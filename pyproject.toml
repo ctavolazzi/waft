@@ -51,7 +51,7 @@ Issues = "https://github.com/ctavolazzi/waft/issues"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
-packages = ["waft", "waft.core", "waft.templates"]
+packages = ["waft", "waft.core", "waft.cli", "waft.templates"]
 
 [tool.ruff]
 line-length = 100
