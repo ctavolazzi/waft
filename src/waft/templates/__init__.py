@@ -23,6 +23,8 @@ class TemplateWriter:
         self.write_justfile()
         self.write_ci_yml()
         self.write_agents_py()
+        self.write_gitignore()
+        self.write_readme()
 
     def write_justfile(self) -> None:
         """Write Justfile template."""
@@ -63,6 +65,22 @@ lint:
 # Run all checks (lint, format, test, verify)
 check: lint format test verify
     @echo "✅ All checks passed!"
+
+# Lint Obsidian markdown files
+lint-obsidian:
+    @if [ -f "./tools/obsidian-linter/waft-lint.sh" ]; then \
+        ./tools/obsidian-linter/waft-lint.sh --scope _work_efforts; \
+    else \
+        echo "⚠️  Obsidian linter not available (pyrite project required)"; \
+    fi
+
+# Fix Obsidian markdown issues
+fix-obsidian:
+    @if [ -f "./tools/obsidian-linter/waft-lint.sh" ]; then \
+        ./tools/obsidian-linter/waft-lint.sh --scope _work_efforts --fix; \
+    else \
+        echo "⚠️  Obsidian linter not available (pyrite project required)"; \
+    fi
 
 # Clean generated files
 clean:
@@ -105,23 +123,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Install uv
         uses: astral-sh/setup-uv@v4
         with:
           version: "latest"
-      
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
-      
+
       - name: Install dependencies
         run: uv sync
-      
+
       - name: Run Adversarial Verification
         run: uv run tools/validation_test.py
-      
+
       - name: Upload validation report
         if: always()
         uses: actions/upload-artifact@v4
@@ -135,20 +153,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Install uv
         uses: astral-sh/setup-uv@v4
         with:
           version: "latest"
-      
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
-      
+
       - name: Install dependencies
         run: uv sync
-      
+
       - name: Run tests
         run: uv run pytest
 
@@ -157,23 +175,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Install uv
         uses: astral-sh/setup-uv@v4
         with:
           version: "latest"
-      
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
-      
+
       - name: Install dependencies
         run: uv sync
-      
+
       - name: Check formatting
         run: uv run ruff format --check .
-      
+
       - name: Check linting
         run: uv run ruff check .
 """
@@ -189,12 +207,12 @@ jobs:
         if agents_py.exists():
             return
 
-        content = """"""
+        content = """\"\"\"
 CrewAI Agents - Starter Template
 
 This file provides a starter template for setting up CrewAI agents.
 Customize this to fit your project's needs.
-"""
+\"\"\"
 
 from crewai import Agent, Task, Crew
 from typing import List, Optional
@@ -206,18 +224,18 @@ def create_agent(
     backstory: str,
     verbose: bool = True,
 ) -> Agent:
-    """
+    \"\"\"
     Create a CrewAI agent.
-    
+
     Args:
         role: The agent's role
         goal: The agent's goal
         backstory: The agent's backstory
         verbose: Whether to enable verbose output
-        
+
     Returns:
         Configured Agent instance
-    """
+    \"\"\"
     return Agent(
         role=role,
         goal=goal,
@@ -228,16 +246,16 @@ def create_agent(
 
 
 def create_crew(agents: List[Agent], tasks: List[Task]) -> Crew:
-    """
+    \"\"\"
     Create a CrewAI crew.
-    
+
     Args:
         agents: List of agents
         tasks: List of tasks
-        
+
     Returns:
         Configured Crew instance
-    """
+    \"\"\"
     return Crew(
         agents=agents,
         tasks=tasks,
@@ -253,31 +271,164 @@ if __name__ == "__main__":
         goal="Research and gather information",
         backstory="You are a research specialist...",
     )
-    
+
     writer = create_agent(
         role="Writer",
         goal="Write clear and engaging content",
         backstory="You are a content writer...",
     )
-    
+
     # Create tasks
     research_task = Task(
         description="Research the topic",
         agent=researcher,
     )
-    
+
     writing_task = Task(
         description="Write about the research findings",
         agent=writer,
     )
-    
+
     # Create crew and execute
     crew = create_crew(
         agents=[researcher, writer],
         tasks=[research_task, writing_task],
     )
-    
+
     result = crew.kickoff()
     print(result)
 """
         agents_py.write_text(content)
+
+    def write_gitignore(self) -> None:
+        """Write .gitignore template."""
+        gitignore_path = self.project_path / ".gitignore"
+
+        if gitignore_path.exists():
+            return
+
+        content = """# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.hypothesis/
+
+# Project specific
+uv.lock
+"""
+        gitignore_path.write_text(content)
+
+    def write_readme(self) -> None:
+        """Write README.md template."""
+        readme_path = self.project_path / "README.md"
+
+        if readme_path.exists():
+            return
+
+        # Try to get project name from pyproject.toml
+        project_name = "Project"
+        pyproject_path = self.project_path / "pyproject.toml"
+        if pyproject_path.exists():
+            try:
+                content = pyproject_path.read_text()
+                import re
+                name_match = re.search(r'name\s*=\s*["\']([^"\']+)["\']', content)
+                if name_match:
+                    project_name = name_match.group(1).replace("-", " ").replace("_", " ").title()
+            except Exception:
+                pass
+
+        content = f"""# {project_name}
+
+> Project created with [Waft](https://github.com/ctavolazzi/waft) - Ambient Meta-Framework for Python
+
+## Quick Start
+
+```bash
+# Install dependencies
+uv sync
+
+# Or use just
+just setup
+
+# Run tests
+just test
+
+# Verify project structure
+waft verify
+```
+
+## Project Structure
+
+```
+.
+├── pyproject.toml          # uv project config
+├── _pyrite/
+│   ├── active/             # Current work
+│   ├── backlog/            # Future work
+│   └── standards/          # Standards
+├── .github/workflows/
+│   └── ci.yml              # CI/CD pipeline
+├── Justfile                # Task runner
+└── src/
+    └── agents.py           # CrewAI template (optional)
+```
+
+## Development
+
+```bash
+# Run all checks
+just check
+
+# Format code
+just format
+
+# Lint code
+just lint
+
+# Clean generated files
+just clean
+```
+
+## License
+
+MIT
+"""
+        readme_path.write_text(content)
+

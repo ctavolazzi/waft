@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "waft"
-version = "0.0.1"
+version = "0.0.2"
 description = "Waft - Ambient, self-modifying Meta-Framework for Python"
 readme = "README.md"
 requires-python = ">=3.10"
-license = {text = "MIT"}
+license = "MIT"
 authors = [
     {name = "Waft Team"}
 ]
@@ -16,7 +16,6 @@ keywords = ["meta-framework", "project-scaffolding", "uv", "python", "cli"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
@@ -28,14 +27,18 @@ classifiers = [
 dependencies = [
     "typer>=0.9.0",
     "rich>=13.0.0",
-    "crewai>=0.1.0",
     "pydantic>=2.0.0",
+    "empirica>=1.2.3",
 ]
 
 [project.optional-dependencies]
 dev = [
     "pytest>=7.0.0",
     "ruff>=0.1.0",
+    "watchdog>=3.0.0",
+]
+crewai = [
+    "crewai>=0.1.0",
 ]
 
 [project.scripts]
@@ -47,7 +50,8 @@ Repository = "https://github.com/ctavolazzi/waft"
 Issues = "https://github.com/ctavolazzi/waft/issues"
 
 [tool.setuptools]
-packages = ["waft", "waft.core", "waft.templates"]
+package-dir = {"" = "src"}
+packages = ["waft", "waft.core", "waft.cli", "waft.templates"]
 
 [tool.ruff]
 line-length = 100
@@ -60,3 +64,7 @@ ignore = []
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
+
+[tool.uv.workspace]
+members = ["_experiments/test_project_001", "_experiments/existing_project", "_experiments/test_project_002", "_experiments/test_project_001/nested_project"]
+

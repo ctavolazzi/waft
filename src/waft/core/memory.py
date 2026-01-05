@@ -77,3 +77,83 @@ class MemoryManager:
                 result["valid"] = False
 
         return result
+
+    def get_active_files(self) -> list[Path]:
+        """
+        Get all files in the active directory.
+
+        Returns:
+            List of file paths in _pyrite/active/
+        """
+        active_path = self.pyrite_path / "active"
+        if not active_path.exists():
+            return []
+        return [f for f in active_path.iterdir() if f.is_file() and f.name != ".gitkeep"]
+
+    def get_backlog_files(self) -> list[Path]:
+        """
+        Get all files in the backlog directory.
+
+        Returns:
+            List of file paths in _pyrite/backlog/
+        """
+        backlog_path = self.pyrite_path / "backlog"
+        if not backlog_path.exists():
+            return []
+        return [f for f in backlog_path.iterdir() if f.is_file() and f.name != ".gitkeep"]
+
+    def get_standards_files(self) -> list[Path]:
+        """
+        Get all files in the standards directory.
+
+        Returns:
+            List of file paths in _pyrite/standards/
+        """
+        standards_path = self.pyrite_path / "standards"
+        if not standards_path.exists():
+            return []
+        return [f for f in standards_path.iterdir() if f.is_file() and f.name != ".gitkeep"]
+
+    def get_all_files(self, recursive: bool = False) -> list[Path]:
+        """
+        Get all files in _pyrite directory.
+
+        Args:
+            recursive: If True, include files in subdirectories
+
+        Returns:
+            List of file paths in _pyrite/
+        """
+        if not self.pyrite_path.exists():
+            return []
+
+        if recursive:
+            # Recursive: use rglob to find all files
+            return [
+                f for f in self.pyrite_path.rglob("*")
+                if f.is_file() and f.name != ".gitkeep"
+            ]
+        else:
+            # Non-recursive: combine all category files
+            return (
+                self.get_active_files() +
+                self.get_backlog_files() +
+                self.get_standards_files()
+            )
+
+    def get_files_by_extension(self, extension: str, recursive: bool = False) -> list[Path]:
+        """
+        Get files matching a specific extension.
+
+        Args:
+            extension: File extension (e.g., ".md", ".txt")
+            recursive: If True, search subdirectories
+
+        Returns:
+            List of matching file paths
+        """
+        all_files = self.get_all_files(recursive=recursive)
+        # Ensure extension starts with dot
+        ext = extension if extension.startswith(".") else f".{extension}"
+        return [f for f in all_files if f.suffix == ext]
+
