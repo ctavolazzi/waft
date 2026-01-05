@@ -1,0 +1,47 @@
+# Justfile - Modern task runner
+# Install: cargo install just
+# Usage: just <recipe>
+
+# Setup project dependencies
+setup:
+    uv sync
+
+# Run tests
+test:
+    uv run pytest
+
+# Run adversarial validation suite
+verify:
+    uv run tools/validation_test.py
+
+# Fix linting and formatting issues
+fix:
+    uv run ruff check --fix .
+    uv run ruff format .
+
+# Format code only
+format:
+    uv run ruff format .
+
+# Lint code only
+lint:
+    uv run ruff check .
+
+# Run all checks (lint, format, test, verify)
+check: lint format test verify
+    @echo "✅ All checks passed!"
+
+# Clean generated files
+clean:
+    rm -rf .venv
+    rm -f uv.lock
+    find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+    find . -type f -name "*.pyc" -delete
+    find . -type f -name "*.pyo" -delete
+    find . -type f -name ".coverage" -delete
+    find . -type d -name "*.egg-info" -exec rm -rf {} + 2>/dev/null || true
+    @echo "✅ Cleaned generated files"
+
+# Show available recipes
+default:
+    @just --list

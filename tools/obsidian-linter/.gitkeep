@@ -1,0 +1,4 @@
+# This directory contains a symlink to pyrite's Obsidian linter
+# The symlink is: tools/obsidian-linter-pyrite -> /Users/ctavolazzi/Code/active/_pyrite/tools/obsidian-linter
+# Use ./tools/obsidian-linter/waft-lint.sh to run the linter
+
