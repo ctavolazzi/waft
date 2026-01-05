@@ -20,6 +20,7 @@ from .core.memory import MemoryManager
 from .core.substrate import SubstrateManager
 from .core.empirica import EmpiricaManager
 from .core.gamification import GamificationManager
+from .core.github import GitHubManager
 from .utils import resolve_project_path, validate_waft_project
 from .cli.epistemic_display import (
     get_moon_phase,
@@ -506,11 +507,15 @@ session_app = typer.Typer(help="Session management commands")
 finding_app = typer.Typer(help="Finding logging commands")
 unknown_app = typer.Typer(help="Unknown logging commands")
 goal_app = typer.Typer(help="Goal management commands")
+github_app = typer.Typer(help="GitHub integration commands")
+journal_app = typer.Typer(help="Development journal commands")
 
 app.add_typer(session_app, name="session")
 app.add_typer(finding_app, name="finding")
 app.add_typer(unknown_app, name="unknown")
 app.add_typer(goal_app, name="goal")
+app.add_typer(github_app, name="github")
+app.add_typer(journal_app, name="journal")
 
 
 @session_app.command("create")
