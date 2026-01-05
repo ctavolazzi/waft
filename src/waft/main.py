@@ -463,6 +463,310 @@ def serve(
         raise typer.Exit(1)
 
 
+# Empirica command groups
+session_app = typer.Typer(help="Session management commands")
+finding_app = typer.Typer(help="Finding logging commands")
+unknown_app = typer.Typer(help="Unknown logging commands")
+goal_app = typer.Typer(help="Goal management commands")
+
+app.add_typer(session_app, name="session")
+app.add_typer(finding_app, name="finding")
+app.add_typer(unknown_app, name="unknown")
+app.add_typer(goal_app, name="goal")
+
+
+@session_app.command("create")
+def session_create(
+    ai_id: str = typer.Option("waft", "--ai-id", help="AI agent identifier"),
+    session_type: str = typer.Option("development", "--type", help="Session type"),
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+):
+    """Create a new Empirica session."""
+    project_path = resolve_project_path(path)
+    
+    console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Creating Empirica session\n")
+    
+    empirica = EmpiricaManager(project_path)
+    if not empirica.is_initialized():
+        console.print("[yellow]⚠️[/yellow]  Empirica not initialized. Run 'waft init' first.")
+        raise typer.Exit(1)
+    
+    session_id = empirica.create_session(ai_id=ai_id, session_type=session_type)
+    if session_id:
+        console.print(f"[green]✅[/green] Session created: [bold]{session_id}[/bold]")
+        console.print(f"[dim]AI ID: {ai_id} | Type: {session_type}[/dim]")
+    else:
+        console.print("[bold red]❌ Failed to create session[/bold red]")
+        raise typer.Exit(1)
+
+
+@session_app.command("bootstrap")
+def session_bootstrap(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+):
+    """Load project context and display epistemic dashboard."""
+    project_path = resolve_project_path(path)
+    
+    console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Loading project context\n")
+    
+    empirica = EmpiricaManager(project_path)
+    if not empirica.is_initialized():
+        console.print("[yellow]⚠️[/yellow]  Empirica not initialized. Run 'waft init' first.")
+        raise typer.Exit(1)
+    
+    context = empirica.project_bootstrap()
+    if context:
+        dashboard = create_epistemic_dashboard(context)
+        console.print(dashboard)
+    else:
+        console.print("[yellow]⚠️[/yellow]  No project context available")
+
+
+@session_app.command("status")
+def session_status(
+    session_id: Optional[str] = typer.Option(None, "--session-id", help="Session ID"),
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+):
+    """Show current session state."""
+    project_path = resolve_project_path(path)
+    
+    console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Session Status\n")
+    
+    empirica = EmpiricaManager(project_path)
+    if not empirica.is_initialized():
+        console.print("[yellow]⚠️[/yellow]  Empirica not initialized. Run 'waft init' first.")
+        raise typer.Exit(1)
+    
+    if session_id:
+        state = empirica.assess_state(session_id=session_id)
+    else:
+        state = empirica.assess_state()
+    
+    if state:
+        from rich.table import Table
+        table = Table(show_header=True, header_style="bold cyan")
+        table.add_column("Property", style="dim")
+        table.add_column("Value")
+        
+        vectors = state.get("vectors", {})
+        foundation = vectors.get("foundation", {})
+        know = foundation.get("know", 0.0)
+        uncertainty = vectors.get("uncertainty", 0.0)
+        moon_phase = get_moon_phase(know * (1.0 - uncertainty))
+        
+        table.add_row("Moon Phase", moon_phase)
+        table.add_row("Know", f"{know:.0%}")
+        table.add_row("Uncertainty", f"{uncertainty:.0%}")
+        
+        console.print(table)
+    else:
+        console.print("[yellow]⚠️[/yellow]  No session state available")
+
+
+@finding_app.command("log")
+def finding_log(
+    finding: str = typer.Argument(..., help="Finding description"),
+    impact: float = typer.Option(0.5, "--impact", help="Impact score (0.0-1.0)"),
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+):
+    """Log a finding with impact score."""
+    project_path = resolve_project_path(path)
+    
+    console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Logging Finding\n")
+    
+    empirica = EmpiricaManager(project_path)
+    if not empirica.is_initialized():
+        console.print("[yellow]⚠️[/yellow]  Empirica not initialized. Run 'waft init' first.")
+        raise typer.Exit(1)
+    
+    success = empirica.log_finding(finding, impact=impact)
+    if success:
+        console.print(f"[green]✅[/green] Finding logged: [bold]{finding}[/bold]")
+        console.print(f"[dim]Impact: {impact:.0%}[/dim]")
+    else:
+        console.print("[bold red]❌ Failed to log finding[/bold red]")
+        raise typer.Exit(1)
+
+
+@unknown_app.command("log")
+def unknown_log(
+    unknown: str = typer.Argument(..., help="Unknown description"),
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+):
+    """Log a knowledge gap."""
+    project_path = resolve_project_path(path)
+    
+    console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Logging Unknown\n")
+    
+    empirica = EmpiricaManager(project_path)
+    if not empirica.is_initialized():
+        console.print("[yellow]⚠️[/yellow]  Empirica not initialized. Run 'waft init' first.")
+        raise typer.Exit(1)
+    
+    success = empirica.log_unknown(unknown)
+    if success:
+        console.print(f"[green]✅[/green] Unknown logged: [bold]{unknown}[/bold]")
+    else:
+        console.print("[bold red]❌ Failed to log unknown[/bold red]")
+        raise typer.Exit(1)
+
+
+@app.command()
+def check(
+    operation: Optional[str] = typer.Option(None, "--operation", help="Operation JSON description"),
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+):
+    """Run safety gate and display result."""
+    project_path = resolve_project_path(path)
+    
+    console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Safety Gate Check\n")
+    
+    empirica = EmpiricaManager(project_path)
+    if not empirica.is_initialized():
+        console.print("[yellow]⚠️[/yellow]  Empirica not initialized. Run 'waft init' first.")
+        raise typer.Exit(1)
+    
+    operation_dict = None
+    if operation:
+        import json
+        try:
+            operation_dict = json.loads(operation)
+        except json.JSONDecodeError:
+            console.print("[red]❌ Invalid JSON in --operation[/red]")
+            raise typer.Exit(1)
+    
+    gate_result = empirica.check_submit(operation=operation_dict)
+    if gate_result:
+        from .cli.epistemic_display import format_gate_result
+        gate_text = format_gate_result(gate_result)
+        console.print(f"Gate Result: {gate_text}")
+        
+        if gate_result == "HALT":
+            console.print("[red]⚠️  Operation requires human approval[/red]")
+            raise typer.Exit(1)
+        elif gate_result == "BRANCH":
+            console.print("[yellow]⚠️  Need to investigate before proceeding[/yellow]")
+        elif gate_result == "REVISE":
+            console.print("[yellow]⚠️  Approach needs revision[/yellow]")
+    else:
+        console.print("[yellow]⚠️  Gate check unavailable[/yellow]")
+
+
+@app.command()
+def assess(
+    session_id: Optional[str] = typer.Option(None, "--session-id", help="Session ID"),
+    history: bool = typer.Option(False, "--history", help="Include historical data"),
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+):
+    """Show detailed epistemic assessment."""
+    project_path = resolve_project_path(path)
+    
+    console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Epistemic Assessment\n")
+    
+    empirica = EmpiricaManager(project_path)
+    if not empirica.is_initialized():
+        console.print("[yellow]⚠️[/yellow]  Empirica not initialized. Run 'waft init' first.")
+        raise typer.Exit(1)
+    
+    state = empirica.assess_state(session_id=session_id, include_history=history)
+    if state:
+        from .cli.epistemic_display import format_epistemic_state
+        panel = format_epistemic_state(state)
+        console.print(panel)
+    else:
+        console.print("[yellow]⚠️  No assessment data available[/yellow]")
+
+
+@goal_app.command("create")
+def goal_create(
+    objective: str = typer.Argument(..., help="Goal objective"),
+    session_id: Optional[str] = typer.Option(None, "--session-id", help="Session ID"),
+    scope: Optional[str] = typer.Option(None, "--scope", help="Scope JSON (breadth, duration, coordination)"),
+    criteria: Optional[str] = typer.Option(None, "--criteria", help="Success criteria (comma-separated)"),
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+):
+    """Create a goal with epistemic scope."""
+    project_path = resolve_project_path(path)
+    
+    console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Creating Goal\n")
+    
+    empirica = EmpiricaManager(project_path)
+    if not empirica.is_initialized():
+        console.print("[yellow]⚠️[/yellow]  Empirica not initialized. Run 'waft init' first.")
+        raise typer.Exit(1)
+    
+    # Get or create session
+    if not session_id:
+        session_id = empirica.create_session(ai_id="waft", session_type="development")
+        if not session_id:
+            console.print("[bold red]❌ Failed to create session[/bold red]")
+            raise typer.Exit(1)
+    
+    # Parse scope
+    scope_dict = None
+    if scope:
+        import json
+        try:
+            scope_dict = json.loads(scope)
+        except json.JSONDecodeError:
+            console.print("[red]❌ Invalid JSON in --scope[/red]")
+            raise typer.Exit(1)
+    
+    # Parse criteria
+    criteria_list = None
+    if criteria:
+        criteria_list = [c.strip() for c in criteria.split(",")]
+    
+    success = empirica.create_goal(
+        session_id=session_id,
+        objective=objective,
+        scope=scope_dict,
+        success_criteria=criteria_list,
+    )
+    
+    if success:
+        console.print(f"[green]✅[/green] Goal created: [bold]{objective}[/bold]")
+        console.print(f"[dim]Session: {session_id}[/dim]")
+    else:
+        console.print("[bold red]❌ Failed to create goal[/bold red]")
+        raise typer.Exit(1)
+
+
+@goal_app.command("list")
+def goal_list(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+):
+    """List active goals."""
+    project_path = resolve_project_path(path)
+    
+    console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Active Goals\n")
+    
+    empirica = EmpiricaManager(project_path)
+    if not empirica.is_initialized():
+        console.print("[yellow]⚠️[/yellow]  Empirica not initialized. Run 'waft init' first.")
+        raise typer.Exit(1)
+    
+    context = empirica.project_bootstrap()
+    if context:
+        goals = context.get("goals", [])
+        if goals:
+            from rich.table import Table
+            table = Table(show_header=True, header_style="bold cyan")
+            table.add_column("Objective", width=50)
+            table.add_column("Status", width=15)
+            
+            for goal in goals:
+                objective = goal.get("objective", "Unknown")
+                status = goal.get("status", "active")
+                table.add_row(objective, status)
+            
+            console.print(table)
+        else:
+            console.print("[dim]No active goals[/dim]")
+    else:
+        console.print("[yellow]⚠️  No project context available[/yellow]")
+
+
 def main():
     """Entry point for the waft CLI."""
     app()
