@@ -367,8 +367,10 @@ def info(
     project_info = substrate.get_project_info(project_path)
 
     if project_info:
-        table.add_row("Project Name", project_info.get("name", "Unknown"))
-        table.add_row("Version", project_info.get("version", "Unknown"))
+        project_name = project_info.get("name", "Unknown")
+        project_version = project_info.get("version", "Unknown")
+        table.add_row("Project Name", project_name)
+        table.add_row("Version", project_version)
     else:
         pyproject_path = project_path / "pyproject.toml"
         if pyproject_path.exists():
