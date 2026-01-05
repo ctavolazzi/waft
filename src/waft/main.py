@@ -961,41 +961,6 @@ def achievements(
     console.print(table)
 
 
-@goal_app.command("list")
-def goal_list(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
-):
-    """List active goals."""
-    project_path = resolve_project_path(path)
-    
-    console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Active Goals\n")
-    
-    empirica = EmpiricaManager(project_path)
-    if not empirica.is_initialized():
-        console.print("[yellow]⚠️[/yellow]  Empirica not initialized. Run 'waft init' first.")
-        raise typer.Exit(1)
-    
-    context = empirica.project_bootstrap()
-    if context:
-        goals = context.get("goals", [])
-        if goals:
-            from rich.table import Table
-            table = Table(show_header=True, header_style="bold cyan")
-            table.add_column("Objective", width=50)
-            table.add_column("Status", width=15)
-            
-            for goal in goals:
-                objective = goal.get("objective", "Unknown")
-                status = goal.get("status", "active")
-                table.add_row(objective, status)
-            
-            console.print(table)
-        else:
-            console.print("[dim]No active goals[/dim]")
-    else:
-        console.print("[yellow]⚠️  No project context available[/yellow]")
-
-
 def main():
     """Entry point for the waft CLI."""
     app()
