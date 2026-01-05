@@ -20,6 +20,11 @@ from .core.memory import MemoryManager
 from .core.substrate import SubstrateManager
 from .core.empirica import EmpiricaManager
 from .utils import resolve_project_path, validate_waft_project
+from .cli.epistemic_display import (
+    get_moon_phase,
+    format_epistemic_summary,
+    create_epistemic_dashboard,
+)
 
 app = typer.Typer(
     name="waft",
@@ -88,13 +93,33 @@ def new(
     empirica_initialized = empirica.initialize()
     if empirica_initialized:
         console.print("[green]✅[/green] Empirica initialized")
+        
+        # Load project-bootstrap context and show epistemic state
+        context = empirica.project_bootstrap()
+        if context:
+            epistemic_summary = format_epistemic_summary(context.get("epistemic_state"))
+            console.print(f"[dim]📊 {epistemic_summary}[/dim]")
     else:
         console.print("[yellow]⚠️[/yellow]  Empirica not initialized (git may not be available)")
 
-    # Success message
+    # Success message with epistemic indicator
+    empirica = EmpiricaManager(project_path)
+    moon_phase = "🌑"  # Default
+    if empirica.is_initialized():
+        context = empirica.project_bootstrap()
+        if context:
+            epistemic_state = context.get("epistemic_state", {})
+            vectors = epistemic_state.get("vectors", {})
+            foundation = vectors.get("foundation", {})
+            know = foundation.get("know", 0.0)
+            uncertainty = vectors.get("uncertainty", 0.0)
+            coverage = know * (1.0 - uncertainty) if know > 0 else 0.0
+            moon_phase = get_moon_phase(coverage)
+    
     success_panel = Panel(
         Text.from_markup(
             f"[bold green]Project '{name}' created successfully![/bold green]\n\n"
+            f"{moon_phase} [dim]Epistemic tracking active[/dim]\n\n"
             f"[dim]Next steps:[/dim]\n"
             f"  cd {name}\n"
             f"  just setup    # Install dependencies\n"
@@ -150,11 +175,35 @@ def verify(
     else:
         console.print("[yellow]⚠️[/yellow]  uv.lock not found (run 'uv sync' to create)")
 
+    # Check epistemic health if Empirica is initialized
+    empirica = EmpiricaManager(project_path)
+    if empirica.is_initialized():
+        console.print("\n[dim]→[/dim] Checking epistemic health...")
+        context = empirica.project_bootstrap()
+        if context:
+            epistemic_state = context.get("epistemic_state", {})
+            epistemic_summary = format_epistemic_summary(epistemic_state)
+            console.print(f"[dim]📊 {epistemic_summary}[/dim]")
+        else:
+            console.print("[dim]📊 Epistemic state not available[/dim]")
+
     # Summary
     all_valid = pyrite_status["valid"] and lock_exists
 
     if all_valid:
-        console.print("\n[bold green]✅ Project structure is valid[/bold green]")
+        # Show moon phase in summary
+        moon_phase = "🌑"
+        if empirica.is_initialized():
+            context = empirica.project_bootstrap()
+            if context:
+                epistemic_state = context.get("epistemic_state", {})
+                vectors = epistemic_state.get("vectors", {})
+                foundation = vectors.get("foundation", {})
+                know = foundation.get("know", 0.0)
+                uncertainty = vectors.get("uncertainty", 0.0)
+                coverage = know * (1.0 - uncertainty) if know > 0 else 0.0
+                moon_phase = get_moon_phase(coverage)
+        console.print(f"\n[bold green]✅ Project structure is valid {moon_phase}[/bold green]")
     else:
         console.print("\n[bold yellow]⚠️  Project structure has issues[/bold yellow]")
         raise typer.Exit(1)
@@ -257,13 +306,32 @@ def init(
     empirica_initialized = empirica.initialize()
     if empirica_initialized:
         console.print("[green]✅[/green] Empirica initialized")
+        
+        # Show epistemic state after initialization
+        context = empirica.project_bootstrap()
+        if context:
+            epistemic_summary = format_epistemic_summary(context.get("epistemic_state"))
+            console.print(f"[dim]📊 {epistemic_summary}[/dim]")
     else:
         console.print("[yellow]⚠️[/yellow]  Empirica not initialized (git may not be available)")
 
-    # Success message
+    # Success message with epistemic indicator
+    moon_phase = "🌑"  # Default
+    if empirica.is_initialized():
+        context = empirica.project_bootstrap()
+        if context:
+            epistemic_state = context.get("epistemic_state", {})
+            vectors = epistemic_state.get("vectors", {})
+            foundation = vectors.get("foundation", {})
+            know = foundation.get("know", 0.0)
+            uncertainty = vectors.get("uncertainty", 0.0)
+            coverage = know * (1.0 - uncertainty) if know > 0 else 0.0
+            moon_phase = get_moon_phase(coverage)
+    
     success_panel = Panel(
         Text.from_markup(
-            "[bold green]Waft initialized successfully![/bold green]\n\n"
+            f"[bold green]Waft initialized successfully![/bold green]\n\n"
+            f"{moon_phase} [dim]Epistemic tracking active[/dim]\n\n"
             "[dim]Next steps:[/dim]\n"
             "  waft verify   # Verify structure\n"
             "  waft sync     # Sync dependencies (if needed)\n"
@@ -339,6 +407,21 @@ def info(
     empirica = EmpiricaManager(project_path)
     empirica_status = "[green]Initialized[/green]" if empirica.is_initialized() else "[yellow]Not initialized[/yellow]"
     table.add_row("Empirica", empirica_status)
+
+    # Add Epistemic State section if Empirica is initialized
+    if empirica.is_initialized():
+        context = empirica.project_bootstrap()
+        if context:
+            epistemic_state = context.get("epistemic_state", {})
+            vectors = epistemic_state.get("vectors", {})
+            foundation = vectors.get("foundation", {})
+            know = foundation.get("know", 0.0)
+            uncertainty = vectors.get("uncertainty", 0.0)
+            coverage = know * (1.0 - uncertainty) if know > 0 else 0.0
+            moon_phase = get_moon_phase(coverage)
+            
+            table.add_row("Epistemic State", f"{moon_phase} K:{know:.0%} U:{uncertainty:.0%} C:{coverage:.0%}")
+            table.add_row("", "[dim]Run 'waft assess' for detailed view[/dim]")
 
     console.print(table)
 
