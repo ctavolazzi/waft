@@ -34,7 +34,9 @@ When you run `waft new <name>`, it creates:
 
 ## Commands
 
-### `waft new <name>`
+### Core Commands
+
+#### `waft new <name>`
 
 Creates a new project with full Waft structure:
 
@@ -42,7 +44,14 @@ Creates a new project with full Waft structure:
 waft new my_project
 ```
 
-### `waft verify`
+This command:
+- Initializes a new `uv` project
+- Creates the `_pyrite` memory structure
+- Generates templates (Justfile, CI/CD, agents.py)
+- Initializes Empirica for epistemic tracking
+- Awards Insight for project creation
+
+#### `waft verify`
 
 Verifies the project structure:
 
@@ -54,6 +63,194 @@ Checks:
 - `_pyrite` directory structure
 - `uv.lock` existence
 - Project configuration
+- Epistemic health (if Empirica initialized)
+- Updates Integrity based on verification results
+
+#### `waft sync`
+
+Sync project dependencies using `uv sync`:
+
+```bash
+waft sync
+```
+
+#### `waft add <package>`
+
+Add a dependency to the project:
+
+```bash
+waft add pytest
+waft add "pytest>=7.0.0" --dev
+```
+
+#### `waft init`
+
+Initialize Waft structure in an existing project:
+
+```bash
+waft init
+```
+
+This command:
+- Creates `_pyrite` structure
+- Writes templates
+- Initializes Empirica
+
+#### `waft info`
+
+Show information about the Waft project:
+
+```bash
+waft info
+```
+
+Displays:
+- Project path, name, version
+- `_pyrite` structure status
+- Template status
+- Empirica initialization status
+- Epistemic state (if available)
+
+#### `waft serve`
+
+Start a web dashboard for the project:
+
+```bash
+waft serve
+waft serve --port 8080 --dev
+```
+
+### Empirica Commands
+
+#### `waft session`
+
+Session management commands:
+
+```bash
+waft session create [--ai-id ID] [--type TYPE]
+waft session bootstrap  # Load project context and display dashboard
+waft session status [--session-id ID]
+```
+
+#### `waft finding log`
+
+Log a discovery with impact score:
+
+```bash
+waft finding log "Discovered X" --impact 0.7
+```
+
+Awards +10 Insight per finding.
+
+#### `waft unknown log`
+
+Log a knowledge gap:
+
+```bash
+waft unknown log "Need to investigate Y"
+```
+
+#### `waft check`
+
+Run safety gate:
+
+```bash
+waft check
+waft check --operation '{"type": "code_generation", "scope": "high"}'
+```
+
+Returns: PROCEED, HALT, BRANCH, or REVISE
+
+#### `waft assess`
+
+Show detailed epistemic assessment:
+
+```bash
+waft assess
+waft assess --session-id ID --history
+```
+
+Displays epistemic vectors, moon phase, and learning trajectory.
+
+#### `waft goal`
+
+Goal management commands:
+
+```bash
+waft goal create "Implement OAuth2" --scope '{"breadth": 0.6}' --criteria "Auth works,Tests pass"
+waft goal list
+```
+
+### Gamification Commands
+
+#### `waft dashboard`
+
+Show the Epistemic HUD with split-screen layout:
+
+```bash
+waft dashboard
+```
+
+Displays:
+- **Header**: Project Name | Integrity Bar | Moon Phase
+- **Left Panel ("The Build")**: Active tasks, file changes
+- **Right Panel ("The Mind")**: Epistemic vectors, known unknowns
+
+#### `waft stats`
+
+Show current stats:
+
+```bash
+waft stats
+```
+
+Displays Integrity, Insight, Level, and Achievements.
+
+#### `waft level`
+
+Show level details and progress:
+
+```bash
+waft level
+```
+
+#### `waft achievements`
+
+List all achievements:
+
+```bash
+waft achievements
+```
+
+## Epistemic Tracking
+
+Waft integrates with [Empirica](https://github.com/Nubaeon/empirica) to provide epistemic tracking:
+
+- **Moon Phase Indicators** (🌑→🌕): Visual representation of epistemic health
+  - 🌑 New Moon: Discovery/Uncertainty phase
+  - 🌒→🌔 Waxing: Building knowledge
+  - 🌕 Full Moon: Execution/Certainty phase
+
+- **Epistemic Vectors**: Track 13 dimensions of knowledge
+- **Project Bootstrap**: Load compressed context (~800 tokens)
+- **Safety Gates**: CHECK gates for risky operations
+
+## Gamification System
+
+Waft includes a Constructivist Sci-Fi themed gamification system:
+
+- **💎 Integrity**: Structural stability of the project (100% = Perfect)
+  - Decreases with errors (-10 per failed test)
+  - Increases with successful operations (+2 per success)
+
+- **🧠 Insight**: Accumulation of verified knowledge
+  - Earned from: creating projects (+50), logging findings (+10), assessments (+25)
+  - Level calculation: `Level = sqrt(Insight / 100)`
+
+- **🌙 Moon Phase**: "Epistemic Clock" reflecting certainty level
+
+- **🏆 Achievements**: Unlock badges for milestones
+  - 🌱 First Build, 🏗️ Constructor, 🎯 Goal Achiever, 🧠 Knowledge Architect, etc.
 
 ## Philosophy
 
