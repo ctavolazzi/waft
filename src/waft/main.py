@@ -25,6 +25,7 @@ from .cli.epistemic_display import (
     format_epistemic_summary,
     create_epistemic_dashboard,
 )
+from .cli.hud import render_hud
 
 app = typer.Typer(
     name="waft",
@@ -652,6 +653,17 @@ def check(
             console.print("[yellow]⚠️  Approach needs revision[/yellow]")
     else:
         console.print("[yellow]⚠️  Gate check unavailable[/yellow]")
+
+
+@app.command()
+def dashboard(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    integrity: float = typer.Option(100.0, "--integrity", help="Integrity value (0.0-100.0)"),
+):
+    """Show the Epistemic HUD with split-screen layout."""
+    project_path = resolve_project_path(path)
+    
+    render_hud(project_path, integrity=integrity)
 
 
 @app.command()
