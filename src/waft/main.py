@@ -19,6 +19,7 @@ from rich.text import Text
 from .core.memory import MemoryManager
 from .core.substrate import SubstrateManager
 from .core.empirica import EmpiricaManager
+from .core.gamification import GamificationManager
 from .utils import resolve_project_path, validate_waft_project
 from .cli.epistemic_display import (
     get_moon_phase,
@@ -103,6 +104,23 @@ def new(
     else:
         console.print("[yellow]⚠️[/yellow]  Empirica not initialized (git may not be available)")
 
+    # Award insight for creating project
+    gamification = GamificationManager(project_path)
+    insight_result = gamification.award_insight(50.0, reason="Created new project")
+    
+    # Check for achievements
+    stats = gamification.get_stats()
+    newly_unlocked = gamification.check_achievements(stats)
+    
+    # Check for First Build achievement
+    if gamification.unlock_achievement("first_build", "🌱 First Build"):
+        newly_unlocked.append("first_build")
+        console.print("[bold green]🏆 Achievement Unlocked: 🌱 First Build[/bold green]")
+    
+    # Show level up notification
+    if insight_result["level_up"]:
+        console.print(f"[bold cyan]🎉 Level Up! Level {insight_result['old_level']} → {insight_result['new_level']}[/bold cyan]")
+    
     # Success message with epistemic indicator
     empirica = EmpiricaManager(project_path)
     moon_phase = "🌑"  # Default
@@ -117,10 +135,15 @@ def new(
             coverage = know * (1.0 - uncertainty) if know > 0 else 0.0
             moon_phase = get_moon_phase(coverage)
     
+    integrity = gamification.integrity
+    insight = gamification.insight
+    level = gamification.level
+    
     success_panel = Panel(
         Text.from_markup(
             f"[bold green]Project '{name}' created successfully![/bold green]\n\n"
-            f"{moon_phase} [dim]Epistemic tracking active[/dim]\n\n"
+            f"{moon_phase} [dim]Epistemic tracking active[/dim]\n"
+            f"💎 Integrity: {integrity:.0f}% | 🧠 Insight: {insight:.0f} | ⭐ Level: {level}\n\n"
             f"[dim]Next steps:[/dim]\n"
             f"  cd {name}\n"
             f"  just setup    # Install dependencies\n"
@@ -191,6 +214,13 @@ def verify(
     # Summary
     all_valid = pyrite_status["valid"] and lock_exists
 
+    # Update integrity based on verification result
+    gamification = GamificationManager(project_path)
+    if all_valid:
+        gamification.restore_integrity(2.0, reason="Project verification passed")
+    else:
+        gamification.damage_integrity(10.0, reason="Project verification failed")
+
     if all_valid:
         # Show moon phase in summary
         moon_phase = "🌑"
@@ -204,9 +234,14 @@ def verify(
                 uncertainty = vectors.get("uncertainty", 0.0)
                 coverage = know * (1.0 - uncertainty) if know > 0 else 0.0
                 moon_phase = get_moon_phase(coverage)
+        
+        integrity = gamification.integrity
         console.print(f"\n[bold green]✅ Project structure is valid {moon_phase}[/bold green]")
+        console.print(f"[dim]💎 Integrity: {integrity:.0f}%[/dim]")
     else:
+        integrity = gamification.integrity
         console.print("\n[bold yellow]⚠️  Project structure has issues[/bold yellow]")
+        console.print(f"[dim]💎 Integrity: {integrity:.0f}%[/dim]")
         raise typer.Exit(1)
 
 
@@ -584,8 +619,23 @@ def finding_log(
     
     success = empirica.log_finding(finding, impact=impact)
     if success:
+        # Award insight for logging finding
+        gamification = GamificationManager(project_path)
+        insight_result = gamification.award_insight(10.0, reason="Logged finding")
+        
+        # Check for Knowledge Architect achievement (50 findings)
+        stats = gamification.get_stats()
+        # Count findings from history
+        findings_count = sum(1 for h in gamification._data.get("history", []) if h.get("type") == "insight_award" and "finding" in h.get("reason", "").lower())
+        if findings_count >= 50:
+            if gamification.unlock_achievement("knowledge_architect", "🧠 Knowledge Architect"):
+                console.print("[bold green]🏆 Achievement Unlocked: 🧠 Knowledge Architect[/bold green]")
+        
+        if insight_result["level_up"]:
+            console.print(f"[bold cyan]🎉 Level Up! Level {insight_result['old_level']} → {insight_result['new_level']}[/bold cyan]")
+        
         console.print(f"[green]✅[/green] Finding logged: [bold]{finding}[/bold]")
-        console.print(f"[dim]Impact: {impact:.0%}[/dim]")
+        console.print(f"[dim]Impact: {impact:.0%} | 🧠 +10 Insight[/dim]")
     else:
         console.print("[bold red]❌ Failed to log finding[/bold red]")
         raise typer.Exit(1)
@@ -684,9 +734,28 @@ def assess(
     
     state = empirica.assess_state(session_id=session_id, include_history=history)
     if state:
+        # Award insight for assessment
+        gamification = GamificationManager(project_path)
+        insight_result = gamification.award_insight(25.0, reason="Epistemic assessment")
+        
+        # Update integrity based on epistemic health
+        vectors = state.get("vectors", {})
+        uncertainty = vectors.get("uncertainty", 0.0)
+        if uncertainty > 0.5:  # High uncertainty decreases integrity
+            gamification.damage_integrity(5.0, reason="High epistemic uncertainty")
+        elif uncertainty < 0.2:  # Low uncertainty restores integrity
+            gamification.restore_integrity(2.0, reason="Low epistemic uncertainty")
+        
+        if insight_result["level_up"]:
+            console.print(f"[bold cyan]🎉 Level Up! Level {insight_result['old_level']} → {insight_result['new_level']}[/bold cyan]")
+        
         from .cli.epistemic_display import format_epistemic_state
         panel = format_epistemic_state(state)
         console.print(panel)
+        
+        integrity = gamification.integrity
+        insight = gamification.insight
+        console.print(f"\n[dim]💎 Integrity: {integrity:.0f}% | 🧠 Insight: {insight:.0f} | 🧠 +25 Insight[/dim]")
     else:
         console.print("[yellow]⚠️  No assessment data available[/yellow]")
 
@@ -744,6 +813,147 @@ def goal_create(
     else:
         console.print("[bold red]❌ Failed to create goal[/bold red]")
         raise typer.Exit(1)
+
+
+@goal_app.command("list")
+def goal_list(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+):
+    """List active goals."""
+    project_path = resolve_project_path(path)
+    
+    console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Active Goals\n")
+    
+    empirica = EmpiricaManager(project_path)
+    if not empirica.is_initialized():
+        console.print("[yellow]⚠️[/yellow]  Empirica not initialized. Run 'waft init' first.")
+        raise typer.Exit(1)
+    
+    context = empirica.project_bootstrap()
+    if context:
+        goals = context.get("goals", [])
+        if goals:
+            from rich.table import Table
+            table = Table(show_header=True, header_style="bold cyan")
+            table.add_column("Objective", width=50)
+            table.add_column("Status", width=15)
+            
+            for goal in goals:
+                objective = goal.get("objective", "Unknown")
+                status = goal.get("status", "active")
+                table.add_row(objective, status)
+            
+            console.print(table)
+        else:
+            console.print("[dim]No active goals[/dim]")
+    else:
+        console.print("[yellow]⚠️  No project context available[/yellow]")
+
+
+@app.command()
+def stats(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+):
+    """Show current stats (Integrity, Insight, Level, Achievements)."""
+    project_path = resolve_project_path(path)
+    
+    console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Stats\n")
+    
+    gamification = GamificationManager(project_path)
+    stats = gamification.get_stats()
+    
+    from rich.table import Table
+    table = Table(show_header=True, header_style="bold cyan")
+    table.add_column("Stat", style="dim", width=20)
+    table.add_column("Value", width=20)
+    
+    table.add_row("💎 Integrity", f"{stats['integrity']:.0f}%")
+    table.add_row("🧠 Insight", f"{stats['insight']:.0f}")
+    table.add_row("⭐ Level", str(stats['level']))
+    table.add_row("🏆 Achievements", str(stats['achievements_count']))
+    
+    console.print(table)
+    
+    # Show insight to next level
+    insight_needed = gamification.get_insight_to_next_level()
+    if insight_needed > 0:
+        console.print(f"\n[dim]🧠 {insight_needed:.0f} Insight needed for next level[/dim]")
+
+
+@app.command()
+def level(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+):
+    """Show level details and progress to next level."""
+    project_path = resolve_project_path(path)
+    
+    console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Level Details\n")
+    
+    gamification = GamificationManager(project_path)
+    current_level = gamification.level
+    current_insight = gamification.insight
+    next_level = current_level + 1
+    
+    # Calculate insight for current and next level
+    insight_for_current = (current_level - 1) ** 2 * 100 if current_level > 1 else 0
+    insight_for_next = (next_level - 1) ** 2 * 100
+    insight_needed = insight_for_next - current_insight
+    progress = (current_insight - insight_for_current) / (insight_for_next - insight_for_current) if insight_for_next > insight_for_current else 1.0
+    
+    from rich.progress import Progress, BarColumn, TextColumn
+    from rich.console import Group
+    
+    progress_bar = Progress(
+        TextColumn("[progress.description]{task.description}"),
+        BarColumn(),
+        TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
+    )
+    
+    task = progress_bar.add_task(f"Level {current_level} → {next_level}", total=100)
+    progress_bar.update(task, completed=int(progress * 100))
+    
+    console.print(f"[bold]Current Level:[/bold] {current_level}")
+    console.print(f"[bold]Current Insight:[/bold] {current_insight:.0f}")
+    console.print(f"[bold]Insight for Level {next_level}:[/bold] {insight_for_next:.0f}")
+    console.print(f"[bold]Insight Needed:[/bold] {insight_needed:.0f}")
+    console.print()
+    console.print(progress_bar)
+
+
+@app.command()
+def achievements(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+):
+    """List all achievements (locked/unlocked)."""
+    project_path = resolve_project_path(path)
+    
+    console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Achievements\n")
+    
+    gamification = GamificationManager(project_path)
+    achievement_status = gamification.get_achievement_status()
+    
+    achievement_names = {
+        "first_build": "🌱 First Build",
+        "constructor": "🏗️ Constructor",
+        "goal_achiever": "🎯 Goal Achiever",
+        "knowledge_architect": "🧠 Knowledge Architect",
+        "perfect_integrity": "💎 Perfect Integrity",
+        "level_10": "🚀 Level 10",
+        "master_constructor": "🏆 Master Constructor",
+        "epistemic_master": "🌙 Epistemic Master",
+    }
+    
+    from rich.table import Table
+    table = Table(show_header=True, header_style="bold cyan")
+    table.add_column("Achievement", width=30)
+    table.add_column("Status", width=15)
+    
+    for achievement_id, unlocked in achievement_status.items():
+        name = achievement_names.get(achievement_id, achievement_id)
+        status = "[green]✓ Unlocked[/green]" if unlocked else "[dim]🔒 Locked[/dim]"
+        table.add_row(name, status)
+    
+    console.print(table)
 
 
 @goal_app.command("list")
