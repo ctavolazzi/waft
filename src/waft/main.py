@@ -96,7 +96,7 @@ def new(
     empirica_initialized = empirica.initialize()
     if empirica_initialized:
         console.print("[green]✅[/green] Empirica initialized")
-        
+
         # Load project-bootstrap context and show epistemic state
         context = empirica.project_bootstrap()
         if context:
@@ -108,20 +108,20 @@ def new(
     # Award insight for creating project
     gamification = GamificationManager(project_path)
     insight_result = gamification.award_insight(50.0, reason="Created new project")
-    
+
     # Check for achievements
     stats = gamification.get_stats()
     newly_unlocked = gamification.check_achievements(stats)
-    
+
     # Check for First Build achievement
     if gamification.unlock_achievement("first_build", "🌱 First Build"):
         newly_unlocked.append("first_build")
         console.print("[bold green]🏆 Achievement Unlocked: 🌱 First Build[/bold green]")
-    
+
     # Show level up notification
     if insight_result["level_up"]:
         console.print(f"[bold cyan]🎉 Level Up! Level {insight_result['old_level']} → {insight_result['new_level']}[/bold cyan]")
-    
+
     # Success message with epistemic indicator
     empirica = EmpiricaManager(project_path)
     moon_phase = "🌑"  # Default
@@ -135,11 +135,11 @@ def new(
             uncertainty = vectors.get("uncertainty", 0.0)
             coverage = know * (1.0 - uncertainty) if know > 0 else 0.0
             moon_phase = get_moon_phase(coverage)
-    
+
     integrity = gamification.integrity
     insight = gamification.insight
     level = gamification.level
-    
+
     success_panel = Panel(
         Text.from_markup(
             f"[bold green]Project '{name}' created successfully![/bold green]\n\n"
@@ -235,7 +235,7 @@ def verify(
                 uncertainty = vectors.get("uncertainty", 0.0)
                 coverage = know * (1.0 - uncertainty) if know > 0 else 0.0
                 moon_phase = get_moon_phase(coverage)
-        
+
         integrity = gamification.integrity
         console.print(f"\n[bold green]✅ Project structure is valid {moon_phase}[/bold green]")
         console.print(f"[dim]💎 Integrity: {integrity:.0f}%[/dim]")
@@ -343,7 +343,7 @@ def init(
     empirica_initialized = empirica.initialize()
     if empirica_initialized:
         console.print("[green]✅[/green] Empirica initialized")
-        
+
         # Show epistemic state after initialization
         context = empirica.project_bootstrap()
         if context:
@@ -364,7 +364,7 @@ def init(
             uncertainty = vectors.get("uncertainty", 0.0)
             coverage = know * (1.0 - uncertainty) if know > 0 else 0.0
             moon_phase = get_moon_phase(coverage)
-    
+
     success_panel = Panel(
         Text.from_markup(
             f"[bold green]Waft initialized successfully![/bold green]\n\n"
@@ -458,7 +458,7 @@ def info(
             uncertainty = vectors.get("uncertainty", 0.0)
             coverage = know * (1.0 - uncertainty) if know > 0 else 0.0
             moon_phase = get_moon_phase(coverage)
-            
+
             table.add_row("Epistemic State", f"{moon_phase} K:{know:.0%} U:{uncertainty:.0%} C:{coverage:.0%}")
             table.add_row("", "[dim]Run 'waft assess' for detailed view[/dim]")
 
@@ -526,14 +526,14 @@ def session_create(
 ):
     """Create a new Empirica session."""
     project_path = resolve_project_path(path)
-    
+
     console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Creating Empirica session\n")
-    
+
     empirica = EmpiricaManager(project_path)
     if not empirica.is_initialized():
         console.print("[yellow]⚠️[/yellow]  Empirica not initialized. Run 'waft init' first.")
         raise typer.Exit(1)
-    
+
     session_id = empirica.create_session(ai_id=ai_id, session_type=session_type)
     if session_id:
         console.print(f"[green]✅[/green] Session created: [bold]{session_id}[/bold]")
@@ -549,14 +549,14 @@ def session_bootstrap(
 ):
     """Load project context and display epistemic dashboard."""
     project_path = resolve_project_path(path)
-    
+
     console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Loading project context\n")
-    
+
     empirica = EmpiricaManager(project_path)
     if not empirica.is_initialized():
         console.print("[yellow]⚠️[/yellow]  Empirica not initialized. Run 'waft init' first.")
         raise typer.Exit(1)
-    
+
     context = empirica.project_bootstrap()
     if context:
         dashboard = create_epistemic_dashboard(context)
@@ -572,35 +572,35 @@ def session_status(
 ):
     """Show current session state."""
     project_path = resolve_project_path(path)
-    
+
     console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Session Status\n")
-    
+
     empirica = EmpiricaManager(project_path)
     if not empirica.is_initialized():
         console.print("[yellow]⚠️[/yellow]  Empirica not initialized. Run 'waft init' first.")
         raise typer.Exit(1)
-    
+
     if session_id:
         state = empirica.assess_state(session_id=session_id)
     else:
         state = empirica.assess_state()
-    
+
     if state:
         from rich.table import Table
         table = Table(show_header=True, header_style="bold cyan")
         table.add_column("Property", style="dim")
         table.add_column("Value")
-        
+
         vectors = state.get("vectors", {})
         foundation = vectors.get("foundation", {})
         know = foundation.get("know", 0.0)
         uncertainty = vectors.get("uncertainty", 0.0)
         moon_phase = get_moon_phase(know * (1.0 - uncertainty))
-        
+
         table.add_row("Moon Phase", moon_phase)
         table.add_row("Know", f"{know:.0%}")
         table.add_row("Uncertainty", f"{uncertainty:.0%}")
-        
+
         console.print(table)
     else:
         console.print("[yellow]⚠️[/yellow]  No session state available")
@@ -614,20 +614,20 @@ def finding_log(
 ):
     """Log a finding with impact score."""
     project_path = resolve_project_path(path)
-    
+
     console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Logging Finding\n")
-    
+
     empirica = EmpiricaManager(project_path)
     if not empirica.is_initialized():
         console.print("[yellow]⚠️[/yellow]  Empirica not initialized. Run 'waft init' first.")
         raise typer.Exit(1)
-    
+
     success = empirica.log_finding(finding, impact=impact)
     if success:
         # Award insight for logging finding
         gamification = GamificationManager(project_path)
         insight_result = gamification.award_insight(10.0, reason="Logged finding")
-        
+
         # Check for Knowledge Architect achievement (50 findings)
         stats = gamification.get_stats()
         # Count findings from history
@@ -635,10 +635,10 @@ def finding_log(
         if findings_count >= 50:
             if gamification.unlock_achievement("knowledge_architect", "🧠 Knowledge Architect"):
                 console.print("[bold green]🏆 Achievement Unlocked: 🧠 Knowledge Architect[/bold green]")
-        
+
         if insight_result["level_up"]:
             console.print(f"[bold cyan]🎉 Level Up! Level {insight_result['old_level']} → {insight_result['new_level']}[/bold cyan]")
-        
+
         console.print(f"[green]✅[/green] Finding logged: [bold]{finding}[/bold]")
         console.print(f"[dim]Impact: {impact:.0%} | 🧠 +10 Insight[/dim]")
     else:
@@ -653,14 +653,14 @@ def unknown_log(
 ):
     """Log a knowledge gap."""
     project_path = resolve_project_path(path)
-    
+
     console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Logging Unknown\n")
-    
+
     empirica = EmpiricaManager(project_path)
     if not empirica.is_initialized():
         console.print("[yellow]⚠️[/yellow]  Empirica not initialized. Run 'waft init' first.")
         raise typer.Exit(1)
-    
+
     success = empirica.log_unknown(unknown)
     if success:
         console.print(f"[green]✅[/green] Unknown logged: [bold]{unknown}[/bold]")
@@ -676,14 +676,14 @@ def check(
 ):
     """Run safety gate and display result."""
     project_path = resolve_project_path(path)
-    
+
     console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Safety Gate Check\n")
-    
+
     empirica = EmpiricaManager(project_path)
     if not empirica.is_initialized():
         console.print("[yellow]⚠️[/yellow]  Empirica not initialized. Run 'waft init' first.")
         raise typer.Exit(1)
-    
+
     operation_dict = None
     if operation:
         import json
@@ -692,13 +692,13 @@ def check(
         except json.JSONDecodeError:
             console.print("[red]❌ Invalid JSON in --operation[/red]")
             raise typer.Exit(1)
-    
+
     gate_result = empirica.check_submit(operation=operation_dict)
     if gate_result:
         from .cli.epistemic_display import format_gate_result
         gate_text = format_gate_result(gate_result)
         console.print(f"Gate Result: {gate_text}")
-        
+
         if gate_result == "HALT":
             console.print("[red]⚠️  Operation requires human approval[/red]")
             raise typer.Exit(1)
@@ -717,7 +717,7 @@ def dashboard(
 ):
     """Show the Epistemic HUD with split-screen layout."""
     project_path = resolve_project_path(path)
-    
+
     render_hud(project_path, integrity=integrity)
 
 
@@ -729,20 +729,20 @@ def assess(
 ):
     """Show detailed epistemic assessment."""
     project_path = resolve_project_path(path)
-    
+
     console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Epistemic Assessment\n")
-    
+
     empirica = EmpiricaManager(project_path)
     if not empirica.is_initialized():
         console.print("[yellow]⚠️[/yellow]  Empirica not initialized. Run 'waft init' first.")
         raise typer.Exit(1)
-    
+
     state = empirica.assess_state(session_id=session_id, include_history=history)
     if state:
         # Award insight for assessment
         gamification = GamificationManager(project_path)
         insight_result = gamification.award_insight(25.0, reason="Epistemic assessment")
-        
+
         # Update integrity based on epistemic health
         vectors = state.get("vectors", {})
         uncertainty = vectors.get("uncertainty", 0.0)
@@ -750,14 +750,14 @@ def assess(
             gamification.damage_integrity(5.0, reason="High epistemic uncertainty")
         elif uncertainty < 0.2:  # Low uncertainty restores integrity
             gamification.restore_integrity(2.0, reason="Low epistemic uncertainty")
-        
+
         if insight_result["level_up"]:
             console.print(f"[bold cyan]🎉 Level Up! Level {insight_result['old_level']} → {insight_result['new_level']}[/bold cyan]")
-        
+
         from .cli.epistemic_display import format_epistemic_state
         panel = format_epistemic_state(state)
         console.print(panel)
-        
+
         integrity = gamification.integrity
         insight = gamification.insight
         console.print(f"\n[dim]💎 Integrity: {integrity:.0f}% | 🧠 Insight: {insight:.0f} | 🧠 +25 Insight[/dim]")
@@ -775,21 +775,21 @@ def goal_create(
 ):
     """Create a goal with epistemic scope."""
     project_path = resolve_project_path(path)
-    
+
     console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Creating Goal\n")
-    
+
     empirica = EmpiricaManager(project_path)
     if not empirica.is_initialized():
         console.print("[yellow]⚠️[/yellow]  Empirica not initialized. Run 'waft init' first.")
         raise typer.Exit(1)
-    
+
     # Get or create session
     if not session_id:
         session_id = empirica.create_session(ai_id="waft", session_type="development")
         if not session_id:
             console.print("[bold red]❌ Failed to create session[/bold red]")
             raise typer.Exit(1)
-    
+
     # Parse scope
     scope_dict = None
     if scope:
@@ -799,19 +799,19 @@ def goal_create(
         except json.JSONDecodeError:
             console.print("[red]❌ Invalid JSON in --scope[/red]")
             raise typer.Exit(1)
-    
+
     # Parse criteria
     criteria_list = None
     if criteria:
         criteria_list = [c.strip() for c in criteria.split(",")]
-    
+
     success = empirica.create_goal(
         session_id=session_id,
         objective=objective,
         scope=scope_dict,
         success_criteria=criteria_list,
     )
-    
+
     if success:
         console.print(f"[green]✅[/green] Goal created: [bold]{objective}[/bold]")
         console.print(f"[dim]Session: {session_id}[/dim]")
@@ -826,14 +826,14 @@ def goal_list(
 ):
     """List active goals."""
     project_path = resolve_project_path(path)
-    
+
     console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Active Goals\n")
-    
+
     empirica = EmpiricaManager(project_path)
     if not empirica.is_initialized():
         console.print("[yellow]⚠️[/yellow]  Empirica not initialized. Run 'waft init' first.")
         raise typer.Exit(1)
-    
+
     context = empirica.project_bootstrap()
     if context:
         goals = context.get("goals", [])
@@ -842,12 +842,12 @@ def goal_list(
             table = Table(show_header=True, header_style="bold cyan")
             table.add_column("Objective", width=50)
             table.add_column("Status", width=15)
-            
+
             for goal in goals:
                 objective = goal.get("objective", "Unknown")
                 status = goal.get("status", "active")
                 table.add_row(objective, status)
-            
+
             console.print(table)
         else:
             console.print("[dim]No active goals[/dim]")
@@ -861,24 +861,24 @@ def stats(
 ):
     """Show current stats (Integrity, Insight, Level, Achievements)."""
     project_path = resolve_project_path(path)
-    
+
     console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Stats\n")
-    
+
     gamification = GamificationManager(project_path)
     stats = gamification.get_stats()
-    
+
     from rich.table import Table
     table = Table(show_header=True, header_style="bold cyan")
     table.add_column("Stat", style="dim", width=20)
     table.add_column("Value", width=20)
-    
+
     table.add_row("💎 Integrity", f"{stats['integrity']:.0f}%")
     table.add_row("🧠 Insight", f"{stats['insight']:.0f}")
     table.add_row("⭐ Level", str(stats['level']))
     table.add_row("🏆 Achievements", str(stats['achievements_count']))
-    
+
     console.print(table)
-    
+
     # Show insight to next level
     insight_needed = gamification.get_insight_to_next_level()
     if insight_needed > 0:
@@ -891,32 +891,32 @@ def level(
 ):
     """Show level details and progress to next level."""
     project_path = resolve_project_path(path)
-    
+
     console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Level Details\n")
-    
+
     gamification = GamificationManager(project_path)
     current_level = gamification.level
     current_insight = gamification.insight
     next_level = current_level + 1
-    
+
     # Calculate insight for current and next level
     insight_for_current = (current_level - 1) ** 2 * 100 if current_level > 1 else 0
     insight_for_next = (next_level - 1) ** 2 * 100
     insight_needed = insight_for_next - current_insight
     progress = (current_insight - insight_for_current) / (insight_for_next - insight_for_current) if insight_for_next > insight_for_current else 1.0
-    
+
     from rich.progress import Progress, BarColumn, TextColumn
     from rich.console import Group
-    
+
     progress_bar = Progress(
         TextColumn("[progress.description]{task.description}"),
         BarColumn(),
         TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
     )
-    
+
     task = progress_bar.add_task(f"Level {current_level} → {next_level}", total=100)
     progress_bar.update(task, completed=int(progress * 100))
-    
+
     console.print(f"[bold]Current Level:[/bold] {current_level}")
     console.print(f"[bold]Current Insight:[/bold] {current_insight:.0f}")
     console.print(f"[bold]Insight for Level {next_level}:[/bold] {insight_for_next:.0f}")
@@ -931,12 +931,12 @@ def achievements(
 ):
     """List all achievements (locked/unlocked)."""
     project_path = resolve_project_path(path)
-    
+
     console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Achievements\n")
-    
+
     gamification = GamificationManager(project_path)
     achievement_status = gamification.get_achievement_status()
-    
+
     achievement_names = {
         "first_build": "🌱 First Build",
         "constructor": "🏗️ Constructor",
@@ -947,17 +947,17 @@ def achievements(
         "master_constructor": "🏆 Master Constructor",
         "epistemic_master": "🌙 Epistemic Master",
     }
-    
+
     from rich.table import Table
     table = Table(show_header=True, header_style="bold cyan")
     table.add_column("Achievement", width=30)
     table.add_column("Status", width=15)
-    
+
     for achievement_id, unlocked in achievement_status.items():
         name = achievement_names.get(achievement_id, achievement_id)
         status = "[green]✓ Unlocked[/green]" if unlocked else "[dim]🔒 Locked[/dim]"
         table.add_row(name, status)
-    
+
     console.print(table)
 
 

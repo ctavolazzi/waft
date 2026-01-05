@@ -16,9 +16,10 @@ See: https://github.com/Nubaeon/empirica
 
 import subprocess
 import json
+import shutil
+import os
 from pathlib import Path
 from typing import Optional, Dict, Any
-
 
 class EmpiricaManager:
     """Manages Empirica integration for epistemic tracking."""
@@ -31,6 +32,51 @@ class EmpiricaManager:
             project_path: Path to project root
         """
         self.project_path = project_path
+        self._empirica_cmd = self._find_empirica_command()
+
+    def _find_empirica_command(self) -> list:
+        """
+        Find the best empirica command to use.
+        Tries Python 3.12/3.11's empirica binary first (required for Empirica), then falls back to system command.
+
+        Returns:
+            List of command parts for subprocess.run (e.g., ["/path/to/python3.12/bin/empirica"] or ["empirica"])
+        """
+        # Try Python 3.12/3.11's empirica binary first (Empirica requires 3.11+)
+        for py_version in ["3.12", "3.11"]:
+            # Try common installation path for Python framework
+            empirica_path = f"/Library/Frameworks/Python.framework/Versions/{py_version}/bin/empirica"
+            if os.path.exists(empirica_path) and os.access(empirica_path, os.X_OK):
+                # Verify it works by checking version
+                try:
+                    result = subprocess.run(
+                        [empirica_path, "--version"],
+                        capture_output=True,
+                        text=True,
+                        timeout=5,
+                    )
+                    if result.returncode == 0 and ("3.12" in result.stdout or "3.11" in result.stdout):
+                        return [empirica_path]
+                except (subprocess.TimeoutExpired, FileNotFoundError, subprocess.CalledProcessError):
+                    continue
+
+        # Fallback: try direct empirica command (may use wrong Python version)
+        empirica_cmd = shutil.which("empirica")
+        if empirica_cmd:
+            # Check if it's the Python 3.12/3.11 version
+            try:
+                result = subprocess.run(
+                    [empirica_cmd, "--version"],
+                    capture_output=True,
+                    text=True,
+                    timeout=2,
+                )
+                if result.returncode == 0 and ("3.12" in result.stdout or "3.11" in result.stdout):
+                    return [empirica_cmd]
+            except (subprocess.TimeoutExpired, FileNotFoundError, subprocess.CalledProcessError):
+                pass
+
+        return ["empirica"]  # Will fail with FileNotFoundError, but consistent interface
 
     def is_initialized(self) -> bool:
         """
@@ -73,7 +119,7 @@ class EmpiricaManager:
         # Run empirica project-init
         try:
             result = subprocess.run(
-                ["empirica", "project-init"],
+                self._empirica_cmd + ["project-init"],
                 cwd=self.project_path,
                 capture_output=True,
                 text=True,
@@ -109,7 +155,7 @@ class EmpiricaManager:
 
         try:
             result = subprocess.run(
-                ["empirica", "session-create", "-"],
+                self._empirica_cmd + ["session-create", "-"],
                 cwd=self.project_path,
                 input=json.dumps(session_data),
                 capture_output=True,
@@ -146,7 +192,7 @@ class EmpiricaManager:
 
         try:
             subprocess.run(
-                ["empirica", "preflight-submit", "-"],
+                self._empirica_cmd + ["preflight-submit", "-"],
                 cwd=self.project_path,
                 input=json.dumps(preflight_data),
                 capture_output=True,
@@ -177,7 +223,7 @@ class EmpiricaManager:
 
         try:
             subprocess.run(
-                ["empirica", "postflight-submit", "-"],
+                self._empirica_cmd + ["postflight-submit", "-"],
                 cwd=self.project_path,
                 input=json.dumps(postflight_data),
                 capture_output=True,
@@ -199,7 +245,7 @@ class EmpiricaManager:
         """
         try:
             result = subprocess.run(
-                ["empirica", "project-bootstrap"],
+                self._empirica_cmd + ["project-bootstrap"],
                 cwd=self.project_path,
                 capture_output=True,
                 text=True,
@@ -222,7 +268,7 @@ class EmpiricaManager:
         """
         try:
             subprocess.run(
-                ["empirica", "finding-log", "--finding", finding, "--impact", str(impact)],
+                self._empirica_cmd + ["finding-log", "--finding", finding, "--impact", str(impact)],
                 cwd=self.project_path,
                 capture_output=True,
                 text=True,
@@ -244,7 +290,7 @@ class EmpiricaManager:
         """
         try:
             subprocess.run(
-                ["empirica", "unknown-log", "--unknown", unknown],
+                self._empirica_cmd + ["unknown-log", "--unknown", unknown],
                 cwd=self.project_path,
                 capture_output=True,
                 text=True,
@@ -269,7 +315,7 @@ class EmpiricaManager:
         try:
             if operation:
                 result = subprocess.run(
-                    ["empirica", "check-submit", "-"],
+                    self._empirica_cmd + ["check-submit", "-"],
                     cwd=self.project_path,
                     input=json.dumps(operation),
                     capture_output=True,
@@ -278,7 +324,7 @@ class EmpiricaManager:
                 )
             else:
                 result = subprocess.run(
-                    ["empirica", "check-submit", "-"],
+                    self._empirica_cmd + ["check-submit", "-"],
                     cwd=self.project_path,
                     capture_output=True,
                     text=True,
@@ -323,7 +369,7 @@ class EmpiricaManager:
 
         try:
             subprocess.run(
-                ["empirica", "goals-create", "-"],
+                self._empirica_cmd + ["goals-create", "-"],
                 cwd=self.project_path,
                 input=json.dumps(goal_data),
                 capture_output=True,
@@ -346,7 +392,7 @@ class EmpiricaManager:
             State assessment dict or None if failed
         """
         try:
-            cmd = ["empirica", "assess-state"]
+            cmd = self._empirica_cmd + ["assess-state"]
             if session_id:
                 cmd.extend(["--session-id", session_id])
             if include_history:

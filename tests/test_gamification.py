@@ -44,7 +44,7 @@ def test_unlock_achievement(temp_project_path):
     unlocked = manager.unlock_achievement("test_achievement", "Test Achievement")
     assert unlocked is True
     assert "test_achievement" in manager.achievements
-    
+
     # Try to unlock again
     unlocked_again = manager.unlock_achievement("test_achievement", "Test Achievement")
     assert unlocked_again is False

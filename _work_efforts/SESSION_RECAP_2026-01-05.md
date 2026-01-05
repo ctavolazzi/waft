@@ -1,7 +1,9 @@
-# Session Recap: Empirica Integration & Sanity Check
+# Session Recap: Empirica Integration & Sanity Check (Abbreviated)
+
 **Date**: 2026-01-05
 **Session Duration**: Full integration session
 **Starting Point**: User requested sanity check and Empirica integration
+**Note**: This is an abbreviated recap. For detailed step-by-step process, see `SESSION_RECAP_2026-01-04.md`
 
 ---
 

@@ -4,6 +4,95 @@ This log tracks development activities, decisions, and progress for the waft pro
 
 ---
 
+## 2026-01-05 - Documentation Review Recommendations
+
+**Work**: Address recommendations from DOCUMENTATION_REVIEW.md
+
+### Summary
+Addressed all immediate recommendations from the comprehensive documentation review. Created standalone sanity check document, clarified duplicate document purpose, and documented work in _pyrite structure.
+
+### Completed Tasks
+
+1. **Verified Method Count** ✅
+   - Checked `SESSION_RECAP_2026-01-05.md` for "12 methods" error
+   - Found: File already correctly states "11 methods" in all places
+   - No fix needed - review may have been incorrect
+
+2. **Clarified Document Purpose** ✅
+   - Added note to `SESSION_RECAP_2026-01-05.md` header
+   - Clarified it's an "Abbreviated" recap
+   - Referenced detailed version (`SESSION_RECAP_2026-01-04.md`)
+   - Both documents serve different purposes (detailed vs abbreviated)
+
+3. **Created Standalone Sanity Check Document** ✅
+   - Created `SANITY_CHECK_RESULTS.md` as standalone reference
+   - Includes all 8 test cases, results (6 passed, 2 failed)
+   - Key findings, impact assessment, and 3 recommendations
+   - Addresses recommendation from `PROJECT_STARTUP_PROCESS.md`
+
+4. **Documented in _pyrite** ✅
+   - Created `_pyrite/active/documentation_review_work.md`
+   - Follows waft's memory layer approach
+   - Documents all work completed
+
+### Files Changed
+- `_work_efforts/SANITY_CHECK_RESULTS.md` - NEW (standalone sanity check document)
+- `_work_efforts/SESSION_RECAP_2026-01-05.md` - UPDATED (added clarification note)
+- `_pyrite/active/documentation_review_work.md` - NEW (work documentation)
+
+### Key Learnings
+1. **Verification First**: Always verify issues before fixing - the "12 methods" error didn't exist
+2. **Document Purpose**: Clarifying document purpose prevents confusion about duplicates
+3. **Standalone Documents**: Creating standalone reference documents improves discoverability
+
+### Status
+✅ **Completed** - All immediate recommendations addressed
+
+---
+
+## 2026-01-05 - Empirica Installation Attempt
+
+**Work**: Install Empirica CLI and use it for epistemic tracking
+
+### Summary
+Attempted to install and use Empirica CLI for epistemic tracking of documentation review work. Installation succeeded, but CLI execution blocked by Python version incompatibility.
+
+### Completed Tasks
+
+1. **Installed Empirica** ✅
+   - Successfully installed `empirica-1.2.3` via pip
+   - All dependencies satisfied
+
+2. **Discovered Python Version Issue** ⚠️
+   - Empirica CLI requires Python 3.11+ (uses `UTC` from datetime)
+   - System has Python 3.10.0
+   - CLI fails with: `ImportError: cannot import name 'UTC' from 'datetime'`
+
+3. **Documented Issue** ✅
+   - Created `_pyrite/active/empirica_python_version_issue.md`
+   - Documented compatibility issue and solutions
+   - Updated documentation review work notes
+
+### Files Changed
+- `_pyrite/active/empirica_python_version_issue.md` - NEW (compatibility issue documentation)
+
+### Key Findings
+
+**Compatibility**:
+- ✅ Empirica package installs on Python 3.10
+- ❌ Empirica CLI requires Python 3.11+
+- ✅ EmpiricaManager code works on Python 3.10+ (CLI usage is optional)
+
+**Workaround**:
+- Work documented in _pyrite structure instead
+- EmpiricaManager gracefully handles CLI not being available
+- Can upgrade to Python 3.11+ later to enable CLI
+
+### Status
+⚠️ **Blocked** - Python version incompatibility prevents CLI usage. Package installed, code ready, CLI blocked.
+
+---
+
 ## 2026-01-04 - Empirica Integration & Sanity Check
 
 **Work**: Integrate Empirica as 4th pillar + Objective testing experiment

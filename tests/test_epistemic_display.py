@@ -21,7 +21,7 @@ def test_format_gate_result():
     """Test gate result formatting."""
     proceed = format_gate_result("PROCEED")
     assert "PROCEED" in str(proceed)
-    
+
     halt = format_gate_result("HALT")
     assert "HALT" in str(halt)
 
@@ -37,7 +37,7 @@ def test_format_epistemic_state():
             "uncertainty": 0.3,
         }
     }
-    
+
     panel = format_epistemic_state(state)
     assert panel is not None
 
@@ -50,7 +50,7 @@ def test_format_epistemic_summary():
             "uncertainty": 0.3,
         }
     }
-    
+
     summary = format_epistemic_summary(state)
     assert "🌑" in summary or "🌒" in summary or "🌓" in summary or "🌔" in summary or "🌕" in summary
 

@@ -26,10 +26,10 @@ from .epistemic_display import get_moon_phase
 def create_integrity_bar(integrity: float) -> Text:
     """
     Create an integrity bar with color coding.
-    
+
     Args:
         integrity: Integrity value (0.0-100.0)
-        
+
     Returns:
         Rich Text with integrity bar
     """
@@ -41,29 +41,29 @@ def create_integrity_bar(integrity: float) -> Text:
         color = "red"
     else:
         color = "bold red"
-    
+
     bar_length = 20
     filled = int((integrity / 100.0) * bar_length)
     bar = "█" * filled + "░" * (bar_length - filled)
-    
+
     return Text(f"[{color}]{bar}[/{color}] {integrity:.0f}%")
 
 
 def create_header(project_name: str, integrity: float, moon_phase: str) -> Panel:
     """
     Create the HUD header with project name, integrity bar, and moon phase.
-    
+
     Args:
         project_name: Name of the project
         integrity: Integrity value (0.0-100.0)
         moon_phase: Moon phase emoji
-        
+
     Returns:
         Rich Panel with header
     """
     integrity_bar = create_integrity_bar(integrity)
     header_text = f"[bold cyan]{project_name}[/bold cyan] | {integrity_bar} | {moon_phase}"
-    
+
     return Panel(
         Align.center(header_text),
         border_style="cyan",
@@ -74,20 +74,20 @@ def create_header(project_name: str, integrity: float, moon_phase: str) -> Panel
 def create_build_panel(project_path: Path) -> Panel:
     """
     Create the "Build" panel showing active work (Praxic Stream).
-    
+
     Shows files from _pyrite/active/ directory.
-    
+
     Args:
         project_path: Path to project root
-        
+
     Returns:
         Rich Panel with build information
     """
     memory = MemoryManager(project_path)
     active_files = memory.get_active_files()
-    
+
     content_lines = ["[bold]The Build[/bold] - Praxic Stream\n"]
-    
+
     if active_files:
         content_lines.append(f"[dim]Active files: {len(active_files)}[/dim]\n")
         for i, file_path in enumerate(active_files[:10], 1):  # Show first 10
@@ -97,9 +97,9 @@ def create_build_panel(project_path: Path) -> Panel:
             content_lines.append(f"  ... and {len(active_files) - 10} more")
     else:
         content_lines.append("[dim]No active files[/dim]")
-    
+
     content = "\n".join(content_lines)
-    
+
     return Panel(
         content,
         title="[bold cyan]The Build[/bold cyan]",
@@ -110,18 +110,18 @@ def create_build_panel(project_path: Path) -> Panel:
 def create_mind_panel(project_path: Path, empirica: EmpiricaManager) -> Panel:
     """
     Create the "Mind" panel showing epistemic state (Noetic State).
-    
+
     Shows Empirica vectors, known unknowns, and epistemic summary.
-    
+
     Args:
         project_path: Path to project root
         empirica: EmpiricaManager instance
-        
+
     Returns:
         Rich Panel with mind information
     """
     content_lines = ["[bold]The Mind[/bold] - Noetic State\n"]
-    
+
     if empirica.is_initialized():
         context = empirica.project_bootstrap()
         if context:
@@ -132,12 +132,12 @@ def create_mind_panel(project_path: Path, empirica: EmpiricaManager) -> Panel:
             uncertainty = vectors.get("uncertainty", 0.0)
             coverage = know * (1.0 - uncertainty) if know > 0 else 0.0
             moon_phase = get_moon_phase(coverage)
-            
+
             content_lines.append(f"{moon_phase} [bold]Epistemic State[/bold]")
             content_lines.append(f"  Know: {know:.0%}")
             content_lines.append(f"  Uncertainty: {uncertainty:.0%}")
             content_lines.append(f"  Coverage: {coverage:.0%}\n")
-            
+
             # Show unknowns
             unknowns = context.get("unknowns", [])
             if unknowns:
@@ -154,9 +154,9 @@ def create_mind_panel(project_path: Path, empirica: EmpiricaManager) -> Panel:
     else:
         content_lines.append("[yellow]Empirica not initialized[/yellow]")
         content_lines.append("[dim]Run 'waft init' to enable[/dim]")
-    
+
     content = "\n".join(content_lines)
-    
+
     return Panel(
         content,
         title="[bold cyan]The Mind[/bold cyan]",
@@ -167,19 +167,19 @@ def create_mind_panel(project_path: Path, empirica: EmpiricaManager) -> Panel:
 def render_hud(project_path: Path, integrity: float = 100.0) -> None:
     """
     Render the Epistemic HUD with split-screen layout.
-    
+
     Args:
         project_path: Path to project root
         integrity: Current integrity value (default: 100.0)
     """
     console = Console()
-    
+
     # Get project name
     from ..core.substrate import SubstrateManager
     substrate = SubstrateManager()
     project_info = substrate.get_project_info(project_path)
     project_name = project_info.get("name", "Unknown Project") if project_info else "Unknown Project"
-    
+
     # Get moon phase
     empirica = EmpiricaManager(project_path)
     moon_phase = "🌑"  # Default
@@ -193,30 +193,30 @@ def render_hud(project_path: Path, integrity: float = 100.0) -> None:
             uncertainty = vectors.get("uncertainty", 0.0)
             coverage = know * (1.0 - uncertainty) if know > 0 else 0.0
             moon_phase = get_moon_phase(coverage)
-    
+
     # Create layout
     layout = Layout()
-    
+
     # Header
     header = create_header(project_name, integrity, moon_phase)
     layout.split_column(
         Layout(header, size=3, name="header"),
         Layout(name="body"),
     )
-    
+
     # Split body into left and right
     layout["body"].split_row(
         Layout(name="build"),
         Layout(name="mind"),
     )
-    
+
     # Create panels
     build_panel = create_build_panel(project_path)
     mind_panel = create_mind_panel(project_path, empirica)
-    
+
     layout["build"].update(build_panel)
     layout["mind"].update(mind_panel)
-    
+
     # Render
     console.print(layout)
 
