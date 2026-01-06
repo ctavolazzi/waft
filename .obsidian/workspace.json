@@ -185,6 +185,8 @@
   },
   "active": "45c5780f64f875ee",
   "lastOpenFiles": [
+    "AI_NARRATIVE_GUIDE.md",
+    "src/waft/core/tavern_keeper/ai_helper.py",
     "src/waft/core/tavern_keeper/narrator.py",
     "src/waft/ui/__pycache__/dashboard.cpython-310.pyc",
     "src/waft/ui/__pycache__/__init__.cpython-310.pyc",
@@ -194,8 +196,6 @@
     "src/waft/ui",
     "src/waft/core/tavern_keeper/__pycache__/grammars.cpython-310.pyc",
     "src/waft/core/tavern_keeper/__pycache__/keeper.cpython-310.pyc",
-    "src/waft/core/tavern_keeper/__pycache__/__init__.cpython-310.pyc",
-    "src/waft/core/tavern_keeper/__pycache__",
     "SPEC-TAVERNKEEPER.md",
     "Gamification-Research.md",
     "_pyrite/active/2026-01-06_engineering_command_creation.md",
