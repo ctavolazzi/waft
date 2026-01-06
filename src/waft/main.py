@@ -21,7 +21,13 @@ from .core.substrate import SubstrateManager
 from .core.empirica import EmpiricaManager
 from .core.gamification import GamificationManager
 from .core.github import GitHubManager
-from .utils import resolve_project_path, validate_waft_project
+from .utils import (
+    resolve_project_path,
+    validate_waft_project,
+    is_inside_waft_project,
+    validate_project_name,
+    validate_package_name,
+)
 from .cli.epistemic_display import (
     get_moon_phase,
     format_epistemic_summary,
@@ -52,7 +58,36 @@ def new(
     3. Writes templates (Justfile, CI, agents.py)
     4. Sets up the project for high-reliability development
     """
-    target_path = Path(path) if path else Path.cwd()
+    # Validate project name
+    is_valid, error_msg = validate_project_name(name)
+    if not is_valid:
+        console.print(f"[bold red]❌ Invalid project name: {error_msg}[/bold red]")
+        raise typer.Exit(1)
+
+    # Resolve and validate target path
+    try:
+        target_path = Path(path) if path else Path.cwd()
+        target_path = target_path.resolve()
+
+        if not target_path.exists():
+            console.print(f"[bold red]❌ Target directory does not exist: {target_path}[/bold red]")
+            raise typer.Exit(1)
+
+        if not target_path.is_dir():
+            console.print(f"[bold red]❌ Target path is not a directory: {target_path}[/bold red]")
+            raise typer.Exit(1)
+    except Exception as e:
+        console.print(f"[bold red]❌ Invalid path: {e}[/bold red]")
+        raise typer.Exit(1)
+
+    # Check for nested project creation
+    is_inside, waft_project = is_inside_waft_project(target_path)
+    if is_inside and waft_project:
+        console.print(f"[bold red]❌ Cannot create project inside existing Waft project[/bold red]")
+        console.print(f"[dim]Target directory is inside: {waft_project}[/dim]")
+        console.print(f"[dim]→[/dim] Create the project outside the Waft project directory")
+        raise typer.Exit(1)
+
     project_path = target_path / name
 
     console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Creating project: [bold]{name}[/bold]\n")
@@ -253,7 +288,12 @@ def sync(
     """
     Sync project dependencies using uv sync.
     """
-    project_path = Path(path) if path else Path.cwd()
+    # Resolve and validate project path
+    try:
+        project_path = resolve_project_path(path)
+    except ValueError as e:
+        console.print(f"[bold red]❌ {e}[/bold red]")
+        raise typer.Exit(1)
 
     console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Syncing dependencies\n")
 
@@ -278,7 +318,18 @@ def add(
     """
     Add a dependency to the project using uv add.
     """
-    project_path = Path(path) if path else Path.cwd()
+    # Validate package name
+    is_valid, error_msg = validate_package_name(package)
+    if not is_valid:
+        console.print(f"[bold red]❌ Invalid package name: {error_msg}[/bold red]")
+        raise typer.Exit(1)
+
+    # Resolve and validate project path
+    try:
+        project_path = resolve_project_path(path)
+    except ValueError as e:
+        console.print(f"[bold red]❌ {e}[/bold red]")
+        raise typer.Exit(1)
 
     console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Adding dependency: [bold]{package}[/bold]\n")
 
@@ -313,13 +364,24 @@ def init(
     2. Writes templates (Justfile, CI, agents.py)
     3. Does NOT run uv init (assumes project already exists)
     """
-    project_path = Path(path) if path else Path.cwd()
+    # Resolve and validate project path
+    try:
+        project_path = resolve_project_path(path)
+    except ValueError as e:
+        console.print(f"[bold red]❌ {e}[/bold red]")
+        raise typer.Exit(1)
 
     console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Initializing Waft in existing project\n")
 
+    # Check if already initialized
+    if is_inside_waft_project(project_path)[0]:
+        console.print("[yellow]⚠️[/yellow]  This project already has Waft initialized (_pyrite directory exists).")
+        console.print("[dim]→[/dim] Re-initializing will update templates but preserve existing _pyrite content.")
+        # Continue - allow re-initialization
+
     # Check if pyproject.toml exists
     if not (project_path / "pyproject.toml").exists():
-        console.print("[yellow]⚠️[/yellow]  No pyproject.toml found. This command is for existing projects.")
+        console.print("[bold red]❌ No pyproject.toml found. This command is for existing Python projects.[/bold red]")
         console.print("[dim]→[/dim] Use 'waft new <name>' to create a new project instead.")
         raise typer.Exit(1)
 
@@ -401,21 +463,23 @@ def info(
 
     # Check pyproject.toml
     substrate = SubstrateManager()
-    project_info = substrate.get_project_info(project_path)
+    pyproject_path = project_path / "pyproject.toml"
 
-    if project_info:
-        project_name = project_info.get("name", "Unknown")
-        project_version = project_info.get("version", "Unknown")
-        table.add_row("Project Name", project_name)
-        table.add_row("Version", project_version)
-    else:
-        pyproject_path = project_path / "pyproject.toml"
-        if pyproject_path.exists():
+    if pyproject_path.exists():
+        project_info = substrate.get_project_info(project_path)
+        if project_info and "name" in project_info:
+            project_name = project_info.get("name", "Unknown")
+            project_version = project_info.get("version", "Unknown")
+            table.add_row("Project Name", project_name)
+            table.add_row("Version", project_version)
+        else:
+            # pyproject.toml exists but couldn't parse name/version
             table.add_row("Project Name", "[yellow]pyproject.toml exists (parse error)[/yellow]")
             table.add_row("Version", "[yellow]N/A[/yellow]")
-        else:
-            table.add_row("Project Name", "[red]Not a Python project[/red]")
-            table.add_row("Version", "[red]N/A[/red]")
+    else:
+        # No pyproject.toml
+        table.add_row("Project Name", "[red]Not a Python project[/red]")
+        table.add_row("Version", "[red]N/A[/red]")
 
     # Check _pyrite
     memory = MemoryManager(project_path)
