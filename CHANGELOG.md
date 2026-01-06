@@ -49,6 +49,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `waft info` - Show project information with epistemic state
 - `waft serve` - Web dashboard for project visualization
 
+#### Testing Infrastructure
+- Comprehensive test suite with pytest
+- Test fixtures for various project scenarios (valid/invalid pyproject.toml, with/without _pyrite)
+- End-to-end tests for all core commands
+- Unit tests for MemoryManager and SubstrateManager
+
 ### Changed
 - Enhanced CLI with epistemic tracking integration
 - Improved error messages with actionable suggestions
@@ -58,7 +64,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Verification updates Integrity based on results
 
 ### Fixed
-- Fixed `waft info` duplicate Project Name bug
+- Fixed `waft info` duplicate Project Name bug - now shows only one "Project Name" row regardless of pyproject.toml parsing status
 
 ## [0.0.1] - 2026-01-05
 
@@ -77,4 +83,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - TemplateWriter for project scaffolding
 
 [0.0.1]: https://github.com/ctavolazzi/waft/releases/tag/v0.0.1
+
 
