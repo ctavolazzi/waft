@@ -271,27 +271,31 @@ TavernKeeper transforms the `waft` CLI into a "Living Repository" by implementin
 
 ### ✅ Completed
 
-1. Feature branch created
-2. Dependencies added to pyproject.toml
-3. TavernKeeper core class structure
-4. Character system (ability scores, HP calculation, proficiency bonus)
-5. Dice rolling system (d20 integration with fallback)
-6. Basic narrative generation (with AI review workflow)
-7. Grammar files created
-8. SPEC document created
+1. ✅ Feature branch created
+2. ✅ Dependencies added to pyproject.toml
+3. ✅ TavernKeeper core class structure
+4. ✅ Character system (ability scores, HP calculation, proficiency bonus)
+5. ✅ Dice rolling system (d20 integration with fallback)
+6. ✅ Narrative generation with placeholder replacement
+7. ✅ Grammar files created
+8. ✅ SPEC document created
+9. ✅ Status effects system (buffs/debuffs with application/removal)
+10. ✅ CLI command: `waft character` (full character sheet)
+11. ✅ Command hooks integrated (all 10 major commands)
+12. ✅ Git merge driver (semantic JSON merging)
+13. ✅ Data migration from gamification.json
+14. ✅ Comprehensive test suite (15 tests, all passing)
+15. ✅ Adventure journal logging
 
 ### 🚧 In Progress
 
-1. Tracery integration for narrative generation
-2. Command hook integration
+1. Tracery library integration (has fallback working)
+2. Rich dashboard UI (Red October theme)
 
 ### ⏳ Pending
 
-1. Status effects system
-2. CLI commands (character, journal, quests)
-3. Git merge driver
-4. Rich dashboard UI
-5. Comprehensive testing
+1. Dashboard UI implementation
+2. Additional polish and refinement
 
 ---
 
