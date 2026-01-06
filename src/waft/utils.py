@@ -18,8 +18,119 @@ def resolve_project_path(path: Optional[str] = None) -> Path:
 
     Returns:
         Resolved Path object
+
+    Raises:
+        ValueError: If path doesn't exist or is not a directory
     """
-    return Path(path) if path else Path.cwd()
+    resolved = Path(path) if path else Path.cwd()
+
+    # Validate path exists
+    if not resolved.exists():
+        raise ValueError(f"Path does not exist: {resolved}")
+
+    # Validate path is a directory
+    if not resolved.is_dir():
+        raise ValueError(f"Path is not a directory: {resolved}")
+
+    return resolved
+
+
+def is_waft_project(path: Path) -> bool:
+    """
+    Check if a path is a Waft project (has _pyrite directory).
+
+    Args:
+        path: Path to check
+
+    Returns:
+        True if path is a Waft project, False otherwise
+    """
+    if not path.exists() or not path.is_dir():
+        return False
+    return (path / "_pyrite").exists()
+
+
+def is_inside_waft_project(path: Path) -> tuple[bool, Optional[Path]]:
+    """
+    Check if a path is inside a Waft project.
+
+    Args:
+        path: Path to check
+
+    Returns:
+        Tuple of (is_inside, waft_project_path)
+        - is_inside: True if path is inside a Waft project
+        - waft_project_path: Path to the Waft project root, or None
+    """
+    current = path.resolve()
+
+    # Walk up the directory tree looking for _pyrite
+    for parent in [current] + list(current.parents):
+        if is_waft_project(parent):
+            return True, parent
+
+    return False, None
+
+
+def validate_project_name(name: str) -> tuple[bool, Optional[str]]:
+    """
+    Validate a project name.
+
+    Args:
+        name: Project name to validate
+
+    Returns:
+        Tuple of (is_valid, error_message)
+        - is_valid: True if name is valid
+        - error_message: None if valid, error description if invalid
+    """
+    if not name:
+        return False, "Project name cannot be empty"
+
+    if len(name) > 100:
+        return False, "Project name is too long (max 100 characters)"
+
+    # Check for valid Python identifier (allowing hyphens and underscores)
+    import re
+    if not re.match(r'^[a-zA-Z_][a-zA-Z0-9_-]*$', name):
+        return False, "Project name must be a valid identifier (letters, numbers, hyphens, underscores only, starting with letter or underscore)"
+
+    # Reserved names
+    reserved = ['con', 'prn', 'aux', 'nul', 'com1', 'com2', 'com3', 'com4', 'com5', 'com6', 'com7', 'com8', 'com9', 'lpt1', 'lpt2', 'lpt3', 'lpt4', 'lpt5', 'lpt6', 'lpt7', 'lpt8', 'lpt9']
+    if name.lower() in reserved:
+        return False, f"Project name '{name}' is reserved"
+
+    return True, None
+
+
+def validate_package_name(package: str) -> tuple[bool, Optional[str]]:
+    """
+    Validate a package name for dependency addition.
+
+    Args:
+        package: Package name (may include version specifier)
+
+    Returns:
+        Tuple of (is_valid, error_message)
+        - is_valid: True if package name is valid
+        - error_message: None if valid, error description if invalid
+    """
+    if not package:
+        return False, "Package name cannot be empty"
+
+    # Extract package name (before version specifiers)
+    import re
+    match = re.match(r'^([a-zA-Z0-9_-]+(?:\[[^\]]+\])?)', package)
+    if not match:
+        return False, "Invalid package name format"
+
+    package_name = match.group(1)
+
+    # Basic validation
+    if len(package_name) > 200:
+        return False, "Package name is too long"
+
+    return True, None
 
 
 def validate_waft_project(project_path: Path) -> tuple[bool, Optional[str]]:
