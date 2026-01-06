@@ -632,6 +632,11 @@ class TavernKeeper:
             "status_effects": self._data.get("status_effects", []) if not self.db else self.db.table("status_effects").all(),
         }
 
+    def get_narrator(self):
+        """Get a Narrator instance for this TavernKeeper."""
+        from .narrator import Narrator
+        return Narrator(self)
+
     def process_command_hook(self, command: str, success: bool, context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """
         Process a command hook - roll dice, generate narrative, award rewards.

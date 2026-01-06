@@ -21,7 +21,7 @@ from .core.substrate import SubstrateManager
 from .core.empirica import EmpiricaManager
 from .core.gamification import GamificationManager
 from .core.github import GitHubManager
-from .core.tavern_keeper import TavernKeeper
+from .core.tavern_keeper import TavernKeeper, Narrator
 from .utils import (
     resolve_project_path,
     validate_waft_project,
@@ -983,7 +983,7 @@ def goal_create(
     if success:
         console.print(f"[green]✅[/green] Goal created: [bold]{objective}[/bold]")
         console.print(f"[dim]Session: {session_id}[/dim]")
-        
+
         # Create quest from goal
         try:
             tavern = TavernKeeper(project_path)
@@ -1004,7 +1004,7 @@ def goal_create(
             console.print(f"[dim]✨ Quest created: {objective}[/dim]")
         except Exception:
             pass  # Silently fail if quest creation doesn't work
-        
+
         _process_tavern_hook(project_path, "goal_create", True, {"objective": objective})
     else:
         console.print("[bold red]❌ Failed to create goal[/bold red]")
@@ -1238,32 +1238,32 @@ def journal(
 
     try:
         tavern = TavernKeeper(project_path)
-        
+
         # Get journal entries
         if tavern.db:
             journal_entries = tavern.db.table("adventure_journal").all()
         else:
             journal_entries = tavern._data.get("adventure_journal", [])
-        
+
         # Get last N entries
         recent_entries = journal_entries[-limit:] if len(journal_entries) > limit else journal_entries
         recent_entries.reverse()  # Show newest first
-        
+
         console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Adventure Journal\n")
-        
+
         if not recent_entries:
             console.print("[dim]No entries in the chronicle yet. Run some commands to generate adventures![/dim]")
             return
-        
+
         from rich.table import Table
-        
+
         journal_table = Table(show_header=True, header_style="bold cyan")
         journal_table.add_column("Time", width=10, style="dim")
         journal_table.add_column("Event", width=12)
         journal_table.add_column("Roll", width=15, justify="center")
         journal_table.add_column("Narrative", ratio=2)
         journal_table.add_column("Reward", width=20, justify="right")
-        
+
         for entry in recent_entries:
             timestamp = entry.get("timestamp", "")
             event = entry.get("event", "unknown")
@@ -1272,13 +1272,13 @@ def journal(
             result = entry.get("result", 0)
             classification = entry.get("classification", "")
             rewards = entry.get("rewards", {})
-            
+
             # Format timestamp
             try:
                 time_part = timestamp.split("T")[1].split(".")[0] if "T" in timestamp else timestamp[:8]
             except:
                 time_part = timestamp[:8] if len(timestamp) >= 8 else timestamp
-            
+
             # Format roll display
             roll_display = f"{dice_result} = {result}"
             if classification:
@@ -1288,7 +1288,7 @@ def journal(
                     roll_display = f"[bold red]{roll_display} 💥[/]"
                 elif classification == "superior":
                     roll_display = f"[gold1]{roll_display} ▲[/]"
-            
+
             # Format reward
             insight = rewards.get("insight", 0)
             credits = rewards.get("credits", 0)
@@ -1299,7 +1299,7 @@ def journal(
                 reward_str += f"+{credits} Credits"
             if not reward_str:
                 reward_str = "[dim]-[/]"
-            
+
             journal_table.add_row(
                 time_part,
                 event,
@@ -1307,10 +1307,10 @@ def journal(
                 narrative,
                 reward_str,
             )
-        
+
         console.print(journal_table)
         console.print(f"\n[dim]Showing {len(recent_entries)} of {len(journal_entries)} entries[/dim]")
-        
+
     except Exception as e:
         console.print(f"[bold red]❌ Error loading journal: {e}[/bold red]")
         raise typer.Exit(1)
@@ -1329,17 +1329,17 @@ def roll(
 
     try:
         tavern = TavernKeeper(project_path)
-        
+
         console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Dice Roll\n")
-        
+
         result = tavern.roll_check(ability, dc, advantage=advantage, disadvantage=disadvantage)
-        
+
         roll = result["roll"]
         modifier = result["modifier"]
         total = result["total"]
         success = result["success"]
         classification = result["classification"]
-        
+
         # Display roll
         console.print(f"[bold]Ability:[/bold] {ability.title()}")
         console.print(f"[bold]DC:[/bold] {dc}")
@@ -1347,9 +1347,9 @@ def roll(
             console.print(f"[dim]Rolling with advantage[/dim]")
         elif disadvantage:
             console.print(f"[dim]Rolling with disadvantage[/dim]")
-        
+
         console.print()
-        
+
         # Show dice result with color
         if classification == "critical_success":
             console.print(f"[bold gold1]🎲 Roll: {roll} + {modifier} = {total}[/bold gold1]")
@@ -1365,14 +1365,14 @@ def roll(
             console.print(f"[green]✓ Optimal Result[/green]")
         else:
             console.print(f"🎲 Roll: {roll} + {modifier} = {total}")
-        
+
         console.print()
-        
+
         if success:
             console.print(f"[bold green]✅ Success! (Total {total} >= DC {dc})[/bold green]")
         else:
             console.print(f"[bold red]❌ Failure (Total {total} < DC {dc})[/bold red]")
-        
+
     except Exception as e:
         console.print(f"[bold red]❌ Error rolling dice: {e}[/bold red]")
         raise typer.Exit(1)
@@ -1426,6 +1426,55 @@ def quests(
         
     except Exception as e:
         console.print(f"[bold red]❌ Error loading quests: {e}[/bold red]")
+        raise typer.Exit(1)
+
+
+@app.command()
+def note(
+    text: str = typer.Argument(..., help="Note to add to the chronicle"),
+    category: str = typer.Option("general", "--category", "-c", help="Category (bug, feature, refactor, insight, etc.)"),
+    source: str = typer.Option("human", "--source", "-s", help="Source (human, ai, system)"),
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+):
+    """Add a narrative note to the chronicle - Share your thoughts!"""
+    project_path = resolve_project_path(path)
+
+    try:
+        tavern = TavernKeeper(project_path)
+        narrator = Narrator(tavern)
+        
+        narrator.note(text, category=category, tags=[source])
+        
+        console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Note Added\n")
+        console.print(f"[green]✅[/green] Note logged: [bold]{text}[/bold]")
+        console.print(f"[dim]Category: {category} | Source: {source}[/dim]")
+        
+    except Exception as e:
+        console.print(f"[bold red]❌ Error adding note: {e}[/bold red]")
+        raise typer.Exit(1)
+
+
+@app.command()
+def observe(
+    observation: str = typer.Argument(..., help="Observation to log"),
+    mood: str = typer.Option("neutral", "--mood", "-m", help="Mood (neutral, surprised, delighted, concerned, amazed)"),
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+):
+    """Log an observation - "woah that's kinda sick" or "weird that's not right"."""
+    project_path = resolve_project_path(path)
+
+    try:
+        tavern = TavernKeeper(project_path)
+        narrator = Narrator(tavern)
+        
+        narrator.observe(observation, mood=mood, source="human")
+        
+        console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Observation Logged\n")
+        console.print(f"[green]✅[/green] Observation: [bold]{observation}[/bold]")
+        console.print(f"[dim]Mood: {mood}[/dim]")
+        
+    except Exception as e:
+        console.print(f"[bold red]❌ Error logging observation: {e}[/bold red]")
         raise typer.Exit(1)
 
 

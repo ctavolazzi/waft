@@ -208,22 +208,38 @@ class RedOctoberDashboard:
                 narrative = entry.get("narrative", "")
                 outcome = entry.get("outcome", "")
                 classification = entry.get("classification", "")
-
+                entry_type = entry.get("type", "event")
+                mood = entry.get("mood", "")
+                source = entry.get("source", "")
+                
                 # Format timestamp (extract time part)
                 try:
                     time_part = timestamp.split("T")[1].split(".")[0] if "T" in timestamp else timestamp[:8]
                 except:
                     time_part = timestamp[:8] if len(timestamp) >= 8 else timestamp
-
-                # Determine row style based on outcome/classification
+                
+                # Determine row style based on outcome/classification/type
                 if classification == "critical_success" or outcome == "critical_success":
                     row_style = f"bold {VOID_BLACK} on {GLORY_GOLD}"
                 elif classification == "critical_failure" or outcome == "critical_failure":
                     row_style = f"bold {PAPER_CREAM} on {CRISIS_RED}"
+                elif entry_type == "narrative":
+                    # Narrative entries get special styling
+                    if mood == "delighted" or entry.get("event") == "celebration":
+                        row_style = f"{GLORY_GOLD}"
+                    elif mood == "concerned" or entry.get("event") == "question":
+                        row_style = f"{CRISIS_RED}"
+                    else:
+                        row_style = PAPER_CREAM
                 else:
                     row_style = PAPER_CREAM
-
-                log_text = f"[{CONCRETE_GREY}]{time_part}[/] │ {narrative}"
+                
+                # Add source indicator for narrative entries
+                prefix = ""
+                if entry_type == "narrative" and source:
+                    prefix = f"[{source}] " if source != "human" else ""
+                
+                log_text = f"[{CONCRETE_GREY}]{time_part}[/] │ {prefix}{narrative}"
                 log_table.add_row(Text(log_text, style=row_style))
         else:
             log_table.add_row(Text("[dim]No entries in the chronicle yet...[/]", style=CONCRETE_GREY))

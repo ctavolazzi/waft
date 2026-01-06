@@ -10,6 +10,6 @@ with Constructivist Sci-Fi theme. It uses:
 """
 
 from .keeper import TavernKeeper
+from .narrator import Narrator
 
-__all__ = ["TavernKeeper"]
-
+__all__ = ["TavernKeeper", "Narrator"]
