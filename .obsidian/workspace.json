@@ -185,6 +185,8 @@
   },
   "active": "45c5780f64f875ee",
   "lastOpenFiles": [
+    "src/waft/core/tavern_keeper/__pycache__/ai_helper.cpython-310.pyc",
+    "src/waft/core/tavern_keeper/__pycache__/narrator.cpython-310.pyc",
     "AI_NARRATIVE_GUIDE.md",
     "src/waft/core/tavern_keeper/ai_helper.py",
     "src/waft/core/tavern_keeper/narrator.py",
@@ -195,7 +197,6 @@
     "src/waft/ui/__init__.py",
     "src/waft/ui",
     "src/waft/core/tavern_keeper/__pycache__/grammars.cpython-310.pyc",
-    "src/waft/core/tavern_keeper/__pycache__/keeper.cpython-310.pyc",
     "SPEC-TAVERNKEEPER.md",
     "Gamification-Research.md",
     "_pyrite/active/2026-01-06_engineering_command_creation.md",
@@ -219,7 +220,6 @@
     "_work_efforts/COMPLETE_CONVERSATION_HISTORY.md",
     "WAFT_SYSTEM_INTEGRATION.md",
     "_work_efforts/CHECKPOINT_2026-01-05_EMPIRICA_CLI_GAMIFICATION.md",
-    "_pyrite/active/empirica_python_version_issue.md",
-    "_pyrite/active/documentation_review_work.md"
+    "_pyrite/active/empirica_python_version_issue.md"
   ]
 }

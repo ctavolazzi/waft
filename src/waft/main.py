@@ -1228,12 +1228,12 @@ def achievements(
     console.print(table)
 
 
-@app.command()
-def journal(
+@app.command(name="chronicle")
+def chronicle(
     path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     limit: int = typer.Option(20, "--limit", "-n", help="Number of entries to show"),
 ):
-    """View the Adventure Journal - Chronicle of your journey."""
+    """View the Adventure Chronicle - Your journey's story."""
     project_path = resolve_project_path(path)
 
     try:
