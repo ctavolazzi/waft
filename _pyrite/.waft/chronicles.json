@@ -1,0 +1,321 @@
+{
+  "character": {
+    "name": "",
+    "level": 1,
+    "integrity": 100.0,
+    "insight": 0.0,
+    "credits": 0,
+    "ability_scores": {
+      "strength": 8,
+      "dexterity": 8,
+      "constitution": 8,
+      "intelligence": 8,
+      "wisdom": 8,
+      "charisma": 8
+    },
+    "proficiency_bonus": 2,
+    "hit_dice": "d8",
+    "max_hp": 10,
+    "current_hp": 10,
+    "created_at": "2026-01-06T01:32:20.665539"
+  },
+  "status_effects": [],
+  "adventure_journal": [
+    {
+      "timestamp": "2026-01-06T00:13:34.681830",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:16:24.825414",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:18:09.060620",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:25:31.692050",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:26:57.321827",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:29:25.265058",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:31:08.140897",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:31:39.558319",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:33:02.114625",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:33:33.014330",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:38:23.015211",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:40:30.696612",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:13:34.681830",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:16:24.825414",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:18:09.060620",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:25:31.692050",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:26:57.321827",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:29:25.265058",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:31:08.140897",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:31:39.558319",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:33:02.114625",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:33:33.014330",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:38:23.015211",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:40:30.696612",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:13:34.681830",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:16:24.825414",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:18:09.060620",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:25:31.692050",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:26:57.321827",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:29:25.265058",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:31:08.140897",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:31:39.558319",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:33:02.114625",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:33:33.014330",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:38:23.015211",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:40:30.696612",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:13:34.681830",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:16:24.825414",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:18:09.060620",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:25:31.692050",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:26:57.321827",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:29:25.265058",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:31:08.140897",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:31:39.558319",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:33:02.114625",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:33:33.014330",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:38:23.015211",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:40:30.696612",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    }
+  ],
+  "quests": [],
+  "achievements": [],
+  "tavern_keeper_state": {
+    "last_narrative": "",
+    "mood": "optimistic",
+    "wisdom_shared": 0
+  },
+  "updated_at": "2026-01-06T01:34:07.034835"
+}

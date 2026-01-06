@@ -194,6 +194,13 @@ class TavernKeeper:
         level = int(math.sqrt(insight / 100)) + 1
         return max(1, level)
 
+    def _calculate_insight_for_level(self, level: int) -> float:
+        """Calculate insight required for a given level."""
+        if level <= 1:
+            return 0.0
+        # Reverse of level calculation: Insight = (Level - 1)^2 * 100
+        return ((level - 1) ** 2) * 100
+
     def _save_json_data(self) -> None:
         """Save data to JSON file (fallback)."""
         self._data["updated_at"] = datetime.now().isoformat()

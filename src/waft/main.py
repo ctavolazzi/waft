@@ -983,6 +983,28 @@ def goal_create(
     if success:
         console.print(f"[green]✅[/green] Goal created: [bold]{objective}[/bold]")
         console.print(f"[dim]Session: {session_id}[/dim]")
+        
+        # Create quest from goal
+        try:
+            tavern = TavernKeeper(project_path)
+            quest = {
+                "id": f"quest_{session_id}_{len(tavern._data.get('quests', []))}",
+                "name": objective,
+                "status": "active",
+                "reward": "500 Insight",
+                "progress": "0%",
+                "created_at": datetime.now().isoformat(),
+                "goal_id": session_id,
+            }
+            if tavern.db:
+                tavern.db.table("quests").insert(quest)
+            else:
+                tavern._data.setdefault("quests", []).append(quest)
+                tavern._save_json_data()
+            console.print(f"[dim]✨ Quest created: {objective}[/dim]")
+        except Exception:
+            pass  # Silently fail if quest creation doesn't work
+        
         _process_tavern_hook(project_path, "goal_create", True, {"objective": objective})
     else:
         console.print("[bold red]❌ Failed to create goal[/bold red]")
@@ -1204,6 +1226,207 @@ def achievements(
         table.add_row(name, status)
 
     console.print(table)
+
+
+@app.command()
+def journal(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    limit: int = typer.Option(20, "--limit", "-n", help="Number of entries to show"),
+):
+    """View the Adventure Journal - Chronicle of your journey."""
+    project_path = resolve_project_path(path)
+
+    try:
+        tavern = TavernKeeper(project_path)
+        
+        # Get journal entries
+        if tavern.db:
+            journal_entries = tavern.db.table("adventure_journal").all()
+        else:
+            journal_entries = tavern._data.get("adventure_journal", [])
+        
+        # Get last N entries
+        recent_entries = journal_entries[-limit:] if len(journal_entries) > limit else journal_entries
+        recent_entries.reverse()  # Show newest first
+        
+        console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Adventure Journal\n")
+        
+        if not recent_entries:
+            console.print("[dim]No entries in the chronicle yet. Run some commands to generate adventures![/dim]")
+            return
+        
+        from rich.table import Table
+        
+        journal_table = Table(show_header=True, header_style="bold cyan")
+        journal_table.add_column("Time", width=10, style="dim")
+        journal_table.add_column("Event", width=12)
+        journal_table.add_column("Roll", width=15, justify="center")
+        journal_table.add_column("Narrative", ratio=2)
+        journal_table.add_column("Reward", width=20, justify="right")
+        
+        for entry in recent_entries:
+            timestamp = entry.get("timestamp", "")
+            event = entry.get("event", "unknown")
+            narrative = entry.get("narrative", "")
+            dice_result = entry.get("dice_roll", "")
+            result = entry.get("result", 0)
+            classification = entry.get("classification", "")
+            rewards = entry.get("rewards", {})
+            
+            # Format timestamp
+            try:
+                time_part = timestamp.split("T")[1].split(".")[0] if "T" in timestamp else timestamp[:8]
+            except:
+                time_part = timestamp[:8] if len(timestamp) >= 8 else timestamp
+            
+            # Format roll display
+            roll_display = f"{dice_result} = {result}"
+            if classification:
+                if classification == "critical_success":
+                    roll_display = f"[bold gold1]{roll_display} ⭐[/]"
+                elif classification == "critical_failure":
+                    roll_display = f"[bold red]{roll_display} 💥[/]"
+                elif classification == "superior":
+                    roll_display = f"[gold1]{roll_display} ▲[/]"
+            
+            # Format reward
+            insight = rewards.get("insight", 0)
+            credits = rewards.get("credits", 0)
+            reward_str = ""
+            if insight > 0:
+                reward_str += f"+{insight} Insight "
+            if credits > 0:
+                reward_str += f"+{credits} Credits"
+            if not reward_str:
+                reward_str = "[dim]-[/]"
+            
+            journal_table.add_row(
+                time_part,
+                event,
+                roll_display,
+                narrative,
+                reward_str,
+            )
+        
+        console.print(journal_table)
+        console.print(f"\n[dim]Showing {len(recent_entries)} of {len(journal_entries)} entries[/dim]")
+        
+    except Exception as e:
+        console.print(f"[bold red]❌ Error loading journal: {e}[/bold red]")
+        raise typer.Exit(1)
+
+
+@app.command()
+def roll(
+    ability: str = typer.Argument(..., help="Ability to use (strength, dexterity, etc.)"),
+    dc: int = typer.Option(10, "--dc", help="Difficulty Class (target number)"),
+    advantage: bool = typer.Option(False, "--advantage", "-a", help="Roll with advantage"),
+    disadvantage: bool = typer.Option(False, "--disadvantage", "-d", help="Roll with disadvantage"),
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+):
+    """Roll a d20 check manually - Test your luck!"""
+    project_path = resolve_project_path(path)
+
+    try:
+        tavern = TavernKeeper(project_path)
+        
+        console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Dice Roll\n")
+        
+        result = tavern.roll_check(ability, dc, advantage=advantage, disadvantage=disadvantage)
+        
+        roll = result["roll"]
+        modifier = result["modifier"]
+        total = result["total"]
+        success = result["success"]
+        classification = result["classification"]
+        
+        # Display roll
+        console.print(f"[bold]Ability:[/bold] {ability.title()}")
+        console.print(f"[bold]DC:[/bold] {dc}")
+        if advantage:
+            console.print(f"[dim]Rolling with advantage[/dim]")
+        elif disadvantage:
+            console.print(f"[dim]Rolling with disadvantage[/dim]")
+        
+        console.print()
+        
+        # Show dice result with color
+        if classification == "critical_success":
+            console.print(f"[bold gold1]🎲 Roll: {roll} + {modifier} = {total}[/bold gold1]")
+            console.print(f"[bold gold1]⭐ CRITICAL SUCCESS![/bold gold1]")
+        elif classification == "critical_failure":
+            console.print(f"[bold red]🎲 Roll: {roll} + {modifier} = {total}[/bold red]")
+            console.print(f"[bold red]💥 CRITICAL FAILURE![/bold red]")
+        elif classification == "superior":
+            console.print(f"[gold1]🎲 Roll: {roll} + {modifier} = {total}[/gold1]")
+            console.print(f"[gold1]▲ Superior Result[/gold1]")
+        elif classification == "optimal":
+            console.print(f"[green]🎲 Roll: {roll} + {modifier} = {total}[/green]")
+            console.print(f"[green]✓ Optimal Result[/green]")
+        else:
+            console.print(f"🎲 Roll: {roll} + {modifier} = {total}")
+        
+        console.print()
+        
+        if success:
+            console.print(f"[bold green]✅ Success! (Total {total} >= DC {dc})[/bold green]")
+        else:
+            console.print(f"[bold red]❌ Failure (Total {total} < DC {dc})[/bold red]")
+        
+    except Exception as e:
+        console.print(f"[bold red]❌ Error rolling dice: {e}[/bold red]")
+        raise typer.Exit(1)
+
+
+@app.command()
+def quests(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+):
+    """View active and completed quests."""
+    project_path = resolve_project_path(path)
+
+    try:
+        tavern = TavernKeeper(project_path)
+        
+        # Get quests
+        if tavern.db:
+            quests = tavern.db.table("quests").all()
+        else:
+            quests = tavern._data.get("quests", [])
+        
+        console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Quests\n")
+        
+        if not quests:
+            console.print("[dim]No quests available. Create goals with 'waft goal create' to generate quests![/dim]")
+            return
+        
+        from rich.table import Table
+        
+        quest_table = Table(show_header=True, header_style="bold cyan")
+        quest_table.add_column("Quest", width=30)
+        quest_table.add_column("Status", width=12)
+        quest_table.add_column("Reward", width=15)
+        quest_table.add_column("Progress", width=20)
+        
+        for quest in quests:
+            name = quest.get("name", "Unknown Quest")
+            status = quest.get("status", "active")
+            reward = quest.get("reward", "N/A")
+            progress = quest.get("progress", "0%")
+            
+            status_color = "green" if status == "completed" else "yellow" if status == "active" else "dim"
+            quest_table.add_row(
+                name,
+                f"[{status_color}]{status.title()}[/{status_color}]",
+                str(reward),
+                progress,
+            )
+        
+        console.print(quest_table)
+        
+    except Exception as e:
+        console.print(f"[bold red]❌ Error loading quests: {e}[/bold red]")
+        raise typer.Exit(1)
 
 
 def main():
