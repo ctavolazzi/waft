@@ -339,18 +339,26 @@ class RedOctoberDashboard:
         except:
             pass
 
-        # Active Operation
-        op_text = Text.assemble(
-            "OP: ", (f"[bold {GLORY_GOLD}]{git_branch}[/]", ""),
-        )
-
-        # Resource Fund
+        # Active Operation with color
+        op_text = Text()
+        op_text.append(f"[{CYAN_ENERGY}]⚡[/] OP: ", style=PAPER_CREAM)
+        branch_color = GREEN_SUCCESS if "main" in git_branch or "master" in git_branch else GLORY_GOLD
+        op_text.append(git_branch, style=f"bold {branch_color}")
+        
+        # Resource Fund with enhanced display
         credits_text = Text()
-        credits_text.append("CREDITS: ", style=PAPER_CREAM)
-        credits_text.append(f"¤ {credits}", style=GLORY_GOLD)
-
+        credits_color = GLORY_GOLD if credits >= 100 else CYAN_ENERGY if credits >= 50 else CONCRETE_GREY
+        credits_text.append(f"[{GLORY_GOLD}]¤[/] CREDITS: ", style=PAPER_CREAM)
+        credits_text.append(f"{credits}", style=f"bold {credits_color}")
+        
+        # Add Insight display
+        insight = character.get("insight", 0.0)
+        insight_text = Text()
+        insight_text.append(f"[{PURPLE_MAGIC}]🧠[/] INSIGHT: ", style=PAPER_CREAM)
+        insight_text.append(f"{insight:.0f}", style=f"bold {PURPLE_MAGIC}")
+        
         # Inventory (placeholder - would come from inventory system)
-        inventory_text = Text("[dim]No items[/]", style=CONCRETE_GREY)
+        inventory_text = Text(f"[{CONCRETE_GREY}]No items[/]", style=CONCRETE_GREY)
 
         # Combine content with enhanced layout
         content = Align.left(
