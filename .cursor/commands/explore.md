@@ -52,7 +52,10 @@ While `spin-up` gives you the current state and status, `explore` helps you unde
    - Check for unused dependencies
    - **Use**: `pyproject.toml` analysis, import tracing, `waft info`
    - **Log**: "Found X external dependencies, Y internal modules" via `waft finding log`
-   - **Use MCP**: `mcp_github_search_code` to find dependency usage patterns
+   - **Use MCP**: 
+- `mcp_github_search_code` to find dependency usage patterns
+- `mcp_github_get_file_contents` to read `pyproject.toml` from GitHub
+- `mcp_github_list_commits` to see dependency changes over time
 
 4. **Pattern Discovery**
    - Identify coding patterns and conventions
@@ -74,7 +77,10 @@ While `spin-up` gives you the current state and status, `explore` helps you unde
    - **Use**: `waft --help`, command exploration, entry point analysis
    - **Document**: Feature map in `_pyrite/active/`
    - **Log**: "Mapped X features, Y commands, Z extension points" via `waft finding log`
-   - **Use MCP**: `mcp_work-efforts_list_work_efforts` to see what's being worked on
+   - **Use MCP**: 
+- `mcp_work-efforts_list_work_efforts` to see what's being worked on
+- `mcp_github_list_issues` to check for related GitHub issues
+- `mcp_github_list_pull_requests` to see pending PRs
 
 6. **Documentation & Knowledge**
    - Read key documentation files
@@ -106,7 +112,10 @@ While `spin-up` gives you the current state and status, `explore` helps you unde
    - Understand plugin/extensibility points
    - Find configuration mechanisms
    - **Use**: Codebase search for "integration", "api", "plugin"
-   - **Use MCP**: `mcp_github_search_code` to find integration code
+   - **Use MCP**: 
+- `mcp_github_search_code` to find integration code
+- `mcp_github_list_commits` to see integration history
+- `mcp_github_get_file_contents` to read integration files
    - **Document**: Integration map in `_pyrite/active/`
    - **Log**: "Found X integrations, Y API boundaries" via `waft finding log`
 
@@ -200,10 +209,20 @@ memory = MemoryManager(project_path)
 - `mcp_docs-maintainer_search_docs` - Find relevant documentation
 - `mcp_docs-maintainer_check_health` - Understand doc state
 
-**GitHub MCP:**
-- `mcp_github_search_code` - Find code patterns
-- `mcp_github_get_file_contents` - Read key files
-- `mcp_github_list_commits` - Understand evolution
+**GitHub MCP (CRITICAL - Use Extensively):**
+- `mcp_github_get_me` - Get authenticated user info
+- `mcp_github_list_commits` - Review recent commits, understand evolution
+- `mcp_github_list_issues` - Check open issues, understand priorities
+- `mcp_github_list_pull_requests` - Review open PRs, see pending work
+- `mcp_github_list_branches` - Understand branch structure
+- `mcp_github_get_latest_release` - Check release history
+- `mcp_github_search_code` - Find code patterns, search across codebase
+- `mcp_github_get_file_contents` - Read key files from GitHub
+- `mcp_github_get_commit` - Get detailed commit information
+- `mcp_github_list_tags` - Check version tags
+- `mcp_github_search_repositories` - Find related repos
+- `mcp_github_search_issues` - Search issues by keyword
+- `mcp_github_search_pull_requests` - Search PRs by keyword
 
 **Memory MCP:**
 - `mcp_memory_search_nodes` - Find related knowledge
@@ -252,11 +271,17 @@ Use semantic search to understand:
    - **Document**: Data flow diagram
 
 5. **"Where are configuration and settings managed?"**
-   - **Use**: `mcp_filesystem_search_files` for config files
+   - **Use**: 
+- `mcp_filesystem_search_files` for config files
+- `mcp_github_search_code` to find config usage patterns
+- `mcp_github_get_file_contents` to read config files from GitHub
    - **Log finding**: "Config: X files, Y locations"
 
 6. **"How does error handling work across the codebase?"**
-   - **Use**: `mcp_github_search_code` for error handling patterns
+   - **Use**: 
+- `mcp_github_search_code` for error handling patterns
+- `mcp_github_list_commits` to see error handling evolution
+- `mcp_github_search_issues` to find error-related issues
    - **Log finding**: "Error handling: X pattern used in Y places"
 
 7. **"What patterns are used for logging and monitoring?"**
@@ -264,7 +289,10 @@ Use semantic search to understand:
    - **Log finding**: "Logging pattern: X"
 
 8. **"How are external dependencies integrated?"**
-   - **Use**: `mcp_github_search_code` for integration code
+   - **Use**: 
+- `mcp_github_search_code` for integration code
+- `mcp_github_list_commits` to see integration history
+- `mcp_github_get_file_contents` to read integration files
    - **Log finding**: "Integrations: X services, Y APIs"
 
 ## Output Format
@@ -360,7 +388,18 @@ As you explore, actively use:
 - [ ] **_pyrite**: Created exploration docs in `_pyrite/active/`
 - [ ] **MCP work-efforts**: Checked active work, searched related efforts
 - [ ] **MCP docs-maintainer**: Searched documentation, checked health
-- [ ] **MCP github**: Searched code, read files, reviewed commits
+- [ ] **MCP github** (CRITICAL - Use First): 
+  - [ ] Got user info (`get_me`) - Understand context
+  - [ ] Listed recent commits (understand evolution, last 10-20)
+  - [ ] Checked open issues (understand priorities, state=OPEN)
+  - [ ] Checked open PRs (see pending work, state=open)
+  - [ ] Listed branches (understand structure)
+  - [ ] Checked releases/tags (version history)
+  - [ ] Searched code (find patterns, use `repo:owner/repo` syntax)
+  - [ ] Read key files (get_file_contents for README, main files)
+  - [ ] Searched issues/PRs (find related work by keyword)
+  - [ ] Got commit details (for important commits)
+  - [ ] Searched repositories (find related projects)
 - [ ] **MCP memory**: Created entities/relations for discoveries
 - [ ] **MCP filesystem**: Explored structure, found files
 - [ ] **Waft commands**: Used `waft info`, `waft verify`, `waft stats`
