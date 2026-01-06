@@ -692,6 +692,15 @@ Use these questions in logical order to compound knowledge:
 23. "What are our next immediate steps? Do we even know?"
 24. "If we don't know... why don't we know?"
 
+### Development Workflow Questions
+25. "Am I using this project's own tools to develop it?" (dogfooding)
+26. "Am I updating work tickets incrementally as I work, or waiting until the end?"
+27. "Am I making frequent commits, or saving everything for one big commit?"
+28. "Am I using the project's validation/verification tools during development?"
+29. "Am I documenting work in the project's memory system as I go?"
+30. "Am I using epistemic tracking (Empirica, finding/unknown logging) if available?"
+31. "Am I using MCPs for work effort management during development?"
+
 ---
 
 ## Workflow Integration
@@ -737,6 +746,182 @@ Use these questions in logical order to compound knowledge:
 3. **Run Quality Checks** → Lint, test, validate
 4. **Update Documentation** → README, CHANGELOG, etc.
 5. **Generate Recap** → For future reference
+
+---
+
+## Using Project Tools During Development
+
+**Critical Principle**: Use the tools you're building/maintaining. If you're working on a project that has its own development tools, use them during development, not just at the end.
+
+### Questions to Ask Yourself
+
+1. **"Am I using the project's own tools to develop it?"**
+   - If the project has CLI commands, use them during development
+   - If the project has epistemic tracking, use it to track your work
+   - If the project has memory/documentation systems, use them as you work
+   - This is "dogfooding" - using your own product
+
+2. **"Am I updating work tickets incrementally?"**
+   - Update ticket status via MCP as you start work (`in_progress`)
+   - Update tickets as you complete tasks, not all at the end
+   - Add commit hashes to tickets when you commit
+   - Document findings and notes in tickets as you discover them
+
+3. **"Am I making frequent commits?"**
+   - Commit after each logical unit of work (not all at the end)
+   - Use meaningful commit messages with ticket references
+   - Commit after completing each ticket or significant milestone
+   - Small, focused commits are better than one large commit
+
+4. **"Am I using the project's validation/verification tools?"**
+   - Run `waft verify` after making structural changes
+   - Run `waft info` to check project status
+   - Use project-specific quality checks as you work
+
+5. **"Am I documenting in the project's memory system?"**
+   - Document work in `_pyrite/active/` as you go, not just at the end
+   - Use the project's documentation structure
+   - Update devlogs incrementally
+
+6. **"Am I using epistemic tracking if available?"**
+   - Create Empirica sessions for work sessions
+   - Submit preflight assessments before starting
+   - Log findings and unknowns during work
+   - Submit postflight assessments after completing
+   - Use `waft finding log` and `waft unknown log` commands
+
+### Workflow: Using Waft to Develop Waft
+
+**Example**: When working on waft framework itself:
+
+1. **Before Starting Work**:
+   ```bash
+   # Check project status
+   waft info
+   waft verify
+
+   # Check for active work efforts
+   # (Use MCP: list_work_efforts with status="active")
+
+   # If Empirica initialized:
+   waft session create --ai-id waft --type development
+   waft finding log "Starting work on [ticket]" --impact 0.7
+   ```
+
+2. **When Starting a Ticket**:
+   ```bash
+   # Update ticket status via MCP
+   # mcp_work-efforts_update_ticket with status="in_progress"
+
+   # Document in _pyrite/active/
+   # Create file: _pyrite/active/YYYY-MM-DD_ticket_description.md
+   ```
+
+3. **During Development**:
+   ```bash
+   # After making changes, verify structure
+   waft verify
+
+   # Log discoveries as you find them
+   waft finding log "Discovered X" --impact 0.6
+
+   # Log unknowns if you encounter them
+   waft unknown log "Need to investigate Y"
+
+   # Check stats periodically
+   waft stats
+   ```
+
+4. **After Completing a Task**:
+   ```bash
+   # Verify everything still works
+   waft verify
+   waft info
+
+   # Commit the work
+   git add [files]
+   git commit -m "fix: [description] (TKT-XXXX)"
+
+   # Update ticket via MCP with commit hash
+   # mcp_work-efforts_update_ticket with status="completed" and commit="[hash]"
+
+   # Document completion in _pyrite/active/
+   ```
+
+5. **At End of Session**:
+   ```bash
+   # If Empirica initialized:
+   waft finding log "Completed [summary]" --impact 0.8
+   # Submit postflight assessment
+
+   # Update devlog
+   # Update work effort status if all tickets complete
+   ```
+
+### Common Mistakes to Avoid
+
+1. **❌ Making all changes, then updating all tickets at the end**
+   - ✅ Update tickets incrementally as you work
+
+2. **❌ Making all changes, then making one big commit**
+   - ✅ Make small, focused commits after each logical unit
+
+3. **❌ Not using the project's own tools during development**
+   - ✅ Use `waft verify`, `waft info`, etc. as you work
+
+4. **❌ Documenting work only at the end**
+   - ✅ Document in `_pyrite/active/` as you go
+
+5. **❌ Not using epistemic tracking if available**
+   - ✅ Use Empirica sessions, finding/unknown logging during work
+
+6. **❌ Not using MCPs for work effort management**
+   - ✅ Use MCP tools to update tickets, create work efforts, etc.
+
+### Integration with MCPs
+
+**Work Effort MCP** (`mcp_work-efforts_*`):
+- `list_work_efforts` - Check for active work
+- `list_tickets` - See what needs to be done
+- `update_ticket` - Update status, add notes, add commit hashes
+- `update_work_effort` - Update work effort status, add progress notes
+
+**Usage Pattern**:
+```python
+# When starting work on a ticket
+mcp_work-efforts_update_ticket(
+    ticket_path="...",
+    status="in_progress"
+)
+
+# During work
+mcp_work-efforts_update_ticket(
+    ticket_path="...",
+    notes="Discovered X, investigating Y"
+)
+
+# After completing
+mcp_work-efforts_update_ticket(
+    ticket_path="...",
+    status="completed",
+    commit="abc123",
+    files_changed=["src/file.py", "tests/test_file.py"]
+)
+```
+
+### Meta-Learning
+
+**The key insight**: If you're building/maintaining a tool, you should be using it to develop itself. This is:
+- **Dogfooding**: Using your own product
+- **Validation**: Proves the tools work
+- **Improvement**: You'll discover issues and improvements
+- **Documentation**: Shows how to use the tools
+
+**If you find yourself not using the project's tools during development, ask yourself why:**
+- Are the tools not working? → Fix them
+- Are the tools too cumbersome? → Improve them
+- Are you forgetting? → Make it part of your workflow
+- Are you prioritizing "getting it done" over "doing it right"? → Reconsider priorities
 
 ---
 
