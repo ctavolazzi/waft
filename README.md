@@ -42,7 +42,11 @@ Creates a new project with full Waft structure:
 
 ```bash
 waft new my_project
+waft new my_project --path /path/to/target
 ```
+
+**Options:**
+- `--path, -p`: Target directory (default: current directory)
 
 This command:
 - Initializes a new `uv` project
@@ -57,7 +61,11 @@ Verifies the project structure:
 
 ```bash
 waft verify
+waft verify --path /path/to/project
 ```
+
+**Options:**
+- `--path, -p`: Project path (default: current directory)
 
 Checks:
 - `_pyrite` directory structure
@@ -72,7 +80,11 @@ Sync project dependencies using `uv sync`:
 
 ```bash
 waft sync
+waft sync --path /path/to/project
 ```
+
+**Options:**
+- `--path, -p`: Project path (default: current directory)
 
 #### `waft add <package>`
 
@@ -80,8 +92,15 @@ Add a dependency to the project:
 
 ```bash
 waft add pytest
-waft add "pytest>=7.0.0" --dev
+waft add "pytest>=7.0.0"
+waft add pytest --path /path/to/project
 ```
+
+**Options:**
+- `--path, -p`: Project path (default: current directory)
+- `--dev, -d`: Add as development dependency (note: currently adds as regular dependency)
+
+**Note:** The `--dev` flag is recognized but currently adds dependencies as regular dependencies. Full dev dependency support coming soon.
 
 #### `waft init`
 
@@ -89,7 +108,14 @@ Initialize Waft structure in an existing project:
 
 ```bash
 waft init
+waft init --path /path/to/project
 ```
+
+**Options:**
+- `--path, -p`: Project path (default: current directory)
+
+**Requirements:**
+- Project must have `pyproject.toml` (command will fail if missing)
 
 This command:
 - Creates `_pyrite` structure
@@ -102,12 +128,17 @@ Show information about the Waft project:
 
 ```bash
 waft info
+waft info --path /path/to/project
 ```
+
+**Options:**
+- `--path, -p`: Project path (default: current directory)
 
 Displays:
 - Project path, name, version
 - `_pyrite` structure status
-- Template status
+- `uv.lock` status
+- Template status (Justfile, CI, agents.py)
 - Empirica initialization status
 - Epistemic state (if available)
 
