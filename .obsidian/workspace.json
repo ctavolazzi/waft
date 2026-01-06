@@ -185,6 +185,13 @@
   },
   "active": "45c5780f64f875ee",
   "lastOpenFiles": [
+    "src/waft/core/tavern_keeper/__pycache__/grammars.cpython-310.pyc",
+    "src/waft/core/tavern_keeper/__pycache__/keeper.cpython-310.pyc",
+    "src/waft/core/tavern_keeper/__pycache__/__init__.cpython-310.pyc",
+    "src/waft/core/tavern_keeper/__pycache__",
+    "tests/__pycache__/test_tavern_keeper.cpython-310-pytest-9.0.2.pyc",
+    "tests/test_tavern_keeper.py",
+    "scripts/json_merge_driver.py",
     "SPEC-TAVERNKEEPER.md",
     "src/waft/core/tavern_keeper/grammars.py",
     "src/waft/core/tavern_keeper/keeper.py",
@@ -200,14 +207,8 @@
     "_pyrite/active/2026-01-06_incremental_commits.md",
     "_pyrite/active/2026-01-06_explore_command_creation.md",
     "_pyrite/active/2026-01-06_demo_creation.md",
-    "demo.py",
     "_work_efforts/ORIENTATION_SUMMARY_2026-01-06.md",
-    "_experiments/playground",
     "_pyrite/active/2026-01-06_test_suite_fix.md",
-    "src/waft/templates/__pycache__/__init__.cpython-312.pyc",
-    "src/waft/cli/__pycache__/hud.cpython-312.pyc",
-    "src/waft/core/__pycache__/github.cpython-312.pyc",
-    "src/waft/core/__pycache__/empirica.cpython-312.pyc",
     "_pyrite/active/2026-01-06_work_effort_9a6i_completion.md",
     "_work_efforts/WE-260105-9a6i_documentation_testing_and_quality_improvements/tickets/TKT-9a6i-006_improve_error_handling_and_validation.md",
     "_work_efforts/WE-260105-9a6i_documentation_testing_and_quality_improvements/tickets/TKT-9a6i-005_end_to_end_testing_of_all_commands.md",
@@ -219,7 +220,6 @@
     "WAFT_SYSTEM_INTEGRATION.md",
     "_work_efforts/CHECKPOINT_2026-01-05_EMPIRICA_CLI_GAMIFICATION.md",
     "_pyrite/active/empirica_python_version_issue.md",
-    "_pyrite/active/documentation_review_work.md",
-    "_work_efforts/SANITY_CHECK_RESULTS.md"
+    "_pyrite/active/documentation_review_work.md"
   ]
 }

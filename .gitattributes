@@ -1,0 +1,3 @@
+# Git attributes for TavernKeeper merge driver
+_pyrite/.waft/chronicles.json merge=tavern-json-driver
+

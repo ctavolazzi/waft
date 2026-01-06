@@ -64,6 +64,9 @@ class TavernKeeper:
         # Initialize character if needed
         if not self._character_exists():
             self._initialize_character()
+        
+        # Migrate from gamification.json if it exists
+        self._migrate_from_gamification()
 
     def _load_json_data(self) -> Dict[str, Any]:
         """Load data from JSON file (fallback if TinyDB not available)."""
@@ -120,25 +123,68 @@ class TavernKeeper:
     def _initialize_character(self) -> None:
         """Initialize character with default stats."""
         character = self._default_character()
-
-        # Derive initial stats from existing gamification data if available
-        gamification_path = self.data_dir / "gamification.json"
-        if gamification_path.exists():
-            try:
-                with open(gamification_path, "r") as f:
-                    gam_data = json.load(f)
-                    # Map existing stats
-                    character["integrity"] = gam_data.get("integrity", 100.0)
-                    character["insight"] = gam_data.get("insight", 0.0)
-                    character["level"] = self._calculate_level_from_insight(character["insight"])
-            except (json.JSONDecodeError, IOError):
-                pass
-
+        
         if self.db:
             self.db.table("character").insert(character)
         else:
             self._data["character"] = character
             self._save_json_data()
+
+    def _migrate_from_gamification(self) -> None:
+        """Migrate data from gamification.json to chronicles.json if needed."""
+        gamification_path = self.data_dir / "gamification.json"
+        if not gamification_path.exists():
+            return
+        
+        try:
+            with open(gamification_path, "r") as f:
+                gam_data = json.load(f)
+            
+            character = self.get_character()
+            
+            # Migrate stats if character is at defaults
+            if character.get("insight", 0.0) == 0.0 and character.get("integrity", 100.0) == 100.0:
+                # Map existing stats
+                character["integrity"] = gam_data.get("integrity", 100.0)
+                character["insight"] = gam_data.get("insight", 0.0)
+                character["level"] = self._calculate_level_from_insight(character["insight"])
+                
+                # Migrate achievements
+                achievements = gam_data.get("achievements", [])
+                if achievements:
+                    if self.db:
+                        # Store achievements in a separate table or in character
+                        pass
+                    else:
+                        self._data["achievements"] = achievements
+                
+                # Migrate history as adventure journal entries
+                history = gam_data.get("history", [])
+                if history:
+                    journal_entries = []
+                    for entry in history[-50:]:  # Keep last 50 entries
+                        journal_entries.append({
+                            "timestamp": entry.get("timestamp", datetime.now().isoformat()),
+                            "event": entry.get("type", "unknown"),
+                            "narrative": entry.get("reason", ""),
+                            "outcome": "success" if entry.get("type") == "insight_award" else "info",
+                        })
+                    
+                    if self.db:
+                        for entry in journal_entries:
+                            self.db.table("adventure_journal").insert(entry)
+                    else:
+                        self._data["adventure_journal"] = journal_entries + self._data.get("adventure_journal", [])
+                
+                # Save updated character
+                if self.db:
+                    self.db.table("character").update(character, Query().name == character["name"])
+                else:
+                    self._data["character"] = character
+                    self._save_json_data()
+        except (json.JSONDecodeError, IOError, KeyError):
+            # Migration failed, continue with defaults
+            pass
 
     def _calculate_level_from_insight(self, insight: float) -> int:
         """Calculate level from insight using polynomial curve."""
@@ -360,15 +406,47 @@ class TavernKeeper:
 
         # Fallback: Simple random selection from grammar
         import random
+        import re
         if "origin" in grammar:
             narrative = random.choice(grammar["origin"])
-            # Simple placeholder replacement
+            # Simple placeholder replacement - replace all #key# patterns
+            # First replace common placeholders
             narrative = narrative.replace("#entity#", char_name)
             narrative = narrative.replace("#component#", char_name)
             narrative = narrative.replace("#structure#", char_name)
-            if context:
-                for key, value in context.items():
-                    narrative = narrative.replace(f"#{key}#", str(value))
+            
+            # Replace other grammar placeholders by expanding them
+            placeholder_pattern = re.compile(r"#(\w+)#")
+            
+            def replace_placeholder(match):
+                key = match.group(1)
+                # Check if it's in context first
+                if context and key in context:
+                    return str(context[key])
+                # Check if it's in grammar
+                if key in grammar:
+                    choices = grammar[key]
+                    if isinstance(choices, list):
+                        return random.choice(choices)
+                    return str(choices)
+                # Unknown placeholder, return as-is
+                return match.group(0)
+            
+            # Replace all placeholders recursively
+            max_iterations = 10
+            iteration = 0
+            while "#" in narrative and iteration < max_iterations:
+                new_narrative = placeholder_pattern.sub(replace_placeholder, narrative)
+                if new_narrative == narrative:
+                    break
+                narrative = new_narrative
+                iteration += 1
+            
+            # Final cleanup - remove any remaining #placeholders#
+            narrative = re.sub(r"#\w+#", "", narrative).strip()
+            if not narrative:
+                narrative = f"The TavernKeeper observes {char_name}."
+            
             return narrative
 
         # Ultimate fallback
