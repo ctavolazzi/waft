@@ -2,7 +2,7 @@
 id: TKT-9a6i-003
 parent: WE-260105-9a6i
 title: "Update CHANGELOG with new features"
-status: pending
+status: completed
 created: 2026-01-05T08:07:05.819Z
 created_by: ctavolazzi
 assigned_to: null
@@ -22,10 +22,12 @@ assigned_to: null
 - [ ] (define acceptance criteria)
 
 ## Files Changed
-- (populated when complete)
+- `CHANGELOG.md`
 
 ## Implementation Notes
+- 1/6/2026: Updated CHANGELOG.md with bug fix details and added test infrastructure to Added section. Documented the duplicate Project Name bug fix and comprehensive test suite addition.
 - (decisions, blockers, context)
 
 ## Commits
+- `94551a1`
 - (populated as work progresses)

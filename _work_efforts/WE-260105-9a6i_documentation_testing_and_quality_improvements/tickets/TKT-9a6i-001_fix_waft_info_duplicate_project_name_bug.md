@@ -2,7 +2,7 @@
 id: TKT-9a6i-001
 parent: WE-260105-9a6i
 title: "Fix waft info duplicate Project Name bug"
-status: pending
+status: completed
 created: 2026-01-05T08:07:05.804Z
 created_by: ctavolazzi
 assigned_to: null
@@ -22,10 +22,12 @@ assigned_to: null
 - [ ] (define acceptance criteria)
 
 ## Files Changed
-- (populated when complete)
+- `src/waft/main.py`
 
 ## Implementation Notes
+- 1/6/2026: Fixed duplicate Project Name bug in waft info command. Updated logic in src/waft/main.py lines 402-418 to check pyproject.toml existence first, then parse. Ensures only one "Project Name" row is displayed regardless of parsing status.
 - (decisions, blockers, context)
 
 ## Commits
+- `cd30afb`
 - (populated as work progresses)
