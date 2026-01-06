@@ -30,7 +30,7 @@ dependencies = [
     "pydantic>=2.0.0",
     "empirica>=1.2.3",
     "tinydb>=4.8.0",
-    "d20>=2.0.0",
+    "d20>=1.0.0",
 ]
 
 [project.optional-dependencies]
