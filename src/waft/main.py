@@ -857,14 +857,32 @@ def check(
         _process_tavern_hook(project_path, "check", False)
 
 
-@app.command()
-def dashboard(
+@app.command(name="dashboard")
+def dashboard_cmd(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+):
+    """Show the Red October Dashboard - TavernKeeper TUI."""
+    project_path = resolve_project_path(path)
+
+    try:
+        from .ui.dashboard import RedOctoberDashboard
+        tavern = TavernKeeper(project_path)
+        dashboard = RedOctoberDashboard(tavern)
+        dashboard.run()
+    except KeyboardInterrupt:
+        console.print("\n[dim]Dashboard closed[/dim]")
+    except Exception as e:
+        console.print(f"[bold red]❌ Error starting dashboard: {e}[/bold red]")
+        raise typer.Exit(1)
+
+
+@app.command(name="hud")
+def hud_cmd(
     path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     integrity: float = typer.Option(100.0, "--integrity", help="Integrity value (0.0-100.0)"),
 ):
-    """Show the Epistemic HUD with split-screen layout."""
+    """Show the Epistemic HUD with split-screen layout (legacy)."""
     project_path = resolve_project_path(path)
-
     render_hud(project_path, integrity=integrity)
 
 
