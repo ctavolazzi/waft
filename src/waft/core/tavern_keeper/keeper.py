@@ -64,7 +64,7 @@ class TavernKeeper:
         # Initialize character if needed
         if not self._character_exists():
             self._initialize_character()
-        
+
         # Migrate from gamification.json if it exists
         self._migrate_from_gamification()
 
@@ -123,7 +123,7 @@ class TavernKeeper:
     def _initialize_character(self) -> None:
         """Initialize character with default stats."""
         character = self._default_character()
-        
+
         if self.db:
             self.db.table("character").insert(character)
         else:
@@ -135,20 +135,20 @@ class TavernKeeper:
         gamification_path = self.data_dir / "gamification.json"
         if not gamification_path.exists():
             return
-        
+
         try:
             with open(gamification_path, "r") as f:
                 gam_data = json.load(f)
-            
+
             character = self.get_character()
-            
+
             # Migrate stats if character is at defaults
             if character.get("insight", 0.0) == 0.0 and character.get("integrity", 100.0) == 100.0:
                 # Map existing stats
                 character["integrity"] = gam_data.get("integrity", 100.0)
                 character["insight"] = gam_data.get("insight", 0.0)
                 character["level"] = self._calculate_level_from_insight(character["insight"])
-                
+
                 # Migrate achievements
                 achievements = gam_data.get("achievements", [])
                 if achievements:
@@ -157,7 +157,7 @@ class TavernKeeper:
                         pass
                     else:
                         self._data["achievements"] = achievements
-                
+
                 # Migrate history as adventure journal entries
                 history = gam_data.get("history", [])
                 if history:
@@ -169,13 +169,13 @@ class TavernKeeper:
                             "narrative": entry.get("reason", ""),
                             "outcome": "success" if entry.get("type") == "insight_award" else "info",
                         })
-                    
+
                     if self.db:
                         for entry in journal_entries:
                             self.db.table("adventure_journal").insert(entry)
                     else:
                         self._data["adventure_journal"] = journal_entries + self._data.get("adventure_journal", [])
-                
+
                 # Save updated character
                 if self.db:
                     self.db.table("character").update(character, Query().name == character["name"])
@@ -414,10 +414,10 @@ class TavernKeeper:
             narrative = narrative.replace("#entity#", char_name)
             narrative = narrative.replace("#component#", char_name)
             narrative = narrative.replace("#structure#", char_name)
-            
+
             # Replace other grammar placeholders by expanding them
             placeholder_pattern = re.compile(r"#(\w+)#")
-            
+
             def replace_placeholder(match):
                 key = match.group(1)
                 # Check if it's in context first
@@ -431,7 +431,7 @@ class TavernKeeper:
                     return str(choices)
                 # Unknown placeholder, return as-is
                 return match.group(0)
-            
+
             # Replace all placeholders recursively
             max_iterations = 10
             iteration = 0
@@ -441,12 +441,12 @@ class TavernKeeper:
                     break
                 narrative = new_narrative
                 iteration += 1
-            
+
             # Final cleanup - remove any remaining #placeholders#
             narrative = re.sub(r"#\w+#", "", narrative).strip()
             if not narrative:
                 narrative = f"The TavernKeeper observes {char_name}."
-            
+
             return narrative
 
         # Ultimate fallback
