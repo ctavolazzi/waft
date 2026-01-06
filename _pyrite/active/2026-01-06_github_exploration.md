@@ -27,7 +27,7 @@
 ### Repository State (2026-01-06)
 - **Owner**: ctavolazzi
 - **Repository**: waft
-- **Branches**: 
+- **Branches**:
   - `main` (37a0b5a) - Latest: "chore: merge v0.0.2 into main - all features complete"
   - `v0.0.2` (beb0db9) - Release branch
 - **Open Issues**: 0

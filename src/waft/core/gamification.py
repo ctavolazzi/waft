@@ -299,3 +299,4 @@ class GamificationManager:
 
         return newly_unlocked
 
+

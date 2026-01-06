@@ -1,0 +1,106 @@
+{
+  "integrity": 100.0,
+  "insight": 0.0,
+  "level": 1,
+  "achievements": [],
+  "history": [
+    {
+      "timestamp": "2026-01-06T00:13:34.681830",
+      "type": "integrity_restore",
+      "amount": 2.0,
+      "reason": "Project verification passed",
+      "integrity_before": 100.0,
+      "integrity_after": 100.0
+    },
+    {
+      "timestamp": "2026-01-06T00:16:24.825414",
+      "type": "integrity_restore",
+      "amount": 2.0,
+      "reason": "Project verification passed",
+      "integrity_before": 100.0,
+      "integrity_after": 100.0
+    },
+    {
+      "timestamp": "2026-01-06T00:18:09.060620",
+      "type": "integrity_restore",
+      "amount": 2.0,
+      "reason": "Project verification passed",
+      "integrity_before": 100.0,
+      "integrity_after": 100.0
+    },
+    {
+      "timestamp": "2026-01-06T00:25:31.692050",
+      "type": "integrity_restore",
+      "amount": 2.0,
+      "reason": "Project verification passed",
+      "integrity_before": 100.0,
+      "integrity_after": 100.0
+    },
+    {
+      "timestamp": "2026-01-06T00:26:57.321827",
+      "type": "integrity_restore",
+      "amount": 2.0,
+      "reason": "Project verification passed",
+      "integrity_before": 100.0,
+      "integrity_after": 100.0
+    },
+    {
+      "timestamp": "2026-01-06T00:29:25.265058",
+      "type": "integrity_restore",
+      "amount": 2.0,
+      "reason": "Project verification passed",
+      "integrity_before": 100.0,
+      "integrity_after": 100.0
+    },
+    {
+      "timestamp": "2026-01-06T00:31:08.140897",
+      "type": "integrity_restore",
+      "amount": 2.0,
+      "reason": "Project verification passed",
+      "integrity_before": 100.0,
+      "integrity_after": 100.0
+    },
+    {
+      "timestamp": "2026-01-06T00:31:39.558319",
+      "type": "integrity_restore",
+      "amount": 2.0,
+      "reason": "Project verification passed",
+      "integrity_before": 100.0,
+      "integrity_after": 100.0
+    },
+    {
+      "timestamp": "2026-01-06T00:33:02.114625",
+      "type": "integrity_restore",
+      "amount": 2.0,
+      "reason": "Project verification passed",
+      "integrity_before": 100.0,
+      "integrity_after": 100.0
+    },
+    {
+      "timestamp": "2026-01-06T00:33:33.014330",
+      "type": "integrity_restore",
+      "amount": 2.0,
+      "reason": "Project verification passed",
+      "integrity_before": 100.0,
+      "integrity_after": 100.0
+    },
+    {
+      "timestamp": "2026-01-06T00:38:23.015211",
+      "type": "integrity_restore",
+      "amount": 2.0,
+      "reason": "Project verification passed",
+      "integrity_before": 100.0,
+      "integrity_after": 100.0
+    },
+    {
+      "timestamp": "2026-01-06T00:40:30.696612",
+      "type": "integrity_restore",
+      "amount": 2.0,
+      "reason": "Project verification passed",
+      "integrity_before": 100.0,
+      "integrity_after": 100.0
+    }
+  ],
+  "created_at": "2026-01-06T00:13:34.681769",
+  "updated_at": "2026-01-06T00:40:30.696941"
+}

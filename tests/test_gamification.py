@@ -60,3 +60,4 @@ def test_get_stats(temp_project_path):
     assert "level" in stats
     assert "achievements" in stats
 
+

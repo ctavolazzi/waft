@@ -220,3 +220,4 @@ def render_hud(project_path: Path, integrity: float = 100.0) -> None:
     # Render
     console.print(layout)
 
+

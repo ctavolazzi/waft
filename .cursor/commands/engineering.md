@@ -38,17 +38,17 @@ This command orchestrates the complete development workflow, ensuring:
 4. **Git status**: Check for uncommitted changes
 5. **Active work**: List active work efforts via `mcp_work-efforts_list_work_efforts`
 6. **Recent history**: Read last 50 lines of `_work_efforts/devlog.md`
-7. **GitHub state**: 
+7. **GitHub state**:
    - `mcp_github_get_me` - Get user context
    - `mcp_github_list_commits` - Recent commits (last 10)
    - `mcp_github_list_issues` - Open issues
    - `mcp_github_list_pull_requests` - Open PRs
-8. **Project state**: 
+8. **Project state**:
    - `waft info` - Project information
    - `waft verify` - Structure health
    - `waft stats` - Gamification state
 
-**Output**: 
+**Output**:
 - Environment status
 - Active work efforts
 - Recent changes
@@ -167,7 +167,7 @@ This command orchestrates the complete development workflow, ensuring:
    - Or update existing work effort
 7. **Create tickets**:
    - `mcp_work-efforts_create_ticket` - Create tickets for each major task
-8. **Document plan**: 
+8. **Document plan**:
    - Create plan document in `_work_efforts/` or `_pyrite/active/`
    - Include: objectives, tasks, dependencies, success criteria
 
@@ -218,14 +218,14 @@ This command orchestrates the complete development workflow, ensuring:
 
 **Steps**:
 1. **Final review**: One last check of the plan
-2. **Update work effort**: 
+2. **Update work effort**:
    - `mcp_work-efforts_update_work_effort` - Update status, add progress notes
 3. **Update tickets**: Ensure all tickets are created and properly scoped
-4. **Document final plan**: 
+4. **Document final plan**:
    - Final plan document
    - Include: final objectives, tasks, dependencies, timeline
 5. **Update devlog**: Add entry about plan finalization
-6. **Commit planning work**: 
+6. **Commit planning work**:
    - `git add` planning documents
    - `git commit -m "docs: finalize plan for [feature]"`
 
