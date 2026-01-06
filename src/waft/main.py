@@ -1142,20 +1142,20 @@ def character(
         info_table = Table(show_header=False, box=None)
         info_table.add_column(style="bold cyan")
         info_table.add_column(style="")
-        
+
         # Color code values
         level = char.get("level", 1)
         level_color = "gold1" if level >= 5 else "cyan" if level >= 3 else "green"
-        
+
         integrity = char.get("integrity", 100.0)
         integrity_color = "green" if integrity >= 80 else "yellow" if integrity >= 50 else "red"
-        
+
         insight = char.get("insight", 0.0)
         insight_color = "magenta" if insight >= 500 else "cyan" if insight >= 100 else "dim"
-        
+
         credits = char.get("credits", 0)
         credits_color = "gold1" if credits >= 100 else "cyan" if credits >= 50 else "dim"
-        
+
         info_table.add_row("Name:", f"[bold]{char.get('name', 'Unknown')}[/]")
         info_table.add_row("Level:", f"[bold {level_color}]{level}[/]")
         info_table.add_row("Proficiency Bonus:", f"[cyan]+{sheet['proficiency_bonus']}[/]")
@@ -1182,12 +1182,12 @@ def character(
             "wisdom": "magenta",
             "charisma": "bright_magenta",
         }
-        
+
         for ability in ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]:
             score = ability_scores.get(ability, 8)
             modifier = ability_modifiers.get(ability, -1)
             modifier_str = f"+{modifier}" if modifier >= 0 else str(modifier)
-            
+
             # Color code score
             if score >= 16:
                 score_color = "gold1"
@@ -1197,7 +1197,7 @@ def character(
                 score_color = "cyan"
             else:
                 score_color = "dim"
-            
+
             ability_color = ability_colors.get(ability, "white")
             ability_table.add_row(
                 f"[{ability_color}]{ability.title()}[/]",
@@ -1223,7 +1223,7 @@ def character(
                 else:
                     effect_color = "red"
                     symbol = "▼"
-                
+
                 effects_table.add_row(
                     f"[{effect_color}]{symbol}[/] {effect.get('name', 'Unknown')}",
                     f"[{effect_color}]{effect_type}[/]",

@@ -133,18 +133,18 @@ class RedOctoberDashboard:
         insight = character.get("insight", 0.0)
         next_level_insight = self.tavern._calculate_insight_for_level(level + 1)
         insight_needed = next_level_insight - insight
-        
+
         level_color = GLORY_GOLD if level >= 5 else CYAN_ENERGY if level >= 3 else GREEN_SUCCESS
         level_text = Text.assemble(
             (f"LVL {level:02d}", f"bold {level_color}"),
             f"\n[{CONCRETE_GREY}]Insight: {insight:.0f}/{next_level_insight:.0f}[/]",
             f"\n[{CYAN_ENERGY}]{insight_needed:.0f} to next[/]",
         )
-        
+
         # Attribute Matrix with color coding
         ability_scores = sheet["ability_scores"]
         ability_modifiers = sheet["ability_modifiers"]
-        
+
         # Color mapping for abilities
         ability_colors = {
             "strength": CRISIS_RED,
@@ -154,14 +154,14 @@ class RedOctoberDashboard:
             "wisdom": PURPLE_MAGIC,
             "charisma": PINK_DELIGHT,
         }
-        
+
         attributes_text = Text()
         for ability in ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]:
             score = ability_scores.get(ability, 8)
             modifier = ability_modifiers.get(ability, -1)
             modifier_str = f"+{modifier}" if modifier >= 0 else str(modifier)
             ability_color = ability_colors.get(ability, PAPER_CREAM)
-            
+
             # Color code based on score
             if score >= 16:
                 score_color = GLORY_GOLD
@@ -171,13 +171,13 @@ class RedOctoberDashboard:
                 score_color = CYAN_ENERGY
             else:
                 score_color = CONCRETE_GREY
-            
+
             # Create bar visualization with color
             bar_length = 15
             filled = int((score / 20.0) * bar_length)
             bar_filled = f"[{ability_color}]" + "▰" * filled + "[/]"
             bar_empty = "[dim]" + "▱" * (bar_length - filled) + "[/]"
-            
+
             abbr = ability[:3].upper()
             attributes_text.append(f"[{ability_color}]{abbr}[/] ", style=PAPER_CREAM)
             attributes_text.append(f"[{score_color}][{score:2d}][/] ", style=PAPER_CREAM)
@@ -187,13 +187,13 @@ class RedOctoberDashboard:
         # Status Effects with enhanced styling
         status_effects = sheet["status_effects"]
         status_text = Text()
-        
+
         if status_effects:
             for effect in status_effects[-5:]:  # Show last 5
                 effect_type = effect.get("type", "unknown")
                 effect_name = effect.get("name", "Unknown")
                 duration = effect.get("duration")
-                
+
                 if effect_type == "buff":
                     symbol = f"[{GLORY_GOLD}]▲[/]"
                     color = GLORY_GOLD
@@ -202,7 +202,7 @@ class RedOctoberDashboard:
                     symbol = f"[{CRISIS_RED}]▼[/]"
                     color = CRISIS_RED
                     bg_color = f"on {CRISIS_RED}"
-                
+
                 duration_str = f" [{CONCRETE_GREY}]{duration}s[/]" if duration else f" [{PURPLE_MAGIC}]Perm[/]"
                 status_text.append(f"{symbol} [{color}]{effect_name}[/]{duration_str}\n")
         else:
@@ -292,7 +292,7 @@ class RedOctoberDashboard:
                 else:
                     row_style = PAPER_CREAM
                     icon = f"[{CONCRETE_GREY}]•[/] "
-                
+
                 # Add source indicator for narrative entries
                 source_indicator = ""
                 if entry_type == "narrative" and source:
@@ -300,7 +300,7 @@ class RedOctoberDashboard:
                         source_indicator = f"[{PURPLE_MAGIC}][AI][/] "
                     elif source == "human":
                         source_indicator = f"[{BLUE_INFO}][YOU][/] "
-                
+
                 log_text = f"[{CONCRETE_GREY}]{time_part}[/] │ {icon}{source_indicator}{narrative}"
                 log_table.add_row(Text(log_text, style=row_style))
         else:
@@ -344,19 +344,19 @@ class RedOctoberDashboard:
         op_text.append(f"[{CYAN_ENERGY}]⚡[/] OP: ", style=PAPER_CREAM)
         branch_color = GREEN_SUCCESS if "main" in git_branch or "master" in git_branch else GLORY_GOLD
         op_text.append(git_branch, style=f"bold {branch_color}")
-        
+
         # Resource Fund with enhanced display
         credits_text = Text()
         credits_color = GLORY_GOLD if credits >= 100 else CYAN_ENERGY if credits >= 50 else CONCRETE_GREY
         credits_text.append(f"[{GLORY_GOLD}]¤[/] CREDITS: ", style=PAPER_CREAM)
         credits_text.append(f"{credits}", style=f"bold {credits_color}")
-        
+
         # Add Insight display
         insight = character.get("insight", 0.0)
         insight_text = Text()
         insight_text.append(f"[{PURPLE_MAGIC}]🧠[/] INSIGHT: ", style=PAPER_CREAM)
         insight_text.append(f"{insight:.0f}", style=f"bold {PURPLE_MAGIC}")
-        
+
         # Inventory (placeholder - would come from inventory system)
         inventory_text = Text(f"[{CONCRETE_GREY}]No items[/]", style=CONCRETE_GREY)
 
