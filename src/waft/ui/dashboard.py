@@ -20,13 +20,21 @@ from rich.align import Align
 from ..core.tavern_keeper import TavernKeeper
 
 
-# Color Palette (Mandatory)
+# Color Palette (Mandatory + Enhanced)
 CRISIS_RED = "#D32F2F"
 VOID_BLACK = "#121212"
 PAPER_CREAM = "#FFF8E1"
 CONCRETE_GREY = "#757575"
 GLORY_GOLD = "#FFD700"
 BORDER_GREY = "#424242"
+
+# Enhanced Color Palette
+CYAN_ENERGY = "#00FFFF"
+GREEN_SUCCESS = "#4CAF50"
+ORANGE_WARNING = "#FF9800"
+PURPLE_MAGIC = "#9C27B0"
+BLUE_INFO = "#2196F3"
+PINK_DELIGHT = "#E91E63"
 
 
 class RedOctoberDashboard:
@@ -120,49 +128,85 @@ class RedOctoberDashboard:
         character = self.tavern.get_character()
         sheet = self.tavern.get_character_sheet()
 
-        # Level Display
+        # Level Display with enhanced styling
         level = character.get("level", 1)
-        level_text = Text(f"LVL {level:02d}", style=f"bold {GLORY_GOLD}")
-
-        # Attribute Matrix
+        insight = character.get("insight", 0.0)
+        next_level_insight = self.tavern._calculate_insight_for_level(level + 1)
+        insight_needed = next_level_insight - insight
+        
+        level_color = GLORY_GOLD if level >= 5 else CYAN_ENERGY if level >= 3 else GREEN_SUCCESS
+        level_text = Text.assemble(
+            (f"LVL {level:02d}", f"bold {level_color}"),
+            f"\n[{CONCRETE_GREY}]Insight: {insight:.0f}/{next_level_insight:.0f}[/]",
+            f"\n[{CYAN_ENERGY}]{insight_needed:.0f} to next[/]",
+        )
+        
+        # Attribute Matrix with color coding
         ability_scores = sheet["ability_scores"]
         ability_modifiers = sheet["ability_modifiers"]
-
+        
+        # Color mapping for abilities
+        ability_colors = {
+            "strength": CRISIS_RED,
+            "dexterity": CYAN_ENERGY,
+            "constitution": GREEN_SUCCESS,
+            "intelligence": BLUE_INFO,
+            "wisdom": PURPLE_MAGIC,
+            "charisma": PINK_DELIGHT,
+        }
+        
         attributes_text = Text()
         for ability in ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]:
             score = ability_scores.get(ability, 8)
             modifier = ability_modifiers.get(ability, -1)
             modifier_str = f"+{modifier}" if modifier >= 0 else str(modifier)
-
-            # Create bar visualization (score out of 20, so 20 blocks max)
-            bar_length = 20
+            ability_color = ability_colors.get(ability, PAPER_CREAM)
+            
+            # Color code based on score
+            if score >= 16:
+                score_color = GLORY_GOLD
+            elif score >= 13:
+                score_color = GREEN_SUCCESS
+            elif score >= 10:
+                score_color = CYAN_ENERGY
+            else:
+                score_color = CONCRETE_GREY
+            
+            # Create bar visualization with color
+            bar_length = 15
             filled = int((score / 20.0) * bar_length)
-            bar = "▰" * filled + "▱" * (bar_length - filled)
-
+            bar_filled = f"[{ability_color}]" + "▰" * filled + "[/]"
+            bar_empty = "[dim]" + "▱" * (bar_length - filled) + "[/]"
+            
             abbr = ability[:3].upper()
-            attributes_text.append(f"{abbr} [{score:2d}] {bar}\n", style=PAPER_CREAM)
+            attributes_text.append(f"[{ability_color}]{abbr}[/] ", style=PAPER_CREAM)
+            attributes_text.append(f"[{score_color}][{score:2d}][/] ", style=PAPER_CREAM)
+            attributes_text.append(f"[dim]({modifier_str})[/] ", style=PAPER_CREAM)
+            attributes_text.append(f"{bar_filled}{bar_empty}\n", style=PAPER_CREAM)
 
-        # Status Effects
+        # Status Effects with enhanced styling
         status_effects = sheet["status_effects"]
         status_text = Text()
-
+        
         if status_effects:
             for effect in status_effects[-5:]:  # Show last 5
                 effect_type = effect.get("type", "unknown")
                 effect_name = effect.get("name", "Unknown")
                 duration = effect.get("duration")
-
+                
                 if effect_type == "buff":
-                    symbol = "▲"
+                    symbol = f"[{GLORY_GOLD}]▲[/]"
                     color = GLORY_GOLD
+                    bg_color = f"on {GLORY_GOLD}"
                 else:
-                    symbol = "▼"
+                    symbol = f"[{CRISIS_RED}]▼[/]"
                     color = CRISIS_RED
-
-                duration_str = f" ({duration}s)" if duration else " (Perm)"
-                status_text.append(f"[{color}]{symbol} {effect_name}{duration_str}[/]\n")
+                    bg_color = f"on {CRISIS_RED}"
+                
+                duration_str = f" [{CONCRETE_GREY}]{duration}s[/]" if duration else f" [{PURPLE_MAGIC}]Perm[/]"
+                status_text.append(f"{symbol} [{color}]{effect_name}[/]{duration_str}\n")
         else:
-            status_text.append("[dim]No active effects[/]\n", style=CONCRETE_GREY)
+            status_text.append(f"[{CONCRETE_GREY}]No active effects[/]\n", style=CONCRETE_GREY)
 
         # Combine all content
         content = Align.left(
@@ -211,35 +255,53 @@ class RedOctoberDashboard:
                 entry_type = entry.get("type", "event")
                 mood = entry.get("mood", "")
                 source = entry.get("source", "")
-                
+
                 # Format timestamp (extract time part)
                 try:
                     time_part = timestamp.split("T")[1].split(".")[0] if "T" in timestamp else timestamp[:8]
                 except:
                     time_part = timestamp[:8] if len(timestamp) >= 8 else timestamp
-                
-                # Determine row style based on outcome/classification/type
+
+                # Determine row style with enhanced color coding
                 if classification == "critical_success" or outcome == "critical_success":
                     row_style = f"bold {VOID_BLACK} on {GLORY_GOLD}"
+                    icon = f"[{VOID_BLACK}]⭐[/] "
                 elif classification == "critical_failure" or outcome == "critical_failure":
                     row_style = f"bold {PAPER_CREAM} on {CRISIS_RED}"
+                    icon = f"[{PAPER_CREAM}]💥[/] "
+                elif classification == "superior":
+                    row_style = f"{GLORY_GOLD}"
+                    icon = f"[{GLORY_GOLD}]▲[/] "
+                elif classification == "optimal":
+                    row_style = f"{GREEN_SUCCESS}"
+                    icon = f"[{GREEN_SUCCESS}]✓[/] "
                 elif entry_type == "narrative":
                     # Narrative entries get special styling
                     if mood == "delighted" or entry.get("event") == "celebration":
                         row_style = f"{GLORY_GOLD}"
+                        icon = f"[{GLORY_GOLD}]✨[/] "
                     elif mood == "concerned" or entry.get("event") == "question":
-                        row_style = f"{CRISIS_RED}"
+                        row_style = f"{ORANGE_WARNING}"
+                        icon = f"[{ORANGE_WARNING}]?[/] "
+                    elif mood == "surprised" or mood == "amazed":
+                        row_style = f"{CYAN_ENERGY}"
+                        icon = f"[{CYAN_ENERGY}]⚡[/] "
                     else:
                         row_style = PAPER_CREAM
+                        icon = f"[{CONCRETE_GREY}]•[/] "
                 else:
                     row_style = PAPER_CREAM
+                    icon = f"[{CONCRETE_GREY}]•[/] "
                 
                 # Add source indicator for narrative entries
-                prefix = ""
+                source_indicator = ""
                 if entry_type == "narrative" and source:
-                    prefix = f"[{source}] " if source != "human" else ""
+                    if source == "ai":
+                        source_indicator = f"[{PURPLE_MAGIC}][AI][/] "
+                    elif source == "human":
+                        source_indicator = f"[{BLUE_INFO}][YOU][/] "
                 
-                log_text = f"[{CONCRETE_GREY}]{time_part}[/] │ {prefix}{narrative}"
+                log_text = f"[{CONCRETE_GREY}]{time_part}[/] │ {icon}{source_indicator}{narrative}"
                 log_table.add_row(Text(log_text, style=row_style))
         else:
             log_table.add_row(Text("[dim]No entries in the chronicle yet...[/]", style=CONCRETE_GREY))
@@ -290,14 +352,15 @@ class RedOctoberDashboard:
         # Inventory (placeholder - would come from inventory system)
         inventory_text = Text("[dim]No items[/]", style=CONCRETE_GREY)
 
-        # Combine content
+        # Combine content with enhanced layout
         content = Align.left(
             Text.assemble(
-                "[bold]ACTIVE OPERATION[/]\n",
+                f"[bold {CYAN_ENERGY}]ACTIVE OPERATION[/]\n",
                 op_text, "\n\n",
-                "[bold]RESOURCE FUND[/]\n",
-                credits_text, "\n\n",
-                "[bold]INVENTORY[/]\n",
+                f"[bold {GLORY_GOLD}]RESOURCE FUND[/]\n",
+                credits_text, "\n",
+                insight_text, "\n\n",
+                f"[bold {CONCRETE_GREY}]INVENTORY[/]\n",
                 inventory_text, "\n",
             ),
             vertical="top",

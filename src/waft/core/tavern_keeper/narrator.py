@@ -15,7 +15,7 @@ from .keeper import TavernKeeper
 class Narrator:
     """
     The Narrator - Allows AI and humans to contribute to the story.
-    
+
     This enables collaborative storytelling where AI assistants can
     observe, reflect, and contribute narratives to the chronicle.
     """
@@ -23,7 +23,7 @@ class Narrator:
     def __init__(self, tavern_keeper: TavernKeeper):
         """
         Initialize the Narrator.
-        
+
         Args:
             tavern_keeper: TavernKeeper instance to log to
         """
@@ -38,7 +38,7 @@ class Narrator:
     ) -> None:
         """
         Log an observation to the chronicle.
-        
+
         Args:
             observation: The narrative observation
             context: Optional context (file changed, command run, etc.)
@@ -54,7 +54,7 @@ class Narrator:
             "context": context or {},
             "type": "narrative",
         }
-        
+
         self.tavern.log_adventure(entry)
 
     def reflect(
@@ -65,7 +65,7 @@ class Narrator:
     ) -> None:
         """
         Log a reflection - deeper thoughts about the codebase or process.
-        
+
         Args:
             reflection: The reflective narrative
             trigger: What triggered this reflection
@@ -79,7 +79,7 @@ class Narrator:
             "insight": insight,
             "type": "narrative",
         }
-        
+
         self.tavern.log_adventure(entry)
 
     def celebrate(
@@ -89,7 +89,7 @@ class Narrator:
     ) -> None:
         """
         Log a celebration - moments of delight and beauty.
-        
+
         Args:
             celebration: What's being celebrated
             achievement: Optional achievement unlocked
@@ -102,7 +102,7 @@ class Narrator:
             "mood": "delighted",
             "type": "narrative",
         }
-        
+
         self.tavern.log_adventure(entry)
 
     def question(
@@ -112,7 +112,7 @@ class Narrator:
     ) -> None:
         """
         Log a question or concern - moments of uncertainty.
-        
+
         Args:
             question: The question or concern
             concern: Type of concern (bug, design, performance, etc.)
@@ -125,7 +125,7 @@ class Narrator:
             "mood": "curious",
             "type": "narrative",
         }
-        
+
         self.tavern.log_adventure(entry)
 
     def note(
@@ -136,7 +136,7 @@ class Narrator:
     ) -> None:
         """
         Log a general note - any observation or thought.
-        
+
         Args:
             note: The note content
             category: Category (bug, feature, refactor, insight, etc.)
@@ -150,6 +150,6 @@ class Narrator:
             "tags": tags or [],
             "type": "narrative",
         }
-        
+
         self.tavern.log_adventure(entry)
 

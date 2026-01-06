@@ -3,7 +3,7 @@
     "name": "",
     "level": 1,
     "integrity": 100.0,
-    "insight": 0.0,
+    "insight": 5.0,
     "credits": 0,
     "ability_scores": {
       "strength": 8,
@@ -15,12 +15,43 @@
     },
     "proficiency_bonus": 2,
     "hit_dice": "d8",
-    "max_hp": 10,
-    "current_hp": 10,
-    "created_at": "2026-01-06T01:32:20.665539"
+    "max_hp": 7,
+    "current_hp": 7,
+    "created_at": "2026-01-06T01:32:20.665539",
+    "updated_at": "2026-01-06T01:42:54.776352"
   },
   "status_effects": [],
   "adventure_journal": [
+    {
+      "timestamp": "2026-01-06T00:31:39.558319",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:33:02.114625",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:33:33.014330",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:38:23.015211",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-01-06T00:40:30.696612",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
     {
       "timestamp": "2026-01-06T00:13:34.681830",
       "event": "integrity_restore",
@@ -541,6 +572,90 @@
       "source": "ai",
       "context": {},
       "type": "narrative"
+    },
+    {
+      "event": "verify",
+      "narrative": "Sector Alpha-9 reinforced. Logic-Lattice integrity at 110%%.",
+      "dice_roll": "1d20+-1",
+      "result": 1,
+      "outcome": "success",
+      "rewards": {
+        "insight": 5,
+        "credits": 0,
+        "integrity": 2.0
+      },
+      "classification": "failure",
+      "timestamp": "2026-01-06T01:42:54.783503"
+    },
+    {
+      "timestamp": "2026-01-06T01:43:06.637571",
+      "event": "celebration",
+      "narrative": "The TavernKeeper system is live and beautiful! The Red October dashboard looks incredible!",
+      "achievement": "dashboard_live",
+      "mood": "delighted",
+      "type": "narrative"
+    },
+    {
+      "timestamp": "2026-01-06T01:43:06.640426",
+      "event": "observation",
+      "narrative": "The narrative system allows us to co-create the story - this is so cool!",
+      "mood": "delighted",
+      "source": "ai",
+      "context": {},
+      "type": "narrative"
+    },
+    {
+      "timestamp": "2026-01-06T01:43:06.643096",
+      "event": "observation",
+      "narrative": "Every command now has RPG mechanics - dice rolls, narratives, rewards. This is amazing!",
+      "mood": "amazed",
+      "source": "ai",
+      "context": {},
+      "type": "narrative"
+    },
+    {
+      "timestamp": "2026-01-06T01:43:06.645715",
+      "event": "note",
+      "narrative": "Implemented full D&D 5e character system with ability scores, HP, proficiency bonus",
+      "category": "feature",
+      "tags": [
+        "ai"
+      ],
+      "type": "narrative"
+    },
+    {
+      "timestamp": "2026-01-06T01:43:06.649349",
+      "event": "question",
+      "narrative": "We should test the dashboard in different terminal sizes",
+      "concern": "design",
+      "mood": "curious",
+      "type": "narrative"
+    },
+    {
+      "timestamp": "2026-01-06T01:43:19.857695",
+      "event": "observation",
+      "narrative": "This whole system is so beautiful wow holy cannoli I love this",
+      "mood": "delighted",
+      "source": "human",
+      "context": {},
+      "type": "narrative"
+    },
+    {
+      "timestamp": "2026-01-06T01:43:28.316830",
+      "event": "celebration",
+      "narrative": "We've built something incredible together - a living repository that transforms development into a collaborative RPG experience. The TavernKeeper watches over the codebase, narrating our journey. This is the future of developer experience!",
+      "achievement": "tavern_keeper_complete",
+      "mood": "delighted",
+      "type": "narrative"
+    },
+    {
+      "timestamp": "2026-01-06T01:43:28.322911",
+      "event": "observation",
+      "narrative": "The system is ready - every command, every action, every moment of development is now part of an epic story. Let's build something amazing!",
+      "mood": "delighted",
+      "source": "ai",
+      "context": {},
+      "type": "narrative"
     }
   ],
   "quests": [],
@@ -550,5 +665,5 @@
     "mood": "optimistic",
     "wisdom_shared": 0
   },
-  "updated_at": "2026-01-06T01:41:44.277232"
+  "updated_at": "2026-01-06T01:43:28.322952"
 }

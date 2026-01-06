@@ -1138,18 +1138,32 @@ def character(
         from rich.table import Table
         from rich.panel import Panel
 
-        # Character Info
+        # Character Info with colors
         info_table = Table(show_header=False, box=None)
-        info_table.add_column(style="bold")
-        info_table.add_column()
-        info_table.add_row("Name:", char.get("name", "Unknown"))
-        info_table.add_row("Level:", str(char.get("level", 1)))
-        info_table.add_row("Proficiency Bonus:", f"+{sheet['proficiency_bonus']}")
-        info_table.add_row("Hit Dice:", char.get("hit_dice", "d8"))
-        info_table.add_row("HP:", f"{hp['current']}/{hp['max']}")
-        info_table.add_row("Integrity:", f"{char.get('integrity', 100.0):.1f}%")
-        info_table.add_row("Insight:", f"{char.get('insight', 0.0):.1f}")
-        info_table.add_row("Credits:", str(char.get("credits", 0)))
+        info_table.add_column(style="bold cyan")
+        info_table.add_column(style="")
+        
+        # Color code values
+        level = char.get("level", 1)
+        level_color = "gold1" if level >= 5 else "cyan" if level >= 3 else "green"
+        
+        integrity = char.get("integrity", 100.0)
+        integrity_color = "green" if integrity >= 80 else "yellow" if integrity >= 50 else "red"
+        
+        insight = char.get("insight", 0.0)
+        insight_color = "magenta" if insight >= 500 else "cyan" if insight >= 100 else "dim"
+        
+        credits = char.get("credits", 0)
+        credits_color = "gold1" if credits >= 100 else "cyan" if credits >= 50 else "dim"
+        
+        info_table.add_row("Name:", f"[bold]{char.get('name', 'Unknown')}[/]")
+        info_table.add_row("Level:", f"[bold {level_color}]{level}[/]")
+        info_table.add_row("Proficiency Bonus:", f"[cyan]+{sheet['proficiency_bonus']}[/]")
+        info_table.add_row("Hit Dice:", f"[dim]{char.get('hit_dice', 'd8')}[/]")
+        info_table.add_row("HP:", f"[green]{hp['current']}[/]/[dim]{hp['max']}[/]")
+        info_table.add_row("Integrity:", f"[{integrity_color}]{integrity:.1f}%[/]")
+        info_table.add_row("Insight:", f"[{insight_color}]{insight:.1f}[/]")
+        info_table.add_row("Credits:", f"[{credits_color}]{credits}[/]")
 
         console.print(Panel(info_table, title="[bold]Character Info[/bold]", border_style="cyan"))
 
@@ -1159,11 +1173,37 @@ def character(
         ability_table.add_column("Score", width=8, justify="center")
         ability_table.add_column("Modifier", width=10, justify="center")
 
+        # Color mapping for abilities
+        ability_colors = {
+            "strength": "red",
+            "dexterity": "cyan",
+            "constitution": "green",
+            "intelligence": "blue",
+            "wisdom": "magenta",
+            "charisma": "bright_magenta",
+        }
+        
         for ability in ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]:
             score = ability_scores.get(ability, 8)
             modifier = ability_modifiers.get(ability, -1)
             modifier_str = f"+{modifier}" if modifier >= 0 else str(modifier)
-            ability_table.add_row(ability.title(), str(score), modifier_str)
+            
+            # Color code score
+            if score >= 16:
+                score_color = "gold1"
+            elif score >= 13:
+                score_color = "green"
+            elif score >= 10:
+                score_color = "cyan"
+            else:
+                score_color = "dim"
+            
+            ability_color = ability_colors.get(ability, "white")
+            ability_table.add_row(
+                f"[{ability_color}]{ability.title()}[/]",
+                f"[{score_color}]{score}[/]",
+                f"[dim]{modifier_str}[/]"
+            )
 
         console.print("\n")
         console.print(Panel(ability_table, title="[bold]Ability Scores[/bold]", border_style="cyan"))
@@ -1177,11 +1217,17 @@ def character(
 
             for effect in status_effects:
                 effect_type = effect.get("type", "unknown")
-                effect_color = "green" if effect_type == "buff" else "red"
+                if effect_type == "buff":
+                    effect_color = "gold1"
+                    symbol = "▲"
+                else:
+                    effect_color = "red"
+                    symbol = "▼"
+                
                 effects_table.add_row(
-                    effect.get("name", "Unknown"),
-                    f"[{effect_color}]{effect_type}[/{effect_color}]",
-                    effect.get("description", ""),
+                    f"[{effect_color}]{symbol}[/] {effect.get('name', 'Unknown')}",
+                    f"[{effect_color}]{effect_type}[/]",
+                    f"[dim]{effect.get('description', '')}[/]",
                 )
 
             console.print("\n")
@@ -1387,33 +1433,33 @@ def quests(
 
     try:
         tavern = TavernKeeper(project_path)
-        
+
         # Get quests
         if tavern.db:
             quests = tavern.db.table("quests").all()
         else:
             quests = tavern._data.get("quests", [])
-        
+
         console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Quests\n")
-        
+
         if not quests:
             console.print("[dim]No quests available. Create goals with 'waft goal create' to generate quests![/dim]")
             return
-        
+
         from rich.table import Table
-        
+
         quest_table = Table(show_header=True, header_style="bold cyan")
         quest_table.add_column("Quest", width=30)
         quest_table.add_column("Status", width=12)
         quest_table.add_column("Reward", width=15)
         quest_table.add_column("Progress", width=20)
-        
+
         for quest in quests:
             name = quest.get("name", "Unknown Quest")
             status = quest.get("status", "active")
             reward = quest.get("reward", "N/A")
             progress = quest.get("progress", "0%")
-            
+
             status_color = "green" if status == "completed" else "yellow" if status == "active" else "dim"
             quest_table.add_row(
                 name,
@@ -1421,9 +1467,9 @@ def quests(
                 str(reward),
                 progress,
             )
-        
+
         console.print(quest_table)
-        
+
     except Exception as e:
         console.print(f"[bold red]❌ Error loading quests: {e}[/bold red]")
         raise typer.Exit(1)
@@ -1442,13 +1488,13 @@ def note(
     try:
         tavern = TavernKeeper(project_path)
         narrator = Narrator(tavern)
-        
+
         narrator.note(text, category=category, tags=[source])
-        
+
         console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Note Added\n")
         console.print(f"[green]✅[/green] Note logged: [bold]{text}[/bold]")
         console.print(f"[dim]Category: {category} | Source: {source}[/dim]")
-        
+
     except Exception as e:
         console.print(f"[bold red]❌ Error adding note: {e}[/bold red]")
         raise typer.Exit(1)
@@ -1466,13 +1512,13 @@ def observe(
     try:
         tavern = TavernKeeper(project_path)
         narrator = Narrator(tavern)
-        
+
         narrator.observe(observation, mood=mood, source="human")
-        
+
         console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Observation Logged\n")
         console.print(f"[green]✅[/green] Observation: [bold]{observation}[/bold]")
         console.print(f"[dim]Mood: {mood}[/dim]")
-        
+
     except Exception as e:
         console.print(f"[bold red]❌ Error logging observation: {e}[/bold red]")
         raise typer.Exit(1)
