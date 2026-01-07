@@ -603,6 +603,9 @@ def info(
 
     console.print(table)
 
+    # TavernKeeper: Perception check
+    _process_tavern_hook(project_path, "info", True)
+
 
 @app.command()
 def serve(
