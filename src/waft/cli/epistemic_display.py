@@ -248,3 +248,4 @@ def format_epistemic_summary(state: Optional[Dict[str, Any]] = None) -> str:
 
     return f"{moon_phase} K:{know:.0%} U:{uncertainty:.0%}"
 
+

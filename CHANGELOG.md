@@ -5,7 +5,40 @@ All notable changes to Waft will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] / [0.0.2] - 2026-01-05
+## [Unreleased] / [0.0.3] - 2026-01-06
+
+### Added
+
+#### Tavern Keeper RPG Gamification System
+- Complete RPG gamification system with Constructivist Sci-Fi theme
+- `waft character` - Display full character sheet with D&D stats
+- `waft chronicle` - View adventure journal entries
+- `waft roll` - Manual dice roll (d20 system)
+- `waft quests` - View active and completed quests
+- `waft note` - Add notes to the chronicle
+- `waft observe` - Log observations with mood
+- `waft dashboard` - Red October Dashboard TUI (real-time updates)
+- Character system with ability scores (STR, DEX, CON, INT, WIS, CHA)
+- Dice rolling system (d20 with advantage/disadvantage)
+- Narrative generation using Tracery grammars
+- Status effects (buffs/debuffs) system
+- Adventure journal logging
+- Command hooks integrated into all major commands:
+  - `waft new` - Character creation (CHA check)
+  - `waft verify` - Constitution save
+  - `waft init` - Ritual casting (WIS check)
+  - `waft info` - Perception check
+  - `waft sync` - Resource management (INT check)
+  - `waft add` - Acquisition (CHA check)
+  - `waft finding log` - Discovery (INT check)
+  - `waft assess` - Wisdom save
+  - `waft check` - Safety gate
+  - `waft goal create` - Quest creation
+- Git merge driver for semantic merging of `chronicles.json`
+- Data migration from `gamification.json` to `chronicles.json`
+- Comprehensive test suite (15 tests, all passing)
+
+## [0.0.2] - 2026-01-05
 
 ### Added
 

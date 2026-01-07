@@ -9,7 +9,7 @@ The "Operating System" for projects, orchestrating:
 """
 
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Dict
 
 import typer
 from rich.console import Console
@@ -21,6 +21,7 @@ from .core.substrate import SubstrateManager
 from .core.empirica import EmpiricaManager
 from .core.gamification import GamificationManager
 from .core.github import GitHubManager
+from .core.tavern_keeper import TavernKeeper, Narrator
 from .utils import (
     resolve_project_path,
     validate_waft_project,
@@ -42,6 +43,67 @@ app = typer.Typer(
 )
 
 console = Console()
+
+
+def _process_tavern_hook(project_path: Path, command: str, success: bool, context: Optional[Dict] = None) -> None:
+    """
+    Helper function to process TavernKeeper command hooks.
+
+    Args:
+        project_path: Path to project
+        command: Command name
+        success: Whether command succeeded
+        context: Optional context dict
+    """
+    try:
+        tavern = TavernKeeper(project_path)
+        hook_result = tavern.process_command_hook(command, success, context)
+
+        # Display narrative if available
+        if hook_result.get("narrative"):
+            console.print(f"\n[dim]# {hook_result['narrative']}[/dim]")
+
+        # Show dice roll result
+        dice_result = hook_result.get("dice_result", {})
+        if dice_result:
+            roll = dice_result.get("roll", 0)
+            total = dice_result.get("total", 0)
+            dc = dice_result.get("dc", 0)
+            classification = dice_result.get("classification", "")
+
+            # Color based on classification
+            if classification == "critical_success":
+                color = "bold gold1"
+            elif classification == "critical_failure":
+                color = "bold red"
+            elif classification == "superior":
+                color = "gold1"
+            elif classification == "optimal":
+                color = "green"
+            else:
+                color = "dim"
+
+            ability_map = {
+                "new": "CHA", "verify": "CON", "init": "WIS", "info": "WIS",
+                "sync": "INT", "add": "CHA", "finding_log": "INT", "assess": "WIS",
+                "check": "WIS", "goal_create": "CHA",
+            }
+            ability = ability_map.get(command, "WIS")
+            console.print(f"[{color}]🎲 {ability} Check: {roll} + {dice_result.get('modifier', 0)} = {total} (DC {dc}) - {classification}[/{color}]")
+
+        # Show rewards
+        rewards = hook_result.get("rewards", {})
+        if rewards.get("level_up"):
+            console.print(f"[bold gold1]🎉 LEVEL UP! Level {rewards.get('old_level', 1)} → {rewards.get('new_level', 1)}[/bold gold1]")
+        if hook_result.get("xp_gained", 0) > 0:
+            credits = hook_result.get("rewards", {}).get("new_credits", 0)
+            if credits > 0:
+                console.print(f"[dim]✨ +{hook_result['xp_gained']} Insight, +{credits} Credits[/dim]")
+            else:
+                console.print(f"[dim]✨ +{hook_result['xp_gained']} Insight[/dim]")
+    except Exception:
+        # Silently fail if TavernKeeper not available
+        pass
 
 
 @app.command()
@@ -143,6 +205,9 @@ def new(
     # Award insight for creating project
     gamification = GamificationManager(project_path)
     insight_result = gamification.award_insight(50.0, reason="Created new project")
+
+    # TavernKeeper: Character creation event
+    _process_tavern_hook(project_path, "new", True, {"project_name": name})
 
     # Check for achievements
     stats = gamification.get_stats()
@@ -257,6 +322,9 @@ def verify(
     else:
         gamification.damage_integrity(10.0, reason="Project verification failed")
 
+    # TavernKeeper: Process command hook (Constitution Save)
+    _process_tavern_hook(project_path, "verify", all_valid, {"pyrite_valid": pyrite_status["valid"], "lock_exists": lock_exists})
+
     if all_valid:
         # Show moon phase in summary
         moon_phase = "🌑"
@@ -304,8 +372,10 @@ def sync(
 
     if success:
         console.print("[green]✅[/green] Dependencies synced successfully")
+        _process_tavern_hook(project_path, "sync", True)
     else:
         console.print("[bold red]❌ Failed to sync dependencies[/bold red]")
+        _process_tavern_hook(project_path, "sync", False)
         raise typer.Exit(1)
 
 
@@ -347,8 +417,10 @@ def add(
 
     if success:
         console.print(f"[green]✅[/green] Dependency '{package}' added successfully")
+        _process_tavern_hook(project_path, "add", True, {"package": package})
     else:
         console.print(f"[bold red]❌ Failed to add dependency '{package}'[/bold red]")
+        _process_tavern_hook(project_path, "add", False, {"package": package})
         raise typer.Exit(1)
 
 
@@ -439,6 +511,9 @@ def init(
         border_style="green",
     )
     console.print(success_panel)
+
+    # TavernKeeper: Ritual casting event
+    _process_tavern_hook(project_path, "init", True)
 
 
 @app.command()
@@ -705,8 +780,10 @@ def finding_log(
 
         console.print(f"[green]✅[/green] Finding logged: [bold]{finding}[/bold]")
         console.print(f"[dim]Impact: {impact:.0%} | 🧠 +10 Insight[/dim]")
+        _process_tavern_hook(project_path, "finding_log", True, {"finding": finding, "impact": impact})
     else:
         console.print("[bold red]❌ Failed to log finding[/bold red]")
+        _process_tavern_hook(project_path, "finding_log", False)
         raise typer.Exit(1)
 
 
@@ -765,23 +842,47 @@ def check(
 
         if gate_result == "HALT":
             console.print("[red]⚠️  Operation requires human approval[/red]")
+            _process_tavern_hook(project_path, "check", False, {"gate_result": gate_result})
             raise typer.Exit(1)
         elif gate_result == "BRANCH":
             console.print("[yellow]⚠️  Need to investigate before proceeding[/yellow]")
+            _process_tavern_hook(project_path, "check", True, {"gate_result": gate_result})
         elif gate_result == "REVISE":
             console.print("[yellow]⚠️  Approach needs revision[/yellow]")
+            _process_tavern_hook(project_path, "check", True, {"gate_result": gate_result})
+        else:
+            _process_tavern_hook(project_path, "check", True, {"gate_result": gate_result})
     else:
         console.print("[yellow]⚠️  Gate check unavailable[/yellow]")
+        _process_tavern_hook(project_path, "check", False)
 
 
-@app.command()
-def dashboard(
+@app.command(name="dashboard")
+def dashboard_cmd(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+):
+    """Show the Red October Dashboard - TavernKeeper TUI."""
+    project_path = resolve_project_path(path)
+
+    try:
+        from .ui.dashboard import RedOctoberDashboard
+        tavern = TavernKeeper(project_path)
+        dashboard = RedOctoberDashboard(tavern)
+        dashboard.run()
+    except KeyboardInterrupt:
+        console.print("\n[dim]Dashboard closed[/dim]")
+    except Exception as e:
+        console.print(f"[bold red]❌ Error starting dashboard: {e}[/bold red]")
+        raise typer.Exit(1)
+
+
+@app.command(name="hud")
+def hud_cmd(
     path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     integrity: float = typer.Option(100.0, "--integrity", help="Integrity value (0.0-100.0)"),
 ):
-    """Show the Epistemic HUD with split-screen layout."""
+    """Show the Epistemic HUD with split-screen layout (legacy)."""
     project_path = resolve_project_path(path)
-
     render_hud(project_path, integrity=integrity)
 
 
@@ -825,6 +926,9 @@ def assess(
         integrity = gamification.integrity
         insight = gamification.insight
         console.print(f"\n[dim]💎 Integrity: {integrity:.0f}% | 🧠 Insight: {insight:.0f} | 🧠 +25 Insight[/dim]")
+
+        # TavernKeeper: Wisdom save
+        _process_tavern_hook(project_path, "assess", True, {"uncertainty": uncertainty})
     else:
         console.print("[yellow]⚠️  No assessment data available[/yellow]")
 
@@ -879,8 +983,32 @@ def goal_create(
     if success:
         console.print(f"[green]✅[/green] Goal created: [bold]{objective}[/bold]")
         console.print(f"[dim]Session: {session_id}[/dim]")
+
+        # Create quest from goal
+        try:
+            tavern = TavernKeeper(project_path)
+            quest = {
+                "id": f"quest_{session_id}_{len(tavern._data.get('quests', []))}",
+                "name": objective,
+                "status": "active",
+                "reward": "500 Insight",
+                "progress": "0%",
+                "created_at": datetime.now().isoformat(),
+                "goal_id": session_id,
+            }
+            if tavern.db:
+                tavern.db.table("quests").insert(quest)
+            else:
+                tavern._data.setdefault("quests", []).append(quest)
+                tavern._save_json_data()
+            console.print(f"[dim]✨ Quest created: {objective}[/dim]")
+        except Exception:
+            pass  # Silently fail if quest creation doesn't work
+
+        _process_tavern_hook(project_path, "goal_create", True, {"objective": objective})
     else:
         console.print("[bold red]❌ Failed to create goal[/bold red]")
+        _process_tavern_hook(project_path, "goal_create", False)
         raise typer.Exit(1)
 
 
@@ -990,6 +1118,127 @@ def level(
 
 
 @app.command()
+def character(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+):
+    """Display full D&D 5e character sheet."""
+    project_path = resolve_project_path(path)
+
+    console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Character Sheet\n")
+
+    try:
+        tavern = TavernKeeper(project_path)
+        sheet = tavern.get_character_sheet()
+        char = sheet["character"]
+        ability_scores = sheet["ability_scores"]
+        ability_modifiers = sheet["ability_modifiers"]
+        hp = sheet["hp"]
+        status_effects = sheet["status_effects"]
+
+        from rich.table import Table
+        from rich.panel import Panel
+
+        # Character Info with colors
+        info_table = Table(show_header=False, box=None)
+        info_table.add_column(style="bold cyan")
+        info_table.add_column(style="")
+
+        # Color code values
+        level = char.get("level", 1)
+        level_color = "gold1" if level >= 5 else "cyan" if level >= 3 else "green"
+
+        integrity = char.get("integrity", 100.0)
+        integrity_color = "green" if integrity >= 80 else "yellow" if integrity >= 50 else "red"
+
+        insight = char.get("insight", 0.0)
+        insight_color = "magenta" if insight >= 500 else "cyan" if insight >= 100 else "dim"
+
+        credits = char.get("credits", 0)
+        credits_color = "gold1" if credits >= 100 else "cyan" if credits >= 50 else "dim"
+
+        info_table.add_row("Name:", f"[bold]{char.get('name', 'Unknown')}[/]")
+        info_table.add_row("Level:", f"[bold {level_color}]{level}[/]")
+        info_table.add_row("Proficiency Bonus:", f"[cyan]+{sheet['proficiency_bonus']}[/]")
+        info_table.add_row("Hit Dice:", f"[dim]{char.get('hit_dice', 'd8')}[/]")
+        info_table.add_row("HP:", f"[green]{hp['current']}[/]/[dim]{hp['max']}[/]")
+        info_table.add_row("Integrity:", f"[{integrity_color}]{integrity:.1f}%[/]")
+        info_table.add_row("Insight:", f"[{insight_color}]{insight:.1f}[/]")
+        info_table.add_row("Credits:", f"[{credits_color}]{credits}[/]")
+
+        console.print(Panel(info_table, title="[bold]Character Info[/bold]", border_style="cyan"))
+
+        # Ability Scores
+        ability_table = Table(show_header=True, header_style="bold cyan")
+        ability_table.add_column("Ability", width=15)
+        ability_table.add_column("Score", width=8, justify="center")
+        ability_table.add_column("Modifier", width=10, justify="center")
+
+        # Color mapping for abilities
+        ability_colors = {
+            "strength": "red",
+            "dexterity": "cyan",
+            "constitution": "green",
+            "intelligence": "blue",
+            "wisdom": "magenta",
+            "charisma": "bright_magenta",
+        }
+
+        for ability in ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]:
+            score = ability_scores.get(ability, 8)
+            modifier = ability_modifiers.get(ability, -1)
+            modifier_str = f"+{modifier}" if modifier >= 0 else str(modifier)
+
+            # Color code score
+            if score >= 16:
+                score_color = "gold1"
+            elif score >= 13:
+                score_color = "green"
+            elif score >= 10:
+                score_color = "cyan"
+            else:
+                score_color = "dim"
+
+            ability_color = ability_colors.get(ability, "white")
+            ability_table.add_row(
+                f"[{ability_color}]{ability.title()}[/]",
+                f"[{score_color}]{score}[/]",
+                f"[dim]{modifier_str}[/]"
+            )
+
+        console.print("\n")
+        console.print(Panel(ability_table, title="[bold]Ability Scores[/bold]", border_style="cyan"))
+
+        # Status Effects
+        if status_effects:
+            effects_table = Table(show_header=True, header_style="bold cyan")
+            effects_table.add_column("Effect", width=20)
+            effects_table.add_column("Type", width=10)
+            effects_table.add_column("Description", width=40)
+
+            for effect in status_effects:
+                effect_type = effect.get("type", "unknown")
+                if effect_type == "buff":
+                    effect_color = "gold1"
+                    symbol = "▲"
+                else:
+                    effect_color = "red"
+                    symbol = "▼"
+
+                effects_table.add_row(
+                    f"[{effect_color}]{symbol}[/] {effect.get('name', 'Unknown')}",
+                    f"[{effect_color}]{effect_type}[/]",
+                    f"[dim]{effect.get('description', '')}[/]",
+                )
+
+            console.print("\n")
+            console.print(Panel(effects_table, title="[bold]Status Effects[/bold]", border_style="cyan"))
+
+    except Exception as e:
+        console.print(f"[bold red]❌ Error loading character sheet: {e}[/bold red]")
+        console.print("[dim]Make sure you've run 'waft new' or 'waft init' first[/dim]")
+
+
+@app.command()
 def achievements(
     path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
@@ -1023,6 +1272,256 @@ def achievements(
         table.add_row(name, status)
 
     console.print(table)
+
+
+@app.command(name="chronicle")
+def chronicle(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    limit: int = typer.Option(20, "--limit", "-n", help="Number of entries to show"),
+):
+    """View the Adventure Chronicle - Your journey's story."""
+    project_path = resolve_project_path(path)
+
+    try:
+        tavern = TavernKeeper(project_path)
+
+        # Get journal entries
+        if tavern.db:
+            journal_entries = tavern.db.table("adventure_journal").all()
+        else:
+            journal_entries = tavern._data.get("adventure_journal", [])
+
+        # Get last N entries
+        recent_entries = journal_entries[-limit:] if len(journal_entries) > limit else journal_entries
+        recent_entries.reverse()  # Show newest first
+
+        console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Adventure Journal\n")
+
+        if not recent_entries:
+            console.print("[dim]No entries in the chronicle yet. Run some commands to generate adventures![/dim]")
+            return
+
+        from rich.table import Table
+
+        journal_table = Table(show_header=True, header_style="bold cyan")
+        journal_table.add_column("Time", width=10, style="dim")
+        journal_table.add_column("Event", width=12)
+        journal_table.add_column("Roll", width=15, justify="center")
+        journal_table.add_column("Narrative", ratio=2)
+        journal_table.add_column("Reward", width=20, justify="right")
+
+        for entry in recent_entries:
+            timestamp = entry.get("timestamp", "")
+            event = entry.get("event", "unknown")
+            narrative = entry.get("narrative", "")
+            dice_result = entry.get("dice_roll", "")
+            result = entry.get("result", 0)
+            classification = entry.get("classification", "")
+            rewards = entry.get("rewards", {})
+
+            # Format timestamp
+            try:
+                time_part = timestamp.split("T")[1].split(".")[0] if "T" in timestamp else timestamp[:8]
+            except:
+                time_part = timestamp[:8] if len(timestamp) >= 8 else timestamp
+
+            # Format roll display
+            roll_display = f"{dice_result} = {result}"
+            if classification:
+                if classification == "critical_success":
+                    roll_display = f"[bold gold1]{roll_display} ⭐[/]"
+                elif classification == "critical_failure":
+                    roll_display = f"[bold red]{roll_display} 💥[/]"
+                elif classification == "superior":
+                    roll_display = f"[gold1]{roll_display} ▲[/]"
+
+            # Format reward
+            insight = rewards.get("insight", 0)
+            credits = rewards.get("credits", 0)
+            reward_str = ""
+            if insight > 0:
+                reward_str += f"+{insight} Insight "
+            if credits > 0:
+                reward_str += f"+{credits} Credits"
+            if not reward_str:
+                reward_str = "[dim]-[/]"
+
+            journal_table.add_row(
+                time_part,
+                event,
+                roll_display,
+                narrative,
+                reward_str,
+            )
+
+        console.print(journal_table)
+        console.print(f"\n[dim]Showing {len(recent_entries)} of {len(journal_entries)} entries[/dim]")
+
+    except Exception as e:
+        console.print(f"[bold red]❌ Error loading journal: {e}[/bold red]")
+        raise typer.Exit(1)
+
+
+@app.command()
+def roll(
+    ability: str = typer.Argument(..., help="Ability to use (strength, dexterity, etc.)"),
+    dc: int = typer.Option(10, "--dc", help="Difficulty Class (target number)"),
+    advantage: bool = typer.Option(False, "--advantage", "-a", help="Roll with advantage"),
+    disadvantage: bool = typer.Option(False, "--disadvantage", "-d", help="Roll with disadvantage"),
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+):
+    """Roll a d20 check manually - Test your luck!"""
+    project_path = resolve_project_path(path)
+
+    try:
+        tavern = TavernKeeper(project_path)
+
+        console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Dice Roll\n")
+
+        result = tavern.roll_check(ability, dc, advantage=advantage, disadvantage=disadvantage)
+
+        roll = result["roll"]
+        modifier = result["modifier"]
+        total = result["total"]
+        success = result["success"]
+        classification = result["classification"]
+
+        # Display roll
+        console.print(f"[bold]Ability:[/bold] {ability.title()}")
+        console.print(f"[bold]DC:[/bold] {dc}")
+        if advantage:
+            console.print(f"[dim]Rolling with advantage[/dim]")
+        elif disadvantage:
+            console.print(f"[dim]Rolling with disadvantage[/dim]")
+
+        console.print()
+
+        # Show dice result with color
+        if classification == "critical_success":
+            console.print(f"[bold gold1]🎲 Roll: {roll} + {modifier} = {total}[/bold gold1]")
+            console.print(f"[bold gold1]⭐ CRITICAL SUCCESS![/bold gold1]")
+        elif classification == "critical_failure":
+            console.print(f"[bold red]🎲 Roll: {roll} + {modifier} = {total}[/bold red]")
+            console.print(f"[bold red]💥 CRITICAL FAILURE![/bold red]")
+        elif classification == "superior":
+            console.print(f"[gold1]🎲 Roll: {roll} + {modifier} = {total}[/gold1]")
+            console.print(f"[gold1]▲ Superior Result[/gold1]")
+        elif classification == "optimal":
+            console.print(f"[green]🎲 Roll: {roll} + {modifier} = {total}[/green]")
+            console.print(f"[green]✓ Optimal Result[/green]")
+        else:
+            console.print(f"🎲 Roll: {roll} + {modifier} = {total}")
+
+        console.print()
+
+        if success:
+            console.print(f"[bold green]✅ Success! (Total {total} >= DC {dc})[/bold green]")
+        else:
+            console.print(f"[bold red]❌ Failure (Total {total} < DC {dc})[/bold red]")
+
+    except Exception as e:
+        console.print(f"[bold red]❌ Error rolling dice: {e}[/bold red]")
+        raise typer.Exit(1)
+
+
+@app.command()
+def quests(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+):
+    """View active and completed quests."""
+    project_path = resolve_project_path(path)
+
+    try:
+        tavern = TavernKeeper(project_path)
+
+        # Get quests
+        if tavern.db:
+            quests = tavern.db.table("quests").all()
+        else:
+            quests = tavern._data.get("quests", [])
+
+        console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Quests\n")
+
+        if not quests:
+            console.print("[dim]No quests available. Create goals with 'waft goal create' to generate quests![/dim]")
+            return
+
+        from rich.table import Table
+
+        quest_table = Table(show_header=True, header_style="bold cyan")
+        quest_table.add_column("Quest", width=30)
+        quest_table.add_column("Status", width=12)
+        quest_table.add_column("Reward", width=15)
+        quest_table.add_column("Progress", width=20)
+
+        for quest in quests:
+            name = quest.get("name", "Unknown Quest")
+            status = quest.get("status", "active")
+            reward = quest.get("reward", "N/A")
+            progress = quest.get("progress", "0%")
+
+            status_color = "green" if status == "completed" else "yellow" if status == "active" else "dim"
+            quest_table.add_row(
+                name,
+                f"[{status_color}]{status.title()}[/{status_color}]",
+                str(reward),
+                progress,
+            )
+
+        console.print(quest_table)
+
+    except Exception as e:
+        console.print(f"[bold red]❌ Error loading quests: {e}[/bold red]")
+        raise typer.Exit(1)
+
+
+@app.command()
+def note(
+    text: str = typer.Argument(..., help="Note to add to the chronicle"),
+    category: str = typer.Option("general", "--category", "-c", help="Category (bug, feature, refactor, insight, etc.)"),
+    source: str = typer.Option("human", "--source", "-s", help="Source (human, ai, system)"),
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+):
+    """Add a narrative note to the chronicle - Share your thoughts!"""
+    project_path = resolve_project_path(path)
+
+    try:
+        tavern = TavernKeeper(project_path)
+        narrator = Narrator(tavern)
+
+        narrator.note(text, category=category, tags=[source])
+
+        console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Note Added\n")
+        console.print(f"[green]✅[/green] Note logged: [bold]{text}[/bold]")
+        console.print(f"[dim]Category: {category} | Source: {source}[/dim]")
+
+    except Exception as e:
+        console.print(f"[bold red]❌ Error adding note: {e}[/bold red]")
+        raise typer.Exit(1)
+
+
+@app.command()
+def observe(
+    observation: str = typer.Argument(..., help="Observation to log"),
+    mood: str = typer.Option("neutral", "--mood", "-m", help="Mood (neutral, surprised, delighted, concerned, amazed)"),
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+):
+    """Log an observation - "woah that's kinda sick" or "weird that's not right"."""
+    project_path = resolve_project_path(path)
+
+    try:
+        tavern = TavernKeeper(project_path)
+        narrator = Narrator(tavern)
+
+        narrator.observe(observation, mood=mood, source="human")
+
+        console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Observation Logged\n")
+        console.print(f"[green]✅[/green] Observation: [bold]{observation}[/bold]")
+        console.print(f"[dim]Mood: {mood}[/dim]")
+
+    except Exception as e:
+        console.print(f"[bold red]❌ Error logging observation: {e}[/bold red]")
+        raise typer.Exit(1)
 
 
 def main():

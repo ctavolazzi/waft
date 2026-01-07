@@ -253,6 +253,87 @@ List all achievements:
 waft achievements
 ```
 
+### Tavern Keeper Commands
+
+The Tavern Keeper transforms your repository into a "Living Repository" with RPG gamification mechanics.
+
+#### `waft character`
+
+Display full character sheet with D&D stats:
+
+```bash
+waft character
+```
+
+Shows ability scores, modifiers, HP, level, insight, credits, and status effects.
+
+#### `waft chronicle`
+
+View adventure journal entries:
+
+```bash
+waft chronicle
+waft chronicle --limit 50
+```
+
+Displays recent events, narratives, dice rolls, and outcomes.
+
+#### `waft roll`
+
+Manual dice roll:
+
+```bash
+waft roll strength --dc 15
+waft roll dexterity --dc 12 --advantage
+waft roll wisdom --dc 10 --disadvantage
+```
+
+Roll a d20 check with optional advantage/disadvantage.
+
+#### `waft quests`
+
+View active and completed quests:
+
+```bash
+waft quests
+```
+
+#### `waft note`
+
+Add a note to the chronicle:
+
+```bash
+waft note "Fixed authentication bug" --category bug
+waft note "Added new feature" --category feature
+```
+
+#### `waft observe`
+
+Log an observation:
+
+```bash
+waft observe "That refactor looks beautiful!" --mood delighted
+waft observe "Weird, that's not right" --mood concerned
+```
+
+#### `waft dashboard`
+
+Red October Dashboard - Real-time TUI:
+
+```bash
+waft dashboard
+```
+
+Displays:
+- **Header**: Integrity monitor with health bar
+- **Left Panel**: Character biometrics (level, ability scores, status effects)
+- **Center Panel**: System log (adventure journal feed)
+- **Right Panel**: Directives (active operation, credits, insight)
+
+Press `Q` to quit.
+
+**See [SPEC-TAVERNKEEPER.md](SPEC-TAVERNKEEPER.md) for complete documentation.**
+
 ## Epistemic Tracking
 
 Waft integrates with [Empirica](https://github.com/Nubaeon/empirica) to provide epistemic tracking:
@@ -282,6 +363,21 @@ Waft includes a Constructivist Sci-Fi themed gamification system:
 
 - **🏆 Achievements**: Unlock badges for milestones
   - 🌱 First Build, 🏗️ Constructor, 🎯 Goal Achiever, 🧠 Knowledge Architect, etc.
+
+### Tavern Keeper RPG System
+
+The **Tavern Keeper** adds full RPG mechanics to your repository:
+
+- **Character System**: D&D 5e style ability scores (STR, DEX, CON, INT, WIS, CHA)
+- **Dice Rolling**: d20 system with advantage/disadvantage
+- **Narrative Generation**: Procedural narratives using Tracery grammars
+- **Status Effects**: Buffs and debuffs from critical successes/failures
+- **Adventure Journal**: Chronicle of all events, rolls, and outcomes
+- **Command Hooks**: All major commands trigger RPG checks and award rewards
+
+Every command you run becomes part of your repository's story. The Tavern Keeper narrates your journey, tracks your progress, and celebrates your achievements.
+
+**See [SPEC-TAVERNKEEPER.md](SPEC-TAVERNKEEPER.md) for complete documentation.**
 
 ## Philosophy
 

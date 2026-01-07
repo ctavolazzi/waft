@@ -29,6 +29,8 @@ dependencies = [
     "rich>=13.0.0",
     "pydantic>=2.0.0",
     "empirica>=1.2.3",
+    "tinydb>=4.8.0",
+    "d20>=1.0.0",
 ]
 
 [project.optional-dependencies]
@@ -39,6 +41,9 @@ dev = [
 ]
 crewai = [
     "crewai>=0.1.0",
+]
+tavern-keeper = [
+    "pytracery>=0.1.1",
 ]
 
 [project.scripts]
@@ -51,7 +56,7 @@ Issues = "https://github.com/ctavolazzi/waft/issues"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
-packages = ["waft", "waft.core", "waft.cli", "waft.templates"]
+packages = ["waft", "waft.core", "waft.cli", "waft.templates", "waft.ui"]
 
 [tool.ruff]
 line-length = 100

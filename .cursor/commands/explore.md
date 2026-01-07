@@ -52,7 +52,7 @@ While `spin-up` gives you the current state and status, `explore` helps you unde
    - Check for unused dependencies
    - **Use**: `pyproject.toml` analysis, import tracing, `waft info`
    - **Log**: "Found X external dependencies, Y internal modules" via `waft finding log`
-   - **Use MCP**: 
+   - **Use MCP**:
 - `mcp_github_search_code` to find dependency usage patterns
 - `mcp_github_get_file_contents` to read `pyproject.toml` from GitHub
 - `mcp_github_list_commits` to see dependency changes over time
@@ -77,7 +77,7 @@ While `spin-up` gives you the current state and status, `explore` helps you unde
    - **Use**: `waft --help`, command exploration, entry point analysis
    - **Document**: Feature map in `_pyrite/active/`
    - **Log**: "Mapped X features, Y commands, Z extension points" via `waft finding log`
-   - **Use MCP**: 
+   - **Use MCP**:
 - `mcp_work-efforts_list_work_efforts` to see what's being worked on
 - `mcp_github_list_issues` to check for related GitHub issues
 - `mcp_github_list_pull_requests` to see pending PRs
@@ -112,7 +112,7 @@ While `spin-up` gives you the current state and status, `explore` helps you unde
    - Understand plugin/extensibility points
    - Find configuration mechanisms
    - **Use**: Codebase search for "integration", "api", "plugin"
-   - **Use MCP**: 
+   - **Use MCP**:
 - `mcp_github_search_code` to find integration code
 - `mcp_github_list_commits` to see integration history
 - `mcp_github_get_file_contents` to read integration files
@@ -271,14 +271,14 @@ Use semantic search to understand:
    - **Document**: Data flow diagram
 
 5. **"Where are configuration and settings managed?"**
-   - **Use**: 
+   - **Use**:
 - `mcp_filesystem_search_files` for config files
 - `mcp_github_search_code` to find config usage patterns
 - `mcp_github_get_file_contents` to read config files from GitHub
    - **Log finding**: "Config: X files, Y locations"
 
 6. **"How does error handling work across the codebase?"**
-   - **Use**: 
+   - **Use**:
 - `mcp_github_search_code` for error handling patterns
 - `mcp_github_list_commits` to see error handling evolution
 - `mcp_github_search_issues` to find error-related issues
@@ -289,7 +289,7 @@ Use semantic search to understand:
    - **Log finding**: "Logging pattern: X"
 
 8. **"How are external dependencies integrated?"**
-   - **Use**: 
+   - **Use**:
 - `mcp_github_search_code` for integration code
 - `mcp_github_list_commits` to see integration history
 - `mcp_github_get_file_contents` to read integration files
@@ -388,7 +388,7 @@ As you explore, actively use:
 - [ ] **_pyrite**: Created exploration docs in `_pyrite/active/`
 - [ ] **MCP work-efforts**: Checked active work, searched related efforts
 - [ ] **MCP docs-maintainer**: Searched documentation, checked health
-- [ ] **MCP github** (CRITICAL - Use First): 
+- [ ] **MCP github** (CRITICAL - Use First):
   - [ ] Got user info (`get_me`) - Understand context
   - [ ] Listed recent commits (understand evolution, last 10-20)
   - [ ] Checked open issues (understand priorities, state=OPEN)
