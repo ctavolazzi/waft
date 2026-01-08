@@ -6,6 +6,13 @@ and industrial design inspired by Russian Constructivism.
 """
 
 import time
+import sys
+import os
+import threading
+import termios
+import tty
+import fcntl
+import select
 from typing import Optional
 from pathlib import Path
 
@@ -54,6 +61,14 @@ class RedOctoberDashboard:
         self.tavern = tavern_keeper
         self.console = Console()
         self.running = True
+        self._original_terminal_settings = None
+        self._tty_fd = None
+        self._tty_settings = None
+        if sys.stdin.isatty():
+            try:
+                self._original_terminal_settings = termios.tcgetattr(sys.stdin.fileno())
+            except (termios.error, OSError):
+                pass
 
     def generate_layout(self) -> Layout:
         """
@@ -416,16 +431,98 @@ class RedOctoberDashboard:
         """
         Start the dashboard with Live context manager, refreshing at 4Hz.
         """
+
+        def get_key():
+            """Get a single keypress using persistent /dev/tty fd with select."""
+
+            # Initialize tty_fd if not already open
+            if self._tty_fd is None:
+                try:
+
+                    self._tty_fd = os.open('/dev/tty', os.O_RDONLY | os.O_NONBLOCK)
+                    self._tty_settings = termios.tcgetattr(self._tty_fd)
+                    tty.setraw(self._tty_fd)
+
+                except (OSError, IOError, termios.error) as e:
+                    return None
+
+            # Use select to check if input is available (non-blocking with 0.1s timeout)
+            try:
+                ready, _, _ = select.select([self._tty_fd], [], [], 0.1)
+
+
+                if ready:
+                    key_bytes = os.read(self._tty_fd, 1)
+
+
+                    if key_bytes:
+                        key = key_bytes.decode('utf-8', errors='ignore')
+
+
+                        return key.lower()
+            except (OSError, IOError) as e:
+                pass
+
+            return None
+
+        def check_keyboard():
+            """Check for keyboard input in a separate thread."""
+
+            while self.running:
+                try:
+
+                    # Use termios to get key (works with alternate screen mode)
+                    key = get_key()
+
+                    if key:
+
+                        if key == 'q':
+
+                            self.running = False
+                            break
+                    else:
+                        time.sleep(0.1)  # Small delay when no key
+                except Exception as e:
+                    time.sleep(0.1)
+
         with Live(
             self.render(),
             console=self.console,
             refresh_per_second=4,
             screen=True,
         ) as live:
+            # Start keyboard monitoring thread AFTER Live context is active
+            keyboard_thread = threading.Thread(target=check_keyboard, daemon=True)
+            keyboard_thread.start()
+
+
             try:
+
                 while self.running:
+
                     live.update(self.render())
                     time.sleep(0.25)  # 4Hz = 0.25s interval
+
             except KeyboardInterrupt:
+
                 self.running = False
+            finally:
+                # Restore terminal settings and close tty_fd
+                if self._tty_fd is not None:
+                    try:
+                        if self._tty_settings:
+                            termios.tcsetattr(self._tty_fd, termios.TCSADRAIN, self._tty_settings)
+                        os.close(self._tty_fd)
+                        self._tty_fd = None
+                        self._tty_settings = None
+
+                    except (termios.error, OSError):
+                        pass
+
+                # Ensure terminal is restored
+                if self._original_terminal_settings and sys.stdin.isatty():
+                    try:
+                        termios.tcsetattr(sys.stdin.fileno(), termios.TCSADRAIN, self._original_terminal_settings)
+                    except (termios.error, OSError):
+                        pass
 

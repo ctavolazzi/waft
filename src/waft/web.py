@@ -23,27 +23,10 @@ class WaftHandler(BaseHTTPRequestHandler):
     """HTTP request handler for Waft web dashboard."""
 
     def __init__(self, project_path: Path, dev_mode: bool = False, *args, **kwargs):
-        # #region agent log
-        import json
-        with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
-            f.write(json.dumps({"sessionId": "debug-session", "runId": "initial", "hypothesisId": "A", "location": "web.py:19", "message": "WaftHandler.__init__ entry", "data": {"project_path": str(project_path), "project_path_type": type(project_path).__name__}, "timestamp": __import__("time").time() * 1000}) + "\n")
-        # #endregion
         self.project_path = project_path
         self.dev_mode = dev_mode
-        # #region agent log
-        with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
-            f.write(json.dumps({"sessionId": "debug-session", "runId": "initial", "hypothesisId": "A", "location": "web.py:21", "message": "Before MemoryManager init", "data": {"project_path": str(project_path)}, "timestamp": __import__("time").time() * 1000}) + "\n")
-        # #endregion
         self.memory = MemoryManager(project_path)
-        # #region agent log
-        with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
-            f.write(json.dumps({"sessionId": "debug-session", "runId": "post-fix", "hypothesisId": "A", "location": "web.py:22", "message": "Before SubstrateManager init", "data": {"project_path": str(project_path), "substrate_class": str(SubstrateManager), "substrate_init": str(SubstrateManager.__init__)}, "timestamp": __import__("time").time() * 1000}) + "\n")
-        # #endregion
         self.substrate = SubstrateManager(project_path)
-        # #region agent log
-        with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
-            f.write(json.dumps({"sessionId": "debug-session", "runId": "post-fix", "hypothesisId": "A", "location": "web.py:23", "message": "After SubstrateManager init", "data": {"substrate_created": str(self.substrate), "substrate_project_path": str(self.substrate.project_path)}, "timestamp": __import__("time").time() * 1000}) + "\n")
-        # #endregion
         super().__init__(*args, **kwargs)
 
     def do_GET(self):

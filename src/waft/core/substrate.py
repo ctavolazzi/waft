@@ -23,13 +23,6 @@ class SubstrateManager:
             project_path: Optional path to project root. If provided, methods can use
                          this as default, but still accept project_path parameter.
         """
-        # #region agent log
-        import json
-        import inspect
-        sig = inspect.signature(self.__init__)
-        with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
-            f.write(json.dumps({"sessionId": "debug-session", "runId": "post-fix", "hypothesisId": "A", "location": "substrate.py:16", "message": "SubstrateManager.__init__ entry", "data": {"signature": str(sig), "params": list(sig.parameters.keys()), "project_path": str(project_path) if project_path else None}, "timestamp": __import__("time").time() * 1000}) + "\n")
-        # #endregion
         self.project_path = project_path
 
     def init_project(self, name: str, target_path: Path) -> bool:
