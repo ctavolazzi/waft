@@ -115,8 +115,48 @@
       "reason": "Project verification passed",
       "integrity_before": 100.0,
       "integrity_after": 100.0
+    },
+    {
+      "timestamp": "2026-01-06T17:06:10.613099",
+      "type": "integrity_restore",
+      "amount": 2.0,
+      "reason": "Project verification passed",
+      "integrity_before": 100.0,
+      "integrity_after": 100.0
+    },
+    {
+      "timestamp": "2026-01-06T23:00:18.674051",
+      "type": "integrity_restore",
+      "amount": 2.0,
+      "reason": "Project verification passed",
+      "integrity_before": 100.0,
+      "integrity_after": 100.0
+    },
+    {
+      "timestamp": "2026-01-07T15:07:05.696044",
+      "type": "integrity_restore",
+      "amount": 2.0,
+      "reason": "Project verification passed",
+      "integrity_before": 100.0,
+      "integrity_after": 100.0
+    },
+    {
+      "timestamp": "2026-01-07T16:06:26.824983",
+      "type": "integrity_restore",
+      "amount": 2.0,
+      "reason": "Project verification passed",
+      "integrity_before": 100.0,
+      "integrity_after": 100.0
+    },
+    {
+      "timestamp": "2026-01-07T16:09:37.031335",
+      "type": "integrity_restore",
+      "amount": 2.0,
+      "reason": "Project verification passed",
+      "integrity_before": 100.0,
+      "integrity_after": 100.0
     }
   ],
   "created_at": "2026-01-06T00:13:34.681769",
-  "updated_at": "2026-01-06T01:47:26.274040"
+  "updated_at": "2026-01-07T16:09:37.031441"
 }

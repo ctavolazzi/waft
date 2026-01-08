@@ -3,7 +3,7 @@
     "name": "",
     "level": 1,
     "integrity": 100.0,
-    "insight": 10.0,
+    "insight": 47.0,
     "credits": 0,
     "ability_scores": {
       "strength": 8,
@@ -18,70 +18,23 @@
     "max_hp": 7,
     "current_hp": 7,
     "created_at": "2026-01-06T01:32:20.665539",
-    "updated_at": "2026-01-06T01:47:26.279741"
+    "updated_at": "2026-01-07T16:09:37.036020"
   },
-  "status_effects": [],
+  "status_effects": [
+    {
+      "id": "harmonic_resonance",
+      "name": "Harmonic Resonance",
+      "type": "buff",
+      "effect": {
+        "intelligence": 2,
+        "wisdom": 2
+      },
+      "duration": 3600,
+      "description": "Critical success creates perfect alignment",
+      "applied_at": "2026-01-06T23:00:39.826589"
+    }
+  ],
   "adventure_journal": [
-    {
-      "timestamp": "2026-01-06T00:26:57.321827",
-      "event": "integrity_restore",
-      "narrative": "Project verification passed",
-      "outcome": "info"
-    },
-    {
-      "timestamp": "2026-01-06T00:29:25.265058",
-      "event": "integrity_restore",
-      "narrative": "Project verification passed",
-      "outcome": "info"
-    },
-    {
-      "timestamp": "2026-01-06T00:31:08.140897",
-      "event": "integrity_restore",
-      "narrative": "Project verification passed",
-      "outcome": "info"
-    },
-    {
-      "timestamp": "2026-01-06T00:31:39.558319",
-      "event": "integrity_restore",
-      "narrative": "Project verification passed",
-      "outcome": "info"
-    },
-    {
-      "timestamp": "2026-01-06T00:33:02.114625",
-      "event": "integrity_restore",
-      "narrative": "Project verification passed",
-      "outcome": "info"
-    },
-    {
-      "timestamp": "2026-01-06T00:33:33.014330",
-      "event": "integrity_restore",
-      "narrative": "Project verification passed",
-      "outcome": "info"
-    },
-    {
-      "timestamp": "2026-01-06T00:38:23.015211",
-      "event": "integrity_restore",
-      "narrative": "Project verification passed",
-      "outcome": "info"
-    },
-    {
-      "timestamp": "2026-01-06T00:40:30.696612",
-      "event": "integrity_restore",
-      "narrative": "Project verification passed",
-      "outcome": "info"
-    },
-    {
-      "timestamp": "2026-01-06T00:13:34.681830",
-      "event": "integrity_restore",
-      "narrative": "Project verification passed",
-      "outcome": "info"
-    },
-    {
-      "timestamp": "2026-01-06T00:16:24.825414",
-      "event": "integrity_restore",
-      "narrative": "Project verification passed",
-      "outcome": "info"
-    },
     {
       "timestamp": "2026-01-06T00:18:09.060620",
       "event": "integrity_restore",
@@ -685,6 +638,142 @@
         "ai"
       ],
       "type": "narrative"
+    },
+    {
+      "event": "verify",
+      "narrative": "Wisdom flows through the  as stability manifests.",
+      "dice_roll": "1d20+-1",
+      "result": 16,
+      "outcome": "success",
+      "rewards": {
+        "insight": 5,
+        "credits": 0,
+        "integrity": 2.0
+      },
+      "classification": "optimal",
+      "timestamp": "2026-01-06T17:06:10.627940"
+    },
+    {
+      "timestamp": "2026-01-06T17:06:25.189461",
+      "event": "note",
+      "narrative": "Tavern Keeper system is live! The Living Repository has awakened.",
+      "category": "feature",
+      "tags": [
+        "human"
+      ],
+      "type": "narrative"
+    },
+    {
+      "event": "info",
+      "narrative": "The  aligns as chaos dissipates.",
+      "dice_roll": "1d20+-1",
+      "result": 17,
+      "outcome": "success",
+      "rewards": {
+        "insight": 2,
+        "credits": 0,
+        "integrity": 2.0
+      },
+      "classification": "optimal",
+      "timestamp": "2026-01-06T23:00:13.409804"
+    },
+    {
+      "event": "verify",
+      "narrative": "The  aligns as complexity transforms.",
+      "dice_roll": "1d20+-1",
+      "result": 6,
+      "outcome": "success",
+      "rewards": {
+        "insight": 5,
+        "credits": 0,
+        "integrity": 2.0
+      },
+      "classification": "failure",
+      "timestamp": "2026-01-06T23:00:18.740198"
+    },
+    {
+      "event": "info",
+      "narrative": "The TavernKeeper nods approvingly: 'Wisdom accumulates.'",
+      "dice_roll": "1d20+-1",
+      "result": 19,
+      "outcome": "success",
+      "rewards": {
+        "insight": 4,
+        "credits": 0,
+        "integrity": 2.0
+      },
+      "classification": "critical_success",
+      "timestamp": "2026-01-06T23:00:39.841614"
+    },
+    {
+      "event": "info",
+      "narrative": "Wisdom flows through the  as harmony manifests.",
+      "dice_roll": "1d20+-1",
+      "result": 4,
+      "outcome": "success",
+      "rewards": {
+        "insight": 2,
+        "credits": 0,
+        "integrity": 2.0
+      },
+      "classification": "failure",
+      "timestamp": "2026-01-07T15:06:57.159169"
+    },
+    {
+      "event": "verify",
+      "narrative": "Wisdom flows through the  as resilience manifests.",
+      "dice_roll": "1d20+-1",
+      "result": 1,
+      "outcome": "success",
+      "rewards": {
+        "insight": 5,
+        "credits": 0,
+        "integrity": 2.0
+      },
+      "classification": "failure",
+      "timestamp": "2026-01-07T15:07:05.703036"
+    },
+    {
+      "event": "info",
+      "narrative": "The TavernKeeper nods approvingly: 'All systems nominal.'",
+      "dice_roll": "1d20+-1",
+      "result": 5,
+      "outcome": "success",
+      "rewards": {
+        "insight": 2,
+        "credits": 0,
+        "integrity": 2.0
+      },
+      "classification": "failure",
+      "timestamp": "2026-01-07T16:06:21.196029"
+    },
+    {
+      "event": "verify",
+      "narrative": "The  resonates as chaos recedes.",
+      "dice_roll": "1d20+-1",
+      "result": 8,
+      "outcome": "success",
+      "rewards": {
+        "insight": 5,
+        "credits": 0,
+        "integrity": 2.0
+      },
+      "classification": "failure",
+      "timestamp": "2026-01-07T16:06:26.842938"
+    },
+    {
+      "event": "verify",
+      "narrative": "The  resonates as entropy recedes.",
+      "dice_roll": "1d20+-1",
+      "result": 18,
+      "outcome": "success",
+      "rewards": {
+        "insight": 7,
+        "credits": 0,
+        "integrity": 2.0
+      },
+      "classification": "superior",
+      "timestamp": "2026-01-07T16:09:37.041401"
     }
   ],
   "quests": [],
@@ -694,5 +783,5 @@
     "mood": "optimistic",
     "wisdom_shared": 0
   },
-  "updated_at": "2026-01-06T07:46:35.010199"
+  "updated_at": "2026-01-07T16:09:37.041410"
 }
