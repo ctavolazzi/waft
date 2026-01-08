@@ -10,6 +10,7 @@ The "Operating System" for projects, orchestrating:
 
 from pathlib import Path
 from typing import Optional, Dict
+from datetime import datetime
 
 import typer
 from rich.console import Console
@@ -35,6 +36,7 @@ from .cli.epistemic_display import (
     create_epistemic_dashboard,
 )
 from .cli.hud import render_hud
+from .core.analytics_cli import app as analytics_app
 
 app = typer.Typer(
     name="waft",
@@ -1053,31 +1055,83 @@ def goal_list(
 @app.command()
 def stats(
     path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    session: bool = typer.Option(False, "--session", "-s", help="Show session statistics instead of gamification stats"),
+    detailed: bool = typer.Option(False, "--detailed", "-d", help="Show detailed breakdown"),
 ):
-    """Show current stats (Integrity, Insight, Level, Achievements)."""
+    """
+    Show statistics.
+    
+    By default shows gamification stats (Integrity, Insight, Level).
+    Use --session to show session statistics (files created, lines written, etc.).
+    """
     project_path = resolve_project_path(path)
 
-    console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Stats\n")
+    if session:
+        # Session statistics
+        from .core.session_stats import SessionStats
+        
+        console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Session Statistics\n")
+        
+        stats_tracker = SessionStats(project_path)
+        stats_data = stats_tracker.calculate_session_stats()
+        formatted = stats_tracker.format_stats(stats_data, detailed=detailed)
+        
+        console.print(Panel(formatted, title="📊 Session Activity", border_style="cyan"))
+        
+        if detailed:
+            # Save to file
+            stats_file = project_path / "_pyrite" / "phase1" / f"session-stats-{datetime.now().strftime('%Y-%m-%d-%H%M%S')}.json"
+            stats_file.parent.mkdir(parents=True, exist_ok=True)
+            import json
+            stats_file.write_text(json.dumps(stats_data, indent=2), encoding="utf-8")
+            console.print(f"\n[dim]💾 Statistics saved: {stats_file.relative_to(project_path)}[/dim]")
+    else:
+        # Gamification stats (original behavior)
+        console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Stats\n")
 
-    gamification = GamificationManager(project_path)
-    stats = gamification.get_stats()
+        gamification = GamificationManager(project_path)
+        stats = gamification.get_stats()
 
-    from rich.table import Table
-    table = Table(show_header=True, header_style="bold cyan")
-    table.add_column("Stat", style="dim", width=20)
-    table.add_column("Value", width=20)
+        from rich.table import Table
+        table = Table(show_header=True, header_style="bold cyan")
+        table.add_column("Stat", style="dim", width=20)
+        table.add_column("Value", width=20)
 
-    table.add_row("💎 Integrity", f"{stats['integrity']:.0f}%")
-    table.add_row("🧠 Insight", f"{stats['insight']:.0f}")
-    table.add_row("⭐ Level", str(stats['level']))
-    table.add_row("🏆 Achievements", str(stats['achievements_count']))
+        table.add_row("💎 Integrity", f"{stats['integrity']:.0f}%")
+        table.add_row("🧠 Insight", f"{stats['insight']:.0f}")
+        table.add_row("⭐ Level", str(stats['level']))
+        table.add_row("🏆 Achievements", str(stats['achievements_count']))
 
-    console.print(table)
+        console.print(table)
 
-    # Show insight to next level
-    insight_needed = gamification.get_insight_to_next_level()
-    if insight_needed > 0:
-        console.print(f"\n[dim]🧠 {insight_needed:.0f} Insight needed for next level[/dim]")
+        # Show insight to next level
+        insight_needed = gamification.get_insight_to_next_level()
+        if insight_needed > 0:
+            console.print(f"\n[dim]🧠 {insight_needed:.0f} Insight needed for next level[/dim]")
+
+
+@app.command()
+def checkout(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    quick: bool = typer.Option(False, "--quick", "-q", help="Quick checkout (skip detailed statistics)"),
+    silent: bool = typer.Option(False, "--silent", "-s", help="Silent mode (minimal output)"),
+):
+    """
+    End chat session - run all relevant cleanup, documentation, and summary tasks.
+    
+    Orchestrates comprehensive end-of-session workflow including statistics,
+    checkpoint creation, documentation updates, session summaries, and analytics tracking.
+    """
+    from .core.checkout import CheckoutManager
+    
+    project_path = resolve_project_path(path)
+    
+    checkout_manager = CheckoutManager(project_path)
+    checkout_manager.run_checkout(quick=quick, silent=silent)
+
+
+# Add analytics subcommand
+app.add_typer(analytics_app, name="analytics")
 
 
 @app.command()
