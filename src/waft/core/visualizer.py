@@ -260,6 +260,7 @@ class Visualizer:
         try:
             # Get recent sessions (last 30 days)
             from datetime import datetime, timedelta
+            from dataclasses import asdict
             end_date = datetime.now()
             start_date = end_date - timedelta(days=30)
             
@@ -275,9 +276,21 @@ class Visualizer:
             # Get iteration chains
             chains = self.analytics.get_iteration_chains()
             
+            # Convert SessionRecord objects to dicts for JSON serialization
+            recent_sessions_data = []
+            for session in sessions[:10]:
+                recent_sessions_data.append({
+                    "session_id": session.session_id,
+                    "timestamp": session.timestamp,
+                    "files_created": session.files_created,
+                    "files_modified": session.files_modified,
+                    "net_lines": session.net_lines,
+                    "approach_category": session.approach_category,
+                })
+            
             return {
                 "sessions_count": len(sessions),
-                "recent_sessions": sessions[:10],  # Last 10 for display
+                "recent_sessions": recent_sessions_data,  # Converted to dicts
                 "trends": trends,
                 "chains_count": len(chains),
                 "available": True,
