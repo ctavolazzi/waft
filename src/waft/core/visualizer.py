@@ -1457,6 +1457,116 @@ class Visualizer:
             </div>
         """
 
+    def _render_analytics_section(self, state: Dict[str, Any]) -> str:
+        """Render analytics section with trends and recent sessions."""
+        analytics = state.get("analytics", {})
+        if not analytics.get("available"):
+            return ""
+        
+        trends = analytics.get("trends", {})
+        sessions = analytics.get("recent_sessions", [])
+        chains_count = analytics.get("chains_count", 0)
+        
+        # Build trends summary
+        trends_html = ""
+        if trends and "error" not in trends:
+            trends_html = f"""
+            <div style="margin-top: 16px;">
+                <h3 style="font-size: 0.95em; color: var(--text-secondary); margin-bottom: 12px;">📊 Last 30 Days</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px;">
+                    <div style="background: rgba(124, 158, 255, 0.1); padding: 12px; border-radius: 8px;">
+                        <div style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 4px;">Sessions</div>
+                        <div style="font-size: 1.4em; font-weight: 600; color: var(--primary-light);">{trends.get('total_sessions', 0)}</div>
+                    </div>
+                    <div style="background: rgba(124, 158, 255, 0.1); padding: 12px; border-radius: 8px;">
+                        <div style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 4px;">Files</div>
+                        <div style="font-size: 1.4em; font-weight: 600; color: var(--primary-light);">{trends.get('total_files', 0):,}</div>
+                    </div>
+                    <div style="background: rgba(124, 158, 255, 0.1); padding: 12px; border-radius: 8px;">
+                        <div style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 4px;">Lines</div>
+                        <div style="font-size: 1.4em; font-weight: 600; color: var(--primary-light);">{trends.get('total_lines', 0):+,}</div>
+                    </div>
+                    <div style="background: rgba(124, 158, 255, 0.1); padding: 12px; border-radius: 8px;">
+                        <div style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 4px;">Avg/Session</div>
+                        <div style="font-size: 1.4em; font-weight: 600; color: var(--primary-light);">{trends.get('avg_files_per_session', 0):.1f}</div>
+                    </div>
+                </div>
+            </div>
+            """
+        
+        # Build recent sessions list
+        sessions_html = ""
+        if sessions:
+            sessions_list = ""
+            for session_data in sessions[:5]:
+                if isinstance(session_data, dict):
+                    date_str = session_data.get("timestamp", "")[:10] if len(session_data.get("timestamp", "")) >= 10 else session_data.get("timestamp", "")
+                    category = session_data.get("approach_category") or "uncategorized"
+                    files = session_data.get("files_created", 0) + session_data.get("files_modified", 0)
+                    lines = session_data.get("net_lines", 0)
+                else:
+                    date_str = session_data.timestamp[:10] if len(session_data.timestamp) >= 10 else session_data.timestamp
+                    category = session_data.approach_category or "uncategorized"
+                    files = session_data.files_created + session_data.files_modified
+                    lines = session_data.net_lines
+                sessions_list += f"""
+                <div style="padding: 10px; background: rgba(124, 158, 255, 0.05); border-radius: 6px; margin-bottom: 8px; border-left: 3px solid var(--primary);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <span style="font-weight: 600; color: var(--text-primary);">{date_str}</span>
+                        <span style="font-size: 0.85em; padding: 4px 8px; background: var(--primary); color: white; border-radius: 4px;">{category}</span>
+                    </div>
+                    <div style="display: flex; gap: 16px; font-size: 0.9em; color: var(--text-secondary);">
+                        <span>📁 {files} files</span>
+                        <span>📝 {lines:+,} lines</span>
+                    </div>
+                </div>
+                """
+            
+            sessions_html = f"""
+            <div style="margin-top: 16px;">
+                <h3 style="font-size: 0.95em; color: var(--text-secondary); margin-bottom: 12px;">📋 Recent Sessions</h3>
+                <div style="max-height: 300px; overflow-y: auto;">
+                    {sessions_list}
+                </div>
+            </div>
+            """
+        
+        # Build category breakdown
+        category_html = ""
+        if trends and "by_category" in trends and trends["by_category"]:
+            category_list = ""
+            for category, data in sorted(trends["by_category"].items(), key=lambda x: x[1]["count"], reverse=True)[:5]:
+                category_list += f"""
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border);">
+                    <span style="font-size: 0.9em; color: var(--text-primary);">{category}</span>
+                    <div style="display: flex; gap: 16px; font-size: 0.85em; color: var(--text-secondary);">
+                        <span>{data['count']} sessions</span>
+                        <span>{data['files']:,} files</span>
+                        <span style="color: var(--primary-light); font-weight: 600;">{data['lines']:+,} lines</span>
+                    </div>
+                </div>
+                """
+            
+            category_html = f"""
+            <div style="margin-top: 16px;">
+                <h3 style="font-size: 0.95em; color: var(--text-secondary); margin-bottom: 12px;">📂 By Category</h3>
+                <div>
+                    {category_list}
+                </div>
+            </div>
+            """
+        
+        return f"""
+        <div class="grid" style="margin-bottom: 24px;">
+            <div class="card" style="grid-column: 1 / -1;">
+                <h2>📊 Analytics & Trends</h2>
+                {trends_html}
+                {category_html}
+                {sessions_html}
+                {f'<div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);"><span style="font-size: 0.85em; color: var(--text-muted);">🔗 {chains_count} iteration chains tracked</span></div>' if chains_count > 0 else ''}
+            </div>
+        </div>
+        """
 
     def generate_and_open(self, output_path: Optional[Path] = None) -> Path:
         """
