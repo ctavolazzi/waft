@@ -4,6 +4,163 @@ This log tracks development activities, decisions, and progress for the waft pro
 
 ---
 
+## 2026-01-07 - Debug Code Cleanup (Engineering Workflow)
+
+**Work Effort**: WE-260107-3x3c - Debug Code Cleanup
+
+### Summary
+Executed complete engineering workflow (spin-up → explore → draft → critique → finalize) for debug code cleanup. Identified 63 occurrences of debug logging code writing to `.cursor/debug.log` across 3 files. Created comprehensive plan with 4 tickets. Ready for implementation.
+
+### Engineering Workflow Progress
+
+**Phase 1: Spin-Up** ✅
+- Environment check: Date/time correct, disk space available
+- Git status: 22 uncommitted files, 1 commit ahead
+- GitHub state: No open issues/PRs, recent commits reviewed
+- Project state: 100% integrity, Level 1, 0 Insight
+- Documented: `_pyrite/active/2026-01-07_engineering_spinup.md`
+
+**Phase 2: Explore** ✅
+- Comprehensive codebase exploration completed
+- Architecture analysis: Three-layer architecture plus two (Substrate, Memory, Agents, Epistemic, Gamification)
+- Issue identified: 63 debug logging occurrences
+- Documented: `_pyrite/active/2026-01-07_exploration_comprehensive.md`
+
+**Phase 3: Draft Plan** ✅
+- Created work effort: WE-260107-3x3c
+- Created 4 tickets for systematic cleanup
+- Documented: `_pyrite/active/2026-01-07_plan_draft.md`
+
+**Phase 4: Critique Plan** ✅
+- Identified unused imports issue (json, inspect in substrate.py)
+- Enhanced verification steps
+- Added hardcoded path checks
+- Plan refined and documented
+
+**Phase 5: Finalize Plan** ✅
+- Final plan locked in
+- All tickets scoped and ready
+- Success criteria defined
+- Documented: `_pyrite/active/2026-01-07_plan_final.md`
+
+**Phase 6: Begin** ✅
+- All 4 tickets completed successfully
+- All debug logging code removed (63 occurrences)
+- All tests passing (55 tests)
+- Verification complete
+
+### Debug Code Locations (Removed)
+- `src/waft/ui/dashboard.py` - 57 occurrences ✅
+- `src/waft/core/substrate.py` - 1 occurrence ✅
+- `src/waft/web.py` - 5 occurrences ✅
+
+### Completed Tasks
+
+1. **Ticket 1: Remove debug logging from dashboard.py** ✅
+   - Removed all 57 debug logging blocks
+   - File verified - no debug.log references remain
+
+2. **Ticket 2: Remove debug logging from substrate.py** ✅
+   - Removed 1 debug logging block
+   - Unused imports (json, inspect) automatically removed
+
+3. **Ticket 3: Remove debug logging from web.py** ✅
+   - Removed all 5 debug logging blocks
+   - Note: json and time imports kept (used legitimately elsewhere)
+
+4. **Ticket 4: Verify cleanup and run tests** ✅
+   - No debug.log references found in codebase
+   - No #region agent log blocks found
+   - No hardcoded paths found
+   - waft verify passes (100% integrity)
+   - All 55 tests pass
+
+### Results
+- **Total debug blocks removed**: 63 occurrences
+- **Files cleaned**: 3 files (dashboard.py, substrate.py, web.py)
+- **Code quality**: Improved (removed clutter, reduced file I/O)
+- **Tests**: All passing (55 tests)
+- **Status**: ✅ Complete
+
+---
+
+## 2026-01-07 - Branch Strategy Setup & Migration Context
+
+**Work Effort**: WE-260107-j4my - Branch Strategy Setup & Migration Context
+
+### Summary
+Set up comprehensive three-tier branch strategy (main → staging → dev) with automation scripts, GitHub Actions workflows, and documentation. Established context for Tavern Keeper migration to treasuretavernhq-web and clarified waft's role as workshop/sandbox repository.
+
+### Completed Tasks
+
+1. **Created Branch Promotion Scripts** ✅
+   - `scripts/promote-dev-to-staging.sh` - Dev → staging promotion with validation
+   - `scripts/promote-staging-to-main.sh` - Staging → main promotion with comprehensive checks
+   - Both scripts: executable, dry-run mode, interactive confirmation
+   - Fixed bug: Missing `MAIN_BRANCH` variable
+
+2. **Created GitHub Actions Workflows** ✅
+   - `.github/workflows/branch-protection.yml` - CI for all branches
+   - `.github/workflows/staging-promotion.yml` - Validation for staging → main
+
+3. **Created Documentation** ✅
+   - `docs/BRANCH_STRATEGY.md` - Complete branch strategy guide (176 lines)
+   - `.cursor/BRANCH_STRATEGY_SETUP.md` - Setup context
+   - `.cursor/CLAUDE_CODE_CONTEXT.md` - Detailed context
+   - `.cursor/BRIDGE_PROMPT.md` - Quick bridge prompt
+   - `.cursor/RECAP_AND_REVIEW.md` - Comprehensive review
+   - `.cursor/MIGRATION_CONTEXT.md` - Migration context
+   - `.cursor/REPO_PURPOSE.md` - Repository purpose
+
+4. **Engineering Workflow Progress** ✅
+   - Phase 1: Spin-Up complete and documented
+   - Phase 2: Explore complete and documented
+   - Issues identified: Debug logging code (63 occurrences)
+
+5. **Migration Context Established** ✅
+   - Documented waft's role as workshop/sandbox
+   - Established context for Tavern Keeper migration
+   - Confirmed alignment with treasuretavernhq-web
+
+### Files Created
+- `scripts/promote-dev-to-staging.sh` (125 lines, executable)
+- `scripts/promote-staging-to-main.sh` (155 lines, executable)
+- `.github/workflows/branch-protection.yml` (88 lines)
+- `.github/workflows/staging-promotion.yml` (74 lines)
+- `docs/BRANCH_STRATEGY.md` (176 lines)
+- 6 context/documentation files in `.cursor/` directory
+- `_pyrite/active/2026-01-07_engineering_spinup.md`
+- `_pyrite/active/2026-01-07_exploration_comprehensive.md`
+- `_work_efforts/CHECKPOINT_2026-01-07_BRANCH_STRATEGY.md`
+
+### Key Findings
+
+**Project Health:**
+- ✅ 100% integrity
+- ✅ 40 tests, all passing
+- ✅ Tavern Keeper 100% complete
+- ✅ Framework fully functional
+
+**Issues Identified:**
+1. Debug logging code (63 occurrences) - Ready for cleanup
+2. Uncommitted changes (31 files) - Ready to move to `dev` branch
+
+**Migration Status:**
+- Tavern Keeper migrating to treasuretavernhq-web (TypeScript port)
+- Both repos use same branch strategy
+- Alignment confirmed, no conflicts
+
+### Key Insights
+1. **Waft = Workshop**: Projects develop here, then migrate to permanent homes
+2. **Branch Strategy**: General workflow, not tied to Tavern Keeper
+3. **Automation**: Reusable for any future project in waft
+4. **Documentation**: Serves as template and reference
+
+### Status
+✅ **Completed** - All automation ready, documentation complete, migration context established
+
+---
+
 ## 2026-01-06 - Work Effort 9a6i Completion
 
 **Work**: Complete all 6 tickets in WE-260105-9a6i (Documentation, Testing, and Quality Improvements)
