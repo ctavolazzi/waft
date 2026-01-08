@@ -35,6 +35,7 @@ class Visualizer:
         self.substrate = SubstrateManager(project_path)
         self.github = GitHubManager(project_path)
         self.gamification = GamificationManager(project_path)
+        self.analytics = SessionAnalytics(project_path)
 
     def gather_state(self) -> Dict[str, Any]:
         """
