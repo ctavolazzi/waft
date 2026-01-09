@@ -8,6 +8,7 @@
 	import WorkEffortsCard from '$lib/components/cards/WorkEffortsCard.svelte';
 	import GamificationCard from '$lib/components/cards/GamificationCard.svelte';
 	import PyriteCard from '$lib/components/cards/PyriteCard.svelte';
+	import GymCard from '$lib/components/cards/GymCard.svelte';
 
 	let loading = true;
 	let error: string | null = null;
@@ -124,9 +125,10 @@
 			<GamificationCard />
 		</div>
 
-		<!-- Project Structure -->
-		<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+		<!-- Project Structure & Gym -->
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
 			<PyriteCard />
+			<GymCard />
 		</div>
 	{/if}
 </div>

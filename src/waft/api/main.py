@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 
-from .routes import state, git, work_efforts, empirica, decision
+from .routes import state, git, work_efforts, empirica, decision, gym
 
 
 def create_app(project_path: Path, static_dir: Path | None = None) -> FastAPI:
@@ -30,7 +30,12 @@ def create_app(project_path: Path, static_dir: Path | None = None) -> FastAPI:
     # CORS middleware
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["http://localhost:5173", "http://localhost:3000"],
+        allow_origins=[
+            "http://localhost:5173",  # Default Vite port
+            "http://localhost:3000",  # React dev server
+            "http://localhost:8781",  # Custom SvelteKit port
+            "http://127.0.0.1:8781",  # IPv4 localhost
+        ],
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
@@ -45,6 +50,7 @@ def create_app(project_path: Path, static_dir: Path | None = None) -> FastAPI:
     app.include_router(work_efforts.router, prefix="/api", tags=["work-efforts"])
     app.include_router(empirica.router, prefix="/api", tags=["empirica"])
     app.include_router(decision.router, prefix="/api/decision", tags=["decision"])
+    app.include_router(gym.router, prefix="/api", tags=["gym"])
 
     # Serve static files if provided (must be last route)
     if static_dir and static_dir.exists():

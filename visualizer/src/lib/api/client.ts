@@ -1,10 +1,12 @@
 import axios from 'axios';
 import type { ProjectState } from '$lib/stores/projectStore';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+// Use relative paths to go through Vite proxy (configured in vite.config.js)
+// The proxy forwards /api requests to http://localhost:8000
+const API_BASE_URL = import.meta.env.VITE_API_URL || '';
 
 const client = axios.create({
-	baseURL: API_BASE_URL,
+	baseURL: API_BASE_URL, // Empty string = relative paths, uses Vite proxy
 	timeout: 10000,
 	headers: {
 		'Content-Type': 'application/json'
@@ -57,6 +59,19 @@ export const apiClient = {
 
 	async getDecisionHealth() {
 		const response = await client.get('/api/decision/health');
+		return response.data;
+	},
+
+	/**
+	 * Gym/RPG API methods
+	 */
+	async getBattleLogs(limit: number = 20) {
+		const response = await client.get(`/api/gym/battle-logs?limit=${limit}`);
+		return response.data;
+	},
+
+	async getGymStats() {
+		const response = await client.get('/api/gym/stats');
 		return response.data;
 	}
 };
