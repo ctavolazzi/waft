@@ -45,7 +45,7 @@ crewai = [
     "crewai>=0.1.0",
 ]
 tavern-keeper = [
-    "pytracery>=0.1.1",
+    "tracery>=0.1.1",
 ]
 
 [project.scripts]
