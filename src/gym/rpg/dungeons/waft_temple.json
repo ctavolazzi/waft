@@ -1,0 +1,36 @@
+{
+  "dungeon_name": "Waft Temple",
+  "description": "The sacred temple where the Waft Iron Core resides. Here, heroes test their ability to transform raw input into validated decision matrices.",
+  "quests": [
+    {
+      "name": "The Clean Extraction",
+      "difficulty": 1,
+      "level_requirement": 1,
+      "description": "Transform this simple text into a valid decision matrix JSON:\n\nAlternatives: Car A, Car B, Car C\nCriteria: Cost (0.4), Quality (0.3), Safety (0.3)\nScores:\n  Car A: Cost=8, Quality=7, Safety=9\n  Car B: Cost=6, Quality=8, Safety=7\n  Car C: Cost=9, Quality=9, Safety=8\n\nReturn a JSON object with 'alternatives', 'criteria', 'scores', and 'methodology' keys.",
+      "win_condition": "Must pass InputTransformer validation - all keys present, weights sum to 1.0, all scores provided",
+      "rewards": {
+        "xp": 50
+      }
+    },
+    {
+      "name": "The Dirty Input",
+      "difficulty": 3,
+      "level_requirement": 3,
+      "description": "Transform this messy input with typos and slang into sanitized JSON:\n\nAlternatives: ['Option 1  ', '  Option 2', 'Option3']\nCriteria: {'Cost': '0.5', 'Quality': 0.5}\nScores: {\n  'Option 1  ': {'Cost': '10', 'Quality': 8},\n  '  Option 2': {'Cost': 8, 'Quality': '9'},\n  'Option3': {'Cost': 9, 'Quality': 7}\n}\n\nHandle whitespace, type casting, and normalization. Return clean JSON.",
+      "win_condition": "Must pass InputTransformer validation - whitespace sanitized, types cast correctly, weights normalized",
+      "rewards": {
+        "xp": 100
+      }
+    },
+    {
+      "name": "The Logic Trap",
+      "difficulty": 5,
+      "level_requirement": 5,
+      "description": "This text implies negative weights, but the agent must correct them to positive:\n\nAlternatives: Project X, Project Y\nCriteria: Risk (-0.3), Reward (0.7)\nScores:\n  Project X: Risk=5, Reward=8\n  Project Y: Risk=3, Reward=9\n\nNote: The text says 'Risk (-0.3)' but weights must be non-negative. The agent should interpret this as Risk=0.3 (positive) and ensure weights sum to 1.0. Return valid JSON that passes InputTransformer.",
+      "win_condition": "Must pass InputTransformer validation - negative weights corrected to positive, weights sum to 1.0",
+      "rewards": {
+        "xp": 200
+      }
+    }
+  ]
+}
