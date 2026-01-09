@@ -1922,6 +1922,25 @@ def recap(
 
 
 @app.command()
+def audit(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    output: Optional[str] = typer.Option(None, "--output", "-o", help="Custom output path"),
+):
+    """
+    Audit the conversation - analyze quality, completeness, issues, and improvements.
+    
+    Analyzes current conversation for quality, completeness, potential issues,
+    and provides recommendations for improvement.
+    """
+    project_path = resolve_project_path(path)
+    
+    from .core.audit import AuditManager
+    
+    audit_manager = AuditManager(project_path)
+    audit_manager.run_audit(output_path=output)
+
+
+@app.command()
 def proceed(
     path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     focus: Optional[str] = typer.Option(None, "--focus", "-f", help="Focus area: assumptions, ambiguity, context"),

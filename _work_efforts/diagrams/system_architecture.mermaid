@@ -1,0 +1,53 @@
+graph TD
+    %% The Source: GameMaster detects Scints
+    GM[GameMaster<br/>Python]
+    SD[RegexScintDetector<br/>Scint Detection]
+    SL[StabilizationLoop<br/>Reality Repair]
+    IT[InputTransformer<br/>Validation]
+    
+    %% The Persistence: Loot Files
+    LF[Loot Files<br/>_pyrite/gym_logs/loot/<br/>JSON Format]
+    
+    %% The Bridge: Gym API
+    API[Gym API<br/>FastAPI Endpoints]
+    BL_EP[/api/gym/battle-logs<br/>GET]
+    STATS_EP[/api/gym/stats<br/>GET]
+    
+    %% The State: GymStore
+    GS[GymStore<br/>Svelte Store]
+    
+    %% The View: GymCard
+    GC[GymCard.svelte<br/>UI Component]
+    
+    %% Flow from Source to Persistence
+    GM -->|"1. Runs Quest<br/>Calls Agent"| SD
+    SD -->|"2. Detects Scints<br/>List[Scint]"| SL
+    SL -->|"3. Attempts Stabilization<br/>Corrected Response"| IT
+    IT -->|"4. Validates Response<br/>Matrix Object"| LF
+    GM -->|"5. Saves BattleLog<br/>JSON Data"| LF
+    
+    %% Flow from Persistence to API
+    LF -->|"6. Reads JSON Files<br/>BattleLog Data"| BL_EP
+    LF -->|"7. Aggregates Stats<br/>Summary Metrics"| STATS_EP
+    BL_EP --> API
+    STATS_EP --> API
+    
+    %% Flow from API to State
+    API -->|"8. HTTP GET<br/>BattleLog[]"| GS
+    API -->|"9. HTTP GET<br/>GymStats Object"| GS
+    
+    %% Flow from State to View
+    GS -->|"10. Reactive Store<br/>$gymStore"| GC
+    
+    %% Styling
+    classDef source fill:#4a90e2,stroke:#2c5aa0,stroke-width:2px,color:#fff
+    classDef persistence fill:#50c878,stroke:#2d7a4d,stroke-width:2px,color:#fff
+    classDef bridge fill:#ff6b6b,stroke:#cc5555,stroke-width:2px,color:#fff
+    classDef state fill:#ffa500,stroke:#cc8500,stroke-width:2px,color:#fff
+    classDef view fill:#9b59b6,stroke:#7d3c98,stroke-width:2px,color:#fff
+    
+    class GM,SD,SL,IT source
+    class LF persistence
+    class API,BL_EP,STATS_EP bridge
+    class GS state
+    class GC view
