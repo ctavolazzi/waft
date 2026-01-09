@@ -7,6 +7,23 @@
 
 ---
 
+## The Scientific Mission
+
+Waft is built to produce data for a future book/paper on **"The Physics of Artificial Cognition."**
+
+This is not just a framework—it is a **scientific instrument** for studying how AI agents evolve through directed mutation and selection. The system is designed to:
+
+- Track complete evolutionary lineages (phylogenetic trees)
+- Measure fitness through rigorous testing (Scint Gym)
+- Record all mutations with complete context (Flight Recorder)
+- Enable scientific analysis of agent evolution patterns
+
+**The ultimate goal**: Observe a "God-Head" agent emerge from thousands of generations of directed mutation.
+
+This vision document defines the architecture and roadmap for achieving this scientific mission.
+
+---
+
 ## Executive Summary
 
 **Waft is a self-modifying AI SDK that enables AI agents to observe, decide, act, and learn within Python projects.** Unlike traditional agent frameworks (LangChain, AutoGPT, MetaGPT), Waft provides agents with the ability to safely modify code, adapt behavior, and evolve project structure based on experience.

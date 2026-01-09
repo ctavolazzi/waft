@@ -682,6 +682,49 @@ def serve(
         raise typer.Exit(1)
 
 
+@app.command()
+def evolve(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    agent: Optional[str] = typer.Option(None, "--agent", "-a", help="Agent identifier to evolve"),
+    generations: int = typer.Option(1, "--generations", "-g", help="Number of generations to run"),
+):
+    """
+    Run the evolutionary cycle (Spawn -> Gym -> Select) for a target agent.
+    
+    This command orchestrates the complete evolutionary process:
+    1. Spawn multiple variants with mutations
+    2. Evaluate fitness in the Scint Gym
+    3. Select the fittest variant
+    4. Evolve the agent into the selected genome
+    5. Record all events in the Flight Recorder
+    
+    Status: Coming Soon
+    
+    This is a placeholder for the evolutionary cycle implementation.
+    """
+    project_path = resolve_project_path(path)
+    
+    # Check if this is a Waft project
+    is_valid, error = validate_waft_project(project_path)
+    if not is_valid:
+        console.print("[bold red]❌ Not a Waft project[/bold red]")
+        console.print(f"[dim]{error}[/dim]")
+        raise typer.Exit(1)
+    
+    console.print("\n[bold cyan]🧬 Evolutionary Code Laboratory[/bold cyan]")
+    console.print("[yellow]⚠️[/yellow]  Evolutionary cycle coming soon")
+    console.print(f"[dim]→[/dim] Project: {project_path.resolve()}")
+    if agent:
+        console.print(f"[dim]→[/dim] Agent: {agent}")
+    console.print(f"[dim]→[/dim] Generations: {generations}")
+    console.print("\n[dim]This command will implement the complete evolutionary cycle:[/dim]")
+    console.print("[dim]  • Spawn variants with mutations[/dim]")
+    console.print("[dim]  • Evaluate fitness in Scint Gym[/dim]")
+    console.print("[dim]  • Select fittest variant[/dim]")
+    console.print("[dim]  • Evolve agent into selected genome[/dim]")
+    console.print("[dim]  • Record events in Flight Recorder[/dim]")
+
+
 # Empirica command groups
 session_app = typer.Typer(help="Session management commands")
 finding_app = typer.Typer(help="Finding logging commands")

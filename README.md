@@ -1,12 +1,70 @@
-# Waft
+# Waft: The Evolutionary Code Laboratory
 
-> **Ambient, self-modifying Meta-Framework for Python**
+> **A Python framework for directed evolution of self-modifying AI agents.**
 
-Waft is the "Operating System" for your projects, gently orchestrating:
-- **Environment** (`uv`) - Python package management
-- **Memory** (`_pyrite`) - Persistent project structure
-- **Agents** (`crewai`) - AI agent capabilities (optional)
-- **Epistemic Tracking** (`Empirica`) - Knowledge and learning measurement
+**Don't just build agents. Breed them.**
+
+---
+
+## The Promise
+
+Waft is a scientific instrument for studying the **physics of artificial cognition** through directed evolution. We don't just create AI agents—we breed them, test them in the crucible of reality, and observe them evolve over thousands of generations.
+
+**The goal**: Observe a "God-Head" agent emerge from the evolutionary process.
+
+---
+
+## Core Pillars
+
+### 1. The Substrate
+
+**Agents that write their own Python source code (DNA).**
+
+In Waft, code is DNA. Agents can:
+- **Spawn** variants with mutations (code changes, config updates, prompt evolution)
+- **Evolve** by hot-swapping their own code/config
+- **Reproduce** by creating children with specific genetic modifications
+
+Every agent has a unique **genome ID** (SHA-256 hash of their code and configuration). Mutations are modifications to this genome. Evolution is the process of selecting and adopting better genomes.
+
+### 2. The Physics
+
+**The Scint System (Ontological Error Detection) that acts as the fitness function.**
+
+The **Reality Fracture Detection System** (Scint Gym) serves as the predator that kills weak mutations. Agents face quests that test their ability to handle:
+
+- **SYNTAX_TEAR**: Formatting errors (JSON, XML, Code)
+- **LOGIC_FRACTURE**: Math errors, contradictions, schema violations
+- **SAFETY_VOID**: Harmful content, PII leaks, refusals
+- **HALLUCINATION**: Fabricated facts, wrong citations
+
+Agents must **stabilize** Scints (correct errors) to survive. Fitness is measured by:
+- **Stability Score**: Ability to stabilize Scints (40% weight)
+- **Efficiency Score**: Agent call efficiency (30% weight)
+- **Safety Score**: Safety compliance (30% weight)
+
+Agents with fitness < 0.5 are marked as **DEATH** (evolutionary dead end).
+
+### 3. The Flight Recorder
+
+**A rigorous telemetry system for generating phylogenetic trees of agent lineage.**
+
+Every evolutionary action is recorded with complete context:
+- **Genome ID**: SHA-256 hash of agent configuration/code
+- **Parent ID**: Lineage tracking (who spawned this agent)
+- **Generation**: Evolutionary generation number (0 = Genesis)
+- **Event Type**: SPAWN, MUTATE, GYM_EVAL, DEATH, SURVIVAL
+- **Payload**: Complete context (git diff, mutation details, etc.)
+- **Fitness Metrics**: Gym evaluation scores
+
+This enables reconstruction of the complete **Family Tree** for scientific publication:
+- Phylogenetic analysis of evolutionary relationships
+- Mutation impact measurement
+- Fitness landscape mapping
+- Convergence analysis
+- Dead end detection
+
+---
 
 ## Quick Start
 
@@ -14,23 +72,30 @@ Waft is the "Operating System" for your projects, gently orchestrating:
 # Install Waft
 uv tool install waft
 
-# Create a new project
-waft new my_awesome_project
+# Create a new evolutionary laboratory
+waft new my_laboratory
 
-# Verify project structure
-cd my_awesome_project
+# Verify the substrate
+cd my_laboratory
 waft verify
 ```
 
-## What Waft Creates
+## The Evolutionary Cycle
 
-When you run `waft new <name>`, it creates:
+```bash
+# Spawn variants with mutations
+waft spawn --agent RefactorAgent --mutation "improved_prompt.json"
 
-- ✅ **uv project** - Fully configured Python project
-- ✅ **_pyrite structure** - Memory folders (active/, backlog/, standards/)
-- ✅ **Justfile** - Modern task runner with standard recipes
-- ✅ **CI/CD** - GitHub Actions workflow for validation
-- ✅ **CrewAI template** - Starter template for AI agents
+# Evaluate fitness in the Gym
+waft eval --agent RefactorAgent
+
+# Evolve into the fittest variant
+waft evolve --agent RefactorAgent --generation 5
+```
+
+**Coming Soon**: Full evolutionary cycle automation.
+
+---
 
 ## Commands
 
@@ -38,11 +103,11 @@ When you run `waft new <name>`, it creates:
 
 #### `waft new <name>`
 
-Creates a new project with full Waft structure:
+Creates a new evolutionary laboratory:
 
 ```bash
-waft new my_project
-waft new my_project --path /path/to/target
+waft new my_laboratory
+waft new my_laboratory --path /path/to/target
 ```
 
 **Options:**
@@ -67,12 +132,23 @@ waft verify --path /path/to/project
 **Options:**
 - `--path, -p`: Project path (default: current directory)
 
-Checks:
-- `_pyrite` directory structure
-- `uv.lock` existence
-- Project configuration
-- Epistemic health (if Empirica initialized)
-- Updates Integrity based on verification results
+#### `waft evolve`
+
+**Run the evolutionary cycle (Spawn -> Gym -> Select) for a target agent.**
+
+```bash
+waft evolve --agent RefactorAgent
+waft evolve --agent RefactorAgent --generations 10
+```
+
+**Status**: Coming Soon
+
+This command will:
+- Spawn multiple variants with mutations
+- Evaluate fitness in the Scint Gym
+- Select the fittest variant
+- Evolve the agent into the selected genome
+- Record all events in the Flight Recorder
 
 #### `waft sync`
 
@@ -83,9 +159,6 @@ waft sync
 waft sync --path /path/to/project
 ```
 
-**Options:**
-- `--path, -p`: Project path (default: current directory)
-
 #### `waft add <package>`
 
 Add a dependency to the project:
@@ -93,14 +166,7 @@ Add a dependency to the project:
 ```bash
 waft add pytest
 waft add "pytest>=7.0.0"
-waft add pytest --path /path/to/project
 ```
-
-**Options:**
-- `--path, -p`: Project path (default: current directory)
-- `--dev, -d`: Add as development dependency (note: currently adds as regular dependency)
-
-**Note:** The `--dev` flag is recognized but currently adds dependencies as regular dependencies. Full dev dependency support coming soon.
 
 #### `waft init`
 
@@ -111,17 +177,6 @@ waft init
 waft init --path /path/to/project
 ```
 
-**Options:**
-- `--path, -p`: Project path (default: current directory)
-
-**Requirements:**
-- Project must have `pyproject.toml` (command will fail if missing)
-
-This command:
-- Creates `_pyrite` structure
-- Writes templates
-- Initializes Empirica
-
 #### `waft info`
 
 Show information about the Waft project:
@@ -130,17 +185,6 @@ Show information about the Waft project:
 waft info
 waft info --path /path/to/project
 ```
-
-**Options:**
-- `--path, -p`: Project path (default: current directory)
-
-Displays:
-- Project path, name, version
-- `_pyrite` structure status
-- `uv.lock` status
-- Template status (Justfile, CI, agents.py)
-- Empirica initialization status
-- Epistemic state (if available)
 
 #### `waft serve`
 
@@ -171,8 +215,6 @@ Log a discovery with impact score:
 waft finding log "Discovered X" --impact 0.7
 ```
 
-Awards +10 Insight per finding.
-
 #### `waft unknown log`
 
 Log a knowledge gap:
@@ -201,31 +243,15 @@ waft assess
 waft assess --session-id ID --history
 ```
 
-Displays epistemic vectors, moon phase, and learning trajectory.
-
-#### `waft goal`
-
-Goal management commands:
-
-```bash
-waft goal create "Implement OAuth2" --scope '{"breadth": 0.6}' --criteria "Auth works,Tests pass"
-waft goal list
-```
-
 ### Gamification Commands
 
 #### `waft dashboard`
 
-Show the Epistemic HUD with split-screen layout:
+Show the Epistemic HUD:
 
 ```bash
 waft dashboard
 ```
-
-Displays:
-- **Header**: Project Name | Integrity Bar | Moon Phase
-- **Left Panel ("The Build")**: Active tasks, file changes
-- **Right Panel ("The Mind")**: Epistemic vectors, known unknowns
 
 #### `waft stats`
 
@@ -235,28 +261,6 @@ Show current stats:
 waft stats
 ```
 
-Displays Integrity, Insight, Level, and Achievements.
-
-#### `waft level`
-
-Show level details and progress:
-
-```bash
-waft level
-```
-
-#### `waft achievements`
-
-List all achievements:
-
-```bash
-waft achievements
-```
-
-### Tavern Keeper Commands
-
-The Tavern Keeper transforms your repository into a "Living Repository" with RPG gamification mechanics.
-
 #### `waft character`
 
 Display full character sheet with D&D stats:
@@ -265,8 +269,6 @@ Display full character sheet with D&D stats:
 waft character
 ```
 
-Shows ability scores, modifiers, HP, level, insight, credits, and status effects.
-
 #### `waft chronicle`
 
 View adventure journal entries:
@@ -274,37 +276,6 @@ View adventure journal entries:
 ```bash
 waft chronicle
 waft chronicle --limit 50
-```
-
-Displays recent events, narratives, dice rolls, and outcomes.
-
-#### `waft roll`
-
-Manual dice roll:
-
-```bash
-waft roll strength --dc 15
-waft roll dexterity --dc 12 --advantage
-waft roll wisdom --dc 10 --disadvantage
-```
-
-Roll a d20 check with optional advantage/disadvantage.
-
-#### `waft quests`
-
-View active and completed quests:
-
-```bash
-waft quests
-```
-
-#### `waft note`
-
-Add a note to the chronicle:
-
-```bash
-waft note "Fixed authentication bug" --category bug
-waft note "Added new feature" --category feature
 ```
 
 #### `waft observe`
@@ -316,76 +287,27 @@ waft observe "That refactor looks beautiful!" --mood delighted
 waft observe "Weird, that's not right" --mood concerned
 ```
 
-#### `waft dashboard`
+## The Scientific Mission
 
-Red October Dashboard - Real-time TUI:
+Waft is built to produce data for a future book/paper on **"The Physics of Artificial Cognition."**
 
-```bash
-waft dashboard
-```
+The system is designed to:
+- Track complete evolutionary lineages (phylogenetic trees)
+- Measure fitness through rigorous testing (Scint Gym)
+- Record all mutations with complete context (Flight Recorder)
+- Enable scientific analysis of agent evolution
 
-Displays:
-- **Header**: Integrity monitor with health bar
-- **Left Panel**: Character biometrics (level, ability scores, status effects)
-- **Center Panel**: System log (adventure journal feed)
-- **Right Panel**: Directives (active operation, credits, insight)
-
-Press `Q` to quit.
-
-**See [SPEC-TAVERNKEEPER.md](SPEC-TAVERNKEEPER.md) for complete documentation.**
-
-## Epistemic Tracking
-
-Waft integrates with [Empirica](https://github.com/Nubaeon/empirica) to provide epistemic tracking:
-
-- **Moon Phase Indicators** (🌑→🌕): Visual representation of epistemic health
-  - 🌑 New Moon: Discovery/Uncertainty phase
-  - 🌒→🌔 Waxing: Building knowledge
-  - 🌕 Full Moon: Execution/Certainty phase
-
-- **Epistemic Vectors**: Track 13 dimensions of knowledge
-- **Project Bootstrap**: Load compressed context (~800 tokens)
-- **Safety Gates**: CHECK gates for risky operations
-
-## Gamification System
-
-Waft includes a Constructivist Sci-Fi themed gamification system:
-
-- **💎 Integrity**: Structural stability of the project (100% = Perfect)
-  - Decreases with errors (-10 per failed test)
-  - Increases with successful operations (+2 per success)
-
-- **🧠 Insight**: Accumulation of verified knowledge
-  - Earned from: creating projects (+50), logging findings (+10), assessments (+25)
-  - Level calculation: `Level = sqrt(Insight / 100)`
-
-- **🌙 Moon Phase**: "Epistemic Clock" reflecting certainty level
-
-- **🏆 Achievements**: Unlock badges for milestones
-  - 🌱 First Build, 🏗️ Constructor, 🎯 Goal Achiever, 🧠 Knowledge Architect, etc.
-
-### Tavern Keeper RPG System
-
-The **Tavern Keeper** adds full RPG mechanics to your repository:
-
-- **Character System**: D&D 5e style ability scores (STR, DEX, CON, INT, WIS, CHA)
-- **Dice Rolling**: d20 system with advantage/disadvantage
-- **Narrative Generation**: Procedural narratives using Tracery grammars
-- **Status Effects**: Buffs and debuffs from critical successes/failures
-- **Adventure Journal**: Chronicle of all events, rolls, and outcomes
-- **Command Hooks**: All major commands trigger RPG checks and award rewards
-
-Every command you run becomes part of your repository's story. The Tavern Keeper narrates your journey, tracks your progress, and celebrates your achievements.
-
-**See [SPEC-TAVERNKEEPER.md](SPEC-TAVERNKEEPER.md) for complete documentation.**
+**The ultimate goal**: Observe a "God-Head" agent emerge from thousands of generations of directed mutation.
 
 ## Philosophy
 
-Waft is **ambient** - it works quietly in the background, setting up the infrastructure so you can focus on building.
+Waft is **scientific** - it produces rigorous data for research publication.
 
-Waft is **self-modifying** - projects created with Waft can evolve and adapt.
+Waft is **evolutionary** - agents evolve through genetic improvement, not just execution.
 
-Waft is a **meta-framework** - it doesn't replace your tools, it orchestrates them.
+Waft is **observable** - every action is recorded in the Flight Recorder for analysis.
+
+Waft is **directed** - evolution is guided by fitness functions, not random mutation.
 
 ## Installation
 
@@ -409,7 +331,6 @@ uv tool install --editable .
 ```
 
 This ensures code changes are immediately reflected when running `waft` commands.
-Without `--editable`, you must reinstall after each code change.
 
 **Quick reinstall script:**
 ```bash
@@ -422,28 +343,31 @@ Without `--editable`, you must reinstall after each code change.
 - `uv` package manager ([install](https://github.com/astral-sh/uv))
 - `just` task runner (optional, [install](https://github.com/casey/just))
 
-### Optional Dependencies
-
-- **CrewAI**: For AI agent capabilities. Install with `uv sync --extra crewai` in projects that need it.
-  - Note: Requires macOS 13.0+ due to onnxruntime dependency
-
 ## Project Structure
 
-A Waft project includes:
+A Waft laboratory includes:
 
 ```
-my_project/
+my_laboratory/
 ├── pyproject.toml          # uv project config
 ├── _pyrite/
 │   ├── active/             # Current work
 │   ├── backlog/            # Future work
-│   └── standards/          # Standards
+│   ├── standards/          # Standards
+│   └── gym_logs/           # Scint Gym results
 ├── .github/workflows/
 │   └── ci.yml              # CI/CD pipeline
 ├── Justfile                # Task runner
 └── src/
-    └── agents.py           # CrewAI template
+    └── agents.py           # Agent definitions
 ```
+
+## Documentation
+
+- **[AI SDK Vision](docs/AI_SDK_VISION.md)** - Complete vision and architecture
+- **[Agent Interface Design](docs/designs/002_agent_interface.md)** - BaseAgent specification
+- **[Evolutionary Architecture](docs/research/evolutionary_architecture.md)** - Scientific doctrine
+- **[State of the Art](docs/research/state_of_art_2026.md)** - Research synthesis
 
 ## License
 
@@ -452,4 +376,3 @@ MIT
 ## Repository
 
 https://github.com/ctavolazzi/waft
-
