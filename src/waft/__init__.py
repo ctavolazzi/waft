@@ -7,6 +7,6 @@ The "Operating System" for projects, orchestrating:
 - Agents (crewai)
 """
 
-__version__ = "0.2.0"
+__version__ = "0.3.0-alpha"
 __author__ = "Waft Team"
 
