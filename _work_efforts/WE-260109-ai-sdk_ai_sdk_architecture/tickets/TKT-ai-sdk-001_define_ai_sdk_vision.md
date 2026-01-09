@@ -16,6 +16,7 @@ assigned_to: null
 - **Parent Work Effort**: WE-260109-ai-sdk
 - **Author**: Claude Audit System
 - **Priority**: CRITICAL
+<<<<<<< HEAD
 - **Estimated Effort**: 2 tickets (requires deep thinking and team discussion)
 
 ## Problem Statement
