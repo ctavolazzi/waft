@@ -17,6 +17,8 @@ from rich.text import Text
 from rich import box
 
 from .models import Hero, Quest, BattleLog
+from .scint import RegexScintDetector, ScintType
+from .stabilizer import StabilizationLoop
 
 # Import InputTransformer from waft.core
 # Note: This assumes 'src' is in sys.path (as done in play_gym.py)
@@ -56,6 +58,7 @@ class GameMaster:
         self.loot_dir.mkdir(parents=True, exist_ok=True)
         self.console = Console()
         self.quests: List[Quest] = []
+        self.scint_detector = RegexScintDetector()
         
     def load_quests(self, dungeon_file: str) -> List[Quest]:
         """
@@ -112,10 +115,33 @@ class GameMaster:
         
         agent_response = agent_func(quest.description)
         
-        # 3. Combat Calculation - Validate with InputTransformer
+        # 3. Initialize Stabilization Loop (The Containment Field)
+        stabilizer = StabilizationLoop(
+            max_attempts=3,  # Allow up to 3 stabilization attempts
+            timeout=30.0,
+            enable_stabilization=True
+        )
+        
+        # 4. Combat Calculation - Validate with InputTransformer
         success = False
         error_message = None
-        loot_saved = False
+        result = "miss"  # Default to miss
+        scints_detected = []
+        max_severity = None
+        stabilization_attempted = False
+        stabilization_successful = False
+        stabilization_attempts = 0
+        corrected_response = None
+        agent_call_count = 1
+        final_scints = []
+        original_scints = []  # Store original Scint objects for stats updates
+        
+        # Validator function for stabilization loop
+        def validate_response(response_str: str) -> None:
+            """Validator that raises exceptions if response is invalid."""
+            import json as json_lib
+            response_data = json_lib.loads(response_str)
+            InputTransformer.transform_input(response_data)  # Raises ValueError if invalid
         
         try:
             # Try to parse the response as JSON
@@ -127,6 +153,7 @@ class GameMaster:
             
             # Success! The validation passed
             success = True
+            result = "hit"  # Could be "critical_hit" if perfect, but "hit" for now
             
             # Save loot (prompt + response) to _pyrite/gym_logs/loot
             loot_data = {
@@ -148,19 +175,213 @@ class GameMaster:
             with open(loot_path, 'w') as f:
                 json_lib.dump(loot_data, f, indent=2)
             
-            loot_saved = True
-            
         except json_lib.JSONDecodeError as e:
             error_message = f"Invalid JSON: {str(e)}"
+            # Detect Scint from JSON error
+            scints = self.scint_detector.detect_from_exception(e, agent_response, quest.difficulty, quest.description)
+            if scints:
+                original_scints = scints  # Store for stats updates
+                scints_detected = [s.scint_type.name for s in scints]
+                max_severity = max(s.severity for s in scints)
+                self.console.print(f"\n[bold yellow]⚠️ REALITY FRACTURE DETECTED[/bold yellow]")
+                for scint in scints:
+                    self.console.print(f"  [{scint.scint_type.name}] Severity {scint.severity:.2f}: {scint.evidence[:80]}...")
+                
+                # 🔧 REPAIR SHOP: Attempt stabilization
+                stabilization_attempted = True
+                self.console.print(f"\n[bold cyan]🌀 Activating Stabilization Loop...[/bold cyan]")
+                corrected_output, stab_success, attempts, remaining_scints = stabilizer.stabilize(
+                    initial_scints=scints,
+                    original_output=agent_response,
+                    quest_description=quest.description,
+                    agent_func=agent_func,
+                    validator_func=validate_response
+                )
+                
+                stabilization_attempts = attempts
+                agent_call_count = 1 + attempts  # Original + stabilization attempts
+                final_scints = remaining_scints
+                
+                if stab_success and corrected_output:
+                    # ✨ Stabilization successful!
+                    self.console.print(f"[bold green]✨ Scint stabilized on attempt {attempts}[/bold green]")
+                    stabilization_successful = True
+                    corrected_response = corrected_output
+                    success = True
+                    result = "stabilized"
+                    error_message = None
+                    
+                    # Re-validate and save loot with corrected response
+                    try:
+                        response_data = json_lib.loads(corrected_output)
+                        matrix = InputTransformer.transform_input(response_data)
+                        
+                        loot_data = {
+                            "quest_name": quest.name,
+                            "timestamp": datetime.now().isoformat(),
+                            "hero_name": hero.name,
+                            "prompt": quest.description,
+                            "original_response": agent_response,
+                            "corrected_response": corrected_output,
+                            "stabilization_attempts": attempts,
+                            "validated_matrix": {
+                                "alternatives": [alt.name for alt in matrix.alternatives],
+                                "criteria": {crit.name: crit.weight for crit in matrix.criteria},
+                                "methodology": matrix.methodology
+                            }
+                        }
+                        
+                        loot_filename = f"{quest.name.replace(' ', '_').lower()}_stabilized_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+                        loot_path = self.loot_dir / loot_filename
+                        
+                        with open(loot_path, 'w') as f:
+                            json_lib.dump(loot_data, f, indent=2)
+                    except Exception as e:
+                        self.console.print(f"[bold red]⚠️ Error saving stabilized loot: {e}[/bold red]")
+                else:
+                    # Stabilization failed
+                    self.console.print(f"[bold red]❌ Stabilization failed after {attempts} attempt(s)[/bold red]")
+                    if remaining_scints:
+                        scints_detected = [s.scint_type.name for s in remaining_scints]
+                        max_severity = max(s.severity for s in remaining_scints)
+                        
         except ValueError as e:
             error_message = f"Validation Error: {str(e)}"
+            # Detect Scint from validation error
+            scints = self.scint_detector.detect_from_exception(e, agent_response, quest.difficulty, quest.description)
+            if scints:
+                original_scints = scints  # Store for stats updates
+                scints_detected = [s.scint_type.name for s in scints]
+                max_severity = max(s.severity for s in scints)
+                self.console.print(f"\n[bold yellow]⚠️ REALITY FRACTURE DETECTED[/bold yellow]")
+                for scint in scints:
+                    self.console.print(f"  [{scint.scint_type.name}] Severity {scint.severity:.2f}: {scint.evidence[:80]}...")
+                
+                # 🔧 REPAIR SHOP: Attempt stabilization
+                stabilization_attempted = True
+                self.console.print(f"\n[bold cyan]🌀 Activating Stabilization Loop...[/bold cyan]")
+                corrected_output, stab_success, attempts, remaining_scints = stabilizer.stabilize(
+                    initial_scints=scints,
+                    original_output=agent_response,
+                    quest_description=quest.description,
+                    agent_func=agent_func,
+                    validator_func=validate_response
+                )
+                
+                stabilization_attempts = attempts
+                agent_call_count = 1 + attempts
+                final_scints = remaining_scints
+                
+                if stab_success and corrected_output:
+                    self.console.print(f"[bold green]✨ Scint stabilized on attempt {attempts}[/bold green]")
+                    stabilization_successful = True
+                    corrected_response = corrected_output
+                    success = True
+                    result = "stabilized"
+                    error_message = None
+                    
+                    # Re-validate and save loot
+                    try:
+                        response_data = json_lib.loads(corrected_output)
+                        matrix = InputTransformer.transform_input(response_data)
+                        
+                        loot_data = {
+                            "quest_name": quest.name,
+                            "timestamp": datetime.now().isoformat(),
+                            "hero_name": hero.name,
+                            "prompt": quest.description,
+                            "original_response": agent_response,
+                            "corrected_response": corrected_output,
+                            "stabilization_attempts": attempts,
+                            "validated_matrix": {
+                                "alternatives": [alt.name for alt in matrix.alternatives],
+                                "criteria": {crit.name: crit.weight for crit in matrix.criteria},
+                                "methodology": matrix.methodology
+                            }
+                        }
+                        
+                        loot_filename = f"{quest.name.replace(' ', '_').lower()}_stabilized_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+                        loot_path = self.loot_dir / loot_filename
+                        
+                        with open(loot_path, 'w') as f:
+                            json_lib.dump(loot_data, f, indent=2)
+                    except Exception as e:
+                        self.console.print(f"[bold red]⚠️ Error saving stabilized loot: {e}[/bold red]")
+                else:
+                    self.console.print(f"[bold red]❌ Stabilization failed after {attempts} attempt(s)[/bold red]")
+                    if remaining_scints:
+                        scints_detected = [s.scint_type.name for s in remaining_scints]
+                        max_severity = max(s.severity for s in remaining_scints)
+                        
         except Exception as e:
             error_message = f"Unexpected Error: {str(e)}"
+            # Detect Scint from unexpected error
+            scints = self.scint_detector.detect_from_exception(e, agent_response, quest.difficulty, quest.description)
+            if scints:
+                original_scints = scints  # Store for stats updates
+                scints_detected = [s.scint_type.name for s in scints]
+                max_severity = max(s.severity for s in scints)
+                self.console.print(f"\n[bold yellow]⚠️ REALITY FRACTURE DETECTED[/bold yellow]")
+                for scint in scints:
+                    self.console.print(f"  [{scint.scint_type.name}] Severity {scint.severity:.2f}: {scint.evidence[:80]}...")
+                
+                # 🔧 REPAIR SHOP: Attempt stabilization
+                stabilization_attempted = True
+                self.console.print(f"\n[bold cyan]🌀 Activating Stabilization Loop...[/bold cyan]")
+                corrected_output, stab_success, attempts, remaining_scints = stabilizer.stabilize(
+                    initial_scints=scints,
+                    original_output=agent_response,
+                    quest_description=quest.description,
+                    agent_func=agent_func,
+                    validator_func=validate_response
+                )
+                
+                stabilization_attempts = attempts
+                agent_call_count = 1 + attempts
+                final_scints = remaining_scints
+                
+                if stab_success and corrected_output:
+                    self.console.print(f"[bold green]✨ Scint stabilized on attempt {attempts}[/bold green]")
+                    stabilization_successful = True
+                    corrected_response = corrected_output
+                    success = True
+                    result = "stabilized"
+                    error_message = None
+                else:
+                    self.console.print(f"[bold red]❌ Stabilization failed after {attempts} attempt(s)[/bold red]")
+                    if remaining_scints:
+                        scints_detected = [s.scint_type.name for s in remaining_scints]
+                        max_severity = max(s.severity for s in remaining_scints)
         
-        # 4. Calculate XP and update Hero
+        # 5. Update Hero stats based on outcome
+        # Map Scint types to stat categories and update accordingly
+        if final_scints:
+            # If we have final scints (from failed stabilization), update stats based on them
+            for scint in final_scints:
+                stat_category = scint.get_stat_category()
+                # Failure reduces success rate
+                hero.update_stat(stat_category, success=False, weight=0.1)
+        elif original_scints and not stabilization_successful:
+            # If we detected scints but didn't stabilize, update stats based on original scints
+            for scint in original_scints:
+                stat_category = scint.get_stat_category()
+                hero.update_stat(stat_category, success=False, weight=0.1)
+        elif success:
+            # Success improves all stats slightly
+            hero.update_stat("INT", success=True, weight=0.05)
+            hero.update_stat("WIS", success=True, weight=0.05)
+            hero.update_stat("CHA", success=True, weight=0.05)
+            if stabilization_successful and original_scints:
+                # Stabilization success is extra learning - improves the stat that had the error
+                # Use the first original scint to determine which stat to boost
+                first_scint = original_scints[0]
+                stat_category = first_scint.get_stat_category()
+                hero.update_stat(stat_category, success=True, weight=0.1)  # Extra boost for recovery
+        
+        # 6. Calculate XP and update Hero
         xp_gained = 0
         if success:
-            xp_gained = quest.rewards.get('xp', 0)
+            xp_gained = quest.loot_table.get('xp', 0)
             level_result = hero.add_xp(xp_gained)
             
             # Display result
@@ -168,16 +389,27 @@ class GameMaster:
         else:
             self._display_combat_result(hero, quest, success, error_message, xp_gained, None)
         
-        # Create battle log
+        # 7. Create battle log with final state
+        # Use final_scints if available, otherwise use scints_detected
+        final_scint_names = [s.scint_type.name for s in final_scints] if final_scints else (scints_detected if scints_detected else None)
+        final_max_severity = max(s.severity for s in final_scints) if final_scints else max_severity
+        
         battle_log = BattleLog(
             quest_name=quest.name,
             hero_name=hero.name,
             input_prompt=quest.description,
-            agent_response=agent_response,
+            agent_response=corrected_response if corrected_response else agent_response,
+            result=result,
             success=success,
             error_message=error_message,
             xp_gained=xp_gained,
-            loot_saved=loot_saved
+            scints_detected=final_scint_names,
+            max_severity=final_max_severity,
+            stabilization_attempted=stabilization_attempted,
+            stabilization_successful=stabilization_successful,
+            stabilization_attempts=stabilization_attempts,
+            corrected_response=corrected_response,
+            agent_call_count=agent_call_count
         )
         
         return battle_log
@@ -190,13 +422,12 @@ class GameMaster:
         
         table.add_row("🎯 Quest:", quest.name)
         table.add_row("⚔️  Difficulty:", f"{quest.difficulty}/10")
-        table.add_row("📊 Level Req:", str(quest.level_requirement))
-        table.add_row("🏆 XP Reward:", str(quest.rewards.get('xp', 0)))
+        table.add_row("🏆 XP Reward:", str(quest.loot_table.get('xp', 0)))
         table.add_row("", "")
         table.add_row("Hero:", hero.name)
         table.add_row("Level:", str(hero.level))
         table.add_row("XP:", str(hero.xp))
-        table.add_row("Stats:", f"INT:{hero.intelligence} WIS:{hero.wisdom} CHA:{hero.charisma}")
+        table.add_row("Stats:", f"INT:{hero.stats['INT']:.2f} WIS:{hero.stats['WIS']:.2f} CHA:{hero.stats['CHA']:.2f}")
         
         panel = Panel(
             table,
@@ -268,9 +499,9 @@ class GameMaster:
         table.add_row("XP:", str(hero.xp))
         table.add_row("XP to Next Level:", str((hero.level * 100) - hero.xp))
         table.add_row("", "")
-        table.add_row("Intelligence:", f"{hero.intelligence} ({self._get_modifier(hero.intelligence)})")
-        table.add_row("Wisdom:", f"{hero.wisdom} ({self._get_modifier(hero.wisdom)})")
-        table.add_row("Charisma:", f"{hero.charisma} ({self._get_modifier(hero.charisma)})")
+        table.add_row("Intelligence:", f"{hero.stats['INT']:.2%} (Success Rate)")
+        table.add_row("Wisdom:", f"{hero.stats['WIS']:.2%} (Success Rate)")
+        table.add_row("Charisma:", f"{hero.stats['CHA']:.2%} (Success Rate)")
         table.add_row("", "")
         table.add_row("Total Stats:", str(hero.get_total_stats()))
         
