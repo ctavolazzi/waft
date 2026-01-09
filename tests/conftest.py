@@ -86,5 +86,3 @@ description = "Test project"
     (temp_project_path / "src" / "agents.py").write_text("# agents.py")
 
     yield temp_project_path
-
-

@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waft Visual Dashboard - waft</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #7c9eff;
+            --primary-dark: #6b8eff;
+            --primary-light: #8dafff;
+            --bg-dark: #0a0e1a;
+            --bg-card: #1a1e29;
+            --bg-card-hover: #232834;
+            --text-primary: #e8eaf6;
+            --text-secondary: #b0b8d0;
+            --text-muted: #707890;
+            --success: #4ade80;
+            --warning: #fbbf24;
+            --error: #f87171;
+            --info: #60a5fa;
+            --border: rgba(124, 158, 255, 0.2);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-bg: linear-gradient(135deg, #0a0e1a 0%, #1a1e29 50%, #0f1419 100%);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', 'SF Pro Display', Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--gradient-bg);
+            background-attachment: fixed;
+            min-height: 100vh;
+            padding: 16px;
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, rgba(124, 158, 255, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+        
+        .header h1 {
+            color: var(--primary-light);
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 12px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            text-shadow: 0 2px 20px rgba(124, 158, 255, 0.3);
+        }
+        
+        .header .subtitle {
+            color: var(--text-secondary);
+            font-size: clamp(0.9rem, 2vw, 1.2rem);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .header .subtitle::before {
+            content: '⚡';
+            font-size: 1.2em;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.6s ease-out backwards;
+        }
+        
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+        .card:nth-child(4) { animation-delay: 0.4s; }
+        .card:nth-child(5) { animation-delay: 0.5s; }
+        .card:nth-child(6) { animation-delay: 0.6s; }
+        
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(124, 158, 255, 0.4);
+            background: var(--bg-card-hover);
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .card:hover::before {
+            opacity: 1;
+        }
+        
+        .card h2 {
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 12px;
+            cursor: pointer;
+            user-select: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s ease;
+        }
+        
+        .card h2::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+        }
+        
+        .card h2:hover {
+            color: var(--primary-light);
+            border-color: var(--primary);
+        }
+        
+        .card.collapsed .card-content {
+            display: none;
+        }
+        
+        .card.collapsed h2::after {
+            content: ' ▶';
+            margin-left: auto;
+            font-size: 0.8em;
+            opacity: 0.6;
+        }
+        
+        .info-item {
+            margin: 12px 0;
+            padding: 14px;
+            background: rgba(26, 30, 41, 0.6);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
+        }
+        
+        .info-item:hover {
+            background: rgba(35, 40, 52, 0.8);
+            border-color: rgba(124, 158, 255, 0.3);
+            transform: translateX(4px);
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .info-value {
+            color: var(--text-primary);
+            font-size: 1.05em;
+            word-break: break-word;
+        }
+        
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .status.valid {
+            background: linear-gradient(135deg, rgba(74, 222, 128, 0.2), rgba(74, 222, 128, 0.1));
+            color: var(--success);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+        }
+        
+        .status.invalid {
+            background: linear-gradient(135deg, rgba(248, 113, 113, 0.2), rgba(248, 113, 113, 0.1));
+            color: var(--error);
+            border: 1px solid rgba(248, 113, 113, 0.3);
+        }
+        
+        .status.missing {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(251, 191, 36, 0.1));
+            color: var(--warning);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+        
+        .file-list {
+            list-style: none;
+            margin-top: 12px;
+            max-height: 320px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+        
+        .file-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .file-list::-webkit-scrollbar-track {
+            background: rgba(26, 30, 41, 0.5);
+            border-radius: 3px;
+        }
+        
+        .file-list::-webkit-scrollbar-thumb {
+            background: var(--gradient-primary);
+            border-radius: 3px;
+        }
+        
+        .file-list::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+        
+        .file-list li {
+            padding: 10px 12px;
+            margin: 6px 0;
+            background: rgba(26, 30, 41, 0.6);
+            border-radius: 8px;
+            border-left: 3px solid var(--primary);
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .file-list li:hover {
+            background: rgba(35, 40, 52, 0.9);
+            transform: translateX(6px);
+            border-left-color: var(--primary-light);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .empty {
+            color: var(--text-muted);
+            font-style: italic;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin: 4px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+        }
+        
+        .badge:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .badge.success {
+            background: linear-gradient(135deg, rgba(74, 222, 128, 0.2), rgba(74, 222, 128, 0.1));
+            color: var(--success);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+        }
+        
+        .badge.warning {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(251, 191, 36, 0.1));
+            color: var(--warning);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+        
+        .badge.info {
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.2), rgba(96, 165, 250, 0.1));
+            color: var(--info);
+            border: 1px solid rgba(96, 165, 250, 0.3);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 24px;
+            background: rgba(26, 30, 41, 0.8);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 12px 0;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-primary);
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        .commit-item {
+            padding: 14px;
+            margin: 8px 0;
+            background: rgba(26, 30, 41, 0.6);
+            border-radius: 10px;
+            border-left: 3px solid var(--primary);
+            transition: all 0.2s ease;
+        }
+        
+        .commit-item:hover {
+            background: rgba(35, 40, 52, 0.9);
+            transform: translateX(4px);
+            border-left-color: var(--primary-light);
+        }
+        
+        .commit-hash {
+            font-family: 'SF Mono', 'Monaco', 'Cascadia Code', 'Roboto Mono', monospace;
+            color: var(--primary-light);
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+        
+        .commit-message {
+            color: var(--text-primary);
+            margin: 6px 0;
+            font-weight: 500;
+        }
+        
+        .commit-meta {
+            color: var(--text-secondary);
+            font-size: 0.85em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .footer {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-top: 40px;
+            padding: 24px;
+            background: rgba(26, 30, 41, 0.4);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+        
+        .footer p {
+            margin: 8px 0;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+            
+            .header {
+                padding: 24px;
+                border-radius: 16px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            
+            .card {
+                padding: 20px;
+                border-radius: 12px;
+            }
+            
+            .card h2 {
+                font-size: 1.2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.75rem;
+            }
+            
+            .card {
+                padding: 16px;
+            }
+            
+            .info-item {
+                padding: 12px;
+            }
+            
+            .file-list {
+                max-height: 250px;
+            }
+        }
+        
+        @media (min-width: 1200px) {
+            .grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (min-width: 1600px) {
+            .grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+            
+            .card {
+                break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌊 Waft Visual Dashboard</h1>
+            <div class="subtitle">
+                waft v0.0.2 • 
+                Generated: 2026-01-07 21:02:25
+            </div>
+        </div>
+
+        <!-- Status Overview - Most Important First -->
+        <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); margin-bottom: 24px;">
+            
+            <div class="card" style="grid-column: span 1;">
+                <h2>⚡ Status Overview</h2>
+                <div class="card-content">
+                    <div class="info-item" style="text-align: center; padding: 20px;">
+                        <div style="font-size: 3em; margin-bottom: 10px;">
+                            🟢
+                        </div>
+                        <div class="info-value" style="font-size: 1.5em; font-weight: 700; margin-bottom: 8px;">
+                            Excellent
+                        </div>
+                        <div class="info-label" style="font-size: 0.9em;">
+                            75% Health Score
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Quick Status</div>
+                        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
+                            <span class="badge success">Excellent</span>
+                            <span class="badge error">69 files</span>
+                            <span class="badge success">Valid Structure</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Health Indicators</div>
+                        <div style="margin-top: 8px; line-height: 1.8;">
+                            ✓ Structure<br>✓ Git<br>✓ Integrity
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            
+            <div class="card">
+                <h2>🔀 Git Summary</h2>
+                <div class="card-content">
+                    <div class="info-item">
+                        <div class="info-label">Branch</div>
+                        <div class="info-value">
+                            <span style="font-family: monospace; color: var(--primary-light);">main</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Uncommitted Changes</div>
+                        <div class="info-value">
+                            <span class="badge error" style="font-size: 1.1em; padding: 8px 16px;">
+                                69 files
+                            </span>
+                        </div>
+                    </div>
+                    <div class="info-item"><div class="info-label">Commits Ahead</div><div class="info-value"><span class="badge info">5</span></div></div>
+                    <div class="info-item"><div class="info-label">Recent Activity</div><div class="info-value" style="font-size: 0.9em; color: var(--text-secondary);">5 commits in history</div></div>
+                </div>
+            </div>
+        
+            
+            <div class="card">
+                <h2>💚 Project Health</h2>
+                <div class="card-content">
+                    <div class="info-item">
+                        <div class="info-label">Integrity</div>
+                        <div class="info-value">
+                            <span class="badge success" style="font-size: 1.1em; padding: 8px 16px;">
+                                100.0%
+                            </span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Level</div>
+                        <div class="info-value">
+                            <span class="badge info" style="font-size: 1.1em; padding: 8px 16px;">
+                                Level 1
+                            </span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Structure</div>
+                        <div class="info-value">
+                            <span class="status valid">
+                                ✅ Valid
+                            </span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Dependencies</div>
+                        <div class="info-value">
+                            <span class="status valid">
+                                ✅ Locked
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+
+        <!-- Primary Information - Git & Changes -->
+        <div class="grid" style="margin-bottom: 24px;">
+            
+            <div class="card" style="grid-column: span 2;">
+                <h2>🔀 Git Details & Changes</h2>
+                <div class="card-content">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px;">
+                        <div class="info-item">
+                            <div class="info-label">Branch</div>
+                            <div class="info-value" style="font-family: monospace; color: var(--primary-light); font-size: 1.1em;">
+                                main
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Uncommitted</div>
+                            <div class="info-value">
+                                <span class="badge error" style="font-size: 1.1em; padding: 8px 16px;">
+                                    69 files
+                                </span>
+                            </div>
+                        </div>
+                        <div class="info-item"><div class="info-label">Commits Ahead</div><div class="info-value"><span class="badge info" style="font-size: 1.1em; padding: 8px 16px;">5</span></div></div>
+                        <div class="info-item"><div class="info-label">Remote</div><div class="info-value" style="font-size: 0.9em; word-break: break-all; color: var(--text-secondary);">https://github.com/ctavolazzi/waft.git</div></div>
+                    </div>
+                    <div class="info-item"><div class="info-label">Changed Files</div><div style='margin-top: 12px;'><div style='display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;'><span class='badge success'>1 staged</span><span class='badge warning'>26 modified</span><span class='badge info'>42 untracked</span></div><ul class='file-list'><li>📄 cursor/commands/COMMAND_RECOMMENDATIONS.md</li><li>📄 .cursor/commands/engineering.md</li><li>⚙️ .obsidian/workspace.json</li><li>📄 CHANGELOG.md</li><li>📄 CONTRIBUTING.md</li><li>📄 RELEASE_NOTES.md</li><li>⚙️ _pyrite/.waft/chronicles.json</li><li>⚙️ _pyrite/.waft/gamification.json</li><li>📄 _pyrite/active/2026-01-06_commit_summary.md</li><li>📄 _pyrite/active/2026-01-06_demo_creation.md</li><li>📄 _pyrite/active/2026-01-06_engineering_command_creation.md</li><li>📄 _pyrite/active/2026-01-06_explore_command_creation.md</li><li>📄 _pyrite/active/2026-01-06_explore_command_enhancement.md</li><li>📄 _pyrite/active/2026-01-06_incremental_commits.md</li><li>📄 _pyrite/active/2026-01-06_test_suite_fix.md</li><li>📄 _pyrite/active/2026-01-06_work_effort_9a6i_completion.md</li><li>📄 _pyrite/active/2026-01-07_engineering_spinup.md</li><li>📄 _pyrite/active/2026-01-07_exploration_comprehensive.md</li><li>📄 _work_efforts/devlog.md</li><li>💻 create_release.py</li><li>💻 create_release_simple.py</li><li>💻 demo.py</li><li>⚙️ pyproject.toml</li><li>💻 src/waft/core/__init__.py</li><li>💻 tests/conftest.py</li><li class='empty'>... and 44 more files</li></ul></div></div>
+                    <div class="info-item" style="margin-top: 20px;"><div class="info-label">Recent Commits</div><div style='margin-top: 15px;'>
+                    <div class="commit-item">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                            <div class="commit-hash">18606d2</div>
+                            <div style="flex: 1; color: var(--text-secondary); font-size: 0.85em;">71 seconds ago</div>
+                        </div>
+                        <div class="commit-message">feat: Add analytics system and checkout workflow</div>
+                        <div class="commit-meta">👤 Christopher Tavolazzi</div>
+                    </div>
+                
+                    <div class="commit-item">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                            <div class="commit-hash">f37473c</div>
+                            <div style="flex: 1; color: var(--text-secondary); font-size: 0.85em;">5 hours ago</div>
+                        </div>
+                        <div class="commit-message">chore: update gamification state from engineering workflow</div>
+                        <div class="commit-meta">👤 Christopher Tavolazzi</div>
+                    </div>
+                
+                    <div class="commit-item">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                            <div class="commit-hash">318503e</div>
+                            <div style="flex: 1; color: var(--text-secondary); font-size: 0.85em;">5 hours ago</div>
+                        </div>
+                        <div class="commit-message">docs: add engineering workflow documentation for debug code cleanup</div>
+                        <div class="commit-meta">👤 Christopher Tavolazzi</div>
+                    </div>
+                
+                    <div class="commit-item">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                            <div class="commit-hash">7f49792</div>
+                            <div style="flex: 1; color: var(--text-secondary); font-size: 0.85em;">5 hours ago</div>
+                        </div>
+                        <div class="commit-message">refactor: remove debug logging code (63 occurrences)</div>
+                        <div class="commit-meta">👤 Christopher Tavolazzi</div>
+                    </div>
+                
+                    <div class="commit-item">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                            <div class="commit-hash">cdf54fe</div>
+                            <div style="flex: 1; color: var(--text-secondary); font-size: 0.85em;">22 hours ago</div>
+                        </div>
+                        <div class="commit-message">fix: add Tavern Keeper hook to info command</div>
+                        <div class="commit-meta">👤 Christopher Tavolazzi</div>
+                    </div>
+                </div></div>
+                </div>
+            </div>
+        
+        </div>
+
+        <!-- Work & Progress -->
+        <div class="grid" style="margin-bottom: 24px;">
+            
+            <div class="card">
+                <h2>📋 Work & Activity</h2>
+                <div class="card-content">
+                    <div class="info-item" style="text-align: center; padding: 30px;">
+                        <div style="font-size: 2.5em; margin-bottom: 10px; opacity: 0.5;">📭</div>
+                        <div class="empty" style="font-size: 1.1em;">No active work efforts</div>
+                        <div style="margin-top: 12px; color: var(--text-secondary); font-size: 0.9em;">
+                            Recent activity will appear here
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+            <div class="card">
+                <h2>🎮 Gamification</h2>
+                <div class="card-content">
+                    <div class="info-item">
+                        <div class="info-label">Integrity</div>
+                        <div class="info-value">
+                            <span class="badge success">
+                                100.0%
+                            </span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Level</div>
+                        <div class="info-value">
+                            <span class="badge info">Level 1</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Insight Progress</div>
+                        <div class="info-value">
+                            0 / 100
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0.0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+
+        <!-- Analytics & Trends -->
+        
+
+        <!-- Project Structure & Details -->
+        <div class="grid" style="margin-bottom: 24px;">
+            
+            <div class="card">
+                <h2>💎 Project Structure</h2>
+                <div class="card-content">
+                    <div class="info-item">
+                        <div class="info-label">Structure Status</div>
+                        <div class="info-value">
+                            <span class="status valid">✅ Valid</span>
+                            <span style="margin-left: 12px; color: var(--text-secondary); font-size: 0.9em;">
+                                29 total files
+                            </span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">
+                            Active Files 
+                            <span class="badge info" style="font-size: 0.8em; margin-left: 8px;">29</span>
+                        </div>
+                        <ul class='file-list' style='max-height: 300px;'><li>📄 <span style='color: var(--primary-light);'>2026-01-07</span> global_commands_setup.md</li><li>📄 <span style='color: var(--primary-light);'>2026-01-07</span> exploration_comprehensive.md</li><li>📄 <span style='color: var(--primary-light);'>2026-01-07</span> plan_draft.md</li><li>📄 <span style='color: var(--primary-light);'>2026-01-06</span> plan_final.md</li><li>📄 <span style='color: var(--primary-light);'>2026-01-06</span> plan_critique.md</li><li>📄 <span style='color: var(--primary-light);'>2026-01-06</span> explore_command_creation.md</li><li>📄 <span style='color: var(--primary-light);'>2026-01-06</span> incremental_commits.md</li><li>📄 <span style='color: var(--primary-light);'>2026-01-07</span> verify_command_creation.md</li><li>📄 <span style='color: var(--primary-light);'>2026-01-06</span> test_suite_fix.md</li><li>📄 <span style='color: var(--primary-light);'>2026-01-07</span> engineering_spinup.md</li><li>📄 <span style='color: var(--primary-light);'>2026-01-07</span> consider_analysis.md</li><li>📄 <span style='color: var(--primary-light);'>2026-01-07</span> verify_run_summary.md</li><li>📄 documentation_review_work.md</li><li class='empty'>... and 14 more files</li></ul>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 12px;">
+                        <div class="info-item">
+                            <div class="info-label">Backlog</div>
+                            <div class="info-value">
+                                <span class="badge warning">
+                                    0 files
+                                </span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Standards</div>
+                            <div class="info-value">
+                                <span class="badge warning">
+                                    0 files
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            
+            <div class="card">
+                <h2>📦 Project Details</h2>
+                <div class="card-content">
+                    <div class="info-item">
+                        <div class="info-label">Project</div>
+                        <div class="info-value">
+                            <strong style="color: var(--primary-light);">waft</strong>
+                            <span style="color: var(--text-secondary); margin-left: 8px;">v0.0.2</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Path</div>
+                        <div class="info-value" style="font-size: 0.85em; word-break: break-all; color: var(--text-secondary); font-family: monospace;">
+                            /Users/ctavolazzi/Code/active/waft
+                        </div>
+                    </div>
+                    <div style="border-top: 1px solid var(--border); margin: 16px 0; padding-top: 16px;">
+                        <div class="info-label" style="margin-bottom: 12px;">System Environment</div>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
+                            <div style="padding: 8px; background: rgba(26, 30, 41, 0.4); border-radius: 6px;">
+                                <div style="font-size: 0.85em; color: var(--text-secondary);">Python</div>
+                                <div style="font-weight: 600; font-family: monospace;">3.10.0</div>
+                            </div>
+                            <div style="padding: 8px; background: rgba(26, 30, 41, 0.4); border-radius: 6px;">
+                                <div style="font-size: 0.85em; color: var(--text-secondary);">Platform</div>
+                                <div style="font-weight: 600;">darwin</div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 8px; padding: 8px; background: rgba(26, 30, 41, 0.4); border-radius: 6px;">
+                            <div style="font-size: 0.85em; color: var(--text-secondary);">Generated</div>
+                            <div style="font-weight: 600; font-size: 0.9em;">2026-01-07 21:02:25</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+
+        <div class="footer">
+            <p style="font-size: 1.1em; font-weight: 600; color: var(--primary-light); margin-bottom: 8px;">
+                🌊 Waft - Ambient Meta-Framework for Python
+            </p>
+            <p style="font-size: 0.9em;">
+                This dashboard is standalone - refresh the page or regenerate to update
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Smooth scroll behavior
+        document.documentElement.style.scrollBehavior = 'smooth';
+        
+        // Make cards collapsible with animation
+        document.querySelectorAll('.card h2').forEach((header, index) => {
+            header.style.cursor = 'pointer';
+            header.addEventListener('click', function() {
+                const card = this.parentElement;
+                const content = card.querySelector('.card-content');
+                
+                if (card.classList.contains('collapsed')) {
+                    card.classList.remove('collapsed');
+                    content.style.animation = 'fadeIn 0.3s ease-out';
+                } else {
+                    card.classList.add('collapsed');
+                }
+            });
+            
+            // Add hover effect
+            header.addEventListener('mouseenter', function() {
+                if (!this.parentElement.classList.contains('collapsed')) {
+                    this.style.transform = 'translateX(4px)';
+                }
+            });
+            
+            header.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateX(0)';
+            });
+        });
+        
+        // Animate progress bars on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const progressBars = document.querySelectorAll('.progress-fill');
+            progressBars.forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = '0%';
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 100);
+            });
+        });
+        
+        // Add smooth hover effects to file list items
+        document.querySelectorAll('.file-list li').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateX(6px) scale(1.02)';
+            });
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateX(0) scale(1)';
+            });
+        });
+        
+        // Add ripple effect to badges
+        document.querySelectorAll('.badge').forEach(badge => {
+            badge.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.style.position = 'absolute';
+                ripple.style.borderRadius = '50%';
+                ripple.style.background = 'rgba(255, 255, 255, 0.3)';
+                ripple.style.transform = 'scale(0)';
+                ripple.style.animation = 'ripple 0.6s ease-out';
+                ripple.style.pointerEvents = 'none';
+                
+                this.style.position = 'relative';
+                this.style.overflow = 'hidden';
+                this.appendChild(ripple);
+                
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+        
+        // Add CSS for ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // State data available in console
+        const state = {
+  "timestamp": "2026-01-07T21:02:25.515520",
+  "project_path": "/Users/ctavolazzi/Code/active/waft",
+  "project": {
+    "name": "waft",
+    "version": "0.0.2",
+    "description": ""
+  },
+  "git": {
+    "initialized": true,
+    "branch": "main",
+    "remote_url": "https://github.com/ctavolazzi/waft.git",
+    "uncommitted_files": [
+      "cursor/commands/COMMAND_RECOMMENDATIONS.md",
+      ".cursor/commands/engineering.md",
+      ".obsidian/workspace.json",
+      "CHANGELOG.md",
+      "CONTRIBUTING.md",
+      "RELEASE_NOTES.md",
+      "_pyrite/.waft/chronicles.json",
+      "_pyrite/.waft/gamification.json",
+      "_pyrite/active/2026-01-06_commit_summary.md",
+      "_pyrite/active/2026-01-06_demo_creation.md",
+      "_pyrite/active/2026-01-06_engineering_command_creation.md",
+      "_pyrite/active/2026-01-06_explore_command_creation.md",
+      "_pyrite/active/2026-01-06_explore_command_enhancement.md",
+      "_pyrite/active/2026-01-06_incremental_commits.md",
+      "_pyrite/active/2026-01-06_test_suite_fix.md",
+      "_pyrite/active/2026-01-06_work_effort_9a6i_completion.md",
+      "_pyrite/active/2026-01-07_engineering_spinup.md",
+      "_pyrite/active/2026-01-07_exploration_comprehensive.md",
+      "_work_efforts/devlog.md",
+      "create_release.py",
+      "create_release_simple.py",
+      "demo.py",
+      "pyproject.toml",
+      "src/waft/core/__init__.py",
+      "tests/conftest.py",
+      "tests/test_memory.py",
+      "tests/test_substrate.py",
+      ".cursor/BRANCH_STRATEGY_SETUP.md",
+      ".cursor/BRIDGE_PROMPT.md",
+      ".cursor/CLAUDE_CODE_CONTEXT.md",
+      ".cursor/CONTINUATION_PROMPT.md",
+      ".cursor/MIGRATION_CONTEXT.md",
+      ".cursor/RECAP_AND_REVIEW.md",
+      ".cursor/REPO_PURPOSE.md",
+      ".cursor/commands/GLOBAL_COMMANDS_SETUP.md",
+      ".cursor/commands/checkpoint.md",
+      ".cursor/commands/consider.md",
+      ".cursor/commands/decide.md",
+      ".cursor/commands/phase1.md",
+      ".cursor/commands/phase2.md",
+      ".cursor/commands/verify.md",
+      ".cursor/commands/visualize.md",
+      ".github/workflows/",
+      "_pyrite/.waft/phase1-2026-01-07-202711.html",
+      "_pyrite/.waft/visualize-2026-01-07-202535.html",
+      "_pyrite/active/2026-01-06_tavern_keeper_demo.md",
+      "_pyrite/active/2026-01-07_consider_analysis.md",
+      "_pyrite/active/2026-01-07_global_commands_setup.md",
+      "_pyrite/active/2026-01-07_orientation_comprehensive.md",
+      "_pyrite/active/2026-01-07_verify_command_creation.md",
+      "_pyrite/active/2026-01-07_verify_run_2.md",
+      "_pyrite/active/2026-01-07_verify_run_summary.md",
+      "_pyrite/analytics/",
+      "_pyrite/checkout/",
+      "_pyrite/phase1/",
+      "_pyrite/standards/verification/",
+      "_work_efforts/CHECKPOINT_2026-01-07_BRANCH_STRATEGY.md",
+      "_work_efforts/CHECKPOINT_2026-01-07_analytics_and_checkout_system.md",
+      "_work_efforts/CHECKPOINT_2026-01-07_cursor_commands_creation.md",
+      "_work_efforts/FINAL_RECAP_2026-01-07.md",
+      "_work_efforts/FINAL_RECAP_COMPLETE.md",
+      "_work_efforts/WE-260107-j4my_branch_strategy_setup_migration_context/",
+      "docs/",
+      "scripts/promote-dev-to-staging.sh",
+      "scripts/promote-staging-to-main.sh",
+      "scripts/sync-cursor-commands.sh",
+      "src/waft/core/decision_matrix.py",
+      "src/waft/core/visualizer.py",
+      "visualizer/"
+    ],
+    "staged_files": [
+      "cursor/commands/COMMAND_RECOMMENDATIONS.md"
+    ],
+    "modified_files": [
+      ".cursor/commands/engineering.md",
+      ".obsidian/workspace.json",
+      "CHANGELOG.md",
+      "CONTRIBUTING.md",
+      "RELEASE_NOTES.md",
+      "_pyrite/.waft/chronicles.json",
+      "_pyrite/.waft/gamification.json",
+      "_pyrite/active/2026-01-06_commit_summary.md",
+      "_pyrite/active/2026-01-06_demo_creation.md",
+      "_pyrite/active/2026-01-06_engineering_command_creation.md",
+      "_pyrite/active/2026-01-06_explore_command_creation.md",
+      "_pyrite/active/2026-01-06_explore_command_enhancement.md",
+      "_pyrite/active/2026-01-06_incremental_commits.md",
+      "_pyrite/active/2026-01-06_test_suite_fix.md",
+      "_pyrite/active/2026-01-06_work_effort_9a6i_completion.md",
+      "_pyrite/active/2026-01-07_engineering_spinup.md",
+      "_pyrite/active/2026-01-07_exploration_comprehensive.md",
+      "_work_efforts/devlog.md",
+      "create_release.py",
+      "create_release_simple.py",
+      "demo.py",
+      "pyproject.toml",
+      "src/waft/core/__init__.py",
+      "tests/conftest.py",
+      "tests/test_memory.py",
+      "tests/test_substrate.py"
+    ],
+    "untracked_files": [
+      ".cursor/BRANCH_STRATEGY_SETUP.md",
+      ".cursor/BRIDGE_PROMPT.md",
+      ".cursor/CLAUDE_CODE_CONTEXT.md",
+      ".cursor/CONTINUATION_PROMPT.md",
+      ".cursor/MIGRATION_CONTEXT.md",
+      ".cursor/RECAP_AND_REVIEW.md",
+      ".cursor/REPO_PURPOSE.md",
+      ".cursor/commands/GLOBAL_COMMANDS_SETUP.md",
+      ".cursor/commands/checkpoint.md",
+      ".cursor/commands/consider.md",
+      ".cursor/commands/decide.md",
+      ".cursor/commands/phase1.md",
+      ".cursor/commands/phase2.md",
+      ".cursor/commands/verify.md",
+      ".cursor/commands/visualize.md",
+      ".github/workflows/",
+      "_pyrite/.waft/phase1-2026-01-07-202711.html",
+      "_pyrite/.waft/visualize-2026-01-07-202535.html",
+      "_pyrite/active/2026-01-06_tavern_keeper_demo.md",
+      "_pyrite/active/2026-01-07_consider_analysis.md",
+      "_pyrite/active/2026-01-07_global_commands_setup.md",
+      "_pyrite/active/2026-01-07_orientation_comprehensive.md",
+      "_pyrite/active/2026-01-07_verify_command_creation.md",
+      "_pyrite/active/2026-01-07_verify_run_2.md",
+      "_pyrite/active/2026-01-07_verify_run_summary.md",
+      "_pyrite/analytics/",
+      "_pyrite/checkout/",
+      "_pyrite/phase1/",
+      "_pyrite/standards/verification/",
+      "_work_efforts/CHECKPOINT_2026-01-07_BRANCH_STRATEGY.md",
+      "_work_efforts/CHECKPOINT_2026-01-07_analytics_and_checkout_system.md",
+      "_work_efforts/CHECKPOINT_2026-01-07_cursor_commands_creation.md",
+      "_work_efforts/FINAL_RECAP_2026-01-07.md",
+      "_work_efforts/FINAL_RECAP_COMPLETE.md",
+      "_work_efforts/WE-260107-j4my_branch_strategy_setup_migration_context/",
+      "docs/",
+      "scripts/promote-dev-to-staging.sh",
+      "scripts/promote-staging-to-main.sh",
+      "scripts/sync-cursor-commands.sh",
+      "src/waft/core/decision_matrix.py",
+      "src/waft/core/visualizer.py",
+      "visualizer/"
+    ],
+    "commits_ahead": 5,
+    "commits_behind": 0,
+    "recent_commits": [
+      {
+        "hash": "18606d2",
+        "message": "feat: Add analytics system and checkout workflow",
+        "author": "Christopher Tavolazzi",
+        "relative": "71 seconds ago"
+      },
+      {
+        "hash": "f37473c",
+        "message": "chore: update gamification state from engineering workflow",
+        "author": "Christopher Tavolazzi",
+        "relative": "5 hours ago"
+      },
+      {
+        "hash": "318503e",
+        "message": "docs: add engineering workflow documentation for debug code cleanup",
+        "author": "Christopher Tavolazzi",
+        "relative": "5 hours ago"
+      },
+      {
+        "hash": "7f49792",
+        "message": "refactor: remove debug logging code (63 occurrences)",
+        "author": "Christopher Tavolazzi",
+        "relative": "5 hours ago"
+      },
+      {
+        "hash": "cdf54fe",
+        "message": "fix: add Tavern Keeper hook to info command",
+        "author": "Christopher Tavolazzi",
+        "relative": "22 hours ago"
+      }
+    ]
+  },
+  "pyrite": {
+    "valid": true,
+    "folders": {
+      "_pyrite/active": true,
+      "_pyrite/backlog": true,
+      "_pyrite/standards": true
+    },
+    "active_files": [
+      "2026-01-07_global_commands_setup.md",
+      "2026-01-07_exploration_comprehensive.md",
+      "documentation_review_work.md",
+      "2026-01-07_plan_draft.md",
+      "2026-01-06_plan_final.md",
+      "2026-01-06_plan_critique.md",
+      "2026-01-06_explore_command_creation.md",
+      "2026-01-06_incremental_commits.md",
+      "2026-01-07_verify_command_creation.md",
+      "2026-01-06_test_suite_fix.md",
+      "2026-01-07_engineering_spinup.md",
+      "2026-01-07_consider_analysis.md",
+      "2026-01-07_verify_run_summary.md",
+      "2026-01-07_orientation_comprehensive.md",
+      "2026-01-06_engineering_command_creation.md",
+      "2026-01-06_commit_summary.md",
+      "2026-01-06_github_exploration.md",
+      "2026-01-06_implementation_complete.md",
+      "2026-01-06_explore_command_enhancement.md",
+      "empirica_python_version_issue.md",
+      "2026-01-06_work_effort_9a6i_completion.md",
+      "2026-01-06_plan_draft.md",
+      "2026-01-07_verify_run_2.md",
+      "2026-01-07_plan_final.md",
+      "2026-01-06_tavern_keeper_demo.md",
+      "2026-01-06_engineering_spinup.md",
+      "2026-01-06_demo_creation.md",
+      "2026-01-06_exploration_tavern_keeper.md",
+      "2026-01-06_engineering_complete.md"
+    ],
+    "backlog_files": [],
+    "standards_files": []
+  },
+  "gamification": {
+    "integrity": 100.0,
+    "insight": 0.0,
+    "level": 1,
+    "insight_to_next": 100.0
+  },
+  "system": {
+    "date_time": "2026-01-07 21:02:25",
+    "working_directory": "/Users/ctavolazzi/Code/active/waft",
+    "python_version": "3.10.0",
+    "platform": "darwin"
+  },
+  "work_efforts": [],
+  "devlog": [],
+  "analytics": {
+    "available": false,
+    "error": "'Visualizer' object has no attribute 'analytics'"
+  }
+};
+        console.log('🌊 Waft Dashboard State:', state);
+        console.log('💡 Tip: All data is available in the state object');
+        
+        // Performance monitoring
+        window.addEventListener('load', function() {
+            const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
+            console.log(`⚡ Dashboard loaded in ${loadTime}ms`);
+        });
+    </script>
+</body>
+</html>

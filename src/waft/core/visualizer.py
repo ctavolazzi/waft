@@ -831,12 +831,14 @@ class Visualizer:
 <body>
     <div class="container">
         <div class="header">
-            <h1>🌊 Waft Visual Dashboard</h1>
+            <h1>🌊 {state['project']['name']}</h1>
             <div class="subtitle">
-                {state['project']['name']} v{state['project']['version']} • 
-                Generated: {state['system']['date_time']}
+                v{state['project']['version']} • {state['system']['date_time']}
             </div>
         </div>
+
+        <!-- Key Metrics at a Glance -->
+        {self._render_key_metrics_bar(state)}
 
         <!-- Status Overview - Most Important First -->
         <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); margin-bottom: 24px;">
@@ -980,6 +982,65 @@ class Visualizer:
     </script>
 </body>
 </html>"""
+
+    def _render_key_metrics_bar(self, state: Dict[str, Any]) -> str:
+        """Render key metrics bar - at a glance metrics."""
+        git = state["git"]
+        pyrite = state["pyrite"]
+        gam = state["gamification"]
+        
+        uncommitted = len(git.get("uncommitted_files", []))
+        commits_ahead = git.get("commits_ahead", 0)
+        integrity = gam.get("integrity", 100.0)
+        level = gam.get("level", 1)
+        
+        # Calculate health
+        health_score = 0
+        if pyrite["valid"]:
+            health_score += 25
+        if git.get("initialized", False):
+            health_score += 25
+        if integrity >= 90:
+            health_score += 25
+        if uncommitted < 10:
+            health_score += 25
+        
+        health_icon = "🟢" if health_score >= 75 else "🟡" if health_score >= 50 else "🔴"
+        health_color = "var(--success)" if health_score >= 75 else "var(--warning)" if health_score >= 50 else "var(--error)"
+        
+        git_status_color = "var(--success)" if uncommitted == 0 else "var(--warning)" if uncommitted < 20 else "var(--error)"
+        
+        return f"""
+        <div style="background: var(--bg-card); border-radius: 12px; padding: 24px; margin-bottom: 24px; border: 1px solid var(--border);">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 20px; text-align: center;">
+                <div>
+                    <div style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em;">Health</div>
+                    <div style="font-size: 2em; margin-bottom: 4px;">{health_icon}</div>
+                    <div style="font-size: 1.5em; font-weight: 700; color: {health_color};">{health_score}%</div>
+                </div>
+                <div>
+                    <div style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em;">Uncommitted</div>
+                    <div style="font-size: 2.5em; font-weight: 700; color: {git_status_color}; margin-bottom: 4px;">{uncommitted}</div>
+                    <div style="font-size: 0.9em; color: var(--text-secondary);">files</div>
+                </div>
+                <div>
+                    <div style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em;">Integrity</div>
+                    <div style="font-size: 2.5em; font-weight: 700; color: var(--success); margin-bottom: 4px;">{integrity:.0f}%</div>
+                    <div style="font-size: 0.9em; color: var(--text-secondary);">Level {level}</div>
+                </div>
+                <div>
+                    <div style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em;">Branch</div>
+                    <div style="font-size: 1.8em; font-weight: 700; color: var(--primary-light); margin-bottom: 4px; font-family: monospace;">{git.get('branch', 'N/A')}</div>
+                    {f'<div style="font-size: 0.9em; color: var(--text-secondary);">{commits_ahead} ahead</div>' if commits_ahead > 0 else '<div style="font-size: 0.9em; color: var(--text-muted);">up to date</div>'}
+                </div>
+                <div>
+                    <div style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em;">Structure</div>
+                    <div style="font-size: 2em; margin-bottom: 4px;">{'✅' if pyrite['valid'] else '❌'}</div>
+                    <div style="font-size: 1.2em; font-weight: 600; color: {'var(--success)' if pyrite['valid'] else 'var(--error)'};">{'Valid' if pyrite['valid'] else 'Invalid'}</div>
+                </div>
+            </div>
+        </div>
+        """
 
     def _render_status_overview_card(self, state: Dict[str, Any]) -> str:
         """Render status overview card - quick health check."""
@@ -1783,3 +1844,495 @@ class Visualizer:
         print(f"   📊 Data: {json_path.name}\n")
 
         return html_path
+
+    def analyze(self, verbose: bool = False) -> Path:
+        """
+        Run Analyze: Analysis, insights, and action planning.
+
+        Analyzes Phase 1 data, identifies issues and opportunities, generates
+        insights, and creates prioritized action plans.
+
+        Args:
+            verbose: If True, show detailed progress for each phase
+
+        Returns:
+            Path to generated analysis report
+        """
+        print("\n🌊 Analyze: Analysis, Insights & Action Planning\n")
+
+        # Analyze 2.1: Data Loading & Validation
+        if verbose:
+            print("Analyze 2.1: Data Loading & Validation")
+        else:
+            print("Analyze 2.1: Data Loading & Validation", end="... ")
+        
+        phase1_dir = self.project_path / "_pyrite" / "phase1"
+        phase1_data = None
+        
+        # Find most recent Phase 1 JSON file
+        if phase1_dir.exists():
+            json_files = sorted(phase1_dir.glob("phase1-*.json"), reverse=True)
+            if json_files:
+                try:
+                    phase1_data = json.loads(json_files[0].read_text())
+                    if verbose:
+                        print(f"  ✓ Loaded Phase 1 data: {json_files[0].name}")
+                        print(f"  ✓ Data complete: {len(phase1_data)} sections")
+                except Exception as e:
+                    if verbose:
+                        print(f"  ⚠️  Error loading Phase 1 data: {e}")
+        
+        # If no Phase 1 data, run Phase 1 first
+        if phase1_data is None:
+            if verbose:
+                print("  ⚠️  No Phase 1 data found, running Phase 1 first...")
+            else:
+                print("⚠️")
+            phase1_path = self.phase1(verbose=verbose)
+            # Reload the data
+            json_files = sorted(phase1_dir.glob("phase1-*.json"), reverse=True)
+            if json_files:
+                phase1_data = json.loads(json_files[0].read_text())
+        else:
+            if not verbose:
+                print("✓")
+
+        # Analyze 2.2: Health Analysis
+        if verbose:
+            print("\nAnalyze 2.2: Health Analysis")
+        else:
+            print("Analyze 2.2: Health Analysis", end="... ")
+        
+        health_score = 0
+        health_items = []
+        
+        # Check integrity
+        integrity = phase1_data.get("gamification", {}).get("integrity", 100.0)
+        if integrity >= 90:
+            health_score += 25
+            health_items.append("✓ Integrity excellent")
+        elif integrity >= 70:
+            health_score += 15
+            health_items.append("⚠ Integrity good")
+        else:
+            health_items.append("❌ Integrity low")
+        
+        # Check structure
+        pyrite_valid = phase1_data.get("pyrite", {}).get("valid", False)
+        if pyrite_valid:
+            health_score += 25
+            health_items.append("✓ Structure valid")
+        else:
+            health_items.append("❌ Structure invalid")
+        
+        # Check git status
+        uncommitted = len(phase1_data.get("git", {}).get("uncommitted_files", []))
+        if uncommitted == 0:
+            health_score += 25
+            health_items.append("✓ Git clean")
+        elif uncommitted < 20:
+            health_score += 15
+            health_items.append("⚠ Git has changes")
+        else:
+            health_items.append("⚠ Git has many uncommitted files")
+        
+        # Check dependencies
+        lock_exists = self.substrate.verify_lock()
+        if lock_exists:
+            health_score += 25
+            health_items.append("✓ Dependencies locked")
+        else:
+            health_items.append("⚠ Dependencies not locked")
+        
+        health_text = "Excellent" if health_score >= 75 else "Good" if health_score >= 50 else "Needs Attention"
+        
+        if verbose:
+            print(f"  ✓ Overall Health: {health_score}% ({health_text})")
+            for item in health_items:
+                print(f"  {item}")
+        else:
+            print("✓")
+
+        # Analyze 2.3: Issue Identification
+        if verbose:
+            print("\nAnalyze 2.3: Issue Identification")
+        else:
+            print("Analyze 2.3: Issue Identification", end="... ")
+        
+        issues = []
+        
+        # Structural issues
+        if not pyrite_valid:
+            issues.append({
+                "type": "structural",
+                "severity": "high",
+                "description": "_pyrite structure is invalid",
+                "priority": "urgent"
+            })
+        
+        # Git issues
+        if uncommitted > 50:
+            issues.append({
+                "type": "git",
+                "severity": "medium",
+                "description": f"High number of uncommitted files ({uncommitted})",
+                "priority": "important"
+            })
+        elif uncommitted > 20:
+            issues.append({
+                "type": "git",
+                "severity": "low",
+                "description": f"Multiple uncommitted files ({uncommitted})",
+                "priority": "nice-to-have"
+            })
+        
+        # Dependency issues
+        if not lock_exists:
+            issues.append({
+                "type": "dependency",
+                "severity": "medium",
+                "description": "uv.lock file missing",
+                "priority": "important"
+            })
+        
+        # Integrity issues
+        if integrity < 70:
+            issues.append({
+                "type": "integrity",
+                "severity": "high",
+                "description": f"Low integrity ({integrity:.1f}%)",
+                "priority": "urgent"
+            })
+        
+        # Work effort issues
+        work_efforts = phase1_data.get("work_efforts", [])
+        if len(work_efforts) == 0:
+            issues.append({
+                "type": "work_effort",
+                "severity": "low",
+                "description": "No active work efforts",
+                "priority": "nice-to-have"
+            })
+        
+        if verbose:
+            print(f"  ⚠️  Found {len(issues)} issues:")
+            for i, issue in enumerate(issues, 1):
+                print(f"    {i}. {issue['description']} - {issue['priority']} priority")
+        else:
+            print("✓")
+
+        # Analyze 2.4: Opportunity Discovery
+        if verbose:
+            print("\nAnalyze 2.4: Opportunity Discovery")
+        else:
+            print("Analyze 2.4: Opportunity Discovery", end="... ")
+        
+        opportunities = []
+        
+        # Quick wins
+        if uncommitted > 0:
+            opportunities.append({
+                "type": "quick_win",
+                "impact": "high",
+                "effort": "low",
+                "description": "Commit uncommitted changes"
+            })
+        
+        if not lock_exists:
+            opportunities.append({
+                "type": "optimization",
+                "impact": "medium",
+                "effort": "low",
+                "description": "Run 'uv sync' to create lock file"
+            })
+        
+        # Enhancements
+        if len(work_efforts) == 0:
+            opportunities.append({
+                "type": "enhancement",
+                "impact": "medium",
+                "effort": "low",
+                "description": "Create work effort for current work"
+            })
+        
+        # Optimizations
+        active_files = len(phase1_data.get("pyrite", {}).get("active_files", []))
+        if active_files > 20:
+            opportunities.append({
+                "type": "optimization",
+                "impact": "low",
+                "effort": "medium",
+                "description": "Review memory layer organization"
+            })
+        
+        if verbose:
+            print(f"  ✨ Found {len(opportunities)} opportunities:")
+            for i, opp in enumerate(opportunities, 1):
+                print(f"    {i}. {opp['description']} ({opp['type']})")
+        else:
+            print("✓")
+
+        # Analyze 2.5: Pattern Analysis
+        if verbose:
+            print("\nAnalyze 2.5: Pattern Analysis")
+        else:
+            print("Analyze 2.5: Pattern Analysis", end="... ")
+        
+        patterns = []
+        
+        # File change patterns
+        if uncommitted > 0:
+            patterns.append({
+                "type": "file_changes",
+                "description": f"Recent activity: {uncommitted} uncommitted files",
+                "implication": "Active development in progress"
+            })
+        
+        # Work effort patterns
+        if len(work_efforts) == 0:
+            patterns.append({
+                "type": "work_effort",
+                "description": "No active work efforts",
+                "implication": "All work completed or ready for new work"
+            })
+        
+        # Memory layer patterns
+        backlog_count = len(phase1_data.get("pyrite", {}).get("backlog_files", []))
+        if backlog_count == 0:
+            patterns.append({
+                "type": "memory_layer",
+                "description": "No backlog files",
+                "implication": "Memory layer is well-organized"
+            })
+        
+        if verbose:
+            print(f"  📊 Patterns identified: {len(patterns)}")
+            for pattern in patterns:
+                print(f"    - {pattern['description']}")
+        else:
+            print("✓")
+
+        # Analyze 2.6: Insight Generation
+        if verbose:
+            print("\nAnalyze 2.6: Insight Generation")
+        else:
+            print("Analyze 2.6: Insight Generation", end="... ")
+        
+        insights = []
+        
+        # Generate insights from analysis
+        if health_score >= 75:
+            insights.append({
+                "type": "health",
+                "priority": "high",
+                "insight": "Project is in good health overall",
+                "recommendation": "Continue current practices"
+            })
+        elif health_score >= 50:
+            insights.append({
+                "type": "health",
+                "priority": "medium",
+                "insight": "Project health is acceptable but could be improved",
+                "recommendation": "Address identified issues to improve health"
+            })
+        else:
+            insights.append({
+                "type": "health",
+                "priority": "high",
+                "insight": "Project health needs attention",
+                "recommendation": "Prioritize urgent issues"
+            })
+        
+        if uncommitted > 0:
+            insights.append({
+                "type": "activity",
+                "priority": "medium",
+                "insight": f"High activity: {uncommitted} uncommitted files",
+                "recommendation": "Consider committing changes to maintain clean state"
+            })
+        
+        if len(work_efforts) == 0:
+            insights.append({
+                "type": "work_management",
+                "priority": "low",
+                "insight": "No active work efforts",
+                "recommendation": "Create work effort for current work if applicable"
+            })
+        
+        if verbose:
+            print(f"  💡 Generated {len(insights)} insights:")
+            for i, insight in enumerate(insights, 1):
+                print(f"    {i}. {insight['insight']}")
+        else:
+            print("✓")
+
+        # Analyze 2.7: Action Planning
+        if verbose:
+            print("\nAnalyze 2.7: Action Planning")
+        else:
+            print("Analyze 2.7: Action Planning", end="... ")
+        
+        actions = []
+        
+        # Create actions from issues
+        for issue in issues:
+            if issue["priority"] == "urgent":
+                actions.append({
+                    "priority": "urgent",
+                    "effort": "low",
+                    "action": f"Fix: {issue['description']}",
+                    "source": "issue"
+                })
+        
+        # Create actions from opportunities
+        for opp in opportunities:
+            if opp["type"] == "quick_win":
+                actions.append({
+                    "priority": "important",
+                    "effort": opp["effort"],
+                    "action": opp["description"],
+                    "source": "opportunity"
+                })
+        
+        # Create actions from insights
+        for insight in insights:
+            if insight["priority"] == "high":
+                actions.append({
+                    "priority": "important",
+                    "effort": "medium",
+                    "action": insight["recommendation"],
+                    "source": "insight"
+                })
+        
+        # Sort by priority
+        priority_order = {"urgent": 0, "important": 1, "nice-to-have": 2}
+        actions.sort(key=lambda x: priority_order.get(x["priority"], 3))
+        
+        if verbose:
+            print(f"  📋 Created {len(actions)} action items:")
+            for i, action in enumerate(actions, 1):
+                print(f"    {i}. [{action['priority']}] {action['action']}")
+        else:
+            print("✓")
+
+        # Analyze 2.8: Report Generation
+        if verbose:
+            print("\nAnalyze 2.8: Report Generation")
+            print("  📄 Generating analysis report...")
+        else:
+            print("Analyze 2.8: Report Generation", end="... ")
+        
+        # Create analyze output directory
+        analyze_dir = self.project_path / "_pyrite" / "analyze"
+        analyze_dir.mkdir(parents=True, exist_ok=True)
+        timestamp = datetime.now().strftime("%Y-%m-%d-%H%M%S")
+        
+        # Generate markdown report
+        report_path = analyze_dir / f"analyze-{timestamp}.md"
+        
+        report_content = f"""# Analyze Report
+
+**Generated**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+**Phase 1 Data**: {json_files[0].name if json_files else "N/A"}
+
+---
+
+## Executive Summary
+
+**Overall Health**: {health_score}% ({health_text})
+
+**Key Findings**:
+- Health Score: {health_score}%
+- Issues Found: {len(issues)}
+- Opportunities: {len(opportunities)}
+- Insights Generated: {len(insights)}
+- Actions Planned: {len(actions)}
+
+**Top Priorities**:
+{chr(10).join(f"1. {action['action']}" for action in actions[:3])}
+
+---
+
+## Health Analysis
+
+**Health Score**: {health_score}% ({health_text})
+
+**Health Indicators**:
+{chr(10).join(f"- {item}" for item in health_items)}
+
+**Detailed Metrics**:
+- Integrity: {integrity:.1f}%
+- Structure: {"Valid" if pyrite_valid else "Invalid"}
+- Git Status: {uncommitted} uncommitted files
+- Dependencies: {"Locked" if lock_exists else "Not locked"}
+- Work Efforts: {len(work_efforts)} active
+
+---
+
+## Issues Identified
+
+**Total Issues**: {len(issues)}
+
+{chr(10).join(f"### {i+1}. {issue['description']}{chr(10)}- **Type**: {issue['type']}{chr(10)}- **Severity**: {issue['severity']}{chr(10)}- **Priority**: {issue['priority']}" for i, issue in enumerate(issues)) if issues else "No issues identified."}
+
+---
+
+## Opportunities Discovered
+
+**Total Opportunities**: {len(opportunities)}
+
+{chr(10).join(f"### {i+1}. {opp['description']}{chr(10)}- **Type**: {opp['type']}{chr(10)}- **Impact**: {opp['impact']}{chr(10)}- **Effort**: {opp['effort']}" for i, opp in enumerate(opportunities)) if opportunities else "No opportunities identified."}
+
+---
+
+## Pattern Analysis
+
+**Patterns Identified**: {len(patterns)}
+
+{chr(10).join(f"### {pattern['type'].replace('_', ' ').title()}{chr(10)}- **Description**: {pattern['description']}{chr(10)}- **Implication**: {pattern['implication']}" for pattern in patterns) if patterns else "No patterns identified."}
+
+---
+
+## Insights & Recommendations
+
+**Total Insights**: {len(insights)}
+
+{chr(10).join(f"### {i+1}. {insight['insight']}{chr(10)}- **Type**: {insight['type']}{chr(10)}- **Priority**: {insight['priority']}{chr(10)}- **Recommendation**: {insight['recommendation']}" for i, insight in enumerate(insights)) if insights else "No insights generated."}
+
+---
+
+## Action Plan
+
+**Total Actions**: {len(actions)}
+
+{chr(10).join(f"### {i+1}. [{action['priority']}] {action['action']}{chr(10)}- **Effort**: {action['effort']}{chr(10)}- **Source**: {action['source']}" for i, action in enumerate(actions)) if actions else "No actions planned."}
+
+---
+
+## Next Steps
+
+1. Review this analysis report
+2. Prioritize actions based on urgency and impact
+3. Execute action plan
+4. Re-run `/analyze` after changes to track progress
+
+---
+
+**Report generated by `/analyze` command**
+"""
+        
+        report_path.write_text(report_content, encoding="utf-8")
+        
+        if verbose:
+            print(f"  ✓ Report saved: {report_path.name}")
+        else:
+            print("✓")
+        
+        print(f"\n✅ Analyze Complete - Analysis and action plan ready")
+        print(f"   📁 Output folder: {analyze_dir.resolve()}")
+        print(f"   📄 Report: {report_path.name}")
+        if actions:
+            print(f"   🎯 Top Priority: {actions[0]['action']}")
+        print()
+        
+        return report_path

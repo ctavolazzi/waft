@@ -59,3 +59,4 @@ The explore command produces a structured report with:
 
 - `.cursor/commands/explore.md` - NEW (5.7KB, comprehensive exploration guide)
 
+

@@ -99,3 +99,4 @@ def test_get_standards_files(project_with_pyrite):
     assert len(files) == 1
     assert test_file in files
 
+

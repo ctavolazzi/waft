@@ -60,3 +60,4 @@ The explore command now guides AI to:
 
 This makes exploration a **tool-using, knowledge-building activity** rather than just reading code.
 
+

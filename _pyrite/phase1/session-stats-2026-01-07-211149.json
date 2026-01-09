@@ -1,0 +1,296 @@
+{
+  "timestamp": "2026-01-07T21:11:49.648489",
+  "files": {
+    "created": 40,
+    "modified": 0,
+    "deleted": 0,
+    "total_operations": 40
+  },
+  "code": {
+    "lines_written": 13379,
+    "lines_modified": 1662,
+    "lines_deleted": 438,
+    "net_change": 12941
+  },
+  "file_details": [
+    {
+      "file": "_pyrite/.waft/visualize-2026-01-07-210434.html",
+      "status": "created",
+      "lines": 1299,
+      "additions": 1299,
+      "deletions": 0,
+      "net": 1299
+    },
+    {
+      "file": "_pyrite/.waft/visualize-2026-01-07-210225.html",
+      "status": "created",
+      "lines": 1198,
+      "additions": 1198,
+      "deletions": 0,
+      "net": 1198
+    },
+    {
+      "file": ".cursor/commands/decide.md",
+      "status": "created",
+      "lines": 666,
+      "additions": 666,
+      "deletions": 0,
+      "net": 666
+    },
+    {
+      "file": "_pyrite/.waft/phase1-2026-01-07-202711.html",
+      "status": "created",
+      "lines": 607,
+      "additions": 607,
+      "deletions": 0,
+      "net": 607
+    },
+    {
+      "file": "_pyrite/.waft/visualize-2026-01-07-202535.html",
+      "status": "created",
+      "lines": 603,
+      "additions": 603,
+      "deletions": 0,
+      "net": 603
+    },
+    {
+      "file": "_pyrite/active/2026-01-07_exploration_comprehensive.md",
+      "status": "modified",
+      "lines": 0,
+      "additions": 801,
+      "deletions": 257,
+      "net": 544
+    },
+    {
+      "file": ".cursor/commands/phase2.md",
+      "status": "created",
+      "lines": 511,
+      "additions": 511,
+      "deletions": 0,
+      "net": 511
+    },
+    {
+      "file": ".cursor/commands/phase1.md",
+      "status": "created",
+      "lines": 450,
+      "additions": 450,
+      "deletions": 0,
+      "net": 450
+    },
+    {
+      "file": "src/waft/core/decision_matrix.py",
+      "status": "created",
+      "lines": 438,
+      "additions": 438,
+      "deletions": 0,
+      "net": 438
+    },
+    {
+      "file": "_work_efforts/devlog.md",
+      "status": "modified",
+      "lines": 0,
+      "additions": 420,
+      "deletions": 0,
+      "net": 420
+    },
+    {
+      "file": ".cursor/commands/consider.md",
+      "status": "created",
+      "lines": 384,
+      "additions": 384,
+      "deletions": 0,
+      "net": 384
+    },
+    {
+      "file": ".cursor/commands/visualize.md",
+      "status": "created",
+      "lines": 377,
+      "additions": 377,
+      "deletions": 0,
+      "net": 377
+    },
+    {
+      "file": "_pyrite/active/2026-01-07_orientation_comprehensive.md",
+      "status": "created",
+      "lines": 368,
+      "additions": 368,
+      "deletions": 0,
+      "net": 368
+    },
+    {
+      "file": ".cursor/commands/checkpoint.md",
+      "status": "created",
+      "lines": 358,
+      "additions": 358,
+      "deletions": 0,
+      "net": 358
+    },
+    {
+      "file": "_pyrite/active/2026-01-07_consider_analysis.md",
+      "status": "created",
+      "lines": 358,
+      "additions": 358,
+      "deletions": 0,
+      "net": 358
+    },
+    {
+      "file": ".cursor/commands/verify.md",
+      "status": "created",
+      "lines": 355,
+      "additions": 355,
+      "deletions": 0,
+      "net": 355
+    },
+    {
+      "file": ".cursor/CONTINUATION_PROMPT.md",
+      "status": "created",
+      "lines": 316,
+      "additions": 316,
+      "deletions": 0,
+      "net": 316
+    },
+    {
+      "file": "_work_efforts/FINAL_RECAP_COMPLETE.md",
+      "status": "created",
+      "lines": 304,
+      "additions": 304,
+      "deletions": 0,
+      "net": 304
+    },
+    {
+      "file": "_work_efforts/CHECKPOINT_2026-01-07_cursor_commands_creation.md",
+      "status": "created",
+      "lines": 235,
+      "additions": 235,
+      "deletions": 0,
+      "net": 235
+    },
+    {
+      "file": "_work_efforts/CHECKPOINT_2026-01-07_analytics_and_checkout_system.md",
+      "status": "created",
+      "lines": 234,
+      "additions": 234,
+      "deletions": 0,
+      "net": 234
+    }
+  ],
+  "by_type": {
+    ".html": {
+      "created": 4,
+      "modified": 0,
+      "lines": 3707
+    },
+    ".md": {
+      "created": 27,
+      "modified": 16,
+      "lines": 8212
+    },
+    ".py": {
+      "created": 1,
+      "modified": 7,
+      "lines": 443
+    },
+    ".sh": {
+      "created": 3,
+      "modified": 0,
+      "lines": 349
+    },
+    ".json": {
+      "created": 2,
+      "modified": 3,
+      "lines": 180
+    },
+    ".js": {
+      "created": 3,
+      "modified": 0,
+      "lines": 51
+    },
+    ".toml": {
+      "created": 0,
+      "modified": 1,
+      "lines": -1
+    }
+  },
+  "top_files": [
+    {
+      "file": "_pyrite/.waft/visualize-2026-01-07-210434.html",
+      "status": "created",
+      "lines": 1299,
+      "additions": 1299,
+      "deletions": 0,
+      "net": 1299
+    },
+    {
+      "file": "_pyrite/.waft/visualize-2026-01-07-210225.html",
+      "status": "created",
+      "lines": 1198,
+      "additions": 1198,
+      "deletions": 0,
+      "net": 1198
+    },
+    {
+      "file": ".cursor/commands/decide.md",
+      "status": "created",
+      "lines": 666,
+      "additions": 666,
+      "deletions": 0,
+      "net": 666
+    },
+    {
+      "file": "_pyrite/.waft/phase1-2026-01-07-202711.html",
+      "status": "created",
+      "lines": 607,
+      "additions": 607,
+      "deletions": 0,
+      "net": 607
+    },
+    {
+      "file": "_pyrite/.waft/visualize-2026-01-07-202535.html",
+      "status": "created",
+      "lines": 603,
+      "additions": 603,
+      "deletions": 0,
+      "net": 603
+    },
+    {
+      "file": "_pyrite/active/2026-01-07_exploration_comprehensive.md",
+      "status": "modified",
+      "lines": 0,
+      "additions": 801,
+      "deletions": 257,
+      "net": 544
+    },
+    {
+      "file": ".cursor/commands/phase2.md",
+      "status": "created",
+      "lines": 511,
+      "additions": 511,
+      "deletions": 0,
+      "net": 511
+    },
+    {
+      "file": ".cursor/commands/phase1.md",
+      "status": "created",
+      "lines": 450,
+      "additions": 450,
+      "deletions": 0,
+      "net": 450
+    },
+    {
+      "file": "src/waft/core/decision_matrix.py",
+      "status": "created",
+      "lines": 438,
+      "additions": 438,
+      "deletions": 0,
+      "net": 438
+    },
+    {
+      "file": "_work_efforts/devlog.md",
+      "status": "modified",
+      "lines": 0,
+      "additions": 420,
+      "deletions": 0,
+      "net": 420
+    }
+  ]
+}

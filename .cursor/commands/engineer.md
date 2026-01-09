@@ -1,4 +1,4 @@
-# Engineering
+# Engineer
 
 **Complete workflow from orientation to implementation.**
 
@@ -54,7 +54,7 @@ This command orchestrates the complete development workflow, ensuring:
 - Recent changes
 - Recommended next step
 
-**Document**: Create `_pyrite/active/YYYY-MM-DD_engineering_spinup.md`
+**Document**: Create `_pyrite/active/YYYY-MM-DD_engineer_spinup.md`
 
 ---
 
@@ -427,4 +427,5 @@ After each phase, provide:
 ---
 
 **This command runs the complete workflow. Use it when you need thorough understanding and planning before implementation.**
+
 

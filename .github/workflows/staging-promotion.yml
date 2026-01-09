@@ -1,0 +1,73 @@
+name: Staging Promotion Validation
+
+on:
+  push:
+    branches:
+      - staging
+  pull_request:
+    branches:
+      - main
+    head:
+      - staging
+
+jobs:
+  validate-staging:
+    name: Validate Staging for Production
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Run comprehensive tests
+        run: uv run pytest -v --cov=src --cov-report=term-missing
+
+      - name: Run linting
+        run: uv run ruff check .
+
+      - name: Check formatting
+        run: uv run ruff format --check .
+
+      - name: Verify project structure
+        run: waft verify
+
+      - name: Check for debug code
+        run: |
+          if grep -r "# #region agent log" src/ || grep -r "debug.log" src/; then
+            echo "❌ Debug logging code found. Remove before promoting to production."
+            exit 1
+          fi
+          echo "✅ No debug code found"
+
+      - name: Validate version consistency
+        run: |
+          VERSION=$(grep '^version = ' pyproject.toml | cut -d'"' -f2)
+          if grep -q "\[Unreleased\]" CHANGELOG.md; then
+            echo "⚠️  CHANGELOG.md contains [Unreleased] entries"
+            echo "Consider updating to version $VERSION before promoting"
+          fi
+
+      - name: Create promotion report
+        if: always()
+        run: |
+          echo "## Staging Promotion Validation Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ All validation checks completed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Next Steps:**" >> $GITHUB_STEP_SUMMARY
+          echo "1. Review the validation results above" >> $GITHUB_STEP_SUMMARY
+          echo "2. Run \`./scripts/promote-staging-to-main.sh\` locally to promote to main" >> $GITHUB_STEP_SUMMARY
+          echo "3. Or create a PR from staging → main for review" >> $GITHUB_STEP_SUMMARY
+

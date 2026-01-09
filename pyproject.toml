@@ -31,6 +31,8 @@ dependencies = [
     "empirica>=1.2.3",
     "tinydb>=4.8.0",
     "d20>=1.0.0",
+    "fastapi>=0.104.0",
+    "uvicorn[standard]>=0.24.0",
 ]
 
 [project.optional-dependencies]
@@ -56,7 +58,7 @@ Issues = "https://github.com/ctavolazzi/waft/issues"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
-packages = ["waft", "waft.core", "waft.cli", "waft.templates", "waft.ui"]
+packages = ["waft", "waft.core", "waft.cli", "waft.templates", "waft.ui", "waft.api"]
 
 [tool.ruff]
 line-length = 100
@@ -72,4 +74,3 @@ indent-style = "space"
 
 [tool.uv.workspace]
 members = ["_experiments/test_project_001", "_experiments/existing_project", "_experiments/test_project_002", "_experiments/test_project_001/nested_project"]
-

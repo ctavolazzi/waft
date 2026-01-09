@@ -17,6 +17,7 @@ from rich.text import Text
 from .session_stats import SessionStats
 from .session_analytics import SessionAnalytics, SessionRecord
 from .github import GitHubManager
+from .visualizer import Visualizer
 
 
 class CheckoutManager:
@@ -34,6 +35,7 @@ class CheckoutManager:
         self.stats_tracker = SessionStats(project_path)
         self.analytics = SessionAnalytics(project_path)
         self.github = GitHubManager(project_path)
+        self.visualizer = Visualizer(project_path)
 
     def run_checkout(self, quick: bool = False, silent: bool = False) -> Dict[str, Any]:
         """
@@ -80,7 +82,12 @@ class CheckoutManager:
         if analytics_result.get("error"):
             results["errors"].append("Analytics phase failed")
 
-        # Phase 5: Final Summary
+        # Phase 5: Open Dashboard
+        if not silent:
+            dashboard_result = self._phase_dashboard(silent)
+            results["phases"]["dashboard"] = dashboard_result
+
+        # Phase 6: Final Summary
         if not silent:
             self._display_final_summary(results)
 
@@ -361,9 +368,39 @@ class CheckoutManager:
         # Default
         return "general_development"
 
+    def _phase_dashboard(self, silent: bool) -> Dict[str, Any]:
+        """Phase 5: Generate and open visual dashboard."""
+        if not silent:
+            self.console.print("\n[bold]Phase 5: Visual Dashboard[/bold]")
+        
+        try:
+            dashboard_path = self.visualizer.generate_and_open()
+            
+            result = {
+                "success": True,
+                "dashboard_path": str(dashboard_path),
+                "opened": True,
+            }
+            
+            if not silent:
+                self.console.print(f"  [green]✓[/green] Dashboard opened: {dashboard_path.name}")
+            
+            return result
+        except Exception as e:
+            result = {
+                "success": False,
+                "error": str(e),
+                "opened": False,
+            }
+            
+            if not silent:
+                self.console.print(f"  [yellow]⚠[/yellow] Could not open dashboard: {e}")
+            
+            return result
+
     def _display_final_summary(self, results: Dict[str, Any]):
         """Display final checkout summary."""
-        self.console.print("\n[bold]Phase 4: Completion[/bold]")
+        self.console.print("\n[bold]Phase 6: Completion[/bold]")
         self.console.print("  [green]✓[/green] Checkout complete!\n")
 
         self.console.print("━" * 80)

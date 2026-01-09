@@ -25,3 +25,13 @@ Thumbs.db
 .pytest_cache/
 .coverage
 htmlcov/
+
+# SvelteKit Visualizer
+visualizer/node_modules/
+visualizer/.svelte-kit/
+visualizer/build/
+visualizer/package-lock.json
+visualizer/.env
+visualizer/.env.*
+visualizer/vite.config.js.timestamp-*
+visualizer/vite.config.ts.timestamp-*

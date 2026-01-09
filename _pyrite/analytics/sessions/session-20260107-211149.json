@@ -1,0 +1,74 @@
+{
+  "session_id": "session-20260107-211149",
+  "timestamp": "2026-01-07T21:11:49.722742",
+  "duration_seconds": null,
+  "files_created": 40,
+  "files_modified": 0,
+  "files_deleted": 0,
+  "lines_written": 13379,
+  "lines_modified": 1662,
+  "lines_deleted": 438,
+  "net_lines": 12941,
+  "commands_executed": [],
+  "work_efforts_created": 0,
+  "work_efforts_updated": 0,
+  "project_name": "waft",
+  "branch": "main",
+  "git_commits_ahead": 75,
+  "prompt_signature": "419fde0e590a2260",
+  "approach_category": "command_creation",
+  "iteration_chain": null,
+  "success_indicators": [],
+  "issues_encountered": [],
+  "metadata": {
+    "top_files": [
+      "_pyrite/.waft/visualize-2026-01-07-210434.html",
+      "_pyrite/.waft/visualize-2026-01-07-210225.html",
+      ".cursor/commands/decide.md",
+      "_pyrite/.waft/phase1-2026-01-07-202711.html",
+      "_pyrite/.waft/visualize-2026-01-07-202535.html",
+      "_pyrite/active/2026-01-07_exploration_comprehensive.md",
+      ".cursor/commands/phase2.md",
+      ".cursor/commands/phase1.md",
+      "src/waft/core/decision_matrix.py",
+      "_work_efforts/devlog.md"
+    ],
+    "file_types": {
+      ".html": {
+        "created": 4,
+        "modified": 0,
+        "lines": 3707
+      },
+      ".md": {
+        "created": 27,
+        "modified": 16,
+        "lines": 8212
+      },
+      ".py": {
+        "created": 1,
+        "modified": 7,
+        "lines": 443
+      },
+      ".sh": {
+        "created": 3,
+        "modified": 0,
+        "lines": 349
+      },
+      ".json": {
+        "created": 2,
+        "modified": 3,
+        "lines": 180
+      },
+      ".js": {
+        "created": 3,
+        "modified": 0,
+        "lines": 51
+      },
+      ".toml": {
+        "created": 0,
+        "modified": 1,
+        "lines": -1
+      }
+    }
+  }
+}

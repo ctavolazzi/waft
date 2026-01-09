@@ -1,0 +1,90 @@
+{
+  "alternatives": [
+    {
+      "name": "PorchRoot (Maker Goods)",
+      "description": null
+    },
+    {
+      "name": "FogSift (Consulting)",
+      "description": null
+    },
+    {
+      "name": "NovaSystem (AI Agents)",
+      "description": null
+    }
+  ],
+  "criteria": [
+    {
+      "name": "Cash Flow Velocity",
+      "weight": 0.5,
+      "description": null
+    },
+    {
+      "name": "Joy & Fulfillment",
+      "weight": 0.3,
+      "description": null
+    },
+    {
+      "name": "Long-Term Scalability",
+      "weight": 0.2,
+      "description": null
+    }
+  ],
+  "scores": [
+    {
+      "alternative_name": "PorchRoot (Maker Goods)",
+      "criterion_name": "Cash Flow Velocity",
+      "value": 4.0,
+      "reasoning": null
+    },
+    {
+      "alternative_name": "PorchRoot (Maker Goods)",
+      "criterion_name": "Joy & Fulfillment",
+      "value": 10.0,
+      "reasoning": null
+    },
+    {
+      "alternative_name": "PorchRoot (Maker Goods)",
+      "criterion_name": "Long-Term Scalability",
+      "value": 3.0,
+      "reasoning": null
+    },
+    {
+      "alternative_name": "FogSift (Consulting)",
+      "criterion_name": "Cash Flow Velocity",
+      "value": 9.0,
+      "reasoning": null
+    },
+    {
+      "alternative_name": "FogSift (Consulting)",
+      "criterion_name": "Joy & Fulfillment",
+      "value": 6.0,
+      "reasoning": null
+    },
+    {
+      "alternative_name": "FogSift (Consulting)",
+      "criterion_name": "Long-Term Scalability",
+      "value": 5.0,
+      "reasoning": null
+    },
+    {
+      "alternative_name": "NovaSystem (AI Agents)",
+      "criterion_name": "Cash Flow Velocity",
+      "value": 2.0,
+      "reasoning": null
+    },
+    {
+      "alternative_name": "NovaSystem (AI Agents)",
+      "criterion_name": "Joy & Fulfillment",
+      "value": 9.0,
+      "reasoning": null
+    },
+    {
+      "alternative_name": "NovaSystem (AI Agents)",
+      "criterion_name": "Long-Term Scalability",
+      "value": 10.0,
+      "reasoning": null
+    }
+  ],
+  "methodology": "WSM"
+}

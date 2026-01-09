@@ -633,16 +633,52 @@ def serve(
         console.print(f"[dim]{error}[/dim]")
         raise typer.Exit(1)
 
-    from .web import serve as serve_web
-
+    # Use new FastAPI + SvelteKit visualizer
     try:
-        serve_web(project_path, port=port, host=host, dev=dev)
-    except OSError as e:
-        if "Address already in use" in str(e):
+        from .api.main import create_app
+        import uvicorn
+
+        # Create FastAPI app
+        static_dir = None
+        if not dev:
+            build_path = project_path / "visualizer" / "build"
+            if build_path.exists():
+                static_dir = build_path
+                console.print("[dim]→[/dim] Serving SvelteKit build from visualizer/build")
+            else:
+                console.print("[yellow]⚠️[/yellow]  SvelteKit build not found. Run 'cd visualizer && npm run build' first")
+                console.print("[dim]→[/dim] API-only mode (use --dev for development)")
+
+        app = create_app(project_path, static_dir=static_dir)
+
+        console.print(f"\n[bold cyan]🌊 Waft Visualizer[/bold cyan]")
+        if dev:
+            console.print("[dim]→[/dim] Development mode - Start SvelteKit dev server: cd visualizer && npm run dev")
+            console.print("[dim]→[/dim] SvelteKit will proxy API requests to this server")
+        console.print(f"[dim]→[/dim] API server: http://{host}:{port}")
+        if static_dir:
+            console.print(f"[dim]→[/dim] Dashboard: http://{host}:{port}/")
+        else:
+            console.print(f"[dim]→[/dim] API docs: http://{host}:{port}/docs")
+        console.print(f"[dim]→[/dim] API docs: http://{host}:{port}/docs")
+        console.print(f"[dim]→[/dim] Project: {project_path.resolve()}")
+        console.print(f"\nPress Ctrl+C to stop\n")
+
+        uvicorn.run(app, host=host, port=port, log_level="info")
+
+    except ImportError as e:
+        console.print(f"[bold red]❌ Missing dependencies: {e}[/bold red]")
+        console.print("[dim]→[/dim] Install with: uv sync[/dim]")
+        raise typer.Exit(1)
+    except Exception as e:
+        if "Address already in use" in str(e) or "already in use" in str(e):
             console.print(f"[bold red]❌ Port {port} is already in use[/bold red]")
             console.print(f"[dim]Try a different port with --port[/dim]")
         else:
             console.print(f"[bold red]❌ Error starting server: {e}[/bold red]")
+            import traceback
+            if dev:
+                console.print(f"[dim]{traceback.format_exc()}[/dim]")
         raise typer.Exit(1)
 
 
@@ -1133,6 +1169,52 @@ def checkout(
 # Add analytics subcommand
 app.add_typer(analytics_app, name="analytics")
 
+@app.command()
+def decide(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    topic: Optional[str] = typer.Option(None, "--topic", "-t", help="Specific decision topic (e.g., 'workflow')"),
+):
+    """
+    Run decision matrix analysis using standardized methodology.
+    
+    This command uses DecisionCLI for standardized decision matrix calculations.
+    The decision matrix is built from the /consider command's output or can be
+    provided directly. Uses the DecisionMatrixCalculator for mathematical rigor.
+    
+    Standardized workflow:
+    1. Use /consider to identify options and criteria
+    2. /decide uses DecisionCLI.run_decision_matrix() for calculations
+    3. Results are displayed in consistent format with sensitivity analysis
+    """
+    project_path = resolve_project_path(path)
+    
+    # Check for topic-specific analyzers
+    if topic == "workflow":
+        from .core.workflow_decision import WorkflowDecisionAnalyzer
+        
+        analyzer = WorkflowDecisionAnalyzer(project_path)
+        analyzer.analyze_workflow_options()
+        return
+    
+    # Default: Show usage
+    from .core.decision_cli import DecisionCLI
+    
+    cli = DecisionCLI(project_path)
+    
+    console.print("[bold cyan]🎯 Decision Matrix Analysis[/bold cyan]\n")
+    console.print("[dim]The /decide command uses DecisionCLI for standardized calculations.")
+    console.print("DecisionCLI.run_decision_matrix() provides a reusable interface.")
+    console.print("\n[bold]Standardized Components:[/bold]")
+    console.print("  • DecisionCLI - Reusable CLI handler")
+    console.print("  • DecisionMatrixCalculator - Mathematical calculations")
+    console.print("  • Consistent output format with Rich tables")
+    console.print("  • Built-in sensitivity analysis")
+    console.print("\n[bold]Available Topics:[/bold]")
+    console.print("  • workflow - Analyze workflow implementation options")
+    console.print("\n[dim]See .cursor/commands/decide.md for full documentation.[/dim]")
+    console.print("[dim]Use /consider first to identify options, then /decide for quantitative analysis.[/dim]")
+    console.print("[dim]Example: waft decide --topic workflow[/dim]")
+
 
 @app.command()
 def level(
@@ -1579,6 +1661,290 @@ def observe(
     except Exception as e:
         console.print(f"[bold red]❌ Error logging observation: {e}[/bold red]")
         raise typer.Exit(1)
+
+
+@app.command()
+def phase1(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed progress"),
+):
+    """Run Phase 1: Comprehensive data gathering and visualization."""
+    project_path = resolve_project_path(path)
+
+    from .core.visualizer import Visualizer
+
+    visualizer = Visualizer(project_path)
+    visualizer.phase1(verbose=verbose)
+
+
+@app.command()
+def analyze(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed progress"),
+):
+    """Run Analyze: Analysis, insights, and action planning."""
+    project_path = resolve_project_path(path)
+
+    from .core.visualizer import Visualizer
+
+    visualizer = Visualizer(project_path)
+    visualizer.analyze(verbose=verbose)
+
+
+@app.command()
+def resume(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    session: Optional[str] = typer.Option(None, "--session", "-s", help="Specific session file to load"),
+    compare: bool = typer.Option(True, "--compare/--no-compare", help="Compare current state with last session"),
+    full: bool = typer.Option(False, "--full", "-f", help="Load full context (not just summary)"),
+):
+    """
+    Pick up where you left off - restore context and continue work.
+    
+    Loads the most recent session summary, compares current state with what was left,
+    identifies what was in progress, and provides clear next steps.
+    """
+    project_path = resolve_project_path(path)
+    
+    from .core.resume import ResumeManager
+    
+    resume_manager = ResumeManager(project_path)
+    resume_manager.run_resume(
+        session_file=session,
+        compare=compare,
+        full_context=full
+    )
+
+
+@app.command(name="continue")
+def continue_work(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    deep: bool = typer.Option(False, "--deep", "-d", help="Perform deep reflection"),
+    focus: Optional[str] = typer.Option(None, "--focus", "-f", help="Focus area: approach, patterns, quality"),
+    save: bool = typer.Option(False, "--save", "-s", help="Save reflection to file"),
+):
+    """
+    Keep doing what you're doing, but take this opportunity to really reflect on what you're doing.
+    
+    Pauses to deeply reflect on current work, approach, and progress, then continues
+    with improved awareness and potentially adjusted direction.
+    """
+    project_path = resolve_project_path(path)
+    
+    from .core.continue_work import ContinueManager
+    
+    continue_manager = ContinueManager(project_path)
+    continue_manager.run_continue(
+        deep=deep,
+        focus=focus,
+        save=save
+    )
+
+
+@app.command()
+def reflect(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    prompt: Optional[str] = typer.Option(None, "--prompt", help="Custom reflection prompt"),
+    topic: Optional[str] = typer.Option(None, "--topic", "-t", help="Topic to focus reflection on"),
+    save: bool = typer.Option(True, "--save/--no-save", help="Save entry to journal"),
+):
+    """
+    Induce the AI to write in its journal - reflect on current work, thoughts, and experiences.
+    
+    The AI definitely needs a journal if it doesn't have one. This command ensures it exists
+    and prompts the AI to write reflective entries about its work, thoughts, and learnings.
+    """
+    project_path = resolve_project_path(path)
+    
+    from .core.reflect import ReflectManager
+    
+    reflect_manager = ReflectManager(project_path)
+    reflect_manager.run_reflect(
+        prompt=prompt,
+        topic=topic,
+        save_entry=save
+    )
+
+
+@app.command()
+def help_cmd(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    category: Optional[str] = typer.Option(None, "--category", "-c", help="Filter by category"),
+    search: Optional[str] = typer.Option(None, "--search", "-s", help="Search commands by keyword"),
+    command: Optional[str] = typer.Option(None, "--command", help="Show details for specific command"),
+    count: bool = typer.Option(False, "--count", help="Just show command count"),
+):
+    """
+    Discover and understand available Cursor commands.
+    
+    Lists all available commands, organized by category, with brief descriptions
+    and usage guidance. Helps you discover commands and understand when to use each one.
+    """
+    project_path = resolve_project_path(path)
+    
+    from .core.help import HelpManager
+    
+    help_manager = HelpManager(project_path)
+    help_manager.run_help(
+        category=category,
+        search=search,
+        command=command,
+        count=count
+    )
+
+
+goal_app = typer.Typer(help="Goal management commands")
+app.add_typer(goal_app, name="goal")
+
+
+@goal_app.command()
+def create(
+    name: str = typer.Argument(..., help="Goal name (slug)"),
+    objective: str = typer.Argument(..., help="Goal objective/description"),
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+):
+    """Create a new goal with objective."""
+    project_path = resolve_project_path(path)
+    
+    from .core.goal import GoalManager
+    
+    goal_manager = GoalManager(project_path)
+    goal_manager.create_goal(name, objective)
+
+
+@goal_app.command("list")
+def goal_list(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    status: Optional[str] = typer.Option(None, "--status", "-s", help="Filter by status (active, completed, paused)"),
+):
+    """List all goals."""
+    project_path = resolve_project_path(path)
+    
+    from .core.goal import GoalManager
+    from rich.table import Table
+    
+    goal_manager = GoalManager(project_path)
+    goals = goal_manager.list_goals(status=status)
+    
+    if not goals:
+        console.print("[dim]No goals found.[/dim]")
+        return
+    
+    table = Table(show_header=True)
+    table.add_column("Name", style="bold")
+    table.add_column("Status", width=12)
+    table.add_column("Objective", ratio=2)
+    table.add_column("Progress", width=15)
+    
+    for goal in goals:
+        steps = goal.get("steps", [])
+        completed = sum(1 for s in steps if s.get("completed", False))
+        total = len(steps)
+        progress = f"{completed}/{total}" if total > 0 else "0/0"
+        
+        table.add_row(
+            goal.get("name", ""),
+            goal.get("status", ""),
+            goal.get("objective", "")[:60] + "..." if len(goal.get("objective", "")) > 60 else goal.get("objective", ""),
+            progress
+        )
+    
+    console.print("\n[bold cyan]🎯 Goals[/bold cyan]\n")
+    console.print(table)
+    console.print()
+
+
+@goal_app.command()
+def show(
+    name: str = typer.Argument(..., help="Goal name"),
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+):
+    """Show goal details."""
+    project_path = resolve_project_path(path)
+    
+    from .core.goal import GoalManager
+    
+    goal_manager = GoalManager(project_path)
+    goal_manager.show_goal(name)
+
+
+@app.command()
+def next_cmd(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    goal: Optional[str] = typer.Option(None, "--goal", "-g", help="Specific goal name"),
+    count: int = typer.Option(1, "--count", "-c", help="Number of next steps to show"),
+):
+    """
+    Identify next step based on goals, context, and priorities.
+    
+    Analyzes current goals, work in progress, and context to identify
+    the most important next action.
+    """
+    project_path = resolve_project_path(path)
+    
+    from .core.goal import GoalManager
+    
+    goal_manager = GoalManager(project_path)
+    next_steps = goal_manager.get_next_step(goal_name=goal, count=count)
+    
+    if not next_steps:
+        console.print("[dim]No next steps found. Create a goal first with: waft goal create <name> <objective>[/dim]")
+        return
+    
+    console.print("\n[bold cyan]🎯 Next Steps[/bold cyan]\n")
+    
+    for i, step in enumerate(next_steps, 1):
+        console.print(f"[bold]{i}. {step.get('step', '')}[/bold]")
+        console.print(f"   [dim]From Goal:[/dim] {step.get('goal', '')}")
+        console.print(f"   [dim]Priority:[/dim] {step.get('priority', 0)}")
+        if step.get('objective'):
+            console.print(f"   [dim]Objective:[/dim] {step.get('objective', '')[:80]}...")
+        console.print()
+
+
+@app.command()
+def recap(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    output: Optional[str] = typer.Option(None, "--output", "-o", help="Custom output path"),
+):
+    """
+    Create conversation recap and session summary.
+    
+    Creates comprehensive recap of current conversation/session, extracting
+    key points, decisions, accomplishments, and questions.
+    """
+    project_path = resolve_project_path(path)
+    
+    from .core.recap import RecapManager
+    
+    recap_manager = RecapManager(project_path)
+    recap_manager.run_recap(output_path=output)
+
+
+@app.command()
+def proceed(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    focus: Optional[str] = typer.Option(None, "--focus", "-f", help="Focus area: assumptions, ambiguity, context"),
+    strict: bool = typer.Option(False, "--strict", "-s", help="Ask questions before proceeding"),
+    relaxed: bool = typer.Option(False, "--relaxed", "-r", help="Proceed with best understanding"),
+):
+    """
+    Keep doing what you're doing, but verify context and assumptions first.
+    
+    Pauses to check larger context, reflect on assumptions, ask clarifying questions,
+    perform a "flight check", then proceeds with verified understanding. Ensures no
+    unverified assumptions or unclear ambiguity before taking actions.
+    """
+    project_path = resolve_project_path(path)
+    
+    from .core.proceed import ProceedManager
+    
+    proceed_manager = ProceedManager(project_path)
+    proceed_manager.run_proceed(
+        focus=focus,
+        strict=strict,
+        relaxed=relaxed,
+    )
 
 
 def main():

@@ -72,3 +72,4 @@
 - Use waft verify/info/stats during development
 - Follow the workflow: spin-up → explore → draft plan → critique → finalize → begin
 
+

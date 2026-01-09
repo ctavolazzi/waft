@@ -87,3 +87,4 @@ def test_substrate_manager_requires_path():
     with pytest.raises(ValueError):
         manager.get_project_info()
 
+

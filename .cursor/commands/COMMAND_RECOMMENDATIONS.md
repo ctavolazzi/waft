@@ -12,12 +12,21 @@
 4. **`/decide`** ✅ - Decision matrix with mathematical calculations
 5. **`/visualize`** ✅ - Quick interactive browser dashboard
 6. **`/phase1`** ✅ - Comprehensive data gathering & visualization
-7. **`/stats`** ✅ - Session statistics (files, lines, activity)
-8. **`/checkout`** ✅ - End chat session workflow
-9. **`/spin-up`** ✅ - Quick orientation
-10. **`/explore`** ✅ - Deep exploration
-11. **`/orient`** ✅ - Project startup process
-12. **`/engineering`** ✅ - Complete workflow
+7. **`/analyze`** ✅ - Analysis, insights & action planning
+8. **`/resume`** ✅ - Pick up where you left off
+9. **`/continue`** ✅ - Reflect on current work and continue
+10. **`/reflect`** ✅ - Write in AI journal (reflection)
+11. **`/stats`** ✅ - Session statistics (files, lines, activity)
+11. **`/checkout`** ✅ - End chat session workflow
+12. **`/spin-up`** ✅ - Quick orientation
+13. **`/explore`** ✅ - Deep exploration
+14. **`/orient`** ✅ - Project startup process
+15. **`/engineer`** ✅ - Complete workflow
+16. **`/goal`** ✅ - Track larger goals, break into steps
+17. **`/next`** ✅ - Identify next step based on goals
+18. **`/help`** ✅ - Discover and understand commands
+19. **`/recap`** ✅ - Conversation recap and session summary
+20. **`/proceed`** ✅ - Verify context and assumptions before continuing
 
 ---
 
@@ -128,6 +137,36 @@
 **Status**: ✅ Created
 
 **Note**: Comprehensive version of `/visualize` with full data gathering workflow
+
+---
+
+### 0.7.5. `/analyze` ✅ - Analysis, Insights & Action Planning
+
+**Purpose**: Analyze Phase 1 data, identify issues/opportunities, generate insights, create action plans
+
+**What it does**:
+- Loads and validates Phase 1 data (or runs Phase 1 if needed)
+- Analyzes project health with scoring
+- Identifies issues with prioritization
+- Discovers opportunities with impact/effort analysis
+- Recognizes patterns and trends
+- Generates actionable insights
+- Creates prioritized action plans
+- Generates comprehensive analysis report
+
+**Use when**: 
+- Just completed Phase 1
+- Need to understand what data means
+- Want to identify issues and opportunities
+- Need to plan next steps
+- Want actionable insights
+- Need prioritized action plan
+
+**Output**: Comprehensive analysis report with insights and action plan
+
+**Status**: ✅ Command definition created (ready for implementation)
+
+**Note**: Transforms `/phase1` data into actionable insights and plans. Complements `/phase1` by providing analysis and planning capabilities.
 
 ---
 

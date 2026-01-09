@@ -1,0 +1,4 @@
+
+# SSL certificates for local development
+localhost.pem
+localhost-key.pem

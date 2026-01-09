@@ -3,7 +3,7 @@
     "name": "",
     "level": 1,
     "integrity": 100.0,
-    "insight": 47.0,
+    "insight": 82.0,
     "credits": 0,
     "ability_scores": {
       "strength": 8,
@@ -18,7 +18,7 @@
     "max_hp": 7,
     "current_hp": 7,
     "created_at": "2026-01-06T01:32:20.665539",
-    "updated_at": "2026-01-07T16:09:37.036020"
+    "updated_at": "2026-01-07T19:51:51.339529"
   },
   "status_effects": [
     {
@@ -32,63 +32,20 @@
       "duration": 3600,
       "description": "Critical success creates perfect alignment",
       "applied_at": "2026-01-06T23:00:39.826589"
+    },
+    {
+      "id": "entropy_spike",
+      "name": "Entropy Spike",
+      "type": "debuff",
+      "effect": {
+        "constitution": -2
+      },
+      "duration": null,
+      "description": "Critical failure causes structural instability",
+      "applied_at": "2026-01-07T19:51:51.335962"
     }
   ],
   "adventure_journal": [
-    {
-      "timestamp": "2026-01-06T00:18:09.060620",
-      "event": "integrity_restore",
-      "narrative": "Project verification passed",
-      "outcome": "info"
-    },
-    {
-      "timestamp": "2026-01-06T00:25:31.692050",
-      "event": "integrity_restore",
-      "narrative": "Project verification passed",
-      "outcome": "info"
-    },
-    {
-      "timestamp": "2026-01-06T00:26:57.321827",
-      "event": "integrity_restore",
-      "narrative": "Project verification passed",
-      "outcome": "info"
-    },
-    {
-      "timestamp": "2026-01-06T00:29:25.265058",
-      "event": "integrity_restore",
-      "narrative": "Project verification passed",
-      "outcome": "info"
-    },
-    {
-      "timestamp": "2026-01-06T00:31:08.140897",
-      "event": "integrity_restore",
-      "narrative": "Project verification passed",
-      "outcome": "info"
-    },
-    {
-      "timestamp": "2026-01-06T00:31:39.558319",
-      "event": "integrity_restore",
-      "narrative": "Project verification passed",
-      "outcome": "info"
-    },
-    {
-      "timestamp": "2026-01-06T00:33:02.114625",
-      "event": "integrity_restore",
-      "narrative": "Project verification passed",
-      "outcome": "info"
-    },
-    {
-      "timestamp": "2026-01-06T00:33:33.014330",
-      "event": "integrity_restore",
-      "narrative": "Project verification passed",
-      "outcome": "info"
-    },
-    {
-      "timestamp": "2026-01-06T00:38:23.015211",
-      "event": "integrity_restore",
-      "narrative": "Project verification passed",
-      "outcome": "info"
-    },
     {
       "timestamp": "2026-01-06T00:40:30.696612",
       "event": "integrity_restore",
@@ -774,6 +731,132 @@
       },
       "classification": "superior",
       "timestamp": "2026-01-07T16:09:37.041401"
+    },
+    {
+      "event": "info",
+      "narrative": "The  holds firm as entropy transforms.",
+      "dice_roll": "1d20+-1",
+      "result": 3,
+      "outcome": "success",
+      "rewards": {
+        "insight": 2,
+        "credits": 0,
+        "integrity": 2.0
+      },
+      "classification": "failure",
+      "timestamp": "2026-01-07T18:59:19.695030"
+    },
+    {
+      "event": "verify",
+      "narrative": "The  holds firm as complexity transforms.",
+      "dice_roll": "1d20+-1",
+      "result": 16,
+      "outcome": "success",
+      "rewards": {
+        "insight": 5,
+        "credits": 0,
+        "integrity": 2.0
+      },
+      "classification": "optimal",
+      "timestamp": "2026-01-07T18:59:22.672167"
+    },
+    {
+      "event": "verify",
+      "narrative": "Sector Gamma-7 reinforced. Logic-Lattice integrity at 115%%.",
+      "dice_roll": "1d20+-1",
+      "result": 2,
+      "outcome": "success",
+      "rewards": {
+        "insight": 5,
+        "credits": 0,
+        "integrity": 2.0
+      },
+      "classification": "failure",
+      "timestamp": "2026-01-07T19:24:26.040256"
+    },
+    {
+      "event": "verify",
+      "narrative": "The  aligns as entropy dissipates.",
+      "dice_roll": "1d20+-1",
+      "result": 18,
+      "outcome": "success",
+      "rewards": {
+        "insight": 7,
+        "credits": 0,
+        "integrity": 2.0
+      },
+      "classification": "superior",
+      "timestamp": "2026-01-07T19:46:12.066838"
+    },
+    {
+      "event": "info",
+      "narrative": "The TavernKeeper nods approvingly: 'The construct stands firm.'",
+      "dice_roll": "1d20+-1",
+      "result": 5,
+      "outcome": "success",
+      "rewards": {
+        "insight": 2,
+        "credits": 0,
+        "integrity": 2.0
+      },
+      "classification": "failure",
+      "timestamp": "2026-01-07T19:46:15.465191"
+    },
+    {
+      "event": "verify",
+      "narrative": "Sector Gamma-7 fortified. Data-Stream integrity at 115%%.",
+      "dice_roll": "1d20+-1",
+      "result": 14,
+      "outcome": "success",
+      "rewards": {
+        "insight": 5,
+        "credits": 0,
+        "integrity": 2.0
+      },
+      "classification": "optimal",
+      "timestamp": "2026-01-07T19:49:02.071845"
+    },
+    {
+      "event": "verify",
+      "narrative": "The TavernKeeper nods approvingly: 'Wisdom accumulates.'",
+      "dice_roll": "1d20+-1",
+      "result": 3,
+      "outcome": "success",
+      "rewards": {
+        "insight": 5,
+        "credits": 0,
+        "integrity": 2.0
+      },
+      "classification": "failure",
+      "timestamp": "2026-01-07T19:50:01.833438"
+    },
+    {
+      "event": "info",
+      "narrative": "The TavernKeeper nods approvingly: 'All systems nominal.'",
+      "dice_roll": "1d20+-1",
+      "result": 17,
+      "outcome": "success",
+      "rewards": {
+        "insight": 2,
+        "credits": 0,
+        "integrity": 2.0
+      },
+      "classification": "optimal",
+      "timestamp": "2026-01-07T19:51:46.151337"
+    },
+    {
+      "event": "verify",
+      "narrative": "The  stabilizes as chaos recedes.",
+      "dice_roll": "1d20+-1",
+      "result": 0,
+      "outcome": "success",
+      "rewards": {
+        "insight": 2,
+        "credits": 0,
+        "integrity": 2.0
+      },
+      "classification": "critical_failure",
+      "timestamp": "2026-01-07T19:51:51.343304"
     }
   ],
   "quests": [],
@@ -783,5 +866,5 @@
     "mood": "optimistic",
     "wisdom_shared": 0
   },
-  "updated_at": "2026-01-07T16:09:37.041410"
+  "updated_at": "2026-01-07T19:51:51.343324"
 }
