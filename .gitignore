@@ -15,6 +15,7 @@ venv/
 .idea/
 *.swp
 *.swo
+.obsidian/workspace.json
 
 # OS
 .DS_Store
