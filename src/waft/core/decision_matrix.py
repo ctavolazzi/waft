@@ -1,6 +1,7 @@
 import math
 from dataclasses import dataclass
 from typing import List, Dict, Optional, Tuple
+from .tracing import get_tracer, SpanStatus
 
 # ==========================================
 # 1. Immutable Data Structures
@@ -94,15 +95,27 @@ class DecisionMatrixCalculator:
         Weighted Sum Model (WSM).
         Formula: Score = Sum(Weight * Value)
         """
-        results = {alt.name: 0.0 for alt in self.matrix.alternatives}
-        weight_map = {c.name: c.weight for c in self.matrix.criteria}
+        tracer = get_tracer()
+        span = tracer.start_span("decision_matrix.calculate_wsm", "core", data={
+            "num_alternatives": len(self.matrix.alternatives),
+            "num_criteria": len(self.matrix.criteria),
+            "num_scores": len(self.matrix.scores)
+        })
 
-        for score_obj in self.matrix.scores:
-            if score_obj.alternative_name in results:
-                weight = weight_map.get(score_obj.criterion_name, 0.0)
-                results[score_obj.alternative_name] += weight * score_obj.value
+        try:
+            results = {alt.name: 0.0 for alt in self.matrix.alternatives}
+            weight_map = {c.name: c.weight for c in self.matrix.criteria}
 
-        return results
+            for score_obj in self.matrix.scores:
+                if score_obj.alternative_name in results:
+                    weight = weight_map.get(score_obj.criterion_name, 0.0)
+                    results[score_obj.alternative_name] += weight * score_obj.value
+
+            tracer.end_span(span, SpanStatus.SUCCESS, output_data={"results": results})
+            return results
+        except Exception as e:
+            tracer.end_span(span, SpanStatus.ERROR, error=e)
+            raise
 
     def rank_alternatives(self, scores: Dict[str, float]) -> List[Tuple[str, float, int]]:
         """
@@ -110,16 +123,26 @@ class DecisionMatrixCalculator:
         Primary Sort: Score (Descending)
         Secondary Sort: Name (Ascending) - Breaks ties alphabetically
         """
-        # Sort key: (-score, name). 
-        # Negative score makes Python sort descending for float.
-        # Name sorts ascending for string.
-        sorted_items = sorted(scores.items(), key=lambda item: (-item[1], item[0]))
-        
-        ranked_results = []
-        for rank, (name, score) in enumerate(sorted_items, start=1):
-            ranked_results.append((name, score, rank))
-            
-        return ranked_results
+        tracer = get_tracer()
+        span = tracer.start_span("decision_matrix.rank_alternatives", "core",
+                                data={"scores": scores})
+
+        try:
+            # Sort key: (-score, name).
+            # Negative score makes Python sort descending for float.
+            # Name sorts ascending for string.
+            sorted_items = sorted(scores.items(), key=lambda item: (-item[1], item[0]))
+
+            ranked_results = []
+            for rank, (name, score) in enumerate(sorted_items, start=1):
+                ranked_results.append((name, score, rank))
+
+            tracer.end_span(span, SpanStatus.SUCCESS,
+                           output_data={"rankings": [(name, score, rank) for name, score, rank in ranked_results]})
+            return ranked_results
+        except Exception as e:
+            tracer.end_span(span, SpanStatus.ERROR, error=e)
+            raise
 
     def get_detailed_scores(self) -> Dict[str, Dict[str, float]]:
         """

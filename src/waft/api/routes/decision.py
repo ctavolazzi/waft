@@ -9,6 +9,7 @@ from typing import Dict, Any
 
 from ...core.decision_matrix import DecisionMatrixCalculator
 from ...core.input_transformer import InputTransformer
+from ...core.tracing import get_tracer, SpanStatus
 from ..models import (
     DecisionRequest, DecisionResponse, RankingItem, AlternativeAnalysis,
     DetailedScore, SensitivityWarning
@@ -37,19 +38,27 @@ async def get_health():
 async def analyze_decision(request: DecisionRequest):
     """
     Analyze a decision using the Decision Engine.
-    
+
     Accepts a DecisionRequest, processes it through InputTransformer
     (the Gateway/Airlock), runs calculations, and returns structured results.
-    
+
     Args:
         request: DecisionRequest with problem, alternatives, criteria, scores
-    
+
     Returns:
         DecisionResponse with rankings, analysis, and sensitivity warnings
-    
+
     Raises:
         HTTPException: If input data is invalid or calculation fails
     """
+    # Start trace for entire API request
+    tracer = get_tracer()
+    trace_span = tracer.start_trace("api.decision.analyze", "api", metadata={
+        "problem": request.problem,
+        "methodology": request.methodology,
+        "show_sensitivity": request.show_sensitivity
+    })
+
     try:
         # Convert Pydantic model to dict for InputTransformer
         # InputTransformer expects a specific format
@@ -59,63 +68,72 @@ async def analyze_decision(request: DecisionRequest):
             'scores': request.scores,
             'methodology': request.methodology
         }
-        
+
         # Pass through InputTransformer (Gateway/Airlock)
         matrix = InputTransformer.transform_input(raw_data)
-        
+
         # Create calculator and run analysis
+        calc_span = tracer.start_span("decision_matrix.create_calculator", "core")
         calculator = DecisionMatrixCalculator(matrix)
-        
+        tracer.end_span(calc_span, SpanStatus.SUCCESS)
+
         # Calculate WSM results
         results = calculator.calculate_wsm()
-        
+
         # Get rankings
         rankings_raw = calculator.rank_alternatives(results)
-        
+
         # Get detailed scores
+        detail_span = tracer.start_span("decision_matrix.get_detailed_scores", "core")
         detailed_scores = calculator.get_detailed_scores()
-        
+        tracer.end_span(detail_span, SpanStatus.SUCCESS)
+
         # Build response
+        response_span = tracer.start_span("api.build_response", "api")
         rankings = [
             RankingItem(rank=rank, name=name, score=score)
             for name, score, rank in rankings_raw
         ]
-        
+
         # Build detailed analysis
         detailed_analysis = []
         for alt_name, score, rank in rankings_raw:
             alt_scores = detailed_scores.get(alt_name, {})
             detailed_items = []
-            
+
             for crit_name, raw_score in alt_scores.items():
                 # Find criterion weight
                 crit = next(c for c in matrix.criteria if c.name == crit_name)
                 weighted_score = crit.weight * raw_score
-                
+
                 detailed_items.append(DetailedScore(
                     criterion_name=crit_name,
                     raw_score=raw_score,
                     weighted_score=weighted_score,
                     weight=crit.weight
                 ))
-            
+
             detailed_analysis.append(AlternativeAnalysis(
                 name=alt_name,
                 total_score=score,
                 rank=rank,
                 detailed_scores=detailed_items
             ))
-        
+        tracer.end_span(response_span, SpanStatus.SUCCESS)
+
         # Run sensitivity analysis if requested
         sensitivity_warnings = []
         is_robust = True
-        
+
         if request.show_sensitivity and len(matrix.criteria) > 1:
+            sensitivity_span = tracer.start_span("api.sensitivity_analysis", "api")
             sensitivity_result = _run_sensitivity_analysis(matrix, calculator, rankings_raw)
             sensitivity_warnings = sensitivity_result['warnings']
             is_robust = sensitivity_result['is_robust']
-        
-        return DecisionResponse(
+            tracer.end_span(sensitivity_span, SpanStatus.SUCCESS,
+                           output_data={"is_robust": is_robust, "num_warnings": len(sensitivity_warnings)})
+
+        response = DecisionResponse(
             problem=request.problem,
             methodology=request.methodology,
             rankings=rankings,
@@ -124,12 +142,22 @@ async def analyze_decision(request: DecisionRequest):
             sensitivity_warnings=sensitivity_warnings,
             is_robust=is_robust
         )
-        
+
+        tracer.end_span(trace_span, SpanStatus.SUCCESS, output_data={
+            "recommendation": response.recommendation,
+            "num_rankings": len(rankings),
+            "is_robust": is_robust
+        })
+
+        return response
+
     except ValueError as e:
         # Input validation errors from InputTransformer or Calculator
+        tracer.end_span(trace_span, SpanStatus.ERROR, error=e)
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         # Unexpected errors
+        tracer.end_span(trace_span, SpanStatus.ERROR, error=e)
         raise HTTPException(status_code=500, detail=f"Internal error: {str(e)}")
 
 

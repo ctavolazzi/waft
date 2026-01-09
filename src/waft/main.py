@@ -1947,6 +1947,56 @@ def proceed(
     )
 
 
+@app.command()
+def trace(
+    action: str = typer.Argument(..., help="Action: 'list' or 'show'"),
+    trace_id: Optional[str] = typer.Argument(None, help="Trace ID (required for 'show' action)"),
+    limit: int = typer.Option(10, "--limit", "-n", help="Number of traces to show (for 'list')"),
+):
+    """
+    View and analyze data traces.
+
+    Actions:
+      - list: Show recent traces
+      - show: Display detailed trace tree for a specific trace ID
+
+    Examples:
+      waft trace list
+      waft trace list --limit 20
+      waft trace show <trace-id>
+    """
+    from .core.tracing import TraceViewer
+
+    viewer = TraceViewer()
+
+    if action == "list":
+        recent_traces = viewer.list_recent_traces(limit=limit)
+        if not recent_traces:
+            console.print("[yellow]No traces found.[/yellow]")
+            return
+
+        console.print(f"\n[bold]Recent Traces[/bold] (showing {len(recent_traces)}):\n")
+        for span in recent_traces:
+            summary = viewer.format_trace_summary(span)
+            console.print(summary)
+
+        console.print(f"\n[dim]Use 'waft trace show <trace-id>' to view details[/dim]")
+
+    elif action == "show":
+        if not trace_id:
+            console.print("[red]Error: trace_id is required for 'show' action[/red]")
+            console.print("Usage: waft trace show <trace-id>")
+            raise typer.Exit(1)
+
+        trace_tree = viewer.format_trace_tree(trace_id)
+        console.print("\n" + trace_tree + "\n")
+
+    else:
+        console.print(f"[red]Error: Unknown action '{action}'[/red]")
+        console.print("Valid actions: list, show")
+        raise typer.Exit(1)
+
+
 def main():
     """Entry point for the waft CLI."""
     app()

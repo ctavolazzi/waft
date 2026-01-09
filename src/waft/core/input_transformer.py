@@ -10,6 +10,7 @@ from typing import Dict, List, Any, Optional
 from .decision_matrix import (
     DecisionMatrix, Alternative, Criterion, Score
 )
+from .tracing import get_tracer, SpanStatus, span_context
 
 
 class InputTransformer:
@@ -24,57 +25,85 @@ class InputTransformer:
     def transform_input(data: Dict[str, Any]) -> DecisionMatrix:
         """
         Transform raw input dictionary into a validated DecisionMatrix.
-        
+
         Args:
             data: Dictionary with keys:
                 - 'alternatives': List[str] or List[Dict[str, Any]]
                 - 'criteria': Dict[str, float] or Dict[str, Dict[str, Any]]
                 - 'scores': Dict[str, Dict[str, float]]
                 - 'methodology': str (optional, defaults to "WSM")
-        
+
         Returns:
             Validated DecisionMatrix object
-        
+
         Raises:
             ValueError: If input data is invalid, missing required keys,
                        or contains invalid values (with context)
         """
+        tracer = get_tracer()
+        span = tracer.start_span("input_transformer.transform_input", "core", data={
+            "input_keys": list(data.keys()),
+            "methodology": data.get('methodology', 'WSM'),
+            "num_alternatives": len(data.get('alternatives', [])),
+            "num_criteria": len(data.get('criteria', {}))
+        })
+
         try:
-            # 1. Schema Check: Ensure required keys exist
-            InputTransformer._validate_schema(data)
-            
-            # 2. Extract and sanitize alternatives
-            alternatives = InputTransformer._extract_alternatives(data['alternatives'])
-            
-            # 3. Extract and sanitize criteria
-            criteria = InputTransformer._extract_criteria(data['criteria'])
-            
-            # 4. Extract and sanitize scores
-            scores = InputTransformer._extract_scores(
-                data['scores'],
-                [alt.name for alt in alternatives],
-                [crit.name for crit in criteria]
-            )
-            
-            # 5. Get methodology (optional, defaults to "WSM")
-            methodology = data.get('methodology', 'WSM')
-            
-            # 6. Create DecisionMatrix (this will trigger Iron Core validation)
-            matrix = DecisionMatrix(
-                alternatives=alternatives,
-                criteria=criteria,
-                scores=scores,
-                methodology=methodology
-            )
-            
+            with span_context(span):
+                # 1. Schema Check: Ensure required keys exist
+                schema_span = tracer.start_span("input_transformer.validate_schema", "core")
+                InputTransformer._validate_schema(data)
+                tracer.end_span(schema_span, SpanStatus.SUCCESS)
+
+                # 2. Extract and sanitize alternatives
+                alt_span = tracer.start_span("input_transformer.extract_alternatives", "core",
+                                             data={"raw_alternatives": data['alternatives']})
+                alternatives = InputTransformer._extract_alternatives(data['alternatives'])
+                tracer.end_span(alt_span, SpanStatus.SUCCESS,
+                               output_data={"count": len(alternatives), "names": [a.name for a in alternatives]})
+
+                # 3. Extract and sanitize criteria
+                crit_span = tracer.start_span("input_transformer.extract_criteria", "core",
+                                              data={"raw_criteria_keys": list(data['criteria'].keys())})
+                criteria = InputTransformer._extract_criteria(data['criteria'])
+                tracer.end_span(crit_span, SpanStatus.SUCCESS,
+                               output_data={"count": len(criteria), "criteria": [{"name": c.name, "weight": c.weight} for c in criteria]})
+
+                # 4. Extract and sanitize scores
+                score_span = tracer.start_span("input_transformer.extract_scores", "core")
+                scores = InputTransformer._extract_scores(
+                    data['scores'],
+                    [alt.name for alt in alternatives],
+                    [crit.name for crit in criteria]
+                )
+                tracer.end_span(score_span, SpanStatus.SUCCESS,
+                               output_data={"count": len(scores)})
+
+                # 5. Get methodology (optional, defaults to "WSM")
+                methodology = data.get('methodology', 'WSM')
+
+                # 6. Create DecisionMatrix (this will trigger Iron Core validation)
+                matrix_span = tracer.start_span("input_transformer.create_matrix", "core")
+                matrix = DecisionMatrix(
+                    alternatives=alternatives,
+                    criteria=criteria,
+                    scores=scores,
+                    methodology=methodology
+                )
+                tracer.end_span(matrix_span, SpanStatus.SUCCESS,
+                               output_data={"methodology": methodology})
+
+            tracer.end_span(span, SpanStatus.SUCCESS, output_data={"matrix_created": True})
             return matrix
-            
+
         except ValueError as e:
-            # Re-raise with context about input data
+            tracer.end_span(span, SpanStatus.ERROR, error=e)
             raise ValueError(f"Error in input data: {str(e)}") from e
         except KeyError as e:
+            tracer.end_span(span, SpanStatus.ERROR, error=e)
             raise ValueError(f"Missing required key in input data: {str(e)}") from e
         except (TypeError, AttributeError) as e:
+            tracer.end_span(span, SpanStatus.ERROR, error=e)
             raise ValueError(f"Invalid data type in input: {str(e)}") from e
     
     @staticmethod
