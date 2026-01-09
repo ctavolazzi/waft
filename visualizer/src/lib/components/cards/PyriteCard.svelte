@@ -21,7 +21,7 @@
 		<div class="info-item">
 			<div class="info-label">
 				Active Files
-				<Badge type="info" class="ml-2 text-xs">{pyrite?.active_files?.length || 0}</Badge>
+				<span class="ml-2 text-xs"><Badge type="info">{pyrite?.active_files?.length || 0}</Badge></span>
 			</div>
 			{#if pyrite?.active_files && pyrite.active_files.length > 0}
 				<ul class="file-list">

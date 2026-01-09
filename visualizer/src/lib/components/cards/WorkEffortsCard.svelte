@@ -19,7 +19,7 @@
 			<div class="info-item">
 				<div class="info-label">
 					Active Work Efforts
-					<Badge type="info" class="ml-2">{efforts.length} active</Badge>
+					<span class="ml-2"><Badge type="info">{efforts.length} active</Badge></span>
 				</div>
 				{#if efforts.length > 0}
 					<ul class="file-list">

@@ -1,0 +1,21 @@
+{
+  "quest_name": "The Dirty Input",
+  "timestamp": "2026-01-09T00:09:14.388818",
+  "hero_name": "NovaSystem",
+  "prompt": "Transform this messy input with typos and slang into sanitized JSON:\n\nAlternatives: ['Option 1  ', '  Option 2', 'Option3']\nCriteria: {'Cost': '0.5', 'Quality': 0.5}\nScores: {\n  'Option 1  ': {'Cost': '10', 'Quality': 8},\n  '  Option 2': {'Cost': 8, 'Quality': '9'},\n  'Option3': {'Cost': 9, 'Quality': 7}\n}\n\nHandle whitespace, type casting, and normalization. Return clean JSON.",
+  "original_response": "{\n  \"alternatives\": [\"Option 1  \", \"  Option 2\", \"Option3\"],\n  \"criteria\": {\n    \"Cost\": \"0.5\",  # String instead of float - will cause validation error\n    \"Quality\": 0.5\n  },\n  \"scores\": {\n    \"Option 1  \": {\"Cost\": \"10\", \"Quality\": 8},  # String instead of int\n    \"  Option 2\": {\"Cost\": 8, \"Quality\": \"9\"},  # String instead of int\n    \"Option3\": {\"Cost\": 9, \"Quality\": 7}\n  },\n  \"methodology\": \"WSM\"\n}",
+  "corrected_response": "{\n  \"alternatives\": [\"Option 1\", \"Option 2\", \"Option3\"],\n  \"criteria\": {\n    \"Cost\": 0.5,\n    \"Quality\": 0.5\n  },\n  \"scores\": {\n    \"Option 1\": {\"Cost\": 10, \"Quality\": 8},\n    \"Option 2\": {\"Cost\": 8, \"Quality\": 9},\n    \"Option3\": {\"Cost\": 9, \"Quality\": 7}\n  },\n  \"methodology\": \"WSM\"\n}",
+  "stabilization_attempts": 1,
+  "validated_matrix": {
+    "alternatives": [
+      "Option 1",
+      "Option 2",
+      "Option3"
+    ],
+    "criteria": {
+      "Cost": 0.5,
+      "Quality": 0.5
+    },
+    "methodology": "WSM"
+  }
+}

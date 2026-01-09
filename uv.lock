@@ -181,6 +181,15 @@ wheels = [
 ]
 
 [[package]]
+name = "annotated-doc"
+version = "0.0.4"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/57/ba/046ceea27344560984e26a590f90bc7f4a75b06701f653222458922b558c/annotated_doc-0.0.4.tar.gz", hash = "sha256:fbcda96e87e9c92ad167c2e53839e57503ecfda18804ea28102353485033faa4", size = 7288 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/1e/d3/26bf1008eb3d2daa8ef4cacc7f3bfdc11818d111f7e2d0201bc6e3b49d45/annotated_doc-0.0.4-py3-none-any.whl", hash = "sha256:571ac1dc6991c450b25a9c2d84a3705e2ae7a53467b5d111c24fa8baabbed320", size = 5303 },
+]
+
+[[package]]
 name = "annotated-types"
 version = "0.7.0"
 source = { registry = "https://pypi.org/simple" }
@@ -720,6 +729,19 @@ wheels = [
 ]
 
 [[package]]
+name = "d20"
+version = "1.1.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "cachetools" },
+    { name = "lark-parser" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/2e/67/cf32c74c91fe101834e4f3a9f4e27b7be8356a98360f8d8f7950e1fe95e9/d20-1.1.2.tar.gz", hash = "sha256:53bc0ac375deeb84bcbb736ef5b3a72656a265732720fa3e5548dd5b38cb20f5", size = 22939 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/52/ec/67f5010bd5965099bb983de6922a4b215806859d85bedf505ff655ee3056/d20-1.1.2-py3-none-any.whl", hash = "sha256:1195bfc643aa4bd984bf6d26327491795272bfab8b19ac15108b4352a9de3166", size = 20681 },
+]
+
+[[package]]
 name = "diskcache"
 version = "5.6.3"
 source = { registry = "https://pypi.org/simple" }
@@ -821,6 +843,21 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [{ name = "pytest", specifier = ">=9.0.2" }]
+
+[[package]]
+name = "fastapi"
+version = "0.128.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "annotated-doc" },
+    { name = "pydantic" },
+    { name = "starlette" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/52/08/8c8508db6c7b9aae8f7175046af41baad690771c9bcde676419965e338c7/fastapi-0.128.0.tar.gz", hash = "sha256:1cc179e1cef10a6be60ffe429f79b829dce99d8de32d7acb7e6c8dfdf7f2645a", size = 365682 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/5c/05/5cbb59154b093548acd0f4c7c474a118eda06da25aa75c616b72d8fcd92a/fastapi-0.128.0-py3-none-any.whl", hash = "sha256:aebd93f9716ee3b4f4fcfe13ffb7cf308d99c9f3ab5622d8877441072561582d", size = 103094 },
+]
 
 [[package]]
 name = "filelock"
@@ -1657,6 +1694,12 @@ sdist = { url = "https://files.pythonhosted.org/packages/ef/55/3f880ef65f559cbed
 wheels = [
     { url = "https://files.pythonhosted.org/packages/ca/ec/65f7d563aa4a62dd58777e8f6aa882f15db53b14eb29aba0c28a20f7eb26/kubernetes-34.1.0-py2.py3-none-any.whl", hash = "sha256:bffba2272534e224e6a7a74d582deb0b545b7c9879d2cd9e4aae9481d1f2cc2a", size = 2008380 },
 ]
+
+[[package]]
+name = "lark-parser"
+version = "0.9.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/8e/ac/c873c508dc2955da6eb85f0425e991a022cf2a4e53933ac057603d0cf890/lark-parser-0.9.0.tar.gz", hash = "sha256:9e7589365d6b6de1cca40b0eaec31104a3fb96a37a11a9dfd5098e95b50aa6cd", size = 298176 }
 
 [[package]]
 name = "markdown-it-py"
@@ -3823,6 +3866,15 @@ wheels = [
 ]
 
 [[package]]
+name = "tinydb"
+version = "4.8.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/a0/79/4af51e2bb214b6ea58f857c51183d92beba85b23f7ba61c983ab3de56c33/tinydb-4.8.2.tar.gz", hash = "sha256:f7dfc39b8d7fda7a1ca62a8dbb449ffd340a117c1206b68c50b1a481fb95181d", size = 32566 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/78/17/853354204e1ca022d6b7d011ca7f3206c4f8faa3cc743e92609b49c1d83f/tinydb-4.8.2-py3-none-any.whl", hash = "sha256:f97030ee5cbc91eeadd1d7af07ab0e48ceb04aa63d4a983adbaca4cba16e86c3", size = 24888 },
+]
+
+[[package]]
 name = "tokenizers"
 version = "0.20.3"
 source = { registry = "https://pypi.org/simple" }
@@ -3917,6 +3969,12 @@ sdist = { url = "https://files.pythonhosted.org/packages/a8/4b/29b4ef32e036bb34e
 wheels = [
     { url = "https://files.pythonhosted.org/packages/d0/30/dc54f88dd4a2b5dc8a0279bdd7270e735851848b762aeb1c1184ed1f6b14/tqdm-4.67.1-py3-none-any.whl", hash = "sha256:26445eca388f82e72884e0d580d5464cd801a3ea01e63e5601bdff9ba6a48de2", size = 78540 },
 ]
+
+[[package]]
+name = "tracery"
+version = "0.1.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/96/9a/7a7ffa8ace49ac6a3f422fdd83caf8d0ad0d132f01389f02845379033a7b/tracery-0.1.1.tar.gz", hash = "sha256:3fefb23a0b12c6568fdc32bcab2ec6f4395c81ea8568c019fc9905d1eb9dd232", size = 8110 }
 
 [[package]]
 name = "typer"
@@ -4084,13 +4142,17 @@ wheels = [
 
 [[package]]
 name = "waft"
-version = "0.0.2"
+version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "d20" },
     { name = "empirica" },
+    { name = "fastapi" },
     { name = "pydantic" },
     { name = "rich" },
+    { name = "tinydb" },
     { name = "typer" },
+    { name = "uvicorn", extra = ["standard"] },
 ]
 
 [package.optional-dependencies]
@@ -4102,19 +4164,27 @@ dev = [
     { name = "ruff" },
     { name = "watchdog" },
 ]
+tavern-keeper = [
+    { name = "tracery" },
+]
 
 [package.metadata]
 requires-dist = [
     { name = "crewai", marker = "extra == 'crewai'", specifier = ">=0.1.0" },
+    { name = "d20", specifier = ">=1.0.0" },
     { name = "empirica", specifier = ">=1.2.3" },
+    { name = "fastapi", specifier = ">=0.104.0" },
     { name = "pydantic", specifier = ">=2.0.0" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=7.0.0" },
     { name = "rich", specifier = ">=13.0.0" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.1.0" },
+    { name = "tinydb", specifier = ">=4.8.0" },
+    { name = "tracery", marker = "extra == 'tavern-keeper'", specifier = ">=0.1.1" },
     { name = "typer", specifier = ">=0.9.0" },
+    { name = "uvicorn", extras = ["standard"], specifier = ">=0.24.0" },
     { name = "watchdog", marker = "extra == 'dev'", specifier = ">=3.0.0" },
 ]
-provides-extras = ["dev", "crewai"]
+provides-extras = ["dev", "crewai", "tavern-keeper"]
 
 [[package]]
 name = "watchdog"

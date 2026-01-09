@@ -1,0 +1,20 @@
+{
+  "quest_name": "The Clean Extraction",
+  "timestamp": "2026-01-08T23:56:22.454836",
+  "hero_name": "NovaSystem",
+  "prompt": "Transform this simple text into a valid decision matrix JSON:\n\nAlternatives: Car A, Car B, Car C\nCriteria: Cost (0.4), Quality (0.3), Safety (0.3)\nScores:\n  Car A: Cost=8, Quality=7, Safety=9\n  Car B: Cost=6, Quality=8, Safety=7\n  Car C: Cost=9, Quality=9, Safety=8\n\nReturn a JSON object with 'alternatives', 'criteria', 'scores', and 'methodology' keys.",
+  "response": "{\n  \"alternatives\": [\"Car A\", \"Car B\", \"Car C\"],\n  \"criteria\": {\n    \"Cost\": 0.4,\n    \"Quality\": 0.3,\n    \"Safety\": 0.3\n  },\n  \"scores\": {\n    \"Car A\": {\"Cost\": 8, \"Quality\": 7, \"Safety\": 9},\n    \"Car B\": {\"Cost\": 6, \"Quality\": 8, \"Safety\": 7},\n    \"Car C\": {\"Cost\": 9, \"Quality\": 9, \"Safety\": 8}\n  },\n  \"methodology\": \"WSM\"\n}",
+  "validated_matrix": {
+    "alternatives": [
+      "Car A",
+      "Car B",
+      "Car C"
+    ],
+    "criteria": {
+      "Cost": 0.4,
+      "Quality": 0.3,
+      "Safety": 0.3
+    },
+    "methodology": "WSM"
+  }
+}

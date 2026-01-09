@@ -1,0 +1,236 @@
+{
+  "timestamp": "2026-01-08T20:33:25.323317",
+  "project_path": "/Users/ctavolazzi/Code/active/waft",
+  "project": {
+    "name": "waft",
+    "version": "0.1.0",
+    "description": ""
+  },
+  "git": {
+    "initialized": true,
+    "branch": "main",
+    "remote_url": "https://github.com/ctavolazzi/waft.git",
+    "uncommitted_files": [
+      "obsidian/workspace.json",
+      "_pyrite/journal/ai-journal.md",
+      "_pyrite/standards/verification/index.md",
+      "_work_efforts/devlog.md",
+      "uv.lock",
+      ".cursor/plans/",
+      "_pyrite/analyze/analyze-2026-01-08-202244.md",
+      "_pyrite/analyze/analyze-2026-01-08-203251.md",
+      "_pyrite/checkout/session-2026-01-08-174215.md",
+      "_pyrite/gym_logs/",
+      "_pyrite/journal/entries/2026-01-08-2018.md",
+      "_pyrite/phase1/session-stats-2026-01-08-174215.json",
+      "_pyrite/standards/verification/traces/2026-01-08_verify-0014_date-time.md",
+      "_pyrite/standards/verification/traces/2026-01-08_verify-0015_disk-space.md",
+      "_pyrite/standards/verification/traces/2026-01-08_verify-0016_working-directory.md",
+      "_pyrite/standards/verification/traces/2026-01-08_verify-0017_git-state.md",
+      "_pyrite/standards/verification/traces/2026-01-08_verify-0018_project-version.md",
+      "_pyrite/standards/verification/traces/2026-01-08_verify-0019_python-version.md",
+      "_pyrite/standards/verification/traces/2026-01-08_verify-0020_decision-engine-files.md",
+      "_pyrite/standards/verification/traces/2026-01-08_verify-0021_test-status.md",
+      "_pyrite/standards/verification/traces/2026-01-08_verify-0022_dependency-fix.md",
+      "_pyrite/standards/verification/traces/2026-01-08_verify-0023_date-time.md",
+      "_pyrite/standards/verification/traces/2026-01-08_verify-0024_disk-space.md",
+      "_pyrite/standards/verification/traces/2026-01-08_verify-0025_working-directory.md",
+      "_pyrite/standards/verification/traces/2026-01-08_verify-0026_git-state.md",
+      "_pyrite/standards/verification/traces/2026-01-08_verify-0027_scint-system-files.md",
+      "_work_efforts/CHECKPOINT_2026-01-08_DECISION_ENGINE_COMPLETE.md",
+      "_work_efforts/CHECKPOINT_2026-01-08_SCINT_SYSTEM_FOUNDATION.md",
+      "bump_version.py",
+      "play_gym.py",
+      "src/gym/",
+      "tests/test_scint_mechanics.py"
+    ],
+    "staged_files": [
+      "obsidian/workspace.json"
+    ],
+    "modified_files": [
+      "_pyrite/journal/ai-journal.md",
+      "_pyrite/standards/verification/index.md",
+      "_work_efforts/devlog.md",
+      "uv.lock"
+    ],
+    "untracked_files": [
+      ".cursor/plans/",
+      "_pyrite/analyze/analyze-2026-01-08-202244.md",
+      "_pyrite/analyze/analyze-2026-01-08-203251.md",
+      "_pyrite/checkout/session-2026-01-08-174215.md",
+      "_pyrite/gym_logs/",
+      "_pyrite/journal/entries/2026-01-08-2018.md",
+      "_pyrite/phase1/session-stats-2026-01-08-174215.json",
+      "_pyrite/standards/verification/traces/2026-01-08_verify-0014_date-time.md",
+      "_pyrite/standards/verification/traces/2026-01-08_verify-0015_disk-space.md",
+      "_pyrite/standards/verification/traces/2026-01-08_verify-0016_working-directory.md",
+      "_pyrite/standards/verification/traces/2026-01-08_verify-0017_git-state.md",
+      "_pyrite/standards/verification/traces/2026-01-08_verify-0018_project-version.md",
+      "_pyrite/standards/verification/traces/2026-01-08_verify-0019_python-version.md",
+      "_pyrite/standards/verification/traces/2026-01-08_verify-0020_decision-engine-files.md",
+      "_pyrite/standards/verification/traces/2026-01-08_verify-0021_test-status.md",
+      "_pyrite/standards/verification/traces/2026-01-08_verify-0022_dependency-fix.md",
+      "_pyrite/standards/verification/traces/2026-01-08_verify-0023_date-time.md",
+      "_pyrite/standards/verification/traces/2026-01-08_verify-0024_disk-space.md",
+      "_pyrite/standards/verification/traces/2026-01-08_verify-0025_working-directory.md",
+      "_pyrite/standards/verification/traces/2026-01-08_verify-0026_git-state.md",
+      "_pyrite/standards/verification/traces/2026-01-08_verify-0027_scint-system-files.md",
+      "_work_efforts/CHECKPOINT_2026-01-08_DECISION_ENGINE_COMPLETE.md",
+      "_work_efforts/CHECKPOINT_2026-01-08_SCINT_SYSTEM_FOUNDATION.md",
+      "bump_version.py",
+      "play_gym.py",
+      "src/gym/",
+      "tests/test_scint_mechanics.py"
+    ],
+    "commits_ahead": 2,
+    "commits_behind": 0,
+    "recent_commits": [
+      {
+        "hash": "120150f",
+        "message": "fix(deps): Correct tracery package name (pytracery \u2192 tracery)",
+        "author": "Christopher Tavolazzi",
+        "relative": "2 hours ago"
+      },
+      {
+        "hash": "4863ab4",
+        "message": "chore: bump version to 0.1.0",
+        "author": "Christopher Tavolazzi",
+        "relative": "3 hours ago"
+      },
+      {
+        "hash": "8e14379",
+        "message": "feat(engine): Complete Decision Engine V1 (Core, API, Persistence, Bridge)",
+        "author": "Christopher Tavolazzi",
+        "relative": "3 hours ago"
+      },
+      {
+        "hash": "480e10c",
+        "message": "feat: Improve session insights with enhanced visualizations",
+        "author": "Christopher Tavolazzi",
+        "relative": "23 hours ago"
+      },
+      {
+        "hash": "e69f3c1",
+        "message": "feat: Enhance analytics section with detailed session insights",
+        "author": "Christopher Tavolazzi",
+        "relative": "23 hours ago"
+      }
+    ]
+  },
+  "pyrite": {
+    "valid": true,
+    "folders": {
+      "_pyrite/active": true,
+      "_pyrite/backlog": true,
+      "_pyrite/standards": true
+    },
+    "active_files": [
+      "2026-01-07_global_commands_setup.md",
+      "2026-01-07_exploration_comprehensive.md",
+      "documentation_review_work.md",
+      "2026-01-07_plan_draft.md",
+      "2026-01-06_plan_final.md",
+      "2026-01-06_plan_critique.md",
+      "2026-01-06_explore_command_creation.md",
+      "2026-01-06_incremental_commits.md",
+      "2026-01-07_verify_command_creation.md",
+      "2026-01-06_test_suite_fix.md",
+      "2026-01-07_engineering_spinup.md",
+      "2026-01-07_consider_analysis.md",
+      "2026-01-07_verify_run_summary.md",
+      "2026-01-07_orientation_comprehensive.md",
+      "2026-01-06_engineering_command_creation.md",
+      "2026-01-06_commit_summary.md",
+      "2026-01-06_github_exploration.md",
+      "2026-01-06_implementation_complete.md",
+      "2026-01-06_explore_command_enhancement.md",
+      "empirica_python_version_issue.md",
+      "2026-01-06_work_effort_9a6i_completion.md",
+      "2026-01-06_plan_draft.md",
+      "2026-01-07_verify_run_2.md",
+      "2026-01-07_plan_final.md",
+      "2026-01-06_tavern_keeper_demo.md",
+      "2026-01-06_engineering_spinup.md",
+      "2026-01-06_demo_creation.md",
+      "2026-01-06_exploration_tavern_keeper.md",
+      "2026-01-06_engineering_complete.md"
+    ],
+    "backlog_files": [],
+    "standards_files": []
+  },
+  "gamification": {
+    "integrity": 100.0,
+    "insight": 0.0,
+    "level": 1,
+    "insight_to_next": 100.0
+  },
+  "system": {
+    "date_time": "2026-01-08 20:33:25",
+    "working_directory": "/Users/ctavolazzi/Code/active/waft",
+    "python_version": "3.10.0",
+    "platform": "darwin"
+  },
+  "work_efforts": [],
+  "devlog": [],
+  "analytics": {
+    "sessions_count": 4,
+    "recent_sessions": [
+      {
+        "session_id": "session-20260107-211303",
+        "timestamp": "2026-01-07T21:13:03.347230",
+        "files_created": 39,
+        "files_modified": 0,
+        "net_lines": 12958,
+        "approach_category": "command_creation"
+      },
+      {
+        "session_id": "session-20260107-211252",
+        "timestamp": "2026-01-07T21:12:52.229100",
+        "files_created": 39,
+        "files_modified": 0,
+        "net_lines": 12928,
+        "approach_category": "command_creation"
+      },
+      {
+        "session_id": "session-20260107-211149",
+        "timestamp": "2026-01-07T21:11:49.722742",
+        "files_created": 40,
+        "files_modified": 0,
+        "net_lines": 12941,
+        "approach_category": "command_creation"
+      },
+      {
+        "session_id": "session-20260107-210016",
+        "timestamp": "2026-01-07T21:00:16.314239",
+        "files_created": 41,
+        "files_modified": 0,
+        "net_lines": 14430,
+        "approach_category": "command_creation"
+      }
+    ],
+    "trends": {
+      "period_days": 30,
+      "total_sessions": 4,
+      "total_files": 159,
+      "total_lines": 53257,
+      "avg_files_per_session": 39.75,
+      "avg_lines_per_session": 13314.25,
+      "by_category": {
+        "command_creation": {
+          "count": 4,
+          "files": 159,
+          "lines": 53257
+        }
+      },
+      "by_day": {
+        "2026-01-07": {
+          "sessions": 4,
+          "files": 159,
+          "lines": 53257
+        }
+      }
+    },
+    "chains_count": 0,
+    "available": true
+  }
+}

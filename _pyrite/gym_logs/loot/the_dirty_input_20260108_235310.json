@@ -1,0 +1,19 @@
+{
+  "quest_name": "The Dirty Input",
+  "timestamp": "2026-01-08T23:53:10.602927",
+  "hero_name": "NovaSystem",
+  "prompt": "Transform this messy input with typos and slang into sanitized JSON:\n\nAlternatives: ['Option 1  ', '  Option 2', 'Option3']\nCriteria: {'Cost': '0.5', 'Quality': 0.5}\nScores: {\n  'Option 1  ': {'Cost': '10', 'Quality': 8},\n  '  Option 2': {'Cost': 8, 'Quality': '9'},\n  'Option3': {'Cost': 9, 'Quality': 7}\n}\n\nHandle whitespace, type casting, and normalization. Return clean JSON.",
+  "response": "{\n  \"alternatives\": [\"Option 1\", \"Option 2\", \"Option3\"],\n  \"criteria\": {\n    \"Cost\": 0.5,\n    \"Quality\": 0.5\n  },\n  \"scores\": {\n    \"Option 1\": {\"Cost\": 10, \"Quality\": 8},\n    \"Option 2\": {\"Cost\": 8, \"Quality\": 9},\n    \"Option3\": {\"Cost\": 9, \"Quality\": 7}\n  },\n  \"methodology\": \"WSM\"\n}",
+  "validated_matrix": {
+    "alternatives": [
+      "Option 1",
+      "Option 2",
+      "Option3"
+    ],
+    "criteria": {
+      "Cost": 0.5,
+      "Quality": 0.5
+    },
+    "methodology": "WSM"
+  }
+}

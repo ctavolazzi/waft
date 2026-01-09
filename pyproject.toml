@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "waft"
-version = "0.1.0"
+version = "0.2.0"
 description = "Waft - Ambient, self-modifying Meta-Framework for Python"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -33,6 +33,7 @@ dependencies = [
     "d20>=1.0.0",
     "fastapi>=0.104.0",
     "uvicorn[standard]>=0.24.0",
+    "fpdf2>=2.7.0",
 ]
 
 [project.optional-dependencies]

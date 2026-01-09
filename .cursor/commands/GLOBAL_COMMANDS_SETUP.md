@@ -58,8 +58,9 @@ After syncing, these commands are available globally:
 4. **`/continue`** - Reflect on current work and continue
 5. **`/reflect`** - Write in AI journal (reflection)
 6. **`/recap`** - Conversation recap and session summary
-6. **`/checkpoint`** - Situation report and status update
-7. **`/verify`** - Verification with traceable evidence
+7. **`/audit`** - Audit conversation quality, completeness, and issues
+8. **`/checkpoint`** - Situation report and status update
+9. **`/verify`** - Verification with traceable evidence
 
 ### Analysis & Planning Commands
 6. **`/consider`** - Analysis and recommendations
