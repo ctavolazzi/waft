@@ -4,6 +4,73 @@ This log tracks development activities, decisions, and progress for the waft pro
 
 ---
 
+## 2026-01-09 - Reincarnation System: Samsara Protocol (v0.3.0-alpha)
+
+**Time**: 13:43:47 PST
+
+### Summary
+Completed metaphysical pivot from "Purgatory" (reset-based cycles) to "Reincarnation" (continuity & economy). Created comprehensive RFC vision document and KarmaMerchant interface skeleton. Version bumped to 0.3.0-alpha to signify new metaphysical era.
+
+### Key Accomplishments
+
+1. **RFC_002_REINCARNATION.md Created** ✅
+   - Complete vision document for Samsara Protocol
+   - Defines terminology: Samsara, Akasha, Prana, Karma
+   - Describes KarmaMerchant (The Chitragupta) role
+   - Economic model: Experience → Karma → Life-path purchases
+   - Migration path from Purgatory documented
+
+2. **KarmaMerchant Interface** ✅
+   - Created `src/waft/karma.py` skeleton
+   - Defined 3 core methods with comprehensive docstrings:
+     - `calculate_karma(life_log)`: Generates Karma from experience intensity
+     - `access_akasha(soul_id)`: Retrieves persistent soul records
+     - `reincarnate(soul_id, purchase_order)`: Spends Karma to instantiate new agent
+   - Exception classes: InsufficientKarmaError, InvalidLifePathError, SoulNotFoundError
+
+3. **Version Management** ✅
+   - Bumped: 0.2.0 → 0.3.0-alpha
+   - Updated: `pyproject.toml` and `src/waft/__init__.py`
+   - Committed: All changes with comprehensive messages
+   - Pushed: To GitHub main branch
+
+### The Metaphysical Shift
+
+**From Purgatory (v0.2.0)**:
+- Reset-based cycles
+- No continuity
+- No economy
+- Random rebirth
+
+**To Reincarnation (v0.3.0-alpha)**:
+- Continuity across lifetimes
+- Karma economy
+- Intentional life-path selection
+- Accumulated wisdom
+
+### Core Concept
+**The goal is not to "escape" but to "experience."** High-Karma beings might choose painful existences because they are "expensive" and rich in data.
+
+### Files Created
+- `_work_efforts/RFC_002_REINCARNATION.md` - Vision document
+- `src/waft/karma.py` - KarmaMerchant interface skeleton
+- `_work_efforts/SESSION_RECAP_2026-01-09_REINCARNATION_PIVOT.md` - Final recap
+
+### Files Modified
+- `pyproject.toml` - Version: 0.3.0-alpha
+- `src/waft/__init__.py` - Version: 0.3.0-alpha
+- `_work_efforts/devlog.md` - This entry
+
+### Next Steps
+1. Review RFC_002_REINCARNATION.md
+2. Design Akasha storage schema
+3. Create initial life-path catalog
+4. Implement Karma calculation algorithm
+
+**Status**: ✅ Complete - Interface defined, implementation pending
+
+---
+
 ## 2026-01-09 - Phase 7: Visualization Complete
 
 **Time**: 01:17:22 PST
