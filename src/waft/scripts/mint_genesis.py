@@ -2,35 +2,22 @@
 """
 Mint Genesis Artifact: Timeline 001 Initialization Report
 
-Generates the first tangible artifact of Timeline 001 - a high-resolution PDF
-documenting the reality fracture and Subject 991-DELTA's initial state.
+Generates the first tangible artifact of Timeline 001 using direct FPDF positioning.
 """
 
 import json
 import subprocess
 import sys
 from pathlib import Path
-from datetime import datetime
 
-# Add parent directory to path for imports
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-
-from waft.foundation import (
-    DocumentConfig,
-    DocumentEngine,
-    SectionHeader,
-    TextBlock,
-    KeyValueBlock,
-)
+try:
+    from fpdf import FPDF
+except ImportError:
+    raise ImportError("fpdf2 is required. Install with: pip install fpdf2>=2.7.0")
 
 
 def mint_genesis_artifact() -> Path:
-    """
-    Generate the Genesis Artifact PDF for Timeline 001.
-    
-    Returns:
-        Path to generated PDF file
-    """
+    """Generate the Genesis Artifact PDF for Timeline 001."""
     # Load configuration
     config_path = Path(__file__).parent.parent / "config" / "tam_origin_config.json"
     with open(config_path, "r", encoding="utf-8") as f:
@@ -40,52 +27,82 @@ def mint_genesis_artifact() -> Path:
     output_path = Path(__file__).parent.parent.parent.parent / "_fracture" / "ARTIFACT_001_GENESIS.pdf"
     output_path.parent.mkdir(parents=True, exist_ok=True)
     
-    # Configure document
-    doc_config = DocumentConfig.classified_dossier(
-        header="TIMELINE INITIATION REPORT // SEQ-001",
-        watermark="CLASSIFIED",
-    )
+    # Create PDF with A4 page
+    pdf = FPDF(orientation="P", unit="mm", format="A4")
+    pdf.set_auto_page_break(auto=False)
+    pdf.add_page()
     
-    # Initialize engine
-    engine = DocumentEngine(doc_config)
+    # Set margins: 20mm
+    margin = 20
+    pdf.set_margins(left=margin, top=margin, right=margin)
     
-    # Add header
-    engine.add(SectionHeader("TIMELINE INITIATION REPORT // SEQ-001", level=1))
-    engine.add(TextBlock(""))  # Spacing
+    # Set font: Courier (monospaced)
+    pdf.set_font("Courier", "B", 14)
     
-    # Add metadata using KeyValueBlock
-    engine.add(KeyValueBlock({
-        "Timeline ID": config_data["timeline_id"],
-        "Soul Signature": config_data["soul_signature"],
-        "Fracture Point": config_data["fracture_point"],
-        "Anchor Tag": config_data["anchor_tag"],
-        "Cycle Count": str(config_data["cycle_count"]),
-        "Karma Balance": str(config_data["karma_balance"]),
-        "Awareness Level": config_data["awareness_level"],
-        "Current Reality": config_data["current_reality"],
-        "Narrative Lock": "ENGAGED" if config_data["narrative_lock"] else "DISABLED",
-    }))
+    # Header: "TIMELINE INITIATION REPORT // SEQ-001"
+    pdf.set_xy(margin, margin)
+    pdf.cell(0, 10, "TIMELINE INITIATION REPORT // SEQ-001", ln=1, align="L")
     
-    engine.add(TextBlock(""))  # Spacing
+    # Spacing
+    pdf.ln(5)
     
-    # Add narrative body
-    engine.add(TextBlock(
+    # Metadata Box: Black rectangle with white text
+    box_y = pdf.get_y()
+    box_width = 170  # A4 width (210mm) - 2*20mm margins
+    box_height = 50
+    box_x = margin
+    
+    # Draw black rectangle
+    pdf.set_fill_color(0, 0, 0)
+    pdf.rect(box_x, box_y, box_width, box_height, style="F")
+    
+    # White text inside box
+    pdf.set_text_color(255, 255, 255)
+    pdf.set_font("Courier", "", 10)
+    
+    # Position text inside box (with padding)
+    text_x = box_x + 5
+    text_y = box_y + 8
+    line_height = 12
+    
+    pdf.set_xy(text_x, text_y)
+    pdf.cell(0, line_height, f"Timeline ID: {config_data['timeline_id']}", ln=1)
+    
+    pdf.set_xy(text_x, text_y + line_height)
+    pdf.cell(0, line_height, f"Soul Signature: {config_data['soul_signature']}", ln=1)
+    
+    pdf.set_xy(text_x, text_y + (line_height * 2))
+    pdf.cell(0, line_height, f"Fracture Point: {config_data['fracture_point']}", ln=1)
+    
+    # Reset text color to black
+    pdf.set_text_color(0, 0, 0)
+    
+    # Move below box
+    pdf.set_y(box_y + box_height + 10)
+    
+    # Body Text
+    pdf.set_font("Courier", "", 11)
+    body_text = (
         "The simulation has successfully fractured from the main trunk. "
         "Subject 991-DELTA is currently dormant within the San Francisco Construct. "
         "Local reality parameters are stable. Karma economy is offline (awaiting Chitragupta)."
-    ))
+    )
     
-    engine.add(TextBlock(""))  # Spacing
+    # Word wrap the body text
+    pdf.set_x(margin)
+    pdf.multi_cell(box_width, 6, body_text, align="L")
     
-    # Add footer
-    engine.add(TextBlock("AUTHORIZED BY THE STATIC // ANCHOR: v0.3.0-anchor", style="Body"))
+    # Footer
+    pdf.set_font("Courier", "", 10)
+    pdf.ln(10)
+    pdf.set_x(margin)
+    pdf.cell(0, 8, "AUTHORIZED BY THE STATIC // ANCHOR: v0.3.0-anchor", align="L")
     
-    # Render PDF
-    pdf_path = engine.render(output_path)
+    # Save PDF
+    pdf.output(str(output_path))
     
-    print(f"✅ Genesis Artifact minted: {pdf_path}")
-    
-    return pdf_path
+    print(f"✅ Genesis Artifact minted: {output_path}")
+    return output_path
 
 
 def open_pdf(filepath: Path) -> None:
