@@ -24,7 +24,10 @@ from rich.text import Text
 from rich.live import Live
 from rich.align import Align
 
+from ..logging import get_logger
 from ..core.tavern_keeper import TavernKeeper
+
+logger = get_logger(__name__)
 
 
 # Color Palette (Mandatory + Enhanced)
@@ -274,7 +277,8 @@ class RedOctoberDashboard:
                 # Format timestamp (extract time part)
                 try:
                     time_part = timestamp.split("T")[1].split(".")[0] if "T" in timestamp else timestamp[:8]
-                except:
+                except (IndexError, AttributeError) as e:
+                    logger.debug(f"Could not parse timestamp '{timestamp}': {e}")
                     time_part = timestamp[:8] if len(timestamp) >= 8 else timestamp
 
                 # Determine row style with enhanced color coding
@@ -351,8 +355,8 @@ class RedOctoberDashboard:
             )
             if result.returncode == 0:
                 git_branch = result.stdout.strip()
-        except:
-            pass
+        except (subprocess.SubprocessError, subprocess.TimeoutExpired, OSError) as e:
+            logger.debug(f"Could not determine git branch: {e}")
 
         # Active Operation with color
         op_text = Text()

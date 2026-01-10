@@ -11,8 +11,11 @@ from typing import Dict, List, Optional, TYPE_CHECKING
 from collections import defaultdict
 from datetime import datetime
 
+from ...logging import get_logger
 from .observer import TheObserver
 from .taxonomy import LineagePoet
+
+logger = get_logger(__name__)
 
 if TYPE_CHECKING:
     from ..world.biome import Biome
@@ -533,7 +536,8 @@ class ObsidianGenerator:
                 if not scientific_name or scientific_name == "Unknown":
                     try:
                         scientific_name = LineagePoet.generate_name(genome_id)
-                    except:
+                    except Exception as e:
+                        logger.debug(f"Could not generate scientific name for {genome_id[:8]}: {e}")
                         scientific_name = f"Organism-{genome_id[:8]}"
                 
                 by_generation[generation].append({

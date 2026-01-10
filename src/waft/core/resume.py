@@ -14,10 +14,13 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
+from ..logging import get_logger
 from .session_stats import SessionStats
 from .github import GitHubManager
 from .gamification import GamificationManager
 from .substrate import SubstrateManager
+
+logger = get_logger(__name__)
 
 
 class ResumeManager:
@@ -263,8 +266,8 @@ class ResumeManager:
                     )
                     if result.returncode == 0 and result.stdout.strip():
                         git_info["commits_ahead"] = int(result.stdout.strip())
-                except:
-                    pass
+                except (ValueError, OSError) as e:
+                    logger.debug(f"Could not determine commits ahead: {e}")
             except Exception:
                 pass
         

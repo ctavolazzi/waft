@@ -1505,7 +1505,8 @@ def chronicle(
             # Format timestamp
             try:
                 time_part = timestamp.split("T")[1].split(".")[0] if "T" in timestamp else timestamp[:8]
-            except:
+            except (IndexError, AttributeError) as e:
+                logger.debug(f"Could not parse timestamp '{timestamp}': {e}")
                 time_part = timestamp[:8] if len(timestamp) >= 8 else timestamp
 
             # Format roll display
