@@ -17,6 +17,7 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
 
+from .logging import get_logger
 from .core.memory import MemoryManager
 from .core.substrate import SubstrateManager
 from .core.empirica import EmpiricaManager
@@ -45,6 +46,7 @@ app = typer.Typer(
 )
 
 console = Console()
+logger = get_logger(__name__)
 
 
 def _process_tavern_hook(project_path: Path, command: str, success: bool, context: Optional[Dict] = None) -> None:
@@ -103,9 +105,8 @@ def _process_tavern_hook(project_path: Path, command: str, success: bool, contex
                 console.print(f"[dim]✨ +{hook_result['xp_gained']} Insight, +{credits} Credits[/dim]")
             else:
                 console.print(f"[dim]✨ +{hook_result['xp_gained']} Insight[/dim]")
-    except Exception:
-        # Silently fail if TavernKeeper not available
-        pass
+    except (ImportError, AttributeError, FileNotFoundError) as e:
+        logger.debug(f"TavernKeeper hook failed (not critical): {e}")
 
 
 @app.command()
