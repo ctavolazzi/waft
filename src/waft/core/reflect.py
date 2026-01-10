@@ -21,47 +21,98 @@ from .memory import MemoryManager
 class ReflectManager:
     """Manages AI journal and reflection entries."""
     
-    def __init__(self, project_path: Path):
+    def __init__(self, project_path: Path, ai_name: Optional[str] = None):
         """
         Initialize reflect manager.
-        
+
         Args:
             project_path: Path to project root
+            ai_name: Optional AI identifier (e.g., 'claude-code', 'cursor', 'chatgpt')
+                    If not provided, uses 'default'
         """
         self.project_path = project_path
         self.console = Console()
         self.stats_tracker = SessionStats(project_path)
         self.github = GitHubManager(project_path)
         self.memory = MemoryManager(project_path)
-        
-        # Journal location
-        self.journal_dir = project_path / "_pyrite" / "journal"
-        self.journal_file = self.journal_dir / "ai-journal.md"
-        self.entries_dir = self.journal_dir / "entries"
-        
+
+        # AI identification
+        self.ai_name = ai_name or "default"
+
+        # Journal location structure:
+        # _pyrite/journal/
+        # ├── registry.json
+        # ├── claude-code/
+        # │   ├── journal.md
+        # │   └── entries/
+        # ├── cursor/
+        # │   ├── journal.md
+        # │   └── entries/
+        # └── default/
+        #     ├── journal.md
+        #     └── entries/
+        self.journal_root = project_path / "_pyrite" / "journal"
+        self.ai_journal_dir = self.journal_root / self.ai_name
+        self.journal_file = self.ai_journal_dir / "journal.md"
+        self.entries_dir = self.ai_journal_dir / "entries"
+        self.registry_file = self.journal_root / "registry.json"
+
         # Ensure journal structure exists
         self._ensure_journal_exists()
     
     def _ensure_journal_exists(self):
         """Ensure journal directory and file exist."""
-        self.journal_dir.mkdir(parents=True, exist_ok=True)
+        self.journal_root.mkdir(parents=True, exist_ok=True)
+        self.ai_journal_dir.mkdir(parents=True, exist_ok=True)
         self.entries_dir.mkdir(parents=True, exist_ok=True)
-        
+
+        # Create/update registry
+        self._update_registry()
+
         # Create journal file if it doesn't exist
         if not self.journal_file.exists():
             self._create_initial_journal()
+
+    def _update_registry(self):
+        """Update the AI journal registry."""
+        import json
+
+        registry = {}
+        if self.registry_file.exists():
+            try:
+                registry = json.loads(self.registry_file.read_text(encoding="utf-8"))
+            except Exception:
+                registry = {}
+
+        # Add or update this AI's entry
+        if self.ai_name not in registry:
+            registry[self.ai_name] = {
+                "created": datetime.now().isoformat(),
+                "last_updated": datetime.now().isoformat(),
+                "entry_count": 0,
+                "journal_path": str(self.journal_file.relative_to(self.project_path)),
+            }
+        else:
+            registry[self.ai_name]["last_updated"] = datetime.now().isoformat()
+
+        # Save registry
+        self.registry_file.write_text(json.dumps(registry, indent=2), encoding="utf-8")
     
     def _create_initial_journal(self):
         """Create initial journal file with header."""
-        header = f"""# AI Journal
+        header = f"""# AI Journal: {self.ai_name}
 
 **Created**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+**AI**: {self.ai_name}
 **Purpose**: Reflective journal for AI assistant thoughts, learnings, and experiences
 
 ---
 
-This journal captures the AI's reflections on its work, thoughts, learnings, and experiences.
-Entries are appended chronologically, providing a record of the AI's cognitive journey.
+This journal captures the reflections of **{self.ai_name}** on its work, thoughts, learnings,
+and experiences. Each entry is signed with model information to track which AI instance
+created the reflection.
+
+Entries are appended chronologically, providing a record of this AI's cognitive journey.
 
 ---
 
@@ -309,30 +360,34 @@ Entries are appended chronologically, providing a record of the AI's cognitive j
     ) -> Dict[str, Any]:
         """
         Create journal entry structure.
-        
+
         Note: This creates the structure. The actual reflection content
         should be written by the AI in response to the prompts.
-        
+
         Args:
             prompts: Reflection prompts
             context: Context information
-            
+
         Returns:
             Dictionary with journal entry structure
         """
         timestamp = datetime.now()
         date_str = timestamp.strftime("%Y-%m-%d")
         time_str = timestamp.strftime("%H:%M")
-        
+
+        # Gather AI metadata for signature
+        ai_metadata = self._gather_ai_metadata()
+
         entry = {
             "timestamp": timestamp.isoformat(),
             "date": date_str,
             "time": time_str,
             "prompts": prompts,
             "context": context,
+            "ai_metadata": ai_metadata,
             "sections": {},
         }
-        
+
         # Create section placeholders based on prompts
         if "custom" in prompts:
             entry["sections"]["reflection"] = "[AI should write reflection here in response to custom prompt]"
@@ -341,8 +396,25 @@ Entries are appended chronologically, providing a record of the AI's cognitive j
                 if key != "custom":
                     section_name = key.replace("_", " ").title()
                     entry["sections"][section_name] = f"[AI should reflect on: {prompt}]"
-        
+
         return entry
+
+    def _gather_ai_metadata(self) -> Dict[str, str]:
+        """
+        Gather AI metadata for journal signature.
+
+        Returns:
+            Dictionary with AI identification information
+        """
+        # This should be populated by the AI assistant itself
+        # Default placeholder - AI should fill this in
+        return {
+            "model": "[AI should identify model name, e.g., 'Claude Sonnet 4.5']",
+            "model_id": "[AI should provide model ID, e.g., 'claude-sonnet-4-5-20250929']",
+            "system": "[AI should identify system, e.g., 'Claude Code', 'Cursor', 'ChatGPT']",
+            "session_id": "[AI should provide session/conversation ID if available]",
+            "notes": "[Any other identifying information the AI wants to include]",
+        }
     
     def _save_journal_entry(self, entry: Dict[str, Any]) -> Path:
         """
@@ -358,7 +430,23 @@ Entries are appended chronologically, providing a record of the AI's cognitive j
         content = []
         content.append(f"\n## Journal Entry: {entry['date']} {entry['time']}\n")
         content.append(f"**Timestamp**: {entry['timestamp']}\n\n")
-        
+
+        # Add AI signature
+        if entry.get('ai_metadata'):
+            ai = entry['ai_metadata']
+            content.append("**AI Signature:**\n")
+            if ai.get('model'):
+                content.append(f"- Model: {ai['model']}\n")
+            if ai.get('model_id'):
+                content.append(f"- Model ID: {ai['model_id']}\n")
+            if ai.get('system'):
+                content.append(f"- System: {ai['system']}\n")
+            if ai.get('session_id'):
+                content.append(f"- Session: {ai['session_id']}\n")
+            if ai.get('notes'):
+                content.append(f"- Notes: {ai['notes']}\n")
+            content.append("\n")
+
         # Add context summary
         if entry['context'].get('git', {}).get('initialized'):
             content.append(f"**Context**: Branch `{entry['context']['git'].get('branch', 'unknown')}`, ")
