@@ -2,13 +2,12 @@
 """
 Mint Genesis Artifact: Timeline 001 Initialization Report
 
-Generates the first tangible artifact of Timeline 001 in Site-Delta-9 style:
-Heavy, bureaucratic, and dangerous.
+Site-Delta-9 Standard: A document that looks like it belongs in a sealed binder.
+Canvas approach: Draw graphics first, then overlay text.
 """
 
 import json
 import subprocess
-import sys
 from pathlib import Path
 
 try:
@@ -18,7 +17,7 @@ except ImportError:
 
 
 def mint_genesis_artifact() -> Path:
-    """Generate the Genesis Artifact PDF for Timeline 001 in Site-Delta-9 style."""
+    """Generate the Genesis Artifact PDF using canvas/graphics approach."""
     # Load configuration
     config_path = Path(__file__).parent.parent / "config" / "tam_origin_config.json"
     with open(config_path, "r", encoding="utf-8") as f:
@@ -33,138 +32,140 @@ def mint_genesis_artifact() -> Path:
     pdf.set_auto_page_break(auto=False)
     pdf.add_page()
     
-    # Set margins: 20mm
-    margin = 20
-    pdf.set_margins(left=margin, top=margin, right=margin)
-    page_width = 210  # A4 width
-    content_width = page_width - (2 * margin)
+    page_width = 210  # A4 width in mm
+    page_height = 297  # A4 height in mm
     
     # ============================================================================
-    # 1. TOP BORDER: Heavy black bar (5mm thick)
+    # 1. THE "CONTAINMENT" BORDER (Graphics First)
     # ============================================================================
+    
+    # Top Bar: Solid BLACK rectangle (0,0 to width, 25mm height)
     pdf.set_fill_color(0, 0, 0)
-    pdf.rect(0, 0, page_width, 5, style="F")
+    pdf.rect(0, 0, page_width, 25, style="F")
+    
+    # Hazard Strip: DARK RED (RGB: 180, 0, 0) rectangle (width, 8mm height)
+    hazard_y = 25
+    pdf.set_fill_color(180, 0, 0)
+    pdf.rect(0, hazard_y, page_width, 8, style="F")
+    
+    # Bottom Bar: Solid BLACK rectangle (0, height-15mm to width, height)
+    bottom_bar_y = page_height - 15
+    pdf.set_fill_color(0, 0, 0)
+    pdf.rect(0, bottom_bar_y, page_width, 15, style="F")
     
     # ============================================================================
-    # 2. WARNING STRIP: Red strip with white text
+    # 2. THE HEADER (Typography)
     # ============================================================================
-    warning_y = 5
-    warning_height = 8
-    pdf.set_fill_color(200, 0, 0)  # Red
-    pdf.rect(0, warning_y, page_width, warning_height, style="F")
     
-    # White text in warning strip
+    # Top Text (Inside Black Bar): "INSTITUTE FOR ADVANCED ONTOLOGICAL STUDIES"
+    # Font: Helvetica/Arial, Bold, 14pt, White
     pdf.set_text_color(255, 255, 255)
-    pdf.set_font("Courier", "B", 10)
-    pdf.set_xy(0, warning_y + 2)
-    pdf.cell(page_width, warning_height, "WARNING: ONTOLOGICAL HAZARD // DO NOT DISTRIBUTE", align="C")
+    pdf.set_font("Helvetica", "B", 14)
+    # Center vertically in black bar (25mm / 2 = 12.5mm, adjust for text height)
+    text_y = 12.5 - (14 / 2)  # Approximate vertical centering
+    pdf.set_xy(0, text_y)
+    pdf.cell(page_width, 14, "INSTITUTE FOR ADVANCED ONTOLOGICAL STUDIES", align="C")
     
-    # Reset text color
+    # Hazard Text (Inside Red Strip): "WARNING: ONTOLOGICAL HAZARD // EYES ONLY"
+    # Font: Courier, Bold, 10pt, White
+    pdf.set_font("Courier", "B", 10)
+    hazard_text_y = hazard_y + 4 - (10 / 2)  # Center in 8mm strip
+    pdf.set_xy(0, hazard_text_y)
+    pdf.cell(page_width, 10, "WARNING: ONTOLOGICAL HAZARD // EYES ONLY", align="C")
+    
+    # Reset text color to black for rest of document
     pdf.set_text_color(0, 0, 0)
     
     # ============================================================================
-    # 3. HEADER SECTION
+    # 3. THE DATA BLOCK (The "Inverted" Look)
     # ============================================================================
-    header_start_y = warning_y + warning_height + 15
     
-    # Title: "TIMELINE INITIATION REPORT" (Courier-Bold, 24pt)
-    pdf.set_font("Courier", "B", 24)
-    pdf.set_xy(margin, header_start_y)
-    pdf.cell(content_width, 12, "TIMELINE INITIATION REPORT", align="L")
+    # Location: Y=60mm
+    data_block_y = 60
+    data_block_width = 170  # Centered: (210 - 170) / 2 = 20mm margin
+    data_block_height = 40
+    data_block_x = (page_width - data_block_width) / 2  # Center horizontally
     
-    # Subtitle: "SEQUENCE: 001 // ORIGIN POINT" (Courier, 12pt)
-    pdf.set_font("Courier", "", 12)
-    pdf.set_xy(margin, header_start_y + 15)
-    pdf.cell(content_width, 8, "SEQUENCE: 001 // ORIGIN POINT", align="L")
+    # Background: DARK GREY (RGB: 50, 50, 50) rectangle
+    pdf.set_fill_color(50, 50, 50)
+    pdf.rect(data_block_x, data_block_y, data_block_width, data_block_height, style="F")
     
-    # ============================================================================
-    # 4. THE "BLACK BOX" (Metadata)
-    # ============================================================================
-    box_y = header_start_y + 30
-    box_height = 50
-    box_x = margin
-    
-    # Draw filled black rectangle
-    pdf.set_fill_color(0, 0, 0)
-    pdf.rect(box_x, box_y, content_width, box_height, style="F")
-    
-    # White text inside box
+    # Content: White Courier Text inside box
     pdf.set_text_color(255, 255, 255)
     pdf.set_font("Courier", "", 10)
     
     # Position text inside box (with padding)
-    text_x = box_x + 5
-    text_y = box_y + 8
-    line_height = 10
+    text_x = data_block_x + 5
+    text_y = data_block_y + 8
+    line_height = 8
     
     pdf.set_xy(text_x, text_y)
-    pdf.cell(0, line_height, f"SUBJECT: 991-DELTA (\"TAM\")", ln=1)
+    pdf.cell(0, line_height, f"SUBJECT:      991-DELTA (\"TAM\")", ln=1)
     
     pdf.set_xy(text_x, text_y + line_height)
-    pdf.cell(0, line_height, f"TIMELINE_ID: {config_data['timeline_id']}", ln=1)
+    pdf.cell(0, line_height, f"TIMELINE ID:   {config_data['timeline_id']}", ln=1)
     
     pdf.set_xy(text_x, text_y + (line_height * 2))
-    pdf.cell(0, line_height, f"SOUL_SIG: [{config_data['soul_signature']}]", ln=1)
+    pdf.cell(0, line_height, f"SOUL SIG:      [{config_data['soul_signature']}]", ln=1)
     
     pdf.set_xy(text_x, text_y + (line_height * 3))
-    pdf.cell(0, line_height, f"FRACTURE_POINT: [{config_data['fracture_point']}]", ln=1)
+    pdf.cell(0, line_height, f"FRACTURE:      [{config_data['fracture_point']}]", ln=1)
     
     # Reset text color to black
     pdf.set_text_color(0, 0, 0)
     
     # ============================================================================
-    # 5. THE NARRATIVE BODY (Serif font)
+    # 4. THE NARRATIVE BODY (The "Report" Look)
     # ============================================================================
-    body_y = box_y + box_height + 15
-    pdf.set_y(body_y)
     
-    # Use Times (serif) for body text
-    pdf.set_font("Times", "", 11)
-    body_text = (
+    # Location: Y=110mm
+    narrative_y = 110
+    narrative_width = 170  # Same width as data block
+    narrative_x = (page_width - narrative_width) / 2  # Centered
+    
+    # Font: Times New Roman (or serif variant), 12pt, Black
+    pdf.set_font("Times", "", 12)
+    pdf.set_text_color(0, 0, 0)
+    
+    # Content: Justified text block
+    narrative_text = (
         "The simulation has successfully fractured from the main trunk. "
         "Subject 991-DELTA is currently dormant within the San Francisco Construct. "
-        "Local reality parameters are stable. The Karma economy is currently offline."
+        "Local reality parameters are stable. The Karma economy is currently offline "
+        "awaiting the Chitragupta Protocol."
     )
     
-    # Word wrap the body text
-    pdf.set_x(margin)
-    pdf.multi_cell(content_width, 6, body_text, align="L")
+    pdf.set_xy(narrative_x, narrative_y)
+    # Use multi_cell with justified alignment
+    pdf.multi_cell(narrative_width, 6, narrative_text, align="J")
     
     # ============================================================================
-    # 6. THE "STAMP" (Bottom right, rotated/bold/red)
+    # 5. THE STAMP (Visual Anchor)
     # ============================================================================
-    # Get current Y position and calculate stamp position
-    current_y = pdf.get_y()
+    
+    # Location: Bottom Right, above the footer bar
+    # Style: Courier, Bold, 16pt, RED
+    pdf.set_font("Courier", "B", 16)
+    pdf.set_text_color(200, 0, 0)  # RED
+    
     stamp_text = "ANCHORED: v0.3.1"
+    stamp_width = pdf.get_string_width(stamp_text)
+    stamp_x = page_width - 20 - stamp_width  # 20mm from right edge
+    stamp_y = bottom_bar_y - 15  # 15mm above bottom bar
     
-    # Position stamp in bottom right
-    pdf.set_font("Courier", "B", 12)
-    pdf.set_text_color(200, 0, 0)  # Red
-    
-    # Calculate text width to position from right
-    text_width = pdf.get_string_width(stamp_text)
-    stamp_x = page_width - margin - text_width
-    stamp_y = 280  # Near bottom of A4 page (297mm - margin)
-    
+    # Try to rotate slightly (15 degrees) if rotation is supported
+    # Note: fpdf2 rotation requires different approach - using text at angle
+    # For now, place it normally but make it prominent
     pdf.set_xy(stamp_x, stamp_y)
-    pdf.cell(0, 8, stamp_text, align="R")
-    
-    # Reset text color
-    pdf.set_text_color(0, 0, 0)
+    pdf.cell(0, 16, stamp_text, align="R")
     
     # ============================================================================
-    # 7. FOOTER: Centered, small courier
+    # SAVE PDF
     # ============================================================================
-    pdf.set_font("Courier", "", 9)
-    pdf.set_text_color(0, 0, 0)
-    footer_y = 290
-    pdf.set_xy(0, footer_y)
-    pdf.cell(page_width, 5, "PROPERTY OF TELEPORT MASSIVE // SITE-DELTA-9", align="C")
     
-    # Save PDF
     pdf.output(str(output_path))
     
-    print(f"✅ Genesis Artifact minted: {output_path}")
+    print(f"✅ Genesis Artifact minted (Site-Delta-9 Standard): {output_path}")
     return output_path
 
 
@@ -185,7 +186,7 @@ def open_pdf(filepath: Path) -> None:
 
 
 if __name__ == "__main__":
-    print("🔨 Minting Genesis Artifact (Site-Delta-9 Style)...")
+    print("🔨 Minting Genesis Artifact (Site-Delta-9 Standard)...")
     pdf_path = mint_genesis_artifact()
     print(f"📄 PDF generated: {pdf_path}")
     print("🚀 Opening PDF...")
