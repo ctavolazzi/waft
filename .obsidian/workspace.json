@@ -20,8 +20,23 @@
               "icon": "lucide-file",
               "title": "ai-journal"
             }
+          },
+          {
+            "id": "21907f24bf18c7cd",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Mint Genesis.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Mint Genesis"
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -183,8 +198,20 @@
       "bases:Create new base": false
     }
   },
-  "active": "45c5780f64f875ee",
+  "active": "21907f24bf18c7cd",
   "lastOpenFiles": [
+    "src/waft/scripts/mint_genesis.py",
+    "src/waft/scripts",
+    "src/waft/config/tam_origin_config.json",
+    "src/waft/config",
+    "_fracture/GENESIS_MARKER.md",
+    "_fracture/ARTIFACT_001_GENESIS.pdf",
+    "_fracture",
+    "_fracture/test_minimal.pdf",
+    "src/waft/scripts/test_minimal_pdf.py",
+    "_pyrite/journal/ai-journal.md",
+    "Mint Genesis.md",
+    "_work_efforts/SESSION_RECAP_2026-01-09_REINCARNATION_PIVOT.md",
     "src/waft/karma.py",
     "_work_efforts/RFC_002_REINCARNATION.md",
     "_work_efforts/WE-260109-sec1_critical_security_portability/tickets/TKT-sec1-005_audit_all_subprocess_calls.md",
@@ -194,32 +221,19 @@
     "_work_efforts/WE-260109-sec1_critical_security_portability/tickets/TKT-sec1-001_fix_hardcoded_path_empirica_config.md",
     "_work_efforts/WE-260109-sec1_critical_security_portability/tickets",
     "_work_efforts/WE-260109-sec1_critical_security_portability/WE-260109-sec1_index.md",
-    "_work_efforts/WE-260109-sec1_critical_security_portability",
     "_work_efforts/WE-260109-scope_scope_definition/tickets/TKT-scope-001_define_value_proposition.md",
-    "_work_efforts/WE-260109-scope_scope_definition/tickets",
     "_work_efforts/WE-260109-scope_scope_definition/WE-260109-scope_index.md",
-    "_work_efforts/WE-260109-scope_scope_definition",
     "_work_efforts/WE-260109-arch_architecture_refactoring/tickets/TKT-arch-004_implement_centralized_logging.md",
     "_work_efforts/WE-260109-arch_architecture_refactoring/tickets/TKT-arch-001_split_main_py_into_command_modules.md",
-    "_work_efforts/WE-260109-arch_architecture_refactoring/tickets",
     "_work_efforts/WE-260109-arch_architecture_refactoring/WE-260109-arch_index.md",
-    "_work_efforts/WE-260109-arch_architecture_refactoring",
     "_work_efforts/AUDIT_2026-01-09_COMPREHENSIVE.md",
     "_work_efforts/SESSION_RECAP_2026-01-09_PURGATORY_AND_FACTORY.md",
-    "_hidden",
-    "src/waft/__pycache__/mechanics.cpython-310.pyc",
-    "src/waft/__pycache__/oubliette.cpython-310.pyc",
-    "src/waft/test_loop.py",
     "_pyrite/checkout/session-2026-01-09-125900.md",
     "_work_efforts/CHECKPOINT_2026-01-09_THEFOUNDATION.md",
     "_pyrite/analyze/analyze-2026-01-09-125900.md",
     "_work_efforts/CONSIDER_2026-01-09_1258.md",
     "_work_efforts/SESSION_RECAP_2026-01-09_THEFOUNDATION.md",
     "_work_efforts/AI_ORIENTATION_RECAP.md",
-    "_work_efforts/CRITTER_TAXONOMY_GUIDE.md",
-    "_work_efforts/session_report.md",
-    "Obsidian_Archive/Lineage/e6575e3d27ea0817.md",
-    "Obsidian_Archive/Lineage/4148de0ddd582957.md",
-    "Obsidian_Archive/Lineage/bea8ef39a13fe2b7.md"
+    "_work_efforts/CRITTER_TAXONOMY_GUIDE.md"
   ]
 }

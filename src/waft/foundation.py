@@ -246,10 +246,15 @@ class KeyValueBlock(ContentBlock):
     ) -> float:
         """Render key-value pairs."""
         current_y = y_position
+        line_height = config.font_size_body * config.line_spacing
 
         if self.label:
             font_family, font_style = config.fonts["Header"]
             pdf.set_font(font_family, style=font_style, size=config.font_size_header)
+            # Check if label fits on current page
+            if current_y + config.font_size_header * 1.5 > pdf.h - pdf.b_margin - 100:
+                pdf.add_page()
+                current_y = pdf.t_margin + 10
             pdf.set_xy(pdf.l_margin, current_y)
             redactor.render_text(pdf, self.label, pdf.l_margin, current_y, config.font_size_header)
             current_y += config.font_size_header * 1.5
@@ -260,6 +265,11 @@ class KeyValueBlock(ContentBlock):
         key_width = page_width * 0.3  # 30% for keys
 
         for key, value in self.data.items():
+            # Check if this item fits on current page
+            if current_y + line_height > pdf.h - pdf.b_margin - 100:
+                pdf.add_page()
+                current_y = pdf.t_margin + 10
+
             # Render key
             pdf.set_xy(pdf.l_margin, current_y)
             redactor.render_text(pdf, f"{key}:", pdf.l_margin, current_y, config.font_size_body)
@@ -270,7 +280,7 @@ class KeyValueBlock(ContentBlock):
                 pdf, str(value), pdf.l_margin + key_width, current_y, config.font_size_body
             )
 
-            current_y += config.font_size_body * config.line_spacing
+            current_y += line_height
 
         return current_y + 5
 
@@ -497,7 +507,8 @@ class DocumentEngine(FPDF):
         self.total_pages = 0
 
         # Set up page
-        self.set_auto_page_break(auto=True, margin=config.page_margins[2])
+        # Disable auto page break - we handle it manually in render()
+        self.set_auto_page_break(auto=False, margin=0)
         self.set_margins(
             left=config.page_margins[3],
             top=config.page_margins[0],
@@ -535,8 +546,8 @@ class DocumentEngine(FPDF):
         y_position = self.t_margin + 10
 
         for block in self.blocks:
-            # Check if we need a new page
-            if y_position > self.h - self.b_margin - 50:
+            # Check if we need a new page (more aggressive check)
+            if y_position > self.h - self.b_margin - 100:
                 self._add_header_footer()
                 if self.config.watermark:
                     self._add_watermark()
