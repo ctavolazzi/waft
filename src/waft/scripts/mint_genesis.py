@@ -95,13 +95,13 @@ def mint_genesis_artifact() -> Path:
     pdf.set_fill_color(0, 0, 0)
     pdf.rect(0, 0, page_width, 25, style="F")
     
-    # Logo Placeholder: Hollow circle (15mm diameter) in top left
+    # Logo Placeholder: Hollow square (15mm) in top left (simulating seal/logo)
     logo_x = 10
     logo_y = 5
-    logo_diameter = 15
-    pdf.set_draw_color(255, 255, 255)  # White circle
+    logo_size = 15
+    pdf.set_draw_color(255, 255, 255)  # White border
     pdf.set_line_width(1)
-    pdf.circle(logo_x + logo_diameter/2, logo_y + logo_diameter/2, logo_diameter/2, style="D")
+    pdf.rect(logo_x, logo_y, logo_size, logo_size, style="D")
     
     # Top Text (Inside Black Bar): "INSTITUTE FOR ADVANCED ONTOLOGICAL STUDIES"
     pdf.set_text_color(255, 255, 255)
