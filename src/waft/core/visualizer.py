@@ -13,11 +13,14 @@ from pathlib import Path
 from typing import Dict, List, Optional, Any
 from urllib.parse import quote
 
+from ..logging import get_logger
 from .memory import MemoryManager
 from .substrate import SubstrateManager
 from .github import GitHubManager
 from .gamification import GamificationManager
 from .session_analytics import SessionAnalytics
+
+logger = get_logger(__name__)
 
 
 class Visualizer:
@@ -142,14 +145,16 @@ class Visualizer:
             try:
                 ahead = self._run_git(["rev-list", "--count", "@{u}..HEAD"]).strip()
                 git_status["commits_ahead"] = int(ahead) if ahead else 0
-            except:
-                pass
+            except (subprocess.CalledProcessError, ValueError) as e:
+                logger.debug(f"Could not determine commits ahead (no upstream?): {e}")
+                git_status["commits_ahead"] = 0
 
             try:
                 behind = self._run_git(["rev-list", "--count", "HEAD..@{u}"]).strip()
                 git_status["commits_behind"] = int(behind) if behind else 0
-            except:
-                pass
+            except (subprocess.CalledProcessError, ValueError) as e:
+                logger.debug(f"Could not determine commits behind (no upstream?): {e}")
+                git_status["commits_behind"] = 0
 
             # Recent commits
             try:
@@ -173,8 +178,8 @@ class Visualizer:
                                     "relative": parts[3],
                                 }
                             )
-            except:
-                pass
+            except (subprocess.CalledProcessError, IndexError, ValueError) as e:
+                logger.debug(f"Could not fetch recent commits: {e}")
 
         except Exception as e:
             git_status["error"] = str(e)
@@ -218,8 +223,8 @@ class Visualizer:
                                 "has_index": True,
                             }
                         )
-                    except:
-                        pass
+                    except (OSError, UnicodeDecodeError) as e:
+                        logger.debug(f"Could not read work effort {item.name}: {e}")
 
         return work_efforts
 
@@ -238,7 +243,8 @@ class Visualizer:
                 if line.startswith("## "):
                     recent.append(line[3:].strip())
             return recent[:5]  # Return last 5 entries
-        except:
+        except (OSError, UnicodeDecodeError) as e:
+            logger.debug(f"Could not read devlog: {e}")
             return []
 
     def _run_git(self, args: List[str]) -> str:

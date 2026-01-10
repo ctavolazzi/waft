@@ -15,7 +15,10 @@ from rich.table import Table
 from rich.panel import Panel
 from rich.markdown import Markdown
 
+from ..logging import get_logger
 from .memory import MemoryManager
+
+logger = get_logger(__name__)
 
 
 class GoalManager:
@@ -296,7 +299,8 @@ class GoalManager:
         if self.goals_index.exists():
             try:
                 index = json.loads(self.goals_index.read_text())
-            except:
+            except (json.JSONDecodeError, OSError) as e:
+                logger.debug(f"Could not read goals index, creating new: {e}")
                 index = {}
         else:
             index = {}
