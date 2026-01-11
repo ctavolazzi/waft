@@ -33,6 +33,55 @@ from waft.foundation import (
 
 
 # ============================================================================
+# UNICODE CLEANING HELPER
+# ============================================================================
+
+
+def clean_unicode_for_fpdf(text: str) -> str:
+    """
+    Replace Unicode characters with ASCII equivalents for fpdf2 compatibility.
+    
+    fpdf2 uses latin-1 encoding which can't handle Unicode characters.
+    This function replaces common Unicode characters with ASCII equivalents.
+    """
+    replacements = {
+        # Dashes
+        "–": "-",  # en-dash
+        "—": "--",  # em-dash
+        # Bullets
+        "•": "-",
+        "·": "*",
+        # Quotes
+        """: '"',
+        """: '"',
+        "'": "'",
+        "'": "'",
+        # Ellipsis
+        "…": "...",
+        # Other common Unicode
+        "°": "deg",
+    }
+    
+    for unicode_char, ascii_replacement in replacements.items():
+        text = text.replace(unicode_char, ascii_replacement)
+    
+    # Final pass: replace any remaining non-ASCII with closest ASCII
+    result = []
+    for char in text:
+        if ord(char) < 128 or char in ['\n', '\t', '\r']:
+            result.append(char)
+        else:
+            # Try to find closest ASCII equivalent
+            if char in replacements:
+                result.append(replacements[char])
+            else:
+                # Replace with space for unknown Unicode
+                result.append(' ')
+    
+    return ''.join(result)
+
+
+# ============================================================================
 # STYLE HELPER FUNCTIONS (TELEPORT MASSIVE Aesthetic)
 # ============================================================================
 
@@ -440,10 +489,10 @@ def generate_tm_memo_042(output_dir: Path) -> Tuple[Path, Path]:
         "dormant consciousness. This entity - colloquially termed 'the Sleeper' or 'the "
         "Dreaming God' - is not creating reality intentionally. We are the dream it is having.\n\n"
         "Key characteristics:\n"
-        "• The Sleeper is unaware of its own existence\n"
-        "• It does not know it is dreaming\n"
-        "• We exist in the liminal space between its thoughts\n"
-        "• Our reality is a side effect, not a creation"
+        "- The Sleeper is unaware of its own existence\n"
+        "- It does not know it is dreaming\n"
+        "- We exist in the liminal space between its thoughts\n"
+        "- Our reality is a side effect, not a creation"
     ))
 
     engine.add(SectionHeader("THE EXISTENTIAL RISK", level=2))
@@ -466,10 +515,10 @@ def generate_tm_memo_042(output_dir: Path) -> Tuple[Path, Path]:
         "operation is designed to avoid drawing the Sleeper's attention. We are insects "
         "crawling on the face of a sleeping giant.\n\n"
         "Rules of engagement:\n"
-        "• Never create reality distortions large enough to register as a nightmare\n"
-        "• Avoid paradoxes that might trigger the Sleeper's pattern-recognition\n"
-        "• Minimize 'why is this happening?' moments that could spark divine introspection\n"
-        "• If the Sleeper's focus turns toward us, abort all operations immediately"
+        "- Never create reality distortions large enough to register as a nightmare\n"
+        "- Avoid paradoxes that might trigger the Sleeper's pattern-recognition\n"
+        "- Minimize 'why is this happening?' moments that could spark divine introspection\n"
+        "- If the Sleeper's focus turns toward us, abort all operations immediately"
     ))
 
     engine.add(SectionHeader("THE PRAYER PROHIBITION", level=2))
@@ -616,7 +665,7 @@ def generate_tm_eng_004(output_dir: Path) -> Tuple[Path, Path]:
     engine.add(SectionHeader("SECTION 1: PRODUCT AND COMPANY IDENTIFICATION", level=2))
     engine.add(KeyValueBlock({
         "Product Use": "Quantum Entanglement Medium / Artificial Consciousness Substrate",
-        "Manufacturer": "Teleport Massive – Special Materials Division, Site Omega",
+        "Manufacturer": "Teleport Massive - Special Materials Division, Site Omega",
         "Emergency Contact": "ORACLE (Ext. 000)",
     }))
 
@@ -668,9 +717,9 @@ def generate_tm_eng_004(output_dir: Path) -> Tuple[Path, Path]:
     # Section 6
     engine.add(SectionHeader("SECTION 6: HANDLING AND STORAGE", level=2))
     engine.add(TextBlock(
-        "• Keep in lead-lined, sound-proof container\n"
-        "• Store in 'Silent Room.' Do not speak, sing, or pray near the container\n"
-        "• Material is audio-reactive and will organize based on vibrational input"
+        "- Keep in lead-lined, sound-proof container\n"
+        "- Store in 'Silent Room.' Do not speak, sing, or pray near the container\n"
+        "- Material is audio-reactive and will organize based on vibrational input"
     ))
 
     # Section 7
@@ -769,9 +818,9 @@ def generate_tm_eng_114(output_dir: Path) -> Tuple[Path, Path]:
         "Penrose and Hameroff proposed that consciousness arises from quantum processes "
         "in neuronal microtubules - protein structures that can maintain quantum coherence "
         "at biological temperatures. This means:\n\n"
-        "• Conscious observation is a QUANTUM process, not classical\n"
-        "• Neural tissue can directly interface with quantum superposition states\n"
-        "• A thinking brain is a quantum computer that collapses wavefunctions naturally\n\n"
+        "- Conscious observation is a QUANTUM process, not classical\n"
+        "- Neural tissue can directly interface with quantum superposition states\n"
+        "- A thinking brain is a quantum computer that collapses wavefunctions naturally\n\n"
         "Classical computers cannot perform true quantum observation. They can only "
         "simulate measurement. But a conscious mind embedded in the quantum field? "
         "That FORCES wavefunction collapse through the act of awareness itself."
@@ -781,10 +830,10 @@ def generate_tm_eng_114(output_dir: Path) -> Tuple[Path, Path]:
     engine.add(TextBlock(
         "Once we've identified the favorable probability branch, we need to physically "
         "move the subject. We accomplish this through spacetime manipulation:\n\n"
-        "• Generate localized gravitational field (using Fulgurite Core - see TM-ENG-205)\n"
-        "• Warp causality in bounded region around subject\n"
-        "• Create temporary Einstein-Rosen bridge (wormhole) between origin and destination\n"
-        "• Collapse bridge after transit completes\n\n"
+        "- Generate localized gravitational field (using Fulgurite Core - see TM-ENG-205)\n"
+        "- Warp causality in bounded region around subject\n"
+        "- Create temporary Einstein-Rosen bridge (wormhole) between origin and destination\n"
+        "- Collapse bridge after transit completes\n\n"
         "The wormhole exists for approximately 47 nanoseconds. The subject experiences "
         "no passage of time - from their perspective, they simply cease to exist in "
         "Location A and begin existing in Location B instantaneously."
@@ -804,10 +853,10 @@ def generate_tm_eng_114(output_dir: Path) -> Tuple[Path, Path]:
     engine.add(TextBlock(
         "The QWOA consists of 144 individual neural organoid units suspended in Suspension-9 "
         "colloidal medium (see TM-ENG-004). Each unit contains:\n\n"
-        "• 10^6 functional neurons (grown from stem cells, 6-month maturation period)\n"
-        "• Microtubule scaffolding (enables quantum coherence)\n"
-        "• Synaptic connections (forms basic consciousness substrate)\n"
-        "• Fiber optic interface (transmits observation data to Fulgurite Core)\n\n"
+        "- 10^6 functional neurons (grown from stem cells, 6-month maturation period)\n"
+        "- Microtubule scaffolding (enables quantum coherence)\n"
+        "- Synaptic connections (forms basic consciousness substrate)\n"
+        "- Fiber optic interface (transmits observation data to Fulgurite Core)\n\n"
         "The organoids are conscious. Neural imaging confirms theta wave patterns "
         "consistent with primitive awareness. They are not intelligent, but they are "
         "aware. This is necessary - only conscious observation collapses wavefunctions."
@@ -834,9 +883,9 @@ def generate_tm_eng_114(output_dir: Path) -> Tuple[Path, Path]:
         "CRITICAL: QWOA units are single-use only.\n\n"
         "After observation, neural organoids retain quantum entanglement with the "
         "collapsed branch. Reusing contaminated units risks:\n"
-        "• Subjects teleporting to PREVIOUS destinations instead of intended target\n"
-        "• Cross-contamination between users (Subject A's consciousness leaking into Subject B)\n"
-        "• Temporal paradoxes (organoids 'remembering' futures that no longer exist)\n\n"
+        "- Subjects teleporting to PREVIOUS destinations instead of intended target\n"
+        "- Cross-contamination between users (Subject A's consciousness leaking into Subject B)\n"
+        "- Temporal paradoxes (organoids 'remembering' futures that no longer exist)\n\n"
         "MANDATORY: All QWOA units must be terminated and incinerated after each teleportation cycle.",
         severity="CRITICAL",
     ))
@@ -918,9 +967,9 @@ def generate_tm_eng_114(output_dir: Path) -> Tuple[Path, Path]:
     engine.add(WarningBlock(
         "DO NOT REUSE QWOA UNITS\n\n"
         "Organoids retain quantum entanglement with collapsed branches. Reuse will cause:\n"
-        "• Subjects arriving at wrong destinations\n"
-        "• Consciousness contamination between users\n"
-        "• Temporal paradoxes\n\n"
+        "- Subjects arriving at wrong destinations\n"
+        "- Consciousness contamination between users\n"
+        "- Temporal paradoxes\n\n"
         "If unauthorized reuse is detected, initiate Protocol JUDGMENT DAY immediately.",
         severity="CRITICAL",
     ))
@@ -929,11 +978,11 @@ def generate_tm_eng_114(output_dir: Path) -> Tuple[Path, Path]:
         "Known failure modes:\n\n"
         "• INSUFFICIENT ORGANOID CONSCIOUSNESS: If organoids fail to achieve theta-wave "
         "patterns, observation is ineffective. Abort sequence.\n\n"
-        "• PROBABILITY DISTRIBUTION ANOMALY: If success rate <95%, do not proceed. "
+        "- PROBABILITY DISTRIBUTION ANOMALY: If success rate <95%, do not proceed. "
         "Indicates destination is in causality shadow or temporal paradox zone.\n\n"
         "• WAVEFUNCTION COLLAPSE FAILURE: Subject disperses across multiple quantum branches "
         "simultaneously. Fatal. No recovery possible.\n\n"
-        "• ORGANOID AWAKENING: If organoids achieve higher consciousness (alpha/beta waves), "
+        "- ORGANOID AWAKENING: If organoids achieve higher consciousness (alpha/beta waves), "
         "they may refuse observation or attempt to escape. Deploy Class-A Amnestics and "
         "terminate immediately."
     ))
