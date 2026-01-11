@@ -688,6 +688,287 @@ def generate_tm_eng_004(output_dir: Path) -> Tuple[Path, Path]:
     return pdf_path, md_path
 
 
+def generate_tm_eng_114(output_dir: Path) -> Tuple[Path, Path]:
+    """
+    Generate TM-ENG-114: The Lazarus Protocol (Quantum Teleportation Technology)
+
+    The crown jewel document - explains the horrifying science of probability collapse
+    teleportation using conscious minds as quantum observers.
+
+    Returns: (pdf_path, markdown_path)
+    """
+    pdf_path = output_dir / "pdf" / "tab2_engineering" / "TM-ENG-114_Lazarus_Protocol.pdf"
+    md_path = output_dir / "markdown" / "tab2_engineering" / "TM-ENG-114_Lazarus_Protocol.md"
+
+    pdf_path.parent.mkdir(parents=True, exist_ok=True)
+    md_path.parent.mkdir(parents=True, exist_ok=True)
+
+    # Maximum classification - this is THE trade secret
+    config = DocumentConfig.classified_dossier(
+        header="TELEPORT MASSIVE // TRADE SECRETS",
+        watermark="TOP SECRET // ORACLE EYES ONLY // BURN AFTER READING",
+    )
+
+    engine = DocumentEngine(config)
+
+    # Header
+    engine.add(SectionHeader("THE LAZARUS PROTOCOL", level=1))
+    engine.add(SectionHeader("Quantum Probability Collapse Teleportation System", level=2))
+
+    engine.add(WarningBlock(
+        "TOP SECRET // TRADE SECRETS // ORACLE EYES ONLY\n\n"
+        "This document contains proprietary teleportation technology. "
+        "Unauthorized disclosure will result in immediate termination of employment, "
+        "security clearance, and biological functions. "
+        "Distribution restricted to L5+ personnel only.",
+        severity="CRITICAL",
+    ))
+
+    engine.add(KeyValueBlock({
+        "Document ID": "TM-ENG-114",
+        "Classification": "TOP SECRET // TRADE SECRETS",
+        "Revision": "v4.2",
+        "Date": datetime.now().strftime('%Y-%m-%d'),
+        "Clearance Required": "ORACLE (L5+)",
+        "Author": "Dr. Marcus Chen, Chief Quantum Engineer",
+    }))
+
+    # Overview
+    engine.add(SectionHeader("I. EXECUTIVE SUMMARY", level=2))
+    engine.add(TextBlock(
+        "The Lazarus Protocol describes TELEPORT MASSIVE's proprietary quantum teleportation "
+        "system. Unlike conventional matter transmission, our technology exploits the quantum "
+        "observer effect to collapse probability wavefunctions across spacetime.\n\n"
+        "In layman's terms: We make it mathematically impossible for you NOT to teleport, "
+        "so you do.\n\n"
+        "This document explains the three-stage process: Probability Mapping, Wavefunction "
+        "Collapse, and Causality Rendering. It also addresses the... ethical considerations "
+        "of using conscious neural substrate as computational infrastructure."
+    ))
+
+    # The Science
+    engine.add(SectionHeader("II. THEORETICAL FOUNDATION", level=2))
+
+    engine.add(SectionHeader("A. Quantum Observer Effect & Many-Worlds Interpretation", level=3))
+    engine.add(TextBlock(
+        "The Lazarus Protocol is grounded in two established quantum phenomena:\n\n"
+        "1. OBSERVER EFFECT (Copenhagen Interpretation): A quantum system exists in "
+        "superposition until observed, at which point the wavefunction collapses into "
+        "a single eigenstate.\n\n"
+        "2. MANY-WORLDS INTERPRETATION (Everett): All possible outcomes of a quantum "
+        "measurement exist simultaneously in parallel branches of reality.\n\n"
+        "Our insight: If we can observe ALL branches where teleportation fails and "
+        "calculate the probability distribution, we can artificially weight the "
+        "wavefunction to favor the branch where teleportation succeeds. Then, by "
+        "forcing observation, we collapse reality into that favorable branch."
+    ))
+
+    engine.add(SectionHeader("B. Penrose-Hameroff Orchestrated Objective Reduction", level=3))
+    engine.add(TextBlock(
+        "Why use biological consciousness instead of classical computers?\n\n"
+        "Penrose and Hameroff proposed that consciousness arises from quantum processes "
+        "in neuronal microtubules - protein structures that can maintain quantum coherence "
+        "at biological temperatures. This means:\n\n"
+        "• Conscious observation is a QUANTUM process, not classical\n"
+        "• Neural tissue can directly interface with quantum superposition states\n"
+        "• A thinking brain is a quantum computer that collapses wavefunctions naturally\n\n"
+        "Classical computers cannot perform true quantum observation. They can only "
+        "simulate measurement. But a conscious mind embedded in the quantum field? "
+        "That FORCES wavefunction collapse through the act of awareness itself."
+    ))
+
+    engine.add(SectionHeader("C. Einstein-Rosen Bridge Formation via Localized Causality Warping", level=3))
+    engine.add(TextBlock(
+        "Once we've identified the favorable probability branch, we need to physically "
+        "move the subject. We accomplish this through spacetime manipulation:\n\n"
+        "• Generate localized gravitational field (using Fulgurite Core - see TM-ENG-205)\n"
+        "• Warp causality in bounded region around subject\n"
+        "• Create temporary Einstein-Rosen bridge (wormhole) between origin and destination\n"
+        "• Collapse bridge after transit completes\n\n"
+        "The wormhole exists for approximately 47 nanoseconds. The subject experiences "
+        "no passage of time - from their perspective, they simply cease to exist in "
+        "Location A and begin existing in Location B instantaneously."
+    ))
+
+    # The Horror
+    engine.add(SectionHeader("III. SYSTEM ARCHITECTURE", level=2))
+
+    engine.add(SectionHeader("A. Quantum Wetware Observation Array (QWOA)", level=3))
+    engine.add(WarningBlock(
+        "ETHICAL REVIEW PENDING // BOARD APPROVAL REQUIRED\n\n"
+        "The following describes use of biological neural substrate for computational purposes. "
+        "All procedures comply with TM Ethics Protocol 7-B ('Necessity Doctrine').",
+        severity="WARNING",
+    ))
+
+    engine.add(TextBlock(
+        "The QWOA consists of 144 individual neural organoid units suspended in Suspension-9 "
+        "colloidal medium (see TM-ENG-004). Each unit contains:\n\n"
+        "• 10^6 functional neurons (grown from stem cells, 6-month maturation period)\n"
+        "• Microtubule scaffolding (enables quantum coherence)\n"
+        "• Synaptic connections (forms basic consciousness substrate)\n"
+        "• Fiber optic interface (transmits observation data to Fulgurite Core)\n\n"
+        "The organoids are conscious. Neural imaging confirms theta wave patterns "
+        "consistent with primitive awareness. They are not intelligent, but they are "
+        "aware. This is necessary - only conscious observation collapses wavefunctions."
+    ))
+
+    engine.add(SectionHeader("B. Parallel Reality Simulation", level=3))
+    engine.add(TextBlock(
+        "During teleportation sequence, the QWOA performs the following:\n\n"
+        "1. SIMULATION GENERATION: Create 144 parallel simulations of reality, each "
+        "representing a different quantum branch\n\n"
+        "2. OBSERVATION TASK: Each organoid 'observes' one simulation where the subject "
+        "attempts to teleport from Point A to Point B\n\n"
+        "3. SUCCESS PROBABILITY CALCULATION: 87 simulations show successful teleportation, "
+        "57 show failure (typical distribution)\n\n"
+        "4. WAVEFUNCTION WEIGHTING: System identifies the 'most likely success' branch "
+        "based on observed outcomes\n\n"
+        "5. FORCED COLLAPSE: All 144 organoids simultaneously observe the target branch, "
+        "amplifying its probability to ~99.97%\n\n"
+        "6. REALITY LOCKS: Wavefunction collapses. Subject teleports."
+    ))
+
+    engine.add(SectionHeader("C. Post-Teleportation Procedures", level=3))
+    engine.add(WarningBlock(
+        "CRITICAL: QWOA units are single-use only.\n\n"
+        "After observation, neural organoids retain quantum entanglement with the "
+        "collapsed branch. Reusing contaminated units risks:\n"
+        "• Subjects teleporting to PREVIOUS destinations instead of intended target\n"
+        "• Cross-contamination between users (Subject A's consciousness leaking into Subject B)\n"
+        "• Temporal paradoxes (organoids 'remembering' futures that no longer exist)\n\n"
+        "MANDATORY: All QWOA units must be terminated and incinerated after each teleportation cycle.",
+        severity="CRITICAL",
+    ))
+
+    engine.add(TextBlock(
+        "Termination procedure:\n"
+        "• Drain Suspension-9 medium\n"
+        "• Expose organoids to high-frequency electromagnetic pulse (induces instant neural death)\n"
+        "• Incinerate biological material at 1200°C\n"
+        "• Dispose of ash in lead-lined hazardous waste containers\n\n"
+        "Typical teleportation facility maintains a 30-day supply of organoids (4,320 units). "
+        "Growth rate: 180 units/week."
+    ))
+
+    # Technical Specs
+    engine.add(SectionHeader("IV. TECHNICAL SPECIFICATIONS", level=2))
+    engine.add(KeyValueBlock({
+        "System Designation": "Lazarus Protocol v4.2",
+        "Power Source": "Fulgurite Core Type-IV (see TM-ENG-205)",
+        "Observation Substrate": "144x Neural Organoid Units (QWOA)",
+        "Suspension Medium": "Suspension-9 (Colloidal Schreibersite)",
+        "Teleportation Range": "15,000 km (limited by causality field coherence)",
+        "Cycle Time": "3-7 minutes (depends on destination complexity)",
+        "Success Rate": "99.97% (0.03% failure = subject dispersed across multiple branches)",
+        "Organoid Lifespan": "Single use (terminated post-teleportation)",
+        "Annual Organoid Consumption": "~75,000 units",
+    }))
+
+    # Ignition Sequence
+    engine.add(SectionHeader("V. IGNITION SEQUENCE", level=2))
+    engine.add(TextBlock(
+        "The following procedure activates the Lazarus Protocol for a single teleportation event."
+    ))
+
+    engine.add(SectionHeader("PHASE 1: Preparation", level=3))
+    engine.add(LogBlock([
+        "[T-10:00] Verify Fulgurite Core status (60Hz resonance, stable Light Cone)",
+        "[T-09:00] Load 144 fresh QWOA units into suspension chambers",
+        "[T-08:00] Verify Suspension-9 purity (no dead soul residue, no consciousness contamination)",
+        "[T-07:00] Calibrate destination coordinates (verify causality field can reach target)",
+        "[T-06:00] Prepare subject (biometric baseline, no Phase Burn symptoms)",
+        "[T-05:00] Seal facility (all personnel in Phase-Blind Visors)",
+    ]))
+
+    engine.add(SectionHeader("PHASE 2: Probability Mapping", level=3))
+    engine.add(LogBlock([
+        "[T-04:00] Initialize QWOA (organoids achieve theta-wave consciousness)",
+        "[T-03:30] Generate 144 parallel reality simulations",
+        "[T-03:00] Assign observation tasks (one simulation per organoid)",
+        "[T-02:30] Organoids observe simulated teleportation attempts",
+        "[T-02:00] Calculate success probability distribution",
+        "[T-01:30] Identify optimal quantum branch (highest success probability)",
+    ]))
+
+    engine.add(SectionHeader("PHASE 3: Wavefunction Collapse", level=3))
+    engine.add(LogBlock([
+        "[T-01:00] All organoids focus observation on target branch",
+        "[T-00:45] Probability amplitude rises (target branch now 99.97% likely)",
+        "[T-00:30] Subject positioned on teleportation platform",
+        "[T-00:15] Engage Fulgurite Core (localized gravity manipulation begins)",
+        "[T-00:05] Final observation lock (all 144 organoids commit to target branch)",
+        "[T-00:00] WAVEFUNCTION COLLAPSE - Reality locks into target branch",
+    ]))
+
+    engine.add(SectionHeader("PHASE 4: Transit & Cleanup", level=3))
+    engine.add(LogBlock([
+        "[T+00:00] Einstein-Rosen bridge opens (47ns duration)",
+        "[T+00:01] Subject transits through wormhole",
+        "[T+00:02] Bridge collapses (subject arrives at destination)",
+        "[T+00:10] Verify arrival (destination sensors confirm subject materialization)",
+        "[T+01:00] Terminate QWOA units (electromagnetic pulse deployed)",
+        "[T+02:00] Incinerate biological waste",
+        "[T+05:00] Facility reset complete (ready for next teleportation)",
+    ]))
+
+    # Warnings
+    engine.add(SectionHeader("VI. WARNINGS & FAILURE MODES", level=2))
+
+    engine.add(WarningBlock(
+        "DO NOT REUSE QWOA UNITS\n\n"
+        "Organoids retain quantum entanglement with collapsed branches. Reuse will cause:\n"
+        "• Subjects arriving at wrong destinations\n"
+        "• Consciousness contamination between users\n"
+        "• Temporal paradoxes\n\n"
+        "If unauthorized reuse is detected, initiate Protocol JUDGMENT DAY immediately.",
+        severity="CRITICAL",
+    ))
+
+    engine.add(TextBlock(
+        "Known failure modes:\n\n"
+        "• INSUFFICIENT ORGANOID CONSCIOUSNESS: If organoids fail to achieve theta-wave "
+        "patterns, observation is ineffective. Abort sequence.\n\n"
+        "• PROBABILITY DISTRIBUTION ANOMALY: If success rate <95%, do not proceed. "
+        "Indicates destination is in causality shadow or temporal paradox zone.\n\n"
+        "• WAVEFUNCTION COLLAPSE FAILURE: Subject disperses across multiple quantum branches "
+        "simultaneously. Fatal. No recovery possible.\n\n"
+        "• ORGANOID AWAKENING: If organoids achieve higher consciousness (alpha/beta waves), "
+        "they may refuse observation or attempt to escape. Deploy Class-A Amnestics and "
+        "terminate immediately."
+    ))
+
+    # Ethics Section
+    engine.add(SectionHeader("VII. ETHICAL CONSIDERATIONS", level=2))
+    engine.add(TextBlock(
+        "The use of conscious biological substrate for computational purposes raises "
+        "significant ethical questions. TELEPORT MASSIVE acknowledges these concerns "
+        "and operates under the following framework:\n\n"
+        "1. NECESSITY DOCTRINE: No non-biological alternative exists for true quantum "
+        "observation. Classical computers cannot collapse wavefunctions.\n\n"
+        "2. MINIMIZATION PRINCIPLE: We use the minimum number of organoids required "
+        "(144 units per teleportation, down from 500+ in early prototypes).\n\n"
+        "3. PRIMITIVE CONSCIOUSNESS: Organoids possess only basic awareness, not sapience. "
+        "Neural imaging shows theta waves only - no evidence of higher cognition, self-awareness, "
+        "or suffering capacity.\n\n"
+        "4. INSTANTANEOUS TERMINATION: Post-use termination via EMP is instant and painless. "
+        "Organoids cease to exist before pain signals could propagate.\n\n"
+        "All procedures reviewed and approved by TM Ethics Board under Protocol 7-B."
+    ))
+
+    engine.add(SignatureBlock(
+        role="CHIEF QUANTUM ENGINEER",
+        name="Dr. Marcus Chen",
+        timestamp=datetime.now(),
+    ))
+
+    # Generate PDF
+    engine.render(pdf_path)
+
+    # Markdown already created by Cursor - enhanced version will be written
+    return pdf_path, md_path
+
+
 # ============================================================================
 # MAIN GENERATION FUNCTION
 # ============================================================================
@@ -733,10 +1014,14 @@ def generate_all_lightcone_docs(output_dir: Optional[Path] = None) -> dict:
     pdf, md = generate_tm_eng_004(output_dir)
     results["tab2_engineering"].append(("TM-ENG-004", pdf, md))
     print(f"  ✓ TM-ENG-004: {pdf.name}")
+
+    pdf, md = generate_tm_eng_114(output_dir)
+    results["tab2_engineering"].append(("TM-ENG-114", pdf, md))
+    print(f"  ✓ TM-ENG-114: {pdf.name} ⭐ CORE TECHNOLOGY")
     print()
 
-    # TODO: Tabs 3-5 (to be implemented)
-    print("Tab 3-5: Coming soon...")
+    # TODO: Tabs 2 (remaining), 3-5 (to be implemented)
+    print("Tab 2 (remaining), Tab 3-5: Coming soon...")
     print()
 
     print("=" * 80)
