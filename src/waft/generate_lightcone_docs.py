@@ -496,7 +496,7 @@ def generate_tm_memo_042(output_dir: Path) -> Tuple[Path, Path]:
     ))
 
     # Generate PDF
-    engine.generate_pdf(str(pdf_path))
+    engine.render(pdf_path)
 
     # Create markdown source
     markdown_content = f"""# TM-MEMO-042: The God Problem
