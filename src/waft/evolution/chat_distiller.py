@@ -257,50 +257,103 @@ class ChatDistiller:
 
     def _extract_ideas_from_text(self, text: str, source: str) -> List[IdeaGene]:
         """
-        Extract ideas from text content.
+        Extract ideas from text content, prioritizing meaningful prose.
+
+        Extracts paragraphs and sections rather than just lines,
+        creating more explanatory content.
 
         Args:
             text: Text to analyze
             source: Source location
 
         Returns:
-            List of extracted IdeaGenes
+            List of extracted IdeaGenes with prose content
         """
         ideas = []
+        
+        # Split into paragraphs (meaningful prose blocks)
+        paragraphs = []
+        current_para = []
+        
         lines = text.split("\n")
-
         for i, line in enumerate(lines):
             line = line.strip()
-
-            if not line or len(line) < 10:  # Skip very short lines
+            
+            # Skip empty lines - they mark paragraph breaks
+            if not line:
+                if current_para:
+                    para_text = " ".join(current_para).strip()
+                    # Only keep substantial paragraphs (at least 50 chars for prose)
+                    if len(para_text) >= 50:
+                        paragraphs.append((para_text, i - len(current_para)))
+                    current_para = []
                 continue
-
+            
+            # Skip markdown headers - they're structure, not content
+            if line.startswith("#"):
+                if current_para:
+                    para_text = " ".join(current_para).strip()
+                    if len(para_text) >= 50:
+                        paragraphs.append((para_text, i - len(current_para)))
+                    current_para = []
+                continue
+            
+            # Skip code blocks entirely
+            if line.startswith("```"):
+                if current_para:
+                    para_text = " ".join(current_para).strip()
+                    if len(para_text) >= 50:
+                        paragraphs.append((para_text, i - len(current_para)))
+                    current_para = []
+                continue
+            
+            # Skip list markers at start (they're formatting, not content)
+            if re.match(r'^[-*+]\s+', line):
+                line = re.sub(r'^[-*+]\s+', '', line)
+            
+            # Skip numbered list markers
+            if re.match(r'^\d+\.\s+', line):
+                line = re.sub(r'^\d+\.\s+', '', line)
+            
+            # Skip markdown bold/italic markers
+            line = re.sub(r'\*\*([^*]+)\*\*', r'\1', line)
+            line = re.sub(r'\*([^*]+)\*', r'\1', line)
+            
+            if line:  # Only add non-empty lines
+                current_para.append(line)
+        
+        # Add last paragraph
+        if current_para:
+            para_text = " ".join(current_para).strip()
+            if len(para_text) >= 50:
+                paragraphs.append((para_text, len(lines)))
+        
+        # Extract ideas from paragraphs
+        for para_text, line_num in paragraphs:
             # Determine category and importance
-            category, importance = self._classify_line(line)
-
+            category, importance = self._classify_line(para_text)
+            
             if importance < self.importance_threshold:
                 continue
-
-            # Extract context (previous and next lines)
-            context_lines = []
-            if i > 0:
-                context_lines.append(lines[i - 1].strip())
-            context_lines.append(line)
-            if i < len(lines) - 1:
-                context_lines.append(lines[i + 1].strip())
-            context = " ".join(context_lines)
-
-            # Create idea gene
+            
+            # Clean up the content - ensure it's readable prose
+            para_text = re.sub(r'\s+', ' ', para_text).strip()
+            
+            # Ensure it ends with proper punctuation
+            if para_text and para_text[-1] not in '.!?':
+                para_text += '.'
+            
+            # Create idea gene with prose content
             idea = IdeaGene(
-                content=line,
+                content=para_text,
                 category=category,
-                context=context,
+                context=para_text,  # Use same as content for prose
                 importance=importance,
-                source_location=f"{source}:L{i+1}",
+                source_location=f"{source}:L{line_num}",
             )
-
+            
             ideas.append(idea)
-
+        
         return ideas
 
     def _classify_line(self, line: str) -> tuple[str, float]:
@@ -368,31 +421,53 @@ class ChatDistiller:
 
     def _generate_summary(self, ideas: List[IdeaGene]) -> str:
         """
-        Generate a brief summary from extracted ideas.
+        Generate an explanatory prose summary from extracted ideas.
 
         Args:
             ideas: List of ideas
 
         Returns:
-            Summary string (1-2 sentences)
+            Summary string in clear prose explaining what happened
         """
         if not ideas:
-            return "Empty conversation with no extractable ideas."
+            return "This conversation did not contain extractable ideas."
 
-        # Count by category
-        categories = {}
-        for idea in ideas:
-            categories[idea.category] = categories.get(idea.category, 0) + 1
-
-        # Generate summary
-        top_category = max(categories, key=categories.get)
-        total = len(ideas)
-
-        summary = f"Conversation with {total} key ideas, "
-        summary += f"primarily focused on {top_category}s. "
-
-        # Add category breakdown
-        breakdown = ", ".join([f"{count} {cat}" for cat, count in sorted(categories.items(), key=lambda x: x[1], reverse=True)])
-        summary += f"Contains: {breakdown}."
-
-        return summary
+        # Get top ideas for summary
+        top_ideas = sorted(ideas, key=lambda x: x.importance, reverse=True)[:3]
+        
+        # Build prose summary
+        summary_parts = []
+        
+        # Start with what the conversation was about
+        if top_ideas:
+            main_idea = top_ideas[0]
+            # Extract a readable explanation from the content
+            content = main_idea.content
+            # Take first sentence or first 100 chars
+            if '.' in content:
+                first_sentence = content.split('.')[0] + '.'
+                summary_parts.append(first_sentence)
+            else:
+                summary_parts.append(content[:150] + ("..." if len(content) > 150 else ""))
+        
+        # Add what was accomplished
+        actions = [i for i in ideas if i.category == "action"]
+        if actions:
+            action_summary = f"This session involved {len(actions)} key actions, including: {actions[0].content[:80]}..."
+            summary_parts.append(action_summary)
+        
+        # Add insights if any
+        insights = [i for i in ideas if i.category == "insight"]
+        if insights:
+            insight_summary = f"Key insights emerged: {insights[0].content[:80]}..."
+            summary_parts.append(insight_summary)
+        
+        # Fallback to category-based summary if no good prose found
+        if not summary_parts:
+            categories = {}
+            for idea in ideas:
+                categories[idea.category] = categories.get(idea.category, 0) + 1
+            top_category = max(categories, key=categories.get)
+            summary_parts.append(f"This conversation explored {top_category}s and related topics.")
+        
+        return " ".join(summary_parts)

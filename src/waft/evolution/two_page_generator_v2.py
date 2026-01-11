@@ -178,41 +178,23 @@ TWO_PAGE_TEMPLATE_V2 = """
             margin-bottom: {{ margin.paragraph_spacing / 2 }}pt;
         }
 
-        /* Ideas - enhanced presentation */
+        /* Ideas - prose presentation */
         .idea {
             margin-bottom: {{ margin.paragraph_spacing }}pt;
-            padding: {{ margin.paragraph_spacing / 2 }}pt;
+            padding: {{ margin.paragraph_spacing }}pt;
             border-left: 3pt solid {{ color.accent }};
-            background: {{ color.code_bg }}22;
+            background: {{ color.code_bg }}15;
             page-break-inside: avoid;
         }
 
-        .idea-category {
-            font-weight: bold;
-            color: {{ color.accent }};
-            font-size: {{ font.size_h3 - 1 }}pt;
-            text-transform: uppercase;
-            display: inline-block;
-            background: {{ color.accent }}22;
-            padding: 2pt 4pt;
-            border-radius: 2pt;
-        }
-
         .idea-content {
-            margin-top: {{ margin.paragraph_spacing / 2 }}pt;
             font-size: {{ font.size_body }}pt;
-            line-height: 1.5;
+            line-height: 1.6;
             word-wrap: break-word;
             overflow-wrap: break-word;
             hyphens: auto;
-        }
-
-        .idea-genome {
-            font-size: {{ font.size_body - 2 }}pt;
-            font-style: italic;
-            color: {{ color.accent }};
-            opacity: 0.7;
-            margin-top: {{ margin.paragraph_spacing / 3 }}pt;
+            text-align: justify;
+            margin: 0;
         }
 
         /* Metadata - compact */
@@ -282,16 +264,14 @@ TWO_PAGE_TEMPLATE_V2 = """
         </div>
 
         <div class="metadata">
-            <p><strong>Genome:</strong> <span class="scientific-name">{{ styling_genome_name }}</span> ({{ styling_genome_id[:8] }}...) | <strong>Ideas:</strong> {{ total_ideas }} | <strong>Generated:</strong> {{ generated_at }}</p>
+            <p><strong>Generated:</strong> {{ generated_at }} | <strong>Ideas Extracted:</strong> {{ total_ideas }}</p>
         </div>
 
-        <h2>Core Concepts</h2>
+        <h2>What Happened</h2>
 
         {% for idea in page_1_ideas %}
         <div class="idea no-break">
-            <div class="idea-category">{{ idea.category }}</div>
-            <div class="idea-content">{{ idea.content }}</div>
-            <div class="idea-genome">{{ idea.scientific_name }}</div>
+            <p class="idea-content">{{ idea.content }}</p>
         </div>
         {% endfor %}
     </div>
