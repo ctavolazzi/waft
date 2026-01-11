@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-Create One-Pager from Chat using V2 Evolution System
-====================================================
+Create One-Pager from Chat using Evolution System
+==================================================
 
 Creates a 2-page one-pager PDF from the current chat session using the
-evolved V2 system with TRUE constraint enforcement and genomic tracking.
+evolved system with TRUE constraint enforcement and genomic tracking.
 """
 
 import sys
@@ -30,11 +30,11 @@ def get_chat_content() -> str:
     """
     Extract chat content from this session in clear prose.
     
-    This session focused on evolving the one-pager system from V1 to V2,
-    fixing formatting issues, and creating a checkpoint.
+    This session focused on evolving the one-pager system with adaptive
+    constraint enforcement, fixing formatting issues, and creating a checkpoint.
     """
     return """
-# V2 Evolution: One-Pager System Evolution
+# Evolution: One-Pager System
 
 ## What We Discovered
 
@@ -67,8 +67,8 @@ Now that we have a system that actually works, we can use it to create one-pager
 
 
 def main():
-    """Create one-pager from chat session using V2 evolution system."""
-    print("🔬 Creating one-pager from chat session using V2 evolution system...")
+    """Create one-pager from chat session using evolution system."""
+    print("🔬 Creating one-pager from chat session using evolution system...")
     print()
     
     # Get chat content
@@ -104,8 +104,8 @@ def main():
     print(f"✓ Using: {genome.scientific_name} ({genome.genome_id[:8]}...)")
     print()
     
-    # Generate with V2 (default)
-    print("📄 Generating 2-page PDF with V2 (adaptive constraint enforcement)...")
+    # Generate with adaptive constraint enforcement
+    print("📄 Generating 2-page PDF with adaptive constraint enforcement...")
     generator = TwoPageGenerator(weasyprint_available=True)
     
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")

@@ -338,7 +338,7 @@ class TwoPageGenerator:
     - Scint detection between versions
     """
 
-    # Genome ID for this generator version
+    # Genome ID for this generator
     GENERATOR_GENOME_ID = hashlib.sha256(b"TwoPageGenerator_adaptive_constraint").hexdigest()
 
     def __init__(self, weasyprint_available: bool = False, max_iterations: int = 5):
@@ -520,7 +520,7 @@ class TwoPageGenerator:
             png_conversion_success=png_conversion_success,
             png_count=len(png_paths) if png_paths else 0,
         )
-        
+
         # Build result dictionary
         result = {
             "success": True,
@@ -536,13 +536,13 @@ class TwoPageGenerator:
             "generator_genome_id": self.GENERATOR_GENOME_ID,
             "png_paths": [str(p) for p in png_paths] if png_paths else None,
         }
-        
+
         # Collect and save metrics if requested
         if collect_metrics and metrics_collector:
             # Compute content statistics
             html_content = best_result['html_content']
             content_stats = self._compute_content_stats(html_content, best_result['page_count'])
-            
+
             # Compute PNG info
             png_info = None
             if png_paths:
@@ -551,7 +551,7 @@ class TwoPageGenerator:
                     "dpi": png_dpi,
                     "total_size_bytes": total_size,
                 }
-            
+
             # Collect metrics
             metrics = metrics_collector.collect_metrics(
                 result=result,
@@ -562,69 +562,69 @@ class TwoPageGenerator:
                 png_info=png_info,
                 content_stats=content_stats,
             )
-            
+
             # Save metrics
             metrics_file = metrics_collector.save_metrics(metrics)
             result["metrics_file"] = str(metrics_file)
             result["metrics"] = metrics.to_dict()
             print(f"  📊 Metrics saved: {metrics_file}")
-        
+
         return result
 
     def _clean_markdown(self, text: str) -> str:
         """
         Clean markdown formatting from text for clean HTML rendering.
-        
+
         Removes:
         - Markdown headers (##, ###, etc.)
         - Bold/italic markers (**text**, *text*)
         - Code blocks (```, `)
         - Links ([text](url)) -> text
         - Lists markers (-, *, 1.)
-        
+
         Args:
             text: Text with markdown formatting
-            
+
         Returns:
             Cleaned text suitable for HTML display
         """
         if not text:
             return ""
-        
+
         # Remove markdown headers (##, ###, ####)
         text = re.sub(r'^#{1,6}\s+', '', text, flags=re.MULTILINE)
-        
+
         # Remove bold (**text** or __text__)
         text = re.sub(r'\*\*([^*]+)\*\*', r'\1', text)
         text = re.sub(r'__([^_]+)__', r'\1', text)
-        
+
         # Remove italic (*text* or _text_) but preserve standalone asterisks
         text = re.sub(r'(?<!\*)\*([^*]+)\*(?!\*)', r'\1', text)
         text = re.sub(r'(?<!_)_([^_]+)_(?!_)', r'\1', text)
-        
+
         # Remove inline code (`code`)
         text = re.sub(r'`([^`]+)`', r'\1', text)
-        
+
         # Remove code blocks (```...```)
         text = re.sub(r'```[\s\S]*?```', '', text)
-        
+
         # Remove links ([text](url)) -> text
         text = re.sub(r'\[([^\]]+)\]\([^\)]+\)', r'\1', text)
-        
+
         # Remove list markers at start of line (-, *, 1., etc.)
         text = re.sub(r'^[\s]*[-*+]\s+', '', text, flags=re.MULTILINE)
         text = re.sub(r'^[\s]*\d+\.\s+', '', text, flags=re.MULTILINE)
-        
+
         # Clean up "Key Concept:" prefixes (redundant with category tag)
         text = re.sub(r'^\s*\*\*Key\s+Concept\*\*:\s*', '', text, flags=re.IGNORECASE)
         text = re.sub(r'^\s*Key\s+Concept:\s*', '', text, flags=re.IGNORECASE)
-        
+
         # Clean up multiple spaces
         text = re.sub(r'\s+', ' ', text)
-        
+
         # Strip leading/trailing whitespace
         text = text.strip()
-        
+
         return text
 
     def _render_html(
@@ -641,7 +641,7 @@ class TwoPageGenerator:
             # Clean the content field
             idea_dict['content'] = self._clean_markdown(idea_dict.get('content', ''))
             return idea_dict
-        
+
         context = {
             "title": distilled_chat.title,
             "summary": distilled_chat.summary,
@@ -665,7 +665,7 @@ class TwoPageGenerator:
             "generated_at": datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC"),
         }
 
-        template = Template(TWO_PAGE_TEMPLATE_V2)
+        template = Template(TWO_PAGE_TEMPLATE)
         return template.render(**context)
 
     def _count_pages(self, html_content: str, output_path: Optional[Path]) -> int:
@@ -819,7 +819,7 @@ class TwoPageGenerator:
             generation=styling_genome.generation,
             event_type=EvolutionaryEventType.GYM_EVAL,
             payload={
-                "event": "two_page_generation_v2",
+                "event": "two_page_generation",
                 "generator_version": "adaptive",
                 "generator_genome_id": self.GENERATOR_GENOME_ID,
                 "chat_title": distilled_chat.title,
@@ -837,39 +837,39 @@ class TwoPageGenerator:
         )
 
         styling_genome.flight_recorder.append(event)
-    
+
     def _compute_content_stats(self, html_content: str, page_count: int) -> Dict[str, Any]:
         """
         Compute content statistics from HTML.
-        
+
         Args:
             html_content: Generated HTML content
             page_count: Number of pages
-        
+
         Returns:
             Dictionary with content statistics
         """
         import re
-        
+
         # Count words (rough estimate)
         text_content = re.sub(r'<[^>]+>', ' ', html_content)
         words = text_content.split()
         words_total = len(words)
-        
+
         # Split by page (rough estimate - assumes equal distribution)
         words_per_page = words_total / page_count if page_count > 0 else 0
         words_page1 = int(words_per_page * 0.6)  # Page 1 gets 60%
         words_page2 = words_total - words_page1
-        
+
         # Count paragraphs
         paragraphs = len(re.findall(r'<p[^>]*>', html_content))
-        
+
         # Count lists
         lists = len(re.findall(r'<[uo]l[^>]*>', html_content))
-        
+
         # Count boxes (note-box, highlight-box)
         boxes = len(re.findall(r'class="(?:note|highlight)-box"', html_content))
-        
+
         return {
             "words_total": words_total,
             "words_page1": words_page1,
