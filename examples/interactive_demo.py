@@ -1,37 +1,39 @@
 #!/usr/bin/env python3
 """
-WAFT Interactive Demonstration - Enhanced
-==========================================
+WAFT Interactive Demonstration - Meta-Cognitive Edition
+========================================================
 
-This script provides an interactive terminal demonstration of WAFT's
-self-documenting capabilities with custom document generation.
+This demo shows:
+1. Creating a messy folder structure
+2. Cleaning it up (basic organization)
+3. Installing _pyrite for work effort management
+4. Demonstrating basic epistemic memory
+5. Explaining perspective-taking and meta-cognition
 
-Run this to see:
-- Existing documents in the system
-- Interactive prompt for what you want to generate
-- WAFT creating documents on-demand
-- Assembling documents into an explorable booklet
-
-This is WAFT documenting WAFT using WAFT.
+This is WAFT demonstrating its own meta-cognitive capabilities.
 """
 
 import sys
 import time
 import subprocess
 import platform
+import random
+import shutil
 from pathlib import Path
-from typing import Optional, List
+from typing import Optional
 from datetime import datetime
 
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.waft.reflection import ReflectionSystem
-from src.waft.templates.code_documentation import generate_code_documentation
-from src.waft.templates.simple_scientific import generate_simple_scientific_document
-from src.waft.templates.field_guide import generate_field_guide
-from src.waft.templates.personal_memo import generate_personal_memo
-from src.waft.binder import Binder, DocumentEntry
+from rich.console import Console
+from rich.panel import Panel
+from rich.text import Text
+
+from src.waft.core.memory import MemoryManager
+
+# Initialize rich console
+console = Console()
 
 
 # ============================================================================
@@ -97,8 +99,8 @@ def open_file(file_path: Path) -> bool:
             subprocess.run(["xdg-open", str(file_path)], check=True)
         return True
     except Exception as e:
-        print(f"   ⚠️  Could not open file automatically: {e}")
-        print(f"   📄 Please open manually: {file_path}")
+        console.print(f"   [yellow]⚠️[/yellow]  Could not open file automatically: {e}")
+        console.print(f"   [cyan]📄[/cyan] Please open manually: [bold]{file_path}[/bold]")
         return False
 
 
@@ -108,8 +110,8 @@ def open_file(file_path: Path) -> bool:
 
 def welcome_message():
     """Display welcome message with ASCII art."""
-    print("\n" + "=" * 80)
-    print("""
+    console.print("\n" + "=" * 80)
+    console.print("""
     ██╗    ██╗ █████╗ ███████╗████████╗
     ██║    ██║██╔══██╗██╔════╝╚══██╔══╝
     ██║ █╗ ██║███████║█████╗     ██║
@@ -118,491 +120,494 @@ def welcome_message():
      ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝        ╚═╝
 
     World Architecture Framework & Templates
-    Interactive Documentation System
+    Meta-Cognitive Demonstration
     """)
+    console.print("=" * 80)
+    console.print()
+
+    console.print("[bold cyan]Welcome to the WAFT Meta-Cognitive Demonstration.[/bold cyan]")
+    console.print()
+    console.print("Today we're going to show you something that would have been")
+    console.print("[yellow]impressive in 2022 when ChatGPT came out...[/yellow]")
+    console.print()
+    console.print("[bold]But we're going to go much deeper.[/bold]")
+    console.print()
+
+
+def create_messy_demo_folder(demo_dir: Path):
+    """Create a messy folder with files scattered everywhere."""
+    console.print("\n" + "─" * 80)
+    console.print("[bold cyan]📁 STEP 1: CREATING A DEMO FOLDER[/bold cyan]")
+    console.print("─" * 80 + "\n")
+
+    console.print("Let's start by creating a demo folder and generating some files...")
+    console.print()
+
+    # Create demo directory
+    console.print(f"  [cyan]📁[/cyan] Creating directory: [bold]{demo_dir}[/bold]")
+    demo_dir.mkdir(parents=True, exist_ok=True)
+    console.print(f"     [green]✅[/green] Directory created: {demo_dir}")
+    console.print()
+
+    # Create messy files in root
+    messy_files = [
+        "document1.txt",
+        "notes.md",
+        "data.json",
+        "script.py",
+        "output.pdf",
+        "temp_file.tmp",
+        "old_backup.bak",
+        "readme.txt",
+        "config.yaml",
+        "log.txt",
+        "test.py",
+        "results.csv",
+    ]
+
+    console.print(f"  [cyan]📄[/cyan] Generating [bold]{len(messy_files)}[/bold] files...")
+    console.print()
+
+    for i, filename in enumerate(messy_files, 1):
+        file_path = demo_dir / filename
+        content = f"# {filename}\n\nThis is a demo file created at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
+        console.print(f"  [dim][{i:2d}/{len(messy_files)}][/dim] Creating: [cyan]{filename}[/cyan]")
+        file_path.write_text(content)
+        size = file_path.stat().st_size
+        console.print(f"       [green]✅[/green] Created ([dim]{size} bytes[/dim])")
+
+    console.print()
+    console.print(f"  [green]✅[/green] Created [bold]{len(messy_files)}[/bold] files in the demo folder.")
+    console.print()
+
+    # Show the mess
+    console.print("\n" + "─" * 80)
+    console.print("[bold cyan]📂 CURRENT FOLDER STRUCTURE[/bold cyan]")
+    console.print("─" * 80 + "\n")
+
+    files = sorted(demo_dir.glob("*"))
+    for f in files:
+        if f.is_file():
+            size = f.stat().st_size
+            console.print(f"  [cyan]📄[/cyan] {f.name:<40} [dim]({size:>4} bytes)[/dim]")
+
+    console.print()
+
+    return messy_files
+
+
+def comment_on_messiness():
+    """Comment on the messy folder structure."""
+    console.print("\n" + "─" * 80)
+    console.print("[bold yellow]💭 OBSERVATION[/bold yellow]")
+    console.print("─" * 80 + "\n")
+
+    console.print("That's great...")
+    console.print("[yellow]but it's a little messy, isn't it?[/yellow]")
+    console.print()
+
+
+def clean_up_folder(demo_dir: Path, messy_files: list):
+    """Clean up the folder with basic organization."""
+    console.print("\n" + "─" * 80)
+    console.print("[bold cyan]🧹 STEP 2: CLEANING UP[/bold cyan]")
+    console.print("─" * 80 + "\n")
+
+    console.print("Let's organize this into a simple structure...")
+    console.print()
+
+    # Create basic folders
+    folders = {
+        "documents": [f for f in messy_files if f.endswith(('.txt', '.md', '.pdf'))],
+        "scripts": [f for f in messy_files if f.endswith('.py')],
+        "data": [f for f in messy_files if f.endswith(('.json', '.csv', '.yaml'))],
+        "temp": [f for f in messy_files if f.endswith(('.tmp', '.bak'))],
+    }
+
+    console.print("  [cyan]📁[/cyan] Creating organization folders...")
+    console.print()
+
+    for folder_name, files in folders.items():
+        if files:
+            folder_path = demo_dir / folder_name
+            console.print(f"  [cyan]📁[/cyan] Creating: [bold]{folder_name}/[/bold]")
+            folder_path.mkdir(exist_ok=True)
+            console.print(f"     [green]✅[/green] Directory created")
+            console.print(f"     [cyan]📦[/cyan] Moving [bold]{len(files)}[/bold] file(s)...")
+
+            for filename in files:
+                src = demo_dir / filename
+                dst = folder_path / filename
+                if src.exists():
+                    console.print(f"        Moving: [cyan]{filename}[/cyan] → [bold]{folder_name}/[/bold]")
+                    shutil.move(str(src), str(dst))
+                    console.print(f"        [green]✅[/green] Moved")
+            console.print()
+
+    console.print("  [green]✅[/green] Organization complete!")
+    console.print()
+
+    console.print("\n" + "─" * 80)
+    console.print("[bold cyan]📂 ORGANIZED STRUCTURE[/bold cyan]")
+    console.print("─" * 80 + "\n")
+
+    for folder_name in sorted(folders.keys()):
+        folder_path = demo_dir / folder_name
+        if folder_path.exists():
+            files = list(folder_path.glob("*"))
+            if files:
+                console.print(f"  [cyan]📁[/cyan] [bold]{folder_name}/[/bold]")
+                for f in sorted(files):
+                    if f.is_file():
+                        console.print(f"     └─ [dim]{f.name}[/dim]")
+
+    console.print()
+    console.print("[green]✅[/green] Much better! Clean and organized.")
+    console.print()
+
+
+def chatgpt_comment():
+    """Make the point about ChatGPT 2022."""
+    console.print("\n" + "─" * 80)
+    console.print("[bold yellow]💡 THE POINT[/bold yellow]")
+    console.print("─" * 80 + "\n")
+
+    console.print("[yellow]That would be impressive...[/yellow]")
+    console.print("[yellow]in 2022 when ChatGPT came out.[/yellow]")
+    console.print()
+    console.print("[bold cyan]Let's show you a little bit of what WAFT is really capable of...[/bold cyan]")
+    console.print()
+
+
+def create_tools_folder(demo_dir: Path):
+    """Create the tools folder."""
+    console.print("\n" + "─" * 80)
+    console.print("[bold cyan]🛠️  STEP 3: CREATING TOOLS FOLDER[/bold cyan]")
+    console.print("─" * 80 + "\n")
+
+    console.print("Now let's create a 'tools' folder...")
+    console.print()
+
+    tools_dir = demo_dir / "tools"
+    console.print(f"  [cyan]📁[/cyan] Creating directory: [bold]tools/[/bold]")
+    tools_dir.mkdir(exist_ok=True)
+    console.print(f"     [green]✅[/green] Directory created: {tools_dir}")
+    console.print()
+
+    return tools_dir
+
+
+def install_pyrite_demo(tools_dir: Path):
+    """Demonstrate installing _pyrite for work effort management."""
+    console.print("\n" + "─" * 80)
+    console.print("[bold cyan]🔧 STEP 4: INSTALLING _PYRITE[/bold cyan]")
+    console.print("─" * 80 + "\n")
+
+    console.print("[cyan]_pyrite[/cyan] is WAFT's work effort management system.")
+    console.print()
+    console.print("Let's install it in the tools folder...")
+    console.print()
+
+    # Create _pyrite structure
+    # MemoryManager expects project_path and creates _pyrite inside it
+    console.print("  [cyan]🔧[/cyan] Initializing MemoryManager...")
+    console.print(f"     Project path: [dim]{tools_dir}[/dim]")
+    memory = MemoryManager(tools_dir)
+    console.print("     [green]✅[/green] MemoryManager initialized")
+    console.print()
+
+    with console.status("[bold cyan]Creating _pyrite structure...[/bold cyan]"):
+        memory.create_structure()
+    console.print("     [green]✅[/green] Structure creation complete")
+    console.print()
+
+    # Verify structure
+    pyrite_dir = tools_dir / "_pyrite"
+    console.print("  [cyan]🔍[/cyan] Verifying structure...")
+    if pyrite_dir.exists():
+        console.print(f"     [green]✅[/green] [bold]_pyrite/[/bold] directory exists")
+    else:
+        console.print(f"     [red]❌[/red] [bold]_pyrite/[/bold] directory missing!")
+
+    for folder in ["active", "backlog", "standards"]:
+        folder_path = pyrite_dir / folder
+        if folder_path.exists():
+            gitkeep = folder_path / ".gitkeep"
+            gitkeep_status = "[green]✅[/green]" if gitkeep.exists() else "[yellow]⚠️[/yellow]"
+            console.print(f"     [green]✅[/green] [bold]{folder}/[/bold] exists {gitkeep_status} .gitkeep")
+        else:
+            console.print(f"     [red]❌[/red] [bold]{folder}/[/bold] missing!")
+    console.print()
+
+    console.print("  [green]✅[/green] [bold]_pyrite installed![/bold]")
+    console.print()
+
+    # Show structure
+    console.print("  [cyan]📂[/cyan] Structure created:")
+    console.print("     [bold]_pyrite/[/bold]")
+    console.print("     ├── [cyan]active/[/cyan]      [dim](current work)[/dim]")
+    console.print("     ├── [cyan]backlog/[/cyan]     [dim](future work)[/dim]")
+    console.print("     └── [cyan]standards/[/cyan]  [dim](project standards)[/dim]")
+    console.print()
+
+    return memory, pyrite_dir
+
+
+def demonstrate_basic_work_effort(tools_dir: Path, memory: MemoryManager, pyrite_dir: Path):
+    """Demonstrate basic work effort management."""
+    console.print("\n" + "─" * 80)
+    console.print("[bold cyan]📝 STEP 5: BASIC WORK EFFORT MANAGEMENT[/bold cyan]")
+    console.print("─" * 80 + "\n")
+
+    console.print("Let's create a simple work effort to track our demo...")
+    console.print()
+
+    # Create a simple work effort entry
+    active_dir = pyrite_dir / "active"
+    console.print(f"  [cyan]📁[/cyan] Using directory: [dim]{active_dir}[/dim]")
+    if not active_dir.exists():
+        console.print(f"     [yellow]⚠️[/yellow]  Directory doesn't exist, creating...")
+        active_dir.mkdir(parents=True, exist_ok=True)
+        console.print(f"     [green]✅[/green] Directory created")
+    else:
+        console.print(f"     [green]✅[/green] Directory exists")
+    console.print()
+
+    work_effort_file = active_dir / "demo_work_effort.md"
+    console.print(f"  [cyan]📄[/cyan] Creating file: [bold]{work_effort_file.name}[/bold]")
+
+    content = f"""# Demo Work Effort
+
+**Created**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+**Status**: In Progress
+
+## Objective
+Demonstrate WAFT's meta-cognitive capabilities through work effort management.
+
+## Tasks
+- [x] Create demo folder
+- [x] Generate messy files
+- [x] Clean up organization
+- [x] Create tools folder
+- [x] Install _pyrite
+- [ ] Demonstrate work effort tracking
+- [ ] Explain meta-cognition
+
+## Notes
+This is a basic demonstration of how WAFT tracks its own work.
+"""
+
+    print("  ✍️  Writing content...")
+    work_effort_file.write_text(content)
+    print(f"     ✅ File written: {work_effort_file.name} ({work_effort_file.stat().st_size} bytes)")
+    print()
+
+    # Show the file
+    print("  📖 Content preview:")
+    print("     " + "─" * 70)
+    for i, line in enumerate(content.split('\n')[:10], 1):
+        print(f"     {i:2d} | {line}")
+    print("     " + "─" * 70)
+    print()
+
+    # Create a journal entry
+    journal_file = active_dir / "demo_journal.md"
+    print(f"  📄 Creating file: {journal_file.name}")
+    journal_content = f"""# Demo Journal Entry
+
+**Date**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+## What I'm Doing
+Setting up a demo to show WAFT's meta-cognitive capabilities.
+
+## What I'm Thinking
+This demo needs to show how WAFT can track its own work and understand
+its own state through the work effort system.
+
+## What I'm Learning
+The _pyrite system provides a simple but powerful way to track intellectual
+labor quanta - discrete units of work and thought.
+"""
+
+    print("  ✍️  Writing content...")
+    journal_file.write_text(journal_content)
+    print(f"     ✅ File written: {journal_file.name} ({journal_file.stat().st_size} bytes)")
+    print()
+
+    # Show what's in active
+    print("  📂 Listing active work files...")
+    active_files = memory.get_active_files()
+    print(f"     Found {len(active_files)} file(s):")
+    for f in active_files:
+        size = f.stat().st_size
+        print(f"     └─ {f.name} ({size} bytes)")
+    print()
+
+    return work_effort_file, journal_file
+
+
+def ask_why():
+    """Ask the 'but why?' question."""
+    console.print("\n" + "─" * 80)
+    console.print("[bold yellow]❓ BUT WHY?[/bold yellow]")
+    console.print("─" * 80 + "\n")
+
+    console.print("[bold yellow]But why?[/bold yellow]")
+    console.print()
+
+
+def explain_meta_cognition(tools_dir: Path):
+    """Explain the meta-cognitive aspect."""
+    console.print("\n" + "─" * 80)
+    console.print("[bold cyan]🧠 THE ANSWER: META-COGNITION[/bold cyan]")
+    console.print("─" * 80 + "\n")
+
+    explanation = """So that WAFT can track on its own what it knows and what it doesn't.
+
+The work efforts ticketing system acts as a sort of rudimentary epistemic
+memory - a journal that any LLM can pick up and wear like a pair of glasses
+to see how the previous AI saw its world.
+
+This is perspective taking.
+
+This is a very, very, very basic, very very very simple form of LLM
+meta-cognition across architectures using a work efforts and journaling
+system to track "thoughts" or intellectual labor quanta in the form of text
+in the WAFT system, which can self-modify and recursively self-improve based
+on external and internal feedback."""
+
+    console.print("  [cyan]💭[/cyan] Explanation:")
+    console.print()
+    for line in explanation.split('\n'):
+        if line.strip():
+            console.print(f"     {line.strip()}")
+        else:
+            console.print()
+    console.print()
+
+    # Create a summary document
+    summary_file = tools_dir / "meta_cognition_explanation.md"
+    console.print(f"  [cyan]📄[/cyan] Creating explanation document: [bold]{summary_file.name}[/bold]")
+    summary_content = f"""# Meta-Cognition Explanation
+
+**Created**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+## The Core Concept
+
+WAFT's work effort management system provides a form of **epistemic memory** -
+a way for AI systems to track what they know and what they don't know.
+
+## How It Works
+
+1. **Work Efforts**: Track discrete units of intellectual labor
+2. **Journaling**: Record thoughts, learnings, and observations
+3. **Perspective Taking**: New AI instances can "put on" the previous AI's
+   perspective by reading the work efforts and journals
+
+## Why It Matters
+
+This enables:
+- **Continuity**: Knowledge persists across AI sessions
+- **Self-Awareness**: System knows what it knows
+- **Recursive Improvement**: System can improve based on its own observations
+- **Meta-Cognition**: Thinking about thinking
+
+## The Recursive Loop
+
+1. AI does work → Creates work effort
+2. AI reflects → Writes journal entry
+3. AI documents → Records what it learned
+4. Next AI reads → Understands previous context
+5. Next AI continues → Builds on previous knowledge
+6. Cycle repeats → Continuous improvement
+
+## Intellectual Labor Quanta
+
+Each work effort, journal entry, or documentation piece represents a
+**quantum of intellectual labor** - a discrete unit of thought and work
+that can be tracked, measured, and built upon.
+
+## Cross-Architecture Meta-Cognition
+
+This system works across different AI architectures because it's based on
+**text** - the universal interface. Any LLM can read and understand:
+- Work effort descriptions
+- Journal entries
+- Documentation
+- Status updates
+
+This creates a form of **perspective-taking** where one AI can understand
+how another AI (or a previous version of itself) saw the world.
+"""
+
+    with console.status("[dim]Writing content...[/dim]"):
+        summary_file.write_text(summary_content)
+    size = summary_file.stat().st_size
+    console.print(f"     [green]✅[/green] File written ([dim]{size} bytes[/dim])")
+    console.print()
+
+    return summary_file
+
+
+def show_final_structure(demo_dir: Path):
+    """Show the final organized structure."""
+    console.print("\n" + "─" * 80)
+    console.print("[bold cyan]📂 FINAL STRUCTURE[/bold cyan]")
+    console.print("─" * 80 + "\n")
+
+    console.print("  [cyan]📁[/cyan] Complete directory tree:")
+    console.print()
+
+    def print_tree(path: Path, prefix: str = "  ", is_last: bool = True):
+        """Print directory tree."""
+        name = path.name if path != demo_dir else "demo/"
+        connector = "└── " if is_last else "├── "
+        if path.is_dir():
+            console.print(f"{prefix}{connector}[bold cyan]{name}[/bold cyan]")
+        else:
+            console.print(f"{prefix}{connector}[dim]{name}[/dim]")
+
+        if path.is_dir():
+            children = sorted([p for p in path.iterdir() if p.name != ".gitkeep"])
+            for i, child in enumerate(children):
+                is_last_child = i == len(children) - 1
+                extension = "    " if is_last else "│   "
+                print_tree(child, prefix + extension, is_last_child)
+
+    print_tree(demo_dir)
+    console.print()
+
+
+def closing_message(demo_dir: Path):
+    """Display closing message."""
+    print("\n" + "=" * 80)
+    print()
+    print("🎉 DEMONSTRATION COMPLETE")
+    print()
     print("=" * 80)
     print()
 
-    typing_print("Welcome to the WAFT Interactive Demonstration.", delay=0.04)
-    print()
-    time.sleep(0.5)
-    typing_print("WAFT is a document generation framework that can observe,", delay=0.03)
-    typing_print("document, and improve itself through recursive self-reflection.", delay=0.03)
-    print()
-    time.sleep(0.5)
-
-
-def show_existing_files():
-    """Display existing PDF files in the system."""
-    print("\n" + "─" * 80)
-    typing_print("📚 EXISTING DOCUMENTS IN SYSTEM", delay=0.05)
-    print("─" * 80 + "\n")
-
-    output_dir = Path(__file__).parent.parent / "_work_efforts"
-
-    if output_dir.exists():
-        pdf_files = sorted(output_dir.glob("*.pdf"))
-
-        if pdf_files:
-            typing_print(f"Found {len(pdf_files)} documents:", delay=0.03)
-            print()
-            time.sleep(0.3)
-
-            for pdf in pdf_files[:10]:  # Show first 10
-                size_kb = pdf.stat().st_size / 1024
-                print(f"  📄 {pdf.name:<50} ({size_kb:>6.1f} KB)")
-                time.sleep(0.1)
-
-            if len(pdf_files) > 10:
-                print(f"\n  ... and {len(pdf_files) - 10} more documents")
-        else:
-            typing_print("No existing documents found. Let's generate some!", delay=0.03)
-
-    print()
-    time.sleep(0.5)
-
-
-def get_user_request():
-    """Get user input for what they want to generate."""
-    print("\n" + "─" * 80)
-    typing_print("💭 WHAT WOULD YOU LIKE TO SEE?", delay=0.05)
-    print("─" * 80 + "\n")
-
-    time.sleep(0.5)
-
-    typing_print("WAFT can generate documents about any topic, in multiple formats.", delay=0.03)
-    print()
-    time.sleep(0.3)
-
-    typing_print("Examples:", delay=0.03)
-    print("  • 'Show me WAFT's architecture'")
-    print("  • 'Create a research paper about quantum computing'")
-    print("  • 'Generate a field guide for survival'")
-    print("  • 'Make a technical overview of the reflection system'")
-    print("  • Or just press Enter for the standard demo")
-    print()
-    time.sleep(0.3)
-
-    typing_print("What would you like? ", delay=0.04, end="")
-    user_input = input().strip()
-
-    return user_input if user_input else "standard demo"
-
-
-def generate_custom_booklet(user_request: str, output_dir: Path) -> Path:
-    """Generate a custom booklet based on user request."""
-    print("\n" + "─" * 80)
-    typing_print("🔧 GENERATING CUSTOM BOOKLET", delay=0.05)
-    print("─" * 80 + "\n")
-
-    time.sleep(0.5)
-    typing_print(f"Request: {user_request}", delay=0.03)
-    print()
-    time.sleep(0.5)
-
-    # Analyze request
-    blinking_cursor(duration=2.0, message="Analyzing request")
-
-    request_lower = user_request.lower()
-
-    # Create binder
-    binder = Binder(
-        title=f"WAFT Custom Documentation",
-        subtitle=f"Generated on {datetime.now().strftime('%Y-%m-%d %H:%M')}",
-        classification="DEMONSTRATION",
-        cover_style="professional"
-    )
-
-    # Determine what to generate
-    documents_to_generate = []
-
-    if "standard" in request_lower or "demo" in request_lower:
-        typing_print("Generating standard demonstration booklet...", delay=0.03)
-        documents_to_generate = ["overview", "reflection", "architecture"]
-
-    elif "architecture" in request_lower or "system" in request_lower or "waft" in request_lower:
-        typing_print("Generating WAFT architecture documentation...", delay=0.03)
-        documents_to_generate = ["overview", "architecture", "reflection"]
-
-    elif "research" in request_lower or "paper" in request_lower or "scientific" in request_lower:
-        typing_print("Generating research documentation...", delay=0.03)
-        documents_to_generate = ["research_overview", "technical_analysis"]
-
-    elif "field guide" in request_lower or "survival" in request_lower or "manual" in request_lower:
-        typing_print("Generating field guide documentation...", delay=0.03)
-        documents_to_generate = ["field_guide", "operations_memo"]
-
-    else:
-        typing_print("Generating general purpose documentation...", delay=0.03)
-        documents_to_generate = ["overview", "user_guide"]
-
-    print()
-    time.sleep(0.5)
-
-    # Generate documents
-    generated_docs = []
-
-    for i, doc_type in enumerate(documents_to_generate, 1):
-        progress_step(i, len(documents_to_generate), f"Generating {doc_type.replace('_', ' ').title()}")
-
-        doc_path = output_dir / f"demo_{doc_type}_{int(time.time())}.pdf"
-
-        if doc_type == "overview":
-            generate_overview_doc(doc_path, user_request)
-        elif doc_type == "reflection":
-            generate_reflection_doc(doc_path)
-        elif doc_type == "architecture":
-            generate_architecture_doc(doc_path)
-        elif doc_type == "research_overview":
-            generate_research_doc(doc_path, user_request)
-        elif doc_type == "technical_analysis":
-            generate_technical_doc(doc_path, user_request)
-        elif doc_type == "field_guide":
-            generate_field_guide_doc(doc_path, user_request)
-        elif doc_type == "operations_memo":
-            generate_operations_memo(doc_path, user_request)
-        elif doc_type == "user_guide":
-            generate_user_guide_doc(doc_path, user_request)
-
-        generated_docs.append((doc_path, doc_type.replace('_', ' ').title()))
-
-    # Add documents to binder
-    print()
-    typing_print("Assembling booklet with generated documents...", delay=0.03)
-    print()
-    time.sleep(0.5)
-
-    section = binder.add_section("Generated Documentation", color="#2c3e50")
-
-    for doc_path, doc_title in generated_docs:
-        section.add_document(DocumentEntry(
-            path=doc_path,
-            title=doc_title,
-            description=f"Generated based on request: {user_request[:50]}..."
-        ))
-        print(f"  ✓ Added: {doc_title}")
-        time.sleep(0.2)
-
-    # Generate final booklet
-    print()
-    loading_animation("Creating final booklet", duration=2.0)
-
-    booklet_path = output_dir / f"WAFT_Custom_Booklet_{int(time.time())}.pdf"
-    binder.generate(booklet_path, include_dividers=True)
-
-    print()
-    print(f"✅ Booklet created: {booklet_path.name}")
-    print(f"   Size: {booklet_path.stat().st_size / 1024:.1f} KB")
-    print(f"   Pages: {len(generated_docs)} documents + cover + TOC")
+    print("What you just witnessed:")
     print()
 
-    return booklet_path
+    print("  ✅ Basic file organization (2022 ChatGPT level)")
+    print("  ✅ Work effort management system")
+    print("  ✅ Epistemic memory through _pyrite")
+    print("  ✅ Meta-cognitive perspective-taking")
+    print("  ✅ Recursive self-improvement foundation")
+    print()
 
+    print("This is WAFT tracking its own work, understanding its own state,")
+    print("and enabling future AI instances to continue where this one left off.")
+    print()
 
-def generate_overview_doc(output_path: Path, request: str):
-    """Generate system overview document."""
-    content = f"""
-<h2>System Overview</h2>
-<p>This document provides an overview of WAFT's capabilities in response to your request:
-<strong>"{request}"</strong></p>
-
-<h2>What is WAFT?</h2>
-<p>WAFT (World Architecture Framework & Templates) is a self-documenting document generation
-system that can observe and document its own structure.</p>
-
-<h2>Key Capabilities</h2>
-<ul>
-    <li><strong>12 Professional Templates</strong> - From academic papers to creative writing</li>
-    <li><strong>Self-Observation</strong> - Reflection system analyzes the codebase</li>
-    <li><strong>Document Assembly</strong> - Binder system creates multi-document collections</li>
-    <li><strong>Recursive Improvement</strong> - Documentation drives development</li>
-</ul>
-
-<h2>The Recursive Loop</h2>
-<p>WAFT demonstrates systems-level self-awareness by documenting itself using its own
-templates, creating a feedback loop for continuous improvement.</p>
-
-<div class="callout note">
-<strong>This Document</strong><br>
-This overview was generated by WAFT in response to your specific request,
-demonstrating the system's ability to create custom documentation on demand.
-</div>
-"""
-
-    generate_code_documentation(
-        title="WAFT System Overview",
-        content=content,
-        output_path=output_path,
-        project="WAFT Interactive Demo",
-        version="1.0"
-    )
-
-
-def generate_reflection_doc(output_path: Path):
-    """Generate reflection system documentation."""
-    waft_root = Path(__file__).parent.parent / "src/waft"
-    reflector = ReflectionSystem(waft_root=waft_root)
-    report = reflector.reflect()
-
-    content = f"""
-<h2>Reflection System Analysis</h2>
-<p>WAFT has analyzed its own codebase and generated this report.</p>
-
-<h2>Code Metrics</h2>
-<ul>
-    <li><strong>Files Analyzed:</strong> {report.metrics.get('total_files', 'N/A')}</li>
-    <li><strong>Functions Found:</strong> {report.metrics.get('total_functions', 'N/A')}</li>
-    <li><strong>Classes Found:</strong> {report.metrics.get('total_classes', 'N/A')}</li>
-    <li><strong>Documentation Coverage:</strong> {report.metrics.get('documentation_coverage', 0):.1f}%</li>
-</ul>
-
-<h2>How It Works</h2>
-<p>The reflection system uses Python's AST (Abstract Syntax Tree) to analyze the
-codebase and identify documentation gaps.</p>
-
-<div class="callout tip">
-<strong>Meta-Documentation</strong><br>
-This analysis was performed by WAFT observing itself - demonstrating recursive
-self-documentation in action.
-</div>
-"""
-
-    generate_code_documentation(
-        title="WAFT Reflection Report",
-        content=content,
-        output_path=output_path,
-        project="Self-Analysis",
-        version="1.0"
-    )
-
-
-def generate_architecture_doc(output_path: Path):
-    """Generate architecture documentation."""
-    content = """
-<h2>System Architecture</h2>
-<p>WAFT is built on three core systems working in harmony.</p>
-
-<h2>Core Components</h2>
-
-<h3>1. Template System</h3>
-<p>12 diverse document generators covering academic, business, technical, and creative formats.</p>
-
-<h3>2. Reflection System</h3>
-<p>Uses AST analysis to observe the codebase and identify documentation needs.</p>
-
-<h3>3. Binder System</h3>
-<p>Assembles multiple documents into cohesive collections with covers, TOCs, and dividers.</p>
-
-<h2>Data Flow</h2>
-<pre>
-User Request
-    ↓
-Template Selection
-    ↓
-Content Generation
-    ↓
-PDF Rendering (WeasyPrint)
-    ↓
-Document Assembly (Binder)
-    ↓
-Final Output
-</pre>
-
-<h2>Technology Stack</h2>
-<ul>
-    <li><strong>WeasyPrint</strong> - HTML/CSS to PDF conversion</li>
-    <li><strong>Jinja2</strong> - Template engine</li>
-    <li><strong>pypdf</strong> - PDF manipulation</li>
-    <li><strong>AST</strong> - Python code analysis</li>
-</ul>
-"""
-
-    generate_code_documentation(
-        title="WAFT Architecture",
-        content=content,
-        output_path=output_path,
-        project="System Design",
-        version="1.0"
-    )
-
-
-def generate_research_doc(output_path: Path, request: str):
-    """Generate research paper style document."""
-    content = f"""
-<h2>Abstract</h2>
-<p>This research document explores the concepts related to "{request}"
-in the context of self-documenting systems and recursive improvement.</p>
-
-<h2>Introduction</h2>
-<p>Modern software systems face the challenge of maintaining up-to-date
-documentation as the system evolves. WAFT addresses this through
-recursive self-documentation.</p>
-
-<h2>Methodology</h2>
-<p>The system employs AST-based code analysis combined with template-driven
-document generation to create a feedback loop of observation and documentation.</p>
-
-<h2>Results</h2>
-<p>WAFT successfully demonstrates the ability to observe and document its own
-structure, creating a foundation for continuous self-improvement through documentation.</p>
-
-<h2>Discussion</h2>
-<p>This approach represents a novel method of maintaining system documentation
-through automated self-observation and generation.</p>
-"""
-
-    generate_simple_scientific_document(
-        title="Self-Documenting Systems: A Case Study",
-        content=content,
-        output_path=output_path,
-        authors=["WAFT System"],
-        abstract="An exploration of recursive self-documentation in software systems.",
-        date=datetime.now().strftime("%Y-%m-%d")
-    )
-
-
-def generate_technical_doc(output_path: Path, request: str):
-    """Generate technical analysis document."""
-    content = f"""
-<h2>Technical Analysis</h2>
-<p>Analysis generated in response to: <em>{request}</em></p>
-
-<h2>System Components</h2>
-<p>WAFT consists of modular components that work together to achieve
-recursive self-documentation.</p>
-
-<h2>Implementation Details</h2>
-<ul>
-    <li>Python 3.10+ for modern language features</li>
-    <li>Type hints for code clarity</li>
-    <li>AST-based static analysis</li>
-    <li>Template-driven document generation</li>
-</ul>
-
-<h2>Performance Characteristics</h2>
-<p>Document generation typically completes in under 2 seconds per document,
-with binder assembly adding minimal overhead.</p>
-
-<div class="callout note">
-<strong>Scalability</strong><br>
-The system scales linearly with codebase size and document complexity.
-</div>
-"""
-
-    generate_code_documentation(
-        title="Technical Analysis",
-        content=content,
-        output_path=output_path,
-        project="WAFT",
-        version="1.0"
-    )
-
-
-def generate_field_guide_doc(output_path: Path, request: str):
-    """Generate field guide style document."""
-    content = f"""
-<h2>Purpose</h2>
-<p>This field guide provides operational procedures for WAFT system usage.</p>
-
-<h2>Quick Start</h2>
-<ol>
-    <li>Import the required template</li>
-    <li>Prepare your content</li>
-    <li>Generate the document</li>
-    <li>Optionally assemble into booklet</li>
-</ol>
-
-<h2>Safety Procedures</h2>
-<div style="border: 2px solid #c00; padding: 10px; margin: 10px 0; background: #fee;">
-<strong>⚠️  WARNING</strong><br>
-Always verify generated documents before distribution.
-</div>
-
-<h2>Operational Notes</h2>
-<p>WAFT can generate documents on-demand based on user requests,
-as demonstrated by this field guide created in response to: "{request}"</p>
-"""
-
-    generate_field_guide(
-        title="WAFT Operations Manual",
-        content=content,
-        output_path=output_path,
-        series="FIELD GUIDE",
-        number="FG-DEMO-001"
-    )
-
-
-def generate_operations_memo(output_path: Path, request: str):
-    """Generate operations memo."""
-    content = f"""
-TO: Demo Participant
-FROM: WAFT System
-RE: Custom Documentation Request
-
-This memo confirms receipt of your documentation request:
-"{request}"
-
-WAFT has processed this request and generated appropriate
-documentation using its template system.
-
-The documents have been assembled into an explorable booklet
-for your review.
-
-Thank you for participating in this demonstration.
-"""
-
-    generate_personal_memo(
-        content=content,
-        output_path=output_path,
-        from_name="WAFT System",
-        to_name="Demo Participant",
-        subject="Documentation Request Processed"
-    )
-
-
-def generate_user_guide_doc(output_path: Path, request: str):
-    """Generate user guide document."""
-    content = f"""
-<h2>User Guide</h2>
-<p>Welcome to the WAFT user guide, generated based on: "{request}"</p>
-
-<h2>Getting Started</h2>
-<p>WAFT makes it easy to generate professional documents from templates.</p>
-
-<h2>Available Templates</h2>
-<ul>
-    <li>Scientific Papers</li>
-    <li>Field Guides</li>
-    <li>Technical Documentation</li>
-    <li>Business Documents</li>
-    <li>Personal Correspondence</li>
-    <li>And 7 more...</li>
-</ul>
-
-<h2>Creating Your First Document</h2>
-<pre>
-from src.waft.templates import generate_code_documentation
-
-generate_code_documentation(
-    title="My Document",
-    content="Content here...",
-    output_path=Path("output.pdf")
-)
-</pre>
-
-<div class="callout tip">
-<strong>Pro Tip</strong><br>
-Use the Binder system to combine multiple documents into collections.
-</div>
-"""
-
-    generate_code_documentation(
-        title="WAFT User Guide",
-        content=content,
-        output_path=output_path,
-        project="Documentation",
-        version="1.0"
-    )
+    print("─" * 80)
+    print()
+    print(f"📁 Demo folder: {demo_dir}")
+    print("📖 Explanation: tools/meta_cognition_explanation.md")
+    print()
+    print("=" * 80)
+    print()
 
 
 # ============================================================================
@@ -612,75 +617,89 @@ Use the Binder system to combine multiple documents into collections.
 def main():
     """Run the interactive demonstration."""
     try:
+        # Setup
+        project_root = Path(__file__).parent.parent
+        demo_dir = project_root / "demo_output"
+        demo_dir.mkdir(exist_ok=True)
+
         # 1. Welcome
         welcome_message()
 
-        # 2. Show existing files
-        show_existing_files()
+        # 2. Create messy folder
+        messy_files = create_messy_demo_folder(demo_dir)
 
-        # 3. Get user request
-        user_request = get_user_request()
+        # 3. Comment on messiness
+        comment_on_messiness()
 
-        # 4. Generate custom booklet
-        output_dir = Path(__file__).parent.parent / "_work_efforts"
-        output_dir.mkdir(exist_ok=True)
+        # 4. Clean up
+        clean_up_folder(demo_dir, messy_files)
 
-        booklet_path = generate_custom_booklet(user_request, output_dir)
+        # 5. ChatGPT comment
+        chatgpt_comment()
 
-        # 5. Open booklet
-        print("\n" + "─" * 80)
-        typing_print("📖 OPENING YOUR CUSTOM BOOKLET", delay=0.05)
-        print("─" * 80 + "\n")
+        # 6. Create tools folder
+        tools_dir = create_tools_folder(demo_dir)
 
-        time.sleep(0.5)
-        typing_print("Your personalized documentation booklet is ready!", delay=0.03)
-        print()
-        time.sleep(0.3)
+        # 7. Install _pyrite
+        memory, pyrite_dir = install_pyrite_demo(tools_dir)
 
-        typing_print("This booklet was:", delay=0.03)
-        print("  ✓ Generated based on your specific request")
-        print("  ✓ Created using WAFT's template system")
-        print("  ✓ Assembled into a cohesive collection")
-        print("  ✓ Ready to explore")
-        print()
-        time.sleep(0.5)
+        # 8. Demonstrate work effort
+        work_effort_file, journal_file = demonstrate_basic_work_effort(tools_dir, memory, pyrite_dir)
 
-        typing_print("Opening booklet...", delay=0.03)
-        print()
-        open_file(booklet_path)
+        # 9. Ask why
+        ask_why()
 
-        # 6. Closing
-        print("\n" + "=" * 80)
-        print()
-        typing_print("🎉 DEMONSTRATION COMPLETE", delay=0.05)
-        print()
-        print("=" * 80)
-        print()
+        # 10. Explain meta-cognition
+        summary_file = explain_meta_cognition(tools_dir)
 
-        typing_print("What you just experienced:", delay=0.03)
-        print()
-        time.sleep(0.3)
+        # 11. Show final structure
+        show_final_structure(demo_dir)
 
-        print("  ✅ Interactive document generation")
-        print("  ✅ Custom content based on your request")
-        print("  ✅ Multi-document booklet assembly")
-        print("  ✅ WAFT documenting itself using its own tools")
-        print()
-        time.sleep(0.5)
+        # 12. Closing
+        closing_message(demo_dir)
 
-        typing_print("This is the recursive loop in action.", delay=0.04)
-        typing_print("A system that documents itself can observe itself improving.", delay=0.04)
-        print()
-        time.sleep(0.5)
+        # 13. Generate PDF booklet
+        console.print("\n" + "─" * 80)
+        console.print("[bold cyan]📖 GENERATING DEMO BOOKLET[/bold cyan]")
+        console.print("─" * 80 + "\n")
+        
+        # Import here to avoid circular imports
+        sys.path.insert(0, str(Path(__file__).parent))
+        from generate_demo_booklet import generate_demo_booklet
+        
+        booklet_path = demo_dir / "WAFT_Demo_Booklet.pdf"
+        console.print(f"  [cyan]📄[/cyan] Generating PDF booklet...")
+        console.print(f"     Output: [bold]{booklet_path}[/bold]")
+        
+        try:
+            with console.status("[bold cyan]Creating PDF booklet...[/bold cyan]"):
+                generate_demo_booklet(demo_dir, booklet_path)
+            console.print(f"     [green]✅[/green] Booklet generated: [bold]{booklet_path}[/bold]")
+            console.print()
+            
+            # Open the PDF
+            console.print("  [cyan]📖[/cyan] Opening PDF booklet...")
+            if open_file(booklet_path):
+                console.print("     [green]✅[/green] PDF opened")
+            console.print()
+        except Exception as e:
+            console.print(f"     [red]❌[/red] Error generating booklet: {e}")
+            import traceback
+            console.print(f"     [dim]{traceback.format_exc()}[/dim]")
+            console.print("     [dim](Continuing without PDF)[/dim]")
+            console.print()
 
-        print("─" * 80)
-        print()
-        print(f"📄 Your booklet: {booklet_path}")
-        print("📁 All documents: _work_efforts/")
-        print("📖 Verification: WHAT_WE_HAVE_HERE.md")
-        print()
-        print("=" * 80)
-        print()
+        # Optionally open the summary
+        console.print()
+        console.print("[cyan]Would you like to open the meta-cognition explanation?[/cyan] [dim](y/n):[/dim] ", end="")
+        try:
+            response = input().strip().lower()
+            if response == 'y':
+                console.print("  [cyan]📖[/cyan] Opening file...")
+                open_file(summary_file)
+                console.print("     [green]✅[/green] File opened")
+        except (EOFError, KeyboardInterrupt):
+            console.print("  [dim](Skipping file open)[/dim]")
 
     except KeyboardInterrupt:
         print("\n\n" + "=" * 80)
