@@ -1,5 +1,5 @@
 {
-  "genome_id": "0fc115dce70e9ab27f91273b4ff255212d99101b4782a253bfbc17e6cd01ae95",
+  "genome_id": "1ccedaee5d6402f1c32c322408e26a0970cc21f96c074d5aeb3e1d3ad4276a36",
   "genes": {
     "font": {
       "family": "'Times New Roman', 'Times', serif",
@@ -35,16 +35,16 @@
       "header_enabled": true,
       "footer_enabled": true
     },
-    "name": "Clinical_Standard - WAFT v0.5.3 MVP: Karma Economy",
+    "name": "Clinical_Standard - Test Document",
     "description": ""
   },
   "generation": 0,
   "parent_id": null,
   "lineage_path": [
-    "0fc115dce70e9ab27f91273b4ff255212d99101b4782a253bfbc17e6cd01ae95"
+    "1ccedaee5d6402f1c32c322408e26a0970cc21f96c074d5aeb3e1d3ad4276a36"
   ],
-  "scientific_name": "Moksha Rakta, the Impatient",
+  "scientific_name": "Karma Sattva, the Noble",
   "fitness_score": null,
-  "created_at": "2026-01-11T23:53:18.342523",
+  "created_at": "2026-01-11T23:53:54.186580",
   "last_evaluated_at": null
 }
