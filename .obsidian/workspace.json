@@ -18,8 +18,23 @@
               "icon": "lucide-file-text",
               "title": "phase2_test_001_output"
             }
+          },
+          {
+            "id": "101fec9d5fd6173c",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "WAFT-One-Pager-Feature-Research/WAFT Purpose.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "WAFT Purpose"
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -181,22 +196,40 @@
       "bases:Create new base": false
     }
   },
-  "active": "45c5780f64f875ee",
+  "active": "101fec9d5fd6173c",
   "lastOpenFiles": [
-    "examples/evolve_constraint.py",
-    "src/waft/evolution/__pycache__/two_page_generator_legacy.cpython-310.pyc",
-    "src/waft/evolution/two_page_generator_legacy.py",
+    "_genetics/document_evolution/documentation/evolution_report_20260111_151539.md",
+    "_genetics/document_evolution/feedback/feedback.json",
+    "_work_efforts/one_pagers/EvolvedPDF_20260111_151536.pdf",
+    "_work_efforts/one_pagers/EvolvedPDF_20260111_151536.html",
+    "_genetics/document_evolution/feedback",
+    "_genetics/document_evolution/documentation",
+    "_genetics/document_evolution",
+    "examples/test_evolution_engine.py",
+    "src/waft/evolution/__pycache__/user_feedback.cpython-310.pyc",
+    "src/waft/evolution/__pycache__/component_evolution.cpython-310.pyc",
+    "src/waft/evolution/__pycache__/document_evolution_engine.cpython-310.pyc",
+    "Untitled.md",
+    "WAFT-One-Pager-Feature-Research/WAFT Purpose.md",
+    "_work_efforts/one_pagers/images/code_dna.png",
+    "_work_efforts/one_pagers/images/evolution_tree.png",
+    "_work_efforts/one_pagers/images/three_pillars.png",
+    "_work_efforts/CRITIQUE_2026-01-11_145503.md",
+    "_work_efforts/CONTINUATION_PROMPT_2026-01-11.md",
+    "_work_efforts/SESSION_RECAP_2026-01-11_COMPREHENSIVE_FEATURE_SHOWCASE.md",
+    "_work_efforts/showcase_temp/evolution_system_showcase_pages/page_002.png",
+    "_work_efforts/showcase_temp/evolution_system_showcase_pages/page_001.png",
+    "_work_efforts/one_pagers/WAFT_Intro_Handout_Enhanced_20260111_145033_pages/page_002.png",
+    "_work_efforts/one_pagers/WAFT_Intro_Handout_Enhanced_20260111_145033_pages/page_001.png",
+    "_work_efforts/one_pagers/WAFT_Intro_Handout_Enhanced_20260111_145007_pages/page_003.png",
+    "_work_efforts/one_pagers/WAFT_Intro_Handout_Enhanced_20260111_145007_pages/page_002.png",
+    "_work_efforts/one_pagers/WAFT_Intro_Handout_Enhanced_20260111_145007_pages/page_001.png",
+    "_work_efforts/CRITIQUE_2026-01-11_144725.md",
     "_work_efforts/THE_FLIGHT_MOMENT_RECAP.md",
     "_work_efforts/CHECKPOINT_2026-01-11_THE_FLIGHT_MOMENT.md",
     "_work_efforts/METRICS_COLLECTION_IMPLEMENTATION.md",
-    "src/waft/evolution/__pycache__/pdf_metrics.cpython-310.pyc",
-    "examples/enable_pdf_metrics.py",
     "docs/PDF_METRICS_COLLECTION.md",
-    "src/waft/evolution/pdf_metrics.py",
     "WAFT-PDF-PNG-Conversion-Research/FEATURE_EVOLUTION_TRACKING.md",
-    "WAFT-PDF-PNG-Conversion-Research/traced_ideas/feature_evolution_events.jsonl",
-    "WAFT-PDF-PNG-Conversion-Research/traced_ideas/feature_evolution_ideas.jsonl",
-    "WAFT-PDF-PNG-Conversion-Research/trace_feature_evolution.py",
     "_work_efforts/SESSION_SUMMARY_2026-01-11_COMPLETE.md",
     "_work_efforts/DECISION_2026-01-11_NEXT_STEPS.md",
     "_work_efforts/CONSIDER_2026-01-11_NEXT_STEPS.md",
@@ -204,26 +237,12 @@
     "_work_efforts/CHECKPOINT_2026-01-11_PDF_PNG_TESTING_RESEARCH.md",
     "_work_efforts/SESSION_RECAP_2026-01-11_PDF_PNG_TESTING_RESEARCH.md",
     "WAFT-PDF-PNG-Conversion-Research/UNDERUTILIZED_DEPS_TOOLING.md",
-    "WAFT-PDF-PNG-Conversion-Research/__pycache__/test_utilities.cpython-310.pyc",
-    "WAFT-PDF-PNG-Conversion-Research/test_utilities.py",
-    "WAFT-PDF-PNG-Conversion-Research/test_results/pdf_to_png/phase1_test_001/page_001.png",
     "WAFT-PDF-PNG-Conversion-Research/IMAGE_FETCHER_README.md",
     "WAFT-One-Pager-Feature-Research/Underutilized Dependencies.md",
-    "WAFT-PDF-PNG-Conversion-Research/images_cache/4d6f840a95b70a60fc0c513727a64e54.jpg",
-    "WAFT-PDF-PNG-Conversion-Research/documents/temp_test_image.png",
     "WAFT-PDF-PNG-Conversion-Research/RESEARCH_REPORT.md",
-    "WAFT-PDF-PNG-Conversion-Research/test_results/png_to_pdf/test_image.png",
     "WAFT-PDF-PNG-Conversion-Research/hypothesis.md",
     "WAFT-PDF-PNG-Conversion-Research/README.md",
     "WAFT-One-Pager-Feature-Research/CROSS-CHAT Planning.md",
-    "WAFT-One-Pager-Feature-Research/README.md",
-    "docs/PDF_PNG_CONVERSION.md",
-    "WAFT-One-Pager-Feature-Research/Synced and Ready.md",
-    "_pyrite/checkout/session-2026-01-11-141000.md",
-    "_work_efforts/one_pagers/chat_session_20260111_140948_pages/page_002.png",
-    "_work_efforts/one_pagers/chat_session_20260111_140948_pages/page_001.png",
-    "_work_efforts/CHECKPOINT_2026-01-11_one_pager_v2_evolution.md",
-    "V2_INTEGRATION_COMPLETE.md",
-    "_work_efforts/waft_first_time_intro_structured.md"
+    "WAFT-One-Pager-Feature-Research/README.md"
   ]
 }

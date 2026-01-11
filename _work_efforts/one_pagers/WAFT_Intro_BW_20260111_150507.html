@@ -1,0 +1,311 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WAFT: The Evolutionary Code Laboratory</title>
+    <style>
+        @page {
+            size: letter;
+            margin: 16mm 20mm 16mm 20mm;
+        }
+        body {
+            font-family: Georgia, serif;
+            font-size: 10pt;
+            line-height: 1.5;
+            color: #1a1a1a;
+            background: #FFFFFF;
+            margin: 0;
+            padding: 0;
+        }
+        p, li { orphans: 2; widows: 2; }
+        .page-break { page-break-after: always; break-after: page; }
+        .no-break { page-break-inside: avoid; break-inside: avoid; }
+        h1 {
+            font-family: "Helvetica Neue", "Arial", sans-serif;
+            font-size: 24pt;
+            font-weight: 700;
+            color: #000000;
+            margin-top: 0;
+            margin-bottom: 12pt;
+            page-break-after: avoid;
+            border-bottom: 2.5pt solid #2a2a2a;
+            padding-bottom: 8pt;
+            letter-spacing: -0.3pt;
+            line-height: 1.2;
+        }
+        h2 {
+            font-family: "Helvetica Neue", "Arial", sans-serif;
+            font-size: 15pt;
+            font-weight: 600;
+            color: #000000;
+            margin-top: 12pt;
+            margin-bottom: 8pt;
+            page-break-after: avoid;
+            border-bottom: 1.5pt solid #2a2a2a;
+            padding-bottom: 4pt;
+            letter-spacing: -0.2pt;
+        }
+        h3 {
+            font-family: "Helvetica Neue", "Arial", sans-serif;
+            font-size: 12pt;
+            font-weight: 600;
+            color: #000000;
+            margin-top: 10pt;
+            margin-bottom: 4.0pt;
+            page-break-after: avoid;
+            letter-spacing: 0;
+        }
+        p { 
+            margin: 0 0 8pt 0; 
+            text-align: justify;
+            hyphens: auto;
+        }
+        ul, ol { 
+            margin: 0 0 8pt 0; 
+            padding-left: 18pt; 
+        }
+        li { 
+            margin-bottom: 2.6666666666666665pt; 
+        }
+        .summary-box {
+            background: #f8f8f8;
+            padding: 10pt;
+            margin-bottom: 12pt;
+            border-left: 4pt solid #2a2a2a;
+            border-top: 1pt solid #2a2a2a;
+            border-right: 1pt solid #2a2a2a;
+            border-bottom: 1pt solid #2a2a2a;
+            page-break-inside: avoid;
+            border-radius: 0;
+        }
+        .pillar {
+            border-left: 4pt solid #2a2a2a;
+            border-top: 1pt solid #2a2a2a;
+            border-right: 1pt solid #2a2a2a;
+            border-bottom: 1pt solid #2a2a2a;
+            background: #FFFFFF;
+            padding: 8pt;
+            margin: 8pt 0;
+            page-break-inside: avoid;
+            border-radius: 0;
+        }
+        .pillar-title {
+            font-family: "Helvetica Neue", "Arial", sans-serif;
+            font-weight: 700;
+            color: #000000;
+            font-size: 12pt;
+            margin-bottom: 4.0pt;
+            text-transform: uppercase;
+            letter-spacing: 1pt;
+        }
+        .pillar p {
+            margin: 0;
+            font-size: 10pt;
+            line-height: 1.6;
+        }
+        .highlight-box {
+            border-left: 4pt solid #2a2a2a;
+            border-top: 1pt solid #2a2a2a;
+            border-right: 1pt solid #2a2a2a;
+            border-bottom: 1pt solid #2a2a2a;
+            background: #f8f8f8;
+            padding: 10pt;
+            margin: 8pt 0;
+            page-break-inside: avoid;
+            border-radius: 0;
+        }
+        .note-box {
+            border-left: 5pt solid #2a2a2a;
+            background: #f8f8f8;
+            padding: 10pt;
+            margin: 8pt 0;
+            page-break-inside: avoid;
+            border-radius: 0;
+        }
+        .note-title {
+            font-family: "Helvetica Neue", "Arial", sans-serif;
+            font-weight: 700;
+            color: #000000;
+            font-size: 12pt;
+            margin-bottom: 4.0pt;
+            text-transform: uppercase;
+            letter-spacing: 0.5pt;
+        }
+        .idea {
+            margin-bottom: 10pt;
+            padding: 10pt;
+            border-left: 4pt solid #2a2a2a;
+            background: #f8f8f8;
+            page-break-inside: avoid;
+            border-radius: 0;
+        }
+        .idea-content {
+            font-size: 10pt;
+            line-height: 1.65;
+            text-align: justify;
+            margin: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10pt 0;
+            font-size: 9.5pt;
+            page-break-inside: avoid;
+        }
+        th {
+            font-family: "Helvetica Neue", "Arial", sans-serif;
+            background: #000000;
+            color: #FFFFFF;
+            border: 1pt solid #2a2a2a;
+            padding: 7pt 8pt;
+            text-align: left;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3pt;
+            font-size: 8.5pt;
+        }
+        td {
+            border: 0.5pt solid #2a2a2a;
+            padding: 6pt 8pt;
+            background: #FFFFFF;
+        }
+        tr:nth-child(even) td {
+            background: #f8f8f8;
+        }
+        .metadata {
+            font-size: 7.5pt;
+            color: #1a1a1a;
+            opacity: 0.65;
+            line-height: 1.4;
+            border-top: 0.5pt solid #2a2a2a;
+            padding-top: 4.0pt;
+            margin-top: 10pt;
+            font-style: italic;
+        }
+        .divider {
+            border-top: 1pt solid #2a2a2a;
+            margin: 12pt 0;
+            width: 60%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        code {
+            font-family: 'Courier New', 'Monaco', monospace;
+            font-size: 9pt;
+            background: #f8f8f8;
+            color: #1a1a1a;
+            padding: 3pt 5pt;
+            border-radius: 0;
+            border: 0.5pt solid #2a2a2a;
+            font-weight: normal;
+        }
+        .key-features {
+            margin: 10pt 0;
+            page-break-inside: avoid;
+        }
+        .feature-list {
+            margin-top: 4.0pt;
+        }
+        .feature-item {
+            margin-bottom: 4.0pt;
+            padding-left: 8pt;
+            border-left: 2pt solid #2a2a2a;
+            padding-left: 10pt;
+            font-size: 9.5pt;
+            line-height: 1.5;
+        }
+        .feature-item strong {
+            color: #000000;
+            font-weight: 600;
+        }
+        .footer {
+            font-size: 6.5pt;
+            color: #1a1a1a;
+            opacity: 0.55;
+            text-align: center;
+            border-top: 0.5pt solid #2a2a2a;
+            padding-top: 4pt;
+            margin-top: 12pt;
+            page-break-inside: avoid;
+            font-style: italic;
+            letter-spacing: 0.2pt;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-1">
+        <h1>WAFT: The Evolutionary Code Laboratory</h1>
+        <div class="summary-box">
+            <p style="margin: 0; font-weight: 600; font-size: 9.5pt; margin-bottom: 4pt;">SUMMARY</p>
+            <p style="margin: 0; font-size: 10pt; line-height: 1.5;">The Physics is the Scint System, which acts as a fitness function through Reality Fracture Detection.</p>
+        </div>
+        <div class="metadata">
+            <p><strong>Generated:</strong> 2026-01-11 23:05 UTC | <strong>Edition:</strong> Black & White | <strong>Ideas:</strong> 13</p>
+        </div>
+        <h2>What is WAFT?</h2>
+        <p>WAFT is a Python framework for directed evolution of self-modifying AI agents. Think of it as an operating system for AI agent research. Instead of building agents that just execute code, WAFT enables you to breed agents that modify their own code, evolve through mutations, and be tested in fitness systems with complete lineage tracking.</p>
+        
+        <h2>The Three Pillars</h2>
+        
+        <div class="pillar no-break">
+            <div class="pillar-title">The Substrate</div>
+            <p>Agents write their own Python code. In WAFT, code is DNA. Each agent has a unique genome ID (SHA-256 hash). Agents spawn variants with mutations, evolve by hot-swapping code, and reproduce by creating children with genetic modifications.</p>
+        </div>
+        
+        <div class="pillar no-break">
+            <div class="pillar-title">The Physics</div>
+            <p>The Scint System acts as a fitness function through Reality Fracture Detection, serving as natural selection that eliminates weak mutations. Agents face quests testing error handling: SYNTAX_TEAR (formatting), LOGIC_FRACTURE (math errors), SAFETY_VOID (harmful content), and HALLUCINATION (fabricated facts).</p>
+        </div>
+        
+        <div class="pillar no-break">
+            <div class="pillar-title">The Flight Recorder</div>
+            <p>A telemetry system generating phylogenetic trees of agent lineage. Every evolutionary action is recorded with complete context: genome ID, parent ID, generation number, event type, payload, and fitness metrics. This enables reconstruction of family trees for scientific publication.</p>
+        </div>
+    </div>
+    <div class="page-break"></div>
+    <div class="page-2">
+        <h2>How It Works</h2>
+        <p>WAFT provides project scaffolding through a unified CLI. Run one command to create a fully configured project. Uses uv for package management, creates a _pyrite memory structure, includes CI/CD pipelines, and provides AI agent templates. Everything is file-based with no database, just plain text files that work with git.</p>
+        
+        <div class="note-box no-break">
+            <div class="note-title">Quick Start</div>
+            <p style="margin: 0; font-size: 10pt; line-height: 1.5;">
+                <strong>Install:</strong> <code>uv tool install waft</code><br>
+                <strong>Create:</strong> <code>waft new my_lab</code><br>
+                <strong>Verify:</strong> <code>waft verify</code>
+            </p>
+        </div>
+        
+        <div class="highlight-box no-break">
+            <p style="margin: 0; font-size: 10pt; line-height: 1.5;">
+                <strong>What Makes WAFT Unique:</strong> Ambient operation. Self-modifying projects. Meta-framework that orchestrates tools. File-based and git-friendly. Includes gamification, epistemic tracking, and scientific observation with complete lineage tracking.
+            </p>
+        </div>
+        <div class="divider"></div>
+        <div class="key-features">
+            <h3>Key Features</h3>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <strong>Self-Modification:</strong> Agents can modify their own code and evolve
+                </div>
+                <div class="feature-item">
+                    <strong>Fitness Testing:</strong> Scint Gym evaluates agents through error handling
+                </div>
+                <div class="feature-item">
+                    <strong>Lineage Tracking:</strong> Complete phylogenetic trees for scientific analysis
+                </div>
+                <div class="feature-item">
+                    <strong>File-Based:</strong> Everything is plain text, git-friendly, no database
+                </div>
+                <div class="feature-item">
+                    <strong>Scientific Instrument:</strong> Produces data for research on AI cognition
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <p>WAFT Intro One-Pager (Black & White) v1.0.0 | Genome: a4121d9f... | Generated: 2026-01-11 15:05</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -19,6 +19,10 @@ from .scint_detector import ScintDetector, Scint, ScintType
 from .chat_distiller import ChatDistiller, DistilledChat, IdeaGene
 from .two_page_generator import TwoPageGenerator
 from .two_page_generator_legacy import TwoPageGeneratorLegacy
+from .component_generator import ComponentPDFGenerator, FoundationComponentGenerator
+from .document_evolution_engine import DocumentEvolutionEngine
+from .component_evolution import ComponentEvolutionEngine, EvolvedComponent, ComponentTrait
+from .user_feedback import UserFeedbackCollector, FeedbackEntry
 from .pdf_image_converter import (
     pdf_to_pngs,
     pngs_to_pdf,
@@ -44,6 +48,14 @@ __all__ = [
     "IdeaGene",
     "TwoPageGenerator",  # Main implementation (adaptive constraint enforcement)
     "TwoPageGeneratorLegacy",  # Legacy version (kept for backward compatibility)
+    "ComponentPDFGenerator",  # High-level component-based generator
+    "FoundationComponentGenerator",  # WAFT-integrated component generator
+    "DocumentEvolutionEngine",  # Evolutionary document creator with learning
+    "ComponentEvolutionEngine",  # Component trait evolution system
+    "EvolvedComponent",  # Component with evolving traits
+    "ComponentTrait",  # Evolving component traits
+    "UserFeedbackCollector",  # User feedback collection and learning
+    "FeedbackEntry",  # Individual feedback entry
     "pdf_to_pngs",
     "pngs_to_pdf",
     "convert_pdf_to_images",

@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WAFT: The Evolutionary Code Laboratory</title>
+    <style>
+        @page {
+            size: letter;
+            margin: 20mm 20mm 20mm 20mm;
+            @top-right {
+                content: "Page " counter(page);
+                font-family: "Helvetica Neue", "Arial", sans-serif;
+                font-size: 9pt;
+                color: #000000;
+                opacity: 0.6;
+            }
+        }
+        @page :first {
+            @top-right { content: none; }
+        }
+        body {
+            font-family: sans-serif;
+            font-size: 11pt;
+            line-height: 1.5;
+            color: #000000;
+            background: #FFFFFF;
+        }
+        h1 {
+            font-family: "Helvetica Neue", "Arial", sans-serif;
+            font-size: 24pt;
+            text-align: center;
+            margin-bottom: 10pt;
+        }
+        .abstract {
+            background: #f5f5f5;
+            border-left: 3pt solid #cccccc;
+            padding: 10pt;
+            margin: 10pt 0;
+        }
+        .abstract-title {
+            font-family: "Helvetica Neue", "Arial", sans-serif;
+            font-weight: 700;
+            font-size: 14pt;
+            margin-bottom: 5.0pt;
+            text-transform: uppercase;
+        }
+        .author-info {
+            font-size: 10pt;
+            text-align: center;
+            margin: 10pt 0;
+            opacity: 0.7;
+        }
+        .diagram {
+            text-align: center;
+            margin: 10pt 0;
+        }
+        .diagram img {
+            max-width: 60%;
+            max-height: 80pt;
+            height: auto;
+            border: 0.5pt solid #cccccc;
+        }
+        .figure-caption {
+            font-size: 9.5pt;
+            font-style: italic;
+            text-align: center;
+            margin-top: 3pt;
+        }
+        h2 {
+            font-family: "Helvetica Neue", "Arial", sans-serif;
+            font-size: 18pt;
+            font-weight: 600;
+            margin-top: 15pt;
+            margin-bottom: 10pt;
+        }
+        h2::before {
+            counter-increment: section;
+            content: counter(section) ". ";
+        }
+        body {
+            counter-reset: section;
+        }
+        p {
+            margin: 0 0 10pt 0;
+            text-align: justify;
+        }
+        .pillar {
+            border-left: 4pt solid #cccccc;
+            padding: 10pt;
+            margin: 10pt 0;
+        }
+        .pillar-title {
+            font-family: "Helvetica Neue", "Arial", sans-serif;
+            font-weight: 700;
+            font-size: 14pt;
+            margin-bottom: 5.0pt;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    
+    <h1>WAFT: The Evolutionary Code Laboratory</h1>
+    
+    <div class="abstract"><div class="abstract-title">Abstract</div><p>WAFT (Wide-Area Functional Taxonomy) is an evolutionary code laboratory.</p></div>
+    
+    <h2>Introduction</h2><p>WAFT (Wide-Area Functional Taxonomy) is an evolutionary code laboratory. It allows AI agents to modify their own code and evolve through generations.</p>
+    
+    <h2>Architecture</h2><p></p>
+    
+    <div class="pillar"><div class="pillar-title">The Substrate</div><p>The system has three pillars: The Substrate: Code is DNA - agents can mutate their own source code The Physics: Scint Gym evaluates agents through error handling tests The Flight Recorder: Complete lineage tracking for scientific analysis.</p></div>
+    
+    <div class="pillar"><div class="pillar-title">The Physics</div><p>The system has three pillars: The Substrate: Code is DNA - agents can mutate their own source code The Physics: Scint Gym evaluates agents through error handling tests The Flight Recorder: Complete lineage tracking for scientific analysis.</p></div>
+    
+    <div class="pillar"><div class="pillar-title">The Flight Recorder</div><p>The system has three pillars: The Substrate: Code is DNA - agents can mutate their own source code The Physics: Scint Gym evaluates agents through error handling tests The Flight Recorder: Complete lineage tracking for scientific analysis.</p></div>
+    
+    <h2>Conclusion</h2><p>Agents evolve through generations, with successful mutations surviving and unsuccessful ones being discarded. The system produces phylogenetic trees showing the evolution of code over time.</p>
+    
+</body>
+</html>

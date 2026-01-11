@@ -23,6 +23,10 @@ import time
 from .chat_distiller import DistilledChat, IdeaGene
 from .styling_genome import StylingGenome
 from .pdf_metrics import PDFMetricsCollector, PDFMetrics
+from .document_components import (
+    DocumentComponent, DocumentLayout, ComponentType,
+    ComponentBuilder, LayoutAlgorithm
+)
 from ..core.agent.state import EvolutionaryEvent, EvolutionaryEventType
 
 
@@ -341,16 +345,18 @@ class TwoPageGenerator:
     # Genome ID for this generator
     GENERATOR_GENOME_ID = hashlib.sha256(b"TwoPageGenerator_adaptive_constraint").hexdigest()
 
-    def __init__(self, weasyprint_available: bool = False, max_iterations: int = 5):
+    def __init__(self, weasyprint_available: bool = False, max_iterations: int = 5, allowed_pages: int = 2):
         """
         Initialize generator.
 
         Args:
             weasyprint_available: Whether WeasyPrint is available
-            max_iterations: Max attempts to achieve 2 pages
+            max_iterations: Max attempts to achieve target pages
+            allowed_pages: Target page count (default: 2, can be any number)
         """
         self.weasyprint_available = weasyprint_available
         self.max_iterations = max_iterations
+        self.allowed_pages = allowed_pages  # Configurable page count
 
         if weasyprint_available:
             try:
@@ -366,35 +372,240 @@ class TwoPageGenerator:
         distilled_chat: DistilledChat,
         styling_genome: StylingGenome,
         output_path: Optional[Path] = None,
-        target_pages: int = 2,
+        target_pages: Optional[int] = None,
         convert_to_png: bool = False,
         png_dpi: int = 300,
         collect_metrics: bool = False,
         metrics_dir: Optional[Path] = None,
+        use_component_system: bool = True,
     ) -> Dict[str, Any]:
         """
-        Generate PDF with TRUE 2-page constraint enforcement.
+        Generate PDF with configurable page constraint and component-based layout.
 
-        Uses adaptive algorithm:
-        1. Start with estimate of ideas per page
-        2. Generate PDF
-        3. Count actual pages
-        4. Adjust idea count
-        5. Repeat until exactly 2 pages
+        Uses adaptive algorithm with component system:
+        1. Build components from distilled content
+        2. Generate multiple layout configurations
+        3. Test each layout
+        4. Learn what works
+        5. Select best layout
 
         Args:
             distilled_chat: Distilled conversation
             styling_genome: Styling configuration
             output_path: Optional output path
-            target_pages: Target page count (default: 2)
+            target_pages: Target page count (default: uses self.allowed_pages)
             convert_to_png: If True, automatically convert PDF to PNG images after generation (default: False)
             png_dpi: DPI for PNG conversion if convert_to_png is True (default: 300)
+            use_component_system: Use new component-based system (default: True)
 
         Returns:
             Dictionary with results and accurate fitness metrics
         """
+        # Use instance allowed_pages if target_pages not specified
+        if target_pages is None:
+            target_pages = self.allowed_pages
+        
         print(f"\n🔬 TwoPageGenerator: Adaptive generation for {target_pages} pages")
         
+        # Use component system if enabled
+        if use_component_system:
+            return self._generate_with_components(
+                distilled_chat=distilled_chat,
+                styling_genome=styling_genome,
+                output_path=output_path,
+                target_pages=target_pages,
+                convert_to_png=convert_to_png,
+                png_dpi=png_dpi,
+                collect_metrics=collect_metrics,
+                metrics_dir=metrics_dir,
+            )
+        
+        # Fall back to original algorithm
+        return self._generate_legacy(
+            distilled_chat=distilled_chat,
+            styling_genome=styling_genome,
+            output_path=output_path,
+            target_pages=target_pages,
+            convert_to_png=convert_to_png,
+            png_dpi=png_dpi,
+            collect_metrics=collect_metrics,
+            metrics_dir=metrics_dir,
+        )
+    
+    def _generate_with_components(
+        self,
+        distilled_chat: DistilledChat,
+        styling_genome: StylingGenome,
+        output_path: Optional[Path],
+        target_pages: int,
+        convert_to_png: bool,
+        png_dpi: int,
+        collect_metrics: bool,
+        metrics_dir: Optional[Path],
+    ) -> Dict[str, Any]:
+        """Generate using component-based system."""
+        from datetime import datetime
+        
+        builder = ComponentBuilder()
+        algorithm = LayoutAlgorithm(allowed_pages=target_pages)
+        
+        # Build components from content
+        components = []
+        
+        # 1. Title component
+        components.append(builder.build_title_component(distilled_chat.title))
+        
+        # 2. Image component (if available)
+        images_dir = Path(__file__).parent.parent.parent / "_work_efforts" / "one_pagers" / "images"
+        three_pillars_path = images_dir / "three_pillars.png"
+        if three_pillars_path.exists():
+            def to_file_url(path: Path) -> str:
+                return path.absolute().as_uri()
+            components.append(builder.build_image_component(
+                to_file_url(three_pillars_path),
+                "Figure 1: The Three Pillars of WAFT Architecture"
+            ))
+        
+        # 3. Abstract component
+        components.append(builder.build_abstract_component(distilled_chat.summary))
+        
+        # 4. Attribution component
+        components.append(builder.build_attribution_component(
+            "WAFT Research Team",
+            datetime.utcnow().strftime("%Y-%m-%d")
+        ))
+        
+        # 5. Section components from ideas
+        all_ideas = distilled_chat.get_top_ideas(n=50, min_importance=0.1)
+        
+        # Group ideas into sections intelligently
+        # Try to find pillar-related ideas
+        substrate_ideas = [idea for idea in all_ideas if 'substrate' in idea.content.lower() or 'code is dna' in idea.content.lower()][:1]
+        physics_ideas = [idea for idea in all_ideas if 'scint' in idea.content.lower() or 'physics' in idea.content.lower() or 'fitness' in idea.content.lower()][:1]
+        flight_recorder_ideas = [idea for idea in all_ideas if 'flight recorder' in idea.content.lower() or 'lineage' in idea.content.lower() or 'phylogenetic' in idea.content.lower()][:1]
+        
+        # Build sections
+        if all_ideas:
+            components.append(builder.build_section_component("Introduction", all_ideas[:1], level=2))
+        
+        if substrate_ideas or physics_ideas or flight_recorder_ideas:
+            # Architecture section with pillars
+            components.append(builder.build_section_component("Architecture", [], level=2))
+            
+            if substrate_ideas:
+                components.append(builder.build_section_component("The Substrate", substrate_ideas, level=3))
+            if physics_ideas:
+                components.append(builder.build_section_component("The Physics", physics_ideas, level=3))
+            if flight_recorder_ideas:
+                components.append(builder.build_section_component("The Flight Recorder", flight_recorder_ideas, level=3))
+        
+        # Methodology and conclusion from remaining ideas
+        remaining_ideas = [idea for idea in all_ideas[1:] if idea not in substrate_ideas + physics_ideas + flight_recorder_ideas]
+        if remaining_ideas:
+            split = len(remaining_ideas) // 2
+            if split > 0:
+                components.append(builder.build_section_component("Methodology", remaining_ideas[:split], level=2))
+            if len(remaining_ideas) > split:
+                components.append(builder.build_section_component("Conclusion", remaining_ideas[split:], level=2))
+        
+        # Generate layout configurations
+        print(f"  Building {len(components)} components...")
+        layouts = algorithm.generate_layouts(components, max_attempts=self.max_iterations)
+        print(f"  Generated {len(layouts)} layout configurations to test")
+        
+        # Test each layout
+        best_layout = None
+        best_fitness = 0.0
+        
+        for i, layout in enumerate(layouts):
+            print(f"  Testing layout {i+1}/{len(layouts)} ({layout.metadata.get('strategy', 'unknown')})...")
+            
+            # Render HTML from layout
+            html_content = self._render_html_from_layout(
+                layout=layout,
+                distilled_chat=distilled_chat,
+                styling_genome=styling_genome,
+            )
+            
+            # Count pages
+            page_count = self._count_pages(html_content, output_path)
+            
+            # Test and learn
+            learning_data = algorithm.test_layout(layout, page_count)
+            print(f"    → {page_count} pages, fitness: {learning_data['fitness']:.3f}")
+            
+            if learning_data['fitness'] > best_fitness:
+                best_fitness = learning_data['fitness']
+                best_layout = layout
+                best_layout.metadata['html_content'] = html_content
+        
+        if best_layout is None:
+            raise RuntimeError("Failed to generate any valid layout")
+        
+        print(f"  ✓ Best layout: {best_layout.metadata.get('strategy')}, fitness: {best_fitness:.3f}")
+        
+        # Get learning summary
+        learning_summary = algorithm.get_learning_summary()
+        print(f"  Learning: {learning_summary['successful']}/{learning_summary['total_tests']} successful")
+        
+        # Save output
+        pdf_path = None
+        if output_path and best_layout.metadata.get('html_content'):
+            output_path = Path(output_path)
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            
+            # Save HTML
+            html_path = Path(str(output_path).replace('.pdf', '.html'))
+            html_path.write_text(best_layout.metadata['html_content'])
+            print(f"  ✓ HTML saved: {html_path}")
+            
+            # Generate PDF
+            if self.weasyprint_available:
+                self.HTML(string=best_layout.metadata['html_content']).write_pdf(output_path)
+                pdf_path = str(output_path)
+                print(f"  ✓ PDF saved: {output_path}")
+        
+        # Count ideas shown
+        ideas_shown = 0
+        for comp in best_layout.components:
+            if comp.component_type == ComponentType.SECTION:
+                ideas_shown += comp.metadata.get('idea_count', 0)
+        
+        # Evaluate fitness
+        fitness_metrics = self._evaluate_fitness(
+            distilled_chat=distilled_chat,
+            ideas_shown=ideas_shown,
+            styling_genome=styling_genome,
+            page_count=best_layout.page_count or target_pages,
+            target_pages=target_pages,
+        )
+        
+        return {
+            'success': True,
+            'pdf_path': pdf_path,
+            'html_path': str(html_path) if output_path else None,
+            'page_count': best_layout.page_count,
+            'target_pages': target_pages,
+            'fitness': fitness_metrics,
+            'layout': best_layout,
+            'learning_summary': learning_summary,
+        }
+    
+    def _generate_legacy(
+        self,
+        distilled_chat: DistilledChat,
+        styling_genome: StylingGenome,
+        output_path: Optional[Path],
+        target_pages: int,
+        convert_to_png: bool,
+        png_dpi: int,
+        collect_metrics: bool,
+        metrics_dir: Optional[Path],
+    ) -> Dict[str, Any]:
+        """Original generation algorithm (fallback)."""
+        # Original implementation continues here...
+        print(f"  Using legacy algorithm...")
+
         # Initialize metrics collector if requested
         metrics_collector = None
         generation_start_time = datetime.utcnow()
@@ -672,6 +883,153 @@ class TwoPageGenerator:
         }
 
         template = Template(TWO_PAGE_TEMPLATE)
+        return template.render(**context)
+    
+    def _render_html_from_layout(
+        self,
+        layout: DocumentLayout,
+        distilled_chat: DistilledChat,
+        styling_genome: StylingGenome,
+        custom_template: Optional[str] = None,
+    ) -> str:
+        """Render HTML from a component-based layout."""
+        from jinja2 import Template
+        
+        # Build science paper template structure
+        styling_dict = {
+            'font': styling_genome.genes.font.to_dict(),
+            'margin': styling_genome.genes.margin.to_dict(),
+            'color': styling_genome.genes.color.to_dict(),
+        }
+        
+        # Render components in order
+        component_htmls = []
+        for comp in layout.components:
+            html = comp.to_html(styling_dict)
+            if html:  # Only add non-empty components
+                component_htmls.append(html)
+        
+        # Use custom template if provided, otherwise use default science paper template
+        if custom_template:
+            template_str = custom_template
+        else:
+            # Default science paper template
+            template_str = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <style>
+        @page {
+            size: letter;
+            margin: {{ margin.top }}mm {{ margin.right }}mm {{ margin.bottom }}mm {{ margin.left }}mm;
+            @top-right {
+                content: "Page " counter(page);
+                font-family: "Helvetica Neue", "Arial", sans-serif;
+                font-size: {{ font.size_body - 2 }}pt;
+                color: {{ color.text }};
+                opacity: 0.6;
+            }
+        }
+        @page :first {
+            @top-right { content: none; }
+        }
+        body {
+            font-family: {{ font.family }};
+            font-size: {{ font.size_body }}pt;
+            line-height: {{ font.line_height }};
+            color: {{ color.text }};
+            background: {{ color.background }};
+        }
+        h1 {
+            font-family: "Helvetica Neue", "Arial", sans-serif;
+            font-size: {{ font.size_h1 }}pt;
+            text-align: center;
+            margin-bottom: {{ margin.paragraph_spacing }}pt;
+        }
+        .abstract {
+            background: {{ color.code_bg }};
+            border-left: 3pt solid {{ color.border }};
+            padding: {{ margin.paragraph_spacing }}pt;
+            margin: {{ margin.paragraph_spacing }}pt 0;
+        }
+        .abstract-title {
+            font-family: "Helvetica Neue", "Arial", sans-serif;
+            font-weight: 700;
+            font-size: {{ font.size_h3 }}pt;
+            margin-bottom: {{ margin.paragraph_spacing / 2 }}pt;
+            text-transform: uppercase;
+        }
+        .author-info {
+            font-size: {{ font.size_body - 1 }}pt;
+            text-align: center;
+            margin: {{ margin.paragraph_spacing }}pt 0;
+            opacity: 0.7;
+        }
+        .diagram {
+            text-align: center;
+            margin: {{ margin.paragraph_spacing }}pt 0;
+        }
+        .diagram img {
+            max-width: 60%;
+            max-height: 80pt;
+            height: auto;
+            border: 0.5pt solid {{ color.border }};
+        }
+        .figure-caption {
+            font-size: {{ font.size_body - 1.5 }}pt;
+            font-style: italic;
+            text-align: center;
+            margin-top: 3pt;
+        }
+        h2 {
+            font-family: "Helvetica Neue", "Arial", sans-serif;
+            font-size: {{ font.size_h2 }}pt;
+            font-weight: 600;
+            margin-top: {{ margin.section_spacing }}pt;
+            margin-bottom: {{ margin.paragraph_spacing }}pt;
+        }
+        h2::before {
+            counter-increment: section;
+            content: counter(section) ". ";
+        }
+        body {
+            counter-reset: section;
+        }
+        p {
+            margin: 0 0 {{ margin.paragraph_spacing }}pt 0;
+            text-align: justify;
+        }
+        .pillar {
+            border-left: 4pt solid {{ color.border }};
+            padding: {{ margin.paragraph_spacing }}pt;
+            margin: {{ margin.paragraph_spacing }}pt 0;
+        }
+        .pillar-title {
+            font-family: "Helvetica Neue", "Arial", sans-serif;
+            font-weight: 700;
+            font-size: {{ font.size_h3 }}pt;
+            margin-bottom: {{ margin.paragraph_spacing / 2 }}pt;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    {% for component_html in components %}
+    {{ component_html }}
+    {% endfor %}
+</body>
+</html>
+"""
+        
+        context = {
+            'title': distilled_chat.title,
+            'components': component_htmls,
+            **styling_dict,
+        }
+        
+        template = Template(template_str)
         return template.render(**context)
 
     def _count_pages(self, html_content: str, output_path: Optional[Path]) -> int:

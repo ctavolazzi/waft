@@ -234,7 +234,7 @@ class PDFMetricsCollector:
             font_family=styling_genes.font.family if styling_genes and hasattr(styling_genes, 'font') else "",
             font_size_body=styling_genes.font.size_body if styling_genes and hasattr(styling_genes, 'font') else 0.0,
             font_size_h1=styling_genes.font.size_h1 if styling_genes and hasattr(styling_genes, 'font') else 0.0,
-            color_scheme=styling_genes.color.scheme if styling_genes and hasattr(styling_genes, 'color') else "",
+            color_scheme="custom" if styling_genes and hasattr(styling_genes, 'color') else "",
             layout_density=styling_genes.layout.density if styling_genes and hasattr(styling_genes, 'layout') else "",
             margin_top=styling_genes.margin.top if styling_genes and hasattr(styling_genes, 'margin') else 0.0,
             margin_bottom=styling_genes.margin.bottom if styling_genes and hasattr(styling_genes, 'margin') else 0.0,

@@ -235,12 +235,14 @@ class ContentBlock(ABC):
         """Get font family and style based on FontFamily enum."""
         fc = config.font_config
 
+        # FIX: FPDF expects base font name with style "B", not bold font name with style "B"
+        # When bold=True, use base font family and set style to "B"
         if family == FontFamily.SERIF:
-            return (fc.serif_bold if bold else fc.serif_family, "B" if bold else "")
+            return (fc.serif_family, "B" if bold else "")
         elif family == FontFamily.SANS_SERIF:
-            return (fc.sans_bold if bold else fc.sans_family, "B" if bold else "")
+            return (fc.sans_family, "B" if bold else "")
         elif family == FontFamily.MONOSPACE:
-            return (fc.mono_bold if bold else fc.mono_family, "B" if bold else "")
+            return (fc.mono_family, "B" if bold else "")
         else:
             return (fc.serif_family, "")
 
