@@ -1,26 +1,23 @@
 # 🎬 WAFT Demo - Pre-Flight Checklist
 
-## ✅ System Status: READY
+## 🚦 Quick System Check
 
-### Dependencies Verified
-- ✅ weasyprint - Installed
-- ✅ jinja2 - Installed
-- ✅ pypdf - Installed
-- ✅ WAFT modules - Importable
-- ✅ Reflection system - Operational
+**Run the automated preflight check:**
 
-### Demo Files Ready
-- ✅ `examples/interactive_demo.py` - Main demo script (executable)
-- ✅ `examples/demonstrate_reflection.py` - Reflection demo
-- ✅ `WHAT_WE_HAVE_HERE.md` - Verification document
-- ✅ Output directory created: `_work_efforts/`
+```bash
+python3 scripts/preflight_check.py
+```
 
-### Existing Example PDFs
-Several example PDFs already exist in `_work_efforts/`:
-- WAFT_CALIBRATION_REPORT.pdf
-- WAFT_DOSSIER_014_v2.pdf
-- WAFT_SPECIMEN_D_AUDIT_v2.pdf
-- test_simple_scientific.pdf
+This comprehensive script verifies:
+- ✅ Python version (3.10+)
+- ✅ All dependencies installed
+- ✅ WAFT modules importable
+- ✅ Demo files present
+- ✅ All 12 templates available
+- ✅ Output directories exist
+- ✅ Smoke test of reflection system
+
+**If you see "ALL SYSTEMS GO"**, you're ready to run the demo!
 
 ---
 
