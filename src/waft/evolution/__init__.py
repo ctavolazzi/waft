@@ -17,18 +17,16 @@ from .styling_genome import (
 )
 from .scint_detector import ScintDetector, Scint, ScintType
 from .chat_distiller import ChatDistiller, DistilledChat, IdeaGene
-from .two_page_generator import TwoPageGenerator as TwoPageGeneratorV1
-from .two_page_generator_v2 import TwoPageGeneratorV2
+from .two_page_generator import TwoPageGenerator
+from .two_page_generator_legacy import TwoPageGeneratorLegacy
 from .pdf_image_converter import (
     pdf_to_pngs,
     pngs_to_pdf,
     convert_pdf_to_images,
     convert_images_to_pdf,
+    PageSize,
 )
-
-# V2 is the default (evolved with TRUE constraint enforcement)
-# V1 is kept for backward compatibility
-TwoPageGenerator = TwoPageGeneratorV2
+from .pdf_metrics import PDFMetrics, PDFMetricsCollector
 
 __all__ = [
     "StylingGenome",
@@ -44,11 +42,16 @@ __all__ = [
     "ChatDistiller",
     "DistilledChat",
     "IdeaGene",
-    "TwoPageGenerator",  # Default: V2 (evolved)
-    "TwoPageGeneratorV1",  # Legacy version
-    "TwoPageGeneratorV2",  # Explicit V2 access
+    "TwoPageGenerator",  # Main implementation (adaptive constraint enforcement)
+    "TwoPageGeneratorLegacy",  # Legacy version (kept for backward compatibility)
     "pdf_to_pngs",
     "pngs_to_pdf",
     "convert_pdf_to_images",
     "convert_images_to_pdf",
+    "PageSize",
+    "PDFMetrics",  # Metrics data class
+    "PDFMetricsCollector",  # Metrics collector
 ]
+
+# TwoPageGenerator is the main implementation (adaptive constraint enforcement)
+# TwoPageGeneratorLegacy is kept for backward compatibility

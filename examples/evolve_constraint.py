@@ -29,8 +29,8 @@ from src.waft.evolution.styling_genome import (
     LayoutGene,
     StylingGenomeRegistry,
 )
-from src.waft.evolution.two_page_generator import TwoPageGenerator as TwoPageGeneratorV1
-from src.waft.evolution.two_page_generator_v2 import TwoPageGeneratorV2
+from src.waft.evolution.two_page_generator_legacy import TwoPageGeneratorLegacy
+from src.waft.evolution.two_page_generator import TwoPageGenerator
 from src.waft.evolution.scint_detector import ScintDetector
 import json
 
@@ -246,7 +246,7 @@ def main():
     # ========================================================================
     print("\n📄 STEP 3: Generating with V1 (expected to fail constraint)...")
 
-    v1_generator = TwoPageGeneratorV1(weasyprint_available=False)
+    legacy_generator = TwoPageGeneratorLegacy(weasyprint_available=False)
 
     v1_result = v1_generator.generate(
         distilled_chat=distilled,
@@ -263,11 +263,11 @@ def main():
     # ========================================================================
     # STEP 4: GENERATE WITH V2 (ADAPTIVE CONSTRAINT)
     # ========================================================================
-    print("\n🔬 STEP 4: Generating with V2 (adaptive constraint enforcement)...")
+    print("\n🔬 STEP 4: Generating with Adaptive Constraint Enforcement...")
 
     try:
         # Try to use WeasyPrint if available
-        v2_generator = TwoPageGeneratorV2(weasyprint_available=True, max_iterations=5)
+        generator = TwoPageGenerator(weasyprint_available=True, max_iterations=5)
     except:
         v2_generator = TwoPageGeneratorV2(weasyprint_available=False, max_iterations=5)
 
@@ -343,7 +343,7 @@ def main():
 
     print("\n  Generator Evolution:")
     print(f"    V1 Genome ID: {TwoPageGenerator.__name__} (implicit)")
-    print(f"    V2 Genome ID: {v2_generator.GENERATOR_GENOME_ID[:16]}...")
+    print(f"    Generator Genome ID: {generator.GENERATOR_GENOME_ID[:16]}...")
     print(f"\n  Key Mutation:")
     print(f"    - V1: Fake constraint metric (HTML length)")
     print(f"    - V2: Real constraint metric (page counting + adaptive iteration)")

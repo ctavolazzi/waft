@@ -13,7 +13,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.waft.evolution import (
     ChatDistiller,
-    TwoPageGeneratorV2,
+    TwoPageGenerator,
     StylingGenome,
     StylingGene,
     FontGene,
@@ -49,7 +49,7 @@ def main():
     genome = StylingGenome.from_genes(styling_genes)
     
     # Generate PDF WITH METRICS COLLECTION
-    generator = TwoPageGeneratorV2(weasyprint_available=True)
+    generator = TwoPageGenerator(weasyprint_available=True)
     output_path = Path("example_with_metrics.pdf")
     
     result = generator.generate(

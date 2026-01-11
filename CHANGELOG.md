@@ -5,6 +5,38 @@ All notable changes to Waft will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+#### PDF/PNG Conversion System
+- **Bidirectional Conversion**: Full PDF ↔ PNG conversion support
+  - PDF to PNG: Convert PDF pages to individual PNG images
+  - PNG to PDF: Combine PNG images into PDF binders
+- **Multiple Backend Support**: Automatic fallback chain
+  - pdf2image (recommended, best quality)
+  - ImageMagick (via subprocess)
+  - PyMuPDF (fallback)
+- **Page Size Support**: Standard page sizes via PageSize enum
+  - LETTER (8.5 x 11), LEGAL (8.5 x 14), A4, A3, TABLOID
+  - Custom page sizes via (width, height) tuples
+- **DPI Configuration**: Flexible resolution control
+  - Manual DPI selection (150, 300, 600)
+  - Auto DPI selection based on file size
+- **One-Pager Integration**: Optional automatic PNG conversion
+  - `convert_to_png` parameter in TwoPageGeneratorV2
+  - Configurable PNG DPI
+  - Conversion events tracked in evolution system
+- **Comprehensive Tests**: Full test coverage for all backends and edge cases
+- **Documentation**: Complete usage guide with examples and troubleshooting
+
+### Changed
+
+- **TwoPageGeneratorV2**: Added optional PNG conversion support
+  - New parameters: `convert_to_png`, `png_dpi`
+  - Conversion success/failure tracked in evolutionary events
+  - Graceful error handling (conversion failures don't break workflow)
+
 ## [0.5.1] - 2026-01-11
 
 ### Added
