@@ -398,7 +398,7 @@ This command can be combined with:
 - `/checkpoint` - Create checkpoint before closeout
 - `/reflect` - Reflect on session before closeout
 - `/verify` - Verify work before closeout
-- `/generate-waft-docs` - Generate closeout PDF using WAFT tools
+- `/waft-docs` - Generate closeout PDF using WAFT tools
 
 **Recommended Sequence**:
 ```
