@@ -5,6 +5,74 @@ All notable changes to Waft will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.1] - 2026-01-11
+
+### Added
+
+#### One-Pager Evolution System V2
+- **TwoPageGeneratorV2**: Evolved generator with TRUE 2-page constraint enforcement
+  - Real page counting using pypdf (replaces unreliable HTML character count heuristic)
+  - Adaptive iteration algorithm (up to 5 attempts to hit exactly 2 pages)
+  - Accurate fitness metrics based on actual page count (no fake constraint scores)
+  - Feedback loop: measure → adjust → measure until target achieved
+- **Markdown Cleaning**: Automatic removal of markdown artifacts from content
+  - Strips headers (##, ###), bold/italic markers (**text**, *text*)
+  - Removes code blocks, links, list markers
+  - Cleans redundant "Key Concept:" prefixes
+  - Ensures professional, clean output
+- **ChatDistiller**: Extracts ideas from conversations as genomic entities
+  - Categories: concepts, actions, decisions, insights, questions
+  - Each idea gets unique genome ID and scientific name
+  - Importance-weighted selection for content prioritization
+- **Styling Genome System**: Treats document design as evolving genetic material
+  - Font, margin, color, layout genes
+  - SHA-256 genome IDs for lineage tracking
+  - Scientific naming via LineagePoet taxonomy
+  - Evolution tracking with flight recorder
+- **Scint Detection**: Monitors styling divergences between versions
+  - Classification and scoring of divergences
+  - Reconciliation strategies
+- **V2-based Chat One-Pager Script**: `scripts/create_chat_one_pager_v2.py`
+  - Creates one-pagers from chat sessions using evolved V2 system
+  - Genomic tracking of all components
+  - Production-ready with accurate metrics
+
+### Changed
+
+- **TwoPageGenerator**: Now defaults to V2 (evolved implementation)
+  - V1 available as `TwoPageGeneratorV1` for backward compatibility
+  - V2 explicitly available as `TwoPageGeneratorV2`
+  - API change: `target_pages=2` instead of `page_1_ideas=5`
+- **Text Rendering**: Enhanced CSS for better content presentation
+  - Added word-wrap and overflow-wrap for better text flow
+  - Added hyphens for better line breaking
+  - Improved line-height for readability
+
+### Fixed
+
+- **Constraint Enforcement**: V1 generated 4 pages but reported constraint = 1.0 (false positive)
+  - V2 fixes this with real page counting and adaptive iteration
+  - Validated: V2 generates 2 pages in 3 iterations with accurate metrics
+- **Formatting Issues**: Markdown artifacts in output
+  - `## What is WAFT?` → `What is WAFT?` (headers stripped)
+  - `**Key Concept**:` → removed (redundant with category tag)
+  - All markdown cleaned before rendering for professional output
+
+### Technical Details
+
+**Evolution: V1 → V2**
+- Problem: HTML character count heuristic (8000-12000 chars = "2 pages") was unreliable
+- Solution: Real PDF page counting with pypdf.PdfReader
+- Result: Accurate constraint enforcement with adaptive iteration
+
+**Performance**
+- V2 may require up to 5 PDF generations (adaptive iteration)
+- Trade-off: Accuracy vs speed (accuracy prioritized)
+- Typical convergence: 1-3 iterations
+
+**Dependencies**
+- Added `pypdf>=3.0.0` for real page counting
+
 ## [0.5.0] - 2026-01-11
 
 ### Added
