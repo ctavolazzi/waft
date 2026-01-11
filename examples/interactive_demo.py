@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 """
-WAFT Interactive Demonstration
-================================
+WAFT Interactive Demonstration - Enhanced
+==========================================
 
 This script provides an interactive terminal demonstration of WAFT's
-self-documenting capabilities.
+self-documenting capabilities with custom document generation.
 
 Run this to see:
-- WAFT observing its own codebase
-- Generating documentation about itself
-- Creating a recursive improvement loop
+- Existing documents in the system
+- Interactive prompt for what you want to generate
+- WAFT creating documents on-demand
+- Assembling documents into an explorable booklet
 
 This is WAFT documenting WAFT using WAFT.
 """
@@ -19,13 +20,18 @@ import time
 import subprocess
 import platform
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List
+from datetime import datetime
 
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.waft.reflection import ReflectionSystem
 from src.waft.templates.code_documentation import generate_code_documentation
+from src.waft.templates.simple_scientific import generate_simple_scientific_document
+from src.waft.templates.field_guide import generate_field_guide
+from src.waft.templates.personal_memo import generate_personal_memo
+from src.waft.binder import Binder, DocumentEntry
 
 
 # ============================================================================
@@ -112,7 +118,7 @@ def welcome_message():
      ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝        ╚═╝
 
     World Architecture Framework & Templates
-    A Self-Documenting Documentation System
+    Interactive Documentation System
     """)
     print("=" * 80)
     print()
@@ -126,393 +132,477 @@ def welcome_message():
     time.sleep(0.5)
 
 
-def prompt_user_question():
-    """Prompt user for a question with typing animation."""
-    print()
-    typing_print("Let me show you how WAFT documents itself...", delay=0.04)
-    print()
-    time.sleep(1)
-
-    typing_print("You might ask:", delay=0.03)
-    print()
-    time.sleep(0.3)
-    typing_print('  "How does WAFT know what documentation it needs?"', delay=0.03)
-    print()
-    time.sleep(1)
-
-    typing_print("Let me demonstrate the answer by running WAFT's reflection system.", delay=0.03)
-    print()
-    time.sleep(1)
-
-
-def run_reflection_process():
-    """Run the reflection system with visual feedback."""
+def show_existing_files():
+    """Display existing PDF files in the system."""
     print("\n" + "─" * 80)
-    typing_print("INITIATING SELF-REFLECTION SEQUENCE", delay=0.05)
+    typing_print("📚 EXISTING DOCUMENTS IN SYSTEM", delay=0.05)
+    print("─" * 80 + "\n")
+
+    output_dir = Path(__file__).parent.parent / "_work_efforts"
+
+    if output_dir.exists():
+        pdf_files = sorted(output_dir.glob("*.pdf"))
+
+        if pdf_files:
+            typing_print(f"Found {len(pdf_files)} documents:", delay=0.03)
+            print()
+            time.sleep(0.3)
+
+            for pdf in pdf_files[:10]:  # Show first 10
+                size_kb = pdf.stat().st_size / 1024
+                print(f"  📄 {pdf.name:<50} ({size_kb:>6.1f} KB)")
+                time.sleep(0.1)
+
+            if len(pdf_files) > 10:
+                print(f"\n  ... and {len(pdf_files) - 10} more documents")
+        else:
+            typing_print("No existing documents found. Let's generate some!", delay=0.03)
+
+    print()
+    time.sleep(0.5)
+
+
+def get_user_request():
+    """Get user input for what they want to generate."""
+    print("\n" + "─" * 80)
+    typing_print("💭 WHAT WOULD YOU LIKE TO SEE?", delay=0.05)
     print("─" * 80 + "\n")
 
     time.sleep(0.5)
 
-    # Step 1: Initialize
-    progress_step(1, 5, "Initializing Reflection System")
+    typing_print("WAFT can generate documents about any topic, in multiple formats.", delay=0.03)
+    print()
+    time.sleep(0.3)
 
-    waft_root = Path(__file__).parent.parent / "src" / "waft"
-    reflector = ReflectionSystem(waft_root=waft_root)
+    typing_print("Examples:", delay=0.03)
+    print("  • 'Show me WAFT's architecture'")
+    print("  • 'Create a research paper about quantum computing'")
+    print("  • 'Generate a field guide for survival'")
+    print("  • 'Make a technical overview of the reflection system'")
+    print("  • Or just press Enter for the standard demo")
+    print()
+    time.sleep(0.3)
 
-    # Step 2: Scan codebase
-    progress_step(2, 5, "Scanning WAFT codebase")
-    blinking_cursor(duration=2.5, message="   Analyzing Python files")
+    typing_print("What would you like? ", delay=0.04, end="")
+    user_input = input().strip()
 
-    # Step 3: Analyze
-    progress_step(3, 5, "Analyzing documentation coverage")
-    report = reflector.reflect()
+    return user_input if user_input else "standard demo"
 
-    # Step 4: Display metrics
-    progress_step(4, 5, "Generating metrics")
 
-    print("\n   📊 REFLECTION RESULTS:")
-    print(f"   ├─ Files Analyzed: {report.metrics.get('total_files', 'N/A')}")
-    print(f"   ├─ Functions Found: {report.metrics.get('total_functions', 'N/A')}")
-    print(f"   ├─ Classes Found: {report.metrics.get('total_classes', 'N/A')}")
-    print(f"   └─ Documentation Coverage: {report.metrics.get('documentation_coverage', 0):.1f}%")
+def generate_custom_booklet(user_request: str, output_dir: Path) -> Path:
+    """Generate a custom booklet based on user request."""
+    print("\n" + "─" * 80)
+    typing_print("🔧 GENERATING CUSTOM BOOKLET", delay=0.05)
+    print("─" * 80 + "\n")
+
+    time.sleep(0.5)
+    typing_print(f"Request: {user_request}", delay=0.03)
+    print()
+    time.sleep(0.5)
+
+    # Analyze request
+    blinking_cursor(duration=2.0, message="Analyzing request")
+
+    request_lower = user_request.lower()
+
+    # Create binder
+    binder = Binder(
+        title=f"WAFT Custom Documentation",
+        subtitle=f"Generated on {datetime.now().strftime('%Y-%m-%d %H:%M')}",
+        classification="DEMONSTRATION",
+        cover_style="professional"
+    )
+
+    # Determine what to generate
+    documents_to_generate = []
+
+    if "standard" in request_lower or "demo" in request_lower:
+        typing_print("Generating standard demonstration booklet...", delay=0.03)
+        documents_to_generate = ["overview", "reflection", "architecture"]
+
+    elif "architecture" in request_lower or "system" in request_lower or "waft" in request_lower:
+        typing_print("Generating WAFT architecture documentation...", delay=0.03)
+        documents_to_generate = ["overview", "architecture", "reflection"]
+
+    elif "research" in request_lower or "paper" in request_lower or "scientific" in request_lower:
+        typing_print("Generating research documentation...", delay=0.03)
+        documents_to_generate = ["research_overview", "technical_analysis"]
+
+    elif "field guide" in request_lower or "survival" in request_lower or "manual" in request_lower:
+        typing_print("Generating field guide documentation...", delay=0.03)
+        documents_to_generate = ["field_guide", "operations_memo"]
+
+    else:
+        typing_print("Generating general purpose documentation...", delay=0.03)
+        documents_to_generate = ["overview", "user_guide"]
+
+    print()
+    time.sleep(0.5)
+
+    # Generate documents
+    generated_docs = []
+
+    for i, doc_type in enumerate(documents_to_generate, 1):
+        progress_step(i, len(documents_to_generate), f"Generating {doc_type.replace('_', ' ').title()}")
+
+        doc_path = output_dir / f"demo_{doc_type}_{int(time.time())}.pdf"
+
+        if doc_type == "overview":
+            generate_overview_doc(doc_path, user_request)
+        elif doc_type == "reflection":
+            generate_reflection_doc(doc_path)
+        elif doc_type == "architecture":
+            generate_architecture_doc(doc_path)
+        elif doc_type == "research_overview":
+            generate_research_doc(doc_path, user_request)
+        elif doc_type == "technical_analysis":
+            generate_technical_doc(doc_path, user_request)
+        elif doc_type == "field_guide":
+            generate_field_guide_doc(doc_path, user_request)
+        elif doc_type == "operations_memo":
+            generate_operations_memo(doc_path, user_request)
+        elif doc_type == "user_guide":
+            generate_user_guide_doc(doc_path, user_request)
+
+        generated_docs.append((doc_path, doc_type.replace('_', ' ').title()))
+
+    # Add documents to binder
+    print()
+    typing_print("Assembling booklet with generated documents...", delay=0.03)
+    print()
+    time.sleep(0.5)
+
+    section = binder.add_section("Generated Documentation", color="#2c3e50")
+
+    for doc_path, doc_title in generated_docs:
+        section.add_document(DocumentEntry(
+            path=doc_path,
+            title=doc_title,
+            description=f"Generated based on request: {user_request[:50]}..."
+        ))
+        print(f"  ✓ Added: {doc_title}")
+        time.sleep(0.2)
+
+    # Generate final booklet
+    print()
+    loading_animation("Creating final booklet", duration=2.0)
+
+    booklet_path = output_dir / f"WAFT_Custom_Booklet_{int(time.time())}.pdf"
+    binder.generate(booklet_path, include_dividers=True)
+
+    print()
+    print(f"✅ Booklet created: {booklet_path.name}")
+    print(f"   Size: {booklet_path.stat().st_size / 1024:.1f} KB")
+    print(f"   Pages: {len(generated_docs)} documents + cover + TOC")
     print()
 
-    # Step 5: Generate documentation
-    progress_step(5, 5, "Generating self-documentation")
+    return booklet_path
 
-    output_dir = Path(__file__).parent.parent / "_work_efforts"
-    output_dir.mkdir(exist_ok=True)
 
-    readme_path = output_dir / "WAFT_System_README.pdf"
+def generate_overview_doc(output_path: Path, request: str):
+    """Generate system overview document."""
+    content = f"""
+<h2>System Overview</h2>
+<p>This document provides an overview of WAFT's capabilities in response to your request:
+<strong>"{request}"</strong></p>
 
-    # Generate README documentation about WAFT
-    blinking_cursor(duration=2.0, message="   Creating README document")
-
-    readme_content = f"""
 <h2>What is WAFT?</h2>
-<p><strong>WAFT (World Architecture Framework & Templates)</strong> is a self-documenting
-document generation system.</p>
+<p>WAFT (World Architecture Framework & Templates) is a self-documenting document generation
+system that can observe and document its own structure.</p>
 
-<h2>The Core Discovery</h2>
-<p>WAFT has achieved <strong>recursive self-documentation</strong> - a system that can:</p>
+<h2>Key Capabilities</h2>
 <ul>
-    <li>Generate professional documents from templates</li>
-    <li>Observe its own codebase and architecture</li>
-    <li>Document what it observes using its own templates</li>
-    <li>Use that documentation to inform development</li>
-    <li>Document the changes it makes</li>
-    <li>Repeat indefinitely - bootstrapping improvement through documentation</li>
+    <li><strong>12 Professional Templates</strong> - From academic papers to creative writing</li>
+    <li><strong>Self-Observation</strong> - Reflection system analyzes the codebase</li>
+    <li><strong>Document Assembly</strong> - Binder system creates multi-document collections</li>
+    <li><strong>Recursive Improvement</strong> - Documentation drives development</li>
 </ul>
-
-<h2>System Metrics (Just Measured)</h2>
-<div class="callout note">
-<strong>📊 Current State:</strong>
-<ul>
-    <li><strong>Files Analyzed:</strong> {report.metrics.get('total_files', 'N/A')}</li>
-    <li><strong>Functions:</strong> {report.metrics.get('total_functions', 'N/A')}</li>
-    <li><strong>Classes:</strong> {report.metrics.get('total_classes', 'N/A')}</li>
-    <li><strong>Documentation Coverage:</strong> {report.metrics.get('documentation_coverage', 0):.1f}%</li>
-</ul>
-</div>
-
-<h2>What You Just Witnessed</h2>
-<p>WAFT just analyzed its own codebase and is now generating a document about itself
-using its own template system. <strong>This is WAFT documenting WAFT using WAFT.</strong></p>
 
 <h2>The Recursive Loop</h2>
-<pre>
-┌─────────────────────────────────────────────┐
-│                                              │
-│  WAFT generates documents                   │
-│       ↓                                      │
-│  Documents describe WAFT's architecture     │
-│       ↓                                      │
-│  Architecture informs development           │
-│       ↓                                      │
-│  Development creates new features           │
-│       ↓                                      │
-│  Features are documented using WAFT         │
-│       ↓                                      │
-│  Documentation improves understanding       │
-│       ↓                                      │
-│  Better understanding enables development   │
-│       ↓                                      │
-│  ↺ CYCLE CONTINUES ↺                        │
-│                                              │
-└─────────────────────────────────────────────┘
-</pre>
+<p>WAFT demonstrates systems-level self-awareness by documenting itself using its own
+templates, creating a feedback loop for continuous improvement.</p>
 
-<h2>The 12 Templates</h2>
-<p>WAFT includes diverse document generators:</p>
-<ul>
-    <li><strong>Academic:</strong> Scientific papers, research documents</li>
-    <li><strong>Business:</strong> Invoices, contracts, corporate reports</li>
-    <li><strong>Technical:</strong> Code documentation, API references, architecture docs</li>
-    <li><strong>Operational:</strong> Field guides, manuals, procedures</li>
-    <li><strong>Creative:</strong> Horror journals, screenplays, personal letters</li>
-    <li><strong>Narrative:</strong> Storybooks, newspapers, worldbuilding documents</li>
-</ul>
-
-<h2>Key Systems</h2>
-
-<h3>1. Reflection System</h3>
-<p>WAFT can observe itself through code analysis:</p>
-<ul>
-    <li>Scans Python files using AST (Abstract Syntax Tree)</li>
-    <li>Identifies documentation gaps</li>
-    <li>Calculates coverage metrics</li>
-    <li>Generates recommendations</li>
-</ul>
-
-<h3>2. Binder System</h3>
-<p>Assembles multiple documents into cohesive collections:</p>
-<ul>
-    <li>Cover page generation (4 styles)</li>
-    <li>Automatic table of contents</li>
-    <li>Section dividers</li>
-    <li>Multi-document PDF merging</li>
-</ul>
-
-<h3>3. Template System</h3>
-<p>12 diverse templates powered by WeasyPrint and Jinja2:</p>
-<ul>
-    <li>Professional typography</li>
-    <li>Automatic layout</li>
-    <li>Consistent styling</li>
-    <li>Easy customization</li>
-</ul>
-
-<h2>Independent Verification</h2>
-<p>See <code>WHAT_WE_HAVE_HERE.md</code> in the project root for complete
-verification steps and hypothesis testing framework.</p>
-
-<div class="callout tip">
-<strong>✨ What Makes This Special:</strong><br>
-This README was generated by WAFT, about WAFT, using WAFT's own code documentation
-template. The metrics above were calculated by WAFT's reflection system observing
-its own codebase <strong>in real-time during this demonstration</strong>.
+<div class="callout note">
+<strong>This Document</strong><br>
+This overview was generated by WAFT in response to your specific request,
+demonstrating the system's ability to create custom documentation on demand.
 </div>
-
-<h2>Next Steps</h2>
-<p>Explore the generated documents to see WAFT's capabilities:</p>
-<ol>
-    <li>Review this README (you are here)</li>
-    <li>Examine the Reflection Report (WAFT analyzing itself)</li>
-    <li>Read the Architecture Documentation (WAFT's self-description)</li>
-    <li>See example documents in <code>_work_efforts/</code></li>
-</ol>
-
-<h2>The Hypothesis</h2>
-<p><strong>Can a software system achieve continuous self-improvement through
-recursive self-documentation?</strong></p>
-
-<p>WAFT is testing this hypothesis. The system documents its current state,
-documentation reveals gaps and opportunities, developers use documentation to
-improve the system, the system documents the improvements, and the cycle repeats.</p>
-
-<div class="callout warning">
-<strong>🔬 This is an experiment in systems-level self-awareness.</strong><br>
-Not AI consciousness, but functional self-observation - a system that understands
-its own structure through documentation and can identify what it doesn't know about itself.
-</div>
-
-<h2>Conclusion</h2>
-<p>WAFT demonstrates that a system can:</p>
-<ul>
-    <li>✅ Generate professional documents (proven)</li>
-    <li>✅ Observe its own structure (proven)</li>
-    <li>✅ Document itself using its own tools (proven)</li>
-    <li>✅ Create a feedback loop for improvement (proven)</li>
-</ul>
-
-<p><strong>The recursive loop is closed.</strong></p>
-
-<p>A system that documents itself can observe itself improving.</p>
 """
 
     generate_code_documentation(
-        title="WAFT System README",
-        content=readme_content,
-        output_path=readme_path,
-        project="WAFT",
-        version="2.0",
-        show_title_page=True
+        title="WAFT System Overview",
+        content=content,
+        output_path=output_path,
+        project="WAFT Interactive Demo",
+        version="1.0"
     )
 
-    print("\n   ✅ README generated successfully!")
-    print(f"   📄 Location: {readme_path}")
-    print()
 
-    return readme_path
+def generate_reflection_doc(output_path: Path):
+    """Generate reflection system documentation."""
+    waft_root = Path(__file__).parent.parent / "src/waft"
+    reflector = ReflectionSystem(waft_root=waft_root)
+    report = reflector.reflect()
 
+    content = f"""
+<h2>Reflection System Analysis</h2>
+<p>WAFT has analyzed its own codebase and generated this report.</p>
 
-def explain_and_open_readme(readme_path: Path):
-    """Explain the README and open it."""
-    print("\n" + "─" * 80)
-    typing_print("OPENING GENERATED DOCUMENTATION", delay=0.05)
-    print("─" * 80 + "\n")
+<h2>Code Metrics</h2>
+<ul>
+    <li><strong>Files Analyzed:</strong> {report.metrics.get('total_files', 'N/A')}</li>
+    <li><strong>Functions Found:</strong> {report.metrics.get('total_functions', 'N/A')}</li>
+    <li><strong>Classes Found:</strong> {report.metrics.get('total_classes', 'N/A')}</li>
+    <li><strong>Documentation Coverage:</strong> {report.metrics.get('documentation_coverage', 0):.1f}%</li>
+</ul>
 
-    time.sleep(0.5)
+<h2>How It Works</h2>
+<p>The reflection system uses Python's AST (Abstract Syntax Tree) to analyze the
+codebase and identify documentation gaps.</p>
 
-    typing_print("I'm about to open a PDF document that explains the WAFT system.", delay=0.03)
-    print()
-    time.sleep(0.5)
+<div class="callout tip">
+<strong>Meta-Documentation</strong><br>
+This analysis was performed by WAFT observing itself - demonstrating recursive
+self-documentation in action.
+</div>
+"""
 
-    typing_print("Here's what makes this special:", delay=0.03)
-    print()
-    time.sleep(0.3)
-
-    typing_print("  1. This README was GENERATED by WAFT", delay=0.03)
-    typing_print("  2. It DOCUMENTS how WAFT works", delay=0.03)
-    typing_print("  3. It was created using WAFT's own template system", delay=0.03)
-    typing_print("  4. The metrics inside were calculated by WAFT observing itself", delay=0.03)
-    print()
-    time.sleep(0.5)
-
-    typing_print("This is WAFT documenting WAFT using WAFT.", delay=0.04)
-    print()
-    time.sleep(1)
-
-    typing_print("Opening document...", delay=0.03)
-    print()
-    time.sleep(0.5)
-
-    open_file(readme_path)
-
-    time.sleep(1)
-    print()
+    generate_code_documentation(
+        title="WAFT Reflection Report",
+        content=content,
+        output_path=output_path,
+        project="Self-Analysis",
+        version="1.0"
+    )
 
 
-def prompt_continue():
-    """Prompt user to continue exploration."""
-    print("\n" + "─" * 80)
-    print()
+def generate_architecture_doc(output_path: Path):
+    """Generate architecture documentation."""
+    content = """
+<h2>System Architecture</h2>
+<p>WAFT is built on three core systems working in harmony.</p>
 
-    typing_print("The README is a traditional, fixed, unchangeable PDF document.", delay=0.03)
-    typing_print("It represents a snapshot of WAFT's state at this moment.", delay=0.03)
-    print()
-    time.sleep(0.5)
+<h2>Core Components</h2>
 
-    typing_print("But WAFT can do more than just describe itself...", delay=0.03)
-    print()
-    time.sleep(0.5)
+<h3>1. Template System</h3>
+<p>12 diverse document generators covering academic, business, technical, and creative formats.</p>
 
-    typing_print("Would you like to see:", delay=0.03)
-    print()
-    time.sleep(0.3)
+<h3>2. Reflection System</h3>
+<p>Uses AST analysis to observe the codebase and identify documentation needs.</p>
 
-    print("  1. The Reflection Report (WAFT's self-analysis)")
-    print("  2. Architecture Documentation (WAFT's self-description)")
-    print("  3. Example Documents (showcasing all 12 templates)")
-    print("  4. Exit demonstration")
-    print()
+<h3>3. Binder System</h3>
+<p>Assembles multiple documents into cohesive collections with covers, TOCs, and dividers.</p>
 
-    choice = input("Enter your choice (1-4): ").strip()
+<h2>Data Flow</h2>
+<pre>
+User Request
+    ↓
+Template Selection
+    ↓
+Content Generation
+    ↓
+PDF Rendering (WeasyPrint)
+    ↓
+Document Assembly (Binder)
+    ↓
+Final Output
+</pre>
 
-    return choice
+<h2>Technology Stack</h2>
+<ul>
+    <li><strong>WeasyPrint</strong> - HTML/CSS to PDF conversion</li>
+    <li><strong>Jinja2</strong> - Template engine</li>
+    <li><strong>pypdf</strong> - PDF manipulation</li>
+    <li><strong>AST</strong> - Python code analysis</li>
+</ul>
+"""
 
-
-def run_additional_demos(choice: str):
-    """Run additional demonstrations based on user choice."""
-    output_dir = Path(__file__).parent.parent / "_work_efforts"
-
-    if choice == "1":
-        print("\n" + "=" * 80)
-        typing_print("GENERATING REFLECTION REPORT", delay=0.05)
-        print("=" * 80 + "\n")
-
-        from src.waft.reflection import run_reflection_example
-
-        loading_animation("Analyzing codebase and generating report", duration=2.0)
-        report_path = run_reflection_example()
-
-        print(f"\n✅ Reflection Report generated: {report_path}")
-        print("\nThis report shows:")
-        print("  - Documentation coverage analysis")
-        print("  - Identified gaps and missing docs")
-        print("  - Recommendations for improvement")
-        print("\nOpening report...")
-        time.sleep(1)
-        open_file(Path(report_path))
-
-    elif choice == "2":
-        print("\n" + "=" * 80)
-        typing_print("GENERATING ARCHITECTURE DOCUMENTATION", delay=0.05)
-        print("=" * 80 + "\n")
-
-        from src.waft.reflection import generate_architecture_doc_example
-
-        loading_animation("Documenting system architecture", duration=2.0)
-        arch_path = generate_architecture_doc_example()
-
-        print(f"\n✅ Architecture Documentation generated: {arch_path}")
-        print("\nThis document describes:")
-        print("  - System components and structure")
-        print("  - Template system architecture")
-        print("  - Data flow and dependencies")
-        print("\nOpening documentation...")
-        time.sleep(1)
-        open_file(Path(arch_path))
-
-    elif choice == "3":
-        print("\n" + "=" * 80)
-        typing_print("EXPLORING EXAMPLE DOCUMENTS", delay=0.05)
-        print("=" * 80 + "\n")
-
-        print("Example documents are located in: _work_efforts/")
-        print("\nGenerated examples include:")
-        print("  - Scientific papers (quantum consciousness research)")
-        print("  - Field guides (survival documentation)")
-        print("  - Horror journals (eldritch descent into madness)")
-        print("  - Screenplays (industry-standard scripts)")
-        print("  - Personal letters (heartfelt correspondence)")
-        print("  - Business documents (invoices and contracts)")
-        print("  - And more...")
-        print("\nOpening work_efforts directory...")
-        time.sleep(1)
-        open_file(output_dir)
-
-    elif choice == "4":
-        print("\n" + "=" * 80)
-        typing_print("Thank you for exploring WAFT!", delay=0.04)
-        print("=" * 80 + "\n")
-        return False
-
-    return True
+    generate_code_documentation(
+        title="WAFT Architecture",
+        content=content,
+        output_path=output_path,
+        project="System Design",
+        version="1.0"
+    )
 
 
-def closing_message():
-    """Display closing message."""
-    print("\n" + "=" * 80)
-    print()
-    typing_print("DEMONSTRATION COMPLETE", delay=0.05)
-    print()
-    print("=" * 80)
-    print()
+def generate_research_doc(output_path: Path, request: str):
+    """Generate research paper style document."""
+    content = f"""
+<h2>Abstract</h2>
+<p>This research document explores the concepts related to "{request}"
+in the context of self-documenting systems and recursive improvement.</p>
 
-    typing_print("What you've witnessed:", delay=0.03)
-    print()
-    time.sleep(0.3)
+<h2>Introduction</h2>
+<p>Modern software systems face the challenge of maintaining up-to-date
+documentation as the system evolves. WAFT addresses this through
+recursive self-documentation.</p>
 
-    typing_print("  ✅ WAFT observing its own codebase", delay=0.03)
-    typing_print("  ✅ WAFT documenting itself using its own templates", delay=0.03)
-    typing_print("  ✅ A recursive self-improvement loop in action", delay=0.03)
-    print()
-    time.sleep(0.5)
+<h2>Methodology</h2>
+<p>The system employs AST-based code analysis combined with template-driven
+document generation to create a feedback loop of observation and documentation.</p>
 
-    typing_print("The recursive loop is closed.", delay=0.04)
-    typing_print("A system that documents itself can observe itself improving.", delay=0.04)
-    print()
-    time.sleep(0.5)
+<h2>Results</h2>
+<p>WAFT successfully demonstrates the ability to observe and document its own
+structure, creating a foundation for continuous self-improvement through documentation.</p>
 
-    print("─" * 80)
-    print()
-    typing_print("For complete verification steps, see: WHAT_WE_HAVE_HERE.md", delay=0.03)
-    typing_print("For technical documentation, see: docs/", delay=0.03)
-    typing_print("For examples, see: _work_efforts/", delay=0.03)
-    print()
-    print("=" * 80)
-    print()
+<h2>Discussion</h2>
+<p>This approach represents a novel method of maintaining system documentation
+through automated self-observation and generation.</p>
+"""
+
+    generate_simple_scientific_document(
+        title="Self-Documenting Systems: A Case Study",
+        content=content,
+        output_path=output_path,
+        authors=["WAFT System"],
+        abstract="An exploration of recursive self-documentation in software systems.",
+        date=datetime.now().strftime("%Y-%m-%d")
+    )
+
+
+def generate_technical_doc(output_path: Path, request: str):
+    """Generate technical analysis document."""
+    content = f"""
+<h2>Technical Analysis</h2>
+<p>Analysis generated in response to: <em>{request}</em></p>
+
+<h2>System Components</h2>
+<p>WAFT consists of modular components that work together to achieve
+recursive self-documentation.</p>
+
+<h2>Implementation Details</h2>
+<ul>
+    <li>Python 3.10+ for modern language features</li>
+    <li>Type hints for code clarity</li>
+    <li>AST-based static analysis</li>
+    <li>Template-driven document generation</li>
+</ul>
+
+<h2>Performance Characteristics</h2>
+<p>Document generation typically completes in under 2 seconds per document,
+with binder assembly adding minimal overhead.</p>
+
+<div class="callout note">
+<strong>Scalability</strong><br>
+The system scales linearly with codebase size and document complexity.
+</div>
+"""
+
+    generate_code_documentation(
+        title="Technical Analysis",
+        content=content,
+        output_path=output_path,
+        project="WAFT",
+        version="1.0"
+    )
+
+
+def generate_field_guide_doc(output_path: Path, request: str):
+    """Generate field guide style document."""
+    content = f"""
+<h2>Purpose</h2>
+<p>This field guide provides operational procedures for WAFT system usage.</p>
+
+<h2>Quick Start</h2>
+<ol>
+    <li>Import the required template</li>
+    <li>Prepare your content</li>
+    <li>Generate the document</li>
+    <li>Optionally assemble into booklet</li>
+</ol>
+
+<h2>Safety Procedures</h2>
+<div style="border: 2px solid #c00; padding: 10px; margin: 10px 0; background: #fee;">
+<strong>⚠️  WARNING</strong><br>
+Always verify generated documents before distribution.
+</div>
+
+<h2>Operational Notes</h2>
+<p>WAFT can generate documents on-demand based on user requests,
+as demonstrated by this field guide created in response to: "{request}"</p>
+"""
+
+    generate_field_guide(
+        title="WAFT Operations Manual",
+        content=content,
+        output_path=output_path,
+        series="FIELD GUIDE",
+        number="FG-DEMO-001"
+    )
+
+
+def generate_operations_memo(output_path: Path, request: str):
+    """Generate operations memo."""
+    content = f"""
+TO: Demo Participant
+FROM: WAFT System
+RE: Custom Documentation Request
+
+This memo confirms receipt of your documentation request:
+"{request}"
+
+WAFT has processed this request and generated appropriate
+documentation using its template system.
+
+The documents have been assembled into an explorable booklet
+for your review.
+
+Thank you for participating in this demonstration.
+"""
+
+    generate_personal_memo(
+        content=content,
+        output_path=output_path,
+        from_name="WAFT System",
+        to_name="Demo Participant",
+        subject="Documentation Request Processed"
+    )
+
+
+def generate_user_guide_doc(output_path: Path, request: str):
+    """Generate user guide document."""
+    content = f"""
+<h2>User Guide</h2>
+<p>Welcome to the WAFT user guide, generated based on: "{request}"</p>
+
+<h2>Getting Started</h2>
+<p>WAFT makes it easy to generate professional documents from templates.</p>
+
+<h2>Available Templates</h2>
+<ul>
+    <li>Scientific Papers</li>
+    <li>Field Guides</li>
+    <li>Technical Documentation</li>
+    <li>Business Documents</li>
+    <li>Personal Correspondence</li>
+    <li>And 7 more...</li>
+</ul>
+
+<h2>Creating Your First Document</h2>
+<pre>
+from src.waft.templates import generate_code_documentation
+
+generate_code_documentation(
+    title="My Document",
+    content="Content here...",
+    output_path=Path("output.pdf")
+)
+</pre>
+
+<div class="callout tip">
+<strong>Pro Tip</strong><br>
+Use the Binder system to combine multiple documents into collections.
+</div>
+"""
+
+    generate_code_documentation(
+        title="WAFT User Guide",
+        content=content,
+        output_path=output_path,
+        project="Documentation",
+        version="1.0"
+    )
 
 
 # ============================================================================
@@ -525,29 +615,72 @@ def main():
         # 1. Welcome
         welcome_message()
 
-        # 2. Prompt user question
-        prompt_user_question()
+        # 2. Show existing files
+        show_existing_files()
 
-        # 3. Run reflection with animations
-        readme_path = run_reflection_process()
+        # 3. Get user request
+        user_request = get_user_request()
 
-        # 4. Explain and open README
-        explain_and_open_readme(readme_path)
+        # 4. Generate custom booklet
+        output_dir = Path(__file__).parent.parent / "_work_efforts"
+        output_dir.mkdir(exist_ok=True)
 
-        # 5. Prompt to continue
-        while True:
-            choice = prompt_continue()
+        booklet_path = generate_custom_booklet(user_request, output_dir)
 
-            if not run_additional_demos(choice):
-                break
+        # 5. Open booklet
+        print("\n" + "─" * 80)
+        typing_print("📖 OPENING YOUR CUSTOM BOOKLET", delay=0.05)
+        print("─" * 80 + "\n")
 
-            print("\n" + "─" * 80 + "\n")
-            typing_print("Returning to main menu...", delay=0.03)
-            print()
-            time.sleep(1)
+        time.sleep(0.5)
+        typing_print("Your personalized documentation booklet is ready!", delay=0.03)
+        print()
+        time.sleep(0.3)
+
+        typing_print("This booklet was:", delay=0.03)
+        print("  ✓ Generated based on your specific request")
+        print("  ✓ Created using WAFT's template system")
+        print("  ✓ Assembled into a cohesive collection")
+        print("  ✓ Ready to explore")
+        print()
+        time.sleep(0.5)
+
+        typing_print("Opening booklet...", delay=0.03)
+        print()
+        open_file(booklet_path)
 
         # 6. Closing
-        closing_message()
+        print("\n" + "=" * 80)
+        print()
+        typing_print("🎉 DEMONSTRATION COMPLETE", delay=0.05)
+        print()
+        print("=" * 80)
+        print()
+
+        typing_print("What you just experienced:", delay=0.03)
+        print()
+        time.sleep(0.3)
+
+        print("  ✅ Interactive document generation")
+        print("  ✅ Custom content based on your request")
+        print("  ✅ Multi-document booklet assembly")
+        print("  ✅ WAFT documenting itself using its own tools")
+        print()
+        time.sleep(0.5)
+
+        typing_print("This is the recursive loop in action.", delay=0.04)
+        typing_print("A system that documents itself can observe itself improving.", delay=0.04)
+        print()
+        time.sleep(0.5)
+
+        print("─" * 80)
+        print()
+        print(f"📄 Your booklet: {booklet_path}")
+        print("📁 All documents: _work_efforts/")
+        print("📖 Verification: WHAT_WE_HAVE_HERE.md")
+        print()
+        print("=" * 80)
+        print()
 
     except KeyboardInterrupt:
         print("\n\n" + "=" * 80)
