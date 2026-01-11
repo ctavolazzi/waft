@@ -16,6 +16,8 @@ from .styling_genome import (
     StylingGenomeRegistry,
 )
 from .scint_detector import ScintDetector, Scint, ScintType
+from .chat_distiller import ChatDistiller, DistilledChat, IdeaGene
+from .two_page_generator import TwoPageGenerator
 
 __all__ = [
     "StylingGenome",
@@ -28,4 +30,8 @@ __all__ = [
     "ScintDetector",
     "Scint",
     "ScintType",
+    "ChatDistiller",
+    "DistilledChat",
+    "IdeaGene",
+    "TwoPageGenerator",
 ]
