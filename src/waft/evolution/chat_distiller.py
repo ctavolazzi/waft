@@ -433,41 +433,38 @@ class ChatDistiller:
             return "This conversation did not contain extractable ideas."
 
         # Get top ideas for summary
-        top_ideas = sorted(ideas, key=lambda x: x.importance, reverse=True)[:3]
+        top_ideas = sorted(ideas, key=lambda x: x.importance, reverse=True)[:2]
         
-        # Build prose summary
-        summary_parts = []
-        
-        # Start with what the conversation was about
+        # Build prose summary from actual content
         if top_ideas:
-            main_idea = top_ideas[0]
-            # Extract a readable explanation from the content
-            content = main_idea.content
-            # Take first sentence or first 100 chars
-            if '.' in content:
-                first_sentence = content.split('.')[0] + '.'
-                summary_parts.append(first_sentence)
+            # Use the first substantial idea as the main summary
+            main_content = top_ideas[0].content
+            
+            # Extract first sentence or first 200 chars for summary
+            if '.' in main_content:
+                # Take first complete sentence
+                first_sentence = main_content.split('.')[0] + '.'
+                if len(first_sentence) > 200:
+                    # If sentence is too long, truncate at word boundary
+                    words = first_sentence.split()
+                    summary = ""
+                    for word in words:
+                        if len(summary + word) < 180:
+                            summary += word + " "
+                        else:
+                            break
+                    summary = summary.strip() + "..."
+                else:
+                    summary = first_sentence
             else:
-                summary_parts.append(content[:150] + ("..." if len(content) > 150 else ""))
+                # No sentence break, take first 200 chars at word boundary
+                if len(main_content) > 200:
+                    words = main_content[:200].split()
+                    summary = " ".join(words[:-1]) + "..."
+                else:
+                    summary = main_content
+            
+            return summary
         
-        # Add what was accomplished
-        actions = [i for i in ideas if i.category == "action"]
-        if actions:
-            action_summary = f"This session involved {len(actions)} key actions, including: {actions[0].content[:80]}..."
-            summary_parts.append(action_summary)
-        
-        # Add insights if any
-        insights = [i for i in ideas if i.category == "insight"]
-        if insights:
-            insight_summary = f"Key insights emerged: {insights[0].content[:80]}..."
-            summary_parts.append(insight_summary)
-        
-        # Fallback to category-based summary if no good prose found
-        if not summary_parts:
-            categories = {}
-            for idea in ideas:
-                categories[idea.category] = categories.get(idea.category, 0) + 1
-            top_category = max(categories, key=categories.get)
-            summary_parts.append(f"This conversation explored {top_category}s and related topics.")
-        
-        return " ".join(summary_parts)
+        # Fallback: simple descriptive summary
+        return f"This conversation explored {len(ideas)} key topics and ideas."
