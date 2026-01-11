@@ -37,17 +37,17 @@ This binder contains corporate horror documentation for TELEPORT MASSIVE's PROJE
 ### Tab 4: Personnel & Medical (The "Human Cost")
 
 **Documents**:
-- ⏳ TM-MED-301: Chart - The Phase Burn Spectrum
-- ⏳ TM-FORM-88B: "Reality Check" Self-Assessment
-- ⏳ TM-DOSSIER-K: Subject K (The Nephilim)
+- ✅ TM-MED-301: Chart - The Phase Burn Spectrum - Markdown ready
+- ✅ TM-FORM-88B: "Reality Check" Self-Assessment - Markdown ready
+- ✅ TM-DOSSIER-K: Subject K (The Nephilim) - Markdown ready
 
 **Location**: `pdf/tab4_personnel/`, `markdown/tab4_personnel/`
 
 ### Tab 5: Emergency Protocols (The "Oh Sh*t" Plans)
 
 **Documents**:
-- ⏳ TM-PROTO-001: Protocol SILENT NIGHT
-- ⏳ TM-PROTO-002: Protocol JUDGMENT DAY
+- ✅ TM-PROTO-001: Protocol SILENT NIGHT - Markdown ready
+- ✅ TM-PROTO-002: Protocol JUDGMENT DAY - Markdown ready
 
 **Location**: `pdf/tab5_emergency/`, `markdown/tab5_emergency/`
 
