@@ -4,6 +4,47 @@ This log tracks development activities, decisions, and progress for the waft pro
 
 ---
 
+## 2026-01-11 - One-Pager Prose Improvements & PDF/PNG Conversion
+
+**Time**: 14:10:00 PST
+
+### Summary
+Fixed one-pager content to be clear, explanatory prose instead of terse technical labels. Added full bidirectional PDF/PNG conversion capabilities with automatic integration.
+
+### Prose Improvements
+- **Problem**: One-pagers showed cryptic labels ("ACTION", "CONCEPT") and scientific names that didn't explain anything
+- **Solution**: 
+  - Extract paragraphs (50+ chars) instead of individual lines
+  - Remove markdown formatting during extraction
+  - Generate prose summaries from actual content
+  - Remove category labels and scientific names from display
+  - Changed headers to "What Happened" and "Additional Details"
+
+### PDF/PNG Conversion
+- **PDF to PNG**: One PNG per page, saved in `{pdf_name}_pages/` folder
+- **PNG to PDF**: Convert 8.5x11 PNGs to PDF binder
+- **Auto-integration**: Automatically converts PDFs to PNGs after one-pager generation
+- **Multiple backends**: Supports pdf2image, ImageMagick, or PyMuPDF (with fallback chain)
+
+### Files Changed
+- `src/waft/evolution/chat_distiller.py` - Better prose extraction
+- `src/waft/evolution/two_page_generator_v2.py` - Removed labels from template
+- `src/waft/evolution/pdf_image_converter.py` - New conversion module
+- `scripts/create_chat_one_pager_v2.py` - Added auto PNG conversion
+- `scripts/pngs_to_pdf_binder.py` - New script for PNG→PDF
+- `pyproject.toml` - Added pillow dependency
+
+### Impact
+- ✅ Content is now clear, explanatory prose
+- ✅ No more cryptic labels and scientific names
+- ✅ Actually explains what happened
+- ✅ Full PDF/PNG conversion support
+- ✅ Automatic workflow integration
+
+**Commits**: `20f28f8`, `e171a11`, `90b5eaa`, `52489af`
+
+---
+
 ## 2026-01-11 - One-Pager V2 Evolution & Formatting Fixes
 
 **Time**: 14:01:42 PST
