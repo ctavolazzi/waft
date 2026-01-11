@@ -17,8 +17,8 @@
 
 ### In Progress ⏳
 
-- **Claude Code**: Creating generation module (`src/waft/generate_lightcone_docs.py`)
-- **AI Assistant**: Creating remaining markdown source files
+- **Claude Code**: Implementing Tab 2 remaining documents (TM-ENG-114, TM-ENG-205, TM-MAINT-088)
+- **AI Assistant**: Completed Tab 2 markdown sources, ready for Tab 3
 
 ### Next Steps
 

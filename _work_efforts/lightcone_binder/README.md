@@ -19,10 +19,10 @@ This binder contains corporate horror documentation for TELEPORT MASSIVE's PROJE
 ### Tab 2: Engineering & Hardware (The "Meat Grinder")
 
 **Documents**:
-- ⏳ TM-ENG-114: The Lazarus Protocol (Ignition Sequence)
-- ⏳ TM-ENG-004: Material Safety Data Sheet - Suspension-9
-- ⏳ TM-ENG-205: Schematic - The Fulgurite Core (Type-IV)
-- ⏳ TM-MAINT-088: Maintenance Log - "The Scream Filter"
+- ⏳ TM-ENG-114: The Lazarus Protocol (Ignition Sequence) - Markdown ready
+- ✅ TM-ENG-004: Material Safety Data Sheet - Suspension-9 - Complete
+- ⏳ TM-ENG-205: Schematic - The Fulgurite Core (Type-IV) - Markdown ready
+- ⏳ TM-MAINT-088: Maintenance Log - "The Scream Filter" - Markdown ready
 
 **Location**: `pdf/tab2_engineering/`, `markdown/tab2_engineering/`
 
