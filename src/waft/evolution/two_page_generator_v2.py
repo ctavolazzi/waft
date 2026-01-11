@@ -15,6 +15,7 @@ Fitness improvement: TBD (will be measured)
 """
 
 import hashlib
+import re
 from pathlib import Path
 from typing import Optional, Dict, Any, List
 from datetime import datetime
@@ -200,6 +201,10 @@ TWO_PAGE_TEMPLATE_V2 = """
         .idea-content {
             margin-top: {{ margin.paragraph_spacing / 2 }}pt;
             font-size: {{ font.size_body }}pt;
+            line-height: 1.5;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
         }
 
         .idea-genome {
@@ -527,6 +532,62 @@ class TwoPageGeneratorV2:
             "generator_genome_id": self.GENERATOR_GENOME_ID,
         }
 
+    def _clean_markdown(self, text: str) -> str:
+        """
+        Clean markdown formatting from text for clean HTML rendering.
+        
+        Removes:
+        - Markdown headers (##, ###, etc.)
+        - Bold/italic markers (**text**, *text*)
+        - Code blocks (```, `)
+        - Links ([text](url)) -> text
+        - Lists markers (-, *, 1.)
+        
+        Args:
+            text: Text with markdown formatting
+            
+        Returns:
+            Cleaned text suitable for HTML display
+        """
+        if not text:
+            return ""
+        
+        # Remove markdown headers (##, ###, ####)
+        text = re.sub(r'^#{1,6}\s+', '', text, flags=re.MULTILINE)
+        
+        # Remove bold (**text** or __text__)
+        text = re.sub(r'\*\*([^*]+)\*\*', r'\1', text)
+        text = re.sub(r'__([^_]+)__', r'\1', text)
+        
+        # Remove italic (*text* or _text_) but preserve standalone asterisks
+        text = re.sub(r'(?<!\*)\*([^*]+)\*(?!\*)', r'\1', text)
+        text = re.sub(r'(?<!_)_([^_]+)_(?!_)', r'\1', text)
+        
+        # Remove inline code (`code`)
+        text = re.sub(r'`([^`]+)`', r'\1', text)
+        
+        # Remove code blocks (```...```)
+        text = re.sub(r'```[\s\S]*?```', '', text)
+        
+        # Remove links ([text](url)) -> text
+        text = re.sub(r'\[([^\]]+)\]\([^\)]+\)', r'\1', text)
+        
+        # Remove list markers at start of line (-, *, 1., etc.)
+        text = re.sub(r'^[\s]*[-*+]\s+', '', text, flags=re.MULTILINE)
+        text = re.sub(r'^[\s]*\d+\.\s+', '', text, flags=re.MULTILINE)
+        
+        # Clean up "Key Concept:" prefixes (redundant with category tag)
+        text = re.sub(r'^\s*\*\*Key\s+Concept\*\*:\s*', '', text, flags=re.IGNORECASE)
+        text = re.sub(r'^\s*Key\s+Concept:\s*', '', text, flags=re.IGNORECASE)
+        
+        # Clean up multiple spaces
+        text = re.sub(r'\s+', ' ', text)
+        
+        # Strip leading/trailing whitespace
+        text = text.strip()
+        
+        return text
+
     def _render_html(
         self,
         distilled_chat: DistilledChat,
@@ -535,6 +596,13 @@ class TwoPageGeneratorV2:
         page_2_ideas: List[IdeaGene],
     ) -> str:
         """Render HTML template with given ideas."""
+        # Clean markdown from idea content
+        def clean_idea(idea: IdeaGene) -> Dict[str, Any]:
+            idea_dict = idea.to_dict()
+            # Clean the content field
+            idea_dict['content'] = self._clean_markdown(idea_dict.get('content', ''))
+            return idea_dict
+        
         context = {
             "title": distilled_chat.title,
             "summary": distilled_chat.summary,
@@ -547,8 +615,8 @@ class TwoPageGeneratorV2:
                 "concepts": distilled_chat.concepts_count,
                 "questions": distilled_chat.questions_count,
             },
-            "page_1_ideas": [idea.to_dict() for idea in page_1_ideas],
-            "page_2_ideas": [idea.to_dict() for idea in page_2_ideas],
+            "page_1_ideas": [clean_idea(idea) for idea in page_1_ideas],
+            "page_2_ideas": [clean_idea(idea) for idea in page_2_ideas],
             "font": styling_genome.genes.font.to_dict(),
             "margin": styling_genome.genes.margin.to_dict(),
             "color": styling_genome.genes.color.to_dict(),
