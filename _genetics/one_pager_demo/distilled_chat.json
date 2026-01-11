@@ -1,0 +1,115 @@
+{
+  "title": "Component Evolution System Design",
+  "summary": "Conversation with 9 key ideas, primarily focused on actions. Contains: 4 action, 2 question, 1 decision, 1 concept, 1 insight.",
+  "source_file": "text_input",
+  "distilled_at": "2026-01-11T21:26:13.554224",
+  "total_ideas": 9,
+  "metrics": {
+    "decisions": 1,
+    "insights": 1,
+    "actions": 4,
+    "concepts": 1,
+    "questions": 2
+  },
+  "ideas": [
+    {
+      "content": "## Key Decisions",
+      "category": "decision",
+      "context": " ## Key Decisions ",
+      "importance": 0.43333333333333335,
+      "genome_id": "84561848aa8c9861fe0eeb7d3eba1b958cf1ec402d81b577e71b35b91a074710",
+      "scientific_name": "Fortis Celer, the Eternal",
+      "extracted_at": "2026-01-11T21:26:13.550070",
+      "source_location": "text_input:L4",
+      "tags": []
+    },
+    {
+      "content": "This allows the system to learn better designs automatically.",
+      "category": "concept",
+      "context": "We decided to treat styling elements as genes that can evolve over time. This allows the system to learn better designs automatically. ",
+      "importance": 0.6666666666666666,
+      "genome_id": "1094055d59f7504114422c61f5f50d2fbc422877592b129a38c8cd3b12267942",
+      "scientific_name": "Deva Kama, the Ancient",
+      "extracted_at": "2026-01-11T21:26:13.552121",
+      "source_location": "text_input:L7",
+      "tags": []
+    },
+    {
+      "content": "## Important Insights",
+      "category": "insight",
+      "context": " ## Important Insights ",
+      "importance": 0.43333333333333335,
+      "genome_id": "c79ec3e609093f44e4b53d9bd0ea15520218f6108e636002278fca330364c502",
+      "scientific_name": "Neon Prime, the Stable",
+      "extracted_at": "2026-01-11T21:26:13.552335",
+      "source_location": "text_input:L12",
+      "tags": []
+    },
+    {
+      "content": "- TODO: Implement ChatDistiller for idea extraction",
+      "category": "action",
+      "context": " - TODO: Implement ChatDistiller for idea extraction - TODO: Create TwoPageGenerator with hard 2-page constraint",
+      "importance": 0.6666666666666666,
+      "genome_id": "a234e4491c8584153361a55a19e85081316fa0c908235774f3a1fa1e7f78933c",
+      "scientific_name": "Prudens Terra, the Bold",
+      "extracted_at": "2026-01-11T21:26:13.552709",
+      "source_location": "text_input:L21",
+      "tags": []
+    },
+    {
+      "content": "- TODO: Create TwoPageGenerator with hard 2-page constraint",
+      "category": "action",
+      "context": "- TODO: Implement ChatDistiller for idea extraction - TODO: Create TwoPageGenerator with hard 2-page constraint - TODO: Build fitness evaluation system",
+      "importance": 0.6666666666666666,
+      "genome_id": "3363e0891f7176b124eeb1b65cdd197d43019cb2e77f1db988c82fad95c06193",
+      "scientific_name": "Moksha Nila, the Wise",
+      "extracted_at": "2026-01-11T21:26:13.552797",
+      "source_location": "text_input:L22",
+      "tags": []
+    },
+    {
+      "content": "- TODO: Build fitness evaluation system",
+      "category": "action",
+      "context": "- TODO: Create TwoPageGenerator with hard 2-page constraint - TODO: Build fitness evaluation system - Must integrate with existing taxonomy system",
+      "importance": 0.6666666666666666,
+      "genome_id": "25af36eae95db2ea977de501fad3aa4bfa3a93f337324e8c2f75f632c77e0419",
+      "scientific_name": "Shakti Pita, the Flawed",
+      "extracted_at": "2026-01-11T21:26:13.552868",
+      "source_location": "text_input:L23",
+      "tags": []
+    },
+    {
+      "content": "- Must integrate with existing taxonomy system",
+      "category": "action",
+      "context": "- TODO: Build fitness evaluation system - Must integrate with existing taxonomy system ",
+      "importance": 0.43333333333333335,
+      "genome_id": "e7a6331e71e3330c90af925901375d20360cb520217ed707e0a60d23a4e16b73",
+      "scientific_name": "Link Prime, the Gentle",
+      "extracted_at": "2026-01-11T21:26:13.552946",
+      "source_location": "text_input:L24",
+      "tags": []
+    },
+    {
+      "content": "How do we enforce the 2-page constraint strictly?",
+      "category": "question",
+      "context": " How do we enforce the 2-page constraint strictly? What metrics best measure document quality?",
+      "importance": 0.6666666666666666,
+      "genome_id": "7d3c31c3f1a77f27016dbc3a5d33a3db0eee96fc3f09a2656bd95dedb4cbf207",
+      "scientific_name": "Einherjar Hraedr, the Vocal",
+      "extracted_at": "2026-01-11T21:26:13.553332",
+      "source_location": "text_input:L35",
+      "tags": []
+    },
+    {
+      "content": "What metrics best measure document quality?",
+      "category": "question",
+      "context": "How do we enforce the 2-page constraint strictly? What metrics best measure document quality? Should we support adaptive layouts based on content?",
+      "importance": 0.6666666666666666,
+      "genome_id": "54450472d483dcfdb26c3b8bc7483e4012944c657227cc6ac7d3d4aa2686a429",
+      "scientific_name": "Skadi Raudr, the Simple",
+      "extracted_at": "2026-01-11T21:26:13.553413",
+      "source_location": "text_input:L36",
+      "tags": []
+    }
+  ]
+}

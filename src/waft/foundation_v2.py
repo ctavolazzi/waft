@@ -504,35 +504,22 @@ class TextBlock(ContentBlock):
             # Check page break before paragraph
             current_y = self._check_page_break(pdf, current_y, config.font_size_body * 3)
 
-            # Word-wrap paragraph
-            words = paragraph.split()
-            current_line = []
-            line_width = 0
-
-            for word in words:
-                word_with_space = word + " "
-                word_width = pdf.get_string_width(word_with_space)
-
-                if line_width + word_width > page_width and current_line:
-                    # Render current line
-                    line_text = " ".join(current_line)
-                    redactor.render_text(
-                        pdf, line_text, pdf.l_margin, current_y + config.font_size_body * 0.75, config.font_size_body
-                    )
-                    current_y += config.font_size_body * config.line_spacing
-                    current_line = [word]
-                    line_width = pdf.get_string_width(word + " ")
-                else:
-                    current_line.append(word)
-                    line_width += word_width
-
-            # Render remaining line
-            if current_line:
-                line_text = " ".join(current_line)
-                redactor.render_text(
-                    pdf, line_text, pdf.l_margin, current_y + config.font_size_body * 0.75, config.font_size_body
-                )
-                current_y += config.font_size_body * config.line_spacing
+            # Use multi_cell for proper word wrapping (FPDF handles this correctly)
+            pdf.set_xy(pdf.l_margin, current_y)
+            line_height = config.font_size_body * config.line_spacing
+            
+            # Use multi_cell which handles word wrapping, line breaks, and page breaks automatically
+            pdf.multi_cell(
+                w=page_width,
+                h=line_height,
+                txt=paragraph,
+                border=0,
+                align="L",
+                fill=False
+            )
+            
+            # Get the Y position after multi_cell (it handles page breaks automatically)
+            current_y = pdf.get_y()
 
         return current_y + 8
 
@@ -922,7 +909,9 @@ class DocumentEngine(FPDF):
 
     def _add_header_footer(self) -> None:
         """Add headers and footers."""
-        font_family, font_style = ContentBlock()._get_font(self.config, self.config.body_font, bold=False)
+        # Use a dummy TextBlock to access _get_font (it's a non-abstract method)
+        dummy = TextBlock("")
+        font_family, font_style = dummy._get_font(self.config, self.config.body_font, bold=False)
 
         if self.config.header_text:
             self.set_font(font_family, style=font_style, size=self.config.font_size_footer)

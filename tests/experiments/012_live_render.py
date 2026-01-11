@@ -2,12 +2,12 @@
 Experiment 012: The Pulse Visualization
 
 Scientific Objective: Visualize the multiverse in real-time using PetriViewer
-and generate a scientific manifesto report.
+and generate a scientific report.
 
 This experiment:
 1. Populates a 15x15 PetriDish with 6 diverse organisms and 10 items
 2. Runs 10 Pulses with real-time visualization
-3. Generates final scientific manifesto report
+3. Generates final scientific report
 """
 
 import asyncio
@@ -25,7 +25,7 @@ from src.waft.core.world import Biome
 from src.waft.core.hub import PetriDish, TheSlicer, TheReaper
 from src.waft.core.science import TheObserver
 from src.waft.core.hub.viewer import PetriViewer
-from src.waft.core.science.report import ManifestoGenerator
+from src.waft.core.science.report import SessionReportGenerator
 
 
 class RenderOrganism(BaseAgent):
@@ -169,12 +169,12 @@ async def run_experiment():
     print("✓ 10 Pulses Complete")
     print()
     
-    # Step 6: Generate Scientific Manifesto
-    print("STEP 6: Generating Scientific Manifesto...")
+    # Step 6: Generate Scientific Report
+    print("STEP 6: Generating Scientific Report...")
     print("-" * 80)
     
-    manifesto_gen = ManifestoGenerator(project_path=project_root, observer=observer)
-    report = manifesto_gen.generate_session_report(biome=biome)
+    report_gen = SessionReportGenerator(project_path=project_root, observer=observer)
+    report = report_gen.generate_session_report(biome=biome)
     
     # Save report
     report_file = project_root / "_work_efforts" / "session_report.md"
@@ -202,13 +202,13 @@ async def run_experiment():
     print(f"  ✓ 6 organisms birthed and visualized")
     print(f"  ✓ 10 items distributed across lattice")
     print(f"  ✓ 10 pulses executed with real-time rendering")
-    print(f"  ✓ Scientific manifesto generated")
+    print(f"  ✓ Scientific report generated")
     print()
     print(f"📄 Report: {report_file}")
     print()
     
-    # Show snippet of manifesto
-    print("━━━ MANIFESTO SNIPPET ━━━")
+    # Show snippet of report
+    print("━━━ REPORT SNIPPET ━━━")
     print()
     report_lines = report.split("\n")
     for i, line in enumerate(report_lines[:30]):  # First 30 lines

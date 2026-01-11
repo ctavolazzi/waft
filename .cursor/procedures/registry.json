@@ -1,0 +1,105 @@
+{
+  "procedures": [
+    {
+      "shortcode": "ENG-001",
+      "name": "Full Engineering Workflow",
+      "category": "ENG",
+      "description": "Complete engineering workflow from orientation to implementation",
+      "file": ".cursor/procedures/ENG-001_full_engineering_workflow.md",
+      "created": "2026-01-10",
+      "updated": "2026-01-10",
+      "status": "active",
+      "aliases": ["/engineering", "/eng"]
+    },
+    {
+      "shortcode": "CMD-001",
+      "name": "Create New Command",
+      "category": "CMD",
+      "description": "Standardized procedure for creating new Cursor commands",
+      "file": ".cursor/procedures/CMD-001_create_new_command.md",
+      "created": "2026-01-10",
+      "updated": "2026-01-10",
+      "status": "active",
+      "aliases": ["/new-command"]
+    },
+    {
+      "shortcode": "ORC-001",
+      "name": "Comprehensive Orchestration",
+      "category": "ORC",
+      "description": "Complete orchestration workflow (orchestrate command)",
+      "file": ".cursor/procedures/ORC-001_comprehensive_orchestration.md",
+      "created": "2026-01-10",
+      "updated": "2026-01-10",
+      "status": "active",
+      "aliases": ["/orchestrate"]
+    },
+    {
+      "shortcode": "ANL-001",
+      "name": "Data Analysis Workflow",
+      "category": "ANL",
+      "description": "Complete data analysis workflow (phase1 → analyze)",
+      "file": ".cursor/procedures/ANL-001_data_analysis_workflow.md",
+      "created": "2026-01-10",
+      "updated": "2026-01-10",
+      "status": "active",
+      "aliases": ["/analyze-workflow"]
+    },
+    {
+      "shortcode": "VER-001",
+      "name": "Verification Workflow",
+      "category": "VER",
+      "description": "Comprehensive verification workflow",
+      "file": ".cursor/procedures/VER-001_verification_workflow.md",
+      "created": "2026-01-10",
+      "updated": "2026-01-10",
+      "status": "active",
+      "aliases": ["/verify-workflow"]
+    },
+    {
+      "shortcode": "PROC-066",
+      "name": "Order 66",
+      "category": "PROC",
+      "description": "Comprehensive execution workflow - complete project cycle from orientation through completion",
+      "file": ".cursor/procedures/PROC-066_order_66.md",
+      "created": "2026-01-10",
+      "updated": "2026-01-10",
+      "status": "active",
+      "aliases": ["/order66", "/order-66"]
+    },
+    {
+      "shortcode": "CMD-002",
+      "name": "Create Work Effort with Tool Bag",
+      "category": "CMD",
+      "description": "Standardized procedure for creating work efforts with automatic tool bag setup",
+      "file": ".cursor/procedures/CMD-002_create_work_effort_with_tools.md",
+      "created": "2026-01-10",
+      "updated": "2026-01-10",
+      "status": "active",
+      "aliases": ["/create-work-effort", "/new-work-effort"]
+    }
+  ],
+  "categories": {
+    "ENG": "Engineering workflows",
+    "CMD": "Command creation procedures",
+    "PROC": "General procedures",
+    "ORC": "Orchestration workflows",
+    "ANL": "Analysis procedures",
+    "VER": "Verification procedures",
+    "DOC": "Documentation procedures",
+    "TST": "Testing procedures",
+    "DEP": "Deployment procedures",
+    "DBG": "Debugging procedures"
+  },
+  "next_numbers": {
+    "ENG": 2,
+    "CMD": 3,
+    "PROC": 67,
+    "ORC": 2,
+    "ANL": 2,
+    "VER": 2,
+    "DOC": 1,
+    "TST": 1,
+    "DEP": 1,
+    "DBG": 1
+  }
+}

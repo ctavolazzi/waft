@@ -109,7 +109,7 @@ def convert_css_to_printer_friendly(css: str) -> str:
     # Convert border colors to black
     result = re.sub(
         r'border(?:-[a-z]+)?:\s*\d+px\s+(?:solid|dashed|dotted)\s+(#[0-9a-fA-F]{3,6})(?=\s*[;})])',
-        lambda m: m.group(0).replace(m.group(2), '#000'),
+        lambda m: m.group(0).replace(m.group(1), '#000'),
         result,
         flags=re.IGNORECASE
     )
