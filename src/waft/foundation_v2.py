@@ -160,6 +160,44 @@ class DocumentConfig:
             font_size_body=11,
         )
 
+    @classmethod
+    def field_guide(
+        cls,
+        field_guide_number: str = "FG-001",
+        classification: str = "FOR OPERATIONAL USE",
+    ) -> "DocumentConfig":
+        """
+        Military field guide style - rugged, practical documentation.
+
+        - Helvetica throughout (field manual aesthetic)
+        - Wider margins for notes
+        - Practical, instructional tone
+        - Warnings, checklists, procedures
+        """
+        return cls(
+            font_config=FontConfig(
+                serif_family="Times",
+                serif_bold="Times-Bold",
+                sans_family="Helvetica",
+                sans_bold="Helvetica-Bold",
+                mono_family="Courier",
+                mono_bold="Courier-Bold",
+            ),
+            body_font=FontFamily.SANS_SERIF,
+            header_font=FontFamily.SANS_SERIF,
+            header_text=f"FIELD GUIDE {field_guide_number}",
+            footer_text=classification,
+            watermark=None,
+            line_spacing=1.3,
+            font_size_title=20,
+            font_size_h1=16,
+            font_size_h2=13,
+            font_size_h3=11,
+            font_size_body=10,
+            page_margins=(90, 90, 90, 90),  # Wider margins for field notes
+            redaction_style=RedactionStyle.BLACK_BAR,
+        )
+
 
 class ContentBlock(ABC):
     """Abstract base class for all content blocks."""
