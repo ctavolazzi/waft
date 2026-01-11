@@ -1,0 +1,353 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WAFT v0.5.3 MVP: Karma Economy & Source Consciousness</title>
+
+    <style>
+        /* Strict 2-page setup */
+        @page {
+            size: letter;
+            margin: 25mm 25mm 25mm 25mm;
+        }
+
+        body {
+            font-family: Georgia, serif;
+            font-size: 11pt;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #FFFFFF;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Prevent orphans/widows */
+        p, li {
+            orphans: 2;
+            widows: 2;
+        }
+
+        /* Page break control */
+        .page-break {
+            page-break-after: always;
+            break-after: page;
+        }
+
+        .no-break {
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 20pt;
+            color: #000000;
+            margin-top: 0;
+            margin-bottom: 14pt;
+            page-break-after: avoid;
+            border-bottom: 2pt solid #2c3e50;
+            padding-bottom: 4pt;
+        }
+
+        h2 {
+            font-size: 16pt;
+            color: #000000;
+            margin-top: 14pt;
+            margin-bottom: 8pt;
+            page-break-after: avoid;
+            border-bottom: 1pt solid #2c3e50;
+            padding-bottom: 2pt;
+        }
+
+        h3 {
+            font-size: 13pt;
+            color: #000000;
+            margin-top: 8pt;
+            margin-bottom: 4.0pt;
+            page-break-after: avoid;
+        }
+
+        p {
+            margin: 0 0 8pt 0;
+        }
+
+        ul, ol {
+            margin: 0 0 8pt 0;
+            padding-left: 15pt;
+        }
+
+        li {
+            margin-bottom: 2.6666666666666665pt;
+        }
+
+        /* Visual boxes - inspired by field guide */
+        .note-box {
+            border-left: 4pt solid #2c3e50;
+            background: #f8f9fa;
+            padding: 8pt;
+            margin: 8pt 0;
+            page-break-inside: avoid;
+        }
+
+        .note-title {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 12pt;
+            margin-bottom: 4.0pt;
+        }
+
+        .highlight-box {
+            border: 2pt solid #2c3e50;
+            background: #f8f9fa;
+            padding: 8pt;
+            margin: 8pt 0;
+            page-break-inside: avoid;
+        }
+
+        /* Tables for structured data */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 8pt 0;
+            font-size: 10pt;
+            page-break-inside: avoid;
+        }
+
+        th {
+            background: #000000;
+            color: #FFFFFF;
+            border: 1pt solid #1a1a1a;
+            padding: 4pt;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            border: 1pt solid #1a1a1a33;
+            padding: 4pt;
+        }
+
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        /* Pillar boxes - visual representation */
+        .pillar {
+            border: 2pt solid #2c3e50;
+            background: #FFFFFF;
+            padding: 8pt;
+            margin: 8pt 0;
+            page-break-inside: avoid;
+        }
+
+        .pillar-title {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 13pt;
+            margin-bottom: 4.0pt;
+        }
+
+        /* Ideas - prose presentation */
+        .idea {
+            margin-bottom: 8pt;
+            padding: 8pt;
+            border-left: 3pt solid #2c3e50;
+            background: #f8f9fa15;
+            page-break-inside: avoid;
+        }
+
+        .idea-content {
+            font-size: 11pt;
+            line-height: 1.6;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+            text-align: justify;
+            margin: 0;
+        }
+
+        /* Metadata - compact */
+        .metadata {
+            font-size: 9pt;
+            color: #1a1a1a88;
+            line-height: 1.3;
+            border-top: 1pt solid #1a1a1a33;
+            padding-top: 4.0pt;
+            margin-top: 8pt;
+        }
+
+        .metadata p {
+            margin-bottom: 2.6666666666666665pt;
+        }
+
+        /* Summary box - prominent */
+        .summary-box {
+            background: #f8f9fa;
+            padding: 8pt;
+            margin-bottom: 14pt;
+            border-left: 4pt solid #2c3e50;
+            border-top: 1pt solid #2c3e50;
+            border-right: 1pt solid #2c3e50;
+            border-bottom: 1pt solid #2c3e50;
+        }
+
+        /* Scientific name styling */
+        .scientific-name {
+            font-style: italic;
+            color: #2c3e50;
+        }
+
+        /* Code blocks */
+        code {
+            font-family: monospace;
+            font-size: 9pt;
+            background: #f8f9fa;
+            color: #333333;
+            padding: 2pt 4pt;
+            border-radius: 2pt;
+        }
+
+        pre {
+            background: #f8f9fa;
+            padding: 4.0pt;
+            border-left: 3pt solid #2c3e50;
+            font-size: 9pt;
+            overflow-x: auto;
+            page-break-inside: avoid;
+        }
+
+        /* Visual separators */
+        .divider {
+            border-top: 1pt solid #1a1a1a33;
+            margin: 8pt 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- PAGE 1 -->
+    <div class="page-1">
+        <h1>WAFT v0.5.3 MVP: Karma Economy & Source Consciousness</h1>
+
+        <div class="summary-box">
+            <strong>Summary:</strong> Purpose: The core "Soul" of the machine that orchestrates everything.
+        </div>
+
+        <div class="metadata">
+            <p><strong>Generated:</strong> 2026-01-11 23:46 UTC | <strong>Ideas Extracted:</strong> 33</p>
+        </div>
+
+        <h2>What Happened</h2>
+
+        
+        <div class="idea no-break">
+            <p class="idea-content">Purpose: The core "Soul" of the machine that orchestrates everything. Represents the original "idea" or "being" that began permutating.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Memory flow system extracts memories from experiences and passes them upward: Lessons learned Skills gained Patterns discovered Insights.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">The architecture passes capacity up the parental chain back to the original "idea" or the original "being" so that it could accomplish whatever its goal was when it began permutating (evolving).</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">The architecture passes capacity up the parental chain back to the original "idea" so that it could accomplish whatever its goal was when it began permutating (evolving).</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">The architecture passes capacity up the parental chain back to the original "idea" so that it could accomplish whatever its goal was when it began permutating (evolving).</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">The WAFT system spins up instances of "realities" where "beings" can learn "skills" in an evolutionary process then pass their "memories" back up the chain in the form of lessons learned, skills gained, and more.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Reality Types: Learning: Beings learn skills Testing: Beings test skills Evolution: Beings evolve through natural selection Research: Beings conduct research Creative: Beings create new things.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Features: Create realities with configurations Spawn beings into realities Manage reality lifecycle Extract lessons/skills/memories Pass memories upward.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Skill Types: Cognitive: Thinking, reasoning, analysis Creative: Creation, expression, innovation Social: Communication, collaboration Technical: Code, tools, systems Meta: Learning how to learn.</p>
+        </div>
+        
+    </div>
+
+    <!-- Forced page break -->
+    <div class="page-break"></div>
+
+    <!-- PAGE 2 -->
+    <div class="page-2">
+        
+        <h2>Additional Details</h2>
+
+        
+        <div class="idea no-break">
+            <p class="idea-content">Purpose: Knowledge passing upward - the mechanism by which beings pass their "memories" back up the chain.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Memory Types: Lessons: What worked/didn't work (2.0 capacity) Skills: New abilities (3.0 capacity) Patterns: Recurring patterns (4.0 capacity) Insights: Deep understanding (5.0 capacity) Wisdom: Higher-level knowledge (10.0 capacity).</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Features: Karma-based exchange List offerings Create offerings Purchase offerings Facilitate knowledge transfer.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Beings learn skills through experience: Learn reasoning skill (level increases) Learn new creative skill Learn lessons (what worked/didn't work) Record memories (patterns discovered).</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">When enough capacity accumulated, source accomplishes its original goal: "Understand evolution through permutation".</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Lifetimes: Auto-registered with Source when purchased Realities: Auto-registered with Source when created Beings: Auto-registered with Source when spawned.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Lifetimes: Auto-contribute karma to Source when ended Realities: Auto-contribute memories to Source when ended Beings: Auto-contribute memories to Source when completed.</p>
+        </div>
+        
+        
+
+        <div class="divider"></div>
+
+        <div class="metrics">
+            <h3>Content Breakdown</h3>
+            <table>
+                <tr>
+                    <th>Type</th>
+                    <th>Count</th>
+                </tr>
+                <tr>
+                    <td>Decisions</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>Insights</td>
+                    <td>7</td>
+                </tr>
+                <tr>
+                    <td>Actions</td>
+                    <td>8</td>
+                </tr>
+                <tr>
+                    <td>Concepts</td>
+                    <td>12</td>
+                </tr>
+                <tr>
+                    <td>Questions</td>
+                    <td>6</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
