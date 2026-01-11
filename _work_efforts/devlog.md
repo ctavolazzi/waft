@@ -4,6 +4,146 @@ This log tracks development activities, decisions, and progress for the waft pro
 
 ---
 
+## 2026-01-11 - One-Pager V2 Evolution & Formatting Fixes
+
+**Time**: 14:01:42 PST
+
+### Summary
+Completed evolution of TwoPageGenerator from V1 → V2 with TRUE constraint enforcement, integrated V2 as default, and fixed formatting issues (markdown artifacts, text rendering). System now accurately generates 2-page PDFs through adaptive iteration and real page counting.
+
+### Evolution: V1 → V2
+- **V1 Problem**: Used HTML character count heuristic, generated 4 pages but reported constraint = 1.0 (false positive)
+- **V2 Solution**: Real page counting (pypdf), adaptive iteration (up to 5 attempts), accurate fitness metrics
+- **Results**: V1 = 4 pages (failed), V2 = 2 pages in 3 iterations (success)
+
+### Integration
+- Made V2 the default (`TwoPageGenerator` → `TwoPageGeneratorV2`)
+- Kept V1 available for backward compatibility
+- Updated all examples to use V2 API (`target_pages=2` instead of `page_1_ideas=5`)
+- Added `pypdf>=3.0.0` dependency
+
+### Formatting Fixes
+- Added `_clean_markdown()` method to strip markdown artifacts (##, **, etc.)
+- Improved text rendering CSS (word-wrap, overflow-wrap, hyphens)
+- Removed redundant "Key Concept:" prefixes
+- Ensured consistent content presentation
+
+### Files Changed
+- `src/waft/evolution/two_page_generator_v2.py` - Markdown cleaning, improved CSS
+- `src/waft/evolution/__init__.py` - V2 as default export
+- `pyproject.toml` - Added pypdf dependency
+- `examples/*.py` - Updated to V2 API
+- Documentation: V2_EVOLUTION_SUMMARY.md, V2_INTEGRATION_COMPLETE.md
+
+### Impact
+- ✅ Accurate constraint enforcement (2 pages, not 4)
+- ✅ Clean, professional output (no markdown artifacts)
+- ✅ Better text rendering and readability
+- ✅ System can evolve based on accurate fitness signals
+
+**Checkpoint**: `_work_efforts/CHECKPOINT_2026-01-11_one_pager_v2_evolution.md`
+
+---
+
+## 2026-01-11 - One-Pager Blank First Page Fix
+
+**Time**: 11:26:21 PST
+
+### Summary
+Fixed blank first page issue in one-pager by completely simplifying the template and generation method. Removed complex CSS rules and Study Gym integration that were causing the problem.
+
+### Problem
+- First page of one-pager PDFs was coming out blank
+- Complex template with `@page :first` rules, image placeholders, notes sections
+- Overly complex generation method with Study Gym integration, multiple iterations, corrections
+
+### Solution
+**Complete rewrite from scratch:**
+
+1. **Simplified Template** ✅
+   - Removed all complex CSS (`@page :first` rules, visual layout, image placeholders, notes sections)
+   - Basic template: header (title/subtitle) + content
+   - Simple, clean CSS that just works
+   - Content starts immediately on page 1
+
+2. **Simplified Generation Method** ✅
+   - Removed Study Gym integration (disabled by default)
+   - Removed complex correction loops
+   - Removed blank page removal logic
+   - Direct generation: render template → write PDF → done
+
+### Result
+- ✅ First page now has content (verified with test)
+- ✅ Template is simple and maintainable
+- ✅ Generation is fast and straightforward
+- ✅ No blank pages
+
+### Files Changed
+- `src/waft/templates/one_pager.py` - Complete template rewrite
+- `src/waft/one_pager.py` - Simplified `generate()` method
+
+---
+
+## 2026-01-11 - One-Pager Evolution: Iterative Learning System Design
+
+**Time**: 10:50:09 PST
+
+### Summary
+Evolved one-pager tool with visual diversity and designed iterative learning system for template evolution. Created genome collection system to track one-pager variations and enable pattern-based template improvement.
+
+### Key Accomplishments
+
+1. **Visual Diversity Implementation** ✅
+   - Added 5 section style variants (story-section, boxed-section, highlight-section, minimal-section, callout-section)
+   - Multiple header variants (boxed, highlight, underlined)
+   - 5 list style variants (standard, custom-bullets, checkmarks, dashed, boxed)
+   - 4 paragraph style variants (standard, indented, highlight, compact)
+   - 3 code block style variants (standard, boxed, minimal)
+   - Style rotation system for automatic diversity
+
+2. **Iterative Learning System Design** ✅ → 🔄 **DEEP INTEGRATION DISCOVERED**
+   - Initially designed custom genome collection system
+   - **Refactored**: Realized we should use existing Study Gym and SessionAnalytics
+   - **Deep Dive**: Discovered FULL ecosystem we can leverage:
+     - Study Gym: Observation, hypothesis, testing, analysis, ChallengeGenerator
+     - SessionAnalytics: Session tracking, pattern analysis, trend detection
+     - EvolutionaryEvent System: Complete lineage tracking (genome_id, parent_id, generation)
+     - LineagePoet: Generate scientific names for templates
+     - SessionReportGenerator: Pattern analysis reports, phylogenetic trees, biodiversity
+     - TamPsyche: Template "health" tracking (coherence, chaos, realization)
+     - Fitness Metrics: Score templates (aesthetic, efficiency, user rating)
+     - Agent Spawn System: Templates can spawn variants with mutations
+   - **Vision**: Templates as living digital organisms that evolve, have scientific names, build phylogenetic trees
+   - **Feature Inventory**: Created complete inventory of ALL evolutionary features - currently using ~30%, should use ALL (SPAWN, MUTATE, GYM_EVAL, DEATH, SURVIVAL, Conjugate, selection mechanisms, mutation types, etc.)
+
+3. **Iterative Learning System Design** ✅
+   - Designed complete system architecture for template evolution
+   - Created design document: `ONE_PAGER_ITERATIVE_SYSTEM_DESIGN.md`
+   - Defined pattern analysis approach
+   - Outlined template evolution strategy
+
+4. **Checkpoint & Reflection** ✅
+   - Created checkpoint: `CHECKPOINT_2026-01-11_one_pager_evolution.md`
+   - Wrote reflection in AI journal about iterative tool design
+   - Documented vision for self-improving tool system
+
+### Current State
+- One-pager tool functional with visual diversity
+- Genome collection system designed and ready for integration
+- Pattern analysis framework designed
+- Template evolution strategy outlined
+
+### Next Steps
+1. Integrate genome collection into `OnePager.generate()`
+2. Test collection system with multiple one-pagers
+3. Implement basic pattern analysis
+4. Design template evolution algorithm
+
+### Key Insight
+The one-pager tool is becoming a **learning system** - each generated document teaches the system something new. Over time, base templates will reflect accumulated wisdom from all previous generations.
+
+---
+
 ## 2026-01-09 - Reincarnation System: Samsara Protocol (v0.3.0-alpha)
 
 **Time**: 13:43:47 PST
@@ -2308,3 +2448,5 @@ Executed complete engineering workflow (spin-up → explore → draft → critiq
 
 
 [2026-01-09 20:59:04] Session: TheFoundation Implementation - Created TheFoundation class as WAFT-specific wrapper around DocumentEngine. Integrated with TheObserver and TavernKeeper. Implementation complete and ready for testing.
+
+[2026-01-11 20:43:44] Created new work effort WE-260111-jr7r: Component Evolution System using genetic ancestry. Components (sections, headers, lists, paragraphs, code blocks) will evolve to maximize content density. Created 6 tickets and comprehensive design document. System will use SPAWN, MUTATE, GYM_EVAL, DEATH/SURVIVAL events to track component evolution with complete lineage.
