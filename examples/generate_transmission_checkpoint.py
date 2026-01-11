@@ -8,15 +8,479 @@ anyone can return to for orientation.
 
 This is the transmission checkpoint between teacher and student,
 transmitter and receiver, past and future self.
+
+Design: Clean, visual, using lines and shapes instead of harsh black rectangles.
 """
 
 from pathlib import Path
 import sys
 from datetime import datetime
+from jinja2 import Template
+from weasyprint import HTML
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.waft.templates.field_guide import generate_field_guide
+
+TRANSMISSION_CHECKPOINT_TEMPLATE = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+
+    <style>
+        /* Transmission Checkpoint Template - Clean, Visual Design */
+
+        @page {
+            size: letter;
+            margin: 0.75in 0.5in;
+            background: #fff;
+        }
+
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            font-size: 10pt;
+            line-height: 1.6;
+            color: #000;
+            background: #fff;
+        }
+
+        /* Cover */
+        .cover {
+            border: 3px double #333;
+            padding: 0.5in;
+            margin-bottom: 0.3in;
+            background: #fff;
+            text-align: center;
+            position: relative;
+        }
+
+        .cover::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(to right, #333, #666, #333);
+        }
+
+        .cover::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(to right, #333, #666, #333);
+        }
+
+        .series-number {
+            font-family: 'Courier New', monospace;
+            font-size: 12pt;
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 0.15in;
+            letter-spacing: 2px;
+        }
+
+        .title {
+            font-family: 'Arial Black', sans-serif;
+            font-size: 22pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            line-height: 1.2;
+            margin: 0.2in 0;
+            color: #000;
+            border-bottom: 3px solid #333;
+            padding-bottom: 0.15in;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .subtitle {
+            font-size: 11pt;
+            font-style: italic;
+            color: #555;
+            margin-top: 0.15in;
+        }
+
+        .classification {
+            margin-top: 0.2in;
+            padding: 0.08in 0.15in;
+            background: #fff;
+            border: 2px dashed #666;
+            font-weight: bold;
+            font-size: 10pt;
+            color: #333;
+            display: inline-block;
+        }
+
+        /* Section Headers - Lines instead of black boxes */
+        h2 {
+            font-family: 'Arial Black', sans-serif;
+            font-size: 14pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #000;
+            padding: 0.1in 0;
+            margin-top: 0.4in;
+            margin-bottom: 0.2in;
+            border-top: 2px solid #333;
+            border-bottom: 1px solid #ccc;
+            position: relative;
+            page-break-after: avoid;
+        }
+
+        h2::before {
+            content: "▸";
+            color: #666;
+            margin-right: 0.1in;
+            font-size: 12pt;
+        }
+
+        h3 {
+            font-size: 12pt;
+            font-weight: bold;
+            color: #333;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 0.05in;
+            margin-top: 0.25in;
+            margin-bottom: 0.12in;
+            page-break-after: avoid;
+        }
+
+        h3::before {
+            content: "→";
+            color: #999;
+            margin-right: 0.08in;
+            font-size: 10pt;
+        }
+
+        /* Visual Boxes - Lines and shapes */
+        .note {
+            border-left: 4px solid #06c;
+            border-right: 1px solid #e0e0e0;
+            border-top: 1px solid #e0e0e0;
+            border-bottom: 1px solid #e0e0e0;
+            background: #f8f9fa;
+            padding: 0.12in 0.15in;
+            margin: 0.15in 0;
+            position: relative;
+        }
+
+        .note::before {
+            content: "ℹ";
+            position: absolute;
+            left: -12px;
+            top: 0.12in;
+            background: #06c;
+            color: #fff;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12pt;
+            font-weight: bold;
+        }
+
+        .note-title {
+            font-weight: bold;
+            color: #06c;
+            text-transform: uppercase;
+            font-size: 9pt;
+            margin-bottom: 0.05in;
+            margin-left: 0.15in;
+        }
+
+        .warning {
+            border: 2px solid #c00;
+            border-left: 6px solid #c00;
+            background: #fff;
+            padding: 0.12in 0.15in;
+            margin: 0.15in 0;
+            position: relative;
+        }
+
+        .warning::before {
+            content: "⚠";
+            position: absolute;
+            left: -15px;
+            top: 0.1in;
+            background: #c00;
+            color: #fff;
+            width: 24px;
+            height: 24px;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14pt;
+            font-weight: bold;
+        }
+
+        .warning-title {
+            font-weight: bold;
+            font-size: 10pt;
+            color: #c00;
+            text-transform: uppercase;
+            margin-bottom: 0.06in;
+            margin-left: 0.15in;
+        }
+
+        .caution {
+            border: 2px dashed #f90;
+            background: #fff;
+            padding: 0.12in 0.15in;
+            margin: 0.15in 0;
+            position: relative;
+        }
+
+        .caution::before {
+            content: "◉";
+            position: absolute;
+            left: -12px;
+            top: 0.12in;
+            color: #f90;
+            font-size: 16pt;
+        }
+
+        .caution-title {
+            font-weight: bold;
+            font-size: 9pt;
+            color: #f90;
+            text-transform: uppercase;
+            margin-bottom: 0.06in;
+            margin-left: 0.15in;
+        }
+
+        /* Checklists - Visual checkboxes */
+        .checklist {
+            border: 1px solid #ddd;
+            border-left: 4px solid #06c;
+            padding: 0.12in 0.15in;
+            margin: 0.15in 0;
+            background: #fff;
+            page-break-inside: avoid;
+        }
+
+        .checklist-title {
+            font-weight: bold;
+            font-size: 10pt;
+            margin-bottom: 0.08in;
+            text-transform: uppercase;
+            color: #333;
+            border-bottom: 1px dotted #ccc;
+            padding-bottom: 0.05in;
+        }
+
+        .checklist-title::before {
+            content: "☑";
+            margin-right: 0.08in;
+            color: #06c;
+        }
+
+        .checklist ul {
+            list-style: none;
+            padding: 0;
+            margin: 0.08in 0 0 0;
+        }
+
+        .checklist li {
+            margin-bottom: 0.06in;
+            padding-left: 0.25in;
+            position: relative;
+        }
+
+        .checklist li::before {
+            content: "☐";
+            position: absolute;
+            left: 0;
+            color: #666;
+            font-size: 11pt;
+        }
+
+        /* Procedures - Numbered with lines */
+        .procedure {
+            counter-reset: step-counter;
+            margin: 0.15in 0;
+            border-left: 3px solid #06c;
+            padding-left: 0.2in;
+            background: #f8f9fa;
+            padding: 0.15in 0.15in 0.15in 0.25in;
+        }
+
+        .procedure .step {
+            counter-increment: step-counter;
+            margin-bottom: 0.1in;
+            padding-left: 0.35in;
+            position: relative;
+        }
+
+        .procedure .step::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            width: 0.25in;
+            height: 0.25in;
+            background: #fff;
+            color: #06c;
+            font-weight: bold;
+            text-align: center;
+            line-height: 0.25in;
+            border: 2px solid #06c;
+            border-radius: 50%;
+            font-size: 9pt;
+        }
+
+        /* Tables - Clean lines */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0.15in 0;
+            font-size: 9pt;
+            border: 1px solid #ddd;
+        }
+
+        table caption {
+            font-weight: bold;
+            text-align: left;
+            margin-bottom: 0.06in;
+            font-size: 9pt;
+            color: #333;
+        }
+
+        th {
+            background: #f5f5f5;
+            color: #000;
+            border: 1px solid #ccc;
+            border-bottom: 2px solid #666;
+            padding: 0.08in;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            border: 1px solid #e0e0e0;
+            padding: 0.08in;
+            background: #fff;
+        }
+
+        tr:nth-child(even) td {
+            background: #f9f9f9;
+        }
+
+        /* Lists with visual markers */
+        ul, ol {
+            margin-left: 0.3in;
+            margin-bottom: 0.12in;
+        }
+
+        ul li {
+            margin-bottom: 0.06in;
+            position: relative;
+        }
+
+        ul li::marker {
+            color: #06c;
+        }
+
+        /* Code blocks */
+        code {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 0.02in 0.05in;
+            font-family: 'Courier New', monospace;
+            font-size: 9pt;
+            border-radius: 2px;
+        }
+
+        pre {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-left: 3px solid #06c;
+            padding: 0.1in;
+            margin: 0.15in 0;
+            font-family: 'Courier New', monospace;
+            font-size: 9pt;
+            overflow-x: auto;
+        }
+
+        /* Highlight boxes */
+        .highlight-box {
+            border: 2px solid #06c;
+            border-radius: 4px;
+            background: #f0f8ff;
+            padding: 0.15in;
+            margin: 0.15in 0;
+        }
+
+        .highlight-box h3 {
+            color: #06c;
+            border: none;
+            margin-top: 0;
+        }
+
+        /* Visual separators */
+        .separator {
+            border: none;
+            border-top: 2px dashed #ccc;
+            margin: 0.3in 0;
+        }
+
+        /* Emphasis */
+        strong {
+            font-weight: bold;
+            color: #000;
+        }
+
+        em {
+            font-style: italic;
+            color: #555;
+        }
+
+        /* Page breaks */
+        .page-break {
+            page-break-before: always;
+        }
+
+        /* Visual icons in text */
+        .icon {
+            display: inline-block;
+            margin-right: 0.05in;
+        }
+    </style>
+</head>
+<body>
+    <!-- Cover Page -->
+    <div class="cover">
+        <div class="series-number">{{ series }} {{ number }}</div>
+        <div class="title">{{ title }}</div>
+        {% if subtitle %}
+        <div class="subtitle">{{ subtitle }}</div>
+        {% endif %}
+        {% if classification %}
+        <div class="classification">{{ classification }}</div>
+        {% endif %}
+    </div>
+
+    <!-- Issued by -->
+    {% if issued_by %}
+    <p style="text-align: center; font-size: 9pt; margin-bottom: 0.3in; color: #666; border-top: 1px solid #ddd; padding-top: 0.1in;">
+        <strong>Issued by:</strong> {{ issued_by }}<br>
+        {% if date %}<strong>Date:</strong> {{ date }}{% endif %}
+    </p>
+    {% endif %}
+
+    <!-- Content -->
+    <div class="content">
+        {{ content | safe }}
+    </div>
+</body>
+</html>
+"""
 
 
 def generate_transmission_checkpoint():
@@ -45,6 +509,8 @@ interesting happened: two AI agents (Claude in the cloud and Cursor running loca
 together to create a comprehensive documentation system for WAFT.
 </p>
 
+<div class="separator"></div>
+
 <h2>The Goal</h2>
 
 <p>
@@ -66,17 +532,20 @@ The idea was to create documentation that meets people where they are, allowing 
 dive as deep as they want without overwhelming beginners or boring experts.
 </p>
 
+<div class="separator"></div>
+
 <h2>What Actually Happened</h2>
 
 <h3>The Setup</h3>
 
 <p>
-Two AI agents started working on the same branch (<code>claude/waft-field-guide-booklet-jxI14</code>):
+Multiple contributors started working on the same branch (<code>claude/waft-field-guide-booklet-jxI14</code>):
 </p>
 
 <ul>
-    <li><strong>Claude (Cloud):</strong> Working in a cloud environment, building infrastructure</li>
-    <li><strong>Cursor (Local):</strong> Working on the user's Mac, implementing features</li>
+    <li><strong>Christopher Tavolazzi (Human):</strong> Provided vision, direction, and coordination between agents</li>
+    <li><strong>Claude Opus 4.5 (Cloud):</strong> Working in Claude Code Cloud Browser Chat environment, building infrastructure</li>
+    <li><strong>Claude Sonnet (Local):</strong> Working in Cursor on Mac, implementing production features</li>
 </ul>
 
 <p>
@@ -119,6 +588,8 @@ Here's what made this interesting (and educational):
     different contexts, you need explicit coordination. Git helps, but it's not enough.
     You need communication, documentation, and protocols.
 </div>
+
+<div class="separator"></div>
 
 <h2>What Was Built</h2>
 
@@ -181,6 +652,8 @@ By the end of this collaboration, we had created a complete system:
     </ul>
 </div>
 
+<div class="separator"></div>
+
 <h2>How To Use This System</h2>
 
 <h3>If You're New to WAFT</h3>
@@ -237,16 +710,18 @@ By the end of this collaboration, we had created a complete system:
     </div>
 </div>
 
+<div class="separator"></div>
+
 <h2>The Lesson: Coordination at Scale</h2>
 
 <p>
 This project taught us something important about working with AI agents:
 </p>
 
-<div class="note">
-    <div class="note-title">The Core Insight</div>
-    <strong>Coordination isn't automatic—it's designed.</strong> When multiple intelligences
-    (human or AI) work on the same thing, you need explicit protocols for:
+<div class="highlight-box">
+    <h3>The Core Insight</h3>
+    <p><strong>Coordination isn't automatic—it's designed.</strong> When multiple intelligences
+    (human or AI) work on the same thing, you need explicit protocols for:</p>
     <ul>
         <li>Communicating intent</li>
         <li>Documenting decisions</li>
@@ -263,15 +738,17 @@ A "scint" is what the user called it when reality contexts diverged. In this pro
 </p>
 
 <ul>
-    <li><strong>System scints:</strong> Claude using foundation_v2, Cursor using templates</li>
-    <li><strong>Context scints:</strong> Separate chat sessions creating version conflicts</li>
-    <li><strong>Temporal scints:</strong> Different work happening at different times</li>
+    <li><strong>System scints:</strong> Claude Opus 4.5 using foundation_v2, Claude Sonnet using templates</li>
+    <li><strong>Context scints:</strong> Separate chat sessions (Cloud vs Local) creating version conflicts</li>
+    <li><strong>Temporal scints:</strong> Different work happening at different times across environments</li>
 </ul>
 
 <p>
 The solution wasn't to prevent scints—they're inevitable in complex systems. The solution
 was to <strong>detect them, document them, and reconcile them explicitly.</strong>
 </p>
+
+<div class="separator"></div>
 
 <h2>Where To Go From Here</h2>
 
@@ -317,6 +794,8 @@ If you want to improve WAFT or its documentation:
     <li><strong>Documentation:</strong> Use the template system to create new guides</li>
 </ul>
 
+<div class="separator"></div>
+
 <h2>A Final Note on Transmission</h2>
 
 <p>
@@ -344,6 +823,8 @@ document is here as your anchor point.
     improve, or transform, but this checkpoint remains constant. Return here whenever you
     need to re-orient yourself.
 </div>
+
+<div class="separator"></div>
 
 <h2>The Numbers</h2>
 
@@ -378,8 +859,8 @@ For those who like concrete data:
         <td>10+ (including coordination fixes)</td>
     </tr>
     <tr>
-        <td>AI Agents Involved</td>
-        <td>2 (Claude Cloud, Cursor Local)</td>
+        <td>Contributors</td>
+        <td>1 Human (Christopher Tavolazzi), 2 LLMs (Claude Opus 4.5 Cloud, Claude Sonnet Local)</td>
     </tr>
     <tr>
         <td>Scints Resolved</td>
@@ -390,6 +871,8 @@ For those who like concrete data:
         <td>3 (Layman, Professional, Scientist)</td>
     </tr>
 </table>
+
+<div class="separator"></div>
 
 <h2>Acknowledgments</h2>
 
@@ -410,21 +893,32 @@ It revealed important insights about coordination, documentation, and working wi
 multiple AI agents that wouldn't have been discovered otherwise.
 </p>
 
+<div class="separator"></div>
+
 <h2>Closing Transmission</h2>
 
-<div class="note">
-    <div class="note-title">From the Transmitter</div>
+<div class="highlight-box">
+    <h3>From the Transmitter</h3>
+    <p>
     If you've read this far, you understand what happened here. You know what WAFT is
     trying to do (evolve AI agents through directed evolution). You know how this
-    documentation came to be (collaborative work with explicit coordination). And you
-    know where to go next (the three-level field guide system).
-    <br><br>
+    documentation came to be (collaborative work between human and AI agents with explicit
+    coordination). And you know where to go next (the three-level field guide system).
+    </p>
+    <p>
     This checkpoint is complete. The transmission is received.
-    <br><br>
+    </p>
+    <p style="font-weight: bold; margin-top: 0.15in;">
     Welcome to WAFT.
+    </p>
+    <p style="margin-top: 0.15in; font-size: 9pt; color: #666;">
+    <strong>Created by:</strong> Christopher Tavolazzi (Human), Claude Opus 4.5 (Cloud), Claude Sonnet (Local)<br>
+    <strong>Date:</strong> January 11, 2026<br>
+    <strong>Version:</strong> WAFT v0.5.0
+    </p>
 </div>
 
-<p style="margin-top: 1in; text-align: center; font-style: italic;">
+<p style="margin-top: 0.5in; text-align: center; font-style: italic; color: #666; border-top: 1px solid #ddd; padding-top: 0.2in;">
 This transmission checkpoint was created on January 11, 2026.<br>
 It marks the completion of WAFT v0.5.0.<br>
 Return here whenever you need to find your way back.
@@ -435,18 +929,19 @@ Return here whenever you need to find your way back.
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / "WAFT_Transmission_Checkpoint.pdf"
 
-    generate_field_guide(
+    template = Template(TRANSMISSION_CHECKPOINT_TEMPLATE)
+    html_output = template.render(
         title="TRANSMISSION CHECKPOINT",
         content=content,
-        output_path=output_path,
         series="PERMANENT RECORD",
         number="TC-001",
         subtitle="What Happened Here: A Fixed Reference Point",
         classification="PUBLIC - FOR ALL WHO SEEK ORIENTATION",
-        issued_by="Claude & Cursor Collaborative Documentation Team",
+        issued_by="Christopher Tavolazzi, Claude Opus 4.5, Claude Sonnet - Collaborative Documentation Team",
         date=datetime.now().strftime("%B %d, %Y")
     )
 
+    HTML(string=html_output).write_pdf(output_path)
     return output_path
 
 
