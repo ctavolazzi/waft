@@ -575,6 +575,120 @@ TELEPORT MASSIVE
 
 
 # ============================================================================
+# DOCUMENT GENERATORS - TAB 2: ENGINEERING & HARDWARE
+# ============================================================================
+
+
+def generate_tm_eng_004(output_dir: Path) -> Tuple[Path, Path]:
+    """
+    Generate TM-ENG-004: Material Safety Data Sheet - Suspension-9
+
+    Returns: (pdf_path, markdown_path)
+    """
+    pdf_path = output_dir / "pdf" / "tab2_engineering" / "TM-ENG-004_Suspension9_MSDS.pdf"
+    md_path = output_dir / "markdown" / "tab2_engineering" / "TM-ENG-004_Suspension9_MSDS.md"
+
+    pdf_path.parent.mkdir(parents=True, exist_ok=True)
+    md_path.parent.mkdir(parents=True, exist_ok=True)
+
+    # Use DocumentEngine for MSDS (simpler than FPDF for text-heavy document)
+    config = DocumentConfig.classified_dossier(
+        header="TELEPORT MASSIVE // MSDS",
+        watermark="INTERNAL USE ONLY",
+    )
+
+    engine = DocumentEngine(config)
+
+    # Header
+    engine.add(SectionHeader("MATERIAL SAFETY DATA SHEET", level=1))
+    engine.add(KeyValueBlock({
+        "Document ID": "TM-ENG-004",
+        "Product Name": "Suspension-9 (Colloidal Schreibersite / Fulgurite Matrix)",
+        "Common Name": '"Mud," "Prime," "Liquid God" (Prohibited Slang)',
+        "Catalog Code": "TM-BIO-99X",
+        "Classification": "INTERNAL USE ONLY",
+        "Revision Date": datetime.now().strftime('%Y-%m-%d'),
+    }))
+
+    engine.add(TextBlock(""))
+
+    # Section 1
+    engine.add(SectionHeader("SECTION 1: PRODUCT AND COMPANY IDENTIFICATION", level=2))
+    engine.add(KeyValueBlock({
+        "Product Use": "Quantum Entanglement Medium / Artificial Consciousness Substrate",
+        "Manufacturer": "Teleport Massive – Special Materials Division, Site Omega",
+        "Emergency Contact": "ORACLE (Ext. 000)",
+    }))
+
+    # Section 2
+    engine.add(SectionHeader("SECTION 2: HAZARDS IDENTIFICATION", level=2))
+    engine.add(WarningBlock(
+        "DANGER! EXTREMELY FLAMMABLE SOLID/LIQUID\n"
+        "CORROSIVE. CAUSES SEVERE SKIN AND EYE BURNS\n"
+        "COGNITOHAZARD. PROLONGED EXPOSURE MAY INDUCE RELIGIOUS MANIA OR EGO DEATH",
+        severity="CRITICAL",
+    ))
+
+    engine.add(TextBlock("\nNFPA Rating (Scale 0-4):", style="Body"))
+    engine.add(KeyValueBlock({
+        "Health": "3 (Extreme Danger)",
+        "Fire": "4 (Flash Point < 73°F)",
+        "Reactivity": "4 (May Detonate if Observed by Unauthorized Personnel)",
+        "Specific": "W (Do Not Use Water)",
+    }))
+
+    # Section 3
+    engine.add(SectionHeader("SECTION 3: COMPOSITION / INFORMATION ON INGREDIENTS", level=2))
+    engine.add(KeyValueBlock({
+        "Synthetic Schreibersite ((Fe,Ni)3P)": "45%",
+        "Fulgurite Glass Dust": "30%",
+        "Prebiotic Amino Acid Broth": "20%",
+        "Stabilizing Agent (Lead/Mercury)": "5%",
+    }))
+
+    # Section 4
+    engine.add(SectionHeader("SECTION 4: FIRST AID MEASURES", level=2))
+    engine.add(TextBlock(
+        "Eye Contact: Flush with standard saline. Do not look directly into the reflection of the liquid.\n\n"
+        "Skin Contact: If material absorbs, Subject may begin speaking in dead languages. "
+        "Administer Class-A Amnestics immediately.\n\n"
+        "Inhalation: If victim claims they 'Understand the Plan,' sedate immediately and contact Security.\n\n"
+        "Ingestion: Do NOT induce vomiting. Surgical intervention required."
+    ))
+
+    # Section 5
+    engine.add(SectionHeader("SECTION 5: FIRE-FIGHTING MEASURES", level=2))
+    engine.add(WarningBlock(
+        "USE DRY CHEMICAL POWDER or SAND\n\n"
+        "DO NOT USE WATER. Water acts as a catalyst for spontaneous biogenesis.\n\n"
+        "Firefighters must wear Phase-Blind Visors. Do not empathize with the fire.",
+        severity="WARNING",
+    ))
+
+    # Section 6
+    engine.add(SectionHeader("SECTION 6: HANDLING AND STORAGE", level=2))
+    engine.add(TextBlock(
+        "• Keep in lead-lined, sound-proof container\n"
+        "• Store in 'Silent Room.' Do not speak, sing, or pray near the container\n"
+        "• Material is audio-reactive and will organize based on vibrational input"
+    ))
+
+    # Section 7
+    engine.add(SectionHeader("SECTION 7: STABILITY AND REACTIVITY", level=2))
+    engine.add(TextBlock(
+        "The product is UNSTABLE.\n\n"
+        "Conditions of Instability: Presence of static electricity, moisture, or Focused Observation.\n\n"
+        "Incompatibility: Avoid contact with Phaseburners or individuals with high Karma scores."
+    ))
+
+    # Generate PDF
+    engine.render(pdf_path)
+
+    # Markdown already created by Cursor - just return paths
+    return pdf_path, md_path
+
+
+# ============================================================================
 # MAIN GENERATION FUNCTION
 # ============================================================================
 
@@ -614,8 +728,15 @@ def generate_all_lightcone_docs(output_dir: Optional[Path] = None) -> dict:
     print(f"  ✓ TM-MEMO-042: {pdf.name}")
     print()
 
-    # TODO: Tabs 2-5 (to be implemented)
-    print("Tab 2-5: Coming soon...")
+    # Tab 2: Engineering & Hardware
+    print("Generating Tab 2: Engineering & Hardware...")
+    pdf, md = generate_tm_eng_004(output_dir)
+    results["tab2_engineering"].append(("TM-ENG-004", pdf, md))
+    print(f"  ✓ TM-ENG-004: {pdf.name}")
+    print()
+
+    # TODO: Tabs 3-5 (to be implemented)
+    print("Tab 3-5: Coming soon...")
     print()
 
     print("=" * 80)
