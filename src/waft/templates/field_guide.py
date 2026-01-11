@@ -32,6 +32,7 @@ FIELD_GUIDE_TEMPLATE = """
         @page {
             size: letter;
             margin: 0.75in 0.5in;
+            background: #fff;
 
             @top-left {
                 content: "{{ series }} {{ number }}";
@@ -66,6 +67,7 @@ FIELD_GUIDE_TEMPLATE = """
             font-size: 10pt;
             line-height: 1.4;
             color: #000;
+            background: #fff;
         }
 
         /* Cover/Title */
@@ -73,7 +75,7 @@ FIELD_GUIDE_TEMPLATE = """
             border: 4px double #000;
             padding: 0.5in;
             margin-bottom: 0.3in;
-            background: #f5f5f5;
+            background: #fff;
             text-align: center;
         }
 
