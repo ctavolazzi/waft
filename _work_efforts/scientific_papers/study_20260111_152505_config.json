@@ -1,0 +1,14 @@
+{
+  "study_id": "study_20260111_152505",
+  "research_question": "How does component evolution with genetic ancestry improve document generation quality in WAFT's two-page generator?",
+  "hypothesis": "Component evolution with genetic ancestry and trait-based selection will produce higher fitness scores (readability, completeness, constraint satisfaction) compared to non-evolutionary layout algorithms.",
+  "objectives": [
+    "Measure fitness scores of evolved vs. non-evolved component layouts",
+    "Track component lineage and identify successful genetic patterns",
+    "Analyze user feedback to understand quality improvements",
+    "Document evolutionary convergence or divergence patterns"
+  ],
+  "created_at": "2026-01-11T15:25:05.443376",
+  "status": "active",
+  "genome_id": "0d946664e06784aa1b561e156e5fabd6dcc72f660c35af14ca6d054da03085e9"
+}

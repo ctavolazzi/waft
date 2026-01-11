@@ -404,9 +404,9 @@ class TwoPageGenerator:
         # Use instance allowed_pages if target_pages not specified
         if target_pages is None:
             target_pages = self.allowed_pages
-        
+
         print(f"\n🔬 TwoPageGenerator: Adaptive generation for {target_pages} pages")
-        
+
         # Use component system if enabled
         if use_component_system:
             return self._generate_with_components(
@@ -419,7 +419,7 @@ class TwoPageGenerator:
                 collect_metrics=collect_metrics,
                 metrics_dir=metrics_dir,
             )
-        
+
         # Fall back to original algorithm
         return self._generate_legacy(
             distilled_chat=distilled_chat,
@@ -431,7 +431,7 @@ class TwoPageGenerator:
             collect_metrics=collect_metrics,
             metrics_dir=metrics_dir,
         )
-    
+
     def _generate_with_components(
         self,
         distilled_chat: DistilledChat,
@@ -445,16 +445,16 @@ class TwoPageGenerator:
     ) -> Dict[str, Any]:
         """Generate using component-based system."""
         from datetime import datetime
-        
+
         builder = ComponentBuilder()
         algorithm = LayoutAlgorithm(allowed_pages=target_pages)
-        
+
         # Build components from content
         components = []
-        
+
         # 1. Title component
         components.append(builder.build_title_component(distilled_chat.title))
-        
+
         # 2. Image component (if available)
         images_dir = Path(__file__).parent.parent.parent / "_work_efforts" / "one_pagers" / "images"
         three_pillars_path = images_dir / "three_pillars.png"
@@ -465,40 +465,40 @@ class TwoPageGenerator:
                 to_file_url(three_pillars_path),
                 "Figure 1: The Three Pillars of WAFT Architecture"
             ))
-        
+
         # 3. Abstract component
         components.append(builder.build_abstract_component(distilled_chat.summary))
-        
+
         # 4. Attribution component
         components.append(builder.build_attribution_component(
             "WAFT Research Team",
             datetime.utcnow().strftime("%Y-%m-%d")
         ))
-        
+
         # 5. Section components from ideas
         all_ideas = distilled_chat.get_top_ideas(n=50, min_importance=0.1)
-        
+
         # Group ideas into sections intelligently
         # Try to find pillar-related ideas
         substrate_ideas = [idea for idea in all_ideas if 'substrate' in idea.content.lower() or 'code is dna' in idea.content.lower()][:1]
         physics_ideas = [idea for idea in all_ideas if 'scint' in idea.content.lower() or 'physics' in idea.content.lower() or 'fitness' in idea.content.lower()][:1]
         flight_recorder_ideas = [idea for idea in all_ideas if 'flight recorder' in idea.content.lower() or 'lineage' in idea.content.lower() or 'phylogenetic' in idea.content.lower()][:1]
-        
+
         # Build sections
         if all_ideas:
             components.append(builder.build_section_component("Introduction", all_ideas[:1], level=2))
-        
+
         if substrate_ideas or physics_ideas or flight_recorder_ideas:
             # Architecture section with pillars
             components.append(builder.build_section_component("Architecture", [], level=2))
-            
+
             if substrate_ideas:
                 components.append(builder.build_section_component("The Substrate", substrate_ideas, level=3))
             if physics_ideas:
                 components.append(builder.build_section_component("The Physics", physics_ideas, level=3))
             if flight_recorder_ideas:
                 components.append(builder.build_section_component("The Flight Recorder", flight_recorder_ideas, level=3))
-        
+
         # Methodology and conclusion from remaining ideas
         remaining_ideas = [idea for idea in all_ideas[1:] if idea not in substrate_ideas + physics_ideas + flight_recorder_ideas]
         if remaining_ideas:
@@ -507,70 +507,70 @@ class TwoPageGenerator:
                 components.append(builder.build_section_component("Methodology", remaining_ideas[:split], level=2))
             if len(remaining_ideas) > split:
                 components.append(builder.build_section_component("Conclusion", remaining_ideas[split:], level=2))
-        
+
         # Generate layout configurations
         print(f"  Building {len(components)} components...")
         layouts = algorithm.generate_layouts(components, max_attempts=self.max_iterations)
         print(f"  Generated {len(layouts)} layout configurations to test")
-        
+
         # Test each layout
         best_layout = None
         best_fitness = 0.0
-        
+
         for i, layout in enumerate(layouts):
             print(f"  Testing layout {i+1}/{len(layouts)} ({layout.metadata.get('strategy', 'unknown')})...")
-            
+
             # Render HTML from layout
             html_content = self._render_html_from_layout(
                 layout=layout,
                 distilled_chat=distilled_chat,
                 styling_genome=styling_genome,
             )
-            
+
             # Count pages
             page_count = self._count_pages(html_content, output_path)
-            
+
             # Test and learn
             learning_data = algorithm.test_layout(layout, page_count)
             print(f"    → {page_count} pages, fitness: {learning_data['fitness']:.3f}")
-            
+
             if learning_data['fitness'] > best_fitness:
                 best_fitness = learning_data['fitness']
                 best_layout = layout
                 best_layout.metadata['html_content'] = html_content
-        
+
         if best_layout is None:
             raise RuntimeError("Failed to generate any valid layout")
-        
+
         print(f"  ✓ Best layout: {best_layout.metadata.get('strategy')}, fitness: {best_fitness:.3f}")
-        
+
         # Get learning summary
         learning_summary = algorithm.get_learning_summary()
         print(f"  Learning: {learning_summary['successful']}/{learning_summary['total_tests']} successful")
-        
+
         # Save output
         pdf_path = None
         if output_path and best_layout.metadata.get('html_content'):
             output_path = Path(output_path)
             output_path.parent.mkdir(parents=True, exist_ok=True)
-            
+
             # Save HTML
             html_path = Path(str(output_path).replace('.pdf', '.html'))
             html_path.write_text(best_layout.metadata['html_content'])
             print(f"  ✓ HTML saved: {html_path}")
-            
+
             # Generate PDF
             if self.weasyprint_available:
                 self.HTML(string=best_layout.metadata['html_content']).write_pdf(output_path)
                 pdf_path = str(output_path)
                 print(f"  ✓ PDF saved: {output_path}")
-        
+
         # Count ideas shown
         ideas_shown = 0
         for comp in best_layout.components:
             if comp.component_type == ComponentType.SECTION:
                 ideas_shown += comp.metadata.get('idea_count', 0)
-        
+
         # Evaluate fitness
         fitness_metrics = self._evaluate_fitness(
             distilled_chat=distilled_chat,
@@ -579,7 +579,7 @@ class TwoPageGenerator:
             page_count=best_layout.page_count or target_pages,
             target_pages=target_pages,
         )
-        
+
         return {
             'success': True,
             'pdf_path': pdf_path,
@@ -590,7 +590,7 @@ class TwoPageGenerator:
             'layout': best_layout,
             'learning_summary': learning_summary,
         }
-    
+
     def _generate_legacy(
         self,
         distilled_chat: DistilledChat,
@@ -884,7 +884,7 @@ class TwoPageGenerator:
 
         template = Template(TWO_PAGE_TEMPLATE)
         return template.render(**context)
-    
+
     def _render_html_from_layout(
         self,
         layout: DocumentLayout,
@@ -894,21 +894,21 @@ class TwoPageGenerator:
     ) -> str:
         """Render HTML from a component-based layout."""
         from jinja2 import Template
-        
+
         # Build science paper template structure
         styling_dict = {
             'font': styling_genome.genes.font.to_dict(),
             'margin': styling_genome.genes.margin.to_dict(),
             'color': styling_genome.genes.color.to_dict(),
         }
-        
+
         # Render components in order
         component_htmls = []
         for comp in layout.components:
             html = comp.to_html(styling_dict)
             if html:  # Only add non-empty components
                 component_htmls.append(html)
-        
+
         # Use custom template if provided, otherwise use default science paper template
         if custom_template:
             template_str = custom_template
@@ -1022,13 +1022,13 @@ class TwoPageGenerator:
 </body>
 </html>
 """
-        
+
         context = {
             'title': distilled_chat.title,
             'components': component_htmls,
             **styling_dict,
         }
-        
+
         template = Template(template_str)
         return template.render(**context)
 

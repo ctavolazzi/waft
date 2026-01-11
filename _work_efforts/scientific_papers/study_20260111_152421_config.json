@@ -1,0 +1,12 @@
+{
+  "study_id": "study_20260111_152421",
+  "research_question": "Test: How does WAFT work?",
+  "hypothesis": "WAFT uses evolution to improve",
+  "objectives": [
+    "Test the system",
+    "Verify functionality"
+  ],
+  "created_at": "2026-01-11T15:24:21.512942",
+  "status": "active",
+  "genome_id": "9e93a01de0037f923ae731bba6625afdd4d572944c7d507fb606ca7a2a4a7e9b"
+}
