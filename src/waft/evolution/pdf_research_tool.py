@@ -6,13 +6,18 @@ Enables research across multiple PDFs:
 - Trend identification
 - Pattern recognition
 - Knowledge accumulation
+- Traceability and monitoring via TheObserver
 """
 
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 from datetime import datetime, timedelta
 import json
+import hashlib
 from collections import Counter, defaultdict
+
+from ..core.science.observer import TheObserver
+from ..core.agent.state import EvolutionaryEvent, EvolutionaryEventType
 
 
 class PDFResearchTool:
@@ -121,6 +126,22 @@ class PDFResearchTool:
                 comparison["insights"].append(
                     f"Common gaps: {', '.join([g[0] for g in common_gaps])}"
                 )
+        
+        # Record comparison event to TheObserver
+        self._record_event(
+            event_type=EvolutionaryEventType.GYM_EVAL,
+            operation="compare_pdfs",
+            payload={
+                "pdfs_compared": len(pdf_paths),
+                "metrics_analyzed": metrics,
+                "rankings_count": len(comparison.get("rankings", {})),
+                "insights_count": len(comparison.get("insights", []))
+            },
+            fitness_metrics={
+                "average_quality": comparison["metrics"].get("quality_score", {}).get("average", 0) if comparison["metrics"] else 0,
+                "pdfs_compared": len(pdf_paths)
+            }
+        )
         
         return comparison
     
@@ -271,6 +292,26 @@ class PDFResearchTool:
                     "older_avg": older_avg,
                     "change": recent_avg - older_avg
                 }
+        
+        # Record pattern recognition event to TheObserver
+        self._record_event(
+            event_type=EvolutionaryEventType.GYM_EVAL,
+            operation="identify_patterns",
+            payload={
+                "category": category,
+                "pdfs_analyzed": len(pdfs),
+                "patterns_found": {
+                    "styling": bool(patterns.get("styling_patterns")),
+                    "quality": bool(patterns.get("quality_patterns")),
+                    "content": bool(patterns.get("content_patterns")),
+                    "temporal": bool(patterns.get("temporal_patterns"))
+                }
+            },
+            fitness_metrics={
+                "average_quality": patterns.get("quality_patterns", {}).get("average", 0),
+                "pdfs_analyzed": len(pdfs)
+            }
+        )
         
         return patterns
     

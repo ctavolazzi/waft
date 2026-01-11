@@ -6,18 +6,22 @@ Enhances PDFGenerator with scientific research capabilities:
 - Hypothesis testing via Study Gym
 - Research tools (comparison, trends, patterns)
 - Evolutionary learning
+- Traceability and monitoring via TheObserver
 """
 
 from pathlib import Path
 from typing import Optional, Dict, Any, List
 from datetime import datetime
 import json
+import hashlib
 
 from .pdf_generator import PDFGenerator
 from .chat_distiller import ChatDistiller
 from .pdf_metrics import PDFMetricsCollector, PDFMetrics
 from ..study_gym import StudyGym, StudySession, Hypothesis
 from ..karmic_wager import KarmicWagerSystem, wager_on_hypothesis
+from ..core.science.observer import TheObserver
+from ..core.agent.state import EvolutionaryEvent, EvolutionaryEventType
 
 
 class ScientificPDFGenerator(PDFGenerator):
@@ -66,7 +70,20 @@ class ScientificPDFGenerator(PDFGenerator):
             self.metrics_collector = PDFMetricsCollector(
                 metrics_dir=Path("_pyrite/metrics/pdf")
             )
+            self.observer = TheObserver(project_path=Path.cwd())
             self._load_research_db()
+        
+        # Generate genome_id for this PDF (for traceability)
+        self.genome_id = self._generate_genome_id()
+        self.generation = 0
+        self.parent_id = None
+    
+    def _generate_genome_id(self) -> str:
+        """Generate genome_id for this PDF (hash of content + title + timestamp)."""
+        content_hash = hashlib.sha256(
+            f"{self.title}:{self.content}:{datetime.now().isoformat()}".encode()
+        ).hexdigest()
+        return content_hash
     
     def _load_research_db(self):
         """Load research database for evolutionary learning."""
@@ -86,6 +103,49 @@ class ScientificPDFGenerator(PDFGenerator):
         self.research_db_path.parent.mkdir(parents=True, exist_ok=True)
         with open(self.research_db_path, 'w') as f:
             json.dump(self.research_db, f, indent=2)
+    
+    def _record_event(
+        self,
+        event_type: EvolutionaryEventType,
+        payload: Dict[str, Any],
+        fitness_metrics: Optional[Dict[str, Any]] = None
+    ) -> None:
+        """
+        Record an event to TheObserver for traceability and monitoring.
+        
+        Args:
+            event_type: Type of evolutionary event
+            payload: Context-specific data
+            fitness_metrics: Optional fitness scores
+        """
+        if not self.scientific_mode:
+            return
+        
+        event = EvolutionaryEvent(
+            timestamp=datetime.utcnow(),
+            genome_id=self.genome_id,
+            parent_id=self.parent_id,
+            generation=self.generation,
+            event_type=event_type,
+            payload={
+                "pdf_title": self.title,
+                "scientific_name": self._get_scientific_name(),
+                **payload
+            },
+            fitness_metrics=fitness_metrics,
+            agent_id=f"pdf_generator_{self.genome_id[:8]}",
+            lineage_path=[self.genome_id] if self.parent_id is None else [self.parent_id, self.genome_id]
+        )
+        
+        self.observer.observe_event(event)
+    
+    def _get_scientific_name(self) -> str:
+        """Generate scientific name for this PDF."""
+        try:
+            from ..core.science.taxonomy import LineagePoet
+            return LineagePoet.generate_name(self.genome_id)
+        except Exception:
+            return f"PDF_{self.genome_id[:8]}"
     
     def analyze_quality(self) -> Dict[str, Any]:
         """
@@ -157,6 +217,23 @@ class ScientificPDFGenerator(PDFGenerator):
                 "vs_previous_avg": current_quality - previous_avg,
                 "trend": "improving" if current_quality > previous_avg else "declining"
             }
+        
+        # Record self-examination event to TheObserver
+        self._record_event(
+            event_type=EvolutionaryEventType.GYM_EVAL,
+            payload={
+                "action": "self_examination",
+                "analysis_type": "quality_analysis",
+                "scores": analysis["scores"],
+                "gaps_count": len(analysis["gaps"]),
+                "suggestions_count": len(analysis["suggestions"])
+            },
+            fitness_metrics={
+                "quality_score": sum(analysis["scores"].values()) / max(len(analysis["scores"]), 1),
+                "completeness": analysis["scores"].get("completeness", 0),
+                "structure": analysis["scores"].get("structure", 0)
+            }
+        )
         
         return analysis
     
@@ -387,14 +464,16 @@ class ScientificPDFGenerator(PDFGenerator):
                     pass
             
             # Record in research database
+            quality_score = sum(analysis["scores"].values()) / max(len(analysis["scores"]), 1)
             self.research_db["pdfs"].append({
                 "title": self.title,
                 "path": str(pdf_path),
                 "timestamp": datetime.now().isoformat(),
-                "quality_score": sum(analysis["scores"].values()) / max(len(analysis["scores"]), 1),
+                "quality_score": quality_score,
                 "gaps": analysis["gaps"],
                 "suggestions": analysis["suggestions"],
-                "style": getattr(self.styling_genome.genes, 'name', 'unknown') if hasattr(self.styling_genome, 'genes') else 'unknown'
+                "style": getattr(self.styling_genome.genes, 'name', 'unknown') if hasattr(self.styling_genome, 'genes') else 'unknown',
+                "genome_id": self.genome_id
             })
             self._save_research_db()
             
@@ -402,6 +481,26 @@ class ScientificPDFGenerator(PDFGenerator):
             analysis_path = pdf_path.with_suffix('.analysis.json')
             with open(analysis_path, 'w') as f:
                 json.dump(analysis, f, indent=2)
+            
+            # Record PDF generation event to TheObserver
+            self._record_event(
+                event_type=EvolutionaryEventType.MUTATE,
+                payload={
+                    "action": "pdf_generation",
+                    "pdf_path": str(pdf_path),
+                    "title": self.title,
+                    "style": getattr(self.styling_genome.genes, 'name', 'unknown') if hasattr(self.styling_genome, 'genes') else 'unknown',
+                    "pages": target_pages or "unlimited",
+                    "collect_metrics": collect_metrics
+                },
+                fitness_metrics={
+                    "quality_score": quality_score,
+                    "completeness": analysis["scores"].get("completeness", 0),
+                    "structure": analysis["scores"].get("structure", 0),
+                    "gaps_count": len(analysis["gaps"]),
+                    "suggestions_count": len(analysis["suggestions"])
+                }
+            )
         
         # Open PDF if requested
         if open_pdf:
