@@ -5,6 +5,50 @@ All notable changes to Waft will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2026-01-11
+
+### Added
+
+#### Document Generation Framework
+- Complete document generation system with printer-friendly capabilities
+- Field guide templates at three complexity levels (layman, professional, scientist)
+- Printer-friendly templates with white backgrounds and minimal ink usage
+- Unified DocumentBuilder framework with fluent API
+- PDF redactor tool for storytelling and classified documents
+- Binder system for assembling multiple PDFs into booklets
+- Session summary and closeout documentation generators
+
+#### Global Cursor Commands
+- `/waft-docs` - Complete document generation workflow command
+- `/waft-status` - Self-aware system status checking with multi-level documentation
+- `/closeout-chat` - Comprehensive session closeout documentation
+- All commands available globally across Cursor instances
+
+#### Document Generation Features
+- Three-level field guide system (layman/professional/scientist)
+- Printer-friendly conversion with automatic styling
+- PDF redaction with area-based blackout capabilities
+- Session documentation generators
+- Complete booklet assembly with binder system
+- Template system with Jinja2 and WeasyPrint
+
+#### Status Checking System
+- Self-aware status checking (git, work efforts, project health)
+- Multi-level status documentation (layman/professional/scientist)
+- Real-time system state analysis
+- Integration with work efforts and devlog systems
+
+### Changed
+- Enhanced document generation with composable units design
+- Improved printer-friendly templates with lighter borders
+- Simplified document generation API (3-line API for common cases)
+- Better template organization and reusability
+
+### Fixed
+- Fixed binder TOC template Jinja2 variable scope issues
+- Fixed template import paths
+- Improved error handling in document generation
+
 ## [Unreleased] / [0.0.3] - 2026-01-06
 
 ### Added
