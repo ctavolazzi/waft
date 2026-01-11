@@ -29,7 +29,7 @@ from src.waft.evolution.styling_genome import (
     LayoutGene,
     StylingGenomeRegistry,
 )
-from src.waft.evolution.two_page_generator import TwoPageGenerator
+from src.waft.evolution.two_page_generator import TwoPageGenerator as TwoPageGeneratorV1
 from src.waft.evolution.two_page_generator_v2 import TwoPageGeneratorV2
 from src.waft.evolution.scint_detector import ScintDetector
 import json
@@ -246,7 +246,7 @@ def main():
     # ========================================================================
     print("\n📄 STEP 3: Generating with V1 (expected to fail constraint)...")
 
-    v1_generator = TwoPageGenerator(weasyprint_available=False)
+    v1_generator = TwoPageGeneratorV1(weasyprint_available=False)
 
     v1_result = v1_generator.generate(
         distilled_chat=distilled,

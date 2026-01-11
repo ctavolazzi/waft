@@ -26,7 +26,7 @@ from .styling_genome import StylingGenome
 from ..core.agent.state import EvolutionaryEvent, EvolutionaryEventType
 
 
-# HTML template for 2-page PDFs with CSS page break control
+# HTML template for 2-page PDFs with visual elements and multiple explanation methods
 TWO_PAGE_TEMPLATE_V2 = """
 <!DOCTYPE html>
 <html lang="en">
@@ -68,13 +68,15 @@ TWO_PAGE_TEMPLATE_V2 = """
             break-inside: avoid;
         }
 
-        /* Typography - tighter for density */
+        /* Typography */
         h1 {
             font-size: {{ font.size_h1 }}pt;
             color: {{ color.heading }};
             margin-top: 0;
             margin-bottom: {{ margin.section_spacing }}pt;
             page-break-after: avoid;
+            border-bottom: 2pt solid {{ color.accent }};
+            padding-bottom: 4pt;
         }
 
         h2 {
@@ -83,6 +85,8 @@ TWO_PAGE_TEMPLATE_V2 = """
             margin-top: {{ margin.section_spacing }}pt;
             margin-bottom: {{ margin.paragraph_spacing }}pt;
             page-break-after: avoid;
+            border-bottom: 1pt solid {{ color.accent }};
+            padding-bottom: 2pt;
         }
 
         h3 {
@@ -106,23 +110,95 @@ TWO_PAGE_TEMPLATE_V2 = """
             margin-bottom: {{ margin.paragraph_spacing / 3 }}pt;
         }
 
-        /* Ideas - compact presentation */
+        /* Visual boxes - inspired by field guide */
+        .note-box {
+            border-left: 4pt solid {{ color.accent }};
+            background: {{ color.code_bg }};
+            padding: {{ margin.paragraph_spacing }}pt;
+            margin: {{ margin.paragraph_spacing }}pt 0;
+            page-break-inside: avoid;
+        }
+
+        .note-title {
+            font-weight: bold;
+            color: {{ color.accent }};
+            font-size: {{ font.size_h3 - 1 }}pt;
+            margin-bottom: {{ margin.paragraph_spacing / 2 }}pt;
+        }
+
+        .highlight-box {
+            border: 2pt solid {{ color.accent }};
+            background: {{ color.code_bg }};
+            padding: {{ margin.paragraph_spacing }}pt;
+            margin: {{ margin.paragraph_spacing }}pt 0;
+            page-break-inside: avoid;
+        }
+
+        /* Tables for structured data */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: {{ margin.paragraph_spacing }}pt 0;
+            font-size: {{ font.size_body - 1 }}pt;
+            page-break-inside: avoid;
+        }
+
+        th {
+            background: {{ color.heading }};
+            color: {{ color.background }};
+            border: 1pt solid {{ color.text }};
+            padding: 4pt;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            border: 1pt solid {{ color.text }}33;
+            padding: 4pt;
+        }
+
+        tr:nth-child(even) {
+            background: {{ color.code_bg }};
+        }
+
+        /* Pillar boxes - visual representation */
+        .pillar {
+            border: 2pt solid {{ color.accent }};
+            background: {{ color.background }};
+            padding: {{ margin.paragraph_spacing }}pt;
+            margin: {{ margin.paragraph_spacing }}pt 0;
+            page-break-inside: avoid;
+        }
+
+        .pillar-title {
+            font-weight: bold;
+            color: {{ color.accent }};
+            font-size: {{ font.size_h3 }}pt;
+            margin-bottom: {{ margin.paragraph_spacing / 2 }}pt;
+        }
+
+        /* Ideas - enhanced presentation */
         .idea {
             margin-bottom: {{ margin.paragraph_spacing }}pt;
-            padding-left: 8pt;
-            border-left: 2pt solid {{ color.accent }};
+            padding: {{ margin.paragraph_spacing / 2 }}pt;
+            border-left: 3pt solid {{ color.accent }};
+            background: {{ color.code_bg }}22;
             page-break-inside: avoid;
         }
 
         .idea-category {
             font-weight: bold;
             color: {{ color.accent }};
-            font-size: {{ font.size_h3 - 2 }}pt;
+            font-size: {{ font.size_h3 - 1 }}pt;
             text-transform: uppercase;
+            display: inline-block;
+            background: {{ color.accent }}22;
+            padding: 2pt 4pt;
+            border-radius: 2pt;
         }
 
         .idea-content {
-            margin-top: {{ margin.paragraph_spacing / 3 }}pt;
+            margin-top: {{ margin.paragraph_spacing / 2 }}pt;
             font-size: {{ font.size_body }}pt;
         }
 
@@ -131,25 +207,32 @@ TWO_PAGE_TEMPLATE_V2 = """
             font-style: italic;
             color: {{ color.accent }};
             opacity: 0.7;
+            margin-top: {{ margin.paragraph_spacing / 3 }}pt;
         }
 
-        /* Metadata - ultra compact */
+        /* Metadata - compact */
         .metadata {
             font-size: {{ font.size_body - 2 }}pt;
             color: {{ color.text }}88;
             line-height: 1.3;
+            border-top: 1pt solid {{ color.text }}33;
+            padding-top: {{ margin.paragraph_spacing / 2 }}pt;
+            margin-top: {{ margin.paragraph_spacing }}pt;
         }
 
         .metadata p {
-            margin-bottom: {{ margin.paragraph_spacing / 2 }}pt;
+            margin-bottom: {{ margin.paragraph_spacing / 3 }}pt;
         }
 
-        /* Summary box */
+        /* Summary box - prominent */
         .summary-box {
             background: {{ color.code_bg }};
             padding: {{ margin.paragraph_spacing }}pt;
             margin-bottom: {{ margin.section_spacing }}pt;
-            border-left: 3pt solid {{ color.accent }};
+            border-left: 4pt solid {{ color.accent }};
+            border-top: 1pt solid {{ color.accent }};
+            border-right: 1pt solid {{ color.accent }};
+            border-bottom: 1pt solid {{ color.accent }};
         }
 
         /* Scientific name styling */
@@ -158,18 +241,29 @@ TWO_PAGE_TEMPLATE_V2 = """
             color: {{ color.accent }};
         }
 
-        /* Metrics table - compact */
-        .metrics {
-            font-size: {{ font.size_body - 1 }}pt;
+        /* Code blocks */
+        code {
+            font-family: monospace;
+            font-size: {{ font.size_code }}pt;
+            background: {{ color.code_bg }};
+            color: {{ color.code_text }};
+            padding: 2pt 4pt;
+            border-radius: 2pt;
         }
 
-        .metrics ul {
-            margin: {{ margin.paragraph_spacing / 2 }}pt 0;
-            padding-left: 12pt;
+        pre {
+            background: {{ color.code_bg }};
+            padding: {{ margin.paragraph_spacing / 2 }}pt;
+            border-left: 3pt solid {{ color.accent }};
+            font-size: {{ font.size_code }}pt;
+            overflow-x: auto;
+            page-break-inside: avoid;
         }
 
-        .metrics li {
-            margin-bottom: {{ margin.paragraph_spacing / 4 }}pt;
+        /* Visual separators */
+        .divider {
+            border-top: 1pt solid {{ color.text }}33;
+            margin: {{ margin.paragraph_spacing }}pt 0;
         }
     </style>
 </head>
@@ -183,11 +277,10 @@ TWO_PAGE_TEMPLATE_V2 = """
         </div>
 
         <div class="metadata">
-            <p><strong>Genome:</strong> <span class="scientific-name">{{ styling_genome_name }}</span> ({{ styling_genome_id[:8] }}...)</p>
-            <p><strong>Generated:</strong> {{ generated_at }} | <strong>Ideas:</strong> {{ total_ideas }} | <strong>Showing:</strong> {{ ideas_shown }}</p>
+            <p><strong>Genome:</strong> <span class="scientific-name">{{ styling_genome_name }}</span> ({{ styling_genome_id[:8] }}...) | <strong>Ideas:</strong> {{ total_ideas }} | <strong>Generated:</strong> {{ generated_at }}</p>
         </div>
 
-        <h2>Key Ideas</h2>
+        <h2>Core Concepts</h2>
 
         {% for idea in page_1_ideas %}
         <div class="idea no-break">
@@ -215,15 +308,36 @@ TWO_PAGE_TEMPLATE_V2 = """
         {% endfor %}
         {% endif %}
 
+        <div class="divider"></div>
+
         <div class="metrics">
-            <h3>Breakdown</h3>
-            <ul>
-                <li><strong>Decisions:</strong> {{ metrics.decisions }}</li>
-                <li><strong>Insights:</strong> {{ metrics.insights }}</li>
-                <li><strong>Actions:</strong> {{ metrics.actions }}</li>
-                <li><strong>Concepts:</strong> {{ metrics.concepts }}</li>
-                <li><strong>Questions:</strong> {{ metrics.questions }}</li>
-            </ul>
+            <h3>Content Breakdown</h3>
+            <table>
+                <tr>
+                    <th>Type</th>
+                    <th>Count</th>
+                </tr>
+                <tr>
+                    <td>Decisions</td>
+                    <td>{{ metrics.decisions }}</td>
+                </tr>
+                <tr>
+                    <td>Insights</td>
+                    <td>{{ metrics.insights }}</td>
+                </tr>
+                <tr>
+                    <td>Actions</td>
+                    <td>{{ metrics.actions }}</td>
+                </tr>
+                <tr>
+                    <td>Concepts</td>
+                    <td>{{ metrics.concepts }}</td>
+                </tr>
+                <tr>
+                    <td>Questions</td>
+                    <td>{{ metrics.questions }}</td>
+                </tr>
+            </table>
         </div>
     </div>
 </body>

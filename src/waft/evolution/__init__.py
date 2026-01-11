@@ -17,7 +17,12 @@ from .styling_genome import (
 )
 from .scint_detector import ScintDetector, Scint, ScintType
 from .chat_distiller import ChatDistiller, DistilledChat, IdeaGene
-from .two_page_generator import TwoPageGenerator
+from .two_page_generator import TwoPageGenerator as TwoPageGeneratorV1
+from .two_page_generator_v2 import TwoPageGeneratorV2
+
+# V2 is the default (evolved with TRUE constraint enforcement)
+# V1 is kept for backward compatibility
+TwoPageGenerator = TwoPageGeneratorV2
 
 __all__ = [
     "StylingGenome",
@@ -33,5 +38,7 @@ __all__ = [
     "ChatDistiller",
     "DistilledChat",
     "IdeaGene",
-    "TwoPageGenerator",
+    "TwoPageGenerator",  # Default: V2 (evolved)
+    "TwoPageGeneratorV1",  # Legacy version
+    "TwoPageGeneratorV2",  # Explicit V2 access
 ]

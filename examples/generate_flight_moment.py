@@ -319,7 +319,7 @@ def main():
             distilled_chat=distilled,
             styling_genome=genome,
             output_path=output_dir / f"{name}.pdf",
-            page_1_ideas=6 if genome == variant_dense else 5,
+            target_pages=2,  # V2 adaptively selects ideas to fit 2 pages
         )
         genome.evaluate_fitness(result['fitness_metrics'])
         results[name] = result
@@ -394,7 +394,7 @@ def main():
         distilled_chat=distilled,
         styling_genome=next_gen,
         output_path=output_dir / "generation_2.pdf",
-        page_1_ideas=5,
+        target_pages=2,  # V2 adaptively selects ideas to fit 2 pages
     )
     next_gen.evaluate_fitness(result_next_gen['fitness_metrics'])
 

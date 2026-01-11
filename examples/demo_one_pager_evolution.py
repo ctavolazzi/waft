@@ -179,20 +179,22 @@ def main():
         print(f"  - Divergence: {scint.divergence_score:.2%}")
 
     # ========================================================================
-    # STEP 3: GENERATE 2-PAGE PDFs
+    # STEP 3: GENERATE 2-PAGE PDFs (using V2 with adaptive constraint enforcement)
     # ========================================================================
     print("\n📄 STEP 3: Generating 2-page PDFs with each styling...")
 
     generator = TwoPageGenerator(weasyprint_available=False)  # HTML only for demo
+    # Note: TwoPageGenerator now defaults to V2 (evolved with TRUE constraint enforcement)
 
     # Generate with genesis styling
     result_genesis = generator.generate(
         distilled_chat=distilled,
         styling_genome=genesis,
         output_path=Path("_genetics/one_pager_demo/genesis.pdf"),
-        page_1_ideas=5,
+        target_pages=2,  # V2 uses target_pages instead of page_1_ideas
     )
     print(f"\n✓ Genesis PDF generated")
+    print(f"  - Pages: {result_genesis.get('page_count', 'N/A')}/2")
     print(f"  - Fitness: {result_genesis['fitness_metrics']['overall']:.3f}")
     print(f"  - Readability: {result_genesis['fitness_metrics']['readability']:.3f}")
     print(f"  - Completeness: {result_genesis['fitness_metrics']['completeness']:.3f}")
@@ -206,9 +208,10 @@ def main():
         distilled_chat=distilled,
         styling_genome=variant_dense,
         output_path=Path("_genetics/one_pager_demo/dense.pdf"),
-        page_1_ideas=6,  # Try to fit more ideas
+        target_pages=2,  # V2 adaptively selects ideas to fit 2 pages
     )
     print(f"\n✓ Dense variant PDF generated")
+    print(f"  - Pages: {result_dense.get('page_count', 'N/A')}/2")
     print(f"  - Fitness: {result_dense['fitness_metrics']['overall']:.3f}")
     print(f"  - Readability: {result_dense['fitness_metrics']['readability']:.3f}")
     print(f"  - Completeness: {result_dense['fitness_metrics']['completeness']:.3f}")
@@ -221,7 +224,7 @@ def main():
         distilled_chat=distilled,
         styling_genome=variant_readable,
         output_path=Path("_genetics/one_pager_demo/readable.pdf"),
-        page_1_ideas=4,  # Fewer ideas for better readability
+        target_pages=2,  # V2 adaptively selects ideas to fit 2 pages
     )
     print(f"\n✓ Readable variant PDF generated")
     print(f"  - Fitness: {result_readable['fitness_metrics']['overall']:.3f}")
