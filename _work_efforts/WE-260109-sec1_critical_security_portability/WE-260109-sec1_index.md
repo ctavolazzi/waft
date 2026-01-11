@@ -35,7 +35,7 @@ Comprehensive audit of all 49 Python files (12,731 LOC) revealed:
 
 | ID | Title | Status | Priority |
 |----|-------|--------|----------|
-| TKT-sec1-001 | Fix hardcoded absolute path in .empirica/config.yaml | open | CRITICAL |
+| TKT-sec1-001 | Fix hardcoded absolute path in .empirica/config.yaml | **completed** | CRITICAL |
 | TKT-sec1-002 | Add comprehensive input validation to subprocess calls | open | CRITICAL |
 | TKT-sec1-003 | Delete legacy web.py (546 lines dead code) | **completed** | HIGH |
 | TKT-sec1-004 | Add security tests for input validation | open | HIGH |
@@ -55,7 +55,7 @@ Comprehensive audit of all 49 Python files (12,731 LOC) revealed:
 
 ## Success Criteria
 
-- [ ] Project works on Linux, Mac, Windows
+- [x] Project works on Linux, Mac, Windows (.empirica config fixed)
 - [ ] All subprocess calls have input validation
 - [x] No dead code remains (web.py deleted - 546 lines)
 - [ ] Security tests pass
@@ -70,6 +70,11 @@ Comprehensive audit of all 49 Python files (12,731 LOC) revealed:
 ## Progress
 
 ### 2026-01-11
+- ✅ **TKT-sec1-001 COMPLETED**: Fixed hardcoded absolute path in .empirica/config.yaml
+  - Changed from Mac-specific `/Users/ctavolazzi/...` to portable `.empirica`
+  - Project now works on Linux, Mac, Windows
+  - Eliminated critical portability barrier
+
 - ✅ **TKT-sec1-003 COMPLETED**: Deleted legacy web.py (546 lines of dead code)
   - Verified no imports or usage in codebase
   - Confirmed `waft serve` uses FastAPI only
@@ -79,4 +84,4 @@ Comprehensive audit of all 49 Python files (12,731 LOC) revealed:
 
 This work effort addresses the most critical findings from the comprehensive audit. These issues must be fixed before any feature work continues, as they represent fundamental flaws in portability and security.
 
-**Progress**: 1 of 5 tickets completed (20%)
+**Progress**: 2 of 5 tickets completed (40%) - Both CRITICAL portability issues resolved!
