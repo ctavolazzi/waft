@@ -394,6 +394,12 @@ class TwoPageGenerator:
             Dictionary with results and accurate fitness metrics
         """
         print(f"\n🔬 TwoPageGenerator: Adaptive generation for {target_pages} pages")
+        
+        # Initialize metrics collector if requested
+        metrics_collector = None
+        generation_start_time = datetime.utcnow()
+        if collect_metrics:
+            metrics_collector = PDFMetricsCollector(metrics_dir=metrics_dir)
 
         # Get top ideas sorted by importance
         all_ideas = distilled_chat.get_top_ideas(n=50, min_importance=0.1)
