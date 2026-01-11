@@ -362,7 +362,46 @@ my_laboratory/
     └── agents.py           # Agent definitions
 ```
 
-## Documentation
+## Documentation System
+
+**WAFT has achieved recursive self-documentation** - a system that can observe, document, and improve itself.
+
+📖 **[WHAT_WE_HAVE_HERE.md](WHAT_WE_HAVE_HERE.md)** - Comprehensive explanation of WAFT's self-documenting capabilities with independent verification steps.
+
+### Interactive Demo
+
+Experience WAFT documenting itself in real-time:
+
+```bash
+python examples/interactive_demo.py
+```
+
+This demonstration shows:
+- WAFT observing its own codebase
+- Generating documentation about itself using its own templates
+- The recursive self-improvement loop in action
+
+### Document Generation Templates
+
+WAFT includes 12 professional document templates:
+- **Academic**: Scientific papers, research documents
+- **Business**: Invoices, contracts, corporate reports
+- **Technical**: Code documentation, API references, architecture docs
+- **Operational**: Field guides, manuals, procedures
+- **Creative**: Horror journals, screenplays, personal letters
+- **Narrative**: Storybooks, newspapers, worldbuilding documents
+
+### Self-Observation Systems
+
+- **Reflection System** (`src/waft/reflection.py`) - WAFT analyzes its own codebase for documentation gaps
+- **Binder System** (`src/waft/binder.py`) - Assembles multiple documents into cohesive collections
+- **Template System** (`src/waft/templates/`) - 12 diverse document generators
+
+**The recursive loop**: WAFT generates documents → Documents describe WAFT → Documentation informs development → Development creates features → Features are documented using WAFT → Cycle continues.
+
+---
+
+## Framework Documentation
 
 - **[AI SDK Vision](docs/AI_SDK_VISION.md)** - Complete vision and architecture
 - **[Agent Interface Design](docs/designs/002_agent_interface.md)** - BaseAgent specification
