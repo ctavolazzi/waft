@@ -35,6 +35,7 @@ dependencies = [
     "uvicorn[standard]>=0.24.0",
     "fpdf2>=2.7.0",
     "pypdf>=3.0.0",  # For real page counting in TwoPageGeneratorV2
+    "pillow>=10.0.0",  # For PDF/PNG conversion
 ]
 
 [project.optional-dependencies]

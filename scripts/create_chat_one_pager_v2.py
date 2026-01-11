@@ -144,6 +144,24 @@ def main():
     print("Ready for printing and binder storage!")
     print()
     
+    # Convert PDF to PNG images (one per page)
+    print("🖼️  Converting PDF to PNG images...")
+    try:
+        from src.waft.evolution.pdf_image_converter import convert_pdf_to_images
+        
+        png_dir = output_path.parent / f"{output_path.stem}_pages"
+        png_paths = convert_pdf_to_images(output_path, output_dir=png_dir, dpi=300)
+        
+        print(f"✓ Created {len(png_paths)} PNG images")
+        print(f"📁 Images saved to: {png_dir}")
+        for i, png_path in enumerate(png_paths, 1):
+            print(f"   - {png_path.name} (page {i})")
+        print()
+    except Exception as e:
+        print(f"⚠️  Could not convert to PNG: {e}")
+        print("   Install pdf2image: pip install pdf2image")
+        print()
+    
     # Open the PDF
     import subprocess
     subprocess.run(["open", "-a", "Preview", str(output_path)])
