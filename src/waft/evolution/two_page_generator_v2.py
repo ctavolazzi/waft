@@ -282,13 +282,11 @@ TWO_PAGE_TEMPLATE_V2 = """
     <!-- PAGE 2 -->
     <div class="page-2">
         {% if page_2_ideas %}
-        <h2>Additional Insights</h2>
+        <h2>Additional Details</h2>
 
         {% for idea in page_2_ideas %}
         <div class="idea no-break">
-            <div class="idea-category">{{ idea.category }}</div>
-            <div class="idea-content">{{ idea.content }}</div>
-            <div class="idea-genome">{{ idea.scientific_name }}</div>
+            <p class="idea-content">{{ idea.content }}</p>
         </div>
         {% endfor %}
         {% endif %}
