@@ -1,12 +1,12 @@
 ---
 id: WE-260109-sec1
 title: "Critical Security & Portability Fixes"
-status: open
+status: in_progress
 priority: CRITICAL
 created: 2026-01-09T00:00:00.000Z
 created_by: claude_audit
-last_updated: 2026-01-09T00:00:00.000Z
-branch: claude/explore-waft-UugBV
+last_updated: 2026-01-11T00:00:00.000Z
+branch: claude/close-work-effort-Q4XFe
 repository: waft
 ---
 
@@ -37,7 +37,7 @@ Comprehensive audit of all 49 Python files (12,731 LOC) revealed:
 |----|-------|--------|----------|
 | TKT-sec1-001 | Fix hardcoded absolute path in .empirica/config.yaml | open | CRITICAL |
 | TKT-sec1-002 | Add comprehensive input validation to subprocess calls | open | CRITICAL |
-| TKT-sec1-003 | Delete legacy web.py (546 lines dead code) | open | HIGH |
+| TKT-sec1-003 | Delete legacy web.py (546 lines dead code) | **completed** | HIGH |
 | TKT-sec1-004 | Add security tests for input validation | open | HIGH |
 | TKT-sec1-005 | Audit and fix all subprocess.run() calls (21 files) | open | HIGH |
 
@@ -57,7 +57,7 @@ Comprehensive audit of all 49 Python files (12,731 LOC) revealed:
 
 - [ ] Project works on Linux, Mac, Windows
 - [ ] All subprocess calls have input validation
-- [ ] No dead code remains
+- [x] No dead code remains (web.py deleted - 546 lines)
 - [ ] Security tests pass
 - [ ] `waft verify` passes on all platforms
 
@@ -67,6 +67,16 @@ Comprehensive audit of all 49 Python files (12,731 LOC) revealed:
 - Security: big_bad_wolf.py (existing security test suite)
 - Architecture: Subprocess usage across 21 files
 
+## Progress
+
+### 2026-01-11
+- ✅ **TKT-sec1-003 COMPLETED**: Deleted legacy web.py (546 lines of dead code)
+  - Verified no imports or usage in codebase
+  - Confirmed `waft serve` uses FastAPI only
+  - Removed technical debt and confusion
+
 ## Notes
 
 This work effort addresses the most critical findings from the comprehensive audit. These issues must be fixed before any feature work continues, as they represent fundamental flaws in portability and security.
+
+**Progress**: 1 of 5 tickets completed (20%)
