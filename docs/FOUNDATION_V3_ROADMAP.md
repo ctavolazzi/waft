@@ -1,5 +1,7 @@
 # Foundation V3 Roadmap - Better PDF Generation
 
+> **Note**: This roadmap will be expanded to include the [Unified Genesis Protocol](UNIFIED_GENESIS_PROTOCOL.md) challenge system architecture.
+
 ## Current State: Foundation V2 ✅
 
 **Status:** Shipped and tested

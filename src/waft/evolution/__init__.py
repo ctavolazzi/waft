@@ -32,6 +32,11 @@ from .pdf_image_converter import (
 )
 from .pdf_metrics import PDFMetrics, PDFMetricsCollector
 from .latex_generator import LaTeXGenerator, generate_latex
+from .status_components import (
+    StatusComponentBuilder,
+    StatusComponentType,
+    create_status_components_from_status_dict,
+)
 
 __all__ = [
     "StylingGenome",
@@ -66,6 +71,9 @@ __all__ = [
     "PDFMetricsCollector",  # Metrics collector
     "LaTeXGenerator",  # LaTeX document generator
     "generate_latex",  # Quick LaTeX generation function
+    "StatusComponentBuilder",  # Builder for status-specific PDF components
+    "StatusComponentType",  # Status component type constants
+    "create_status_components_from_status_dict",  # Create all status components from status dict
 ]
 
 # TwoPageGenerator is the main implementation (adaptive constraint enforcement)

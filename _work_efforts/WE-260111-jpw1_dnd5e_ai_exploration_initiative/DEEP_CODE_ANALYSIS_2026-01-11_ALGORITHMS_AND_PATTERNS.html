@@ -1,0 +1,519 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Deep Code Analysis 2026-01-11 Algorithms And Patterns</title>
+
+    <style>
+        /* Strict 2-page setup */
+        @page {
+            size: letter;
+            margin: 25.4mm 25.4mm 25.4mm 25.4mm;
+        }
+
+        body {
+            font-family: 'Times New Roman', 'Times', serif;
+            font-size: 11pt;
+            line-height: 1.4;
+            color: #000000;
+            background: #FFFFFF;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Prevent orphans/widows */
+        p, li {
+            orphans: 2;
+            widows: 2;
+        }
+
+        /* Page break control */
+        .page-break {
+            page-break-after: always;
+            break-after: page;
+        }
+
+        .no-break {
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 16pt;
+            color: #000000;
+            margin-top: 0;
+            margin-bottom: 12pt;
+            page-break-after: avoid;
+            border-bottom: 2pt solid #000000;
+            padding-bottom: 4pt;
+        }
+
+        h2 {
+            font-size: 14pt;
+            color: #000000;
+            margin-top: 12pt;
+            margin-bottom: 8pt;
+            page-break-after: avoid;
+            border-bottom: 1pt solid #000000;
+            padding-bottom: 2pt;
+        }
+
+        h3 {
+            font-size: 12pt;
+            color: #000000;
+            margin-top: 8pt;
+            margin-bottom: 4.0pt;
+            page-break-after: avoid;
+        }
+
+        p {
+            margin: 0 0 8pt 0;
+        }
+
+        ul, ol {
+            margin: 0 0 8pt 0;
+            padding-left: 15pt;
+        }
+
+        li {
+            margin-bottom: 2.6666666666666665pt;
+        }
+
+        /* Visual boxes - inspired by field guide */
+        .note-box {
+            border-left: 4pt solid #000000;
+            background: #f5f5f5;
+            padding: 8pt;
+            margin: 8pt 0;
+            page-break-inside: avoid;
+        }
+
+        .note-title {
+            font-weight: bold;
+            color: #000000;
+            font-size: 11pt;
+            margin-bottom: 4.0pt;
+        }
+
+        .highlight-box {
+            border: 2pt solid #000000;
+            background: #f5f5f5;
+            padding: 8pt;
+            margin: 8pt 0;
+            page-break-inside: avoid;
+        }
+
+        /* Tables for structured data */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 8pt 0;
+            font-size: 10pt;
+            page-break-inside: avoid;
+        }
+
+        th {
+            background: #000000;
+            color: #FFFFFF;
+            border: 1pt solid #000000;
+            padding: 4pt;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            border: 1pt solid #00000033;
+            padding: 4pt;
+        }
+
+        tr:nth-child(even) {
+            background: #f5f5f5;
+        }
+
+        /* Pillar boxes - visual representation */
+        .pillar {
+            border: 2pt solid #000000;
+            background: #FFFFFF;
+            padding: 8pt;
+            margin: 8pt 0;
+            page-break-inside: avoid;
+        }
+
+        .pillar-title {
+            font-weight: bold;
+            color: #000000;
+            font-size: 12pt;
+            margin-bottom: 4.0pt;
+        }
+
+        /* Ideas - prose presentation with varied formatting */
+        .idea {
+            margin-bottom: 9.6pt;
+            padding: 6.4pt 0;
+            page-break-inside: avoid;
+        }
+
+        /* Alternate between different visual styles */
+        .idea:nth-child(odd) {
+            padding-left: 8pt;
+            border-left: 2pt solid #000000;
+            background: #f5f5f510;
+        }
+
+        .idea:nth-child(even) {
+            padding-left: 0;
+            border-left: none;
+            background: transparent;
+            border-top: 1pt solid #00000020;
+            padding-top: 4.8pt;
+            margin-top: 3.2pt;
+        }
+
+        .idea:nth-child(3n) {
+            padding-left: 0;
+            border-left: none;
+            background: #f5f5f508;
+            border-radius: 3pt;
+            padding: 4.8pt;
+        }
+
+        .idea-content {
+            font-size: 11pt;
+            line-height: 1.6;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+            text-align: justify;
+            margin: 0;
+        }
+
+        /* Metadata - compact */
+        .metadata {
+            font-size: 9pt;
+            color: #00000088;
+            line-height: 1.3;
+            border-top: 1pt solid #00000033;
+            padding-top: 4.0pt;
+            margin-top: 8pt;
+        }
+
+        .metadata p {
+            margin-bottom: 2.6666666666666665pt;
+        }
+
+        /* Summary box - prominent */
+        .summary-box {
+            background: #f5f5f5;
+            padding: 8pt;
+            margin-bottom: 12pt;
+            border-left: 4pt solid #000000;
+            border-top: 1pt solid #000000;
+            border-right: 1pt solid #000000;
+            border-bottom: 1pt solid #000000;
+        }
+
+        /* Scientific name styling */
+        .scientific-name {
+            font-style: italic;
+            color: #000000;
+        }
+
+        /* Code blocks */
+        code {
+            font-family: monospace;
+            font-size: 9pt;
+            background: #f5f5f5;
+            color: #000000;
+            padding: 2pt 4pt;
+            border-radius: 2pt;
+        }
+
+        pre {
+            background: #f5f5f5;
+            padding: 4.0pt;
+            border-left: 3pt solid #000000;
+            font-size: 9pt;
+            overflow-x: auto;
+            page-break-inside: avoid;
+        }
+
+        /* Visual separators */
+        .divider {
+            border-top: 1pt solid #00000033;
+            margin: 8pt 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- PAGE 1 -->
+    <div class="page-1">
+        <h1>Deep Code Analysis 2026-01-11 Algorithms And Patterns</h1>
+
+        <div class="summary-box">
+            <strong>Summary:</strong> Dataclass-based state (from AI-DnD) Property-based computed values (hp_percent, modifiers) Adapter pattern (4-stat to 6-stat conversion) Save system with checksums (integrity...
+        </div>
+
+        <div class="metadata">
+            <p><strong>Generated:</strong> 2026-01-12 05:14 UTC | <strong>Ideas Extracted:</strong> 52</p>
+        </div>
+
+        <h2>What Happened</h2>
+
+        
+        <div class="idea no-break">
+            <p class="idea-content">Dataclass-based state (from AI-DnD) Property-based computed values (hp_percent, modifiers) Adapter pattern (4-stat to 6-stat conversion) Save system with checksums (integrity checking) Quest system with objectives (progress tracking).</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">ctavolazzi/AI-DnD (HIGHEST PRIORITY) Clone repository Study gamemanager.py architecture Analyze pixelgame_manager.py for UI patterns Extract quest system implementation.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Adapter Pattern: 4-stat to 6-stat conversion ✅ State Management: Centralized with dataclasses ✅ Save System: JSON with checksums ✅ Quest System: Objective progress tracking ✅ Combat System: Turn-based with initiative ✅.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Deep analysis of actual source code from D&D 5e repositories reveals critical algorithms, data structures, and patterns that can directly benefit WAFT's D&D mechanics implementation. This document focuses on actionable code patterns rather than high-level descriptions.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">WAFT Integration Opportunity: CRITICAL: This solves the 4-stat vs 6-stat problem Class-based stat derivation (WIS/CHA from class) Modifier calculation: (stat - 10) // 2 AC calculation: 10 + dex_modifier Proficiency bonus: 2 + (level // 4).</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Algorithm: Attack Roll Calculation Formula: d20 + attackbonus >= targetAC Attack Bonus: proficiencybonus + STRmodifier (melee) or DEX_modifier (ranged) Critical Hit: Natural 20 on d20.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Key Concepts (from web search): CommonTemplate: Shared fields (abilities, currency) AttributesFields: AC, Initiative, Movement, HP TraitsFields: Size, Damage Immunities/Resistances, Conditions.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">result = d20.roll("1d20+5") print(result.total) # Total: 15 print(result.crit) # Critical hit detection.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">WAFT Integration: Use d20 library for all dice rolling Supports complex expressions Built-in critical hit detection Tree-based representation for parsing.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">def makeattackroll(attack_modifier: int, advantage: bool = False, disadvantage: bool = False) -> tuple: """Make an attack roll. Returns (total, hit, critical).""" if advantage and not disadvantage: roll = max(d20.roll("1d20").total, d20.roll("1d20").total) elif disadvantage and not advantage: roll = min(d20.roll("1d20").total, d20.roll("1d20").total) else: roll = d20.roll("1d20").total.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Critical Algorithms for WAFT: Ability Modifier: (score - 10) // 2 Proficiency Bonus: Level-based table lookup AC Calculation: Base 10 + DEX, modified by armor HP Calculation: Hit die + CON modifier per level Attack Roll: d20 + proficiency + ability modifier Saving Throw: d20 + ability + proficiency (if proficient) vs DC.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">@staticmethod def attackroll(advantage: bool = False, disadvantage: bool = False) -> tuple: """Make attack roll. Returns (total, iscritical).""" if advantage: roll = max(d20.roll("1d20").total, d20.roll("1d20").total) elif disadvantage: roll = min(d20.roll("1d20").total, d20.roll("1d20").total) else: roll = d20.roll("1d20").total.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">d20 - Dice rolling engine Installation: pip install d20 Used by: Avrae, many D&D tools Features: Complex expressions, critical detection.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">def makeattackroll(self, advantage: bool = False) -> tuple: """Make attack roll. Returns (total, hit, critical).""" roll, iscritical = self.rolld20(advantage) strmod = self.abilitymodifier(self.strength) prof = self.proficiencybonus() total = roll + strmod + prof return (total, total, iscritical).</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">def rolld20(self, advantage: bool = False) -> tuple: """Roll d20. Returns (result, is_critical).""" if advantage: roll = max(d20.roll("1d20").total, d20.roll("1d20").total) else: roll = d20.roll("1d20").total return (roll, roll == 20).</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Key Pattern: Centralized state management with dataclasses.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Key Pattern: Stackable items with quantity tracking.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Key Pattern: Adapter pattern for D&D stat conversion.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Key Pattern: JSON serialization with integrity checking.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">total = roll + attack_modifier critical = (roll == 20) return (total, total, critical).</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">iscritical = (roll == 20) return (roll, iscritical).</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Generated: 2026-01-11 Analysis Type: Deep Code & Algorithm Exploration Purpose: Extract reusable algorithms, patterns, and code structures for WAFT integration.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">WAFT Integration Opportunity: Use similar dataclass pattern for WAFT's Being state Property-based computed values (hppercent, manapercent) Status effects as list (extensible) Ability scores as dictionary (flexible).</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">savedata = { "version": self.SAVEVERSION, "slot": slot, "name": savename, "createdat": now, "updatedat": now, "metadata": metadata or {}, "gamedata": game_data }.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">WAFT Integration Opportunity: Save file integrity checking Version tracking for migration Metadata separation from game data Backup system before overwrite.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">def update(self, count: int = 1) -> bool: """Update progress. Returns True if objective completed.""" self.currentcount = min(self.currentcount + count, self.requiredcount) if self.currentcount >= self.required_count: self.completed = True return self.completed.</p>
+        </div>
+        
+    </div>
+
+    <!-- Forced page break -->
+    <div class="page-break"></div>
+
+    <!-- PAGE 2 -->
+    <div class="page-2">
+        
+        <h2>Additional Details</h2>
+
+        
+        <div class="idea no-break">
+            <p class="idea-content">WAFT Integration Opportunity: hitdie: Used for HP calculation (d12 for Barbarian) proficiencychoices: Player choices during character creation savingthrows: Which saves the class is proficient in startingequipment: Default equipment for new characters.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">WAFT Integration Opportunity: Template-based data model Mixin pattern for shared fields Derived data calculation (prepareDerivedData()).</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Algorithm: Dice Expression Parsing Pattern: NdM+K where N=dice count, M=sides, K=modifier Example: 5d20+6 = roll 5d20, add 6 Advanced: 2d20kh1 = keep highest of 2d20.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">WAFT Integration: Combine both approaches Use dataclass for state Use dictionary for ability scores (flexible) Status effects as list (extensible).</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">WAFT Integration: Slot-based equipment system Stackable items with quantity Gold as separate currency Capacity limits.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">High Priority: StatsAdapter from AI-DnD - Solves 4-stat to 6-stat conversion SaveSystem from AI-DnD - Game state persistence with checksums QuestTracker from AI-DnD - Objective-based quest system d20 library - Dice rolling engine (already exists).</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Medium Priority: InventoryState from AI-DnD - Stackable items, equipment slots CharacterState from AI-DnD - HP, mana, status effects GameStateSerializer from AI-DnD - State serialization patterns.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">WAFT Integration: Use 5e-database as reference data source Parse JSON structures for game mechanics Build WAFT's D&D system on top of this data.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">@staticmethod def ability_modifier(score: int) -> int: """Calculate ability modifier.""" return (score - 10) // 2.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">@staticmethod def proficiency_bonus(level: int) -> int: """Calculate proficiency bonus.""" return 2 + ((level - 1) // 4).</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">@staticmethod def armorclass(dexmod: int, armortype: str = "none", armorbase: int = 0) -> int: """Calculate AC.""" if armortype == "none": return 10 + dexmod elif armortype == "light": return armorbase + dexmod elif armortype == "medium": return armorbase + min(dexmod, 2) elif armortype == "heavy": return armorbase return 10.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">@staticmethod def spellsavedc(spellcastingmod: int, proficiency: int) -> int: """Calculate spell save DC.""" return 8 + spellcastingmod + proficiency.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">@staticmethod def roll(expression: str) -> int: """Roll dice expression.""" result = d20.roll(expression) return result.total.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Create D&D 5e module in WAFT: src/waft/core/dnd5e/ directory stats.py - Stat calculations dice.py - Dice rolling wrapper character.py - Character state combat.py - Combat mechanics.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Integrate 5e-database data: Download or reference JSON files Create data loaders Build character creation from class data.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">WAFT Integration: Study dice rolling patterns Character sheet data structures Command-based interface patterns.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">WAFT Integration: Command parsing patterns Game state modification via commands Combat encounter setup.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">5e-bits/5e-database Clone repository Study JSON structure Create data loaders Map data to WAFT models.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Create waft.core.dnd5e module Implement stat calculation functions Integrate d20 library Build character creation system Implement combat mechanics.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Pattern: Command-based game mechanics via hashtags.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Quest System: Objective-based tracking Progress calculation Reward distribution.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Combat System: Turn-based initiative Attack roll vs AC Damage application Status effects.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">5e-SRD - System Reference Document Legal: Open Gaming License Content: Core rules and mechanics.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">foundryvtt/dnd5e Study actor data model Analyze template system Understand derived data calculation.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Status: Deep code analysis complete. Ready for implementation phase.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Next Action: Begin implementing D&D 5e module in WAFT using extracted algorithms and patterns.</p>
+        </div>
+        
+        
+
+        <div class="divider"></div>
+
+        <div class="metrics">
+            <h3>Content Breakdown</h3>
+            <table>
+                <tr>
+                    <th>Type</th>
+                    <th>Count</th>
+                </tr>
+                <tr>
+                    <td>Decisions</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>Insights</td>
+                    <td>13</td>
+                </tr>
+                <tr>
+                    <td>Actions</td>
+                    <td>9</td>
+                </tr>
+                <tr>
+                    <td>Concepts</td>
+                    <td>29</td>
+                </tr>
+                <tr>
+                    <td>Questions</td>
+                    <td>1</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
