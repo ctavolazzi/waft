@@ -8,6 +8,7 @@ Each component is a variable that can be tested, measured, and evolved.
 from dataclasses import dataclass, field
 from typing import List, Dict, Any, Optional
 from enum import Enum
+import html
 
 
 class ComponentType(Enum):
@@ -176,7 +177,7 @@ class ComponentBuilder:
         if not ideas:
             body = ""
         else:
-            # Clean and join idea content
+            # Clean and join idea content (preserve newlines for markdown)
             cleaned_ideas = []
             for idea in ideas:
                 if hasattr(idea, 'content'):
@@ -186,7 +187,14 @@ class ComponentBuilder:
                         cleaned_ideas.append(content)
                 else:
                     cleaned_ideas.append(str(idea))
-            body = ' '.join(cleaned_ideas)
+            # Join with newlines to preserve markdown structure (lists, paragraphs, etc.)
+            body = '\n\n'.join(cleaned_ideas)
+        
+        # #region agent log
+        with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
+            import json
+            f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"A","location":"document_components.py:190","message":"build_section_component body created","data":{"title":title,"body_length":len(body) if body else 0,"body_preview":body[:150] if body else "","ideas_count":len(ideas)},"timestamp":int(__import__('time').time()*1000)}) + '\n')
+        # #endregion
         
         return DocumentComponent(
             component_type=ComponentType.SECTION,
@@ -204,6 +212,47 @@ class ComponentBuilder:
             content=text,
             size_estimate=0.08,
             priority=0.6,
+        )
+    
+    @staticmethod
+    def build_list_component(items: List[str], ordered: bool = False) -> DocumentComponent:
+        """Build list component."""
+        return DocumentComponent(
+            component_type=ComponentType.LIST,
+            content={'items': items, 'ordered': ordered},
+            size_estimate=0.05 * len(items),
+            priority=0.7,
+        )
+    
+    @staticmethod
+    def build_code_component(code: str, language: str = "") -> DocumentComponent:
+        """Build code component."""
+        return DocumentComponent(
+            component_type=ComponentType.CODE,
+            content=code,
+            metadata={'language': language},
+            size_estimate=0.15,
+            priority=0.8,
+        )
+    
+    @staticmethod
+    def build_quote_component(quote: str, attribution: str = "") -> DocumentComponent:
+        """Build quote component."""
+        return DocumentComponent(
+            component_type=ComponentType.QUOTE,
+            content={'quote': quote, 'attribution': attribution},
+            size_estimate=0.10,
+            priority=0.7,
+        )
+    
+    @staticmethod
+    def build_divider_component() -> DocumentComponent:
+        """Build divider component."""
+        return DocumentComponent(
+            component_type=ComponentType.DIVIDER,
+            content="",
+            size_estimate=0.02,
+            priority=0.5,
         )
 
 

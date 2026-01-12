@@ -1,0 +1,16 @@
+{
+  "timestamp": "2026-01-11T16:46:54.498375",
+  "title": "LaTeX Generator Feature - Self-Examination Test",
+  "scores": {
+    "completeness": 1.0,
+    "structure": 1.0
+  },
+  "gaps": [
+    "No insights identified"
+  ],
+  "suggestions": [],
+  "comparison": {
+    "vs_previous_avg": 0.3931818181818182,
+    "trend": "improving"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "batch_id": "20260111_164856",
+  "timestamp": "2026-01-11T16:48:56.776915",
+  "wager_id": "wager_20260111_164856_6b3c7013",
+  "tests": {
+    "project_verification": {
+      "status": "PASSED",
+      "details": "Project structure valid"
+    },
+    "latex_generator": {
+      "status": "PASSED",
+      "details": {
+        "documentclass": true,
+        "begin_document": true,
+        "end_document": true,
+        "title": true
+      }
+    },
+    "self_examination": {
+      "status": "PASSED",
+      "quality_score": 1.0,
+      "hypothesis_confirmed": true,
+      "details": {
+        "timestamp": "2026-01-11T16:48:58.152645",
+        "title": "Batch Self-Examination Test",
+        "scores": {
+          "completeness": 1.0,
+          "structure": 1.0
+        },
+        "gaps": [
+          "No actions identified",
+          "No insights identified"
+        ],
+        "suggestions": [],
+        "comparison": {
+          "vs_previous_avg": 0.24573863636363635,
+          "trend": "improving"
+        }
+      }
+    },
+    "pdf_generation": {
+      "status": "PASSED",
+      "details": "PDF generated: /Users/ctavolazzi/Code/active/waft/_work_efforts/one_pagers/Batch_Test_20260111_164856.pdf"
+    }
+  }
+}

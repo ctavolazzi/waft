@@ -14,6 +14,8 @@ painful existences because they are "expensive" and rich in data.
 from pathlib import Path
 from typing import Dict, Any, Optional, List
 from datetime import datetime
+import json
+import os
 
 
 class KarmaMerchant:
@@ -49,6 +51,61 @@ class KarmaMerchant:
         # Ensure directories exist
         self.akasha_path.mkdir(parents=True, exist_ok=True)
         self.store_path.mkdir(parents=True, exist_ok=True)
+        
+        # Set directory permissions (0700 = owner read/write/execute only)
+        try:
+            self.akasha_path.chmod(0o700)
+            self.store_path.chmod(0o700)
+        except (OSError, PermissionError):
+            # Ignore if permissions can't be set (e.g., on Windows)
+            pass
+    
+    def _validate_soul_id(self, soul_id: str) -> bool:
+        """
+        Validate soul_id is safe for file system use.
+        
+        Rejects:
+        - IDs with path traversal (.., /, \)
+        - IDs with null bytes or control characters
+        - IDs that are too long (>255 characters)
+        - IDs that aren't alphanumeric + underscore + hyphen
+        
+        Args:
+            soul_id: Soul ID to validate
+        
+        Returns:
+            True if valid, False otherwise
+        """
+        if not soul_id:
+            return False
+        if len(soul_id) > 255:
+            return False
+        if any(c in soul_id for c in ['..', '/', '\\', '\x00']):
+            return False
+        # Check for control characters
+        if any(ord(c) < 32 and c not in ['\t', '\n', '\r'] for c in soul_id):
+            return False
+        # Allow alphanumeric, underscore, hyphen
+        if not soul_id.replace('_', '').replace('-', '').isalnum():
+            return False
+        return True
+    
+    def _validate_path_in_project(self, file_path: Path) -> bool:
+        """
+        Validate file path is within project directory.
+        
+        Args:
+            file_path: Path to validate
+        
+        Returns:
+            True if path is within project, False otherwise
+        """
+        try:
+            resolved = file_path.resolve()
+            project_resolved = self.project_path.resolve()
+            return resolved.is_relative_to(project_resolved)
+        except (ValueError, OSError):
+            return False
     
     def calculate_karma(self, life_log: Dict[str, Any]) -> float:
         """
@@ -110,24 +167,96 @@ class KarmaMerchant:
         Returns:
             Dictionary containing:
                 - soul_id: The soul identifier
+                - karma_balance: Current karma balance (CRITICAL - must exist)
                 - total_karma: Accumulated Karma across all lifetimes
                 - lifetimes: List of previous lifetime records
                 - last_incarnation: Configuration of most recent life
                 - memory_fragments: Accessible memories from past lives
         
         Note:
-            This is the interface definition. Implementation will:
+            CRITICAL: Returns dict with 'karma_balance' key (required for luck calculation).
+            Implementation:
             1. Load soul record from Akasha (JSON file)
             2. Calculate total Karma from all lifetimes
             3. Return complete soul history
             4. Handle missing souls (new souls start with 0 Karma)
         """
-        # TODO: Implement Akasha access
-        # - Load soul record from _hidden/.truth/{soul_id}.json
-        # - Calculate total Karma from lifetime history
-        # - Return soul data structure
-        # - Handle new souls (initialize with 0 Karma)
-        pass
+        
+        if not self._validate_soul_id(soul_id):
+            raise ValueError(f"Invalid soul_id: {soul_id} (contains path traversal or invalid characters)")
+        
+        soul_file = self.akasha_path / f"{soul_id}.json"
+        
+        # Validate path is within project
+        if not self._validate_path_in_project(soul_file):
+            raise ValueError(f"Path traversal detected: {soul_file}")
+        
+        # If soul doesn't exist, return default structure
+        if not soul_file.exists():
+            default_soul = {
+                "soul_id": soul_id,
+                "karma_balance": 0.0,  # CRITICAL: Must have this key
+                "total_karma": 0.0,
+                "lifetimes": [],
+                "last_incarnation": None,
+                "memory_fragments": [],
+                "created_at": datetime.now().isoformat()
+            }
+            
+            # Create soul file with default values
+            try:
+                with open(soul_file, "w", encoding="utf-8") as f:
+                    json.dump(default_soul, f, indent=2, ensure_ascii=False)
+                
+                # CRITICAL: Set restrictive file permissions (0o600)
+                try:
+                    soul_file.chmod(0o600)
+                except (OSError, PermissionError):
+                    # Ignore if permissions can't be set (e.g., on Windows)
+                    pass
+            except (IOError, OSError, PermissionError):
+                # If we can't create the file, just return default
+                pass
+            
+            return default_soul
+        
+        # Load existing soul record
+        try:
+            with open(soul_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+        except json.JSONDecodeError:
+            # Corrupted file - return default
+            return {
+                "soul_id": soul_id,
+                "karma_balance": 0.0,  # CRITICAL: Must have this key
+                "total_karma": 0.0,
+                "lifetimes": [],
+                "last_incarnation": None,
+                "memory_fragments": []
+            }
+        except (IOError, OSError, PermissionError):
+            # Can't read file - return default
+            return {
+                "soul_id": soul_id,
+                "karma_balance": 0.0,  # CRITICAL: Must have this key
+                "total_karma": 0.0,
+                "lifetimes": [],
+                "last_incarnation": None,
+                "memory_fragments": []
+            }
+        
+        # Ensure karma_balance exists (for backward compatibility)
+        if "karma_balance" not in data:
+            data["karma_balance"] = data.get("total_karma", 0.0)
+        
+        # Ensure all required keys exist
+        data.setdefault("soul_id", soul_id)
+        data.setdefault("total_karma", data.get("karma_balance", 0.0))
+        data.setdefault("lifetimes", [])
+        data.setdefault("last_incarnation", None)
+        data.setdefault("memory_fragments", [])
+        
+        return data
     
     def reincarnate(
         self,
@@ -210,16 +339,20 @@ class KarmaMerchant:
         """
         Get current Karma balance for a soul.
         
+        Convenience method that wraps access_akasha() to return just karma balance.
+        
         Args:
             soul_id: Unique identifier for the soul
         
         Returns:
-            Current total Karma (0.0 if soul doesn't exist)
+            Current karma balance (0.0 if soul doesn't exist or error occurs)
         """
-        # TODO: Implement Karma balance retrieval
-        # - Access Akasha
-        # - Return total_karma
-        pass
+        try:
+            akasha_data = self.access_akasha(soul_id)
+            return akasha_data.get("karma_balance", akasha_data.get("total_karma", 0.0))
+        except (ValueError, OSError, Exception):
+            # Return 0.0 on any error
+            return 0.0
 
 
 # Exception classes for Karma system

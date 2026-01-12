@@ -181,13 +181,35 @@ TWO_PAGE_TEMPLATE = """
             margin-bottom: {{ margin.paragraph_spacing / 2 }}pt;
         }
 
-        /* Ideas - prose presentation */
+        /* Ideas - prose presentation with varied formatting */
         .idea {
-            margin-bottom: {{ margin.paragraph_spacing }}pt;
-            padding: {{ margin.paragraph_spacing }}pt;
-            border-left: 3pt solid {{ color.accent }};
-            background: {{ color.code_bg }}15;
+            margin-bottom: {{ margin.paragraph_spacing * 1.2 }}pt;
+            padding: {{ margin.paragraph_spacing * 0.8 }}pt 0;
             page-break-inside: avoid;
+        }
+
+        /* Alternate between different visual styles */
+        .idea:nth-child(odd) {
+            padding-left: {{ margin.paragraph_spacing }}pt;
+            border-left: 2pt solid {{ color.accent }};
+            background: {{ color.code_bg }}10;
+        }
+
+        .idea:nth-child(even) {
+            padding-left: 0;
+            border-left: none;
+            background: transparent;
+            border-top: 1pt solid {{ color.text }}20;
+            padding-top: {{ margin.paragraph_spacing * 0.6 }}pt;
+            margin-top: {{ margin.paragraph_spacing * 0.4 }}pt;
+        }
+
+        .idea:nth-child(3n) {
+            padding-left: 0;
+            border-left: none;
+            background: {{ color.code_bg }}08;
+            border-radius: 3pt;
+            padding: {{ margin.paragraph_spacing * 0.6 }}pt;
         }
 
         .idea-content {

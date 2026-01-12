@@ -1,0 +1,32 @@
+---
+id: TKT-roo0-004
+parent: WE-260111-roo0
+title: "Integrate NowCycleManager with TheSlicer and lifecycle systems"
+status: completed
+created: 2026-01-12T02:50:17.195Z
+created_by: ctavolazzi
+assigned_to: null
+---
+
+# TKT-roo0-004: Integrate NowCycleManager with TheSlicer and lifecycle systems
+
+## Metadata
+- **Created**: Sunday, January 11, 2026 at 6:50:17 PM PST
+- **Parent Work Effort**: WE-260111-roo0
+- **Author**: ctavolazzi
+
+## Description
+(describe what needs to be done)
+
+## Acceptance Criteria
+- [ ] (define acceptance criteria)
+
+## Files Changed
+- (populated when complete)
+
+## Implementation Notes
+- 1/11/2026: Note: TheSlicer is NOT modified as per plan - it works with BaseAgent, not Being. NowCycleManager manages Being entities separately.
+- (decisions, blockers, context)
+
+## Commits
+- (populated as work progresses)

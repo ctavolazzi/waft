@@ -293,7 +293,9 @@ class PDFGenerator:
         output_path: Optional[Path] = None,
         open_pdf: bool = False,
         include_all_ideas: bool = True,
-        target_pages: Optional[int] = None
+        target_pages: Optional[int] = None,
+        convert_to_png: bool = True,
+        png_dpi: int = 300
     ) -> Path:
         """
         Generate and save PDF.
@@ -303,6 +305,8 @@ class PDFGenerator:
             open_pdf: Open PDF after generation
             include_all_ideas: Include all ideas (no page limit)
             target_pages: Target page count (None = no limit)
+            convert_to_png: Convert PDF to PNG images after generation (default: True for evolutionary iteration)
+            png_dpi: DPI for PNG conversion (default: 300)
         
         Returns:
             Path to generated PDF
@@ -367,6 +371,37 @@ class PDFGenerator:
         
         self._generated_path = output_path
         
+        # Convert to PNG if requested (evolutionary iteration process)
+        if convert_to_png:
+            try:
+                from .pdf_image_converter import pdf_to_pngs
+                png_paths = pdf_to_pngs(
+                    output_path,
+                    output_dir=output_path.parent,
+                    dpi=png_dpi,
+                    format='png'
+                )
+                if png_paths:
+                    # Copy first page to main PNG file for easy access
+                    import shutil
+                    img_path = output_path.with_suffix('.png')
+                    shutil.copy(png_paths[0], img_path)
+                    print(f"📸 PNG screenshot saved: {img_path}")
+            except Exception as e:
+                # Fallback: try PyMuPDF direct conversion
+                try:
+                    import fitz  # PyMuPDF
+                    doc = fitz.open(str(output_path))
+                    if len(doc) > 0:
+                        page = doc[0]
+                        pix = page.get_pixmap(matrix=fitz.Matrix(png_dpi/72, png_dpi/72))
+                        img_path = output_path.with_suffix('.png')
+                        pix.save(str(img_path))
+                        doc.close()
+                        print(f"📸 PNG screenshot saved: {img_path}")
+                except Exception:
+                    print(f"⚠️  PNG conversion failed: {e}")
+        
         # Open if requested
         if open_pdf:
             import subprocess
@@ -397,6 +432,8 @@ def generate_pdf(
     title: str,
     output_path: Optional[Path] = None,
     style: str = "clinical_standard",
+    convert_to_png: bool = True,
+    png_dpi: int = 300,
     open_pdf: bool = False,
     **kwargs
 ) -> Path:
@@ -417,7 +454,12 @@ def generate_pdf(
         style=style,
         **kwargs
     )
-    return generator.save(output_path=output_path, open_pdf=open_pdf)
+    return generator.save(
+        output_path=output_path,
+        open_pdf=open_pdf,
+        convert_to_png=convert_to_png,
+        png_dpi=png_dpi
+    )
 
 
 def generate_pdf_from_file(
@@ -425,6 +467,8 @@ def generate_pdf_from_file(
     output_path: Optional[Path] = None,
     style: str = "clinical_standard",
     open_pdf: bool = False,
+    convert_to_png: bool = True,
+    png_dpi: int = 300,
     **kwargs
 ) -> Path:
     """
@@ -442,4 +486,9 @@ def generate_pdf_from_file(
         style=style,
         **kwargs
     )
-    return generator.save(output_path=output_path, open_pdf=open_pdf)
+    return generator.save(
+        output_path=output_path,
+        open_pdf=open_pdf,
+        convert_to_png=convert_to_png,
+        png_dpi=png_dpi
+    )

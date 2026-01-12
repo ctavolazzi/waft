@@ -362,6 +362,23 @@ my_laboratory/
     └── agents.py           # Agent definitions
 ```
 
+## Development Roadmaps
+
+### Being Lifecycle System (In Progress)
+
+**Status**: Planning Complete, Ready for Implementation
+
+Add RPG-like lifecycle attributes to WAFT beings: **will to live**, **luck** (karma-influenced), **decision fatigue** (sleep mechanics), and **pleasure/pain** (personality alignment). Implement a centralized "Now" cycle event loop that synchronizes all beings, calculates system variables, records state, and unblocks beings for decisions.
+
+**Key Features**:
+- Will to live depletes over time/decisions/pain, regenerates from pleasure
+- Luck calculated from karma balance (separate but related attribute)
+- Decision fatigue requires sleep when depleted (sleep duration evolves)
+- Pleasure/pain from personality-goal-experience alignment
+- Centralized cycle manager coordinates all beings across realities
+
+**Full Roadmap**: [_work_efforts/roadmaps/being_lifecycle_system/DEVELOPMENT_ROADMAP.md](_work_efforts/roadmaps/being_lifecycle_system/DEVELOPMENT_ROADMAP.md)
+
 ## Documentation
 
 - **[AI SDK Vision](docs/AI_SDK_VISION.md)** - Complete vision and architecture

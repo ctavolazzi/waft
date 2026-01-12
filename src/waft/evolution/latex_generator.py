@@ -340,8 +340,18 @@ class LaTeXGenerator:
                 content.append(r"\end{itemize}")
                 content.append("")
         else:
-            # Fallback: convert raw content
-            content.append(self._markdown_to_latex(self.distilled_chat.raw_content))
+            # Fallback: use summary and all ideas
+            if self.distilled_chat.summary:
+                content.append(r"\section{Summary}")
+                content.append(self._escape_latex(self.distilled_chat.summary))
+                content.append("")
+            
+            # Add all ideas as a general section
+            if ideas:
+                content.append(r"\section{Content}")
+                for idea in ideas:
+                    content.append(self._escape_latex(idea.content))
+                    content.append("")
         
         # End document
         content.append(r"\end{document}")

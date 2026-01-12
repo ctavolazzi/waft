@@ -22,6 +22,9 @@ import html
 
 from .document_builder import DocumentBuilder
 from .templates.one_pager import ONE_PAGER_TEMPLATE
+from .evolution.document_components import (
+    DocumentComponent, ComponentBuilder, ComponentType, DocumentLayout
+)
 from jinja2 import Template
 from weasyprint import HTML
 
@@ -117,6 +120,12 @@ class OnePager:
     
     def _markdown_to_html(self, markdown: str) -> str:
         """Convert markdown to visual, story-driven HTML."""
+        # #region agent log
+        with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
+            import json
+            f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"B","location":"one_pager.py:121","message":"_markdown_to_html entry","data":{"markdown_length":len(markdown) if markdown else 0,"markdown_preview":markdown[:150] if markdown else "","has_bold":bool(re.search(r'\*\*|__', markdown)) if markdown else False,"has_lists":bool(re.search(r'^[-*]\s', markdown, re.MULTILINE)) if markdown else False},"timestamp":int(__import__('time').time()*1000)}) + '\n')
+        # #endregion
+        
         html_parts = []
         lines = markdown.split('\n')
         in_code_block = False
@@ -232,17 +241,14 @@ class OnePager:
                     html_parts.append(f"</{list_type}>")
                     in_list = False
                 html_parts.append("<hr>")
-            # Regular paragraph - Use diverse paragraph styles
+            # Regular paragraph - Use consistent styling (no rotation for cleaner look)
             elif line.strip():
                 if in_list:
                     html_parts.append(f"</{list_type}>")
                     in_list = False
                 content = self._process_inline_markdown(line.strip())
-                # Rotate through paragraph styles
-                para_styles = ['', 'indented', 'highlight', 'compact']
-                style = para_styles[para_count % len(para_styles)]
-                p_class = f' class="{style}"' if style else ''
-                html_parts.append(f"<p{p_class}>{content}</p>")
+                # Use consistent paragraph styling (no rotation)
+                html_parts.append(f"<p>{content}</p>")
                 para_count += 1
         
         # Close any open structures
@@ -257,28 +263,70 @@ class OnePager:
         if in_section:
             html_parts.append("</div>")
         
-        return '\n'.join(html_parts)
+        result = '\n'.join(html_parts)
+        
+        # #region agent log
+        with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
+            import json
+            f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"B","location":"one_pager.py:263","message":"_markdown_to_html exit","data":{"result_length":len(result) if result else 0,"result_preview":result[:200] if result else "","has_html_tags":bool(re.search(r'<[^>]+>', result)) if result else False,"has_strong_tags":bool(re.search(r'<strong>', result)) if result else False,"has_list_tags":bool(re.search(r'<[uo]l>', result)) if result else False},"timestamp":int(__import__('time').time()*1000)}) + '\n')
+        # #endregion
+        
+        return result
     
     def _process_inline_markdown(self, text: str) -> str:
         """Process inline markdown (bold, italic, links, code)."""
-        # Escape HTML first
-        text = html.escape(text)
+        # #region agent log
+        with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
+            import json
+            f.write(json.dumps({"sessionId":"debug-session","runId":"post-fix","hypothesisId":"C","location":"one_pager.py:265","message":"_process_inline_markdown entry","data":{"text_length":len(text) if text else 0,"text_preview":text[:100] if text else "","has_bold_markers":bool(re.search(r'\*\*|__', text)) if text else False,"has_underscores":bool('_' in text) if text else False},"timestamp":int(__import__('time').time()*1000)}) + '\n')
+        # #endregion
         
-        # Code (inline)
-        text = re.sub(r'`([^`]+)`', r'<code>\1</code>', text)
+        # Process markdown BEFORE escaping to preserve structure
+        # Then escape the content parts
         
-        # Bold
-        text = re.sub(r'\*\*([^*]+)\*\*', r'<strong>\1</strong>', text)
-        text = re.sub(r'__([^_]+)__', r'<strong>\1</strong>', text)
+        # Code (inline) - process first, escape content
+        def escape_code(match):
+            return f'<code>{html.escape(match.group(1))}</code>'
+        text = re.sub(r'`([^`]+)`', escape_code, text)
         
-        # Italic
-        text = re.sub(r'\*([^*]+)\*', r'<em>\1</em>', text)
-        text = re.sub(r'_([^_]+)_', r'<em>\1</em>', text)
+        # Bold - process, escape content
+        def escape_bold(match):
+            return f'<strong>{html.escape(match.group(1))}</strong>'
+        text = re.sub(r'\*\*([^*]+)\*\*', escape_bold, text)
+        text = re.sub(r'__([^_]+)__', escape_bold, text)
         
-        # Links
-        text = re.sub(r'\[([^\]]+)\]\(([^\)]+)\)', r'<a href="\2">\1</a>', text)
+        # Italic - process, escape content (but avoid conflicts with bold and code/filenames)
+        def escape_italic(match):
+            return f'<em>{html.escape(match.group(1))}</em>'
+        # Only match single * that aren't part of **
+        # For _, be more careful - don't match if surrounded by alphanumeric (likely code/filename)
+        text = re.sub(r'(?<!\*)\*([^*]+)\*(?!\*)', escape_italic, text)
+        # Only match _italic_ when NOT in code-like context (not surrounded by alphanumeric)
+        text = re.sub(r'(?<![a-zA-Z0-9])_([^_]+)_(?![a-zA-Z0-9])', escape_italic, text)
         
-        return text
+        # Links - process, escape both text and URL
+        def escape_link(match):
+            return f'<a href="{html.escape(match.group(2))}">{html.escape(match.group(1))}</a>'
+        text = re.sub(r'\[([^\]]+)\]\(([^\)]+)\)', escape_link, text)
+        
+        # Escape any remaining HTML that wasn't part of markdown
+        # Split by HTML tags, escape non-tag parts
+        parts = re.split(r'(<[^>]+>)', text)
+        result = []
+        for part in parts:
+            if part.startswith('<') and part.endswith('>'):
+                result.append(part)  # Already HTML tag
+            else:
+                result.append(html.escape(part))  # Escape plain text
+        final_result = ''.join(result)
+        
+        # #region agent log
+        with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
+            import json
+            f.write(json.dumps({"sessionId":"debug-session","runId":"post-fix","hypothesisId":"C","location":"one_pager.py:304","message":"_process_inline_markdown exit","data":{"result_length":len(final_result) if final_result else 0,"result_preview":final_result[:150] if final_result else "","has_strong_tags":bool(re.search(r'<strong>', final_result)) if final_result else False,"has_incorrect_em_tags":bool(re.search(r'<em>latex</em>|<em>self</em>|<em>batch</em>', final_result)) if final_result else False,"preserves_underscores":bool('test_latex' in final_result or 'test_self' in final_result) if final_result else False},"timestamp":int(__import__('time').time()*1000)}) + '\n')
+        # #endregion
+        
+        return final_result
     
     def _text_to_html(self, text: str) -> str:
         """Convert plain text to HTML."""
@@ -347,7 +395,7 @@ class OnePager:
         html_parts.append("</ul>")
         return '\n'.join(html_parts)
     
-    def generate(self, output_path: Optional[Path] = None, use_study_gym: bool = False) -> Path:
+    def generate(self, output_path: Optional[Path] = None, use_study_gym: bool = False, save_html_preview: bool = False, open_in_browser: bool = False) -> Path:
         """
         Generate the one-pager PDF (exactly 2 pages).
         
@@ -367,14 +415,148 @@ class OnePager:
         
         # Simple template rendering
         template = Template(ONE_PAGER_TEMPLATE)
-        html_output = template.render(
-            title=self.title,
-            content=self.html_content,
-            subtitle=self.subtitle
-        )
+        
+        # Prepare template context
+        context = {
+            'title': self.title,
+            'subtitle': self.subtitle,
+            'content': self.html_content,
+        }
+        
+        # Add components if using from_components/from_sections
+        if hasattr(self, 'components'):
+            # Use DocumentComponent.to_html() for ALL component types
+            # This leverages WAFT's full document component system
+            styling_dict = {
+                'font': {'size_body': 10, 'size_title': 18},
+                'margin': {'top': 0.5, 'bottom': 0.5},
+                'color': {'text': '#000', 'background': '#fff'}
+            }
+            
+            # Render all components using their to_html() methods
+            component_htmls = []
+            sections = []  # Keep for backward compatibility with template
+            
+            for comp in self.components:
+                if comp.component_type == ComponentType.SECTION:
+                    # Process section components with markdown support
+                    title = comp.content.get('title', '') if isinstance(comp.content, dict) else str(comp.content)
+                    body = comp.content.get('body', '') if isinstance(comp.content, dict) else ''
+                    
+                    # #region agent log
+                    with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
+                        import json
+                        f.write(json.dumps({"sessionId":"debug-session","runId":"overview-debug","hypothesisId":"A","location":"one_pager.py:447","message":"Section processing","data":{"title":title,"body_length":len(body) if body else 0,"body_preview":body[:200] if body else "","body_starts_with_dash":body.strip().startswith('-') if body else False},"timestamp":int(__import__('time').time()*1000)}) + '\n')
+                    # #endregion
+                    
+                    # Process body content - convert markdown to HTML
+                    # If body already contains HTML tags, skip markdown processing
+                    if body:
+                        if body.strip().startswith('<') and ('<dl>' in body or '<ul>' in body or '<ol>' in body or '<table>' in body):
+                            # Already HTML, use as-is (but still process inline markdown in it)
+                            body_html = body
+                        else:
+                            body_html = self._markdown_to_html(body)
+                        
+                        # #region agent log
+                        with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
+                            import json
+                            f.write(json.dumps({"sessionId":"debug-session","runId":"overview-debug","hypothesisId":"B","location":"one_pager.py:456","message":"Markdown processing result","data":{"body_html_length":len(body_html) if body_html else 0,"body_html_preview":body_html[:300] if body_html else "","has_ul_tags":bool(re.search(r'<ul>', body_html)) if body_html else False,"has_p_tags":bool(re.search(r'<p[^>]*>', body_html)) if body_html else False},"timestamp":int(__import__('time').time()*1000)}) + '\n')
+                        # #endregion
+                    else:
+                        body_html = ""
+                    
+                    section_dict = {
+                        'title': title,
+                        'content': body_html,
+                        'level': comp.metadata.get('level', 2)
+                    }
+                    sections.append(section_dict)
+                    
+                    # Also add to component_htmls for full component rendering with proper section styling
+                    level = comp.metadata.get('level', 2)
+                    section_html = f'<section class="section"><h{level}>{html.escape(title)}</h{level}><div class="section-content">{body_html}</div></section>'
+                    component_htmls.append(section_html)
+                else:
+                    # Use component's to_html() method for all other types
+                    html_output = comp.to_html(styling_dict)
+                    if html_output:
+                        # For components with markdown content, process it
+                        if comp.component_type == ComponentType.ABSTRACT:
+                            # Abstract content is in <p> tag, need to process markdown in the paragraph
+                            content = str(comp.content)
+                            if re.search(r'\*\*|__|- |`', content):
+                                processed = self._markdown_to_html(content)
+                                # Replace the escaped content in the <p> tag
+                                html_output = html_output.replace(f'<p>{html.escape(content)}</p>', f'<p>{processed}</p>')
+                        elif comp.component_type == ComponentType.PARAGRAPH:
+                            content = str(comp.content)
+                            if re.search(r'\*\*|__|- |`', content):
+                                processed = self._markdown_to_html(content)
+                                html_output = html_output.replace(f'<p>{html.escape(content)}</p>', f'<p>{processed}</p>')
+                        component_htmls.append(html_output)
+            
+            # Pass both sections (for template compatibility) and component_htmls (for full rendering)
+            context['sections'] = sections
+            context['component_htmls'] = component_htmls
+            context['content'] = None
+        
+        # Add any additional variables
+        if hasattr(self, 'variables'):
+            context.update(self.variables)
+        
+        # #region agent log
+        with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
+            import json
+            f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"D","location":"one_pager.py:430","message":"Template context before render","data":{"has_sections":"sections" in context and context["sections"] is not None,"sections_count":len(context.get("sections", [])) if context.get("sections") else 0,"has_content":bool(context.get("content"))},"timestamp":int(__import__('time').time()*1000)}) + '\n')
+        # #endregion
+        
+        html_output = template.render(**context)
+        
+        # #region agent log
+        with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
+            import json
+            f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"D","location":"one_pager.py:440","message":"HTML output after render","data":{"html_length":len(html_output) if html_output else 0,"html_preview":html_output[:300] if html_output else "","has_section_tags":bool(re.search(r'<section', html_output)) if html_output else False},"timestamp":int(__import__('time').time()*1000)}) + '\n')
+        # #endregion
+        
+        # Save HTML preview if requested
+        if save_html_preview or open_in_browser:
+            html_path = output_path.with_suffix('.html')
+            html_path.write_text(html_output)
+            if open_in_browser:
+                import webbrowser
+                html_path_abs = html_path.absolute()
+                webbrowser.open(f'file://{html_path_abs}')
         
         # Generate PDF directly
         HTML(string=html_output).write_pdf(str(output_path))
+        
+        # Convert PDF to image for screenshot if requested
+        if open_in_browser:
+            try:
+                from .evolution.pdf_image_converter import pdf_to_pngs
+                # Convert first page to PNG (save directly to same directory as PDF)
+                img_path = output_path.with_suffix('.png')
+                png_paths = pdf_to_pngs(output_path, output_dir=output_path.parent, dpi=150, format='png')
+                if png_paths:
+                    # Copy first page to main PNG file for easy access
+                    import shutil
+                    shutil.copy(png_paths[0], img_path)
+                    print(f"📸 Screenshot saved: {img_path}")
+            except Exception as e:
+                # Fallback: try direct conversion
+                try:
+                    import fitz  # PyMuPDF
+                    doc = fitz.open(str(output_path))
+                    if len(doc) > 0:
+                        page = doc[0]
+                        pix = page.get_pixmap(matrix=fitz.Matrix(2, 2))  # 2x zoom for better quality
+                        img_path = output_path.with_suffix('.png')
+                        pix.save(str(img_path))
+                        doc.close()
+                        print(f"📸 Screenshot saved: {img_path}")
+                except Exception:
+                    pass  # No PDF to image converter available
         
         return output_path
     
@@ -833,6 +1015,116 @@ class OnePager:
     def from_text(cls, text: str, **kwargs) -> "OnePager":
         """Create one-pager from plain text."""
         return cls(content=text, **kwargs)
+    
+    @classmethod
+    def from_components(
+        cls,
+        components: List[DocumentComponent],
+        title: Optional[str] = None,
+        subtitle: Optional[str] = None,
+        variables: Optional[Dict[str, Any]] = None,
+        **kwargs
+    ) -> "OnePager":
+        """
+        Create one-pager from DocumentComponent list (using WAFT's document model).
+        
+        Args:
+            components: List of DocumentComponent objects
+            title: Document title
+            subtitle: Document subtitle
+            variables: Additional variables to pass to template
+            **kwargs: Additional OnePager options
+            
+        Example:
+            from waft.evolution.document_components import ComponentBuilder
+            
+            components = [
+                ComponentBuilder.build_title_component("My Report"),
+                ComponentBuilder.build_section_component("Overview", ["Summary text..."]),
+                ComponentBuilder.build_section_component("Results", ["Results text..."])
+            ]
+            
+            OnePager.from_components(
+                components=components,
+                title="My Report",
+                variables={'date': '2026-01-11'}
+            )
+        """
+        # Store components and variables for template rendering
+        instance = cls.__new__(cls)
+        instance.raw_content = components
+        instance.title = title or "One-Pager"
+        instance.subtitle = subtitle
+        instance.output_path = kwargs.get('output_path')
+        instance.kwargs = kwargs
+        instance.components = components
+        instance.variables = variables or {}
+        
+        # Store components for template rendering
+        # Content will be processed during generate() when we have access to _markdown_to_html
+        instance.html_content = ""  # Will be built during template rendering
+        return instance
+    
+    @classmethod
+    def from_sections(
+        cls,
+        sections: List[Dict[str, Any]],
+        title: Optional[str] = None,
+        subtitle: Optional[str] = None,
+        variables: Optional[Dict[str, Any]] = None,
+        **kwargs
+    ) -> "OnePager":
+        """
+        Create one-pager from structured sections and variables.
+        
+        Args:
+            sections: List of section dicts with 'title' and 'content' keys
+            title: Document title
+            subtitle: Document subtitle
+            variables: Additional variables to pass to template
+            **kwargs: Additional OnePager options
+            
+        Example:
+            OnePager.from_sections(
+                sections=[
+                    {'title': 'Overview', 'content': 'Summary text...'},
+                    {'title': 'Results', 'content': 'Results text...'}
+                ],
+                title="My Report",
+                variables={'date': '2026-01-11', 'author': 'John Doe'}
+            )
+        """
+        # Convert section dicts to DocumentComponents and use from_components
+        builder = ComponentBuilder()
+        components = []
+        
+        # Add title component if provided
+        if title:
+            components.append(builder.build_title_component(title))
+        
+        # Convert sections to section components
+        for section in sections:
+            title_text = section.get('title', '')
+            content = section.get('content', '')
+            level = section.get('level', 2)
+            
+            # Convert content to list (section components expect list of ideas/content)
+            content_list = [content] if isinstance(content, str) else content
+            
+            components.append(builder.build_section_component(
+                title=title_text,
+                ideas=content_list,
+                level=level
+            ))
+        
+        # Use from_components to create the instance
+        return cls.from_components(
+            components=components,
+            title=title,
+            subtitle=subtitle,
+            variables=variables,
+            **kwargs
+        )
 
 
 def create_one_pager(
