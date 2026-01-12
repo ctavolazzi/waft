@@ -141,7 +141,20 @@ class Being:
         
         # Cycle tracking (needed for stamina calculation)
         self.last_cycle_number: int = last_cycle_number if last_cycle_number is not None else 0
-        self.lifetimes: int = lifetimes if lifetimes is not None else 0
+        # lifetimes: Number of reincarnations
+        # If explicitly provided, use it
+        # If None and no parent: this is a new birth (lifetime 1)
+        # If None and has parent: will be set by spawn_being() (parent + 1)
+        # If loading from storage: will be set by from_dict()
+        if lifetimes is not None:
+            self.lifetimes = lifetimes
+        elif parent_being_id is None:
+            # Direct instantiation without parent = new birth (lifetime 1)
+            self.lifetimes = 1
+        else:
+            # Has parent but lifetimes not set - will be set by spawn_being()
+            # Default to 0 for now (spawn_being will increment from parent)
+            self.lifetimes = 0
         
         # Stamina system (NEW)
         # Willpower: Core stat derived from personality and will_to_live
@@ -910,6 +923,7 @@ class BeingSystem:
         
         # Inherit skills from parent if provided
         skills = initial_skills or {}
+        parent_lifetimes = 0
         if parent_being_id:
             parent = self._load_being(parent_being_id)
             # Inherit skills (with slight mutation)
@@ -918,14 +932,24 @@ class BeingSystem:
                 mutation = (hashlib.sha256(f"{being_id}{skill_name}".encode()).hexdigest()[:2])
                 mutation_factor = (int(mutation, 16) / 255.0 - 0.5) * 0.1  # -5% to +5%
                 skills[skill_name] = max(0.0, min(100.0, skill_level * (1.0 + mutation_factor)))
+            # Get parent's lifetimes for reincarnation
+            parent_lifetimes = parent.lifetimes
         
-        # Create being
+        # Create being (lifetimes will be set after creation)
         being = Being(
             being_id=being_id,
             reality_id=reality_id,
             parent_being_id=parent_being_id,
             skills=skills
         )
+        
+        # Set lifetimes: increment from parent if reincarnated, or 1 if first birth
+        if parent_being_id:
+            # Reincarnation: parent's lifetimes + 1
+            being.lifetimes = parent_lifetimes + 1
+        else:
+            # First birth: this is lifetime 1
+            being.lifetimes = 1
         
         # Build ancestral chain
         if parent_being_id:

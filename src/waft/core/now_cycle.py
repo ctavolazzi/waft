@@ -208,9 +208,8 @@ class NowCycleManager:
                     
                     # Update cycle tracking
                     being.last_cycle_number = self.cycle_number
-                    # Note: lifetimes should only increment on reincarnation, not every cycle
-                    # This increment may need to be moved to reincarnation logic
-                    # being.lifetimes += 1  # TODO: Move to reincarnation mechanism
+                    # Note: lifetimes only increments when a Being is born (in spawn_being()),
+                    # not every cycle. This represents number of reincarnations, not cycles lived.
                     
                     # Save being state
                     self.being_system._save_being(being)

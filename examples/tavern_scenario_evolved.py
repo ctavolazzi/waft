@@ -512,7 +512,7 @@ def main():
     console.print("[bold bright_blue]║[/bold bright_blue]  [dim]WAFT Being + D&D 5e Adventure[/dim]  [bold bright_blue]║[/bold bright_blue]")
     console.print("[bold bright_blue]╚════════════════════════════════════════╝[/bold bright_blue]\n")
     
-    # Create a Being
+    # Create a Being (direct instantiation - this is lifetime 1)
     being = Being(
         being_id=f"tavern_being_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
         reality_id="tavern_scenario",
@@ -522,7 +522,8 @@ def main():
             "investigation": 40.0,
             "persuasion": 25.0,
             "intelligence": 35.0,
-        }
+        },
+        lifetimes=1  # First lifetime (explicit for clarity)
     )
     
     console.print(f"[dim]Created Being: {being.being_id}[/dim]")
