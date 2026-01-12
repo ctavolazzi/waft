@@ -91,6 +91,11 @@ Commands for tracking larger goals and identifying next steps.
 
 20. **`/next`** - Identify next step based on goals. Use when want to know what to do next, need direction.
 
+### Master Orchestration Commands
+Commands that orchestrate multiple workflows into comprehensive cycles.
+
+21. **`/another-cycle`** - Complete development cycle from orientation to evolution. Orchestrates all major workflows: onboard → explore → check-assumptions → hypothesis → critique → comprehensive-orchestration → analyze → engineer → improve → version-bake → run-it → prove-it → evolve → journal → next → goal → checkpoint. Use when starting major new initiative, need complete systematic approach, want full lifecycle coverage.
+
 ---
 
 ## Command Discovery
@@ -128,13 +133,15 @@ Commands for tracking larger goals and identifying next steps.
 
 ## Command Count
 
-**Total Commands**: 20+
+**Total Commands**: 21+
 
 **By Category:**
 - Core Workflow: 9 commands
 - Analysis & Planning: 3 commands
 - Project Management: 4 commands
 - Utility: 4 commands
+- Goal Management: 2 commands
+- Master Orchestration: 1 command
 
 **Are we getting out of hand?**
 - Maybe! But each command serves a specific purpose

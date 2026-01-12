@@ -1,5 +1,5 @@
 {
-  "total_genomes": 30,
+  "total_genomes": 31,
   "generations": 0,
   "best_fitness": 0.0,
   "genome_ids": [
@@ -32,6 +32,7 @@
     "35273aff7b3d7960aa639f74030b6c4996e6cf15ef77a84d47348c32d18af11d",
     "0fc115dce70e9ab27f91273b4ff255212d99101b4782a253bfbc17e6cd01ae95",
     "d8c95284c69b1009b2c7c7ce77649959796697f9a288aaf877346ba41843f445",
-    "2320d287bd2532b68ecc5190e2dab59776fb97be12d9d2c0c5c41f1c3bb10947"
+    "2320d287bd2532b68ecc5190e2dab59776fb97be12d9d2c0c5c41f1c3bb10947",
+    "13d9e64e47de5249b81af2e640c132f5c7e69c54ec61c9e1cff603fd15a045c5"
   ]
 }

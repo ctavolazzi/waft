@@ -34,6 +34,7 @@
 25. **`/run-it`** ✅ - Comprehensive workflow orchestration with self-correcting balance
 26. **`/version-bake`** ✅ - Complete quality workflow: reflect → run-it → improve → check-assumptions → verify → hypothesis → prove-it (tracks genetic lineage of ideas)
 27. **`/evolve`** ✅ - Spawn new Being from Source, then run complete version-bake workflow (tracks genetic lineage from Source outward and back)
+28. **`/another-cycle`** ✅ - Complete development cycle: onboard → explore → check-assumptions → hypothesis → critique → comprehensive-orchestration → analyze → engineer → improve → version-bake → run-it → prove-it → evolve → journal → next → goal → checkpoint
 
 ---
 

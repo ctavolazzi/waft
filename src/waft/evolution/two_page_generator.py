@@ -296,7 +296,7 @@ TWO_PAGE_TEMPLATE = """
 
         {% for idea in page_1_ideas %}
         <div class="idea no-break">
-            <p class="idea-content">{{ idea.content }}</p>
+            <div class="idea-content">{{ idea.content|safe }}</div>
         </div>
         {% endfor %}
     </div>
@@ -311,7 +311,7 @@ TWO_PAGE_TEMPLATE = """
 
         {% for idea in page_2_ideas %}
         <div class="idea no-break">
-            <p class="idea-content">{{ idea.content }}</p>
+            <div class="idea-content">{{ idea.content|safe }}</div>
         </div>
         {% endfor %}
         {% endif %}
@@ -810,61 +810,138 @@ class TwoPageGenerator:
 
         return result
 
-    def _clean_markdown(self, text: str) -> str:
+    def _markdown_to_html(self, text: str) -> str:
         """
-        Clean markdown formatting from text for clean HTML rendering.
+        Convert markdown formatting to HTML for proper rendering.
 
-        Removes:
-        - Markdown headers (##, ###, etc.)
-        - Bold/italic markers (**text**, *text*)
-        - Code blocks (```, `)
-        - Links ([text](url)) -> text
-        - Lists markers (-, *, 1.)
+        Converts:
+        - Markdown headers (##, ###, etc.) -> HTML headers
+        - Bold/italic markers (**text**, *text*) -> <strong>, <em>
+        - Code blocks (```, `) -> <pre><code>, <code>
+        - Links ([text](url)) -> <a> tags
+        - Lists (-, *, 1.) -> <ul>, <ol>, <li>
 
         Args:
             text: Text with markdown formatting
 
         Returns:
-            Cleaned text suitable for HTML display
+            HTML string with proper formatting
         """
         if not text:
             return ""
 
-        # Remove markdown headers (##, ###, ####)
-        text = re.sub(r'^#{1,6}\s+', '', text, flags=re.MULTILINE)
+        # Try using markdown library if available (best option)
+        try:
+            import markdown
+            html = markdown.markdown(
+                text,
+                extensions=['fenced_code', 'tables', 'nl2br', 'extra']
+            )
+            return html
+        except ImportError:
+            # Fallback: manual conversion
+            pass
 
-        # Remove bold (**text** or __text__)
-        text = re.sub(r'\*\*([^*]+)\*\*', r'\1', text)
-        text = re.sub(r'__([^_]+)__', r'\1', text)
+        # Manual markdown to HTML conversion (fallback)
+        html = text
 
-        # Remove italic (*text* or _text_) but preserve standalone asterisks
-        text = re.sub(r'(?<!\*)\*([^*]+)\*(?!\*)', r'\1', text)
-        text = re.sub(r'(?<!_)_([^_]+)_(?!_)', r'\1', text)
+        # Code blocks first (before other processing)
+        html = re.sub(
+            r'```(\w+)?\n(.*?)```',
+            r'<pre><code class="language-\1">\2</code></pre>',
+            html,
+            flags=re.DOTALL
+        )
 
-        # Remove inline code (`code`)
-        text = re.sub(r'`([^`]+)`', r'\1', text)
+        # Inline code
+        html = re.sub(r'`([^`]+)`', r'<code>\1</code>', html)
 
-        # Remove code blocks (```...```)
-        text = re.sub(r'```[\s\S]*?```', '', text)
+        # Headers (process from h6 to h1 to avoid conflicts)
+        html = re.sub(r'^######\s+(.+)$', r'<h6>\1</h6>', html, flags=re.MULTILINE)
+        html = re.sub(r'^#####\s+(.+)$', r'<h5>\1</h5>', html, flags=re.MULTILINE)
+        html = re.sub(r'^####\s+(.+)$', r'<h4>\1</h4>', html, flags=re.MULTILINE)
+        html = re.sub(r'^###\s+(.+)$', r'<h3>\1</h3>', html, flags=re.MULTILINE)
+        html = re.sub(r'^##\s+(.+)$', r'<h2>\1</h2>', html, flags=re.MULTILINE)
+        html = re.sub(r'^#\s+(.+)$', r'<h1>\1</h1>', html, flags=re.MULTILINE)
 
-        # Remove links ([text](url)) -> text
-        text = re.sub(r'\[([^\]]+)\]\([^\)]+\)', r'\1', text)
+        # Bold (**text** or __text__)
+        html = re.sub(r'\*\*([^*]+)\*\*', r'<strong>\1</strong>', html)
+        html = re.sub(r'__([^_]+)__', r'<strong>\1</strong>', html)
 
-        # Remove list markers at start of line (-, *, 1., etc.)
-        text = re.sub(r'^[\s]*[-*+]\s+', '', text, flags=re.MULTILINE)
-        text = re.sub(r'^[\s]*\d+\.\s+', '', text, flags=re.MULTILINE)
+        # Italic (*text* or _text_) - but not if already bold
+        html = re.sub(r'(?<!<strong>)(?<!\*)\*([^*<]+)\*(?!\*)(?!</strong>)', r'<em>\1</em>', html)
+        html = re.sub(r'(?<!<strong>)(?<!_)_([^_<]+)_(?!_)(?!</strong>)', r'<em>\1</em>', html)
+
+        # Links ([text](url))
+        html = re.sub(r'\[([^\]]+)\]\(([^\)]+)\)', r'<a href="\2">\1</a>', html)
+
+        # Lists - process line by line
+        lines = html.split('\n')
+        result = []
+        in_list = False
+        list_type = None
+
+        for line in lines:
+            # Ordered list (1., 2., etc.)
+            if re.match(r'^\s*\d+\.\s+', line):
+                if not in_list or list_type != 'ol':
+                    if in_list:
+                        result.append(f'</{list_type}>')
+                    result.append('<ol>')
+                    in_list = True
+                    list_type = 'ol'
+                item_text = re.sub(r'^\s*\d+\.\s+', '', line)
+                result.append(f'<li>{item_text}</li>')
+            # Unordered list (-, *, +)
+            elif re.match(r'^\s*[-*+]\s+', line):
+                if not in_list or list_type != 'ul':
+                    if in_list:
+                        result.append(f'</{list_type}>')
+                    result.append('<ul>')
+                    in_list = True
+                    list_type = 'ul'
+                item_text = re.sub(r'^\s*[-*+]\s+', '', line)
+                result.append(f'<li>{item_text}</li>')
+            else:
+                if in_list:
+                    result.append(f'</{list_type}>')
+                    in_list = False
+                    list_type = None
+                if line.strip():
+                    # Wrap in paragraph if not already a header or code block
+                    if not (line.strip().startswith('<h') or 
+                            line.strip().startswith('<pre') or
+                            line.strip().startswith('<code') or
+                            line.strip().startswith('<ul') or
+                            line.strip().startswith('<ol')):
+                        result.append(f'<p>{line}</p>')
+                    else:
+                        result.append(line)
+                else:
+                    result.append('')
+
+        if in_list:
+            result.append(f'</{list_type}>')
+
+        html = '\n'.join(result)
+
+        # Horizontal rules
+        html = re.sub(r'^---$', r'<hr>', html, flags=re.MULTILINE)
 
         # Clean up "Key Concept:" prefixes (redundant with category tag)
-        text = re.sub(r'^\s*\*\*Key\s+Concept\*\*:\s*', '', text, flags=re.IGNORECASE)
-        text = re.sub(r'^\s*Key\s+Concept:\s*', '', text, flags=re.IGNORECASE)
+        html = re.sub(r'^\s*<strong>Key\s+Concept</strong>:\s*', '', html, flags=re.IGNORECASE)
+        html = re.sub(r'^\s*Key\s+Concept:\s*', '', html, flags=re.IGNORECASE)
 
-        # Clean up multiple spaces
-        text = re.sub(r'\s+', ' ', text)
+        return html
 
-        # Strip leading/trailing whitespace
-        text = text.strip()
-
-        return text
+    def _clean_markdown(self, text: str) -> str:
+        """
+        DEPRECATED: Use _markdown_to_html instead.
+        
+        This method is kept for backward compatibility but now calls
+        _markdown_to_html to properly convert markdown to HTML.
+        """
+        return self._markdown_to_html(text)
 
     def _render_html(
         self,
@@ -874,11 +951,11 @@ class TwoPageGenerator:
         page_2_ideas: List[IdeaGene],
     ) -> str:
         """Render HTML template with given ideas."""
-        # Clean markdown from idea content
+        # Convert markdown to HTML for idea content
         def clean_idea(idea: IdeaGene) -> Dict[str, Any]:
             idea_dict = idea.to_dict()
-            # Clean the content field
-            idea_dict['content'] = self._clean_markdown(idea_dict.get('content', ''))
+            # Convert markdown to HTML (preserves formatting)
+            idea_dict['content'] = self._markdown_to_html(idea_dict.get('content', ''))
             return idea_dict
 
         context = {
