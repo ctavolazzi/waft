@@ -1,12 +1,61 @@
 import React from 'react'
 
+// Avatar generation based on being attributes
+function generateAvatar(being) {
+  if (!being) return '🧙‍♂️'
+
+  // Avatar options based on personality and stats
+  const avatars = {
+    analytical: ['🧙‍♂️', '🧝‍♂️', '🧑‍🔬', '🦉'],
+    creative: ['🧚‍♀️', '🎨', '🦄', '🌟'],
+    warrior: ['⚔️', '🛡️', '🗡️', '🦸‍♂️'],
+    explorer: ['🧭', '🗺️', '🏃‍♂️', '🎒'],
+    mystical: ['🔮', '✨', '🌙', '⭐'],
+    default: ['👤', '🎭', '🧬', '💫']
+  }
+
+  // Determine avatar category based on skills
+  let category = 'default'
+  if (being.skills) {
+    const topSkill = Object.entries(being.skills).sort((a, b) => b[1] - a[1])[0]
+    if (topSkill) {
+      if (topSkill[0].includes('reason') || topSkill[0].includes('analy')) category = 'analytical'
+      else if (topSkill[0].includes('creat') || topSkill[0].includes('art')) category = 'creative'
+      else if (topSkill[0].includes('combat') || topSkill[0].includes('fight')) category = 'warrior'
+      else if (topSkill[0].includes('explor') || topSkill[0].includes('adven')) category = 'explorer'
+    }
+  }
+
+  // If stamina is low or sleeping, show mystical
+  if (being.is_sleeping || (being.stamina && being.stamina < 20)) {
+    category = 'mystical'
+  }
+
+  const options = avatars[category] || avatars.default
+  const hash = being.being_id ? being.being_id.charCodeAt(0) + being.being_id.charCodeAt(1) : 0
+  return options[hash % options.length]
+}
+
 function BeingProfile({ being }) {
   if (!being) {
     return (
       <div className="profile-empty">
         <div className="profile-empty-content">
+          <div className="empty-avatar-showcase">
+            <div className="empty-avatar-row">
+              <span className="empty-avatar-icon">🧙‍♂️</span>
+              <span className="empty-avatar-icon">🧝‍♀️</span>
+              <span className="empty-avatar-icon">⚔️</span>
+            </div>
+            <div className="empty-avatar-row">
+              <span className="empty-avatar-icon">🔮</span>
+              <span className="empty-avatar-icon">🎨</span>
+              <span className="empty-avatar-icon">🦄</span>
+            </div>
+          </div>
           <h2>🎭 No Avatar Created</h2>
-          <p>Spawn a Being to view their profile and begin your adventure!</p>
+          <p>Spawn a Being to generate your unique avatar and begin your adventure!</p>
+          <p className="empty-subtitle">Each avatar is uniquely generated based on their skills and personality</p>
         </div>
       </div>
     )
@@ -28,17 +77,20 @@ function BeingProfile({ being }) {
     return '#8b5cf6'
   }
 
+  const avatar = generateAvatar(being)
+
   return (
     <div className="profile-container">
       {/* Hero Section */}
       <div className="profile-hero">
         <div className="profile-avatar">
-          <div className="avatar-circle">
-            🧙‍♂️
+          <div className={`avatar-circle ${being.is_sleeping ? 'sleeping' : ''}`}>
+            {avatar}
           </div>
           {being.empirica_enabled && (
             <div className="empirica-crown">👑</div>
           )}
+          <div className="avatar-glow"></div>
         </div>
         <div className="profile-header">
           <h1 className="profile-name">
@@ -51,6 +103,11 @@ function BeingProfile({ being }) {
               <span className="profile-tag empirica">⚡ Empirica Enhanced</span>
             )}
           </div>
+          {being.is_first_being && (
+            <div className="first-being-badge">
+              ✨ First Being
+            </div>
+          )}
         </div>
       </div>
 

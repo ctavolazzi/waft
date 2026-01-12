@@ -3,6 +3,7 @@ Being API endpoints for testing Being system with Empirica integration.
 """
 
 from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel, Field
 from pathlib import Path
 from typing import Dict, Any, Optional, List
 import sys
@@ -17,29 +18,35 @@ from waft.reality import RealitySystem
 router = APIRouter()
 
 
+# Request models
+class SpawnBeingRequest(BaseModel):
+    reality_id: str = Field(default="test_reality", description="Reality to spawn into")
+    parent_being_id: Optional[str] = Field(default=None, description="Optional parent being ID")
+    initial_skills: Optional[Dict[str, float]] = Field(default=None, description="Optional initial skills dict")
+
+
+class MakeDecisionRequest(BaseModel):
+    decision_type: Optional[str] = Field(default=None, description="Optional decision type")
+    stamina_cost: float = Field(default=5.0, description="Stamina cost for decision")
+
+
 @router.post("/spawn")
-async def spawn_being(
-    reality_id: str = "test_reality",
-    parent_being_id: Optional[str] = None,
-    initial_skills: Optional[Dict[str, float]] = None
-) -> Dict[str, Any]:
+async def spawn_being(request: SpawnBeingRequest) -> Dict[str, Any]:
     """
     Spawn a new Being (first Being will use Empirica).
-    
+
     Args:
-        reality_id: Reality to spawn into
-        parent_being_id: Optional parent being ID
-        initial_skills: Optional initial skills dict
-    
+        request: Spawn request containing reality_id, parent_being_id, and initial_skills
+
     Returns:
         Being data with Empirica session info if first Being
     """
     try:
         being_system = BeingSystem(project_path=project_root)
         being = being_system.spawn_being(
-            reality_id=reality_id,
-            parent_being_id=parent_being_id,
-            initial_skills=initial_skills or {}
+            reality_id=request.reality_id,
+            parent_being_id=request.parent_being_id,
+            initial_skills=request.initial_skills or {}
         )
         
         return {
@@ -63,27 +70,25 @@ async def spawn_being(
 @router.post("/{being_id}/decision")
 async def make_decision(
     being_id: str,
-    decision_type: Optional[str] = None,
-    stamina_cost: float = 5.0
+    request: MakeDecisionRequest
 ) -> Dict[str, Any]:
     """
     Make a decision for a Being (uses Empirica if first Being).
-    
+
     Args:
         being_id: Being ID
-        decision_type: Optional decision type (if None, BeingDecisionSystem chooses)
-        stamina_cost: Stamina cost for decision
-    
+        request: Decision request containing decision_type and stamina_cost
+
     Returns:
         Decision result with Empirica gate info
     """
     try:
         being_system = BeingSystem(project_path=project_root)
         being = being_system._load_being(being_id)
-        
-        if decision_type:
+
+        if request.decision_type:
             # Direct decision
-            result = being.make_decision(decision_type, stamina_cost)
+            result = being.make_decision(request.decision_type, request.stamina_cost)
         else:
             # Use BeingDecisionSystem
             from waft.core.being_decisions import BeingDecisionSystem
