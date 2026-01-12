@@ -52,35 +52,21 @@
             }
           },
           {
-            "id": "58c202cbffc08a10",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "_pyrite/journal/entries/2026-01-11-2219_ai-dnd-integration-reflection.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "2026-01-11-2219_ai-dnd-integration-reflection"
-            }
-          },
-          {
             "id": "770f401cc441acdc",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "_pyrite/journal/Streamlit API Cheat Sheet.md",
+                "file": "_pyrite/journal/ai-journal.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Streamlit API Cheat Sheet"
+              "title": "ai-journal"
             }
           }
         ],
-        "currentTab": 4
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -244,51 +230,51 @@
   },
   "active": "770f401cc441acdc",
   "lastOpenFiles": [
-    "_work_efforts/WE-260112-wfga_heavy_seed_protocol_redbean_codex_implementation/LARVAL_FORM_COMPLETE_SPECIFICATION.md",
-    "_work_efforts/WE-260112-wfga_heavy_seed_protocol_redbean_codex_implementation/REACTIVE_LIVE_RELOAD_IMPLEMENTATION.md",
-    "_pyrite/journal/entries/2026-01-11-2219_ai-dnd-integration-reflection.md",
-    "_pyrite/journal/Streamlit API Cheat Sheet.md",
-    "_pyrite/journal/ai-journal.md",
-    "_work_efforts/WE-260112-wfga_heavy_seed_protocol_redbean_codex_implementation/EVOLVE_COMMAND_CREATION.md",
-    "_work_efforts/WE-260112-wfga_heavy_seed_protocol_redbean_codex_implementation/COMPREHENSIVE_QUALITY_WORKFLOW_COMPLETE.md",
-    "_work_efforts/WE-260112-wfga_heavy_seed_protocol_redbean_codex_implementation/WORKFLOW_EXECUTION_SUMMARY.md",
-    "_work_efforts/WE-260112-wfga_heavy_seed_protocol_redbean_codex_implementation/VERIFICATION_TRACES.md",
-    "_work_efforts/WE-260112-wfga_heavy_seed_protocol_redbean_codex_implementation/HYPOTHESES.md",
-    "_work_efforts/WE-260112-wfga_heavy_seed_protocol_redbean_codex_implementation/IMPROVEMENTS_ANALYSIS.md",
-    "_work_efforts/WE-260112-wfga_heavy_seed_protocol_redbean_codex_implementation/ASSUMPTIONS_VALIDATION.md",
-    "_work_efforts/WE-260112-wfga_heavy_seed_protocol_redbean_codex_implementation/COMPREHENSIVE_WORKFLOW_ANALYSIS.md",
-    "waft_memory.db-shm",
-    "waft_memory.db-wal",
-    "_genetics/pdf_generator/c1b3dcaa970f28b8_events.jsonl",
-    "_genetics/pdf_generator/c1b3dcaa970f28b8.json",
-    "src/waft/core/science/__pycache__/oracle.cpython-310.pyc",
-    "V0.6.0_VERSION_UPDATE_SUMMARY.md",
-    "VERSION_0.6.0_RELEASE_NOTES.md",
-    "_work_efforts/WE-260112-wfga_heavy_seed_protocol_redbean_codex_implementation/LARVAL_FORM_IMPLEMENTATION.md",
-    "_pyrite/active/2026-01-12_run-it_goal_management.md",
-    "_pyrite/active/2026-01-12_run-it_decision_matrix.md",
-    "_work_efforts/CHECKPOINT_2026-01-12_run-it_workflow_execution.md",
-    "_pyrite/active/2026-01-12_run-it_proceed_verification.md",
-    "_pyrite/standards/verification/traces/2026-01-12_verify-0001_run-it_workflow_claims.md",
-    "_pyrite/hypothesis/2026-01-12_run-it_workflow_hypotheses.md",
-    "_work_efforts/CRITIQUE_2026-01-12_134400_run-it_workflow.md",
-    "_pyrite/active/2026-01-12_run-it_deep_analysis.md",
-    "waft_memory.db-journal",
     "waft_memory.db",
-    "_pyrite/standards/verification/traces/2026-01-12_run-it_assumptions_validation.md",
-    "WAFT_LARVA_IMPLEMENTATION_SUMMARY.md",
-    "__pycache__/waft_larva.cpython-312.pyc",
-    "test_waft_larva.py",
     "waft_larva.py",
+    "visualizer/src/routes/campfire/+page.ts",
+    "visualizer/src/routes/campfire/+page.svelte",
+    "visualizer/src/routes/campfire",
+    "tests/test_data/pain_pleasure_alignment_energy_test_data.json",
+    "tests/test_data/memory_with_harm_help_example.json",
+    "tests/test_data/harm_help_events_example.json",
+    "tests/test_data/complete_being_state_example.json",
+    "tests/test_data/alignment_history_example.json",
+    "tests/test_data",
+    "scientific_method_tool/README.md",
+    "scientific_method_tool/IMPLEMENTATION_SUMMARY.md",
+    "docs/SELF_ENGINEERING_VISION.md",
+    "docs/SELF_ENGINEERING_IMPLEMENTATION.md",
+    "docs/SELF_ENGINEERING_EMPIRICA_SUMMARY.md",
+    "docs/SELF_ENGINEERING_EMPIRICA_INTEGRATION.md",
+    "docs/REFINEMENT_CONCEPT.md",
+    "docs/ORACLE_COMMAND.md",
+    "docs/OBSERVER_ORACLE_TAVERNKEEPER_EMPIRICA.md",
+    "docs/LARVA_TO_MATURE_MIGRATION.md",
+    "docs/HYPOTHESIS_FLIGHTRECORDER_EMPIRICA.md",
+    "docs/CAMPFIRE_SYSTEM.md",
+    "docs/CAMPFIRE_SPEC.md",
+    "docs/CAMPFIRE_ESSENCE.md",
+    "_work_efforts/WE-260112-z87p_encapsulated_environments_beings_telling_stories_for_information_exchange/tickets/TKT-z87p-010_add_misalignment_reaction_system.md",
+    "_work_efforts/WE-260112-z87p_encapsulated_environments_beings_telling_stories_for_information_exchange/tickets/TKT-z87p-009_create_story_based_information_encoding_decoding.md",
+    "_work_efforts/WE-260112-z87p_encapsulated_environments_beings_telling_stories_for_information_exchange/tickets/TKT-z87p-008_implement_information_exchange_protocols.md",
+    "_work_efforts/WE-260112-z87p_encapsulated_environments_beings_telling_stories_for_information_exchange/tickets/TKT-z87p-007_build_multi_layered_environment_stacking_system.md",
+    "_work_efforts/WE-260112-z87p_encapsulated_environments_beings_telling_stories_for_information_exchange/tickets/TKT-z87p-006_create_agreement_detection_and_scint_calculation.md",
+    "_work_efforts/WE-260112-z87p_encapsulated_environments_beings_telling_stories_for_information_exchange/tickets/TKT-z87p-005_implement_being_to_being_storytelling_system.md",
+    "_work_efforts/WE-260112-z87p_encapsulated_environments_beings_telling_stories_for_information_exchange/tickets/TKT-z87p-004_build_encapsulated_environment_simulation_framework.md",
+    "_work_efforts/WE-260112-z87p_encapsulated_environments_beings_telling_stories_for_information_exchange/tickets/TKT-z87p-003_create_arrow_of_intent_for_tracking_harm_direction.md",
+    "_work_efforts/WE-260112-z87p_encapsulated_environments_beings_telling_stories_for_information_exchange/tickets/TKT-z87p-002_implement_scint_as_agreement_measurement_system.md",
+    "_work_efforts/WE-260112-z87p_encapsulated_environments_beings_telling_stories_for_information_exchange/tickets/TKT-z87p-001_create_harm_class_for_tracking_intentional_unintentional_harm.md",
+    "_work_efforts/WE-260112-z87p_encapsulated_environments_beings_telling_stories_for_information_exchange/WE-260112-z87p_index.md",
+    "_work_efforts/WE-260111-jpw1_dnd5e_ai_exploration_initiative/page_006.png",
+    "_work_efforts/WE-260111-jpw1_dnd5e_ai_exploration_initiative/page_005.png",
+    "_work_efforts/WE-260111-jpw1_dnd5e_ai_exploration_initiative/page_004.png",
+    "_work_efforts/WE-260111-jpw1_dnd5e_ai_exploration_initiative/page_003.png",
+    "_work_efforts/WE-260111-jpw1_dnd5e_ai_exploration_initiative/page_002.png",
+    "_work_efforts/WE-260111-jpw1_dnd5e_ai_exploration_initiative/page_001.png",
+    "_work_efforts/WE-260111-jpw1_dnd5e_ai_exploration_initiative/DND5E_IMPLEMENTATION_BREAKDOWN.png",
+    "_work_efforts/WE-260111-jpw1_dnd5e_ai_exploration_initiative/DEEP_CODE_ANALYSIS_2026-01-11_ALGORITHMS_AND_PATTERNS.png",
     "temp_pngs/page_002.png",
-    "temp_pngs/page_001.png",
-    "temp_pngs/page_003.png",
-    "_work_efforts/one_pagers/chat_session_20260111_213720_pages/page_002.png",
-    "_work_efforts/one_pagers/chat_session_20260111_213720_pages/page_001.png",
-    "_work_efforts/one_pagers/chat_session_20260111_213707_pages/page_002.png",
-    "_work_efforts/one_pagers/chat_session_20260111_213707_pages/page_001.png",
-    "_work_efforts/showcase_documents/Status_Command_Documentation_20260111_213642.png",
-    "_work_efforts/showcase_documents/page_004.png",
-    "_work_efforts/showcase_documents/page_003.png"
+    "temp_pngs/page_001.png"
   ]
 }

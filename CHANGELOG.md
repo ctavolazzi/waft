@@ -11,6 +11,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Work in progress features
 
+## [0.6.1] - 2026-01-12
+
+### Added
+
+#### Reactive Live Reload System
+- **Auto-refresh functionality**: Lightweight hash-based change detection
+  - Data hash calculation using metadata (max log ID, counts, artifact status)
+  - Only reruns when data actually changes (efficient, ~1-2ms overhead)
+  - JavaScript-based scheduling (non-blocking)
+  - User controls: enable/disable checkbox, configurable intervals (2s, 3s, 5s, 10s)
+  - Visual indicators: pulsing dot animation, status in footer
+- **Complete Specification Documentation**: AI-recreatable specification
+  - Complete database schema documentation
+  - All class methods with signatures and behavior
+  - UI layout and component specifications
+  - Reactive system implementation details
+  - Error handling requirements
+  - Testing requirements
+  - Migration requirements
+
+### Changed
+
+- **UI Improvements**: Enhanced clarity and usability
+  - Header with auto-refresh controls
+  - Clear explanations and help text
+  - Status dashboard with metrics
+  - Improved section labels and captions
+- **Version Update**: Bumped from v0.6.0 to v0.6.1
+
 ## [0.6.0] - 2026-01-12
 
 ### Added
