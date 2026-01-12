@@ -1,0 +1,17 @@
+{
+  "test_id": "phase1_test_001",
+  "phase": 1,
+  "test_name": "Single-page PDF conversion",
+  "success": true,
+  "metrics": {
+    "png_count": 1,
+    "dpi": 300,
+    "backend": "auto",
+    "output_dir": "/Users/ctavolazzi/Code/active/waft/WAFT-PDF-PNG-Conversion-Research/test_results/pdf_to_png/phase1_test_001"
+  },
+  "error": null,
+  "idea_genome_id": "eb3402f954313b002872e370abddfd480c64b2ca2870c39e5e4b78c855df4e3b",
+  "idea_scientific_name": "Wave Iota, the Humble",
+  "event_genome_id": "eb3402f954313b002872e370abddfd480c64b2ca2870c39e5e4b78c855df4e3b",
+  "timestamp": "2026-01-11T22:23:09.153509"
+}

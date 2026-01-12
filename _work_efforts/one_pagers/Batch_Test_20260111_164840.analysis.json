@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-01-11T16:48:42.505781",
+  "title": "Batch Test Report 20260111_164840",
+  "scores": {
+    "completeness": 1.0,
+    "structure": 1.0
+  },
+  "gaps": [
+    "No actions identified",
+    "No insights identified"
+  ],
+  "suggestions": [],
+  "comparison": {
+    "vs_previous_avg": 0.2808441558441558,
+    "trend": "improving"
+  }
+}

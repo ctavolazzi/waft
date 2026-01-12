@@ -1,0 +1,309 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>V2 Evolution: One-Pager System Evolution</title>
+
+    <style>
+        /* Strict 2-page setup */
+        @page {
+            size: letter;
+            margin: 20mm 20mm 20mm 20mm;
+        }
+
+        body {
+            font-family: sans-serif;
+            font-size: 11pt;
+            line-height: 1.5;
+            color: #000000;
+            background: #FFFFFF;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Prevent orphans/widows */
+        p, li {
+            orphans: 2;
+            widows: 2;
+        }
+
+        /* Page break control */
+        .page-break {
+            page-break-after: always;
+            break-after: page;
+        }
+
+        .no-break {
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 24pt;
+            color: #1a1a1a;
+            margin-top: 0;
+            margin-bottom: 15pt;
+            page-break-after: avoid;
+            border-bottom: 2pt solid #0066cc;
+            padding-bottom: 4pt;
+        }
+
+        h2 {
+            font-size: 18pt;
+            color: #1a1a1a;
+            margin-top: 15pt;
+            margin-bottom: 10pt;
+            page-break-after: avoid;
+            border-bottom: 1pt solid #0066cc;
+            padding-bottom: 2pt;
+        }
+
+        h3 {
+            font-size: 14pt;
+            color: #1a1a1a;
+            margin-top: 10pt;
+            margin-bottom: 5.0pt;
+            page-break-after: avoid;
+        }
+
+        p {
+            margin: 0 0 10pt 0;
+        }
+
+        ul, ol {
+            margin: 0 0 10pt 0;
+            padding-left: 15pt;
+        }
+
+        li {
+            margin-bottom: 3.3333333333333335pt;
+        }
+
+        /* Visual boxes - inspired by field guide */
+        .note-box {
+            border-left: 4pt solid #0066cc;
+            background: #f5f5f5;
+            padding: 10pt;
+            margin: 10pt 0;
+            page-break-inside: avoid;
+        }
+
+        .note-title {
+            font-weight: bold;
+            color: #0066cc;
+            font-size: 13pt;
+            margin-bottom: 5.0pt;
+        }
+
+        .highlight-box {
+            border: 2pt solid #0066cc;
+            background: #f5f5f5;
+            padding: 10pt;
+            margin: 10pt 0;
+            page-break-inside: avoid;
+        }
+
+        /* Tables for structured data */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10pt 0;
+            font-size: 10pt;
+            page-break-inside: avoid;
+        }
+
+        th {
+            background: #1a1a1a;
+            color: #FFFFFF;
+            border: 1pt solid #000000;
+            padding: 4pt;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            border: 1pt solid #00000033;
+            padding: 4pt;
+        }
+
+        tr:nth-child(even) {
+            background: #f5f5f5;
+        }
+
+        /* Pillar boxes - visual representation */
+        .pillar {
+            border: 2pt solid #0066cc;
+            background: #FFFFFF;
+            padding: 10pt;
+            margin: 10pt 0;
+            page-break-inside: avoid;
+        }
+
+        .pillar-title {
+            font-weight: bold;
+            color: #0066cc;
+            font-size: 14pt;
+            margin-bottom: 5.0pt;
+        }
+
+        /* Ideas - prose presentation */
+        .idea {
+            margin-bottom: 10pt;
+            padding: 10pt;
+            border-left: 3pt solid #0066cc;
+            background: #f5f5f515;
+            page-break-inside: avoid;
+        }
+
+        .idea-content {
+            font-size: 11pt;
+            line-height: 1.6;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+            text-align: justify;
+            margin: 0;
+        }
+
+        /* Metadata - compact */
+        .metadata {
+            font-size: 9pt;
+            color: #00000088;
+            line-height: 1.3;
+            border-top: 1pt solid #00000033;
+            padding-top: 5.0pt;
+            margin-top: 10pt;
+        }
+
+        .metadata p {
+            margin-bottom: 3.3333333333333335pt;
+        }
+
+        /* Summary box - prominent */
+        .summary-box {
+            background: #f5f5f5;
+            padding: 10pt;
+            margin-bottom: 15pt;
+            border-left: 4pt solid #0066cc;
+            border-top: 1pt solid #0066cc;
+            border-right: 1pt solid #0066cc;
+            border-bottom: 1pt solid #0066cc;
+        }
+
+        /* Scientific name styling */
+        .scientific-name {
+            font-style: italic;
+            color: #0066cc;
+        }
+
+        /* Code blocks */
+        code {
+            font-family: monospace;
+            font-size: 10pt;
+            background: #f5f5f5;
+            color: #333333;
+            padding: 2pt 4pt;
+            border-radius: 2pt;
+        }
+
+        pre {
+            background: #f5f5f5;
+            padding: 5.0pt;
+            border-left: 3pt solid #0066cc;
+            font-size: 10pt;
+            overflow-x: auto;
+            page-break-inside: avoid;
+        }
+
+        /* Visual separators */
+        .divider {
+            border-top: 1pt solid #00000033;
+            margin: 10pt 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- PAGE 1 -->
+    <div class="page-1">
+        <h1>V2 Evolution: One-Pager System Evolution</h1>
+
+        <div class="summary-box">
+            <strong>Summary:</strong> The original one-pager generator had a critical flaw.
+        </div>
+
+        <div class="metadata">
+            <p><strong>Generated:</strong> 2026-01-11 22:09 UTC | <strong>Ideas Extracted:</strong> 7</p>
+        </div>
+
+        <h2>What Happened</h2>
+
+        
+        <div class="idea no-break">
+            <p class="idea-content">The original one-pager generator had a critical flaw. It was supposed to create exactly two pages, but it was generating four pages instead. Even worse, it was reporting that it had successfully created two pages when it clearly hadn't. This happened because the system was using a simple rule of thumb: it assumed that between 8,000 and 12,000 characters of HTML would equal two pages. But this assumption was completely wrong. Different content, different fonts, and different layouts all affect how much text fits on a page, so this character-counting method was unreliable.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">The new system starts by selecting a reasonable number of ideas to include. It generates a PDF with that content and counts the actual pages. If it gets exactly two pages, it's done. If it gets more than two pages, it reduces the content by about 25 percent and tries again. If it gets fewer than two pages, it increases the content by about 30 percent. This process continues until it either hits exactly two pages or reaches the maximum number of attempts. The result is a system that actually delivers on its promise of creating two-page documents.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">This represents something important: the system evolved itself. When the first version failed, we didn't just fix a bug. We created a new version that uses a fundamentally different approach. The new version measures reality instead of estimating it. It adapts based on feedback instead of assuming it got it right the first time. This is the kind of improvement that makes systems more reliable and more capable over time.</p>
+        </div>
+        
+    </div>
+
+    <!-- Forced page break -->
+    <div class="page-break"></div>
+
+    <!-- PAGE 2 -->
+    <div class="page-2">
+        
+        <h2>Additional Details</h2>
+
+        
+        <div class="idea no-break">
+            <p class="idea-content">Now that we have a system that actually works, we can use it to create one-pagers from chat sessions. Each one-pager will be exactly two pages, with clean formatting, and will accurately summarize the key points from a conversation. The system tracks everything it does, so we can see how it evolves over time and learn from what works best.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">We created a new version of the generator that actually measures what it produces. Instead of guessing based on character count, the new system generates a PDF, counts the real number of pages using a library called pypdf, and then adjusts the content if needed. It tries up to five times to get exactly two pages. If it generates too many pages, it reduces the amount of content. If it generates too few, it adds more. This creates a feedback loop: the system measures what it created, compares it to the goal, and adjusts until it gets it right.</p>
+        </div>
+        
+        
+
+        <div class="divider"></div>
+
+        <div class="metrics">
+            <h3>Content Breakdown</h3>
+            <table>
+                <tr>
+                    <th>Type</th>
+                    <th>Count</th>
+                </tr>
+                <tr>
+                    <td>Decisions</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>Insights</td>
+                    <td>3</td>
+                </tr>
+                <tr>
+                    <td>Actions</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>Concepts</td>
+                    <td>3</td>
+                </tr>
+                <tr>
+                    <td>Questions</td>
+                    <td>0</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

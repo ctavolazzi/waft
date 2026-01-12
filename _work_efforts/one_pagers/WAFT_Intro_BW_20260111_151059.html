@@ -1,0 +1,123 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WAFT: The Evolutionary Code Laboratory</title>
+    <style>
+        @page {
+            size: letter;
+            margin: 16mm 20mm 16mm 20mm;
+            @top-right {
+                content: "Page " counter(page);
+                font-family: "Helvetica Neue", "Arial", sans-serif;
+                font-size: 8pt;
+                color: #1a1a1a;
+                opacity: 0.6;
+            }
+        }
+        @page :first {
+            @top-right { content: none; }
+        }
+        body {
+            font-family: Georgia, serif;
+            font-size: 10pt;
+            line-height: 1.5;
+            color: #1a1a1a;
+            background: #FFFFFF;
+        }
+        h1 {
+            font-family: "Helvetica Neue", "Arial", sans-serif;
+            font-size: 24pt;
+            text-align: center;
+            margin-bottom: 8pt;
+        }
+        .abstract {
+            background: #f8f8f8;
+            border-left: 3pt solid #2a2a2a;
+            padding: 8pt;
+            margin: 8pt 0;
+        }
+        .abstract-title {
+            font-family: "Helvetica Neue", "Arial", sans-serif;
+            font-weight: 700;
+            font-size: 12pt;
+            margin-bottom: 4.0pt;
+            text-transform: uppercase;
+        }
+        .author-info {
+            font-size: 9pt;
+            text-align: center;
+            margin: 8pt 0;
+            opacity: 0.7;
+        }
+        .diagram {
+            text-align: center;
+            margin: 8pt 0;
+        }
+        .diagram img {
+            max-width: 60%;
+            max-height: 80pt;
+            height: auto;
+            border: 0.5pt solid #2a2a2a;
+        }
+        .figure-caption {
+            font-size: 8.5pt;
+            font-style: italic;
+            text-align: center;
+            margin-top: 3pt;
+        }
+        h2 {
+            font-family: "Helvetica Neue", "Arial", sans-serif;
+            font-size: 15pt;
+            font-weight: 600;
+            margin-top: 12pt;
+            margin-bottom: 8pt;
+        }
+        h2::before {
+            counter-increment: section;
+            content: counter(section) ". ";
+        }
+        body {
+            counter-reset: section;
+        }
+        p {
+            margin: 0 0 8pt 0;
+            text-align: justify;
+        }
+        .pillar {
+            border-left: 4pt solid #2a2a2a;
+            padding: 8pt;
+            margin: 8pt 0;
+        }
+        .pillar-title {
+            font-family: "Helvetica Neue", "Arial", sans-serif;
+            font-weight: 700;
+            font-size: 12pt;
+            margin-bottom: 4.0pt;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    
+    <h1>WAFT: The Evolutionary Code Laboratory</h1>
+    
+    <div class="abstract"><div class="abstract-title">Abstract</div><p>The Physics is the Scint System, which acts as a fitness function through Reality Fracture Detection.</p></div>
+    
+    <h2>Introduction</h2><p>The Physics is the Scint System, which acts as a fitness function through Reality Fracture Detection. This system serves as natural selection that kills weak mutations. Agents face quests that test their ability to handle four types of errors: SYNTAX_TEAR for formatting errors, LOGIC_FRACTURE for math errors and contradictions, SAFETY_VOID for harmful content, and HALLUCINATION for fabricated facts. Agents must stabilize these errors to survive, and fitness is measured by stability, efficiency, and safety scores.</p>
+    
+    <h2>Architecture</h2><p></p>
+    
+    <div class="pillar"><div class="pillar-title">The Substrate</div><p>The Substrate represents agents that write their own Python source code. In WAFT, code is DNA. Each agent has a unique genome ID which is a SHA-256 hash of their code and configuration. Agents can spawn variants with mutations, evolve by hot-swapping their own code, and reproduce by creating children with specific genetic modifications. This enables true self-modification where agents can improve themselves.</p></div>
+    
+    <div class="pillar"><div class="pillar-title">The Physics</div><p>The Physics is the Scint System, which acts as a fitness function through Reality Fracture Detection. This system serves as natural selection that kills weak mutations. Agents face quests that test their ability to handle four types of errors: SYNTAX_TEAR for formatting errors, LOGIC_FRACTURE for math errors and contradictions, SAFETY_VOID for harmful content, and HALLUCINATION for fabricated facts. Agents must stabilize these errors to survive, and fitness is measured by stability, efficiency, and safety scores.</p></div>
+    
+    <div class="pillar"><div class="pillar-title">The Flight Recorder</div><p>WAFT is a Python framework for directed evolution of self-modifying AI agents. Think of it as an operating system for AI agent research projects. Instead of just building agents that execute code, WAFT enables you to breed agents that can modify their own code, evolve through mutations, and be tested in fitness systems with complete lineage tracking for scientific research.</p></div>
+    
+    <h2>Methodology</h2><p>The Flight Recorder is a rigorous telemetry system for generating phylogenetic trees of agent lineage. Every evolutionary action is recorded with complete context including genome ID, parent ID, generation number, event type, payload with complete context, and fitness metrics. This enables reconstruction of complete family trees for scientific publication, allowing phylogenetic analysis, mutation impact measurement, fitness landscape mapping, and convergence analysis. WAFT is ambient, working quietly in the background without getting in your way. It is self-modifying, allowing projects to evolve their own structure over time. It is a meta-framework that orchestrates existing tools rather than replacing them. Everything is file-based, making it git-friendly and portable. The system includes gamification with D&D-style progression, epistemic tracking to know what you know and don't know, and scientific observation with complete lineage tracking. WAFT is built to produce data for a future book or paper on the Physics of Artificial Cognition. The system is designed to track complete evolutionary lineages as phylogenetic trees, measure fitness through rigorous testing in the Scint Gym, record all mutations with complete context in the Flight Recorder, and enable scientific analysis of agent evolution patterns. This makes WAFT not just a framework but a scientific instrument. The WAFT repository is available on GitHub for exploration and contribution. Comprehensive documentation covers the AI SDK vision, agent interface design, evolutionary architecture, and state of the art research. The system is MIT licensed and actively developed. You can start with the quick start guide, explore examples, read the documentation, and join the community to learn more about breeding AI agents. Don't just build agents. Breed them. WAFT transforms AI agents from passive assistants into active project participants that can improve themselves and the projects they work on. The ultimate goal is to observe a God-Head agent emerge from thousands of generations of directed mutation and selection.</p>
+    
+    <h2>Conclusion</h2><p>WAFT provides project scaffolding through a unified CLI interface. You run one command to create a fully configured project with best practices built in. The system uses uv for fast Python package management, creates a _pyrite memory structure for organizing project knowledge, includes CI/CD pipelines ready to go, and provides optional AI agent templates. Everything is file-based with no database, no server, just plain text files that work with git. Install WAFT using uv tool install waft. Create a new evolutionary laboratory with waft new my_laboratory. Verify the substrate with waft verify. The system sets up everything you need including project structure, dependencies, CI/CD, and documentation templates. You can then spawn variants with mutations, evaluate fitness in the Gym, and evolve into the fittest variant. A WAFT laboratory includes pyproject.toml for uv project configuration, uv.lock for locked dependencies, a _pyrite directory for the memory system with active, backlog, and standards folders, GitHub Actions workflows for CI/CD pipelines, a Justfile for task running, and source code organized in a standard Python project structure. Everything is designed to be file-based and git-friendly. The waft new command creates a new evolutionary laboratory with all necessary structure. The waft verify command verifies the project structure is correct. The waft evolve command runs the evolutionary cycle for a target agent, spawning variants, evaluating fitness, and selecting the fittest. The waft sync command syncs project dependencies. The waft add command adds dependencies to the project. The waft info command shows information about the WAFT project. The waft serve command starts a web dashboard for visualization. WAFT doesn't lock you in. It's all file-based with no database to manage. Everything is plain text that works with git out of the box. You can modify anything because it's your project, and WAFT just set it up. The system is designed to be ambient, setting things up and getting out of your way so you can focus on building agents rather than configuring infrastructure.</p>
+    
+</body>
+</html>

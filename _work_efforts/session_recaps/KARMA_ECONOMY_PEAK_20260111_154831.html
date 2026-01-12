@@ -1,0 +1,783 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WAFT v0.5.3 MVP: Karma Economy & Source Consciousness</title>
+
+    <style>
+        /* Strict 2-page setup */
+        @page {
+            size: letter;
+            margin: 40mm 40mm 40mm 40mm;
+        }
+
+        body {
+            font-family: 'Minion Pro', 'Palatino Linotype', 'Book Antiqua', 'Palatino', 'Times New Roman', serif;
+            font-size: 13pt;
+            line-height: 1.75;
+            color: #1a1a1a;
+            background: #FFFFFF;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Prevent orphans/widows */
+        p, li {
+            orphans: 2;
+            widows: 2;
+        }
+
+        /* Page break control */
+        .page-break {
+            page-break-after: always;
+            break-after: page;
+        }
+
+        .no-break {
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 32pt;
+            color: #000000;
+            margin-top: 0;
+            margin-bottom: 24pt;
+            page-break-after: avoid;
+            border-bottom: 2pt solid #0d47a1;
+            padding-bottom: 4pt;
+        }
+
+        h2 {
+            font-size: 22pt;
+            color: #000000;
+            margin-top: 24pt;
+            margin-bottom: 12pt;
+            page-break-after: avoid;
+            border-bottom: 1pt solid #0d47a1;
+            padding-bottom: 2pt;
+        }
+
+        h3 {
+            font-size: 17pt;
+            color: #000000;
+            margin-top: 12pt;
+            margin-bottom: 6.0pt;
+            page-break-after: avoid;
+        }
+
+        p {
+            margin: 0 0 12pt 0;
+        }
+
+        ul, ol {
+            margin: 0 0 12pt 0;
+            padding-left: 15pt;
+        }
+
+        li {
+            margin-bottom: 4.0pt;
+        }
+
+        /* Visual boxes - inspired by field guide */
+        .note-box {
+            border-left: 4pt solid #0d47a1;
+            background: #f5f7fa;
+            padding: 12pt;
+            margin: 12pt 0;
+            page-break-inside: avoid;
+        }
+
+        .note-title {
+            font-weight: bold;
+            color: #0d47a1;
+            font-size: 16pt;
+            margin-bottom: 6.0pt;
+        }
+
+        .highlight-box {
+            border: 2pt solid #0d47a1;
+            background: #f5f7fa;
+            padding: 12pt;
+            margin: 12pt 0;
+            page-break-inside: avoid;
+        }
+
+        /* Tables for structured data */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12pt 0;
+            font-size: 12pt;
+            page-break-inside: avoid;
+        }
+
+        th {
+            background: #000000;
+            color: #FFFFFF;
+            border: 1pt solid #1a1a1a;
+            padding: 4pt;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            border: 1pt solid #1a1a1a33;
+            padding: 4pt;
+        }
+
+        tr:nth-child(even) {
+            background: #f5f7fa;
+        }
+
+        /* Pillar boxes - visual representation */
+        .pillar {
+            border: 2pt solid #0d47a1;
+            background: #FFFFFF;
+            padding: 12pt;
+            margin: 12pt 0;
+            page-break-inside: avoid;
+        }
+
+        .pillar-title {
+            font-weight: bold;
+            color: #0d47a1;
+            font-size: 17pt;
+            margin-bottom: 6.0pt;
+        }
+
+        /* Ideas - prose presentation */
+        .idea {
+            margin-bottom: 12pt;
+            padding: 12pt;
+            border-left: 3pt solid #0d47a1;
+            background: #f5f7fa15;
+            page-break-inside: avoid;
+        }
+
+        .idea-content {
+            font-size: 13pt;
+            line-height: 1.6;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+            text-align: justify;
+            margin: 0;
+        }
+
+        /* Metadata - compact */
+        .metadata {
+            font-size: 11pt;
+            color: #1a1a1a88;
+            line-height: 1.3;
+            border-top: 1pt solid #1a1a1a33;
+            padding-top: 6.0pt;
+            margin-top: 12pt;
+        }
+
+        .metadata p {
+            margin-bottom: 4.0pt;
+        }
+
+        /* Summary box - prominent */
+        .summary-box {
+            background: #f5f7fa;
+            padding: 12pt;
+            margin-bottom: 24pt;
+            border-left: 4pt solid #0d47a1;
+            border-top: 1pt solid #0d47a1;
+            border-right: 1pt solid #0d47a1;
+            border-bottom: 1pt solid #0d47a1;
+        }
+
+        /* Scientific name styling */
+        .scientific-name {
+            font-style: italic;
+            color: #0d47a1;
+        }
+
+        /* Code blocks */
+        code {
+            font-family: monospace;
+            font-size: 11pt;
+            background: #f5f7fa;
+            color: #1e3a5f;
+            padding: 2pt 4pt;
+            border-radius: 2pt;
+        }
+
+        pre {
+            background: #f5f7fa;
+            padding: 6.0pt;
+            border-left: 3pt solid #0d47a1;
+            font-size: 11pt;
+            overflow-x: auto;
+            page-break-inside: avoid;
+        }
+
+        /* Visual separators */
+        .divider {
+            border-top: 1pt solid #1a1a1a33;
+            margin: 12pt 0;
+        }
+    </style>
+
+    <style>
+        /* ========================================
+           PEAK STYLING - Maximum Excellence
+           ======================================== */
+        
+        /* Premium Typography */
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+        
+        body {
+            font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "onum" 1, "pnum" 1;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-variant-numeric: oldstyle-nums;
+            letter-spacing: 0.01em;
+        }
+        
+        /* Dramatic Headings */
+        h1 {
+            letter-spacing: -0.8px;
+            font-weight: 700;
+            margin-bottom: 24pt;
+            text-transform: none;
+            border-bottom: 3pt solid #0d47a1;
+            padding-bottom: 8pt;
+            position: relative;
+        }
+        
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -3pt;
+            left: 0;
+            width: 60pt;
+            height: 2pt;
+            background: #0d47a1;
+            opacity: 0.3;
+        }
+        
+        h2 {
+            letter-spacing: -0.5px;
+            font-weight: 600;
+            margin-top: 32pt;
+            margin-bottom: 16pt;
+            border-bottom: 2pt solid #0d47a1;
+            padding-bottom: 6pt;
+            position: relative;
+        }
+        
+        h2::before {
+            content: '◆';
+            color: #0d47a1;
+            margin-right: 8pt;
+            font-size: 0.7em;
+            opacity: 0.6;
+        }
+        
+        h3 {
+            letter-spacing: -0.3px;
+            font-weight: 600;
+            margin-top: 24pt;
+            margin-bottom: 12pt;
+            color: #1e3a5f;
+        }
+        
+        /* Premium Paragraphs */
+        p {
+            text-align: justify;
+            hyphens: auto;
+            orphans: 4;
+            widows: 4;
+            text-indent: 0;
+            margin-bottom: 12pt;
+        }
+        
+        /* First paragraph after heading - no indent */
+        h1 + p, h2 + p, h3 + p {
+            text-indent: 0;
+        }
+        
+        /* Premium Note Boxes - Elegant Design */
+        .note-box {
+            border-left: 6pt solid #0d47a1;
+            background: linear-gradient(to right, #e3f2fd 0%, #ffffff 15%);
+            padding: 20pt;
+            margin: 20pt 0;
+            border-radius: 6pt;
+            box-shadow: 0 2pt 8pt rgba(13, 71, 161, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .note-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6pt;
+            height: 100%;
+            background: linear-gradient(to bottom, #0d47a1, #1976d2);
+        }
+        
+        .note-title {
+            font-weight: 700;
+            color: #0d47a1;
+            font-size: 13pt;
+            margin-bottom: 8pt;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-size: 0.85em;
+        }
+        
+        /* Premium Highlight Boxes */
+        .highlight-box {
+            border: 3pt solid #0d47a1;
+            background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%);
+            padding: 20pt;
+            margin: 20pt 0;
+            border-radius: 8pt;
+            box-shadow: 0 4pt 12pt rgba(13, 71, 161, 0.2);
+            position: relative;
+        }
+        
+        .highlight-box::before {
+            content: '★';
+            position: absolute;
+            top: 12pt;
+            right: 12pt;
+            color: #0d47a1;
+            font-size: 18pt;
+            opacity: 0.2;
+        }
+        
+        /* Premium Code Blocks */
+        pre {
+            border-left: 5pt solid #0d47a1;
+            background: linear-gradient(to right, #f5f7fa 0%, #ffffff 5%);
+            padding: 16pt;
+            border-radius: 6pt;
+            box-shadow: 0 2pt 6pt rgba(0,0,0,0.08);
+            margin: 16pt 0;
+            overflow-x: auto;
+        }
+        
+        code {
+            font-family: 'Courier New', 'Monaco', monospace;
+            font-size: 11pt;
+            background: #f5f7fa;
+            padding: 2pt 6pt;
+            border-radius: 3pt;
+            color: #1e3a5f;
+            border: 1pt solid #e0e7ef;
+        }
+        
+        /* Premium Tables */
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+            margin: 20pt 0;
+            box-shadow: 0 2pt 8pt rgba(0,0,0,0.1);
+            border-radius: 6pt;
+            overflow: hidden;
+        }
+        
+        th {
+            background: linear-gradient(to bottom, #0d47a1, #1565c0);
+            color: #ffffff;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            padding: 14pt;
+            text-align: left;
+        }
+        
+        td {
+            padding: 12pt 14pt;
+            border-bottom: 1pt solid #e0e7ef;
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        /* Premium Idea Cards */
+        .idea-card {
+            background: #ffffff;
+            border: 2pt solid #e0e7ef;
+            border-radius: 8pt;
+            padding: 16pt;
+            margin: 14pt 0;
+            box-shadow: 0 2pt 6pt rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .idea-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4pt;
+            height: 100%;
+            background: linear-gradient(to bottom, #0d47a1, #42a5f5);
+            border-radius: 8pt 0 0 8pt;
+        }
+        
+        .idea-card:hover {
+            box-shadow: 0 4pt 12pt rgba(13, 71, 161, 0.15);
+            border-color: #0d47a1;
+            transform: translateY(-1pt);
+        }
+        
+        /* Premium Section Dividers */
+        hr {
+            border: none;
+            border-top: 3pt solid #0d47a1;
+            margin: 32pt 0;
+            opacity: 0.4;
+            position: relative;
+        }
+        
+        hr::after {
+            content: '◆';
+            position: absolute;
+            top: -8pt;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ffffff;
+            padding: 0 8pt;
+            color: #0d47a1;
+            font-size: 12pt;
+        }
+        
+        /* Premium Blockquotes */
+        blockquote {
+            border-left: 6pt solid #0d47a1;
+            background: linear-gradient(to right, #e3f2fd 0%, #ffffff 20%);
+            padding: 20pt;
+            margin: 20pt 0;
+            font-style: italic;
+            border-radius: 6pt;
+            box-shadow: 0 2pt 8pt rgba(13, 71, 161, 0.1);
+            position: relative;
+            font-size: 1.05em;
+            line-height: 1.8;
+        }
+        
+        blockquote::before {
+            content: '"';
+            position: absolute;
+            top: 8pt;
+            left: 12pt;
+            font-size: 48pt;
+            color: #0d47a1;
+            opacity: 0.2;
+            font-family: serif;
+        }
+        
+        blockquote::after {
+            content: '"';
+            position: absolute;
+            bottom: 8pt;
+            right: 12pt;
+            font-size: 48pt;
+            color: #0d47a1;
+            opacity: 0.2;
+            font-family: serif;
+        }
+        
+        /* Premium Lists */
+        ul, ol {
+            margin: 16pt 0;
+            padding-left: 28pt;
+        }
+        
+        li {
+            margin: 8pt 0;
+            line-height: 1.8;
+        }
+        
+        ul li::marker {
+            color: #0d47a1;
+            font-weight: bold;
+        }
+        
+        /* Premium Page Numbers */
+        @page {
+            @bottom-center {
+                content: counter(page);
+                font-family: serif;
+                font-size: 10pt;
+                color: #666;
+                margin-top: 20pt;
+            }
+        }
+        
+        /* Premium Headers/Footers */
+        .header, .footer {
+            color: #666;
+            font-size: 9pt;
+            border-top: 1pt solid #e0e7ef;
+            padding-top: 8pt;
+            margin-top: 16pt;
+        }
+        
+        /* Premium Links */
+        a {
+            color: #0d47a1;
+            text-decoration: none;
+            border-bottom: 1pt solid transparent;
+            transition: border-color 0.2s;
+        }
+        
+        a:hover {
+            border-bottom-color: #0d47a1;
+        }
+        
+        /* Premium Category Tags */
+        .category-tag {
+            display: inline-block;
+            background: linear-gradient(135deg, #0d47a1, #1976d2);
+            color: #ffffff;
+            padding: 4pt 10pt;
+            border-radius: 12pt;
+            font-size: 0.75em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-right: 6pt;
+            box-shadow: 0 2pt 4pt rgba(13, 71, 161, 0.3);
+        }
+        
+        /* Premium Importance Badge */
+        .importance-badge {
+            display: inline-block;
+            width: 8pt;
+            height: 8pt;
+            border-radius: 50%;
+            margin-right: 6pt;
+            vertical-align: middle;
+        }
+        
+        .importance-high {
+            background: #0d47a1;
+            box-shadow: 0 0 4pt rgba(13, 71, 161, 0.5);
+        }
+        
+        .importance-medium {
+            background: #42a5f5;
+        }
+        
+        .importance-low {
+            background: #90caf9;
+        }
+    </style>
+    </head>
+<body>
+    <!-- PAGE 1 -->
+    <div class="page-1">
+        <h1>WAFT v0.5.3 MVP: Karma Economy & Source Consciousness</h1>
+
+        <div class="summary-box">
+            <strong>Summary:</strong> Purpose: The core "Soul" of the machine that orchestrates everything.
+        </div>
+
+        <div class="metadata">
+            <p><strong>Generated:</strong> 2026-01-11 23:48 UTC | <strong>Ideas Extracted:</strong> 33</p>
+        </div>
+
+        <h2>What Happened</h2>
+
+        
+        <div class="idea no-break">
+            <p class="idea-content">Purpose: The core "Soul" of the machine that orchestrates everything. Represents the original "idea" or "being" that began permutating.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Memory flow system extracts memories from experiences and passes them upward: Lessons learned Skills gained Patterns discovered Insights.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">The architecture passes capacity up the parental chain back to the original "idea" or the original "being" so that it could accomplish whatever its goal was when it began permutating (evolving).</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">The architecture passes capacity up the parental chain back to the original "idea" so that it could accomplish whatever its goal was when it began permutating (evolving).</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">The architecture passes capacity up the parental chain back to the original "idea" so that it could accomplish whatever its goal was when it began permutating (evolving).</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">The WAFT system spins up instances of "realities" where "beings" can learn "skills" in an evolutionary process then pass their "memories" back up the chain in the form of lessons learned, skills gained, and more.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Reality Types: Learning: Beings learn skills Testing: Beings test skills Evolution: Beings evolve through natural selection Research: Beings conduct research Creative: Beings create new things.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Features: Create realities with configurations Spawn beings into realities Manage reality lifecycle Extract lessons/skills/memories Pass memories upward.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Skill Types: Cognitive: Thinking, reasoning, analysis Creative: Creation, expression, innovation Social: Communication, collaboration Technical: Code, tools, systems Meta: Learning how to learn.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Purpose: Knowledge passing upward - the mechanism by which beings pass their "memories" back up the chain.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Memory Types: Lessons: What worked/didn't work (2.0 capacity) Skills: New abilities (3.0 capacity) Patterns: Recurring patterns (4.0 capacity) Insights: Deep understanding (5.0 capacity) Wisdom: Higher-level knowledge (10.0 capacity).</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Features: Karma-based exchange List offerings Create offerings Purchase offerings Facilitate knowledge transfer.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Beings learn skills through experience: Learn reasoning skill (level increases) Learn new creative skill Learn lessons (what worked/didn't work) Record memories (patterns discovered).</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">When enough capacity accumulated, source accomplishes its original goal: "Understand evolution through permutation".</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Lifetimes: Auto-registered with Source when purchased Realities: Auto-registered with Source when created Beings: Auto-registered with Source when spawned.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Lifetimes: Auto-contribute karma to Source when ended Realities: Auto-contribute memories to Source when ended Beings: Auto-contribute memories to Source when completed.</p>
+        </div>
+        
+    </div>
+
+    <!-- Forced page break -->
+    <div class="page-break"></div>
+
+    <!-- PAGE 2 -->
+    <div class="page-2">
+        
+        <h2>Additional Details</h2>
+
+        
+        <div class="idea no-break">
+            <p class="idea-content">✅ 1. Reality created ✅ 2. Reality started ✅ 3. Being spawned ✅ 4. Being learned ✅ 5. Memories passed upward: 3 memories, 9.00 capacity ✅ 6. Source stats: 6 permutations, 98.10 capacity 🎉 Complete System Working!</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Everything has a karmic price. Each lifetime is an investment in experience, and experiences generate karma for the next lifetime.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">The WAFT system spins up instances of "realities" where "beings" can learn "skills" in an evolutionary process then pass their "memories" back up the chain in the form of lessons learned, skills gained, and more.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">src/waft/karmicwager.py - Wager system src/waft/karmacollector.py - Collector (Yama) src/waft/karmamarket.py - Market & Afterlife Market src/waft/sourceconsciousness.py - Source system src/waft/reality.py - Reality system src/waft/being.py - Beings system src/waft/skill.py - Skills system src/waft/memoryflow.py - Memory flow src/waft/lifetimeexchange.py - Lifetime exchange Updated src/waft/evolution/scientificpapergenerator.py - Wager integration.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">docs/KARMICWAGERSYSTEM.md docs/KARMACOLLECTOR.md docs/KARMAMARKET.md docs/SOURCE_CONSCIOUSNESS.md Multiple recap documents.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">The karmic wager system creates engagement through risk/reward. WAFT bets karma on its own hypotheses, creating accountability and investment in outcomes.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Beings pass their "memories" back up the chain in the form of: Lessons learned Skills gained Patterns discovered Insights Wisdom.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">✅ Realities - Spin up simulation environments ✅ Beings - Entities that learn and evolve ✅ Skills - Learned abilities that evolve ✅ Memory Flow - Knowledge passes upward ✅ Lifetime Exchange - Trading mechanism ✅ Source Integration - Everything connects to source ✅ Karma Economy - Complete economic loop ✅ Ancestral Chain - Capacity flows upward.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">The WAFT system spins up instances of "realities" where "beings" can learn "skills" in an evolutionary process then pass their "memories" back up the chain in the form of lessons learned, skills gained, and more!</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Date: 2026-01-11 Session: Building Complete Karma Economy Status: ✅ COMPLETE - All Systems Connected.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Philosophy: "Put your karma where your hypothesis is.".</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Lore: "Yama" - The god of death who collects souls and sends them to their next life.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Connection: This IS the Treasure Tavern! Same place, different name.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Architecture: Capacity flows upward through ancestral chain back to source.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Purpose: Spin up "realities" - simulation environments where beings can exist and learn.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Source creates a learning reality where beings can learn cognitive skills.</p>
+        </div>
+        
+        <div class="idea no-break">
+            <p class="idea-content">Status: ✅ COMPLETE Version: 0.5.3 MVP Epic: 🎉 The complete system is built and working!</p>
+        </div>
+        
+        
+
+        <div class="divider"></div>
+
+        <div class="metrics">
+            <h3>Content Breakdown</h3>
+            <table>
+                <tr>
+                    <th>Type</th>
+                    <th>Count</th>
+                </tr>
+                <tr>
+                    <td>Decisions</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>Insights</td>
+                    <td>7</td>
+                </tr>
+                <tr>
+                    <td>Actions</td>
+                    <td>8</td>
+                </tr>
+                <tr>
+                    <td>Concepts</td>
+                    <td>12</td>
+                </tr>
+                <tr>
+                    <td>Questions</td>
+                    <td>6</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

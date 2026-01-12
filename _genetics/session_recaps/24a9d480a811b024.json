@@ -1,0 +1,50 @@
+{
+  "genome_id": "24a9d480a811b024821e77e32285388a5eb52cb1c96c41931270350d5c471881",
+  "genes": {
+    "font": {
+      "family": "'Minion Pro', 'Palatino Linotype', 'Book Antiqua', 'Palatino', serif",
+      "size_body": 12,
+      "size_h1": 28,
+      "size_h2": 20,
+      "size_h3": 15,
+      "size_code": 10,
+      "line_height": 1.7
+    },
+    "margin": {
+      "top": 30,
+      "bottom": 30,
+      "left": 35,
+      "right": 35,
+      "paragraph_spacing": 10,
+      "section_spacing": 20
+    },
+    "color": {
+      "text": "#1a1a1a",
+      "background": "#FFFFFF",
+      "heading": "#000000",
+      "accent": "#1a5490",
+      "code_bg": "#f8f9fa",
+      "code_text": "#2c3e50",
+      "border": "#d1d5db"
+    },
+    "layout": {
+      "columns": 1,
+      "density": "comfortable",
+      "toc_enabled": false,
+      "page_numbers": true,
+      "header_enabled": true,
+      "footer_enabled": true
+    },
+    "name": "Premium Session Recap - Peak Styling",
+    "description": ""
+  },
+  "generation": 0,
+  "parent_id": null,
+  "lineage_path": [
+    "24a9d480a811b024821e77e32285388a5eb52cb1c96c41931270350d5c471881"
+  ],
+  "scientific_name": "Brahman Kama, the Impatient",
+  "fitness_score": null,
+  "created_at": "2026-01-11T23:47:43.850640",
+  "last_evaluated_at": null
+}

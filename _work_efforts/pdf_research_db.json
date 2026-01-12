@@ -1,0 +1,187 @@
+{
+  "pdfs": [
+    {
+      "title": "WAFT v0.5.3 MVP: Karma Economy & Source Consciousness",
+      "path": "_work_efforts/session_recaps/WAFT_v053_MVP_Karma_Economy__Source_Consciousness_20260111_155318.pdf",
+      "timestamp": "2026-01-11T15:53:21.935936",
+      "quality_score": 0.7840909090909092,
+      "gaps": [
+        "Missing introduction/overview section"
+      ],
+      "suggestions": [],
+      "style": "Clinical_Standard - WAFT v0.5.3 MVP: Karma Economy"
+    },
+    {
+      "title": "LaTeX Feature - Scientific Analysis",
+      "path": "/Users/ctavolazzi/Code/active/waft/_work_efforts/one_pagers/LaTeX_Feature_Scientific_20260111_164004.pdf",
+      "timestamp": "2026-01-11T16:40:08.829141",
+      "quality_score": 0.375,
+      "gaps": [
+        "No insights identified",
+        "Missing introduction/overview section",
+        "Missing methodology/approach section",
+        "Missing results/findings section",
+        "Missing conclusion/summary section"
+      ],
+      "suggestions": [
+        "Improve document structure with clear sections"
+      ],
+      "style": "Clinical_Standard - LaTeX Feature - Scientific Ana",
+      "genome_id": "7afbd867e002ed37deb45064af0f7d2e0f2af53d89500a11b60bf05af41054d0"
+    },
+    {
+      "title": "LaTeX Generator Feature - Self-Examination Test",
+      "path": "/Users/ctavolazzi/Code/active/waft/_work_efforts/one_pagers/LaTeX_Feature_Self_Examination_Test.pdf",
+      "timestamp": "2026-01-11T16:45:07.444757",
+      "quality_score": 0.625,
+      "gaps": [
+        "No insights identified",
+        "Missing introduction/overview section",
+        "Missing methodology/approach section",
+        "Missing results/findings section"
+      ],
+      "suggestions": [
+        "Improve document structure with clear sections"
+      ],
+      "style": "Clinical_Standard - LaTeX Generator Feature - Self",
+      "genome_id": "9148be196c5b08cd72a9deed420dd0b1dcc89acae6ffa23e8c637d1fa8f72dcf"
+    },
+    {
+      "title": "LaTeX Generator Feature - Self-Examination Test",
+      "path": "/Users/ctavolazzi/Code/active/waft/_work_efforts/one_pagers/LaTeX_Feature_Self_Examination_Test.pdf",
+      "timestamp": "2026-01-11T16:45:29.675095",
+      "quality_score": 0.625,
+      "gaps": [
+        "No insights identified",
+        "Missing introduction/overview section",
+        "Missing methodology/approach section",
+        "Missing results/findings section"
+      ],
+      "suggestions": [
+        "Improve document structure with clear sections"
+      ],
+      "style": "Clinical_Standard - LaTeX Generator Feature - Self",
+      "genome_id": "f6e841172b90b932adb248d7826a502ee5e7e578ad23e100e2a187e9094cd051"
+    },
+    {
+      "title": "LaTeX Generator Feature - Self-Examination Test",
+      "path": "/Users/ctavolazzi/Code/active/waft/_work_efforts/one_pagers/LaTeX_Feature_Self_Examination_Test.pdf",
+      "timestamp": "2026-01-11T16:45:44.182536",
+      "quality_score": 0.625,
+      "gaps": [
+        "No insights identified",
+        "Missing introduction/overview section",
+        "Missing methodology/approach section",
+        "Missing results/findings section"
+      ],
+      "suggestions": [
+        "Improve document structure with clear sections"
+      ],
+      "style": "Clinical_Standard - LaTeX Generator Feature - Self",
+      "genome_id": "e463cf80b1f0709f34a43ebe53b0ef24aeaf5bd16d95f24427e42d50b1001658"
+    },
+    {
+      "title": "LaTeX Generator Feature - Self-Examination Test",
+      "path": "/Users/ctavolazzi/Code/active/waft/_work_efforts/one_pagers/LaTeX_Feature_Self_Examination_Test.pdf",
+      "timestamp": "2026-01-11T16:46:55.328992",
+      "quality_score": 1.0,
+      "gaps": [
+        "No insights identified"
+      ],
+      "suggestions": [],
+      "style": "Clinical_Standard - LaTeX Generator Feature - Self",
+      "genome_id": "b9f62d3dde2574661667824c16f6e8de9bfe3cd8dc13c6bd27962cefa3bf3527"
+    },
+    {
+      "title": "Batch Test Report 20260111_164826",
+      "path": "/Users/ctavolazzi/Code/active/waft/_work_efforts/one_pagers/Batch_Test_20260111_164826.pdf",
+      "timestamp": "2026-01-11T16:48:32.276068",
+      "quality_score": 1.0,
+      "gaps": [
+        "No actions identified",
+        "No insights identified"
+      ],
+      "suggestions": [],
+      "style": "Clinical_Standard - Batch Test Report 20260111_164",
+      "genome_id": "df68de685a52f79b48c402e4158b8f5cadb3dbbd289259f3a7364f2f548821d0"
+    },
+    {
+      "title": "Batch Test Report 20260111_164840",
+      "path": "/Users/ctavolazzi/Code/active/waft/_work_efforts/one_pagers/Batch_Test_20260111_164840.pdf",
+      "timestamp": "2026-01-11T16:48:43.225985",
+      "quality_score": 1.0,
+      "gaps": [
+        "No actions identified",
+        "No insights identified"
+      ],
+      "suggestions": [],
+      "style": "Clinical_Standard - Batch Test Report 20260111_164",
+      "genome_id": "9a5a6715826d1c953218c1cd84369abacabfbd0638a7bab18f480513df412b73"
+    },
+    {
+      "title": "Batch Test Report 20260111_164856",
+      "path": "/Users/ctavolazzi/Code/active/waft/_work_efforts/one_pagers/Batch_Test_20260111_164856.pdf",
+      "timestamp": "2026-01-11T16:48:59.634610",
+      "quality_score": 1.0,
+      "gaps": [
+        "No actions identified",
+        "No insights identified"
+      ],
+      "suggestions": [],
+      "style": "Clinical_Standard - Batch Test Report 20260111_164",
+      "genome_id": "02cdb07dca2070f31f97351dec2ff5dc2718a557a64783a365eb3a515584622f"
+    }
+  ],
+  "hypotheses": [
+    {
+      "statement": "LaTeX generator successfully integrates with WAFT's evolution system",
+      "reasoning": "The generator uses ChatDistiller and StylingGenome correctly",
+      "test_result": {
+        "hypothesis": "LaTeX generator successfully integrates with WAFT's evolution system",
+        "tested_at": "2026-01-11T16:46:55.343928",
+        "quality_score": 1.0,
+        "confirmed": true,
+        "wager_id": null
+      },
+      "timestamp": "2026-01-11T16:46:55.343950"
+    },
+    {
+      "statement": "WAFT's self-testing tools successfully validate all components and provide actionable quality insights",
+      "reasoning": "Comprehensive batch testing validates all components",
+      "test_result": {
+        "hypothesis": "WAFT's self-testing tools successfully validate all components and provide actionable quality insights",
+        "tested_at": "2026-01-11T16:48:30.882594",
+        "quality_score": 1.0,
+        "confirmed": true,
+        "wager_id": "wager_20260111_164830_6b3c7013"
+      },
+      "timestamp": "2026-01-11T16:48:30.882622"
+    },
+    {
+      "statement": "WAFT's self-testing tools successfully validate all components and provide actionable quality insights",
+      "reasoning": "Comprehensive batch testing validates all components",
+      "test_result": {
+        "hypothesis": "WAFT's self-testing tools successfully validate all components and provide actionable quality insights",
+        "tested_at": "2026-01-11T16:48:42.044337",
+        "quality_score": 1.0,
+        "confirmed": true,
+        "wager_id": "wager_20260111_164842_6b3c7013"
+      },
+      "timestamp": "2026-01-11T16:48:42.044362"
+    },
+    {
+      "statement": "WAFT's self-testing tools successfully validate all components and provide actionable quality insights",
+      "reasoning": "Comprehensive batch testing validates all components",
+      "test_result": {
+        "hypothesis": "WAFT's self-testing tools successfully validate all components and provide actionable quality insights",
+        "tested_at": "2026-01-11T16:48:58.157004",
+        "quality_score": 1.0,
+        "confirmed": true,
+        "wager_id": "wager_20260111_164858_6b3c7013"
+      },
+      "timestamp": "2026-01-11T16:48:58.157073"
+    }
+  ],
+  "findings": [],
+  "knowledge": []
+}

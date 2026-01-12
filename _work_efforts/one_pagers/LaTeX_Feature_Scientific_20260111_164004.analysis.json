@@ -1,0 +1,22 @@
+{
+  "timestamp": "2026-01-11T16:40:07.456733",
+  "title": "LaTeX Feature - Scientific Analysis",
+  "scores": {
+    "completeness": 0.75,
+    "structure": 0.0
+  },
+  "gaps": [
+    "No insights identified",
+    "Missing introduction/overview section",
+    "Missing methodology/approach section",
+    "Missing results/findings section",
+    "Missing conclusion/summary section"
+  ],
+  "suggestions": [
+    "Improve document structure with clear sections"
+  ],
+  "comparison": {
+    "vs_previous_avg": -0.40909090909090917,
+    "trend": "declining"
+  }
+}

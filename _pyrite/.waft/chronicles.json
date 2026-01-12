@@ -1,9 +1,9 @@
 {
   "character": {
     "name": "",
-    "level": 1,
+    "level": 2,
     "integrity": 100.0,
-    "insight": 89.0,
+    "insight": 114.0,
     "credits": 0,
     "ability_scores": {
       "strength": 8,
@@ -15,10 +15,10 @@
     },
     "proficiency_bonus": 2,
     "hit_dice": "d8",
-    "max_hp": 7,
-    "current_hp": 7,
+    "max_hp": 10,
+    "current_hp": 10,
     "created_at": "2026-01-06T01:32:20.665539",
-    "updated_at": "2026-01-09T01:41:37.593389"
+    "updated_at": "2026-01-11T16:48:58.067124"
   },
   "status_effects": [
     {
@@ -46,36 +46,6 @@
     }
   ],
   "adventure_journal": [
-    {
-      "timestamp": "2026-01-06T00:16:24.825414",
-      "event": "integrity_restore",
-      "narrative": "Project verification passed",
-      "outcome": "info"
-    },
-    {
-      "timestamp": "2026-01-06T00:18:09.060620",
-      "event": "integrity_restore",
-      "narrative": "Project verification passed",
-      "outcome": "info"
-    },
-    {
-      "timestamp": "2026-01-06T00:25:31.692050",
-      "event": "integrity_restore",
-      "narrative": "Project verification passed",
-      "outcome": "info"
-    },
-    {
-      "timestamp": "2026-01-06T00:26:57.321827",
-      "event": "integrity_restore",
-      "narrative": "Project verification passed",
-      "outcome": "info"
-    },
-    {
-      "timestamp": "2026-01-06T00:29:25.265058",
-      "event": "integrity_restore",
-      "narrative": "Project verification passed",
-      "outcome": "info"
-    },
     {
       "timestamp": "2026-01-06T00:31:08.140897",
       "event": "integrity_restore",
@@ -873,6 +843,76 @@
       },
       "classification": "critical_failure",
       "timestamp": "2026-01-09T01:41:37.596844"
+    },
+    {
+      "event": "verify",
+      "narrative": "Wisdom flows through the  as harmony manifests.",
+      "dice_roll": "1d20+-1",
+      "result": 12,
+      "outcome": "success",
+      "rewards": {
+        "insight": 5,
+        "credits": 0,
+        "integrity": 2.0
+      },
+      "classification": "optimal",
+      "timestamp": "2026-01-11T10:26:33.516702"
+    },
+    {
+      "event": "verify",
+      "narrative": "The  stabilizes as uncertainty transforms.",
+      "dice_roll": "1d20+-1",
+      "result": 6,
+      "outcome": "success",
+      "rewards": {
+        "insight": 5,
+        "credits": 0,
+        "integrity": 2.0
+      },
+      "classification": "failure",
+      "timestamp": "2026-01-11T16:44:39.377668"
+    },
+    {
+      "event": "verify",
+      "narrative": "Sector Gamma-7 reinforced. Code-Matrix integrity at 105%%.",
+      "dice_roll": "1d20+-1",
+      "result": 15,
+      "outcome": "success",
+      "rewards": {
+        "insight": 5,
+        "credits": 0,
+        "integrity": 2.0
+      },
+      "classification": "optimal",
+      "timestamp": "2026-01-11T16:48:30.791084"
+    },
+    {
+      "event": "verify",
+      "narrative": "Sector Alpha-9 reinforced. Data-Stream integrity at 102%%.",
+      "dice_roll": "1d20+-1",
+      "result": 5,
+      "outcome": "success",
+      "rewards": {
+        "insight": 5,
+        "credits": 0,
+        "integrity": 2.0
+      },
+      "classification": "failure",
+      "timestamp": "2026-01-11T16:48:41.925266"
+    },
+    {
+      "event": "verify",
+      "narrative": "Sector Epsilon-5 reinforced. Logic-Lattice integrity at 102%%.",
+      "dice_roll": "1d20+-1",
+      "result": 17,
+      "outcome": "success",
+      "rewards": {
+        "insight": 5,
+        "credits": 0,
+        "integrity": 2.0
+      },
+      "classification": "optimal",
+      "timestamp": "2026-01-11T16:48:58.070447"
     }
   ],
   "quests": [],
@@ -882,5 +922,5 @@
     "mood": "optimistic",
     "wisdom_shared": 0
   },
-  "updated_at": "2026-01-09T01:41:37.596860"
+  "updated_at": "2026-01-11T16:48:58.070494"
 }

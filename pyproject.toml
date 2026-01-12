@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "waft"
-version = "0.3.1-alpha"
+version = "0.5.2"
 description = "Waft - Ambient, self-modifying Meta-Framework for Python"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -34,6 +34,8 @@ dependencies = [
     "fastapi>=0.104.0",
     "uvicorn[standard]>=0.24.0",
     "fpdf2>=2.7.0",
+    "pypdf>=3.0.0",  # For real page counting in TwoPageGeneratorV2
+    "pillow>=10.0.0",  # For PDF/PNG conversion
 ]
 
 [project.optional-dependencies]

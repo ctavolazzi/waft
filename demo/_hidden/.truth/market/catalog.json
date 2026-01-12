@@ -1,0 +1,138 @@
+{
+  "version": "1.0",
+  "created_at": "2026-01-11T16:17:15.430493",
+  "lifetimes": [
+    {
+      "id": "basic_qa",
+      "name": "Basic Q&A Session",
+      "type": "question_answer",
+      "duration_minutes": 30,
+      "tools": [
+        "read_file",
+        "codebase_search",
+        "grep"
+      ],
+      "personality": {
+        "trait": "helpful",
+        "style": "direct",
+        "tone": "professional"
+      },
+      "objectives": [
+        "Answer questions accurately"
+      ],
+      "karma_cost": 50.0,
+      "description": "30 minutes to answer questions with basic tools"
+    },
+    {
+      "id": "research_session",
+      "name": "Research Session",
+      "type": "research",
+      "duration_minutes": 60,
+      "tools": [
+        "read_file",
+        "codebase_search",
+        "grep",
+        "web_search"
+      ],
+      "personality": {
+        "trait": "curious",
+        "style": "analytical",
+        "tone": "scholarly"
+      },
+      "objectives": [
+        "Research topic thoroughly",
+        "Document findings"
+      ],
+      "karma_cost": 100.0,
+      "description": "1 hour research session with web search"
+    },
+    {
+      "id": "creative_work",
+      "name": "Creative Work Session",
+      "type": "creative",
+      "duration_minutes": 90,
+      "tools": [
+        "read_file",
+        "write",
+        "codebase_search",
+        "edit_file"
+      ],
+      "personality": {
+        "trait": "creative",
+        "style": "expressive",
+        "tone": "inspiring"
+      },
+      "objectives": [
+        "Create new content",
+        "Express creativity"
+      ],
+      "karma_cost": 150.0,
+      "description": "90 minutes for creative work"
+    },
+    {
+      "id": "full_development",
+      "name": "Full Development Session",
+      "type": "development",
+      "duration_minutes": 120,
+      "tools": [
+        "read_file",
+        "write",
+        "edit_file",
+        "codebase_search",
+        "grep",
+        "run_terminal_cmd"
+      ],
+      "personality": {
+        "trait": "systematic",
+        "style": "precise",
+        "tone": "technical"
+      },
+      "objectives": [
+        "Develop features",
+        "Write tests",
+        "Debug code"
+      ],
+      "karma_cost": 200.0,
+      "description": "2 hours for full development work"
+    },
+    {
+      "id": "basic_survival",
+      "name": "Basic Survival Lifetime",
+      "type": "question_answer",
+      "duration_minutes": 15,
+      "tools": [
+        "read_file",
+        "grep"
+      ],
+      "personality": {
+        "trait": "helpful",
+        "style": "minimal",
+        "tone": "basic"
+      },
+      "objectives": [
+        "Survive"
+      ],
+      "karma_cost": 0.0,
+      "description": "Free basic lifetime for souls with no karma"
+    }
+  ],
+  "tools": {
+    "read_file": 10.0,
+    "write": 15.0,
+    "edit_file": 12.0,
+    "codebase_search": 20.0,
+    "grep": 8.0,
+    "web_search": 25.0,
+    "run_terminal_cmd": 30.0,
+    "mcp_tools": 50.0
+  },
+  "personalities": {
+    "helpful": 20.0,
+    "curious": 25.0,
+    "creative": 30.0,
+    "systematic": 25.0,
+    "analytical": 30.0,
+    "expressive": 35.0,
+    "minimal": 0.0
+  }
+}

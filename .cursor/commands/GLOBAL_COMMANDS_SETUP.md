@@ -71,6 +71,11 @@ After syncing, these commands are available globally:
 9. **`/orient`** - Project startup process
 10. **`/spin-up`** - Quick orientation
 11. **`/engineer`** - Complete workflow
+
+### Document Generation Commands
+12. **`/one-pager-preview`** - Generate one-pager PDF with PNG screenshot preview (PDF → PNG → Browser)
+13. **`/one-pager-chat`** - Generate one-pager from chat session
+14. **`/one-pager`** - General one-pager generation
 12. **`/goal`** - Track larger goals, break into steps
 13. **`/proceed`** - Verify context and assumptions before continuing
 13. **`/next`** - Identify next step based on goals

@@ -1,0 +1,11 @@
+{
+  "total_genomes": 4,
+  "generations": 1,
+  "best_fitness": 0.9365,
+  "genome_ids": [
+    "430e9e9fe07005964a037c52b10ca81df3739826d38037e8a225eb85e8339a15",
+    "f9f73203134c14978c80c92f709f728dbec876d3f7bf319ee6c2fe60ce182013",
+    "8a66103365f9d19fe99c606bada323ae5f4f139a780d249f0f4dabce108f0279",
+    "c9080425f0e873106ba476de78281719be7de9c00ce393a5c2948cc810bf14e1"
+  ]
+}

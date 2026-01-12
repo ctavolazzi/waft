@@ -45,7 +45,7 @@ class MarkdownToPDFConverter:
                 header_text=None,
                 footer_text="Waft Documentation",
                 page_margins=(72, 72, 72, 72),  # 1 inch margins
-                line_spacing=1.3,
+                line_spacing=1.5,
                 font_size_body=11,
                 font_size_header=16,
                 font_size_footer=9,

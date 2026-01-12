@@ -1,0 +1,51 @@
+{
+  "genome_id": "c9080425f0e873106ba476de78281719be7de9c00ce393a5c2948cc810bf14e1",
+  "genes": {
+    "font": {
+      "family": "sans-serif",
+      "size_body": 11,
+      "size_h1": 24,
+      "size_h2": 18,
+      "size_h3": 14,
+      "size_code": 10,
+      "line_height": 1.55
+    },
+    "margin": {
+      "top": 20,
+      "bottom": 20,
+      "left": 20,
+      "right": 20,
+      "paragraph_spacing": 9,
+      "section_spacing": 15
+    },
+    "color": {
+      "text": "#000000",
+      "background": "#FFFFFF",
+      "heading": "#1a1a1a",
+      "accent": "#0066cc",
+      "code_bg": "#f5f5f5",
+      "code_text": "#333333",
+      "border": "#cccccc"
+    },
+    "layout": {
+      "columns": 1,
+      "density": "normal",
+      "toc_enabled": false,
+      "page_numbers": true,
+      "header_enabled": true,
+      "footer_enabled": true
+    },
+    "name": "Genesis Styling",
+    "description": ""
+  },
+  "generation": 1,
+  "parent_id": "430e9e9fe07005964a037c52b10ca81df3739826d38037e8a225eb85e8339a15",
+  "lineage_path": [
+    "430e9e9fe07005964a037c52b10ca81df3739826d38037e8a225eb85e8339a15",
+    "c9080425f0e873106ba476de78281719be7de9c00ce393a5c2948cc810bf14e1"
+  ],
+  "scientific_name": "Code Iota, the Wild",
+  "fitness_score": null,
+  "created_at": "2026-01-11T21:26:13.674838",
+  "last_evaluated_at": null
+}

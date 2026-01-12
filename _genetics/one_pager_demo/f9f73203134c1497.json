@@ -1,0 +1,51 @@
+{
+  "genome_id": "f9f73203134c14978c80c92f709f728dbec876d3f7bf319ee6c2fe60ce182013",
+  "genes": {
+    "font": {
+      "family": "sans-serif",
+      "size_body": 10,
+      "size_h1": 20,
+      "size_h2": 16,
+      "size_h3": 14,
+      "size_code": 10,
+      "line_height": 1.5
+    },
+    "margin": {
+      "top": 15,
+      "bottom": 15,
+      "left": 20,
+      "right": 20,
+      "paragraph_spacing": 10,
+      "section_spacing": 15
+    },
+    "color": {
+      "text": "#000000",
+      "background": "#FFFFFF",
+      "heading": "#1a1a1a",
+      "accent": "#0066cc",
+      "code_bg": "#f5f5f5",
+      "code_text": "#333333",
+      "border": "#cccccc"
+    },
+    "layout": {
+      "columns": 1,
+      "density": "compact",
+      "toc_enabled": false,
+      "page_numbers": true,
+      "header_enabled": true,
+      "footer_enabled": true
+    },
+    "name": "Genesis Styling",
+    "description": ""
+  },
+  "generation": 1,
+  "parent_id": "430e9e9fe07005964a037c52b10ca81df3739826d38037e8a225eb85e8339a15",
+  "lineage_path": [
+    "430e9e9fe07005964a037c52b10ca81df3739826d38037e8a225eb85e8339a15",
+    "f9f73203134c14978c80c92f709f728dbec876d3f7bf319ee6c2fe60ce182013"
+  ],
+  "scientific_name": "Circuit Theta, the Incomplete",
+  "fitness_score": null,
+  "created_at": "2026-01-11T21:26:13.557798",
+  "last_evaluated_at": null
+}

@@ -1,0 +1,23 @@
+#!/usr/bin/env python3
+"""
+Global Command: waft-one-pager-chat
+
+Creates a one-pager from the current chat session.
+Works from anywhere in the system.
+"""
+
+import sys
+from pathlib import Path
+
+# Find project root (look for src/waft directory)
+current = Path(__file__).resolve()
+project_root = current.parent.parent
+
+# Add to path
+sys.path.insert(0, str(project_root))
+
+# Import and run
+from scripts.create_chat_one_pager import main
+
+if __name__ == "__main__":
+    main()
