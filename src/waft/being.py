@@ -1152,11 +1152,40 @@ class BeingSystem:
         else:
             # First birth: this is lifetime 1
             being.lifetimes = 1
-            
+
             # Initialize Empirica for the first Being (optional - Being works without it)
-            # Skip Empirica initialization to avoid hanging - can be enabled later if needed
-            # Empirica integration is available but disabled by default to prevent blocking
-            pass
+            try:
+                from .core.empirica import EmpiricaManager
+                empirica_manager = EmpiricaManager(project_path=self.project_path)
+
+                # Check if Empirica is initialized, initialize if needed
+                if not empirica_manager.is_initialized():
+                    # Try to initialize Empirica (may fail if not installed)
+                    initialized = empirica_manager.initialize()
+                    if not initialized:
+                        # Empirica not available - Being works without it
+                        pass
+                    else:
+                        # Create Empirica session for this Being
+                        session_id = empirica_manager.create_session(
+                            ai_id=being_id,
+                            session_type="being_lifecycle"
+                        )
+                        if session_id:
+                            being.empirica_manager = empirica_manager
+                            being.empirica_session_id = session_id
+                else:
+                    # Empirica already initialized - create session
+                    session_id = empirica_manager.create_session(
+                        ai_id=being_id,
+                        session_type="being_lifecycle"
+                    )
+                    if session_id:
+                        being.empirica_manager = empirica_manager
+                        being.empirica_session_id = session_id
+            except (ImportError, Exception):
+                # Empirica not available or failed - Being works without it
+                pass
         
         # Build ancestral chain
         if parent_being_id:

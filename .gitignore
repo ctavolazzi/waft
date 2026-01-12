@@ -36,3 +36,4 @@ visualizer/.env
 visualizer/.env.*
 visualizer/vite.config.js.timestamp-*
 visualizer/vite.config.ts.timestamp-*
+.empirica_reflex_logs/
