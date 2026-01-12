@@ -133,6 +133,16 @@ class Being:
         self.pleasure: float = pleasure if pleasure is not None else 0.0
         self.pain: float = pain if pain is not None else 0.0
         
+        # Personality and goals (NEW - Being doesn't have AgentState)
+        # Set these BEFORE calculating willpower/stamina which depend on them
+        self.personality: Dict[str, Any] = personality if personality is not None else {}
+        self.goals: List[Dict[str, Any]] = goals if goals is not None else []
+        self.personality_type: str = personality_type if personality_type is not None else "balanced"
+        
+        # Cycle tracking (needed for stamina calculation)
+        self.last_cycle_number: int = last_cycle_number if last_cycle_number is not None else 0
+        self.cycles_alive: int = cycles_alive if cycles_alive is not None else 0
+        
         # Stamina system (NEW)
         # Willpower: Core stat derived from personality and will_to_live
         self.willpower: float = self._calculate_willpower()
@@ -140,11 +150,6 @@ class Being:
         self.stamina: float = self._calculate_stamina()
         self.stamina_max: float = self.stamina  # Maximum stamina (recalculated each cycle)
         self.stamina_regeneration_rate: float = 5.0  # Stamina regenerated per cycle
-        
-        # Personality and goals (NEW - Being doesn't have AgentState)
-        self.personality: Dict[str, Any] = personality if personality is not None else {}
-        self.goals: List[Dict[str, Any]] = goals if goals is not None else []
-        self.personality_type: str = personality_type if personality_type is not None else "balanced"
         
         # Karma connection (NEW)
         self.soul_id: Optional[str] = soul_id
@@ -167,10 +172,6 @@ class Being:
         self.sleep_duration_base: int = sleep_duration_base
         self.sleep_duration: int = sleep_duration if sleep_duration is not None else 0
         self.cycles_slept: int = cycles_slept if cycles_slept is not None else 0
-        
-        # Cycle tracking
-        self.last_cycle_number: int = last_cycle_number if last_cycle_number is not None else 0
-        self.cycles_alive: int = cycles_alive if cycles_alive is not None else 0
         
         # Experience tracking (for pleasure/pain calculation)
         self.recent_experiences: List[Dict[str, Any]] = recent_experiences if recent_experiences is not None else []
@@ -1032,7 +1033,8 @@ class BeingSystem:
         # Validate soul_id
         if not self._validate_being_id(being.soul_id):
             # Fallback: use being_id as soul_id (sanitized)
-            being.soul_id = f"soul_{being.being_id.replace('..', '').replace('/', '_').replace('\\', '_')}"
+            sanitized_id = being.being_id.replace('..', '').replace('/', '_').replace('\\', '_')
+            being.soul_id = f"soul_{sanitized_id}"
         
         # Try to get karma from KarmaMerchant if available
         try:
