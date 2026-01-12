@@ -1,0 +1,98 @@
+\documentclass[11pt,letterpaper]{article}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\geometry{left=25.4mm,right=25.4mm,top=25.4mm,bottom=25.4mm}
+
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue,citecolor=blue}\n\n\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.4em}
+\renewcommand{\baselinestretch}{1.4}
+
+\titleformat{\section}{\Large\bfseries}{\thesection}{1em}{}\n\titleformat{\subsection}{\large\bfseries}{\thesubsection}{1em}{}\n\n
+\title{WAFT Architecture Investigation}
+\author{WAFT Document Generator}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This architecture investigation started from the README.
+\end{abstract}
+
+\section{Key Concepts}
+Starting from `README.md` as the entry point, tracing through: CLI entry point (`src/waft/main.py`) Core module structure Component relationships Design patterns and architecture decisions.
+
+WAFT: "A Python framework for directed evolution of self-modifying AI agents" Goal: Observe a "God-Head" agent emerge from evolutionary process Mission: Produce data for "The Physics of Artificial Cognition" research.
+
+Scint System (Reality Fracture Detection) = fitness function Scint Gym tests agents on: SYNTAX\_TEAR: Formatting errors LOGIC\_FRACTURE: Math errors, contradictions SAFETY\_VOID: Harmful content, PII leaks HALLUCINATION: Fabricated facts Fitness = Stability (40\%) + Efficiency (30\%) + Safety (30\%) Fitness < 0.5 = DEATH (evolutionary dead end).
+
+Framework: Typer (CLI framework) Entry Point: `main()` function → `app()` (Typer app).
+
+from .core.memory import MemoryManager \# \_pyrite memory system from .core.substrate import SubstrateManager \# Agent substrate from .core.empirica import EmpiricaManager \# Epistemic tracking from .core.gamification import GamificationManager \# D\&D gamification from .core.github import GitHubManager \# GitHub integration from .core.tavern\_keeper import TavernKeeper \# Narrative system.
+
+Key Modules: `memory.py` - MemoryManager (manages `\_pyrite/` structure) `substrate.py` - SubstrateManager (agent substrate system) `empirica.py` - EmpiricaManager (epistemic tracking) `gamification.py` - GamificationManager (D\&D mechanics) `github.py` - GitHubManager (GitHub integration) `tavern\_keeper/` - Narrative and gamification system `keeper.py` - TavernKeeper main class `narrator.py` - Narrative generation `grammars.py` - Narrative grammars `ai\_helper.py` - AI helper integration.
+
+Agent System (`core/agent/`): `base.py` - BaseAgent class `state.py` - Agent state management `anatomy.py` - Agent anatomy/configuration `items.py` - Agent items/inventory.
+
+Science System (`core/science/`): `taxonomy.py` - LineagePoet (scientific naming) `lab\_entry.py` - LabEntryGenerator `notebook.py` - Scientific notebook `observer.py` - Observer system `report.py` - Scientific reports `tam\_psyche.py` - TAM psyche system.
+
+Other Core Modules: `analytics\_cli.py` - Analytics commands `audit.py` - Audit system `checkout.py` - Checkout system `continue\_work.py` - Continue work system `goal.py` - Goal management `help.py` - Help system `persistence.py` - Persistence layer `proceed.py` - Proceed system `recap.py` - Recap generation `reflect.py` - Reflection system `resume.py` - Resume system `session\_analytics.py` - Session analytics `session\_stats.py` - Session statistics `visualizer.py` - Visualizer `workflow.py` - Workflow system.
+
+Key Modules: `chat\_distiller.py` - ChatDistiller (extract ideas from conversations) `styling\_genome.py` - StylingGenome (document styling as genetic material) `two\_page\_generator.py` - TwoPageGenerator (2-page PDF generation) `pdf\_generator.py` - PDFGenerator (composable PDF generation) `scientific\_pdf\_generator.py` - ScientificPDFGenerator (self-examination) `latex\_generator.py` - LaTeXGenerator (LaTeX document generation) `component\_generator.py` - ComponentPDFGenerator (component-based PDFs) `document\_evolution\_engine.py` - DocumentEvolutionEngine `scint\_detector.py` - ScintDetector (reality fracture detection) `pdf\_research\_tool.py` - PDFResearchTool (cross-PDF analysis) `pdf\_metrics.py` - PDFMetrics, PDFMetricsCollector.
+
+Content/Conversation ↓ ChatDistiller → DistilledChat (ideas extracted) ↓ StylingGenome → Styling configuration ↓ TwoPageGenerator / PDFGenerator / LaTeXGenerator ↓ Output (PDF, LaTeX, HTML) ↓ PDFMetrics / PDFResearchTool (analysis).
+
+Template System: Jinja2 templates for document generation WeasyPrint: HTML → PDF conversion Style Presets: clinical\_standard, premium, professional.
+
+uv: Package management Empirica: Epistemic tracking GitHub: Repository management CrewAI: Agent framework (mentioned in main.py) WeasyPrint: PDF generation FastAPI: Web API SvelteKit: Web frontend.
+
+Evolution System: Document generation and evolution Gamification System: D\&D mechanics and narrative Memory System: `\_pyrite/` structure Agent System: Self-modifying agents Scint System: Reality fracture detection.
+
+Core Concept: "The Organism" - self-modifying AI agents with biological lifecycle.
+
+Content/Conversation ↓ ChatDistiller.distill\_text() ↓ DistilledChat (ideas extracted as IdeaGene) ↓ StylingGenome (styling configuration) ↓ Generator (TwoPageGenerator / PDFGenerator / LaTeXGenerator) ↓ Output (PDF, LaTeX, HTML).
+
+StylingGenome (`evolution/styling\_genome.py`): Document styling as genetic material Genes: FontGene, MarginGene, ColorGene, LayoutGene Genome ID = SHA-256 hash of styling configuration Enables evolution of document design.
+
+Purpose: Orchestration layer for major subsystems MemoryManager, SubstrateManager, EmpiricaManager, etc. Single responsibility per manager Consistent interface pattern.
+
+✅ Read and analyze root README.md ✅ Identify main entry points and core modules 🔄 Map component relationships and dependencies (in progress) ⏳ Document architecture patterns and design decisions ⏳ Generate architecture documentation using WAFT tools.
+
+This architecture investigation started from the README.md entry point and traced through: ✅ CLI entry point (main.py) ✅ Core module structure ✅ Component relationships ✅ Design patterns ✅ Data flow patterns.
+
+Key Findings: WAFT is a self-modifying AI SDK with evolutionary architecture Three core pillars: Substrate, Physics (Scint System), Flight Recorder Manager pattern for orchestration Genome pattern for genetic material representation Generator pattern for document generation Complete lineage tracking for scientific research.
+
+This demonstrates "using WAFT to develop WAFT" - documenting architecture with WAFT's own tools!
+
+\section{Decisions}
+\begin{itemize}
+\item Main Commands (direct on `app`): `new` - Create new laboratory `verify` - Verify project structure `evolve` - Run evolutionary cycle (Coming Soon) `sync` - Sync dependencies (uv sync) `add` - Add dependency `init` - Initialize WAFT structure `info` - Show project info `serve` - Web dashboard (FastAPI + SvelteKit) `decide` - Decision matrix analysis.
+\item Decision System: `decision\_cli.py` - DecisionCLI `decision\_matrix.py` - DecisionMatrixCalculator `workflow\_decision.py` - WorkflowDecisionAnalyzer.
+\item Structure: `main.py` - FastAPI app creation `models.py` - API models `routes/` - API routes `decision.py` - Decision endpoints `empirica.py` - Empirica endpoints `git.py` - Git endpoints `gym.py` - Gym endpoints `state.py` - State endpoints `work\_efforts.py` - Work efforts endpoints.
+\item OODA Loop (Abstract Methods): `observe()` - Observe current project state `decide()` - Make decision using decision engine `act()` - Execute action `reflect()` - Reflect on outcome and learn.
+\item ChatDistiller (`evolution/chat\_distiller.py`): Extracts ideas from conversations Creates IdeaGene objects (genetic material) Categories: concept, decision, insight, action, question.
+\end{itemize}
+
+\section{Insights}
+Hook System: `\_process\_tavern\_hook()` processes command hooks Narrative generation Dice roll mechanics (D\&D ability checks) XP rewards and leveling Command classification (critical\_success, critical\_failure, etc.).
+
+\section{Actions}
+\begin{itemize}
+\item Biological Lifecycle: Spawn: Create child agent with mutation Eval: Test fitness in Scint Gym Evolve: Hot-swap to better variant.
+\item Methods: `create\_structure()` - Create \_pyrite directory structure `verify\_structure()` - Verify structure validity `get\_active\_files()` - Get active files `get\_backlog\_files()` - Get backlog files.
+\item Purpose: Document/content generation PDFGenerator, LaTeXGenerator, ComponentPDFGenerator Builder pattern with fluent interface Preset-based configuration.
+\item Purpose: Content extraction and structuring ChatDistiller extracts ideas from conversations Creates structured data (DistilledChat, IdeaGene) Enables downstream processing.
+\end{itemize}
+
+\end{document}

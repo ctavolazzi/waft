@@ -1,0 +1,50 @@
+{
+  "genome_id": "c096a842ba0ae5c27bb66718f1b14725db1576603a40137b1bdc0c31d6f76129",
+  "genes": {
+    "font": {
+      "family": "'Times New Roman', 'Times', serif",
+      "size_body": 11,
+      "size_h1": 16,
+      "size_h2": 14,
+      "size_h3": 12,
+      "size_code": 9,
+      "line_height": 1.4
+    },
+    "margin": {
+      "top": 25.4,
+      "bottom": 25.4,
+      "left": 25.4,
+      "right": 25.4,
+      "paragraph_spacing": 8,
+      "section_spacing": 12
+    },
+    "color": {
+      "text": "#000000",
+      "background": "#FFFFFF",
+      "heading": "#000000",
+      "accent": "#000000",
+      "code_bg": "#f5f5f5",
+      "code_text": "#000000",
+      "border": "#cccccc"
+    },
+    "layout": {
+      "columns": 1,
+      "density": "normal",
+      "toc_enabled": false,
+      "page_numbers": true,
+      "header_enabled": true,
+      "footer_enabled": true
+    },
+    "name": "Clinical_Standard - LaTeX & Research Tools with Li",
+    "description": ""
+  },
+  "generation": 0,
+  "parent_id": null,
+  "lineage_path": [
+    "c096a842ba0ae5c27bb66718f1b14725db1576603a40137b1bdc0c31d6f76129"
+  ],
+  "scientific_name": "Logic Eight, the Cautious",
+  "fitness_score": null,
+  "created_at": "2026-01-12T00:40:04.386949",
+  "last_evaluated_at": null
+}

@@ -10,6 +10,24 @@
       ],
       "suggestions": [],
       "style": "Clinical_Standard - WAFT v0.5.3 MVP: Karma Economy"
+    },
+    {
+      "title": "LaTeX Feature - Scientific Analysis",
+      "path": "/Users/ctavolazzi/Code/active/waft/_work_efforts/one_pagers/LaTeX_Feature_Scientific_20260111_164004.pdf",
+      "timestamp": "2026-01-11T16:40:08.829141",
+      "quality_score": 0.375,
+      "gaps": [
+        "No insights identified",
+        "Missing introduction/overview section",
+        "Missing methodology/approach section",
+        "Missing results/findings section",
+        "Missing conclusion/summary section"
+      ],
+      "suggestions": [
+        "Improve document structure with clear sections"
+      ],
+      "style": "Clinical_Standard - LaTeX Feature - Scientific Ana",
+      "genome_id": "7afbd867e002ed37deb45064af0f7d2e0f2af53d89500a11b60bf05af41054d0"
     }
   ],
   "hypotheses": [],

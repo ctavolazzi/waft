@@ -31,6 +31,7 @@ from .pdf_image_converter import (
     PageSize,
 )
 from .pdf_metrics import PDFMetrics, PDFMetricsCollector
+from .latex_generator import LaTeXGenerator, generate_latex
 
 __all__ = [
     "StylingGenome",
@@ -63,6 +64,8 @@ __all__ = [
     "PageSize",
     "PDFMetrics",  # Metrics data class
     "PDFMetricsCollector",  # Metrics collector
+    "LaTeXGenerator",  # LaTeX document generator
+    "generate_latex",  # Quick LaTeX generation function
 ]
 
 # TwoPageGenerator is the main implementation (adaptive constraint enforcement)
