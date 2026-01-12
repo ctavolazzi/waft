@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import './index.css'
+import BeingProfile from './BeingProfile'
 
 const API_BASE = '/api/being'
 
@@ -9,6 +10,7 @@ function App() {
   const [logs, setLogs] = useState([])
   const [decisionResults, setDecisionResults] = useState([])
   const [makingDecisions, setMakingDecisions] = useState(false)
+  const [view, setView] = useState('profile') // 'profile' or 'controls'
 
   const addLog = (message, type = 'info') => {
     setLogs(prev => [...prev, { 
@@ -194,9 +196,29 @@ function App() {
   return (
     <div className="container">
       <div className="header">
-        <h1>🧠 WAFT Being Test</h1>
-        <p>Testing Being System with Empirica Integration</p>
+        <h1>🎭 WAFT Avatar Profile</h1>
+        <p>Create your Avatar and begin your DnD adventure!</p>
       </div>
+
+      <div className="view-toggle">
+        <button
+          className={view === 'profile' ? 'button' : 'button secondary'}
+          onClick={() => setView('profile')}
+        >
+          👤 Profile
+        </button>
+        <button
+          className={view === 'controls' ? 'button' : 'button secondary'}
+          onClick={() => setView('controls')}
+        >
+          🎮 Controls
+        </button>
+      </div>
+
+      {view === 'profile' ? (
+        <BeingProfile being={being} />
+      ) : (
+        <div>
 
       <div className="grid">
         <div className="section">
@@ -361,14 +383,16 @@ function App() {
             ))
           )}
         </div>
-        <button 
-          className="button secondary" 
+        <button
+          className="button secondary"
           onClick={() => setLogs([])}
           style={{ marginTop: '1rem' }}
         >
           Clear Log
         </button>
       </div>
+      </div>
+      )}
     </div>
   )
 }
