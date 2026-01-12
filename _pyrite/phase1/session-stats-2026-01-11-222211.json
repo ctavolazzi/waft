@@ -1,0 +1,296 @@
+{
+  "timestamp": "2026-01-11T22:22:11.566654",
+  "files": {
+    "created": 11,
+    "modified": 0,
+    "deleted": 0,
+    "total_operations": 11
+  },
+  "code": {
+    "lines_written": 13273,
+    "lines_modified": 3666,
+    "lines_deleted": 2931,
+    "net_change": 10342
+  },
+  "file_details": [
+    {
+      "file": "_work_efforts/showcase_documents/WAFT_Status_TypedState_20260111_220614.pdf",
+      "status": "created",
+      "lines": 7665,
+      "additions": 7665,
+      "deletions": 0,
+      "net": 7665
+    },
+    {
+      "file": "src/waft/core/status_persistence.py",
+      "status": "created",
+      "lines": 343,
+      "additions": 343,
+      "deletions": 0,
+      "net": 343
+    },
+    {
+      "file": ".cursor/commands/think.md",
+      "status": "created",
+      "lines": 309,
+      "additions": 309,
+      "deletions": 0,
+      "net": 309
+    },
+    {
+      "file": "docs/STATUS_PERSISTENCE_GUIDE.md",
+      "status": "created",
+      "lines": 307,
+      "additions": 307,
+      "deletions": 0,
+      "net": 307
+    },
+    {
+      "file": "docs/STATUS_STATE_TYPED_GUIDE.md",
+      "status": "created",
+      "lines": 296,
+      "additions": 296,
+      "deletions": 0,
+      "net": 296
+    },
+    {
+      "file": "_work_efforts/devlog.md",
+      "status": "modified",
+      "lines": 0,
+      "additions": 257,
+      "deletions": 0,
+      "net": 257
+    },
+    {
+      "file": "examples/test_status_persistence.py",
+      "status": "created",
+      "lines": 220,
+      "additions": 220,
+      "deletions": 0,
+      "net": 220
+    },
+    {
+      "file": "src/waft/being.py",
+      "status": "modified",
+      "lines": 0,
+      "additions": 183,
+      "deletions": 1,
+      "net": 182
+    },
+    {
+      "file": "examples/test_typed_status_state.py",
+      "status": "created",
+      "lines": 148,
+      "additions": 148,
+      "deletions": 0,
+      "net": 148
+    },
+    {
+      "file": "examples/generate_status_with_typed_state.py",
+      "status": "created",
+      "lines": 146,
+      "additions": 146,
+      "deletions": 0,
+      "net": 146
+    },
+    {
+      "file": "src/waft/core/reflect.py",
+      "status": "modified",
+      "lines": 0,
+      "additions": 130,
+      "deletions": 6,
+      "net": 124
+    },
+    {
+      "file": "_pyrite/journal/entries/2026-01-11-2219_ai-dnd-integration-reflection.md",
+      "status": "created",
+      "lines": 122,
+      "additions": 122,
+      "deletions": 0,
+      "net": 122
+    },
+    {
+      "file": "_pyrite/journal/ai-journal.md",
+      "status": "modified",
+      "lines": 0,
+      "additions": 121,
+      "deletions": 57,
+      "net": 64
+    },
+    {
+      "file": "_genetics/status_pdfs/fd13e4ecce71edb8.json",
+      "status": "created",
+      "lines": 50,
+      "additions": 50,
+      "deletions": 0,
+      "net": 50
+    },
+    {
+      "file": ".obsidian/workspace.json",
+      "status": "modified",
+      "lines": 0,
+      "additions": 50,
+      "deletions": 20,
+      "net": 30
+    },
+    {
+      "file": "src/waft/evolution/status_components.py",
+      "status": "modified",
+      "lines": 0,
+      "additions": 46,
+      "deletions": 17,
+      "net": 29
+    },
+    {
+      "file": "scripts/waft_status.py",
+      "status": "modified",
+      "lines": 0,
+      "additions": 30,
+      "deletions": 2,
+      "net": 28
+    },
+    {
+      "file": "scripts/generate_status_pdf.py",
+      "status": "modified",
+      "lines": 0,
+      "additions": 10,
+      "deletions": 1,
+      "net": 9
+    },
+    {
+      "file": "uv.lock",
+      "status": "modified",
+      "lines": 0,
+      "additions": 2829,
+      "deletions": 2823,
+      "net": 6
+    },
+    {
+      "file": "src/waft/core/status_state.py",
+      "status": "modified",
+      "lines": 0,
+      "additions": 5,
+      "deletions": 2,
+      "net": 3
+    }
+  ],
+  "by_type": {
+    ".pdf": {
+      "created": 1,
+      "modified": 0,
+      "lines": 7665
+    },
+    ".py": {
+      "created": 4,
+      "modified": 6,
+      "lines": 1232
+    },
+    ".md": {
+      "created": 4,
+      "modified": 3,
+      "lines": 1356
+    },
+    ".json": {
+      "created": 1,
+      "modified": 2,
+      "lines": 81
+    },
+    ".lock": {
+      "created": 0,
+      "modified": 1,
+      "lines": 6
+    },
+    ".jsonl": {
+      "created": 1,
+      "modified": 1,
+      "lines": 2
+    },
+    ".db": {
+      "created": 0,
+      "modified": 1,
+      "lines": 0
+    }
+  },
+  "top_files": [
+    {
+      "file": "_work_efforts/showcase_documents/WAFT_Status_TypedState_20260111_220614.pdf",
+      "status": "created",
+      "lines": 7665,
+      "additions": 7665,
+      "deletions": 0,
+      "net": 7665
+    },
+    {
+      "file": "src/waft/core/status_persistence.py",
+      "status": "created",
+      "lines": 343,
+      "additions": 343,
+      "deletions": 0,
+      "net": 343
+    },
+    {
+      "file": ".cursor/commands/think.md",
+      "status": "created",
+      "lines": 309,
+      "additions": 309,
+      "deletions": 0,
+      "net": 309
+    },
+    {
+      "file": "docs/STATUS_PERSISTENCE_GUIDE.md",
+      "status": "created",
+      "lines": 307,
+      "additions": 307,
+      "deletions": 0,
+      "net": 307
+    },
+    {
+      "file": "docs/STATUS_STATE_TYPED_GUIDE.md",
+      "status": "created",
+      "lines": 296,
+      "additions": 296,
+      "deletions": 0,
+      "net": 296
+    },
+    {
+      "file": "_work_efforts/devlog.md",
+      "status": "modified",
+      "lines": 0,
+      "additions": 257,
+      "deletions": 0,
+      "net": 257
+    },
+    {
+      "file": "examples/test_status_persistence.py",
+      "status": "created",
+      "lines": 220,
+      "additions": 220,
+      "deletions": 0,
+      "net": 220
+    },
+    {
+      "file": "src/waft/being.py",
+      "status": "modified",
+      "lines": 0,
+      "additions": 183,
+      "deletions": 1,
+      "net": 182
+    },
+    {
+      "file": "examples/test_typed_status_state.py",
+      "status": "created",
+      "lines": 148,
+      "additions": 148,
+      "deletions": 0,
+      "net": 148
+    },
+    {
+      "file": "examples/generate_status_with_typed_state.py",
+      "status": "created",
+      "lines": 146,
+      "additions": 146,
+      "deletions": 0,
+      "net": 146
+    }
+  ]
+}

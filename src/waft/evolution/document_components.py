@@ -67,12 +67,44 @@ class DocumentComponent:
             level = self.metadata.get('level', 2)
             title = self.content.get('title', '') if isinstance(self.content, dict) else str(self.content)
             body = self.content.get('body', '') if isinstance(self.content, dict) else ''
+            
+            # Check for status component subtypes for special formatting
+            component_subtype = self.metadata.get('component_subtype', '')
+            
             # Check if this is a pillar section (special formatting)
             if 'pillar' in title.lower() or 'substrate' in title.lower() or 'physics' in title.lower() or 'flight recorder' in title.lower():
-                return f'<div class="pillar"><div class="pillar-title">{title}</div><p>{body}</p></div>'
-            return f'<h{level}>{title}</h{level}><p>{body}</p>'
+                return f'<div class="pillar"><div class="pillar-title">{title}</div><div class="pillar-body">{body}</div></div>'
+            
+            # Status components get special formatting
+            if component_subtype:
+                return f'<div class="status-section status-{component_subtype}"><h{level}>{title}</h{level}><div class="status-body">{body}</div></div>'
+            
+            return f'<h{level}>{title}</h{level}><div>{body}</div>'
         elif self.component_type == ComponentType.PARAGRAPH:
             return f'<p>{self.content}</p>'
+        elif self.component_type == ComponentType.TABLE:
+            # Handle table component
+            if isinstance(self.content, dict):
+                headers = self.content.get('headers', [])
+                rows = self.content.get('rows', [])
+                table_class = self.content.get('class', 'data-table')
+                
+                header_row = '<tr>' + ''.join(f'<th>{html.escape(str(h))}</th>' for h in headers) + '</tr>' if headers else ''
+                body_rows = ''.join(
+                    '<tr>' + ''.join(f'<td>{html.escape(str(cell))}</td>' for cell in row) + '</tr>'
+                    for row in rows
+                )
+                return f'<table class="{table_class}">{header_row}{body_rows}</table>'
+            return f'<table>{self.content}</table>'
+        elif self.component_type == ComponentType.LIST:
+            # Handle list component
+            if isinstance(self.content, dict):
+                items = self.content.get('items', [])
+                ordered = self.content.get('ordered', False)
+                tag = 'ol' if ordered else 'ul'
+                list_items = ''.join(f'<li>{html.escape(str(item))}</li>' for item in items)
+                return f'<{tag}>{list_items}</{tag}>'
+            return f'<ul><li>{self.content}</li></ul>'
         # Add more component types as needed
         return f'<div>{self.content}</div>'
     

@@ -168,6 +168,8 @@ class EvolutionaryEventType(str, Enum):
     DEATH = "death"  # Agent termination (fitness below threshold)
     SURVIVAL = "survival"  # Agent survives generation
     SESSION_END = "session_end"  # Session completion marker
+    BOOT = "boot"  # Kernel boot event
+    STATUS_CHECK = "status_check"  # Status check event
 
 
 class EvolutionaryEvent(BaseModel):

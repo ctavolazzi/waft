@@ -130,6 +130,23 @@
       "suggestions": [],
       "style": "Clinical_Standard - Batch Test Report 20260111_164",
       "genome_id": "02cdb07dca2070f31f97351dec2ff5dc2718a557a64783a365eb3a515584622f"
+    },
+    {
+      "title": "ScientificPDFGenerator - Research Tools",
+      "path": "_generated_pdfs/scientific_pdfgenerator.pdf",
+      "timestamp": "2026-01-11T21:44:02.228058",
+      "quality_score": 0.75,
+      "gaps": [
+        "No actions identified",
+        "No insights identified",
+        "Missing methodology/approach section",
+        "Missing results/findings section"
+      ],
+      "suggestions": [
+        "Improve document structure with clear sections"
+      ],
+      "style": "Clinical_Standard - ScientificPDFGenerator - Resea",
+      "genome_id": "c7b4b62bf843f35ffcd85132e566260bd6250855b676631ebbcb3ba2445f9511"
     }
   ],
   "hypotheses": [

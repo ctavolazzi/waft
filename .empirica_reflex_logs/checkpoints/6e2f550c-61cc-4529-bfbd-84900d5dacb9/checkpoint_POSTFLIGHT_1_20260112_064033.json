@@ -1,0 +1,150 @@
+{
+  "session_id": "6e2f550c-61cc-4529-bfbd-84900d5dacb9",
+  "phase": "POSTFLIGHT",
+  "round": 1,
+  "timestamp": "2026-01-12T06:40:21.235863+00:00",
+  "vectors": {
+    "engagement": 0.9990000000000001,
+    "know": 0.375,
+    "do": 0.4865,
+    "context": 0.0,
+    "clarity": 0.8587819947043248,
+    "coherence": 0.74275,
+    "signal": 0.0,
+    "density": 0.3,
+    "state": 0.4865,
+    "change": 0.3,
+    "completion": 1.0,
+    "impact": 0.5,
+    "uncertainty": 0.7
+  },
+  "overall_confidence": 0.287,
+  "meta": {
+    "reasoning": "Completed learn_skill decision. Quality: excellent, Stamina remaining: 48.6, Mistakes: 0",
+    "task_summary": "Completed learn_skill decision. Quality: excellent, Stamina remaining: 48.6, Mistakes: 0",
+    "postflight_confidence": 0.30000000000000004,
+    "calibration_accuracy": "poor",
+    "deltas": {
+      "engagement": 0.0,
+      "know": 0.0,
+      "do": -0.08,
+      "context": 0.0,
+      "clarity": -0.141,
+      "coherence": -0.04,
+      "signal": 0.0,
+      "density": 0.0,
+      "state": -0.08,
+      "change": -0.2,
+      "completion": 1.0,
+      "impact": 0.0,
+      "uncertainty": 0.0
+    },
+    "calibration_issues": [
+      {
+        "pattern": "completion_high_uncertainty_high",
+        "description": "High completion with high uncertainty - possible overconfidence or incomplete self-assessment"
+      }
+    ],
+    "git_commit_sha": "f1e3103dcddae432accabe262e40bc5b22c766ad",
+    "git_notes_ref": "empirica/session/6e2f550c-61cc-4529-bfbd-84900d5dacb9/POSTFLIGHT/1"
+  },
+  "epistemic_tags": {},
+  "git_state": {
+    "head_commit": "eb073c04dd0bf9faae744dda123b993fe8986501",
+    "commits_since_last_checkpoint": [],
+    "uncommitted_changes": {
+      "files_modified": [
+        ".cursor/commands/COMMAND_RECOMMENDATIONS.md",
+        ".empirica/sessions/sessions.db",
+        ".obsidian/workspace.json",
+        "_genetics/status_pdfs/index.json",
+        "_pyrite/analytics/sessions.db",
+        "_pyrite/journal/ai-journal.md",
+        "_pyrite/science/laboratory.jsonl",
+        "_work_efforts/devlog.md",
+        "docs/STATUS_COMPONENTS_QUICK_REFERENCE.md",
+        "scripts/generate_status_pdf.py",
+        "scripts/waft_status.py",
+        "src/waft/api/main.py",
+        "src/waft/being.py",
+        "src/waft/core/empirica.py",
+        "src/waft/core/reflect.py",
+        "src/waft/core/status_state.py",
+        "src/waft/evolution/status_components.py",
+        "src/waft/evolution/two_page_generator.py",
+        "uv.lock"
+      ],
+      "files_added": [],
+      "files_deleted": [],
+      "diff_stat": ".cursor/commands/COMMAND_RECOMMENDATIONS.md |    1 +\n .empirica/sessions/sessions.db              |  Bin 442368 -> 450560 bytes\n .obsidian/workspace.json                    |   80 +-\n _genetics/status_pdfs/index.json            |    4 +-\n _pyrite/analytics/sessions.db               |  Bin 28672 -> 36864 bytes\n _pyrite/journal/ai-journal.md               |  178 +-\n _pyrite/science/laboratory.jsonl            |    1 +\n _work_efforts/devlog.md                     |  445 +++\n docs/STATUS_COMPONENTS_QUICK_REFERENCE.md   |   32 +-\n scripts/generate_status_pdf.py              |   11 +-\n scripts/waft_status.py                      |   32 +-\n src/waft/api/main.py                        |    3 +-\n src/waft/being.py                           |  215 +-\n src/waft/core/empirica.py                   |   19 +-\n src/waft/core/reflect.py                    |  136 +-\n src/waft/core/status_state.py               |    7 +-\n src/waft/evolution/status_components.py     |  329 +-\n src/waft/evolution/two_page_generator.py    |   58 +-\n uv.lock                                     | 5652 ++++++++++++++-------------\n 19 files changed, 4258 insertions(+), 2945 deletions(-)"
+    }
+  },
+  "learning_delta": {
+    "engagement": {
+      "prev": 0.999,
+      "curr": 0.999,
+      "delta": 0.0
+    },
+    "know": {
+      "prev": 0.375,
+      "curr": 0.375,
+      "delta": 0.0
+    },
+    "do": {
+      "prev": 0.567,
+      "curr": 0.486,
+      "delta": -0.08
+    },
+    "context": {
+      "prev": 0.0,
+      "curr": 0.0,
+      "delta": 0.0
+    },
+    "clarity": {
+      "prev": 1.0,
+      "curr": 0.859,
+      "delta": -0.141
+    },
+    "coherence": {
+      "prev": 0.783,
+      "curr": 0.743,
+      "delta": -0.04
+    },
+    "signal": {
+      "prev": 0.0,
+      "curr": 0.0,
+      "delta": 0.0
+    },
+    "density": {
+      "prev": 0.3,
+      "curr": 0.3,
+      "delta": 0.0
+    },
+    "state": {
+      "prev": 0.567,
+      "curr": 0.486,
+      "delta": -0.08
+    },
+    "change": {
+      "prev": 0.5,
+      "curr": 0.3,
+      "delta": -0.2
+    },
+    "completion": {
+      "prev": 0.0,
+      "curr": 1.0,
+      "delta": 1.0
+    },
+    "impact": {
+      "prev": 0.5,
+      "curr": 0.5,
+      "delta": 0.0
+    },
+    "uncertainty": {
+      "prev": 0.7,
+      "curr": 0.7,
+      "delta": 0.0
+    }
+  },
+  "token_count": 416
+}

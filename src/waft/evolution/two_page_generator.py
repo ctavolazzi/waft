@@ -1035,6 +1035,211 @@ class TwoPageGenerator:
             margin-bottom: {{ margin.paragraph_spacing / 2 }}pt;
             text-transform: uppercase;
         }
+        .pillar-body {
+            margin-top: {{ margin.paragraph_spacing / 2 }}pt;
+        }
+        /* Status Components Styling */
+        .status-section {
+            margin: {{ margin.section_spacing }}pt 0;
+        }
+        .status-body {
+            margin-top: {{ margin.paragraph_spacing / 2 }}pt;
+        }
+        .epistemic-state {
+            background: {{ color.code_bg }};
+            border-left: 3pt solid {{ color.accent }};
+            padding: {{ margin.paragraph_spacing }}pt;
+            margin: {{ margin.paragraph_spacing }}pt 0;
+        }
+        .moon-phase {
+            display: flex;
+            align-items: center;
+            gap: 8pt;
+            margin-bottom: {{ margin.paragraph_spacing / 2 }}pt;
+        }
+        .moon-emoji {
+            font-size: {{ font.size_h2 }}pt;
+        }
+        .moon-desc {
+            font-weight: 600;
+            color: {{ color.text }};
+        }
+        .epistemic-phase {
+            text-align: center;
+            margin: {{ margin.paragraph_spacing }}pt 0;
+        }
+        .phase-badge {
+            display: inline-block;
+            padding: 6pt 12pt;
+            background: {{ color.accent }};
+            color: {{ color.background }};
+            font-weight: 700;
+            font-size: {{ font.size_h3 }}pt;
+            border-radius: 4pt;
+            margin: 0;
+        }
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: {{ margin.paragraph_spacing }}pt 0;
+            font-size: {{ font.size_body }}pt;
+        }
+        table th {
+            background: {{ color.code_bg }};
+            font-family: "Helvetica Neue", "Arial", sans-serif;
+            font-weight: 600;
+            padding: 6pt 8pt;
+            text-align: left;
+            border-bottom: 2pt solid {{ color.border }};
+        }
+        table td {
+            padding: 6pt 8pt;
+            border-bottom: 1pt solid {{ color.border }};
+        }
+        table tr:last-child td {
+            border-bottom: none;
+        }
+        .gamification-table, .health-table, .metrics-table, .grouped-metrics-table {
+            font-size: {{ font.size_body - 1 }}pt;
+        }
+        .flight-events {
+            list-style: none;
+            padding-left: 0;
+        }
+        .flight-events li {
+            margin: 4pt 0;
+            padding-left: 12pt;
+            text-indent: -12pt;
+        }
+        .flight-events li::before {
+            content: "▸ ";
+            color: {{ color.accent }};
+            font-weight: bold;
+        }
+        
+        /* Progress Bar (inspired by AI-DnD quest progress) */
+        .progress-container {
+            margin: {{ margin.paragraph_spacing }}pt 0;
+        }
+        .progress-label {
+            font-size: {{ font.size_body }}pt;
+            font-weight: bold;
+            margin-bottom: 4pt;
+            color: {{ color.text }};
+        }
+        .progress-bar {
+            width: 100%;
+            height: 10pt;
+            background: {{ color.code_bg }};
+            border-radius: 5pt;
+            overflow: hidden;
+            border: 1pt solid {{ color.text }}20;
+        }
+        .progress-fill {
+            height: 100%;
+            background: {{ color.accent }};
+            transition: width 0.3s;
+            border-radius: 5pt;
+        }
+        .progress-text {
+            font-size: {{ font.size_body - 1 }}pt;
+            color: {{ color.text }}88;
+            margin-top: 2pt;
+            text-align: right;
+        }
+        
+        /* Status Badges (inspired by AI-DnD status effects) */
+        .status-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4pt;
+            margin: {{ margin.paragraph_spacing / 2 }}pt 0;
+        }
+        .status-badge {
+            padding: 3pt 8pt;
+            border-radius: 4pt;
+            font-size: {{ font.size_body - 1 }}pt;
+            display: inline-block;
+            border: 1pt solid;
+            white-space: nowrap;
+        }
+        .status-badge.status-good {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-color: #4caf50;
+        }
+        .status-badge.status-warning {
+            background: #fff3e0;
+            color: #e65100;
+            border-color: #ff9800;
+        }
+        .status-badge.status-error {
+            background: #ffebee;
+            color: #c62828;
+            border-color: #f44336;
+        }
+        .status-badge.status-info {
+            background: {{ color.code_bg }};
+            color: {{ color.text }};
+            border-color: {{ color.accent }};
+        }
+        
+        /* Grouped Metrics (inspired by AI-DnD inventory display) */
+        .metrics-group {
+            margin: {{ margin.paragraph_spacing }}pt 0;
+        }
+        .group-description {
+            font-size: {{ font.size_body - 1 }}pt;
+            color: {{ color.text }}88;
+            margin-bottom: 6pt;
+            font-style: italic;
+        }
+        .grouped-metrics-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: {{ font.size_body - 1 }}pt;
+        }
+        .grouped-metrics-table td {
+            padding: 6pt 8pt;
+            border-bottom: 1pt solid {{ color.text }}20;
+        }
+        .grouped-metrics-table tr:last-child td {
+            border-bottom: none;
+        }
+        .grouped-metrics-table .metric-label {
+            font-weight: 500;
+            color: {{ color.text }};
+            width: 60%;
+        }
+        .grouped-metrics-table .metric-value {
+            text-align: right;
+            font-weight: 600;
+            color: {{ color.text }};
+        }
+        .grouped-metrics-table .metric-value.status-good {
+            color: #2e7d32;
+        }
+        .grouped-metrics-table .metric-value.status-warning {
+            color: #e65100;
+        }
+        .grouped-metrics-table .metric-value.status-error {
+            color: #c62828;
+        }
+        .grouped-metrics-table .metric-value.status-info {
+            color: {{ color.accent }};
+        }
+        .grouped-metrics-table .metric-unit {
+            font-size: {{ font.size_body - 2 }}pt;
+            color: {{ color.text }}88;
+            font-weight: normal;
+            margin-left: 2pt;
+        }
+        
+        /* Git Summary & Work Efforts Summary */
+        .git-summary, .work-efforts-summary {
+            margin: {{ margin.paragraph_spacing }}pt 0;
+        }
     </style>
 </head>
 <body>

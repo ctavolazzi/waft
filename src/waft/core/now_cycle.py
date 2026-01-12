@@ -208,7 +208,8 @@ class NowCycleManager:
                     
                     # Update cycle tracking
                     being.last_cycle_number = self.cycle_number
-                    being.cycles_alive += 1
+                    # Note: lifetimes only increments when a Being is born (in spawn_being()),
+                    # not every cycle. This represents number of reincarnations, not cycles lived.
                     
                     # Save being state
                     self.being_system._save_being(being)
@@ -421,7 +422,7 @@ class NowCycleManager:
                             "pain": being.pain,
                             "decision_fatigue": being.decision_fatigue,
                             "is_sleeping": being.is_sleeping,
-                            "cycles_alive": being.cycles_alive,
+                            "lifetimes": being.lifetimes,
                             "timestamp": datetime.now().isoformat()
                         }
                         

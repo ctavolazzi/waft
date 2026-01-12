@@ -83,15 +83,17 @@ class EmpiricaManager:
         Check if Empirica is initialized in the project.
 
         Returns:
-            True if .empirica-project exists or git is initialized
+            True if .empirica directory exists (Empirica's project marker)
         """
         # Empirica requires git, so check for .git
         if not (self.project_path / ".git").exists():
             return False
 
-        # Check for .empirica-project directory (Empirica's project marker)
-        empirica_project = self.project_path / ".empirica-project"
-        return empirica_project.exists()
+        # Check for .empirica directory (Empirica's project marker)
+        # Empirica creates .empirica/config.yaml when initialized
+        empirica_dir = self.project_path / ".empirica"
+        empirica_config = empirica_dir / "config.yaml"
+        return empirica_dir.exists() and empirica_config.exists()
 
     def initialize(self) -> bool:
         """
@@ -161,13 +163,14 @@ class EmpiricaManager:
                 capture_output=True,
                 text=True,
                 check=True,
+                timeout=5,  # 5 second timeout to prevent hanging
             )
             # Parse session ID from output (format: {"session_id": "..."})
             import json as json_module
 
             output = json_module.loads(result.stdout)
             return output.get("session_id")
-        except (subprocess.CalledProcessError, FileNotFoundError, json.JSONDecodeError):
+        except (subprocess.CalledProcessError, FileNotFoundError, json.JSONDecodeError, subprocess.TimeoutExpired):
             return None
 
     def submit_preflight(self, session_id: str, vectors: dict, reasoning: str = "") -> bool:
@@ -198,9 +201,10 @@ class EmpiricaManager:
                 capture_output=True,
                 text=True,
                 check=True,
+                timeout=5,  # 5 second timeout to prevent hanging
             )
             return True
-        except (subprocess.CalledProcessError, FileNotFoundError):
+        except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
             return False
 
     def submit_postflight(self, session_id: str, vectors: dict, reasoning: str = "") -> bool:
@@ -229,9 +233,10 @@ class EmpiricaManager:
                 capture_output=True,
                 text=True,
                 check=True,
+                timeout=5,  # 5 second timeout to prevent hanging
             )
             return True
-        except (subprocess.CalledProcessError, FileNotFoundError):
+        except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
             return False
 
     def project_bootstrap(self) -> Optional[Dict[str, Any]]:
@@ -295,9 +300,10 @@ class EmpiricaManager:
                 capture_output=True,
                 text=True,
                 check=True,
+                timeout=3,  # 3 second timeout for logging
             )
             return True
-        except (subprocess.CalledProcessError, FileNotFoundError):
+        except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
             return False
 
     def check_submit(self, operation: Optional[Dict[str, Any]] = None) -> Optional[str]:

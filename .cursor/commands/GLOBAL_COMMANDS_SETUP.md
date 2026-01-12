@@ -72,6 +72,12 @@ After syncing, these commands are available globally:
 10. **`/spin-up`** - Quick orientation
 11. **`/engineer`** - Complete workflow
 
+### Code Analysis Commands
+12. **`/deep-analyze`** - Deep code analysis and algorithm extraction from GitHub repositories
+
+### Quick Status Commands
+13. **`/status`** - Quick, immediate status report (< 5 seconds)
+
 ### Document Generation Commands
 12. **`/one-pager-preview`** - Generate one-pager PDF with PNG screenshot preview (PDF → PNG → Browser)
 13. **`/one-pager-chat`** - Generate one-pager from chat session

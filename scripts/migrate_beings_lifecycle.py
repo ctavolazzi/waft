@@ -65,8 +65,12 @@ def migrate_being(being_system: BeingSystem, being_id: str) -> bool:
             being.cycles_slept = 0
         if not hasattr(being, 'last_cycle_number') or being.last_cycle_number is None:
             being.last_cycle_number = 0
-        if not hasattr(being, 'cycles_alive') or being.cycles_alive is None:
-            being.cycles_alive = 0
+        # Migrate cycles_alive to lifetimes
+        if hasattr(being, 'cycles_alive') and not hasattr(being, 'lifetimes'):
+            being.lifetimes = being.cycles_alive
+            delattr(being, 'cycles_alive')
+        elif not hasattr(being, 'lifetimes') or being.lifetimes is None:
+            being.lifetimes = 0
         if not hasattr(being, 'recent_experiences') or being.recent_experiences is None:
             being.recent_experiences = []
         

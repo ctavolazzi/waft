@@ -50,6 +50,10 @@ Commands for analysis, decision-making, and planning.
 
 11. **`/explore`** - Deep codebase exploration and analysis. Use when need to understand codebase deeply.
 
+12. **`/deep-analyze`** - Deep code analysis and algorithm extraction from GitHub repositories. Use when need to extract algorithms, patterns, or prepare code for integration.
+
+13. **`/status`** - Quick, immediate status report (< 5 seconds). Use when need fast status check or current state snapshot.
+
 ---
 
 ### Project Management Commands

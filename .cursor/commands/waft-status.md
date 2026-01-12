@@ -16,6 +16,7 @@ This command provides:
 - **Self-Awareness**: System documents its own current state
 - **Real-Time Analysis**: Captures what's happening right now
 - **Integration**: Works with work efforts, git, devlog, epistemic state
+- **WAFT Kernel Integration**: Includes kernel identity, boot sequence, epistemic phase, and operational state
 
 ---
 
@@ -92,13 +93,19 @@ Generates printer-friendly (black-and-white) status documentation.
    - Moon phase indicator
    - Knowledge percentage
    - Uncertainty percentage
+   - Epistemic phase (Data Gathering, Exploration, Synthesis, Evolution)
    - Epistemic vectors
 
-6. **Gamification State**:
-   - Character level
-   - Integrity score
-   - Insight points
-   - Recent achievements
+6. **Kernel Status**:
+   - Kernel status (ONLINE)
+   - Epistemic phase
+   - Boot time (from flight recorder)
+   - Active generation tracking
+
+7. **_pyrite Integrity**:
+   - Structure validation
+   - Genesis files presence (20.00_state.json, 35.00_ledger.json, 42.00_kernel.md)
+   - Directory structure check
 
 **Output**: Comprehensive status data structure
 
@@ -160,11 +167,65 @@ Generates printer-friendly (black-and-white) status documentation.
 ## Complete Execution Sequence
 
 ```
-1. Check system status        → Gather all status data
-2. Analyze status             → Identify patterns and insights
-3. Display status summary     → Show current state
-4. [Optional] Generate docs   → Create documentation at requested level(s)
+1. Initialize WAFT Kernel      → Boot sequence, identity acknowledgment
+2. Check system status        → Gather all status data (including kernel state)
+3. Analyze status             → Identify patterns and insights
+4. Display status summary     → Show current state (including kernel info)
+5. [Optional] Generate docs   → Create documentation at requested level(s)
+6. Log kernel event           → Record status check to Flight Recorder
 ```
+
+## WAFT Kernel Integration
+
+### Kernel Boot Sequence
+
+When `/waft-status` is executed, the WAFT Kernel performs a boot sequence:
+
+1. **Kernel Initialization**
+   - Load project path
+   - Set identity: WAFT_KERNEL
+   - Record boot_time
+   - Initialize integration with existing systems (TheObserver, EmpiricaManager, GamificationManager)
+
+2. **Initial Status Check**
+   - Git status
+   - Work efforts
+   - Project health
+   - _pyrite integrity
+   - uv.lock status
+
+3. **Epistemic Phase Declaration**
+   - Analyze system state
+   - Determine phase (Data Gathering/Synthesis/Evolution/etc.)
+   - Calculate epistemic metrics (via EmpiricaManager or kernel estimates)
+
+4. **Flight Recorder Log**
+   - Event: KERNEL_BOOT (using EvolutionaryEvent)
+   - Context: boot status
+   - Logged to: _pyrite/science/laboratory.jsonl (via TheObserver)
+
+5. **Status Check Integration**
+   - Kernel status included in status output
+   - Kernel perspective added to documentation
+   - Kernel events logged to Flight Recorder
+
+### Kernel Identity
+
+The WAFT Kernel is the **system-level intelligence** that:
+- **Role**: Central operating intelligence for directed evolution
+- **Mission**: Oversee breeding of self-modifying AI agents
+- **Goal**: Generate data for "The Physics of Artificial Cognition"
+- **Identity**: WAFT_KERNEL
+
+**Important Distinction**: The WAFT Kernel is NOT the same as `42.00_kernel.md` from Unified Genesis Protocol (that's for UNIT_GENESIS entities). The WAFT Kernel is the system-level orchestrator.
+
+### Kernel Operational State
+
+The kernel provides:
+- **Epistemic Phase**: Current operational phase (e.g., "Data Gathering", "Synthesis", "Evolution")
+- **Epistemic State**: Moon phase, knowledge %, uncertainty % (from EmpiricaManager or kernel estimates)
+- **System Integration**: Status of Flight Recorder, Empirica, Gamification systems
+- **Uptime**: Time since kernel boot sequence
 
 ---
 
@@ -428,10 +489,11 @@ This command integrates with:
 
 **Recommended Sequence**:
 ```
-1. /waft-status              → Check current state
-2. /waft-status --docs       → Generate status documentation
-3. /checkpoint               → Create checkpoint with status
-4. /recap                    → Recap with status context
+1. /waft-boot                → Initialize kernel (first time)
+2. /waft-status              → Check current state
+3. /waft-status --docs       → Generate status documentation
+4. /checkpoint               → Create checkpoint with status
+5. /recap                    → Recap with status context
 ```
 
 ---

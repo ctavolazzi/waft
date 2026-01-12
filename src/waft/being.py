@@ -73,7 +73,7 @@ class Being:
         cycles_slept: Optional[int] = None,
         # Cycle tracking
         last_cycle_number: Optional[int] = None,
-        cycles_alive: Optional[int] = None,
+        lifetimes: Optional[int] = None,
         # Experience tracking
         recent_experiences: Optional[List[Dict[str, Any]]] = None
     ):
@@ -101,7 +101,7 @@ class Being:
             sleep_duration_base: Base sleep duration (default: random 3-10)
             cycles_slept: Current sleep counter (default: 0)
             last_cycle_number: Last cycle number (default: 0)
-            cycles_alive: Cycles alive (default: 0)
+            lifetimes: Number of reincarnations (default: 0)
             recent_experiences: Recent experiences (default: [])
         """
         self.being_id = being_id
@@ -133,6 +133,29 @@ class Being:
         self.pleasure: float = pleasure if pleasure is not None else 0.0
         self.pain: float = pain if pain is not None else 0.0
         
+        # Personality and goals (NEW - Being doesn't have AgentState)
+        # Set these BEFORE calculating willpower/stamina which depend on them
+        self.personality: Dict[str, Any] = personality if personality is not None else {}
+        self.goals: List[Dict[str, Any]] = goals if goals is not None else []
+        self.personality_type: str = personality_type if personality_type is not None else "balanced"
+        
+        # Cycle tracking (needed for stamina calculation)
+        self.last_cycle_number: int = last_cycle_number if last_cycle_number is not None else 0
+        # lifetimes: Number of reincarnations
+        # If explicitly provided, use it
+        # If None and no parent: this is a new birth (lifetime 1)
+        # If None and has parent: will be set by spawn_being() (parent + 1)
+        # If loading from storage: will be set by from_dict()
+        if lifetimes is not None:
+            self.lifetimes = lifetimes
+        elif parent_being_id is None:
+            # Direct instantiation without parent = new birth (lifetime 1)
+            self.lifetimes = 1
+        else:
+            # Has parent but lifetimes not set - will be set by spawn_being()
+            # Default to 0 for now (spawn_being will increment from parent)
+            self.lifetimes = 0
+        
         # Stamina system (NEW)
         # Willpower: Core stat derived from personality and will_to_live
         self.willpower: float = self._calculate_willpower()
@@ -140,11 +163,6 @@ class Being:
         self.stamina: float = self._calculate_stamina()
         self.stamina_max: float = self.stamina  # Maximum stamina (recalculated each cycle)
         self.stamina_regeneration_rate: float = 5.0  # Stamina regenerated per cycle
-        
-        # Personality and goals (NEW - Being doesn't have AgentState)
-        self.personality: Dict[str, Any] = personality if personality is not None else {}
-        self.goals: List[Dict[str, Any]] = goals if goals is not None else []
-        self.personality_type: str = personality_type if personality_type is not None else "balanced"
         
         # Karma connection (NEW)
         self.soul_id: Optional[str] = soul_id
@@ -168,12 +186,13 @@ class Being:
         self.sleep_duration: int = sleep_duration if sleep_duration is not None else 0
         self.cycles_slept: int = cycles_slept if cycles_slept is not None else 0
         
-        # Cycle tracking
-        self.last_cycle_number: int = last_cycle_number if last_cycle_number is not None else 0
-        self.cycles_alive: int = cycles_alive if cycles_alive is not None else 0
-        
         # Experience tracking (for pleasure/pain calculation)
         self.recent_experiences: List[Dict[str, Any]] = recent_experiences if recent_experiences is not None else []
+        
+        # Empirica integration (for first Being only - when parent_being_id is None)
+        self.empirica_session_id: Optional[str] = None
+        self.empirica_manager: Optional[Any] = None
+        self._is_first_being = parent_being_id is None
     
     def _calculate_personality_modifier(self) -> float:
         """Calculate decision quota modifier based on personality type."""
@@ -239,7 +258,7 @@ class Being:
         will_to_live_component = (self.will_to_live / 100.0) * 100.0 * 0.20  # 20% weight
         skills_component = min(100.0, sum(self.skills.values()) / len(self.skills) if self.skills else 0.0) * 0.15  # 15% weight
         luck_component = self.luck * 0.10  # 10% weight
-        experience_component = min(100.0, self.cycles_alive * 0.5) * 0.05  # 5% weight (experience bonus)
+        experience_component = min(100.0, self.lifetimes * 0.5) * 0.05  # 5% weight (experience bonus from reincarnations)
         pleasure_component = self.pleasure * 100.0 * 0.05  # 5% weight (positive energy)
         pain_component = -self.pain * 100.0 * 0.05  # -5% weight (negative energy)
         
@@ -586,11 +605,170 @@ class Being:
         # Update sleep_duration for next sleep
         self.sleep_duration = self.sleep_duration_base
     
+    def _think_with_empirica(self, decision_type: str) -> Optional[str]:
+        """
+        Use Empirica to think about the decision (only for first Being).
+        
+        Args:
+            decision_type: Type of decision being considered
+        
+        Returns:
+            Gate result (PROCEED/HALT/BRANCH/REVISE) or None if Empirica not available
+        """
+        if not self._is_first_being or not self.empirica_manager or not self.empirica_session_id:
+            return None
+        
+        try:
+            # Use Empirica check gate to assess decision
+            operation = {
+                "type": "decision",
+                "scope": "medium",
+                "decision_type": decision_type,
+                "being_state": {
+                    "stamina_ratio": self.get_stamina_ratio(),
+                    "will_to_live": self.will_to_live,
+                    "personality_type": self.personality_type,
+                    "decision_fatigue": self.decision_fatigue
+                }
+            }
+            
+            gate_result = self.empirica_manager.check_submit(operation)
+            return gate_result
+        except Exception:
+            # If Empirica hangs or fails, just proceed without gate
+            return None
+    
+    def _empirica_preflight(self, decision_type: str) -> bool:
+        """
+        Submit preflight assessment to Empirica before making decision.
+        
+        Args:
+            decision_type: Type of decision being considered
+        
+        Returns:
+            True if preflight submitted successfully, False otherwise
+        """
+        if not self._is_first_being or not self.empirica_manager or not self.empirica_session_id:
+            return False
+        
+        try:
+            # Calculate epistemic vectors based on being state
+            vectors = {
+                "engagement": min(1.0, self.will_to_live / 100.0),
+                "foundation": {
+                    "know": min(1.0, sum(self.skills.values()) / (len(self.skills) * 100.0) if self.skills else 0.0),
+                    "do": min(1.0, self.stamina / 100.0),
+                    "context": min(1.0, len(self.memories) / 10.0)  # Normalize to 0-1
+                },
+                "comprehension": {
+                    "clarity": min(1.0, self.get_stamina_ratio()),
+                    "coherence": min(1.0, (self.will_to_live + self.stamina) / 200.0),
+                    "signal": min(1.0, len(self.lessons_learned) / 5.0),
+                    "density": min(1.0, sum(self.skills.values()) / 500.0 if self.skills else 0.0)
+                },
+                "execution": {
+                    "state": min(1.0, self.stamina / 100.0),
+                    "change": 0.5,  # Default - will be updated postflight
+                    "completion": 0.0,  # Will be updated postflight
+                    "impact": 0.5  # Default - will be updated postflight
+                },
+                "uncertainty": max(0.0, 1.0 - (sum(self.skills.values()) / 500.0 if self.skills else 1.0))
+            }
+            
+            reasoning = f"Considering {decision_type} decision. Stamina: {self.stamina:.1f}/{self.stamina_max:.1f}, Will to live: {self.will_to_live:.1f}, Fatigue: {self.decision_fatigue}/{self.decision_quota_max}"
+            
+            return self.empirica_manager.submit_preflight(
+                self.empirica_session_id,
+                vectors,
+                reasoning
+            )
+        except Exception:
+            # If Empirica hangs or fails, just continue without preflight
+            return False
+    
+    def _empirica_postflight(self, decision_type: str, experience: Dict[str, Any]) -> bool:
+        """
+        Submit postflight assessment to Empirica after making decision.
+        
+        Args:
+            decision_type: Type of decision that was made
+            experience: Experience data from the decision
+        
+        Returns:
+            True if postflight submitted successfully, False otherwise
+        """
+        if not self._is_first_being or not self.empirica_manager or not self.empirica_session_id:
+            return False
+        
+        # Calculate epistemic vectors based on decision outcome
+        success = experience.get("quality") in ["excellent", "good"]
+        impact = experience.get("intensity", 0.5)
+        
+        vectors = {
+            "engagement": min(1.0, self.will_to_live / 100.0),
+            "foundation": {
+                "know": min(1.0, sum(self.skills.values()) / (len(self.skills) * 100.0) if self.skills else 0.0),
+                "do": min(1.0, self.stamina / 100.0),
+                "context": min(1.0, len(self.memories) / 10.0)
+            },
+            "comprehension": {
+                "clarity": min(1.0, self.get_stamina_ratio()),
+                "coherence": min(1.0, (self.will_to_live + self.stamina) / 200.0),
+                "signal": min(1.0, len(self.lessons_learned) / 5.0),
+                "density": min(1.0, sum(self.skills.values()) / 500.0 if self.skills else 0.0)
+            },
+            "execution": {
+                "state": min(1.0, self.stamina / 100.0),
+                "change": 0.3 if success else 0.1,  # Positive change if successful
+                "completion": 1.0 if success else 0.5,  # Completed if successful
+                "impact": impact
+            },
+            "uncertainty": max(0.0, 1.0 - (sum(self.skills.values()) / 500.0 if self.skills else 1.0))
+        }
+        
+        reasoning = f"Completed {decision_type} decision. Quality: {experience.get('quality', 'unknown')}, Stamina remaining: {self.stamina:.1f}, Mistakes: {len(experience.get('mistakes', []))}"
+        
+        return self.empirica_manager.submit_postflight(
+            self.empirica_session_id,
+            vectors,
+            reasoning
+        )
+    
+    def _empirica_log_finding(self, finding: str, impact: float = 0.5) -> bool:
+        """
+        Log a finding to Empirica.
+        
+        Args:
+            finding: Description of the finding
+            impact: Impact score (0.0-1.0)
+        
+        Returns:
+            True if logged successfully, False otherwise
+        """
+        if not self._is_first_being or not self.empirica_manager:
+            return False
+        return self.empirica_manager.log_finding(finding, impact)
+    
+    def _empirica_log_unknown(self, unknown: str) -> bool:
+        """
+        Log an unknown to Empirica.
+        
+        Args:
+            unknown: Description of what needs investigation
+        
+        Returns:
+            True if logged successfully, False otherwise
+        """
+        if not self._is_first_being or not self.empirica_manager:
+            return False
+        return self.empirica_manager.log_unknown(unknown)
+    
     def make_decision(self, decision_type: str, stamina_cost: float = 5.0) -> Dict[str, Any]:
         """
         Make a decision (decrements fatigue, consumes stamina, returns experience).
         
         When stamina is depleted, actions become sluggish, shitty, and make mistakes.
+        For the first Being, uses Empirica for epistemic thinking.
         
         Args:
             decision_type: Type of decision (learn_skill, record_memory, pursue_goal, rest, explore)
@@ -606,6 +784,28 @@ class Being:
             # Must sleep - enter sleep state
             self.enter_sleep()
             raise ValueError("Decision fatigue depleted - being must sleep")
+        
+        # Empirica preflight (for first Being) - non-blocking, continue if fails
+        try:
+            self._empirica_preflight(decision_type)
+        except Exception:
+            pass  # Continue even if preflight fails
+        
+        # Empirica check gate (for first Being) - non-blocking, continue if fails
+        try:
+            gate_result = self._think_with_empirica(decision_type)
+        except Exception:
+            gate_result = None  # Continue without gate if it fails
+        if gate_result == "HALT":
+            # Being decides to halt - log unknown and rest instead
+            self._empirica_log_unknown(f"Decision {decision_type} halted by Empirica gate")
+            decision_type = "rest"  # Fallback to rest
+        elif gate_result == "BRANCH":
+            # Being decides to branch - log finding
+            self._empirica_log_finding(f"Decision {decision_type} requires branching investigation", impact=0.6)
+        elif gate_result == "REVISE":
+            # Being decides to revise - log finding
+            self._empirica_log_finding(f"Decision {decision_type} needs revision", impact=0.4)
         
         # Decrement fatigue
         self.decision_fatigue -= 1
@@ -650,12 +850,28 @@ class Being:
         if len(self.recent_experiences) > 10:
             self.recent_experiences.pop(0)
         
+        # Empirica postflight (for first Being) - non-blocking
+        try:
+            self._empirica_postflight(decision_type, experience)
+        except Exception:
+            pass  # Continue even if postflight fails
+        
+        # Log findings/unknowns based on experience quality - non-blocking
+        try:
+            if experience.get("stamina_depleted"):
+                self._empirica_log_unknown(f"Stamina depleted during {decision_type} - performance degraded")
+            if experience.get("quality") == "excellent":
+                self._empirica_log_finding(f"Excellent execution of {decision_type}", impact=0.7)
+        except Exception:
+            pass  # Continue even if logging fails
+        
         return {
             "decision_type": decision_type,
             "experience": experience,
             "decision_fatigue_remaining": self.decision_fatigue,
             "stamina_remaining": self.stamina,
-            "stamina_depleted": stamina_depleted
+            "stamina_depleted": stamina_depleted,
+            "empirica_gate": gate_result if self._is_first_being else None
         }
     
     def _generate_stamina_mistakes(self) -> List[str]:
@@ -735,7 +951,7 @@ class Being:
             "cycles_slept": self.cycles_slept,
             # Cycle tracking
             "last_cycle_number": self.last_cycle_number,
-            "cycles_alive": self.cycles_alive,
+            "lifetimes": self.lifetimes,
             # Experience tracking
             "recent_experiences": self.recent_experiences,
         }
@@ -770,7 +986,7 @@ class Being:
             cycles_slept=data.get("cycles_slept"),
             # Cycle tracking
             last_cycle_number=data.get("last_cycle_number"),
-            cycles_alive=data.get("cycles_alive"),
+            lifetimes=data.get("lifetimes", data.get("cycles_alive", 0)),  # Support old name for migration
             # Experience tracking
             recent_experiences=data.get("recent_experiences")
         )
@@ -909,6 +1125,7 @@ class BeingSystem:
         
         # Inherit skills from parent if provided
         skills = initial_skills or {}
+        parent_lifetimes = 0
         if parent_being_id:
             parent = self._load_being(parent_being_id)
             # Inherit skills (with slight mutation)
@@ -917,14 +1134,58 @@ class BeingSystem:
                 mutation = (hashlib.sha256(f"{being_id}{skill_name}".encode()).hexdigest()[:2])
                 mutation_factor = (int(mutation, 16) / 255.0 - 0.5) * 0.1  # -5% to +5%
                 skills[skill_name] = max(0.0, min(100.0, skill_level * (1.0 + mutation_factor)))
+            # Get parent's lifetimes for reincarnation
+            parent_lifetimes = parent.lifetimes
         
-        # Create being
+        # Create being (lifetimes will be set after creation)
         being = Being(
             being_id=being_id,
             reality_id=reality_id,
             parent_being_id=parent_being_id,
             skills=skills
         )
+        
+        # Set lifetimes: increment from parent if reincarnated, or 1 if first birth
+        if parent_being_id:
+            # Reincarnation: parent's lifetimes + 1
+            being.lifetimes = parent_lifetimes + 1
+        else:
+            # First birth: this is lifetime 1
+            being.lifetimes = 1
+
+            # Initialize Empirica for the first Being (optional - Being works without it)
+            try:
+                from .core.empirica import EmpiricaManager
+                empirica_manager = EmpiricaManager(project_path=self.project_path)
+
+                # Check if Empirica is initialized, initialize if needed
+                if not empirica_manager.is_initialized():
+                    # Try to initialize Empirica (may fail if not installed)
+                    initialized = empirica_manager.initialize()
+                    if not initialized:
+                        # Empirica not available - Being works without it
+                        pass
+                    else:
+                        # Create Empirica session for this Being
+                        session_id = empirica_manager.create_session(
+                            ai_id=being_id,
+                            session_type="being_lifecycle"
+                        )
+                        if session_id:
+                            being.empirica_manager = empirica_manager
+                            being.empirica_session_id = session_id
+                else:
+                    # Empirica already initialized - create session
+                    session_id = empirica_manager.create_session(
+                        ai_id=being_id,
+                        session_type="being_lifecycle"
+                    )
+                    if session_id:
+                        being.empirica_manager = empirica_manager
+                        being.empirica_session_id = session_id
+            except (ImportError, Exception):
+                # Empirica not available or failed - Being works without it
+                pass
         
         # Build ancestral chain
         if parent_being_id:
@@ -1012,6 +1273,133 @@ class BeingSystem:
             "completed_at": datetime.now().isoformat()
         }
     
+    def reincarnate_being(
+        self,
+        dead_being_id: str,
+        reality_id: Optional[str] = None,
+        use_karma: bool = True,
+        purchase_order: Optional[Dict[str, Any]] = None
+    ) -> Being:
+        """
+        Reincarnate a dead (ARCHIVED) Being into a new lifetime.
+        
+        This bridges the death → rebirth cycle. The Being's soul (via soul_id)
+        can use accumulated Karma to purchase a life-path, or simply reincarnate
+        with inherited skills.
+        
+        Process:
+        1. Load the archived Being
+        2. Verify it's dead (ARCHIVED state)
+        3. Optionally use KarmaMerchant if available and use_karma=True
+        4. Spawn new Being with parent_being_id pointing to dead Being
+        5. New Being's lifetimes = dead Being's lifetimes + 1
+        
+        Args:
+            dead_being_id: ID of the archived/dead Being to reincarnate
+            reality_id: Reality to spawn into (defaults to dead Being's reality)
+            use_karma: Whether to attempt Karma-based reincarnation (default: True)
+            purchase_order: Optional purchase order for KarmaMerchant
+                          (life_path_id, class, experience_packages, memory_continuity)
+        
+        Returns:
+            New Being instance (reincarnated)
+        
+        Raises:
+            ValueError: If Being is not archived/dead
+        """
+        # Load the dead Being
+        dead_being = self._load_being(dead_being_id)
+        
+        # Verify it's dead
+        if dead_being.state != BeingState.ARCHIVED:
+            raise ValueError(
+                f"Being {dead_being_id} is not dead (state: {dead_being.state.value}). "
+                "Only ARCHIVED Beings can be reincarnated."
+            )
+        
+        # Use reality from dead Being if not specified
+        if reality_id is None:
+            reality_id = dead_being.reality_id
+        
+        # Try Karma-based reincarnation if requested
+        if use_karma and dead_being.soul_id:
+            try:
+                from .karma import KarmaMerchant
+                karma_merchant = KarmaMerchant(project_path=self.project_path)
+                
+                # Check if reincarnate is implemented
+                if hasattr(karma_merchant, 'reincarnate') and callable(karma_merchant.reincarnate):
+                    # Try to access Akasha to check Karma
+                    akasha_data = karma_merchant.access_akasha(dead_being.soul_id)
+                    
+                    if akasha_data and isinstance(akasha_data, dict):
+                        karma_balance = akasha_data.get("karma_balance", akasha_data.get("total_karma", 0.0))
+                        
+                        # If we have Karma and a purchase order, use Karma-based reincarnation
+                        if karma_balance > 0 and purchase_order:
+                            try:
+                                reincarnation_result = karma_merchant.reincarnate(
+                                    dead_being.soul_id,
+                                    purchase_order
+                                )
+                                
+                                # If reincarnate returns agent_config, use it
+                                if reincarnation_result and "agent_config" in reincarnation_result:
+                                    agent_config = reincarnation_result["agent_config"]
+                                    
+                                    # Spawn with purchased configuration
+                                    new_being = self.spawn_being(
+                                        reality_id=reality_id,
+                                        parent_being_id=dead_being_id,
+                                        initial_skills=agent_config.get("skills", {})
+                                    )
+                                    
+                                    # Apply other config if present
+                                    if "personality" in agent_config:
+                                        new_being.personality = agent_config["personality"]
+                                    if "personality_type" in agent_config:
+                                        new_being.personality_type = agent_config["personality_type"]
+                                    if "goals" in agent_config:
+                                        new_being.goals = agent_config["goals"]
+                                    
+                                    # Inherit soul_id for continuity
+                                    new_being.soul_id = dead_being.soul_id
+                                    
+                                    self._save_being(new_being)
+                                    return new_being
+                            except Exception:
+                                # Karma reincarnation failed, fall through to simple reincarnation
+                                pass
+            except (ImportError, AttributeError, Exception):
+                # KarmaMerchant not available or not fully implemented, fall through
+                pass
+        
+        # Fallback: Simple reincarnation (inherit skills with mutation)
+        # This is the basic evolutionary mechanism
+        new_being = self.spawn_being(
+            reality_id=reality_id,
+            parent_being_id=dead_being_id
+        )
+        
+        # Inherit soul_id for continuity across lifetimes
+        if dead_being.soul_id:
+            new_being.soul_id = dead_being.soul_id
+        
+        # Inherit some memories/lessons based on memory_continuity if specified
+        if purchase_order and "memory_continuity" in purchase_order:
+            continuity = purchase_order["memory_continuity"]
+            if 0.0 < continuity <= 1.0:
+                # Carry over a percentage of memories
+                num_memories = int(len(dead_being.memories) * continuity)
+                new_being.memories = dead_being.memories[-num_memories:] if num_memories > 0 else []
+                
+                # Carry over some lessons
+                num_lessons = int(len(dead_being.lessons_learned) * continuity)
+                new_being.lessons_learned = dead_being.lessons_learned[-num_lessons:] if num_lessons > 0 else []
+        
+        self._save_being(new_being)
+        return new_being
+    
     def get_karma_balance(self, being: Being) -> float:
         """
         Get karma balance for a being via soul_id.
@@ -1032,7 +1420,8 @@ class BeingSystem:
         # Validate soul_id
         if not self._validate_being_id(being.soul_id):
             # Fallback: use being_id as soul_id (sanitized)
-            being.soul_id = f"soul_{being.being_id.replace('..', '').replace('/', '_').replace('\\', '_')}"
+            sanitized_id = being.being_id.replace('..', '').replace('/', '_').replace('\\', '_')
+            being.soul_id = f"soul_{sanitized_id}"
         
         # Try to get karma from KarmaMerchant if available
         try:
