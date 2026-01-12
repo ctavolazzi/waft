@@ -9,11 +9,13 @@ This demonstrates:
 - Automatic decision-making based on skills and personality
 - Evolutionary learning from past experiences
 - D&D 5e physics engine
+- Save/Load Being state for reincarnation testing
 """
 
 from pathlib import Path
 import sys
 import random
+import json
 from typing import Optional, Dict, Any
 
 # Add src to path
@@ -25,7 +27,7 @@ from waft.core.dnd5e import (
     DnDRoller,
     ArmorType
 )
-from waft.being import Being, BeingState
+from waft.being import Being, BeingState, BeingSystem
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
@@ -505,36 +507,93 @@ def tavern_scenario_evolved(being: Being, character: DnD5eCharacter) -> Dict[str
     return results
 
 
+def save_being_state(being: Being, filepath: Optional[Path] = None) -> Path:
+    """
+    Save Being state to disk for later loading/reincarnation.
+
+    Args:
+        being: Being to save
+        filepath: Optional path to save to (defaults to beings directory)
+
+    Returns:
+        Path where Being was saved
+    """
+    if filepath is None:
+        beings_dir = Path(__file__).parent / "saved_beings"
+        beings_dir.mkdir(exist_ok=True)
+        filepath = beings_dir / f"{being.being_id}.json"
+
+    # Use BeingSystem to save (includes proper validation and security)
+    being_system = BeingSystem(project_path=Path.cwd())
+    being_system._save_being(being)
+
+    console.print(f"\n[green]✓[/green] Being saved to: {filepath}")
+    return filepath
+
+
+def load_being_state(being_id: str, filepath: Optional[Path] = None) -> Being:
+    """
+    Load Being state from disk.
+
+    Args:
+        being_id: Being ID to load
+        filepath: Optional path to load from
+
+    Returns:
+        Loaded Being instance
+    """
+    # Use BeingSystem to load (includes proper validation and security)
+    being_system = BeingSystem(project_path=Path.cwd())
+    being = being_system._load_being(being_id)
+
+    console.print(f"\n[green]✓[/green] Being loaded: {being_id}")
+    return being
+
+
 def main():
     """Main scenario runner with evolution."""
     console.print("\n[bold bright_blue]╔════════════════════════════════════════╗[/bold bright_blue]")
     console.print("[bold bright_blue]║[/bold bright_blue]  [bold white]TOWN TAVERN SCENARIO - EVOLVED[/bold white]  [bold bright_blue]║[/bold bright_blue]")
     console.print("[bold bright_blue]║[/bold bright_blue]  [dim]WAFT Being + D&D 5e Adventure[/dim]  [bold bright_blue]║[/bold bright_blue]")
     console.print("[bold bright_blue]╚════════════════════════════════════════╝[/bold bright_blue]\n")
-    
-    # Create a Being (direct instantiation - this is lifetime 1)
-    being = Being(
-        being_id=f"tavern_being_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
+
+    # Use BeingSystem to create Being (proper initialization with soul_id)
+    being_system = BeingSystem(project_path=Path.cwd())
+
+    being = being_system.spawn_being(
         reality_id="tavern_scenario",
-        personality_type="analytical",  # Start with analytical personality
-        skills={
+        initial_skills={
             "perception": 30.0,
             "investigation": 40.0,
             "persuasion": 25.0,
             "intelligence": 35.0,
-        },
-        lifetimes=1  # First lifetime (explicit for clarity)
+        }
     )
-    
+
+    # Set personality
+    being.personality_type = "analytical"
+
+    # Create soul_id if not present
+    if being.soul_id is None:
+        being.soul_id = f"soul_{being.being_id}"
+
+    # Save initial state
+    being_system._save_being(being)
+
     console.print(f"[dim]Created Being: {being.being_id}[/dim]")
-    console.print(f"[dim]Personality: {being.personality_type}[/dim]\n")
-    
+    console.print(f"[dim]Personality: {being.personality_type}[/dim]")
+    console.print(f"[dim]Lifetimes: {being.lifetimes}[/dim]")
+    console.print(f"[dim]Soul ID: {being.soul_id[:16]}...[/dim]\n")
+
     # Create character from Being
     character = create_character(being)
-    
+
     # Run scenario
     results = tavern_scenario_evolved(being, character)
-    
+
+    # Save Being state after scenario
+    save_being_state(being)
+
     # Show evolution summary
     console.print("\n[bold green]✓ Scenario Complete![/bold green]")
     console.print(f"\n[bold]Evolution Summary:[/bold]")
@@ -542,7 +601,7 @@ def main():
     console.print(f"  Being Fitness: {being.fitness:.1f}")
     console.print(f"  Skills Improved: {len([s for s in being.skills.values() if s > 0])}")
     console.print(f"  Memories Stored: {len(being.memories)}")
-    
+
     # Show skill progression
     if being.skills:
         table = Table(title="Skill Progression")
@@ -552,8 +611,10 @@ def main():
             table.add_row(skill.title(), f"{level:.1f}")
         console.print("\n")
         console.print(table)
-    
-    console.print("\n[dim]This Being can now be used as a parent for future evolutions![/dim]\n")
+
+    console.print("\n[dim]This Being can now be archived and reincarnated![/dim]")
+    console.print(f"[dim]Being ID: {being.being_id}[/dim]")
+    console.print(f"[dim]Soul ID: {being.soul_id}[/dim]\n")
 
 
 if __name__ == "__main__":
