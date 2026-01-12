@@ -1,0 +1,61 @@
+{
+  "session_id": "07383451-3964-44aa-ae6e-806741e812e4",
+  "phase": "PREFLIGHT",
+  "round": 1,
+  "timestamp": "2026-01-12T06:41:25.567586+00:00",
+  "vectors": {
+    "engagement": 0.9990000000000001,
+    "know": 0.375,
+    "do": 0.5665,
+    "context": 0.0,
+    "clarity": 1.0,
+    "coherence": 0.7827500000000001,
+    "signal": 0.0,
+    "density": 0.3,
+    "state": 0.5665,
+    "change": 0.5,
+    "completion": 0.0,
+    "impact": 0.5,
+    "uncertainty": 0.7
+  },
+  "overall_confidence": 0.314,
+  "meta": {
+    "reasoning": "Considering learn_skill decision. Stamina: 56.6/56.6, Will to live: 99.9, Fatigue: 11/11",
+    "prompt": "Considering learn_skill decision. Stamina: 56.6/56.6, Will to live: 99.9, Fatigue: 11/11",
+    "git_commit_sha": "434dc7e654d23c74d89e15601a05cf1bf40da73a",
+    "git_notes_ref": "empirica/session/07383451-3964-44aa-ae6e-806741e812e4/PREFLIGHT/1"
+  },
+  "epistemic_tags": {},
+  "git_state": {
+    "head_commit": "eb073c04dd0bf9faae744dda123b993fe8986501",
+    "commits_since_last_checkpoint": [],
+    "uncommitted_changes": {
+      "files_modified": [
+        ".cursor/commands/COMMAND_RECOMMENDATIONS.md",
+        ".empirica/sessions/sessions.db",
+        ".obsidian/workspace.json",
+        "_genetics/status_pdfs/index.json",
+        "_pyrite/analytics/sessions.db",
+        "_pyrite/journal/ai-journal.md",
+        "_pyrite/science/laboratory.jsonl",
+        "_work_efforts/devlog.md",
+        "docs/STATUS_COMPONENTS_QUICK_REFERENCE.md",
+        "scripts/generate_status_pdf.py",
+        "scripts/waft_status.py",
+        "src/waft/api/main.py",
+        "src/waft/being.py",
+        "src/waft/core/empirica.py",
+        "src/waft/core/reflect.py",
+        "src/waft/core/status_state.py",
+        "src/waft/evolution/status_components.py",
+        "src/waft/evolution/two_page_generator.py",
+        "uv.lock"
+      ],
+      "files_added": [],
+      "files_deleted": [],
+      "diff_stat": ".cursor/commands/COMMAND_RECOMMENDATIONS.md |    1 +\n .empirica/sessions/sessions.db              |  Bin 442368 -> 462848 bytes\n .obsidian/workspace.json                    |   80 +-\n _genetics/status_pdfs/index.json            |    4 +-\n _pyrite/analytics/sessions.db               |  Bin 28672 -> 36864 bytes\n _pyrite/journal/ai-journal.md               |  178 +-\n _pyrite/science/laboratory.jsonl            |    1 +\n _work_efforts/devlog.md                     |  445 +++\n docs/STATUS_COMPONENTS_QUICK_REFERENCE.md   |   32 +-\n scripts/generate_status_pdf.py              |   11 +-\n scripts/waft_status.py                      |   32 +-\n src/waft/api/main.py                        |    3 +-\n src/waft/being.py                           |  235 +-\n src/waft/core/empirica.py                   |   19 +-\n src/waft/core/reflect.py                    |  136 +-\n src/waft/core/status_state.py               |    7 +-\n src/waft/evolution/status_components.py     |  329 +-\n src/waft/evolution/two_page_generator.py    |   58 +-\n uv.lock                                     | 5652 ++++++++++++++-------------\n 19 files changed, 4278 insertions(+), 2945 deletions(-)"
+    }
+  },
+  "learning_delta": {},
+  "token_count": 241
+}

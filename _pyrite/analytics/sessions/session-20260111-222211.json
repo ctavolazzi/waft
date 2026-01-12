@@ -1,0 +1,74 @@
+{
+  "session_id": "session-20260111-222211",
+  "timestamp": "2026-01-11T22:22:11.749703",
+  "duration_seconds": null,
+  "files_created": 11,
+  "files_modified": 0,
+  "files_deleted": 0,
+  "lines_written": 13273,
+  "lines_modified": 3666,
+  "lines_deleted": 2931,
+  "net_lines": 10342,
+  "commands_executed": [],
+  "work_efforts_created": 0,
+  "work_efforts_updated": 0,
+  "project_name": "",
+  "branch": "2026-01-11-updates",
+  "git_commits_ahead": 28,
+  "prompt_signature": "419fde0e590a2260",
+  "approach_category": "command_creation",
+  "iteration_chain": null,
+  "success_indicators": [],
+  "issues_encountered": [],
+  "metadata": {
+    "top_files": [
+      "_work_efforts/showcase_documents/WAFT_Status_TypedState_20260111_220614.pdf",
+      "src/waft/core/status_persistence.py",
+      ".cursor/commands/think.md",
+      "docs/STATUS_PERSISTENCE_GUIDE.md",
+      "docs/STATUS_STATE_TYPED_GUIDE.md",
+      "_work_efforts/devlog.md",
+      "examples/test_status_persistence.py",
+      "src/waft/being.py",
+      "examples/test_typed_status_state.py",
+      "examples/generate_status_with_typed_state.py"
+    ],
+    "file_types": {
+      ".pdf": {
+        "created": 1,
+        "modified": 0,
+        "lines": 7665
+      },
+      ".py": {
+        "created": 4,
+        "modified": 6,
+        "lines": 1232
+      },
+      ".md": {
+        "created": 4,
+        "modified": 3,
+        "lines": 1356
+      },
+      ".json": {
+        "created": 1,
+        "modified": 2,
+        "lines": 81
+      },
+      ".lock": {
+        "created": 0,
+        "modified": 1,
+        "lines": 6
+      },
+      ".jsonl": {
+        "created": 1,
+        "modified": 1,
+        "lines": 2
+      },
+      ".db": {
+        "created": 0,
+        "modified": 1,
+        "lines": 0
+      }
+    }
+  }
+}

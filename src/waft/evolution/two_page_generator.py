@@ -1100,7 +1100,7 @@ class TwoPageGenerator:
         table tr:last-child td {
             border-bottom: none;
         }
-        .gamification-table, .health-table, .metrics-table {
+        .gamification-table, .health-table, .metrics-table, .grouped-metrics-table {
             font-size: {{ font.size_body - 1 }}pt;
         }
         .flight-events {
@@ -1183,6 +1183,62 @@ class TwoPageGenerator:
             background: {{ color.code_bg }};
             color: {{ color.text }};
             border-color: {{ color.accent }};
+        }
+        
+        /* Grouped Metrics (inspired by AI-DnD inventory display) */
+        .metrics-group {
+            margin: {{ margin.paragraph_spacing }}pt 0;
+        }
+        .group-description {
+            font-size: {{ font.size_body - 1 }}pt;
+            color: {{ color.text }}88;
+            margin-bottom: 6pt;
+            font-style: italic;
+        }
+        .grouped-metrics-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: {{ font.size_body - 1 }}pt;
+        }
+        .grouped-metrics-table td {
+            padding: 6pt 8pt;
+            border-bottom: 1pt solid {{ color.text }}20;
+        }
+        .grouped-metrics-table tr:last-child td {
+            border-bottom: none;
+        }
+        .grouped-metrics-table .metric-label {
+            font-weight: 500;
+            color: {{ color.text }};
+            width: 60%;
+        }
+        .grouped-metrics-table .metric-value {
+            text-align: right;
+            font-weight: 600;
+            color: {{ color.text }};
+        }
+        .grouped-metrics-table .metric-value.status-good {
+            color: #2e7d32;
+        }
+        .grouped-metrics-table .metric-value.status-warning {
+            color: #e65100;
+        }
+        .grouped-metrics-table .metric-value.status-error {
+            color: #c62828;
+        }
+        .grouped-metrics-table .metric-value.status-info {
+            color: {{ color.accent }};
+        }
+        .grouped-metrics-table .metric-unit {
+            font-size: {{ font.size_body - 2 }}pt;
+            color: {{ color.text }}88;
+            font-weight: normal;
+            margin-left: 2pt;
+        }
+        
+        /* Git Summary & Work Efforts Summary */
+        .git-summary, .work-efforts-summary {
+            margin: {{ margin.paragraph_spacing }}pt 0;
         }
     </style>
 </head>

@@ -36,11 +36,14 @@ class EpistemicState:
         """
         Total epistemic coverage (computed property).
         
-        Formula: knowledge + (100 - uncertainty) / 2
+        Formula: Average of knowledge and (100 - uncertainty)
+        This gives a balanced view of both what we know and what we're not uncertain about.
         """
         if not self.initialized:
             return 0.0
-        return self.knowledge_pct + (100 - self.uncertainty_pct) / 2
+        # Average of knowledge and certainty (100 - uncertainty)
+        certainty = 100.0 - self.uncertainty_pct
+        return (self.knowledge_pct + certainty) / 2.0
     
     @property
     def health_status(self) -> str:

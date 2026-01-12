@@ -28,6 +28,9 @@ class StatusComponentType:
     METRICS_TABLE = "metrics_table"
     PROGRESS_BAR = "progress_bar"
     STATUS_BADGES = "status_badges"
+    GROUPED_METRICS = "grouped_metrics"
+    GIT_SUMMARY = "git_summary"
+    WORK_EFFORTS_SUMMARY = "work_efforts_summary"
 
 
 class StatusComponentBuilder:
@@ -453,14 +456,214 @@ class StatusComponentBuilder:
             size_estimate=0.15,
             priority=0.7
         )
+    
+    @staticmethod
+    def build_grouped_metrics_component(
+        group_name: str,
+        metrics: List[Dict[str, Any]],
+        description: Optional[str] = None
+    ) -> DocumentComponent:
+        """
+        Build grouped metrics component (inspired by AI-DnD's inventory display).
+        
+        Organizes related metrics together in a compact, visually organized format.
+        
+        Args:
+            group_name: Group label (e.g., "Epistemic Metrics", "System Health")
+            metrics: List of metric dictionaries with keys:
+                - label: str (metric name)
+                - value: Any (metric value)
+                - unit: Optional[str] (unit like "%", "points", etc.)
+                - icon: Optional[str] (emoji or icon)
+                - status: Optional[str] ("good", "warning", "error", "info")
+            description: Optional description text
+        
+        Returns:
+            DocumentComponent for grouped metrics
+        """
+        if not metrics:
+            body = f"<p>No {group_name.lower()} available.</p>"
+        else:
+            rows = []
+            for metric in metrics:
+                label = html.escape(str(metric.get("label", "")))
+                value = html.escape(str(metric.get("value", "")))
+                unit = html.escape(str(metric.get("unit", "")))
+                icon = metric.get("icon", "")
+                status = metric.get("status", "")
+                
+                # Build value cell with optional status styling
+                value_cell = f'<td class="metric-value'
+                if status:
+                    value_cell += f' status-{status}'
+                value_cell += f'">{value}'
+                if unit:
+                    value_cell += f' <span class="metric-unit">{unit}</span>'
+                value_cell += '</td>'
+                
+                rows.append(f"""
+                <tr>
+                    <td class="metric-label">{icon} {label}</td>
+                    {value_cell}
+                </tr>
+                """)
+            
+            desc_html = f'<p class="group-description">{html.escape(description)}</p>' if description else ""
+            
+            body = f"""
+            <div class="metrics-group">
+                {desc_html}
+                <table class="grouped-metrics-table">
+                    {''.join(rows)}
+                </table>
+            </div>
+            """
+        
+        return DocumentComponent(
+            component_type=ComponentType.SECTION,
+            content={
+                "title": group_name,
+                "body": body
+            },
+            metadata={
+                "level": 2,
+                "component_subtype": StatusComponentType.GROUPED_METRICS
+            },
+            size_estimate=0.12,
+            priority=0.75
+        )
+    
+    @staticmethod
+    def build_git_summary_component(git_data: Dict[str, Any]) -> DocumentComponent:
+        """
+        Build Git status summary component.
+        
+        Args:
+            git_data: Dictionary with git status information
+        
+        Returns:
+            DocumentComponent for Git summary
+        """
+        if not git_data.get("initialized", False):
+            body = "<p>Git not initialized.</p>"
+        else:
+            branch = git_data.get("branch", "unknown")
+            uncommitted = len(git_data.get("uncommitted_files", []))
+            recent_commits = len(git_data.get("recent_commits", []))
+            
+            metrics = [
+                {"label": "Branch", "value": branch, "icon": "🌿"},
+                {"label": "Uncommitted Files", "value": uncommitted, "icon": "📝"},
+                {"label": "Recent Commits", "value": recent_commits, "icon": "💾"},
+            ]
+            
+            # Add status indicators
+            if uncommitted > 0:
+                metrics[1]["status"] = "warning"
+            if recent_commits > 0:
+                metrics[2]["status"] = "good"
+            
+            body = f"""
+            <div class="git-summary">
+                <table class="grouped-metrics-table">
+                    {''.join([
+                        f'<tr><td class="metric-label">{m["icon"]} {html.escape(m["label"])}</td>'
+                        f'<td class="metric-value status-{m.get("status", "")}">{m["value"]}</td></tr>'
+                        for m in metrics
+                    ])}
+                </table>
+            </div>
+            """
+        
+        return DocumentComponent(
+            component_type=ComponentType.SECTION,
+            content={
+                "title": "Git Status",
+                "body": body
+            },
+            metadata={
+                "level": 2,
+                "component_subtype": StatusComponentType.GIT_SUMMARY
+            },
+            size_estimate=0.1,
+            priority=0.7
+        )
+    
+    @staticmethod
+    def build_work_efforts_summary_component(work_efforts_data: Dict[str, Any]) -> DocumentComponent:
+        """
+        Build Work Efforts summary component with progress tracking.
+        
+        Args:
+            work_efforts_data: Dictionary with work efforts information
+        
+        Returns:
+            DocumentComponent for Work Efforts summary
+        """
+        total = work_efforts_data.get("count", 0)
+        active = len(work_efforts_data.get("active", []))
+        completed = len(work_efforts_data.get("completed", []))
+        recent = len(work_efforts_data.get("recent", []))
+        
+        # Calculate completion percentage
+        completion_pct = (completed / total * 100) if total > 0 else 0.0
+        
+        metrics = [
+            {"label": "Total", "value": total, "icon": "📋"},
+            {"label": "Active", "value": active, "icon": "🔄", "status": "info"},
+            {"label": "Completed", "value": completed, "icon": "✅", "status": "good"},
+            {"label": "Recent", "value": recent, "icon": "🆕", "status": "info"},
+        ]
+        
+        # Build progress bar
+        progress_html = f"""
+        <div class="progress-container">
+            <div class="progress-label">Completion Progress</div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: {completion_pct:.1f}%"></div>
+            </div>
+            <div class="progress-text">{completion_pct:.1f}% ({completed}/{total})</div>
+        </div>
+        """ if total > 0 else ""
+        
+        body = f"""
+        <div class="work-efforts-summary">
+            {progress_html}
+            <table class="grouped-metrics-table">
+                {''.join([
+                    f'<tr><td class="metric-label">{m["icon"]} {html.escape(m["label"])}</td>'
+                    f'<td class="metric-value status-{m.get("status", "")}">{m["value"]}</td></tr>'
+                    for m in metrics
+                ])}
+            </table>
+        </div>
+        """
+        
+        return DocumentComponent(
+            component_type=ComponentType.SECTION,
+            content={
+                "title": "Work Efforts",
+                "body": body
+            },
+            metadata={
+                "level": 2,
+                "component_subtype": StatusComponentType.WORK_EFFORTS_SUMMARY
+            },
+            size_estimate=0.15,
+            priority=0.8
+        )
 
 
-def create_status_components_from_status_dict(status: Dict[str, Any]) -> List[DocumentComponent]:
+def create_status_components_from_status_dict(
+    status: Dict[str, Any],
+    typed_state: Optional[Any] = None
+) -> List[DocumentComponent]:
     """
     Create all status components from a complete status dictionary.
     
     Args:
         status: Complete status dictionary from check_status()
+        typed_state: Optional StatusState object (if available, uses computed properties)
     
     Returns:
         List of DocumentComponent objects ready for PDF generation
@@ -468,8 +671,23 @@ def create_status_components_from_status_dict(status: Dict[str, Any]) -> List[Do
     builder = StatusComponentBuilder()
     components = []
     
+    # Use typed state if available (for computed properties)
+    if typed_state is not None:
+        # Use computed properties from typed state
+        epistemic_data = typed_state.epistemic.to_dict()
+        gamification_data = typed_state.gamification.to_dict()
+        health_data = typed_state.project_health.to_dict()
+        epistemic_phase = typed_state.epistemic_phase
+        flight_events = typed_state.flight_events
+    else:
+        # Fallback to dict (backward compatible)
+        epistemic_data = status.get("epistemic_state", {})
+        gamification_data = status.get("gamification_state", {})
+        health_data = status.get("project_health", {})
+        epistemic_phase = status.get("epistemic_phase", "Unknown")
+        flight_events = status.get("flight_recorder_events", [])
+    
     # 1. Epistemic Phase (high priority)
-    epistemic_phase = status.get("epistemic_phase")
     if not epistemic_phase or epistemic_phase == "Unknown":
         # Try to determine from status
         try:
@@ -477,41 +695,41 @@ def create_status_components_from_status_dict(status: Dict[str, Any]) -> List[Do
             from pathlib import Path
             sys.path.insert(0, str(Path(__file__).parent.parent.parent))
             from scripts.waft_status import declare_epistemic_phase
-            epistemic_phase = declare_epistemic_phase(status)
+            if typed_state is None:
+                epistemic_phase = declare_epistemic_phase(status)
+            else:
+                # Use typed state's epistemic phase
+                epistemic_phase = typed_state.epistemic_phase
         except Exception:
             epistemic_phase = "Unknown"
     components.append(builder.build_epistemic_phase_component(epistemic_phase))
     
     # 2. Epistemic State
-    epistemic_state = status.get("epistemic_state", {})
-    components.append(builder.build_epistemic_state_component(epistemic_state))
+    components.append(builder.build_epistemic_state_component(epistemic_data))
     
     # 3. Gamification
-    gamification_state = status.get("gamification_state", {})
-    components.append(builder.build_gamification_component(gamification_state))
+    components.append(builder.build_gamification_component(gamification_data))
     
     # 4. Flight Recorder Events
-    flight_events = status.get("flight_recorder_events", [])
     components.append(builder.build_flight_recorder_component(flight_events, limit=5))
     
     # 5. System Health
-    project_health = status.get("project_health", {})
-    components.append(builder.build_system_health_component(project_health))
+    components.append(builder.build_system_health_component(health_data))
     
     # 6. System Health Badges (enhanced display)
-    if project_health:
+    if health_data:
         health_badges = []
-        if project_health.get("pyrite_valid"):
+        if health_data.get("pyrite_valid"):
             health_badges.append({"label": "Pyrite Valid", "status": "good", "icon": "✅"})
         else:
             health_badges.append({"label": "Pyrite Invalid", "status": "error", "icon": "❌"})
         
-        if project_health.get("lock_exists"):
+        if health_data.get("lock_exists"):
             health_badges.append({"label": "Lock File", "status": "good", "icon": "🔒"})
         else:
             health_badges.append({"label": "No Lock File", "status": "warning", "icon": "⚠️"})
         
-        if project_health.get("structure_valid"):
+        if health_data.get("structure_valid"):
             health_badges.append({"label": "Structure Valid", "status": "good", "icon": "📁"})
         else:
             health_badges.append({"label": "Structure Invalid", "status": "error", "icon": "📁"})
@@ -520,9 +738,8 @@ def create_status_components_from_status_dict(status: Dict[str, Any]) -> List[Do
             components.append(builder.build_status_badges_component(health_badges, "System Health"))
     
     # 7. Epistemic Progress Bar (if initialized)
-    epistemic_state = status.get("epistemic_state", {})
-    if epistemic_state.get("initialized") and epistemic_state.get("knowledge_pct") is not None:
-        knowledge_pct = epistemic_state.get("knowledge_pct", 0.0)
+    if epistemic_data.get("initialized") and epistemic_data.get("knowledge_pct") is not None:
+        knowledge_pct = epistemic_data.get("knowledge_pct", 0.0)
         components.append(builder.build_progress_bar_component(
             "Epistemic Knowledge",
             int(knowledge_pct),
@@ -530,5 +747,83 @@ def create_status_components_from_status_dict(status: Dict[str, Any]) -> List[Do
             show_percentage=True,
             show_fraction=False
         ))
+    
+    # 8. Gamification Level Progress (if available and using typed state)
+    if typed_state is not None and typed_state.gamification.available:
+        level_progress = typed_state.gamification.level_progress_pct
+        components.append(builder.build_progress_bar_component(
+            "Level Progress",
+            int(level_progress),
+            100,
+            show_percentage=True,
+            show_fraction=False
+        ))
+    
+    # 9. Grouped Epistemic Metrics (if initialized)
+    if epistemic_data.get("initialized"):
+        epistemic_metrics = []
+        if epistemic_data.get("knowledge_pct") is not None:
+            epistemic_metrics.append({
+                "label": "Knowledge",
+                "value": f"{epistemic_data['knowledge_pct']:.1f}",
+                "unit": "%",
+                "icon": "📊"
+            })
+        if epistemic_data.get("uncertainty_pct") is not None:
+            uncertainty = epistemic_data["uncertainty_pct"]
+            epistemic_metrics.append({
+                "label": "Uncertainty",
+                "value": f"{uncertainty:.1f}",
+                "unit": "%",
+                "icon": "❓",
+                "status": "warning" if uncertainty > 50 else "info"
+            })
+        if typed_state is not None:
+            coverage = typed_state.epistemic.coverage_pct
+            epistemic_metrics.append({
+                "label": "Coverage",
+                "value": f"{coverage:.1f}",
+                "unit": "%",
+                "icon": "🎯",
+                "status": "good" if coverage >= 75 else "warning"
+            })
+        
+        if epistemic_metrics:
+            components.append(builder.build_grouped_metrics_component(
+                "Epistemic Metrics",
+                epistemic_metrics,
+                description="Knowledge measurement and coverage indicators"
+            ))
+    
+    # 10. Grouped Gamification Metrics (if available)
+    if gamification_data.get("available"):
+        gamification_metrics = [
+            {"label": "Level", "value": gamification_data.get("level", 1), "icon": "⭐"},
+            {"label": "Integrity", "value": f"{gamification_data.get('integrity', 100.0):.1f}", "unit": "%", "icon": "💎"},
+            {"label": "Insight", "value": f"{gamification_data.get('insight', 0.0):.0f}", "icon": "💡"},
+        ]
+        
+        # Add status indicators
+        integrity = gamification_data.get("integrity", 100.0)
+        if integrity >= 90:
+            gamification_metrics[1]["status"] = "good"
+        elif integrity < 50:
+            gamification_metrics[1]["status"] = "error"
+        
+        components.append(builder.build_grouped_metrics_component(
+            "Gamification Metrics",
+            gamification_metrics,
+            description="Character progression and system integrity"
+        ))
+    
+    # 11. Git Status Summary
+    git_data = status.get("git", {})
+    if git_data:
+        components.append(builder.build_git_summary_component(git_data))
+    
+    # 12. Work Efforts Summary
+    work_efforts_data = status.get("work_efforts", {})
+    if work_efforts_data:
+        components.append(builder.build_work_efforts_summary_component(work_efforts_data))
     
     return components

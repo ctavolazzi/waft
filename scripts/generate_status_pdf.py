@@ -44,9 +44,18 @@ def main():
     print("✓ Status check complete")
     print()
     
+    # Create typed state (optional, for computed properties)
+    try:
+        from src.waft.core.status_state import StatusState
+        typed_state = StatusState.from_dict(status)
+        print("✓ Typed state created (using computed properties)")
+    except ImportError:
+        typed_state = None
+        print("⚠️  Typed state not available (using dict fallback)")
+    
     # Create status components
     print("🧩 Building status components...")
-    status_components = create_status_components_from_status_dict(status)
+    status_components = create_status_components_from_status_dict(status, typed_state=typed_state)
     print(f"✓ Created {len(status_components)} status components")
     for comp in status_components:
         comp_subtype = comp.metadata.get('component_subtype', 'standard')

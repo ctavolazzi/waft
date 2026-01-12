@@ -547,7 +547,8 @@ def get_recent_activity(project_path: Optional[Path] = None) -> Dict[str, Any]:
 def check_status(
     project_path: Optional[Path] = None,
     log_event: bool = True,
-    return_typed: bool = False
+    return_typed: bool = False,
+    save_snapshot: bool = False
 ) -> Dict[str, Any]:
     """
     Perform comprehensive status check.
@@ -556,6 +557,7 @@ def check_status(
         project_path: Project root path (default: current directory)
         log_event: Whether to log STATUS_CHECK event to flight recorder
         return_typed: If True, returns StatusState object instead of dict
+        save_snapshot: If True, saves status snapshot with checksum
 
     Returns:
         Dictionary with complete status information, or StatusState if return_typed=True
@@ -578,6 +580,9 @@ def check_status(
         "flight_recorder_events": get_recent_flight_recorder_events(project_path, limit=10),
         "pyrite_integrity": check_pyrite_integrity(project_path),
     }
+    
+    # Determine epistemic phase
+    status["epistemic_phase"] = declare_epistemic_phase(status)
     
     # Log STATUS_CHECK event to flight recorder
     if log_event:
@@ -603,6 +608,24 @@ def check_status(
             # Don't fail status check if event logging fails
             print(f"Warning: Could not log status check event: {e}")
     
+    # Optionally save snapshot
+    if save_snapshot:
+        try:
+            from src.waft.core.status_persistence import save_status_snapshot
+            snapshot = save_status_snapshot(status, project_path=project_path)
+            print(f"✓ Status snapshot saved: {snapshot['snapshot_id']}")
+        except Exception as e:
+            print(f"Warning: Could not save status snapshot: {e}")
+    
+    # Optionally return typed state
+    if return_typed:
+        try:
+            from src.waft.core.status_state import StatusState
+            return StatusState.from_dict(status)
+        except ImportError:
+            # Fallback to dict if typed state not available
+            pass
+
     return status
 
 
@@ -1400,6 +1423,7 @@ def main():
     parser.add_argument('--level', choices=['layman', 'professional', 'scientist'], help='Documentation level (requires --docs)')
     parser.add_argument('--printer-friendly', action='store_true', help='Generate printer-friendly versions')
     parser.add_argument('--focus', help='Focus on specific area')
+    parser.add_argument('--save-snapshot', action='store_true', help='Save status snapshot with checksum')
     
     args = parser.parse_args()
     
@@ -1407,7 +1431,11 @@ def main():
     project_path = Path.cwd()
     
     # Check status
-    status = check_status(project_path=project_path, log_event=True)
+    status = check_status(
+        project_path=project_path,
+        log_event=True,
+        save_snapshot=args.save_snapshot
+    )
     
     # Display status
     display_status(status)

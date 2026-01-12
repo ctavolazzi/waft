@@ -27,6 +27,7 @@
 18. **`/help`** ✅ - Discover and understand commands
 19. **`/recap`** ✅ - Conversation recap and session summary
 20. **`/proceed`** ✅ - Verify context and assumptions before continuing
+21. **`/think`** ✅ - Initialize all thinking and cognitive enhancement tools
 
 ---
 

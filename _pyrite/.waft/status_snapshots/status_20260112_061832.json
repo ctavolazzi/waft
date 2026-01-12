@@ -1,0 +1,408 @@
+{
+  "version": "1.0",
+  "snapshot_id": "status_20260112_061832",
+  "timestamp": "2026-01-12T06:18:32.342651",
+  "status": {
+    "timestamp": "2026-01-11T22:18:29.911830",
+    "git": {
+      "initialized": true,
+      "branch": "2026-01-11-updates",
+      "uncommitted_files": [
+        "cursor/commands/COMMAND_RECOMMENDATIONS.md",
+        ".empirica/sessions/sessions.db",
+        ".obsidian/workspace.json",
+        "_genetics/status_pdfs/index.json",
+        "_pyrite/journal/ai-journal.md",
+        "_work_efforts/devlog.md",
+        "scripts/generate_status_pdf.py",
+        "scripts/waft_status.py",
+        "src/waft/core/reflect.py",
+        "src/waft/core/status_state.py",
+        "src/waft/evolution/status_components.py",
+        "uv.lock",
+        ".cursor/commands/think.md",
+        "_genetics/status_pdfs/fd13e4ecce71edb8.json",
+        "_genetics/status_pdfs/fd13e4ecce71edb8_events.jsonl",
+        "_pyrite/.waft/status_snapshots/",
+        "_pyrite/journal/ai-journal-restored.md",
+        "_work_efforts/showcase_documents/WAFT_Status_TypedState_20260111_220614.pdf",
+        "docs/STATUS_PERSISTENCE_GUIDE.md",
+        "docs/STATUS_STATE_TYPED_GUIDE.md",
+        "examples/generate_status_with_typed_state.py",
+        "examples/test_status_persistence.py",
+        "examples/test_typed_status_state.py",
+        "src/waft/core/status_persistence.py"
+      ],
+      "staged_files": [
+        "cursor/commands/COMMAND_RECOMMENDATIONS.md",
+        ".cursor/commands/think.md",
+        "_genetics/status_pdfs/fd13e4ecce71edb8.json",
+        "_genetics/status_pdfs/fd13e4ecce71edb8_events.jsonl",
+        "_pyrite/.waft/status_snapshots/",
+        "_pyrite/journal/ai-journal-restored.md",
+        "_work_efforts/showcase_documents/WAFT_Status_TypedState_20260111_220614.pdf",
+        "docs/STATUS_PERSISTENCE_GUIDE.md",
+        "docs/STATUS_STATE_TYPED_GUIDE.md",
+        "examples/generate_status_with_typed_state.py",
+        "examples/test_status_persistence.py",
+        "examples/test_typed_status_state.py",
+        "src/waft/core/status_persistence.py"
+      ],
+      "unstaged_files": [
+        ".empirica/sessions/sessions.db",
+        ".obsidian/workspace.json",
+        "_genetics/status_pdfs/index.json",
+        "_pyrite/journal/ai-journal.md",
+        "_work_efforts/devlog.md",
+        "scripts/generate_status_pdf.py",
+        "scripts/waft_status.py",
+        "src/waft/core/reflect.py",
+        "src/waft/core/status_state.py",
+        "src/waft/evolution/status_components.py",
+        "uv.lock",
+        ".cursor/commands/think.md",
+        "_genetics/status_pdfs/fd13e4ecce71edb8.json",
+        "_genetics/status_pdfs/fd13e4ecce71edb8_events.jsonl",
+        "_pyrite/.waft/status_snapshots/",
+        "_pyrite/journal/ai-journal-restored.md",
+        "_work_efforts/showcase_documents/WAFT_Status_TypedState_20260111_220614.pdf",
+        "docs/STATUS_PERSISTENCE_GUIDE.md",
+        "docs/STATUS_STATE_TYPED_GUIDE.md",
+        "examples/generate_status_with_typed_state.py",
+        "examples/test_status_persistence.py",
+        "examples/test_typed_status_state.py",
+        "src/waft/core/status_persistence.py"
+      ],
+      "commits_ahead": 0,
+      "commits_behind": 0,
+      "recent_commits": [
+        "ccc2df2 Complete reincarnation cycle with reincarnate_being() method",
+        "fcb6a5c Engineer lifetimes to increment only at birth",
+        "fd76c09 Rename cycles_alive to lifetimes (number of reincarnations)",
+        "02a413f Evolve tavern scenario with WAFT Being system",
+        "f7c31a9 Update: PDF generator work, DND exploration, status components, and documentation updates",
+        "2025be3 docs: Add release completion summary",
+        "52c09e4 Release v0.5.2: Evolutionary Iteration Process - PNG Integration",
+        "8371f59 docs: Add release completion and instructions",
+        "ddbd336 docs: Add release instructions",
+        "3be246b docs: Add release completion summary"
+      ]
+    },
+    "work_efforts": {
+      "active": [],
+      "recent": [
+        "WE-260111-6vzd_github_project_installation_exploration_template",
+        "WE-260106-ivnd_complete_tavern_keeper_system",
+        "WE-260109-sec1_critical_security_portability",
+        "WE-260110-order66_order_66_execution",
+        "WE-260111-6ca4_ai-dnd-user_installation_exploration",
+        "WE-260111-v3h7_evolvable_document_component_methods_expand_contract_system",
+        "WE-260111-qm3i_aidnd-tsinx_installation_exploration",
+        "WE-260109-arch_architecture_refactoring",
+        "WE-260111-roo0_being_lifecycle_attributes_and_now_cycle_event_loop_system",
+        "WE-260111-jpw1_dnd5e_ai_exploration_initiative",
+        "WE-260111-t322_using_waft_tools_to_develop_waft_features",
+        "WE-260111-o7f0_dnd-ai-chung_installation_exploration",
+        "WE-260107-j4my_branch_strategy_setup_migration_context",
+        "WE-260107-3x3c_debug_code_cleanup",
+        "WE-260104-bk5z_development_environment_setup",
+        "WE-260111-ys1t_hashtag-dnd_installation_exploration",
+        "WE-260105-9a6i_documentation_testing_and_quality_improvements",
+        "WE-260111-dr0f_evolutionary_iteration_process_pdf_png_screenshot_workflow",
+        "WE-260111-tqpk_blandness_cure_investigation_pdf_styling_enhancement",
+        "WE-260111-jr7r_component_evolution_system_genetic_ancestry_for_page_assembly",
+        "WE-260111-v90k_dungeon-master-ai_installation_exploration",
+        "WE-260111-jtkv_dnd-ai-quito_installation_exploration",
+        "WE-260111-l9sc_foundryvtt-dnd5e_installation_exploration",
+        "WE-260111-rogt_dnd-books-pdf_installation_exploration",
+        "WE-260109-ai-sdk_ai_sdk_architecture",
+        "WE-260111-jxot_gamemaster-ai_installation_exploration",
+        "WE-260110-lsyr_project_lightcone_binder_generation",
+        "WE-260111-2759_5e-database_installation_exploration",
+        "WE-260109-scope_scope_definition",
+        "WE-260111-2i9f_app_architecture_investigation_from_readme_entry_point",
+        "WE-260111-8o35_chatgpt-dm_installation_exploration"
+      ],
+      "completed": [],
+      "count": 31
+    },
+    "project_health": {
+      "pyrite_valid": true,
+      "lock_exists": true,
+      "structure_valid": true
+    },
+    "recent_activity": {
+      "devlog_entries": [],
+      "recent_files": []
+    },
+    "epistemic_state": {
+      "initialized": false,
+      "moon_phase": "\ud83c\udf11",
+      "moon_phase_desc": "Unknown (Empirica not initialized)",
+      "knowledge_pct": null,
+      "uncertainty_pct": null,
+      "vectors": {},
+      "message": "Empirica not initialized - epistemic state unavailable"
+    },
+    "gamification_state": {
+      "available": true,
+      "level": 1,
+      "integrity": 100.0,
+      "insight": 0.0,
+      "achievements": [],
+      "achievements_count": 0,
+      "message": null
+    },
+    "flight_recorder_events": [
+      {
+        "timestamp": "2026-01-09T09:55:41.888381",
+        "genome_id": "1411a4c2a275156ef9e8af645009316d32223a75561909ff3192ffbee9203eb6",
+        "parent_id": null,
+        "generation": 0,
+        "event_type": "spawn",
+        "payload": {
+          "event": "genesis",
+          "generation": 0,
+          "genome_id": "1411a4c2a275156ef9e8af645009316d32223a75561909ff3192ffbee9203eb6"
+        },
+        "fitness_metrics": null,
+        "agent_id": "agent_20260109_015541",
+        "lineage_path": [
+          "1411a4c2a275156ef9e8af645009316d32223a75561909ff3192ffbee9203eb6"
+        ]
+      },
+      {
+        "timestamp": "2026-01-09T09:55:41.890347",
+        "genome_id": "1411a4c2a275156ef9e8af645009316d32223a75561909ff3192ffbee9203eb6",
+        "parent_id": null,
+        "generation": 0,
+        "event_type": "spawn",
+        "payload": {
+          "mutation": {
+            "modification_type": "prompt",
+            "target": "backstory",
+            "change": {
+              "content": "An evolved test agent with improved backstory"
+            },
+            "safety_level": 2,
+            "validation_required": true
+          },
+          "parent_genome": "1411a4c2a275156ef9e8af645009316d32223a75561909ff3192ffbee9203eb6",
+          "action": "spawning_child"
+        },
+        "fitness_metrics": null,
+        "agent_id": "agent_20260109_015541",
+        "lineage_path": [
+          "1411a4c2a275156ef9e8af645009316d32223a75561909ff3192ffbee9203eb6"
+        ]
+      },
+      {
+        "timestamp": "2026-01-09T09:55:41.899806",
+        "genome_id": "1b21d95e3ce7b11e49f66ebdf2cb418da1f7c8d7d307b5ee7ff6568a236cb957",
+        "parent_id": null,
+        "generation": 0,
+        "event_type": "spawn",
+        "payload": {
+          "event": "genesis",
+          "generation": 0,
+          "genome_id": "1b21d95e3ce7b11e49f66ebdf2cb418da1f7c8d7d307b5ee7ff6568a236cb957"
+        },
+        "fitness_metrics": null,
+        "agent_id": "agent_20260109_015541",
+        "lineage_path": [
+          "1b21d95e3ce7b11e49f66ebdf2cb418da1f7c8d7d307b5ee7ff6568a236cb957"
+        ]
+      },
+      {
+        "timestamp": "2026-01-09T09:55:41.900315",
+        "genome_id": "1b21d95e3ce7b11e49f66ebdf2cb418da1f7c8d7d307b5ee7ff6568a236cb957",
+        "parent_id": "1411a4c2a275156ef9e8af645009316d32223a75561909ff3192ffbee9203eb6",
+        "generation": 1,
+        "event_type": "spawn",
+        "payload": {
+          "parent_genome": "1411a4c2a275156ef9e8af645009316d32223a75561909ff3192ffbee9203eb6",
+          "mutation": {
+            "modification_type": "prompt",
+            "target": "backstory",
+            "change": {
+              "content": "An evolved test agent with improved backstory"
+            },
+            "safety_level": 2,
+            "validation_required": true
+          },
+          "action": "born_from_parent"
+        },
+        "fitness_metrics": null,
+        "agent_id": "agent_20260109_015541",
+        "lineage_path": [
+          "1411a4c2a275156ef9e8af645009316d32223a75561909ff3192ffbee9203eb6",
+          "1b21d95e3ce7b11e49f66ebdf2cb418da1f7c8d7d307b5ee7ff6568a236cb957"
+        ]
+      },
+      {
+        "timestamp": "2026-01-09T10:08:31.847777",
+        "genome_id": "f31fa70f9c42a0dbf7d35bf87aafe760003481b9ea5405ee5ab35385097ae0e6",
+        "parent_id": null,
+        "generation": 0,
+        "event_type": "spawn",
+        "payload": {
+          "event": "genesis",
+          "generation": 0,
+          "genome_id": "f31fa70f9c42a0dbf7d35bf87aafe760003481b9ea5405ee5ab35385097ae0e6"
+        },
+        "fitness_metrics": null,
+        "agent_id": "agent_20260109_020831",
+        "lineage_path": [
+          "f31fa70f9c42a0dbf7d35bf87aafe760003481b9ea5405ee5ab35385097ae0e6"
+        ]
+      },
+      {
+        "timestamp": "2026-01-09T10:08:31.848830",
+        "genome_id": "f31fa70f9c42a0dbf7d35bf87aafe760003481b9ea5405ee5ab35385097ae0e6",
+        "parent_id": null,
+        "generation": 0,
+        "event_type": "mutate",
+        "payload": {
+          "metabolic_action": true,
+          "slice_number": 1,
+          "dish_id": "dish_001",
+          "biome_id": "biome_001",
+          "duration": 2.2e-05,
+          "actions": {
+            "observe": {
+              "status": "observed",
+              "environment": "biome"
+            },
+            "decide": {
+              "action": "none",
+              "stop": false
+            },
+            "act": {
+              "result": "success"
+            },
+            "reflect": {
+              "learned": true
+            }
+          },
+          "error": null
+        },
+        "fitness_metrics": null,
+        "agent_id": "agent_20260109_020831",
+        "lineage_path": [
+          "f31fa70f9c42a0dbf7d35bf87aafe760003481b9ea5405ee5ab35385097ae0e6"
+        ]
+      },
+      {
+        "timestamp": "2026-01-09T10:08:31.860142",
+        "genome_id": "f9e704af5d02bdba732ad1c72508443fed7ec2ae829f874a49ee1c4f35e95734",
+        "parent_id": null,
+        "generation": 0,
+        "event_type": "spawn",
+        "payload": {
+          "event": "genesis",
+          "generation": 0,
+          "genome_id": "f9e704af5d02bdba732ad1c72508443fed7ec2ae829f874a49ee1c4f35e95734"
+        },
+        "fitness_metrics": null,
+        "agent_id": "agent_20260109_020831",
+        "lineage_path": [
+          "f9e704af5d02bdba732ad1c72508443fed7ec2ae829f874a49ee1c4f35e95734"
+        ]
+      },
+      {
+        "timestamp": "2026-01-09T10:08:46.134189",
+        "genome_id": "1bd94c98b91d33f8be7fc1d0dd5343bb62035c8c65c1a8a088e7d9b7a6dec745",
+        "parent_id": null,
+        "generation": 0,
+        "event_type": "spawn",
+        "payload": {
+          "event": "genesis",
+          "generation": 0,
+          "genome_id": "1bd94c98b91d33f8be7fc1d0dd5343bb62035c8c65c1a8a088e7d9b7a6dec745"
+        },
+        "fitness_metrics": null,
+        "agent_id": "agent_20260109_020846",
+        "lineage_path": [
+          "1bd94c98b91d33f8be7fc1d0dd5343bb62035c8c65c1a8a088e7d9b7a6dec745"
+        ]
+      },
+      {
+        "timestamp": "2026-01-09T10:08:46.135526",
+        "genome_id": "1bd94c98b91d33f8be7fc1d0dd5343bb62035c8c65c1a8a088e7d9b7a6dec745",
+        "parent_id": null,
+        "generation": 0,
+        "event_type": "mutate",
+        "payload": {
+          "metabolic_action": true,
+          "slice_number": 1,
+          "dish_id": "dish_001",
+          "biome_id": "biome_001",
+          "duration": 1.2e-05,
+          "actions": {
+            "observe": {
+              "status": "observed",
+              "environment": "biome"
+            },
+            "decide": {
+              "action": "none",
+              "stop": false
+            },
+            "act": {
+              "result": "success"
+            },
+            "reflect": {
+              "learned": true
+            }
+          },
+          "error": null
+        },
+        "fitness_metrics": null,
+        "agent_id": "agent_20260109_020846",
+        "lineage_path": [
+          "1bd94c98b91d33f8be7fc1d0dd5343bb62035c8c65c1a8a088e7d9b7a6dec745"
+        ]
+      },
+      {
+        "timestamp": "2026-01-09T10:08:46.188091",
+        "genome_id": "488d154d15beaeacbb76ed128d7392651bbba6d7939f0e00fef4f9a0c1e45d26",
+        "parent_id": null,
+        "generation": 0,
+        "event_type": "spawn",
+        "payload": {
+          "event": "genesis",
+          "generation": 0,
+          "genome_id": "488d154d15beaeacbb76ed128d7392651bbba6d7939f0e00fef4f9a0c1e45d26"
+        },
+        "fitness_metrics": null,
+        "agent_id": "breach_agent_1767953326149",
+        "lineage_path": [
+          "488d154d15beaeacbb76ed128d7392651bbba6d7939f0e00fef4f9a0c1e45d26"
+        ]
+      }
+    ],
+    "pyrite_integrity": {
+      "exists": true,
+      "structure_valid": true,
+      "genesis_files": {
+        "state": {
+          "exists": false,
+          "path": null
+        },
+        "ledger": {
+          "exists": false,
+          "path": null
+        },
+        "kernel": {
+          "exists": false,
+          "path": null
+        }
+      }
+    },
+    "epistemic_phase": "Active Development"
+  },
+  "metadata": {
+    "source": "waft-status",
+    "project_path": "/Users/ctavolazzi/Code/active/waft"
+  },
+  "checksum": "4253a10c04cbc737b069883709dfaedc"
+}

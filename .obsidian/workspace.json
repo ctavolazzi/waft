@@ -34,9 +34,39 @@
               "icon": "lucide-file",
               "title": "WAFT-DND-GAME-DEVELOPMENT"
             }
+          },
+          {
+            "id": "2ca0f96b76c99db9",
+            "type": "leaf",
+            "pinned": true,
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "_pyrite/journal/ai-journal.md",
+                "mode": "source",
+                "source": false
+              },
+              "pinned": true,
+              "icon": "lucide-file",
+              "title": "ai-journal"
+            }
+          },
+          {
+            "id": "58c202cbffc08a10",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "_pyrite/journal/entries/2026-01-11-2219_ai-dnd-integration-reflection.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "2026-01-11-2219_ai-dnd-integration-reflection"
+            }
           }
         ],
-        "currentTab": 1
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -198,21 +228,32 @@
       "bases:Create new base": false
     }
   },
-  "active": "758ea289aca55ac3",
+  "active": "58c202cbffc08a10",
   "lastOpenFiles": [
-    "src/waft/core/status_state.py",
+    "examples/demo_simple.py",
+    "examples/demo_helper_beings.py",
+    "src/waft/core/__pycache__/personality_alignment.cpython-310.pyc",
+    "src/waft/__pycache__/source_consciousness.cpython-312.pyc",
+    "src/waft/core/__pycache__/being_decisions.cpython-312.pyc",
+    "src/waft/__pycache__/being.cpython-312.pyc",
+    "examples/run_helper_beings_autonomous.py",
+    "src/waft/core/__pycache__/being_decisions.cpython-310.pyc",
+    "examples/spawn_helper_beings.py",
+    "react-being-test/TESTING_GUIDE.md",
+    "examples/test_being_empirica.py",
+    "_work_efforts/showcase_documents/WAFT_Status_Phase4_20260111_222734.pdf",
+    "react-being-test/README.md",
+    "docs/AI_DND_INTEGRATION_COMPLETE.md",
+    "_pyrite/checkout/session-2026-01-11-222211.md",
+    "_pyrite/journal/ai-journal.md",
+    "_pyrite/journal/archive/ai-journal-2026-01-11.md",
+    "_pyrite/journal/entries/2026-01-11-2219_ai-dnd-integration-reflection.md",
+    "docs/STATUS_PERSISTENCE_GUIDE.md",
+    "_pyrite/journal/ai-journal-restored.md",
+    "_work_efforts/active/WAFT-DND-GAME-DEVELOPMENT.md",
+    "docs/STATUS_STATE_TYPED_GUIDE.md",
     "_work_efforts/PHASE_1_TESTING_COMPLETE.md",
-    "_work_efforts/showcase_documents/edge_case_test_scenario_05.pdf",
-    "_work_efforts/showcase_documents/edge_case_test_scenario_04.pdf",
-    "_work_efforts/showcase_documents/edge_case_test_scenario_03.pdf",
-    "_work_efforts/showcase_documents/edge_case_test_scenario_02.pdf",
-    "_work_efforts/showcase_documents/edge_case_test_scenario_01.pdf",
-    "examples/test_status_components_edge_cases.py",
-    "examples/tavern_scenario_evolved.py",
     "_work_efforts/AUDIT_2026-01-11_215040.md",
-    "src/waft/core/dnd5e/__pycache__/adapter.cpython-310.pyc",
-    "src/waft/core/dnd5e/__pycache__/combat.cpython-310.pyc",
-    "src/waft/core/dnd5e/__pycache__/character.cpython-310.pyc",
     "temp_pngs/page_002.png",
     "temp_pngs/page_001.png",
     "temp_pngs/page_003.png",
@@ -231,20 +272,9 @@
     "_work_efforts/STATUS_COMPONENTS_CREATED.md",
     "docs/STATUS_COMPONENTS_GUIDE.md",
     "examples/README_TAVERN_SCENARIO.md",
-    "_pyrite/journal/ai-journal.md",
-    "_work_efforts/active/WAFT-DND-GAME-DEVELOPMENT.md",
     "_work_efforts/IMPLEMENTATION_COMPLETE_2026-01-11_WAFT_KERNEL_BOOT.md",
     "_work_efforts/CRITIQUE_2026-01-11_212041_DND5E_IMPLEMENTATION.md",
     "WAFT-SYSTEM-KERNEL.md",
-    "_work_efforts/PLAN_REVISION_2026-01-11_210531_WAFT_KERNEL.md",
-    "_work_efforts/WE-260111-jpw1_dnd5e_ai_exploration_initiative/ANALYSIS_INDEX.md",
-    "_work_efforts/WE-260111-2759_5e-database_installation_exploration/DATA_STRUCTURE_ANALYSIS.md",
-    "_work_efforts/WE-260111-6ca4_ai-dnd-user_installation_exploration/CODE_ANALYSIS.md",
-    "_work_efforts/AUDIT_2026-01-11_WAFT_KERNEL_PLAN.md",
-    "_work_efforts/WE-260111-jpw1_dnd5e_ai_exploration_initiative/DEEP_CODE_ANALYSIS_2026-01-11_ALGORITHMS_AND_PATTERNS.md",
-    "_work_efforts/AUDIT_2026-01-11_210531_WAFT_KERNEL_CODEBASE.md",
-    "_work_efforts/CRITIQUE_2026-01-11_WAFT_KERNEL_PLAN.md",
-    "_work_efforts/CRITIQUE_2026-01-11_210531_WAFT_KERNEL_BOOT.md",
-    "_work_efforts/WE-260111-jpw1_dnd5e_ai_exploration_initiative/REPOSITORY_ANALYSIS_2026-01-11_INITIAL_WEB_EXPLORATION.md"
+    "_work_efforts/PLAN_REVISION_2026-01-11_210531_WAFT_KERNEL.md"
   ]
 }

@@ -188,6 +188,11 @@ class Being:
         
         # Experience tracking (for pleasure/pain calculation)
         self.recent_experiences: List[Dict[str, Any]] = recent_experiences if recent_experiences is not None else []
+        
+        # Empirica integration (for first Being only - when parent_being_id is None)
+        self.empirica_session_id: Optional[str] = None
+        self.empirica_manager: Optional[Any] = None
+        self._is_first_being = parent_being_id is None
     
     def _calculate_personality_modifier(self) -> float:
         """Calculate decision quota modifier based on personality type."""
@@ -600,11 +605,170 @@ class Being:
         # Update sleep_duration for next sleep
         self.sleep_duration = self.sleep_duration_base
     
+    def _think_with_empirica(self, decision_type: str) -> Optional[str]:
+        """
+        Use Empirica to think about the decision (only for first Being).
+        
+        Args:
+            decision_type: Type of decision being considered
+        
+        Returns:
+            Gate result (PROCEED/HALT/BRANCH/REVISE) or None if Empirica not available
+        """
+        if not self._is_first_being or not self.empirica_manager or not self.empirica_session_id:
+            return None
+        
+        try:
+            # Use Empirica check gate to assess decision
+            operation = {
+                "type": "decision",
+                "scope": "medium",
+                "decision_type": decision_type,
+                "being_state": {
+                    "stamina_ratio": self.get_stamina_ratio(),
+                    "will_to_live": self.will_to_live,
+                    "personality_type": self.personality_type,
+                    "decision_fatigue": self.decision_fatigue
+                }
+            }
+            
+            gate_result = self.empirica_manager.check_submit(operation)
+            return gate_result
+        except Exception:
+            # If Empirica hangs or fails, just proceed without gate
+            return None
+    
+    def _empirica_preflight(self, decision_type: str) -> bool:
+        """
+        Submit preflight assessment to Empirica before making decision.
+        
+        Args:
+            decision_type: Type of decision being considered
+        
+        Returns:
+            True if preflight submitted successfully, False otherwise
+        """
+        if not self._is_first_being or not self.empirica_manager or not self.empirica_session_id:
+            return False
+        
+        try:
+            # Calculate epistemic vectors based on being state
+            vectors = {
+                "engagement": min(1.0, self.will_to_live / 100.0),
+                "foundation": {
+                    "know": min(1.0, sum(self.skills.values()) / (len(self.skills) * 100.0) if self.skills else 0.0),
+                    "do": min(1.0, self.stamina / 100.0),
+                    "context": min(1.0, len(self.memories) / 10.0)  # Normalize to 0-1
+                },
+                "comprehension": {
+                    "clarity": min(1.0, self.get_stamina_ratio()),
+                    "coherence": min(1.0, (self.will_to_live + self.stamina) / 200.0),
+                    "signal": min(1.0, len(self.lessons_learned) / 5.0),
+                    "density": min(1.0, sum(self.skills.values()) / 500.0 if self.skills else 0.0)
+                },
+                "execution": {
+                    "state": min(1.0, self.stamina / 100.0),
+                    "change": 0.5,  # Default - will be updated postflight
+                    "completion": 0.0,  # Will be updated postflight
+                    "impact": 0.5  # Default - will be updated postflight
+                },
+                "uncertainty": max(0.0, 1.0 - (sum(self.skills.values()) / 500.0 if self.skills else 1.0))
+            }
+            
+            reasoning = f"Considering {decision_type} decision. Stamina: {self.stamina:.1f}/{self.stamina_max:.1f}, Will to live: {self.will_to_live:.1f}, Fatigue: {self.decision_fatigue}/{self.decision_quota_max}"
+            
+            return self.empirica_manager.submit_preflight(
+                self.empirica_session_id,
+                vectors,
+                reasoning
+            )
+        except Exception:
+            # If Empirica hangs or fails, just continue without preflight
+            return False
+    
+    def _empirica_postflight(self, decision_type: str, experience: Dict[str, Any]) -> bool:
+        """
+        Submit postflight assessment to Empirica after making decision.
+        
+        Args:
+            decision_type: Type of decision that was made
+            experience: Experience data from the decision
+        
+        Returns:
+            True if postflight submitted successfully, False otherwise
+        """
+        if not self._is_first_being or not self.empirica_manager or not self.empirica_session_id:
+            return False
+        
+        # Calculate epistemic vectors based on decision outcome
+        success = experience.get("quality") in ["excellent", "good"]
+        impact = experience.get("intensity", 0.5)
+        
+        vectors = {
+            "engagement": min(1.0, self.will_to_live / 100.0),
+            "foundation": {
+                "know": min(1.0, sum(self.skills.values()) / (len(self.skills) * 100.0) if self.skills else 0.0),
+                "do": min(1.0, self.stamina / 100.0),
+                "context": min(1.0, len(self.memories) / 10.0)
+            },
+            "comprehension": {
+                "clarity": min(1.0, self.get_stamina_ratio()),
+                "coherence": min(1.0, (self.will_to_live + self.stamina) / 200.0),
+                "signal": min(1.0, len(self.lessons_learned) / 5.0),
+                "density": min(1.0, sum(self.skills.values()) / 500.0 if self.skills else 0.0)
+            },
+            "execution": {
+                "state": min(1.0, self.stamina / 100.0),
+                "change": 0.3 if success else 0.1,  # Positive change if successful
+                "completion": 1.0 if success else 0.5,  # Completed if successful
+                "impact": impact
+            },
+            "uncertainty": max(0.0, 1.0 - (sum(self.skills.values()) / 500.0 if self.skills else 1.0))
+        }
+        
+        reasoning = f"Completed {decision_type} decision. Quality: {experience.get('quality', 'unknown')}, Stamina remaining: {self.stamina:.1f}, Mistakes: {len(experience.get('mistakes', []))}"
+        
+        return self.empirica_manager.submit_postflight(
+            self.empirica_session_id,
+            vectors,
+            reasoning
+        )
+    
+    def _empirica_log_finding(self, finding: str, impact: float = 0.5) -> bool:
+        """
+        Log a finding to Empirica.
+        
+        Args:
+            finding: Description of the finding
+            impact: Impact score (0.0-1.0)
+        
+        Returns:
+            True if logged successfully, False otherwise
+        """
+        if not self._is_first_being or not self.empirica_manager:
+            return False
+        return self.empirica_manager.log_finding(finding, impact)
+    
+    def _empirica_log_unknown(self, unknown: str) -> bool:
+        """
+        Log an unknown to Empirica.
+        
+        Args:
+            unknown: Description of what needs investigation
+        
+        Returns:
+            True if logged successfully, False otherwise
+        """
+        if not self._is_first_being or not self.empirica_manager:
+            return False
+        return self.empirica_manager.log_unknown(unknown)
+    
     def make_decision(self, decision_type: str, stamina_cost: float = 5.0) -> Dict[str, Any]:
         """
         Make a decision (decrements fatigue, consumes stamina, returns experience).
         
         When stamina is depleted, actions become sluggish, shitty, and make mistakes.
+        For the first Being, uses Empirica for epistemic thinking.
         
         Args:
             decision_type: Type of decision (learn_skill, record_memory, pursue_goal, rest, explore)
@@ -620,6 +784,28 @@ class Being:
             # Must sleep - enter sleep state
             self.enter_sleep()
             raise ValueError("Decision fatigue depleted - being must sleep")
+        
+        # Empirica preflight (for first Being) - non-blocking, continue if fails
+        try:
+            self._empirica_preflight(decision_type)
+        except Exception:
+            pass  # Continue even if preflight fails
+        
+        # Empirica check gate (for first Being) - non-blocking, continue if fails
+        try:
+            gate_result = self._think_with_empirica(decision_type)
+        except Exception:
+            gate_result = None  # Continue without gate if it fails
+        if gate_result == "HALT":
+            # Being decides to halt - log unknown and rest instead
+            self._empirica_log_unknown(f"Decision {decision_type} halted by Empirica gate")
+            decision_type = "rest"  # Fallback to rest
+        elif gate_result == "BRANCH":
+            # Being decides to branch - log finding
+            self._empirica_log_finding(f"Decision {decision_type} requires branching investigation", impact=0.6)
+        elif gate_result == "REVISE":
+            # Being decides to revise - log finding
+            self._empirica_log_finding(f"Decision {decision_type} needs revision", impact=0.4)
         
         # Decrement fatigue
         self.decision_fatigue -= 1
@@ -664,12 +850,28 @@ class Being:
         if len(self.recent_experiences) > 10:
             self.recent_experiences.pop(0)
         
+        # Empirica postflight (for first Being) - non-blocking
+        try:
+            self._empirica_postflight(decision_type, experience)
+        except Exception:
+            pass  # Continue even if postflight fails
+        
+        # Log findings/unknowns based on experience quality - non-blocking
+        try:
+            if experience.get("stamina_depleted"):
+                self._empirica_log_unknown(f"Stamina depleted during {decision_type} - performance degraded")
+            if experience.get("quality") == "excellent":
+                self._empirica_log_finding(f"Excellent execution of {decision_type}", impact=0.7)
+        except Exception:
+            pass  # Continue even if logging fails
+        
         return {
             "decision_type": decision_type,
             "experience": experience,
             "decision_fatigue_remaining": self.decision_fatigue,
             "stamina_remaining": self.stamina,
-            "stamina_depleted": stamina_depleted
+            "stamina_depleted": stamina_depleted,
+            "empirica_gate": gate_result if self._is_first_being else None
         }
     
     def _generate_stamina_mistakes(self) -> List[str]:
@@ -950,6 +1152,11 @@ class BeingSystem:
         else:
             # First birth: this is lifetime 1
             being.lifetimes = 1
+            
+            # Initialize Empirica for the first Being (optional - Being works without it)
+            # Skip Empirica initialization to avoid hanging - can be enabled later if needed
+            # Empirica integration is available but disabled by default to prevent blocking
+            pass
         
         # Build ancestral chain
         if parent_being_id:

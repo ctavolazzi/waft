@@ -42,6 +42,32 @@ badges_comp = builder.build_status_badges_component([
     {"label": "Warning", "status": "warning", "icon": "⚠️"},
 ], "System Status")
 
+# Grouped Metrics (NEW - Phase 4)
+grouped_comp = builder.build_grouped_metrics_component(
+    "Epistemic Metrics",
+    [
+        {"label": "Knowledge", "value": "75.0", "unit": "%", "icon": "📊"},
+        {"label": "Uncertainty", "value": "25.0", "unit": "%", "icon": "❓", "status": "warning"},
+    ],
+    description="Knowledge measurement indicators"
+)
+
+# Git Summary (NEW - Phase 4)
+git_comp = builder.build_git_summary_component({
+    "initialized": True,
+    "branch": "main",
+    "uncommitted_files": ["file1.py"],
+    "recent_commits": ["abc123"]
+})
+
+# Work Efforts Summary (NEW - Phase 4)
+we_comp = builder.build_work_efforts_summary_component({
+    "count": 10,
+    "active": ["WE-001", "WE-002"],
+    "completed": ["WE-003", "WE-004"],
+    "recent": ["WE-001"]
+})
+
 # Epistemic State
 epistemic_comp = builder.build_epistemic_state_component({
     "initialized": True,
@@ -87,8 +113,12 @@ health_comp = builder.build_system_health_component({
 - `.epistemic-state` - Epistemic display box
 - `.moon-phase` - Moon phase indicator
 - `.phase-badge` - Phase badge
-- `.gamification-table`, `.health-table`, `.metrics-table` - Tables
+- `.gamification-table`, `.health-table`, `.metrics-table`, `.grouped-metrics-table` - Tables
 - `.flight-events` - Event list
+- `.progress-container`, `.progress-bar`, `.progress-fill` - Progress bars
+- `.status-badges`, `.status-badge` - Status badges
+- `.metrics-group` - Grouped metrics container
+- `.git-summary`, `.work-efforts-summary` - Summary sections
 
 ## Integration
 

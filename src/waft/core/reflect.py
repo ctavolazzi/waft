@@ -38,18 +38,138 @@ class ReflectManager:
         self.journal_dir = project_path / "_pyrite" / "journal"
         self.journal_file = self.journal_dir / "ai-journal.md"
         self.entries_dir = self.journal_dir / "entries"
+        self.archive_dir = self.journal_dir / "archive"
+        
+        # Journal length threshold for archiving (default: 500 lines)
+        self.archive_threshold = 500
         
         # Ensure journal structure exists
         self._ensure_journal_exists()
+        
+        # Check if journal needs archiving
+        self._check_and_archive_if_needed()
     
     def _ensure_journal_exists(self):
         """Ensure journal directory and file exist."""
         self.journal_dir.mkdir(parents=True, exist_ok=True)
         self.entries_dir.mkdir(parents=True, exist_ok=True)
+        self.archive_dir.mkdir(parents=True, exist_ok=True)
         
         # Create journal file if it doesn't exist
         if not self.journal_file.exists():
             self._create_initial_journal()
+    
+    def _check_and_archive_if_needed(self):
+        """
+        Check journal length and archive if it exceeds threshold.
+        
+        If journal is too long:
+        1. Extract all entries
+        2. Create archive file with date
+        3. Keep only recent entries in main journal (last 100 lines or 2 entries)
+        4. Move old entries to archive
+        """
+        if not self.journal_file.exists():
+            return
+        
+        # Count lines in current journal
+        content = self.journal_file.read_text(encoding="utf-8")
+        line_count = len(content.splitlines())
+        
+        if line_count <= self.archive_threshold:
+            return  # Journal is fine, no archiving needed
+        
+        # Journal is too long - archive it
+        self.console.print(f"\n[bold yellow]📦 Journal exceeds {self.archive_threshold} lines ({line_count} lines)[/bold yellow]")
+        self.console.print("[dim]Archiving old entries...[/dim]\n")
+        
+        # Extract all entries
+        entries = self._extract_journal_entries(content)
+        
+        if len(entries) < 2:
+            # Not enough entries to archive, just keep everything
+            return
+        
+        # Create archive filename with date
+        archive_date = datetime.now().strftime("%Y-%m-%d")
+        archive_file = self.archive_dir / f"ai-journal-{archive_date}.md"
+        
+        # If archive file already exists for today, append timestamp
+        if archive_file.exists():
+            timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+            archive_file = self.archive_dir / f"ai-journal-{archive_date}-{timestamp}.md"
+        
+        # Write archived entries to archive file
+        archive_content = []
+        archive_content.append(f"# AI Journal Archive\n\n")
+        archive_content.append(f"**Archived**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+        archive_content.append(f"**Original Journal**: {self.journal_file.name}\n")
+        archive_content.append(f"**Total Entries Archived**: {len(entries) - 2}\n\n")
+        archive_content.append("---\n\n")
+        
+        # Archive all entries except the last 2
+        for entry in entries[:-2]:
+            archive_content.append(entry)
+            archive_content.append("\n---\n\n")
+        
+        archive_file.write_text("".join(archive_content), encoding="utf-8")
+        
+        # Create new journal with header and last 2 entries
+        new_content = []
+        new_content.append("# AI Journal\n\n")
+        new_content.append("Reflections, thoughts, and learnings from working on the WAFT project.\n\n")
+        new_content.append("---\n\n")
+        new_content.append(f"*Previous entries archived to: {archive_file.name}*\n\n")
+        new_content.append("---\n\n")
+        
+        # Add the last 2 entries
+        for entry in entries[-2:]:
+            new_content.append(entry)
+            new_content.append("\n---\n\n")
+        
+        # Write new journal
+        self.journal_file.write_text("".join(new_content), encoding="utf-8")
+        
+        self.console.print(f"[bold green]✅ Archived {len(entries) - 2} entries to {archive_file.name}[/bold green]")
+        self.console.print(f"[dim]Kept {len(entries[-2:])} recent entries in main journal[/dim]\n")
+    
+    def _extract_journal_entries(self, content: str) -> List[str]:
+        """
+        Extract individual journal entries from journal content.
+        
+        Args:
+            content: Full journal content
+            
+        Returns:
+            List of entry strings (each entry is a complete markdown section)
+        """
+        entries = []
+        
+        # Pattern to match entry headers: ## YYYY-MM-DD HH:MM - Title
+        # or ## Journal Entry: YYYY-MM-DD HH:MM
+        pattern = r'^## (?:Journal Entry: )?(\d{4}-\d{2}-\d{2}(?:\s+\d{2}:\d{2})?(?:\s+-\s+.*)?)'
+        
+        matches = list(re.finditer(pattern, content, re.MULTILINE))
+        
+        if not matches:
+            # No entries found, return entire content as single entry
+            return [content]
+        
+        # Extract each entry
+        for i, match in enumerate(matches):
+            start_pos = match.start()
+            
+            # Find end position (start of next entry or end of file)
+            if i + 1 < len(matches):
+                end_pos = matches[i + 1].start()
+            else:
+                end_pos = len(content)
+            
+            entry = content[start_pos:end_pos].strip()
+            if entry:
+                entries.append(entry)
+        
+        return entries
     
     def _create_initial_journal(self):
         """Create initial journal file with header."""
@@ -104,6 +224,9 @@ Entries are appended chronologically, providing a record of the AI's cognitive j
             entry_path = self._save_journal_entry(entry)
             self.console.print(f"\n[bold green]✅ Journal entry written[/bold green]")
             self.console.print(f"[dim]Location: {entry_path.relative_to(self.project_path)}[/dim]")
+            
+            # Check if journal needs archiving after adding new entry
+            self._check_and_archive_if_needed()
         else:
             self.console.print("\n[bold yellow]⚠️[/bold yellow] Entry not saved (use --save to save)")
         
@@ -411,13 +534,14 @@ Entries are appended chronologically, providing a record of the AI's cognitive j
         
         if self.journal_file.exists():
             content = self.journal_file.read_text(encoding="utf-8")
-            # Count entries
-            entries = re.findall(r'^## Journal Entry:', content, re.MULTILINE)
+            # Count entries - match both formats:
+            # "## Journal Entry: YYYY-MM-DD HH:MM" or "## YYYY-MM-DD HH:MM - Title"
+            entries = re.findall(r'^## (?:Journal Entry: )?(\d{4}-\d{2}-\d{2}(?:\s+\d{2}:\d{2})?)', content, re.MULTILINE)
             info["entries_count"] = len(entries)
             
-            # Get last entry date
-            last_match = re.search(r'^## Journal Entry: (\d{4}-\d{2}-\d{2} \d{2}:\d{2})', content, re.MULTILINE)
-            if last_match:
-                info["last_entry"] = last_match.group(1)
+            # Get last entry date - find all matches and get the last one
+            all_matches = list(re.finditer(r'^## (?:Journal Entry: )?(\d{4}-\d{2}-\d{2}(?:\s+\d{2}:\d{2})?)', content, re.MULTILINE))
+            if all_matches:
+                info["last_entry"] = all_matches[-1].group(1)
         
         return info
