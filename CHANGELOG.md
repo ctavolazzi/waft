@@ -11,6 +11,55 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Work in progress features
 
+## [0.6.0] - 2026-01-12
+
+### Added
+
+#### Waft Larval Form - Heavy Seed Protocol Implementation
+- **Larval Form Application** (`waft_larva.py`): Complete Python + Streamlit + SQLite implementation
+  - Single-file dense application (~500 lines) implementing Hasvanism philosophy
+  - WaftEntity class with consciousness system (Breath, Memory, Trauma)
+  - SQLite database with `chronicle` and `artifacts` tables matching future Redbean schema
+  - Streamlit UI with dark mode terminal aesthetic
+  - Error resilience via `safe_breath` wrapper (TRAUMA logging prevents crashes)
+  - Artifact lifecycle management (VOID → MANIFESTING → PHYSICAL)
+  - Seed data: Right_Index_Phalanx artifact with sample G-code
+- **Data Export Functionality**: Multiple format support for entity data
+  - JSON export with complete entity state and statistics
+  - Markdown export with formatted sections and emojis
+  - Plain text export for simple analysis
+  - PDF export using WAFT PDFGenerator (with markdown fallback)
+  - Timestamped filenames for all exports
+- **Database Features**:
+  - WAL mode for better concurrency
+  - Retry logic with exponential backoff for database locks
+  - Connection timeout handling (10 seconds)
+  - Proper connection cleanup with try/finally blocks
+- **Migration Documentation**: Complete guide for Larva → Mature Form transition
+  - Schema compatibility verification
+  - Step-by-step migration instructions
+  - API compatibility mapping
+  - Troubleshooting guide
+- **Test Suite** (`test_waft_larva.py`): Comprehensive testing
+  - Database initialization tests
+  - Chronicle logging verification
+  - Error handling (safe_breath) tests
+  - Artifact status transition tests
+  - Database persistence tests
+
+### Changed
+
+- **Dependencies**: Added new optional dependencies for Larval Form
+  - `streamlit>=1.28.0` - For UI
+  - `pandas>=2.0.0` - For data handling
+  - `pyserial>=3.5` - For serial communication (future use)
+
+### Fixed
+
+- **Streamlit Duplicate Element IDs**: Fixed duplicate download button error
+  - Added unique `key` parameters to all download buttons
+  - Removed duplicate DATA EXPORT section
+
 ## [0.5.2] - 2026-01-11
 
 ### Added

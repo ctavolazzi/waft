@@ -4,6 +4,17 @@
 
 ---
 
+## AI Execution Principle
+
+**When executing this command as AI:**
+- The script requires interactive input
+- If direct execution fails with EOFError, **immediately try piped input**
+- Do not give up or explain why it "can't work" - it works with piped input
+- Format: `echo -e "Name\n1\ny\n1" | python3 examples/tavern_scenario.py`
+- Always try multiple approaches before assuming something is impossible
+
+---
+
 ## Purpose
 
 This command runs the Town Tavern scenario - an interactive D&D 5e adventure where you wake up in a tavern with no memory of how you got there. You'll create a character, make skill checks, and navigate through an engaging narrative using the D&D 5e physics engine we built.
@@ -28,10 +39,26 @@ This command runs the Town Tavern scenario - an interactive D&D 5e adventure whe
 5. Demonstrates the physics engine in action
 
 **Execution Steps:**
-1. Run `python3 examples/tavern_scenario.py`
+
+**For Human Users:**
+1. Run `python3 examples/tavern_scenario.py` in your terminal
 2. Follow the interactive prompts
 3. Make choices that affect the story
 4. Experience D&D 5e mechanics in action
+
+**For AI Execution:**
+When executed by AI (non-interactive environment), pipe input to make it work:
+```bash
+echo -e "CharacterName\n1\ny\n1" | python3 examples/tavern_scenario.py
+```
+
+**Input Format:**
+- Line 1: Character name
+- Line 2: First choice (1-4)
+- Line 3: Read note? (y/n)
+- Line 4: Final choice (1-3)
+
+**Important:** The script requires input. If running non-interactively, always use piped input. Do not give up if the first attempt fails - try piping input instead.
 
 ---
 
@@ -135,6 +162,10 @@ You wake up with a pounding headache...
 
 **Script not found**
 - Solution: Ensure you're in the project root directory
+
+**Error: EOFError when reading a line (non-interactive execution)**
+- Solution: Use piped input: `echo -e "Name\n1\ny\n1" | python3 examples/tavern_scenario.py`
+- **For AI:** Always try piped input if direct execution fails. Do not give up - the script works with piped input.
 
 ---
 

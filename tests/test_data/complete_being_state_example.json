@@ -1,0 +1,198 @@
+{
+  "being_id": "being_complete_example_001",
+  "reality_id": "reality_test_001",
+  "parent_being_id": null,
+  "source_id": "source_consciousness",
+  "state": "learning",
+  "created_at": "2026-01-12T10:00:00Z",
+  "fitness": 0.0,
+  "skills": {
+    "mathematics": 45.0,
+    "physics": 38.0,
+    "communication": 52.0
+  },
+  "memories": [],
+  "lessons_learned": [],
+  "ancestral_chain": ["source_consciousness"],
+  "lifecycle_attributes": {
+    "will_to_live": 85.0,
+    "luck": 65.0,
+    "decision_fatigue": 8,
+    "decision_quota_max": 12,
+    "pleasure": 0.65,
+    "pain": 0.25
+  },
+  "personality": {
+    "type": "analytical",
+    "traits": {
+      "curiosity": 0.8,
+      "patience": 0.7,
+      "precision": 0.9
+    },
+    "alignment_seeking": 0.6,
+    "misalignment_avoidance": 0.5
+  },
+  "goals": [
+    {
+      "description": "Master quantum mechanics",
+      "type": "learning",
+      "priority": 0.9,
+      "progress": 0.4
+    },
+    {
+      "description": "Publish research paper",
+      "type": "achievement",
+      "priority": 0.8,
+      "progress": 0.2
+    }
+  ],
+  "personality_type": "analytical",
+  "soul_id": "soul_complete_example_001",
+  "karma_balance": 750.0,
+  "sleep_state": {
+    "is_sleeping": false,
+    "sleep_duration": 0,
+    "sleep_duration_base": 5,
+    "cycles_slept": 0
+  },
+  "cycle_tracking": {
+    "last_cycle_number": 42,
+    "lifetimes": 1
+  },
+  "stamina_system": {
+    "willpower": 72.5,
+    "stamina": 65.0,
+    "stamina_max": 80.0,
+    "stamina_regeneration_rate": 5.0,
+    "stamina_ratio": 0.8125,
+    "is_depleted": false
+  },
+  "energy_system": {
+    "energy": 425.0,
+    "energy_capacity": 475.0,
+    "energy_well": 475.0,
+    "energy_regeneration_rate": 2.0,
+    "energy_ratio": 0.895,
+    "is_depleted": false,
+    "note": "Energy capacity calculated from karma: 100.0 + (750.0 / 100.0) * 50.0 = 475.0"
+  },
+  "alignment_system": {
+    "current_alignment_score": 0.75,
+    "alignment_history": [
+      {
+        "cycle": 40,
+        "alignment_score": 0.7,
+        "will_to_live": 84.0,
+        "energy": 420.0,
+        "stamina": 63.0,
+        "pleasure": 0.6,
+        "pain": 0.3
+      },
+      {
+        "cycle": 41,
+        "alignment_score": 0.72,
+        "will_to_live": 84.5,
+        "energy": 422.5,
+        "stamina": 64.0,
+        "pleasure": 0.62,
+        "pain": 0.28
+      },
+      {
+        "cycle": 42,
+        "alignment_score": 0.75,
+        "will_to_live": 85.0,
+        "energy": 425.0,
+        "stamina": 65.0,
+        "pleasure": 0.65,
+        "pain": 0.25
+      }
+    ],
+    "avg_alignment_last_10_cycles": 0.73,
+    "trend": "increasing"
+  },
+  "harm_help_tracking": {
+    "recent_harm_events": [
+      {
+        "harm_id": "harm_recent_001",
+        "severity": 0.4,
+        "intentional": false,
+        "source_being_id": "being_other_001",
+        "target_being_id": "being_complete_example_001",
+        "arrow_of_intent": {
+          "x": 0.7,
+          "y": 0.71,
+          "z": 0.0
+        },
+        "harm_type": "informational",
+        "resolved": false,
+        "created_at": "2026-01-12T11:55:00Z"
+      }
+    ],
+    "recent_help_events": [
+      {
+        "help_id": "help_recent_001",
+        "benefit": 0.8,
+        "intentional": true,
+        "source_being_id": "being_mentor_001",
+        "target_being_id": "being_complete_example_001",
+        "arrow_of_intent": {
+          "x": 0.87,
+          "y": 0.5,
+          "z": 0.0
+        },
+        "help_type": "informational",
+        "acknowledged": false,
+        "created_at": "2026-01-12T12:00:00Z"
+      }
+    ]
+  },
+  "recent_experiences": [
+    {
+      "type": "positive",
+      "intensity": 0.7,
+      "description": "Learned quantum mechanics principle",
+      "action_intensity": 0.594,
+      "energy_consumed": 5.0,
+      "stamina_consumed": 8.0,
+      "stamina_depleted": false
+    }
+  ],
+  "calculated_values": {
+    "effective_pleasure": 0.528,
+    "effective_pain": 0.203,
+    "action_intensity_modifier": 0.594,
+    "stamina_feeling_capacity": 0.906,
+    "note": "Stamina modulates feeling: pleasure 0.65 * 0.906 = 0.589, pain 0.25 * 0.906 = 0.227"
+  },
+  "decision_state": {
+    "available_options": [
+      "learn_skill",
+      "pursue_goal",
+      "explore",
+      "record_memory",
+      "rest"
+    ],
+    "calculated_weights": {
+      "learn_skill": 1.56,
+      "pursue_goal": 1.755,
+      "explore": 1.04,
+      "record_memory": 0.8,
+      "rest": 0.3
+    },
+    "note": "Weights favor goal pursuit and learning due to: high alignment (1.3x), high pleasure (1.5x), high energy (1.2x), analytical personality (2.0x)"
+  },
+  "next_cycle_projections": {
+    "if_alignment_maintains_0.75": {
+      "energy": 427.75,
+      "stamina": 65.375,
+      "will_to_live": 85.0,
+      "note": "Alignment bonus: +2.75 energy, +0.375 stamina"
+    },
+    "if_alignment_drops_to_0.3": {
+      "energy": 424.65,
+      "stamina": 64.79,
+      "will_to_live": 84.93,
+      "note": "Misalignment friction: -0.35 energy, -0.21 stamina, -0.07 will_to_live"
+    }
+  }
+}

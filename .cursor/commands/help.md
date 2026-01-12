@@ -31,13 +31,17 @@ Essential commands for daily development workflow.
 
 6. **`/proceed`** - Verify context and assumptions before continuing. Use when need to check understanding before acting.
 
+7. **`/check-assumptions`** - Identify all assumptions in conversation and validate them with evidence. Use when need to prove/disprove assumptions before proceeding.
+
 7. **`/reflect`** - Prompt AI to write reflective journal entries. Use when want AI to document thoughts, learnings, experiences.
 
-8. **`/checkpoint`** - Document current state, progress, todos. Use when need snapshot of current situation.
+8. **`/journal`** - Comprehensive AI journal system hub - view, search, reflect, and analyze journal. Use when want to interact with journal system, view entries, search history, check statistics.
 
-9. **`/verify`** - Verify project state with traceable evidence. Use when need to verify project is in good state.
+9. **`/checkpoint`** - Document current state, progress, todos. Use when need snapshot of current situation.
 
-10. **`/checkout`** - Run cleanup, documentation, summary tasks. Use when ending session, want comprehensive wrap-up.
+10. **`/verify`** - Verify project state with traceable evidence. Use when need to verify project is in good state.
+
+11. **`/checkout`** - Run cleanup, documentation, summary tasks. Use when ending session, want comprehensive wrap-up.
 
 ---
 

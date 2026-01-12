@@ -2,6 +2,8 @@
 TavernKeeper - Core class for RPG gamification system.
 
 Manages character stats, dice rolling, narrative generation, and game state.
+
+Integrates with Empirica for epistemic tracking of character development and learning.
 """
 
 import json
@@ -41,25 +43,35 @@ class TavernKeeper:
     - Adventure journal
     """
 
-    def __init__(self, project_path: Path):
+    def __init__(self, project_path: Path, empirica_manager=None):
         """
         Initialize the TavernKeeper.
-
+        
         Args:
             project_path: Path to project root
+            empirica_manager: Optional EmpiricaManager for epistemic tracking
         """
         self.project_path = project_path
         self.data_dir = project_path / "_pyrite" / ".waft"
         self.data_dir.mkdir(parents=True, exist_ok=True)
         self.chronicles_path = self.data_dir / "chronicles.json"
 
-        # Initialize database
+        # Initialize database first (needed for _data)
         if TINYDB_AVAILABLE:
             self.db = TinyDB(str(self.chronicles_path))
+            # Initialize _data for fallback compatibility
+            self._data = {}
         else:
             self.db = None
             # Fallback to JSON file
             self._data = self._load_json_data()
+
+        # Initialize Empirica (for epistemic tracking)
+        if empirica_manager is None:
+            from ..empirica import EmpiricaManager
+            self.empirica = EmpiricaManager(self.project_path)
+        else:
+            self.empirica = empirica_manager
 
         # Initialize character if needed
         if not self._character_exists():
@@ -67,6 +79,16 @@ class TavernKeeper:
 
         # Migrate from gamification.json if it exists
         self._migrate_from_gamification()
+        
+        # Log character initialization to Empirica if available
+        if self.empirica.is_initialized():
+            self._log_character_init_to_empirica()
+    
+    def _log_character_init_to_empirica(self) -> None:
+        """Log character initialization to Empirica."""
+        character = self.get_character()
+        finding = f"TavernKeeper character initialized: {character.get('name')} (Level {character.get('level', 1)})"
+        self.empirica.log_finding(finding, impact=0.3)
 
     def _load_json_data(self) -> Dict[str, Any]:
         """Load data from JSON file (fallback if TinyDB not available)."""
@@ -578,6 +600,10 @@ class TavernKeeper:
         else:
             self._data["character"] = character
             self._save_json_data()
+        
+        # Log to Empirica if available
+        if self.empirica.is_initialized():
+            self._log_rewards_to_empirica(rewards, level_up, old_level, new_level, old_insight, new_insight)
 
         return {
             "level_up": level_up,
@@ -588,6 +614,43 @@ class TavernKeeper:
             "new_credits": new_credits,
             "new_integrity": new_integrity,
         }
+    
+    def _log_rewards_to_empirica(
+        self, 
+        rewards: Dict[str, Any], 
+        level_up: bool, 
+        old_level: int, 
+        new_level: int,
+        old_insight: float,
+        new_insight: float
+    ) -> None:
+        """Log character progression to Empirica."""
+        character = self.get_character()
+        char_name = character.get("name", "Character")
+        
+        # Log level up as finding
+        if level_up:
+            finding = f"TavernKeeper level up: {char_name} reached level {new_level} (from {old_level})"
+            impact = min(0.9, 0.5 + (new_level * 0.05))  # Higher level = higher impact
+            self.empirica.log_finding(finding, impact=impact)
+        
+        # Log insight gain
+        insight_gain = new_insight - old_insight
+        if insight_gain > 0:
+            finding = f"TavernKeeper insight gained: {char_name} +{insight_gain:.1f} insight (total: {new_insight:.1f})"
+            impact = min(0.7, 0.3 + (insight_gain / 100.0))  # Impact based on insight gain
+            self.empirica.log_finding(finding, impact=impact)
+        
+        # Log integrity changes
+        integrity_delta = rewards.get("integrity", 0.0)
+        if integrity_delta != 0:
+            current_integrity = character.get("integrity", 100.0)
+            if integrity_delta < 0:
+                finding = f"TavernKeeper integrity loss: {char_name} {integrity_delta:.1f} integrity (current: {current_integrity:.1f}%)"
+                self.empirica.log_finding(finding, impact=0.4)
+            else:
+                finding = f"TavernKeeper integrity gain: {char_name} +{integrity_delta:.1f} integrity (current: {current_integrity:.1f}%)"
+                self.empirica.log_finding(finding, impact=0.3)
 
     def log_adventure(self, event: Dict[str, Any]) -> None:
         """

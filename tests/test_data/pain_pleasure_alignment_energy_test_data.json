@@ -1,0 +1,523 @@
+{
+  "test_scenarios": {
+    "scenario_1_aligned_beings": {
+      "description": "Two beings with aligned Arrows of Intent - should generate pleasure",
+      "being_1": {
+        "being_id": "being_alice_001",
+        "reality_id": "reality_test_001",
+        "arrow_of_intent": {
+          "x": 1.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "personality": {
+          "type": "analytical",
+          "traits": {
+            "curiosity": 0.8,
+            "patience": 0.7
+          }
+        },
+        "goals": [
+          {
+            "description": "Learn advanced mathematics",
+            "type": "learning",
+            "priority": 0.9
+          }
+        ],
+        "energy": 85.0,
+        "energy_capacity": 150.0,
+        "stamina": 75.0,
+        "stamina_max": 80.0,
+        "will_to_live": 85.0,
+        "pleasure": 0.0,
+        "pain": 0.0,
+        "current_alignment_score": 0.0,
+        "soul_id": "soul_alice_001",
+        "karma_balance": 500.0
+      },
+      "being_2": {
+        "being_id": "being_bob_001",
+        "reality_id": "reality_test_001",
+        "arrow_of_intent": {
+          "x": 0.95,
+          "y": 0.31,
+          "z": 0.0
+        },
+        "personality": {
+          "type": "systematic",
+          "traits": {
+            "organization": 0.9,
+            "precision": 0.8
+          }
+        },
+        "goals": [
+          {
+            "description": "Teach mathematics effectively",
+            "type": "teaching",
+            "priority": 0.85
+          }
+        ],
+        "energy": 90.0,
+        "energy_capacity": 140.0,
+        "stamina": 80.0,
+        "stamina_max": 85.0,
+        "will_to_live": 90.0,
+        "pleasure": 0.0,
+        "pain": 0.0,
+        "current_alignment_score": 0.0,
+        "soul_id": "soul_bob_001",
+        "karma_balance": 400.0
+      },
+      "expected_alignment": 0.95,
+      "expected_pleasure": 0.7,
+      "expected_pain": 0.1
+    },
+    "scenario_2_misaligned_beings": {
+      "description": "Two beings with opposite Arrows of Intent - should generate pain",
+      "being_1": {
+        "being_id": "being_charlie_001",
+        "arrow_of_intent": {
+          "x": 1.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "personality": {
+          "type": "creative",
+          "traits": {
+            "spontaneity": 0.9,
+            "flexibility": 0.8
+          }
+        },
+        "goals": [
+          {
+            "description": "Create art freely",
+            "type": "creative",
+            "priority": 0.95
+          }
+        ],
+        "energy": 60.0,
+        "stamina": 50.0,
+        "will_to_live": 70.0
+      },
+      "being_2": {
+        "being_id": "being_diana_001",
+        "arrow_of_intent": {
+          "x": -1.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "personality": {
+          "type": "systematic",
+          "traits": {
+            "control": 0.9,
+            "structure": 0.95
+          }
+        },
+        "goals": [
+          {
+            "description": "Enforce strict rules",
+            "type": "control",
+            "priority": 0.9
+          }
+        ],
+        "energy": 70.0,
+        "stamina": 65.0,
+        "will_to_live": 75.0
+      },
+      "expected_alignment": -1.0,
+      "expected_pleasure": 0.1,
+      "expected_pain": 0.8
+    },
+    "scenario_3_harm_event": {
+      "description": "Being causes harm to another - subjective interpretation",
+      "source_being": {
+        "being_id": "being_eve_001",
+        "arrow_of_intent": {
+          "x": 0.5,
+          "y": 0.87,
+          "z": 0.0
+        }
+      },
+      "target_being": {
+        "being_id": "being_frank_001",
+        "arrow_of_intent": {
+          "x": 0.5,
+          "y": 0.87,
+          "z": 0.0
+        },
+        "stamina": 40.0,
+        "stamina_max": 70.0
+      },
+      "harm_event": {
+        "harm_id": "harm_001",
+        "severity": 0.7,
+        "intentional": true,
+        "source_being_id": "being_eve_001",
+        "target_being_id": "being_frank_001",
+        "arrow_of_intent": {
+          "x": 0.5,
+          "y": 0.87,
+          "z": 0.0
+        },
+        "harm_type": "emotional",
+        "resolved": false,
+        "created_at": "2026-01-12T12:00:00Z"
+      },
+      "expected_pain": 0.49,
+      "note": "High alignment between arrows means target understands intent, reducing pain from 0.7 to ~0.49"
+    },
+    "scenario_4_help_event": {
+      "description": "Being provides help to another - subjective interpretation",
+      "source_being": {
+        "being_id": "being_grace_001",
+        "arrow_of_intent": {
+          "x": 0.87,
+          "y": 0.5,
+          "z": 0.0
+        }
+      },
+      "target_being": {
+        "being_id": "being_henry_001",
+        "arrow_of_intent": {
+          "x": 0.87,
+          "y": 0.5,
+          "z": 0.0
+        },
+        "stamina": 80.0,
+        "stamina_max": 90.0
+      },
+      "help_event": {
+        "help_id": "help_001",
+        "benefit": 0.8,
+        "intentional": true,
+        "source_being_id": "being_grace_001",
+        "target_being_id": "being_henry_001",
+        "arrow_of_intent": {
+          "x": 0.87,
+          "y": 0.5,
+          "z": 0.0
+        },
+        "help_type": "informational",
+        "acknowledged": false,
+        "created_at": "2026-01-12T12:05:00Z"
+      },
+      "expected_pleasure": 0.96,
+      "note": "Perfect alignment + intentional help + high stamina = maximum pleasure (0.8 * 1.2 * 1.0)"
+    },
+    "scenario_5_stamina_modulation": {
+      "description": "Stamina affects capacity to feel pain/pleasure and action intensity",
+      "being_low_stamina": {
+        "being_id": "being_exhausted_001",
+        "stamina": 5.0,
+        "stamina_max": 80.0,
+        "stamina_ratio": 0.0625,
+        "energy": 20.0,
+        "energy_capacity": 100.0
+      },
+      "being_high_stamina": {
+        "being_id": "being_energized_001",
+        "stamina": 75.0,
+        "stamina_max": 80.0,
+        "stamina_ratio": 0.9375,
+        "energy": 95.0,
+        "energy_capacity": 100.0
+      },
+      "test_experience": {
+        "type": "positive",
+        "intensity": 0.8,
+        "description": "Achieved major goal"
+      },
+      "expected_results": {
+        "low_stamina": {
+          "effective_pleasure": 0.425,
+          "action_intensity": 1.46875,
+          "note": "Low stamina = reduced capacity to feel (numbness), but higher action intensity (desperate)"
+        },
+        "high_stamina": {
+          "effective_pleasure": 0.75,
+          "action_intensity": 0.53125,
+          "note": "High stamina = full capacity to feel, but lower action intensity (more control)"
+        }
+      }
+    },
+    "scenario_6_alignment_effects": {
+      "description": "Alignment increases Capacity, Misalignment causes Friction",
+      "aligned_being": {
+        "being_id": "being_aligned_001",
+        "current_alignment_score": 0.9,
+        "energy": 50.0,
+        "energy_capacity": 100.0,
+        "stamina": 60.0,
+        "stamina_max": 80.0,
+        "will_to_live": 80.0
+      },
+      "misaligned_being": {
+        "being_id": "being_misaligned_001",
+        "current_alignment_score": 0.2,
+        "energy": 50.0,
+        "energy_capacity": 100.0,
+        "stamina": 60.0,
+        "stamina_max": 80.0,
+        "will_to_live": 80.0
+      },
+      "after_one_cycle": {
+        "aligned": {
+          "energy": 51.9,
+          "stamina": 60.45,
+          "will_to_live": 80.0,
+          "note": "Alignment bonus: +1.9 energy, +0.45 stamina, no will_to_live change"
+        },
+        "misaligned": {
+          "energy": 49.6,
+          "stamina": 59.76,
+          "will_to_live": 79.92,
+          "note": "Misalignment friction: -0.4 energy, -0.24 stamina, -0.08 will_to_live"
+        }
+      }
+    },
+    "scenario_7_energy_karma_bidirectional": {
+      "description": "Energy ↔ Karma bidirectional relationship",
+      "being": {
+        "being_id": "being_karma_test_001",
+        "soul_id": "soul_karma_test_001",
+        "karma_balance": 1000.0,
+        "energy": 100.0,
+        "energy_capacity": 100.0
+      },
+      "karma_to_energy": {
+        "formula": "energy_capacity = 100.0 + (karma_balance / 100.0) * 50.0",
+        "calculation": "100.0 + (1000.0 / 100.0) * 50.0 = 600.0",
+        "new_energy_capacity": 600.0,
+        "note": "More karma = larger energy pool"
+      },
+      "energy_to_karma": {
+        "energy_spent": 50.0,
+        "formula": "karma_generated = energy_spent * 0.1",
+        "calculation": "50.0 * 0.1 = 5.0",
+        "karma_generated": 5.0,
+        "note": "Energy expenditure generates karma"
+      }
+    },
+    "scenario_8_learning_from_alignment": {
+      "description": "Being learns from alignment patterns over time",
+      "being": {
+        "being_id": "being_learner_001",
+        "personality": {
+          "type": "balanced",
+          "alignment_seeking": 0.5,
+          "misalignment_avoidance": 0.5
+        },
+        "alignment_history": [
+          {
+            "cycle": 1,
+            "alignment_score": 0.9,
+            "pleasure": 0.8,
+            "pain": 0.1
+          },
+          {
+            "cycle": 2,
+            "alignment_score": 0.85,
+            "pleasure": 0.75,
+            "pain": 0.15
+          },
+          {
+            "cycle": 3,
+            "alignment_score": 0.9,
+            "pleasure": 0.8,
+            "pain": 0.1
+          },
+          {
+            "cycle": 4,
+            "alignment_score": 0.88,
+            "pleasure": 0.78,
+            "pain": 0.12
+          },
+          {
+            "cycle": 5,
+            "alignment_score": 0.92,
+            "pleasure": 0.82,
+            "pain": 0.08
+          }
+        ]
+      },
+      "expected_learning": {
+        "avg_alignment": 0.89,
+        "avg_pleasure": 0.79,
+        "avg_pain": 0.112,
+        "personality_update": {
+          "alignment_seeking": 0.6,
+          "note": "Being learns to seek alignment because it consistently creates pleasure"
+        }
+      }
+    },
+    "scenario_9_complete_cycle": {
+      "description": "Complete cycle showing all systems working together",
+      "cycle_number": 42,
+      "being": {
+        "being_id": "being_complete_001",
+        "reality_id": "reality_test_001",
+        "energy": 75.0,
+        "energy_capacity": 150.0,
+        "stamina": 65.0,
+        "stamina_max": 80.0,
+        "will_to_live": 85.0,
+        "pleasure": 0.0,
+        "pain": 0.0,
+        "current_alignment_score": 0.0,
+        "soul_id": "soul_complete_001",
+        "karma_balance": 500.0,
+        "personality": {
+          "type": "analytical",
+          "alignment_seeking": 0.6
+        },
+        "goals": [
+          {
+            "description": "Master quantum physics",
+            "type": "learning",
+            "priority": 0.9
+          }
+        ]
+      },
+      "cycle_events": [
+        {
+          "type": "experience",
+          "description": "Learned quantum mechanics principle",
+          "intensity": 0.7,
+          "type": "positive"
+        },
+        {
+          "type": "help",
+          "help_id": "help_cycle_001",
+          "benefit": 0.6,
+          "intentional": true,
+          "source_being_id": "being_mentor_001"
+        }
+      ],
+      "after_cycle": {
+        "alignment_score": 0.75,
+        "pleasure": 0.65,
+        "pain": 0.15,
+        "energy": 77.75,
+        "stamina": 65.375,
+        "will_to_live": 85.0,
+        "energy_regenerated": 2.75,
+        "stamina_bonus": 0.375,
+        "note": "Alignment increases capacity, experiences generate pleasure/pain modulated by stamina"
+      }
+    },
+    "scenario_10_decision_calculus": {
+      "description": "Decision weights with Pain/Pleasure, Alignment, and Energy",
+      "being": {
+        "being_id": "being_decider_001",
+        "stamina": 30.0,
+        "stamina_max": 80.0,
+        "energy": 25.0,
+        "energy_capacity": 100.0,
+        "pleasure": 0.3,
+        "pain": 0.7,
+        "current_alignment_score": 0.25,
+        "will_to_live": 60.0
+      },
+      "decision_options": [
+        "learn_skill",
+        "pursue_goal",
+        "explore",
+        "record_memory",
+        "rest"
+      ],
+      "expected_weights": {
+        "rest": 15.0,
+        "note": "High weight due to: low energy (3x), high pain (2x), low alignment (1.5x), low stamina (5x base)"
+      },
+      "calculated_weights": {
+        "learn_skill": 0.5,
+        "pursue_goal": 0.35,
+        "explore": 0.7,
+        "record_memory": 1.0,
+        "rest": 15.0,
+        "note": "Rest heavily favored due to depleted state"
+      }
+    }
+  },
+  "test_arrows": {
+    "parallel": {
+      "arrow1": {"x": 1.0, "y": 0.0, "z": 0.0},
+      "arrow2": {"x": 1.0, "y": 0.0, "z": 0.0},
+      "expected_cosine_similarity": 1.0,
+      "expected_alignment": 1.0
+    },
+    "perpendicular": {
+      "arrow1": {"x": 1.0, "y": 0.0, "z": 0.0},
+      "arrow2": {"x": 0.0, "y": 1.0, "z": 0.0},
+      "expected_cosine_similarity": 0.0,
+      "expected_alignment": 0.0
+    },
+    "opposite": {
+      "arrow1": {"x": 1.0, "y": 0.0, "z": 0.0},
+      "arrow2": {"x": -1.0, "y": 0.0, "z": 0.0},
+      "expected_cosine_similarity": -1.0,
+      "expected_alignment": -1.0
+    },
+    "similar": {
+      "arrow1": {"x": 1.0, "y": 0.0, "z": 0.0},
+      "arrow2": {"x": 0.87, "y": 0.5, "z": 0.0},
+      "expected_cosine_similarity": 0.87,
+      "expected_alignment": 0.87
+    }
+  },
+  "test_formulas": {
+    "stamina_modulation_pleasure": {
+      "formula": "effective_pleasure = total_pleasure * (stamina_ratio * 0.5 + 0.5)",
+      "example": {
+        "total_pleasure": 0.8,
+        "stamina_ratio": 0.25,
+        "calculation": "0.8 * (0.25 * 0.5 + 0.5) = 0.8 * 0.625 = 0.5",
+        "effective_pleasure": 0.5
+      }
+    },
+    "stamina_modulation_action_intensity": {
+      "formula": "action_intensity = 1.0 - (stamina_ratio * 0.5)",
+      "example": {
+        "stamina_ratio": 0.2,
+        "calculation": "1.0 - (0.2 * 0.5) = 1.0 - 0.1 = 0.9",
+        "action_intensity": 0.9,
+        "note": "Low stamina = higher intensity (desperate, powerful)"
+      }
+    },
+    "alignment_energy_bonus": {
+      "formula": "energy += alignment_score * 1.0",
+      "example": {
+        "alignment_score": 0.8,
+        "base_regeneration": 2.0,
+        "bonus": 0.8,
+        "total_regeneration": 2.8
+      }
+    },
+    "misalignment_friction": {
+      "formula": "will_to_live -= (1.0 - alignment_score) * 0.1",
+      "example": {
+        "alignment_score": 0.3,
+        "misalignment": 0.7,
+        "friction": 0.07,
+        "will_to_live_loss": 0.07
+      }
+    },
+    "energy_capacity_from_karma": {
+      "formula": "energy_capacity = 100.0 + (karma_balance / 100.0) * 50.0",
+      "examples": {
+        "karma_0": 100.0,
+        "karma_500": 350.0,
+        "karma_1000": 600.0,
+        "karma_2000": 1100.0
+      }
+    },
+    "karma_from_energy": {
+      "formula": "karma_generated = energy_spent * 0.1",
+      "examples": {
+        "energy_10": 1.0,
+        "energy_50": 5.0,
+        "energy_100": 10.0
+      }
+    }
+  }
+}

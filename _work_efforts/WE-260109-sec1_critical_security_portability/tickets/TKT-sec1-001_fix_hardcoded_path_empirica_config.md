@@ -2,7 +2,7 @@
 id: TKT-sec1-001
 parent: WE-260109-sec1
 title: "Fix hardcoded absolute path in .empirica/config.yaml"
-status: open
+status: completed
 priority: CRITICAL
 created: 2026-01-09T00:00:00.000Z
 created_by: claude_audit

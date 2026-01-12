@@ -1,0 +1,26 @@
+{
+  "reflection_id": "reflection_20260112_051723",
+  "timestamp": 1768223843.417104,
+  "entry_ids": [
+    "test_entry_empirica_integration"
+  ],
+  "insights": [
+    "TheObserver correctly does NOT use Empirica - verified clean",
+    "TheOracle successfully uses Empirica for epistemic intelligence",
+    "TavernKeeper successfully logs character progression to Empirica",
+    "TheFoundation successfully logs document generation to Empirica",
+    "All components tested and working correctly"
+  ],
+  "patterns": [
+    "Components that provide intelligence/guidance use Empirica",
+    "Components that passively record do NOT use Empirica",
+    "Empirica integration follows clear separation of concerns"
+  ],
+  "questions": [
+    "How should FlightRecorder (concept) integrate with Empirica while keeping TheObserver (implementation) clean?",
+    "Should FlightRecorder be a wrapper around TheObserver that adds Empirica analysis?",
+    "What epistemic insights can be derived from FlightRecorder events?"
+  ],
+  "recommendations": [],
+  "actionable_suggestions": []
+}

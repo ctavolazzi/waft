@@ -3,15 +3,20 @@ Reflect - AI Journal System.
 
 Induces the AI to write in its journal, reflecting on current work, thoughts,
 and experiences. The AI definitely needs a journal if it doesn't have one.
+
+Enhanced with search, statistics, analytics, and improved integration.
 """
 
 import re
-from datetime import datetime
+import json
+from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional, List, Tuple
+from collections import defaultdict
 from rich.console import Console
 from rich.panel import Panel
 from rich.markdown import Markdown
+from rich.table import Table
 
 from .session_stats import SessionStats
 from .github import GitHubManager
@@ -34,14 +39,20 @@ class ReflectManager:
         self.github = GitHubManager(project_path)
         self.memory = MemoryManager(project_path)
         
-        # Journal location
+        # Journal location - placed in _pyrite/journal/ (memory layer)
+        # This is appropriate as the journal is part of the AI's memory system
         self.journal_dir = project_path / "_pyrite" / "journal"
         self.journal_file = self.journal_dir / "ai-journal.md"
         self.entries_dir = self.journal_dir / "entries"
         self.archive_dir = self.journal_dir / "archive"
+        self.stats_dir = self.journal_dir / "stats"
+        self.index_file = self.journal_dir / "index.json"
         
         # Journal length threshold for archiving (default: 500 lines)
         self.archive_threshold = 500
+        
+        # Archive retention policy (days to keep archives)
+        self.archive_retention_days = 365  # Keep archives for 1 year
         
         # Ensure journal structure exists
         self._ensure_journal_exists()
@@ -54,10 +65,15 @@ class ReflectManager:
         self.journal_dir.mkdir(parents=True, exist_ok=True)
         self.entries_dir.mkdir(parents=True, exist_ok=True)
         self.archive_dir.mkdir(parents=True, exist_ok=True)
+        self.stats_dir.mkdir(parents=True, exist_ok=True)
         
         # Create journal file if it doesn't exist
         if not self.journal_file.exists():
             self._create_initial_journal()
+        
+        # Initialize index if it doesn't exist
+        if not self.index_file.exists():
+            self._create_index()
     
     def _check_and_archive_if_needed(self):
         """
@@ -477,15 +493,30 @@ Entries are appended chronologically, providing a record of the AI's cognitive j
         Returns:
             Path to saved entry
         """
-        # Build markdown content
+        # Build markdown content with enhanced metadata
         content = []
         content.append(f"\n## Journal Entry: {entry['date']} {entry['time']}\n")
-        content.append(f"**Timestamp**: {entry['timestamp']}\n\n")
+        content.append(f"**Timestamp**: {entry['timestamp']}\n")
         
-        # Add context summary
+        # Enhanced metadata section
+        metadata = []
+        if entry.get('topic'):
+            metadata.append(f"**Topic**: {entry['topic']}")
+        
         if entry['context'].get('git', {}).get('initialized'):
-            content.append(f"**Context**: Branch `{entry['context']['git'].get('branch', 'unknown')}`, ")
-            content.append(f"{entry['context']['git'].get('uncommitted_count', 0)} uncommitted files\n\n")
+            branch = entry['context']['git'].get('branch', 'unknown')
+            uncommitted = entry['context']['git'].get('uncommitted_count', 0)
+            metadata.append(f"**Git**: Branch `{branch}`, {uncommitted} uncommitted files")
+        
+        if entry['context'].get('stats'):
+            stats = entry['context']['stats']
+            if stats.get('files_created') or stats.get('files_modified'):
+                metadata.append(f"**Session**: {stats.get('files_created', 0)} created, {stats.get('files_modified', 0)} modified")
+        
+        if metadata:
+            content.append(" | ".join(metadata))
+        
+        content.append("\n")
         
         # Add sections
         for section_name, section_content in entry['sections'].items():
@@ -501,6 +532,9 @@ Entries are appended chronologically, providing a record of the AI's cognitive j
         # Also save as individual entry file
         entry_file = self.entries_dir / f"{entry['date']}-{entry['time'].replace(':', '')}.md"
         entry_file.write_text("".join(content), encoding="utf-8")
+        
+        # Update index
+        self._update_index(entry)
         
         return self.journal_file
     
@@ -545,3 +579,256 @@ Entries are appended chronologically, providing a record of the AI's cognitive j
                 info["last_entry"] = all_matches[-1].group(1)
         
         return info
+    
+    def _create_index(self):
+        """Create initial journal index for fast lookups."""
+        index = {
+            "created": datetime.now().isoformat(),
+            "entries": [],
+            "tags": {},
+            "topics": {},
+            "stats": {
+                "total_entries": 0,
+                "first_entry": None,
+                "last_entry": None,
+            }
+        }
+        self.index_file.write_text(json.dumps(index, indent=2), encoding="utf-8")
+    
+    def _update_index(self, entry: Dict[str, Any]):
+        """Update journal index with new entry."""
+        if not self.index_file.exists():
+            self._create_index()
+        
+        try:
+            index = json.loads(self.index_file.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, FileNotFoundError):
+            index = self._create_index()
+        
+        entry_id = f"{entry['date']}-{entry['time'].replace(':', '')}"
+        entry_info = {
+            "id": entry_id,
+            "date": entry['date'],
+            "time": entry['time'],
+            "timestamp": entry['timestamp'],
+            "topic": entry.get('context', {}).get('topic'),
+            "sections": list(entry.get('sections', {}).keys()),
+        }
+        
+        index["entries"].append(entry_info)
+        index["stats"]["total_entries"] = len(index["entries"])
+        
+        if not index["stats"]["first_entry"]:
+            index["stats"]["first_entry"] = entry['timestamp']
+        index["stats"]["last_entry"] = entry['timestamp']
+        
+        # Update topics
+        if entry_info["topic"]:
+            if entry_info["topic"] not in index["topics"]:
+                index["topics"][entry_info["topic"]] = []
+            index["topics"][entry_info["topic"]].append(entry_id)
+        
+        self.index_file.write_text(json.dumps(index, indent=2), encoding="utf-8")
+    
+    def search_entries(
+        self,
+        query: Optional[str] = None,
+        topic: Optional[str] = None,
+        date_from: Optional[str] = None,
+        date_to: Optional[str] = None,
+        limit: int = 10
+    ) -> List[Dict[str, Any]]:
+        """
+        Search journal entries.
+        
+        Args:
+            query: Text search query
+            topic: Filter by topic
+            date_from: Start date (YYYY-MM-DD)
+            date_to: End date (YYYY-MM-DD)
+            limit: Maximum results to return
+            
+        Returns:
+            List of matching entries
+        """
+        results = []
+        
+        # Search main journal
+        if self.journal_file.exists():
+            content = self.journal_file.read_text(encoding="utf-8")
+            entries = self._extract_journal_entries(content)
+            
+            for entry_text in entries:
+                entry_data = self._parse_entry(entry_text)
+                if not entry_data:
+                    continue
+                
+                # Apply filters
+                if topic and entry_data.get('topic') != topic:
+                    continue
+                
+                if date_from and entry_data.get('date') < date_from:
+                    continue
+                
+                if date_to and entry_data.get('date') > date_to:
+                    continue
+                
+                if query and query.lower() not in entry_text.lower():
+                    continue
+                
+                results.append(entry_data)
+                
+                if len(results) >= limit:
+                    break
+        
+        # Search archives
+        if len(results) < limit:
+            for archive_file in sorted(self.archive_dir.glob("*.md"), reverse=True):
+                try:
+                    archive_content = archive_file.read_text(encoding="utf-8")
+                    archive_entries = self._extract_journal_entries(archive_content)
+                    
+                    for entry_text in archive_entries:
+                        entry_data = self._parse_entry(entry_text)
+                        if not entry_data:
+                            continue
+                        
+                        # Apply filters
+                        if topic and entry_data.get('topic') != topic:
+                            continue
+                        
+                        if date_from and entry_data.get('date') < date_from:
+                            continue
+                        
+                        if date_to and entry_data.get('date') > date_to:
+                            continue
+                        
+                        if query and query.lower() not in entry_text.lower():
+                            continue
+                        
+                        results.append(entry_data)
+                        
+                        if len(results) >= limit:
+                            break
+                except Exception:
+                    continue
+                
+                if len(results) >= limit:
+                    break
+        
+        return results[:limit]
+    
+    def _parse_entry(self, entry_text: str) -> Optional[Dict[str, Any]]:
+        """Parse a journal entry text into structured data."""
+        # Extract date/time
+        date_match = re.search(r'^## (?:Journal Entry: )?(\d{4}-\d{2}-\d{2})(?:\s+(\d{2}:\d{2}))?', entry_text, re.MULTILINE)
+        if not date_match:
+            return None
+        
+        date_str = date_match.group(1)
+        time_str = date_match.group(2) or "00:00"
+        
+        # Extract sections
+        sections = {}
+        section_pattern = r'^### (.+?)\n(.*?)(?=^### |^---|$)'
+        for match in re.finditer(section_pattern, entry_text, re.MULTILINE | re.DOTALL):
+            section_name = match.group(1).strip()
+            section_content = match.group(2).strip()
+            sections[section_name] = section_content
+        
+        return {
+            "date": date_str,
+            "time": time_str,
+            "timestamp": f"{date_str}T{time_str}:00",
+            "sections": sections,
+            "content": entry_text,
+        }
+    
+    def get_statistics(self) -> Dict[str, Any]:
+        """
+        Get comprehensive journal statistics.
+        
+        Returns:
+            Dictionary with statistics
+        """
+        stats = {
+            "total_entries": 0,
+            "entries_by_date": defaultdict(int),
+            "entries_by_topic": defaultdict(int),
+            "total_words": 0,
+            "average_entry_length": 0,
+            "first_entry": None,
+            "last_entry": None,
+            "archive_count": 0,
+            "archive_size_mb": 0,
+        }
+        
+        # Count entries in main journal
+        if self.journal_file.exists():
+            content = self.journal_file.read_text(encoding="utf-8")
+            entries = self._extract_journal_entries(content)
+            stats["total_entries"] = len(entries)
+            
+            for entry_text in entries:
+                entry_data = self._parse_entry(entry_text)
+                if entry_data:
+                    stats["entries_by_date"][entry_data["date"]] += 1
+                    stats["total_words"] += len(entry_text.split())
+                    
+                    if not stats["first_entry"]:
+                        stats["first_entry"] = entry_data["timestamp"]
+                    stats["last_entry"] = entry_data["timestamp"]
+        
+        # Count archives
+        archive_files = list(self.archive_dir.glob("*.md"))
+        stats["archive_count"] = len(archive_files)
+        
+        total_size = sum(f.stat().st_size for f in archive_files if f.exists())
+        stats["archive_size_mb"] = round(total_size / (1024 * 1024), 2)
+        
+        if stats["total_entries"] > 0:
+            stats["average_entry_length"] = stats["total_words"] // stats["total_entries"]
+        
+        return stats
+    
+    def display_statistics(self):
+        """Display journal statistics in a formatted table."""
+        stats = self.get_statistics()
+        
+        table = Table(title="📊 Journal Statistics", show_header=True, header_style="bold cyan")
+        table.add_column("Metric", style="dim")
+        table.add_column("Value", justify="right")
+        
+        table.add_row("Total Entries", str(stats["total_entries"]))
+        table.add_row("Total Words", f"{stats['total_words']:,}")
+        table.add_row("Average Entry Length", f"{stats['average_entry_length']} words")
+        table.add_row("Archive Files", str(stats["archive_count"]))
+        table.add_row("Archive Size", f"{stats['archive_size_mb']} MB")
+        
+        if stats["first_entry"]:
+            table.add_row("First Entry", stats["first_entry"][:10])
+        if stats["last_entry"]:
+            table.add_row("Last Entry", stats["last_entry"][:10])
+        
+        self.console.print("\n")
+        self.console.print(table)
+        self.console.print("\n")
+    
+    def cleanup_old_archives(self):
+        """Remove archive files older than retention policy."""
+        cutoff_date = datetime.now() - timedelta(days=self.archive_retention_days)
+        removed_count = 0
+        
+        for archive_file in self.archive_dir.glob("*.md"):
+            try:
+                file_time = datetime.fromtimestamp(archive_file.stat().st_mtime)
+                if file_time < cutoff_date:
+                    archive_file.unlink()
+                    removed_count += 1
+            except Exception:
+                continue
+        
+        if removed_count > 0:
+            self.console.print(f"[dim]Cleaned up {removed_count} old archive files[/dim]\n")
+        
+        return removed_count

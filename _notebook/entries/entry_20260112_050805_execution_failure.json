@@ -1,0 +1,20 @@
+{
+  "entry_id": "entry_20260112_050805_execution_failure",
+  "entry_type": "problem_detected",
+  "timestamp": 1768223285.207604,
+  "title": "Problem Detected: execution_failure",
+  "content": "**Problem Type**: execution_failure\n**Severity**: high\n**Description**: Test problem for Empirica integration\n\n**Context**:\n{\n  \"test\": true\n}\n\n**Exception**: Test exception",
+  "metadata": {
+    "problem_type": "execution_failure",
+    "severity": "high",
+    "exception_type": "EOFError",
+    "exception_message": "Test exception"
+  },
+  "related_problems": [
+    "entry_20260112_050805_execution_failure"
+  ],
+  "related_diagnoses": [],
+  "actionable_type": null,
+  "actionable_created": false,
+  "actionable_id": null
+}

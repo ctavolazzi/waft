@@ -57,7 +57,8 @@ After syncing, these commands are available globally:
 3. **`/resume`** - Pick up where you left off
 4. **`/continue`** - Reflect on current work and continue
 5. **`/reflect`** - Write in AI journal (reflection)
-6. **`/recap`** - Conversation recap and session summary
+6. **`/journal`** - AI journal system hub (view, search, stats, reflect)
+7. **`/recap`** - Conversation recap and session summary
 7. **`/audit`** - Audit conversation quality, completeness, and issues
 8. **`/checkpoint`** - Situation report and status update
 9. **`/verify`** - Verification with traceable evidence
@@ -92,8 +93,12 @@ After syncing, these commands are available globally:
 14. **`/stats`** - Project statistics
 15. **`/analytics`** - Session analytics
 
+### Quality Assurance Commands
+16. **`/version-bake`** - Complete quality workflow: reflect → run-it → improve → check-assumptions → verify → hypothesis → prove-it (tracks genetic lineage of ideas)
+17. **`/evolve`** - Spawn new Being from Source, then run complete version-bake workflow (tracks genetic lineage from Source outward and back)
+
 ### Documentation
-16. **`/COMMAND_RECOMMENDATIONS`** - Command recommendations guide
+17. **`/COMMAND_RECOMMENDATIONS`** - Command recommendations guide
 
 ---
 

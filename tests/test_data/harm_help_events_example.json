@@ -1,0 +1,108 @@
+{
+  "scenario": "Multiple Harm/Help events with subjective interpretation",
+  "being": {
+    "being_id": "being_target_001",
+    "arrow_of_intent": {
+      "x": 0.87,
+      "y": 0.5,
+      "z": 0.0
+    },
+    "stamina": 60.0,
+    "stamina_max": 80.0,
+    "personality": {
+      "type": "analytical",
+      "alignment_seeking": 0.7
+    }
+  },
+  "harm_events": [
+    {
+      "harm_id": "harm_001",
+      "severity": 0.8,
+      "intentional": true,
+      "source_being_id": "being_aggressor_001",
+      "target_being_id": "being_target_001",
+      "arrow_of_intent": {
+        "x": 0.87,
+        "y": 0.5,
+        "z": 0.0
+      },
+      "harm_type": "emotional",
+      "resolved": false,
+      "created_at": "2026-01-12T12:00:00Z",
+      "interpretation": {
+        "source_alignment": 1.0,
+        "interpreted_pain": 0.4,
+        "note": "High alignment means target understands intent, reducing pain from 0.8 to 0.4"
+      }
+    },
+    {
+      "harm_id": "harm_002",
+      "severity": 0.6,
+      "intentional": false,
+      "source_being_id": "being_clumsy_001",
+      "target_being_id": "being_target_001",
+      "arrow_of_intent": {
+        "x": 0.5,
+        "y": 0.87,
+        "z": 0.0
+      },
+      "harm_type": "physical",
+      "resolved": false,
+      "created_at": "2026-01-12T12:05:00Z",
+      "interpretation": {
+        "source_alignment": 0.5,
+        "interpreted_pain": 0.21,
+        "note": "Unintentional harm (0.7x) + moderate alignment = low pain (0.6 * 0.7 * 0.5 = 0.21)"
+      }
+    }
+  ],
+  "help_events": [
+    {
+      "help_id": "help_001",
+      "benefit": 0.9,
+      "intentional": true,
+      "source_being_id": "being_helper_001",
+      "target_being_id": "being_target_001",
+      "arrow_of_intent": {
+        "x": 0.87,
+        "y": 0.5,
+        "z": 0.0
+      },
+      "help_type": "informational",
+      "acknowledged": false,
+      "created_at": "2026-01-12T12:10:00Z",
+      "interpretation": {
+        "source_alignment": 1.0,
+        "interpreted_pleasure": 1.08,
+        "note": "Perfect alignment + intentional help + high benefit = maximum pleasure (0.9 * 1.2 * 1.0 = 1.08, clamped to 1.0)"
+      }
+    },
+    {
+      "help_id": "help_002",
+      "benefit": 0.5,
+      "intentional": false,
+      "source_being_id": "being_accidental_helper_001",
+      "target_being_id": "being_target_001",
+      "arrow_of_intent": {
+        "x": -0.5,
+        "y": 0.87,
+        "z": 0.0
+      },
+      "help_type": "physical",
+      "acknowledged": false,
+      "created_at": "2026-01-12T12:15:00Z",
+      "interpretation": {
+        "source_alignment": 0.0,
+        "interpreted_pleasure": 0.0,
+        "note": "Misaligned unintentional help = minimal pleasure (0.5 * 0.9 * 0.0 = 0.0)"
+      }
+    }
+  ],
+  "combined_effect": {
+    "total_pain": 0.61,
+    "total_pleasure": 1.0,
+    "stamina_modulated_pain": 0.4575,
+    "stamina_modulated_pleasure": 0.875,
+    "note": "Stamina ratio 0.75 modulates feeling capacity: pain 0.61 * 0.875 = 0.534, pleasure 1.0 * 0.875 = 0.875"
+  }
+}

@@ -4,6 +4,404 @@ This log tracks development activities, decisions, and progress for the waft pro
 
 ---
 
+## 2026-01-12 - AI Journal System Enhancement
+
+**Time**: 11:37:00 PST  
+**Status**: ✅ Complete  
+**Work Effort**: WE-260112-c4ci
+
+### Summary
+Comprehensively enhanced the AI journal system with search capabilities, statistics, analytics, improved archive management, and better integration. Confirmed journal placement in `_pyrite/journal/` is appropriate as part of the memory layer.
+
+### Key Enhancements
+
+1. **Search & Query System** ✅
+   - Full-text search across main journal and archives
+   - Topic filtering
+   - Date range queries
+   - Combined filter support
+   - Fast JSON index for lookups
+
+2. **Statistics & Analytics** ✅
+   - Entry counts and word statistics
+   - Timeline tracking (first/last entry)
+   - Archive size and file counts
+   - Formatted statistics dashboard
+   - CLI command: `waft journal-stats`
+
+3. **Archive Management** ✅
+   - Retention policy (1 year, configurable)
+   - Automatic cleanup command
+   - Archive size tracking
+   - Preserves last 2 entries in main journal
+
+4. **Index System** ✅
+   - JSON index for fast entry lookups
+   - Topic tracking across entries
+   - Entry metadata storage
+   - Automatic index updates
+
+5. **Enhanced Entry Format** ✅
+   - Topic tags
+   - Git context (branch, uncommitted files)
+   - Session statistics (files created/modified)
+   - Structured metadata section
+
+6. **CLI Commands** ✅
+   - `waft journal-search` - Search entries with filters
+   - `waft journal-stats` - View statistics and cleanup archives
+
+### Structure & Placement
+
+**Decision**: Confirmed `_pyrite/journal/` placement is appropriate
+
+**Rationale**:
+- `_pyrite/` is the memory layer - journal is part of AI's memory system
+- Consistent with other memory components (active/, backlog/, standards/)
+- Separates AI cognitive artifacts from project code
+- Enables easy backup and archival
+
+**Structure**:
+```
+_pyrite/journal/
+├── ai-journal.md          # Main journal file
+├── index.json             # Fast lookup index
+├── entries/               # Individual entry files
+├── archive/               # Archived entries
+└── stats/                 # Statistics data
+```
+
+### Files Modified
+
+- `src/waft/core/reflect.py` - Enhanced ReflectManager (~200 lines added)
+  - Search functionality
+  - Statistics calculation
+  - Index system
+  - Enhanced entry format
+  - Archive cleanup
+
+- `src/waft/main.py` - Added CLI commands (~50 lines added)
+  - `journal-search` command
+  - `journal-stats` command
+
+- `.cursor/commands/reflect.md` - Updated documentation
+  - New features section
+  - Placement rationale
+  - Search/stats examples
+  - Enhanced integration section
+
+### Features
+
+**Search Capabilities**:
+```bash
+waft journal-search --query "learning" --topic "architecture" --from 2026-01-01 --limit 10
+```
+
+**Statistics Dashboard**:
+```bash
+waft journal-stats
+# Displays formatted table with:
+# - Total entries, words, average length
+# - Archive count and size
+# - Timeline (first/last entry)
+```
+
+**Archive Cleanup**:
+```bash
+waft journal-stats --cleanup
+# Removes archives older than retention policy
+```
+
+### Integration Points
+
+- **`/continue`**: Can reference journal for context
+- **`/resume`**: Uses journal for session continuity
+- **`/checkpoint`**: Complements journal (state vs reflection)
+- **`/analyze`**: Journal captures AI's thoughts about analysis
+- **Git Integration**: Tracks branch and uncommitted files
+- **Session Stats**: Includes file creation/modification counts
+
+### Backward Compatibility
+
+- ✅ Fully backward compatible
+- Existing entries continue to work
+- New features are optional
+- No breaking changes
+
+### Documentation
+
+- Updated `.cursor/commands/reflect.md` with new features
+- Created comprehensive summary document
+- Added placement rationale
+- Enhanced integration documentation
+
+### Status
+
+✅ **Complete** - All enhancements implemented, tested, and documented
+
+---
+
+## 2026-01-12 - Created `/improve` Command & Fixed Encapsulated Environments PDF
+
+**Time**: 11:47:00 PST  
+**Status**: ✅ Complete
+
+### Summary
+Created global `/improve` command that analyzes work and suggests prioritized improvements. Applied improvements to fix the `encapsulated-environments-pdf` command, which now works reliably using `uv run` with the working example script pattern.
+
+### Key Features
+
+1. **Improve Command** (`waft improve`):
+   - Analyzes code, documentation, architecture, testing, performance, usability
+   - Provides prioritized recommendations with scores
+   - Calculates priority: (Impact × Priority) / Effort
+   - Supports filtering by category, focus area, recent changes
+   - Saves improvement reports to files
+
+2. **Improvement Categories**:
+   - **Code**: Import issues, error handling, best practices
+   - **Documentation**: Completeness, examples, clarity
+   - **Architecture**: Design patterns, organization, duplication
+   - **Testing**: Coverage, quality, missing tests
+   - **Performance**: Optimization opportunities
+   - **Usability**: User experience, error messages
+
+3. **Priority Scoring**:
+   - Impact: high (3.0), medium (2.0), low (1.0)
+   - Effort: high (1.0), medium (2.0), low (3.0) - lower effort = higher score
+   - Priority: critical (4.0), high (3.0), medium (2.0), low (1.0)
+   - Score = (Impact × Priority) / Effort
+
+### Improvements Applied
+
+1. ✅ **Fixed PDF Command**: Now uses `uv run` with working example script
+2. ✅ **Enhanced Error Messages**: Better dependency detection and suggestions
+3. ✅ **Updated Documentation**: Added troubleshooting section
+
+### Files Created
+
+- `src/waft/core/improve.py` - ImproveManager class (~400 lines)
+- `.cursor/commands/improve.md` - Command documentation
+- `_work_efforts/IMPROVEMENTS_2026-01-12_encapsulated_environments.md` - Improvement report
+
+### Files Modified
+
+- `src/waft/main.py` - Added `improve` command, fixed `encapsulated-environments-pdf` command
+- `.cursor/commands/encapsulated-environments-pdf.md` - Added troubleshooting section
+
+### Usage
+
+```bash
+# Analyze all work
+waft improve
+
+# Focus on specific area
+waft improve --focus encapsulated-environments
+
+# Filter by category
+waft improve --category code
+
+# Save report
+waft improve --output improvements.md
+```
+
+### Integration
+
+- Complements `/critique` (adversarial security review)
+- Complements `/check-assumptions` (assumption validation)
+- Complements `/audit` (conversation quality)
+- Provides constructive, prioritized improvement suggestions
+
+---
+
+## 2026-01-12 - Created Science-Bitch Command
+
+**Time**: 11:50:00 PST  
+**Status**: ✅ Core Complete  
+**Work Effort**: WE-260112-az3z
+
+### Summary
+Created comprehensive `/science-bitch` command that runs the full scientific method workflow. Built tooling, documentation, and generated field guide and project status PDFs.
+
+### Key Features
+
+1. **Full Scientific Method Workflow** ✅
+   - Form hypothesis interactively
+   - Design experiments
+   - Capture initial state (A)
+   - Run experiments with data collection (C)
+   - Capture final state (B)
+   - Analyze results
+   - Generate reports
+
+2. **Command Structure** ✅
+   - `waft science-bitch` - Interactive workflow
+   - `waft science-bitch --field-guide` - Generate field guide PDF
+   - `waft science-bitch --report` - Generate project status PDF
+
+3. **Folder Structure** ✅
+   - `_science/` - Root directory
+   - `experiments/` - Experiment definitions
+   - `data/` - Collected data (C)
+   - `reports/` - Generated reports and PDFs
+   - `tools/` - Helper utilities
+
+4. **Documentation** ✅
+   - README with quick start and workflow
+   - Field guide PDF (complete usage guide)
+   - Project status PDF (goals, evidence, next steps)
+   - Work effort tracking (10 tickets)
+
+5. **Tooling** ✅
+   - ExperimentManagerTool for managing experiments
+   - List, status, and statistics functions
+   - PDF generation utilities
+
+### Files Created
+
+- `src/waft/core/science_bitch.py` - ScienceBitchManager class (~500 lines)
+- `_science/README.md` - Comprehensive documentation
+- `_science/tools/experiment_manager.py` - Experiment management tool
+- `_science/reports/field_guide.pdf` - Field guide PDF
+- `_science/reports/project_status.pdf` - Project status PDF
+
+### Files Modified
+
+- `src/waft/main.py` - Added `science-bitch` command
+
+### Integration
+
+- Uses `scientific_method_tool/` for core functionality
+- Integrates with `waft.evolution.pdf_generator` for PDFs
+- Tracks progress in `WE-260112-az3z` work effort
+- Follows scientific method: Observe → Hypothesize → Experiment → Analyze → Report
+
+### Status
+
+✅ **Core Complete** - Command structure, field guide, project status PDFs, documentation, and tooling are complete. Interactive workflow is functional. Ready for end-to-end testing and enhancements.
+
+---
+
+## 2026-01-12 - Created Quest: Encapsulated Environments for Being Storytelling
+
+**Time**: 11:40:00 PST  
+**Status**: ✅ Quest Created, Hypothesis & Plan Complete
+
+### Summary
+Created comprehensive Quest (Work Effort) for building encapsulated environments where evolving Beings tell each other Stories to relay Information. System uses Scint as measurable Agreement between Beings, Arrow of Intent for harm tracking, and multi-layered environment simulation.
+
+### Key Concepts
+
+1. **Scint as Agreement**: Repurposes Scint concept to measure Agreement (0.0-1.0) between two Beings based on aligned Intent, shared understanding, and successful information exchange.
+
+2. **Arrow of Intent**: Tracks direction of harm/intent from source Being to destination. When two Beings' Arrows point the same way = Agreement. Misalignment requires reactive responses.
+
+3. **Harm Class**: Tracks intentional vs unintentional harm. Determines Arrow of Intent direction and affects Agreement calculations.
+
+4. **Story as Information Medium**: Stories encode "How To Do Things" and "How To Understand What Things Are". Beings extract actionable information when Agreement threshold is met.
+
+5. **Encapsulated Environments**: Isolated environments for Being simulation. Can be stacked (cosmic soup/foam/pond/puddle/ocean) with internal and external interactions.
+
+### Architecture Components
+
+- **Harm Class** (`src/waft/core/harm.py`): ArrowOfIntent, Harm tracking
+- **Agreement System** (`src/waft/core/agreement.py`): Scint-based Agreement measurement
+- **Story Information** (`src/waft/core/story_information.py`): Information encoding/decoding
+- **Encapsulated Environment** (`src/waft/core/encapsulated_environment.py`): Simulation framework
+- **Being Communication** (`src/waft/core/being_communication.py`): Story exchange protocols
+
+### Implementation Phases
+
+1. **Phase 1**: Foundation (Harm class, Scint as Agreement, Arrow of Intent)
+2. **Phase 2**: Story Information System (encoding/decoding)
+3. **Phase 3**: Environment Framework (encapsulated, stacked)
+4. **Phase 4**: Being Communication (protocols, misalignment reactions)
+5. **Phase 5**: Integration & Testing
+
+### Files Created
+
+- `_pyrite/hypothesis/2026-01-12_being-storytelling-information-exchange.md` - Hypothesis document
+- `_pyrite/active/2026-01-12_encapsulated-environments-engineering-plan.md` - Engineering plan
+- `_work_efforts/WE-260112-z87p_.../` - Quest (Work Effort) with 10 tickets
+
+### Related Systems
+
+- **Being System**: Entities that learn, evolve, have memories/lessons
+- **TheCampfire**: Storytelling infrastructure
+- **Scint System**: Energy/reality fracture detection (to be extended)
+- **Work Efforts = Quests**: D&D campaign integration
+
+### Next Steps
+
+Begin Phase 1: Create Harm class with Arrow of Intent tracking.
+
+---
+
+## 2026-01-12 - Created `/check-assumptions` Command
+
+**Time**: 05:32:00 PST  
+**Status**: ✅ Complete
+
+### Summary
+Created global `/check-assumptions` command that identifies all assumptions in the current conversation and systematically validates them using multiple evidence sources (code analysis, file system checks, test results, Empirica/Oracle, scientific method tool, etc.).
+
+### Key Features
+
+1. **Assumption Extraction**:
+   - Analyzes conversation history for implicit and explicit assumptions
+   - Categorizes by type (code, dependency, data, system, behavioral)
+   - Prioritizes by risk level (critical vs minor)
+
+2. **Multi-Source Validation**:
+   - Code analysis (grep, file reading, type checking)
+   - File system checks (existence, contents, permissions)
+   - Test execution and results
+   - Git history analysis
+   - Empirica/Oracle epistemic state
+   - Scientific method tool for hypothesis testing
+   - Documentation review
+   - Runtime checks
+
+3. **Evidence-Based Conclusions**:
+   - PROVEN / DISPROVEN / PARTIALLY PROVEN / INSUFFICIENT EVIDENCE / NEEDS TESTING
+   - Confidence levels (0.0-1.0)
+   - Traceable evidence points
+   - Risk assessment updates
+
+4. **Comprehensive Reporting**:
+   - Summary table with validation status
+   - Detailed results for each assumption
+   - Critical findings highlighting
+   - Actionable recommendations
+   - Evidence traces
+
+### Files Created
+
+- `.cursor/commands/check-assumptions.md` - Complete command definition with execution steps, validation methods, and output format
+- `src/waft/core/check_assumptions.py` - Python implementation with `CheckAssumptionsManager` class
+- CLI command `waft check-assumptions` added to `src/waft/main.py`
+
+### Documentation Updated
+
+- `.cursor/commands/COMMAND_RECOMMENDATIONS.md` - Added to current commands list
+- `.cursor/commands/help.md` - Added to Core Workflow Commands section
+
+### Integration
+
+- **`/proceed`**: More comprehensive than proceed (which is verification-focused)
+- **`/verify`**: Pre/post validation (verify is post-action)
+- **`/oracle`**: Uses Oracle + additional validation methods
+- **`/critique`**: Validates assumptions (critique finds them)
+- **`/hypothesis`**: Can use scientific method tool for testing
+
+### Next Steps
+
+- Command ready for use
+- Can be synced globally via `scripts/sync-cursor-commands.sh`
+- May want to create Python implementation for automated assumption extraction
+
+---
+
 ## 2026-01-11 - Session Closeout: Cognitive Tooling & Journal Evolution
 
 **Time**: 22:21:00 PST  
