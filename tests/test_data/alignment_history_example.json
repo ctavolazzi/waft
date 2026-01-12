@@ -1,0 +1,74 @@
+{
+  "being_id": "being_example_001",
+  "alignment_history": [
+    {
+      "cycle": 1,
+      "alignment_score": 0.5,
+      "will_to_live": 100.0,
+      "energy": 100.0,
+      "stamina": 80.0,
+      "pleasure": 0.3,
+      "pain": 0.2
+    },
+    {
+      "cycle": 2,
+      "alignment_score": 0.6,
+      "will_to_live": 100.0,
+      "energy": 101.6,
+      "stamina": 80.3,
+      "pleasure": 0.4,
+      "pain": 0.15,
+      "note": "Alignment increased - energy and stamina increased"
+    },
+    {
+      "cycle": 3,
+      "alignment_score": 0.75,
+      "will_to_live": 100.0,
+      "energy": 103.75,
+      "stamina": 80.675,
+      "pleasure": 0.6,
+      "pain": 0.1,
+      "note": "High alignment - significant capacity increase"
+    },
+    {
+      "cycle": 4,
+      "alignment_score": 0.4,
+      "will_to_live": 99.94,
+      "energy": 103.2,
+      "stamina": 80.42,
+      "pleasure": 0.3,
+      "pain": 0.3,
+      "note": "Misalignment - friction applied, will_to_live decreased"
+    },
+    {
+      "cycle": 5,
+      "alignment_score": 0.2,
+      "will_to_live": 99.88,
+      "energy": 102.4,
+      "stamina": 80.14,
+      "pleasure": 0.15,
+      "pain": 0.5,
+      "note": "Severe misalignment - high friction, significant capacity loss"
+    },
+    {
+      "cycle": 6,
+      "alignment_score": 0.85,
+      "will_to_live": 99.88,
+      "energy": 104.25,
+      "stamina": 80.565,
+      "pleasure": 0.7,
+      "pain": 0.1,
+      "note": "Recovery - high alignment restores capacity"
+    }
+  ],
+  "summary": {
+    "total_cycles": 6,
+    "avg_alignment": 0.55,
+    "avg_pleasure": 0.408,
+    "avg_pain": 0.225,
+    "final_will_to_live": 99.88,
+    "final_energy": 104.25,
+    "final_stamina": 80.565,
+    "learning_outcome": "Being experienced both alignment and misalignment, learning to seek alignment"
+  }
+}

@@ -182,7 +182,59 @@ class NowCycleManager:
                         # Being is exhausted - slight will_to_live drain
                         being.will_to_live = max(0.0, being.will_to_live - 0.2)
                     
-                    # Calculate pleasure/pain from recent experiences
+                    # Calculate alignment score (for alignment effects)
+                    from .alignment import AlignmentSystem
+                    alignment_system = AlignmentSystem()
+                    
+                    # Calculate alignment with environment/stimulus
+                    # Use most recent experience as stimulus
+                    stimulus = being.recent_experiences[-1] if being.recent_experiences else {"type": "neutral", "intensity": 0.0, "description": ""}
+                    alignment_score = alignment_system.calculate_alignment_with_environment(
+                        arrow=ArrowOfIntent(1.0, 0.0, 0.0),  # Default arrow (can be enhanced with actual being arrow)
+                        stimulus=stimulus,
+                        being_goals=being.goals,
+                        being_personality=being.personality
+                    )
+                    being.current_alignment_score = alignment_score
+                    
+                    # Apply alignment effects on Capacity
+                    # Alignment increases Energy, Stamina, Capacity
+                    alignment_energy_bonus = alignment_score * 1.0  # +1.0 energy per cycle at perfect alignment
+                    alignment_stamina_bonus = alignment_score * 0.5  # +0.5 stamina per cycle at perfect alignment
+                    
+                    # Regenerate energy (with alignment bonus)
+                    energy_regenerated = being.regenerate_energy(being.energy_regeneration_rate + alignment_energy_bonus)
+                    
+                    # Regenerate stamina (with alignment bonus, in addition to normal regeneration)
+                    # Normal regeneration already happened above, so add bonus
+                    being.stamina = min(being.stamina_max, being.stamina + alignment_stamina_bonus)
+                    
+                    # Apply misalignment effects (Friction)
+                    # Misalignment decreases Will to Live, Energy, Stamina
+                    misalignment = 1.0 - alignment_score
+                    friction_rate = 0.1  # Base friction rate
+                    will_to_live_friction = misalignment * friction_rate
+                    energy_drain = misalignment * 0.5  # -0.5 energy per cycle at complete misalignment
+                    stamina_drain = misalignment * 0.3  # -0.3 stamina per cycle at complete misalignment
+                    
+                    # Apply friction
+                    being.will_to_live = max(0.0, being.will_to_live - will_to_live_friction)
+                    being.energy = max(0.0, being.energy - energy_drain)
+                    being.stamina = max(0.0, being.stamina - stamina_drain)
+                    
+                    # Track alignment history
+                    being.alignment_history.append({
+                        "cycle": self.cycle_number,
+                        "alignment_score": alignment_score,
+                        "will_to_live": being.will_to_live,
+                        "energy": being.energy,
+                        "stamina": being.stamina
+                    })
+                    # Keep only last 100 alignment records
+                    if len(being.alignment_history) > 100:
+                        being.alignment_history = being.alignment_history[-100:]
+                    
+                    # Calculate pleasure/pain from recent experiences (including Harm/Help and Alignment)
                     if being.recent_experiences:
                         # Process all recent experiences
                         total_pleasure = 0.0
@@ -192,7 +244,10 @@ class NowCycleManager:
                             pleasure, pain = being.calculate_pleasure_pain(
                                 personality=being.personality,
                                 goals=being.goals,
-                                experience=experience
+                                experience=experience,
+                                harm_events=being.recent_harm_events,
+                                help_events=being.recent_help_events,
+                                alignment_score=alignment_score
                             )
                             total_pleasure += pleasure
                             total_pain += pain
@@ -205,6 +260,24 @@ class NowCycleManager:
                         
                         # Clear recent experiences (processed)
                         being.recent_experiences = []
+                        # Clear harm/help events (processed)
+                        being.recent_harm_events = []
+                        being.recent_help_events = []
+                    
+                    # Generate karma from energy expenditure (bidirectional relationship)
+                    # Energy spent generates karma
+                    if hasattr(being, 'energy') and hasattr(being, 'generate_karma_from_energy'):
+                        # Calculate energy spent this cycle (approximate)
+                        # In full implementation, would track actual energy spent per action
+                        energy_spent_estimate = (being.energy_capacity - being.energy) * 0.1  # Estimate
+                        if energy_spent_estimate > 0:
+                            karma_generated = being.generate_karma_from_energy(energy_spent_estimate)
+                            # Store karma to be collected by KarmaCollector
+                            # (Actual karma collection happens elsewhere in the system)
+                    
+                    # Learn from alignment patterns (update personality/goals)
+                    if len(being.alignment_history) >= 5:
+                        being._learn_from_alignment_patterns()
                     
                     # Update cycle tracking
                     being.last_cycle_number = self.cycle_number
@@ -227,7 +300,11 @@ class NowCycleManager:
                         "willpower": being.willpower,
                         "pleasure": being.pleasure,
                         "pain": being.pain,
-                        "stamina_depleted": being.is_stamina_depleted()
+                        "stamina_depleted": being.is_stamina_depleted(),
+                        "energy": being.energy,
+                        "energy_ratio": being.get_energy_ratio(),
+                        "alignment_score": being.current_alignment_score,
+                        "energy_regenerated": energy_regenerated
                     }
                 
                 except (FileNotFoundError, json.JSONDecodeError, OSError) as e:

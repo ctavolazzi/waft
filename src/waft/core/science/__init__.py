@@ -9,6 +9,7 @@ LabEntryGenerator: Formal lab entry generator.
 """
 
 from .observer import TheObserver
+from .oracle import TheOracle
 from .taxonomy import LineagePoet
 from .report import SessionReportGenerator, ObsidianGenerator
 from .tam_psyche import TamPsyche
@@ -17,6 +18,7 @@ from .lab_entry import LabEntryGenerator
 
 __all__ = [
     "TheObserver",
+    "TheOracle",
     "LineagePoet",
     "SessionReportGenerator",
     "ObsidianGenerator",

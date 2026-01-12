@@ -1,0 +1,34 @@
+{
+  "entry_id": "entry_20260112_050728_decision_quality",
+  "entry_type": "problem_detected",
+  "timestamp": 1768223248.022184,
+  "title": "Problem Detected: decision_quality",
+  "content": "**Problem Type**: decision_quality\n**Severity**: low\n**Description**: Low fitness gain from decisions (0.0 < 5.0)\n\n**Context**:\n{\n  \"fitness_gained\": 0.0,\n  \"min_fitness\": 5.0,\n  \"scenario\": \"tavern_scenario.py\",\n  \"line\": 50,\n  \"function\": \"create_character\",\n  \"interactive\": true\n}\n\n**Exception**: None",
+  "metadata": {
+    "problem_type": "decision_quality",
+    "severity": "low",
+    "exception_type": null,
+    "exception_message": null,
+    "execution_time": 0.5,
+    "execution_result_keys": [
+      "exception",
+      "error_message",
+      "context",
+      "traceback"
+    ],
+    "has_exception": true,
+    "execution_context": {
+      "scenario": "tavern_scenario.py",
+      "line": 50,
+      "function": "create_character",
+      "interactive": true
+    }
+  },
+  "related_problems": [
+    "entry_20260112_050728_decision_quality"
+  ],
+  "related_diagnoses": [],
+  "actionable_type": null,
+  "actionable_created": false,
+  "actionable_id": null
+}

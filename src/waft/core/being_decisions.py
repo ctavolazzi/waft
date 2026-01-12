@@ -203,6 +203,47 @@ class BeingDecisionSystem:
             if option == "rest" and being.will_to_live < 50.0:
                 weight *= 2.0  # Prefer rest if will_to_live is low
             
+            # Pain/Pleasure weighting (avoid pain, seek pleasure)
+            if being.pain > 0.5:
+                # High pain - prefer rest and low-cost actions
+                if option == "rest":
+                    weight *= 2.0  # Strongly prefer rest when in pain
+                elif option in ["pursue_goal", "learn_skill"]:
+                    weight *= 0.5  # Avoid high-cost actions when in pain
+            
+            if being.pleasure > 0.5:
+                # High pleasure - prefer actions that maintain or increase pleasure
+                if option == "pursue_goal":
+                    weight *= 1.5  # Prefer goal pursuit when feeling good
+                elif option == "explore":
+                    weight *= 1.3  # Prefer exploration when feeling good
+            
+            # Alignment weighting (seek alignment, avoid misalignment)
+            alignment_score = being.current_alignment_score
+            if alignment_score > 0.7:
+                # High alignment - prefer actions that maintain alignment
+                if option in ["pursue_goal", "learn_skill"]:
+                    weight *= 1.3  # Prefer goal-oriented actions when aligned
+            elif alignment_score < 0.3:
+                # Low alignment (misalignment) - prefer rest and low-cost actions
+                if option == "rest":
+                    weight *= 1.5  # Prefer rest when misaligned
+                elif option in ["pursue_goal", "learn_skill"]:
+                    weight *= 0.7  # Reduce high-cost actions when misaligned
+            
+            # Energy state weighting (low energy = prefer rest)
+            energy_ratio = being.get_energy_ratio()
+            if energy_ratio < 0.3:
+                # Low energy - strongly prefer rest
+                if option == "rest":
+                    weight *= 3.0  # Strongly prefer rest when energy is low
+                else:
+                    weight *= 0.5  # Reduce other actions when energy is low
+            elif energy_ratio > 0.7:
+                # High energy - prefer high-value actions
+                if option in ["pursue_goal", "learn_skill"]:
+                    weight *= 1.2  # Prefer high-value actions when energy is high
+            
             weights.append(weight)
         
         return weights
@@ -241,7 +282,10 @@ class BeingDecisionSystem:
         """
         Execute a decision and generate experience.
         
-        Actions consume stamina and quality degrades when depleted.
+        Actions consume stamina and energy, and quality degrades when depleted.
+        Action intensity is modulated by stamina (inverse relationship):
+        - More Stamina = Less Intensity per Action (more control, efficient)
+        - Less Stamina = More Intensity per Action (desperate, powerful but inefficient)
         
         Args:
             being: Being instance
@@ -259,58 +303,102 @@ class BeingDecisionSystem:
             "rest": 0.0  # Rest doesn't cost stamina, actually regenerates
         }
         
+        # Action energy costs
+        energy_costs = {
+            "learn_skill": 5.0,
+            "pursue_goal": 7.0,
+            "explore": 4.0,
+            "record_memory": 2.0,
+            "rest": 0.0  # Rest doesn't cost energy
+        }
+        
         stamina_cost = stamina_costs.get(decision_type, 5.0)
+        energy_cost = energy_costs.get(decision_type, 3.0)
+        
+        # Calculate action intensity from stamina (INVERSE relationship)
+        stamina_ratio = being.get_stamina_ratio()
+        # More stamina = less intensity per action (more control, efficient)
+        # Less stamina = more intensity per action (desperate, powerful)
+        intensity_modifier = 0.5  # Base modifier
+        action_intensity = 1.0 - (stamina_ratio * intensity_modifier)
+        # Clamp to reasonable range [0.3, 1.5]
+        action_intensity = max(0.3, min(1.5, action_intensity))
+        
+        # Consume energy
+        actual_energy_consumed = being.consume_energy(energy_cost)
         
         # Make decision (consumes stamina, applies depleted effects)
         decision_result = being.make_decision(decision_type, stamina_cost)
         experience = decision_result["experience"]
         
+        # Apply action intensity to experience outcomes
+        experience["action_intensity"] = action_intensity
+        experience["energy_consumed"] = actual_energy_consumed
+        
         # Enhance experience based on decision type
+        # Apply action intensity to outcomes
+        base_intensity = experience.get("intensity", 0.5)
+        
         if decision_type == "learn_skill":
             experience["type"] = "positive"
             if not experience.get("stamina_depleted"):
-                experience["intensity"] = 0.6
+                base_intensity = 0.6
                 experience["description"] = "Learned a new skill"
             else:
-                experience["intensity"] = 0.3  # Reduced due to mistakes
+                base_intensity = 0.3  # Reduced due to mistakes
                 experience["description"] = "Attempted to learn a skill (made mistakes due to exhaustion)"
+            # Apply intensity: high intensity = more skill gain, but less efficient
+            experience["intensity"] = base_intensity * action_intensity
+            # Adjust skill learning based on intensity
+            if "skill_learned" in experience:
+                experience["skill_learned"]["level_increase"] *= action_intensity
         
         elif decision_type == "record_memory":
             experience["type"] = "positive"
             if not experience.get("stamina_depleted"):
-                experience["intensity"] = 0.4
+                base_intensity = 0.4
                 experience["description"] = "Recorded a memory"
             else:
-                experience["intensity"] = 0.2
+                base_intensity = 0.2
                 experience["description"] = "Recorded a memory (incomplete due to exhaustion)"
+            experience["intensity"] = base_intensity * action_intensity
         
         elif decision_type == "pursue_goal":
             experience["type"] = "positive"
             if not experience.get("stamina_depleted"):
-                experience["intensity"] = 0.7
+                base_intensity = 0.7
                 experience["description"] = "Pursued a lifetime goal"
             else:
-                experience["intensity"] = 0.3
+                base_intensity = 0.3
                 experience["description"] = "Attempted to pursue goal (poor execution due to exhaustion)"
+            experience["intensity"] = base_intensity * action_intensity
+            # High intensity = more goal progress, but less efficient
+            if "goal_progress" in experience:
+                experience["goal_progress"] *= action_intensity
         
         elif decision_type == "rest":
-            # Resting regenerates stamina and will_to_live
+            # Resting regenerates stamina, energy, and will_to_live
             experience["type"] = "positive"
-            experience["intensity"] = 0.3
+            base_intensity = 0.3
+            experience["intensity"] = base_intensity
             experience["description"] = "Rested and recovered"
             # Regenerate stamina faster when resting
             stamina_regenerated = being.regenerate_stamina(being.stamina_regeneration_rate * 2.0)
             experience["stamina_regenerated"] = stamina_regenerated
+            # Regenerate energy
+            energy_regenerated = being.regenerate_energy(being.energy_regeneration_rate * 1.5)
+            experience["energy_regenerated"] = energy_regenerated
             # Slight will_to_live regeneration
             being.will_to_live = min(100.0, being.will_to_live + 1.0)
         
         elif decision_type == "explore":
             experience["type"] = "positive"
             if not experience.get("stamina_depleted"):
-                experience["intensity"] = random.uniform(0.3, 0.6)
+                base_intensity = random.uniform(0.3, 0.6)
                 experience["description"] = "Explored reality and discovered opportunities"
             else:
-                experience["intensity"] = random.uniform(0.1, 0.3)
+                base_intensity = random.uniform(0.1, 0.3)
                 experience["description"] = "Explored reality (missed opportunities due to exhaustion)"
+            experience["intensity"] = base_intensity * action_intensity
         
         return experience

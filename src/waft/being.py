@@ -189,6 +189,22 @@ class Being:
         # Experience tracking (for pleasure/pain calculation)
         self.recent_experiences: List[Dict[str, Any]] = recent_experiences if recent_experiences is not None else []
         
+        # Energy system (INNATE to all beings)
+        # Energy capacity is derived from Karma (bidirectional relationship)
+        self.energy: float = 100.0  # Current energy (0.0-100.0)
+        self.energy_capacity: float = 100.0  # Max energy (derived from Karma)
+        self.energy_well: float = 100.0  # Energy Well/Source (related to Karma)
+        self.energy_regeneration_rate: float = 2.0  # Energy restored per cycle
+        self._initialize_energy_from_karma()  # Initialize from Karma if available
+        
+        # Harm/Help tracking (for pain/pleasure calculation)
+        self.recent_harm_events: List[Any] = []  # List of Harm objects
+        self.recent_help_events: List[Any] = []  # List of Help objects
+        
+        # Alignment tracking
+        self.current_alignment_score: float = 0.5  # Current alignment (0.0-1.0)
+        self.alignment_history: List[Dict[str, Any]] = []  # History of alignment scores
+        
         # Empirica integration (for first Being only - when parent_being_id is None)
         self.empirica_session_id: Optional[str] = None
         self.empirica_manager: Optional[Any] = None
@@ -337,6 +353,111 @@ class Being:
         
         return self.stamina - old_stamina
     
+    def _initialize_energy_from_karma(self) -> None:
+        """
+        Initialize energy capacity from Karma (bidirectional relationship).
+        
+        Karma → Energy Capacity: More karma = larger energy pool
+        Formula: energy_capacity = base_capacity + (karma_balance / 100.0) * capacity_multiplier
+        """
+        base_capacity = 100.0
+        capacity_multiplier = 50.0  # Each 100 karma = +50 energy capacity
+        
+        # Try to get karma balance
+        karma_balance = 0.0
+        if self.soul_id:
+            try:
+                from .karma import KarmaMerchant
+                from pathlib import Path
+                karma_merchant = KarmaMerchant(project_path=Path.cwd())
+                akasha_data = karma_merchant.access_akasha(self.soul_id)
+                if akasha_data and isinstance(akasha_data, dict):
+                    karma_balance = akasha_data.get("karma_balance", akasha_data.get("total_karma", 0.0))
+            except Exception:
+                # KarmaMerchant not available or error
+                pass
+        
+        # Calculate energy capacity from karma
+        self.energy_capacity = base_capacity + (karma_balance / 100.0) * capacity_multiplier
+        self.energy_well = self.energy_capacity  # Energy Well = capacity
+        self.energy = min(self.energy, self.energy_capacity)  # Clamp current energy to capacity
+    
+    def update_energy_from_karma(self) -> None:
+        """
+        Update energy capacity from current Karma balance.
+        
+        Called when karma changes to update energy capacity.
+        """
+        self._initialize_energy_from_karma()
+    
+    def consume_energy(self, amount: float) -> float:
+        """
+        Consume energy for an action.
+        
+        Args:
+            amount: Energy to consume
+        
+        Returns:
+            Actual energy consumed (may be less if depleted)
+        """
+        actual_consumption = min(amount, self.energy)
+        self.energy = max(0.0, self.energy - actual_consumption)
+        return actual_consumption
+    
+    def regenerate_energy(self, amount: Optional[float] = None) -> float:
+        """
+        Regenerate energy (called each cycle).
+        
+        Args:
+            amount: Amount to regenerate (defaults to energy_regeneration_rate)
+        
+        Returns:
+            Actual energy regenerated
+        """
+        if amount is None:
+            amount = self.energy_regeneration_rate
+        
+        old_energy = self.energy
+        self.energy = min(self.energy_capacity, self.energy + amount)
+        
+        return self.energy - old_energy
+    
+    def get_energy_ratio(self) -> float:
+        """
+        Get energy as a ratio of capacity (0.0-1.0).
+        
+        Returns:
+            Energy ratio
+        """
+        if self.energy_capacity == 0:
+            return 0.0
+        return self.energy / self.energy_capacity
+    
+    def is_energy_depleted(self) -> bool:
+        """
+        Check if energy is depleted (below 10% threshold).
+        
+        Returns:
+            True if energy is critically low
+        """
+        return self.energy < (self.energy_capacity * 0.1)
+    
+    def generate_karma_from_energy(self, energy_spent: float) -> float:
+        """
+        Generate karma from energy expenditure (bidirectional relationship).
+        
+        Energy Spent → Karma: Energy expenditure generates karma
+        Formula: karma_generated = energy_spent * karma_conversion_rate
+        
+        Args:
+            energy_spent: Amount of energy spent
+        
+        Returns:
+            Karma generated
+        """
+        karma_conversion_rate = 0.1  # Each 1.0 energy = 0.1 karma
+        return energy_spent * karma_conversion_rate
+    
     def learn_skill(
         self,
         skill_name: str,
@@ -377,10 +498,12 @@ class Being:
         """
         Record a memory.
         
+        Enhanced to include Harm/Help events and alignment information.
+        
         Args:
             memory_content: Content of memory
             memory_type: Type of memory
-            metadata: Additional metadata
+            metadata: Additional metadata (can include harm_events, help_events, alignment_score)
             
         Returns:
             Memory record
@@ -391,6 +514,21 @@ class Being:
             "recorded_at": datetime.now().isoformat(),
             "metadata": metadata or {}
         }
+        
+        # Include Harm/Help events if available
+        if self.recent_harm_events:
+            memory["metadata"]["harm_events"] = [
+                harm.to_dict() for harm in self.recent_harm_events
+            ]
+        if self.recent_help_events:
+            memory["metadata"]["help_events"] = [
+                help_event.to_dict() for help_event in self.recent_help_events
+            ]
+        
+        # Include alignment information
+        memory["metadata"]["alignment_score"] = self.current_alignment_score
+        memory["metadata"]["pleasure"] = self.pleasure
+        memory["metadata"]["pain"] = self.pain
         
         self.memories.append(memory)
         return memory
@@ -403,6 +541,8 @@ class Being:
     ) -> Dict[str, Any]:
         """
         Learn a lesson (what worked/didn't work).
+        
+        Enhanced to include alignment patterns and Harm/Help learning.
         
         Args:
             lesson: The lesson learned
@@ -419,8 +559,61 @@ class Being:
             "metadata": metadata or {}
         }
         
+        # Include alignment information for learning
+        lesson_record["metadata"]["alignment_score"] = self.current_alignment_score
+        lesson_record["metadata"]["pleasure"] = self.pleasure
+        lesson_record["metadata"]["pain"] = self.pain
+        
         self.lessons_learned.append(lesson_record)
+        
+        # Learn from alignment patterns
+        self._learn_from_alignment_patterns()
+        
         return lesson_record
+    
+    def _learn_from_alignment_patterns(self) -> None:
+        """
+        Learn from alignment history to update personality/goals.
+        
+        Beings learn which actions create Alignment vs. Misalignment,
+        and personality/goals evolve based on what creates Pleasure (Alignment).
+        """
+        if len(self.alignment_history) < 5:
+            # Need at least 5 data points to learn patterns
+            return
+        
+        # Analyze recent alignment history
+        recent_history = self.alignment_history[-20:]  # Last 20 cycles
+        
+        # Calculate average alignment
+        avg_alignment = sum(h["alignment_score"] for h in recent_history) / len(recent_history)
+        
+        # Calculate average pleasure/pain
+        avg_pleasure = sum(h.get("pleasure", 0.0) for h in recent_history if "pleasure" in h) / len(recent_history)
+        avg_pain = sum(h.get("pain", 0.0) for h in recent_history if "pain" in h) / len(recent_history)
+        
+        # If alignment consistently creates pleasure, being learns to seek alignment
+        if avg_alignment > 0.7 and avg_pleasure > 0.5:
+            # High alignment = high pleasure - being learns to maintain this
+            # Adjust personality/goals to favor alignment-seeking behaviors
+            if "alignment_seeking" not in self.personality:
+                self.personality["alignment_seeking"] = 0.5
+            self.personality["alignment_seeking"] = min(1.0, self.personality["alignment_seeking"] + 0.1)
+        
+        # If misalignment consistently creates pain, being learns to avoid it
+        if avg_alignment < 0.3 and avg_pain > 0.5:
+            # Low alignment = high pain - being learns to avoid this
+            if "misalignment_avoidance" not in self.personality:
+                self.personality["misalignment_avoidance"] = 0.5
+            self.personality["misalignment_avoidance"] = min(1.0, self.personality["misalignment_avoidance"] + 0.1)
+        
+        # Update goals based on what creates alignment
+        # If certain goals consistently lead to alignment, prioritize them
+        if avg_alignment > 0.6:
+            # High alignment - being learns which goals/actions create this
+            # This is a simplified learning mechanism
+            # In full implementation, would track which specific goals/actions led to alignment
+            pass
     
     def calculate_will_to_live_change(
         self,
@@ -492,22 +685,32 @@ class Being:
         self,
         personality: Optional[Dict[str, Any]] = None,
         goals: Optional[List[Dict[str, Any]]] = None,
-        experience: Optional[Dict[str, Any]] = None
+        experience: Optional[Dict[str, Any]] = None,
+        harm_events: Optional[List[Any]] = None,
+        help_events: Optional[List[Any]] = None,
+        alignment_score: Optional[float] = None
     ) -> Tuple[float, float]:
         """
-        Calculate pleasure and pain based on personality-goal-experience alignment.
+        Calculate pleasure and pain from multiple sources:
+        1. Harm/Help events (subjective interpretation)
+        2. Alignment score (Arrow of Intent alignment)
+        3. Personality-goal-experience alignment (existing)
         
-        Uses PersonalityAlignment class for calculation.
+        Modulated by Stamina (capacity to feel).
         
         Args:
             personality: Personality traits dict (defaults to self.personality)
             goals: Lifetime goals list (defaults to self.goals)
             experience: Experience dict from current cycle (defaults to recent_experiences)
+            harm_events: List of Harm objects (defaults to self.recent_harm_events)
+            help_events: List of Help objects (defaults to self.recent_help_events)
+            alignment_score: Alignment score (defaults to self.current_alignment_score)
         
         Returns:
-            (pleasure, pain) tuple (0.0-1.0 each)
+            (pleasure, pain) tuple (0.0-1.0 each), modulated by Stamina
         """
         from .core.personality_alignment import PersonalityAlignment
+        from .core.alignment import AlignmentSystem
         
         # Use defaults if not provided
         if personality is None:
@@ -519,11 +722,82 @@ class Being:
             if self.recent_experiences:
                 experience = self.recent_experiences[-1]
             else:
-                # No experience - return neutral
-                return (0.0, 0.0)
+                experience = {"type": "neutral", "intensity": 0.0, "description": ""}
         
-        alignment = PersonalityAlignment()
-        return alignment.calculate_alignment(personality, goals, experience)
+        if harm_events is None:
+            harm_events = self.recent_harm_events
+        if help_events is None:
+            help_events = self.recent_help_events
+        if alignment_score is None:
+            alignment_score = self.current_alignment_score
+        
+        # Initialize systems
+        personality_alignment = PersonalityAlignment()
+        alignment_system = AlignmentSystem()
+        
+        # 1. Calculate base pleasure/pain from personality-goal-experience alignment
+        base_pleasure, base_pain = personality_alignment.calculate_alignment(
+            personality, goals, experience
+        )
+        
+        # 2. Add pleasure/pain from Harm/Help events (subjective interpretation)
+        harm_pain = 0.0
+        help_pleasure = 0.0
+        
+        # Process harm events
+        for harm in harm_events or []:
+            # Calculate alignment between source and target (this being)
+            # For now, use a simple interpretation based on harm severity
+            # In full implementation, would use Arrow of Intent alignment
+            interpreted_pain = harm.severity
+            if not harm.intentional:
+                # Unintentional harm causes less pain
+                interpreted_pain *= 0.7
+            harm_pain += interpreted_pain
+        
+        # Process help events
+        for help_event in help_events or []:
+            # Calculate alignment between source and target (this being)
+            interpreted_pleasure = help_event.benefit
+            if help_event.intentional:
+                # Intentional help causes more pleasure
+                interpreted_pleasure *= 1.2
+            help_pleasure += interpreted_pleasure
+        
+        # Clamp harm/help contributions
+        harm_pain = min(1.0, harm_pain)
+        help_pleasure = min(1.0, help_pleasure)
+        
+        # 3. Add pleasure/pain from Alignment score
+        alignment_pleasure = alignment_system.alignment_to_pleasure(alignment_score)
+        alignment_pain = alignment_system.alignment_to_pain(alignment_score)
+        
+        # Combine all sources (weighted average)
+        total_pleasure = (
+            base_pleasure * 0.4 +
+            help_pleasure * 0.3 +
+            alignment_pleasure * 0.3
+        )
+        total_pain = (
+            base_pain * 0.4 +
+            harm_pain * 0.3 +
+            alignment_pain * 0.3
+        )
+        
+        # Clamp to 0.0-1.0
+        total_pleasure = max(0.0, min(1.0, total_pleasure))
+        total_pain = max(0.0, min(1.0, total_pain))
+        
+        # 4. Modulate by Stamina (capacity to feel)
+        stamina_ratio = self.get_stamina_ratio()
+        # Low stamina = reduced capacity to feel (numbness)
+        # High stamina = full capacity to feel
+        stamina_modifier = stamina_ratio * 0.5 + 0.5  # Maps [0.0, 1.0] to [0.5, 1.0]
+        
+        effective_pleasure = total_pleasure * stamina_modifier
+        effective_pain = total_pain * stamina_modifier
+        
+        return (effective_pleasure, effective_pain)
     
     def check_death(self) -> bool:
         """

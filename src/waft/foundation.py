@@ -637,7 +637,13 @@ class DocumentEngine(FPDF):
         if not result.get('success', False):
             raise RuntimeError(f"Component PDF generation failed: {result.get('error', 'Unknown error')}")
         
-        return Path(result['pdf_path'])
+        pdf_path = Path(result['pdf_path'])
+        
+        # Log to Empirica if available
+        if self.empirica.is_initialized():
+            self._log_one_pager_generation_to_empirica("component", title, pdf_path)
+        
+        return pdf_path
     
     def generate_evolved_one_pager(
         self,
@@ -708,7 +714,13 @@ class DocumentEngine(FPDF):
         if not result.get('success', False):
             raise RuntimeError(f"Evolution PDF generation failed: {result.get('error', 'Unknown error')}")
         
-        return Path(result['pdf_path'])
+        pdf_path = Path(result['pdf_path'])
+        
+        # Log to Empirica if available
+        if self.empirica.is_initialized():
+            self._log_one_pager_generation_to_empirica("evolved", title, pdf_path)
+        
+        return pdf_path
     
     def record_evolution_feedback(
         self,
@@ -1009,8 +1021,10 @@ class TheFoundation:
     """
     WAFT-specific PDF documentation generator.
     
-    Integrates TheObserver and TavernKeeper to generate stylized PDF documentation
+    Integrates TheObserver, TavernKeeper, and Empirica to generate stylized PDF documentation
     in SCP/Dossier format. Uses DocumentEngine internally for PDF generation.
+    
+    Uses Empirica to track document generation, insights, and knowledge gained from documentation.
     """
 
     def __init__(
@@ -1018,6 +1032,7 @@ class TheFoundation:
         project_path: Path,
         observer: Optional["TheObserver"] = None,
         tavern_keeper: Optional["TavernKeeper"] = None,
+        empirica_manager=None,
     ) -> None:
         """
         Initialize TheFoundation.
@@ -1026,6 +1041,7 @@ class TheFoundation:
             project_path: Path to project root
             observer: Optional TheObserver instance (creates if None)
             tavern_keeper: Optional TavernKeeper instance (creates if None)
+            empirica_manager: Optional EmpiricaManager instance (creates if None)
         """
         self.project_path = Path(project_path)
         self.output_dir = self.project_path / "_work_efforts"
@@ -1033,16 +1049,23 @@ class TheFoundation:
 
         # Initialize Observer and TavernKeeper
         if observer is None:
-            from ..core.science.observer import TheObserver
+            from waft.core.science.observer import TheObserver
             self.observer = TheObserver(self.project_path)
         else:
             self.observer = observer
 
         if tavern_keeper is None:
-            from ..core.tavern_keeper import TavernKeeper
+            from waft.core.tavern_keeper import TavernKeeper
             self.tavern_keeper = TavernKeeper(self.project_path)
         else:
             self.tavern_keeper = tavern_keeper
+        
+        # Initialize Empirica (for epistemic tracking of documentation)
+        if empirica_manager is None:
+            from waft.core.empirica import EmpiricaManager
+            self.empirica = EmpiricaManager(self.project_path)
+        else:
+            self.empirica = empirica_manager
 
     def generate_dossier(self, dossier_number: str = "014", output_path: Optional[Path] = None) -> Path:
         """
@@ -1237,7 +1260,47 @@ class TheFoundation:
         )
 
         # Render PDF
-        return engine.render(output_path)
+        output_path = engine.render(output_path)
+        
+        # Log to Empirica if available
+        if self.empirica.is_initialized():
+            self._log_dossier_generation_to_empirica(dossier_number, output_path)
+        
+        return output_path
+    
+    def _log_dossier_generation_to_empirica(self, dossier_number: str, output_path: Path) -> None:
+        """Log dossier generation to Empirica."""
+        file_size_kb = output_path.stat().st_size / 1024 if output_path.exists() else 0
+        
+        finding = (
+            f"TheFoundation generated dossier {dossier_number}: "
+            f"{output_path.name} ({file_size_kb:.1f} KB)"
+        )
+        impact = 0.5  # Documentation generation is moderately impactful
+        self.empirica.log_finding(finding, impact=impact)
+        
+        # Log insight about documentation
+        insight = f"Documentation generated: Dossier {dossier_number} captures system state and protocol"
+        self.empirica.log_finding(insight, impact=0.4)
+    
+    def _log_one_pager_generation_to_empirica(self, doc_type: str, title: str, output_path: Path) -> None:
+        """Log one-pager generation to Empirica."""
+        file_size_kb = output_path.stat().st_size / 1024 if output_path.exists() else 0
+        
+        finding = (
+            f"TheFoundation generated {doc_type} one-pager: "
+            f"{title} ({file_size_kb:.1f} KB)"
+        )
+        impact = 0.4  # One-pagers are moderately impactful
+        self.empirica.log_finding(finding, impact=impact)
+        
+        # Log insight about documentation type
+        if doc_type == "evolved":
+            insight = f"Evolutionary documentation generated: {title} - system learning from feedback"
+            self.empirica.log_finding(insight, impact=0.5)
+        else:
+            insight = f"Component-based documentation generated: {title} - adaptive layout system"
+            self.empirica.log_finding(insight, impact=0.4)
 
 
 if __name__ == "__main__":

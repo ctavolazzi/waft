@@ -1811,6 +1811,74 @@ def reflect(
     )
 
 
+@app.command(name="journal-search")
+def journal_search(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    query: Optional[str] = typer.Option(None, "--query", "-q", help="Text search query"),
+    topic: Optional[str] = typer.Option(None, "--topic", "-t", help="Filter by topic"),
+    date_from: Optional[str] = typer.Option(None, "--from", help="Start date (YYYY-MM-DD)"),
+    date_to: Optional[str] = typer.Option(None, "--to", help="End date (YYYY-MM-DD)"),
+    limit: int = typer.Option(10, "--limit", "-l", help="Maximum results"),
+):
+    """
+    Search journal entries by query, topic, or date range.
+    """
+    project_path = resolve_project_path(path)
+    
+    from .core.reflect import ReflectManager
+    from rich.table import Table
+    
+    reflect_manager = ReflectManager(project_path)
+    results = reflect_manager.search_entries(
+        query=query,
+        topic=topic,
+        date_from=date_from,
+        date_to=date_to,
+        limit=limit
+    )
+    
+    if not results:
+        reflect_manager.console.print("[yellow]No entries found matching your criteria.[/yellow]\n")
+        return
+    
+    table = Table(title=f"📔 Journal Search Results ({len(results)} found)", show_header=True)
+    table.add_column("Date", style="dim")
+    table.add_column("Time", style="dim")
+    table.add_column("Preview", style="cyan")
+    
+    for entry in results:
+        preview = entry.get("content", "")[:100].replace("\n", " ")
+        table.add_row(
+            entry.get("date", "Unknown"),
+            entry.get("time", "Unknown"),
+            preview + "..." if len(preview) >= 100 else preview
+        )
+    
+    reflect_manager.console.print("\n")
+    reflect_manager.console.print(table)
+    reflect_manager.console.print("\n")
+
+
+@app.command(name="journal-stats")
+def journal_stats(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    cleanup: bool = typer.Option(False, "--cleanup", help="Clean up old archives"),
+):
+    """
+    Display journal statistics and analytics.
+    """
+    project_path = resolve_project_path(path)
+    
+    from .core.reflect import ReflectManager
+    
+    reflect_manager = ReflectManager(project_path)
+    
+    if cleanup:
+        reflect_manager.cleanup_old_archives()
+    
+    reflect_manager.display_statistics()
+
+
 @app.command()
 def help_cmd(
     path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
@@ -1836,6 +1904,113 @@ def help_cmd(
         command=command,
         count=count
     )
+
+
+@app.command(name="encapsulated-environments-pdf")
+def encapsulated_environments_pdf(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    output: Optional[str] = typer.Option(None, "--output", "-o", help="Output PDF path (default: auto-generated)"),
+    style: str = typer.Option("clinical_standard", "--style", "-s", help="PDF style (clinical_standard/premium/professional)"),
+    open_pdf: bool = typer.Option(True, "--open/--no-open", help="Open PDF after generation"),
+):
+    """
+    Generate research PDF explaining Encapsulated Environments system.
+    
+    Creates a multi-section research PDF with simple prose and scientific design elements
+    explaining the framework for Being storytelling and information exchange.
+    """
+    project_path = resolve_project_path(path)
+    console.print(f"\n[bold cyan]📄 Waft[/bold cyan] - Generating Encapsulated Environments Research PDF\n")
+    
+    from pathlib import Path
+    
+    # Read the research document
+    research_file = project_path / "_pyrite" / "research" / "encapsulated-environments-research.md"
+    
+    if not research_file.exists():
+        console.print(f"[red]❌ Research file not found: {research_file}[/red]")
+        raise typer.Exit(1)
+    
+    # Use the working example script with uv run to ensure dependencies
+    import subprocess
+    import shutil
+    
+    example_script = project_path / "examples" / "generate_encapsulated_environments_pdf.py"
+    
+    if not example_script.exists():
+        console.print(f"[red]❌ Example script not found: {example_script}[/red]")
+        raise typer.Exit(1)
+    
+    # Generate output path
+    if output:
+        output_path = Path(output)
+    else:
+        output_path = project_path / "encapsulated_environments_research.pdf"
+    
+    console.print(f"[yellow]→[/yellow] Generating PDF...")
+    
+    # Check if uv is available, use it if so
+    uv_available = shutil.which("uv") is not None
+    
+    try:
+        if uv_available:
+            # Use uv run to ensure dependencies are available
+            console.print(f"[dim]Using uv run to ensure dependencies...[/dim]")
+            result = subprocess.run(
+                ["uv", "run", "python3", str(example_script)],
+                cwd=project_path,
+                capture_output=True,
+                text=True
+            )
+        else:
+            # Fallback to python3 directly
+            console.print(f"[dim]Running with python3 (uv not found)...[/dim]")
+            result = subprocess.run(
+                ["python3", str(example_script)],
+                cwd=project_path,
+                capture_output=True,
+                text=True
+            )
+        
+        if result.returncode == 0:
+            # Check if PDF was created (script creates it at default location)
+            default_pdf = project_path / "encapsulated_environments_research.pdf"
+            if default_pdf.exists():
+                # Move to requested location if different
+                if output_path != default_pdf:
+                    default_pdf.rename(output_path)
+                
+                console.print(f"[green]✅ PDF generated:[/green] {output_path}")
+                console.print(f"[dim]Style: {style} | Pages: Auto[/dim]")
+                
+                if open_pdf:
+                    import subprocess as sp
+                    sp.run(["open", str(output_path)], check=False)
+                
+                return output_path
+            else:
+                console.print(f"[yellow]⚠️[/yellow]  Script completed but PDF not found")
+                if result.stdout:
+                    console.print(f"[dim]Output: {result.stdout}[/dim]")
+                raise typer.Exit(1)
+        else:
+            error_msg = result.stderr or result.stdout or "Unknown error"
+            console.print(f"[red]❌ Error generating PDF[/red]")
+            if "jinja2" in error_msg or "ModuleNotFoundError" in error_msg:
+                console.print(f"[yellow]💡 Missing dependencies. Try:[/yellow]")
+                console.print(f"   uv pip install jinja2 weasyprint markdown")
+                console.print(f"   Or: uv run python3 {example_script}")
+            else:
+                console.print(f"[dim]{error_msg}[/dim]")
+            raise typer.Exit(1)
+            
+    except FileNotFoundError:
+        console.print(f"[red]❌ Python not found. Please ensure Python 3 is installed.[/red]")
+        raise typer.Exit(1)
+    except Exception as e:
+        console.print(f"[red]❌ Error:[/red] {e}")
+        logger.exception("Error generating encapsulated environments PDF")
+        raise typer.Exit(1)
 
 
 goal_app = typer.Typer(help="Goal management commands")
@@ -1966,6 +2141,108 @@ def recap(
     recap_manager.run_recap(output_path=output)
 
 
+@app.command(name="science-bitch")
+def science_bitch(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    hypothesis: Optional[str] = typer.Option(None, "--hypothesis", "-h", help="Hypothesis statement"),
+    run: bool = typer.Option(False, "--run", "-r", help="Run experiment"),
+    report: bool = typer.Option(False, "--report", help="Generate report"),
+    field_guide: bool = typer.Option(False, "--field-guide", help="Generate field guide PDF"),
+):
+    """
+    Science-Bitch: Full scientific method workflow.
+    
+    Runs the complete scientific method:
+    1. Form hypothesis
+    2. Design experiment
+    3. Capture initial state (A)
+    4. Run experiment
+    5. Collect data (C)
+    6. Capture final state (B)
+    7. Analyze results
+    8. Generate reports
+    """
+    project_path = resolve_project_path(path)
+    
+    from .core.science_bitch import ScienceBitchManager
+    
+    manager = ScienceBitchManager(project_path)
+    
+    if field_guide:
+        # Generate field guide PDF
+        console.print("\n[bold cyan]📖 Generating Field Guide PDF...[/bold cyan]\n")
+        guide_path = manager.generate_field_guide()
+        if guide_path:
+            console.print(f"[green]✅ Field guide generated:[/green] {guide_path}")
+        else:
+            console.print("[red]❌ Failed to generate field guide[/red]")
+            raise typer.Exit(1)
+        return
+    
+    if report:
+        # Generate project status report
+        console.print("\n[bold cyan]📊 Generating Project Status Report...[/bold cyan]\n")
+        report_path = manager.generate_project_status_report()
+        if report_path:
+            console.print(f"[green]✅ Report generated:[/green] {report_path}")
+        else:
+            console.print("[red]❌ Failed to generate report[/red]")
+            raise typer.Exit(1)
+        return
+    
+    # Run interactive workflow
+    result = manager.run_interactive()
+    
+    if result.get("success"):
+        console.print("\n[green]✅ Scientific method workflow complete![/green]")
+        if result.get("report_path"):
+            console.print(f"[dim]Report: {result['report_path']}[/dim]")
+    else:
+        console.print(f"\n[red]❌ Workflow failed: {result.get('error', 'Unknown error')}[/red]")
+        raise typer.Exit(1)
+
+
+@app.command()
+def improve(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    focus: Optional[str] = typer.Option(None, "--focus", "-f", help="Focus area (file path, work effort, or 'all')"),
+    category: Optional[str] = typer.Option(None, "--category", "-c", help="Filter by category (code, documentation, architecture, testing, performance, usability)"),
+    recent_only: bool = typer.Option(False, "--recent", "-r", help="Only analyze recent changes"),
+    output: Optional[str] = typer.Option(None, "--output", "-o", help="Save improvement report to file"),
+):
+    """
+    Analyze work and suggest improvements.
+    
+    Analyzes code, documentation, architecture, and implementation to identify
+    improvement opportunities with prioritized recommendations.
+    """
+    project_path = resolve_project_path(path)
+    
+    from .core.improve import ImproveManager
+    
+    improve_manager = ImproveManager(project_path)
+    
+    output_path = None
+    if output:
+        output_path = Path(output)
+    
+    result = improve_manager.run_improve(
+        focus=focus,
+        category=category,
+        recent_only=recent_only,
+        output_path=output_path
+    )
+    
+    if result["success"]:
+        summary = result["summary"]
+        console.print(f"\n[green]✅[/green] Analysis complete: {summary['total']} improvements identified")
+        if summary["top_3"]:
+            console.print(f"[dim]Top priority: {summary['top_3'][0]['title']}[/dim]")
+    else:
+        console.print("[red]❌ Analysis failed[/red]")
+        raise typer.Exit(1)
+
+
 @app.command()
 def audit(
     path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
@@ -2009,6 +2286,318 @@ def proceed(
         strict=strict,
         relaxed=relaxed,
     )
+
+
+@app.command()
+def check_assumptions(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    focus: Optional[str] = typer.Option(None, "--focus", "-f", help="Focus area: code, dependencies, data, system, behavioral"),
+    critical_only: bool = typer.Option(False, "--critical", "-c", help="Only check critical assumptions"),
+    test: bool = typer.Option(False, "--test", "-t", help="Run experiments for assumptions needing testing"),
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed evidence traces"),
+):
+    """
+    Identify all assumptions in conversation and validate them with evidence.
+    
+    Analyzes conversation history to extract implicit assumptions, then systematically
+    validates each one using code analysis, file system checks, test results, Empirica
+    epistemic state, and other available evidence sources.
+    """
+    project_path = resolve_project_path(path)
+    
+    from .core.check_assumptions import CheckAssumptionsManager
+    
+    manager = CheckAssumptionsManager(project_path)
+    manager.run_check_assumptions(
+        focus=focus,
+        critical_only=critical_only,
+        test=test,
+        verbose=verbose,
+    )
+
+
+@app.command()
+def oracle(
+    question: Optional[str] = typer.Argument(None, help="Question or context for guidance"),
+    assess: Optional[str] = typer.Option(None, "--assess", "-a", help="Assess a decision (provide description)"),
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+):
+    """
+    Consult TheOracle for epistemic insights and guidance.
+    
+    TheOracle provides epistemic intelligence based on Empirica state, offering
+    insights, recommendations, and decision support.
+    """
+    project_path = resolve_project_path(path)
+    
+    console.print(f"\n[bold cyan]🔮 Waft[/bold cyan] - Consulting TheOracle\n")
+    
+    from .core.science import TheOracle
+    from rich.table import Table
+    
+    try:
+        oracle = TheOracle(project_path)
+        
+        # Get epistemic state
+        console.print("[yellow]→[/yellow] Gathering epistemic state...")
+        state = oracle.get_epistemic_state()
+        
+        if not state.get("initialized"):
+            console.print("[yellow]⚠️[/yellow]  Empirica not fully initialized")
+            console.print(f"  Message: {state.get('message', 'Unknown')}")
+            console.print("\n[dim]The Oracle requires Empirica to be initialized.[/dim]")
+            console.print("[dim]Run: waft init (if not done) or initialize Empirica first.[/dim]")
+            
+            # Still provide basic guidance
+            console.print("\n[bold cyan]🔮 Oracle Basic Guidance:[/bold cyan]")
+            console.print(Panel(
+                "The Oracle sees that Empirica is not initialized. "
+                "To enable full epistemic intelligence, initialize Empirica first.",
+                title="Basic Recommendation",
+                border_style="yellow"
+            ))
+            _process_tavern_hook(project_path, "oracle", True)
+            return
+        
+        # Display epistemic state
+        epistemic_state = state.get("epistemic_state", {})
+        vectors = epistemic_state.get("vectors", {})
+        foundation = vectors.get("foundation", {})
+        
+        know = foundation.get("know", 0.0)
+        uncertainty = vectors.get("uncertainty", 1.0)
+        engagement = vectors.get("engagement", 0.0)
+        
+        console.print("[green]✓[/green] Epistemic state retrieved")
+        
+        # Get phase
+        phase = oracle.get_epistemic_phase()
+        console.print(f"\n[bold]Epistemic Phase:[/bold] [cyan]{phase}[/cyan]")
+        
+        # Display vectors table
+        table = Table(title="Epistemic Vectors", show_header=True, header_style="bold magenta")
+        table.add_column("Vector", style="cyan")
+        table.add_column("Value", style="yellow")
+        table.add_column("Interpretation", style="dim")
+        
+        table.add_row("Knowledge", f"{know:.0%}", "What we know" if know > 0.5 else "Low knowledge")
+        table.add_row("Uncertainty", f"{uncertainty:.0%}", "High uncertainty" if uncertainty > 0.5 else "Low uncertainty")
+        table.add_row("Engagement", f"{engagement:.0%}", "Active engagement" if engagement > 0.5 else "Low engagement")
+        
+        console.print("\n")
+        console.print(table)
+        
+        # Get recent insights
+        console.print("\n[yellow]→[/yellow] Retrieving recent insights...")
+        insights = oracle.get_insights(limit=5)
+        unknowns = oracle.get_unknowns(limit=5)
+        
+        console.print(f"[green]✓[/green] Found {len(insights)} insights, {len(unknowns)} unknowns")
+        
+        if insights:
+            console.print("\n[bold]Recent Insights:[/bold]")
+            for i, insight in enumerate(insights[-5:], 1):
+                insight_text = str(insight) if isinstance(insight, dict) else insight
+                if len(insight_text) > 80:
+                    console.print(f"  {i}. [dim]{insight_text[:80]}...[/dim]")
+                else:
+                    console.print(f"  {i}. {insight_text}")
+        else:
+            console.print("  [dim]No recent insights recorded[/dim]")
+        
+        if unknowns:
+            console.print("\n[bold]Open Unknowns:[/bold]")
+            for i, unknown in enumerate(unknowns[-5:], 1):
+                unknown_text = str(unknown) if isinstance(unknown, dict) else unknown
+                if len(unknown_text) > 80:
+                    console.print(f"  {i}. [yellow]{unknown_text[:80]}...[/yellow]")
+                else:
+                    console.print(f"  {i}. {unknown_text}")
+        else:
+            console.print("\n[bold]Open Unknowns:[/bold]")
+            console.print("  [dim]No open unknowns recorded[/dim]")
+        
+        # Handle question or assessment
+        if assess:
+            # Decision assessment
+            console.print(f"\n[yellow]→[/yellow] Assessing decision: {assess}")
+            assessment = oracle.assess_decision({
+                "description": assess,
+                "scope": "medium",
+                "type": "implementation"
+            })
+            
+            gate_result = assessment.get("gate_result", "UNKNOWN")
+            if gate_result == "PROCEED":
+                gate_color = "green"
+            elif gate_result in ["BRANCH", "REVISE"]:
+                gate_color = "yellow"
+            else:
+                gate_color = "red"
+            
+            console.print(f"\n[bold]Decision Assessment:[/bold]")
+            console.print(f"  Gate Result: [{gate_color}]{gate_result}[/{gate_color}]")
+            console.print(f"  Recommendation: {assessment.get('recommendation', 'No recommendation')}")
+            
+        elif question:
+            # Specific question
+            console.print(f"\n[yellow]→[/yellow] Seeking guidance: {question}")
+            guidance = oracle.provide_guidance(question)
+            
+            console.print("\n[bold cyan]🔮 Oracle Guidance:[/bold cyan]")
+            console.print(Panel(
+                guidance.get("recommendation", "No recommendation available"),
+                title="Recommendation",
+                border_style="cyan"
+            ))
+            
+            console.print(f"\n[dim]Knowledge Coverage: {guidance.get('knowledge_coverage', 0):.0%}[/dim]")
+            console.print(f"[dim]Phase: {guidance.get('epistemic_phase', 'UNKNOWN')}[/dim]")
+        else:
+            # General guidance
+            console.print("\n[yellow]→[/yellow] Seeking general guidance...")
+            guidance = oracle.provide_guidance("What should we focus on next?")
+            
+            console.print("\n[bold cyan]🔮 Oracle Guidance:[/bold cyan]")
+            console.print(Panel(
+                guidance.get("recommendation", "No recommendation available"),
+                title="Recommendation",
+                border_style="cyan"
+            ))
+            
+            console.print(f"\n[dim]Knowledge Coverage: {guidance.get('knowledge_coverage', 0):.0%}[/dim]")
+            console.print(f"[dim]Phase: {guidance.get('epistemic_phase', 'UNKNOWN')}[/dim]")
+        
+        _process_tavern_hook(project_path, "oracle", True)
+        
+    except RuntimeError as e:
+        console.print(f"[red]❌ Error: {e}[/red]")
+        _process_tavern_hook(project_path, "oracle", False)
+        raise typer.Exit(1)
+    except Exception as e:
+        console.print(f"[red]❌ Error consulting Oracle: {e}[/red]")
+        _process_tavern_hook(project_path, "oracle", False)
+        raise typer.Exit(1)
+
+
+@app.command()
+def tell_story(
+    story: str = typer.Argument(..., help="Story input (text, can be multi-line)"),
+    title: Optional[str] = typer.Option(None, "--title", "-t", help="PDF title (default: auto-generated)"),
+    style: str = typer.Option("premium", "--style", "-s", help="PDF style (premium/clinical_standard/professional)"),
+    narrative_style: str = typer.Option("medium", "--narrative", "-n", help="Narrative style (simple/medium)"),
+    structure: str = typer.Option("linear", "--structure", help="Story structure (linear/three_act)"),
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    no_oracle: bool = typer.Option(False, "--no-oracle", help="Skip Oracle insights"),
+    output: Optional[str] = typer.Option(None, "--output", "-o", help="Output PDF path (default: auto-generated)"),
+):
+    """
+    Tell a story using TheOracle, Storyteller, and TavernKeeper.
+    
+    Generates a narrative PDF from your story input, enriched with epistemic insights
+    from TheOracle and narrative elements from TavernKeeper.
+    """
+    project_path = resolve_project_path(path)
+    
+    console.print(f"\n[bold cyan]📖 Waft[/bold cyan] - Telling Your Story\n")
+    
+    from .core.campfire import TheCampfire
+    from pathlib import Path
+    import subprocess
+    
+    try:
+        # Use TheCampfire to gather around the campfire
+        console.print("[yellow]→[/yellow] Gathering around the campfire...")
+        campfire = TheCampfire(project_path)
+        console.print("[green]✓[/green] Campfire ready")
+        
+        # Tell the story
+        console.print("[yellow]→[/yellow] Telling story...")
+        result = campfire.gather_around_the_campfire(
+            story_input=story,
+            title=title,
+            style=style,
+            narrative_style=narrative_style,
+            structure=structure,
+            include_oracle=not no_oracle,
+            save_story=True
+        )
+        
+        pdf_path = Path(result["pdf_path"])
+        story_metadata = result["story"]
+        
+        console.print(f"[green]✓[/green] Story told! (ID: {story_metadata['id']})")
+        console.print(f"[green]✓[/green] PDF generated: {pdf_path}")
+        
+        if result.get("oracle_insights"):
+            console.print(f"[green]✓[/green] Oracle insights included (Phase: {result['oracle_insights']['phase']})")
+        
+        # Open PDF
+        console.print("[yellow]→[/yellow] Opening PDF...")
+        try:
+            subprocess.run(["open", str(pdf_path)], check=True)
+            console.print("[green]✓[/green] PDF opened")
+        except subprocess.CalledProcessError:
+            console.print(f"[yellow]⚠️[/yellow]  Could not open PDF automatically")
+            console.print(f"[dim]PDF saved at: {pdf_path}[/dim]")
+        except FileNotFoundError:
+            # Try alternative on Linux
+            try:
+                subprocess.run(["xdg-open", str(pdf_path)], check=True)
+                console.print("[green]✓[/green] PDF opened")
+            except (subprocess.CalledProcessError, FileNotFoundError):
+                console.print(f"[yellow]⚠️[/yellow]  Could not open PDF automatically")
+                console.print(f"[dim]PDF saved at: {pdf_path}[/dim]")
+        
+        # Process TavernKeeper hook
+        _process_tavern_hook(project_path, "tell_story", True, {
+            "pdf_path": str(pdf_path),
+            "story_id": story_metadata["id"],
+            "title": story_metadata["title"],
+            "style": style
+        })
+        
+        console.print(f"\n[bold green]✅ Story complete![/bold green]")
+        console.print(f"[dim]PDF: {pdf_path}[/dim]")
+        console.print(f"[dim]Story saved to campfire. Start with: waft campfire[/dim]")
+        
+    except Exception as e:
+        console.print(f"\n[bold red]❌ Error:[/bold red] {e}")
+        logger.exception("Error in tell_story command")
+        _process_tavern_hook(project_path, "tell_story", False, {"error": str(e)})
+        raise typer.Exit(1)
+
+
+@app.command()
+def campfire(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    port: int = typer.Option(5000, "--port", help="Port to serve on (default: 5000)"),
+    host: str = typer.Option("localhost", "--host", help="Host to bind to (default: localhost)"),
+):
+    """
+    Start TheCampfire - Gather around to tell stories.
+    
+    TheCampfire is a self-contained full-stack application that embodies
+    the essence of sitting around a campfire to tell stories.
+    
+    True Name: "Essence of Sitting Around a Campfire to Tell Stories"
+    """
+    project_path = resolve_project_path(path)
+    
+    console.print(f"\n[bold yellow]🔥[/bold yellow] [bold]TheCampfire[/bold]")
+    console.print(f"[dim]The Essence of Sitting Around a Campfire to Tell Stories[/dim]\n")
+    
+    from .core.campfire import TheCampfire
+    
+    try:
+        campfire = TheCampfire(project_path, port=port, host=host)
+        campfire.serve()
+    except KeyboardInterrupt:
+        console.print("\n[dim]Campfire extinguished.[/dim]")
+    except Exception as e:
+        console.print(f"[red]❌ Error:[/red] {e}")
+        logger.exception("Error starting TheCampfire")
+        raise typer.Exit(1)
 
 
 def main():

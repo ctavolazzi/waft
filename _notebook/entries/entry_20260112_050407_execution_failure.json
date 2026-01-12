@@ -1,0 +1,34 @@
+{
+  "entry_id": "entry_20260112_050407_execution_failure",
+  "entry_type": "problem_detected",
+  "timestamp": 1768223047.133657,
+  "title": "Problem Detected: execution_failure",
+  "content": "**Problem Type**: execution_failure\n**Severity**: high\n**Description**: EOFError: EOF when reading a line\n\n**Context**:\n{\n  \"scenario\": \"tavern_scenario.py\",\n  \"line\": 50,\n  \"function\": \"create_character\",\n  \"interactive\": true\n}\n\n**Exception**: EOF when reading a line",
+  "metadata": {
+    "problem_type": "execution_failure",
+    "severity": "high",
+    "exception_type": "EOFError",
+    "exception_message": "EOF when reading a line",
+    "execution_time": 0.5,
+    "execution_result_keys": [
+      "exception",
+      "error_message",
+      "context",
+      "traceback"
+    ],
+    "has_exception": true,
+    "execution_context": {
+      "scenario": "tavern_scenario.py",
+      "line": 50,
+      "function": "create_character",
+      "interactive": true
+    }
+  },
+  "related_problems": [
+    "entry_20260112_050407_execution_failure"
+  ],
+  "related_diagnoses": [],
+  "actionable_type": null,
+  "actionable_created": false,
+  "actionable_id": null
+}

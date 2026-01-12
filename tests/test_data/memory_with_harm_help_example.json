@@ -1,0 +1,71 @@
+{
+  "memory_record": {
+    "content": "I experienced both harm and help today. Someone intentionally hurt me, but another being provided valuable information that aligned perfectly with my goals.",
+    "type": "experience",
+    "recorded_at": "2026-01-12T12:20:00Z",
+    "metadata": {
+      "harm_events": [
+        {
+          "harm_id": "harm_001",
+          "severity": 0.8,
+          "intentional": true,
+          "source_being_id": "being_aggressor_001",
+          "target_being_id": "being_target_001",
+          "arrow_of_intent": {
+            "x": 0.87,
+            "y": 0.5,
+            "z": 0.0
+          },
+          "harm_type": "emotional",
+          "resolved": false,
+          "created_at": "2026-01-12T12:00:00Z"
+        }
+      ],
+      "help_events": [
+        {
+          "help_id": "help_001",
+          "benefit": 0.9,
+          "intentional": true,
+          "source_being_id": "being_helper_001",
+          "target_being_id": "being_target_001",
+          "arrow_of_intent": {
+            "x": 0.87,
+            "y": 0.5,
+            "z": 0.0
+          },
+          "help_type": "informational",
+          "acknowledged": false,
+          "created_at": "2026-01-12T12:10:00Z"
+        }
+      ],
+      "alignment_score": 0.85,
+      "pleasure": 0.75,
+      "pain": 0.35,
+      "stamina_ratio": 0.75,
+      "energy_ratio": 0.8,
+      "will_to_live": 85.0
+    }
+  },
+  "lesson_learned": {
+    "lesson": "Alignment with helper's intent creates pleasure, even when experiencing harm from others",
+    "outcome": "partial",
+    "learned_at": "2026-01-12T12:25:00Z",
+    "metadata": {
+      "alignment_score": 0.85,
+      "pleasure": 0.75,
+      "pain": 0.35,
+      "insight": "High alignment with helper mitigated pain from harm"
+    }
+  },
+  "personality_update": {
+    "before": {
+      "alignment_seeking": 0.5,
+      "misalignment_avoidance": 0.5
+    },
+    "after": {
+      "alignment_seeking": 0.6,
+      "misalignment_avoidance": 0.5,
+      "note": "Being learned to seek alignment because it consistently creates pleasure"
+    }
+  }
+}

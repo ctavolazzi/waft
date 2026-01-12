@@ -14,6 +14,7 @@
 			<a href="/git" class="text-[var(--text-primary)] hover:text-[var(--primary-light)] transition-colors">Git</a>
 			<a href="/work-efforts" class="text-[var(--text-primary)] hover:text-[var(--primary-light)] transition-colors">Work Efforts</a>
 			<a href="/empirica" class="text-[var(--text-primary)] hover:text-[var(--primary-light)] transition-colors">Empirica</a>
+			<a href="/campfire" class="text-[var(--text-primary)] hover:text-[var(--primary-light)] transition-colors">🔥 Campfire</a>
 			<button
 				on:click={refresh}
 				class="px-4 py-2 bg-[var(--primary)] text-[var(--bg-dark)] rounded-lg font-semibold hover:bg-[var(--primary-dark)] transition-colors"

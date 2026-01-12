@@ -134,16 +134,30 @@ This command provides:
 
 **Default Location**: `_pyrite/journal/ai-journal.md`
 
+**Placement Rationale**: The journal is placed in `_pyrite/journal/` because:
+- `_pyrite/` is the memory layer - the journal is part of the AI's memory system
+- Consistent with other memory components (active/, backlog/, standards/, etc.)
+- Separates AI cognitive artifacts from project code
+- Enables easy backup and archival of AI thoughts
+
 **Structure**:
 ```
 _pyrite/
 └── journal/
     ├── ai-journal.md          # Main journal file (appended entries)
-    └── entries/                # Individual entry files (optional)
-        └── YYYY-MM-DD-HHMM.md
+    ├── index.json             # Fast lookup index for entries
+    ├── entries/                # Individual entry files
+    │   └── YYYY-MM-DD-HHMM.md
+    ├── archive/                # Archived entries (auto-archived when >500 lines)
+    │   └── ai-journal-YYYY-MM-DD.md
+    └── stats/                  # Statistics and analytics data
 ```
 
-**Format**: Markdown with dated entries appended to main journal file.
+**Format**: Markdown with dated entries appended to main journal file. Each entry includes:
+- Timestamp and date
+- Context (git branch, uncommitted files, session stats)
+- Structured sections (What I'm Doing, Thinking, Learning, etc.)
+- Metadata for search and analytics
 
 ---
 
@@ -213,12 +227,40 @@ AI: ✅ Learning documented
 
 ---
 
+## Enhanced Features
+
+### Search & Query
+- **Text Search**: Search entries by content (`waft journal-search --query "learning"`)
+- **Topic Filter**: Filter by topic (`waft journal-search --topic "architecture"`)
+- **Date Range**: Search within date range (`waft journal-search --from 2026-01-01 --to 2026-01-31`)
+- **Combined Filters**: Use multiple filters together
+
+### Statistics & Analytics
+- **Entry Counts**: Total entries, entries per date
+- **Word Counts**: Total words, average entry length
+- **Archive Info**: Archive file count and size
+- **Timeline**: First and last entry dates
+- **Display**: `waft journal-stats` shows formatted statistics table
+
+### Archive Management
+- **Auto-Archiving**: Automatically archives when journal exceeds 500 lines
+- **Retention Policy**: Keeps archives for 1 year (configurable)
+- **Cleanup**: `waft journal-stats --cleanup` removes old archives
+- **Preservation**: Always keeps last 2 entries in main journal
+
+### Index System
+- **Fast Lookups**: JSON index for quick entry retrieval
+- **Topic Tracking**: Index tracks topics across entries
+- **Metadata**: Entry metadata stored for analytics
+
 ## Integration with Other Commands
 
 - **`/continue`**: Reflects on current work (different from journal writing)
 - **`/resume`**: Picks up from last session (journal helps with continuity)
 - **`/checkpoint`**: Documents current state (journal is more reflective)
 - **`/analyze`**: Analyzes data (journal captures AI's thoughts about analysis)
+- **`journal-search`**: Search journal entries (CLI: `waft journal-search`)
+- **`journal-stats`**: View statistics (CLI: `waft journal-stats`)
 
 ---
 

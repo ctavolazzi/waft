@@ -16,18 +16,24 @@
 8. **`/resume`** ✅ - Pick up where you left off
 9. **`/continue`** ✅ - Reflect on current work and continue
 10. **`/reflect`** ✅ - Write in AI journal (reflection)
-11. **`/stats`** ✅ - Session statistics (files, lines, activity)
-11. **`/checkout`** ✅ - End chat session workflow
-12. **`/spin-up`** ✅ - Quick orientation
-13. **`/explore`** ✅ - Deep exploration
-14. **`/orient`** ✅ - Project startup process
-15. **`/engineer`** ✅ - Complete workflow
-16. **`/goal`** ✅ - Track larger goals, break into steps
-17. **`/next`** ✅ - Identify next step based on goals
-18. **`/help`** ✅ - Discover and understand commands
-19. **`/recap`** ✅ - Conversation recap and session summary
-20. **`/proceed`** ✅ - Verify context and assumptions before continuing
-21. **`/think`** ✅ - Initialize all thinking and cognitive enhancement tools
+11. **`/journal`** ✅ - AI journal system hub (view, search, stats, reflect)
+12. **`/stats`** ✅ - Session statistics (files, lines, activity)
+12. **`/checkout`** ✅ - End chat session workflow
+13. **`/spin-up`** ✅ - Quick orientation
+14. **`/explore`** ✅ - Deep exploration
+15. **`/orient`** ✅ - Project startup process
+16. **`/engineer`** ✅ - Complete workflow
+17. **`/goal`** ✅ - Track larger goals, break into steps
+18. **`/next`** ✅ - Identify next step based on goals
+19. **`/help`** ✅ - Discover and understand commands
+20. **`/recap`** ✅ - Conversation recap and session summary
+21. **`/proceed`** ✅ - Verify context and assumptions before continuing
+22. **`/think`** ✅ - Initialize all thinking and cognitive enhancement tools
+23. **`/prove-it`** ✅ - Prove scientific method tool works
+24. **`/check-assumptions`** ✅ - Identify and validate assumptions with evidence
+25. **`/run-it`** ✅ - Comprehensive workflow orchestration with self-correcting balance
+26. **`/version-bake`** ✅ - Complete quality workflow: reflect → run-it → improve → check-assumptions → verify → hypothesis → prove-it (tracks genetic lineage of ideas)
+27. **`/evolve`** ✅ - Spawn new Being from Source, then run complete version-bake workflow (tracks genetic lineage from Source outward and back)
 
 ---
 
@@ -168,6 +174,44 @@
 **Status**: ✅ Command definition created (ready for implementation)
 
 **Note**: Transforms `/phase1` data into actionable insights and plans. Complements `/phase1` by providing analysis and planning capabilities.
+
+---
+
+### 0.7.6. `/run-it` ✅ - Comprehensive Workflow Orchestration
+
+**Purpose**: Complete workflow orchestration with self-correcting balance
+
+**What it does**:
+- Orchestrates 15 phases in sequence: consider → think → check-assumptions → deep-analyze → critique → status → hypothesis → prove-it → verify → proceed → reflect → checkpoint → decide → next → goal
+- Balances critique with understanding (runs deep-analyze before critique to prevent being too harsh)
+- Multiple verification points throughout (check-assumptions, verify, proceed)
+- Evidence-based decision-making with quantitative analysis
+- Complete documentation and reflection at each phase
+- Self-correcting workflow that builds understanding before criticism
+
+**Use when**: 
+- Starting significant new work or feature
+- Need comprehensive systematic approach
+- Want verification and critique before proceeding
+- Need evidence-based decision-making
+- Want full workflow coverage from consideration to goal
+- Starting major investigation or analysis
+
+**Output**: Complete workflow execution with all phases documented:
+- Analysis documents
+- Assumption validation reports
+- Critique reports
+- Hypothesis documents
+- Verification traces
+- Journal entries
+- Checkpoints
+- Decision matrices
+- Next step recommendations
+- Goal tracking
+
+**Status**: ✅ Created
+
+**Note**: Self-correcting workflow that prevents being too harsh by understanding first (deep-analyze), then critiquing. Includes scientific method demonstration and comprehensive verification.
 
 ---
 
