@@ -73,7 +73,7 @@ class Being:
         cycles_slept: Optional[int] = None,
         # Cycle tracking
         last_cycle_number: Optional[int] = None,
-        cycles_alive: Optional[int] = None,
+        lifetimes: Optional[int] = None,
         # Experience tracking
         recent_experiences: Optional[List[Dict[str, Any]]] = None
     ):
@@ -101,7 +101,7 @@ class Being:
             sleep_duration_base: Base sleep duration (default: random 3-10)
             cycles_slept: Current sleep counter (default: 0)
             last_cycle_number: Last cycle number (default: 0)
-            cycles_alive: Cycles alive (default: 0)
+            lifetimes: Number of reincarnations (default: 0)
             recent_experiences: Recent experiences (default: [])
         """
         self.being_id = being_id
@@ -141,7 +141,7 @@ class Being:
         
         # Cycle tracking (needed for stamina calculation)
         self.last_cycle_number: int = last_cycle_number if last_cycle_number is not None else 0
-        self.cycles_alive: int = cycles_alive if cycles_alive is not None else 0
+        self.lifetimes: int = lifetimes if lifetimes is not None else 0
         
         # Stamina system (NEW)
         # Willpower: Core stat derived from personality and will_to_live
@@ -240,7 +240,7 @@ class Being:
         will_to_live_component = (self.will_to_live / 100.0) * 100.0 * 0.20  # 20% weight
         skills_component = min(100.0, sum(self.skills.values()) / len(self.skills) if self.skills else 0.0) * 0.15  # 15% weight
         luck_component = self.luck * 0.10  # 10% weight
-        experience_component = min(100.0, self.cycles_alive * 0.5) * 0.05  # 5% weight (experience bonus)
+        experience_component = min(100.0, self.lifetimes * 0.5) * 0.05  # 5% weight (experience bonus from reincarnations)
         pleasure_component = self.pleasure * 100.0 * 0.05  # 5% weight (positive energy)
         pain_component = -self.pain * 100.0 * 0.05  # -5% weight (negative energy)
         
@@ -736,7 +736,7 @@ class Being:
             "cycles_slept": self.cycles_slept,
             # Cycle tracking
             "last_cycle_number": self.last_cycle_number,
-            "cycles_alive": self.cycles_alive,
+            "lifetimes": self.lifetimes,
             # Experience tracking
             "recent_experiences": self.recent_experiences,
         }
@@ -771,7 +771,7 @@ class Being:
             cycles_slept=data.get("cycles_slept"),
             # Cycle tracking
             last_cycle_number=data.get("last_cycle_number"),
-            cycles_alive=data.get("cycles_alive"),
+            lifetimes=data.get("lifetimes", data.get("cycles_alive", 0)),  # Support old name for migration
             # Experience tracking
             recent_experiences=data.get("recent_experiences")
         )
