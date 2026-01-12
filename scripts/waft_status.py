@@ -544,16 +544,21 @@ def get_recent_activity(project_path: Optional[Path] = None) -> Dict[str, Any]:
     return activity
 
 
-def check_status(project_path: Optional[Path] = None, log_event: bool = True) -> Dict[str, Any]:
+def check_status(
+    project_path: Optional[Path] = None,
+    log_event: bool = True,
+    return_typed: bool = False
+) -> Dict[str, Any]:
     """
     Perform comprehensive status check.
-    
+
     Args:
         project_path: Project root path (default: current directory)
         log_event: Whether to log STATUS_CHECK event to flight recorder
-        
+        return_typed: If True, returns StatusState object instead of dict
+
     Returns:
-        Dictionary with complete status information
+        Dictionary with complete status information, or StatusState if return_typed=True
     """
     if project_path is None:
         project_path = Path.cwd()

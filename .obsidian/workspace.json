@@ -200,6 +200,14 @@
   },
   "active": "758ea289aca55ac3",
   "lastOpenFiles": [
+    "src/waft/core/status_state.py",
+    "_work_efforts/PHASE_1_TESTING_COMPLETE.md",
+    "_work_efforts/showcase_documents/edge_case_test_scenario_05.pdf",
+    "_work_efforts/showcase_documents/edge_case_test_scenario_04.pdf",
+    "_work_efforts/showcase_documents/edge_case_test_scenario_03.pdf",
+    "_work_efforts/showcase_documents/edge_case_test_scenario_02.pdf",
+    "_work_efforts/showcase_documents/edge_case_test_scenario_01.pdf",
+    "examples/test_status_components_edge_cases.py",
     "examples/tavern_scenario_evolved.py",
     "_work_efforts/AUDIT_2026-01-11_215040.md",
     "src/waft/core/dnd5e/__pycache__/adapter.cpython-310.pyc",
@@ -207,13 +215,6 @@
     "src/waft/core/dnd5e/__pycache__/character.cpython-310.pyc",
     "temp_pngs/page_002.png",
     "temp_pngs/page_001.png",
-    "temp_pngs",
-    "_generated_pdfs/template_technical_memo.pdf",
-    "_generated_pdfs/template_lab_notes.pdf",
-    "_generated_pdfs/template_field_guide.pdf",
-    "_generated_pdfs/component_pdfgenerator.pdf",
-    "_generated_pdfs/component_pdfgenerator.html",
-    "_generated_pdfs/scientific_pdfgenerator.analysis.json",
     "temp_pngs/page_003.png",
     "docs/AI_DND_INTEGRATION_OPPORTUNITIES.md",
     "PDF_SUPERCUT_BINDER_README.md",
@@ -244,7 +245,6 @@
     "_work_efforts/AUDIT_2026-01-11_210531_WAFT_KERNEL_CODEBASE.md",
     "_work_efforts/CRITIQUE_2026-01-11_WAFT_KERNEL_PLAN.md",
     "_work_efforts/CRITIQUE_2026-01-11_210531_WAFT_KERNEL_BOOT.md",
-    "_work_efforts/WE-260111-jpw1_dnd5e_ai_exploration_initiative/REPOSITORY_ANALYSIS_2026-01-11_INITIAL_WEB_EXPLORATION.md",
-    "_work_efforts/WE-260111-jpw1_dnd5e_ai_exploration_initiative/ANALYSIS_COMPLETE.md"
+    "_work_efforts/WE-260111-jpw1_dnd5e_ai_exploration_initiative/REPOSITORY_ANALYSIS_2026-01-11_INITIAL_WEB_EXPLORATION.md"
   ]
 }

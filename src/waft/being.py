@@ -1037,6 +1037,133 @@ class BeingSystem:
             "completed_at": datetime.now().isoformat()
         }
     
+    def reincarnate_being(
+        self,
+        dead_being_id: str,
+        reality_id: Optional[str] = None,
+        use_karma: bool = True,
+        purchase_order: Optional[Dict[str, Any]] = None
+    ) -> Being:
+        """
+        Reincarnate a dead (ARCHIVED) Being into a new lifetime.
+        
+        This bridges the death → rebirth cycle. The Being's soul (via soul_id)
+        can use accumulated Karma to purchase a life-path, or simply reincarnate
+        with inherited skills.
+        
+        Process:
+        1. Load the archived Being
+        2. Verify it's dead (ARCHIVED state)
+        3. Optionally use KarmaMerchant if available and use_karma=True
+        4. Spawn new Being with parent_being_id pointing to dead Being
+        5. New Being's lifetimes = dead Being's lifetimes + 1
+        
+        Args:
+            dead_being_id: ID of the archived/dead Being to reincarnate
+            reality_id: Reality to spawn into (defaults to dead Being's reality)
+            use_karma: Whether to attempt Karma-based reincarnation (default: True)
+            purchase_order: Optional purchase order for KarmaMerchant
+                          (life_path_id, class, experience_packages, memory_continuity)
+        
+        Returns:
+            New Being instance (reincarnated)
+        
+        Raises:
+            ValueError: If Being is not archived/dead
+        """
+        # Load the dead Being
+        dead_being = self._load_being(dead_being_id)
+        
+        # Verify it's dead
+        if dead_being.state != BeingState.ARCHIVED:
+            raise ValueError(
+                f"Being {dead_being_id} is not dead (state: {dead_being.state.value}). "
+                "Only ARCHIVED Beings can be reincarnated."
+            )
+        
+        # Use reality from dead Being if not specified
+        if reality_id is None:
+            reality_id = dead_being.reality_id
+        
+        # Try Karma-based reincarnation if requested
+        if use_karma and dead_being.soul_id:
+            try:
+                from .karma import KarmaMerchant
+                karma_merchant = KarmaMerchant(project_path=self.project_path)
+                
+                # Check if reincarnate is implemented
+                if hasattr(karma_merchant, 'reincarnate') and callable(karma_merchant.reincarnate):
+                    # Try to access Akasha to check Karma
+                    akasha_data = karma_merchant.access_akasha(dead_being.soul_id)
+                    
+                    if akasha_data and isinstance(akasha_data, dict):
+                        karma_balance = akasha_data.get("karma_balance", akasha_data.get("total_karma", 0.0))
+                        
+                        # If we have Karma and a purchase order, use Karma-based reincarnation
+                        if karma_balance > 0 and purchase_order:
+                            try:
+                                reincarnation_result = karma_merchant.reincarnate(
+                                    dead_being.soul_id,
+                                    purchase_order
+                                )
+                                
+                                # If reincarnate returns agent_config, use it
+                                if reincarnation_result and "agent_config" in reincarnation_result:
+                                    agent_config = reincarnation_result["agent_config"]
+                                    
+                                    # Spawn with purchased configuration
+                                    new_being = self.spawn_being(
+                                        reality_id=reality_id,
+                                        parent_being_id=dead_being_id,
+                                        initial_skills=agent_config.get("skills", {})
+                                    )
+                                    
+                                    # Apply other config if present
+                                    if "personality" in agent_config:
+                                        new_being.personality = agent_config["personality"]
+                                    if "personality_type" in agent_config:
+                                        new_being.personality_type = agent_config["personality_type"]
+                                    if "goals" in agent_config:
+                                        new_being.goals = agent_config["goals"]
+                                    
+                                    # Inherit soul_id for continuity
+                                    new_being.soul_id = dead_being.soul_id
+                                    
+                                    self._save_being(new_being)
+                                    return new_being
+                            except Exception:
+                                # Karma reincarnation failed, fall through to simple reincarnation
+                                pass
+            except (ImportError, AttributeError, Exception):
+                # KarmaMerchant not available or not fully implemented, fall through
+                pass
+        
+        # Fallback: Simple reincarnation (inherit skills with mutation)
+        # This is the basic evolutionary mechanism
+        new_being = self.spawn_being(
+            reality_id=reality_id,
+            parent_being_id=dead_being_id
+        )
+        
+        # Inherit soul_id for continuity across lifetimes
+        if dead_being.soul_id:
+            new_being.soul_id = dead_being.soul_id
+        
+        # Inherit some memories/lessons based on memory_continuity if specified
+        if purchase_order and "memory_continuity" in purchase_order:
+            continuity = purchase_order["memory_continuity"]
+            if 0.0 < continuity <= 1.0:
+                # Carry over a percentage of memories
+                num_memories = int(len(dead_being.memories) * continuity)
+                new_being.memories = dead_being.memories[-num_memories:] if num_memories > 0 else []
+                
+                # Carry over some lessons
+                num_lessons = int(len(dead_being.lessons_learned) * continuity)
+                new_being.lessons_learned = dead_being.lessons_learned[-num_lessons:] if num_lessons > 0 else []
+        
+        self._save_being(new_being)
+        return new_being
+    
     def get_karma_balance(self, being: Being) -> float:
         """
         Get karma balance for a being via soul_id.

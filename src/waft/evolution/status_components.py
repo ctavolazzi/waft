@@ -319,7 +319,9 @@ class StatusComponentBuilder:
         if total <= 0:
             percentage = 0.0
         else:
-            percentage = min((current / total) * 100, 100.0)
+            # Clamp current to 0 minimum, then calculate percentage
+            current_clamped = max(0, current)
+            percentage = min((current_clamped / total) * 100, 100.0)
         
         progress_text_parts = []
         if show_fraction:
