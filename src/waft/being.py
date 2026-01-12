@@ -21,6 +21,10 @@ import hashlib
 import random
 import os
 
+# Security limits to prevent DoS attacks
+MAX_SKILLS = 1000  # Maximum number of skills a Being can have
+MAX_MEMORIES = 1000  # Maximum number of memories a Being can store
+
 
 class BeingState(Enum):
     """State of a being."""
@@ -108,8 +112,11 @@ class Being:
         self.reality_id = reality_id
         self.parent_being_id = parent_being_id
         self.source_id = source_id
-        
+
         # Skills (learned abilities)
+        # Security: Limit skills dict size to prevent DoS
+        if skills and len(skills) > MAX_SKILLS:
+            raise ValueError(f"Too many skills: {len(skills)} (max: {MAX_SKILLS})")
         self.skills = skills or {}
         
         # Memories and lessons
@@ -147,6 +154,9 @@ class Being:
         # If None and has parent: will be set by spawn_being() (parent + 1)
         # If loading from storage: will be set by from_dict()
         if lifetimes is not None:
+            # Validate lifetimes >= 0 (security: prevent underflow)
+            if lifetimes < 0:
+                raise ValueError(f"lifetimes must be >= 0, got {lifetimes}")
             self.lifetimes = lifetimes
         elif parent_being_id is None:
             # Direct instantiation without parent = new birth (lifetime 1)
@@ -190,7 +200,12 @@ class Being:
         self.recent_experiences: List[Dict[str, Any]] = recent_experiences if recent_experiences is not None else []
     
     def _calculate_personality_modifier(self) -> float:
-        """Calculate decision quota modifier based on personality type."""
+        """
+        Calculate decision quota modifier based on personality type.
+
+        Returns:
+            Modifier value for decision quota based on personality type
+        """
         modifiers = {
             "analytical": 5.0,
             "systematic": 5.0,
@@ -371,12 +386,15 @@ class Being:
     ) -> Dict[str, Any]:
         """
         Record a memory.
-        
+
+        Memories are bounded to MAX_MEMORIES to prevent resource exhaustion.
+        When limit is reached, oldest memories are dropped (FIFO).
+
         Args:
             memory_content: Content of memory
             memory_type: Type of memory
             metadata: Additional metadata
-            
+
         Returns:
             Memory record
         """
@@ -386,8 +404,14 @@ class Being:
             "recorded_at": datetime.now().isoformat(),
             "metadata": metadata or {}
         }
-        
+
         self.memories.append(memory)
+
+        # Security: Bound memories to prevent DoS
+        if len(self.memories) > MAX_MEMORIES:
+            # Remove oldest memory (FIFO)
+            self.memories.pop(0)
+
         return memory
     
     def learn_lesson(
@@ -398,12 +422,15 @@ class Being:
     ) -> Dict[str, Any]:
         """
         Learn a lesson (what worked/didn't work).
-        
+
+        Lessons are bounded to MAX_MEMORIES to prevent resource exhaustion.
+        When limit is reached, oldest lessons are dropped (FIFO).
+
         Args:
             lesson: The lesson learned
             outcome: Outcome (success, failure, partial)
             metadata: Additional metadata
-            
+
         Returns:
             Lesson record
         """
@@ -413,8 +440,14 @@ class Being:
             "learned_at": datetime.now().isoformat(),
             "metadata": metadata or {}
         }
-        
+
         self.lessons_learned.append(lesson_record)
+
+        # Security: Bound lessons to prevent DoS (same limit as memories)
+        if len(self.lessons_learned) > MAX_MEMORIES:
+            # Remove oldest lesson (FIFO)
+            self.lessons_learned.pop(0)
+
         return lesson_record
     
     def calculate_will_to_live_change(
@@ -603,15 +636,18 @@ class Being:
     def make_decision(self, decision_type: str, stamina_cost: float = 5.0) -> Dict[str, Any]:
         """
         Make a decision (decrements fatigue, consumes stamina, returns experience).
-        
+
         When stamina is depleted, actions become sluggish, shitty, and make mistakes.
-        
+
         Args:
             decision_type: Type of decision (learn_skill, record_memory, pursue_goal, rest, explore)
             stamina_cost: Stamina cost for this action (default: 5.0)
-        
+
         Returns:
             Decision result with experience data, including mistakes if stamina depleted
+
+        Raises:
+            ValueError: If being is sleeping or decision fatigue is depleted
         """
         if self.is_sleeping:
             raise ValueError("Being is sleeping and cannot make decisions")
@@ -711,7 +747,12 @@ class Being:
             self.recent_experiences.pop(0)
     
     def to_dict(self) -> Dict[str, Any]:
-        """Convert being to dictionary."""
+        """
+        Convert being to dictionary for serialization.
+
+        Returns:
+            Dictionary representation of the Being with all attributes
+        """
         return {
             "being_id": self.being_id,
             "reality_id": self.reality_id,
@@ -756,7 +797,15 @@ class Being:
     
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "Being":
-        """Create being from dictionary (with backward compatibility for missing attributes)."""
+        """
+        Create being from dictionary (with backward compatibility for missing attributes).
+
+        Args:
+            data: Dictionary containing being data (from to_dict or storage)
+
+        Returns:
+            Being instance reconstructed from the dictionary data
+        """
         being = cls(
             being_id=data["being_id"],
             reality_id=data["reality_id"],
