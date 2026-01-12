@@ -230,6 +230,8 @@
   },
   "active": "58c202cbffc08a10",
   "lastOpenFiles": [
+    "react-being-test/src/BeingProfile.jsx",
+    "react-being-test/package-lock.json",
     "examples/demo_simple.py",
     "examples/demo_helper_beings.py",
     "src/waft/core/__pycache__/personality_alignment.cpython-310.pyc",
@@ -240,8 +242,6 @@
     "src/waft/core/__pycache__/being_decisions.cpython-310.pyc",
     "examples/spawn_helper_beings.py",
     "react-being-test/TESTING_GUIDE.md",
-    "examples/test_being_empirica.py",
-    "_work_efforts/showcase_documents/WAFT_Status_Phase4_20260111_222734.pdf",
     "react-being-test/README.md",
     "docs/AI_DND_INTEGRATION_COMPLETE.md",
     "_pyrite/checkout/session-2026-01-11-222211.md",
