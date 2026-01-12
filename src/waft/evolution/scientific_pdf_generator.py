@@ -403,7 +403,9 @@ class ScientificPDFGenerator(PDFGenerator):
         open_pdf: bool = False,
         include_all_ideas: bool = True,
         target_pages: Optional[int] = None,
-        collect_metrics: bool = True
+        collect_metrics: bool = True,
+        convert_to_png: bool = True,
+        png_dpi: int = 300
     ) -> Path:
         """
         Generate and save PDF with scientific analysis.
@@ -414,6 +416,8 @@ class ScientificPDFGenerator(PDFGenerator):
             include_all_ideas: Include all ideas
             target_pages: Target page count
             collect_metrics: Collect PDF metrics
+            convert_to_png: Convert PDF to PNG images after generation (default: True for evolutionary iteration)
+            png_dpi: DPI for PNG conversion (default: 300)
         
         Returns:
             Path to generated PDF
@@ -423,7 +427,9 @@ class ScientificPDFGenerator(PDFGenerator):
             output_path=output_path,
             open_pdf=False,  # Don't open yet - we'll do analysis first
             include_all_ideas=include_all_ideas,
-            target_pages=target_pages
+            target_pages=target_pages,
+            convert_to_png=convert_to_png,
+            png_dpi=png_dpi
         )
         
         # Scientific analysis

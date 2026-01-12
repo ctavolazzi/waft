@@ -9,6 +9,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Work in progress features
+
+## [0.5.2] - 2026-01-11
+
+### Added
+
+#### Evolutionary Iteration Process - PNG Integration
+- **Automatic PNG Conversion**: All PDF generators now create PNG screenshots by default
+  - Integrated into `PDFGenerator`, `ScientificPDFGenerator`, `ComponentPDFGenerator`, `DocumentEvolutionEngine`
+  - Default behavior: `convert_to_png=True` enables visual verification workflow
+  - Configurable DPI (default: 300) for quality vs speed trade-offs
+- **Fallback Chain**: Robust PNG conversion with automatic fallback
+  - Primary: pdf2image (best quality)
+  - Fallback 1: ImageMagick (via subprocess)
+  - Fallback 2: PyMuPDF (always available)
+  - Graceful degradation ensures workflow continues even if dependencies missing
+- **Evolutionary Iteration Workflow**: Core process for evidence-based debugging
+  - Generate → Visualize (PNG) → Inspect → Iterate
+  - "See Before You Fix" principle built into all generators
+  - Enables before/after comparisons for styling improvements
+- **Work Effort Tooling**: Tools for data generation and experimentation
+  - `generate_test_pdfs.py` - Generate test PDFs with PNGs
+  - `status.py` - Work effort status tracker
+  - Enables hypothesis-driven development and data generation
+
 #### PDF/PNG Conversion System
 - **Bidirectional Conversion**: Full PDF ↔ PNG conversion support
   - PDF to PNG: Convert PDF pages to individual PNG images
@@ -23,19 +48,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **DPI Configuration**: Flexible resolution control
   - Manual DPI selection (150, 300, 600)
   - Auto DPI selection based on file size
-- **One-Pager Integration**: Optional automatic PNG conversion
-  - `convert_to_png` parameter in TwoPageGeneratorV2
-  - Configurable PNG DPI
-  - Conversion events tracked in evolution system
 - **Comprehensive Tests**: Full test coverage for all backends and edge cases
 - **Documentation**: Complete usage guide with examples and troubleshooting
 
 ### Changed
 
-- **TwoPageGeneratorV2**: Added optional PNG conversion support
+- **All PDF Generators**: Now support PNG conversion by default
+  - `PDFGenerator.save()` - Added `convert_to_png` and `png_dpi` parameters
+  - `ScientificPDFGenerator.save()` - Passes PNG parameters to parent
+  - `ComponentPDFGenerator.generate_one_pager()` - Supports PNG conversion
+  - `DocumentEvolutionEngine.generate_one_pager()` - Supports PNG conversion
+  - Convenience functions `generate_pdf()` and `generate_pdf_from_file()` updated
+- **TwoPageGeneratorV2**: Enhanced PNG conversion support
   - New parameters: `convert_to_png`, `png_dpi`
   - Conversion success/failure tracked in evolutionary events
   - Graceful error handling (conversion failures don't break workflow)
+
+### Fixed
+
+- **Version Consistency**: Fixed version mismatch between `pyproject.toml` and `__init__.py`
+  - Both now consistently use 0.5.2
 
 ## [0.5.1] - 2026-01-11
 

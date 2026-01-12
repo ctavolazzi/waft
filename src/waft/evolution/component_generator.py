@@ -73,6 +73,8 @@ class ComponentPDFGenerator:
         image_paths: Optional[Dict[str, str]] = None,
         author: str = "WAFT Research Team",
         use_science_paper_structure: bool = True,
+        convert_to_png: bool = True,
+        png_dpi: int = 300,
     ) -> Dict[str, Any]:
         """
         Generate a one-pager PDF using component-based system.
@@ -86,6 +88,8 @@ class ComponentPDFGenerator:
             image_paths: Dict of image paths (e.g., {'three_pillars': 'path/to/image.png'})
             author: Author name for attribution
             use_science_paper_structure: Use Title → Image → Abstract → Attribution → Sections
+            convert_to_png: Convert PDF to PNG images after generation (default: True for evolutionary iteration)
+            png_dpi: DPI for PNG conversion (default: 300)
         
         Returns:
             Dictionary with results, learning summary, and metadata
@@ -161,6 +165,8 @@ class ComponentPDFGenerator:
             output_path=output_path,
             target_pages=allowed_pages,
             use_component_system=True,
+            convert_to_png=convert_to_png,
+            png_dpi=png_dpi,
         )
         
         return {

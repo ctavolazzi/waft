@@ -86,6 +86,8 @@ class DocumentEvolutionEngine(ComponentPDFGenerator):
         author: str = "WAFT Research Team",
         use_science_paper_structure: bool = True,
         use_evolved_components: bool = True,
+        convert_to_png: bool = True,
+        png_dpi: int = 300,
     ) -> Dict[str, Any]:
         """
         Generate one-pager using evolved components.
@@ -100,6 +102,8 @@ class DocumentEvolutionEngine(ComponentPDFGenerator):
             author: Author name
             use_science_paper_structure: Use science paper structure
             use_evolved_components: Use evolved components (default: True)
+            convert_to_png: Convert PDF to PNG images after generation (default: True for evolutionary iteration)
+            png_dpi: DPI for PNG conversion (default: 300)
         
         Returns:
             Generation results with evolution metadata
@@ -137,6 +141,8 @@ class DocumentEvolutionEngine(ComponentPDFGenerator):
             image_paths=image_paths,
             author=author,
             use_science_paper_structure=use_science_paper_structure,
+            convert_to_png=convert_to_png,
+            png_dpi=png_dpi,
         )
         
         # Track components used for learning
