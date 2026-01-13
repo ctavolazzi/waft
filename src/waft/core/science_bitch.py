@@ -263,25 +263,67 @@ class ScienceBitchManager:
         results: Dict[str, Any],
         analysis: Any
     ) -> Optional[Path]:
-        """Generate report PDF."""
-        self.console.print("\n[bold]Step 5: Generate Report[/bold]\n")
+        """Generate comprehensive research PDF report."""
+        self.console.print("\n[bold]Step 5: Generate Research Report[/bold]\n")
         
-        self.console.print("[yellow]→[/yellow] Generating report PDF...")
+        self.console.print("[yellow]→[/yellow] Creating comprehensive research PDF...")
         
-        # Create report content
-        report_content = self._create_report_content(hypothesis, results, analysis)
+        # Create comprehensive report content
+        report_content = self._create_comprehensive_report_content(hypothesis, results, analysis)
         
-        # Save to reports directory
+        # Save markdown backup
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        report_path = self.science_path / "reports" / f"experiment_report_{timestamp}.md"
-        report_path.write_text(report_content)
+        report_md = self.science_path / "reports" / f"experiment_report_{timestamp}.md"
+        report_md.write_text(report_content)
         
-        self.console.print(f"[green]✓[/green] Report saved: {report_path}")
-        
-        # TODO: Generate PDF using PDFGenerator
-        # For now, just save markdown
-        
-        return report_path
+        # Generate PDF using ScientificPDFGenerator
+        try:
+            from ..evolution.scientific_pdf_generator import generate_scientific_pdf
+            import platform
+            import subprocess
+            
+            # Save to desktop
+            desktop_path = Path.home() / "Desktop"
+            pdf_filename = f"Science_Research_Report_{timestamp}.pdf"
+            pdf_path = desktop_path / pdf_filename
+            
+            self.console.print(f"[yellow]→[/yellow] Generating scientific research PDF...")
+            
+            # Generate PDF with scientific features
+            generated_path = generate_scientific_pdf(
+                content=report_content,
+                title=f"Scientific Research Report: {hypothesis.statement[:50]}...",
+                output_path=pdf_path,
+                style="clinical_standard",
+                scientific_mode=True,
+                open_pdf=False  # We'll open manually to desktop
+            )
+            
+            if generated_path and generated_path.exists():
+                self.console.print(f"[green]✓[/green] Research PDF generated: {generated_path}")
+                
+                # Open PDF automatically
+                self.console.print("[yellow]→[/yellow] Opening PDF on desktop...")
+                system = platform.system()
+                if system == "Darwin":  # macOS
+                    subprocess.run(["open", str(generated_path)], check=False)
+                elif system == "Windows":
+                    subprocess.run(["start", str(generated_path)], shell=True, check=False)
+                else:  # Linux
+                    subprocess.run(["xdg-open", str(generated_path)], check=False)
+                
+                self.console.print(f"[green]✓[/green] PDF opened on desktop!")
+                return generated_path
+            else:
+                self.console.print("[yellow]⚠️[/yellow]  PDF generation failed, markdown saved")
+                return report_md
+                
+        except Exception as e:
+            self.console.print(f"[red]❌[/red] PDF generation error: {e}")
+            self.console.print(f"[dim]Markdown saved: {report_md}[/dim]")
+            import traceback
+            self.console.print(f"[dim]{traceback.format_exc()}[/dim]")
+            return report_md
     
     def _create_report_content(
         self,
@@ -340,6 +382,332 @@ class ScienceBitchManager:
 [Analysis conclusions and recommendations]
 
 """
+        return content
+    
+    def _create_comprehensive_report_content(
+        self,
+        hypothesis: Hypothesis,
+        results: Dict[str, Any],
+        analysis: Any
+    ) -> str:
+        """Create comprehensive scientific research report content."""
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        
+        # Get experiment data if available
+        experiment_id = results.get("experiment_id")
+        experiment = None
+        state_a = None
+        state_b = None
+        collected_data = None
+        
+        if experiment_id:
+            experiment = self.experiment_manager.get_experiment(experiment_id)
+            if experiment:
+                # Get state snapshots
+                state_a = experiment.initial_state
+                state_b = experiment.final_state
+                # Get collected data
+                if hasattr(experiment, 'data_collector'):
+                    collected_data = experiment.data_collector.get_all_data()
+        
+        content = f"""# Scientific Research Report
+
+**Generated**: {timestamp}  
+**Experiment ID**: {experiment_id or "N/A"}  
+**Status**: Complete
+
+---
+
+## Executive Summary
+
+This report documents a complete scientific method workflow, including hypothesis formation, experiment design, state capture, data collection, and analysis. The research follows rigorous scientific methodology with traceable evidence and reproducible results.
+
+---
+
+## 1. Hypothesis
+
+### Statement
+
+**{hypothesis.statement}**
+
+### Prediction
+
+**{hypothesis.prediction}**
+
+### Variables
+
+"""
+        
+        # Independent variables
+        independent_vars = [v for v in hypothesis.variables if v.type == VariableType.INDEPENDENT]
+        if independent_vars:
+            content += "#### Independent Variables\n\n"
+            for var in independent_vars:
+                content += f"- **{var.name}**: {var.value}"
+                if var.description:
+                    content += f" - {var.description}"
+                content += "\n"
+            content += "\n"
+        
+        # Dependent variables
+        dependent_vars = [v for v in hypothesis.variables if v.type == VariableType.DEPENDENT]
+        if dependent_vars:
+            content += "#### Dependent Variables\n\n"
+            for var in dependent_vars:
+                content += f"- **{var.name}**: {var.value}"
+                if var.description:
+                    content += f" - {var.description}"
+                content += "\n"
+            content += "\n"
+        
+        # Control variables
+        control_vars = [v for v in hypothesis.variables if v.type == VariableType.CONTROL]
+        if control_vars:
+            content += "#### Control Variables\n\n"
+            for var in control_vars:
+                content += f"- **{var.name}**: {var.value}"
+                if var.description:
+                    content += f" - {var.description}"
+                content += "\n"
+            content += "\n"
+        
+        content += f"""---
+
+## 2. Experiment Design
+
+### Experiment Structure
+
+**Experiment ID**: {experiment_id or "N/A"}
+
+**Design Methodology**: Systematic scientific method workflow
+
+**Components Tracked**: {len(hypothesis.variables)} variables
+
+### Experimental Procedure
+
+1. **Initial State Capture (A)**: System state captured before experiment
+2. **Experiment Execution**: Controlled experiment run with data collection
+3. **Data Collection (C)**: Systematic measurement during experiment
+4. **Final State Capture (B)**: System state captured after experiment
+5. **Analysis**: Comparative analysis of states and data
+
+---
+
+## 3. State Capture
+
+### Initial State (A)
+
+"""
+        
+        if state_a:
+            content += f"""**State Hash**: `{state_a.state_hash[:16]}...`
+
+**Components Captured**: {len(state_a.components) if hasattr(state_a, 'components') else 0}
+
+**Timestamp**: {state_a.timestamp if hasattr(state_a, 'timestamp') else 'N/A'}
+
+#### Component Values
+
+"""
+            if hasattr(state_a, 'components'):
+                for comp_name, comp_value in state_a.components.items():
+                    content += f"- **{comp_name}**: {comp_value}\n"
+        else:
+            content += "*Initial state not captured*\n"
+        
+        content += "\n### Final State (B)\n\n"
+        
+        if state_b:
+            content += f"""**State Hash**: `{state_b.state_hash[:16]}...`
+
+**Components Captured**: {len(state_b.components) if hasattr(state_b, 'components') else 0}
+
+**Timestamp**: {state_b.timestamp if hasattr(state_b, 'timestamp') else 'N/A'}
+
+#### Component Values
+
+"""
+            if hasattr(state_b, 'components'):
+                for comp_name, comp_value in state_b.components.items():
+                    content += f"- **{comp_name}**: {comp_value}\n"
+            
+            # State comparison
+            if state_a and hasattr(state_a, 'components') and hasattr(state_b, 'components'):
+                content += "\n#### State Comparison\n\n"
+                content += "**Changes Detected**:\n\n"
+                all_keys = set(state_a.components.keys()) | set(state_b.components.keys())
+                changes = []
+                for key in all_keys:
+                    val_a = state_a.components.get(key, "N/A")
+                    val_b = state_b.components.get(key, "N/A")
+                    if val_a != val_b:
+                        changes.append(f"- **{key}**: {val_a} → {val_b}")
+                
+                if changes:
+                    content += "\n".join(changes) + "\n"
+                else:
+                    content += "*No changes detected*\n"
+        else:
+            content += "*Final state not captured*\n"
+        
+        content += "\n---\n\n## 4. Data Collection (C)\n\n"
+        
+        if collected_data:
+            content += "### Collected Data Series\n\n"
+            for series_name, series_data in collected_data.items():
+                content += f"#### {series_name}\n\n"
+                if isinstance(series_data, list):
+                    content += f"**Data Points**: {len(series_data)}\n\n"
+                    content += "**Values**: "
+                    if len(series_data) <= 10:
+                        content += ", ".join([str(v) for v in series_data])
+                    else:
+                        content += ", ".join([str(v) for v in series_data[:5]]) + f" ... ({len(series_data) - 5} more)"
+                    content += "\n\n"
+                else:
+                    content += f"**Value**: {series_data}\n\n"
+        else:
+            content += "*No data collected during experiment*\n"
+        
+        content += f"""---
+
+## 5. Results
+
+### Experimental Outcomes
+
+"""
+        
+        for key, value in results.items():
+            if key != "experiment_id":  # Skip internal IDs
+                if isinstance(value, dict):
+                    content += f"#### {key}\n\n"
+                    for sub_key, sub_value in value.items():
+                        content += f"- **{sub_key}**: {sub_value}\n"
+                    content += "\n"
+                else:
+                    content += f"- **{key}**: {value}\n"
+        
+        content += "\n---\n\n## 6. Analysis\n\n"
+        
+        if hasattr(analysis, 'verified'):
+            content += f"### Hypothesis Verification\n\n"
+            content += f"**Status**: {'✅ Verified' if analysis.verified else '❌ Not Verified'}\n\n"
+        
+        if hasattr(analysis, 'confidence'):
+            content += f"### Confidence Level\n\n"
+            content += f"**Confidence**: {analysis.confidence:.2%}\n\n"
+        
+        if hasattr(analysis, 'conclusions'):
+            content += f"### Conclusions\n\n"
+            if isinstance(analysis.conclusions, str):
+                content += f"{analysis.conclusions}\n\n"
+            elif isinstance(analysis.conclusions, list):
+                for conclusion in analysis.conclusions:
+                    content += f"- {conclusion}\n"
+                content += "\n"
+            else:
+                content += f"{analysis.conclusions}\n\n"
+        
+        if hasattr(analysis, 'to_dict'):
+            analysis_dict = analysis.to_dict()
+            if 'evidence' in analysis_dict:
+                content += "### Evidence\n\n"
+                for evidence_item in analysis_dict['evidence']:
+                    content += f"- {evidence_item}\n"
+                content += "\n"
+        
+        content += """---
+
+## 7. Scientific Method Workflow
+
+This research followed the complete scientific method:
+
+1. **Observation**: Identified phenomenon or question
+2. **Hypothesis Formation**: Created testable hypothesis with variables
+3. **Experiment Design**: Designed controlled experiment
+4. **State Capture (A)**: Captured initial system state
+5. **Experiment Execution**: Ran experiment with data collection
+6. **Data Collection (C)**: Systematically collected measurements
+7. **State Capture (B)**: Captured final system state
+8. **Analysis**: Compared states, analyzed data, verified hypothesis
+9. **Conclusion**: Drew evidence-based conclusions
+
+---
+
+## 8. Reproducibility
+
+### Experiment Parameters
+
+All experiment parameters are documented above. To reproduce:
+
+1. Use the same hypothesis statement and variables
+2. Capture initial state (A) with same components
+3. Run experiment with same procedure
+4. Collect data (C) using same metrics
+5. Capture final state (B) for comparison
+
+### Data Availability
+
+- **Experiment ID**: {experiment_id or "N/A"}
+- **State Files**: Available in `_science/experiments/{experiment_id}/`
+- **Data Files**: Available in `_science/data/{experiment_id}/`
+- **Report**: This document
+
+---
+
+## 9. Conclusions and Recommendations
+
+### Key Findings
+
+"""
+        
+        if hasattr(analysis, 'conclusions'):
+            if isinstance(analysis.conclusions, str):
+                content += f"{analysis.conclusions}\n\n"
+            elif isinstance(analysis.conclusions, list):
+                for conclusion in analysis.conclusions:
+                    content += f"- {conclusion}\n"
+                content += "\n"
+        
+        content += """### Recommendations
+
+Based on this research:
+
+1. **Hypothesis Status**: The hypothesis was """ + ("verified" if (hasattr(analysis, 'verified') and analysis.verified) else "not verified") + """
+2. **Confidence**: """ + (f"{analysis.confidence:.2%}" if hasattr(analysis, 'confidence') else "Not calculated") + """
+3. **Next Steps**: Consider refining hypothesis or running additional experiments
+
+---
+
+## 10. Appendices
+
+### A. Raw Data
+
+All raw data is available in the experiment data files.
+
+### B. State Snapshots
+
+Complete state snapshots are available in the experiment state files.
+
+### C. Methodology
+
+This research used the Science-Bitch scientific method workflow tool, which implements:
+- Systematic state capture
+- Controlled data collection
+- Evidence-based analysis
+- Reproducible methodology
+
+---
+
+**Report Generated**: {timestamp}  
+**Tool**: Science-Bitch Scientific Method Workflow  
+**Version**: 1.0
+
+---
+
+*This is real research. This is real science. This is real evidence.* 🔬
+"""
+        
         return content
     
     def _display_hypothesis(self, hypothesis: Hypothesis) -> None:

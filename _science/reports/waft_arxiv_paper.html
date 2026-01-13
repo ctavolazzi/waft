@@ -1,0 +1,567 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WAFT: A Framework for Autonomous Agent Evolution and Scientific Method Integration</title>
+
+    <style>
+        /* Strict 2-page setup */
+        @page {
+            size: letter;
+            margin: 25.4mm 25.4mm 25.4mm 25.4mm;
+        }
+
+        body {
+            font-family: 'Times New Roman', 'Times', serif;
+            font-size: 11pt;
+            line-height: 1.4;
+            color: #000000;
+            background: #FFFFFF;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Prevent orphans/widows */
+        p, li {
+            orphans: 2;
+            widows: 2;
+        }
+
+        /* Page break control */
+        .page-break {
+            page-break-after: always;
+            break-after: page;
+        }
+
+        .no-break {
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 16pt;
+            color: #000000;
+            margin-top: 0;
+            margin-bottom: 12pt;
+            page-break-after: avoid;
+            border-bottom: 2pt solid #000000;
+            padding-bottom: 4pt;
+        }
+
+        h2 {
+            font-size: 14pt;
+            color: #000000;
+            margin-top: 12pt;
+            margin-bottom: 8pt;
+            page-break-after: avoid;
+            border-bottom: 1pt solid #000000;
+            padding-bottom: 2pt;
+        }
+
+        h3 {
+            font-size: 12pt;
+            color: #000000;
+            margin-top: 8pt;
+            margin-bottom: 4.0pt;
+            page-break-after: avoid;
+        }
+
+        p {
+            margin: 0 0 8pt 0;
+        }
+
+        ul, ol {
+            margin: 0 0 8pt 0;
+            padding-left: 15pt;
+        }
+
+        li {
+            margin-bottom: 2.6666666666666665pt;
+        }
+
+        /* Visual boxes - inspired by field guide */
+        .note-box {
+            border-left: 4pt solid #000000;
+            background: #f5f5f5;
+            padding: 8pt;
+            margin: 8pt 0;
+            page-break-inside: avoid;
+        }
+
+        .note-title {
+            font-weight: bold;
+            color: #000000;
+            font-size: 11pt;
+            margin-bottom: 4.0pt;
+        }
+
+        .highlight-box {
+            border: 2pt solid #000000;
+            background: #f5f5f5;
+            padding: 8pt;
+            margin: 8pt 0;
+            page-break-inside: avoid;
+        }
+
+        /* Tables for structured data */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 8pt 0;
+            font-size: 10pt;
+            page-break-inside: avoid;
+        }
+
+        th {
+            background: #000000;
+            color: #FFFFFF;
+            border: 1pt solid #000000;
+            padding: 4pt;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            border: 1pt solid #00000033;
+            padding: 4pt;
+        }
+
+        tr:nth-child(even) {
+            background: #f5f5f5;
+        }
+
+        /* Pillar boxes - visual representation */
+        .pillar {
+            border: 2pt solid #000000;
+            background: #FFFFFF;
+            padding: 8pt;
+            margin: 8pt 0;
+            page-break-inside: avoid;
+        }
+
+        .pillar-title {
+            font-weight: bold;
+            color: #000000;
+            font-size: 12pt;
+            margin-bottom: 4.0pt;
+        }
+
+        /* Ideas - prose presentation with varied formatting */
+        .idea {
+            margin-bottom: 9.6pt;
+            padding: 6.4pt 0;
+            page-break-inside: avoid;
+        }
+
+        /* Alternate between different visual styles */
+        .idea:nth-child(odd) {
+            padding-left: 8pt;
+            border-left: 2pt solid #000000;
+            background: #f5f5f510;
+        }
+
+        .idea:nth-child(even) {
+            padding-left: 0;
+            border-left: none;
+            background: transparent;
+            border-top: 1pt solid #00000020;
+            padding-top: 4.8pt;
+            margin-top: 3.2pt;
+        }
+
+        .idea:nth-child(3n) {
+            padding-left: 0;
+            border-left: none;
+            background: #f5f5f508;
+            border-radius: 3pt;
+            padding: 4.8pt;
+        }
+
+        .idea-content {
+            font-size: 11pt;
+            line-height: 1.6;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+            text-align: justify;
+            margin: 0;
+        }
+
+        /* Metadata - compact */
+        .metadata {
+            font-size: 9pt;
+            color: #00000088;
+            line-height: 1.3;
+            border-top: 1pt solid #00000033;
+            padding-top: 4.0pt;
+            margin-top: 8pt;
+        }
+
+        .metadata p {
+            margin-bottom: 2.6666666666666665pt;
+        }
+
+        /* Summary box - prominent */
+        .summary-box {
+            background: #f5f5f5;
+            padding: 8pt;
+            margin-bottom: 12pt;
+            border-left: 4pt solid #000000;
+            border-top: 1pt solid #000000;
+            border-right: 1pt solid #000000;
+            border-bottom: 1pt solid #000000;
+        }
+
+        /* Scientific name styling */
+        .scientific-name {
+            font-style: italic;
+            color: #000000;
+        }
+
+        /* Code blocks */
+        code {
+            font-family: monospace;
+            font-size: 9pt;
+            background: #f5f5f5;
+            color: #000000;
+            padding: 2pt 4pt;
+            border-radius: 2pt;
+        }
+
+        pre {
+            background: #f5f5f5;
+            padding: 4.0pt;
+            border-left: 3pt solid #000000;
+            font-size: 9pt;
+            overflow-x: auto;
+            page-break-inside: avoid;
+        }
+
+        /* Visual separators */
+        .divider {
+            border-top: 1pt solid #00000033;
+            margin: 8pt 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- PAGE 1 -->
+    <div class="page-1">
+        <h1>WAFT: A Framework for Autonomous Agent Evolution and Scientific Method Integration</h1>
+
+        <div class="summary-box">
+            <strong>Summary:</strong> Key contributions include: Complete scientific method implementation Automatic state capture system Systematic data collection framework Hypothesis testing infrastructure...
+        </div>
+
+        <div class="metadata">
+            <p><strong>Generated:</strong> 2026-01-13 00:05 UTC | <strong>Ideas Extracted:</strong> 64</p>
+        </div>
+
+        <h2>What Happened</h2>
+
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Key contributions include: Complete scientific method implementation Automatic state capture system Systematic data collection framework Hypothesis testing infrastructure Automated report generation Modular, extensible architecture.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>We present WAFT (Workflow Automation Framework for Transformation), a comprehensive framework for autonomous agent evolution, scientific method integration, and systematic research workflows. WAFT provides a structured approach to hypothesis testing, experiment management, state tracking, and evidence-based analysis through its integrated scientific method toolchain. The framework implements a complete lifecycle from hypothesis formation through experiment execution, data collection, state capture, analysis, and automated report generation. We demonstrate WAFT's capabilities through case studies in algorithm optimization, configuration tuning, and code refactoring impact analysis. Our results show that WAFT enables reproducible, traceable, and systematic research workflows with automated documentation generation. The framework is implemented in Python with modular architecture supporting multiple PDF generation engines, state management systems, and scientific method workflows.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Modern software development and research workflows face significant challenges in maintaining systematic approaches to experimentation, hypothesis testing, and evidence-based decision making. Traditional approaches often lack:.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Complete Scientific Method Implementation: Full workflow from hypothesis formation to conclusion Automatic State Capture System: Before (A) and after (B) state snapshots with change tracking Systematic Data Collection Framework: Structured measurement recording during experiments (C) Hypothesis Testing Infrastructure: Structured approach to forming, testing, and verifying hypotheses Automated Report Generation: Professional PDF reports with multiple styling options Modular Architecture: Extensible design supporting multiple use cases.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>The remainder of this paper is organized as follows: Section 2 reviews related work. Section 3 presents the WAFT architecture and design principles. Section 4 details the scientific method workflow implementation. Section 5 describes the state capture and data collection systems. Section 6 presents case studies demonstrating WAFT's capabilities. Section 7 discusses results and implications. Section 8 concludes with future directions.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Several tools exist for scientific computing and experiment management. Jupyter Notebooks [1] provide interactive computing environments but lack structured hypothesis testing frameworks. MLflow [2] focuses on machine learning experiment tracking but doesn't implement the complete scientific method workflow. Weights & Biases [3] provides experiment tracking but is primarily cloud-based and ML-focused.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>┌─────────────────────────────────────────────────────────┐ │ WAFT Framework │ └─────────────────────────────────────────────────────────┘ │ ┌───────────────────┼───────────────────┐ │ │ │ ▼ ▼ ▼ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ │ Scientific │ │ State │ │ PDF │ │ Method │ │ Capture │ │ Generation │ │ Workflow │ │ System │ │ Engine │ └──────────────┘ └──────────────┘ └──────────────┘ │ │ │ └───────────────────┼───────────────────┘ │ ▼ ┌──────────────────────┐ │ Data Collection │ │ Framework (C) │ └──────────────────────┘.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Design Elements: Structure: Experiment organization and flow Variables: Specification of all variables Data Collection: Methods and intervals State Capture: Points for A and B snapshots Success Criteria: Definition of success/failure.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Design Process: Define experiment structure Specify variables and types Design data collection methods Plan state capture points Define success criteria.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>We have presented WAFT, a comprehensive framework for autonomous agent evolution and scientific method integration. WAFT provides a structured approach to hypothesis testing, experiment management, state tracking, and evidence-based analysis through its integrated scientific method toolchain.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Keywords: Autonomous Agents, Scientific Method, Hypothesis Testing, Experiment Management, State Tracking, Research Automation, PDF Generation, Workflow Automation.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>File System: Directory structure, key file contents Configuration: Environment variables, config files Code: Source versions, dependencies Data: Input data files, schemas Metrics: Baseline performance metrics.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>File System State: Directory structure File contents (for key files) File metadata (size, modified time) File hashes (for change detection).</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>WAFT is implemented in Python 3.8+ with the following key technologies:.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>The state capture system provides automatic snapshots of system state at key workflow points.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Systematic State Tracking: No clear before/after snapshots of system state Structured Data Collection: Ad-hoc data recording without systematic frameworks Evidence Chains: Difficult to trace conclusions back to original data and hypotheses Automated Documentation: Manual report generation is time-consuming and error-prone Reproducibility: Lack of structured state capture makes reproduction difficult.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>WAFT differs by providing a complete scientific method implementation with state capture, hypothesis testing, and automated documentation generation, suitable for general software engineering and research workflows.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Version control systems like Git [4] track code changes but don't capture complete system state including configuration, data, and runtime metrics. Container systems like Docker [5] provide state capture but at the infrastructure level, not the application/research level.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>WAFT's state capture system operates at the research workflow level, capturing application state, configuration, data, and metrics relevant to scientific experiments.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Tools like Airflow [6] and Prefect [7] automate workflow execution but don't implement scientific method principles. Research automation platforms like Galaxy [8] focus on bioinformatics workflows.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>WAFT uniquely combines workflow automation with scientific method principles, providing structured hypothesis testing and evidence-based analysis.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>LaTeX [9] is the gold standard for academic paper generation but requires manual formatting. Modern tools like Pandoc [10] convert between formats but don't provide structured research workflows.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>WAFT integrates PDF generation directly into the scientific method workflow, automatically generating professional reports from experiment data and analysis.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Hypothesis Formation: Structured hypothesis creation with variables Experiment Design: Systematic experiment planning State Capture (A): Initial system state snapshot Experiment Execution: Controlled experiment running Data Collection (C): Systematic measurement recording State Capture (B): Final system state snapshot Analysis: Hypothesis verification/refutation Reporting: Automated documentation generation.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>File System State: Directory structure, file contents, metadata Configuration State: Environment variables, config files, settings Code State: Source code versions, dependencies, build artifacts Data State: Input/output data, schemas, data files Hash Generation: For change detection and comparison.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Measurements: Quantitative values with timestamps Observations: Qualitative notes and observations Metrics: Performance, system, and application metrics Events: Significant events, errors, state transitions Structured Storage: JSON format with metadata.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Multiple Generators: PDFGenerator, ScientificPDFGenerator, ComponentPDFGenerator Style Presets: clinical_standard, premium, professional Markdown Support: Automatic markdown to HTML conversion Template System: Field guides, lab notes, technical memos WeasyPrint Integration: High-quality PDF rendering.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Core Framework: Python with type hints CLI Interface: Typer for command-line interface PDF Generation: WeasyPrint for HTML-to-PDF conversion State Management: JSON-based state snapshots Data Storage: Structured JSON data files Template Engine: Jinja2 for templates.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Components: Statement: Clear, testable prediction Variables: Independent, dependent, control Verification Criteria: What constitutes verification/refutation Falsifiability: Can be proven wrong.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>After experiment execution, the system captures the same components and compares with State A to identify:.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Analysis Process: Compare states A and B Analyze collected data (C) Verify/refute hypothesis Calculate confidence level Generate conclusions Identify patterns.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Configuration State: Environment variables Configuration files Settings and parameters System configuration.</p></div>
+        </div>
+        
+    </div>
+
+    <!-- Forced page break -->
+    <div class="page-break"></div>
+
+    <!-- PAGE 2 -->
+    <div class="page-2">
+        
+        <h2>Additional Details</h2>
+
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>File Changes: Added, modified, deleted, renamed files Configuration Changes: Modified settings, new/removed parameters Code Changes: Modified source, new dependencies, version updates Data Changes: New data files, modified data, schema changes.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>def capture<em>state(state</em>id: str) -> Dict[str, Any]: """Capture current system state.""" state = { "timestamp": datetime.now().isoformat(), "state<em>id": state</em>id, "files": capture<em>file</em>system(), "config": capture<em>configuration(), "code": capture</em>code<em>state(), "data": capture</em>data<em>state(), "hash": generate</em>state_hash() } return state.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>The data collection framework provides systematic recording of measurements, observations, and metrics.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Define Collection Points: Where to collect data Specify Intervals: How often to collect Record Measurements: Capture values Store Data: Save to structured format Timestamp Everything: All data points timestamped.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Temporal Analysis: How values change over time Correlation Analysis: Relationships between variables Statistical Analysis: Means, variances, distributions Pattern Recognition: Identifying trends and patterns.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Hypothesis: "The new genetic algorithm reduces execution time by at least 30% compared to the baseline implementation.".</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Experiment Design: Independent Variable: Algorithm implementation (baseline vs new) Dependent Variable: Execution time (milliseconds) Control Variables: Input data, random seed, hardware Trials: 10 runs per implementation.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>State Capture: State A: Initial codebase with baseline algorithm State B: Final codebase with new algorithm integrated.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Data Collection (C): Execution time for each run Memory usage Convergence iterations Final fitness scores.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Experiment Design: Independent Variable: Learning rate (0.0001, 0.0005, 0.001, 0.005, 0.01) Dependent Variable: Model accuracy (0.0-1.0) Control Variables: Model architecture, training data, epochs Trials: 5 runs per learning rate.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>State Capture: State A: Initial configuration with default learning rate State B: Final configuration with optimal learning rate.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Experiment Design: Independent Variable: Code version (pre-refactoring vs post-refactoring) Dependent Variables: Maintainability index (0-100) Execution time (milliseconds) Memory usage (MB) Control Variables: Test suite, input data Metrics: Cyclomatic complexity, code coverage, performance benchmarks.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Systematic Hypothesis Testing: Clear structure for forming and testing hypotheses Reproducible Experiments: Complete state capture enables reproduction Evidence-Based Conclusions: All conclusions traceable to data Automated Documentation: Professional reports generated automatically Traceable Evidence Chains: Complete links from hypothesis to conclusion.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>For Researchers: Structured approach ensures completeness Evidence chains provide traceability Automated reports save time Reproducibility is built-in.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>For Developers: Systematic testing of code changes Performance impact analysis Configuration optimization Refactoring validation.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>For Teams: Standardized research processes Shared experiment frameworks Collaborative analysis Knowledge preservation.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Advanced Analytics: Statistical analysis, machine learning integration Visualization: Charts, graphs, interactive dashboards Collaboration: Team experiment sharing, cloud storage Integration: Better ecosystem integration (Git, CI/CD, cloud platforms) Real-Time: Live experiment monitoring and tracking.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Our case studies demonstrate WAFT's effectiveness in algorithm optimization, configuration tuning, and code refactoring impact analysis. The framework enables reproducible, traceable, and systematic research workflows with automated documentation generation.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>WAFT is open-source and available for use in research and development workflows. Future work will focus on advanced analytics, visualization, collaboration features, and ecosystem integration.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p><em>science/ ├── README.md # Overview ├── experiments/ # Experiment definitions │ └── [exp</em>id]/ # Individual experiment │ ├── experiment.json # Experiment definition │ ├── state<em>a.json # Initial state (A) │ ├── state</em>b.json # Final state (B) │ └── results.json # Experiment results ├── data/ # Collected data (C) │ └── [exp<em>id]/ # Data for each experiment │ └── data</em>series.json # Collected measurements └── reports/ # Generated reports ├── field<em>guide.pdf # Usage guide └── project</em>status.pdf # Status report.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>This paper presents WAFT, a framework that addresses these challenges through:.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>The scientific method workflow implements the complete cycle:.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>The hypothesis formation phase creates testable hypotheses with:.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>The experiment design phase creates systematic experiment plans:.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>The report generation phase creates comprehensive documentation:.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Code State: Source code versions Dependencies Build artifacts Test results.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>The system compares State A (initial) and State B (final) to identify:.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Metrics: Performance metrics System metrics Application metrics Custom metrics.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Objective: Test if a new genetic algorithm implementation improves performance.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>[4] Torvalds, L., & Hamano, J. (2005). "Git: Fast Version Control System." Git Documentation.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>[9] Lamport, L. (1994). "LaTeX: A Document Preparation System." Addison-Wesley.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>This paper was generated using WAFT's scientific method workflow and PDF generation capabilities.</p></div>
+        </div>
+        
+        
+
+        <div class="divider"></div>
+
+        <div class="metrics">
+            <h3>Content Breakdown</h3>
+            <table>
+                <tr>
+                    <th>Type</th>
+                    <th>Count</th>
+                </tr>
+                <tr>
+                    <td>Decisions</td>
+                    <td>6</td>
+                </tr>
+                <tr>
+                    <td>Insights</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>Actions</td>
+                    <td>13</td>
+                </tr>
+                <tr>
+                    <td>Concepts</td>
+                    <td>43</td>
+                </tr>
+                <tr>
+                    <td>Questions</td>
+                    <td>2</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

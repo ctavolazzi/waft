@@ -1,8 +1,53 @@
 """
-Templates module - Text assets for project scaffolding.
+PDF Templates Module
+===================
+
+WAFT PDF template library for generating professional PDFs using WeasyPrint + HTML + Jinja2.
+
+Available Templates:
+- field_guide: Field guide template
+- lab_notes: Lab notebook template
+- one_pager: One-pager template
+- personal_memo: Personal memo template
+- tm_report: Technical memo template
+
+Usage:
+    from src.waft.templates.registry import get_registry
+    
+    registry = get_registry()
+    templates = registry.list_templates()
+    
+    # Get a template
+    template = registry.get_template("Field Guide")
+    
+    # Get generate function
+    generate_func = registry.get_generate_function("Field Guide")
+    
+    # Generate PDF
+    generate_func(
+        title="My Document",
+        content="<p>Content here</p>",
+        output_path=Path("output.pdf")
+    )
+
+CLI:
+    python -m src.waft.templates.cli list
+    python -m src.waft.templates.cli show field_guide
+    python -m src.waft.templates.cli search "lab"
+    python -m src.waft.templates.cli validate
 """
 
 from pathlib import Path
+from .registry import get_registry, TemplateRegistry, TemplateMetadata
+from .validator import TemplateValidator, ValidationResult
+
+__all__ = [
+    "get_registry",
+    "TemplateRegistry",
+    "TemplateMetadata",
+    "TemplateValidator",
+    "ValidationResult",
+]
 
 
 class TemplateWriter:

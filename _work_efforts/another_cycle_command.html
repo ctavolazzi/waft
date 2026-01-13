@@ -1,0 +1,535 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Another Cycle Command</title>
+
+    <style>
+        /* Strict 2-page setup */
+        @page {
+            size: letter;
+            margin: 25.4mm 25.4mm 25.4mm 25.4mm;
+        }
+
+        body {
+            font-family: 'Times New Roman', 'Times', serif;
+            font-size: 11pt;
+            line-height: 1.4;
+            color: #000000;
+            background: #FFFFFF;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Prevent orphans/widows */
+        p, li {
+            orphans: 2;
+            widows: 2;
+        }
+
+        /* Page break control */
+        .page-break {
+            page-break-after: always;
+            break-after: page;
+        }
+
+        .no-break {
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 16pt;
+            color: #000000;
+            margin-top: 0;
+            margin-bottom: 12pt;
+            page-break-after: avoid;
+            border-bottom: 2pt solid #000000;
+            padding-bottom: 4pt;
+        }
+
+        h2 {
+            font-size: 14pt;
+            color: #000000;
+            margin-top: 12pt;
+            margin-bottom: 8pt;
+            page-break-after: avoid;
+            border-bottom: 1pt solid #000000;
+            padding-bottom: 2pt;
+        }
+
+        h3 {
+            font-size: 12pt;
+            color: #000000;
+            margin-top: 8pt;
+            margin-bottom: 4.0pt;
+            page-break-after: avoid;
+        }
+
+        p {
+            margin: 0 0 8pt 0;
+        }
+
+        ul, ol {
+            margin: 0 0 8pt 0;
+            padding-left: 15pt;
+        }
+
+        li {
+            margin-bottom: 2.6666666666666665pt;
+        }
+
+        /* Visual boxes - inspired by field guide */
+        .note-box {
+            border-left: 4pt solid #000000;
+            background: #f5f5f5;
+            padding: 8pt;
+            margin: 8pt 0;
+            page-break-inside: avoid;
+        }
+
+        .note-title {
+            font-weight: bold;
+            color: #000000;
+            font-size: 11pt;
+            margin-bottom: 4.0pt;
+        }
+
+        .highlight-box {
+            border: 2pt solid #000000;
+            background: #f5f5f5;
+            padding: 8pt;
+            margin: 8pt 0;
+            page-break-inside: avoid;
+        }
+
+        /* Tables for structured data */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 8pt 0;
+            font-size: 10pt;
+            page-break-inside: avoid;
+        }
+
+        th {
+            background: #000000;
+            color: #FFFFFF;
+            border: 1pt solid #000000;
+            padding: 4pt;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            border: 1pt solid #00000033;
+            padding: 4pt;
+        }
+
+        tr:nth-child(even) {
+            background: #f5f5f5;
+        }
+
+        /* Pillar boxes - visual representation */
+        .pillar {
+            border: 2pt solid #000000;
+            background: #FFFFFF;
+            padding: 8pt;
+            margin: 8pt 0;
+            page-break-inside: avoid;
+        }
+
+        .pillar-title {
+            font-weight: bold;
+            color: #000000;
+            font-size: 12pt;
+            margin-bottom: 4.0pt;
+        }
+
+        /* Ideas - prose presentation with varied formatting */
+        .idea {
+            margin-bottom: 9.6pt;
+            padding: 6.4pt 0;
+            page-break-inside: avoid;
+        }
+
+        /* Alternate between different visual styles */
+        .idea:nth-child(odd) {
+            padding-left: 8pt;
+            border-left: 2pt solid #000000;
+            background: #f5f5f510;
+        }
+
+        .idea:nth-child(even) {
+            padding-left: 0;
+            border-left: none;
+            background: transparent;
+            border-top: 1pt solid #00000020;
+            padding-top: 4.8pt;
+            margin-top: 3.2pt;
+        }
+
+        .idea:nth-child(3n) {
+            padding-left: 0;
+            border-left: none;
+            background: #f5f5f508;
+            border-radius: 3pt;
+            padding: 4.8pt;
+        }
+
+        .idea-content {
+            font-size: 11pt;
+            line-height: 1.6;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+            text-align: justify;
+            margin: 0;
+        }
+
+        /* Metadata - compact */
+        .metadata {
+            font-size: 9pt;
+            color: #00000088;
+            line-height: 1.3;
+            border-top: 1pt solid #00000033;
+            padding-top: 4.0pt;
+            margin-top: 8pt;
+        }
+
+        .metadata p {
+            margin-bottom: 2.6666666666666665pt;
+        }
+
+        /* Summary box - prominent */
+        .summary-box {
+            background: #f5f5f5;
+            padding: 8pt;
+            margin-bottom: 12pt;
+            border-left: 4pt solid #000000;
+            border-top: 1pt solid #000000;
+            border-right: 1pt solid #000000;
+            border-bottom: 1pt solid #000000;
+        }
+
+        /* Scientific name styling */
+        .scientific-name {
+            font-style: italic;
+            color: #000000;
+        }
+
+        /* Code blocks */
+        code {
+            font-family: monospace;
+            font-size: 9pt;
+            background: #f5f5f5;
+            color: #000000;
+            padding: 2pt 4pt;
+            border-radius: 2pt;
+        }
+
+        pre {
+            background: #f5f5f5;
+            padding: 4.0pt;
+            border-left: 3pt solid #000000;
+            font-size: 9pt;
+            overflow-x: auto;
+            page-break-inside: avoid;
+        }
+
+        /* Visual separators */
+        .divider {
+            border-top: 1pt solid #00000033;
+            margin: 8pt 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- PAGE 1 -->
+    <div class="page-1">
+        <h1>Another Cycle Command</h1>
+
+        <div class="summary-box">
+            <strong>Summary:</strong> Phase 2: `/explore` Deep codebase exploration Structure, architecture, patterns, dependencies Key functionality mapping Integration points identification.
+        </div>
+
+        <div class="metadata">
+            <p><strong>Generated:</strong> 2026-01-12 23:47 UTC | <strong>Ideas Extracted:</strong> 56</p>
+        </div>
+
+        <h2>What Happened</h2>
+
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Phase 2: <code>/explore</code> Deep codebase exploration Structure, architecture, patterns, dependencies Key functionality mapping Integration points identification.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Key Difference: <code>/another-cycle</code> is the complete lifecycle, <code>/run-it</code> is a focused systematic workflow.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Use when: Starting major new work, need complete systematic approach, want full cycle from onboarding through quality assurance and evolution.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>The workflow covers the entire development lifecycle: Orientation: Get oriented and understand the codebase Analysis: Validate assumptions, form hypotheses, critique, orchestrate Engineering: Plan and implement systematically Quality: Improve, verify, and prove quality Evolution: Track Being evolution and genetic lineage Planning: Identify next steps and track goals.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Phase 8: <code>/engineer</code> Complete engineering workflow Spin-up → explore → draft plan → critique plan → finalize plan → begin Systematic implementation approach Active tool usage (Empirica, _pyrite, GitHub MCP, work-efforts).</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Group 6 (Planning): Next: Next step recommendation Goal: Goal tracking updates Checkpoint: Checkpoint file in <code><em>work</em>efforts/</code>.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Use <code>/another-cycle</code> when: ✅ Starting major new initiative ✅ Need complete systematic approach ✅ Want full cycle from start to finish ✅ Need comprehensive quality assurance ✅ Want Being evolution tracking ✅ Need complete lifecycle coverage ✅ Starting significant new work.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Orientation Complete: Onboarded and explored codebase Analysis Complete: Assumptions validated, hypotheses formed, critique done, orchestrated, analyzed Engineering Complete: Systematic implementation done Quality Complete: Improvements identified, version-baked, run-it executed, proven Evolution Complete: Being evolved, learnings captured Planning Complete: Next steps identified, goals tracked, checkpoint created.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>This command provides the complete development lifecycle from orientation through evolution - perfect for major initiatives requiring comprehensive systematic approach.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Phase 5: <code>/critique</code> Security-first adversarial review Find vulnerabilities, assumptions, overengineering Prioritize by severity (CRITICAL first) Generate critique report.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Continue if Possible: Skip failed phase if not critical Continue with remaining phases Note what was skipped.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Graceful Degradation: The command continues with available phases even if some fail. Critical phases may cause subsequent phases to skip, but non-critical failures shouldn't stop the entire cycle.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Key Difference: <code>/another-cycle</code> includes engineering as one phase, <code>/engineer</code> is the full engineering workflow.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Runs essential phases only. Use when: Time-constrained Need faster execution Some phases not applicable.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>This command provides: Complete Orientation: Full onboarding and exploration Comprehensive Analysis: Assumption validation, hypothesis formation, critique, orchestration Full Engineering: Complete engineering workflow Quality Assurance: Improvements, version-bake, run-it, proof Evolution: Being evolution from Source Reflection: Journal and learning capture Planning: Next steps, goals, checkpoints.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Each phase builds on the previous: Orientation provides foundation for analysis Analysis informs engineering decisions Engineering creates work for quality assurance Quality ensures evolution is meaningful Evolution captures learnings for future cycles.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Every phase produces evidence: Assumptions validated with traces Hypotheses verified with evidence Decisions supported by data All findings documented and traceable.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Phase 1: <code>/onboard</code> Standard repository onboarding Proceed → spin-up → analyze → phase1 → prepare → recap Get oriented to the project Initial analysis and setup.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Phase 6: <code>/comprehensive-orchestration</code> Full orchestration workflow (prompt template) Spin-up → consider → engineer → visualize → analyze → goal → checkpoint → execute → hypothesis → verify → reflect → recap → proceed → decide Complete strategic planning Note: This is a prompt template, not an executable command - execute phases manually or use individual commands.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Phase 7: <code>/analyze</code> Data analysis, insights, and action planning Health analysis Issue identification Opportunity discovery Pattern analysis Prioritized action plan.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Phase 9: <code>/improve</code> Identify and prioritize improvements Code quality, documentation, architecture, testing, performance, usability Score-based ranking Actionable recommendations.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Phase 10: <code>/version-bake</code> Complete quality workflow Reflect → run-it → improve → check-assumptions → verify → hypothesis → prove-it Tracks genetic lineage of ideas Self-correcting loop.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Phase 12: <code>/prove-it</code> Prove scientific method tool works Run simple and real experiment proofs Show state capture (A & B) and data collection (C) Verify file persistence.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Phase 14: <code>/journal</code> AI journal system hub View recent entries, search, statistics Write new reflections Capture learnings.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Phase 15: <code>/next</code> Identify next step based on goals Analyze active goals, work in progress, context Prioritize by importance and urgency Provide actionable recommendation.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Phase 16: <code>/goal</code> Track larger goals and break into steps Review current goals Update progress Create new goals if needed.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Phase 17: <code>/checkpoint</code> Create situation report and status update Recap conversation Document current state Update devlog and work efforts.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Group 4: Quality Assurance /improve → Improvement analysis /version-bake → Quality workflow /run-it → Comprehensive workflow /prove-it → Scientific method proof.</p></div>
+        </div>
+        
+    </div>
+
+    <!-- Forced page break -->
+    <div class="page-break"></div>
+
+    <!-- PAGE 2 -->
+    <div class="page-2">
+        
+        <h2>Additional Details</h2>
+
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Group 6: Planning & Tracking /next → Next step identification /goal → Goal tracking /checkpoint → Status checkpoint.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Actions: Check current state (date, directory, git status) Verify prerequisites (tools, dependencies) Identify current work effort (if applicable) Create cycle tracking document Display cycle overview.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Actions: Execute <code>/onboard</code> - Standard onboarding Execute <code>/explore</code> - Deep exploration Document findings from orientation Update cycle tracking.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Actions: Execute <code>/check-assumptions</code> - Validate assumptions Execute <code>/hypothesis</code> - Form hypotheses Execute <code>/critique</code> - Adversarial review Execute <code>/comprehensive-orchestration</code> - Full orchestration Execute <code>/analyze</code> - Data analysis Document all analysis findings Update cycle tracking.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Actions: Execute <code>/engineer</code> - Complete engineering workflow Document implementation progress Update cycle tracking.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Actions: Execute <code>/improve</code> - Improvement analysis Execute <code>/version-bake</code> - Quality workflow Execute <code>/run-it</code> - Comprehensive workflow Execute <code>/prove-it</code> - Scientific method proof Document quality findings Update cycle tracking.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Actions: Execute <code>/evolve</code> - Being evolution Execute <code>/journal</code> - Journal hub Document evolution and reflections Update cycle tracking.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Actions: Execute <code>/next</code> - Next step identification Execute <code>/goal</code> - Goal tracking Execute <code>/checkpoint</code> - Status checkpoint Document final state Complete cycle tracking.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Document the Failure: Note which phase failed Document error message Capture context at time of failure.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Suggest Remediation: Provide steps to fix failure Suggest alternative approaches Recommend when to retry.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Group 4 (Quality): Improve: Improvement report Version-Bake: Quality workflow documents Run-It: Multiple workflow documents Prove-It: Proof results in <code>scientific<em>method</em>tool/experiments/</code>.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>This command orchestrates: <code>/onboard</code> - Standard onboarding <code>/explore</code> - Deep exploration <code>/check-assumptions</code> - Assumption validation <code>/hypothesis</code> - Hypothesis formation <code>/critique</code> - Adversarial review <code>/comprehensive-orchestration</code> - Full orchestration <code>/analyze</code> - Data analysis <code>/engineer</code> - Engineering workflow <code>/improve</code> - Improvement analysis <code>/version-bake</code> - Quality workflow <code>/run-it</code> - Comprehensive workflow <code>/prove-it</code> - Scientific method proof <code>/evolve</code> - Being evolution <code>/journal</code> - Journal hub <code>/next</code> - Next step identification <code>/goal</code> - Goal tracking <code>/checkpoint</code> - Status checkpoint.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><code>/another-cycle</code> includes: Onboard and explore (orientation) Comprehensive-orchestration (full strategic planning) Analyze (data analysis) Engineering (implementation workflow) Improve (improvement analysis) Version-bake (quality workflow) Evolve (Being evolution) Journal (reflection hub) Next, goal, checkpoint (planning).</div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><code>/run-it</code> focuses on: Systematic workflow with verification and critique 15 phases of analysis, verification, decision-making.</div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><code>/engineer</code> focuses on: Engineering workflow (spin-up → explore → draft → critique → finalize → begin).</div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Don't use <code>/another-cycle</code> when: ❌ Quick task or simple change ❌ Already have full understanding ❌ Time-constrained (use <code>--quick</code> or individual commands) ❌ Just need one specific workflow ❌ Routine maintenance work.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Executes all 17 phases in 6 groups. Use when: Starting major new initiative Need complete lifecycle coverage Want comprehensive quality assurance.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Runs only quality assurance group. Use when: Need focused quality workflow Other areas already complete Want targeted analysis.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Runs cycle without evolution and journal. Use when: Don't need Being evolution Want to skip reflection phases Customizing workflow.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Runs only specified phases. Use when: Want custom workflow Need specific phases only Building custom sequence.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>The command requires: All individual commands to be available Empirica CLI (for some phases) MCP servers (for some phases) Git repository (for some checks) Scientific method tool (for prove-it).</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>If dependencies are missing: Document which phases are skipped Continue with available phases Provide guidance on installing missing dependencies.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Group 3: Engineering & Implementation /engineer → Complete engineering workflow.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Purpose: Systematic engineering and implementation.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Group 3 (Engineering): Engineering: Engineering documents, plans, implementation.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Use for Major Initiatives: This is a comprehensive cycle - use for major work, not quick tasks.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Trust the Process: The systematic progression is intentional - trust it.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Document Everything: All phases create documentation - use it for future reference.</p></div>
+        </div>
+        
+        
+
+        <div class="divider"></div>
+
+        <div class="metrics">
+            <h3>Content Breakdown</h3>
+            <table>
+                <tr>
+                    <th>Type</th>
+                    <th>Count</th>
+                </tr>
+                <tr>
+                    <td>Decisions</td>
+                    <td>6</td>
+                </tr>
+                <tr>
+                    <td>Insights</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <td>Actions</td>
+                    <td>22</td>
+                </tr>
+                <tr>
+                    <td>Concepts</td>
+                    <td>19</td>
+                </tr>
+                <tr>
+                    <td>Questions</td>
+                    <td>7</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
