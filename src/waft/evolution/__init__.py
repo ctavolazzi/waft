@@ -21,6 +21,7 @@ from .two_page_generator import TwoPageGenerator
 from .two_page_generator_legacy import TwoPageGeneratorLegacy
 from .component_generator import ComponentPDFGenerator, FoundationComponentGenerator
 from .document_evolution_engine import DocumentEvolutionEngine
+from .flexible_pdf_generator import FlexiblePDFGenerator
 from .component_evolution import ComponentEvolutionEngine, EvolvedComponent, ComponentTrait
 from .user_feedback import UserFeedbackCollector, FeedbackEntry
 from .pdf_image_converter import (
@@ -60,6 +61,7 @@ __all__ = [
     "ComponentEvolutionEngine",  # Component trait evolution system
     "EvolvedComponent",  # Component with evolving traits
     "ComponentTrait",  # Evolving component traits
+    "FlexiblePDFGenerator",  # Flexible PDF generator (no page constraints)
     "UserFeedbackCollector",  # User feedback collection and learning
     "FeedbackEntry",  # Individual feedback entry
     "pdf_to_pngs",
