@@ -4,6 +4,120 @@ This log tracks development activities, decisions, and progress for the waft pro
 
 ---
 
+## 2026-01-12 - Version Update to v0.7.0
+
+**Time**: 20:03:24 PST  
+**Status**: ✅ Complete  
+**Work Effort**: WE-260112-050t
+
+### Summary
+Prepared codebase for version 0.7.0 release by updating all version references and fixing version inconsistency between `pyproject.toml` and `__init__.py`.
+
+### Key Accomplishments
+- ✅ Updated version in `pyproject.toml`: `0.6.1` → `0.7.0`
+- ✅ Updated version in `src/waft/__init__.py`: `0.5.2` → `0.7.0` (fixed inconsistency)
+- ✅ Updated `CHANGELOG.md` with v0.7.0 entry
+- ✅ Created version update summary document
+
+### Version Consistency Fix
+- **Issue**: Version mismatch between `pyproject.toml` (0.6.1) and `__init__.py` (0.5.2)
+- **Solution**: Both files now consistently use 0.7.0
+- **Impact**: Ensures version consistency across the codebase
+
+### Files Modified
+- `pyproject.toml` - Version updated to 0.7.0
+- `src/waft/__init__.py` - Version updated to 0.7.0 (fixed inconsistency)
+- `CHANGELOG.md` - Added v0.7.0 entry
+
+### Files Created
+- `V0.7.0_VERSION_UPDATE_SUMMARY.md` - Version update summary document
+
+### Work Effort
+- **ID**: WE-260112-050t
+- **Tickets**: All 4 tickets completed
+  - TKT-050t-001: Update version in pyproject.toml ✅
+  - TKT-050t-002: Update version in __init__.py (fix inconsistency) ✅
+  - TKT-050t-003: Update CHANGELOG.md ✅
+  - TKT-050t-004: Create version update summary ✅
+
+### Next Steps
+1. Review changes and verify version consistency
+2. Test application with new version
+3. Create git tag `v0.7.0` when ready
+4. Create GitHub release with release notes
+
+---
+
+## 2026-01-12 - WAFT Handbook Field Guide PDF Generation
+
+**Time**: 19:52:19 PST  
+**Status**: ✅ Complete  
+**Inspiration**: LaTTe (LaTeX templates + JSON) + LaTeX Cookbook
+
+### Summary
+Created LaTeX-inspired field guide PDF template system for WAFT Framework Handbook. Generated professional field guide PDF (3.00 MB) using WeasyPrint with LaTeX-inspired typography and styling.
+
+### Key Accomplishments
+- ✅ Created LaTeX-inspired field guide template (inspired by LaTTe's template + JSON approach)
+- ✅ Implemented LaTeX Cookbook-inspired typography and styling
+- ✅ Parsed WAFT_FRAMEWORK_HANDBOOK.md into structured JSON data
+- ✅ Generated beautiful field guide PDF with professional formatting
+- ✅ Field guide styling: military manual aesthetic with practical layout
+
+### Technical Details
+- **Template System**: WeasyPrint + HTML + Jinja2 (LaTeX-inspired styling)
+- **Data Format**: JSON (LaTTe-style template + data separation)
+- **Styling**: LaTeX Cookbook-inspired typography, colors, and layout
+- **Output**: 3.00 MB PDF with complete WAFT handbook content
+
+### Files Created
+- `scripts/generate_waft_handbook_field_guide.py` - Main generator script
+- `scripts/generate_waft_handbook_latex.py` - LaTeX version (requires pdflatex)
+- `_work_efforts/waft_handbook_field_guide/WAFT_FRAMEWORK_HANDBOOK_FIELD_GUIDE.pdf` - Generated PDF
+- `_work_efforts/waft_handbook_field_guide/handbook_data.json` - Structured data
+- `_work_efforts/waft_handbook_field_guide/waft_handbook.html` - HTML intermediate
+
+### Design Inspiration
+- **LaTTe**: Template + JSON data approach (https://github.com/raphaelreyna/latte.git)
+- **LaTeX Cookbook**: Beautiful typography and professional styling (https://github.com/alexpovel/latex-cookbook.git)
+- **Field Guide Aesthetic**: Military manual meets technical documentation
+
+### Next Steps
+- Evolve template further using `/evolve` command workflow
+- Add more LaTeX-inspired features (equations, advanced tables, etc.)
+- Consider true LaTeX compilation if pdflatex becomes available
+
+---
+
+## 2026-01-12 - WAFT Framework Handbook Creation
+
+**Time**: 17:57:15 PST  
+**Status**: 🚧 In Progress  
+**Checkpoint**: [CHECKPOINT_2026-01-12_WAFT_FRAMEWORK_HANDBOOK.md](CHECKPOINT_2026-01-12_WAFT_FRAMEWORK_HANDBOOK.md)
+
+### Summary
+Created first draft of comprehensive WAFT Framework Handbook (12 sections, 785 lines). Generated publication-ready PDF using evolved ArXiv generator. Currently iteratively refining formatting issues related to two-column academic paper layout.
+
+### Key Accomplishments
+- ✅ Created comprehensive WAFT Framework Handbook covering all aspects
+- ✅ Generated PDF using ArXiv academic paper template
+- ✅ Fixed multiple formatting issues (abstract, diagrams, code blocks, JSON)
+- ✅ Improved template CSS for word-wrapping in code blocks
+- ✅ Added conditional rendering for abstract section
+
+### Current State
+- Handbook: First draft complete, formatting refinement in progress
+- PDF: 2.8 MB, ArXiv format, multiple formatting fixes applied
+- Template: CSS improvements for two-column layout compatibility
+- Process: Iterative refinement based on user feedback
+
+### Next Steps
+- Continue fixing formatting issues as flagged
+- Complete formatting refinement
+- Final PDF review
+
+---
+
 ## 2026-01-12 - Deep Cognitive Processing & Assumption Validation
 
 **Time**: 16:05:00 PST  
@@ -4384,3 +4498,98 @@ Executed complete engineering workflow (spin-up → explore → draft → critiq
 **Note**: Wiki upload may need manual step if wiki feature needs enabling in repository settings.
 
 **The evolutionary iteration process is now a core WAFT workflow!**
+
+[2026-01-13 03:44:31] [2026-01-12 19:40:54] ✅ Cursor Development Plan Phase 1 Complete
+
+**Work Effort**: WE-260112-g0ih - Cursor Development Plan - Phase 1: Complete Missing Commands
+**Status**: ✅ Completed
+
+**What Was Done**:
+- Implemented all 6 missing cursor commands from Phase 1:
+  1. ✅ `/context` - Current context for handoff (comprehensive context summary)
+  2. ✅ `/sync` - Sync documentation across files (keeps docs consistent)
+  3. ✅ `/todos` - Todo management and tracking (task management)
+  4. ✅ `/search` - Search across documentation (fast comprehensive search)
+  5. ✅ `/cleanup` - Cleanup and maintenance (project organization)
+  6. ✅ `/links` - Create bidirectional documentation links (documentation relationships)
+
+**Files Created**:
+- `.cursor/commands/context.md` (~400 lines)
+- `.cursor/commands/sync.md` (~350 lines)
+- `.cursor/commands/todos.md` (~400 lines)
+- `.cursor/commands/search.md` (~400 lines)
+- `.cursor/commands/cleanup.md` (~400 lines)
+- `.cursor/commands/links.md` (~400 lines)
+
+**Files Modified**:
+- `.cursor/commands/COMMAND_RECOMMENDATIONS.md` - Updated all commands to ✅ status
+
+**Command Features**:
+- All commands follow existing command patterns and structure
+- Comprehensive documentation with examples
+- Integration with MCP servers where applicable
+- Error handling and performance considerations
+- Advanced features and best practices documented
+
+**Impact**: 
+- Complete command suite for Phase 1
+- All recommended commands now implemented
+- Ready for Phase 2 (IDE Integration) from Cursor Development Plan
+
+**Next Steps**:
+- Phase 2: IDE Integration (.cursorrules, composer, tab completion, MCP, keybindings)
+- Phase 3: Scint Integration (10 tasks pending)
+- Phase 4: Documentation & Workflows
+
+[2026-01-13 03:46:40] [2026-01-12 19:45:00] ✅ Resurrect ProtoCel System Implemented
+
+**Work Effort**: WE-260112-dj2p - Resurrect ProtoCel - Self-Contained Evolving Cell
+**Status**: ✅ Completed
+
+**What Was Done**:
+- Implemented ProtoCel system: self-contained evolving cells that can observe and interact with beings
+- Created ProtoCel class with:
+  - Self-contained folder structure (_hidden/.truth/protocels/{id}/)
+  - Being observation capabilities (can peer outside to observe beings)
+  - Being interaction capabilities (via API)
+  - Evolution system based on usage patterns (evolves every 10 interactions)
+  - Fitness calculation based on diversity and activity
+  - Mutation generation based on usage patterns
+- Created ProtoCel API routes:
+  - POST /api/protocel/create - Create new ProtoCel
+  - GET /api/protocel/list - List all ProtoCels
+  - GET /api/protocel/{id} - Get ProtoCel state
+  - POST /api/protocel/{id}/observe - Observe a being
+  - POST /api/protocel/{id}/interact - Interact with a being
+  - POST /api/protocel/{id}/evolve - Trigger evolution
+- Created /resurrect command definition with comprehensive documentation
+- Integrated ProtoCel router into main API
+
+**Files Created**:
+- `src/waft/protocel.py` (~400 lines) - ProtoCel class and system
+- `src/waft/api/routes/protocel.py` (~200 lines) - API routes
+- `.cursor/commands/resurrect.md` (~400 lines) - Command definition
+
+**Files Modified**:
+- `src/waft/api/main.py` - Added ProtoCel router
+
+**Key Features**:
+- Self-contained: ProtoCel lives in its own folder with own structure
+- Observable: Can observe beings from outside the cell
+- Interactive: Can interact with beings via API
+- Evolving: Evolves automatically based on usage patterns (every 10 interactions)
+- Encapsulated: Isolated but communicates via API
+- Fitness-based: Calculates fitness from diversity and activity
+- Pattern-aware: Tracks usage patterns and generates mutations
+
+**Impact**: 
+- Enables creation of self-contained evolving cells
+- Provides encapsulated system for being observation/interaction
+- Supports evolutionary study of being patterns
+- Ready for testing and usage
+
+**Next Steps**:
+- Test ProtoCel creation and evolution
+- Test being observation and interaction
+- Monitor evolution patterns
+- Refine fitness calculation and mutations

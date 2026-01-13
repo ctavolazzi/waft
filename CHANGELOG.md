@@ -11,6 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Work in progress features
 
+## [0.7.0] - 2026-01-12
+
+### Changed
+
+- **Version Update**: Bumped from v0.6.1 to v0.7.0
+- **Version Consistency**: Fixed version mismatch between `pyproject.toml` and `__init__.py`
+  - Both now consistently use 0.7.0
+
 ## [0.6.1] - 2026-01-12
 
 ### Added
