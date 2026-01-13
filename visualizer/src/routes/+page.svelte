@@ -9,6 +9,7 @@
 	import GamificationCard from '$lib/components/cards/GamificationCard.svelte';
 	import PyriteCard from '$lib/components/cards/PyriteCard.svelte';
 	import GymCard from '$lib/components/cards/GymCard.svelte';
+	import BobCard from '$lib/components/cards/BobCard.svelte';
 
 	let loading = true;
 	let error: string | null = null;
@@ -129,6 +130,11 @@
 		<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
 			<PyriteCard />
 			<GymCard />
+		</div>
+
+		<!-- Bob the Cartographer -->
+		<div class="grid grid-cols-1 gap-6 mb-6">
+			<BobCard />
 		</div>
 	{/if}
 </div>

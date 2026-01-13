@@ -1,0 +1,22 @@
+{
+  "name": "Test API",
+  "version": "1.0.0",
+  "endpoints": [
+    {
+      "path": "/users",
+      "method": "GET"
+    },
+    {
+      "path": "/users/{id}",
+      "method": "GET"
+    },
+    {
+      "path": "/users",
+      "method": "POST"
+    }
+  ],
+  "authentication": {
+    "type": "Bearer Token",
+    "header": "Authorization"
+  }
+}

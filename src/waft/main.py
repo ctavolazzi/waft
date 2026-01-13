@@ -11,6 +11,7 @@ The "Operating System" for projects, orchestrating:
 from pathlib import Path
 from typing import Optional, Dict
 from datetime import datetime
+import time
 
 import typer
 from rich.console import Console
@@ -38,6 +39,7 @@ from .cli.epistemic_display import (
 )
 from .cli.hud import render_hud
 from .core.analytics_cli import app as analytics_app
+from .cli.pyrite_cli import app as pyrite_app
 
 app = typer.Typer(
     name="waft",
@@ -1212,6 +1214,7 @@ def checkout(
 
 # Add analytics subcommand
 app.add_typer(analytics_app, name="analytics")
+app.add_typer(pyrite_app, name="pyrite", help="Pyrite - The God of Work Efforts")
 
 @app.command()
 def decide(
@@ -2244,6 +2247,38 @@ def improve(
 
 
 @app.command()
+def celebrate(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    achievement: Optional[str] = typer.Option(None, "--achievement", "-a", help="What was accomplished"),
+    message: Optional[str] = typer.Option(None, "--message", "-m", help="Custom celebration message"),
+    no_print: bool = typer.Option(False, "--no-print", help="Don't print PDF, just generate it"),
+):
+    """
+    Generate and print a celebratory PDF!
+    
+    Creates a beautiful ArXiv-style celebration PDF and prints it to the material world.
+    Perfect for acknowledging achievements, milestones, and moments of success.
+    """
+    project_path = resolve_project_path(path)
+    
+    from .core.celebrate import CelebrateManager
+    
+    celebrate_manager = CelebrateManager(project_path)
+    pdf_path = celebrate_manager.celebrate(
+        achievement=achievement,
+        message=message,
+        print_pdf=not no_print
+    )
+    
+    if pdf_path:
+        console.print(f"\n[green]✅ Celebration PDF ready![/green]")
+        console.print(f"[dim]Location: {pdf_path.relative_to(project_path)}[/dim]")
+    else:
+        console.print("[red]❌ Failed to generate celebration PDF[/red]")
+        raise typer.Exit(1)
+
+
+@app.command()
 def audit(
     path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     output: Optional[str] = typer.Option(None, "--output", "-o", help="Custom output path"),
@@ -2565,6 +2600,311 @@ def tell_story(
         console.print(f"\n[bold red]❌ Error:[/bold red] {e}")
         logger.exception("Error in tell_story command")
         _process_tavern_hook(project_path, "tell_story", False, {"error": str(e)})
+        raise typer.Exit(1)
+
+
+@app.command(name="print-pdf")
+def print_pdf(
+    force_create: bool = typer.Option(False, "--force-create", help="Force creation of new PDF even if relevant one exists"),
+    no_print: bool = typer.Option(False, "--no-print", help="Generate but don't print (preview only)"),
+    style: str = typer.Option("clinical_standard", "--style", "-s", help="PDF style (clinical_standard/premium/professional)"),
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+):
+    """
+    Print most relevant PDF or create evolved PDF using WAFT.
+    
+    Intelligently finds the most relevant PDF based on conversation context,
+    active files, work efforts, and Oracle epistemic state. If no relevant PDF
+    exists or relevance is low, creates an evolved PDF using WAFT principles.
+    """
+    project_path = resolve_project_path(path)
+    
+    console.print(f"\n[bold cyan]🖨️  Waft[/bold cyan] - Print PDF\n")
+    
+    from .core.pdf_discovery import PDFDiscovery
+    from .core.pdf_evolution import PDFEvolution
+    from .core.science import TheOracle
+    import subprocess
+    import platform
+    
+    try:
+        # Gather context
+        console.print("[yellow]→[/yellow] Gathering context...")
+        
+        # Build context dictionary
+        # Note: In a real implementation, this would gather from conversation history,
+        # active files, etc. For now, we use minimal context.
+        context = {
+            "conversation": [],  # Would be populated from conversation history
+            "active_files": [],  # Would be populated from active files
+            "work_efforts": [],  # Would be populated from active work efforts
+        }
+        
+        # Try to initialize Oracle
+        oracle = None
+        oracle_state = None
+        try:
+            oracle = TheOracle(project_path)
+            oracle_state = oracle.get_epistemic_state()
+            context["oracle_state"] = oracle_state
+            console.print("[green]✓[/green] Oracle available")
+        except RuntimeError:
+            console.print("[dim]Oracle not available (Empirica not initialized)[/dim]")
+        except Exception as e:
+            console.print(f"[dim]Oracle error: {e}[/dim]")
+        
+        # Discover relevant PDF
+        console.print("[yellow]→[/yellow] Discovering relevant PDF...")
+        discovery = PDFDiscovery(project_path)
+        
+        pdf_path = None
+        if not force_create:
+            pdf_path = discovery.find_relevant_pdf(context)
+        
+        # If found and relevant, use it
+        if pdf_path and pdf_path.exists():
+            # Score it to check relevance
+            score = discovery.score_pdf(pdf_path, context)
+            
+            if score >= 0.5:  # Threshold for relevance
+                console.print(f"[green]✓[/green] Found relevant PDF: {pdf_path.name} (relevance: {score:.0%})")
+                console.print(f"[dim]   Path: {pdf_path}[/dim]")
+            else:
+                console.print(f"[yellow]⚠️[/yellow]  Found PDF but low relevance ({score:.0%}), creating new one...")
+                pdf_path = None
+        
+        # If no relevant PDF found, create evolved PDF
+        if not pdf_path:
+            console.print("[yellow]→[/yellow] Creating evolved PDF using WAFT principles...")
+            
+            evolution = PDFEvolution(project_path, oracle)
+            pdf_path = evolution.evolve_pdf(context, style=style)
+            
+            console.print(f"[green]✓[/green] Created evolved PDF: {pdf_path}")
+        
+        # Print PDF if requested
+        if not no_print:
+            console.print("[yellow]→[/yellow] Printing PDF...")
+            
+            # Use PDF class print method
+            from .pdf import PDF, PDFConfig
+            
+            # Create PDF instance to use print method
+            # Note: We need to load the existing PDF or recreate it
+            # For now, use direct lpr command
+            system = platform.system()
+            try:
+                if system == "Darwin":  # macOS
+                    result = subprocess.run(
+                        ["lpr", str(pdf_path)],
+                        capture_output=True,
+                        text=True,
+                        check=False
+                    )
+                elif system == "Windows":
+                    result = subprocess.run(
+                        ["print", str(pdf_path)],
+                        shell=True,
+                        capture_output=True,
+                        text=True,
+                        check=False
+                    )
+                else:  # Linux
+                    result = subprocess.run(
+                        ["lpr", str(pdf_path)],
+                        capture_output=True,
+                        text=True,
+                        check=False
+                    )
+                
+                if result.returncode == 0:
+                    console.print(f"[green]✓[/green] PDF sent to printer!")
+                else:
+                    console.print(f"[yellow]⚠️[/yellow]  Print command returned: {result.stderr}")
+                    console.print(f"[dim]PDF saved at: {pdf_path}[/dim]")
+            except FileNotFoundError:
+                console.print(f"[yellow]⚠️[/yellow]  Print command not found. Please print manually:")
+                console.print(f"[dim]lpr {pdf_path}[/dim]")
+            except Exception as e:
+                console.print(f"[yellow]⚠️[/yellow]  Print error: {e}")
+                console.print(f"[dim]PDF saved at: {pdf_path}[/dim]")
+        else:
+            console.print(f"[dim]PDF saved at: {pdf_path} (not printed)[/dim]")
+        
+        # Log to Oracle if available
+        if oracle:
+            try:
+                oracle.log_insight(
+                    f"Printed PDF: {pdf_path.name}",
+                    impact=0.3
+                )
+            except Exception:
+                pass
+        
+        # Process TavernKeeper hook
+        _process_tavern_hook(project_path, "print_pdf", True, {
+            "pdf_path": str(pdf_path),
+            "created": not force_create and pdf_path and pdf_path.exists(),
+            "style": style
+        })
+        
+        console.print(f"\n[bold green]✅ Complete![/bold green]")
+        console.print(f"[dim]PDF: {pdf_path}[/dim]")
+        
+    except Exception as e:
+        console.print(f"\n[bold red]❌ Error:[/bold red] {e}")
+        logger.exception("Error in print_pdf command")
+        _process_tavern_hook(project_path, "print_pdf", False, {"error": str(e)})
+        raise typer.Exit(1)
+
+
+@app.command(name="evolve-another-template")
+def evolve_another_template(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    template: Optional[str] = typer.Option(None, "--template", "-t", help="Template name (academic, field-guide, etc.)"),
+    list_templates: bool = typer.Option(False, "--list", "-l", help="List available templates"),
+    all_templates: bool = typer.Option(False, "--all", "-a", help="Generate all templates"),
+):
+    """
+    Generate evolution report using alternative template format.
+    
+    Creates a new version of the complete evolution report using a different
+    template style (academic paper, field guide, lab notes, etc.) instead
+    of the default format.
+    
+    Requires a previous /evolve run to have evolution data available.
+    """
+    project_path = resolve_project_path(path)
+    
+    import subprocess
+    import sys
+    
+    script_path = project_path / "scripts" / "evolve_another_template.py"
+    
+    if not script_path.exists():
+        console.print(f"[red]❌ Script not found: {script_path}[/red]")
+        raise typer.Exit(1)
+    
+    # Build command
+    cmd = [sys.executable, str(script_path)]
+    if list_templates:
+        cmd.append("--list")
+    elif all_templates:
+        cmd.append("--all")
+    elif template:
+        cmd.extend(["--template", template])
+    
+    # Run script
+    result = subprocess.run(cmd, cwd=str(project_path))
+    
+    if result.returncode != 0:
+        raise typer.Exit(result.returncode)
+
+
+@app.command(name="chronicler")
+def chronicler_start(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    reset_hour: int = typer.Option(5, "--reset-hour", help="Hour to reset daily cycle (default: 5 AM)"),
+):
+    """
+    Start TheChronicler - Self-monitoring system.
+    
+    TheChronicler observes, records, and reports on all activity within WAFT:
+    - File system changes (genesis, exodus, mutations)
+    - Git repository activity
+    - Work effort lifecycle
+    
+    Generates:
+    - Hourly reports on the hour
+    - Daily reports at 5 AM (reset cycle)
+    
+    Observations stored in: _chronicler/observations/
+    Reports stored in: _chronicler/reports/
+    """
+    project_path = resolve_project_path(path)
+    
+    console.print(f"\n[bold cyan]📜[/bold cyan] [bold]TheChronicler[/bold]")
+    console.print(f"[dim]The Chronicler of All System Activity - Observing Genesis and Exodus[/dim]\n")
+    
+    from .core.chronicler import TheChronicler
+    
+    try:
+        chronicler = TheChronicler(project_path, reset_hour=reset_hour)
+        chronicler.start()
+        
+        console.print(f"[green]✅[/green] TheChronicler monitoring active")
+        console.print(f"[dim]Press Ctrl+C to stop[/dim]\n")
+        
+        # Keep running until interrupted
+        try:
+            while True:
+                time.sleep(1)
+        except KeyboardInterrupt:
+            console.print("\n[dim]Stopping TheChronicler...[/dim]")
+            chronicler.stop()
+            console.print("[green]✅[/green] TheChronicler stopped")
+    except Exception as e:
+        console.print(f"[red]❌ Error:[/red] {e}")
+        logger.exception("Error starting TheChronicler")
+        raise typer.Exit(1)
+
+
+@app.command(name="chronicler-stats")
+def chronicler_stats(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+):
+    """Show TheChronicler statistics."""
+    project_path = resolve_project_path(path)
+    
+    from .core.chronicler import TheChronicler
+    
+    try:
+        chronicler = TheChronicler(project_path)
+        stats = chronicler.get_stats()
+        
+        console.print(f"\n[bold cyan]📊 TheChronicler Statistics[/bold cyan]\n")
+        console.print(f"Date: {stats['date']}")
+        console.print(f"Genesis (Created): {stats['genesis_count']}")
+        console.print(f"Exodus (Deleted): {stats['exodus_count']}")
+        console.print(f"Net Change: {stats['net_change']}")
+        console.print(f"Observers Active: {stats['observers_active']}")
+        console.print(f"Oracle Available: {stats['oracle_available']}")
+    except Exception as e:
+        console.print(f"[red]❌ Error:[/red] {e}")
+        logger.exception("Error getting TheChronicler stats")
+        raise typer.Exit(1)
+
+
+@app.command(name="chronicler-report")
+def chronicler_report(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    hourly: bool = typer.Option(False, "--hourly", help="Generate hourly report for current hour"),
+    daily: bool = typer.Option(False, "--daily", help="Generate daily report for today"),
+):
+    """Generate TheChronicler reports manually."""
+    if not hourly and not daily:
+        console.print("[red]❌ Error:[/red] Must specify --hourly or --daily")
+        raise typer.Exit(1)
+    
+    project_path = resolve_project_path(path)
+    
+    from .core.chronicler import TheChronicler
+    
+    try:
+        chronicler = TheChronicler(project_path)
+        
+        if hourly:
+            console.print("[dim]Generating hourly report...[/dim]")
+            chronicler.generate_immediate_hourly_report()
+            console.print("[green]✅[/green] Hourly report generated")
+        
+        if daily:
+            console.print("[dim]Generating daily report...[/dim]")
+            chronicler.generate_immediate_daily_report()
+            console.print("[green]✅[/green] Daily report generated")
+    except Exception as e:
+        console.print(f"[red]❌ Error:[/red] {e}")
+        logger.exception("Error generating TheChronicler report")
         raise typer.Exit(1)
 
 

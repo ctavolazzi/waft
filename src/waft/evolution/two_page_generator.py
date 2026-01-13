@@ -106,12 +106,21 @@ TWO_PAGE_TEMPLATE = """
         }
 
         ul, ol {
-            margin: 0 0 {{ margin.paragraph_spacing }}pt 0;
-            padding-left: 15pt;
+            margin: {{ margin.paragraph_spacing }}pt 0 {{ margin.paragraph_spacing }}pt 0;
+            padding-left: 20pt;
         }
 
         li {
-            margin-bottom: {{ margin.paragraph_spacing / 3 }}pt;
+            margin-bottom: {{ margin.paragraph_spacing / 2 }}pt;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        /* Nested lists */
+        ul ul, ol ol, ul ol, ol ul {
+            margin-top: {{ margin.paragraph_spacing / 2 }}pt;
+            margin-bottom: {{ margin.paragraph_spacing / 2 }}pt;
+            padding-left: 30pt;
         }
 
         /* Visual boxes - inspired by field guide */
@@ -315,38 +324,6 @@ TWO_PAGE_TEMPLATE = """
         </div>
         {% endfor %}
         {% endif %}
-
-        <div class="divider"></div>
-
-        <div class="metrics">
-            <h3>Content Breakdown</h3>
-            <table>
-                <tr>
-                    <th>Type</th>
-                    <th>Count</th>
-                </tr>
-                <tr>
-                    <td>Decisions</td>
-                    <td>{{ metrics.decisions }}</td>
-                </tr>
-                <tr>
-                    <td>Insights</td>
-                    <td>{{ metrics.insights }}</td>
-                </tr>
-                <tr>
-                    <td>Actions</td>
-                    <td>{{ metrics.actions }}</td>
-                </tr>
-                <tr>
-                    <td>Concepts</td>
-                    <td>{{ metrics.concepts }}</td>
-                </tr>
-                <tr>
-                    <td>Questions</td>
-                    <td>{{ metrics.questions }}</td>
-                </tr>
-            </table>
-        </div>
     </div>
 </body>
 </html>
@@ -497,7 +474,21 @@ class TwoPageGenerator:
             datetime.utcnow().strftime("%Y-%m-%d")
         ))
 
-        # 5. Section components from ideas
+        # 5. Metadata component
+        from src.waft import __version__
+        generation_info = {
+            'generator': 'WAFT TwoPageGenerator',
+            'style': styling_genome.genes.name if hasattr(styling_genome.genes, 'name') else 'adaptive',
+            'timestamp': datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"),
+            'version': __version__,
+            'process': f'Adaptive component-based generation with {target_pages}-page constraint'
+        }
+        components.append(builder.build_metadata_component(
+            authors="WAFT Research Team",
+            generation_info=generation_info
+        ))
+
+        # 6. Section components from ideas
         all_ideas = distilled_chat.get_top_ideas(n=50, min_importance=0.1)
 
         # Group ideas into sections intelligently
@@ -1065,6 +1056,20 @@ class TwoPageGenerator:
             text-align: center;
             margin: {{ margin.paragraph_spacing }}pt 0;
             opacity: 0.7;
+        }
+        .document-metadata {
+            font-size: {{ font.size_body - 1.5 }}pt;
+            color: {{ color.text }}88;
+            margin: {{ margin.paragraph_spacing }}pt 0;
+            padding: {{ margin.paragraph_spacing / 2 }}pt;
+            background: {{ color.code_bg }}40;
+            border-left: 3pt solid {{ color.accent }};
+        }
+        .document-metadata p {
+            margin: 2pt 0;
+        }
+        .document-metadata strong {
+            font-weight: 600;
         }
         .diagram {
             text-align: center;

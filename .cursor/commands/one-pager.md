@@ -41,6 +41,18 @@ Perfect for academic nerds who love physical binders full of paper.
 /one-pager json:'{"title": "Config", "version": "0.5.0"}' title:"Config One-Pager"
 ```
 
+### Briefing Document (NEW!)
+```
+/one-pager --briefing title:"Session Briefing"
+```
+
+Generates a field guide style 2-page briefing with:
+- Current system status (git, work efforts, health)
+- Chat context (what we're doing, recent topics)
+- Larger context (project state, epistemic state)
+
+Perfect for "at a glance" session documentation.
+
 ---
 
 ## Features
@@ -51,6 +63,7 @@ Perfect for academic nerds who love physical binders full of paper.
 - **Printer-Friendly**: Black and white, minimal ink usage
 - **Intelligent Expansion**: Adds content if too short, condenses if too long
 - **Multiple Input Types**: Files, strings, dictionaries, lists
+- **Briefing Mode**: Field guide style briefing with system status and chat context
 
 ---
 
@@ -125,6 +138,7 @@ create_one_pager("# Title\n\nContent", title="My Doc")
 - **Meeting Notes**: Convert notes to printable format
 - **Research Gists**: Crystallize research findings
 - **Binder Organization**: Build physical knowledge constellation
+- **Session Briefings**: Generate "at a glance" status documents with system state and chat context
 
 ---
 

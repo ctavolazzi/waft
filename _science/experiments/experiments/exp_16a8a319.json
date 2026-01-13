@@ -1,0 +1,148 @@
+{
+  "experiment_id": "exp_16a8a319",
+  "hypothesis": {
+    "statement": "Higher investigation and perception skills improve decision quality and fitness outcomes in D&D scenarios",
+    "prediction": "Characters with investigation skill > 40 and perception skill > 25 will gain > 15 fitness points through real game play",
+    "variables": [
+      {
+        "name": "investigation_skill",
+        "type": "independent",
+        "value": 45.0,
+        "description": "Investigation skill level",
+        "unit": null,
+        "range": null
+      },
+      {
+        "name": "perception_skill",
+        "type": "independent",
+        "value": 30.0,
+        "description": "Perception skill level",
+        "unit": null,
+        "range": null
+      }
+    ],
+    "created_at": "2026-01-13T02:06:55.640021",
+    "verified": null,
+    "confidence": 0.0
+  },
+  "state": "completed",
+  "initial_state": {
+    "timestamp": "2026-01-13T02:06:55.658745",
+    "state_type": "initial",
+    "components": {
+      "investigation_skill": 45.0,
+      "perception_skill": 30.0,
+      "experiment_type": "deep_tavern_scenario_scientific",
+      "timestamp": "2026-01-13T02:06:55.647135"
+    },
+    "metadata": {
+      "experiment_id": "exp_16a8a319"
+    },
+    "state_hash": "52c9d103a788e9cf"
+  },
+  "final_state": {
+    "timestamp": "2026-01-13T02:06:55.764264",
+    "state_type": "final",
+    "components": {
+      "investigation_skill": 45.0,
+      "perception_skill": 30.0,
+      "experiment_type": "deep_tavern_scenario_scientific",
+      "timestamp": "2026-01-13T02:06:55.647135"
+    },
+    "metadata": {
+      "experiment_id": "exp_16a8a319"
+    },
+    "state_hash": "55b1e4b61d09c5d4"
+  },
+  "results": {
+    "fitness_gained": 16.0,
+    "prediction_match": true,
+    "confidence": 0.64,
+    "being_id": "exp_exp_16a8a319",
+    "events": 5,
+    "dice_rolls": 1,
+    "skill_checks": 1,
+    "successful_checks": 0,
+    "character_stats": {
+      "strength": 12,
+      "dexterity": 16,
+      "constitution": 13,
+      "intelligence": 13,
+      "wisdom": 10,
+      "charisma": 13,
+      "hp": 11,
+      "max_hp": 11,
+      "ac": 13
+    },
+    "dice_rolls_data": [
+      {
+        "roll": 3,
+        "modifier": 0,
+        "total": 3,
+        "dc": null,
+        "success": false,
+        "timestamp": "2026-01-13T02:06:55.747532"
+      }
+    ],
+    "skill_checks_data": [
+      {
+        "type": "unknown",
+        "roll": 3,
+        "modifier": 0,
+        "total": 3,
+        "success": false,
+        "outcome": "Your head is still spinning. You can't make out much in the dim light. The bartender glances at you but says nothing."
+      }
+    ],
+    "session_events": [
+      {
+        "type": "scene",
+        "description": "The Awakening",
+        "details": {
+          "content": "You wake up with a pounding headache. The smell of ale and sawdust fills your nostrils.\n\nYou're lying on a rough wooden floor, surrounded by empty tankards and sleeping patrons.\nThe tavern is dimly lit by a few flickering candles. Your memory is hazy...\n\nHow did you get here? What happened last night?"
+        },
+        "timestamp": "2026-01-13 02:06:55.728069"
+      },
+      {
+        "type": "choice",
+        "description": "Perception Check: Stand up and look around",
+        "details": {
+          "roll": 3,
+          "modifier": 0,
+          "total": 3,
+          "outcome": "Your head is still spinning. You can't make out much in the dim light. The bartender glances at you but says nothing.",
+          "success": false
+        },
+        "timestamp": "2026-01-13 02:06:55.747518"
+      },
+      {
+        "type": "scene",
+        "description": "The Mysterious Stranger",
+        "details": {
+          "content": "\nAs you're trying to make sense of things, a cloaked figure approaches your table.\n\n'You're awake,' they say in a low voice. 'Good. We need to talk. But not here.'\n\nThey slide a note across the table and disappear into the shadows before you can respond."
+        },
+        "timestamp": "2026-01-13 02:06:55.749984"
+      },
+      {
+        "type": "scene",
+        "description": "Reading the Note",
+        "details": {
+          "content": "\n[bold]The Note:[/bold]\n\n'You were chosen for a reason. Meet me at the old mill outside town at midnight. Come alone, or don't come at all. Your life depends on it.\n\n- The Shadow'\n\nThe note is signed with the same symbol you saw earlier: a crescent moon with a dagger."
+        },
+        "timestamp": "2026-01-13 02:06:55.753746"
+      },
+      {
+        "type": "decision",
+        "description": "Follow the note - Go to the old mill",
+        "details": {
+          "ending": "\n[bold]To Be Continued...[/bold]\n\nYou decide to follow the note. As you leave the tavern, you feel eyes watching you.\nThe old mill awaits. What secrets does it hold?\n\nYour adventure has just begun."
+        },
+        "timestamp": "2026-01-13 02:06:55.760766"
+      }
+    ]
+  },
+  "metadata": {},
+  "created_at": "2026-01-13T02:06:55.644541",
+  "started_at": "2026-01-13T02:06:55.676662",
+  "completed_at": "2026-01-13T02:06:55.765848"
+}

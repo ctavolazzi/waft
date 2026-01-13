@@ -1,77 +1,94 @@
-# /prove-it - Prove Scientific Method Tool Works
+# /prove-it - Comprehensive Proof with Evidence-Based Case File
 
-**Demonstrates that the scientific method tool is fully functional.**
+**Builds a case file with evidence to prove or disprove claims beyond reasonable doubt.**
 
 ---
 
 ## Purpose
 
-This command proves that the scientific method tool works by running demonstration experiments that show:
-1. Initial state capture (A)
-2. Data collection during experiments (C)
-3. Final state capture (B)
-4. State comparison
-5. Result analysis
-6. File persistence
+This command provides comprehensive proof by:
+1. **Running /verify checks** - Verifies all claims with evidence
+2. **Running /check-assumptions** - Validates all assumptions
+3. **Building a case file** - Creates detailed evidence brief
+4. **Generating PDF binder** - Professional case document with verdict on cover
+5. **Clear verdict** - States PROVEN, DISPROVEN, or INCONCLUSIVE
+
+**If claims are false, states so clearly in the case brief.**
 
 **Use when:**
-- You want to verify the scientific method tool works
-- You want to demonstrate the system to others
-- You want to test the experimental framework
-- You want to see the full scientific method cycle in action
+- You need to prove a claim with evidence
+- You want verification beyond reasonable doubt
+- You need a case file documenting proof
+- You want assumption validation
+- You need a professional proof document
 
 ---
 
 ## Execution
 
-**Command**: `/prove-it` or `/prove`
+**Command**: `/prove-it [claim]` or `/prove [claim]`
 
 **What it does:**
-1. Runs simple proof demonstration
-2. Runs real D&D experiment proof
-3. Shows all captured states (A & B)
-4. Shows collected data (C)
-5. Displays analysis results
-6. Verifies file persistence
+1. Extracts claim from conversation or argument
+2. Runs `/verify` checks with evidence collection
+3. Runs `/check-assumptions` validation
+4. Builds comprehensive case file with evidence
+5. Generates PDF binder with verdict on cover
+6. Opens PDF for review
 
 **Execution Steps:**
-1. Run `python3 scientific_method_tool/prove_it_works.py` (simple proof)
-2. Run `python3 scientific_method_tool/prove_with_real_experiment.py` (real experiment)
-3. Display results and verification
+1. Run `python3 scripts/prove_it_comprehensive.py [claim]`
+2. Verification checks execute (date/time, disk space, git, templates, etc.)
+3. Assumption validation runs
+4. Case file built with all evidence
+5. PDF generated with verdict prominently displayed
+6. PDF opens automatically
+
+**Default Claim** (if none provided):
+- "All PDF templates have been fixed to remove black bars from headers"
 
 ---
 
 ## What Gets Proven
 
-### 1. State Capture (A & B)
-- ✅ Initial state captured before experiment
-- ✅ Final state captured after experiment
-- ✅ State hashes for comparison
-- ✅ Components tracked
+### 1. Verification Checks
+- ✅ Date/Time accuracy
+- ✅ Disk space availability
+- ✅ Working directory verification
+- ✅ Git repository state
+- ✅ File existence checks
+- ✅ Template verification (black bars, etc.)
+- ✅ All with traceable evidence
 
-### 2. Data Collection (C)
-- ✅ Data points collected during experiment
-- ✅ Data series with timestamps
-- ✅ Multiple metrics tracked
-- ✅ Data persisted to files
-
-### 3. Experiment Execution
-- ✅ Experiments run successfully
-- ✅ Real Being and D&D character integration
-- ✅ Hypothesis testing works
-- ✅ Results captured
-
-### 4. Analysis
-- ✅ Hypothesis verification/refutation
+### 2. Assumption Validation
+- ✅ Extracts assumptions from claim
+- ✅ Validates each assumption with evidence
+- ✅ Code analysis
+- ✅ File system checks
+- ✅ Test results
 - ✅ Confidence scoring
-- ✅ Conclusions generated
-- ✅ Recommendations provided
 
-### 5. File Persistence
-- ✅ Experiment files saved
-- ✅ State files saved (initial & final)
-- ✅ Data files saved
-- ✅ All data recoverable
+### 3. Evidence Collection
+- ✅ All verification results documented
+- ✅ Assumption validation results
+- ✅ Code evidence
+- ✅ File evidence
+- ✅ Test evidence
+- ✅ Traceable proof chains
+
+### 4. Case File Generation
+- ✅ Executive summary with verdict
+- ✅ Detailed verification evidence
+- ✅ Assumption validation results
+- ✅ Additional evidence
+- ✅ Conclusion with confidence level
+
+### 5. PDF Binder
+- ✅ Professional case brief format
+- ✅ Verdict on cover page
+- ✅ Confidence level displayed
+- ✅ All evidence included
+- ✅ Clear PROVEN/DISPROVEN/INCONCLUSIVE statement
 
 ---
 

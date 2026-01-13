@@ -10,3 +10,8 @@ The "Operating System" for projects, orchestrating:
 __version__ = "0.7.1"
 __author__ = "Waft Team"
 
+# Unified PDF class - single entry point for all PDF generation
+from .pdf import PDF
+
+__all__ = ["PDF"]
+

@@ -1,0 +1,131 @@
+[
+  {
+    "title": "Player's Guide",
+    "pdf_path": "/Users/ctavolazzi/Code/active/waft/_work_efforts/WE-260112-jqkn_d_d_campaign_pdf_evolution/campaign_players_guide.pdf",
+    "analysis": {
+      "timestamp": "2026-01-12T16:52:08.246514",
+      "title": "Player's Guide",
+      "scores": {
+        "completeness": 0.4166666666666667,
+        "structure": 0.25
+      },
+      "gaps": [
+        "Missing methodology/approach section",
+        "Missing results/findings section",
+        "Missing conclusion/summary section"
+      ],
+      "suggestions": [
+        "Add more detailed content to improve completeness",
+        "Improve document structure with clear sections"
+      ],
+      "comparison": {
+        "vs_previous_avg": -0.46181129476584015,
+        "trend": "declining"
+      }
+    },
+    "file_size_kb": 48.642578125
+  },
+  {
+    "title": "DM Guide",
+    "pdf_path": "/Users/ctavolazzi/Code/active/waft/_work_efforts/WE-260112-jqkn_d_d_campaign_pdf_evolution/campaign_dm_guide.pdf",
+    "analysis": {
+      "timestamp": "2026-01-12T16:52:08.292431",
+      "title": "DM Guide",
+      "scores": {
+        "completeness": 0.30434782608695654,
+        "structure": 0.75
+      },
+      "gaps": [
+        "Missing results/findings section"
+      ],
+      "suggestions": [
+        "Add more detailed content to improve completeness"
+      ],
+      "comparison": {
+        "vs_previous_avg": -0.26797071505569525,
+        "trend": "declining"
+      }
+    },
+    "file_size_kb": 26.3154296875
+  },
+  {
+    "title": "Encounter Sheets",
+    "pdf_path": "/Users/ctavolazzi/Code/active/waft/_work_efforts/WE-260112-jqkn_d_d_campaign_pdf_evolution/campaign_encounters.pdf",
+    "analysis": {
+      "timestamp": "2026-01-12T16:52:08.342067",
+      "title": "Encounter Sheets",
+      "scores": {
+        "completeness": 0.3333333333333333,
+        "structure": 0.25
+      },
+      "gaps": [
+        "No concepts identified",
+        "No insights identified",
+        "Missing introduction/overview section",
+        "Missing methodology/approach section",
+        "Missing results/findings section"
+      ],
+      "suggestions": [
+        "Add more detailed content to improve completeness",
+        "Improve document structure with clear sections"
+      ],
+      "comparison": {
+        "vs_previous_avg": -0.5034779614325069,
+        "trend": "declining"
+      }
+    },
+    "file_size_kb": 14.9912109375
+  },
+  {
+    "title": "World Map",
+    "pdf_path": "/Users/ctavolazzi/Code/active/waft/_work_efforts/WE-260112-jqkn_d_d_campaign_pdf_evolution/campaign_world_map.pdf",
+    "analysis": {
+      "timestamp": "2026-01-12T16:52:08.411476",
+      "title": "World Map",
+      "scores": {
+        "completeness": 0.42857142857142855,
+        "structure": 0.5
+      },
+      "gaps": [
+        "No actions identified",
+        "No insights identified",
+        "Missing methodology/approach section",
+        "Missing results/findings section"
+      ],
+      "suggestions": [
+        "Add more detailed content to improve completeness",
+        "Improve document structure with clear sections"
+      ],
+      "comparison": {
+        "vs_previous_avg": -0.3308589138134592,
+        "trend": "declining"
+      }
+    },
+    "file_size_kb": 47.767578125
+  },
+  {
+    "title": "NPC Cards",
+    "pdf_path": "/Users/ctavolazzi/Code/active/waft/_work_efforts/WE-260112-jqkn_d_d_campaign_pdf_evolution/campaign_npcs.pdf",
+    "analysis": {
+      "timestamp": "2026-01-12T16:52:08.448323",
+      "title": "NPC Cards",
+      "scores": {
+        "completeness": 0.5454545454545454,
+        "structure": 0.5
+      },
+      "gaps": [
+        "Missing introduction/overview section",
+        "Missing results/findings section"
+      ],
+      "suggestions": [
+        "Add more detailed content to improve completeness",
+        "Improve document structure with clear sections"
+      ],
+      "comparison": {
+        "vs_previous_avg": -0.2724173553719008,
+        "trend": "declining"
+      }
+    },
+    "file_size_kb": 15.9990234375
+  }
+]

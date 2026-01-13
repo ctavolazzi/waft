@@ -19,6 +19,7 @@ from .substrate import SubstrateManager
 from .github import GitHubManager
 from .gamification import GamificationManager
 from .session_analytics import SessionAnalytics
+from .devlog import DevlogManager
 
 logger = get_logger(__name__)
 
@@ -230,22 +231,27 @@ class Visualizer:
 
     def _get_recent_devlog(self) -> List[str]:
         """Get recent devlog entries."""
-        devlog_path = self.project_path / "_work_efforts" / "devlog.md"
-        if not devlog_path.exists():
-            return []
-
         try:
-            content = devlog_path.read_text()
-            # Get last 10 lines that start with "##"
-            lines = content.split("\n")
-            recent = []
-            for line in lines[-50:]:  # Check last 50 lines
-                if line.startswith("## "):
-                    recent.append(line[3:].strip())
-            return recent[:5]  # Return last 5 entries
-        except (OSError, UnicodeDecodeError) as e:
+            entries = self.devlog.get_recent_entries(limit=5)
+            # Return titles for display
+            return [entry.get("title", "Untitled") for entry in entries]
+        except Exception as e:
             logger.debug(f"Could not read devlog: {e}")
-            return []
+            # Fallback to legacy devlog
+            devlog_path = self.project_path / "_work_efforts" / "devlog.md"
+            if not devlog_path.exists():
+                return []
+
+            try:
+                content = devlog_path.read_text()
+                lines = content.split("\n")
+                recent = []
+                for line in lines[-50:]:
+                    if line.startswith("## "):
+                        recent.append(line[3:].strip())
+                return recent[:5]
+            except (OSError, UnicodeDecodeError):
+                return []
 
     def _run_git(self, args: List[str]) -> str:
         """Run git command and return output."""

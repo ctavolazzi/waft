@@ -22,6 +22,7 @@ import html
 
 from .document_builder import DocumentBuilder
 from .templates.one_pager import ONE_PAGER_TEMPLATE
+from .templates.briefing import BRIEFING_TEMPLATE, generate_briefing
 from .evolution.document_components import (
     DocumentComponent, ComponentBuilder, ComponentType, DocumentLayout
 )
@@ -413,15 +414,27 @@ class OnePager:
         
         output_path.parent.mkdir(parents=True, exist_ok=True)
         
-        # Simple template rendering
-        template = Template(ONE_PAGER_TEMPLATE)
-        
-        # Prepare template context
-        context = {
-            'title': self.title,
-            'subtitle': self.subtitle,
-            'content': self.html_content,
-        }
+        # Use briefing template if flagged
+        if hasattr(self, 'use_briefing_template') and self.use_briefing_template:
+            template = Template(BRIEFING_TEMPLATE)
+            context = {
+                'title': self.title,
+                'subtitle': self.subtitle,
+                'content': self.html_content,
+                'series': getattr(self, 'briefing_series', 'BRIEFING'),
+                'number': getattr(self, 'briefing_number', 'BG-001'),
+                'classification': getattr(self, 'briefing_classification', 'INTERNAL'),
+                'issued_by': getattr(self, 'briefing_issued_by', 'WAFT System'),
+                'date': getattr(self, 'briefing_date', datetime.now().strftime('%B %d, %Y'))
+            }
+        else:
+            # Standard one-pager template
+            template = Template(ONE_PAGER_TEMPLATE)
+            context = {
+                'title': self.title,
+                'subtitle': self.subtitle,
+                'content': self.html_content,
+            }
         
         # Add components if using from_components/from_sections
         if hasattr(self, 'components'):
@@ -1125,6 +1138,117 @@ class OnePager:
             variables=variables,
             **kwargs
         )
+    
+    @classmethod
+    def from_briefing(
+        cls,
+        chat_context: Optional[Dict[str, Any]] = None,
+        include_system_status: bool = True,
+        title: Optional[str] = None,
+        subtitle: Optional[str] = None,
+        output_path: Optional[Path] = None,
+        **kwargs
+    ) -> "OnePager":
+        """
+        Create a briefing one-pager with system status and chat context.
+        
+        This generates a field guide style 2-page briefing document that includes:
+        - Current system status (git, work efforts, health)
+        - Chat context (what we're doing, recent topics)
+        - Larger context (project state, epistemic state)
+        
+        Args:
+            chat_context: Optional dict with chat context (topics, current_task, etc.)
+            include_system_status: Whether to gather system status (default: True)
+            title: Document title (default: "SESSION BRIEFING")
+            subtitle: Document subtitle
+            output_path: Output PDF path
+            **kwargs: Additional options (series, number, classification, etc.)
+            
+        Example:
+            OnePager.from_briefing(
+                chat_context={
+                    'current_task': 'Implementing feature X',
+                    'recent_topics': ['API design', 'Testing'],
+                    'next_steps': ['Write tests', 'Update docs']
+                }
+            ).generate()
+        """
+        from datetime import datetime
+        
+        # Gather system status if requested
+        status_content = ""
+        if include_system_status:
+            try:
+                from scripts.waft_status import check_status, format_status_content
+                project_path = Path.cwd()
+                status = check_status(project_path=project_path, log_event=False, save_snapshot=False)
+                # Use professional level for briefing (good balance)
+                status_content = format_status_content(status, level="professional")
+            except Exception as e:
+                status_content = f"<div class='caution'><div class='caution-title'>Status Check Unavailable</div>Could not gather system status: {str(e)}</div>"
+        
+        # Build briefing content
+        briefing_html = []
+        
+        # Chat Context Section
+        if chat_context:
+            briefing_html.append("<h2>Current Session Context</h2>")
+            
+            if chat_context.get('current_task'):
+                briefing_html.append(f"<div class='status-box'><div class='status-title'>Current Task</div><p><strong>{html.escape(str(chat_context['current_task']))}</strong></p></div>")
+            
+            if chat_context.get('recent_topics'):
+                topics = chat_context['recent_topics']
+                if isinstance(topics, list):
+                    topics_html = '<ul>'
+                    for topic in topics[:5]:  # Limit to 5 most recent
+                        topics_html += f"<li>{html.escape(str(topic))}</li>"
+                    topics_html += '</ul>'
+                    briefing_html.append(f"<h3>Recent Topics</h3>{topics_html}")
+            
+            if chat_context.get('key_decisions'):
+                decisions = chat_context['key_decisions']
+                if isinstance(decisions, list):
+                    decisions_html = '<ul>'
+                    for decision in decisions[:5]:
+                        decisions_html += f"<li>{html.escape(str(decision))}</li>"
+                    decisions_html += '</ul>'
+                    briefing_html.append(f"<h3>Key Decisions</h3>{decisions_html}")
+            
+            if chat_context.get('next_steps'):
+                steps = chat_context['next_steps']
+                if isinstance(steps, list):
+                    steps_html = '<ol>'
+                    for step in steps[:5]:
+                        steps_html += f"<li>{html.escape(str(step))}</li>"
+                    steps_html += '</ol>'
+                    briefing_html.append(f"<h3>Next Steps</h3>{steps_html}")
+        
+        # System Status Section
+        if status_content:
+            briefing_html.append("<h2>System Status</h2>")
+            briefing_html.append(status_content)
+        
+        # Combine content
+        content_html = '\n'.join(briefing_html)
+        
+        # Create instance with briefing template
+        instance = cls.__new__(cls)
+        instance.raw_content = content_html
+        instance.title = title or "SESSION BRIEFING"
+        instance.subtitle = subtitle or f"Generated {datetime.now().strftime('%B %d, %Y at %I:%M %p')}"
+        instance.output_path = output_path
+        instance.kwargs = kwargs
+        instance.html_content = content_html
+        instance.use_briefing_template = True  # Flag to use briefing template
+        instance.briefing_series = kwargs.get('series', 'BRIEFING')
+        instance.briefing_number = kwargs.get('number', f"BG-{datetime.now().strftime('%Y%m%d')}")
+        instance.briefing_classification = kwargs.get('classification', 'INTERNAL')
+        instance.briefing_issued_by = kwargs.get('issued_by', 'WAFT System')
+        instance.briefing_date = kwargs.get('date', datetime.now().strftime('%B %d, %Y'))
+        
+        return instance
 
 
 def create_one_pager(

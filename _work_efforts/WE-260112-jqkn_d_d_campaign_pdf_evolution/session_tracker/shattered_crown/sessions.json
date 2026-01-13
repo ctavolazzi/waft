@@ -1,0 +1,39 @@
+[
+  {
+    "session_number": 1,
+    "title": "The Tavern Meeting",
+    "date": "2026-01-10",
+    "summary": "The party meets in a tavern and receives their first quest.",
+    "characters_present": [
+      "Aldric the Brave",
+      "Lyra the Wise",
+      "Thorin Ironforge"
+    ],
+    "key_events": [
+      "Party meets in the Golden Dragon Tavern",
+      "Receive quest from mysterious stranger",
+      "Discover ancient map fragment"
+    ],
+    "evolution_notes": "Campaign begins. Party forms.",
+    "created_at": "2026-01-12T21:22:18.606103"
+  },
+  {
+    "session_number": 2,
+    "title": "Moonfall Keep",
+    "date": "2026-01-12",
+    "summary": "The party explores the haunted ruins and recovers the first fragment.",
+    "characters_present": [
+      "Aldric the Brave",
+      "Lyra the Wise",
+      "Thorin Ironforge"
+    ],
+    "key_events": [
+      "Arrive at Moonfall Keep",
+      "Battle with spectral guardians",
+      "Recover first Crown fragment",
+      "Discover clue to second fragment"
+    ],
+    "evolution_notes": "First major combat encounter. Party learns to work together.",
+    "created_at": "2026-01-12T21:22:18.607093"
+  }
+]

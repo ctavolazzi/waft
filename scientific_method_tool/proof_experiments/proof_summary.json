@@ -1,0 +1,201 @@
+{
+  "total_proofs": 5,
+  "timestamp": "2026-01-13T00:42:01.205850",
+  "proofs": [
+    {
+      "proof_id": 1,
+      "experiment_id": "exp_bb06093f",
+      "timestamp": "2026-01-13T00:42:01.171408",
+      "initial_state_hash": "a7353653",
+      "final_state_hash": "e8f71798",
+      "results": {
+        "initial": 10,
+        "final": 15,
+        "change": 5,
+        "prediction_match": true,
+        "confidence": 0.9
+      },
+      "data_series": {
+        "counter": {
+          "count": 2,
+          "values": [
+            10,
+            15
+          ]
+        },
+        "change": {
+          "count": 1,
+          "values": [
+            5
+          ]
+        }
+      },
+      "analysis": {
+        "verified": true,
+        "confidence": 0.9,
+        "conclusions_count": 2
+      },
+      "files": {
+        "experiments": 6,
+        "states": 18,
+        "data": 6
+      }
+    },
+    {
+      "proof_id": 2,
+      "experiment_id": "exp_0ce345fe",
+      "timestamp": "2026-01-13T00:42:01.179179",
+      "initial_state_hash": "1bb91eb2",
+      "final_state_hash": "8f9fdc06",
+      "results": {
+        "initial": 10,
+        "final": 15,
+        "change": 5,
+        "prediction_match": true,
+        "confidence": 0.9
+      },
+      "data_series": {
+        "counter": {
+          "count": 2,
+          "values": [
+            10,
+            15
+          ]
+        },
+        "change": {
+          "count": 1,
+          "values": [
+            5
+          ]
+        }
+      },
+      "analysis": {
+        "verified": true,
+        "confidence": 0.9,
+        "conclusions_count": 2
+      },
+      "files": {
+        "experiments": 7,
+        "states": 21,
+        "data": 7
+      }
+    },
+    {
+      "proof_id": 3,
+      "experiment_id": "exp_28cc421f",
+      "timestamp": "2026-01-13T00:42:01.188693",
+      "initial_state_hash": "9e108414",
+      "final_state_hash": "9b82df93",
+      "results": {
+        "initial": 10,
+        "final": 15,
+        "change": 5,
+        "prediction_match": true,
+        "confidence": 0.9
+      },
+      "data_series": {
+        "counter": {
+          "count": 2,
+          "values": [
+            10,
+            15
+          ]
+        },
+        "change": {
+          "count": 1,
+          "values": [
+            5
+          ]
+        }
+      },
+      "analysis": {
+        "verified": true,
+        "confidence": 0.9,
+        "conclusions_count": 2
+      },
+      "files": {
+        "experiments": 8,
+        "states": 24,
+        "data": 8
+      }
+    },
+    {
+      "proof_id": 4,
+      "experiment_id": "exp_e4eed728",
+      "timestamp": "2026-01-13T00:42:01.195945",
+      "initial_state_hash": "e0240080",
+      "final_state_hash": "9881a780",
+      "results": {
+        "initial": 10,
+        "final": 15,
+        "change": 5,
+        "prediction_match": true,
+        "confidence": 0.9
+      },
+      "data_series": {
+        "counter": {
+          "count": 2,
+          "values": [
+            10,
+            15
+          ]
+        },
+        "change": {
+          "count": 1,
+          "values": [
+            5
+          ]
+        }
+      },
+      "analysis": {
+        "verified": true,
+        "confidence": 0.9,
+        "conclusions_count": 2
+      },
+      "files": {
+        "experiments": 9,
+        "states": 27,
+        "data": 9
+      }
+    },
+    {
+      "proof_id": 5,
+      "experiment_id": "exp_1a61a413",
+      "timestamp": "2026-01-13T00:42:01.204634",
+      "initial_state_hash": "309f018f",
+      "final_state_hash": "c8a79f2c",
+      "results": {
+        "initial": 10,
+        "final": 15,
+        "change": 5,
+        "prediction_match": true,
+        "confidence": 0.9
+      },
+      "data_series": {
+        "counter": {
+          "count": 2,
+          "values": [
+            10,
+            15
+          ]
+        },
+        "change": {
+          "count": 1,
+          "values": [
+            5
+          ]
+        }
+      },
+      "analysis": {
+        "verified": true,
+        "confidence": 0.9,
+        "conclusions_count": 2
+      },
+      "files": {
+        "experiments": 10,
+        "states": 30,
+        "data": 10
+      }
+    }
+  ]
+}

@@ -1,0 +1,217 @@
+
+\documentclass[11pt,letterpaper]{article}
+
+% Packages (inspired by LaTeX Cookbook)
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{tcolorbox}
+\usepackage{fontspec}
+\usepackage{microtype}
+
+% Geometry (field guide style - practical margins)
+\geometry{
+    left=0.75in,
+    right=0.75in,
+    top=0.75in,
+    bottom=0.75in,
+    headheight=0.3in,
+    footskip=0.4in
+}
+
+% Colors (field guide aesthetic)
+\definecolor{fieldguideblack}{RGB}{0,0,0}
+\definecolor{fieldguideyellow}{RGB}{255,255,0}
+\definecolor{fieldguidered}{RGB}{204,0,0}
+\definecolor{fieldguideblue}{RGB}{0,102,204}
+\definecolor{fieldguideorange}{RGB}{255,153,0}
+
+% Hyperref setup
+\hypersetup{
+    colorlinks=true,
+    linkcolor=fieldguideblue,
+    urlcolor=fieldguideblue,
+    citecolor=fieldguideblue,
+    pdfauthor={WAFT Development Team},
+    pdftitle={WAFT Framework Handbook},
+    pdfsubject={Directed Evolution of Self-Modifying AI Agents}
+}
+
+% Page style (field guide header/footer)
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textsc{\textbf{{{series} {{number}}}}
+\fancyhead[R]{\textsc{Page \thepage}}
+\fancyfoot[C]{\textsc{\textbf{{{classification}}}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% Title formatting (field guide style)
+\titleformat{\section}
+    {\Large\bfseries\color{fieldguideblack}}
+    {}
+    {0em}
+    {}
+    [\titlerule[0.4pt]]
+
+\titleformat{\subsection}
+    {\large\bfseries\color{fieldguideblack}}
+    {}
+    {0em}
+    {}
+
+\titleformat{\subsubsection}
+    {\normalsize\bfseries\itshape\color{fieldguideblack}}
+    {}
+    {0em}
+    {}
+
+% Spacing
+\titlespacing*{\section}{0pt}{0.3in}{0.15in}
+\titlespacing*{\subsection}{0pt}{0.2in}{0.1in}
+\titlespacing*{\subsubsection}{0pt}{0.15in}{0.08in}
+
+% Custom environments (field guide boxes)
+\newtcolorbox{warningbox}{
+    colback=fieldguideyellow!20,
+    colframe=fieldguidered,
+    boxrule=3pt,
+    arc=2pt,
+    left=0.15in,
+    right=0.15in,
+    top=0.1in,
+    bottom=0.1in
+}
+
+\newtcolorbox{cautionbox}{
+    colback=fieldguideorange!10,
+    colframe=fieldguideorange,
+    boxrule=2pt,
+    arc=2pt,
+    left=0.15in,
+    right=0.15in,
+    top=0.1in,
+    bottom=0.1in
+}
+
+\newtcolorbox{notebox}{
+    colback=fieldguideblue!10,
+    colframe=fieldguideblue,
+    boxrule=2pt,
+    arc=2pt,
+    left=0.15in,
+    right=0.15in,
+    top=0.1in,
+    bottom=0.1in
+}
+
+\newtcolorbox{checklistbox}{
+    colback=white,
+    colframe=fieldguideblack,
+    boxrule=2pt,
+    arc=2pt,
+    left=0.15in,
+    right=0.15in,
+    top=0.1in,
+    bottom=0.1in
+}
+
+% Code listings style
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    backgroundcolor=\color{gray!10},
+    rulecolor=\color{fieldguideblack}
+}
+
+% Document metadata
+\title{{{title}}
+
+\subtitle{{{subtitle}}
+
+\author{{{authors}}
+\date{{{date}}
+
+\begin{document}
+
+% Cover page (field guide style)
+\begin{titlepage}
+    \centering
+    \vspace*{0.5in}
+    
+    % Series and number
+    {\Large\bfseries\textsc{{{series} {{number}}}
+    
+    \vspace{0.3in}
+    
+    % Title
+    \begin{tcolorbox}[
+        colback=white,
+        colframe=fieldguideblack,
+        boxrule=4pt,
+        arc=0pt,
+        width=0.9\textwidth,
+        left=0.2in,
+        right=0.2in,
+        top=0.3in,
+        bottom=0.3in
+    ]
+    \centering
+    {\Huge\bfseries {{title}}
+    
+    \\[0.2in]
+    {\Large {{subtitle}}
+    
+    \end{tcolorbox}
+    
+    \vfill
+    
+    
+    \begin{tcolorbox}[
+        colback=fieldguideyellow,
+        colframe=fieldguidered,
+        boxrule=2pt,
+        width=0.7\textwidth
+    ]
+    \centering
+    {\Large\bfseries {{classification}}
+    \end{tcolorbox}
+    
+    
+    \vspace{0.3in}
+    
+    
+    \textbf{Issued by:} {{issued_by}\\
+    
+    
+    \textbf{Date:} {{date}
+    
+    
+    \vspace{0.5in}
+\end{titlepage}
+
+\newpage
+\setcounter{page}{1}
+
+% Abstract
+
+\begin{abstract}
+{{abstract}
+\end{abstract}
+\vspace{0.2in}
+
+
+% Main content
+{{content}
+
+\end{document}

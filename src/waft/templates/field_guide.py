@@ -111,14 +111,27 @@ FIELD_GUIDE_TEMPLATE = """
         }
 
         /* Section Headers */
+        h1 {
+            font-family: 'Arial Black', sans-serif;
+            font-size: 18pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #000;
+            border-bottom: 4px solid #000;
+            padding-bottom: 0.08in;
+            margin-top: 0.4in;
+            margin-bottom: 0.2in;
+            page-break-after: avoid;
+        }
+
         h2 {
             font-family: 'Arial Black', sans-serif;
             font-size: 14pt;
             font-weight: bold;
             text-transform: uppercase;
-            background: #000;
-            color: #fff;
-            padding: 0.1in;
+            color: #000;
+            border-bottom: 3px solid #000;
+            padding-bottom: 0.05in;
             margin-top: 0.3in;
             margin-bottom: 0.15in;
             page-break-after: avoid;
@@ -302,6 +315,14 @@ FIELD_GUIDE_TEMPLATE = """
         .highlight {
             background: #ff0;
             padding: 0.02in 0.05in;
+        }
+
+        /* Horizontal Rules */
+        hr {
+            border: none;
+            border-top: 2px solid #000;
+            margin: 0.3in 0;
+            page-break-inside: avoid;
         }
 
         /* Page breaks */

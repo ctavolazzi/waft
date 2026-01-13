@@ -76,6 +76,10 @@ After syncing, these commands are available globally:
 ### Code Analysis Commands
 12. **`/deep-analyze`** - Deep code analysis and algorithm extraction from GitHub repositories
 
+### Monitoring Commands
+12. **`/chronicle`** - TheChronicler self-monitoring system (start, stats, reports)
+13. **`/good-morning`** - Morning briefing dashboard (entry point to ecosystem)
+
 ### Quick Status Commands
 13. **`/status`** - Quick, immediate status report (< 5 seconds)
 

@@ -1,0 +1,50 @@
+{
+  "genome_id": "5d0c9f7fe6e506ec6426b24f5857d487014d52fdeb0cc63ad3b520637e9e1b74",
+  "genes": {
+    "font": {
+      "family": "'Minion Pro', 'Palatino Linotype', 'Book Antiqua', 'Palatino', serif",
+      "size_body": 13,
+      "size_h1": 32,
+      "size_h2": 22,
+      "size_h3": 17,
+      "size_code": 11,
+      "line_height": 1.75
+    },
+    "margin": {
+      "top": 40,
+      "bottom": 40,
+      "left": 40,
+      "right": 40,
+      "paragraph_spacing": 12,
+      "section_spacing": 24
+    },
+    "color": {
+      "text": "#1a1a1a",
+      "background": "#FFFFFF",
+      "heading": "#000000",
+      "accent": "#0d47a1",
+      "code_bg": "#f5f7fa",
+      "code_text": "#1e3a5f",
+      "border": "#b0bec5"
+    },
+    "layout": {
+      "columns": 1,
+      "density": "normal",
+      "toc_enabled": false,
+      "page_numbers": true,
+      "header_enabled": true,
+      "footer_enabled": true
+    },
+    "name": "Premium - Shattered Crown - Campaign Bin",
+    "description": ""
+  },
+  "generation": 0,
+  "parent_id": null,
+  "lineage_path": [
+    "5d0c9f7fe6e506ec6426b24f5857d487014d52fdeb0cc63ad3b520637e9e1b74"
+  ],
+  "scientific_name": "Thor Visr, the Clever",
+  "fitness_score": null,
+  "created_at": "2026-01-13T05:22:18.735366",
+  "last_evaluated_at": null
+}

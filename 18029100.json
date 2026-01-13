@@ -1,0 +1,400 @@
+{
+  "access": {
+    "embargo": {
+      "active": false,
+      "reason": null
+    },
+    "files": "public",
+    "record": "public",
+    "status": "open"
+  },
+  "created": "2025-12-23T06:20:36.009943+00:00",
+  "custom_fields": {},
+  "deletion_status": {
+    "is_deleted": false,
+    "status": "P"
+  },
+  "files": {
+    "count": 9,
+    "default_preview": "Code Generation Competition 16 Proprietary vs. Open-Source LLMs Iterative Learning Based on FDA Adverse Event Reporting System.pdf",
+    "enabled": true,
+    "entries": {
+      "Code Generation Competition 16 Proprietary vs. Open-Source LLMs Iterative Learning Based on FDA Adverse Event Reporting System.pdf": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:ef715cc5f2a55057567115d67a84f930",
+        "ext": "pdf",
+        "id": "c85891c7-6686-4020-b3fb-6bbf1a22f2c9",
+        "key": "Code Generation Competition 16 Proprietary vs. Open-Source LLMs Iterative Learning Based on FDA Adverse Event Reporting System.pdf",
+        "links": {
+          "content": "https://zenodo.org/api/records/18029100/files/Code%20Generation%20Competition%2016%20Proprietary%20vs.%20Open-Source%20LLMs%20Iterative%20Learning%20Based%20on%20FDA%20Adverse%20Event%20Reporting%20System.pdf/content",
+          "iiif_api": "https://zenodo.org/api/iiif/record:18029100:Code%20Generation%20Competition%2016%20Proprietary%20vs.%20Open-Source%20LLMs%20Iterative%20Learning%20Based%20on%20FDA%20Adverse%20Event%20Reporting%20System.pdf/full/full/0/default.png",
+          "iiif_base": "https://zenodo.org/api/iiif/record:18029100:Code%20Generation%20Competition%2016%20Proprietary%20vs.%20Open-Source%20LLMs%20Iterative%20Learning%20Based%20on%20FDA%20Adverse%20Event%20Reporting%20System.pdf",
+          "iiif_canvas": "https://zenodo.org/api/iiif/record:18029100/canvas/Code%20Generation%20Competition%2016%20Proprietary%20vs.%20Open-Source%20LLMs%20Iterative%20Learning%20Based%20on%20FDA%20Adverse%20Event%20Reporting%20System.pdf",
+          "iiif_info": "https://zenodo.org/api/iiif/record:18029100:Code%20Generation%20Competition%2016%20Proprietary%20vs.%20Open-Source%20LLMs%20Iterative%20Learning%20Based%20on%20FDA%20Adverse%20Event%20Reporting%20System.pdf/info.json",
+          "self": "https://zenodo.org/api/records/18029100/files/Code%20Generation%20Competition%2016%20Proprietary%20vs.%20Open-Source%20LLMs%20Iterative%20Learning%20Based%20on%20FDA%20Adverse%20Event%20Reporting%20System.pdf"
+        },
+        "metadata": {
+          "height": 792,
+          "width": 612
+        },
+        "mimetype": "application/pdf",
+        "size": 1967368,
+        "storage_class": "L"
+      },
+      "Competition Notebooks.zip": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:2883049d659f2f265a3482775e987500",
+        "ext": "zip",
+        "id": "60248c89-ee83-4d7a-8f1a-609ad6956d95",
+        "key": "Competition Notebooks.zip",
+        "links": {
+          "content": "https://zenodo.org/api/records/18029100/files/Competition%20Notebooks.zip/content",
+          "self": "https://zenodo.org/api/records/18029100/files/Competition%20Notebooks.zip"
+        },
+        "metadata": {},
+        "mimetype": "application/zip",
+        "size": 125905,
+        "storage_class": "L"
+      },
+      "Latex Source Code.zip": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:303fe85dceaf975164029f19b0cd6160",
+        "ext": "zip",
+        "id": "c1c92e6d-fb02-452a-b71e-5eef11f5d1fa",
+        "key": "Latex Source Code.zip",
+        "links": {
+          "content": "https://zenodo.org/api/records/18029100/files/Latex%20Source%20Code.zip/content",
+          "self": "https://zenodo.org/api/records/18029100/files/Latex%20Source%20Code.zip"
+        },
+        "metadata": {},
+        "mimetype": "application/zip",
+        "size": 1318571,
+        "storage_class": "L"
+      },
+      "Notebook Generation Inputs.zip": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:2a83e2ab1e078da53ccb8486fa6a6548",
+        "ext": "zip",
+        "id": "bc103fed-e5a5-432a-af7a-9f5b83a2ea82",
+        "key": "Notebook Generation Inputs.zip",
+        "links": {
+          "content": "https://zenodo.org/api/records/18029100/files/Notebook%20Generation%20Inputs.zip/content",
+          "self": "https://zenodo.org/api/records/18029100/files/Notebook%20Generation%20Inputs.zip"
+        },
+        "metadata": {},
+        "mimetype": "application/zip",
+        "size": 2635833,
+        "storage_class": "L"
+      },
+      "Notebook Generation Outputs.zip": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:d251808e5017dd8ead24785e55401b66",
+        "ext": "zip",
+        "id": "2de40bd6-26a0-49dc-84cb-7e6aebe176cc",
+        "key": "Notebook Generation Outputs.zip",
+        "links": {
+          "content": "https://zenodo.org/api/records/18029100/files/Notebook%20Generation%20Outputs.zip/content",
+          "self": "https://zenodo.org/api/records/18029100/files/Notebook%20Generation%20Outputs.zip"
+        },
+        "metadata": {},
+        "mimetype": "application/zip",
+        "size": 1511620,
+        "storage_class": "L"
+      },
+      "Round 1 Bracket Outputs.zip": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:25195221f77c4b7181748457a1811471",
+        "ext": "zip",
+        "id": "85d7b1be-72e1-494a-b3c0-5489ce11205e",
+        "key": "Round 1 Bracket Outputs.zip",
+        "links": {
+          "content": "https://zenodo.org/api/records/18029100/files/Round%201%20Bracket%20Outputs.zip/content",
+          "self": "https://zenodo.org/api/records/18029100/files/Round%201%20Bracket%20Outputs.zip"
+        },
+        "metadata": {},
+        "mimetype": "application/zip",
+        "size": 2715016,
+        "storage_class": "L"
+      },
+      "Round 2 Bracket Outputs.zip": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:6b309a6e55b52e5056d2f03500f08a3b",
+        "ext": "zip",
+        "id": "0d2e31fe-5593-4ffa-a10a-694e179fd720",
+        "key": "Round 2 Bracket Outputs.zip",
+        "links": {
+          "content": "https://zenodo.org/api/records/18029100/files/Round%202%20Bracket%20Outputs.zip/content",
+          "self": "https://zenodo.org/api/records/18029100/files/Round%202%20Bracket%20Outputs.zip"
+        },
+        "metadata": {},
+        "mimetype": "application/zip",
+        "size": 5842267,
+        "storage_class": "L"
+      },
+      "Round 3 Bracket Outputs.zip": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:ba2f229b147c138a0b807aa8e3b083f9",
+        "ext": "zip",
+        "id": "ca8b74df-c66f-4e04-937f-fdd828c05936",
+        "key": "Round 3 Bracket Outputs.zip",
+        "links": {
+          "content": "https://zenodo.org/api/records/18029100/files/Round%203%20Bracket%20Outputs.zip/content",
+          "self": "https://zenodo.org/api/records/18029100/files/Round%203%20Bracket%20Outputs.zip"
+        },
+        "metadata": {},
+        "mimetype": "application/zip",
+        "size": 1008569,
+        "storage_class": "L"
+      },
+      "Round 4 Bracket Outputs.zip": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:32b5b84b749724ed439b3991a7e08d5a",
+        "ext": "zip",
+        "id": "ca96294b-e5ba-41e6-b08c-71c813327127",
+        "key": "Round 4 Bracket Outputs.zip",
+        "links": {
+          "content": "https://zenodo.org/api/records/18029100/files/Round%204%20Bracket%20Outputs.zip/content",
+          "self": "https://zenodo.org/api/records/18029100/files/Round%204%20Bracket%20Outputs.zip"
+        },
+        "metadata": {},
+        "mimetype": "application/zip",
+        "size": 719602,
+        "storage_class": "L"
+      }
+    },
+    "order": [],
+    "total_bytes": 17844751
+  },
+  "id": "18029100",
+  "is_draft": false,
+  "is_published": true,
+  "links": {
+    "access": "https://zenodo.org/api/records/18029100/access",
+    "access_grants": "https://zenodo.org/api/records/18029100/access/grants",
+    "access_links": "https://zenodo.org/api/records/18029100/access/links",
+    "access_request": "https://zenodo.org/api/records/18029100/access/request",
+    "access_users": "https://zenodo.org/api/records/18029100/access/users",
+    "archive": "https://zenodo.org/api/records/18029100/files-archive",
+    "archive_media": "https://zenodo.org/api/records/18029100/media-files-archive",
+    "communities": "https://zenodo.org/api/records/18029100/communities",
+    "communities-suggestions": "https://zenodo.org/api/records/18029100/communities-suggestions",
+    "doi": "https://doi.org/10.5281/zenodo.18029100",
+    "draft": "https://zenodo.org/api/records/18029100/draft",
+    "file_modification": "https://zenodo.org/api/records/18029100/file-modification",
+    "files": "https://zenodo.org/api/records/18029100/files",
+    "latest": "https://zenodo.org/api/records/18029100/versions/latest",
+    "latest_html": "https://zenodo.org/records/18029100/latest",
+    "media_files": "https://zenodo.org/api/records/18029100/media-files",
+    "parent": "https://zenodo.org/api/records/18029099",
+    "parent_doi": "https://doi.org/10.5281/zenodo.18029099",
+    "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.18029099",
+    "parent_html": "https://zenodo.org/records/18029099",
+    "preview_html": "https://zenodo.org/records/18029100?preview=1",
+    "request_deletion": "https://zenodo.org/api/records/18029100/request-deletion",
+    "requests": "https://zenodo.org/api/records/18029100/requests",
+    "reserve_doi": "https://zenodo.org/api/records/18029100/draft/pids/doi",
+    "self": "https://zenodo.org/api/records/18029100",
+    "self_doi": "https://doi.org/10.5281/zenodo.18029100",
+    "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.18029100",
+    "self_html": "https://zenodo.org/records/18029100",
+    "self_iiif_manifest": "https://zenodo.org/api/iiif/record:18029100/manifest",
+    "self_iiif_sequence": "https://zenodo.org/api/iiif/record:18029100/sequence/default",
+    "thumbnails": {
+      "10": "https://zenodo.org/api/iiif/record:18029100:Code%20Generation%20Competition%2016%20Proprietary%20vs.%20Open-Source%20LLMs%20Iterative%20Learning%20Based%20on%20FDA%20Adverse%20Event%20Reporting%20System.pdf/full/%5E10,/0/default.jpg",
+      "100": "https://zenodo.org/api/iiif/record:18029100:Code%20Generation%20Competition%2016%20Proprietary%20vs.%20Open-Source%20LLMs%20Iterative%20Learning%20Based%20on%20FDA%20Adverse%20Event%20Reporting%20System.pdf/full/%5E100,/0/default.jpg",
+      "1200": "https://zenodo.org/api/iiif/record:18029100:Code%20Generation%20Competition%2016%20Proprietary%20vs.%20Open-Source%20LLMs%20Iterative%20Learning%20Based%20on%20FDA%20Adverse%20Event%20Reporting%20System.pdf/full/%5E1200,/0/default.jpg",
+      "250": "https://zenodo.org/api/iiif/record:18029100:Code%20Generation%20Competition%2016%20Proprietary%20vs.%20Open-Source%20LLMs%20Iterative%20Learning%20Based%20on%20FDA%20Adverse%20Event%20Reporting%20System.pdf/full/%5E250,/0/default.jpg",
+      "50": "https://zenodo.org/api/iiif/record:18029100:Code%20Generation%20Competition%2016%20Proprietary%20vs.%20Open-Source%20LLMs%20Iterative%20Learning%20Based%20on%20FDA%20Adverse%20Event%20Reporting%20System.pdf/full/%5E50,/0/default.jpg",
+      "750": "https://zenodo.org/api/iiif/record:18029100:Code%20Generation%20Competition%2016%20Proprietary%20vs.%20Open-Source%20LLMs%20Iterative%20Learning%20Based%20on%20FDA%20Adverse%20Event%20Reporting%20System.pdf/full/%5E750,/0/default.jpg"
+    },
+    "versions": "https://zenodo.org/api/records/18029100/versions"
+  },
+  "media_files": {
+    "count": 1,
+    "enabled": true,
+    "entries": {
+      "Code Generation Competition 16 Proprietary vs. Open-Source LLMs Iterative Learning Based on FDA Adverse Event Reporting System.pdf.ptif": {
+        "access": {
+          "hidden": true
+        },
+        "ext": "ptif",
+        "id": "0643d836-5cb8-4d10-a433-c4d86704f7f9",
+        "key": "Code Generation Competition 16 Proprietary vs. Open-Source LLMs Iterative Learning Based on FDA Adverse Event Reporting System.pdf.ptif",
+        "links": {
+          "content": "https://zenodo.org/api/records/18029100/files/Code%20Generation%20Competition%2016%20Proprietary%20vs.%20Open-Source%20LLMs%20Iterative%20Learning%20Based%20on%20FDA%20Adverse%20Event%20Reporting%20System.pdf.ptif/content",
+          "self": "https://zenodo.org/api/records/18029100/files/Code%20Generation%20Competition%2016%20Proprietary%20vs.%20Open-Source%20LLMs%20Iterative%20Learning%20Based%20on%20FDA%20Adverse%20Event%20Reporting%20System.pdf.ptif"
+        },
+        "metadata": null,
+        "mimetype": "application/octet-stream",
+        "processor": {
+          "source_file_id": "c85891c7-6686-4020-b3fb-6bbf1a22f2c9",
+          "status": "finished",
+          "type": "image-tiles"
+        },
+        "size": 0,
+        "storage_class": "L"
+      }
+    },
+    "order": [],
+    "total_bytes": 0
+  },
+  "metadata": {
+    "creators": [
+      {
+        "affiliations": [
+          {
+            "name": "ChemicalQDevice"
+          }
+        ],
+        "person_or_org": {
+          "family_name": "Kawchak",
+          "given_name": "Kevin",
+          "identifiers": [
+            {
+              "identifier": "0009-0007-5457-8667",
+              "scheme": "orcid"
+            }
+          ],
+          "name": "Kawchak, Kevin",
+          "type": "personal"
+        }
+      }
+    ],
+    "dates": [
+      {
+        "date": "2025-12-23",
+        "type": {
+          "id": "created",
+          "title": {
+            "de": "Erstellt",
+            "en": "Created"
+          }
+        }
+      }
+    ],
+    "description": "<p>Few effective goal-oriented iterative LLM code benchmarking studies exist. Successive high dimensional and complex problem improvements are desired versus conventional code assessments. Inspired by a recent CodeClash study, this tournament focuses primarily on the goal of generating functions to obtain a perfect competition task score based on three recent FDA FAERS files. Here, Opus 4.5 Extended was primarily utilized to build a novel Python evaluation engine measuring LLM code pair correctness, methodology, code quality, and algorithm effectiveness against a fixed reference standard and head-to-head. The notebook then automated Code A and Code B grading, and outputted their answers and reference standard of drug-reaction signals in csv files. The bracket was organized at scale: 16 LLMs - 8 proprietary LLMs on the left and 8 open-source LLMs on the right. The 8 Round 1 winners and corresponding notebooks were then re-introduced to each LLM with a competition prompt to generate the next round&rsquo;s code submission. Iterative learning in the form of improved final scores was observed for several Round 2 winners, which was based on its prior round competition code, competitors&rsquo; code, and results. Gpt-5.2-pro and Gemini 2.5 Pro API were effective at iterative learning on the FAERS dataset goal; while Kimi K2 Thinking saw the biggest single round score increase at +0.405. Contestant models were from xAI, OpenAI, Gemini, Claude, DeepSeek, Kimi, GLM, MiniMax, and Qwen manufacturers.</p>",
+    "languages": [
+      {
+        "id": "eng",
+        "title": {
+          "en": "English"
+        }
+      }
+    ],
+    "publication_date": "2025-12-23",
+    "publisher": "Zenodo",
+    "resource_type": {
+      "id": "publication-preprint",
+      "title": {
+        "de": "Preprint",
+        "en": "Preprint"
+      }
+    },
+    "rights": [
+      {
+        "description": {
+          "en": "The Creative Commons Attribution license allows re-distribution and re-use of a licensed work on the condition that the creator is appropriately credited."
+        },
+        "icon": "cc-by-icon",
+        "id": "cc-by-4.0",
+        "props": {
+          "scheme": "spdx",
+          "url": "https://creativecommons.org/licenses/by/4.0/legalcode"
+        },
+        "title": {
+          "en": "Creative Commons Attribution 4.0 International"
+        }
+      }
+    ],
+    "subjects": [
+      {
+        "subject": "Goal Oriented Software Engineering"
+      },
+      {
+        "subject": "LLM Code Generation"
+      },
+      {
+        "subject": "Iterative Learning"
+      },
+      {
+        "subject": "FDA FAERS"
+      }
+    ],
+    "title": "Code Generation Competition: 16 Proprietary vs. Open-Source LLMs & Iterative Learning Based on FDA Adverse Event Reporting System"
+  },
+  "parent": {
+    "access": {
+      "owned_by": {
+        "user": "1171568"
+      },
+      "settings": {
+        "accept_conditions_text": null,
+        "allow_guest_requests": false,
+        "allow_user_requests": false,
+        "secret_link_expiration": 0
+      }
+    },
+    "communities": {},
+    "id": "18029099",
+    "pids": {
+      "doi": {
+        "client": "datacite",
+        "identifier": "10.5281/zenodo.18029099",
+        "provider": "datacite"
+      }
+    }
+  },
+  "pids": {
+    "doi": {
+      "client": "datacite",
+      "identifier": "10.5281/zenodo.18029100",
+      "provider": "datacite"
+    },
+    "oai": {
+      "identifier": "oai:zenodo.org:18029100",
+      "provider": "oai"
+    }
+  },
+  "revision_id": 4,
+  "stats": {
+    "all_versions": {
+      "data_volume": 220760533.0,
+      "downloads": 112,
+      "unique_downloads": 99,
+      "unique_views": 144,
+      "views": 164
+    },
+    "this_version": {
+      "data_volume": 220760533.0,
+      "downloads": 112,
+      "unique_downloads": 99,
+      "unique_views": 144,
+      "views": 164
+    }
+  },
+  "status": "published",
+  "swh": {},
+  "updated": "2025-12-23T06:20:36.801552+00:00",
+  "versions": {
+    "index": 1,
+    "is_latest": true
+  }
+}

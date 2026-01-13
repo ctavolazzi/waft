@@ -1,0 +1,14 @@
+{
+  "timestamp": "2026-01-12T19:58:53.242054",
+  "state_type": "initial",
+  "components": {
+    "investigation_skill": 45.0,
+    "perception_skill": 30.0,
+    "experiment_type": "tavern_scenario_scientific",
+    "timestamp": "2026-01-12T19:58:53.239248"
+  },
+  "metadata": {
+    "experiment_id": "exp_08215429"
+  },
+  "state_hash": "37f149f75c73e919"
+}

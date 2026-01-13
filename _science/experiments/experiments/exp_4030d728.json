@@ -1,0 +1,51 @@
+{
+  "experiment_id": "exp_4030d728",
+  "hypothesis": {
+    "statement": "Higher investigation and perception skills improve decision quality and fitness outcomes in D&D scenarios",
+    "prediction": "Characters with investigation skill > 40 and perception skill > 25 will gain > 15 fitness points through real game play",
+    "variables": [
+      {
+        "name": "investigation_skill",
+        "type": "independent",
+        "value": 45.0,
+        "description": "Investigation skill level",
+        "unit": null,
+        "range": null
+      },
+      {
+        "name": "perception_skill",
+        "type": "independent",
+        "value": 30.0,
+        "description": "Perception skill level",
+        "unit": null,
+        "range": null
+      }
+    ],
+    "created_at": "2026-01-12T20:03:11.433480",
+    "verified": null,
+    "confidence": 0.0
+  },
+  "state": "failed",
+  "initial_state": {
+    "timestamp": "2026-01-12T20:03:11.440432",
+    "state_type": "initial",
+    "components": {
+      "investigation_skill": 45.0,
+      "perception_skill": 30.0,
+      "experiment_type": "deep_tavern_scenario_scientific",
+      "timestamp": "2026-01-12T20:03:11.437641"
+    },
+    "metadata": {
+      "experiment_id": "exp_4030d728"
+    },
+    "state_hash": "8f75cae43f666e8c"
+  },
+  "final_state": null,
+  "results": {
+    "error": "EOF when reading a line"
+  },
+  "metadata": {},
+  "created_at": "2026-01-12T20:03:11.436152",
+  "started_at": "2026-01-12T20:03:11.441769",
+  "completed_at": null
+}

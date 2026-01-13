@@ -31,11 +31,12 @@ Example:
 """
 
 from pathlib import Path
-from typing import Optional, Dict, Any, Tuple, Union
+from typing import Optional, Dict, Any, Tuple, Union, List
 from datetime import datetime
 
 from .chat_distiller import ChatDistiller
 from .two_page_generator import TwoPageGenerator
+from .golden_triangle import GoldenTriangle
 from .styling_genome import (
     StylingGenome,
     StylingGenomeRegistry,
@@ -173,6 +174,8 @@ class PDFGenerator:
         self.distilled_chat = distilled_chat
         self.custom_css = custom_css
         self._generated_path: Optional[Path] = None
+        self._style: Optional[str] = None  # Store style for golden triangle
+        self._metadata: Dict[str, Any] = {}  # Store metadata for component generation
     
     @classmethod
     def from_content(
@@ -183,6 +186,9 @@ class PDFGenerator:
         output_path: Optional[Path] = None,
         registry_dir: Optional[Path] = None,
         custom_css: Optional[str] = None,
+        author: Optional[Union[str, List[str]]] = None,
+        subject: Optional[str] = None,
+        keywords: Optional[Union[str, List[str]]] = None,
         **overrides
     ) -> "PDFGenerator":
         """
@@ -195,6 +201,9 @@ class PDFGenerator:
             output_path: Optional output path
             registry_dir: Optional styling genome registry directory
             custom_css: Optional additional CSS
+            author: Optional author name(s) - string or list of strings
+            subject: Optional document subject/topic
+            keywords: Optional keywords - string or list of strings
             **overrides: Override preset values (e.g., font_size=12, margins=(30,30,30,30))
         
         Returns:
@@ -211,10 +220,11 @@ class PDFGenerator:
             preset["font"]["size_body"] = overrides.pop("font_size")
         if "margins" in overrides:
             margins = overrides.pop("margins")
-            if isinstance(margins, (int, float)):
-                preset["margin"]["top"] = preset["margin"]["bottom"] = preset["margin"]["left"] = preset["margin"]["right"] = margins
-            elif len(margins) == 4:
-                preset["margin"]["top"], preset["margin"]["right"], preset["margin"]["bottom"], preset["margin"]["left"] = margins
+            if margins is not None:
+                if isinstance(margins, (int, float)):
+                    preset["margin"]["top"] = preset["margin"]["bottom"] = preset["margin"]["left"] = preset["margin"]["right"] = margins
+                elif isinstance(margins, (list, tuple)) and len(margins) == 4:
+                    preset["margin"]["top"], preset["margin"]["right"], preset["margin"]["bottom"], preset["margin"]["left"] = margins
         if "line_height" in overrides:
             preset["font"]["line_height"] = overrides.pop("line_height")
         
@@ -243,13 +253,21 @@ class PDFGenerator:
         distiller = ChatDistiller()
         distilled = distiller.distill_text(content, title=title)
         
-        return cls(
+        instance = cls(
             content=content,
             title=title,
             styling_genome=genome,
             distilled_chat=distilled,
             custom_css=custom_css
         )
+        # Store metadata for later use in component generation
+        instance._metadata = {
+            'author': author,
+            'subject': subject,
+            'keywords': keywords,
+            'style': style
+        }
+        return instance
     
     @classmethod
     def from_file(
@@ -320,6 +338,50 @@ class PDFGenerator:
         output_path = Path(output_path)
         output_path.parent.mkdir(parents=True, exist_ok=True)
         
+        # If using golden triangle (simpler path for direct markdown→PDF)
+        if self.distilled_chat is None and self.styling_genome is None:
+            # Direct markdown to PDF using golden triangle
+            golden_triangle = GoldenTriangle()
+            
+            # Get style from stored value
+            style = getattr(self, '_style', 'premium')
+            
+            # Convert markdown to PDF
+            pdf_path = golden_triangle.markdown_to_pdf(
+                self.content,
+                output_path,
+                css=self.custom_css,
+                style=style
+            )
+            
+            self._generated_path = pdf_path
+            
+            # Convert to PNG if requested
+            if convert_to_png:
+                try:
+                    from .pdf_image_converter import pdf_to_pngs
+                    png_paths = pdf_to_pngs(
+                        pdf_path,
+                        output_dir=pdf_path.parent,
+                        dpi=png_dpi,
+                        format='png'
+                    )
+                    if png_paths:
+                        import shutil
+                        img_path = pdf_path.with_suffix('.png')
+                        shutil.copy(png_paths[0], img_path)
+                        print(f"📸 PNG screenshot saved: {img_path}")
+                except Exception as e:
+                    print(f"⚠️  PNG conversion failed: {e}")
+            
+            # Open if requested
+            if open_pdf:
+                import subprocess
+                subprocess.run(["open", str(pdf_path)])
+            
+            return pdf_path
+        
+        # Original implementation (for backward compatibility with ChatDistiller/TwoPageGenerator)
         # Get all ideas if requested
         if include_all_ideas:
             all_ideas = self.distilled_chat.get_top_ideas(n=1000, min_importance=0.0)
@@ -351,12 +413,12 @@ class PDFGenerator:
             html_path = output_path.with_suffix('.html')
             html_path.write_text(html_content)
             
-            # Generate PDF
-            from weasyprint import HTML
-            HTML(string=html_content, base_url=str(output_path.parent)).write_pdf(
+            # Generate PDF using golden triangle (clean HTML → PDF)
+            golden_triangle = GoldenTriangle()
+            golden_triangle.html_to_pdf(
+                html_content,
                 output_path,
-                presentational_hints=True,
-                optimize_images=True
+                base_url=str(output_path.parent)
             )
         else:
             # Use generator's adaptive system

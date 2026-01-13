@@ -15,6 +15,10 @@ Runs the complete scientific method workflow:
 from pathlib import Path
 from typing import Dict, Any, Optional, Callable, List
 from datetime import datetime
+import re
+import subprocess
+import platform
+import markdown
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
@@ -22,7 +26,6 @@ from rich.progress import Progress, SpinnerColumn, TextColumn
 
 # Import scientific method tool
 import sys
-from pathlib import Path
 
 # Add project root to path for scientific_method_tool
 project_root = Path(__file__).parent.parent.parent.parent
@@ -263,7 +266,7 @@ class ScienceBitchManager:
         results: Dict[str, Any],
         analysis: Any
     ) -> Optional[Path]:
-        """Generate comprehensive research PDF report."""
+        """Generate comprehensive research PDF report using academic paper template and print it."""
         self.console.print("\n[bold]Step 5: Generate Research Report[/bold]\n")
         
         self.console.print("[yellow]→[/yellow] Creating comprehensive research PDF...")
@@ -276,34 +279,56 @@ class ScienceBitchManager:
         report_md = self.science_path / "reports" / f"experiment_report_{timestamp}.md"
         report_md.write_text(report_content)
         
-        # Generate PDF using ScientificPDFGenerator
+        # Generate PDF using academic paper template (like generate_all_pdfs_comparison.py)
         try:
-            from ..evolution.scientific_pdf_generator import generate_scientific_pdf
-            import platform
+            import sys
             import subprocess
+            import platform
+            from pathlib import Path
             
-            # Save to desktop
-            desktop_path = Path.home() / "Desktop"
+            # Add project root to path
+            project_root = self.project_path
+            if str(project_root) not in sys.path:
+                sys.path.insert(0, str(project_root))
+            
+            # Import the academic paper generator
+            from src.waft.templates.academic_paper import generate_academic_paper
+            import markdown
+            import re
+            
+            # Extract metadata from report content (similar to generate_all_pdfs_comparison.py)
+            metadata = self._extract_metadata_from_content(report_content)
+            
+            # Process markdown content to HTML
+            html_content = self._process_markdown_to_html(report_content, metadata)
+            
+            # Generate PDF filename
             pdf_filename = f"Science_Research_Report_{timestamp}.pdf"
-            pdf_path = desktop_path / pdf_filename
+            pdf_path = self.science_path / "reports" / pdf_filename
             
-            self.console.print(f"[yellow]→[/yellow] Generating scientific research PDF...")
+            self.console.print(f"[yellow]→[/yellow] Generating ArXiv-style academic PDF...")
             
-            # Generate PDF with scientific features
-            generated_path = generate_scientific_pdf(
-                content=report_content,
-                title=f"Scientific Research Report: {hypothesis.statement[:50]}...",
+            # Generate PDF using academic paper template
+            generated_path = generate_academic_paper(
+                title=metadata.get("title", f"Scientific Research Report: {hypothesis.statement[:50]}..."),
+                content=html_content,
                 output_path=pdf_path,
-                style="clinical_standard",
-                scientific_mode=True,
-                open_pdf=False  # We'll open manually to desktop
+                abstract=metadata.get("abstract", ""),
+                authors=metadata.get("authors", [{"name": "WAFT Research Team"}]),
+                affiliations=metadata.get("affiliations"),
+                email=metadata.get("email"),
+                conference="arXiv",
+                year=metadata.get("year", str(datetime.now().year)),
+                references=metadata.get("references")
             )
             
             if generated_path and generated_path.exists():
+                size = generated_path.stat().st_size / 1024  # KB
                 self.console.print(f"[green]✓[/green] Research PDF generated: {generated_path}")
+                self.console.print(f"[dim]   Size: {size:.1f} KB[/dim]")
                 
                 # Open PDF automatically
-                self.console.print("[yellow]→[/yellow] Opening PDF on desktop...")
+                self.console.print("[yellow]→[/yellow] Opening PDF...")
                 system = platform.system()
                 if system == "Darwin":  # macOS
                     subprocess.run(["open", str(generated_path)], check=False)
@@ -312,7 +337,12 @@ class ScienceBitchManager:
                 else:  # Linux
                     subprocess.run(["xdg-open", str(generated_path)], check=False)
                 
-                self.console.print(f"[green]✓[/green] PDF opened on desktop!")
+                # Print PDF to material world (only if explicitly requested)
+                # Note: Printing is now opt-in to prevent duplicate printing
+                # User can print manually with: lpr {generated_path}
+                self.console.print(f"[dim]💡 To print: lpr {generated_path}[/dim]")
+                
+                self.console.print(f"[green]✓[/green] PDF ready: {generated_path}")
                 return generated_path
             else:
                 self.console.print("[yellow]⚠️[/yellow]  PDF generation failed, markdown saved")
@@ -324,6 +354,198 @@ class ScienceBitchManager:
             import traceback
             self.console.print(f"[dim]{traceback.format_exc()}[/dim]")
             return report_md
+    
+    def _extract_metadata_from_content(self, content: str) -> Dict[str, Any]:
+        """Extract metadata from report content (similar to generate_all_pdfs_comparison.py)."""
+        metadata = {
+            "title": "",
+            "abstract": "",
+            "authors": [],
+            "affiliations": [],
+            "email": None,
+            "year": str(datetime.now().year),
+            "references": []
+        }
+        
+        lines = content.split('\n')
+        
+        # Try to extract YAML frontmatter first
+        frontmatter = {}
+        if lines and lines[0].strip() == '---':
+            i = 1
+            current_key = None
+            current_value = []
+            while i < len(lines) and lines[i].strip() != '---':
+                line = lines[i]
+                line_stripped = line.strip()
+                
+                # Check if this is a new key-value pair
+                if ':' in line_stripped and not line_stripped.startswith('-') and not line_stripped.startswith(' '):
+                    # Save previous key-value if exists
+                    if current_key and current_value:
+                        frontmatter[current_key] = '\n'.join(current_value).strip().strip('"').strip("'")
+                    
+                    # Start new key-value
+                    key, value = line_stripped.split(':', 1)
+                    current_key = key.strip().lower()
+                    value_stripped = value.strip().strip('"').strip("'")
+                    if value_stripped:
+                        current_value = [value_stripped]
+                    else:
+                        current_value = []
+                elif current_key:
+                    # Continuation of current value (indented or list item)
+                    if line_stripped.startswith('-') or line_stripped.startswith(' '):
+                        current_value.append(line_stripped.lstrip('- ').strip().strip('"').strip("'"))
+                    elif line_stripped:
+                        current_value.append(line_stripped.strip().strip('"').strip("'"))
+                
+                i += 1
+            
+            # Save last key-value
+            if current_key and current_value:
+                frontmatter[current_key] = '\n'.join(current_value).strip().strip('"').strip("'")
+        
+        # Extract from frontmatter if available
+        if frontmatter:
+            metadata["title"] = frontmatter.get("title", "").strip().strip('"').strip("'")
+            metadata["abstract"] = frontmatter.get("abstract", "").strip().strip('"').strip("'")
+            
+            # Handle authors (can be string or list in YAML)
+            if "authors" in frontmatter:
+                authors_value = frontmatter["authors"]
+                if isinstance(authors_value, str):
+                    authors_list = [a.strip() for a in re.split(r'[,\n]', authors_value) if a.strip()]
+                    metadata["authors"] = [{"name": author} for author in authors_list]
+                elif isinstance(authors_value, list):
+                    metadata["authors"] = [{"name": str(a).strip()} for a in authors_value if str(a).strip()]
+            
+            metadata["email"] = frontmatter.get("email", "").strip().strip('"').strip("'") or None
+            year_value = frontmatter.get("year", "")
+            if year_value:
+                metadata["year"] = str(year_value).strip().strip('"').strip("'")
+        
+        # Extract from markdown structure if not in frontmatter
+        # Title: First H1
+        if not metadata["title"]:
+            for line in lines:
+                if line.startswith('# ') and not line.startswith('##'):
+                    metadata["title"] = line[2:].strip()
+                    break
+        
+        # Abstract: Look for ## Abstract section
+        if not metadata["abstract"]:
+            in_abstract = False
+            abstract_lines = []
+            for line in lines:
+                line_stripped = line.strip()
+                if line_stripped.lower().startswith('## abstract'):
+                    in_abstract = True
+                    continue
+                elif in_abstract:
+                    if line_stripped.startswith('##') or line_stripped.startswith('---'):
+                        break
+                    if line_stripped:
+                        abstract_lines.append(line_stripped)
+            if abstract_lines:
+                abstract_text = ' '.join(abstract_lines)
+                abstract_text = re.sub(r'\*\*([^*]+)\*\*', r'\1', abstract_text)
+                abstract_text = re.sub(r'\*([^*]+)\*', r'\1', abstract_text)
+                metadata["abstract"] = abstract_text
+        
+        # Extract references from ## References section
+        in_references = False
+        for line in lines:
+            line_stripped = line.strip()
+            if line_stripped.lower().startswith('## references'):
+                in_references = True
+                continue
+            elif in_references:
+                if line_stripped.startswith('##') and not line_stripped.lower().startswith('## references'):
+                    break
+                if line_stripped and (line_stripped.startswith('[') or line_stripped[0].isdigit() or line_stripped.startswith('-')):
+                    ref = re.sub(r'^[\d\.\-\s\)\[\]]+', '', line_stripped)
+                    if ref and len(ref) > 10:
+                        metadata["references"].append(ref)
+        
+        # Default values
+        if not metadata["title"]:
+            metadata["title"] = "Scientific Research Report"
+        if not metadata["authors"]:
+            metadata["authors"] = [{"name": "WAFT Research Team"}]
+        
+        return metadata
+    
+    def _process_markdown_to_html(self, content: str, metadata: Dict[str, Any]) -> str:
+        """Process markdown content to HTML (similar to generate_all_pdfs_comparison.py)."""
+        lines = content.split('\n')
+        processed_lines = []
+        
+        # Skip YAML frontmatter
+        skip_frontmatter = False
+        if lines and lines[0].strip() == '---':
+            skip_frontmatter = True
+            i = 1
+            while i < len(lines) and lines[i].strip() != '---':
+                i += 1
+            if i < len(lines):
+                i += 1  # Skip closing ---
+                lines = lines[i:]
+        
+        # Skip Abstract and References sections (handled by template)
+        skip_abstract = False
+        skip_references = False
+        
+        for line in lines:
+            line_stripped = line.strip()
+            line_lower = line_stripped.lower()
+            
+            # Skip Abstract section
+            if line_lower.startswith('## abstract') or line_lower.startswith('# abstract'):
+                skip_abstract = True
+                continue
+            elif skip_abstract:
+                if line_stripped.startswith('##') or line_stripped.startswith('# ') or line_stripped.startswith('---'):
+                    skip_abstract = False
+                    if not line_lower.startswith('## abstract') and not line_lower.startswith('# abstract'):
+                        continue
+                else:
+                    continue
+            
+            # Skip References section
+            if line_lower.startswith('## references') or line_lower.startswith('# references'):
+                skip_references = True
+                continue
+            elif skip_references:
+                if line_stripped.startswith('##') and not line_lower.startswith('## references'):
+                    skip_references = False
+                    continue
+                elif line_stripped.startswith('# ') and not line_lower.startswith('# references'):
+                    skip_references = False
+                    continue
+                else:
+                    continue
+            
+            if skip_abstract or skip_references:
+                continue
+            
+            processed_lines.append(line)
+        
+        # Convert markdown to HTML
+        processed_md = '\n'.join(processed_lines)
+        html_content = markdown.markdown(
+            processed_md,
+            extensions=[
+                'fenced_code',
+                'tables',
+                'nl2br',
+                'extra',
+                'codehilite',
+                'md_in_html'
+            ]
+        )
+        
+        return html_content
     
     def _create_report_content(
         self,
@@ -410,7 +632,18 @@ class ScienceBitchManager:
                 if hasattr(experiment, 'data_collector'):
                     collected_data = experiment.data_collector.get_all_data()
         
-        content = f"""# Scientific Research Report
+        content = f"""---
+title: "Scientific Research Report: {hypothesis.statement[:80]}..."
+authors:
+  - name: "WAFT Research Team"
+abstract: |
+  This report documents a complete scientific method workflow, including hypothesis formation, experiment design, state capture, data collection, and analysis. The research follows rigorous scientific methodology with traceable evidence and reproducible results. Hypothesis: {hypothesis.statement}. Prediction: {hypothesis.prediction[:100]}...
+year: "{datetime.now().year}"
+conference: "arXiv"
+email: "waft@example.com"
+---
+
+# Scientific Research Report
 
 **Generated**: {timestamp}  
 **Experiment ID**: {experiment_id or "N/A"}  
@@ -418,9 +651,13 @@ class ScienceBitchManager:
 
 ---
 
-## Executive Summary
+## Abstract
 
 This report documents a complete scientific method workflow, including hypothesis formation, experiment design, state capture, data collection, and analysis. The research follows rigorous scientific methodology with traceable evidence and reproducible results.
+
+**Hypothesis**: {hypothesis.statement}
+
+**Prediction**: {hypothesis.prediction}
 
 ---
 
@@ -705,6 +942,15 @@ This research used the Science-Bitch scientific method workflow tool, which impl
 
 ---
 
+## References
+
+1. WAFT Repository: https://github.com/ctavolazzi/waft
+2. Scientific Method Tool: `scientific_method_tool/`
+3. Science-Bitch Command: `src/waft/core/science_bitch.py`
+4. Experiment ID: {experiment_id or "N/A"}
+
+---
+
 *This is real research. This is real science. This is real evidence.* 🔬
 """
         
@@ -756,120 +1002,137 @@ This research used the Science-Bitch scientific method workflow tool, which impl
         self.console.print(table)
     
     def generate_field_guide(self) -> Optional[Path]:
-        """Generate field guide PDF."""
-        import subprocess
-        import sys
-        
+        """Generate field guide PDF using academic paper template and print it."""
         # Create field guide content
         guide_content = self._create_field_guide_content()
         guide_md = self.science_path / "reports" / "field_guide.md"
         guide_md.write_text(guide_content)
         
-        # Generate PDF
+        # Generate PDF using academic paper template
         guide_pdf = self.science_path / "reports" / "field_guide.pdf"
         
         try:
-            # Use example script pattern
-            example_script = self.project_path / "examples" / "generate_encapsulated_environments_pdf.py"
-            if example_script.exists():
-                # Create temporary script for field guide
-                temp_script = self.science_path / "tools" / "generate_field_guide_pdf.py"
-                temp_script.write_text(f"""#!/usr/bin/env python3
-import sys
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
-
-from waft.evolution.pdf_generator import PDFGenerator
-
-content = Path("{guide_md}").read_text()
-generator = PDFGenerator.from_content(
-    content=content,
-    title="Science-Bitch Field Guide",
-    style="clinical_standard"
-)
-pdf_path = generator.save(
-    output_path=Path("{guide_pdf}"),
-    open_pdf=False,
-    convert_to_png=False
-)
-print(f"✅ PDF generated: {{pdf_path}}")
-""")
-                temp_script.chmod(0o755)
+            import sys
+            # Add project root to path
+            if str(self.project_path) not in sys.path:
+                sys.path.insert(0, str(self.project_path))
+            
+            from src.waft.templates.academic_paper import generate_academic_paper
+            
+            # Extract metadata
+            metadata = self._extract_metadata_from_content(guide_content)
+            
+            # Process markdown to HTML
+            html_content = self._process_markdown_to_html(guide_content, metadata)
+            
+            # Generate PDF
+            self.console.print("[yellow]→[/yellow] Generating ArXiv-style field guide PDF...")
+            generated_path = generate_academic_paper(
+                title=metadata.get("title", "Science-Bitch Field Guide"),
+                content=html_content,
+                output_path=guide_pdf,
+                abstract=metadata.get("abstract", ""),
+                authors=metadata.get("authors", [{"name": "WAFT Development Team"}]),
+                affiliations=metadata.get("affiliations"),
+                email=metadata.get("email"),
+                conference="arXiv",
+                year=metadata.get("year", str(datetime.now().year)),
+                references=metadata.get("references")
+            )
+            
+            if generated_path and generated_path.exists():
+                size = generated_path.stat().st_size / 1024  # KB
+                self.console.print(f"[green]✓[/green] Field guide PDF generated: {generated_path}")
+                self.console.print(f"[dim]   Size: {size:.1f} KB[/dim]")
                 
-                result = subprocess.run(
-                    ["uv", "run", "python3", str(temp_script)],
-                    cwd=self.project_path,
-                    capture_output=True,
-                    text=True
-                )
+                # Open PDF
+                system = platform.system()
+                if system == "Darwin":  # macOS
+                    subprocess.run(["open", str(generated_path)], check=False)
+                elif system == "Windows":
+                    subprocess.run(["start", str(generated_path)], shell=True, check=False)
+                else:  # Linux
+                    subprocess.run(["xdg-open", str(generated_path)], check=False)
                 
-                if result.returncode == 0 and guide_pdf.exists():
-                    return guide_pdf
+                # Print PDF (opt-in to prevent duplicate printing)
+                # User can print manually with: lpr {generated_path}
+                self.console.print(f"[dim]💡 To print: lpr {generated_path}[/dim]")
+                
+                return generated_path
         
         except Exception as e:
             self.console.print(f"[yellow]⚠️[/yellow]  PDF generation failed: {e}")
             self.console.print(f"[dim]Markdown saved: {guide_md}[/dim]")
+            import traceback
+            self.console.print(f"[dim]{traceback.format_exc()}[/dim]")
             return guide_md
         
         return guide_md if guide_md.exists() else None
     
     def generate_project_status_report(self) -> Optional[Path]:
-        """Generate project status PDF."""
-        import subprocess
-        import sys
-        
+        """Generate project status PDF using academic paper template and print it."""
         # Create project status content
         status_content = self._create_project_status_content()
         status_md = self.science_path / "reports" / "project_status.md"
         status_md.write_text(status_content)
         
-        # Generate PDF
+        # Generate PDF using academic paper template
         status_pdf = self.science_path / "reports" / "project_status.pdf"
         
         try:
-            # Use example script pattern
-            example_script = self.project_path / "examples" / "generate_encapsulated_environments_pdf.py"
-            if example_script.exists():
-                # Create temporary script for status report
-                temp_script = self.science_path / "tools" / "generate_status_pdf.py"
-                temp_script.write_text(f"""#!/usr/bin/env python3
-import sys
-from pathlib import Path
-project_root = Path(__file__).parent.parent.parent
-sys.path.insert(0, str(project_root))
-sys.path.insert(0, str(project_root / "src"))
-
-from waft.evolution.pdf_generator import PDFGenerator
-
-content = Path("{status_md}").read_text()
-generator = PDFGenerator.from_content(
-    content=content,
-    title="Science-Bitch Project Status",
-    style="clinical_standard"
-)
-pdf_path = generator.save(
-    output_path=Path("{status_pdf}"),
-    open_pdf=False,
-    convert_to_png=False
-)
-print(f"✅ PDF generated: {{pdf_path}}")
-""")
-                temp_script.chmod(0o755)
+            import sys
+            # Add project root to path
+            if str(self.project_path) not in sys.path:
+                sys.path.insert(0, str(self.project_path))
+            
+            from src.waft.templates.academic_paper import generate_academic_paper
+            
+            # Extract metadata
+            metadata = self._extract_metadata_from_content(status_content)
+            
+            # Process markdown to HTML
+            html_content = self._process_markdown_to_html(status_content, metadata)
+            
+            # Generate PDF
+            self.console.print("[yellow]→[/yellow] Generating ArXiv-style project status PDF...")
+            generated_path = generate_academic_paper(
+                title=metadata.get("title", "Science-Bitch Project Status"),
+                content=html_content,
+                output_path=status_pdf,
+                abstract=metadata.get("abstract", ""),
+                authors=metadata.get("authors", [{"name": "WAFT Development Team"}]),
+                affiliations=metadata.get("affiliations"),
+                email=metadata.get("email"),
+                conference="arXiv",
+                year=metadata.get("year", str(datetime.now().year)),
+                references=metadata.get("references")
+            )
+            
+            if generated_path and generated_path.exists():
+                size = generated_path.stat().st_size / 1024  # KB
+                self.console.print(f"[green]✓[/green] Project status PDF generated: {generated_path}")
+                self.console.print(f"[dim]   Size: {size:.1f} KB[/dim]")
                 
-                result = subprocess.run(
-                    ["uv", "run", "python3", str(temp_script)],
-                    cwd=self.project_path,
-                    capture_output=True,
-                    text=True
-                )
+                # Open PDF
+                system = platform.system()
+                if system == "Darwin":  # macOS
+                    subprocess.run(["open", str(generated_path)], check=False)
+                elif system == "Windows":
+                    subprocess.run(["start", str(generated_path)], shell=True, check=False)
+                else:  # Linux
+                    subprocess.run(["xdg-open", str(generated_path)], check=False)
                 
-                if result.returncode == 0 and status_pdf.exists():
-                    return status_pdf
+                # Print PDF (opt-in to prevent duplicate printing)
+                # User can print manually with: lpr {generated_path}
+                self.console.print(f"[dim]💡 To print: lpr {generated_path}[/dim]")
+                
+                return generated_path
         
         except Exception as e:
             self.console.print(f"[yellow]⚠️[/yellow]  PDF generation failed: {e}")
             self.console.print(f"[dim]Markdown saved: {status_md}[/dim]")
+            import traceback
+            self.console.print(f"[dim]{traceback.format_exc()}[/dim]")
             return status_md
         
         return status_md if status_md.exists() else None

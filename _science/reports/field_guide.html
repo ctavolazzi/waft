@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Science-Bitch Field Guide</title>
+    <title>Field Guide</title>
 
     <style>
         /* Strict 2-page setup */
@@ -73,12 +73,21 @@
         }
 
         ul, ol {
-            margin: 0 0 8pt 0;
-            padding-left: 15pt;
+            margin: 8pt 0 8pt 0;
+            padding-left: 20pt;
         }
 
         li {
-            margin-bottom: 2.6666666666666665pt;
+            margin-bottom: 4.0pt;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        /* Nested lists */
+        ul ul, ol ol, ul ol, ol ul {
+            margin-top: 4.0pt;
+            margin-bottom: 4.0pt;
+            padding-left: 30pt;
         }
 
         /* Visual boxes - inspired by field guide */
@@ -249,33 +258,33 @@
 <body>
     <!-- PAGE 1 -->
     <div class="page-1">
-        <h1>Science-Bitch Field Guide</h1>
+        <h1>Field Guide</h1>
 
         <div class="summary-box">
             <strong>Summary:</strong> Science-Bitch is a command-line tool that implements the full scientific method workflow for hypothesis testing, experimentation, and evidence-based conclusions.
         </div>
 
         <div class="metadata">
-            <p><strong>Generated:</strong> 2026-01-12 19:50 UTC | <strong>Ideas Extracted:</strong> 9</p>
+            <p><strong>Generated:</strong> 2026-01-13 04:52 UTC | <strong>Ideas Extracted:</strong> 9</p>
         </div>
 
         <h2>What Happened</h2>
 
         
         <div class="idea no-break">
-            <p class="idea-content">Science-Bitch is a command-line tool that implements the full scientific method workflow for hypothesis testing, experimentation, and evidence-based conclusions.</p>
+            <div class="idea-content"><p>Science-Bitch is a command-line tool that implements the full scientific method workflow for hypothesis testing, experimentation, and evidence-based conclusions.</p></div>
         </div>
         
         <div class="idea no-break">
-            <p class="idea-content">Create a testable hypothesis with: Statement: What you're testing Prediction: Expected outcome Variables: Independent, dependent, and control variables.</p>
+            <div class="idea-content"><p>Create a testable hypothesis with: Statement: What you're testing Prediction: Expected outcome Variables: Independent, dependent, and control variables.</p></div>
         </div>
         
         <div class="idea no-break">
-            <p class="idea-content">Design an experiment that: Tests your hypothesis Controls for confounding variables Collects measurable data.</p>
+            <div class="idea-content"><p>Design an experiment that: Tests your hypothesis Controls for confounding variables Collects measurable data.</p></div>
         </div>
         
         <div class="idea no-break">
-            <p class="idea-content">Before running the experiment: Capture system state Record baseline measurements Document initial conditions.</p>
+            <div class="idea-content"><p>Before running the experiment: Capture system state Record baseline measurements Document initial conditions.</p></div>
         </div>
         
     </div>
@@ -290,23 +299,23 @@
 
         
         <div class="idea no-break">
-            <p class="idea-content">Run full interactive workflow: Form hypothesis interactively Design experiment Run experiment Analyze results Generate report.</p>
+            <div class="idea-content"><p>Run full interactive workflow: Form hypothesis interactively Design experiment Run experiment Analyze results Generate report.</p></div>
         </div>
         
         <div class="idea no-break">
-            <p class="idea-content">Scientific Method Tool: Core functionality from scientificmethodtool/ PDF Generation: Uses waft.evolution.pdf_generator Work Effort: Tracked in WE-260112-az3z State Capture: Automatic state snapshots Data Collection: Comprehensive data recording.</p>
+            <div class="idea-content"><p>Scientific Method Tool: Core functionality from <code>scientific_method_tool/</code> PDF Generation: Uses <code>waft.evolution.pdf_generator</code> Work Effort: Tracked in <code>WE-260112-az3z</code> State Capture: Automatic state snapshots Data Collection: Comprehensive data recording.</p></div>
         </div>
         
         <div class="idea no-break">
-            <p class="idea-content">After the experiment: Capture final system state Compare with initial state Identify changes.</p>
+            <div class="idea-content"><p>After the experiment: Capture final system state Compare with initial state Identify changes.</p></div>
         </div>
         
         <div class="idea no-break">
-            <p class="idea-content">Create documentation: Experiment report Analysis results Recommendations.</p>
+            <div class="idea-content"><p>Create documentation: Experiment report Analysis results Recommendations.</p></div>
         </div>
         
         <div class="idea no-break">
-            <p class="idea-content">See scientificmethodtool/example_usage.py for complete examples.</p>
+            <div class="idea-content"><p>See <code>scientific_method_tool/example_usage.py</code> for complete examples.</p></div>
         </div>
         
         

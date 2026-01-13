@@ -45,6 +45,9 @@ ACADEMIC_PAPER_TEMPLATE = """
             column-count: 2;
             column-gap: 0.3in;
             column-rule: none;
+            column-fill: auto;
+            orphans: 3;
+            widows: 3;
         }
 
         /* Title and Authors */
@@ -143,6 +146,9 @@ ACADEMIC_PAPER_TEMPLATE = """
             text-align: justify;
             orphans: 3;
             widows: 3;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
         }
 
         /* Equations */
@@ -233,7 +239,10 @@ ACADEMIC_PAPER_TEMPLATE = """
             padding: 0.1in;
             margin: 0.1in 0;
             overflow-x: auto;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
             column-span: all;
+            max-width: 100%;
         }
 
         code {
@@ -244,24 +253,84 @@ ACADEMIC_PAPER_TEMPLATE = """
         }
 
         /* First page adjustments */
-        @page :first {
-            @top-center {
-                content: "{{ conference or 'arXiv' }} {{ year or '2024' }}";
-                font-size: 9pt;
-                font-family: 'Times New Roman', serif;
-            }
-        }
+        /* arXiv header removed - no header on first page */
 
         /* Page numbers */
+        {% if page_numbers %}
         @bottom-center {
             content: counter(page);
             font-size: 9pt;
             font-family: 'Times New Roman', serif;
         }
+        {% endif %}
 
         /* Avoid column breaks in bad places */
         h1, h2, .figure, .table, pre {
             break-inside: avoid;
+            page-break-inside: avoid;
+        }
+        
+        /* Prevent breaking inside paragraphs and lists */
+        p, li {
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+        
+        /* Ensure proper text flow */
+        * {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        
+        /* Hide frontmatter if it appears in content */
+        .content pre:first-of-type,
+        .content code:first-of-type {
+            display: none;
+        }
+        
+        /* Remove duplicate abstract heading */
+        .content h1:first-of-type,
+        .content h2:first-of-type {
+            /* Check if it's an abstract heading and hide it */
+        }
+        
+        /* Better handling of markdown frontmatter artifacts */
+        .content > *:first-child {
+            /* Ensure first element starts properly */
+        }
+        
+        /* Fix text fragmentation in columns */
+        .content {
+            text-align: justify;
+            hyphens: auto;
+            -webkit-hyphens: auto;
+            -moz-hyphens: auto;
+        }
+        
+        /* Ensure proper spacing between sections */
+        .content h1 + p,
+        .content h2 + p,
+        .content h3 + p {
+            margin-top: 0.05in;
+        }
+        
+        /* Prevent orphaned words */
+        .content p:last-child {
+            margin-bottom: 0;
+        }
+        
+        /* Better list handling in columns */
+        .content ul,
+        .content ol {
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+        
+        /* Ensure code blocks don't break columns */
+        .content pre {
+            break-inside: avoid;
+            page-break-inside: avoid;
+            column-span: all;
         }
     </style>
 </head>
@@ -287,10 +356,12 @@ ACADEMIC_PAPER_TEMPLATE = """
         {% endif %}
     </div>
 
+    {% if abstract and abstract.strip() %}
     <div class="abstract">
         <div class="abstract-title">Abstract</div>
         <div class="abstract-text">{{ abstract }}</div>
     </div>
+    {% endif %}
 
     <div class="content">
         {{ content|safe }}
@@ -319,7 +390,8 @@ def generate_academic_paper(
     email: str = None,
     conference: str = "arXiv",
     year: str = None,
-    references: list = None
+    references: list = None,
+    page_numbers: bool = True
 ) -> Path:
     """
     Generate an academic paper PDF.
@@ -335,6 +407,7 @@ def generate_academic_paper(
         conference: Conference name (default: "arXiv")
         year: Publication year
         references: List of reference strings
+        page_numbers: Whether to include page numbers (default: True)
 
     Returns:
         Path to generated PDF
@@ -355,7 +428,8 @@ def generate_academic_paper(
         email=email,
         conference=conference,
         year=year,
-        references=references or []
+        references=references or [],
+        page_numbers=page_numbers
     )
 
     HTML(string=html_output).write_pdf(output_path)

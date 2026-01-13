@@ -4498,9 +4498,10 @@ wheels = [
 
 [[package]]
 name = "waft"
-version = "0.6.1"
+version = "0.7.1"
 source = { editable = "." }
 dependencies = [
+    { name = "cryptography" },
     { name = "d20" },
     { name = "empirica" },
     { name = "fastapi" },
@@ -4534,6 +4535,7 @@ tavern-keeper = [
 [package.metadata]
 requires-dist = [
     { name = "crewai", marker = "extra == 'crewai'", specifier = ">=0.1.0" },
+    { name = "cryptography", specifier = ">=41.0.0" },
     { name = "d20", specifier = ">=1.0.0" },
     { name = "empirica", specifier = ">=1.2.3" },
     { name = "fastapi", specifier = ">=0.104.0" },

@@ -525,19 +525,28 @@ def get_recent_activity(project_path: Optional[Path] = None) -> Dict[str, Any]:
     }
     
     try:
-        # Get recent devlog entries
-        devlog = project_path / "_work_efforts" / "devlog.md"
-        if devlog.exists() and validate_path(devlog, project_path):
-            content = devlog.read_text(encoding="utf-8")
-            lines = content.split("\n")
-            # Get last 5 entries (simple approach - look for date headers)
-            recent_lines = []
-            for line in reversed(lines[-100:]):  # Check last 100 lines
-                if line.startswith("## ") and any(char.isdigit() for char in line):
-                    recent_lines.append(line)
-                    if len(recent_lines) >= 5:
-                        break
-            activity["devlog_entries"] = list(reversed(recent_lines))
+        # Use DevlogManager if available
+        try:
+            from waft.core.devlog import DevlogManager
+            devlog_manager = DevlogManager(project_path)
+            entries = devlog_manager.get_recent_entries(limit=5)
+            activity["devlog_entries"] = [
+                f"## {entry.get('timestamp', '')[:10]} - {entry.get('title', 'Untitled')}"
+                for entry in entries
+            ]
+        except (ImportError, Exception):
+            # Fallback to legacy devlog.md
+            devlog = project_path / "_work_efforts" / "devlog.md"
+            if devlog.exists() and validate_path(devlog, project_path):
+                content = devlog.read_text(encoding="utf-8")
+                lines = content.split("\n")
+                recent_lines = []
+                for line in reversed(lines[-100:]):
+                    if line.startswith("## ") and any(char.isdigit() for char in line):
+                        recent_lines.append(line)
+                        if len(recent_lines) >= 5:
+                            break
+                activity["devlog_entries"] = list(reversed(recent_lines))
     except Exception as e:
         print(f"Warning: Error reading devlog: {e}")
     

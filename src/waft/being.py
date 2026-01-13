@@ -75,7 +75,9 @@ class Being:
         last_cycle_number: Optional[int] = None,
         lifetimes: Optional[int] = None,
         # Experience tracking
-        recent_experiences: Optional[List[Dict[str, Any]]] = None
+        recent_experiences: Optional[List[Dict[str, Any]]] = None,
+        # Naming
+        custom_name: Optional[str] = None
     ):
         """
         Initialize a being.
@@ -103,6 +105,7 @@ class Being:
             last_cycle_number: Last cycle number (default: 0)
             lifetimes: Number of reincarnations (default: 0)
             recent_experiences: Recent experiences (default: [])
+            custom_name: Optional custom name (e.g., "Bob") - overrides scientific name
         """
         self.being_id = being_id
         self.reality_id = reality_id
@@ -209,6 +212,9 @@ class Being:
         self.empirica_session_id: Optional[str] = None
         self.empirica_manager: Optional[Any] = None
         self._is_first_being = parent_being_id is None
+        
+        # Naming
+        self.custom_name: Optional[str] = custom_name
     
     def _calculate_personality_modifier(self) -> float:
         """Calculate decision quota modifier based on personality type."""
@@ -249,6 +255,54 @@ class Being:
         
         willpower = (base_willpower * modifier) + skill_bonus
         return max(0.0, min(100.0, willpower))
+    
+    @property
+    def scientific_name(self) -> str:
+        """
+        Generate scientific name from being_id using LineagePoet.
+        
+        Uses being_id as genome seed to generate deterministic scientific name.
+        Format: "Genus Species, Title" (e.g., "Cognis Novus, the Fragile")
+        
+        Returns:
+            Scientific name based on being_id hash
+        """
+        from .core.science.taxonomy import LineagePoet
+        import hashlib
+        
+        # Generate genome_id from being_id (deterministic)
+        # Use being_id as seed for hash-based naming
+        genome_id = hashlib.sha256(self.being_id.encode()).hexdigest()
+        return LineagePoet.generate_name(genome_id)
+    
+    @property
+    def display_name(self) -> str:
+        """
+        Get display name for this being.
+        
+        Priority:
+        1. custom_name (if user set one, e.g., "Bob")
+        2. scientific_name (deterministic from hash)
+        3. being_id (fallback)
+        
+        Returns:
+            Display name to use
+        """
+        if self.custom_name:
+            return self.custom_name
+        return self.scientific_name
+    
+    def set_custom_name(self, name: str) -> None:
+        """
+        Set a custom name for this being (e.g., "Bob").
+        
+        This overrides the scientific name for display purposes.
+        The scientific name is still available via scientific_name property.
+        
+        Args:
+            name: Custom name to use
+        """
+        self.custom_name = name
     
     def _calculate_stamina(self) -> float:
         """
@@ -1228,6 +1282,8 @@ class Being:
             "lifetimes": self.lifetimes,
             # Experience tracking
             "recent_experiences": self.recent_experiences,
+            # Naming
+            "custom_name": self.custom_name,
         }
     
     @classmethod
@@ -1262,7 +1318,9 @@ class Being:
             last_cycle_number=data.get("last_cycle_number"),
             lifetimes=data.get("lifetimes", data.get("cycles_alive", 0)),  # Support old name for migration
             # Experience tracking
-            recent_experiences=data.get("recent_experiences")
+            recent_experiences=data.get("recent_experiences"),
+            # Naming
+            custom_name=data.get("custom_name")
         )
         being.memories = data.get("memories", [])
         being.lessons_learned = data.get("lessons_learned", [])
@@ -1412,11 +1470,23 @@ class BeingSystem:
             parent_lifetimes = parent.lifetimes
         
         # Create being (lifetimes will be set after creation)
+        # Check if parent had custom_name to inherit
+        custom_name = None
+        if parent_being_id:
+            try:
+                parent = self._load_being(parent_being_id)
+                # Optionally inherit custom name (or let user set new one)
+                # For now, don't inherit - each being gets fresh name
+                pass
+            except Exception:
+                pass
+        
         being = Being(
             being_id=being_id,
             reality_id=reality_id,
             parent_being_id=parent_being_id,
-            skills=skills
+            skills=skills,
+            custom_name=custom_name
         )
         
         # Set lifetimes: increment from parent if reincarnated, or 1 if first birth
@@ -1481,6 +1551,15 @@ class BeingSystem:
         
         # Save being
         self._save_being(being)
+        
+        # Generate character sheet .txt (default, automatic)
+        # Only generates .txt by default - .md and .pdf are on-demand
+        try:
+            from ..evolution.being_character_sheet_generator import generate_character_sheet_txt
+            generate_character_sheet_txt(being, project_path=self.project_path)
+        except (ImportError, Exception):
+            # Character sheet generation optional - Being works without it
+            pass
         
         return being
     

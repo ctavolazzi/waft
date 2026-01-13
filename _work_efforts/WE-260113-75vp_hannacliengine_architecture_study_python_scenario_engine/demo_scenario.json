@@ -1,0 +1,181 @@
+{
+  "gameTitle": "The Mysterious Tavern",
+  "gameAuthor": "WAFT Scenario Engine Demo",
+  "gameDesc": "A short demo scenario demonstrating the scenario engine architecture",
+  "startSq": "seq_001",
+  "gameContainers": ["inventory", "clues", "karma"],
+  "sequences": [
+    {
+      "sqId": "seq_001",
+      "sqType": "ordinary",
+      "mainText": "You wake up in a dimly lit tavern with no memory of how you got there. Your head is pounding, and the room spins slightly as you sit up. The air smells of ale and sawdust.",
+      "secondaryText": "What do you do?",
+      "choices": [
+        {
+          "choiceLetter": "A",
+          "choiceType": "set",
+          "choiceText": "Stand up slowly and look around (Perception check)",
+          "outcomeText": "You carefully stand up, steadying yourself against the table. As you scan the room, you notice a mysterious note tucked under an empty mug. Your keen eyes spot something important.",
+          "containerAdd": {
+            "container": "clues",
+            "value": "mysterious_note"
+          },
+          "nextSq": "seq_002"
+        },
+        {
+          "choiceLetter": "B",
+          "choiceType": "set",
+          "choiceText": "Call out for help",
+          "outcomeText": "You call out, but the tavern appears empty. Your voice echoes in the silence. However, you notice a key on the floor near the door.",
+          "containerAdd": {
+            "container": "inventory",
+            "value": "rusty_key"
+          },
+          "nextSq": "seq_003"
+        },
+        {
+          "choiceLetter": "C",
+          "choiceType": "set",
+          "choiceText": "Check your pockets",
+          "outcomeText": "You pat yourself down and find a small coin purse with a few gold pieces. Not much, but it's something.",
+          "containerAdd": {
+            "container": "inventory",
+            "value": "coin_purse"
+          },
+          "nextSq": "seq_003"
+        }
+      ]
+    },
+    {
+      "sqId": "seq_002",
+      "sqType": "ordinary",
+      "mainText": "You pick up the mysterious note. The handwriting is elegant but hurried. It reads: 'Meet me at the old mill at midnight. Bring the key. -A'",
+      "secondaryText": "What will you do next?",
+      "choices": [
+        {
+          "choiceLetter": "A",
+          "choiceType": "set",
+          "choiceText": "Look for the key mentioned in the note",
+          "outcomeText": "You search the tavern more carefully. Under a loose floorboard, you find an ornate key with strange symbols carved into it.",
+          "containerAdd": {
+            "container": "inventory",
+            "value": "ornate_key"
+          },
+          "nextSq": "seq_004"
+        },
+        {
+          "choiceLetter": "B",
+          "choiceType": "set",
+          "choiceText": "Leave the tavern and head to the old mill",
+          "outcomeText": "You step outside into the night. The old mill is visible in the distance, its silhouette dark against the moonlit sky. You feel a sense of purpose, but also unease.",
+          "containerAdd": {
+            "container": "karma",
+            "value": "curious"
+          },
+          "nextSq": "seq_005"
+        }
+      ]
+    },
+    {
+      "sqId": "seq_003",
+      "sqType": "ordinary",
+      "mainText": "You're standing in the tavern, holding what you found. The room is still empty, but you sense you're not alone. Shadows dance in the corners.",
+      "secondaryText": "How do you proceed?",
+      "choices": [
+        {
+          "choiceLetter": "A",
+          "choiceType": "conditional",
+          "choiceText": "Use the key you found to unlock the door",
+          "choiceCondition": {
+            "container": "inventory",
+            "value": "rusty_key"
+          },
+          "outcomeText": "The rusty key fits perfectly in the lock. The door creaks open, revealing a dark corridor. You step through cautiously.",
+          "nextSq": "seq_006"
+        },
+        {
+          "choiceLetter": "B",
+          "choiceType": "set",
+          "choiceText": "Search the tavern more thoroughly",
+          "outcomeText": "You methodically search every corner. Behind the bar, you find a hidden compartment containing a map of the area with several locations marked.",
+          "containerAdd": {
+            "container": "clues",
+            "value": "area_map"
+          },
+          "nextSq": "seq_007"
+        },
+        {
+          "choiceLetter": "C",
+          "choiceType": "set",
+          "choiceText": "Wait and observe",
+          "outcomeText": "You sit quietly and watch. After a few minutes, a figure emerges from the shadows - an old bartender who was hiding. 'You're awake,' he says with a knowing smile.",
+          "containerAdd": {
+            "container": "karma",
+            "value": "patient"
+          },
+          "nextSq": "seq_008"
+        }
+      ]
+    },
+    {
+      "sqId": "seq_004",
+      "sqType": "ordinary",
+      "mainText": "You now have both the note and the ornate key. The symbols on the key seem to match some markings you saw on the tavern walls. This is clearly part of something larger.",
+      "secondaryText": "What's your next move?",
+      "choices": [
+        {
+          "choiceLetter": "A",
+          "choiceType": "conditional",
+          "choiceText": "Head to the old mill with the ornate key",
+          "choiceCondition": {
+            "container": "inventory",
+            "value": "ornate_key"
+          },
+          "outcomeText": "You make your way to the old mill, key in hand. The building is ancient and weathered, but the door has a lock that matches your key perfectly.",
+          "nextSq": "seq_005"
+        },
+        {
+          "choiceLetter": "B",
+          "choiceType": "set",
+          "choiceText": "Examine the key more closely",
+          "outcomeText": "The symbols on the key form a pattern. You realize they're directions - a map encoded in the metalwork. This could be valuable.",
+          "containerAdd": {
+            "container": "clues",
+            "value": "key_symbols_decoded"
+          },
+          "nextSq": "seq_009"
+        }
+      ]
+    },
+    {
+      "sqId": "seq_005",
+      "sqType": "end",
+      "mainText": "You arrive at the old mill. The door opens with your key, and inside you find... well, that's where this story ends. But your adventure has just begun.",
+      "secondaryText": "The mystery deepens, and new paths await."
+    },
+    {
+      "sqId": "seq_006",
+      "sqType": "end",
+      "mainText": "You step through the door into the unknown. The corridor leads deeper into darkness, and you can hear whispers in the distance. Your journey continues beyond this moment.",
+      "secondaryText": "To be continued..."
+    },
+    {
+      "sqId": "seq_007",
+      "sqType": "end",
+      "mainText": "With the map in hand, you realize there are multiple locations of interest marked. The tavern was just the beginning. You have a choice of destinations, each promising new mysteries.",
+      "secondaryText": "Your investigation continues."
+    },
+    {
+      "sqId": "seq_008",
+      "sqType": "end",
+      "mainText": "The old bartender shares his story - he's been waiting for someone like you. The tavern is a meeting place for those who seek answers. He offers to guide you, and you accept. Together, you'll uncover the truth.",
+      "secondaryText": "A new partnership begins."
+    },
+    {
+      "sqId": "seq_009",
+      "sqType": "end",
+      "mainText": "With the decoded symbols, you understand the key is more than just a tool - it's a guide. The pattern points to multiple locations, each holding a piece of the puzzle. You're ready to explore them all.",
+      "secondaryText": "The adventure expands."
+    }
+  ]
+}

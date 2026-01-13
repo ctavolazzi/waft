@@ -1,0 +1,106 @@
+{
+  "experiment_id": "exp_6577ac0c",
+  "hypothesis": {
+    "statement": "Higher investigation and perception skills improve decision quality and fitness outcomes in D&D scenarios",
+    "prediction": "Characters with investigation skill > 40 and perception skill > 25 will gain > 15 fitness points",
+    "variables": [
+      {
+        "name": "investigation_skill",
+        "type": "independent",
+        "value": 45.0,
+        "description": "Investigation skill level",
+        "unit": null,
+        "range": null
+      },
+      {
+        "name": "perception_skill",
+        "type": "independent",
+        "value": 30.0,
+        "description": "Perception skill level",
+        "unit": null,
+        "range": null
+      }
+    ],
+    "created_at": "2026-01-12T20:00:04.431927",
+    "verified": null,
+    "confidence": 0.0
+  },
+  "state": "completed",
+  "initial_state": {
+    "timestamp": "2026-01-12T20:00:04.441735",
+    "state_type": "initial",
+    "components": {
+      "investigation_skill": 45.0,
+      "perception_skill": 30.0,
+      "experiment_type": "tavern_scenario_scientific",
+      "timestamp": "2026-01-12T20:00:04.437981"
+    },
+    "metadata": {
+      "experiment_id": "exp_6577ac0c"
+    },
+    "state_hash": "784251ae89ce73b1"
+  },
+  "final_state": {
+    "timestamp": "2026-01-12T20:00:04.446661",
+    "state_type": "final",
+    "components": {
+      "investigation_skill": 45.0,
+      "perception_skill": 30.0,
+      "experiment_type": "tavern_scenario_scientific",
+      "timestamp": "2026-01-12T20:00:04.437981"
+    },
+    "metadata": {
+      "experiment_id": "exp_6577ac0c"
+    },
+    "state_hash": "6cddf90195a74955"
+  },
+  "results": {
+    "fitness_gained": 23.0,
+    "prediction_match": true,
+    "confidence": 0.92,
+    "being_id": "exp_exp_6577ac0c",
+    "events": 4,
+    "successful_checks": 1,
+    "session_events": [
+      {
+        "type": "skill_check",
+        "description": "Perception check succeeded",
+        "details": {
+          "roll": 11,
+          "modifier": 1,
+          "total": 12,
+          "dc": 12
+        },
+        "timestamp": "2026-01-12 20:00:04.446604"
+      },
+      {
+        "type": "discovery",
+        "description": "Noticed details about the tavern",
+        "details": {
+          "observation": "The tavern is quiet, with only a few patrons"
+        },
+        "timestamp": "2026-01-12 20:00:04.446608"
+      },
+      {
+        "type": "action",
+        "description": "Read mysterious note",
+        "details": {
+          "content": "Meet at the old mill at midnight"
+        },
+        "timestamp": "2026-01-12 20:00:04.446610"
+      },
+      {
+        "type": "decision",
+        "description": "Decided to investigate the note",
+        "details": {
+          "choice": "Investigate the old mill"
+        },
+        "timestamp": "2026-01-12 20:00:04.446611"
+      }
+    ]
+  },
+  "metadata": {},
+  "created_at": "2026-01-12T20:00:04.435471",
+  "started_at": "2026-01-12T20:00:04.442857",
+  "completed_at": "2026-01-12T20:00:04.447056"
+}

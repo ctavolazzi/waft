@@ -1,0 +1,50 @@
+{
+  "genome_id": "c8b3263c206538668d0da4dc7a386f9e49deeff0f8e0d7407a9bcdcd65a31a40",
+  "genes": {
+    "font": {
+      "family": "Georgia",
+      "size_body": 11,
+      "size_h1": 24,
+      "size_h2": 18,
+      "size_h3": 14,
+      "size_code": 10,
+      "line_height": 1.5
+    },
+    "margin": {
+      "top": 30,
+      "bottom": 30,
+      "left": 40,
+      "right": 40,
+      "paragraph_spacing": 10,
+      "section_spacing": 15
+    },
+    "color": {
+      "text": "#1a1a1a",
+      "background": "#fafafa",
+      "heading": "#1a1a1a",
+      "accent": "#0066cc",
+      "code_bg": "#f5f5f5",
+      "code_text": "#333333",
+      "border": "#cccccc"
+    },
+    "layout": {
+      "columns": 1,
+      "density": "comfortable",
+      "toc_enabled": false,
+      "page_numbers": true,
+      "header_enabled": true,
+      "footer_enabled": true
+    },
+    "name": "Creative Story Genesis",
+    "description": ""
+  },
+  "generation": 0,
+  "parent_id": null,
+  "lineage_path": [
+    "c8b3263c206538668d0da4dc7a386f9e49deeff0f8e0d7407a9bcdcd65a31a40"
+  ],
+  "scientific_name": "Aura Four, the Eternal",
+  "fitness_score": null,
+  "created_at": "2026-01-13T10:23:50.791557",
+  "last_evaluated_at": null
+}

@@ -1,0 +1,56 @@
+{
+  "experiment_id": "exp_1a61a413",
+  "hypothesis": {
+    "statement": "Incrementing a counter increases its value",
+    "prediction": "Counter will increase by 5",
+    "variables": [
+      {
+        "name": "test_variable",
+        "type": "independent",
+        "value": 1,
+        "description": "Test variable",
+        "unit": null,
+        "range": null
+      }
+    ],
+    "created_at": "2026-01-13T00:42:01.196521",
+    "verified": null,
+    "confidence": 0.0
+  },
+  "state": "completed",
+  "initial_state": {
+    "timestamp": "2026-01-13T00:42:01.200460",
+    "state_type": "initial",
+    "components": {
+      "counter": 10,
+      "test_var": 1
+    },
+    "metadata": {
+      "experiment_id": "exp_1a61a413"
+    },
+    "state_hash": "0b4d247a9ad937b0"
+  },
+  "final_state": {
+    "timestamp": "2026-01-13T00:42:01.202366",
+    "state_type": "final",
+    "components": {
+      "counter": 10,
+      "test_var": 1
+    },
+    "metadata": {
+      "experiment_id": "exp_1a61a413"
+    },
+    "state_hash": "c8a79f2cf0d43cca"
+  },
+  "results": {
+    "initial": 10,
+    "final": 15,
+    "change": 5,
+    "prediction_match": true,
+    "confidence": 0.9
+  },
+  "metadata": {},
+  "created_at": "2026-01-13T00:42:01.197018",
+  "started_at": "2026-01-13T00:42:01.201619",
+  "completed_at": "2026-01-13T00:42:01.203068"
+}

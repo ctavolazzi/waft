@@ -157,6 +157,132 @@
       "suggestions": [],
       "style": "Clinical_Standard - Waft Larval Form: Complete Tec",
       "genome_id": "ac8d055839f12d98ba3f5f48f865da21e2aaec898a3d2b759d31005feec1d7d0"
+    },
+    {
+      "title": "D&D Campaign PDF Evolution - Complete Work Effort",
+      "path": "/Users/ctavolazzi/Code/active/waft/_work_efforts/WE-260112-jqkn_d_d_campaign_pdf_evolution/WE-260112-jqkn_COMPLETE.pdf",
+      "timestamp": "2026-01-12T16:55:06.550191",
+      "quality_score": 0.7790697674418605,
+      "gaps": [],
+      "suggestions": [
+        "Add more detailed content to improve completeness"
+      ],
+      "style": "Premium - D&D Campaign PDF Evolution - C",
+      "genome_id": "eb5a81986df97b315505944414e4dd484d4d54b3aa1e3f78e5ec828e82cf880f"
+    },
+    {
+      "title": "D&D Campaign PDF Evolution - Complete Work Effort",
+      "path": "/Users/ctavolazzi/Code/active/waft/_work_efforts/WE-260112-jqkn_d_d_campaign_pdf_evolution/WE-260112-jqkn_COMPLETE.pdf",
+      "timestamp": "2026-01-12T16:56:08.889693",
+      "quality_score": 0.7790697674418605,
+      "gaps": [],
+      "suggestions": [
+        "Add more detailed content to improve completeness"
+      ],
+      "style": "Premium - D&D Campaign PDF Evolution - C",
+      "genome_id": "efce01cd59b7432e1781c3db6711e3d5c3987c3e8bc8b40dcb2f66a808a8a32e"
+    },
+    {
+      "title": "D&D Campaign PDF Evolution - Complete Work Effort",
+      "path": "/Users/ctavolazzi/Code/active/waft/_work_efforts/WE-260112-jqkn_d_d_campaign_pdf_evolution/WE-260112-jqkn_COMPLETE.pdf",
+      "timestamp": "2026-01-12T17:00:48.326289",
+      "quality_score": 0.7816091954022988,
+      "gaps": [],
+      "suggestions": [
+        "Add more detailed content to improve completeness"
+      ],
+      "style": "Premium - D&D Campaign PDF Evolution - C",
+      "genome_id": "09792ddac1df9b29b4368c1b648ecc4fe55ddfcd38e05d9593fd17271c685351"
+    },
+    {
+      "title": "D&D Campaign PDF Evolution - Complete Work Effort",
+      "path": "/Users/ctavolazzi/Code/active/waft/_work_efforts/WE-260112-jqkn_d_d_campaign_pdf_evolution/WE-260112-jqkn_COMPLETE.pdf",
+      "timestamp": "2026-01-12T17:01:56.075343",
+      "quality_score": 0.7934782608695652,
+      "gaps": [],
+      "suggestions": [
+        "Add more detailed content to improve completeness"
+      ],
+      "style": "Premium - D&D Campaign PDF Evolution - C",
+      "genome_id": "8a7710a4abb9615ac950f6b6eec9979ef5e1f9dd904417d52c05874c32813f9b"
+    },
+    {
+      "title": "Information Entropy as a Measure of Code Complexity",
+      "path": "_work_efforts/creative_booklet/06_scientific_paper.pdf",
+      "timestamp": "2026-01-13T02:17:17.068505",
+      "quality_score": 0.9,
+      "gaps": [
+        "No actions identified",
+        "No insights identified"
+      ],
+      "suggestions": [],
+      "style": "Clinical_Standard - Information Entropy as a Measu",
+      "genome_id": "3fa19668d02a5197eecea7e02170e899ea8858c0ebb84cffae12f1c55efe771b"
+    },
+    {
+      "title": "Information Entropy as a Measure of Code Complexity",
+      "path": "_work_efforts/creative_booklet/06_scientific_paper.pdf",
+      "timestamp": "2026-01-13T02:18:30.183199",
+      "quality_score": 0.9,
+      "gaps": [
+        "No actions identified",
+        "No insights identified"
+      ],
+      "suggestions": [],
+      "style": "Clinical_Standard - Information Entropy as a Measu",
+      "genome_id": "d5caeec091e6f0cc617d014cff6d33d64dcad89176b71a4e3cdd795563a73a15"
+    },
+    {
+      "title": "Information Entropy as a Measure of Code Complexity",
+      "path": "_work_efforts/creative_booklet/06_scientific_paper.pdf",
+      "timestamp": "2026-01-13T02:18:56.363697",
+      "quality_score": 0.9,
+      "gaps": [
+        "No actions identified",
+        "No insights identified"
+      ],
+      "suggestions": [],
+      "style": "Clinical_Standard - Information Entropy as a Measu",
+      "genome_id": "a27d8258626ae585a0f8316ca7a18c79687d6a401efebea2ae1820ef4913e8a0"
+    },
+    {
+      "title": "Information Entropy as a Measure of Code Complexity",
+      "path": "_work_efforts/creative_booklet/06_scientific_paper.pdf",
+      "timestamp": "2026-01-13T02:19:38.172191",
+      "quality_score": 0.9,
+      "gaps": [
+        "No actions identified",
+        "No insights identified"
+      ],
+      "suggestions": [],
+      "style": "Clinical_Standard - Information Entropy as a Measu",
+      "genome_id": "f873d5f96168c0664c9717fb6b46e729839d5120394e0848cb166ec36d40afa4"
+    },
+    {
+      "title": "Information Entropy as a Measure of Code Complexity",
+      "path": "_work_efforts/creative_booklet/06_scientific_paper.pdf",
+      "timestamp": "2026-01-13T02:20:08.668311",
+      "quality_score": 0.9,
+      "gaps": [
+        "No actions identified",
+        "No insights identified"
+      ],
+      "suggestions": [],
+      "style": "Clinical_Standard - Information Entropy as a Measu",
+      "genome_id": "4022b19a03e29c9777be766bc9598a975b109bcc1adfb5ecc7dae1da825236ac"
+    },
+    {
+      "title": "Information Entropy as a Measure of Code Complexity",
+      "path": "_work_efforts/creative_booklet/06_scientific_paper.pdf",
+      "timestamp": "2026-01-13T02:20:26.701297",
+      "quality_score": 0.9,
+      "gaps": [
+        "No actions identified",
+        "No insights identified"
+      ],
+      "suggestions": [],
+      "style": "Clinical_Standard - Information Entropy as a Measu",
+      "genome_id": "2ef4fc1b36a21e4270954410837caaa496eeba20e16e06b07fbc406444a5608e"
     }
   ],
   "hypotheses": [

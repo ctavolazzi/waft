@@ -73,5 +73,13 @@ export const apiClient = {
 	async getGymStats() {
 		const response = await client.get('/api/gym/stats');
 		return response.data;
+	},
+
+	/**
+	 * Cartographer API methods
+	 */
+	async getCartographerData() {
+		const response = await client.get('/api/cartographer');
+		return response.data;
 	}
 };

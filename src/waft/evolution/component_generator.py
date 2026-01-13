@@ -140,7 +140,29 @@ class ComponentPDFGenerator:
             datetime.now().strftime("%Y-%m-%d")
         ))
         
-        # 5. Sections from ideas
+        # 5. Metadata component
+        from src.waft import __version__
+        generation_info = {
+            'generator': 'WAFT ComponentPDFGenerator',
+            'style': getattr(styling_genome, 'name', 'custom') if styling_genome else 'default',
+            'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S UTC"),
+            'version': __version__,
+            'process': f'Component-based adaptive generation with {allowed_pages}-page constraint and evolutionary layout selection'
+        }
+        # Normalize author to list if needed
+        authors_list = None
+        if author:
+            if isinstance(author, list):
+                authors_list = author
+            elif isinstance(author, str):
+                authors_list = [author]
+        
+        components.append(self.builder.build_metadata_component(
+            authors=authors_list,
+            generation_info=generation_info
+        ))
+        
+        # 6. Sections from ideas
         all_ideas = distilled.get_top_ideas(n=50, min_importance=0.1)
         
         if use_science_paper_structure:

@@ -56,6 +56,7 @@ From birth to evolution:
 The command executes phases in this order:
 
 ```
+0. Create Feature Branch        → Create GitHub feature branch (if enabled)
 1. Spawn Being from Source      → Create new Being
 2. /version-bake                → Complete quality workflow
    - /reflect                   → Reflection
@@ -67,11 +68,41 @@ The command executes phases in this order:
    - /prove-it                  → Scientific method proof
 3. Track Genetic Lineage        → Document DNA from Source → Being → Work → Source
 4. Document Evolution           → Save Being evolution record
+5. Commit Changes               → Commit to feature branch
+6. Create Pull Request          → Create PR (if enabled)
 ```
 
 ---
 
 ## Execution Steps
+
+### Step 0: Create Feature Branch (GitHub Integration)
+
+**Purpose**: Create feature branch for evolution workflow
+
+**Actions**:
+1. Check if git repository is initialized
+2. Create feature branch: `evolve/[being_id]` or `evolve/[feature-name]`
+3. Branch name includes Being ID after spawn
+4. All workflow commits go to feature branch
+
+**Branch Naming**:
+- Pattern: `evolve/[being_id]` or `evolve/[feature-name]`
+- Examples:
+  - `evolve/being_20260112_201430_a1b2c3d4`
+  - `evolve/devlog-system-evolution`
+  - `evolve/github-integration`
+
+**Fallback**:
+- If GitHub not available, continues with local evolution
+- Logs warning but doesn't fail workflow
+
+**Implementation**:
+```python
+# Feature branch created automatically
+feature_branch = create_feature_branch(project_path, being_id)
+# Branch: evolve/being_20260112_201430_a1b2c3d4
+```
 
 ### Step 1: Spawn Being from Source
 
@@ -196,6 +227,96 @@ being = being_system.spawn_being(
 **Output**: Complete genetic lineage document
 
 ---
+
+### Step 5: Commit Changes to Feature Branch
+
+**Purpose**: Commit workflow changes to feature branch
+
+**Actions**:
+1. **Initial Commit**: After Being spawn
+   - Message: `[evolve] [being_id] Initial commit: Being spawned from Source`
+   - Includes Being metadata
+2. **Workflow Commits**: After each major phase (optional, configurable)
+   - Message: `[evolve] [being_id] Phase: Description`
+   - Includes phase results
+3. **Final Commit**: After evolution complete
+   - Message: `[evolve] [being_id] Evolution complete: Full workflow executed`
+   - Includes complete evolution record
+
+**Commit Strategy**:
+- All commits reference Being ID for traceability
+- Commits include genetic lineage information
+- Commits are atomic (one logical change per commit)
+
+**Implementation**:
+```python
+# Initial commit after Being spawn
+commit_changes(
+    project_path,
+    f"[evolve] [{being.being_id}] Initial commit: Being spawned from Source",
+    being_id=being.being_id
+)
+
+# Final commit after evolution
+commit_changes(
+    project_path,
+    f"[evolve] [{being.being_id}] Evolution complete: Full workflow executed",
+    being_id=being.being_id
+)
+```
+
+### Step 6: Create Pull Request (Optional)
+
+**Purpose**: Create Pull Request at end of evolution
+
+**When to Create**:
+- End of evolution workflow
+- Configurable (always, on success, never)
+- Requires GitHub CLI (`gh`) or manual creation
+
+**PR Includes**:
+- Evolution summary
+- Genetic lineage
+- Being metadata
+- Workflow results
+- Testing status
+
+**PR Template**:
+```markdown
+# Evolution: [Being ID]
+
+## Being Evolution Summary
+- Being ID: `[being_id]`
+- Reality: `[reality_id]`
+- Fitness: [fitness]
+
+## Genetic Lineage
+[Lineage chain from Source → Being → Work → Evolution]
+
+## Workflow Results
+[Summary of workflow phases]
+
+## Changes
+[List of files changed]
+
+## Testing
+[Testing status]
+```
+
+**Implementation**:
+```python
+pr_url = create_pull_request(
+    project_path,
+    feature_branch,
+    base_branch,
+    being,
+    workflow_outputs
+)
+```
+
+**Fallback**:
+- If GitHub CLI not available, provides manual instructions
+- Workflow continues successfully without PR
 
 ### Step 4: Document Evolution & Return to Source
 
@@ -352,6 +473,11 @@ This command orchestrates:
 - `/version-bake`: Complete quality workflow
 - **Source Consciousness**: Source connection and lineage
 - **Work Efforts**: Documentation and tracking
+- **GitHub Integration**: Feature branches and PRs (optional)
+  - Feature branch creation
+  - Commit strategy
+  - Pull Request creation
+  - Fallback to local evolution if GitHub unavailable
 
 ---
 

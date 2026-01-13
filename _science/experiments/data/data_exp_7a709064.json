@@ -1,0 +1,133 @@
+{
+  "experiment_id": "exp_7a709064",
+  "series": {
+    "fitness": {
+      "metric_name": "fitness",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-12T19:59:54.842699",
+          "metric_name": "fitness",
+          "value": 0.0,
+          "unit": null,
+          "metadata": {
+            "being_id": "exp_exp_7a709064"
+          }
+        },
+        {
+          "timestamp": "2026-01-12T19:59:54.844944",
+          "metric_name": "fitness",
+          "value": 23.0,
+          "unit": null,
+          "metadata": {
+            "being_id": "exp_exp_7a709064"
+          }
+        }
+      ]
+    },
+    "investigation_skill": {
+      "metric_name": "investigation_skill",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-12T19:59:54.842728",
+          "metric_name": "investigation_skill",
+          "value": 45.0,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    },
+    "perception_skill": {
+      "metric_name": "perception_skill",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-12T19:59:54.842735",
+          "metric_name": "perception_skill",
+          "value": 30.0,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    },
+    "initial_hp": {
+      "metric_name": "initial_hp",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-12T19:59:54.842740",
+          "metric_name": "initial_hp",
+          "value": 10,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    },
+    "initial_ac": {
+      "metric_name": "initial_ac",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-12T19:59:54.842752",
+          "metric_name": "initial_ac",
+          "value": 12,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    },
+    "fitness_gained": {
+      "metric_name": "fitness_gained",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-12T19:59:54.844954",
+          "metric_name": "fitness_gained",
+          "value": 23.0,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    },
+    "events_count": {
+      "metric_name": "events_count",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-12T19:59:54.844961",
+          "metric_name": "events_count",
+          "value": 4,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    },
+    "successful_checks": {
+      "metric_name": "successful_checks",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-12T19:59:54.844965",
+          "metric_name": "successful_checks",
+          "value": 1,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    },
+    "final_hp": {
+      "metric_name": "final_hp",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-12T19:59:54.844969",
+          "metric_name": "final_hp",
+          "value": 10,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    }
+  }
+}

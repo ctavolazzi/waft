@@ -40,6 +40,7 @@ dependencies = [
     "pandas>=2.0.0",  # For waft_larva.py data handling
     "pyserial>=3.5",  # For waft_larva.py serial communication
     "markdown>=3.4.0",  # For markdown to HTML conversion in PDF generation
+    "cryptography>=41.0.0",  # For Pyrite secrets encryption
 ]
 
 [project.optional-dependencies]

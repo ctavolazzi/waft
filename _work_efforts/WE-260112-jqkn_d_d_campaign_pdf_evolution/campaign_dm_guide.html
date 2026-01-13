@@ -1,0 +1,412 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Shattered Crown - Dungeon Master's Guide</title>
+
+    <style>
+        /* Strict 2-page setup */
+        @page {
+            size: letter;
+            margin: 25.4mm 25.4mm 25.4mm 25.4mm;
+        }
+
+        body {
+            font-family: 'Times New Roman', 'Times', serif;
+            font-size: 11pt;
+            line-height: 1.4;
+            color: #000000;
+            background: #FFFFFF;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Prevent orphans/widows */
+        p, li {
+            orphans: 2;
+            widows: 2;
+        }
+
+        /* Page break control */
+        .page-break {
+            page-break-after: always;
+            break-after: page;
+        }
+
+        .no-break {
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 16pt;
+            color: #000000;
+            margin-top: 0;
+            margin-bottom: 12pt;
+            page-break-after: avoid;
+            border-bottom: 2pt solid #000000;
+            padding-bottom: 4pt;
+        }
+
+        h2 {
+            font-size: 14pt;
+            color: #000000;
+            margin-top: 12pt;
+            margin-bottom: 8pt;
+            page-break-after: avoid;
+            border-bottom: 1pt solid #000000;
+            padding-bottom: 2pt;
+        }
+
+        h3 {
+            font-size: 12pt;
+            color: #000000;
+            margin-top: 8pt;
+            margin-bottom: 4.0pt;
+            page-break-after: avoid;
+        }
+
+        p {
+            margin: 0 0 8pt 0;
+        }
+
+        ul, ol {
+            margin: 8pt 0 8pt 0;
+            padding-left: 20pt;
+        }
+
+        li {
+            margin-bottom: 4.0pt;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        /* Nested lists */
+        ul ul, ol ol, ul ol, ol ul {
+            margin-top: 4.0pt;
+            margin-bottom: 4.0pt;
+            padding-left: 30pt;
+        }
+
+        /* Visual boxes - inspired by field guide */
+        .note-box {
+            border-left: 4pt solid #000000;
+            background: #f5f5f5;
+            padding: 8pt;
+            margin: 8pt 0;
+            page-break-inside: avoid;
+        }
+
+        .note-title {
+            font-weight: bold;
+            color: #000000;
+            font-size: 11pt;
+            margin-bottom: 4.0pt;
+        }
+
+        .highlight-box {
+            border: 2pt solid #000000;
+            background: #f5f5f5;
+            padding: 8pt;
+            margin: 8pt 0;
+            page-break-inside: avoid;
+        }
+
+        /* Tables for structured data */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 8pt 0;
+            font-size: 10pt;
+            page-break-inside: avoid;
+        }
+
+        th {
+            background: #000000;
+            color: #FFFFFF;
+            border: 1pt solid #000000;
+            padding: 4pt;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            border: 1pt solid #00000033;
+            padding: 4pt;
+        }
+
+        tr:nth-child(even) {
+            background: #f5f5f5;
+        }
+
+        /* Pillar boxes - visual representation */
+        .pillar {
+            border: 2pt solid #000000;
+            background: #FFFFFF;
+            padding: 8pt;
+            margin: 8pt 0;
+            page-break-inside: avoid;
+        }
+
+        .pillar-title {
+            font-weight: bold;
+            color: #000000;
+            font-size: 12pt;
+            margin-bottom: 4.0pt;
+        }
+
+        /* Ideas - prose presentation with varied formatting */
+        .idea {
+            margin-bottom: 9.6pt;
+            padding: 6.4pt 0;
+            page-break-inside: avoid;
+        }
+
+        /* Alternate between different visual styles */
+        .idea:nth-child(odd) {
+            padding-left: 8pt;
+            border-left: 2pt solid #000000;
+            background: #f5f5f510;
+        }
+
+        .idea:nth-child(even) {
+            padding-left: 0;
+            border-left: none;
+            background: transparent;
+            border-top: 1pt solid #00000020;
+            padding-top: 4.8pt;
+            margin-top: 3.2pt;
+        }
+
+        .idea:nth-child(3n) {
+            padding-left: 0;
+            border-left: none;
+            background: #f5f5f508;
+            border-radius: 3pt;
+            padding: 4.8pt;
+        }
+
+        .idea-content {
+            font-size: 11pt;
+            line-height: 1.6;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+            text-align: justify;
+            margin: 0;
+        }
+
+        /* Metadata - compact */
+        .metadata {
+            font-size: 9pt;
+            color: #00000088;
+            line-height: 1.3;
+            border-top: 1pt solid #00000033;
+            padding-top: 4.0pt;
+            margin-top: 8pt;
+        }
+
+        .metadata p {
+            margin-bottom: 2.6666666666666665pt;
+        }
+
+        /* Summary box - prominent */
+        .summary-box {
+            background: #f5f5f5;
+            padding: 8pt;
+            margin-bottom: 12pt;
+            border-left: 4pt solid #000000;
+            border-top: 1pt solid #000000;
+            border-right: 1pt solid #000000;
+            border-bottom: 1pt solid #000000;
+        }
+
+        /* Scientific name styling */
+        .scientific-name {
+            font-style: italic;
+            color: #000000;
+        }
+
+        /* Code blocks */
+        code {
+            font-family: monospace;
+            font-size: 9pt;
+            background: #f5f5f5;
+            color: #000000;
+            padding: 2pt 4pt;
+            border-radius: 2pt;
+        }
+
+        pre {
+            background: #f5f5f5;
+            padding: 4.0pt;
+            border-left: 3pt solid #000000;
+            font-size: 9pt;
+            overflow-x: auto;
+            page-break-inside: avoid;
+        }
+
+        /* Visual separators */
+        .divider {
+            border-top: 1pt solid #00000033;
+            margin: 8pt 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- PAGE 1 -->
+    <div class="page-1">
+        <h1>The Shattered Crown - Dungeon Master's Guide</h1>
+
+        <div class="summary-box">
+            <strong>Summary:</strong> The party must stop Duke Blackwood from completing the ritual to restore the Shattered Crown.
+        </div>
+
+        <div class="metadata">
+            <p><strong>Generated:</strong> 2026-01-13 00:51 UTC | <strong>Ideas Extracted:</strong> 23</p>
+        </div>
+
+        <h2>What Happened</h2>
+
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>The party must stop Duke Blackwood from completing the ritual to restore the Shattered Crown. Final dungeon crawl and epic boss battle.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Key Encounters: Research Challenge - Investigation and History checks Combat: Animated Armor - Medium difficulty Puzzle: The Coded Manuscript - Decipher ancient text Discovery: Location of Temple - Find where the ritual will occur.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Key Encounters: Chase: Through the City - Skill challenge chase Combat: Duke's Agents - Hard encounter Social: Confrontation with Duke - Final social encounter before Act 3 Discovery: Duke Escapes - Sets up Act 3.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Clues to Reveal: The prince is alive but weakened Duke is performing the ritual The party must stop him before it completes.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Key Encounters: Combat: Final Guardians - Very hard encounter Puzzle: The Crown Altar - Final puzzle Combat: Ancient Guardian - Very hard encounter (construct) Discovery: Final Fragment - Recover the last fragment.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Key Encounters: Boss Battle: Duke Blackwood - Epic final encounter Phase 1: Duke with 4 fragments (Hard) Phase 2: Duke with all 5 fragments (Very Hard) Phase 3: Duke transformed (Extreme).</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Resolution Options: Good Ending: Party defeats Duke, saves prince, returns fragments to safety Neutral Ending: Party defeats Duke but fragments are scattered Bad Ending: Duke completes ritual, party must deal with consequences.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>This campaign is designed to be flexible and adaptable. Use this guide as a framework, but don't be afraid to deviate based on player actions and interests. The most important thing is that everyone has fun!</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Clues to Reveal: The ritual is almost complete Duke is in the final chamber The party must act now.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>The campaign revolves around the disappearance of Prince Aldric, the young heir to the throne of Aetheria. As the party investigates, they uncover a conspiracy involving Duke Blackwood, who seeks to seize power by using an ancient artifact known as the Shattered Crown.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Major NPCs: Duke Blackwood (Final Boss) Ancient Guardian (Construct, Neutral) Prince Aldric (Rescued NPC).</p></div>
+        </div>
+        
+    </div>
+
+    <!-- Forced page break -->
+    <div class="page-break"></div>
+
+    <!-- PAGE 2 -->
+    <div class="page-2">
+        
+        <h2>Additional Details</h2>
+
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Clues to Reveal: The cult serves an ancient evil Duke Blackwood is their leader The ritual is almost complete.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Clues to Reveal: The Temple of the Shattered Crown location The ritual requires a blood sacrifice Prince Aldric is the intended sacrifice.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Clues to Reveal: Duke has 4 of 5 fragments The party has 1 fragment The final fragment is in the Temple.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Clues to Reveal: The Temple is a pocket dimension Time moves differently inside Duke is already inside.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Personality: Scholarly, helpful, cautious Goals: Preserve knowledge, stop dark magic Secrets: Knows how to destroy the fragments.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Type: Legendary (when complete), Rare (individual fragments) Properties: Each fragment grants different powers.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Prince Aldric is the intended sacrifice The Temple is a pocket dimension Duke has made a pact with an ancient evil The complete crown corrupts its wielder.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Act 1: Fast-paced investigation and discovery Act 2: Slower, more methodical political intrigue Act 3: High-stakes action and final confrontation.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Allow players to choose their approach Reward creative solutions Adapt to player choices Let players shape the story.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Climax: Final battle with Duke Blackwood and resolution of the campaign.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Rewards: Final fragment 500 gold Legendary magic items.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Notable Encounters: Temple Guardians Shadow Creatures Ancient Guardian Duke Blackwood (final boss).</p></div>
+        </div>
+        
+        
+
+        <div class="divider"></div>
+
+        <div class="metrics">
+            <h3>Content Breakdown</h3>
+            <table>
+                <tr>
+                    <th>Type</th>
+                    <th>Count</th>
+                </tr>
+                <tr>
+                    <td>Decisions</td>
+                    <td>12</td>
+                </tr>
+                <tr>
+                    <td>Insights</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>Actions</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <td>Concepts</td>
+                    <td>4</td>
+                </tr>
+                <tr>
+                    <td>Questions</td>
+                    <td>4</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

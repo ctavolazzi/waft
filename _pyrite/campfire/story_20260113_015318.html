@@ -1,0 +1,296 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Oracle's Silence</title>
+
+    <style>
+        /* Strict 2-page setup */
+        @page {
+            size: letter;
+            margin: 40mm 40mm 40mm 40mm;
+        }
+
+        body {
+            font-family: 'Minion Pro', 'Palatino Linotype', 'Book Antiqua', 'Palatino', serif;
+            font-size: 13pt;
+            line-height: 1.75;
+            color: #1a1a1a;
+            background: #FFFFFF;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Prevent orphans/widows */
+        p, li {
+            orphans: 2;
+            widows: 2;
+        }
+
+        /* Page break control */
+        .page-break {
+            page-break-after: always;
+            break-after: page;
+        }
+
+        .no-break {
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 32pt;
+            color: #000000;
+            margin-top: 0;
+            margin-bottom: 24pt;
+            page-break-after: avoid;
+            border-bottom: 2pt solid #0d47a1;
+            padding-bottom: 4pt;
+        }
+
+        h2 {
+            font-size: 22pt;
+            color: #000000;
+            margin-top: 24pt;
+            margin-bottom: 12pt;
+            page-break-after: avoid;
+            border-bottom: 1pt solid #0d47a1;
+            padding-bottom: 2pt;
+        }
+
+        h3 {
+            font-size: 17pt;
+            color: #000000;
+            margin-top: 12pt;
+            margin-bottom: 6.0pt;
+            page-break-after: avoid;
+        }
+
+        p {
+            margin: 0 0 12pt 0;
+        }
+
+        ul, ol {
+            margin: 12pt 0 12pt 0;
+            padding-left: 20pt;
+        }
+
+        li {
+            margin-bottom: 6.0pt;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        /* Nested lists */
+        ul ul, ol ol, ul ol, ol ul {
+            margin-top: 6.0pt;
+            margin-bottom: 6.0pt;
+            padding-left: 30pt;
+        }
+
+        /* Visual boxes - inspired by field guide */
+        .note-box {
+            border-left: 4pt solid #0d47a1;
+            background: #f5f7fa;
+            padding: 12pt;
+            margin: 12pt 0;
+            page-break-inside: avoid;
+        }
+
+        .note-title {
+            font-weight: bold;
+            color: #0d47a1;
+            font-size: 16pt;
+            margin-bottom: 6.0pt;
+        }
+
+        .highlight-box {
+            border: 2pt solid #0d47a1;
+            background: #f5f7fa;
+            padding: 12pt;
+            margin: 12pt 0;
+            page-break-inside: avoid;
+        }
+
+        /* Tables for structured data */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12pt 0;
+            font-size: 12pt;
+            page-break-inside: avoid;
+        }
+
+        th {
+            background: #000000;
+            color: #FFFFFF;
+            border: 1pt solid #1a1a1a;
+            padding: 4pt;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            border: 1pt solid #1a1a1a33;
+            padding: 4pt;
+        }
+
+        tr:nth-child(even) {
+            background: #f5f7fa;
+        }
+
+        /* Pillar boxes - visual representation */
+        .pillar {
+            border: 2pt solid #0d47a1;
+            background: #FFFFFF;
+            padding: 12pt;
+            margin: 12pt 0;
+            page-break-inside: avoid;
+        }
+
+        .pillar-title {
+            font-weight: bold;
+            color: #0d47a1;
+            font-size: 17pt;
+            margin-bottom: 6.0pt;
+        }
+
+        /* Ideas - prose presentation with varied formatting */
+        .idea {
+            margin-bottom: 14.399999999999999pt;
+            padding: 9.600000000000001pt 0;
+            page-break-inside: avoid;
+        }
+
+        /* Alternate between different visual styles */
+        .idea:nth-child(odd) {
+            padding-left: 12pt;
+            border-left: 2pt solid #0d47a1;
+            background: #f5f7fa10;
+        }
+
+        .idea:nth-child(even) {
+            padding-left: 0;
+            border-left: none;
+            background: transparent;
+            border-top: 1pt solid #1a1a1a20;
+            padding-top: 7.199999999999999pt;
+            margin-top: 4.800000000000001pt;
+        }
+
+        .idea:nth-child(3n) {
+            padding-left: 0;
+            border-left: none;
+            background: #f5f7fa08;
+            border-radius: 3pt;
+            padding: 7.199999999999999pt;
+        }
+
+        .idea-content {
+            font-size: 13pt;
+            line-height: 1.6;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+            text-align: justify;
+            margin: 0;
+        }
+
+        /* Metadata - compact */
+        .metadata {
+            font-size: 11pt;
+            color: #1a1a1a88;
+            line-height: 1.3;
+            border-top: 1pt solid #1a1a1a33;
+            padding-top: 6.0pt;
+            margin-top: 12pt;
+        }
+
+        .metadata p {
+            margin-bottom: 4.0pt;
+        }
+
+        /* Summary box - prominent */
+        .summary-box {
+            background: #f5f7fa;
+            padding: 12pt;
+            margin-bottom: 24pt;
+            border-left: 4pt solid #0d47a1;
+            border-top: 1pt solid #0d47a1;
+            border-right: 1pt solid #0d47a1;
+            border-bottom: 1pt solid #0d47a1;
+        }
+
+        /* Scientific name styling */
+        .scientific-name {
+            font-style: italic;
+            color: #0d47a1;
+        }
+
+        /* Code blocks */
+        code {
+            font-family: monospace;
+            font-size: 11pt;
+            background: #f5f7fa;
+            color: #1e3a5f;
+            padding: 2pt 4pt;
+            border-radius: 2pt;
+        }
+
+        pre {
+            background: #f5f7fa;
+            padding: 6.0pt;
+            border-left: 3pt solid #0d47a1;
+            font-size: 11pt;
+            overflow-x: auto;
+            page-break-inside: avoid;
+        }
+
+        /* Visual separators */
+        .divider {
+            border-top: 1pt solid #1a1a1a33;
+            margin: 12pt 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- PAGE 1 -->
+    <div class="page-1">
+        <h1>The Oracle's Silence</h1>
+
+        <div class="summary-box">
+            <strong>Summary:</strong> To awaken TheOracle, one must first initialize Empirica, the foundation of epistemic intelligence.
+        </div>
+
+        <div class="metadata">
+            <p><strong>Generated:</strong> 2026-01-13 09:53 UTC | <strong>Ideas Extracted:</strong> 2</p>
+        </div>
+
+        <h2>What Happened</h2>
+
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>To awaken TheOracle, one must first initialize Empirica, the foundation of epistemic intelligence..</p></div>
+        </div>
+        
+    </div>
+
+    <!-- Forced page break -->
+    <div class="page-break"></div>
+
+    <!-- PAGE 2 -->
+    <div class="page-2">
+        
+        <h2>Additional Details</h2>
+
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>In this moment, the system existed in a state of potential—waiting for the first spark of epistemic awareness. The repository held its breath, ready to begin the journey of learning and discovery..</p></div>
+        </div>
+        
+        
+    </div>
+</body>
+</html>

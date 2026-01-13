@@ -1,0 +1,1102 @@
+[
+  {
+    "session_num": 1,
+    "character_name": "EpicHero_001",
+    "choices": [
+      "4",
+      "y",
+      "2"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:11:56.142213"
+  },
+  {
+    "session_num": 2,
+    "character_name": "EpicHero_002",
+    "choices": [
+      "4",
+      "y",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:11:56.897930"
+  },
+  {
+    "session_num": 3,
+    "character_name": "EpicHero_003",
+    "choices": [
+      "4",
+      "n",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:11:57.680766"
+  },
+  {
+    "session_num": 4,
+    "character_name": "EpicHero_004",
+    "choices": [
+      "3",
+      "n",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:11:58.689618"
+  },
+  {
+    "session_num": 5,
+    "character_name": "EpicHero_005",
+    "choices": [
+      "1",
+      "n",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:11:59.437964"
+  },
+  {
+    "session_num": 6,
+    "character_name": "EpicHero_006",
+    "choices": [
+      "1",
+      "y",
+      "2"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:00.308801"
+  },
+  {
+    "session_num": 7,
+    "character_name": "EpicHero_007",
+    "choices": [
+      "1",
+      "y",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:01.277216"
+  },
+  {
+    "session_num": 8,
+    "character_name": "EpicHero_008",
+    "choices": [
+      "4",
+      "n",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:02.383944"
+  },
+  {
+    "session_num": 9,
+    "character_name": "EpicHero_009",
+    "choices": [
+      "4",
+      "y",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:03.439544"
+  },
+  {
+    "session_num": 10,
+    "character_name": "EpicHero_010",
+    "choices": [
+      "2",
+      "n",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:04.229906"
+  },
+  {
+    "session_num": 11,
+    "character_name": "EpicHero_011",
+    "choices": [
+      "1",
+      "y",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:04.984514"
+  },
+  {
+    "session_num": 12,
+    "character_name": "EpicHero_012",
+    "choices": [
+      "1",
+      "y",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:05.763388"
+  },
+  {
+    "session_num": 13,
+    "character_name": "EpicHero_013",
+    "choices": [
+      "3",
+      "n",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:06.637283"
+  },
+  {
+    "session_num": 14,
+    "character_name": "EpicHero_014",
+    "choices": [
+      "1",
+      "n",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:07.483694"
+  },
+  {
+    "session_num": 15,
+    "character_name": "EpicHero_015",
+    "choices": [
+      "3",
+      "y",
+      "2"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:08.417846"
+  },
+  {
+    "session_num": 16,
+    "character_name": "EpicHero_016",
+    "choices": [
+      "2",
+      "n",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:09.239431"
+  },
+  {
+    "session_num": 17,
+    "character_name": "EpicHero_017",
+    "choices": [
+      "2",
+      "y",
+      "2"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:10.030003"
+  },
+  {
+    "session_num": 18,
+    "character_name": "EpicHero_018",
+    "choices": [
+      "3",
+      "n",
+      "2"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:10.840749"
+  },
+  {
+    "session_num": 19,
+    "character_name": "EpicHero_019",
+    "choices": [
+      "2",
+      "n",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:11.658369"
+  },
+  {
+    "session_num": 20,
+    "character_name": "EpicHero_020",
+    "choices": [
+      "2",
+      "n",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:12.969578"
+  },
+  {
+    "session_num": 21,
+    "character_name": "EpicHero_021",
+    "choices": [
+      "3",
+      "y",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:14.325427"
+  },
+  {
+    "session_num": 22,
+    "character_name": "EpicHero_022",
+    "choices": [
+      "1",
+      "n",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:15.613233"
+  },
+  {
+    "session_num": 23,
+    "character_name": "EpicHero_023",
+    "choices": [
+      "2",
+      "n",
+      "2"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:16.885612"
+  },
+  {
+    "session_num": 24,
+    "character_name": "EpicHero_024",
+    "choices": [
+      "2",
+      "n",
+      "2"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:18.219773"
+  },
+  {
+    "session_num": 25,
+    "character_name": "EpicHero_025",
+    "choices": [
+      "4",
+      "y",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:19.567054"
+  },
+  {
+    "session_num": 26,
+    "character_name": "EpicHero_026",
+    "choices": [
+      "3",
+      "n",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:21.209120"
+  },
+  {
+    "session_num": 27,
+    "character_name": "EpicHero_027",
+    "choices": [
+      "2",
+      "y",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:22.978960"
+  },
+  {
+    "session_num": 28,
+    "character_name": "EpicHero_028",
+    "choices": [
+      "2",
+      "y",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:24.566631"
+  },
+  {
+    "session_num": 29,
+    "character_name": "EpicHero_029",
+    "choices": [
+      "3",
+      "n",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:26.052427"
+  },
+  {
+    "session_num": 30,
+    "character_name": "EpicHero_030",
+    "choices": [
+      "4",
+      "y",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:28.066216"
+  },
+  {
+    "session_num": 31,
+    "character_name": "EpicHero_031",
+    "choices": [
+      "4",
+      "y",
+      "2"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:29.620974"
+  },
+  {
+    "session_num": 32,
+    "character_name": "EpicHero_032",
+    "choices": [
+      "3",
+      "y",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:31.139441"
+  },
+  {
+    "session_num": 33,
+    "character_name": "EpicHero_033",
+    "choices": [
+      "3",
+      "n",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:32.555815"
+  },
+  {
+    "session_num": 34,
+    "character_name": "EpicHero_034",
+    "choices": [
+      "2",
+      "n",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:34.122047"
+  },
+  {
+    "session_num": 35,
+    "character_name": "EpicHero_035",
+    "choices": [
+      "4",
+      "n",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:35.665303"
+  },
+  {
+    "session_num": 36,
+    "character_name": "EpicHero_036",
+    "choices": [
+      "2",
+      "y",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:37.134963"
+  },
+  {
+    "session_num": 37,
+    "character_name": "EpicHero_037",
+    "choices": [
+      "3",
+      "y",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:39.967044"
+  },
+  {
+    "session_num": 38,
+    "character_name": "EpicHero_038",
+    "choices": [
+      "4",
+      "n",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:42.822685"
+  },
+  {
+    "session_num": 39,
+    "character_name": "EpicHero_039",
+    "choices": [
+      "4",
+      "n",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:44.988499"
+  },
+  {
+    "session_num": 40,
+    "character_name": "EpicHero_040",
+    "choices": [
+      "1",
+      "y",
+      "2"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:47.069703"
+  },
+  {
+    "session_num": 41,
+    "character_name": "EpicHero_041",
+    "choices": [
+      "3",
+      "n",
+      "2"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:48.958278"
+  },
+  {
+    "session_num": 42,
+    "character_name": "EpicHero_042",
+    "choices": [
+      "3",
+      "y",
+      "2"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:51.041542"
+  },
+  {
+    "session_num": 43,
+    "character_name": "EpicHero_043",
+    "choices": [
+      "3",
+      "y",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:54.759942"
+  },
+  {
+    "session_num": 44,
+    "character_name": "EpicHero_044",
+    "choices": [
+      "2",
+      "n",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:12:59.666201"
+  },
+  {
+    "session_num": 45,
+    "character_name": "EpicHero_045",
+    "choices": [
+      "3",
+      "n",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:13:03.499427"
+  },
+  {
+    "session_num": 46,
+    "character_name": "EpicHero_046",
+    "choices": [
+      "1",
+      "n",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:13:06.028704"
+  },
+  {
+    "session_num": 47,
+    "character_name": "EpicHero_047",
+    "choices": [
+      "3",
+      "n",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:13:08.965722"
+  },
+  {
+    "session_num": 48,
+    "character_name": "EpicHero_048",
+    "choices": [
+      "4",
+      "n",
+      "2"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:13:11.786083"
+  },
+  {
+    "session_num": 49,
+    "character_name": "EpicHero_049",
+    "choices": [
+      "2",
+      "y",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:13:13.739602"
+  },
+  {
+    "session_num": 50,
+    "character_name": "EpicHero_050",
+    "choices": [
+      "2",
+      "n",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:13:15.784230"
+  },
+  {
+    "session_num": 51,
+    "character_name": "EpicHero_051",
+    "choices": [
+      "1",
+      "y",
+      "2"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:13:17.299815"
+  },
+  {
+    "session_num": 52,
+    "character_name": "EpicHero_052",
+    "choices": [
+      "4",
+      "y",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:13:19.538766"
+  },
+  {
+    "session_num": 53,
+    "character_name": "EpicHero_053",
+    "choices": [
+      "3",
+      "y",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:13:21.725436"
+  },
+  {
+    "session_num": 54,
+    "character_name": "EpicHero_054",
+    "choices": [
+      "4",
+      "y",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:13:23.862257"
+  },
+  {
+    "session_num": 55,
+    "character_name": "EpicHero_055",
+    "choices": [
+      "4",
+      "n",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:13:26.397407"
+  },
+  {
+    "session_num": 56,
+    "character_name": "EpicHero_056",
+    "choices": [
+      "4",
+      "y",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:13:28.122036"
+  },
+  {
+    "session_num": 57,
+    "character_name": "EpicHero_057",
+    "choices": [
+      "3",
+      "y",
+      "2"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:13:29.824163"
+  },
+  {
+    "session_num": 58,
+    "character_name": "EpicHero_058",
+    "choices": [
+      "1",
+      "y",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:13:31.570847"
+  },
+  {
+    "session_num": 59,
+    "character_name": "EpicHero_059",
+    "choices": [
+      "1",
+      "y",
+      "2"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:13:33.175336"
+  },
+  {
+    "session_num": 60,
+    "character_name": "EpicHero_060",
+    "choices": [
+      "2",
+      "y",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:13:35.082199"
+  },
+  {
+    "session_num": 61,
+    "character_name": "EpicHero_061",
+    "choices": [
+      "2",
+      "n",
+      "2"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:13:37.122963"
+  },
+  {
+    "session_num": 62,
+    "character_name": "EpicHero_062",
+    "choices": [
+      "1",
+      "y",
+      "2"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:13:39.288229"
+  },
+  {
+    "session_num": 63,
+    "character_name": "EpicHero_063",
+    "choices": [
+      "1",
+      "n",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:13:41.598913"
+  },
+  {
+    "session_num": 64,
+    "character_name": "EpicHero_064",
+    "choices": [
+      "4",
+      "n",
+      "2"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:13:44.977066"
+  },
+  {
+    "session_num": 65,
+    "character_name": "EpicHero_065",
+    "choices": [
+      "1",
+      "y",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:13:48.029924"
+  },
+  {
+    "session_num": 66,
+    "character_name": "EpicHero_066",
+    "choices": [
+      "1",
+      "n",
+      "2"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:13:50.488803"
+  },
+  {
+    "session_num": 67,
+    "character_name": "EpicHero_067",
+    "choices": [
+      "2",
+      "y",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:13:53.328577"
+  },
+  {
+    "session_num": 68,
+    "character_name": "EpicHero_068",
+    "choices": [
+      "1",
+      "n",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:13:55.677239"
+  },
+  {
+    "session_num": 69,
+    "character_name": "EpicHero_069",
+    "choices": [
+      "4",
+      "y",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:13:57.725511"
+  },
+  {
+    "session_num": 70,
+    "character_name": "EpicHero_070",
+    "choices": [
+      "2",
+      "n",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:13:59.919877"
+  },
+  {
+    "session_num": 71,
+    "character_name": "EpicHero_071",
+    "choices": [
+      "4",
+      "y",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:14:02.075464"
+  },
+  {
+    "session_num": 72,
+    "character_name": "EpicHero_072",
+    "choices": [
+      "1",
+      "n",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:14:04.313016"
+  },
+  {
+    "session_num": 73,
+    "character_name": "EpicHero_073",
+    "choices": [
+      "3",
+      "n",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:14:05.722349"
+  },
+  {
+    "session_num": 74,
+    "character_name": "EpicHero_074",
+    "choices": [
+      "2",
+      "y",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:14:07.834518"
+  },
+  {
+    "session_num": 75,
+    "character_name": "EpicHero_075",
+    "choices": [
+      "1",
+      "y",
+      "2"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:14:09.559772"
+  },
+  {
+    "session_num": 76,
+    "character_name": "EpicHero_076",
+    "choices": [
+      "4",
+      "n",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:14:11.339297"
+  },
+  {
+    "session_num": 77,
+    "character_name": "EpicHero_077",
+    "choices": [
+      "3",
+      "y",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:14:13.166679"
+  },
+  {
+    "session_num": 78,
+    "character_name": "EpicHero_078",
+    "choices": [
+      "2",
+      "y",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:14:15.010129"
+  },
+  {
+    "session_num": 79,
+    "character_name": "EpicHero_079",
+    "choices": [
+      "2",
+      "y",
+      "2"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:14:16.651557"
+  },
+  {
+    "session_num": 80,
+    "character_name": "EpicHero_080",
+    "choices": [
+      "3",
+      "y",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:14:18.217194"
+  },
+  {
+    "session_num": 81,
+    "character_name": "EpicHero_081",
+    "choices": [
+      "4",
+      "n",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:14:21.343560"
+  },
+  {
+    "session_num": 82,
+    "character_name": "EpicHero_082",
+    "choices": [
+      "3",
+      "y",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:14:23.740999"
+  },
+  {
+    "session_num": 83,
+    "character_name": "EpicHero_083",
+    "choices": [
+      "1",
+      "y",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:14:26.542763"
+  },
+  {
+    "session_num": 84,
+    "character_name": "EpicHero_084",
+    "choices": [
+      "4",
+      "n",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:14:28.559733"
+  },
+  {
+    "session_num": 85,
+    "character_name": "EpicHero_085",
+    "choices": [
+      "2",
+      "n",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:14:29.848565"
+  },
+  {
+    "session_num": 86,
+    "character_name": "EpicHero_086",
+    "choices": [
+      "3",
+      "n",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:14:31.209712"
+  },
+  {
+    "session_num": 87,
+    "character_name": "EpicHero_087",
+    "choices": [
+      "3",
+      "n",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:14:32.847299"
+  },
+  {
+    "session_num": 88,
+    "character_name": "EpicHero_088",
+    "choices": [
+      "1",
+      "n",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:14:34.719646"
+  },
+  {
+    "session_num": 89,
+    "character_name": "EpicHero_089",
+    "choices": [
+      "2",
+      "y",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:14:36.683905"
+  },
+  {
+    "session_num": 90,
+    "character_name": "EpicHero_090",
+    "choices": [
+      "4",
+      "n",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:14:37.916552"
+  },
+  {
+    "session_num": 91,
+    "character_name": "EpicHero_091",
+    "choices": [
+      "2",
+      "n",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:14:39.129667"
+  },
+  {
+    "session_num": 92,
+    "character_name": "EpicHero_092",
+    "choices": [
+      "1",
+      "n",
+      "2"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:14:40.278351"
+  },
+  {
+    "session_num": 93,
+    "character_name": "EpicHero_093",
+    "choices": [
+      "4",
+      "y",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:14:41.476406"
+  },
+  {
+    "session_num": 94,
+    "character_name": "EpicHero_094",
+    "choices": [
+      "1",
+      "y",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:14:43.097314"
+  },
+  {
+    "session_num": 95,
+    "character_name": "EpicHero_095",
+    "choices": [
+      "3",
+      "n",
+      "2"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:14:45.074823"
+  },
+  {
+    "session_num": 96,
+    "character_name": "EpicHero_096",
+    "choices": [
+      "1",
+      "y",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:14:46.497816"
+  },
+  {
+    "session_num": 97,
+    "character_name": "EpicHero_097",
+    "choices": [
+      "1",
+      "n",
+      "2"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:14:47.839217"
+  },
+  {
+    "session_num": 98,
+    "character_name": "EpicHero_098",
+    "choices": [
+      "4",
+      "n",
+      "3"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:14:49.159169"
+  },
+  {
+    "session_num": 99,
+    "character_name": "EpicHero_099",
+    "choices": [
+      "2",
+      "n",
+      "2"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:14:50.801763"
+  },
+  {
+    "session_num": 100,
+    "character_name": "EpicHero_100",
+    "choices": [
+      "4",
+      "n",
+      "1"
+    ],
+    "success": false,
+    "timestamp": "2026-01-13T02:14:53.301017"
+  }
+]
