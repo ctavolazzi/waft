@@ -1,0 +1,15 @@
+{
+  "role_key": "housekeeping",
+  "role_name": "Housekeeping",
+  "being_id": "being_20260113_091631_ff584bd5",
+  "custom_name": "Martha",
+  "reality_id": "treasure_tavern_inn",
+  "initial_skills": {
+    "organization": 25.0,
+    "refactoring": 20.0,
+    "code_structure": 22.0,
+    "tidying": 28.0
+  },
+  "personality_type": "perfectionist",
+  "spawned_at": "2026-01-13T09:16:34.342098"
+}

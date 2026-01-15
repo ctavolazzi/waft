@@ -1,6 +1,6 @@
 # /pdf-me - PDF Generator from Markdown
 
-**Purpose:** Generate professional PDFs from markdown files and optionally print them.
+**Purpose:** Generate professional PDFs from markdown files and open them (not print).
 
 **Usage:** `/pdf-me <file_path> [options]`
 
@@ -16,8 +16,7 @@ The PDF-me command generates professional PDFs from markdown files using WAFT's 
 - Generate PDFs from any markdown file
 - Professional formatting (clinical_standard style)
 - Automatic title detection
-- Optional printing
-- Opens PDF in Preview automatically
+- Opens PDF in Preview automatically (not prints)
 
 ---
 
@@ -33,13 +32,14 @@ The PDF-me command generates professional PDFs from markdown files using WAFT's 
 /pdf-me _work_efforts/PLAN_BOOKLET_CREATOR_INTEGRATION.md title:"Booklet Plan"
 ```
 
-### Print PDF
+### Open PDF (Default)
 ```
 /pdf-me _work_efforts/PLAN_BOOKLET_CREATOR_INTEGRATION.md
-/print-PDF
 ```
 
-**Note:** The `/pdf-me` command no longer has a `--print` flag. Use `/print-PDF` to print PDFs intelligently based on context.
+The PDF will be generated and automatically opened in Preview (not printed).
+
+**Note:** To print PDFs, use `/print-PDF` command separately.
 
 ### Specify Output Path
 ```
@@ -83,8 +83,7 @@ The PDF-me command generates professional PDFs from markdown files using WAFT's 
 ### Optional
 - **`--title "Title"`** or **`title:"Title"`**: Custom PDF title (default: extracted from filename)
 - **`--output <path>`**: Custom output path (default: same directory as input with `.pdf` extension)
-- **`--print`**: ❌ **REMOVED** - Use `/print-PDF` command instead for intelligent printing
-- **`--no-open`**: Don't open PDF in Preview (default: opens automatically)
+- **`--no-open`**: Don't open PDF automatically (default: opens in Preview)
 - **`--style <style>`**: PDF style (default: `clinical_standard`, options: `clinical_standard`, `premium`, `professional`)
 
 ---
@@ -106,19 +105,23 @@ The PDF-me command generates professional PDFs from markdown files using WAFT's 
 
 ## Implementation
 
-The command uses WAFT's `PDFGenerator` class:
+The command uses WAFT's `PDFGenerator` class with proper title escaping:
 
 ```python
 from pathlib import Path
 from src.waft.evolution.pdf_generator import PDFGenerator
+from src.waft.utils import escape_title_for_pdf
 
 # Read markdown file
 content = Path(file_path).read_text()
 
-# Generate PDF
+# Generate PDF with properly escaped title
+title_raw = title or extract_title(file_path)
+title_escaped = escape_title_for_pdf(title_raw)  # Handles special chars like /, -, etc.
+
 generator = PDFGenerator.from_content(
     content=content,
-    title=title or extract_title(file_path),
+    title=title_escaped,
     style=style or "clinical_standard"
 )
 
@@ -126,11 +129,18 @@ generator = PDFGenerator.from_content(
 output_path = output or Path(file_path).with_suffix('.pdf')
 generator.save(output_path, open_pdf=not no_open)
 
-# Print if requested
-if print_pdf:
+# Open PDF (not print)
+if not no_open:
     import subprocess
-    subprocess.run(['lp', str(output_path)])
+    subprocess.run(['open', str(output_path)])  # macOS
+    # Or 'xdg-open' for Linux, 'start' for Windows
 ```
+
+**Special Character Handling:**
+- All titles are automatically escaped for HTML/PDF rendering
+- Special characters like `/`, `-`, `_`, `(`, `)`, etc. render correctly
+- HTML special characters (`< > & " '`) are properly escaped
+- See `/within-reason` command for details
 
 ---
 

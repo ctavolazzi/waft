@@ -1,0 +1,15 @@
+{
+  "role_key": "janitor",
+  "role_name": "Janitor",
+  "being_id": "being_20260113_091634_ff584bd5",
+  "custom_name": "Carl",
+  "reality_id": "treasure_tavern_inn",
+  "initial_skills": {
+    "cleanup": 30.0,
+    "error_handling": 25.0,
+    "reactive_fixes": 28.0,
+    "temporary_cleanup": 32.0
+  },
+  "personality_type": "reactive",
+  "spawned_at": "2026-01-13T09:16:37.475957"
+}

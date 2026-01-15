@@ -1,0 +1,159 @@
+---
+name: v0.1.0 Release (Corrected)
+overview: Merge 3 unmerged branches, bump to v0.1.0, update README and docs, delete 5 stale branches, deploy to Cloudflare.
+todos:
+  - id: sync-main
+    content: Pull origin/main to sync local (16 commits behind)
+    status: pending
+  - id: merge-3-branches
+    content: Merge feature-void-audit, tech-debt, testimonials branches
+    status: pending
+  - id: version-bump
+    content: Update package.json version to 0.1.0
+    status: pending
+  - id: write-readme
+    content: Write complete README.md (currently empty)
+    status: pending
+  - id: update-changelog
+    content: Consolidate CHANGELOG.md for v0.1.0
+    status: pending
+  - id: update-tech-debt
+    content: Mark fixed items in TECH_DEBT.md
+    status: pending
+  - id: build-test
+    content: Run build and verify site works
+    status: pending
+  - id: delete-branches
+    content: Delete 8 stale remote branches
+    status: pending
+  - id: deploy-cloudflare
+    content: Push and deploy to Cloudflare
+    status: pending
+
+category: dreads
+confidence: 0.90
+constellation_date: 2026-01-14
+---
+
+# v0.1.0 Release Plan (Corrected)
+
+## Current State (Verified)
+- **origin/main:** v0.0.4 with wiki content already merged (31 pages)
+- **Local main:** 16 commits behind origin/main
+- **Target version:** 0.1.0
+
+## Branches to Merge (3)
+
+| Order | Branch | Content |
+|-------|--------|---------|
+| 1 | `feature-void-audit-A47jp` | FEATURE_VOID_AUDIT.md (new file, no conflicts) |
+| 2 | `identify-tech-debt-DcxVD` | ESLint config, error handling, TECH_DEBT.md updates |
+| 3 | `testimonials-social-proof-A47jp` | Testimonials section, CHANGELOG.md |
+
+## Branches to Delete (5)
+
+**Already Merged:**
+- `claude/bump-version-uWIiQ` (PR #7)
+- `claude/document-api-architecture-NisEt` (PR #5)
+- `claude/mcp-monitoring-system-jATXw` (PR #6)
+- `claude/sleep-animation-effects-njYxu` (PR #4)
+
+**Empty:**
+- `claude/security-audit-AwDy6`
+
+---
+
+## Execution Steps
+
+### Phase 1: Sync Local
+
+```bash
+cd /Users/ctavolazzi/Code/fogsift
+git checkout main
+git pull origin main
+```
+
+### Phase 2: Merge 3 Branches
+
+```bash
+# 1. Feature void audit (docs only - clean merge)
+git merge origin/claude/feature-void-audit-A47jp -m "Merge feature-void-audit for v0.1.0"
+
+# 2. Tech debt (ESLint + fixes)
+git merge origin/claude/identify-tech-debt-DcxVD -m "Merge tech-debt fixes for v0.1.0"
+
+# 3. Testimonials (UI + changelog)
+git merge origin/claude/testimonials-social-proof-A47jp -m "Merge testimonials for v0.1.0"
+```
+
+Resolve conflicts preferring branch changes.
+
+### Phase 3: Version Bump + Docs
+
+1. **[`package.json`](package.json)** - Update version `0.0.4` -> `0.1.0`
+
+2. **[`README.md`](README.md)** - Complete rewrite (currently just `# fogsift`):
+   - Project description and value prop
+   - Features (wiki, testimonials, consulting services)
+   - Tech stack (vanilla HTML/CSS/JS, Cloudflare Pages)
+   - Quick start / development setup
+   - Deployment instructions
+   - Links to live site and documentation
+
+3. **[`CHANGELOG.md`](CHANGELOG.md)** - Consolidate into v0.1.0 entry with all changes
+
+4. **[`TECH_DEBT.md`](TECH_DEBT.md)** - Mark newly fixed items as complete
+
+### Phase 4: Build and Test
+
+```bash
+npm run build
+# Test with browser tools
+```
+
+### Phase 5: Commit and Push
+
+```bash
+git add .
+git commit -m "release: v0.1.0 - Testimonials, tech debt fixes, feature audit"
+git push origin main
+```
+
+### Phase 6: Cleanup Branches
+
+```bash
+git push origin --delete claude/bump-version-uWIiQ
+git push origin --delete claude/document-api-architecture-NisEt
+git push origin --delete claude/mcp-monitoring-system-jATXw
+git push origin --delete claude/sleep-animation-effects-njYxu
+git push origin --delete claude/security-audit-AwDy6
+git push origin --delete claude/feature-void-audit-A47jp
+git push origin --delete claude/identify-tech-debt-DcxVD
+git push origin --delete claude/testimonials-social-proof-A47jp
+```
+
+### Phase 7: Deploy
+
+```bash
+npm run deploy
+```
+
+---
+
+## Summary
+
+| Action | Count |
+|--------|-------|
+| Branches to merge | 3 |
+| Branches to delete | 8 (5 stale + 3 newly merged) |
+| Files to update | 4 (package.json, README, CHANGELOG, TECH_DEBT) |
+| Final version | 0.1.0 |
+
+## v0.1.0 Will Include
+
+- 31-page wiki (already in main)
+- Testimonials section with social proof
+- ESLint configuration
+- Error handling improvements
+- Feature void audit document
+- Updated documentation

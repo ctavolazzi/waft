@@ -17,8 +17,10 @@ from pathlib import Path
 from typing import Optional, Dict, Any, List
 from datetime import datetime
 import html as html_module
+import re
 
 from .templates.brief import generate_brief_document
+from .utils import escape_title_for_pdf, escape_title_for_filename
 
 
 class BriefDocument:
@@ -43,6 +45,7 @@ class BriefDocument:
         cover_warning: Optional[Dict[str, str]] = None,
         cover_signature: Optional[Dict[str, str]] = None,
         cover_footer: Optional[str] = None,
+        cover_badge: Optional[str] = None,
         include_system_status: bool = True,
         chat_context: Optional[Dict[str, Any]] = None
     ):
@@ -59,6 +62,7 @@ class BriefDocument:
             cover_warning: Dict with 'message' and 'severity' for cover warning
             cover_signature: Dict with 'role', 'name', 'date' for cover signature
             cover_footer: Footer text for cover
+            cover_badge: Optional corner badge text (e.g., "V1.0", "DRAFT")
             include_system_status: Whether to gather system status
             chat_context: Optional dict with chat context
         """
@@ -71,6 +75,7 @@ class BriefDocument:
         self.cover_warning = cover_warning
         self.cover_signature = cover_signature
         self.cover_footer = cover_footer
+        self.cover_badge = cover_badge
         self.include_system_status = include_system_status
         self.chat_context = chat_context or {}
 
@@ -124,38 +129,89 @@ class BriefDocument:
         self.content_blocks.append(html_str)
         return self
 
-    def add_markdown(self, markdown: str):
-        """Add markdown content (simple conversion)."""
-        lines = markdown.split('\n')
-        html_parts = []
-        in_list = False
+    def add_markdown(self, markdown_content: str):
+        """Add markdown content with proper code block support."""
+        try:
+            import markdown as md_lib
+            html_content = md_lib.markdown(
+                markdown_content,
+                extensions=[
+                    'fenced_code',
+                    'tables',
+                    'nl2br',
+                    'extra',
+                    'codehilite'
+                ],
+                extension_configs={
+                    'codehilite': {
+                        'css_class': 'highlight',
+                        'use_pygments': True,
+                        'linenums': True
+                    }
+                }
+            )
+            self.content_blocks.append(html_content)
+        except ImportError:
+            # Fallback: simple conversion without markdown library
+            lines = markdown_content.split('\n')
+            html_parts = []
+            in_list = False
+            in_code = False
+            code_lines = []
+            code_lang = ''
 
-        for line in lines:
-            if line.startswith('# '):
-                html_parts.append(f"<h2>{html_module.escape(line[2:].strip())}</h2>")
-            elif line.startswith('## '):
-                html_parts.append(f"<h3>{html_module.escape(line[3:].strip())}</h3>")
-            elif line.startswith('### '):
-                html_parts.append(f"<h4>{html_module.escape(line[4:].strip())}</h4>")
-            elif line.startswith('- ') or line.startswith('* '):
-                if not in_list:
-                    html_parts.append('<ul>')
-                    in_list = True
-                html_parts.append(f"<li>{html_module.escape(line[2:].strip())}</li>")
-            elif line.strip() == '':
-                if in_list:
-                    html_parts.append('</ul>')
-                    in_list = False
-            else:
-                if in_list:
-                    html_parts.append('</ul>')
-                    in_list = False
-                html_parts.append(f"<p>{html_module.escape(line.strip())}</p>")
+            for line in lines:
+                # Code block start
+                if line.startswith('```'):
+                    if in_code:
+                        # End code block
+                        code_content = '\n'.join(code_lines)
+                        html_parts.append(f'<pre><code class="language-{code_lang}">{html_module.escape(code_content)}</code></pre>')
+                        code_lines = []
+                        code_lang = ''
+                        in_code = False
+                    else:
+                        # Start code block
+                        code_lang = line[3:].strip() or 'text'
+                        in_code = True
+                    continue
+                
+                if in_code:
+                    code_lines.append(line)
+                    continue
+                
+                # Headers
+                if line.startswith('# '):
+                    html_parts.append(f"<h2>{html_module.escape(line[2:].strip())}</h2>")
+                elif line.startswith('## '):
+                    html_parts.append(f"<h3>{html_module.escape(line[3:].strip())}</h3>")
+                elif line.startswith('### '):
+                    html_parts.append(f"<h4>{html_module.escape(line[4:].strip())}</h4>")
+                elif line.startswith('- ') or line.startswith('* '):
+                    if not in_list:
+                        html_parts.append('<ul>')
+                        in_list = True
+                    html_parts.append(f"<li>{html_module.escape(line[2:].strip())}</li>")
+                elif line.strip() == '':
+                    if in_list:
+                        html_parts.append('</ul>')
+                        in_list = False
+                else:
+                    if in_list:
+                        html_parts.append('</ul>')
+                        in_list = False
+                    # Inline code
+                    line_escaped = re.sub(r'`([^`]+)`', r'<code>\1</code>', html_module.escape(line))
+                    html_parts.append(f"<p>{line_escaped}</p>")
 
-        if in_list:
-            html_parts.append('</ul>')
+            if in_list:
+                html_parts.append('</ul>')
+            if in_code:
+                code_content = '\n'.join(code_lines)
+                html_parts.append(f'<pre><code class="language-{code_lang}">{html_module.escape(code_content)}</code></pre>')
 
-        self.content_blocks.append('\n'.join(html_parts))
+            self.content_blocks.append('\n'.join(html_parts))
+        
         return self
 
     def _build_briefing_content(self) -> str:
@@ -232,7 +288,8 @@ class BriefDocument:
             Path to generated PDF
         """
         if output_path is None:
-            safe_title = self.title.replace(' ', '_').replace('/', '_')[:50]
+            # Use proper filename escaping (preserves title for PDF, escapes for filename)
+            safe_title = escape_title_for_filename(self.title)[:50]
             output_path = Path(f"_work_efforts/briefs/{safe_title}_{datetime.now().strftime('%Y%m%d')}.pdf")
 
         output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -249,19 +306,24 @@ class BriefDocument:
             if briefing_content:
                 content_html += '\n' + briefing_content
 
+        # Escape title for PDF rendering (preserves special chars like /, -, etc.)
+        title_escaped = escape_title_for_pdf(self.title)
+        subtitle_escaped = escape_title_for_pdf(self.subtitle) if self.subtitle else None
+        
         # Generate PDF
         return generate_brief_document(
-            title=self.title,
+            title=title_escaped,
             content=content_html,
             output_path=output_path,
             doc_id=self.doc_id,
-            subtitle=self.subtitle,
+            subtitle=subtitle_escaped,
             classification=self.classification,
             cover_header=self.cover_header,
             cover_metadata=self.cover_metadata,
             cover_warning=self.cover_warning,
             cover_signature=self.cover_signature,
-            cover_footer=self.cover_footer
+            cover_footer=self.cover_footer,
+            cover_badge=self.cover_badge
         )
 
 

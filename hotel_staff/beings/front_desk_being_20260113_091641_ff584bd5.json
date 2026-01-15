@@ -1,0 +1,15 @@
+{
+  "role_key": "front_desk",
+  "role_name": "Front Desk",
+  "being_id": "being_20260113_091641_ff584bd5",
+  "custom_name": "Sarah",
+  "reality_id": "treasure_tavern_inn",
+  "initial_skills": {
+    "request_handling": 28.0,
+    "routing": 30.0,
+    "professionalism": 32.0,
+    "efficiency": 30.0
+  },
+  "personality_type": "professional",
+  "spawned_at": "2026-01-13T09:16:43.692656"
+}

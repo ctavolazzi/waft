@@ -29,6 +29,192 @@ from src.waft.core.check_assumptions import CheckAssumptionsManager
 from src.waft.core.session_stats import SessionStats
 
 
+def generate_informative_title(claim: str, verdict: str = None) -> str:
+    """
+    Generate an informative title from a claim.
+    
+    Extracts key information and creates a concise, descriptive title
+    that conveys what the case is about.
+    
+    Args:
+        claim: The claim statement
+        verdict: Optional verdict (PROVEN/DISPROVEN/INCONCLUSIVE)
+    
+    Returns:
+        A concise, informative title
+    """
+    import re
+    
+    claim = claim.strip()
+    if not claim:
+        return "Proof Case"
+    
+    # Pattern 1: Extract subject and key action/outcome
+    # Match patterns like "The X [verb] Y" or "X [verb] Y"
+    pattern = re.match(
+        r'^(?:The\s+)?(.+?)\s+(?:now\s+)?(?:displays|shows|generates|creates|implements|supports|provides|includes|uses|contains|accepts|returns|handles|processes|renders|outputs|prints|saves|loads|reads|writes|executes|runs|performs|completes|finishes|starts|begins|ends|stops|removes|adds|updates|modifies|changes|fixes|corrects|improves|enhances|optimizes|refactors|replaces|deletes|has|is|does)\s+(.+?)(?:\.|$|instead of)',
+        claim,
+        re.IGNORECASE
+    )
+    
+    if pattern:
+        subject = pattern.group(1).strip()
+        outcome = pattern.group(2).strip()
+        
+        # Clean subject - remove generic terms if redundant
+        subject = re.sub(r'\s+(generator|system|tool|module|component|feature)$', '', subject, flags=re.IGNORECASE)
+        
+        # Clean outcome - remove "been" and other weak words, take meaningful content
+        outcome = re.sub(r'^(?:been|is|are|was|were)\s+', '', outcome, flags=re.IGNORECASE)
+        outcome = outcome.strip()
+        
+        # If outcome is still weak, try to extract what was actually done
+        if len(outcome) < 5 or outcome.lower() in ['implemented', 'created', 'added', 'done']:
+            # Look for what comes after "instead of" or in parentheses
+            instead_of = re.search(r'instead of\s+(.+)', claim, re.IGNORECASE)
+            if instead_of:
+                outcome = f"replaces {instead_of.group(1).strip()}"
+            else:
+                # Use the subject as the main focus
+                title = subject
+                if verdict:
+                    title = f"{title} ({verdict})"
+                if len(title) > 75:
+                    title = title[:72] + "..."
+                return title
+        
+        # Handle parentheses in outcome - preserve them carefully
+        paren_match = re.search(r'\(([^)]+)\)', outcome)
+        paren_content = paren_match.group(1) if paren_match else None
+        
+        # Extract the part before "instead of" if present (that's usually the key info)
+        instead_of_match = re.search(r'instead of', outcome, re.IGNORECASE)
+        if instead_of_match:
+            outcome = outcome[:instead_of_match.start()].strip()
+        
+        # If we have parentheses, preserve the whole phrase containing them
+        if paren_content:
+            # Find the full phrase with parentheses (up to 50 chars before paren)
+            paren_start = outcome.find('(')
+            if paren_start > 0:
+                # Get text before parentheses, limit to key words
+                before_paren = outcome[:paren_start].strip()
+                words = before_paren.split()
+                # Keep meaningful words (skip articles, but keep important short words like "AI")
+                important = [w for w in words if (len(w) > 3 or w.upper() in ['AI', 'UI', 'API', 'PDF', 'XML', 'JSON']) and w.lower() not in ['the', 'and', 'for', 'with', 'from', 'now']][:4]
+                before_paren = ' '.join(important) if important else ' '.join(words[:4]) if words else before_paren[:30]
+            else:
+                before_paren = ""
+            
+            # Limit paren content if too long (keep it informative)
+            if len(paren_content) > 35:
+                paren_words = paren_content.split()
+                # Keep first few meaningful words
+                paren_content = ' '.join(paren_words[:5])
+            
+            outcome = f"{before_paren} ({paren_content})".strip() if before_paren else f"({paren_content})"
+        else:
+            # No parentheses - take first meaningful phrase, limit to key words
+            # Split on common separators but take the first substantial part
+            parts = re.split(r'[,\s]+(?:and|or|but|with|without|for|to|from|by|via|through|using|instead)', outcome, maxsplit=1)
+            main_part = parts[0].strip() if parts else outcome
+            words = main_part.split()
+            # Keep meaningful words (include important short words like "AI")
+            important = [w for w in words if (len(w) > 3 or w.upper() in ['AI', 'UI', 'API', 'PDF', 'XML', 'JSON']) and w.lower() not in ['the', 'and', 'for', 'with', 'from', 'now']][:4]
+            outcome = ' '.join(important) if important else ' '.join(words[:4]) if words else main_part[:40]
+        
+        title = f"{subject}: {outcome}"
+        
+    else:
+        # Pattern 2: Extract commands/features in parentheses (often the key feature)
+        paren_match = re.search(r'\(([^)]+)\)', claim)
+        if paren_match:
+            feature = paren_match.group(1)
+            # Get the main part before parentheses
+            main = re.sub(r'\([^)]+\)', '', claim).strip()
+            main = re.sub(r'^(?:The\s+)?', '', main, flags=re.IGNORECASE)
+            
+            # Extract subject from main part
+            subject_match = re.match(r'^(.+?)\s+(?:has|is|was|does|can|will|should|must)', main, re.IGNORECASE)
+            if subject_match:
+                subject = subject_match.group(1).strip()
+                # Remove generic terms
+                subject = re.sub(r'\s+(generator|system|tool|module|component|feature)$', '', subject, flags=re.IGNORECASE)
+                title = f"{subject}: {feature}"
+            else:
+                main = main.split('.')[0].strip()
+                if main and len(main) > 10:
+                    title = f"{main} - {feature}"
+                else:
+                    title = feature
+        else:
+            # Pattern 3: Simple extraction - first sentence or key phrase
+            # Remove leading articles
+            claim_clean = re.sub(r'^(?:The\s+|A\s+|An\s+)', '', claim, flags=re.IGNORECASE)
+            
+            # Take first sentence or first 70 chars at word boundary
+            if '.' in claim_clean:
+                title = claim_clean.split('.')[0].strip()
+            else:
+                words = claim_clean.split()
+                title_parts = []
+                for word in words:
+                    test_title = ' '.join(title_parts + [word])
+                    if len(test_title) <= 70:
+                        title_parts.append(word)
+                    else:
+                        break
+                title = ' '.join(title_parts) if title_parts else claim_clean[:70]
+    
+    # Clean up title
+    title = title.strip()
+    if not title or len(title) < 5:
+        title = "Proof Case"
+    
+    # Add verdict if provided and title is meaningful
+    if verdict and title != "Proof Case":
+        title = f"{title} ({verdict})"
+    
+    # Final length check - ensure it fits on cover page
+    # But be smarter about preserving parentheses
+    if len(title) > 75:
+        # If title has parentheses, try to preserve them
+        paren_match = re.search(r'\(([^)]+)\)', title)
+        if paren_match:
+            # Keep the part before parentheses and the parentheses
+            before_paren = title[:title.find('(')].strip()
+            paren_part = f"({paren_match.group(1)})"
+            
+            # Limit before_paren to fit
+            if len(before_paren) + len(paren_part) + 3 > 75:  # +3 for spaces
+                words = before_paren.split()
+                truncated = []
+                for word in words:
+                    test = ' '.join(truncated + [word]) + ' ' + paren_part
+                    if len(test) <= 72:
+                        truncated.append(word)
+                    else:
+                        break
+                before_paren = ' '.join(truncated) if truncated else before_paren[:50]
+            
+            title = f"{before_paren} {paren_part}".strip()
+        else:
+            # No parentheses - truncate at word boundary
+            words = title.split()
+            truncated = []
+            for word in words:
+                test = ' '.join(truncated + [word])
+                if len(test) <= 72:
+                    truncated.append(word)
+                else:
+                    break
+            title = ' '.join(truncated)
+            if len(title) < len(' '.join(words[:len(truncated)])):
+                title += "..."
+    
+    return title
+
+
 class ProofCaseBuilder:
     """Builds a comprehensive proof case with evidence."""
     
@@ -724,14 +910,17 @@ class ProofCaseBuilder:
         # Use BriefDocument directly to add markdown content
         from src.waft.brief import BriefDocument
         
+        # Generate informative title
+        informative_title = generate_informative_title(self.claim, self.verdict)
+        
         doc = BriefDocument(
-            title=f"PROOF CASE: {self.claim[:60]}",
+            title=informative_title,
             doc_id=f"PROOF-{timestamp}",
             subtitle=f"Verdict: {self.verdict} | Confidence: {self.confidence:.1%}",
             classification=classification,
             cover_header="PROOF CASE BRIEF",
             cover_metadata={
-                "CLAIM": self.claim[:100],
+                "CLAIM": self.claim[:100] if len(self.claim) > 100 else self.claim,
                 "VERDICT": self.verdict,
                 "CONFIDENCE": f"{self.confidence:.1%}",
                 "DATE": datetime.now().strftime("%Y-%m-%d %H:%M:%S")

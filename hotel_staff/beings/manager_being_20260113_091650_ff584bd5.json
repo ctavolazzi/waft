@@ -1,0 +1,15 @@
+{
+  "role_key": "manager",
+  "role_name": "Manager",
+  "being_id": "being_20260113_091650_ff584bd5",
+  "custom_name": "Marcus",
+  "reality_id": "treasure_tavern_inn",
+  "initial_skills": {
+    "orchestration": 35.0,
+    "coordination": 32.0,
+    "leadership": 30.0,
+    "workflow_management": 28.0
+  },
+  "personality_type": "leadership",
+  "spawned_at": "2026-01-13T09:16:52.874249"
+}

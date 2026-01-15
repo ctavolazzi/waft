@@ -1,0 +1,15 @@
+{
+  "role_key": "bellhop",
+  "role_name": "Bellhop",
+  "being_id": "being_20260113_091643_ff584bd5",
+  "custom_name": "Tommy",
+  "reality_id": "treasure_tavern_inn",
+  "initial_skills": {
+    "file_operations": 28.0,
+    "data_transfer": 30.0,
+    "careful_handling": 32.0,
+    "detail_oriented": 28.0
+  },
+  "personality_type": "energetic",
+  "spawned_at": "2026-01-13T09:16:46.238050"
+}

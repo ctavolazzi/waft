@@ -319,7 +319,9 @@ class ScienceBitchManager:
                 email=metadata.get("email"),
                 conference="arXiv",
                 year=metadata.get("year", str(datetime.now().year)),
-                references=metadata.get("references")
+                references=metadata.get("references"),
+                model_name=metadata.get("model_name", "Auto"),
+                generation_date=datetime.now().strftime("%Y-%m-%d %H:%M")
             )
             
             if generated_path and generated_path.exists():
@@ -1037,7 +1039,9 @@ This research used the Science-Bitch scientific method workflow tool, which impl
                 email=metadata.get("email"),
                 conference="arXiv",
                 year=metadata.get("year", str(datetime.now().year)),
-                references=metadata.get("references")
+                references=metadata.get("references"),
+                model_name=metadata.get("model_name", "Auto"),
+                generation_date=datetime.now().strftime("%Y-%m-%d %H:%M")
             )
             
             if generated_path and generated_path.exists():
@@ -1105,7 +1109,9 @@ This research used the Science-Bitch scientific method workflow tool, which impl
                 email=metadata.get("email"),
                 conference="arXiv",
                 year=metadata.get("year", str(datetime.now().year)),
-                references=metadata.get("references")
+                references=metadata.get("references"),
+                model_name=metadata.get("model_name", "Auto"),
+                generation_date=datetime.now().strftime("%Y-%m-%d %H:%M")
             )
             
             if generated_path and generated_path.exists():

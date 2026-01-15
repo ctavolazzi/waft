@@ -2940,6 +2940,169 @@ def campfire(
         raise typer.Exit(1)
 
 
+# RAG Chatbot Commands
+rag_app = typer.Typer(name="rag", help="RAG Chatbot - Query PDFs with AI")
+
+@rag_app.command("query")
+def rag_query(
+    question: str = typer.Argument(..., help="Question to ask"),
+    pdfs: Optional[str] = typer.Option(None, "--pdfs", "-p", help="Comma-separated list of PDF paths"),
+    path: Optional[str] = typer.Option(None, "--path", help="Project path (default: current)"),
+):
+    """
+    Query RAG chatbot with a question.
+    
+    Examples:
+        waft rag query "What is WAFT?" --pdfs docs/welcome_packet/WAFT_WELCOME_PACKET.pdf
+        waft rag query "How do agents work?" --pdfs docs/**,_work_efforts/**
+    """
+    project_path = resolve_project_path(path)
+    
+    try:
+        from .rag import RAGChatbot
+        
+        console.print(f"\n[bold cyan]🤖[/bold cyan] [bold]RAG Chatbot[/bold]\n")
+        
+        chatbot = RAGChatbot(project_path=project_path)
+        
+        # Parse PDF paths
+        pdf_list = []
+        if pdfs:
+            pdf_list = [p.strip() for p in pdfs.split(",")]
+        
+        # Query
+        console.print(f"[dim]Question:[/dim] {question}")
+        if pdf_list:
+            console.print(f"[dim]PDFs:[/dim] {', '.join(pdf_list)}")
+        
+        console.print("\n[dim]Querying...[/dim]")
+        answer = chatbot.query(question=question, pdfs=pdf_list if pdf_list else None)
+        
+        console.print(f"\n[bold]Answer:[/bold]\n{answer}\n")
+        
+    except Exception as e:
+        console.print(f"[red]❌ Error:[/red] {e}")
+        logger.exception("Error querying RAG")
+        raise typer.Exit(1)
+
+
+@rag_app.command("index")
+def rag_index(
+    pdfs: str = typer.Argument(..., help="Comma-separated list of PDF paths or directories"),
+    path: Optional[str] = typer.Option(None, "--path", help="Project path (default: current)"),
+):
+    """
+    Index PDFs into the vector store.
+    
+    Examples:
+        waft rag index docs/welcome_packet/WAFT_WELCOME_PACKET.pdf
+        waft rag index docs/**,_work_efforts/briefs/**
+    """
+    project_path = resolve_project_path(path)
+    
+    try:
+        from .rag import RAGChatbot
+        from pathlib import Path
+        
+        console.print(f"\n[bold cyan]📚[/bold cyan] [bold]RAG Indexing[/bold]\n")
+        
+        chatbot = RAGChatbot(project_path=project_path)
+        
+        # Parse paths
+        path_list = [p.strip() for p in pdfs.split(",")]
+        
+        # Index
+        console.print(f"[dim]Indexing {len(path_list)} path(s)...[/dim]")
+        for pdf_path in path_list:
+            p = Path(pdf_path)
+            if not p.is_absolute():
+                p = project_path / p
+            
+            if p.is_file() and p.suffix.lower() == ".pdf":
+                chatbot.add_pdfs([str(p)])
+                console.print(f"[green]✓[/green] Indexed: {p.name}")
+            elif p.is_dir():
+                chatbot.index_path(p)
+                pdf_count = len(list(p.rglob("*.pdf")))
+                console.print(f"[green]✓[/green] Indexed {pdf_count} PDF(s) from: {p}")
+            else:
+                console.print(f"[yellow]⚠[/yellow]  Skipped (not a PDF or directory): {p}")
+        
+        indexed = chatbot.get_indexed_files()
+        console.print(f"\n[green]✅[/green] Indexing complete. {len(indexed)} file(s) indexed.")
+        
+    except Exception as e:
+        console.print(f"[red]❌ Error:[/red] {e}")
+        logger.exception("Error indexing PDFs")
+        raise typer.Exit(1)
+
+
+@rag_app.command("ui")
+def rag_ui(
+    path: Optional[str] = typer.Option(None, "--path", help="Project path (default: current)"),
+    port: int = typer.Option(7860, "--port", help="Port to serve on (default: 7860)"),
+    host: str = typer.Option("0.0.0.0", "--host", help="Host to bind to (default: 0.0.0.0)"),
+):
+    """
+    Launch RAG Chatbot Gradio UI.
+    
+    Opens an interactive web interface for querying PDFs.
+    """
+    project_path = resolve_project_path(path)
+    
+    try:
+        import sys
+        from pathlib import Path
+        
+        # Add rag-chatbot to path
+        rag_chatbot_path = project_path / "_integrations" / "rag-chatbot"
+        if str(rag_chatbot_path) not in sys.path:
+            sys.path.insert(0, str(rag_chatbot_path))
+        
+        from rag_chatbot import LocalRAGPipeline
+        from rag_chatbot.ui.ui import LocalChatbotUI
+        from rag_chatbot.logger import Logger
+        
+        console.print(f"\n[bold cyan]🎨[/bold cyan] [bold]RAG Chatbot UI[/bold]\n")
+        console.print(f"[dim]Starting Gradio interface on http://{host}:{port}[/dim]\n")
+        
+        pipeline = LocalRAGPipeline(host="localhost")
+        logger = Logger()
+        ui = LocalChatbotUI(
+            pipeline=pipeline,
+            logger=logger,
+            host="localhost",
+            data_dir=str(project_path / "_hidden" / ".truth" / "rag" / "data"),
+        )
+        
+        ui.launch(server_name=host, server_port=port, share=False)
+        
+    except KeyboardInterrupt:
+        console.print("\n[dim]UI stopped.[/dim]")
+    except Exception as e:
+        console.print(f"[red]❌ Error:[/red] {e}")
+        logger.exception("Error launching RAG UI")
+        raise typer.Exit(1)
+
+
+@rag_app.command("serve")
+def rag_serve(
+    path: Optional[str] = typer.Option(None, "--path", help="Project path (default: current)"),
+    port: int = typer.Option(7860, "--port", help="Port to serve on (default: 7860)"),
+    host: str = typer.Option("0.0.0.0", "--host", help="Host to bind to (default: 0.0.0.0)"),
+):
+    """
+    Serve RAG Chatbot API (alias for 'ui' command).
+    
+    Serves the RAG chatbot with both UI and API access.
+    """
+    rag_ui(path=path, port=port, host=host)
+
+
+# Register rag subcommand
+app.add_typer(rag_app)
+
+
 def main():
     """Entry point for the waft CLI."""
     app()

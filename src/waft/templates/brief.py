@@ -77,6 +77,7 @@ BRIEF_TEMPLATE = """
             background: #fff;
             text-align: center;
             page-break-after: always;
+            position: relative;
         }
 
         .cover-header {
@@ -94,8 +95,14 @@ BRIEF_TEMPLATE = """
             font-size: 22pt;
             font-weight: bold;
             text-transform: uppercase;
-            line-height: 1.2;
+            line-height: 1.4;
             margin-bottom: 0.2in;
+            margin-top: 0.1in;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+            max-width: 100%;
+            padding: 0.05in 0;
         }
 
         .cover-subtitle {
@@ -217,6 +224,34 @@ BRIEF_TEMPLATE = """
             color: #666;
         }
 
+        /* Corner Badge (Cover) */
+        .corner-badge {
+            position: absolute;
+            top: 0.2in;
+            right: 0.2in;
+            background: #000;
+            color: #fff;
+            padding: 0.15in 0.25in;
+            font-family: 'Courier New', monospace;
+            font-size: 8pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            border: 2px solid #000;
+            transform: rotate(0deg);
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .corner-badge::before {
+            content: "";
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border: 1px solid #fff;
+            z-index: -1;
+        }
+
         /* Content Pages */
         .content-page {
             margin-top: 0.2in;
@@ -312,6 +347,47 @@ BRIEF_TEMPLATE = """
             text-align: justify;
         }
 
+        /* Code Blocks */
+        pre {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-left: 4px solid #06c;
+            padding: 0.15in;
+            margin: 0.15in 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 9pt;
+            line-height: 1.4;
+            page-break-inside: avoid;
+        }
+
+        code {
+            font-family: 'Courier New', monospace;
+            font-size: 9pt;
+            background: #f5f5f5;
+            padding: 0.02in 0.05in;
+            border-radius: 2px;
+        }
+
+        pre code {
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+            display: block;
+        }
+
+        /* Code highlighting (basic) */
+        .highlight {
+            background: #f5f5f5;
+        }
+
+        .highlight .k { color: #0000ff; } /* Keywords */
+        .highlight .s { color: #008000; } /* Strings */
+        .highlight .c { color: #808080; font-style: italic; } /* Comments */
+        .highlight .n { color: #000000; } /* Names */
+        .highlight .o { color: #000000; } /* Operators */
+        .highlight .p { color: #000000; } /* Punctuation */
+
         /* Note Box */
         .note {
             border-left: 4px solid #06c;
@@ -341,24 +417,28 @@ BRIEF_TEMPLATE = """
 <body>
     <!-- Cover Page -->
     <div class="cover-page">
-        {% if cover_header %}
-        <div class="cover-header">{{ cover_header }}</div>
+        {% if cover_badge %}
+        <div class="corner-badge">{{ cover_badge }}</div>
         {% endif %}
         
-        <div class="cover-title">{{ title }}</div>
+        {% if cover_header %}
+        <div class="cover-header">{{ cover_header | e }}</div>
+        {% endif %}
+        
+        <div class="cover-title">{{ title | e }}</div>
         
         {% if subtitle %}
-        <div class="cover-subtitle">{{ subtitle }}</div>
+        <div class="cover-subtitle">{{ subtitle | e }}</div>
         {% endif %}
         
-        <div class="cover-doc-id">{{ doc_id }}</div>
+        <div class="cover-doc-id">{{ doc_id | e }}</div>
         
         {% if cover_metadata %}
         <div class="keyvalue-block">
             {% for key, value in cover_metadata.items() %}
             <div class="keyvalue-item">
-                <span class="keyvalue-key">{{ key }}:</span>
-                <span class="keyvalue-value">{{ value }}</span>
+                <span class="keyvalue-key">{{ key | e }}:</span>
+                <span class="keyvalue-value">{{ value | e }}</span>
             </div>
             {% endfor %}
         </div>
@@ -366,18 +446,18 @@ BRIEF_TEMPLATE = """
         
         {% if cover_warning %}
         <div class="warning-block {{ cover_warning.severity|lower }}">
-            <div class="warning-title">{{ cover_warning.severity }}</div>
-            <p>{{ cover_warning.message }}</p>
+            <div class="warning-title">{{ cover_warning.severity | e }}</div>
+            <p>{{ cover_warning.message | e }}</p>
         </div>
         {% endif %}
         
         {% if cover_signature %}
         <div class="signature-block">
             <div class="signature-line">
-                <div class="signature-role">{{ cover_signature.role }}</div>
-                <div class="signature-name">{{ cover_signature.name }}</div>
+                <div class="signature-role">{{ cover_signature.role | e }}</div>
+                <div class="signature-name">{{ cover_signature.name | e }}</div>
                 {% if cover_signature.date %}
-                <div class="signature-date">{{ cover_signature.date }}</div>
+                <div class="signature-date">{{ cover_signature.date | e }}</div>
                 {% endif %}
             </div>
         </div>
@@ -385,7 +465,7 @@ BRIEF_TEMPLATE = """
         
         {% if cover_footer %}
         <div class="cover-footer">
-            {{ cover_footer }}
+            {{ cover_footer | e }}
         </div>
         {% endif %}
     </div>
@@ -410,7 +490,8 @@ def generate_brief_document(
     cover_metadata: dict = None,
     cover_warning: dict = None,
     cover_signature: dict = None,
-    cover_footer: str = None
+    cover_footer: str = None,
+    cover_badge: str = None
 ) -> Path:
     """
     Generate a full brief document with cover page (TM-ARCH-009 style).
@@ -427,6 +508,7 @@ def generate_brief_document(
         cover_warning: Dict with 'message' and 'severity' for cover warning
         cover_signature: Dict with 'role', 'name', 'date' for cover signature
         cover_footer: Footer text for cover (e.g., "INTERNAL USE ONLY")
+        cover_badge: Optional corner badge text (e.g., "V1.0", "DRAFT", "CONFIDENTIAL")
 
     Returns:
         Path to generated PDF
@@ -444,7 +526,8 @@ def generate_brief_document(
         cover_metadata=cover_metadata,
         cover_warning=cover_warning,
         cover_signature=cover_signature,
-        cover_footer=cover_footer
+        cover_footer=cover_footer,
+        cover_badge=cover_badge
     )
 
     HTML(string=html_output).write_pdf(output_path)

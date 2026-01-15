@@ -1,0 +1,50 @@
+{
+  "genome_id": "e6a97506e62f8339846fde9332d62b5e434e965a6eb75bf5c05ec4b6a27457df",
+  "genes": {
+    "font": {
+      "family": "'Times New Roman', 'Times', serif",
+      "size_body": 11,
+      "size_h1": 16,
+      "size_h2": 14,
+      "size_h3": 12,
+      "size_code": 9,
+      "line_height": 1.4
+    },
+    "margin": {
+      "top": 25.4,
+      "bottom": 25.4,
+      "left": 25.4,
+      "right": 25.4,
+      "paragraph_spacing": 8,
+      "section_spacing": 12
+    },
+    "color": {
+      "text": "#000000",
+      "background": "#FFFFFF",
+      "heading": "#000000",
+      "accent": "#000000",
+      "code_bg": "#f5f5f5",
+      "code_text": "#000000",
+      "border": "#cccccc"
+    },
+    "layout": {
+      "columns": 1,
+      "density": "normal",
+      "toc_enabled": false,
+      "page_numbers": true,
+      "header_enabled": true,
+      "footer_enabled": true
+    },
+    "name": "Clinical_Standard - PROOF CASE CASE-20260114_11085",
+    "description": ""
+  },
+  "generation": 0,
+  "parent_id": null,
+  "lineage_path": [
+    "e6a97506e62f8339846fde9332d62b5e434e965a6eb75bf5c05ec4b6a27457df"
+  ],
+  "scientific_name": "Nexus Slow, the Weak",
+  "fitness_score": null,
+  "created_at": "2026-01-14T19:17:13.087849",
+  "last_evaluated_at": null
+}

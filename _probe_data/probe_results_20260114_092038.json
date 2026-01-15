@@ -1,0 +1,169 @@
+{
+  "timestamp": "2026-01-14T09:20:38.732334",
+  "total_probes": 10,
+  "results": [
+    {
+      "probe_type": "http_get",
+      "target": "http://localhost:8507",
+      "timestamp": "2026-01-14T09:20:38.722346",
+      "success": true,
+      "data": {
+        "status_code": 200,
+        "headers": {
+          "Server": "TornadoServer/6.5.4",
+          "Content-Type": "text/html",
+          "Date": "Wed, 14 Jan 2026 17:20:38 GMT",
+          "Accept-Ranges": "bytes",
+          "Etag": "\"7c4233bbfa23a23484cee74d3acdd552ab463803b8cf432c1c1dd47ea7a07b3287eb08a0353f28010b7cb4e56c6cdc510096ff493bbfb6898658b96801f4cf07\"",
+          "Last-Modified": "Tue, 13 Jan 2026 09:17:45 GMT",
+          "Cache-Control": "no-cache",
+          "Vary": "Accept-Encoding",
+          "Content-Encoding": "gzip",
+          "Transfer-Encoding": "chunked"
+        },
+        "content_type": "text/html",
+        "content_length": 1522,
+        "url": "http://localhost:8507/",
+        "text_preview": "<!--\n Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022-2025)\n\n Licensed under the Apache License, Version 2.0 (the \"License\");\n you may not use this file except in compliance with the License.\n You may obtain a copy of the License at\n\n     http://www.apache.org/licenses/LICENSE-2.0\n\n Unless required by applicable law or agreed to in writing, software\n distributed under the License is distributed on an \"AS IS\" BASIS,\n WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or im"
+      },
+      "error": null,
+      "duration_ms": 16.175031661987305
+    },
+    {
+      "probe_type": "http_get",
+      "target": "http://localhost:8000/api/health",
+      "timestamp": "2026-01-14T09:20:38.725700",
+      "success": false,
+      "data": {},
+      "error": "HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /api/health (Caused by NewConnectionError(\"HTTPConnection(host='localhost', port=8000): Failed to establish a new connection: [Errno 61] Connection refused\"))",
+      "duration_ms": 3.2248497009277344
+    },
+    {
+      "probe_type": "http_get",
+      "target": "http://localhost:8501",
+      "timestamp": "2026-01-14T09:20:38.727914",
+      "success": false,
+      "data": {},
+      "error": "HTTPConnectionPool(host='localhost', port=8501): Max retries exceeded with url: / (Caused by NewConnectionError(\"HTTPConnection(host='localhost', port=8501): Failed to establish a new connection: [Errno 61] Connection refused\"))",
+      "duration_ms": 2.1839141845703125
+    },
+    {
+      "probe_type": "filesystem",
+      "target": "good_morning.py",
+      "timestamp": "2026-01-14T09:20:38.729054",
+      "success": true,
+      "data": {
+        "type": "file",
+        "size": 22497,
+        "modified": "2026-01-13T08:20:55.803783",
+        "extension": ".py",
+        "preview": "\"\"\"\nGood Morning - WAFT Morning Briefing Dashboard\n\nEntry point to the WAFT ecosystem showing:\n- Activity since 5 AM previous day (TheChronicler observations)\n- Work efforts status with details\n- System health\n- Oracle insights\n- Activity visualizations\n- Quick actions\n",
+        "total_lines": 596
+      },
+      "error": null,
+      "duration_ms": 1.1126995086669922
+    },
+    {
+      "probe_type": "filesystem",
+      "target": "src/waft/core/probe.py",
+      "timestamp": "2026-01-14T09:20:38.729358",
+      "success": true,
+      "data": {
+        "type": "file",
+        "size": 11241,
+        "modified": "2026-01-14T09:20:12.479312",
+        "extension": ".py",
+        "preview": "\"\"\"\nProbe System - Pokey Stick for Testing and Exploration\n\nA flexible system for probing services, endpoints, files, and collecting data.\nThe \"pokey stick\" for poking at things and seeing what they are.\n\"\"\"\n\nimport json\nimport time\nimport socket\n",
+        "total_lines": 329
+      },
+      "error": null,
+      "duration_ms": 0.2899169921875
+    },
+    {
+      "probe_type": "filesystem",
+      "target": "_work_efforts",
+      "timestamp": "2026-01-14T09:20:38.730674",
+      "success": true,
+      "data": {
+        "type": "directory",
+        "item_count": 325,
+        "items": [
+          "WE-260111-6vzd_github_project_installation_exploration_template",
+          "showcase_temp",
+          "WAFT_SPECIMEN_D_AUDIT_v2.pdf",
+          "ORIENTATION_SUMMARY_2026-01-06_v2.md",
+          "CURRENT_STATE_AND_DIRECTION.md",
+          "WE-260106-ivnd_complete_tavern_keeper_system",
+          "COMPLETE_CYCLE_FINAL_SUMMARY.md",
+          "WE-260112-ccw3_voting_system_and_thecouncil_town_court_system",
+          "CHECKPOINT_2026-01-11_one_pager_evolution.md",
+          "PROJECT_STARTUP_PROCESS.md",
+          "ONE_PAGER_STUDY_GYM_INTEGRATION.md",
+          "WE-260113-tya7_local_rag_self_evolution_integration",
+          "PHASE_1_TESTING_COMPLETE.md",
+          "AI_ORIENTATION_RECAP.md",
+          "chat_session_2026-01-11_summary.md",
+          "NEXT_STEPS_2026-01-11_PDF_SCIENTIFIC_EVOLUTION.md",
+          "RUN_IT_WORKFLOW_COMPLETE_2026-01-13.md",
+          "KARMIC_WAGER_SYSTEM_COMPLETE.md",
+          "WORK_EFFORT_TOOL_BAG_STANDARD.md",
+          "SESSION_RECAP_2026-01-12.md"
+        ]
+      },
+      "error": null,
+      "duration_ms": 1.3082027435302734
+    },
+    {
+      "probe_type": "service",
+      "target": "localhost:8507",
+      "timestamp": "2026-01-14T09:20:38.731147",
+      "success": true,
+      "data": {
+        "host": "localhost",
+        "port": 8507,
+        "open": true
+      },
+      "error": null,
+      "duration_ms": 0.4107952117919922
+    },
+    {
+      "probe_type": "service",
+      "target": "localhost:8000",
+      "timestamp": "2026-01-14T09:20:38.731422",
+      "success": false,
+      "data": {
+        "host": "localhost",
+        "port": 8000,
+        "open": false
+      },
+      "error": null,
+      "duration_ms": 0.2658367156982422
+    },
+    {
+      "probe_type": "service",
+      "target": "localhost:8501",
+      "timestamp": "2026-01-14T09:20:38.731696",
+      "success": false,
+      "data": {
+        "host": "localhost",
+        "port": 8501,
+        "open": false
+      },
+      "error": null,
+      "duration_ms": 0.2682209014892578
+    },
+    {
+      "probe_type": "service",
+      "target": "localhost:5432",
+      "timestamp": "2026-01-14T09:20:38.732004",
+      "success": false,
+      "data": {
+        "host": "localhost",
+        "port": 5432,
+        "open": false
+      },
+      "error": null,
+      "duration_ms": 0.2961158752441406
+    }
+  ]
+}

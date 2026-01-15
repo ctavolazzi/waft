@@ -1,0 +1,616 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Probe System Plan Critique</title>
+
+    <style>
+        /* Strict 2-page setup */
+        @page {
+            size: letter;
+            margin: 25.4mm 25.4mm 25.4mm 25.4mm;
+        }
+
+        body {
+            font-family: 'Times New Roman', 'Times', serif;
+            font-size: 11pt;
+            line-height: 1.4;
+            color: #000000;
+            background: #FFFFFF;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Prevent orphans/widows */
+        p, li {
+            orphans: 2;
+            widows: 2;
+        }
+
+        /* Page break control */
+        .page-break {
+            page-break-after: always;
+            break-after: page;
+        }
+
+        .no-break {
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 16pt;
+            color: #000000;
+            margin-top: 0;
+            margin-bottom: 12pt;
+            page-break-after: avoid;
+            border-bottom: 2pt solid #000000;
+            padding-bottom: 4pt;
+        }
+
+        h2 {
+            font-size: 14pt;
+            color: #000000;
+            margin-top: 12pt;
+            margin-bottom: 8pt;
+            page-break-after: avoid;
+            border-bottom: 1pt solid #000000;
+            padding-bottom: 2pt;
+        }
+
+        h3 {
+            font-size: 12pt;
+            color: #000000;
+            margin-top: 8pt;
+            margin-bottom: 4.0pt;
+            page-break-after: avoid;
+        }
+
+        p {
+            margin: 0 0 8pt 0;
+        }
+
+        ul, ol {
+            margin: 8pt 0 8pt 0;
+            padding-left: 20pt;
+        }
+
+        li {
+            margin-bottom: 4.0pt;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        /* Nested lists */
+        ul ul, ol ol, ul ol, ol ul {
+            margin-top: 4.0pt;
+            margin-bottom: 4.0pt;
+            padding-left: 30pt;
+        }
+
+        /* Visual boxes - inspired by field guide */
+        .note-box {
+            border-left: 4pt solid #000000;
+            background: #f5f5f5;
+            padding: 8pt;
+            margin: 8pt 0;
+            page-break-inside: avoid;
+        }
+
+        .note-title {
+            font-weight: bold;
+            color: #000000;
+            font-size: 11pt;
+            margin-bottom: 4.0pt;
+        }
+
+        .highlight-box {
+            border: 2pt solid #000000;
+            background: #f5f5f5;
+            padding: 8pt;
+            margin: 8pt 0;
+            page-break-inside: avoid;
+        }
+
+        /* Tables for structured data */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 8pt 0;
+            font-size: 10pt;
+            page-break-inside: avoid;
+        }
+
+        th {
+            background: #000000;
+            color: #FFFFFF;
+            border: 1pt solid #000000;
+            padding: 4pt;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            border: 1pt solid #00000033;
+            padding: 4pt;
+        }
+
+        tr:nth-child(even) {
+            background: #f5f5f5;
+        }
+
+        /* Pillar boxes - visual representation */
+        .pillar {
+            border: 2pt solid #000000;
+            background: #FFFFFF;
+            padding: 8pt;
+            margin: 8pt 0;
+            page-break-inside: avoid;
+        }
+
+        .pillar-title {
+            font-weight: bold;
+            color: #000000;
+            font-size: 12pt;
+            margin-bottom: 4.0pt;
+        }
+
+        /* Ideas - prose presentation with varied formatting */
+        .idea {
+            margin-bottom: 9.6pt;
+            padding: 6.4pt 0;
+            page-break-inside: avoid;
+        }
+
+        /* Alternate between different visual styles */
+        .idea:nth-child(odd) {
+            padding-left: 8pt;
+            border-left: 2pt solid #000000;
+            background: #f5f5f510;
+        }
+
+        .idea:nth-child(even) {
+            padding-left: 0;
+            border-left: none;
+            background: transparent;
+            border-top: 1pt solid #00000020;
+            padding-top: 4.8pt;
+            margin-top: 3.2pt;
+        }
+
+        .idea:nth-child(3n) {
+            padding-left: 0;
+            border-left: none;
+            background: #f5f5f508;
+            border-radius: 3pt;
+            padding: 4.8pt;
+        }
+
+        .idea-content {
+            font-size: 11pt;
+            line-height: 1.6;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+            text-align: justify;
+            margin: 0;
+        }
+
+        /* Metadata - compact */
+        .metadata {
+            font-size: 9pt;
+            color: #00000088;
+            line-height: 1.3;
+            border-top: 1pt solid #00000033;
+            padding-top: 4.0pt;
+            margin-top: 8pt;
+        }
+
+        .metadata p {
+            margin-bottom: 2.6666666666666665pt;
+        }
+
+        /* Summary box - prominent */
+        .summary-box {
+            background: #f5f5f5;
+            padding: 8pt;
+            margin-bottom: 12pt;
+            border-left: 4pt solid #000000;
+            border-top: 1pt solid #000000;
+            border-right: 1pt solid #000000;
+            border-bottom: 1pt solid #000000;
+        }
+
+        /* Scientific name styling */
+        .scientific-name {
+            font-style: italic;
+            color: #000000;
+        }
+
+        /* Code blocks */
+        code {
+            font-family: monospace;
+            font-size: 9pt;
+            background: #f5f5f5;
+            color: #000000;
+            padding: 2pt 4pt;
+            border-radius: 2pt;
+        }
+
+        pre {
+            background: #f5f5f5;
+            padding: 4.0pt;
+            border-left: 3pt solid #000000;
+            font-size: 9pt;
+            overflow-x: auto;
+            page-break-inside: avoid;
+        }
+
+        /* Visual separators */
+        .divider {
+            border-top: 1pt solid #00000033;
+            margin: 8pt 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- PAGE 1 -->
+    <div class="page-1">
+        <h1>Probe System Plan Critique</h1>
+
+        <div class="summary-box">
+            <strong>Summary:</strong> Overall Assessment: This plan has CRITICAL security vulnerabilities that must be addressed before implementation.
+        </div>
+
+        <div class="metadata">
+            <p><strong>Generated:</strong> 2026-01-14 19:12 UTC | <strong>Ideas Extracted:</strong> 82</p>
+        </div>
+
+        <h2>What Happened</h2>
+
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Overall Assessment: This plan has CRITICAL security vulnerabilities that must be addressed before implementation. The Probe system will handle file operations, state capture, and data collection without proper security measures defined. Multiple unexamined assumptions about integration and behavior could cause catastrophic failures. Significant architectural complexity adds unnecessary risk.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Evidence: Existing Being system uses <code>0o600</code> for files, <code>0o700</code> for directories (see <code>src/waft/being.py:1964</code>) Scientific method tool's <code>StateCapture</code> doesn't set permissions (see <code>scientific_method_tool/state_capture.py:68</code>) Plan doesn't specify security measures for Probe storage.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Evidence: Existing Being system has <code>_validate_being_id()</code> method (see <code>src/waft/being.py:1949</code>) Plan doesn't mention validation for Probe IDs Scientific method tool doesn't validate experiment IDs.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Fix Required: Validate scientific method tool is available Test integration before use Handle tool failures gracefully Add fallback if tool unavailable Version pin scientific method tool.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Evidence Needed: Check Reality system API for observation methods Verify Being system exposes observable state Test observation capabilities.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Recommendation: Design analysis algorithm before implementation.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>CRITICAL Security Vulnerabilities: 4 HIGH Safety Issues: 3 MEDIUM Unexamined Assumptions: 12 LOW Overengineering: 5 Oversights: 8 Missed Obviousness: 6.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Recommendation: DO NOT PROCEED until all CRITICAL and HIGH priority issues are addressed. The security vulnerabilities alone make this plan unsafe to implement as-is.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>This plan has CRITICAL security vulnerabilities that must be addressed before any code is written. The Probe system will handle file operations, state capture, and data collection without proper security measures. These are not minor issues - they are show-stoppers.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Recommendation: DO NOT PROCEED with implementation until all CRITICAL and HIGH priority issues are addressed. The security vulnerabilities alone make this plan unsafe to implement as-is.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Date: 2026-01-14 09:55:39 PST Plan: OriginPoint Probe Experimental System Critique Mode: Bad Faith / Adversarial Security-First Analysis: YES.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Fix Required: Set restrictive file permissions: <code>0o600</code> for files, <code>0o700</code> for directories Apply permissions after file creation in all Probe storage operations Validate storage path is within project (path traversal protection) Never store sensitive data (sanitize before storage).</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Impact: Path traversal attacks (read/write files outside project) DoS attacks (resource exhaustion from long paths) File system corruption (null bytes in filenames) Log injection (newlines in IDs).</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Fix Required: Validate all IDs before use in file paths Reject IDs with <code>..</code>, <code>/</code>, <code>\</code>, null bytes, control characters Limit ID length (e.g., max 255 characters) Sanitize IDs (alphanumeric + underscore + hyphen only) Validate path encoding (UTF-8, handle encoding errors) Use <code>Path.resolve()</code> and check it's within project root.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>def <em>validate_probe_id(self, probe_id: str) -&gt; bool: """Validate probe_id is safe for file system use.""" if not probe_id or len(probe_id) &gt; 255: return False if any(char in probe_id for char in ['..', '/', '\', '\x00']): return False if not probe_id.replace('</em>', '').replace('-', '').isalnum(): return False return True.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Issue: Plan uses <code>scientific_method_tool/state_capture.py</code> which captures Being state including skills, fitness, personality.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Attack Vector: State capture reads Being objects without sanitization Sensitive Being data (personality, memories) stored in experiment files State snapshots could contain sensitive information No access control on who can capture state.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Evidence: <code>StateCapture.capture_being_state()</code> captures full Being state (see <code>scientific_method_tool/state_capture.py:99</code>) No sanitization of sensitive fields Plan doesn't specify what data should be excluded.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Fix Required: Sanitize Being state before capture (exclude sensitive fields) Define whitelist of safe fields to capture Never capture memories, lessons, or personal data Add access control for state capture operations Encrypt sensitive state data if storage is shared.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Attack Vector: Probe could access Reality it shouldn't have access to No validation that Probe belongs to Reality Cross-Reality data leakage.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Evidence: Plan doesn't specify Reality access control Existing Reality system may not have access control Probe could observe Beings in other Realities.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Fix Required: Validate Probe has access to Reality before operations Check <code>probe.reality_id</code> matches <code>reality.reality_id</code> Add Reality access control checks Log unauthorized access attempts.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Fix Required: Add try/except blocks for all file I/O Handle <code>IOError</code>, <code>PermissionError</code>, <code>OSError</code> Validate file operations succeed Implement retry logic for transient failures Log errors for debugging.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Fix Required: Limit observation_history size (e.g., last 1000 observations) Limit active hypotheses (e.g., max 10) Limit experiment records (e.g., archive old experiments) Add disk space checks before writes Implement data rotation/archival.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Issue: Reality system may not expose observation API Other Beings may not be observable Environmental features may not exist.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Evidence Needed: Test scientific method tool with Probe data Verify tool supports required features Check tool limitations.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Evidence Needed: Test D&amp;D stat integration with personality system Verify enhancement vs. override behavior Check stat-to-personality mapping.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Issue: Interface may not work as expected Communication protocol undefined Error handling for failed suggestions unclear.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Evidence Needed: Design communication protocol Test suggestion/review cycle Handle edge cases (Probe suggests invalid action).</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Issue: Phase transitions may not work Pattern recognition may fail Adaptive phase may not combine correctly.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Evidence Needed: Test phase transition logic Verify pattern recognition works Test adaptive exploration.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Issue: Analysis algorithm undefined Cause-effect detection may fail Reflection may not produce useful insights.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Evidence Needed: Define analysis algorithm Test cause-effect detection Verify reflection produces insights.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Disk Full: What happens if disk fills up during experiment? (No handling) Network Down: What if external dependencies unavailable? (No fallback) Process Killed: What if process killed mid-experiment? (No cleanup) System Under Load: What if system is under heavy load? (No throttling).</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Path Traversal: Probe IDs with <code>../</code> could escape project directory Resource Exhaustion: No limits on observations/experiments Data Injection: Malicious data in observations could corrupt system State Manipulation: Probe could manipulate its own state maliciously.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Empty Reality: What if Reality has no Beings? (No handling) Invalid Observations: What if observations are malformed? (No validation) Concurrent Probes: What if multiple Probes run simultaneously? (Race conditions) Corrupted State: What if Probe state is corrupted? (No recovery).</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Add Error Handling: Handle all file I/O errors, network errors Add Resource Limits: Limit observation history, experiments, data size Validate Scientific Method Integration: Test integration before use Add Action Validation: Validate Probe-suggested actions before execution.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Simplify Architecture: Consider if separate system is necessary Add Versioning: Version Probe system and data Add Documentation: API docs, usage guide, examples.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Additionally, there are multiple unexamined assumptions that could cause catastrophic failures, significant overengineering that adds unnecessary risk, and obvious oversights that should have been caught.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>This critique assumes the worst and looks for all the ways things could fail. Address these issues before implementation.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Impact: Crashes on file system errors, data loss, corrupted state.</p></div>
+        </div>
+        
+    </div>
+
+    <!-- Forced page break -->
+    <div class="page-break"></div>
+
+    <!-- PAGE 2 -->
+    <div class="page-2">
+        
+        <h2>Additional Details</h2>
+
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Issue: Plan assumes <code>scientific_method_tool/</code> works correctly without validation.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Recommendation: Validate Reality observation API before implementation.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Assumption: Scientific method tool can handle Probe-specific data structures.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Recommendation: Test integration with sample Probe data before full implementation.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Recommendation: Design and test piloting interface before full implementation.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Assumption: Exploration evolves from random → systematic → adaptive correctly.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Recommendation: Implement and test each phase separately before combining.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Assumption: External/Internal pressure loops work as designed.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Assumption: Probe updates behavior based on experiment results.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Issue: Learning algorithm undefined Update mechanism unclear Learning may not converge.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Evidence Needed: Define learning algorithm Specify update mechanism Test learning convergence.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Recommendation: Design learning algorithm before implementation.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Assumption: Observation system can observe Reality, Beings, environment.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Recommendation: Validate observation capabilities before implementation.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Assumption: Reflection system can analyze feedback loops and cause-effect.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Recommendation: Validate spawning process before implementation.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Issue: Plan creates separate ProbeBeing class when Being subclass would work.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Consideration: Could use Being subclass with Probe capabilities instead of separate system.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Issue: Plan has 8 separate components for experimental system.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Issue: D&amp;D stats may not add value beyond existing personality system.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Issue: Separate piloting interface may be unnecessary for experimental system.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Consideration: Could use simpler direct control for experimental system.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Fix Required: Add unit tests, integration tests, security tests.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Fix Required: Add error recovery, state restoration, retry logic.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Fix Required: Add performance limits, optimization, monitoring.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Issue: Plan mentions documentation but doesn't specify what or how.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Fix Required: Specify documentation requirements (API docs, usage guide, examples).</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Issue: Plan doesn't specify how to migrate Probe data if system changes.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Fix Required: Add migration strategy, versioning, backward compatibility.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Issue: Plan doesn't specify how to clean up old experiments/observations.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Fix Required: Add cleanup strategy, archival, data rotation.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Issue: Plan doesn't specify how to rollback if Probe system fails.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Fix Required: Add rollback strategy, state backup, recovery procedures.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Issue: Plan doesn't specify who can create/control Probes.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Fix Required: Add authentication, authorization, access control.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Fix Required: Add rate limiting, operation throttling.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Fix Required: Add size limits, validation, truncation.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Fix Required: Add action validation, whitelist of allowed actions.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Fix Required: Add Probe isolation, separate storage, access control.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Issue: Plan doesn't specify versioning for Probe system or data.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Fix Required: Add versioning, migration, backward compatibility.</p></div>
+        </div>
+        
+        
+    </div>
+</body>
+</html>

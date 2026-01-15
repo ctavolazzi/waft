@@ -1,0 +1,516 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Scientific Method - Probe Experiment</title>
+
+    <style>
+        /* Strict 2-page setup */
+        @page {
+            size: letter;
+            margin: 25.4mm 25.4mm 25.4mm 25.4mm;
+        }
+
+        body {
+            font-family: 'Times New Roman', 'Times', serif;
+            font-size: 11pt;
+            line-height: 1.4;
+            color: #000000;
+            background: #FFFFFF;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Prevent orphans/widows */
+        p, li {
+            orphans: 2;
+            widows: 2;
+        }
+
+        /* Page break control */
+        .page-break {
+            page-break-after: always;
+            break-after: page;
+        }
+
+        .no-break {
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 16pt;
+            color: #000000;
+            margin-top: 0;
+            margin-bottom: 12pt;
+            page-break-after: avoid;
+            border-bottom: 2pt solid #000000;
+            padding-bottom: 4pt;
+        }
+
+        h2 {
+            font-size: 14pt;
+            color: #000000;
+            margin-top: 12pt;
+            margin-bottom: 8pt;
+            page-break-after: avoid;
+            border-bottom: 1pt solid #000000;
+            padding-bottom: 2pt;
+        }
+
+        h3 {
+            font-size: 12pt;
+            color: #000000;
+            margin-top: 8pt;
+            margin-bottom: 4.0pt;
+            page-break-after: avoid;
+        }
+
+        p {
+            margin: 0 0 8pt 0;
+        }
+
+        ul, ol {
+            margin: 8pt 0 8pt 0;
+            padding-left: 20pt;
+        }
+
+        li {
+            margin-bottom: 4.0pt;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        /* Nested lists */
+        ul ul, ol ol, ul ol, ol ul {
+            margin-top: 4.0pt;
+            margin-bottom: 4.0pt;
+            padding-left: 30pt;
+        }
+
+        /* Visual boxes - inspired by field guide */
+        .note-box {
+            border-left: 4pt solid #000000;
+            background: #f5f5f5;
+            padding: 8pt;
+            margin: 8pt 0;
+            page-break-inside: avoid;
+        }
+
+        .note-title {
+            font-weight: bold;
+            color: #000000;
+            font-size: 11pt;
+            margin-bottom: 4.0pt;
+        }
+
+        .highlight-box {
+            border: 2pt solid #000000;
+            background: #f5f5f5;
+            padding: 8pt;
+            margin: 8pt 0;
+            page-break-inside: avoid;
+        }
+
+        /* Tables for structured data */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 8pt 0;
+            font-size: 10pt;
+            page-break-inside: avoid;
+        }
+
+        th {
+            background: #000000;
+            color: #FFFFFF;
+            border: 1pt solid #000000;
+            padding: 4pt;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            border: 1pt solid #00000033;
+            padding: 4pt;
+        }
+
+        tr:nth-child(even) {
+            background: #f5f5f5;
+        }
+
+        /* Pillar boxes - visual representation */
+        .pillar {
+            border: 2pt solid #000000;
+            background: #FFFFFF;
+            padding: 8pt;
+            margin: 8pt 0;
+            page-break-inside: avoid;
+        }
+
+        .pillar-title {
+            font-weight: bold;
+            color: #000000;
+            font-size: 12pt;
+            margin-bottom: 4.0pt;
+        }
+
+        /* Ideas - prose presentation with varied formatting */
+        .idea {
+            margin-bottom: 9.6pt;
+            padding: 6.4pt 0;
+            page-break-inside: avoid;
+        }
+
+        /* Alternate between different visual styles */
+        .idea:nth-child(odd) {
+            padding-left: 8pt;
+            border-left: 2pt solid #000000;
+            background: #f5f5f510;
+        }
+
+        .idea:nth-child(even) {
+            padding-left: 0;
+            border-left: none;
+            background: transparent;
+            border-top: 1pt solid #00000020;
+            padding-top: 4.8pt;
+            margin-top: 3.2pt;
+        }
+
+        .idea:nth-child(3n) {
+            padding-left: 0;
+            border-left: none;
+            background: #f5f5f508;
+            border-radius: 3pt;
+            padding: 4.8pt;
+        }
+
+        .idea-content {
+            font-size: 11pt;
+            line-height: 1.6;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+            text-align: justify;
+            margin: 0;
+        }
+
+        /* Metadata - compact */
+        .metadata {
+            font-size: 9pt;
+            color: #00000088;
+            line-height: 1.3;
+            border-top: 1pt solid #00000033;
+            padding-top: 4.0pt;
+            margin-top: 8pt;
+        }
+
+        .metadata p {
+            margin-bottom: 2.6666666666666665pt;
+        }
+
+        /* Summary box - prominent */
+        .summary-box {
+            background: #f5f5f5;
+            padding: 8pt;
+            margin-bottom: 12pt;
+            border-left: 4pt solid #000000;
+            border-top: 1pt solid #000000;
+            border-right: 1pt solid #000000;
+            border-bottom: 1pt solid #000000;
+        }
+
+        /* Scientific name styling */
+        .scientific-name {
+            font-style: italic;
+            color: #000000;
+        }
+
+        /* Code blocks */
+        code {
+            font-family: monospace;
+            font-size: 9pt;
+            background: #f5f5f5;
+            color: #000000;
+            padding: 2pt 4pt;
+            border-radius: 2pt;
+        }
+
+        pre {
+            background: #f5f5f5;
+            padding: 4.0pt;
+            border-left: 3pt solid #000000;
+            font-size: 9pt;
+            overflow-x: auto;
+            page-break-inside: avoid;
+        }
+
+        /* Visual separators */
+        .divider {
+            border-top: 1pt solid #00000033;
+            margin: 8pt 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- PAGE 1 -->
+    <div class="page-1">
+        <h1>Scientific Method - Probe Experiment</h1>
+
+        <div class="summary-box">
+            <strong>Summary:</strong> Define Learning Algorithm (CRITICAL - Blocking) Fix Security Issues (CRITICAL - Blocking) Specify Experiment Design (CRITICAL - Blocking) Validate Integration Points (HIGH -...
+        </div>
+
+        <div class="metadata">
+            <p><strong>Generated:</strong> 2026-01-14 19:12 UTC | <strong>Ideas Extracted:</strong> 51</p>
+        </div>
+
+        <h2>What Happened</h2>
+
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Define Learning Algorithm (CRITICAL - Blocking) Fix Security Issues (CRITICAL - Blocking) Specify Experiment Design (CRITICAL - Blocking) Validate Integration Points (HIGH - Should do before implementation) Simplify Architecture (HIGH - Reduces complexity) Begin Implementation (After CRITICAL issues fixed).</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Scientific Method Applied: ✅ Complete Ready for Implementation: ❌ NO (CRITICAL issues must be fixed first) Recommendation: Fix CRITICAL issues, then proceed with implementation using this scientific method framework.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Date: 2026-01-14 09:57:00 PST Experiment: OriginPoint Probe System Design &amp; Implementation Scientific Method: Full workflow (Hypothesis → Experiment → Analysis).</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>H4: "Hybrid exploration (random → systematic) outperforms pure random or pure systematic" Prediction: Hybrid exploration finds better patterns faster Verification: Pattern discovery rate is higher with hybrid exploration.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Phases: Phase 1: Security &amp; Core ProbeBeing (Foundation) Phase 2: Learning Algorithm &amp; Scientific Method Integration Phase 3: Feedback Loops &amp; Adaptation Phase 4: Integration &amp; Full System Testing.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><ol>
+<li>Codebase State: Probe system: NOT IMPLEMENTED Being system: ✅ Implemented (v0.5.3) Reality system: ✅ Implemented Scientific method tool: ✅ Implemented D&amp;D character system: ❌ Not implemented.</li>
+</ol></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><ol>
+<li>Integration State: Reality observation API: ❓ Unclear (needs validation) Scientific method tool compatibility: ❓ Untested Being system integration path: ❓ Unclear.</li>
+</ol></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Phase 4: Integration &amp; Testing (Week 4) ✅ Validate Reality observation API ✅ Test scientific method tool compatibility ✅ Test full Probe cycle (observe → reflect → learn) ✅ Integration testing with Being system.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><ol>
+<li>Integration State: Reality observation: ✅ Working (or ❌ Failed) Scientific method tool: ✅ Compatible (or ❌ Incompatible) Being system: ✅ Integrated (or ❌ Not integrated).</li>
+</ol></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><ol>
+<li>Scientific Method Report: How scientific method was applied Experiment design evaluation Data collection evaluation Analysis evaluation.</li>
+</ol></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>[x] Form hypothesis [x] Design experiment [x] Define variables (independent, dependent, control) [x] Capture initial state (A) [x] Plan data collection (C) [x] Define success criteria [x] Plan analysis methods.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Validate Integration Points: Reality observation API Scientific method tool compatibility Being system integration path.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Phase 1: Security &amp; Core ProbeBeing (Week 1) ✅ Fix CRITICAL security issues ✅ Implement ProbeBeing class with security ✅ Add ID validation ✅ Set file permissions ✅ Test basic ProbeBeing creation.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Data Validation: All data points must have timestamps All metrics must be numeric (0.0-1.0 or counts) All text data must be sanitized (no sensitive info) All data must be JSON-serializable.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Statement: "A Probe system that can Observe, Reflect, and Learn using scientific principles will successfully adapt its behavior through feedback loops and hypothesis-driven exploration.".</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Prediction: Probe will form testable hypotheses from observations Probe will run experiments to test hypotheses Probe will learn from experiment results and adapt behavior Probe will improve exploration efficiency over time (random → systematic).</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Verification Criteria: ✅ Probe forms at least 3 testable hypotheses per 10 observations ✅ Probe runs at least 1 experiment per 5 hypotheses ✅ Probe updates behavior after 70%+ of experiments ✅ Exploration efficiency improves (measured by observation quality / time).</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>H2: "D&amp;D character stats enhance personality system without conflicts" Prediction: D&amp;D stats add value to personality without overriding existing traits Verification: Personality + D&amp;D stats produces better behavior than personality alone.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>H3: "Collaborative piloting (Probe suggests, AI guides) improves learning rate" Prediction: Collaborative piloting produces faster learning than autonomous or fully controlled Verification: Learning rate (behavior updates / time) is higher with collaborative piloting.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Learning Algorithm Type: Options: Reinforcement Learning, Bayesian Updating, Pattern Matching, Hybrid Default: Hybrid (Reinforcement + Bayesian).</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Exploration Strategy: Options: Pure Random, Pure Systematic, Hybrid (Random → Systematic) Default: Hybrid.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>D&amp;D Stat Integration Method: Options: Additive (stats add to personality), Multiplicative (stats multiply), Override (stats replace) Default: Additive.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Learning Rate: Metric: Behavior updates per experiment Measurement: Count behavior updates / count experiments.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><ol>
+<li>Being System State: Total Beings: 0 (will create ProbeBeing) TheOne Being: ✅ Exists Being storage: <code>_hidden/.truth/beings/</code> (exists, permissions: 0700).</li>
+</ol></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><ol>
+<li>Reality System State: Total Realities: 0 (will create Probe Reality) Reality storage: <code>_hidden/.truth/realities/</code> (exists).</li>
+</ol></div>
+        </div>
+        
+    </div>
+
+    <!-- Forced page break -->
+    <div class="page-break"></div>
+
+    <!-- PAGE 2 -->
+    <div class="page-2">
+        
+        <h2>Additional Details</h2>
+
+        
+        <div class="idea no-break">
+            <div class="idea-content"><ol>
+<li>Scientific Method Tool State: Tool exists: ✅ Components: ✅ All implemented Storage: <code>scientific_method_tool/experiments/</code> (exists).</li>
+</ol></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><ol>
+<li>Security State: File permissions: Being system uses <code>0o600</code>/<code>0o700</code> ✅ ID validation: Being system has <code>_validate_being_id()</code> ✅ Path validation: Being system validates paths ✅.</li>
+</ol></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Phase 2: Learning Algorithm &amp; Scientific Method (Week 2) ✅ Define learning algorithm ✅ Implement learning algorithm ✅ Integrate scientific method tool ✅ Test hypothesis formation ✅ Test experiment execution.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Phase 3: Feedback Loops &amp; Adaptation (Week 3) ✅ Implement feedback loops ✅ Implement adaptation mechanism ✅ Test phase transitions (random → systematic) ✅ Test feedback loop effectiveness.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Hypothesis Metrics (Every hypothesis): Timestamp Hypothesis statement Variables (independent, dependent, control) Formation method (pattern recognition, statistical, etc.).</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Experiment Metrics (Every experiment): Timestamp Hypothesis ID Experiment design State A (initial) State B (final) Data collected (C) Result (verified/refuted) Confidence level.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Learning Metrics (Every learning update): Timestamp Trigger (experiment result, feedback, etc.) Update type (belief weight, pattern memory, exploration ratio) Before state After state Success metric.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Adaptation Metrics (Every adaptation): Timestamp Adaptation type (exploration phase, response pattern, etc.) Trigger (success rate, failure rate, etc.) Before state After state.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Collection Frequency: Observations: Real-time (every observation) Hypotheses: Real-time (every hypothesis) Experiments: Per experiment (before/after) Learning: Per update (before/after) Adaptation: Per adaptation (before/after).</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Data Collection Tools: <code>DataCollector</code> from <code>scientific_method_tool/data_collection.py</code> Custom Probe data collection methods State capture for before/after comparisons.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><ol>
+<li>Codebase State: Probe system: ✅ Implemented (or ❌ Failed) Components implemented: Count and list Tests written: Count and coverage Documentation: Count and completeness.</li>
+</ol></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><ol>
+<li>Probe System State: ProbeBeing instances: Count Experiments run: Count Hypotheses formed: Count Learning updates: Count.</li>
+</ol></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><ol>
+<li>Performance State: Observation rate: Observations per minute Hypothesis formation rate: Hypotheses per observation Experiment success rate: Verified / total Learning rate: Updates per experiment.</li>
+</ol></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>[ ] Run experiment (implement Probe system) [ ] Collect data (C) during implementation [ ] Monitor progress [ ] Adjust if needed (iterative).</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>[ ] Capture final state (B) [ ] Analyze results [ ] Verify/refute hypotheses [ ] Generate reports [ ] Document learnings.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Fix Security Issues: File permissions (<code>0o600</code>/<code>0o700</code>) ID validation State capture sanitization Reality access control.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Simplify Architecture: Reduce components (8 → 5-6) Combine observation + reflection Simplify feedback loop system.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Experiment Type: Multi-phase implementation with iterative testing.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Timestamp: 2026-01-14 09:57:00 PST State Type: Initial (Before Probe Implementation).</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Timestamp: TBD (After experiment completion) State Type: Final (After Probe Implementation).</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>State Hash: TBD (calculated from final component states).</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Pattern Recognition: Identify successful patterns Identify failed patterns Extract insights.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><ol>
+<li>Implementation Report: What was implemented What worked What didn't work Lessons learned.</li>
+</ol></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Define Learning Algorithm: Update mechanism Learning rate Convergence criteria Pattern memory.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Specify Experiment Design: Variables (independent, dependent, control) Measurements Success criteria.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Design Testing Strategy: Unit tests Integration tests Security tests.</p></div>
+        </div>
+        
+        
+    </div>
+</body>
+</html>

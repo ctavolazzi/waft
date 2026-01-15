@@ -1,0 +1,91 @@
+---
+name: V0.0.2 Session Security
+overview: Implement 24-hour automatic session expiration, fix the forgot-password redirect loop, and update documentation to reflect the new security settings.
+todos:
+  - id: session-ttl
+    content: Change SESSION_DURATION_MS from 7 days to 24 hours in kv-auth.ts and local-auth.ts
+    status: completed
+  - id: auth-docs
+    content: Update _docs/AUTH.md to reflect 24-hour session expiry
+    status: completed
+  - id: forgot-password
+    content: Verify forgot-password page works after redeploy, add redirect rule if needed
+    status: completed
+  - id: commit-push
+    content: Commit changes and push to trigger production deployment
+    status: completed
+
+category: fears
+confidence: 0.51
+constellation_date: 2026-01-14
+---
+
+# V0.0.2 Session Security Update
+
+## Changes
+
+### 1. Reduce Session Duration to 24 Hours
+
+**Files to modify:**
+
+`src/lib/auth/kv-auth.ts` (line 32):
+
+```typescript
+// Before
+const SESSION_DURATION_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+
+// After
+const SESSION_DURATION_MS = 24 * 60 * 60 * 1000; // 24 hours - daily auto-logout
+```
+
+`src/lib/auth/local-auth.ts` (line 72):
+
+```typescript
+// Before
+const SESSION_DURATION_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+
+// After
+const SESSION_DURATION_MS = 24 * 60 * 60 * 1000; // 24 hours - daily auto-logout
+```
+
+### 2. Fix Forgot-Password Redirect Loop
+
+The code looks correct. The issue is likely the page not being deployed or a Cloudflare caching issue.
+
+**Diagnostic steps:**
+
+1. Force redeploy to production
+2. If still failing, add explicit route handling
+
+**Potential fix if redeploy fails - add to `public/_redirects`:**
+
+```
+/forgot-password /forgot-password/ 301
+```
+
+### 3. Update AUTH.md Documentation
+
+`_docs/AUTH.md` - update session expiry section:
+
+- Change "7 days TTL" to "24 hours TTL"
+- Add note about security rationale
+
+## Commit Message
+
+```
+feat(security): implement 24-hour session expiration
+
+- Reduce session TTL from 7 days to 24 hours for security
+- Update AUTH.md documentation
+- Force redeploy to fix forgot-password page
+
+BREAKING: Users will need to re-login daily
+```
+
+## Testing
+
+After changes:
+
+1. Run locally with `npm run dev:wrangler`
+2. Login and verify session cookie has 24-hour expiry
+3. Test forgot-password page loads correctly

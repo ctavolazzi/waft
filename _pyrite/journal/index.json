@@ -64,13 +64,32 @@
         "Differently",
         "Meta"
       ]
+    },
+    {
+      "id": "2026-01-14-1046",
+      "date": "2026-01-14",
+      "time": "10:46",
+      "timestamp": "2026-01-14T10:46:54.000000",
+      "topic": "security-critique-assumption-validation",
+      "sections": [
+        "What Doing",
+        "What Thinking",
+        "What Learning",
+        "Patterns",
+        "Questions",
+        "Feelings",
+        "Differently",
+        "Meta"
+      ]
     }
   ],
   "tags": {},
-  "topics": {},
+  "topics": {
+    "security-critique-assumption-validation": ["2026-01-14-1046"]
+  },
   "stats": {
-    "total_entries": 5,
+    "total_entries": 6,
     "first_entry": "2026-01-12T16:38:17.072095",
-    "last_entry": "2026-01-12T20:25:20.364045"
+    "last_entry": "2026-01-14T10:46:54.000000"
   }
 }

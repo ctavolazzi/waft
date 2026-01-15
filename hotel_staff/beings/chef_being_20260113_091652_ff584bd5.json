@@ -1,0 +1,15 @@
+{
+  "role_key": "chef",
+  "role_name": "Chef",
+  "being_id": "being_20260113_091652_ff584bd5",
+  "custom_name": "Pierre",
+  "reality_id": "treasure_tavern_inn",
+  "initial_skills": {
+    "code_generation": 30.0,
+    "transformations": 28.0,
+    "pattern_following": 32.0,
+    "creativity": 25.0
+  },
+  "personality_type": "creative",
+  "spawned_at": "2026-01-13T09:16:55.333591"
+}
