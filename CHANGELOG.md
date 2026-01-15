@@ -11,6 +11,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Work in progress features
 
+### In Development: v1.0.0 Electron Desktop Application
+
+**The Vision**: A full-featured Electron desktop application that anyone can use to WAFT their Agents around and do some fucking Science Bitch.
+
+**Current Work**:
+- Electron game display (local Chromium on laptop)
+- Agent management interface
+- Science Bitch workflow integration
+- Real-time monitoring and visualization
+
+**Target**: Stable Electron app for v1.0.0 - the first production-ready desktop application for WAFT.
+
 ## [0.8.1] - 2026-01-14
 
 ### Added
