@@ -23,6 +23,73 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Target**: Stable Electron app for v1.0.0 - the first production-ready desktop application for WAFT.
 
+## [0.9.0] - 2026-01-15
+
+### Added
+
+#### Dockerized Electron Desktop Application ⭐ MAJOR FEATURE
+- **Full-Stack Application**: Complete Electron frontend + FastAPI backend architecture
+- **Dockerized Architecture**: Modern containerization with Xvfb, VNC, and multi-stage builds
+  - Xvfb virtual display for headless GUI rendering
+  - Non-root user security-first design
+  - Multi-stage builds for optimized image sizes
+  - VNC support for remote desktop access
+- **PDF Viewer Integration**: PDF.js-based client-side PDF rendering
+- **Modern Architecture**: Updated from 10-year-old patterns to 2024-2025 best practices
+- **Complete Documentation**: 12+ comprehensive guides (Docker, Electron, stabilization, alternatives)
+- **Work Effort**: WE-260115-wc3m (5 tickets completed)
+
+#### Self-Playing DnD Campaign System ⭐ MAJOR FEATURE
+- **Complete Campaign System**: Python-based self-playing DnD campaign from tavern to final boss
+- **Party Management**: 4-character party (Thorin, Lyra, Rogar, Aria) with HP, XP, and leveling
+- **Combat System**: Automated encounter generation, damage calculation, and resolution
+- **Story Generation**: Dynamic narrative with 4 major chapters and multiple encounters
+- **Final Boss Battle**: Epic Shadow Lord Malachar battle system
+- **Two Versions Available**:
+  - PDF Only: `SELF_PLAYING_CAMPAIGN.py` - Generates story PDF
+  - Electron Window: `SELF_PLAYING_CAMPAIGN_ELECTRON.py` - Watch it play in real-time!
+- **Real-Time Display**: Electron/browser window showing game as it plays with auto-refresh
+- **JSON Logging**: Complete campaign log for analysis
+- **Installer System**: User-friendly installer for easy distribution
+- **Work Effort**: WE-260115-8vvn (8 tickets completed)
+
+#### Recap and Review Command System
+- **`/recap-and-review` Command**: New CLI command for mindspace documentation
+- **Full-Stack Integration**: Electron + FastAPI desktop interface
+- **PDF Generation**: Automatic review document creation
+- **Context Capture**: Git state, system state, project state, environment state
+- **Desktop Integration**: Opens PDF automatically on desktop
+
+#### Enhanced Documentation Infrastructure
+- **Comprehensive Wiki**: 20+ new documentation files
+- **Installation Guides**: Step-by-step installation instructions
+- **Usage Examples**: Complete usage examples and tutorials
+- **Architecture Documentation**: System design and technical details
+- **Troubleshooting Guides**: Common issues and solutions
+
+### Changed
+
+- **PDF Generation**: Enhanced academic paper template with artifact metadata
+- **Docker Architecture**: Modernized from legacy patterns to current best practices
+- **Electron Patterns**: Updated to 2024-2025 Electron best practices
+- **Documentation Structure**: Reorganized and expanded documentation
+
+### Fixed
+
+- **Electron Window Opening**: Fixed issues with Electron window not opening
+- **PDF Generation Reliability**: Improved WeasyPrint integration and error handling
+- **Docker Container Security**: Enhanced non-root user implementation
+- **File Path Resolution**: Improved path handling across platforms
+- **HTML Auto-Refresh**: Fixed campaign display auto-refresh functionality
+
+### Statistics
+
+- **15+ Major Work Efforts** completed
+- **50+ Tickets** completed across all work efforts
+- **100+ Documentation Files** created or updated
+- **5,000+ Lines of Code** added
+- **10,000+ Words** of documentation
+
 ## [0.8.1] - 2026-01-14
 
 ### Added

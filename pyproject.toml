@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "waft"
-version = "0.8.1"
+version = "0.9.0"
 description = "Waft - Ambient, self-modifying Meta-Framework for Python"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -49,15 +49,7 @@ dependencies = [
     "llama-index-vector-stores-chroma>=0.1.6,<0.2",
     "llama-index-llms-ollama>=0.1.2,<0.2",
     "llama-index-readers-file>=0.1.11,<0.2",
-    "llama-index>=0.10.22,<0.11",
-    "transformers>=4.39.1,<5",
-    "torch",
-    "llama-index-callbacks-wandb>=0.1.2,<0.2",
-    "llama-index-retrievers-bm25>=0.1.3,<0.2",
-    "pymupdf>=1.24.3,<2",
-    "tqdm>=4.66.4,<5",
     "requests>=2.32.3,<3",
-    "sentence-transformers>=3.2.0,<4",
 ]
 
 [project.optional-dependencies]
@@ -71,6 +63,22 @@ crewai = [
 ]
 tavern-keeper = [
     "tracery>=0.1.1",
+]
+rag = [
+    "gradio<5",
+    "python-dotenv>=1.0.1,<2",
+    "llama-index-embeddings-huggingface>=0.1.4,<0.2",
+    "llama-index-llms-openai>=0.1.12,<0.2",
+    "llama-index-vector-stores-chroma>=0.1.6,<0.2",
+    "llama-index-llms-ollama>=0.1.2,<0.2",
+    "llama-index-readers-file>=0.1.11,<0.2",
+    "llama-index>=0.10.22,<0.11",
+    # Note: torch and transformers are required by RAG but may not install on macOS x86_64
+    # Install manually if needed: pip install torch transformers
+    "llama-index-callbacks-wandb>=0.1.2,<0.2",
+    "llama-index-retrievers-bm25>=0.1.3,<0.2",
+    "pymupdf>=1.24.3,<2",
+    "tqdm>=4.66.4,<5",
 ]
 
 [project.scripts]
