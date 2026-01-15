@@ -1,0 +1,38 @@
+{
+  "experiment_id": "exp_457468d8",
+  "series": {
+    "counter": {
+      "metric_name": "counter",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-13T00:40:06.728110",
+          "metric_name": "counter",
+          "value": 10,
+          "unit": null,
+          "metadata": {}
+        },
+        {
+          "timestamp": "2026-01-13T00:40:06.728137",
+          "metric_name": "counter",
+          "value": 15,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    },
+    "change": {
+      "metric_name": "change",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-13T00:40:06.728153",
+          "metric_name": "change",
+          "value": 5,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    }
+  }
+}

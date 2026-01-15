@@ -75,7 +75,9 @@ class Being:
         last_cycle_number: Optional[int] = None,
         lifetimes: Optional[int] = None,
         # Experience tracking
-        recent_experiences: Optional[List[Dict[str, Any]]] = None
+        recent_experiences: Optional[List[Dict[str, Any]]] = None,
+        # Naming
+        custom_name: Optional[str] = None
     ):
         """
         Initialize a being.
@@ -103,6 +105,7 @@ class Being:
             last_cycle_number: Last cycle number (default: 0)
             lifetimes: Number of reincarnations (default: 0)
             recent_experiences: Recent experiences (default: [])
+            custom_name: Optional custom name (e.g., "Bob") - overrides scientific name
         """
         self.being_id = being_id
         self.reality_id = reality_id
@@ -209,6 +212,13 @@ class Being:
         self.empirica_session_id: Optional[str] = None
         self.empirica_manager: Optional[Any] = None
         self._is_first_being = parent_being_id is None
+        
+        # Naming
+        self.custom_name: Optional[str] = custom_name
+        
+        # Purpose system
+        self.purpose_being_id: Optional[str] = None  # Link to Purpose Being
+        self.purpose: Optional[Dict[str, Any]] = None  # Purpose object (direct)
     
     def _calculate_personality_modifier(self) -> float:
         """Calculate decision quota modifier based on personality type."""
@@ -249,6 +259,105 @@ class Being:
         
         willpower = (base_willpower * modifier) + skill_bonus
         return max(0.0, min(100.0, willpower))
+    
+    @property
+    def scientific_name(self) -> str:
+        """
+        Generate scientific name from being_id using LineagePoet.
+        
+        Uses being_id as genome seed to generate deterministic scientific name.
+        Format: "Genus Species, Title" (e.g., "Cognis Novus, the Fragile")
+        
+        Returns:
+            Scientific name based on being_id hash
+        """
+        from .core.science.taxonomy import LineagePoet
+        import hashlib
+        
+        # Generate genome_id from being_id (deterministic)
+        # Use being_id as seed for hash-based naming
+        genome_id = hashlib.sha256(self.being_id.encode()).hexdigest()
+        return LineagePoet.generate_name(genome_id)
+    
+    @property
+    def display_name(self) -> str:
+        """
+        Get display name for this being.
+        
+        Priority:
+        1. custom_name (if user set one, e.g., "Bob")
+        2. scientific_name (deterministic from hash)
+        3. being_id (fallback)
+        
+        Returns:
+            Display name to use
+        """
+        if self.custom_name:
+            return self.custom_name
+        return self.scientific_name
+    
+    def set_custom_name(self, name: str) -> None:
+        """
+        Set a custom name for this being (e.g., "Bob").
+        
+        This overrides the scientific name for display purposes.
+        The scientific name is still available via scientific_name property.
+        
+        Args:
+            name: Custom name to use
+        """
+        self.custom_name = name
+    
+    def get_purpose(self, being_system: Optional["BeingSystem"] = None) -> Optional[Dict[str, Any]]:
+        """
+        Get the purpose of this being.
+        
+        Args:
+            being_system: Optional BeingSystem instance (to avoid circular import)
+        
+        Returns:
+            Purpose dict if set, or None if no purpose
+        """
+        # If purpose is set directly, return it
+        if self.purpose is not None:
+            return self.purpose
+        
+        # If purpose_being_id is set, load Purpose Being and return its purpose
+        if self.purpose_being_id:
+            try:
+                # Use provided being_system or create new one
+                if being_system is None:
+                    being_system = BeingSystem(project_path=Path.cwd())
+                purpose_being = being_system._load_being(self.purpose_being_id)
+                return purpose_being.purpose
+            except Exception:
+                # Purpose Being not found or error loading
+                return None
+        
+        return None
+    
+    def set_purpose(self, purpose: Dict[str, Any]) -> None:
+        """
+        Set purpose directly on this being.
+        
+        Args:
+            purpose: Purpose dict to set
+        """
+        self.purpose = purpose
+        self.purpose_being_id = None  # Clear linked purpose being
+    
+    def imbue_with_purpose(self, purpose_being: "Being") -> None:
+        """
+        Imbue this being with a Purpose Being's purpose.
+        
+        Links this being to the Purpose Being, so this being's purpose
+        comes from the Purpose Being.
+        
+        Args:
+            purpose_being: Purpose Being to link to
+        """
+        self.purpose_being_id = purpose_being.being_id
+        self.purpose = None  # Clear direct purpose (use linked instead)
     
     def _calculate_stamina(self) -> float:
         """
@@ -1228,6 +1337,11 @@ class Being:
             "lifetimes": self.lifetimes,
             # Experience tracking
             "recent_experiences": self.recent_experiences,
+            # Naming
+            "custom_name": self.custom_name,
+            # Purpose system
+            "purpose_being_id": self.purpose_being_id,
+            "purpose": self.purpose,
         }
     
     @classmethod
@@ -1262,8 +1376,14 @@ class Being:
             last_cycle_number=data.get("last_cycle_number"),
             lifetimes=data.get("lifetimes", data.get("cycles_alive", 0)),  # Support old name for migration
             # Experience tracking
-            recent_experiences=data.get("recent_experiences")
+            recent_experiences=data.get("recent_experiences"),
+            # Naming
+            custom_name=data.get("custom_name")
         )
+        
+        # Purpose system (set after initialization to avoid __init__ signature issues)
+        being.purpose_being_id = data.get("purpose_being_id")
+        being.purpose = data.get("purpose")
         being.memories = data.get("memories", [])
         being.lessons_learned = data.get("lessons_learned", [])
         being.state = BeingState(data.get("state", "spawning"))
@@ -1294,6 +1414,9 @@ class BeingSystem:
     - Evolve
     - Pass memories/lessons upward
     """
+    
+    # TheOne Being ID - root ancestor for all Beings
+    THE_ONE_BEING_ID = "the_one"
     
     def __init__(
         self,
@@ -1330,12 +1453,71 @@ class BeingSystem:
         else:
             self.source = source_consciousness
     
+    def get_or_create_the_one(self) -> Being:
+        """
+        Get or create TheOne Being - the root ancestor for all Beings.
+        
+        TheOne is a special Being entity that serves as the root ancestor.
+        All new Beings will be descendants of TheOne, ensuring a unified lineage.
+        
+        Returns:
+            TheOne Being instance
+        """
+        # Check if TheOne exists
+        the_one_file = self.beings_path / f"{self.THE_ONE_BEING_ID}.json"
+        
+        if the_one_file.exists():
+            # Load existing TheOne
+            return self._load_being(self.THE_ONE_BEING_ID)
+        
+        # Create Genesis Reality for TheOne
+        from .reality import RealitySystem, RealityType
+        reality_system = RealitySystem(project_path=self.project_path, source_consciousness=self.source)
+        
+        # Create Genesis Reality (will generate unique ID)
+        genesis_reality = reality_system.create_reality(
+            reality_type=RealityType.LEARNING,  # Use LEARNING if GENESIS doesn't exist
+            configuration={"special": True, "purpose": "genesis"},
+            source_id=self.source.source_id
+        )
+        genesis_reality_id = genesis_reality.reality_id
+        
+        # Create TheOne Being
+        the_one = Being(
+            being_id=self.THE_ONE_BEING_ID,
+            reality_id=genesis_reality_id,
+            parent_being_id=None,  # Spawns from Source
+            source_id=self.source.source_id,
+            lifetimes=1,  # First Being
+            custom_name="TheOne"
+        )
+        
+        # Set ancestral chain: [source_consciousness, the_one]
+        the_one.ancestral_chain = [self.source.source_id, self.THE_ONE_BEING_ID]
+        
+        # Save TheOne
+        self._save_being(the_one)
+        
+        # Register TheOne as permutation of source
+        self.source.register_permutation(
+            permutation_id=self.THE_ONE_BEING_ID,
+            permutation_type="being",
+            parent_id=None,
+            metadata={
+                "reality_id": genesis_reality_id,
+                "special": True,
+                "purpose": "root_ancestor"
+            }
+        )
+        
+        return the_one
+    
     def _validate_being_id(self, being_id: str) -> bool:
         """
         Validate being_id is safe for file system use.
         
         Rejects:
-        - IDs with path traversal (.., /, \)
+        - IDs with path traversal (.., /, \\)
         - IDs with null bytes or control characters
         - IDs that are too long (>255 characters)
         - IDs that aren't alphanumeric + underscore + hyphen
@@ -1386,6 +1568,8 @@ class BeingSystem:
         """
         Spawn a new being into a reality.
         
+        All new Beings are descendants of TheOne, ensuring a unified lineage.
+        
         Args:
             reality_id: Reality to spawn into
             parent_being_id: Optional parent being ID
@@ -1394,6 +1578,13 @@ class BeingSystem:
         Returns:
             Created Being instance
         """
+        # Get or create TheOne (root ancestor)
+        the_one = self.get_or_create_the_one()
+        
+        # If parent_being_id is None (spawning from Source), set parent to TheOne
+        if parent_being_id is None:
+            parent_being_id = the_one.being_id
+        
         # Generate being ID
         being_id = f"being_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{hashlib.sha256(f'{reality_id}{parent_being_id}'.encode()).hexdigest()[:8]}"
         
@@ -1412,11 +1603,23 @@ class BeingSystem:
             parent_lifetimes = parent.lifetimes
         
         # Create being (lifetimes will be set after creation)
+        # Check if parent had custom_name to inherit
+        custom_name = None
+        if parent_being_id:
+            try:
+                parent = self._load_being(parent_being_id)
+                # Optionally inherit custom name (or let user set new one)
+                # For now, don't inherit - each being gets fresh name
+                pass
+            except Exception:
+                pass
+        
         being = Being(
             being_id=being_id,
             reality_id=reality_id,
             parent_being_id=parent_being_id,
-            skills=skills
+            skills=skills,
+            custom_name=custom_name
         )
         
         # Set lifetimes: increment from parent if reincarnated, or 1 if first birth
@@ -1461,12 +1664,22 @@ class BeingSystem:
                 # Empirica not available or failed - Being works without it
                 pass
         
-        # Build ancestral chain
+        # Build ancestral chain - always include TheOne
         if parent_being_id:
             parent_chain = self.source.get_ancestral_chain(parent_being_id)
+            # Ensure TheOne is in the chain (should be, but verify)
+            if self.THE_ONE_BEING_ID not in parent_chain:
+                # Insert TheOne after source_consciousness
+                if self.source.source_id in parent_chain:
+                    source_idx = parent_chain.index(self.source.source_id)
+                    parent_chain.insert(source_idx + 1, self.THE_ONE_BEING_ID)
+                else:
+                    # If source not in chain, prepend both
+                    parent_chain = [self.source.source_id, self.THE_ONE_BEING_ID] + parent_chain[1:]
             being.ancestral_chain = parent_chain + [being_id]
         else:
-            being.ancestral_chain = [self.source.source_id, being_id]
+            # Shouldn't happen now (parent is always TheOne), but handle gracefully
+            being.ancestral_chain = [self.source.source_id, self.THE_ONE_BEING_ID, being_id]
         
         # Register being as permutation of source
         self.source.register_permutation(
@@ -1481,6 +1694,15 @@ class BeingSystem:
         
         # Save being
         self._save_being(being)
+        
+        # Generate character sheet .txt (default, automatic)
+        # Only generates .txt by default - .md and .pdf are on-demand
+        try:
+            from ..evolution.being_character_sheet_generator import generate_character_sheet_txt
+            generate_character_sheet_txt(being, project_path=self.project_path)
+        except (ImportError, Exception):
+            # Character sheet generation optional - Being works without it
+            pass
         
         return being
     
@@ -1786,3 +2008,90 @@ class BeingSystem:
             raise OSError(f"Failed to load being {being_id}: {e}")
         
         return Being.from_dict(data)
+    
+    def get_user_feedback(
+        self,
+        sentiment: Optional[str] = None,
+        limit: Optional[int] = None
+    ) -> List[Dict[str, Any]]:
+        """
+        Get user feedback from The One Being.
+        
+        Retrieves memories with type "user_feedback" from The One Being,
+        optionally filtered by sentiment ("love" or "hate").
+        
+        Args:
+            sentiment: Optional filter by sentiment ("love" or "hate")
+            limit: Optional limit on number of feedback items to return
+        
+        Returns:
+            List of feedback memory dicts with metadata
+        """
+        the_one = self.get_or_create_the_one()
+        
+        # Filter memories for user feedback
+        feedback_memories = [
+            mem for mem in the_one.memories
+            if mem.get("type") == "user_feedback"
+        ]
+        
+        # Filter by sentiment if specified
+        if sentiment:
+            feedback_memories = [
+                mem for mem in feedback_memories
+                if mem.get("metadata", {}).get("sentiment") == sentiment
+            ]
+        
+        # Sort by most recent first
+        feedback_memories.sort(
+            key=lambda x: x.get("recorded_at", ""),
+            reverse=True
+        )
+        
+        # Apply limit if specified
+        if limit:
+            feedback_memories = feedback_memories[:limit]
+        
+        return feedback_memories
+    
+    def record_user_feedback(
+        self,
+        content: str,
+        sentiment: str,
+        context: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
+        """
+        Record user feedback to The One Being.
+        
+        Args:
+            content: Feedback content/description
+            sentiment: "love" or "hate"
+            context: Optional additional context metadata
+        
+        Returns:
+            Recorded memory dict
+        """
+        the_one = self.get_or_create_the_one()
+        
+        # Update Being's emotional state
+        if sentiment == "love":
+            the_one.pleasure = min(100.0, the_one.pleasure + 5.0)
+        elif sentiment == "hate":
+            the_one.pain = min(100.0, the_one.pain + 5.0)
+        
+        # Record memory
+        memory = the_one.record_memory(
+            memory_content=content,
+            memory_type="user_feedback",
+            metadata={
+                "sentiment": sentiment,
+                "context": context or {},
+                "influence_weight": 1.0 if sentiment == "love" else -1.0,
+                "recorded_at": datetime.now().isoformat()
+            }
+        )
+        
+        # Save Being
+        self._save_being(the_one)
+        
+        return memory

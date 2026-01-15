@@ -20,6 +20,7 @@ from .decision_matrix import (
 )
 from .input_transformer import InputTransformer
 from .persistence import DecisionPersistence
+from ..being import BeingSystem
 
 
 class DecisionCLI:
@@ -34,6 +35,7 @@ class DecisionCLI:
         """
         self.project_path = project_path
         self.console = Console()
+        self.being_system = BeingSystem(project_path=project_path)
     
     def run_decision_matrix(
         self,
@@ -89,6 +91,16 @@ class DecisionCLI:
             self.console.print(f"[bold red]Input Error:[/bold red] {str(e)}")
             raise
         
+        # Get user feedback to inform decision
+        feedback_adjustments = self._get_feedback_adjustments(alternatives)
+        
+        # Apply feedback adjustments to scores if any feedback exists
+        if feedback_adjustments:
+            scores = self._apply_feedback_adjustments(scores, feedback_adjustments, criteria)
+            # Rebuild matrix with adjusted scores
+            raw_data['scores'] = scores
+            matrix = InputTransformer.transform_input(raw_data)
+        
         # Calculate
         calculator = DecisionMatrixCalculator(matrix)
         
@@ -96,6 +108,10 @@ class DecisionCLI:
         if methodology != "WSM":
             raise ValueError(f"Unsupported methodology: {methodology}. Only 'WSM' is supported.")
         results = calculator.calculate_wsm()
+        
+        # Show feedback influence if applicable
+        if feedback_adjustments:
+            self._display_feedback_influence(feedback_adjustments)
         
         rankings = calculator.rank_alternatives(results)
         
@@ -462,3 +478,127 @@ class DecisionCLI:
         except Exception as e:
             self.console.print(f"[bold red]Error loading file:[/bold red] {str(e)}")
             return None
+    
+    def _get_feedback_adjustments(
+        self,
+        alternatives: List[str]
+    ) -> Dict[str, float]:
+        """
+        Get feedback-based adjustments for alternatives.
+        
+        Analyzes user feedback from The One Being and calculates
+        adjustments for alternatives that align with loved/hated patterns.
+        
+        Args:
+            alternatives: List of alternative names
+        
+        Returns:
+            Dictionary mapping alternative names to adjustment values (-1.0 to +1.0)
+        """
+        try:
+            # Get recent feedback (last 20 items)
+            love_feedback = self.being_system.get_user_feedback(sentiment="love", limit=10)
+            hate_feedback = self.being_system.get_user_feedback(sentiment="hate", limit=10)
+            
+            adjustments = {alt: 0.0 for alt in alternatives}
+            
+            # Analyze feedback for patterns that match alternatives
+            for feedback in love_feedback:
+                content = feedback.get("content", "").lower()
+                context = feedback.get("metadata", {}).get("context", {})
+                
+                # Check if any alternative matches feedback patterns
+                for alt in alternatives:
+                    alt_lower = alt.lower()
+                    # Simple keyword matching (can be enhanced)
+                    if any(word in content for word in alt_lower.split()):
+                        adjustments[alt] += 0.1  # Positive adjustment
+                    # Check context for related patterns
+                    if isinstance(context, dict):
+                        context_str = str(context).lower()
+                        if any(word in context_str for word in alt_lower.split()):
+                            adjustments[alt] += 0.05
+            
+            for feedback in hate_feedback:
+                content = feedback.get("content", "").lower()
+                context = feedback.get("metadata", {}).get("context", {})
+                
+                # Check if any alternative matches feedback patterns
+                for alt in alternatives:
+                    alt_lower = alt.lower()
+                    if any(word in content for word in alt_lower.split()):
+                        adjustments[alt] -= 0.1  # Negative adjustment
+                    if isinstance(context, dict):
+                        context_str = str(context).lower()
+                        if any(word in context_str for word in alt_lower.split()):
+                            adjustments[alt] -= 0.05
+            
+            # Clamp adjustments to reasonable range
+            for alt in adjustments:
+                adjustments[alt] = max(-1.0, min(1.0, adjustments[alt]))
+            
+            # Only return non-zero adjustments
+            return {k: v for k, v in adjustments.items() if abs(v) > 0.01}
+        except Exception:
+            # If feedback system fails, continue without adjustments
+            return {}
+    
+    def _apply_feedback_adjustments(
+        self,
+        scores: Dict[str, Dict[str, float]],
+        adjustments: Dict[str, float]
+    ) -> Dict[str, Dict[str, float]]:
+        """
+        Apply feedback adjustments to scores.
+        
+        Adds an implicit "user_satisfaction" criterion based on feedback,
+        or adjusts existing scores proportionally.
+        
+        Args:
+            scores: Original scores dict
+            adjustments: Adjustment values per alternative
+        
+        Returns:
+            Adjusted scores dict
+        """
+        adjusted_scores = {}
+        
+        for alt, alt_scores in scores.items():
+            adjusted_scores[alt] = alt_scores.copy()
+            
+            if alt in adjustments:
+                adjustment = adjustments[alt]
+                
+                # Add implicit user_satisfaction criterion
+                # Weight it at 10% of total (distribute from other criteria)
+                if "user_satisfaction" not in adjusted_scores[alt]:
+                    # Calculate base satisfaction score from adjustment
+                    # Map adjustment (-1.0 to +1.0) to score (1.0 to 10.0)
+                    satisfaction_score = 5.0 + (adjustment * 5.0)
+                    adjusted_scores[alt]["user_satisfaction"] = satisfaction_score
+        
+        return adjusted_scores
+    
+    def _display_feedback_influence(self, adjustments: Dict[str, float]):
+        """Display how user feedback influenced the decision."""
+        if not adjustments:
+            return
+        
+        self.console.print()
+        self.console.print(Panel(
+            "[bold]💚 Emotional Feedback Influence[/bold]",
+            border_style="cyan"
+        ))
+        self.console.print()
+        self.console.print("[dim]Your emotional feedback (via /love-you and /hate-this) has been considered:[/dim]")
+        self.console.print()
+        
+        for alt, adj in sorted(adjustments.items(), key=lambda x: x[1], reverse=True):
+            if adj > 0:
+                self.console.print(f"  [green]+[/green] {alt}: [green]+{adj:.2f}[/green] (loved patterns)")
+            elif adj < 0:
+                self.console.print(f"  [red]-[/red] {alt}: [red]{adj:.2f}[/red] (hated patterns)")
+        
+        self.console.print()
+        self.console.print("[dim]Scores have been adjusted proportionally based on your emotional feedback.[/dim]")
+        self.console.print()

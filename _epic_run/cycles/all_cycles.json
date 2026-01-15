@@ -1,0 +1,602 @@
+[
+  {
+    "cycle_num": 1,
+    "focus": "analysis",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.318457"
+  },
+  {
+    "cycle_num": 2,
+    "focus": "engineering",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.319165"
+  },
+  {
+    "cycle_num": 3,
+    "focus": "planning",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.319702"
+  },
+  {
+    "cycle_num": 4,
+    "focus": "quality",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.320138"
+  },
+  {
+    "cycle_num": 5,
+    "focus": "analysis",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.320570"
+  },
+  {
+    "cycle_num": 6,
+    "focus": "engineering",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.321132"
+  },
+  {
+    "cycle_num": 7,
+    "focus": "planning",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.321642"
+  },
+  {
+    "cycle_num": 8,
+    "focus": "quality",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.322086"
+  },
+  {
+    "cycle_num": 9,
+    "focus": "analysis",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.322508"
+  },
+  {
+    "cycle_num": 10,
+    "focus": "engineering",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.323188"
+  },
+  {
+    "cycle_num": 11,
+    "focus": "planning",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.324564"
+  },
+  {
+    "cycle_num": 12,
+    "focus": "quality",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.325546"
+  },
+  {
+    "cycle_num": 13,
+    "focus": "analysis",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.326418"
+  },
+  {
+    "cycle_num": 14,
+    "focus": "engineering",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.327428"
+  },
+  {
+    "cycle_num": 15,
+    "focus": "planning",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.327996"
+  },
+  {
+    "cycle_num": 16,
+    "focus": "quality",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.328525"
+  },
+  {
+    "cycle_num": 17,
+    "focus": "analysis",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.330821"
+  },
+  {
+    "cycle_num": 18,
+    "focus": "engineering",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.331479"
+  },
+  {
+    "cycle_num": 19,
+    "focus": "planning",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.331962"
+  },
+  {
+    "cycle_num": 20,
+    "focus": "quality",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.332761"
+  },
+  {
+    "cycle_num": 21,
+    "focus": "analysis",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.333711"
+  },
+  {
+    "cycle_num": 22,
+    "focus": "engineering",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.334321"
+  },
+  {
+    "cycle_num": 23,
+    "focus": "planning",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.334783"
+  },
+  {
+    "cycle_num": 24,
+    "focus": "quality",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.335242"
+  },
+  {
+    "cycle_num": 25,
+    "focus": "analysis",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.335724"
+  },
+  {
+    "cycle_num": 26,
+    "focus": "engineering",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.336144"
+  },
+  {
+    "cycle_num": 27,
+    "focus": "planning",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.336563"
+  },
+  {
+    "cycle_num": 28,
+    "focus": "quality",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.336984"
+  },
+  {
+    "cycle_num": 29,
+    "focus": "analysis",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.337402"
+  },
+  {
+    "cycle_num": 30,
+    "focus": "engineering",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.338027"
+  },
+  {
+    "cycle_num": 31,
+    "focus": "planning",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.338503"
+  },
+  {
+    "cycle_num": 32,
+    "focus": "quality",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.338928"
+  },
+  {
+    "cycle_num": 33,
+    "focus": "analysis",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.339349"
+  },
+  {
+    "cycle_num": 34,
+    "focus": "engineering",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.339856"
+  },
+  {
+    "cycle_num": 35,
+    "focus": "planning",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.340362"
+  },
+  {
+    "cycle_num": 36,
+    "focus": "quality",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.344091"
+  },
+  {
+    "cycle_num": 37,
+    "focus": "analysis",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.345746"
+  },
+  {
+    "cycle_num": 38,
+    "focus": "engineering",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.346385"
+  },
+  {
+    "cycle_num": 39,
+    "focus": "planning",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.347335"
+  },
+  {
+    "cycle_num": 40,
+    "focus": "quality",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.348325"
+  },
+  {
+    "cycle_num": 41,
+    "focus": "analysis",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.349179"
+  },
+  {
+    "cycle_num": 42,
+    "focus": "engineering",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.349672"
+  },
+  {
+    "cycle_num": 43,
+    "focus": "planning",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.351235"
+  },
+  {
+    "cycle_num": 44,
+    "focus": "quality",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.351753"
+  },
+  {
+    "cycle_num": 45,
+    "focus": "analysis",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.352297"
+  },
+  {
+    "cycle_num": 46,
+    "focus": "engineering",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.352734"
+  },
+  {
+    "cycle_num": 47,
+    "focus": "planning",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.353156"
+  },
+  {
+    "cycle_num": 48,
+    "focus": "quality",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.353572"
+  },
+  {
+    "cycle_num": 49,
+    "focus": "analysis",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.354033"
+  },
+  {
+    "cycle_num": 50,
+    "focus": "engineering",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.355098"
+  },
+  {
+    "cycle_num": 51,
+    "focus": "planning",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.355769"
+  },
+  {
+    "cycle_num": 52,
+    "focus": "quality",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.356445"
+  },
+  {
+    "cycle_num": 53,
+    "focus": "analysis",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.357135"
+  },
+  {
+    "cycle_num": 54,
+    "focus": "engineering",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.357776"
+  },
+  {
+    "cycle_num": 55,
+    "focus": "planning",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.359004"
+  },
+  {
+    "cycle_num": 56,
+    "focus": "quality",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.359839"
+  },
+  {
+    "cycle_num": 57,
+    "focus": "analysis",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.360744"
+  },
+  {
+    "cycle_num": 58,
+    "focus": "engineering",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.361636"
+  },
+  {
+    "cycle_num": 59,
+    "focus": "planning",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.362722"
+  },
+  {
+    "cycle_num": 60,
+    "focus": "quality",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.363663"
+  },
+  {
+    "cycle_num": 61,
+    "focus": "analysis",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.364444"
+  },
+  {
+    "cycle_num": 62,
+    "focus": "engineering",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.365317"
+  },
+  {
+    "cycle_num": 63,
+    "focus": "planning",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.365981"
+  },
+  {
+    "cycle_num": 64,
+    "focus": "quality",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.366597"
+  },
+  {
+    "cycle_num": 65,
+    "focus": "analysis",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.367059"
+  },
+  {
+    "cycle_num": 66,
+    "focus": "engineering",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.367621"
+  },
+  {
+    "cycle_num": 67,
+    "focus": "planning",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.368154"
+  },
+  {
+    "cycle_num": 68,
+    "focus": "quality",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.368605"
+  },
+  {
+    "cycle_num": 69,
+    "focus": "analysis",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.369069"
+  },
+  {
+    "cycle_num": 70,
+    "focus": "engineering",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.369570"
+  },
+  {
+    "cycle_num": 71,
+    "focus": "planning",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.370001"
+  },
+  {
+    "cycle_num": 72,
+    "focus": "quality",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.370773"
+  },
+  {
+    "cycle_num": 73,
+    "focus": "analysis",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.371589"
+  },
+  {
+    "cycle_num": 74,
+    "focus": "engineering",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.372312"
+  },
+  {
+    "cycle_num": 75,
+    "focus": "planning",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.373039"
+  },
+  {
+    "cycle_num": 76,
+    "focus": "quality",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.373774"
+  },
+  {
+    "cycle_num": 77,
+    "focus": "analysis",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.374655"
+  },
+  {
+    "cycle_num": 78,
+    "focus": "engineering",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.376166"
+  },
+  {
+    "cycle_num": 79,
+    "focus": "planning",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.377250"
+  },
+  {
+    "cycle_num": 80,
+    "focus": "quality",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.378205"
+  },
+  {
+    "cycle_num": 81,
+    "focus": "analysis",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.378990"
+  },
+  {
+    "cycle_num": 82,
+    "focus": "engineering",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.379981"
+  },
+  {
+    "cycle_num": 83,
+    "focus": "planning",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.380874"
+  },
+  {
+    "cycle_num": 84,
+    "focus": "quality",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.381509"
+  },
+  {
+    "cycle_num": 85,
+    "focus": "analysis",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.382149"
+  },
+  {
+    "cycle_num": 86,
+    "focus": "engineering",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.382761"
+  },
+  {
+    "cycle_num": 87,
+    "focus": "planning",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.383284"
+  },
+  {
+    "cycle_num": 88,
+    "focus": "quality",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.383746"
+  },
+  {
+    "cycle_num": 89,
+    "focus": "analysis",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.387347"
+  },
+  {
+    "cycle_num": 90,
+    "focus": "engineering",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.389555"
+  },
+  {
+    "cycle_num": 91,
+    "focus": "planning",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.390784"
+  },
+  {
+    "cycle_num": 92,
+    "focus": "quality",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.391412"
+  },
+  {
+    "cycle_num": 93,
+    "focus": "analysis",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.392310"
+  },
+  {
+    "cycle_num": 94,
+    "focus": "engineering",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.392904"
+  },
+  {
+    "cycle_num": 95,
+    "focus": "planning",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.393436"
+  },
+  {
+    "cycle_num": 96,
+    "focus": "quality",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.393954"
+  },
+  {
+    "cycle_num": 97,
+    "focus": "analysis",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.394405"
+  },
+  {
+    "cycle_num": 98,
+    "focus": "engineering",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.394885"
+  },
+  {
+    "cycle_num": 99,
+    "focus": "planning",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.395372"
+  },
+  {
+    "cycle_num": 100,
+    "focus": "quality",
+    "success": true,
+    "timestamp": "2026-01-13T02:14:53.397411"
+  }
+]

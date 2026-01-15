@@ -11,6 +11,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Work in progress features
 
+## [0.8.1] - 2026-01-14
+
+### Added
+
+#### Science-Bitch: Spacetime Context & Artifacts
+- **Spacetime Context Capture**: Complete contextual data capture at invocation moment
+  - Git state (branch, commit, uncommitted files, recent commits)
+  - System state (platform, Python version, disk usage)
+  - Project state (active work efforts, recent files)
+  - Environment state (virtual env, user, WAFT variables)
+- **Artifact Metadata System**: Unique generation IDs, timestamps, timezone information
+- **Verifiable Exhibits**: Screenshot and visual evidence embedded in reports (Exhibit A, B, C...)
+- **JSON Context Files**: Full context saved as JSON for reference
+- **Enhanced PDF Reports**: Academic-style reports with artifact metadata on cover page
+
+#### New Commands
+- **`/take-your-time`**: Encourage deliberate, careful thinking before proceeding
+- **`/dossier`**: Create comprehensive mission dossiers with PDF generation
+- **`/kickoff`**: Genesis moment creation and documentation
+- **Enhanced `/spin-up`**: Now includes README reading, docs scanning, work efforts review, and assumption checking
+
+#### PDF System Enhancements
+- **Academic Paper Template**: Artifact metadata display, enhanced typography, better cover design
+- **Template System Updates**: Improvements across all 14 PDF templates
+- **Contextual Data Integration**: Git/system/project state embedded in PDFs
+
+#### Pantheon: God of Science Planning
+- **Comprehensive Plan**: Complete implementation plan for The Scientist God
+- **OpenHands SDK Analysis**: Integration strategy with production-ready agent framework
+- **Architectural Design**: 7-phase implementation roadmap
+- **Observational System Design**: SENSE, REACT, OBSERVE, RECORD, EXAMINE, ORGANIZE capabilities
+
+#### Narrative & Philosophy
+- **NOW/SWAB/SWAE Concepts**: New cosmological framework added to core narrative
+- **The Infinite & The Point**: Fundamental existence concepts
+
+### Changed
+
+- **Science-Bitch Command**: Enhanced with spacetime context capture
+- **PDF Generation**: Improved academic paper template with artifact metadata
+- **Command System**: Enhanced `/spin-up` with comprehensive orientation
+- **Documentation**: Extensive analysis and planning documents
+
+### Fixed
+
+- Improved blank page handling in PDF generation
+- Enhanced error handling in template system
+- Fixed import errors in document builder
+- Improved PDF formatting consistency
+
 ## [0.7.0] - 2026-01-12
 
 ### Changed

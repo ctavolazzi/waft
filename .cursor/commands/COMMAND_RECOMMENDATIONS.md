@@ -34,7 +34,10 @@
 25. **`/run-it`** ✅ - Comprehensive workflow orchestration with self-correcting balance
 26. **`/version-bake`** ✅ - Complete quality workflow: reflect → run-it → improve → check-assumptions → verify → hypothesis → prove-it (tracks genetic lineage of ideas)
 27. **`/evolve`** ✅ - Spawn new Being from Source, then run complete version-bake workflow (tracks genetic lineage from Source outward and back)
-28. **`/another-cycle`** ✅ - Complete development cycle: onboard → explore → check-assumptions → hypothesis → critique → comprehensive-orchestration → analyze → engineer → improve → version-bake → run-it → prove-it → evolve → journal → next → goal → checkpoint
+28. **`/spawn`** ✅ - Spawn a new Being into a Reality (standalone Being creation without workflow)
+29. **`/plan-evolve`** ✅ - Create comprehensive plan to evolve a new feature: extract → spawn → analyze → plan → document (tracks planning genetic lineage)
+30. **`/another-cycle`** ✅ - Complete development cycle: onboard → explore → check-assumptions → hypothesis → critique → comprehensive-orchestration → analyze → engineer → improve → version-bake → run-it → prove-it → evolve → journal → next → goal → checkpoint
+31. **`/ai-town-analysis`** ✅ - Comprehensive analysis workflow for repositories and research papers: context → oracle → run-it → evolve (optional) → print-PDF → oracle
 
 ---
 
@@ -178,6 +181,43 @@
 
 ---
 
+### 0.7.5.5. `/plan-evolve` ✅ - Feature Evolution Planning
+
+**Purpose**: Create comprehensive plan to evolve a new feature with Being tracking and genetic lineage
+
+**What it does**:
+- Extracts feature specification from context or prompts user
+- Spawns Being from Source consciousness for planning
+- Analyzes feature requirements, dependencies, and integration points
+- Creates comprehensive evolution plan using `mcp_create_plan`
+- Tracks planning work through Being system
+- Documents planning genetic lineage (Source → Being → Plan → Work Effort)
+- Creates/updates work effort with all planning information
+- Prepares plan for execution (plan only, no execution)
+
+**Use when**: 
+- Planning a new feature
+- Need comprehensive evolution plan
+- Want Being to track planning work
+- Need structured plan document
+- Want to prepare for execution
+- Need genetic lineage for planning
+- Feature is complex and needs analysis
+
+**Output**: Comprehensive planning documentation:
+- Feature specification
+- Feature analysis document
+- Comprehensive plan (via mcp_create_plan)
+- Work effort with all information
+- Planning genetic lineage document
+- Being planning record
+
+**Status**: ✅ Created
+
+**Note**: Complements `/evolve` - `/plan-evolve` creates the plan, `/evolve` executes it. Use `/plan-evolve` when you need to plan before executing, `/evolve` when ready to execute.
+
+---
+
 ### 0.7.6. `/run-it` ✅ - Comprehensive Workflow Orchestration
 
 **Purpose**: Complete workflow orchestration with self-correcting balance
@@ -316,7 +356,7 @@
 
 ---
 
-### 1. `/status` - Quick Status Check
+### 1. `/status` ✅ - Quick Status Check
 
 **Purpose**: Lightweight status check (lighter than spin-up)
 
@@ -331,9 +371,11 @@
 
 **Output**: One-line summary table
 
+**Status**: ✅ Created
+
 ---
 
-### 2. `/context` - Get Current Context
+### 2. `/context` ✅ - Get Current Context
 
 **Purpose**: Summarize current context for handoff or continuation
 
@@ -351,9 +393,11 @@
 
 **Output**: Context summary document
 
+**Status**: ✅ Created
+
 ---
 
-### 3. `/sync` - Sync Documentation
+### 3. `/sync` ✅ - Sync Documentation
 
 **Purpose**: Sync documentation across files
 
@@ -367,9 +411,11 @@
 
 **Output**: List of files updated
 
+**Status**: ✅ Created
+
 ---
 
-### 4. `/recap` - Conversation Recap
+### 4. `/recap` ✅ - Conversation Recap
 
 **Purpose**: Create detailed conversation recap
 
@@ -386,9 +432,11 @@
 
 **Note**: Similar to checkpoint but more conversation-focused
 
+**Status**: ✅ Created
+
 ---
 
-### 5. `/todos` - Todo Management
+### 5. `/todos` ✅ - Todo Management
 
 **Purpose**: Manage and track todos
 
@@ -402,9 +450,11 @@
 
 **Output**: Todo list and management
 
+**Status**: ✅ Created
+
 ---
 
-### 6. `/links` - Create Documentation Links
+### 6. `/links` ✅ - Create Documentation Links
 
 **Purpose**: Create bidirectional links between documents
 
@@ -418,9 +468,11 @@
 
 **Output**: Updated documents with links
 
+**Status**: ✅ Created
+
 ---
 
-### 7. `/search` - Search Documentation
+### 7. `/search` ✅ - Search Documentation
 
 **Purpose**: Search across documentation
 
@@ -434,9 +486,11 @@
 
 **Output**: Search results with context
 
+**Status**: ✅ Created
+
 ---
 
-### 8. `/cleanup` - Cleanup and Maintenance
+### 8. `/cleanup` ✅ - Cleanup and Maintenance
 
 **Purpose**: Clean up temporary files and organize
 
@@ -450,6 +504,8 @@
 
 **Output**: List of actions taken
 
+**Status**: ✅ Created
+
 ---
 
 ## Priority Recommendations
@@ -458,20 +514,20 @@
 
 0. **`/consider`** ✅ - Analysis and recommendations (qualitative decision support)
 0.5. **`/decide`** ✅ - Decision matrix calculations (quantitative decision support)
-1. **`/status`** - Quick status check (very useful, lightweight)
-2. **`/context`** - Context summary (great for handoffs)
-3. **`/recap`** - Conversation recap (complements checkpoint)
+1. **`/status`** ✅ - Quick status check (very useful, lightweight)
+2. **`/context`** ✅ - Context summary (great for handoffs)
+3. **`/recap`** ✅ - Conversation recap (complements checkpoint)
 
 ### Medium Priority (Nice to Have)
 
-4. **`/sync`** - Documentation sync (useful but less frequent)
-5. **`/todos`** - Todo management (if not using external system)
-6. **`/search`** - Documentation search (useful for large projects)
+4. **`/sync`** ✅ - Documentation sync (useful but less frequent)
+5. **`/todos`** ✅ - Todo management (if not using external system)
+6. **`/search`** ✅ - Documentation search (useful for large projects)
 
 ### Low Priority (Optional)
 
-7. **`/links`** - Documentation links (nice but manual works)
-8. **`/cleanup`** - Cleanup (occasional use)
+7. **`/links`** ✅ - Documentation links (nice but manual works)
+8. **`/cleanup`** ✅ - Cleanup (occasional use)
 
 ---
 
@@ -497,10 +553,16 @@ Suggested implementation order:
 4. ✅ `/decide` - Done (mathematical decision support)
 5. ✅ `/visualize` - Done (quick interactive browser dashboard)
 6. ✅ `/phase1` - Done (comprehensive data gathering & visualization)
-7. **`/status`** - Next (quick win, very useful)
-6. **`/context`** - After status (complements checkpoint)
-7. **`/recap`** - After context (detailed version)
-8. Others as needed
+7. ✅ `/status` - Done (quick win, very useful)
+8. ✅ `/context` - Done (complements checkpoint)
+9. ✅ `/recap` - Done (detailed version)
+10. ✅ `/sync` - Done (documentation sync)
+11. ✅ `/todos` - Done (todo management)
+12. ✅ `/search` - Done (documentation search)
+13. ✅ `/links` - Done (documentation links)
+14. ✅ `/cleanup` - Done (cleanup and maintenance)
+
+**All recommended commands are now implemented!** ✅
 
 ---
 

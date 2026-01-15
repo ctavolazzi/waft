@@ -1,0 +1,50 @@
+{
+  "genome_id": "b99d83e34c17560002f310fe489609940750dfc11590266962b5350d6cc7e88a",
+  "genes": {
+    "font": {
+      "family": "'Times New Roman', 'Times', serif",
+      "size_body": 10,
+      "size_h1": 16,
+      "size_h2": 14,
+      "size_h3": 12,
+      "size_code": 9,
+      "line_height": 1.4
+    },
+    "margin": {
+      "top": 20,
+      "bottom": 20,
+      "left": 20,
+      "right": 20,
+      "paragraph_spacing": 8,
+      "section_spacing": 12
+    },
+    "color": {
+      "text": "#000000",
+      "background": "#FFFFFF",
+      "heading": "#000000",
+      "accent": "#000000",
+      "code_bg": "#f5f5f5",
+      "code_text": "#000000",
+      "border": "#cccccc"
+    },
+    "layout": {
+      "columns": 1,
+      "density": "normal",
+      "toc_enabled": false,
+      "page_numbers": true,
+      "header_enabled": true,
+      "footer_enabled": true
+    },
+    "name": "Clinical_Standard - The Shattered Crown - NPC Refe",
+    "description": ""
+  },
+  "generation": 0,
+  "parent_id": null,
+  "lineage_path": [
+    "b99d83e34c17560002f310fe489609940750dfc11590266962b5350d6cc7e88a"
+  ],
+  "scientific_name": "Prudens Altus, the Great",
+  "fitness_score": null,
+  "created_at": "2026-01-13T00:51:43.341412",
+  "last_evaluated_at": null
+}

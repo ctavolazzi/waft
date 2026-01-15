@@ -1,0 +1,10 @@
+{
+  "claim": "The PDF generator footer displays AI assistant information",
+  "verdict": "PROVEN",
+  "confidence": 0.95,
+  "reasoning": "Claim is PROVEN based on 1 supporting precedents (weight: 0.98) vs 0 contradicting (weight: 0.00). Key precedents: case_20260114_105535",
+  "relevant_precedents": [
+    "case_20260114_105535"
+  ],
+  "created_at": "2026-01-14T11:26:34.261003"
+}

@@ -1,0 +1,428 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Booklet Creator Integration Plan</title>
+
+    <style>
+        /* Strict 2-page setup */
+        @page {
+            size: letter;
+            margin: 25.4mm 25.4mm 25.4mm 25.4mm;
+        }
+
+        body {
+            font-family: 'Times New Roman', 'Times', serif;
+            font-size: 11pt;
+            line-height: 1.4;
+            color: #000000;
+            background: #FFFFFF;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Prevent orphans/widows */
+        p, li {
+            orphans: 2;
+            widows: 2;
+        }
+
+        /* Page break control */
+        .page-break {
+            page-break-after: always;
+            break-after: page;
+        }
+
+        .no-break {
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 16pt;
+            color: #000000;
+            margin-top: 0;
+            margin-bottom: 12pt;
+            page-break-after: avoid;
+            border-bottom: 2pt solid #000000;
+            padding-bottom: 4pt;
+        }
+
+        h2 {
+            font-size: 14pt;
+            color: #000000;
+            margin-top: 12pt;
+            margin-bottom: 8pt;
+            page-break-after: avoid;
+            border-bottom: 1pt solid #000000;
+            padding-bottom: 2pt;
+        }
+
+        h3 {
+            font-size: 12pt;
+            color: #000000;
+            margin-top: 8pt;
+            margin-bottom: 4.0pt;
+            page-break-after: avoid;
+        }
+
+        p {
+            margin: 0 0 8pt 0;
+        }
+
+        ul, ol {
+            margin: 8pt 0 8pt 0;
+            padding-left: 20pt;
+        }
+
+        li {
+            margin-bottom: 4.0pt;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        /* Nested lists */
+        ul ul, ol ol, ul ol, ol ul {
+            margin-top: 4.0pt;
+            margin-bottom: 4.0pt;
+            padding-left: 30pt;
+        }
+
+        /* Visual boxes - inspired by field guide */
+        .note-box {
+            border-left: 4pt solid #000000;
+            background: #f5f5f5;
+            padding: 8pt;
+            margin: 8pt 0;
+            page-break-inside: avoid;
+        }
+
+        .note-title {
+            font-weight: bold;
+            color: #000000;
+            font-size: 11pt;
+            margin-bottom: 4.0pt;
+        }
+
+        .highlight-box {
+            border: 2pt solid #000000;
+            background: #f5f5f5;
+            padding: 8pt;
+            margin: 8pt 0;
+            page-break-inside: avoid;
+        }
+
+        /* Tables for structured data */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 8pt 0;
+            font-size: 10pt;
+            page-break-inside: avoid;
+        }
+
+        th {
+            background: #000000;
+            color: #FFFFFF;
+            border: 1pt solid #000000;
+            padding: 4pt;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            border: 1pt solid #00000033;
+            padding: 4pt;
+        }
+
+        tr:nth-child(even) {
+            background: #f5f5f5;
+        }
+
+        /* Pillar boxes - visual representation */
+        .pillar {
+            border: 2pt solid #000000;
+            background: #FFFFFF;
+            padding: 8pt;
+            margin: 8pt 0;
+            page-break-inside: avoid;
+        }
+
+        .pillar-title {
+            font-weight: bold;
+            color: #000000;
+            font-size: 12pt;
+            margin-bottom: 4.0pt;
+        }
+
+        /* Ideas - prose presentation with varied formatting */
+        .idea {
+            margin-bottom: 9.6pt;
+            padding: 6.4pt 0;
+            page-break-inside: avoid;
+        }
+
+        /* Alternate between different visual styles */
+        .idea:nth-child(odd) {
+            padding-left: 8pt;
+            border-left: 2pt solid #000000;
+            background: #f5f5f510;
+        }
+
+        .idea:nth-child(even) {
+            padding-left: 0;
+            border-left: none;
+            background: transparent;
+            border-top: 1pt solid #00000020;
+            padding-top: 4.8pt;
+            margin-top: 3.2pt;
+        }
+
+        .idea:nth-child(3n) {
+            padding-left: 0;
+            border-left: none;
+            background: #f5f5f508;
+            border-radius: 3pt;
+            padding: 4.8pt;
+        }
+
+        .idea-content {
+            font-size: 11pt;
+            line-height: 1.6;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+            text-align: justify;
+            margin: 0;
+        }
+
+        /* Metadata - compact */
+        .metadata {
+            font-size: 9pt;
+            color: #00000088;
+            line-height: 1.3;
+            border-top: 1pt solid #00000033;
+            padding-top: 4.0pt;
+            margin-top: 8pt;
+        }
+
+        .metadata p {
+            margin-bottom: 2.6666666666666665pt;
+        }
+
+        /* Summary box - prominent */
+        .summary-box {
+            background: #f5f5f5;
+            padding: 8pt;
+            margin-bottom: 12pt;
+            border-left: 4pt solid #000000;
+            border-top: 1pt solid #000000;
+            border-right: 1pt solid #000000;
+            border-bottom: 1pt solid #000000;
+        }
+
+        /* Scientific name styling */
+        .scientific-name {
+            font-style: italic;
+            color: #000000;
+        }
+
+        /* Code blocks */
+        code {
+            font-family: monospace;
+            font-size: 9pt;
+            background: #f5f5f5;
+            color: #000000;
+            padding: 2pt 4pt;
+            border-radius: 2pt;
+        }
+
+        pre {
+            background: #f5f5f5;
+            padding: 4.0pt;
+            border-left: 3pt solid #000000;
+            font-size: 9pt;
+            overflow-x: auto;
+            page-break-inside: avoid;
+        }
+
+        /* Visual separators */
+        .divider {
+            border-top: 1pt solid #00000033;
+            margin: 8pt 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- PAGE 1 -->
+    <div class="page-1">
+        <h1>Booklet Creator Integration Plan</h1>
+
+        <div class="summary-box">
+            <strong>Summary:</strong> Task 2.
+        </div>
+
+        <div class="metadata">
+            <p><strong>Generated:</strong> 2026-01-13 04:45 UTC | <strong>Ideas Extracted:</strong> 27</p>
+        </div>
+
+        <h2>What Happened</h2>
+
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Task 2.3: Integration with WAFT Tools [ ] Consider integration with <code>DocumentBuilder</code>: Add <code>.booklet()</code> method to <code>DocumentBuilder</code> Or standalone function: <code>waft.booklet.rearrange()</code> [ ] Integration with <code>Binder</code> system (optional): Rearrange binder pages for booklet printing [ ] Document integration patterns.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Skills Learned/Improved: Planning: Analyzed feature requirements Analysis: Understood algorithm and dependencies Architecture: Designed integration approach.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Knowledge Gained: Booklet printing page rearrangement algorithm PyPDF2 to pypdf migration patterns WAFT PDF tool ecosystem structure Integration patterns for new tools.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Feature Goal: Create a functional prototype that integrates booklet-creator's page rearrangement algorithm into WAFT's PDF tool ecosystem.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Source Repository: <code>chongchonghe/booklet-creator</code> Language: Python Dependencies: <code>PyPDF2=3.0.1</code> (old version) <code>numpy</code> Core Algorithm: Rearranges PDF pages for booklet printing Output: Creates <code>.booklet.pdf</code> file with rearranged pages.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>The booklet-creator uses a specific page rearrangement algorithm: For an 8-page document, rearranges to: <code>4, 5, 6, 3, 2, 7, 8, 1</code> Designed for Tabloid (11x17) printing with: 2 pages per sheet Short-edge binding Normal 'Z' layout Handles page ranges (start/end pages) Can print page order without rearranging.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>PDF Libraries: ✅ <code>pypdf&gt;=3.0.0</code> (modern version, already in dependencies) ✅ <code>numpy</code> (likely available, need to verify) ⚠️ <code>PyPDF2</code> (old, deprecated - needs migration to <code>pypdf</code>).</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Existing PDF Tools: <code>src/waft/document_builder.py</code> - Uses <code>pypdf.PdfReader</code> <code>src/waft/redactor.py</code> - Uses <code>pypdf.PdfReader, PdfWriter</code> <code>tools/pdf_binder_organizer/</code> - Uses <code>pypdf</code> for PDF manipulation <code>src/waft/binder.py</code> - Binder system for combining PDFs.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Task 1.1: Create Tool Directory [ ] Create <code>tools/booklet_creator/</code> directory [ ] Add <code>__init__.py</code> [ ] Create <code>README.md</code> with usage instructions.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Task 1.2: Migrate Code [ ] Copy <code>booklet.py</code> from repository [ ] Migrate <code>PyPDF2</code> → <code>pypdf</code>: Replace <code>from PyPDF2 import PdfWriter as Writer, PdfReader as Reader</code> Replace with <code>from pypdf import PdfWriter, PdfReader</code> Update variable names if needed [ ] Update imports and API calls [ ] Test basic functionality.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Task 1.3: Dependency Check [ ] Verify <code>numpy</code> is available (add to dependencies if needed) [ ] Verify <code>pypdf&gt;=3.0.0</code> is available (already in pyproject.toml) [ ] Update <code>requirements.txt</code> or <code>pyproject.toml</code> if needed.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Task 2.1: Create CLI Interface [ ] Create <code>cli.py</code> with Typer/Click interface [ ] Support command: <code>waft booklet &lt;pdf_file&gt; [options]</code> [ ] Options: <code>--start &lt;page&gt;</code> - Starting page number <code>--end &lt;page&gt;</code> - Ending page number <code>--print-pages</code> - Print page order without rearranging <code>--output &lt;path&gt;</code> - Custom output path [ ] Add help text and usage examples.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Task 3.1: Testing [ ] Create test PDFs (4, 8, 12, 16 pages) [ ] Test page rearrangement algorithm [ ] Verify output PDFs are valid [ ] Test edge cases: Minimum pages (4) Odd page counts Large documents Page ranges.</p></div>
+        </div>
+        
+    </div>
+
+    <!-- Forced page break -->
+    <div class="page-break"></div>
+
+    <!-- PAGE 2 -->
+    <div class="page-2">
+        
+        <h2>Additional Details</h2>
+
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Task 3.2: Documentation [ ] Update <code>README.md</code> with: Usage examples Printer setup instructions Algorithm explanation Integration examples [ ] Add docstrings to all functions [ ] Create example script in <code>examples/</code>.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>output = rearrange_for_booklet( pdf_path=Path("document.pdf"), start=1, end=None ) print(f"Booklet PDF created: {output}").</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Task 4.2: Output Options [ ] Support custom output paths [ ] Preserve original filename with <code>.booklet</code> suffix (default) [ ] Option to overwrite or create new file.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Task 4.3: CLI Command Registration [ ] Add to main WAFT CLI if applicable [ ] Or document as standalone tool [ ] Update main README with tool reference.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>[ ] Print test booklet on Tabloid paper [ ] Verify page order is correct when folded [ ] Verify binding works correctly.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Mitigation: Start with standalone tool (Option 1) Document integration patterns for future Keep API simple and focused.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Integration with DocumentBuilder Integration with Binder system Support for different paper sizes Support for different binding types GUI interface (optional).</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Review plan with user Execute plan using <code>/evolve</code> command (spawns Being, executes workflow) Or execute manually following this plan Track execution through Being system Complete evolution cycle.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Planning Participation: Feature specification extracted Repository analyzed Dependencies identified Integration points found Comprehensive plan created.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Decision: Start with Option 1 (standalone tool) for prototype, can migrate to Option 2 later.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Task 2.2: Python API [ ] Create clean Python API in <code>booklet.py</code>:.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Task 3.3: Example Usage [ ] Create <code>examples/create_booklet.py</code>:.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>✅ <code>pypdf&gt;=3.0.0</code> (already in <code>pyproject.toml</code>) ⚠️ <code>numpy</code> (need to verify/add if missing).</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>doc = DocumentBuilder.field_guide(title="Guide", content="...") doc.save("guide.pdf").</p></div>
+        </div>
+        
+        
+
+        <div class="divider"></div>
+
+        <div class="metrics">
+            <h3>Content Breakdown</h3>
+            <table>
+                <tr>
+                    <th>Type</th>
+                    <th>Count</th>
+                </tr>
+                <tr>
+                    <td>Decisions</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>Insights</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>Actions</td>
+                    <td>19</td>
+                </tr>
+                <tr>
+                    <td>Concepts</td>
+                    <td>6</td>
+                </tr>
+                <tr>
+                    <td>Questions</td>
+                    <td>1</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

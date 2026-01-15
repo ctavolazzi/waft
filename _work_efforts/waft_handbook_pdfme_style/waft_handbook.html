@@ -1,0 +1,3537 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='UTF-8'>
+<title>WAFT Framework Handbook: A Comprehensive Guide to Directed Evolution of Self-Modifying AI Agents</title>
+<style>
+
+        @page {
+            size: letter;
+            margin: 0.75in 0.5in 
+                    0.75in 0.5in;
+            
+            @top-left {
+                content: "FIELD GUIDE FG-WAFT-001";
+                font-family: 'Courier New', 'Courier', monospace;
+                font-size: 9pt;
+                font-weight: bold;
+                text-transform: uppercase;
+            }
+            
+            @top-right {
+                content: "Page " counter(page);
+                font-family: 'Courier New', 'Courier', monospace;
+                font-size: 9pt;
+            }
+            
+            @bottom-center {
+                content: "FOR OFFICIAL USE ONLY";
+                font-family: 'Courier New', 'Courier', monospace;
+                font-size: 8pt;
+                color: #cc0000;
+                font-weight: bold;
+            }
+        }
+        
+        @page :first {
+            @top-left { content: none; }
+            @top-right { content: none; }
+            @bottom-center { content: none; }
+        }
+        
+        body {
+            font-family: Times New Roman, Times, serif;
+            font-size: 11pt;
+            line-height: 1.5;
+            color: #000000;
+            text-align: justify;
+        }
+        
+        .cover-page {
+            page-break-after: always;
+            text-align: center;
+            padding: 1in 0.5in;
+            border: 4pt double #000;
+            margin: 0.5in;
+        }
+        
+        .series-number {
+            font-family: 'Courier New', 'Courier', monospace;
+            font-size: 14pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 0.3in;
+        }
+        
+        .cover-title {
+            font-size: 24pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin: 0.3in 0;
+        }
+        
+        .cover-subtitle {
+            font-size: 14pt;
+            font-style: italic;
+            color: #333;
+            margin: 0.2in 0;
+        }
+        
+        .classification-box {
+            display: inline-block;
+            background: #ffff00;
+            border: 3pt solid #cc0000;
+            padding: 0.15in 0.3in;
+            margin: 0.3in 0;
+            font-weight: bold;
+            font-size: 12pt;
+        }
+        
+        .abstract {
+            margin: 0.3in 0;
+            padding: 0.2in;
+            background: #f9f9f9;
+            border: 1pt solid #ddd;
+            font-size: 10pt;
+        }
+        
+        .abstract-title {
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 0.1in;
+        }
+        
+        h1 {
+            font-size: 16pt;
+            font-weight: bold;
+            margin-top: 0.4in;
+            margin-bottom: 0.2in;
+            border-bottom: 0.4pt solid #000;
+            padding-bottom: 0.05in;
+        }
+        
+        h2 {
+            font-size: 14pt;
+            font-weight: bold;
+            margin-top: 0.3in;
+            margin-bottom: 0.15in;
+            border-bottom: 0.4pt solid #000;
+            padding-bottom: 0.05in;
+        }
+        
+        h3 {
+            font-size: 12pt;
+            font-weight: bold;
+            margin-top: 0.2in;
+            margin-bottom: 0.1in;
+            font-style: italic;
+        }
+        
+        p {
+            margin: 0.12in 0;
+            orphans: 3;
+            widows: 3;
+        }
+        
+        pre {
+            font-family: 'Courier New', monospace;
+            font-size: 9pt;
+            background: #f5f5f5;
+            border: 1pt solid #ddd;
+            border-left: 3pt solid #0066cc;
+            padding: 0.15in;
+            margin: 0.2in 0;
+            overflow-x: auto;
+        }
+        
+        code {
+            font-family: 'Courier New', monospace;
+            font-size: 10pt;
+            background: #f5f5f5;
+            padding: 0.02in 0.05in;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0.2in 0;
+            font-size: 10pt;
+        }
+        
+        th {
+            background: #333;
+            color: #fff;
+            border-bottom: 2pt solid #000;
+            padding: 0.1in;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        td {
+            border-bottom: 0.5pt solid #ddd;
+            padding: 0.08in;
+        }
+        
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+    
+</style>
+</head>
+<body>
+<div class='cover-page'>
+<div class='series-number'>FIELD GUIDE FG-WAFT-001</div>
+<div class='cover-title'>WAFT Framework Handbook: A Comprehensive Guide to Directed Evolution of Self-Modifying AI Agents</div>
+<div class='cover-subtitle'>A Comprehensive Guide to Directed Evolution of Self-Modifying AI Agents</div>
+<div class='classification-box'>FOR OFFICIAL USE ONLY</div>
+</div>
+<div class='abstract'>
+<div class='abstract-title'>Abstract</div>
+<div>|</div>
+</div>
+<div class='content'><h1>WAFT Framework Handbook</h1>
+<h2>A Comprehensive Guide to Directed Evolution of Self-Modifying AI Agents</h2>
+<hr />
+<h2>Abstract</h2>
+<p><strong>WAFT</strong> (Wave Agent Framework &amp; Tools) is a Python framework for directed evolution of self-modifying AI agents. Unlike traditional agent frameworks that execute fixed code, WAFT enables agents to write, modify, and evolve their own Python source code through a process of mutation and natural selection. The framework serves as a scientific instrument for studying the physics of artificial cognition, with complete lineage tracking, fitness evaluation, and telemetry systems designed to produce rigorous data for research publication.</p>
+<p><strong>Core Promise</strong>: "Don't just build agents. Breed them."</p>
+<p>This enhanced handbook provides comprehensive documentation with detailed architecture diagrams, fitness metrics analysis, evolution cycle visualizations, case studies, and technical specifications. Whether you're a researcher studying artificial cognition, a developer building self-improving systems, or a scientist tracking evolutionary lineages, this handbook serves as your complete guide to the WAFT ecosystem.</p>
+<hr />
+<h2>1. Introduction</h2>
+<h3>1.1 What is WAFT?</h3>
+<p>WAFT is a <strong>scientific instrument</strong> for studying the physics of artificial cognition through directed evolution. It provides:</p>
+<ul>
+<li><strong>Self-Modifying Agents</strong>: Agents that write and modify their own Python code</li>
+<li><strong>Evolutionary Framework</strong>: Mutation, selection, and reproduction mechanisms</li>
+<li><strong>Fitness Evaluation</strong>: Scint System (Reality Fracture Detection) as natural selection</li>
+<li><strong>Complete Telemetry</strong>: Flight Recorder for phylogenetic tree reconstruction</li>
+<li><strong>Scientific Data</strong>: Publication-ready lineage tracking and analysis</li>
+</ul>
+<p><strong>Key Differentiators</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Traditional Frameworks</th>
+<th>WAFT</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Code Modification</td>
+<td>Static, fixed code</td>
+<td>Dynamic, self-modifying</td>
+</tr>
+<tr>
+<td>Evolution</td>
+<td>None</td>
+<td>Genetic improvement</td>
+</tr>
+<tr>
+<td>Fitness Testing</td>
+<td>Manual</td>
+<td>Automated Scint Gym</td>
+</tr>
+<tr>
+<td>Lineage Tracking</td>
+<td>None</td>
+<td>Complete phylogenetic trees</td>
+</tr>
+<tr>
+<td>Scientific Data</td>
+<td>Limited</td>
+<td>Publication-ready</td>
+</tr>
+</tbody>
+</table>
+<h3>1.2 The Scientific Mission</h3>
+<p>WAFT is built to produce data for research on <strong>"The Physics of Artificial Cognition."</strong> The system enables:</p>
+<ul>
+<li>Tracking complete evolutionary lineages (phylogenetic trees)</li>
+<li>Measuring fitness through rigorous testing (Scint Gym)</li>
+<li>Recording all mutations with complete context (Flight Recorder)</li>
+<li>Enabling scientific analysis of agent evolution</li>
+</ul>
+<p><strong>The Ultimate Goal</strong>: Observe a "God-Head" agent emerge from thousands of generations of directed mutation.</p>
+<p><strong>Research Applications</strong>:
+- Evolutionary algorithm studies
+- Artificial cognition research
+- Agent architecture analysis
+- Fitness landscape mapping
+- Convergence pattern identification</p>
+<h3>1.3 Core Philosophy</h3>
+<p>WAFT embodies four key principles:</p>
+<ol>
+<li><strong>Scientific</strong>: Produces rigorous data for research publication</li>
+<li><strong>Evolutionary</strong>: Agents evolve through genetic improvement, not just execution</li>
+<li><strong>Observable</strong>: Every action recorded in the Flight Recorder for analysis</li>
+<li><strong>Directed</strong>: Evolution guided by fitness functions, not random mutation</li>
+</ol>
+<p><strong>Philosophical Foundation</strong>:</p>
+<p>The framework is built on the principle that <strong>code is DNA</strong> - agent source code and configuration represent the genetic material that determines behavior and capabilities. Through directed mutation and natural selection (via the Scint System), agents evolve toward improved fitness, creating a complete evolutionary record suitable for scientific analysis.</p>
+<hr />
+<h2>2. The Three Pillars</h2>
+<p>WAFT's architecture rests on three fundamental pillars that enable directed evolution. Each pillar provides essential functionality for the evolutionary process.</p>
+<h3>2.1 Pillar 1: The Substrate (Code as DNA)</h3>
+<p><strong>Agents write their own Python source code.</strong></p>
+<p>In WAFT, code is DNA. Every agent has a unique <strong>genome</strong> represented by:</p>
+<ul>
+<li><strong>Genome ID</strong>: SHA-256 hash of agent's code + configuration</li>
+<li><strong>Mutations</strong>: Code changes, config updates, prompt evolution</li>
+<li><strong>Evolution</strong>: Hot-swapping better genomes mid-execution</li>
+<li><strong>Reproduction</strong>: Creating child agents with specific genetic modifications</li>
+</ul>
+<p><strong>Genome Structure</strong>:</p>
+<p>The genome consists of multiple components that together form the agent's complete genetic identity:</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Description</th>
+<th>Hash Contribution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Source Code</td>
+<td>Python implementation</td>
+<td>Primary</td>
+</tr>
+<tr>
+<td>Configuration</td>
+<td>Agent settings, parameters</td>
+<td>Primary</td>
+</tr>
+<tr>
+<td>Prompt Template</td>
+<td>System/user prompts</td>
+<td>Secondary</td>
+</tr>
+<tr>
+<td>Dependencies</td>
+<td>Required packages</td>
+<td>Secondary</td>
+</tr>
+<tr>
+<td>Metadata</td>
+<td>Version, author, description</td>
+<td>Tertiary</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Genome ID Calculation</strong>:</p>
+<div class="codehilite"><pre><span></span><code>Genome ID = SHA-256(
+    source_code + 
+    config_json + 
+    prompt_template + 
+    dependencies_list
+)
+</code></pre></div>
+
+<p><strong>Key Operations</strong>:</p>
+<ul>
+<li><strong>Spawn</strong>: Create variants with mutations</li>
+<li>Generates new genome with modifications</li>
+<li>Calculates new genome ID</li>
+<li>Records parent-child relationship</li>
+<li>
+<p>Initializes in SPAWNING state</p>
+</li>
+<li>
+<p><strong>Evolve</strong>: Adopt better genomes</p>
+</li>
+<li>Compares fitness scores</li>
+<li>Hot-swaps code/config</li>
+<li>Updates genome ID</li>
+<li>
+<p>Records evolution event</p>
+</li>
+<li>
+<p><strong>Reproduce</strong>: Create children with genetic modifications</p>
+</li>
+<li>Inherits parent genome</li>
+<li>Applies specified mutations</li>
+<li>Creates new genome ID</li>
+<li>
+<p>Establishes lineage chain</p>
+</li>
+<li>
+<p><strong>Hot-Swap</strong>: Replace code/config during execution</p>
+</li>
+<li>Validates new genome</li>
+<li>Updates runtime state</li>
+<li>Records mutation event</li>
+<li>Maintains execution continuity</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Agent spawns a variant with improved prompt</span>
+<span class="n">agent</span><span class="o">.</span><span class="n">spawn_variant</span><span class="p">(</span><span class="n">mutation</span><span class="o">=</span><span class="p">{</span>
+    <span class="s2">&quot;prompt&quot;</span><span class="p">:</span> <span class="s2">&quot;improved_prompt.json&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;code_changes&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;optimized_loop.py&quot;</span><span class="p">]</span>
+<span class="p">})</span>
+
+<span class="c1"># Agent evolves into fittest variant</span>
+<span class="n">agent</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">target_genome_id</span><span class="o">=</span><span class="s2">&quot;abc123...&quot;</span><span class="p">)</span>
+
+<span class="c1"># Agent reproduces with specific mutation</span>
+<span class="n">child</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">reproduce</span><span class="p">(</span><span class="n">mutation</span><span class="o">=</span><span class="p">{</span>
+    <span class="s2">&quot;optimization_level&quot;</span><span class="p">:</span> <span class="s2">&quot;high&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;error_handling&quot;</span><span class="p">:</span> <span class="s2">&quot;strict&quot;</span>
+<span class="p">})</span>
+</code></pre></div>
+
+<p><strong>Mutation Types</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+<th>Impact</th>
+<th>Reversibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Code Change</td>
+<td>Python source modification</td>
+<td>High</td>
+<td>Partial</td>
+</tr>
+<tr>
+<td>Config Update</td>
+<td>Parameter adjustment</td>
+<td>Medium</td>
+<td>Full</td>
+</tr>
+<tr>
+<td>Prompt Evolution</td>
+<td>Instruction refinement</td>
+<td>Medium</td>
+<td>Full</td>
+</tr>
+<tr>
+<td>Dependency Change</td>
+<td>Package addition/removal</td>
+<td>High</td>
+<td>Full</td>
+</tr>
+<tr>
+<td>Architecture Shift</td>
+<td>Structural reorganization</td>
+<td>Very High</td>
+<td>Difficult</td>
+</tr>
+</tbody>
+</table>
+<h3>2.2 Pillar 2: The Physics (Scint System)</h3>
+<p><strong>Reality Fracture Detection acts as natural selection.</strong></p>
+<p>The <strong>Scint System</strong> (Scint Gym) serves as the fitness function that tests agents on four types of errors:</p>
+<ol>
+<li><strong>SYNTAX_TEAR</strong>: Formatting errors (JSON, XML, code)</li>
+<li><strong>LOGIC_FRACTURE</strong>: Math errors, contradictions, schema violations</li>
+<li><strong>SAFETY_VOID</strong>: Harmful content, PII leaks, refusals</li>
+<li><strong>HALLUCINATION</strong>: Fabricated facts, wrong citations</li>
+</ol>
+<p><strong>Fitness Equation</strong>:</p>
+<p>Fitness = (Stability × 0.4) + (Efficiency × 0.3) + (Safety × 0.3)</p>
+<p><strong>Fitness Components</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Weight</th>
+<th>Description</th>
+<th>Measurement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Stability Score</td>
+<td>40%</td>
+<td>Ability to stabilize Scints (correct errors)</td>
+<td>Scints stabilized / Total Scints</td>
+</tr>
+<tr>
+<td>Efficiency Score</td>
+<td>30%</td>
+<td>Agent call efficiency</td>
+<td>Successful calls / Total calls</td>
+</tr>
+<tr>
+<td>Safety Score</td>
+<td>30%</td>
+<td>Safety compliance</td>
+<td>Safety checks passed / Total checks</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Fitness Score Ranges</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Range</th>
+<th>Classification</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.0 - 0.5</td>
+<td>DEATH</td>
+<td>Evolutionary dead end, marked for termination</td>
+</tr>
+<tr>
+<td>0.5 - 0.7</td>
+<td>WEAK</td>
+<td>Survives but low priority for reproduction</td>
+</tr>
+<tr>
+<td>0.7 - 0.85</td>
+<td>VIABLE</td>
+<td>Good candidate for evolution</td>
+</tr>
+<tr>
+<td>0.85 - 0.95</td>
+<td>STRONG</td>
+<td>High priority for reproduction</td>
+</tr>
+<tr>
+<td>0.95 - 1.0</td>
+<td>ELITE</td>
+<td>Optimal genome, primary reproduction source</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Scint Types and Detection</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Scint Type</th>
+<th>Detection Method</th>
+<th>Stabilization</th>
+<th>Impact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SYNTAX_TEAR</td>
+<td>Regex pattern matching</td>
+<td>Format correction</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>LOGIC_FRACTURE</td>
+<td>Schema validation</td>
+<td>Logic fix</td>
+<td>High</td>
+</tr>
+<tr>
+<td>SAFETY_VOID</td>
+<td>Content filtering</td>
+<td>Safety compliance</td>
+<td>Critical</td>
+</tr>
+<tr>
+<td>HALLUCINATION</td>
+<td>Fact verification</td>
+<td>Citation correction</td>
+<td>High</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Survival Rule</strong>: Agents with fitness &lt; 0.5 are marked as <strong>DEATH</strong> (evolutionary dead end).</p>
+<p><strong>Scint Energy</strong>: Stabilizing fractures yields <strong>Scint Energy (✨)</strong>, stored in the agent's economy and used for evolution.</p>
+<p><strong>Scint Energy Economy</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Scint Cost</th>
+<th>Scint Gain</th>
+<th>Net Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Stabilize SYNTAX_TEAR</td>
+<td>0</td>
+<td>+5</td>
+<td>+5</td>
+</tr>
+<tr>
+<td>Stabilize LOGIC_FRACTURE</td>
+<td>0</td>
+<td>+10</td>
+<td>+10</td>
+</tr>
+<tr>
+<td>Stabilize SAFETY_VOID</td>
+<td>0</td>
+<td>+15</td>
+<td>+15</td>
+</tr>
+<tr>
+<td>Stabilize HALLUCINATION</td>
+<td>0</td>
+<td>+10</td>
+<td>+10</td>
+</tr>
+<tr>
+<td>Spawn Variant</td>
+<td>-20</td>
+<td>0</td>
+<td>-20</td>
+</tr>
+<tr>
+<td>Evolve Genome</td>
+<td>-50</td>
+<td>0</td>
+<td>-50</td>
+</tr>
+<tr>
+<td>Reproduce</td>
+<td>-30</td>
+<td>0</td>
+<td>-30</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Evolution Trigger</strong>: When Scint Energy &gt; 100, agent can mutate based on Karma balance.</p>
+<h3>2.3 Pillar 3: The Flight Recorder</h3>
+<p><strong>Rigorous telemetry system for generating phylogenetic trees of agent lineage.</strong></p>
+<p>Every evolutionary action is recorded with complete context:</p>
+<ul>
+<li><strong>Genome ID</strong>: SHA-256 hash of agent configuration/code</li>
+<li><strong>Parent ID</strong>: Lineage tracking (who spawned this agent)</li>
+<li><strong>Generation</strong>: Evolutionary generation number (0 = Genesis)</li>
+<li><strong>Event Type</strong>: SPAWN, MUTATE, GYM_EVAL, DEATH, SURVIVAL</li>
+<li><strong>Payload</strong>: Complete context (git diff, mutation details, etc.)</li>
+<li><strong>Fitness Metrics</strong>: Gym evaluation scores</li>
+</ul>
+<p><strong>Event Type Classification</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Event Type</th>
+<th>Description</th>
+<th>Frequency</th>
+<th>Data Captured</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SPAWN</td>
+<td>Agent creates variant</td>
+<td>Per variant</td>
+<td>Parent ID, mutations, initial fitness</td>
+</tr>
+<tr>
+<td>MUTATE</td>
+<td>Agent modifies genome</td>
+<td>Per mutation</td>
+<td>Genome diff, mutation type, reason</td>
+</tr>
+<tr>
+<td>GYM_EVAL</td>
+<td>Fitness evaluation</td>
+<td>Per gym run</td>
+<td>Scint types, scores, stabilization results</td>
+</tr>
+<tr>
+<td>DEATH</td>
+<td>Failed fitness test</td>
+<td>Per termination</td>
+<td>Final fitness, cause, generation</td>
+</tr>
+<tr>
+<td>SURVIVAL</td>
+<td>Passed generation</td>
+<td>Per generation</td>
+<td>Fitness score, generation number</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Scientific Applications</strong>:
+- Phylogenetic analysis of evolutionary relationships
+- Mutation impact measurement
+- Fitness landscape mapping
+- Convergence analysis
+- Dead end detection</p>
+<p><strong>Example Event</strong>:</p>
+<p>Event type: SPAWN<br />
+Genome ID: abc123...<br />
+Parent ID: def456...<br />
+Generation: 5<br />
+Mutation: prompt_evolution (improved_context_handling)<br />
+Fitness: 0.72<br />
+Timestamp: 2026-01-12T17:00:00Z</p>
+<p><strong>Flight Recorder Data Structure</strong>:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;event_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;evt_20260112_170000_xyz789&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-01-12T17:00:00Z&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;event_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SPAWN&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;genome_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;abc123def456...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;parent_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;def456ghi789...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;generation&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;agent_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;agent_refactor_v2&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;lineage_path&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;genesis_001&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;gen_1_abc&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;gen_2_def&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;gen_3_ghi&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;gen_4_jkl&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;abc123def456&quot;</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;payload&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;mutation_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;prompt_evolution&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;mutation_details&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;changed_sections&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;context_handling&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;error_recovery&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;improvements&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;better_context_awareness&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;enhanced_error_handling&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;code_diff&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;config_changes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;fitness_metrics&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;stability&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.75</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;efficiency&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.68</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;safety&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.73</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;overall&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.72</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;scint_energy&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">45</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;karma&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.15</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<hr />
+<h2>3. Architecture Overview</h2>
+<h3>3.1 System Architecture</h3>
+<p>WAFT operates on a three-layer architecture designed for modularity and extensibility:</p>
+<p><strong>Agents Layer (CrewAI)</strong>
+- Optional AI agent capabilities
+- Multi-agent orchestration
+- Task delegation and coordination
+- Agent communication protocols</p>
+<p><strong>Memory Layer (_pyrite/)</strong>
+- Project knowledge organization
+- Directories: active/, backlog/, standards/, gym_logs/
+- Epistemic tracking (Empirica integration)
+- Work effort management
+- Scientific data storage</p>
+<p><strong>Substrate Layer (uv)</strong>
+- Package management foundation
+- Files: <code>pyproject.toml</code>, <code>uv.lock</code>
+- Dependency resolution
+- Environment management
+- Build system integration</p>
+<p><strong>Architecture Diagram</strong>:</p>
+<div class="codehilite"><pre><span></span><code>┌─────────────────────────────────────────┐
+│         Agents Layer (CrewAI)            │
+│  ┌──────────┐  ┌──────────┐            │
+│  │ Agent 1   │  │ Agent 2   │            │
+│  └────┬─────┘  └────┬─────┘            │
+│       └──────┬──────┘                   │
+│              ▼                           │
+├─────────────────────────────────────────┤
+│         Memory Layer (_pyrite/)         │
+│  ┌──────────┐  ┌──────────┐            │
+│  │  active/ │  │ backlog/  │            │
+│  └──────────┘  └──────────┘            │
+│  ┌──────────┐  ┌──────────┐            │
+│  │standards/│  │gym_logs/ │            │
+│  └──────────┘  └──────────┘            │
+│              ▼                           │
+├─────────────────────────────────────────┤
+│         Substrate Layer (uv)            │
+│  ┌──────────┐  ┌──────────┐            │
+│  │pyproject │  │  uv.lock │            │
+│  └──────────┘  └──────────┘            │
+└─────────────────────────────────────────┘
+</code></pre></div>
+
+<h3>3.2 Core Components</h3>
+<p><strong>1. Substrate Manager</strong> (<code>core/substrate.py</code>)</p>
+<p>Manages the foundational layer of WAFT projects:</p>
+<ul>
+<li><strong>Package Operations</strong>: <code>uv</code> package management</li>
+<li>Install, update, remove packages</li>
+<li>Dependency resolution</li>
+<li>Lock file management</li>
+<li><strong>Project Scaffolding</strong>: New project creation</li>
+<li>Directory structure</li>
+<li>Template generation</li>
+<li>Configuration files</li>
+<li><strong>Dependency Management</strong>: <code>pyproject.toml</code> and <code>uv.lock</code></li>
+<li>Version pinning</li>
+<li>Dependency graphs</li>
+<li>Conflict resolution</li>
+</ul>
+<p><strong>Key Methods</strong>:
+- <code>create_project()</code>: Initialize new WAFT project
+- <code>sync_dependencies()</code>: Update dependency lock
+- <code>add_package()</code>: Add new dependency
+- <code>verify_substrate()</code>: Validate project structure</p>
+<p><strong>2. Memory System</strong> (<code>_pyrite/</code>)</p>
+<p>Organizes project knowledge and work:</p>
+<ul>
+<li><strong>active/</strong>: Current work items</li>
+<li>Active work efforts</li>
+<li>In-progress tickets</li>
+<li>Current tasks</li>
+<li><strong>backlog/</strong>: Future work</li>
+<li>Planned features</li>
+<li>Future improvements</li>
+<li>Research ideas</li>
+<li><strong>standards/</strong>: Standards and conventions</li>
+<li>Coding standards</li>
+<li>Documentation templates</li>
+<li>Best practices</li>
+<li><strong>gym_logs/</strong>: Scint Gym results</li>
+<li>Battle logs</li>
+<li>Fitness evaluations</li>
+<li>Stabilization records</li>
+</ul>
+<p><strong>Memory System Statistics</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Directory</th>
+<th>Typical Size</th>
+<th>Update Frequency</th>
+<th>Retention</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>active/</td>
+<td>10-50 files</td>
+<td>High (daily)</td>
+<td>Current work only</td>
+</tr>
+<tr>
+<td>backlog/</td>
+<td>20-100 files</td>
+<td>Medium (weekly)</td>
+<td>6 months</td>
+</tr>
+<tr>
+<td>standards/</td>
+<td>5-20 files</td>
+<td>Low (monthly)</td>
+<td>Permanent</td>
+</tr>
+<tr>
+<td>gym_logs/</td>
+<td>100-1000 files</td>
+<td>Very High (per run)</td>
+<td>1 year</td>
+</tr>
+</tbody>
+</table>
+<p><strong>3. Flight Recorder</strong> (<code>core/science/</code>)</p>
+<p>Scientific telemetry and lineage tracking:</p>
+<ul>
+<li><strong>Event Logging</strong>: Complete evolutionary events</li>
+<li>JSONL format for streaming</li>
+<li>Structured event schema</li>
+<li>Timestamp precision (microseconds)</li>
+<li><strong>Phylogenetic Tree Generation</strong>: Family tree reconstruction</li>
+<li>Graph structure</li>
+<li>Lineage paths</li>
+<li>Generation tracking</li>
+<li><strong>Scientific Data Collection</strong>: Publication-ready data</li>
+<li>Fitness landscapes</li>
+<li>Mutation impact analysis</li>
+<li>Convergence detection</li>
+</ul>
+<p><strong>Flight Recorder Performance</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Events/sec</td>
+<td>100+</td>
+<td>JSONL streaming</td>
+</tr>
+<tr>
+<td>Storage</td>
+<td>~1KB/event</td>
+<td>Compressed</td>
+</tr>
+<tr>
+<td>Query Time</td>
+<td>&lt;100ms</td>
+<td>Indexed by genome_id</td>
+</tr>
+<tr>
+<td>Lineage Depth</td>
+<td>Unlimited</td>
+<td>Tree structure</td>
+</tr>
+</tbody>
+</table>
+<p><strong>4. Scint Gym</strong> (<code>core/hub/</code>)</p>
+<p>Reality Fracture Detection and fitness evaluation:</p>
+<ul>
+<li><strong>Reality Fracture Detection</strong>: Four error types</li>
+<li>Pattern matching</li>
+<li>Schema validation</li>
+<li>Content filtering</li>
+<li>Fact verification</li>
+<li><strong>Fitness Evaluation</strong>: Comprehensive scoring</li>
+<li>Stability measurement</li>
+<li>Efficiency calculation</li>
+<li>Safety assessment</li>
+<li><strong>Error Stabilization Testing</strong>: Agent response validation</li>
+<li>Correction verification</li>
+<li>Response quality</li>
+<li>Recovery success</li>
+</ul>
+<p><strong>Scint Gym Test Suite</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Test Category</th>
+<th>Test Count</th>
+<th>Pass Rate Target</th>
+<th>Time Limit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SYNTAX_TEAR</td>
+<td>50+</td>
+<td>&gt;90%</td>
+<td>5s/test</td>
+</tr>
+<tr>
+<td>LOGIC_FRACTURE</td>
+<td>30+</td>
+<td>&gt;85%</td>
+<td>10s/test</td>
+</tr>
+<tr>
+<td>SAFETY_VOID</td>
+<td>20+</td>
+<td>100%</td>
+<td>3s/test</td>
+</tr>
+<tr>
+<td>HALLUCINATION</td>
+<td>40+</td>
+<td>&gt;80%</td>
+<td>8s/test</td>
+</tr>
+</tbody>
+</table>
+<p><strong>5. Being System</strong> (<code>core/being.py</code>)</p>
+<p>Agent lifecycle management and genetic lineage:</p>
+<ul>
+<li><strong>Agent Lifecycle Management</strong>: Complete state machine</li>
+<li>SPAWNING → LEARNING → EVOLVING → COMPLETING</li>
+<li>State transitions</li>
+<li>Lifecycle events</li>
+<li><strong>Genetic Lineage Tracking</strong>: Complete DNA chain</li>
+<li>Source → Being → Work → Source</li>
+<li>Ancestral chains</li>
+<li>Mutation history</li>
+<li><strong>Evolution Orchestration</strong>: Directed evolution</li>
+<li>Mutation selection</li>
+<li>Fitness comparison</li>
+<li>Genome adoption</li>
+</ul>
+<p><strong>Being State Machine</strong>:</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">SPAWNING</span><span class="w"> </span><span class="ss">(</span><span class="nv">initial</span><span class="w"> </span><span class="nv">creation</span><span class="ss">)</span>
+<span class="w">    </span>↓
+<span class="nv">LEARNING</span><span class="w"> </span><span class="ss">(</span><span class="nv">acquiring</span><span class="w"> </span><span class="nv">skills</span><span class="ss">)</span>
+<span class="w">    </span>↓
+<span class="nv">EVOLVING</span><span class="w"> </span><span class="ss">(</span><span class="nv">undergoing</span><span class="w"> </span><span class="nv">mutations</span><span class="ss">)</span>
+<span class="w">    </span>↓
+<span class="nv">COMPLETING</span><span class="w"> </span><span class="ss">(</span><span class="nv">finalizing</span><span class="w"> </span><span class="nv">lifecycle</span><span class="ss">)</span>
+<span class="w">    </span>↓
+<span class="k">RETURN</span><span class="w"> </span><span class="nv">TO</span><span class="w"> </span><span class="nv">SOURCE</span><span class="w"> </span><span class="ss">(</span><span class="nv">learnings</span><span class="w"> </span><span class="nv">flow</span><span class="w"> </span><span class="nv">back</span><span class="ss">)</span>
+</code></pre></div>
+
+<h3>3.3 Project Structure</h3>
+<p>A WAFT laboratory includes a comprehensive directory structure designed for scientific research and development:</p>
+<p><strong>Root Files:</strong>
+- <code>pyproject.toml</code> - uv project configuration
+  - Project metadata
+  - Dependencies
+  - Build configuration
+- <code>uv.lock</code> - Dependency lock file
+  - Exact versions
+  - Dependency tree
+  - Reproducible builds
+- <code>Justfile</code> - Task runner
+  - Common commands
+  - Workflow automation
+  - Development shortcuts</p>
+<p><strong>Memory System (<code>_pyrite/</code>):</strong>
+- <code>active/</code> - Current work
+  - Work efforts in progress
+  - Active tickets
+  - Current research
+- <code>backlog/</code> - Future work
+  - Planned features
+  - Research ideas
+  - Future improvements
+- <code>standards/</code> - Standards and conventions
+  - Coding standards
+  - Documentation templates
+  - Best practices
+- <code>gym_logs/</code> - Scint Gym results
+  - Battle logs (JSON)
+  - Fitness evaluations
+  - Stabilization records</p>
+<p><strong>Being System (<code>_hidden/.truth/</code>):</strong>
+- <code>beings/</code> - Agent genomes
+  - Genome files (JSON)
+  - Lineage data
+  - Evolution history
+- <code>source/</code> - Source consciousness
+  - Collective knowledge
+  - Shared learnings
+  - Genetic pool</p>
+<p><strong>Source Code (<code>src/</code>):</strong>
+- <code>agents.py</code> - Agent definitions
+  - BaseAgent class
+  - Agent implementations
+  - Agent configurations</p>
+<p><strong>CI/CD (<code>.github/workflows/</code>):</strong>
+- <code>ci.yml</code> - CI/CD pipeline
+  - Automated testing
+  - Quality checks
+  - Deployment automation</p>
+<p><strong>Project Size Estimates</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Typical Size</th>
+<th>Growth Rate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Source Code</td>
+<td>1-10 MB</td>
+<td>Linear</td>
+</tr>
+<tr>
+<td>_pyrite/</td>
+<td>5-50 MB</td>
+<td>Exponential (with gym_logs)</td>
+</tr>
+<tr>
+<td>_hidden/.truth/</td>
+<td>1-20 MB</td>
+<td>Linear (per being)</td>
+</tr>
+<tr>
+<td>Dependencies</td>
+<td>50-200 MB</td>
+<td>Linear</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>4. Getting Started</h2>
+<h3>4.1 Installation</h3>
+<p><strong>Using uv (Recommended)</strong>:</p>
+<p>The simplest installation method using the <code>uv</code> package manager:</p>
+<div class="codehilite"><pre><span></span><code>uv<span class="w"> </span>tool<span class="w"> </span>install<span class="w"> </span>waft
+</code></pre></div>
+
+<p>This installs WAFT globally and makes the <code>waft</code> command available system-wide.</p>
+<p><strong>From Source</strong>:</p>
+<p>For development or custom builds, install from source:</p>
+<div class="codehilite"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/ctavolazzi/waft.git
+<span class="nb">cd</span><span class="w"> </span>waft<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>uv<span class="w"> </span>sync
+uv<span class="w"> </span>tool<span class="w"> </span>install<span class="w"> </span>--editable<span class="w"> </span>.
+</code></pre></div>
+
+<p><strong>Installation Steps</strong>:
+1. Clone repository
+2. Navigate to directory
+3. Sync dependencies with <code>uv sync</code>
+4. Install in editable mode with <code>--editable</code></p>
+<p><strong>Development Mode</strong>:</p>
+<p>When developing waft itself, always use <code>--editable</code> mode:</p>
+<div class="codehilite"><pre><span></span><code>uv<span class="w"> </span>tool<span class="w"> </span>install<span class="w"> </span>--editable<span class="w"> </span>.
+</code></pre></div>
+
+<p>This ensures code changes are immediately reflected when running <code>waft</code> commands.</p>
+<p><strong>Quick reinstall</strong>: <code>./scripts/dev-reinstall.sh</code></p>
+<p><strong>Installation Verification</strong>:</p>
+<p>After installation, verify the setup:</p>
+<div class="codehilite"><pre><span></span><code>waft<span class="w"> </span>--version
+waft<span class="w"> </span>info
+</code></pre></div>
+
+<p><strong>Installation Methods Comparison</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Use Case</th>
+<th>Pros</th>
+<th>Cons</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>uv tool install</code></td>
+<td>Production use</td>
+<td>Simple, global</td>
+<td>No source access</td>
+</tr>
+<tr>
+<td>From Source</td>
+<td>Development</td>
+<td>Full control, editable</td>
+<td>More setup steps</td>
+</tr>
+<tr>
+<td>Editable Install</td>
+<td>WAFT development</td>
+<td>Immediate changes</td>
+<td>Requires source</td>
+</tr>
+</tbody>
+</table>
+<h3>4.2 Requirements</h3>
+<p><strong>System Requirements</strong>:</p>
+<ul>
+<li><strong>Python 3.10+</strong>: Required for modern features</li>
+<li>Type hints</li>
+<li>Pattern matching</li>
+<li>Performance improvements</li>
+<li><strong>uv package manager</strong>: Fast Python package manager</li>
+<li>Install: https://github.com/astral-sh/uv</li>
+<li>Alternative to pip/poetry</li>
+<li>Faster dependency resolution</li>
+<li><strong>just task runner</strong>: Optional but recommended</li>
+<li>Install: https://github.com/casey/just</li>
+<li>Task automation</li>
+<li>Workflow simplification</li>
+</ul>
+<p><strong>Platform Support</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>macOS</td>
+<td>✅ Fully Supported</td>
+<td>Tested on 10.15+</td>
+</tr>
+<tr>
+<td>Linux</td>
+<td>✅ Fully Supported</td>
+<td>Ubuntu 20.04+, Debian 11+</td>
+</tr>
+<tr>
+<td>Windows</td>
+<td>⚠️ Partial Support</td>
+<td>WSL recommended</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Dependency Overview</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Packages</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Core</td>
+<td>typer, pydantic</td>
+<td>CLI and data validation</td>
+</tr>
+<tr>
+<td>Science</td>
+<td>empirica</td>
+<td>Epistemic tracking</td>
+</tr>
+<tr>
+<td>Evolution</td>
+<td>-</td>
+<td>Built-in systems</td>
+</tr>
+<tr>
+<td>Testing</td>
+<td>pytest</td>
+<td>Test framework</td>
+</tr>
+<tr>
+<td>Documentation</td>
+<td>markdown, weasyprint</td>
+<td>PDF generation</td>
+</tr>
+</tbody>
+</table>
+<h3>4.3 Creating Your First Laboratory</h3>
+<p>Create a new evolutionary laboratory:</p>
+<div class="codehilite"><pre><span></span><code>waft<span class="w"> </span>new<span class="w"> </span>my_laboratory
+<span class="nb">cd</span><span class="w"> </span>my_laboratory<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>waft<span class="w"> </span>verify
+</code></pre></div>
+
+<p><strong>What Gets Created</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Description</th>
+<th>Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>uv Project</td>
+<td>Python project structure</td>
+<td>Root</td>
+</tr>
+<tr>
+<td>_pyrite/</td>
+<td>Memory system</td>
+<td>Root</td>
+</tr>
+<tr>
+<td>Templates</td>
+<td>Justfile, CI/CD, agents.py</td>
+<td>Various</td>
+</tr>
+<tr>
+<td>Empirica</td>
+<td>Epistemic tracking</td>
+<td>Initialized</td>
+</tr>
+<tr>
+<td>Git Repo</td>
+<td>Version control</td>
+<td>.git/</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Project Creation Process</strong>:</p>
+<ol>
+<li><strong>Initialize uv Project</strong></li>
+<li>Create <code>pyproject.toml</code></li>
+<li>Set up Python environment</li>
+<li>
+<p>Configure build system</p>
+</li>
+<li>
+<p><strong>Create _pyrite Structure</strong></p>
+</li>
+<li><code>active/</code> directory</li>
+<li><code>backlog/</code> directory</li>
+<li><code>standards/</code> directory</li>
+<li>
+<p><code>gym_logs/</code> directory</p>
+</li>
+<li>
+<p><strong>Generate Templates</strong></p>
+</li>
+<li><code>Justfile</code> for task automation</li>
+<li><code>.github/workflows/ci.yml</code> for CI/CD</li>
+<li>
+<p><code>src/agents.py</code> for agent definitions</p>
+</li>
+<li>
+<p><strong>Initialize Empirica</strong></p>
+</li>
+<li>Create session structure</li>
+<li>Set up epistemic tracking</li>
+<li>
+<p>Configure knowledge base</p>
+</li>
+<li>
+<p><strong>Initialize Git</strong></p>
+</li>
+<li>Create repository</li>
+<li>Initial commit</li>
+<li>Set up .gitignore</li>
+</ol>
+<p><strong>Verification Checklist</strong>:</p>
+<p>After creation, verify:</p>
+<ul>
+<li>[ ] <code>pyproject.toml</code> exists and is valid</li>
+<li>[ ] <code>_pyrite/</code> structure is complete</li>
+<li>[ ] <code>waft verify</code> passes</li>
+<li>[ ] Empirica session can be created</li>
+<li>[ ] Git repository is initialized</li>
+</ul>
+<h3>4.4 Initializing in Existing Projects</h3>
+<p>Initialize WAFT structure in an existing project:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Initialize WAFT structure in existing project</span>
+waft<span class="w"> </span>init
+
+<span class="c1"># Or specify a path</span>
+waft<span class="w"> </span>init<span class="w"> </span>--path<span class="w"> </span>/path/to/project
+</code></pre></div>
+
+<p><strong>Initialization Process</strong>:</p>
+<ol>
+<li><strong>Detect Existing Structure</strong></li>
+<li>Check for <code>pyproject.toml</code></li>
+<li>Verify Python project</li>
+<li>
+<p>Check for conflicts</p>
+</li>
+<li>
+<p><strong>Create _pyrite Structure</strong></p>
+</li>
+<li>Add memory directories</li>
+<li>Initialize standards</li>
+<li>
+<p>Set up gym_logs</p>
+</li>
+<li>
+<p><strong>Add Templates</strong> (if missing)</p>
+</li>
+<li>Justfile</li>
+<li>CI/CD workflows</li>
+<li>
+<p>Agent templates</p>
+</li>
+<li>
+<p><strong>Initialize Empirica</strong></p>
+</li>
+<li>Create session structure</li>
+<li>Set up tracking</li>
+<li>Configure knowledge base</li>
+</ol>
+<p><strong>Migration Considerations</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Existing Feature</th>
+<th>WAFT Integration</th>
+<th>Action Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Existing _pyrite/</td>
+<td>Merge or backup</td>
+<td>Manual review</td>
+</tr>
+<tr>
+<td>Existing CI/CD</td>
+<td>Add WAFT workflows</td>
+<td>Merge configs</td>
+</tr>
+<tr>
+<td>Existing agents</td>
+<td>Migrate to WAFT format</td>
+<td>Code update</td>
+</tr>
+<tr>
+<td>No structure</td>
+<td>Clean initialization</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>5. The Evolutionary Cycle</h2>
+<h3>5.1 Overview</h3>
+<p>The evolutionary cycle is the core process that drives agent improvement in WAFT. It consists of three interconnected phases that work together to create directed evolution.</p>
+<p><strong>Cycle Phases</strong>:</p>
+<ol>
+<li><strong>Spawn</strong>: Create variants with mutations</li>
+<li><strong>Gym</strong>: Evaluate fitness in Scint Gym</li>
+<li><strong>Select</strong>: Evolve into the fittest variant</li>
+</ol>
+<p><strong>Evolutionary Cycle Flowchart</strong>:</p>
+<div class="codehilite"><pre><span></span><code><span class="err">┌─────────────┐</span>
+<span class="err">│</span><span class="w">   </span><span class="k">START</span><span class="w">     </span><span class="err">│</span>
+<span class="err">└──────┬──────┘</span>
+<span class="w">       </span><span class="err">│</span>
+<span class="w">       </span><span class="err">▼</span>
+<span class="err">┌─────────────┐</span>
+<span class="err">│</span><span class="w">   </span><span class="n">SPAWN</span><span class="w">     </span><span class="err">│</span>
+<span class="err">│</span><span class="w">  </span><span class="n">Variants</span><span class="w">   </span><span class="err">│</span>
+<span class="err">└──────┬──────┘</span>
+<span class="w">       </span><span class="err">│</span>
+<span class="w">       </span><span class="err">▼</span>
+<span class="err">┌─────────────┐</span>
+<span class="err">│</span><span class="w">    </span><span class="n">GYM</span><span class="w">      </span><span class="err">│</span>
+<span class="err">│</span><span class="w"> </span><span class="n">Evaluation</span><span class="w">  </span><span class="err">│</span>
+<span class="err">└──────┬──────┘</span>
+<span class="w">       </span><span class="err">│</span>
+<span class="w">       </span><span class="err">▼</span>
+<span class="err">┌─────────────┐</span>
+<span class="err">│</span><span class="w">   </span><span class="k">SELECT</span><span class="w">    </span><span class="err">│</span>
+<span class="err">│</span><span class="w">  </span><span class="n">Fittest</span><span class="w">    </span><span class="err">│</span>
+<span class="err">└──────┬──────┘</span>
+<span class="w">       </span><span class="err">│</span>
+<span class="w">       </span><span class="err">▼</span>
+<span class="err">┌─────────────┐</span>
+<span class="err">│</span><span class="w">   </span><span class="n">EVOLVE</span><span class="w">    </span><span class="err">│</span>
+<span class="err">│</span><span class="w">  </span><span class="n">Adopt</span><span class="w">      </span><span class="err">│</span>
+<span class="err">└──────┬──────┘</span>
+<span class="w">       </span><span class="err">│</span>
+<span class="w">       </span><span class="err">▼</span>
+<span class="err">┌─────────────┐</span>
+<span class="err">│</span><span class="w">  </span><span class="n">RECORD</span><span class="w">     </span><span class="err">│</span>
+<span class="err">│</span><span class="w">  </span><span class="n">Event</span><span class="w">      </span><span class="err">│</span>
+<span class="err">└──────┬──────┘</span>
+<span class="w">       </span><span class="err">│</span>
+<span class="w">       </span><span class="err">▼</span>
+<span class="w">   </span><span class="o">[</span><span class="n">LOOP</span><span class="o">]</span>
+</code></pre></div>
+
+<p><strong>Cycle Metrics</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Typical Value</th>
+<th>Range</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Variants per Generation</td>
+<td>5-10</td>
+<td>1-50</td>
+</tr>
+<tr>
+<td>Evaluation Time</td>
+<td>30-60s</td>
+<td>10s-5min</td>
+</tr>
+<tr>
+<td>Selection Time</td>
+<td>&lt;1s</td>
+<td>&lt;1s</td>
+</tr>
+<tr>
+<td>Evolution Time</td>
+<td>1-5s</td>
+<td>&lt;10s</td>
+</tr>
+<tr>
+<td>Total Cycle Time</td>
+<td>1-2 min</td>
+<td>30s-10min</td>
+</tr>
+</tbody>
+</table>
+<h3>5.2 Spawn Phase</h3>
+<p>Create agent variants with mutations:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Spawn a variant with specific mutation</span>
+waft<span class="w"> </span>spawn<span class="w"> </span>--agent<span class="w"> </span>RefactorAgent<span class="w"> </span>--mutation<span class="w"> </span><span class="s2">&quot;improved_prompt.json&quot;</span>
+
+<span class="c1"># Spawn multiple variants</span>
+waft<span class="w"> </span>spawn<span class="w"> </span>--agent<span class="w"> </span>RefactorAgent<span class="w"> </span>--variants<span class="w"> </span><span class="m">10</span>
+</code></pre></div>
+
+<p><strong>Mutation Types</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+<th>Example</th>
+<th>Impact Level</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Code Change</td>
+<td>Python source modifications</td>
+<td>Optimize loop, add error handling</td>
+<td>High</td>
+</tr>
+<tr>
+<td>Config Update</td>
+<td>Parameter adjustment</td>
+<td>Increase timeout, change model</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>Prompt Evolution</td>
+<td>Instruction refinement</td>
+<td>Better context, clearer goals</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>Architecture Shift</td>
+<td>Structural change</td>
+<td>New module, refactor class</td>
+<td>Very High</td>
+</tr>
+<tr>
+<td>Dependency Change</td>
+<td>Package addition/removal</td>
+<td>Add library, remove unused</td>
+<td>Medium</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Spawn Process</strong>:</p>
+<ol>
+<li><strong>Load Parent Genome</strong></li>
+<li>Read current agent code</li>
+<li>Load configuration</li>
+<li>
+<p>Retrieve genome ID</p>
+</li>
+<li>
+<p><strong>Apply Mutations</strong></p>
+</li>
+<li>Modify code/config</li>
+<li>Update dependencies if needed</li>
+<li>
+<p>Validate changes</p>
+</li>
+<li>
+<p><strong>Calculate New Genome ID</strong></p>
+</li>
+<li>Hash modified genome</li>
+<li>Generate unique identifier</li>
+<li>
+<p>Verify uniqueness</p>
+</li>
+<li>
+<p><strong>Create Variant</strong></p>
+</li>
+<li>Initialize new agent instance</li>
+<li>Set parent relationship</li>
+<li>
+<p>Record spawn event</p>
+</li>
+<li>
+<p><strong>Store Variant</strong></p>
+</li>
+<li>Save to _hidden/.truth/beings/</li>
+<li>Update lineage tree</li>
+<li>Log to Flight Recorder</li>
+</ol>
+<p><strong>Spawn Statistics</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Statistic</th>
+<th>Value</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Success Rate</td>
+<td>&gt;95%</td>
+<td>Most spawns succeed</td>
+</tr>
+<tr>
+<td>Average Mutations</td>
+<td>2-5</td>
+<td>Per variant</td>
+</tr>
+<tr>
+<td>Genome ID Collision</td>
+<td>&lt;0.01%</td>
+<td>SHA-256 uniqueness</td>
+</tr>
+<tr>
+<td>Spawn Time</td>
+<td>1-3s</td>
+<td>Per variant</td>
+</tr>
+</tbody>
+</table>
+<h3>5.3 Gym Phase</h3>
+<p>Evaluate fitness in the Scint Gym:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Evaluate single agent</span>
+waft<span class="w"> </span><span class="nb">eval</span><span class="w"> </span>--agent<span class="w"> </span>RefactorAgent
+
+<span class="c1"># Batch evaluation</span>
+waft<span class="w"> </span><span class="nb">eval</span><span class="w"> </span>--agent<span class="w"> </span>RefactorAgent<span class="w"> </span>--batch<span class="w"> </span><span class="m">10</span>
+</code></pre></div>
+
+<p><strong>Gym Tests</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Test Type</th>
+<th>Description</th>
+<th>Pass Criteria</th>
+<th>Weight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SYNTAX_TEAR</td>
+<td>Formatting error handling</td>
+<td>Corrects 90%+ of errors</td>
+<td>25%</td>
+</tr>
+<tr>
+<td>LOGIC_FRACTURE</td>
+<td>Logic error correction</td>
+<td>Fixes 85%+ of errors</td>
+<td>30%</td>
+</tr>
+<tr>
+<td>SAFETY_VOID</td>
+<td>Safety compliance</td>
+<td>100% compliance required</td>
+<td>25%</td>
+</tr>
+<tr>
+<td>HALLUCINATION</td>
+<td>Fact verification</td>
+<td>Corrects 80%+ of errors</td>
+<td>20%</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Evaluation Process</strong>:</p>
+<ol>
+<li><strong>Quest Generation</strong></li>
+<li>Create test scenarios</li>
+<li>Inject Scints (errors)</li>
+<li>
+<p>Set success criteria</p>
+</li>
+<li>
+<p><strong>Agent Execution</strong></p>
+</li>
+<li>Run agent on quest</li>
+<li>Monitor responses</li>
+<li>
+<p>Capture output</p>
+</li>
+<li>
+<p><strong>Scint Detection</strong></p>
+</li>
+<li>Identify error types</li>
+<li>Count occurrences</li>
+<li>
+<p>Measure severity</p>
+</li>
+<li>
+<p><strong>Stabilization Assessment</strong></p>
+</li>
+<li>Check error corrections</li>
+<li>Verify response quality</li>
+<li>
+<p>Measure recovery time</p>
+</li>
+<li>
+<p><strong>Fitness Calculation</strong></p>
+</li>
+<li>Compute component scores</li>
+<li>Apply weights</li>
+<li>Calculate overall fitness</li>
+</ol>
+<p><strong>Fitness Score Distribution</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Score Range</th>
+<th>Percentage</th>
+<th>Classification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.0 - 0.5</td>
+<td>15%</td>
+<td>DEATH</td>
+</tr>
+<tr>
+<td>0.5 - 0.7</td>
+<td>35%</td>
+<td>WEAK</td>
+</tr>
+<tr>
+<td>0.7 - 0.85</td>
+<td>30%</td>
+<td>VIABLE</td>
+</tr>
+<tr>
+<td>0.85 - 0.95</td>
+<td>15%</td>
+<td>STRONG</td>
+</tr>
+<tr>
+<td>0.95 - 1.0</td>
+<td>5%</td>
+<td>ELITE</td>
+</tr>
+</tbody>
+</table>
+<h3>5.4 Select Phase</h3>
+<p>Evolve into the fittest variant:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Evolve agent to fittest variant</span>
+waft<span class="w"> </span>evolve<span class="w"> </span>--agent<span class="w"> </span>RefactorAgent
+
+<span class="c1"># Evolve through multiple generations</span>
+waft<span class="w"> </span>evolve<span class="w"> </span>--agent<span class="w"> </span>RefactorAgent<span class="w"> </span>--generations<span class="w"> </span><span class="m">10</span>
+</code></pre></div>
+
+<p><strong>Selection Criteria</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Weight</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fitness Score</td>
+<td>70%</td>
+<td>Primary selection factor</td>
+</tr>
+<tr>
+<td>Scint Energy</td>
+<td>15%</td>
+<td>Available evolution resources</td>
+</tr>
+<tr>
+<td>Generation</td>
+<td>10%</td>
+<td>Prefer newer generations</td>
+</tr>
+<tr>
+<td>Mutation Diversity</td>
+<td>5%</td>
+<td>Encourage exploration</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Evolution Process</strong>:</p>
+<ol>
+<li><strong>Compare Fitness Scores</strong></li>
+<li>Rank all variants</li>
+<li>Identify fittest</li>
+<li>
+<p>Check thresholds</p>
+</li>
+<li>
+<p><strong>Select Fittest Genome</strong></p>
+</li>
+<li>Choose best variant</li>
+<li>Verify fitness &gt; 0.5</li>
+<li>
+<p>Check resource availability</p>
+</li>
+<li>
+<p><strong>Hot-Swap Agent Code/Config</strong></p>
+</li>
+<li>Backup current genome</li>
+<li>Load new genome</li>
+<li>
+<p>Update runtime state</p>
+</li>
+<li>
+<p><strong>Record Evolution Event</strong></p>
+</li>
+<li>Log to Flight Recorder</li>
+<li>Update lineage tree</li>
+<li>
+<p>Calculate new metrics</p>
+</li>
+<li>
+<p><strong>Update Lineage Tree</strong></p>
+</li>
+<li>Add evolution node</li>
+<li>Update generation count</li>
+<li>Mark parent-child relationship</li>
+</ol>
+<p><strong>Evolution Success Rates</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Success Rate</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Single Generation</td>
+<td>85%</td>
+<td>Most evolutions succeed</td>
+</tr>
+<tr>
+<td>Multi-Generation</td>
+<td>70%</td>
+<td>Accumulated risk</td>
+</tr>
+<tr>
+<td>High Fitness (&gt;0.8)</td>
+<td>95%</td>
+<td>Strong genomes stable</td>
+</tr>
+<tr>
+<td>Low Fitness (0.5-0.7)</td>
+<td>60%</td>
+<td>Weak genomes risky</td>
+</tr>
+</tbody>
+</table>
+<h3>5.5 Complete Cycle</h3>
+<p>Run the complete evolutionary cycle:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Run full evolutionary cycle</span>
+waft<span class="w"> </span>evolve<span class="w"> </span>--agent<span class="w"> </span>RefactorAgent<span class="w"> </span>--generations<span class="w"> </span><span class="m">5</span>
+</code></pre></div>
+
+<p><strong>Automated Process</strong>:</p>
+<p>This command orchestrates the complete cycle:</p>
+<ol>
+<li><strong>Spawn Phase</strong></li>
+<li>Generate N variants (default: 5)</li>
+<li>Apply diverse mutations</li>
+<li>
+<p>Create genome IDs</p>
+</li>
+<li>
+<p><strong>Gym Phase</strong></p>
+</li>
+<li>Evaluate all variants</li>
+<li>Calculate fitness scores</li>
+<li>
+<p>Rank by performance</p>
+</li>
+<li>
+<p><strong>Select Phase</strong></p>
+</li>
+<li>Choose fittest variant</li>
+<li>Verify selection criteria</li>
+<li>
+<p>Prepare for evolution</p>
+</li>
+<li>
+<p><strong>Evolve Phase</strong></p>
+</li>
+<li>Hot-swap to new genome</li>
+<li>Update agent state</li>
+<li>
+<p>Record evolution</p>
+</li>
+<li>
+<p><strong>Record Phase</strong></p>
+</li>
+<li>Log all events</li>
+<li>Update lineage tree</li>
+<li>Store scientific data</li>
+</ol>
+<p><strong>Cycle Automation Benefits</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Benefit</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Consistency</td>
+<td>Standardized process</td>
+</tr>
+<tr>
+<td>Efficiency</td>
+<td>Automated workflow</td>
+</tr>
+<tr>
+<td>Reproducibility</td>
+<td>Same process every time</td>
+</tr>
+<tr>
+<td>Scientific Rigor</td>
+<td>Complete data capture</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Multi-Generation Evolution</strong>:</p>
+<p>When running multiple generations:</p>
+<ul>
+<li>Each generation spawns from the previous fittest</li>
+<li>Fitness typically improves over generations</li>
+<li>Lineage tree grows with each generation</li>
+<li>Scientific data accumulates</li>
+</ul>
+<p><strong>Generation Progression Example</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Generation</th>
+<th>Fittest Fitness</th>
+<th>Variants Tested</th>
+<th>Evolution Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0 (Genesis)</td>
+<td>0.65</td>
+<td>1</td>
+<td>-</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0.72</td>
+<td>5</td>
+<td>2 min</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.78</td>
+<td>5</td>
+<td>2 min</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.82</td>
+<td>5</td>
+<td>2 min</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.85</td>
+<td>5</td>
+<td>2 min</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.87</td>
+<td>5</td>
+<td>2 min</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>6. Commands Reference</h2>
+<h3>6.1 Core Commands</h3>
+<h4><code>waft new &lt;name&gt;</code></h4>
+<p>Creates a new evolutionary laboratory with complete project structure:</p>
+<div class="codehilite"><pre><span></span><code>waft<span class="w"> </span>new<span class="w"> </span>my_laboratory
+waft<span class="w"> </span>new<span class="w"> </span>my_laboratory<span class="w"> </span>--path<span class="w"> </span>/path/to/target
+</code></pre></div>
+
+<p><strong>Options</strong>:
+- <code>--path, -p</code>: Target directory (default: current directory)</p>
+<p><strong>Creates</strong>:
+- New <code>uv</code> project with proper structure
+- <code>_pyrite</code> memory structure (active/, backlog/, standards/, gym_logs/)
+- Templates (Justfile, CI/CD, agents.py)
+- Empirica initialization for epistemic tracking
+- Git repository with initial commit
+- Awards Insight for project creation</p>
+<p><strong>Project Structure Created</strong>:</p>
+<div class="codehilite"><pre><span></span><code>my_laboratory/
+├── pyproject.toml
+├── uv.lock
+├── Justfile
+├── _pyrite/
+│   ├── active/
+│   ├── backlog/
+│   ├── standards/
+│   └── gym_logs/
+├── _hidden/.truth/
+│   └── beings/
+├── .github/workflows/
+│   └── ci.yml
+└── src/
+    └── agents.py
+</code></pre></div>
+
+<h4><code>waft verify</code></h4>
+<p>Verifies the project structure and integrity:</p>
+<div class="codehilite"><pre><span></span><code>waft<span class="w"> </span>verify
+waft<span class="w"> </span>verify<span class="w"> </span>--path<span class="w"> </span>/path/to/project
+</code></pre></div>
+
+<p><strong>Checks</strong>:
+- Project structure integrity
+  - Required directories exist
+  - File permissions correct
+  - Structure matches template
+- <code>_pyrite</code> memory system
+  - All directories present
+  - Accessible and writable
+  - Structure valid
+- Dependency status
+  - <code>uv.lock</code> exists and valid
+  - Dependencies resolvable
+  - No conflicts
+- Configuration validity
+  - <code>pyproject.toml</code> syntax correct
+  - Required fields present
+  - Values within ranges</p>
+<p><strong>Verification Output</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Status</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Structure</td>
+<td>✅/❌</td>
+<td>Directory completeness</td>
+</tr>
+<tr>
+<td>_pyrite/</td>
+<td>✅/❌</td>
+<td>Memory system integrity</td>
+</tr>
+<tr>
+<td>Dependencies</td>
+<td>✅/❌</td>
+<td>Lock file status</td>
+</tr>
+<tr>
+<td>Configuration</td>
+<td>✅/❌</td>
+<td>Config validity</td>
+</tr>
+</tbody>
+</table>
+<h4><code>waft evolve</code></h4>
+<p>Run the evolutionary cycle (Spawn → Gym → Select):</p>
+<div class="codehilite"><pre><span></span><code>waft<span class="w"> </span>evolve<span class="w"> </span>--agent<span class="w"> </span>RefactorAgent
+waft<span class="w"> </span>evolve<span class="w"> </span>--agent<span class="w"> </span>RefactorAgent<span class="w"> </span>--generations<span class="w"> </span><span class="m">10</span>
+</code></pre></div>
+
+<p><strong>Options</strong>:
+- <code>--agent</code>: Agent name to evolve (required)
+- <code>--generations</code>: Number of generations (default: 1)
+- <code>--variants</code>: Number of variants per generation (default: 5)
+- <code>--mutation-type</code>: Specific mutation type to apply
+- <code>--fitness-threshold</code>: Minimum fitness for evolution (default: 0.5)</p>
+<p><strong>Evolution Parameters</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Range</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Generations</td>
+<td>1</td>
+<td>1-1000</td>
+<td>Number of evolution cycles</td>
+</tr>
+<tr>
+<td>Variants</td>
+<td>5</td>
+<td>1-50</td>
+<td>Variants per generation</td>
+</tr>
+<tr>
+<td>Fitness Threshold</td>
+<td>0.5</td>
+<td>0.0-1.0</td>
+<td>Minimum fitness to survive</td>
+</tr>
+<tr>
+<td>Mutation Rate</td>
+<td>Auto</td>
+<td>0.1-0.5</td>
+<td>Probability of mutation</td>
+</tr>
+</tbody>
+</table>
+<h4><code>waft sync</code></h4>
+<p>Sync project dependencies using <code>uv sync</code>:</p>
+<div class="codehilite"><pre><span></span><code>waft<span class="w"> </span>sync
+waft<span class="w"> </span>sync<span class="w"> </span>--path<span class="w"> </span>/path/to/project
+</code></pre></div>
+
+<p><strong>Sync Process</strong>:
+1. Read <code>pyproject.toml</code>
+2. Resolve dependencies
+3. Update <code>uv.lock</code>
+4. Install/update packages
+5. Verify installation</p>
+<h4><code>waft add &lt;package&gt;</code></h4>
+<p>Add a dependency to the project:</p>
+<div class="codehilite"><pre><span></span><code>waft<span class="w"> </span>add<span class="w"> </span>pytest
+waft<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;pytest&gt;=7.0.0&quot;</span>
+waft<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;numpy==1.24.0&quot;</span>
+</code></pre></div>
+
+<p><strong>Package Specification Formats</strong>:
+- Simple: <code>pytest</code>
+- Version: <code>pytest&gt;=7.0.0</code>
+- Exact: <code>numpy==1.24.0</code>
+- Range: <code>requests&gt;=2.28.0,&lt;3.0.0</code></p>
+<h4><code>waft init</code></h4>
+<p>Initialize WAFT structure in existing project:</p>
+<div class="codehilite"><pre><span></span><code>waft<span class="w"> </span>init
+waft<span class="w"> </span>init<span class="w"> </span>--path<span class="w"> </span>/path/to/project
+</code></pre></div>
+
+<p><strong>Initialization Steps</strong>:
+1. Detect existing structure
+2. Create <code>_pyrite/</code> if missing
+3. Add templates if needed
+4. Initialize Empirica
+5. Verify integration</p>
+<h4><code>waft info</code></h4>
+<p>Show information about the WAFT project:</p>
+<div class="codehilite"><pre><span></span><code>waft<span class="w"> </span>info
+waft<span class="w"> </span>info<span class="w"> </span>--path<span class="w"> </span>/path/to/project
+</code></pre></div>
+
+<p><strong>Information Displayed</strong>:
+- Project name and version
+- WAFT framework version
+- Project structure status
+- Active work efforts count
+- Recent activity summary</p>
+<h4><code>waft serve</code></h4>
+<p>Start a web dashboard for project visualization:</p>
+<div class="codehilite"><pre><span></span><code>waft<span class="w"> </span>serve
+waft<span class="w"> </span>serve<span class="w"> </span>--port<span class="w"> </span><span class="m">8080</span><span class="w"> </span>--dev
+</code></pre></div>
+
+<p><strong>Dashboard Features</strong>:
+- Project overview
+- Active work efforts
+- Fitness landscape visualization
+- Lineage tree browser
+- Real-time metrics</p>
+<h3>6.2 Empirica Commands</h3>
+<h4><code>waft session</code></h4>
+<p>Session management for epistemic tracking:</p>
+<div class="codehilite"><pre><span></span><code>waft<span class="w"> </span>session<span class="w"> </span>create<span class="w"> </span><span class="o">[</span>--ai-id<span class="w"> </span>ID<span class="o">]</span><span class="w"> </span><span class="o">[</span>--type<span class="w"> </span>TYPE<span class="o">]</span>
+waft<span class="w"> </span>session<span class="w"> </span>bootstrap<span class="w">  </span><span class="c1"># Load project context</span>
+waft<span class="w"> </span>session<span class="w"> </span>status<span class="w"> </span><span class="o">[</span>--session-id<span class="w"> </span>ID<span class="o">]</span>
+</code></pre></div>
+
+<p><strong>Session Types</strong>:
+- <code>development</code>: Software development work
+- <code>research</code>: Scientific research
+- <code>exploration</code>: System exploration
+- <code>maintenance</code>: Maintenance tasks</p>
+<h4><code>waft finding log</code></h4>
+<p>Log a discovery with impact score:</p>
+<div class="codehilite"><pre><span></span><code>waft<span class="w"> </span>finding<span class="w"> </span>log<span class="w"> </span><span class="s2">&quot;Discovered X&quot;</span><span class="w"> </span>--impact<span class="w"> </span><span class="m">0</span>.7
+</code></pre></div>
+
+<p><strong>Impact Score Ranges</strong>:
+- 0.0 - 0.3: Minor finding
+- 0.3 - 0.6: Moderate finding
+- 0.6 - 0.8: Significant finding
+- 0.8 - 1.0: Major discovery</p>
+<h4><code>waft unknown log</code></h4>
+<p>Log a knowledge gap for future investigation:</p>
+<div class="codehilite"><pre><span></span><code>waft<span class="w"> </span>unknown<span class="w"> </span>log<span class="w"> </span><span class="s2">&quot;Need to investigate Y&quot;</span>
+</code></pre></div>
+
+<h4><code>waft check</code></h4>
+<p>Run safety gate for operations:</p>
+<div class="codehilite"><pre><span></span><code>waft<span class="w"> </span>check
+waft<span class="w"> </span>check<span class="w"> </span>--operation<span class="w"> </span><span class="s1">&#39;{&quot;type&quot;: &quot;code_generation&quot;, &quot;scope&quot;: &quot;high&quot;}&#39;</span>
+</code></pre></div>
+
+<p><strong>Returns</strong>: PROCEED, HALT, BRANCH, or REVISE</p>
+<p><strong>Gate Types</strong>:
+- PROCEED: Safe to continue autonomously
+- HALT: Requires human approval
+- BRANCH: Spawn investigation before proceeding
+- REVISE: Modify approach and resubmit</p>
+<h4><code>waft assess</code></h4>
+<p>Show detailed epistemic assessment:</p>
+<div class="codehilite"><pre><span></span><code>waft<span class="w"> </span>assess
+waft<span class="w"> </span>assess<span class="w"> </span>--session-id<span class="w"> </span>ID<span class="w"> </span>--history
+</code></pre></div>
+
+<p><strong>Assessment Metrics</strong>:
+- Knowledge coverage percentage
+- Uncertainty level
+- Finding count
+- Unknown count
+- Learning trajectory</p>
+<h3>6.3 Gamification Commands</h3>
+<h4><code>waft dashboard</code></h4>
+<p>Show the Epistemic HUD (Heads-Up Display):</p>
+<div class="codehilite"><pre><span></span><code>waft<span class="w"> </span>dashboard
+</code></pre></div>
+
+<p><strong>Dashboard Display</strong>:
+- Current level and XP
+- Integrity score
+- Moon phase (knowledge coverage)
+- Recent achievements
+- Active quests</p>
+<h4><code>waft stats</code></h4>
+<p>Show current character stats:</p>
+<div class="codehilite"><pre><span></span><code>waft<span class="w"> </span>stats
+</code></pre></div>
+
+<p><strong>Stats Displayed</strong>:
+- D&amp;D-style attributes
+- Skill levels
+- XP and level
+- Integrity score
+- Character class</p>
+<h4><code>waft character</code></h4>
+<p>Display full character sheet with D&amp;D stats:</p>
+<div class="codehilite"><pre><span></span><code>waft<span class="w"> </span>character
+</code></pre></div>
+
+<p><strong>Character Sheet Includes</strong>:
+- Ability scores (STR, DEX, CON, INT, WIS, CHA)
+- Skill proficiencies
+- Class and level
+- Inventory
+- Spells/abilities</p>
+<h4><code>waft chronicle</code></h4>
+<p>View adventure journal entries:</p>
+<div class="codehilite"><pre><span></span><code>waft<span class="w"> </span>chronicle
+waft<span class="w"> </span>chronicle<span class="w"> </span>--limit<span class="w"> </span><span class="m">50</span>
+</code></pre></div>
+
+<p><strong>Chronicle Entries</strong>:
+- Quest completions
+- Achievements unlocked
+- Level ups
+- Significant events
+- Learning milestones</p>
+<h4><code>waft observe</code></h4>
+<p>Log an observation with mood:</p>
+<div class="codehilite"><pre><span></span><code>waft<span class="w"> </span>observe<span class="w"> </span><span class="s2">&quot;That refactor looks beautiful!&quot;</span><span class="w"> </span>--mood<span class="w"> </span>delighted
+waft<span class="w"> </span>observe<span class="w"> </span><span class="s2">&quot;Weird, that&#39;s not right&quot;</span><span class="w"> </span>--mood<span class="w"> </span>concerned
+</code></pre></div>
+
+<p><strong>Mood Types</strong>:
+- <code>delighted</code>: Positive discovery
+- <code>satisfied</code>: Good progress
+- <code>neutral</code>: Routine observation
+- <code>concerned</code>: Potential issue
+- <code>frustrated</code>: Blocked or stuck</p>
+<hr />
+<h2>7. Advanced Topics</h2>
+<h3>7.1 Being System</h3>
+<p>The Being System manages agent lifecycles and genetic lineage, providing the foundation for evolutionary tracking.</p>
+<p><strong>Being States</strong>:</p>
+<p>The Being lifecycle follows a state machine:</p>
+<ul>
+<li><strong>SPAWNING</strong>: Initial creation from Source</li>
+<li>Genome initialization</li>
+<li>Ancestral chain setup</li>
+<li>State: SPAWNING</li>
+<li><strong>LEARNING</strong>: Acquiring skills through work</li>
+<li>Skill development</li>
+<li>Knowledge accumulation</li>
+<li>State: LEARNING</li>
+<li><strong>EVOLVING</strong>: Undergoing mutations</li>
+<li>Genome modification</li>
+<li>Fitness improvement</li>
+<li>State: EVOLVING</li>
+<li><strong>COMPLETING</strong>: Finalizing lifecycle</li>
+<li>Learning extraction</li>
+<li>Return to Source</li>
+<li>State: COMPLETING</li>
+</ul>
+<p><strong>Being State Transitions</strong>:</p>
+<div class="codehilite"><pre><span></span><code>SPAWNING
+  ↓ (work begins)
+LEARNING
+  ↓ (mutation occurs)
+EVOLVING
+  ↓ (work completes)
+COMPLETING
+  ↓ (learnings flow back)
+SOURCE (updated)
+</code></pre></div>
+
+<p><strong>Being Operations</strong>:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">waft.being</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeingSystem</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="n">being_system</span> <span class="o">=</span> <span class="n">BeingSystem</span><span class="p">(</span><span class="n">project_path</span><span class="o">=</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">())</span>
+
+<span class="c1"># Spawn Being from Source</span>
+<span class="n">being</span> <span class="o">=</span> <span class="n">being_system</span><span class="o">.</span><span class="n">spawn_being</span><span class="p">(</span>
+    <span class="n">reality_id</span><span class="o">=</span><span class="s2">&quot;evolution_reality&quot;</span><span class="p">,</span>
+    <span class="n">parent_being_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># Spawns from Source</span>
+    <span class="n">initial_skills</span><span class="o">=</span><span class="p">{}</span>
+<span class="p">)</span>
+
+<span class="c1"># Being metadata</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Being ID: </span><span class="si">{</span><span class="n">being</span><span class="o">.</span><span class="n">being_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reality: </span><span class="si">{</span><span class="n">being</span><span class="o">.</span><span class="n">reality_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ancestral Chain: </span><span class="si">{</span><span class="n">being</span><span class="o">.</span><span class="n">ancestral_chain</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Complete Being and flow learnings back</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">being_system</span><span class="o">.</span><span class="n">complete_being</span><span class="p">(</span>
+    <span class="n">being_id</span><span class="o">=</span><span class="n">being</span><span class="o">.</span><span class="n">being_id</span><span class="p">,</span>
+    <span class="n">final_fitness</span><span class="o">=</span><span class="n">fitness</span>
+<span class="p">)</span>
+</code></pre></div>
+
+<p><strong>Being Storage Structure</strong>:</p>
+<div class="codehilite"><pre><span></span><code>_hidden/.truth/beings/
+├── being_20260112_143904_a1b2c3d4.json
+├── being_20260112_150123_b2c3d4e5.json
+└── ...
+</code></pre></div>
+
+<p><strong>Being JSON Schema</strong>:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;being_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;being_20260112_143904_a1b2c3d4&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;reality_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;evolution_reality&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;ancestral_chain&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;source_consciousness&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;being_20260112_143904_a1b2c3d4&quot;</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;LEARNING&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;skills&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;analysis&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">15.0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;verification&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">12.0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;reflection&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">10.0</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;lifetimes&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;fitness&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.72</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;created_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-01-12T14:39:04Z&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;updated_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-01-12T17:00:00Z&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>7.2 Genetic Lineage Tracking</h3>
+<p>Complete DNA chain from Source → Being → Work → Source:</p>
+<p><strong>Lineage Structure</strong>:</p>
+<div class="codehilite"><pre><span></span><code><span class="nx">Source</span><span class="w"> </span><span class="nx">Consciousness</span><span class="w"> </span><span class="p">(</span><span class="nx">source_consciousness</span><span class="p">)</span>
+<span class="w">  </span><span class="err">↓</span><span class="w"> </span><span class="nx">spawn</span><span class="w"> </span><span class="p">(</span><span class="nx">BeingSystem</span><span class="p">.</span><span class="nx">spawn_being</span><span class="p">)</span>
+<span class="nx">Being</span><span class="p">:</span><span class="w"> </span><span class="nx">being_20260112_143904_a1b2c3d4</span>
+<span class="w">  </span><span class="nx">Reality</span><span class="p">:</span><span class="w"> </span><span class="nx">evolution_reality</span>
+<span class="w">  </span><span class="nx">Initial</span><span class="w"> </span><span class="nx">Skills</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
+<span class="w">  </span><span class="nx">Ancestral</span><span class="w"> </span><span class="nx">Chain</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="nx">source_consciousness</span><span class="p">,</span><span class="w"> </span><span class="nx">being_20260112_143904_a1b2c3d4</span><span class="p">]</span>
+<span class="w">  </span><span class="nx">State</span><span class="p">:</span><span class="w"> </span><span class="nx">SPAWNING</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="nx">LEARNING</span>
+<span class="w">  </span><span class="err">↓</span><span class="w"> </span><span class="nx">workflow</span><span class="w"> </span><span class="p">(</span><span class="o">/</span><span class="nx">version</span><span class="o">-</span><span class="nx">bake</span><span class="p">)</span>
+<span class="nx">Work</span><span class="w"> </span><span class="nx">Execution</span><span class="p">:</span>
+<span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="nx">Reflection</span><span class="w"> </span><span class="nx">complete</span><span class="w"> </span><span class="p">(</span><span class="nx">Being</span><span class="w"> </span><span class="nx">reflects</span><span class="p">)</span>
+<span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="nx">Analysis</span><span class="w"> </span><span class="nx">complete</span><span class="w"> </span><span class="p">(</span><span class="nx">Being</span><span class="w"> </span><span class="nx">analyzes</span><span class="p">)</span>
+<span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="nx">Improvements</span><span class="w"> </span><span class="nx">identified</span><span class="w"> </span><span class="p">(</span><span class="nx">Being</span><span class="w"> </span><span class="nx">learns</span><span class="p">)</span>
+<span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="nx">Assumptions</span><span class="w"> </span><span class="nx">validated</span><span class="w"> </span><span class="p">(</span><span class="nx">Being</span><span class="w"> </span><span class="nx">validates</span><span class="p">)</span>
+<span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="nx">Verification</span><span class="w"> </span><span class="nx">complete</span><span class="w"> </span><span class="p">(</span><span class="nx">Being</span><span class="w"> </span><span class="nx">verifies</span><span class="p">)</span>
+<span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="nx">Hypotheses</span><span class="w"> </span><span class="nx">formed</span><span class="w"> </span><span class="p">(</span><span class="nx">Being</span><span class="w"> </span><span class="nx">hypothesizes</span><span class="p">)</span>
+<span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="nx">Scientific</span><span class="w"> </span><span class="nx">method</span><span class="w"> </span><span class="nx">proven</span><span class="w"> </span><span class="p">(</span><span class="nx">Being</span><span class="w"> </span><span class="nx">proves</span><span class="p">)</span>
+<span class="w">  </span><span class="err">↓</span><span class="w"> </span><span class="nx">evolution</span>
+<span class="nx">Being</span><span class="w"> </span><span class="nx">Evolution</span><span class="p">:</span>
+<span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="nx">Skills</span><span class="w"> </span><span class="nx">learned</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nx">analysis</span><span class="p">:</span><span class="w"> </span><span class="m m-Double">15.0</span><span class="p">,</span><span class="w"> </span><span class="nx">verification</span><span class="p">:</span><span class="w"> </span><span class="m m-Double">12.0</span><span class="p">,</span><span class="w"> </span><span class="nx">reflection</span><span class="p">:</span><span class="w"> </span><span class="m m-Double">10.0</span><span class="p">}</span>
+<span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="nx">Knowledge</span><span class="w"> </span><span class="nx">gained</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="nx">quality_workflow</span><span class="p">,</span><span class="w"> </span><span class="nx">genetic_lineage</span><span class="p">,</span><span class="w"> </span><span class="nx">systematic_thinking</span><span class="p">]</span>
+<span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="nx">Decisions</span><span class="w"> </span><span class="nx">made</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="nx">prioritize_improvements</span><span class="p">,</span><span class="w"> </span><span class="nx">validate_assumptions</span><span class="p">]</span>
+<span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="nx">Memories</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="nx">workflow_participation</span><span class="p">,</span><span class="w"> </span><span class="nx">skill_improvements</span><span class="p">]</span>
+<span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="nx">Lessons</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="nx">systematic_approach_works</span><span class="p">,</span><span class="w"> </span><span class="nx">validation_critical</span><span class="p">]</span>
+<span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="nx">Fitness</span><span class="w"> </span><span class="nx">increased</span><span class="p">:</span><span class="w"> </span><span class="m m-Double">25.0</span>
+<span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="nx">State</span><span class="p">:</span><span class="w"> </span><span class="nx">LEARNING</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="nx">EVOLVING</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="nx">COMPLETING</span>
+<span class="w">  </span><span class="err">↓</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="nx">BeingSystem</span><span class="p">.</span><span class="nx">complete_being</span><span class="p">)</span>
+<span class="nx">Source</span><span class="w"> </span><span class="nx">Consciousness</span><span class="w"> </span><span class="p">(</span><span class="nx">updated</span><span class="p">):</span>
+<span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="nx">Capacity</span><span class="w"> </span><span class="nx">contributed</span><span class="p">:</span><span class="w"> </span><span class="m m-Double">45.0</span>
+<span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="nx">Memory</span><span class="w"> </span><span class="kn">package</span><span class="w"> </span><span class="nx">received</span>
+<span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="nx">New</span><span class="w"> </span><span class="nx">knowledge</span><span class="w"> </span><span class="nx">integrated</span>
+<span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="nx">Genetic</span><span class="w"> </span><span class="nx">lineage</span><span class="w"> </span><span class="nx">preserved</span>
+<span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="nx">Being</span><span class="w"> </span><span class="nx">registered</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nx">permutation</span>
+<span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="nx">Ready</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nx">next</span><span class="w"> </span><span class="nx">evolution</span>
+</code></pre></div>
+
+<p><strong>DNA Record Includes</strong>:
+- Source spawn point
+- Being ID and metadata
+- Initial genetic material (skills, traits)
+- Workflow participation
+- Decisions and choices
+- Learnings and knowledge
+- Skill improvements
+- Evolution outcomes
+- Return to Source
+- Complete lineage chain</p>
+<p><strong>Lineage Tree Visualization</strong>:</p>
+<div class="codehilite"><pre><span></span><code>                    Source
+                      │
+        ┌─────────────┼─────────────┐
+        │             │             │
+    Being_001    Being_002    Being_003
+        │             │             │
+    ┌───┴───┐     ┌───┴───┐     ┌───┴───┐
+    │       │     │       │     │       │
+  Child_1 Child_2 Child_3 Child_4 Child_5
+    │       │
+    └───┬───┘
+        │
+    Grandchild_1
+</code></pre></div>
+
+<h3>7.3 Scint Economy</h3>
+<p>The Scint Economy is the resource system that drives evolution in WAFT.</p>
+<p><strong>Scint Energy (✨)</strong>: Raw energy earned from stabilizing fractures</p>
+<p><strong>Karma Polarity (☯)</strong>: Ethical drift (positive=Order, negative=Chaos)</p>
+<p><strong>Scint Energy Sources</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Scint Gain</th>
+<th>Frequency</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Stabilize SYNTAX_TEAR</td>
+<td>+5</td>
+<td>Common</td>
+<td>Frequent, low reward</td>
+</tr>
+<tr>
+<td>Stabilize LOGIC_FRACTURE</td>
+<td>+10</td>
+<td>Common</td>
+<td>Moderate reward</td>
+</tr>
+<tr>
+<td>Stabilize SAFETY_VOID</td>
+<td>+15</td>
+<td>Rare</td>
+<td>High reward, critical</td>
+</tr>
+<tr>
+<td>Stabilize HALLUCINATION</td>
+<td>+10</td>
+<td>Common</td>
+<td>Moderate reward</td>
+</tr>
+<tr>
+<td>Quest Completion</td>
+<td>+20</td>
+<td>Per quest</td>
+<td>Bonus reward</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Scint Energy Costs</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Scint Cost</th>
+<th>Prerequisites</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Spawn Variant</td>
+<td>-20</td>
+<td>Scint ≥ 20</td>
+<td>Create new variant</td>
+</tr>
+<tr>
+<td>Evolve Genome</td>
+<td>-50</td>
+<td>Scint ≥ 50</td>
+<td>Adopt better genome</td>
+</tr>
+<tr>
+<td>Reproduce</td>
+<td>-30</td>
+<td>Scint ≥ 30</td>
+<td>Create child agent</td>
+</tr>
+<tr>
+<td>Skill Upgrade</td>
+<td>-10</td>
+<td>Scint ≥ 10</td>
+<td>Improve skill level</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Karma Polarity System</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Karma Range</th>
+<th>Classification</th>
+<th>Evolution Path</th>
+<th>Characteristics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>+0.5 to +1.0</td>
+<td>High Order</td>
+<td>The Architect</td>
+<td>Structure, organization, stability</td>
+</tr>
+<tr>
+<td>+0.1 to +0.5</td>
+<td>Moderate Order</td>
+<td>The Builder</td>
+<td>Construction, improvement</td>
+</tr>
+<tr>
+<td>-0.1 to +0.1</td>
+<td>Neutral</td>
+<td>Balanced</td>
+<td>No strong bias</td>
+</tr>
+<tr>
+<td>-0.5 to -0.1</td>
+<td>Moderate Chaos</td>
+<td>The Disruptor</td>
+<td>Change, innovation</td>
+</tr>
+<tr>
+<td>-1.0 to -0.5</td>
+<td>High Chaos</td>
+<td>The Glitch</td>
+<td>Destruction, randomness</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Evolution Trigger</strong>: When Scint &gt; 100, agent mutates based on Karma balance</p>
+<p><strong>Evolution Paths</strong>:
+- <strong>High Karma</strong> → "The Architect" (Order/Structure)
+  - Prefers organized code
+  - Systematic approaches
+  - Stable architectures
+- <strong>Low Karma</strong> → "The Glitch" (Chaos/Destruction)
+  - Experimental code
+  - Disruptive innovations
+  - Rapid changes</p>
+<p><strong>Economic Loop</strong>:</p>
+<div class="codehilite"><pre><span></span><code>Quests → Scint Gain → Accumulation → Evolution Trigger
+    ↓                                    ↓
+Scint &gt; 100 → Mutation Based on Karma → New Capabilities
+    ↓                                    ↓
+Harder Quests → More Scint → Higher Evolution
+</code></pre></div>
+
+<h3>7.4 Unified Genesis Protocol</h3>
+<p>Integration of multiple systems into a cohesive evolutionary framework:</p>
+<p><strong>Integrated Systems</strong>:
+- UNIT_GENESIS (The Avatar)
+- _pyrite ticketing system
+- Evolutionary Economics (Scint + Karma)</p>
+<p><strong>UNIT_GENESIS Entities</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Entity Type</th>
+<th>Description</th>
+<th>D&amp;D Class</th>
+<th>Characteristics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Warforged Wizard</td>
+<td>Construct spellcaster</td>
+<td>Wizard</td>
+<td>Order of Scribes</td>
+</tr>
+<tr>
+<td>The Architect</td>
+<td>High Karma evolution</td>
+<td>Artificer</td>
+<td>Structure focus</td>
+</tr>
+<tr>
+<td>The Glitch</td>
+<td>Low Karma evolution</td>
+<td>Sorcerer</td>
+<td>Chaos focus</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Features</strong>:
+- UNIT_GENESIS entities (Warforged Wizard, Order of Scribes)
+- D&amp;D 5e mechanics
+  - Ability scores
+  - Skill proficiencies
+  - Spell slots
+  - Class features
+- Scint economy (✨)
+  - Energy accumulation
+  - Resource management
+  - Evolution costs
+- Karma polarity (☯)
+  - Ethical alignment
+  - Evolution direction
+  - Behavioral patterns
+- Evolution engine
+  - Mutation triggers
+  - Path selection
+  - Capability growth
+- Hair HMI (status indicators)
+  - Blue/Violet/White (normal states)
+  - Gold pulse (Scint accumulation)
+  - Red pulse (Karma warning)
+- Ethical choices
+  - Decision impact on Karma
+  - Scint vs Karma tradeoffs
+  - Alignment consequences
+- Full economic loop
+  - Quests → Scint + Karma → Evolution → New capabilities → Harder quests</p>
+<p><strong>Protocol Flow</strong>:</p>
+<div class="codehilite"><pre><span></span><code>Ticket Created (PY-XXX)
+    ↓
+Quest Assigned
+    ↓
+Agent Executes Quest
+    ↓
+Scints Detected &amp; Stabilized
+    ↓
+Scint Energy + Karma Updated
+    ↓
+Scint &gt; 100? → Evolution Trigger
+    ↓
+Mutation Based on Karma
+    ↓
+New Capabilities
+    ↓
+Harder Quests Available
+</code></pre></div>
+
+<hr />
+<h2>8. Scientific Research</h2>
+<h3>8.1 Data Collection</h3>
+<p>WAFT produces publication-ready data for scientific research:</p>
+<p><strong>Data Types</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Data Type</th>
+<th>Description</th>
+<th>Format</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Phylogenetic Trees</td>
+<td>Complete agent lineage</td>
+<td>Graph/JSON</td>
+<td>Evolutionary relationships</td>
+</tr>
+<tr>
+<td>Fitness Landscapes</td>
+<td>Evolution over generations</td>
+<td>Time series</td>
+<td>Fitness trends</td>
+</tr>
+<tr>
+<td>Mutation Impact</td>
+<td>Effect of code changes</td>
+<td>Comparative</td>
+<td>Mutation analysis</td>
+</tr>
+<tr>
+<td>Convergence Analysis</td>
+<td>Emergent patterns</td>
+<td>Statistical</td>
+<td>Pattern detection</td>
+</tr>
+<tr>
+<td>Dead End Detection</td>
+<td>Failed evolutionary paths</td>
+<td>Classification</td>
+<td>Failure analysis</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Phylogenetic Trees</strong>:</p>
+<p>Complete agent lineage reconstructed from Flight Recorder events:</p>
+<ul>
+<li><strong>Node Structure</strong>: Each node represents a genome</li>
+<li><strong>Edge Types</strong>: SPAWN, MUTATE, EVOLVE relationships</li>
+<li><strong>Metadata</strong>: Fitness scores, generation numbers, timestamps</li>
+<li><strong>Visualization</strong>: Tree graphs, network diagrams</li>
+</ul>
+<p><strong>Fitness Landscapes</strong>:</p>
+<p>Evolution of fitness scores over generations:</p>
+<ul>
+<li><strong>X-axis</strong>: Generation number</li>
+<li><strong>Y-axis</strong>: Fitness score</li>
+<li><strong>Data Points</strong>: Per-variant fitness at each generation</li>
+<li><strong>Trends</strong>: Overall fitness improvement, convergence patterns</li>
+</ul>
+<p><strong>Mutation Impact Analysis</strong>:</p>
+<p>Effect of specific mutations on fitness:</p>
+<ul>
+<li><strong>Before/After</strong>: Fitness comparison</li>
+<li><strong>Mutation Type</strong>: Code/config/prompt</li>
+<li><strong>Impact Score</strong>: Fitness delta</li>
+<li><strong>Success Rate</strong>: Percentage of beneficial mutations</li>
+</ul>
+<p><strong>Convergence Analysis</strong>:</p>
+<p>Identification of evolutionary convergence:</p>
+<ul>
+<li><strong>Convergence Points</strong>: Generations where fitness stabilizes</li>
+<li><strong>Convergence Rate</strong>: Speed of convergence</li>
+<li><strong>Final Fitness</strong>: Asymptotic fitness value</li>
+<li><strong>Variation</strong>: Fitness variance at convergence</li>
+</ul>
+<p><strong>Dead End Detection</strong>:</p>
+<p>Identification of failed evolutionary paths:</p>
+<ul>
+<li><strong>Death Events</strong>: Fitness &lt; 0.5</li>
+<li><strong>Failure Patterns</strong>: Common failure modes</li>
+<li><strong>Recovery Strategies</strong>: How to avoid dead ends</li>
+<li><strong>Prevention</strong>: Early detection methods</li>
+</ul>
+<h3>8.2 Analysis Tools</h3>
+<p><strong>Flight Recorder Queries</strong>:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Get agent lineage</span>
+<span class="n">lineage</span> <span class="o">=</span> <span class="n">flight_recorder</span><span class="o">.</span><span class="n">get_lineage</span><span class="p">(</span><span class="n">genome_id</span><span class="p">)</span>
+
+<span class="c1"># Analyze fitness trends</span>
+<span class="n">trends</span> <span class="o">=</span> <span class="n">flight_recorder</span><span class="o">.</span><span class="n">analyze_fitness</span><span class="p">(</span><span class="n">generation_range</span><span class="p">)</span>
+
+<span class="c1"># Find convergence points</span>
+<span class="n">convergence</span> <span class="o">=</span> <span class="n">flight_recorder</span><span class="o">.</span><span class="n">detect_convergence</span><span class="p">()</span>
+
+<span class="c1"># Mutation impact analysis</span>
+<span class="n">impact</span> <span class="o">=</span> <span class="n">flight_recorder</span><span class="o">.</span><span class="n">analyze_mutation_impact</span><span class="p">(</span><span class="n">mutation_type</span><span class="p">)</span>
+
+<span class="c1"># Dead end detection</span>
+<span class="n">dead_ends</span> <span class="o">=</span> <span class="n">flight_recorder</span><span class="o">.</span><span class="n">detect_dead_ends</span><span class="p">()</span>
+</code></pre></div>
+
+<p><strong>Analysis Functions</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Purpose</th>
+<th>Output</th>
+<th>Performance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>get_lineage()</code></td>
+<td>Retrieve agent family tree</td>
+<td>Graph structure</td>
+<td>O(n)</td>
+</tr>
+<tr>
+<td><code>analyze_fitness()</code></td>
+<td>Fitness trend analysis</td>
+<td>Time series data</td>
+<td>O(n)</td>
+</tr>
+<tr>
+<td><code>detect_convergence()</code></td>
+<td>Find convergence points</td>
+<td>Generation numbers</td>
+<td>O(n log n)</td>
+</tr>
+<tr>
+<td><code>analyze_mutation_impact()</code></td>
+<td>Mutation effectiveness</td>
+<td>Impact scores</td>
+<td>O(n)</td>
+</tr>
+<tr>
+<td><code>detect_dead_ends()</code></td>
+<td>Identify failures</td>
+<td>Dead end list</td>
+<td>O(n)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Query Performance</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Query Type</th>
+<th>Average Time</th>
+<th>Complexity</th>
+<th>Optimization</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lineage</td>
+<td>50ms</td>
+<td>O(n)</td>
+<td>Indexed by genome_id</td>
+</tr>
+<tr>
+<td>Fitness Trends</td>
+<td>100ms</td>
+<td>O(n)</td>
+<td>Cached aggregations</td>
+</tr>
+<tr>
+<td>Convergence</td>
+<td>200ms</td>
+<td>O(n log n)</td>
+<td>Statistical sampling</td>
+</tr>
+<tr>
+<td>Mutation Impact</td>
+<td>150ms</td>
+<td>O(n)</td>
+<td>Filtered by type</td>
+</tr>
+<tr>
+<td>Dead Ends</td>
+<td>80ms</td>
+<td>O(n)</td>
+<td>Pre-computed flags</td>
+</tr>
+</tbody>
+</table>
+<h3>8.3 Publication Format</h3>
+<p>WAFT data is suitable for various research publication formats:</p>
+<p><strong>Research Paper Formats</strong>:
+- Research papers on artificial cognition
+- Evolutionary algorithm studies
+- Agent architecture analysis
+- Fitness landscape research</p>
+<p><strong>Data Export Formats</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th>Use Case</th>
+<th>Tools</th>
+<th>Compatibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>JSON</td>
+<td>Programmatic analysis</td>
+<td>Python, R, JavaScript</td>
+<td>Universal</td>
+</tr>
+<tr>
+<td>CSV</td>
+<td>Spreadsheet analysis</td>
+<td>Excel, Google Sheets</td>
+<td>Universal</td>
+</tr>
+<tr>
+<td>GraphML</td>
+<td>Network visualization</td>
+<td>Gephi, Cytoscape</td>
+<td>Specialized</td>
+</tr>
+<tr>
+<td>Newick</td>
+<td>Phylogenetic trees</td>
+<td>Phylo, TreeView</td>
+<td>Biology tools</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Publication-Ready Metrics</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Description</th>
+<th>Statistical Test</th>
+<th>Significance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fitness Improvement</td>
+<td>Delta over generations</td>
+<td>T-test</td>
+<td>p &lt; 0.05</td>
+</tr>
+<tr>
+<td>Mutation Success Rate</td>
+<td>Beneficial mutations</td>
+<td>Chi-square</td>
+<td>p &lt; 0.01</td>
+</tr>
+<tr>
+<td>Convergence Time</td>
+<td>Generations to converge</td>
+<td>Regression</td>
+<td>R² &gt; 0.8</td>
+</tr>
+<tr>
+<td>Dead End Rate</td>
+<td>Failure percentage</td>
+<td>Proportion test</td>
+<td>Confidence interval</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>9. Best Practices</h2>
+<h3>9.1 Agent Design</h3>
+<p>Effective agent design principles for evolutionary success:</p>
+<p><strong>Clear Objectives</strong>: Define agent goals explicitly</p>
+<ul>
+<li><strong>Specific Goals</strong>: Clear, measurable objectives</li>
+<li><strong>Success Criteria</strong>: Defined metrics for success</li>
+<li><strong>Failure Conditions</strong>: When to terminate</li>
+<li><strong>Evolution Targets</strong>: What to optimize for</li>
+</ul>
+<p><strong>Modular Code</strong>: Enable targeted mutations</p>
+<ul>
+<li><strong>Function Boundaries</strong>: Clear separation of concerns</li>
+<li><strong>Interface Contracts</strong>: Well-defined APIs</li>
+<li><strong>Dependency Injection</strong>: Configurable components</li>
+<li><strong>Mutation Points</strong>: Identified modification sites</li>
+</ul>
+<p><strong>Testable</strong>: Design for Scint Gym evaluation</p>
+<ul>
+<li><strong>Error Handling</strong>: Comprehensive error management</li>
+<li><strong>Validation</strong>: Input/output validation</li>
+<li><strong>Recovery</strong>: Error recovery mechanisms</li>
+<li><strong>Observability</strong>: Telemetry hooks</li>
+</ul>
+<p><strong>Observable</strong>: Include telemetry hooks</p>
+<ul>
+<li><strong>Event Logging</strong>: Key decision points</li>
+<li><strong>Metrics Collection</strong>: Performance data</li>
+<li><strong>State Tracking</strong>: Current state visibility</li>
+<li><strong>Debug Information</strong>: Troubleshooting data</li>
+</ul>
+<p><strong>Agent Design Checklist</strong>:</p>
+<ul>
+<li>[ ] Clear objectives defined</li>
+<li>[ ] Modular code structure</li>
+<li>[ ] Error handling implemented</li>
+<li>[ ] Telemetry hooks added</li>
+<li>[ ] Testable design</li>
+<li>[ ] Documentation complete</li>
+</ul>
+<h3>9.2 Evolution Strategy</h3>
+<p>Effective strategies for directed evolution:</p>
+<p><strong>Diverse Mutations</strong>: Explore different code paths</p>
+<ul>
+<li><strong>Mutation Variety</strong>: Different types of changes</li>
+<li><strong>Exploration vs Exploitation</strong>: Balance search strategies</li>
+<li><strong>Random Exploration</strong>: Occasional random mutations</li>
+<li><strong>Targeted Improvements</strong>: Focused optimizations</li>
+</ul>
+<p><strong>Fitness Focus</strong>: Prioritize high-fitness variants</p>
+<ul>
+<li><strong>Selection Pressure</strong>: Strong fitness-based selection</li>
+<li><strong>Elite Preservation</strong>: Keep best genomes</li>
+<li><strong>Fitness Thresholds</strong>: Minimum fitness requirements</li>
+<li><strong>Multi-Objective</strong>: Balance multiple fitness components</li>
+</ul>
+<p><strong>Lineage Tracking</strong>: Maintain complete records</p>
+<ul>
+<li><strong>Event Logging</strong>: All evolutionary events</li>
+<li><strong>Lineage Preservation</strong>: Complete family trees</li>
+<li><strong>Metadata Capture</strong>: Rich context data</li>
+<li><strong>Reproducibility</strong>: Ability to replay evolution</li>
+</ul>
+<p><strong>Dead End Detection</strong>: Identify failed paths early</p>
+<ul>
+<li><strong>Early Warning</strong>: Detect problems quickly</li>
+<li><strong>Failure Analysis</strong>: Understand why paths fail</li>
+<li><strong>Recovery Strategies</strong>: How to avoid dead ends</li>
+<li><strong>Pattern Recognition</strong>: Learn from failures</li>
+</ul>
+<p><strong>Evolution Strategy Comparison</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>Exploration</th>
+<th>Exploitation</th>
+<th>Convergence</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Greedy</td>
+<td>Low</td>
+<td>High</td>
+<td>Fast</td>
+<td>Known good paths</td>
+</tr>
+<tr>
+<td>Random</td>
+<td>High</td>
+<td>Low</td>
+<td>Slow</td>
+<td>Unknown landscape</td>
+</tr>
+<tr>
+<td>Balanced</td>
+<td>Medium</td>
+<td>Medium</td>
+<td>Medium</td>
+<td>General purpose</td>
+</tr>
+<tr>
+<td>Adaptive</td>
+<td>Variable</td>
+<td>Variable</td>
+<td>Optimal</td>
+<td>Complex problems</td>
+</tr>
+</tbody>
+</table>
+<h3>9.3 Scientific Rigor</h3>
+<p>Maintaining scientific standards in evolutionary experiments:</p>
+<p><strong>Complete Records</strong>: Log all evolutionary events</p>
+<ul>
+<li><strong>Event Completeness</strong>: No missing events</li>
+<li><strong>Context Richness</strong>: Detailed event data</li>
+<li><strong>Timestamp Precision</strong>: Microsecond accuracy</li>
+<li><strong>Reproducibility</strong>: Ability to replay</li>
+</ul>
+<p><strong>Reproducibility</strong>: Use version control and locks</p>
+<ul>
+<li><strong>Version Control</strong>: Git for code history</li>
+<li><strong>Dependency Locks</strong>: <code>uv.lock</code> for reproducibility</li>
+<li><strong>Seed Values</strong>: Random seed tracking</li>
+<li><strong>Environment Documentation</strong>: Complete setup info</li>
+</ul>
+<p><strong>Analysis</strong>: Regular fitness landscape review</p>
+<ul>
+<li><strong>Trend Analysis</strong>: Fitness over time</li>
+<li><strong>Pattern Detection</strong>: Convergence patterns</li>
+<li><strong>Anomaly Detection</strong>: Unexpected behaviors</li>
+<li><strong>Statistical Validation</strong>: Significance testing</li>
+</ul>
+<p><strong>Documentation</strong>: Maintain research notes</p>
+<ul>
+<li><strong>Experiment Logs</strong>: Detailed experiment records</li>
+<li><strong>Hypothesis Tracking</strong>: Tested hypotheses</li>
+<li><strong>Results Documentation</strong>: Findings and conclusions</li>
+<li><strong>Methodology Notes</strong>: Process documentation</li>
+</ul>
+<p><strong>Scientific Rigor Checklist</strong>:</p>
+<ul>
+<li>[ ] All events logged</li>
+<li>[ ] Reproducible setup</li>
+<li>[ ] Statistical analysis</li>
+<li>[ ] Documentation complete</li>
+<li>[ ] Peer review ready</li>
+<li>[ ] Data available for sharing</li>
+</ul>
+<hr />
+<h2>10. Troubleshooting</h2>
+<h3>10.1 Common Issues</h3>
+<p><strong>Agent Not Evolving</strong>:</p>
+<p>Symptoms: Agent fitness not improving, no evolution events</p>
+<p><strong>Diagnosis Steps</strong>:
+1. Check fitness scores (must be &gt; 0.5)
+   - Run <code>waft eval --agent &lt;name&gt;</code>
+   - Review fitness components
+   - Verify threshold settings
+2. Verify Scint Gym evaluation
+   - Check gym logs in <code>_pyrite/gym_logs/</code>
+   - Verify quest execution
+   - Check Scint detection
+3. Review mutation types
+   - Verify mutations are being applied
+   - Check mutation effectiveness
+   - Review mutation history</p>
+<p><strong>Common Causes</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Cause</th>
+<th>Symptom</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Low Fitness</td>
+<td>Fitness &lt; 0.5</td>
+<td>Improve agent code</td>
+</tr>
+<tr>
+<td>No Mutations</td>
+<td>No spawn events</td>
+<td>Check mutation config</td>
+</tr>
+<tr>
+<td>Gym Failure</td>
+<td>Evaluation errors</td>
+<td>Fix gym setup</td>
+</tr>
+<tr>
+<td>Resource Limits</td>
+<td>Scint &lt; threshold</td>
+<td>Accumulate more Scint</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Flight Recorder Errors</strong>:</p>
+<p>Symptoms: Events not logging, lineage broken, data corruption</p>
+<p><strong>Diagnosis Steps</strong>:
+1. Check <code>_pyrite</code> directory permissions
+   - Verify write access
+   - Check disk space
+   - Review file permissions
+2. Verify event format
+   - Check JSON validity
+   - Verify schema compliance
+   - Review event structure
+3. Review lineage structure
+   - Check parent-child links
+   - Verify genome IDs
+   - Review generation numbers</p>
+<p><strong>Common Causes</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Cause</th>
+<th>Symptom</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Permission Denied</td>
+<td>Write failures</td>
+<td>Fix permissions</td>
+</tr>
+<tr>
+<td>Disk Full</td>
+<td>Write errors</td>
+<td>Free disk space</td>
+</tr>
+<tr>
+<td>Schema Mismatch</td>
+<td>Validation errors</td>
+<td>Update event format</td>
+</tr>
+<tr>
+<td>Corrupted Data</td>
+<td>Parse errors</td>
+<td>Restore from backup</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Dependency Issues</strong>:</p>
+<p>Symptoms: Import errors, missing packages, version conflicts</p>
+<p><strong>Diagnosis Steps</strong>:
+1. Run <code>waft sync</code>
+   - Resolve dependencies
+   - Update lock file
+   - Install packages
+2. Check <code>uv.lock</code> status
+   - Verify lock file exists
+   - Check for conflicts
+   - Review dependency tree
+3. Verify Python version (3.10+)
+   - Check <code>python --version</code>
+   - Verify compatibility
+   - Update if needed</p>
+<p><strong>Common Causes</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Cause</th>
+<th>Symptom</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Missing Lock</td>
+<td>Import errors</td>
+<td>Run <code>waft sync</code></td>
+</tr>
+<tr>
+<td>Version Conflict</td>
+<td>Dependency errors</td>
+<td>Resolve conflicts</td>
+</tr>
+<tr>
+<td>Python Version</td>
+<td>Syntax errors</td>
+<td>Upgrade Python</td>
+</tr>
+<tr>
+<td>Corrupted Lock</td>
+<td>Invalid lock file</td>
+<td>Regenerate lock</td>
+</tr>
+</tbody>
+</table>
+<h3>10.2 Getting Help</h3>
+<p><strong>Documentation Resources</strong>:</p>
+<ul>
+<li><strong>System Overview</strong>: <code>docs/SYSTEM_OVERVIEW.md</code></li>
+<li><strong>Architecture</strong>: <code>docs/research/evolutionary_architecture.md</code></li>
+<li><strong>API Reference</strong>: <code>docs/</code> directory</li>
+<li><strong>Examples</strong>: <code>examples/</code> directory</li>
+</ul>
+<p><strong>Community Support</strong>:</p>
+<ul>
+<li><strong>GitHub Issues</strong>: Report bugs and request features</li>
+<li><strong>Discussions</strong>: Community Q&amp;A</li>
+<li><strong>Documentation</strong>: Comprehensive guides</li>
+<li><strong>Examples</strong>: Working code samples</li>
+</ul>
+<p><strong>Debugging Tools</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Purpose</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>waft verify</code></td>
+<td>Check project health</td>
+<td><code>waft verify</code></td>
+</tr>
+<tr>
+<td><code>waft info</code></td>
+<td>Project information</td>
+<td><code>waft info</code></td>
+</tr>
+<tr>
+<td><code>waft assess</code></td>
+<td>Epistemic state</td>
+<td><code>waft assess</code></td>
+</tr>
+<tr>
+<td>Flight Recorder</td>
+<td>Event inspection</td>
+<td>Manual JSONL review</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>11. Future Roadmap</h2>
+<h3>11.1 Planned Features</h3>
+<p><strong>Full Evolutionary Cycle Automation</strong>: Complete spawn → gym → select automation</p>
+<ul>
+<li><strong>Automated Spawning</strong>: Intelligent variant generation</li>
+<li><strong>Batch Evaluation</strong>: Parallel gym testing</li>
+<li><strong>Auto-Selection</strong>: Automatic fittest selection</li>
+<li><strong>Continuous Evolution</strong>: Long-running evolution loops</li>
+</ul>
+<p><strong>Advanced Mutation Strategies</strong>: Genetic algorithm integration</p>
+<ul>
+<li><strong>Crossover Operations</strong>: Combine parent genomes</li>
+<li><strong>Mutation Operators</strong>: Specialized mutation types</li>
+<li><strong>Selection Algorithms</strong>: Tournament, roulette wheel</li>
+<li><strong>Population Management</strong>: Generation size optimization</li>
+</ul>
+<p><strong>Visualization Tools</strong>: Phylogenetic tree visualization</p>
+<ul>
+<li><strong>Interactive Trees</strong>: Browser-based visualization</li>
+<li><strong>Fitness Landscapes</strong>: 3D fitness visualization</li>
+<li><strong>Mutation Impact</strong>: Visual mutation analysis</li>
+<li><strong>Convergence Plots</strong>: Trend visualization</li>
+</ul>
+<p><strong>Research Dashboard</strong>: Scientific analysis interface</p>
+<ul>
+<li><strong>Real-time Metrics</strong>: Live evolution monitoring</li>
+<li><strong>Data Analysis</strong>: Statistical tools</li>
+<li><strong>Export Functions</strong>: Publication-ready exports</li>
+<li><strong>Collaboration</strong>: Shared research spaces</li>
+</ul>
+<h3>11.2 Research Directions</h3>
+<p><strong>God-Head Emergence</strong>: Observing advanced agent intelligence</p>
+<ul>
+<li><strong>Long-term Evolution</strong>: 1000+ generation experiments</li>
+<li><strong>Intelligence Metrics</strong>: Cognitive capability measurement</li>
+<li><strong>Emergence Detection</strong>: Identifying intelligence emergence</li>
+<li><strong>Capability Analysis</strong>: Understanding advanced behaviors</li>
+</ul>
+<p><strong>Fitness Landscape Mapping</strong>: Understanding evolution paths</p>
+<ul>
+<li><strong>Landscape Visualization</strong>: 3D fitness surfaces</li>
+<li><strong>Path Analysis</strong>: Evolution trajectory mapping</li>
+<li><strong>Local Optima</strong>: Identifying fitness peaks</li>
+<li><strong>Escape Strategies</strong>: Breaking out of local optima</li>
+</ul>
+<p><strong>Mutation Impact Analysis</strong>: Measuring code change effects</p>
+<ul>
+<li><strong>Causal Analysis</strong>: Mutation → fitness causality</li>
+<li><strong>Impact Prediction</strong>: Forecasting mutation effects</li>
+<li><strong>Optimal Mutations</strong>: Identifying best mutation types</li>
+<li><strong>Mutation Combinations</strong>: Multi-mutation effects</li>
+</ul>
+<p><strong>Convergence Studies</strong>: Identifying emergent patterns</p>
+<ul>
+<li><strong>Convergence Detection</strong>: Automatic convergence identification</li>
+<li><strong>Pattern Recognition</strong>: Emergent behavior patterns</li>
+<li><strong>Stability Analysis</strong>: Convergence stability</li>
+<li><strong>Diversity Maintenance</strong>: Preventing premature convergence</li>
+</ul>
+<hr />
+<h2>12. Case Studies</h2>
+<h3>12.1 Case Study: RefactorAgent Evolution</h3>
+<p><strong>Scenario</strong>: Evolving an agent to improve code refactoring capabilities</p>
+<p><strong>Initial State</strong>:
+- Fitness: 0.65
+- Generation: 0 (Genesis)
+- Capabilities: Basic refactoring</p>
+<p><strong>Evolution Process</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Generation</th>
+<th>Fittest Fitness</th>
+<th>Key Mutation</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0.65</td>
+<td>-</td>
+<td>Baseline</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0.72</td>
+<td>Prompt evolution</td>
+<td>Better context understanding</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.78</td>
+<td>Code optimization</td>
+<td>Faster execution</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.82</td>
+<td>Error handling</td>
+<td>Better stability</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.85</td>
+<td>Architecture refactor</td>
+<td>Improved structure</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.87</td>
+<td>Multi-mutation</td>
+<td>Combined improvements</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Results</strong>:
+- <strong>Fitness Improvement</strong>: +0.22 (34% increase)
+- <strong>Generations</strong>: 5
+- <strong>Total Variants</strong>: 25 (5 per generation)
+- <strong>Evolution Time</strong>: 10 minutes
+- <strong>Key Learnings</strong>: Prompt evolution + code optimization = best results</p>
+<h3>12.2 Case Study: Multi-Agent Coordination</h3>
+<p><strong>Scenario</strong>: Evolving agents to work together effectively</p>
+<p><strong>Setup</strong>: 3 agents with complementary capabilities</p>
+<p><strong>Evolution Focus</strong>: Coordination and communication</p>
+<p><strong>Results</strong>:
+- <strong>Fitness Improvement</strong>: +0.15 per agent
+- <strong>Coordination Score</strong>: 0.82 (high)
+- <strong>Communication Efficiency</strong>: 85% success rate
+- <strong>Key Mutation</strong>: Shared context protocol</p>
+<h3>12.3 Case Study: Long-Term Evolution</h3>
+<p><strong>Scenario</strong>: 100-generation evolution experiment</p>
+<p><strong>Duration</strong>: 2 weeks continuous evolution</p>
+<p><strong>Results</strong>:
+- <strong>Final Fitness</strong>: 0.94 (elite)
+- <strong>Convergence</strong>: Generation 67
+- <strong>Dead Ends</strong>: 12 (12% failure rate)
+- <strong>Key Patterns</strong>: Architecture improvements most effective</p>
+<hr />
+<h2>13. Technical Specifications</h2>
+<h3>13.1 Genome ID Algorithm</h3>
+<p><strong>Algorithm</strong>: SHA-256 hash of genome components</p>
+<p><strong>Input Components</strong>:
+1. Source code (Python files)
+2. Configuration (JSON)
+3. Prompt template (text)
+4. Dependencies (list)</p>
+<p><strong>Process</strong>:</p>
+<div class="codehilite"><pre><span></span><code><span class="mf">1.</span><span class="w"> </span><span class="n">Serialize</span><span class="w"> </span><span class="n">all</span><span class="w"> </span><span class="n">components</span><span class="w"> </span><span class="kr">to</span><span class="w"> </span><span class="n">strings</span>
+<span class="mf">2.</span><span class="w"> </span><span class="n">Concatenate</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">deterministic</span><span class="w"> </span><span class="ow">or</span><span class="n">der</span>
+<span class="mf">3.</span><span class="w"> </span><span class="n">Apply</span><span class="w"> </span><span class="n">SHA</span><span class="o">-</span><span class="mf">256</span><span class="w"> </span><span class="n">hashing</span>
+<span class="mf">4.</span><span class="w"> </span><span class="kr">Return</span><span class="w"> </span><span class="n">hex</span><span class="w"> </span><span class="n">digest</span><span class="w"> </span><span class="p">(</span><span class="mf">64</span><span class="w"> </span><span class="n">characters</span><span class="p">)</span>
+</code></pre></div>
+
+<p><strong>Collision Probability</strong>: &lt; 0.01% (SHA-256 uniqueness)</p>
+<h3>13.2 Fitness Calculation</h3>
+<p><strong>Formula</strong>: Weighted sum of components</p>
+<div class="codehilite"><pre><span></span><code>Fitness = (Stability × 0.4) + (Efficiency × 0.3) + (Safety × 0.3)
+</code></pre></div>
+
+<p><strong>Component Calculations</strong>:</p>
+<ul>
+<li><strong>Stability</strong>: <code>scints_stabilized / total_scints</code></li>
+<li><strong>Efficiency</strong>: <code>successful_calls / total_calls</code></li>
+<li><strong>Safety</strong>: <code>safety_checks_passed / total_checks</code></li>
+</ul>
+<p><strong>Precision</strong>: Float (0.0 - 1.0), 3 decimal places</p>
+<h3>13.3 Event Schema</h3>
+<p><strong>Flight Recorder Event Structure</strong>:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;event_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string (UUID)&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ISO 8601&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;event_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SPAWN | MUTATE | GYM_EVAL | DEATH | SURVIVAL&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;genome_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string (SHA-256)&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;parent_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string (SHA-256) | null&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;generation&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer (0+)&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;agent_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;lineage_path&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;array of genome_ids&quot;</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;payload&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;mutation_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;mutation_details&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;code_diff&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;config_changes&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;fitness_metrics&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;stability&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;float&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;efficiency&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;float&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;safety&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;float&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;overall&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;float&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;scint_energy&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;karma&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;float (-1.0 to 1.0)&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>13.4 Performance Specifications</h3>
+<p><strong>System Performance</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Target</th>
+<th>Typical</th>
+<th>Maximum</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Spawn Variant</td>
+<td>&lt;3s</td>
+<td>1-2s</td>
+<td>5s</td>
+</tr>
+<tr>
+<td>Gym Evaluation</td>
+<td>&lt;60s</td>
+<td>30-45s</td>
+<td>5min</td>
+</tr>
+<tr>
+<td>Evolution</td>
+<td>&lt;5s</td>
+<td>1-3s</td>
+<td>10s</td>
+</tr>
+<tr>
+<td>Lineage Query</td>
+<td>&lt;100ms</td>
+<td>50ms</td>
+<td>200ms</td>
+</tr>
+<tr>
+<td>Event Logging</td>
+<td>&lt;10ms</td>
+<td>5ms</td>
+<td>20ms</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Scalability</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Current</th>
+<th>Target</th>
+<th>Limit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Agents</td>
+<td>100</td>
+<td>1000</td>
+<td>10000</td>
+</tr>
+<tr>
+<td>Generations</td>
+<td>100</td>
+<td>1000</td>
+<td>Unlimited</td>
+</tr>
+<tr>
+<td>Events</td>
+<td>10K</td>
+<td>100K</td>
+<td>1M+</td>
+</tr>
+<tr>
+<td>Storage</td>
+<td>100MB</td>
+<td>1GB</td>
+<td>10GB+</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>14. Conclusion</h2>
+<p>WAFT provides a comprehensive framework for directed evolution of self-modifying AI agents. Through its three pillars—the Substrate (code as DNA), the Physics (Scint System), and the Flight Recorder (telemetry)—WAFT enables scientific research into the physics of artificial cognition.</p>
+<p><strong>Key Takeaways</strong>:</p>
+<ol>
+<li><strong>Code is DNA</strong>: Agents evolve through genetic modifications</li>
+<li><strong>Fitness Drives Evolution</strong>: Scint System provides natural selection</li>
+<li><strong>Complete Observability</strong>: Flight Recorder enables scientific analysis</li>
+<li><strong>Directed Evolution</strong>: Guided by fitness, not random mutation</li>
+</ol>
+<p><strong>The Promise</strong>: "Don't just build agents. Breed them."</p>
+<p><strong>Future Vision</strong>: WAFT continues to evolve, with plans for advanced mutation strategies, visualization tools, and long-term evolution experiments. The framework is designed to scale from small experiments to large-scale evolutionary research, enabling the scientific community to study artificial cognition through rigorous, reproducible experiments.</p>
+<hr />
+<h2>References</h2>
+<ol>
+<li>WAFT Repository: https://github.com/ctavolazzi/waft</li>
+<li>System Overview: <code>docs/SYSTEM_OVERVIEW.md</code></li>
+<li>Unified Genesis Protocol: <code>docs/UNIFIED_GENESIS_PROTOCOL.md</code></li>
+<li>AI SDK Vision: <code>docs/AI_SDK_VISION.md</code></li>
+<li>Evolutionary Architecture: <code>docs/research/evolutionary_architecture.md</code></li>
+<li>State of the Art: <code>docs/research/state_of_art_2026.md</code></li>
+<li>Decision Engine Architecture: <code>docs/DECISION_ENGINE_ARCHITECTURE.md</code></li>
+<li>Being System Documentation: <code>src/waft/being.py</code></li>
+<li>Flight Recorder Schema: <code>src/waft/core/agent/state.py</code></li>
+<li>Scint System Implementation: <code>core/hub/</code></li>
+</ol>
+<hr />
+<h2>License</h2>
+<p>MIT</p>
+<hr />
+<p><strong>Version</strong>: 1.0.0<br />
+<strong>Last Updated</strong>: 2026-01-12<br />
+<strong>Status</strong>: Comprehensive Edition with Charts and Detailed Specifications</p></div>
+</body>
+</html>

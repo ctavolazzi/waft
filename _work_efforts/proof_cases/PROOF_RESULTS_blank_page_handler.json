@@ -1,0 +1,34 @@
+{
+  "tests": [
+    {
+      "name": "Direct Handler Test",
+      "pass": false,
+      "blank_pages": 1,
+      "markers_added": 0,
+      "evidence": "Test PDF: PROOF_TEST_1_direct_handler.pdf"
+    },
+    {
+      "name": "PDFGenerator Integration",
+      "pass": true,
+      "blank_pages": 0,
+      "markers_added": 0,
+      "evidence": "Test PDF: PROOF_TEST_2_pdfgenerator.pdf"
+    },
+    {
+      "name": "BriefDocument Integration",
+      "pass": true,
+      "blank_pages": 0,
+      "markers_added": 0,
+      "evidence": "Test PDF: PROOF_TEST_3_briefdocument.pdf"
+    },
+    {
+      "name": "GoldenTriangle Integration",
+      "pass": true,
+      "blank_pages": 0,
+      "markers_added": 0,
+      "evidence": "Test PDF: PROOF_TEST_4_goldentriangle.pdf"
+    }
+  ],
+  "evidence": [],
+  "failures": []
+}

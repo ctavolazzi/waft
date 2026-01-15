@@ -1,0 +1,50 @@
+{
+  "genome_id": "0db3662db1c742b7625e85ac3ca7031deb179d90a584483d7d97820a700bed4c",
+  "genes": {
+    "font": {
+      "family": "'Times New Roman', 'Times', serif",
+      "size_body": 11,
+      "size_h1": 16,
+      "size_h2": 14,
+      "size_h3": 12,
+      "size_code": 9,
+      "line_height": 1.4
+    },
+    "margin": {
+      "top": 25.4,
+      "bottom": 25.4,
+      "left": 25.4,
+      "right": 25.4,
+      "paragraph_spacing": 8,
+      "section_spacing": 12
+    },
+    "color": {
+      "text": "#000000",
+      "background": "#FFFFFF",
+      "heading": "#000000",
+      "accent": "#000000",
+      "code_bg": "#f5f5f5",
+      "code_text": "#000000",
+      "border": "#cccccc"
+    },
+    "layout": {
+      "columns": 1,
+      "density": "normal",
+      "toc_enabled": false,
+      "page_numbers": true,
+      "header_enabled": true,
+      "footer_enabled": true
+    },
+    "name": "Clinical_Standard - DM Guide",
+    "description": ""
+  },
+  "generation": 0,
+  "parent_id": null,
+  "lineage_path": [
+    "0db3662db1c742b7625e85ac3ca7031deb179d90a584483d7d97820a700bed4c"
+  ],
+  "scientific_name": "Deva Rajas, the Clever",
+  "fitness_score": null,
+  "created_at": "2026-01-13T00:52:08.260792",
+  "last_evaluated_at": null
+}

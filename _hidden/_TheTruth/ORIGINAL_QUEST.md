@@ -1,0 +1,3 @@
+# Original Quest
+
+**Know Thyself**

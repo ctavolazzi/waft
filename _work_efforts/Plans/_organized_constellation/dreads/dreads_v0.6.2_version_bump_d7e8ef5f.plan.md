@@ -1,0 +1,122 @@
+---
+name: v0.6.2 Version Bump
+overview: Bump _pyrite repository from v0.6.1 to v0.6.2 with comprehensive version alignment and pre-release cleanup.
+todos:
+  - id: lint-check
+    content: Run lint check on modified CSS/JS files
+    status: completed
+  - id: update-jsdoc-versions
+    content: Update JSDoc @version comments in app.js, server.js, events.js, parser.js
+    status: completed
+  - id: update-footer-version
+    content: Update VERSION constant in footer.js to v0.6.2
+    status: completed
+  - id: update-html-versions
+    content: Update version badges in index.html (sidebar + about modal)
+    status: completed
+  - id: update-work-efforts
+    content: Update work effort statuses for completed session work
+    status: completed
+  - id: write-devlog
+    content: Write devlog entry documenting session accomplishments
+    status: completed
+  - id: commit-version
+    content: Commit all version and status changes
+    status: completed
+  - id: create-tag
+    content: Create git tag v0.6.2 and push
+    status: completed
+
+category: dreads
+confidence: 1.00
+constellation_date: 2026-01-14
+---
+
+# v0.6.2 Release Plan
+
+Bump _pyrite from v0.6.1 to v0.6.2 with comprehensive version alignment and pre-release cleanup.
+
+## Changes in This Release
+
+**Bug Fixes:**
+
+- Footer visibility - sticky footer always visible at viewport bottom
+- Sidebar/footer overlap - sidebar height accounts for footer
+- View mutual exclusivity - fixed CSS load order
+
+**UI Improvements:**
+
+- VS Code-style tree navigation with status dots and chevrons
+- Hero banner redesign - clean styled text instead of ASCII art
+- Responsive refinements for stats grid and hero height
+
+---
+
+## Implementation Steps
+
+### 1. Pre-Release Checks
+
+**Lint check** on modified files:
+
+- `mcp-servers/dashboard-v3/public/styles/layout.css`
+- `mcp-servers/dashboard-v3/public/styles/components/sidebar.css`
+- `mcp-servers/dashboard-v3/public/styles/main.css`
+
+### 2. Update JSDoc Version Comments
+
+Update `@version 0.2.0` to `@version 0.6.2` in:
+
+- [`mcp-servers/dashboard-v3/public/app.js`](mcp-servers/dashboard-v3/public/app.js) - line 11
+- [`mcp-servers/dashboard-v3/server.js`](mcp-servers/dashboard-v3/server.js) - line 10
+- [`mcp-servers/dashboard-v3/public/events.js`](mcp-servers/dashboard-v3/public/events.js) - line 16
+- [`mcp-servers/dashboard-v3/lib/parser.js`](mcp-servers/dashboard-v3/lib/parser.js) - line 9
+
+### 3. Update Dashboard UI Version
+
+Update version strings from `v0.2.0` to `v0.6.2` in:
+
+- [`mcp-servers/dashboard-v3/public/components/footer.js`](mcp-servers/dashboard-v3/public/components/footer.js) - line 13: `const VERSION`
+- [`mcp-servers/dashboard-v3/public/index.html`](mcp-servers/dashboard-v3/public/index.html) - line 86: sidebar `.version-badge`
+- [`mcp-servers/dashboard-v3/public/index.html`](mcp-servers/dashboard-v3/public/index.html) - line 549: about modal version
+
+### 4. Update Work Effort Statuses
+
+Mark progress on active work efforts:
+
+- `WE-251231-un7r` (Mission Control V3 Responsive Rewrite) - update completed tickets
+- `WE-251231-sdc6` (Phase 2 Component Migration) - note progress made
+
+### 5. Write Devlog Entry
+
+Document session accomplishments:
+
+- Footer fix
+- VS Code-style sidebar
+- Hero banner redesign
+- Version alignment
+
+### 6. Commit and Tag
+
+```bash
+git add -A
+git commit -m "chore: release v0.6.2
+
+- Fix footer visibility and sidebar overlap
+- VS Code-style tree navigation
+- Hero banner redesign
+- Align all version numbers to v0.6.2"
+
+git tag v0.6.2
+git push origin main
+git push origin v0.6.2
+```
+
+---
+
+## Verification
+
+After release, confirm:
+
+- Git tag `v0.6.2` exists: `git tag -l v0.6.2`
+- Dashboard footer shows `v0.6.2`
+- Dashboard sidebar shows `v0.6.2`

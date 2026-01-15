@@ -6,7 +6,7 @@ Each component is a variable that can be tested, measured, and evolved.
 """
 
 from dataclasses import dataclass, field
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Union
 from enum import Enum
 import html
 
@@ -17,6 +17,7 @@ class ComponentType(Enum):
     IMAGE = "image"
     ABSTRACT = "abstract"
     ATTRIBUTION = "attribution"
+    METADATA = "metadata"
     SECTION = "section"
     PARAGRAPH = "paragraph"
     LIST = "list"
@@ -63,6 +64,61 @@ class DocumentComponent:
             author = self.content.get('author', '') if isinstance(self.content, dict) else ''
             date = self.content.get('date', '') if isinstance(self.content, dict) else ''
             return f'<div class="author-info"><p style="margin: 0;">{author}</p><p style="margin: 2pt 0 0 0; font-size: {styling.get("font", {}).get("size_body", 10) - 1.5}pt;">{date}</p></div>'
+        elif self.component_type == ComponentType.METADATA:
+            # Render metadata block with document and generation info
+            if not isinstance(self.content, dict):
+                return ''
+            
+            metadata_items = []
+            font_size = styling.get("font", {}).get("size_body", 11)
+            small_font = font_size - 1.5
+            
+            # Document metadata
+            if self.content.get('authors'):
+                authors = self.content['authors']
+                if isinstance(authors, list):
+                    authors_str = ', '.join(authors)
+                else:
+                    authors_str = str(authors)
+                metadata_items.append(f'<p><strong>Author(s):</strong> {html.escape(authors_str)}</p>')
+            
+            if self.content.get('subject'):
+                metadata_items.append(f'<p><strong>Subject:</strong> {html.escape(str(self.content["subject"]))}</p>')
+            
+            if self.content.get('keywords'):
+                keywords = self.content['keywords']
+                if isinstance(keywords, list):
+                    keywords_str = ', '.join(keywords)
+                else:
+                    keywords_str = str(keywords)
+                metadata_items.append(f'<p><strong>Keywords:</strong> {html.escape(keywords_str)}</p>')
+            
+            # Generation process metadata
+            if self.content.get('generation_info'):
+                gen_info = self.content['generation_info']
+                if isinstance(gen_info, dict):
+                    gen_items = []
+                    if gen_info.get('generator'):
+                        gen_items.append(f'<strong>Generator:</strong> {html.escape(str(gen_info["generator"]))}')
+                    if gen_info.get('style'):
+                        gen_items.append(f'<strong>Style:</strong> {html.escape(str(gen_info["style"]))}')
+                    if gen_info.get('timestamp'):
+                        gen_items.append(f'<strong>Generated:</strong> {html.escape(str(gen_info["timestamp"]))}')
+                    if gen_info.get('version'):
+                        gen_items.append(f'<strong>Version:</strong> {html.escape(str(gen_info["version"]))}')
+                    if gen_info.get('process'):
+                        gen_items.append(f'<strong>Process:</strong> {html.escape(str(gen_info["process"]))}')
+                    
+                    if gen_items:
+                        metadata_items.append(f'<p style="margin-top: {styling.get("margin", {}).get("paragraph_spacing", 8) / 2}pt; padding-top: {styling.get("margin", {}).get("paragraph_spacing", 8) / 2}pt; border-top: 1pt solid {styling.get("color", {}).get("border", "#cccccc")};">{" | ".join(gen_items)}</p>')
+            
+            if not metadata_items:
+                return ''
+            
+            # Wrap in metadata container
+            return f'''<div class="document-metadata" style="font-size: {small_font}pt; color: {styling.get("color", {}).get("text", "#000000")}88; margin: {styling.get("margin", {}).get("paragraph_spacing", 8)}pt 0; padding: {styling.get("margin", {}).get("paragraph_spacing", 8) / 2}pt; background: {styling.get("color", {}).get("code_bg", "#f5f5f5")}40; border-left: 3pt solid {styling.get("color", {}).get("accent", "#000000")};">
+                {"".join(metadata_items)}
+            </div>'''
         elif self.component_type == ComponentType.SECTION:
             level = self.metadata.get('level', 2)
             title = self.content.get('title', '') if isinstance(self.content, dict) else str(self.content)
@@ -119,6 +175,7 @@ class DocumentComponent:
             ComponentType.IMAGE: 0.15,
             ComponentType.ABSTRACT: 0.10,
             ComponentType.ATTRIBUTION: 0.03,
+            ComponentType.METADATA: 0.08,
             ComponentType.SECTION: 0.20,
             ComponentType.PARAGRAPH: 0.08,
         }
@@ -200,6 +257,47 @@ class ComponentBuilder:
             content={'author': author, 'date': date},
             size_estimate=0.03,
             priority=0.7,
+        )
+    
+    @staticmethod
+    def build_metadata_component(
+        authors: Optional[Union[str, List[str]]] = None,
+        subject: Optional[str] = None,
+        keywords: Optional[Union[str, List[str]]] = None,
+        generation_info: Optional[Dict[str, Any]] = None
+    ) -> DocumentComponent:
+        """
+        Build metadata component with document and generation information.
+        
+        Args:
+            authors: Author name(s) - can be string or list
+            subject: Document subject/topic
+            keywords: Keywords - can be string or list
+            generation_info: Dictionary with generation process info:
+                - generator: Generator name/version
+                - style: Style preset used
+                - timestamp: Generation timestamp
+                - version: WAFT version
+                - process: Description of generation process
+        
+        Returns:
+            DocumentComponent for metadata
+        """
+        content = {}
+        if authors:
+            content['authors'] = authors
+        if subject:
+            content['subject'] = subject
+        if keywords:
+            content['keywords'] = keywords
+        if generation_info:
+            content['generation_info'] = generation_info
+        
+        return DocumentComponent(
+            component_type=ComponentType.METADATA,
+            content=content,
+            size_estimate=0.08,
+            priority=0.6,  # Lower priority - can be omitted if space is tight
         )
     
     @staticmethod

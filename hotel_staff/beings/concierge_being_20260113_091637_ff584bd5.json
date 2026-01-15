@@ -1,0 +1,15 @@
+{
+  "role_key": "concierge",
+  "role_name": "Concierge",
+  "being_id": "being_20260113_091637_ff584bd5",
+  "custom_name": "Arthur",
+  "reality_id": "treasure_tavern_inn",
+  "initial_skills": {
+    "information_architecture": 30.0,
+    "knowledge_management": 28.0,
+    "routing": 25.0,
+    "memory": 35.0
+  },
+  "personality_type": "helpful",
+  "spawned_at": "2026-01-13T09:16:41.528769"
+}

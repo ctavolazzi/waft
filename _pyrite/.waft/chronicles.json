@@ -3,7 +3,7 @@
     "name": "waft",
     "level": 1,
     "integrity": 100.0,
-    "insight": 5.0,
+    "insight": 0.0,
     "credits": 0,
     "ability_scores": {
       "strength": 8,
@@ -15,12 +15,11 @@
     },
     "proficiency_bonus": 2,
     "hit_dice": "d8",
-    "max_hp": 7,
-    "current_hp": 7,
-    "created_at": "2026-01-12T15:36:54.689796",
-    "updated_at": "2026-01-12T15:36:56.007381"
+    "max_hp": 10,
+    "current_hp": 10,
+    "created_at": "2026-01-13T01:53:15.841210"
   },
-  "updated_at": "2026-01-12T15:36:58.090431",
+  "updated_at": "2026-01-13T01:53:20.519872",
   "adventure_journal": [
     {
       "timestamp": "2026-01-06T00:13:34.681830",
@@ -227,18 +226,16 @@
       "outcome": "info"
     },
     {
-      "event": "verify",
-      "narrative": "The TavernKeeper nods approvingly: 'Structural integrity confirmed.'",
-      "dice_roll": "1d20+-1",
-      "result": 9,
-      "outcome": "success",
-      "rewards": {
-        "insight": 5,
-        "credits": 0,
-        "integrity": 2.0
+      "timestamp": "2026-01-13T01:53:20.519216",
+      "event": "observation",
+      "narrative": "Story told around the campfire: The Oracle's Silence",
+      "mood": "delighted",
+      "source": "ai",
+      "context": {
+        "story_id": "story_20260113_015318",
+        "pdf_path": "_pyrite/campfire/story_20260113_015318.pdf"
       },
-      "classification": "failure",
-      "timestamp": "2026-01-12T15:36:58.090250"
+      "type": "narrative"
     }
   ]
 }

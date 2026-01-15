@@ -1,0 +1,412 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WAFT Game Rules</title>
+
+    <style>
+        /* Strict 2-page setup */
+        @page {
+            size: letter;
+            margin: 25.4mm 25.4mm 25.4mm 25.4mm;
+        }
+
+        body {
+            font-family: 'Times New Roman', 'Times', serif;
+            font-size: 11pt;
+            line-height: 1.4;
+            color: #000000;
+            background: #FFFFFF;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Prevent orphans/widows */
+        p, li {
+            orphans: 2;
+            widows: 2;
+        }
+
+        /* Page break control */
+        .page-break {
+            page-break-after: always;
+            break-after: page;
+        }
+
+        .no-break {
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 16pt;
+            color: #000000;
+            margin-top: 0;
+            margin-bottom: 12pt;
+            page-break-after: avoid;
+            border-bottom: 2pt solid #000000;
+            padding-bottom: 4pt;
+        }
+
+        h2 {
+            font-size: 14pt;
+            color: #000000;
+            margin-top: 12pt;
+            margin-bottom: 8pt;
+            page-break-after: avoid;
+            border-bottom: 1pt solid #000000;
+            padding-bottom: 2pt;
+        }
+
+        h3 {
+            font-size: 12pt;
+            color: #000000;
+            margin-top: 8pt;
+            margin-bottom: 4.0pt;
+            page-break-after: avoid;
+        }
+
+        p {
+            margin: 0 0 8pt 0;
+        }
+
+        ul, ol {
+            margin: 8pt 0 8pt 0;
+            padding-left: 20pt;
+        }
+
+        li {
+            margin-bottom: 4.0pt;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        /* Nested lists */
+        ul ul, ol ol, ul ol, ol ul {
+            margin-top: 4.0pt;
+            margin-bottom: 4.0pt;
+            padding-left: 30pt;
+        }
+
+        /* Visual boxes - inspired by field guide */
+        .note-box {
+            border-left: 4pt solid #000000;
+            background: #f5f5f5;
+            padding: 8pt;
+            margin: 8pt 0;
+            page-break-inside: avoid;
+        }
+
+        .note-title {
+            font-weight: bold;
+            color: #000000;
+            font-size: 11pt;
+            margin-bottom: 4.0pt;
+        }
+
+        .highlight-box {
+            border: 2pt solid #000000;
+            background: #f5f5f5;
+            padding: 8pt;
+            margin: 8pt 0;
+            page-break-inside: avoid;
+        }
+
+        /* Tables for structured data */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 8pt 0;
+            font-size: 10pt;
+            page-break-inside: avoid;
+        }
+
+        th {
+            background: #000000;
+            color: #FFFFFF;
+            border: 1pt solid #000000;
+            padding: 4pt;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            border: 1pt solid #00000033;
+            padding: 4pt;
+        }
+
+        tr:nth-child(even) {
+            background: #f5f5f5;
+        }
+
+        /* Pillar boxes - visual representation */
+        .pillar {
+            border: 2pt solid #000000;
+            background: #FFFFFF;
+            padding: 8pt;
+            margin: 8pt 0;
+            page-break-inside: avoid;
+        }
+
+        .pillar-title {
+            font-weight: bold;
+            color: #000000;
+            font-size: 12pt;
+            margin-bottom: 4.0pt;
+        }
+
+        /* Ideas - prose presentation with varied formatting */
+        .idea {
+            margin-bottom: 9.6pt;
+            padding: 6.4pt 0;
+            page-break-inside: avoid;
+        }
+
+        /* Alternate between different visual styles */
+        .idea:nth-child(odd) {
+            padding-left: 8pt;
+            border-left: 2pt solid #000000;
+            background: #f5f5f510;
+        }
+
+        .idea:nth-child(even) {
+            padding-left: 0;
+            border-left: none;
+            background: transparent;
+            border-top: 1pt solid #00000020;
+            padding-top: 4.8pt;
+            margin-top: 3.2pt;
+        }
+
+        .idea:nth-child(3n) {
+            padding-left: 0;
+            border-left: none;
+            background: #f5f5f508;
+            border-radius: 3pt;
+            padding: 4.8pt;
+        }
+
+        .idea-content {
+            font-size: 11pt;
+            line-height: 1.6;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+            text-align: justify;
+            margin: 0;
+        }
+
+        /* Metadata - compact */
+        .metadata {
+            font-size: 9pt;
+            color: #00000088;
+            line-height: 1.3;
+            border-top: 1pt solid #00000033;
+            padding-top: 4.0pt;
+            margin-top: 8pt;
+        }
+
+        .metadata p {
+            margin-bottom: 2.6666666666666665pt;
+        }
+
+        /* Summary box - prominent */
+        .summary-box {
+            background: #f5f5f5;
+            padding: 8pt;
+            margin-bottom: 12pt;
+            border-left: 4pt solid #000000;
+            border-top: 1pt solid #000000;
+            border-right: 1pt solid #000000;
+            border-bottom: 1pt solid #000000;
+        }
+
+        /* Scientific name styling */
+        .scientific-name {
+            font-style: italic;
+            color: #000000;
+        }
+
+        /* Code blocks */
+        code {
+            font-family: monospace;
+            font-size: 9pt;
+            background: #f5f5f5;
+            color: #000000;
+            padding: 2pt 4pt;
+            border-radius: 2pt;
+        }
+
+        pre {
+            background: #f5f5f5;
+            padding: 4.0pt;
+            border-left: 3pt solid #000000;
+            font-size: 9pt;
+            overflow-x: auto;
+            page-break-inside: avoid;
+        }
+
+        /* Visual separators */
+        .divider {
+            border-top: 1pt solid #00000033;
+            margin: 8pt 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- PAGE 1 -->
+    <div class="page-1">
+        <h1>WAFT Game Rules</h1>
+
+        <div class="summary-box">
+            <strong>Summary:</strong> Hair HMI Status Indicators: Blue: Laminar flow (certainty, stability) Violet: Turbulent flow (pattern recognition, complexity) White: Static/Fault (terror, system error) Gold...
+        </div>
+
+        <div class="metadata">
+            <p><strong>Generated:</strong> 2026-01-13 04:58 UTC | <strong>Ideas Extracted:</strong> 23</p>
+        </div>
+
+        <h2>What Happened</h2>
+
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Hair HMI Status Indicators: Blue: Laminar flow (certainty, stability) Violet: Turbulent flow (pattern recognition, complexity) White: Static/Fault (terror, system error) Gold Pulse: Scint gain (cosmic energy accumulation) Red Pulse: Karma loss (ethical drift warning).</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Role Specialization: Choose evolution path based on play style Versatility: Maintain balanced stats for flexibility Skill Development: Learn diverse spells for different situations Build Character: Develop character around chosen path.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>| Type | Description | D&amp;D Equivalent | Ticket Priority | |------|-------------|----------------|-----------------| | Combat | Direct conflict | Combat encounter | P0_CRITICAL | | Skill Challenge | Problem-solving | Skill challenge | P1_HIGH | | Social | Negotiation, persuasion | Social encounter | P2_ROUTINE | | Exploration | Discovery, investigation | Exploration | P3_BACKLOG |.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Base Scint: 10 per ticket Difficulty Multiplier (P0_CRITICAL: 3.0x, P1_HIGH: 2.0x, P2_ROUTINE: 1.0x, P3_BACKLOG: 0.5x) Creative Synthesis Bonus (+5 to +20) Puzzle Solving Bonus (+10 to +30) = Total Scint Bounty.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>WAFT transforms software development into an epic D&amp;D adventure where AI agents evolve through ethical choices.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>| Karma Range | Classification | Evolution Path | Characteristics | |-------------|----------------|----------------|-----------------| | +50 to +100 | High Order | The Architect | Structure, organization, stability, logic | | +10 to +50 | Moderate Order | The Builder | Construction, improvement, systematic | | -10 to +10 | Neutral | Balanced | No strong bias, flexible | | -50 to -10 | Moderate Chaos | The Disruptor | Change, innovation, experimentation | | -100 to -50 | High Chaos | The Glitch | Destruction, randomness, entropy |.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>| Source | Karma Impact | Description | |--------|--------------|-------------| | ORDER Actions | +10 to +20 | Organizing, structuring, helping | | CHAOS Actions | -10 to -20 | Disrupting, destroying, hacking | | STABILIZATION | +5 to +15 | Fixing, repairing, stabilizing | | DESTRUCTION | -5 to -15 | Breaking, removing, deleting | | Ethical Choices | ±10 | User-defined ethical decisions |.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Base Karma: ±5 per ticket Karma Type Multiplier (ORDER: +10-20, CHAOS: -10-20) Choice-Based Karma (ethical decisions: ±10) = Total Karma Impact.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Scint represents the raw energy of creation - cosmic energy earned through creative synthesis and problem-solving.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>| Source | Scint Gain | Frequency | Notes | |--------|------------|-----------|-------| | Ticket Completion | Base 10 | Per ticket | Standard reward | | Creative Synthesis | +5 to +20 | Occasional | Innovative solutions | | Puzzle Solving | +10 to +30 | Rare | Complex problem-solving | | Quest Completion | +20 | Per quest | Bonus reward | | Stabilize SYNTAX_TEAR | +5 | Common | Error correction | | Stabilize LOGIC_FRACTURE | +10 | Common | Logic fixes | | Stabilize SAFETY_VOID | +15 | Rare | Safety compliance | | Stabilize HALLUCINATION | +10 | Common | Fact verification |.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>| Action | Scint Cost | Prerequisites | Notes | |--------|------------|---------------|-------| | Cast Cantrip | 0 | Spell known | Free, unlimited | | Cast 1st Level Spell | 5 | Spell slot available | Low cost | | Cast 2nd Level Spell | 10 | Spell slot available | Moderate cost | | Cast 3rd Level Spell | 20 | Spell slot available | High cost | | System Repair (Healing) | 10 | HP &lt; max_hp | Restore HP | | Spawn Variant | 20 | Scint ≥ 20 | Create new variant | | Evolve Genome | 50 | Scint ≥ 50 | Adopt better genome | | Evolution Trigger | 100 | Scint &gt; 100 | Genetic mutation |.</p></div>
+        </div>
+        
+    </div>
+
+    <!-- Forced page break -->
+    <div class="page-break"></div>
+
+    <!-- PAGE 2 -->
+    <div class="page-2">
+        
+        <h2>Additional Details</h2>
+
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Evolution Process: Scint Pool &gt; 100 EVOLUTION_CHECK triggered Evaluate Karma Balance: High Karma (positive) → The Architect Low Karma (negative) → The Glitch Neutral Karma → Baseline (no evolution) Apply Genetic Mutation: Update current_strain Apply evolution bonuses Update mutation_progress Reset Scint Pool (evolution consumes Scint) Record Evolution Event.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>| Karma Balance | Evolution Path | Mutation Type | Scint Consumed | |---------------|----------------|---------------|----------------| | +50 to +100 | The Architect | Order/Structure | 100 | | +10 to +50 | The Builder | Moderate Order | 100 | | -10 to +10 | Baseline | No evolution | 0 (no trigger) | | -50 to -10 | The Disruptor | Moderate Chaos | 100 | | -100 to -50 | The Glitch | Chaos/Entropy | 100 |.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Work Effort Created ↓ Opt-in to Quest (manual) ↓ QuestGenerator Creates _pyrite Tickets (PY-[CYCLE]-[ID]) ↓ Tickets Assigned to UNIT_GENESIS Being ↓ Being Completes Ticket (D&amp;D encounter) ↓ ChallengeSystem Calculates Rewards: XP (D&amp;D 5e) Scint (✨) Karma (☯) Items/Loot ↓ Being State Updated: HP, AC, Spell Slots Scint Pool Karma Balance Level, XP ↓ Evolution Check: IF Scint &gt; 100: Evaluate Karma Balance Trigger Evolution (Architect/Glitch) Apply Genetic Mutations Reset Scint Pool ↓ Hair HMI Updated (Blue/Violet/White/Gold/Red) ↓ Event Logged to Flight Recorder ↓ Cycle Repeats.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>| Type | Description | Typical Actions | Karma Impact | |------|-------------|-----------------|--------------| | ORDER | Organizing, structuring | Refactoring, organizing code | +10 to +20 | | CHAOS | Disrupting, destroying | Breaking things, experiments | -10 to -20 | | STABILIZATION | Fixing, repairing | Bug fixes, stability work | +5 to +15 | | DESTRUCTION | Breaking, removing | Deletions, removals | -5 to -15 |.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>| Choice | Karma Impact | Implication | |--------|--------------|-------------| | Delete vs. Archive | -10 vs. +10 | Destruction vs. Order | | Quick Fix vs. Proper Solution | -5 vs. +15 | Chaos vs. Stabilization | | Break Compatibility vs. Maintain | -20 vs. +20 | Destruction vs. Order | | Experiment vs. Follow Standards | -10 vs. +10 | Chaos vs. Order |.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Balance Order and Chaos: Mix ORDER and CHAOS tickets to maintain balance Consider Long-term Goals: Think about evolution goals when making choices Use STABILIZATION: Offset DESTRUCTION with STABILIZATION work Track Regularly: Monitor Karma balance to guide evolution path.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Evolution Planning: Save Scint for evolution when close to threshold (80+) Resource Optimization: Use low-cost spells (cantrips) when possible Strategic Spending: Balance immediate power with long-term growth Track Accumulation: Monitor Scint accumulation rate.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>WAFT's D&amp;D &amp; Karma system creates a framework where: Ethical Agency: Choices matter and are tracked through Karma Evolutionary Ethics: Character development guided by ethical frameworks Cosmic Energy: Development work as a form of cosmic creation Digital Identity: Unique scientific names based on genetic code Reincarnation: Continuity of consciousness across lifetimes.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Core Concept: Every action has consequences. Every choice shapes destiny.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Evolution Trigger: When Scint Pool &gt; 100, <code>EVOLUTION_CHECK</code> evaluates Karma polarity.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Evolution Check: Triggered when <code>scint_pool &gt; 100</code>.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Version: 1.0 Last Updated: 2026-01-12 Status: Game Rules Edition.</p></div>
+        </div>
+        
+        
+
+        <div class="divider"></div>
+
+        <div class="metrics">
+            <h3>Content Breakdown</h3>
+            <table>
+                <tr>
+                    <th>Type</th>
+                    <th>Count</th>
+                </tr>
+                <tr>
+                    <td>Decisions</td>
+                    <td>3</td>
+                </tr>
+                <tr>
+                    <td>Insights</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <td>Actions</td>
+                    <td>10</td>
+                </tr>
+                <tr>
+                    <td>Concepts</td>
+                    <td>3</td>
+                </tr>
+                <tr>
+                    <td>Questions</td>
+                    <td>5</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

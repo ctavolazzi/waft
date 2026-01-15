@@ -1,0 +1,12 @@
+{
+  "timestamp": "2026-01-13T00:40:06.672724",
+  "state_type": "initial",
+  "components": {
+    "counter": 10,
+    "test_var": 1
+  },
+  "metadata": {
+    "experiment_id": "exp_2407a784"
+  },
+  "state_hash": "6ea22c901267d429"
+}

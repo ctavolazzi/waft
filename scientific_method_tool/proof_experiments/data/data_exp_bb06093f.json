@@ -1,0 +1,38 @@
+{
+  "experiment_id": "exp_bb06093f",
+  "series": {
+    "counter": {
+      "metric_name": "counter",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-13T00:42:01.169877",
+          "metric_name": "counter",
+          "value": 10,
+          "unit": null,
+          "metadata": {}
+        },
+        {
+          "timestamp": "2026-01-13T00:42:01.169890",
+          "metric_name": "counter",
+          "value": 15,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    },
+    "change": {
+      "metric_name": "change",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-13T00:42:01.169898",
+          "metric_name": "change",
+          "value": 5,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    }
+  }
+}

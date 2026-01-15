@@ -31,6 +31,18 @@ Create a comprehensive PDF template library system for WAFT that provides toolin
 | TKT-q6gl-005 | Template Creation Utilities | pending |
 
 ## Progress
+- 1/13/2026: TemplateGoblin Being spawned! Created Being to manage template library:
+  - ✅ TemplateGoblin Being created (being_20260113_090952_e7985a71)
+  - ✅ Initial skills: template_management (75.0), organization (75.0), template_discovery (70.0)
+  - ✅ Reality: template_library_reality
+  - ✅ Custom name: "TemplateGoblin"
+  - TemplateGoblin will serve as the Template API for WAFT
+
+- 1/13/2026: Cover template improvements:
+  - ✅ Added decorative corner badge element to brief.py cover template
+  - ✅ Created alternative minimal cover template (cover_minimal.py)
+  - ✅ Corner badge supports version numbers, status labels, etc.
+
 - 1/12/2026: Initial tooling complete! Created core template library system:
 
 ✅ Template Registry System (registry.py)

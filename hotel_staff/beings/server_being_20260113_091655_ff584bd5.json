@@ -1,0 +1,15 @@
+{
+  "role_key": "server",
+  "role_name": "Server",
+  "being_id": "being_20260113_091655_ff584bd5",
+  "custom_name": "Emma",
+  "reality_id": "treasure_tavern_inn",
+  "initial_skills": {
+    "api_routing": 30.0,
+    "service_delivery": 28.0,
+    "efficiency": 32.0,
+    "attention": 30.0
+  },
+  "personality_type": "attentive",
+  "spawned_at": "2026-01-13T09:16:57.846164"
+}

@@ -1,0 +1,15 @@
+{
+  "role_key": "maintenance",
+  "role_name": "Maintenance",
+  "being_id": "being_20260113_091646_ff584bd5",
+  "custom_name": "Frank",
+  "reality_id": "treasure_tavern_inn",
+  "initial_skills": {
+    "system_health": 30.0,
+    "bug_fixes": 28.0,
+    "preventive_maintenance": 25.0,
+    "technical_skills": 32.0
+  },
+  "personality_type": "technical",
+  "spawned_at": "2026-01-13T09:16:48.112084"
+}

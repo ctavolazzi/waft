@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>D&D 5e Character Sheet</title>
+    <style>
+        @page {
+            size: letter;
+            margin: 0.25in;
+        }
+        
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            font-size: 10pt;
+            margin: 0;
+            padding: 0;
+            background: #fff;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 0.1in;
+        }
+        
+        td {
+            vertical-align: top;
+            padding: 0.05in;
+        }
+        
+        .header-table {
+            border: 2px solid #000;
+            margin-bottom: 0.1in;
+        }
+        
+        .header-table td {
+            border: 1px solid #000;
+            padding: 0.08in;
+        }
+        
+        .header-label {
+            font-size: 8pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-bottom: 1px solid #000;
+            padding-bottom: 2pt;
+            margin-bottom: 4pt;
+        }
+        
+        .header-value {
+            font-size: 11pt;
+            font-weight: bold;
+        }
+        
+        .section-box {
+            border: 2px solid #000;
+            padding: 0.1in;
+        }
+        
+        .section-title {
+            font-weight: bold;
+            font-size: 12pt;
+            text-transform: uppercase;
+            border-bottom: 2px solid #000;
+            padding-bottom: 4pt;
+            margin-bottom: 0.1in;
+        }
+        
+        .ability-box {
+            border: 1px solid #000;
+            padding: 0.05in;
+            margin-bottom: 0.08in;
+        }
+        
+        .ability-name {
+            font-weight: bold;
+            font-size: 11pt;
+            text-transform: uppercase;
+            border-bottom: 1px solid #000;
+            padding-bottom: 2pt;
+            margin-bottom: 4pt;
+        }
+        
+        .ability-row {
+            display: table;
+            width: 100%;
+        }
+        
+        .ability-value {
+            text-align: center;
+            font-size: 18pt;
+            font-weight: bold;
+            border: 1px solid #000;
+            padding: 0.05in;
+            width: 50%;
+            display: table-cell;
+        }
+        
+        .ability-modifier {
+            text-align: center;
+            font-size: 14pt;
+            font-weight: bold;
+            border: 1px solid #000;
+            padding: 0.05in;
+            width: 50%;
+            display: table-cell;
+        }
+        
+        .saving-throw {
+            margin-top: 4pt;
+            font-size: 9pt;
+        }
+        
+        .checkbox {
+            width: 12pt;
+            height: 12pt;
+            border: 1px solid #000;
+            display: inline-block;
+            text-align: center;
+            line-height: 12pt;
+            font-size: 10pt;
+            margin-right: 4pt;
+        }
+        
+        .checkbox.checked::after {
+            content: "✓";
+        }
+        
+        .skill-table {
+            width: 100%;
+            font-size: 9pt;
+        }
+        
+        .skill-table td {
+            padding: 2pt;
+            border: none;
+        }
+        
+        .skill-checkbox {
+            width: 12pt;
+        }
+        
+        .skill-name {
+            font-weight: bold;
+        }
+        
+        .skill-modifier {
+            text-align: right;
+            font-weight: bold;
+        }
+        
+        .stat-box {
+            border: 1px solid #000;
+            padding: 0.05in;
+            margin-bottom: 0.08in;
+        }
+        
+        .stat-label {
+            font-size: 8pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-bottom: 1px solid #000;
+            padding-bottom: 2pt;
+            margin-bottom: 4pt;
+        }
+        
+        .stat-value {
+            font-size: 16pt;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .proficiency-bonus {
+            text-align: center;
+            font-size: 14pt;
+            font-weight: bold;
+            border: 2px solid #000;
+            padding: 0.1in;
+            margin: 0.1in 0;
+        }
+        
+        .hp-table {
+            width: 100%;
+        }
+        
+        .hp-table td {
+            border: 1px solid #000;
+            padding: 0.05in;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <table class="header-table">
+        <tr>
+            <td>
+                <div class="header-label">Character Name</div>
+                <div class="header-value">{{ data.NAME }}</div>
+            </td>
+            <td>
+                <div class="header-label">Class & Level</div>
+                <div class="header-value">{{ data.CLASS_LEVEL }}</div>
+            </td>
+            <td>
+                <div class="header-label">Background</div>
+                <div class="header-value">{{ data.BACKGROUND }}</div>
+            </td>
+            <td>
+                <div class="header-label">Player Name</div>
+                <div class="header-value">{{ data.PLAYER_NAME or '_________________' }}</div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="header-label">Race</div>
+                <div class="header-value">{{ data.RACE }}</div>
+            </td>
+            <td>
+                <div class="header-label">Alignment</div>
+                <div class="header-value">{{ data.ALIGNMENT }}</div>
+            </td>
+            <td colspan="2">
+                <div class="header-label">Experience Points</div>
+                <div class="header-value">{{ data.XP }}</div>
+            </td>
+        </tr>
+    </table>
+    
+    <!-- Main Layout -->
+    <table class="main-layout">
+        <tr>
+            <!-- Left Column: Ability Scores & Skills -->
+            <td width="50%">
+                <div class="section-box">
+                    <div class="section-title">Ability Scores</div>
+                    <div class="proficiency-bonus">Proficiency Bonus: +{{ data.PROF_BONUS }}</div>
+                    
+                    <!-- Strength -->
+                    <div class="ability-box">
+                        <div class="ability-name">Strength</div>
+                        <table class="ability-row">
+                            <tr>
+                                <td class="ability-value">{{ data.STR }}</td>
+                                <td class="ability-modifier">{{ data.STR_MOD }}</td>
+                            </tr>
+                        </table>
+                        <div class="saving-throw">
+                            <span class="checkbox {{ 'checked' if data.STR_SAVE_PROF else '' }}"></span>
+                            <span>Save: {{ data.STR_SAVE }}</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Dexterity -->
+                    <div class="ability-box">
+                        <div class="ability-name">Dexterity</div>
+                        <table class="ability-row">
+                            <tr>
+                                <td class="ability-value">{{ data.DEX }}</td>
+                                <td class="ability-modifier">{{ data.DEX_MOD }}</td>
+                            </tr>
+                        </table>
+                        <div class="saving-throw">
+                            <span class="checkbox {{ 'checked' if data.DEX_SAVE_PROF else '' }}"></span>
+                            <span>Save: {{ data.DEX_SAVE }}</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Constitution -->
+                    <div class="ability-box">
+                        <div class="ability-name">Constitution</div>
+                        <table class="ability-row">
+                            <tr>
+                                <td class="ability-value">{{ data.CON }}</td>
+                                <td class="ability-modifier">{{ data.CON_MOD }}</td>
+                            </tr>
+                        </table>
+                        <div class="saving-throw">
+                            <span class="checkbox {{ 'checked' if data.CON_SAVE_PROF else '' }}"></span>
+                            <span>Save: {{ data.CON_SAVE }}</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Intelligence -->
+                    <div class="ability-box">
+                        <div class="ability-name">Intelligence</div>
+                        <table class="ability-row">
+                            <tr>
+                                <td class="ability-value">{{ data.INT }}</td>
+                                <td class="ability-modifier">{{ data.INT_MOD }}</td>
+                            </tr>
+                        </table>
+                        <div class="saving-throw">
+                            <span class="checkbox {{ 'checked' if data.INT_SAVE_PROF else '' }}"></span>
+                            <span>Save: {{ data.INT_SAVE }}</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Wisdom -->
+                    <div class="ability-box">
+                        <div class="ability-name">Wisdom</div>
+                        <table class="ability-row">
+                            <tr>
+                                <td class="ability-value">{{ data.WIS }}</td>
+                                <td class="ability-modifier">{{ data.WIS_MOD }}</td>
+                            </tr>
+                        </table>
+                        <div class="saving-throw">
+                            <span class="checkbox {{ 'checked' if data.WIS_SAVE_PROF else '' }}"></span>
+                            <span>Save: {{ data.WIS_SAVE }}</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Charisma -->
+                    <div class="ability-box">
+                        <div class="ability-name">Charisma</div>
+                        <table class="ability-row">
+                            <tr>
+                                <td class="ability-value">{{ data.CHA }}</td>
+                                <td class="ability-modifier">{{ data.CHA_MOD }}</td>
+                            </tr>
+                        </table>
+                        <div class="saving-throw">
+                            <span class="checkbox {{ 'checked' if data.CHA_SAVE_PROF else '' }}"></span>
+                            <span>Save: {{ data.CHA_SAVE }}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Skills -->
+                <div class="section-box" style="margin-top: 0.1in;">
+                    <div class="section-title">Skills</div>
+                    <table class="skill-table">
+                        <tr>
+                            <td class="skill-checkbox"><span class="checkbox {{ 'checked' if data.ACROBATICS_PROF else '' }}"></span></td>
+                            <td class="skill-name">Acrobatics (DEX)</td>
+                            <td class="skill-modifier">{{ data.ACROBATICS }}</td>
+                        </tr>
+                        <tr>
+                            <td class="skill-checkbox"><span class="checkbox {{ 'checked' if data.ANIMAL_HANDLING_PROF else '' }}"></span></td>
+                            <td class="skill-name">Animal Handling (WIS)</td>
+                            <td class="skill-modifier">{{ data.ANIMAL_HANDLING }}</td>
+                        </tr>
+                        <tr>
+                            <td class="skill-checkbox"><span class="checkbox {{ 'checked' if data.ARCANA_PROF else '' }}"></span></td>
+                            <td class="skill-name">Arcana (INT)</td>
+                            <td class="skill-modifier">{{ data.ARCANA }}</td>
+                        </tr>
+                        <tr>
+                            <td class="skill-checkbox"><span class="checkbox {{ 'checked' if data.ATHLETICS_PROF else '' }}"></span></td>
+                            <td class="skill-name">Athletics (STR)</td>
+                            <td class="skill-modifier">{{ data.ATHLETICS }}</td>
+                        </tr>
+                        <tr>
+                            <td class="skill-checkbox"><span class="checkbox {{ 'checked' if data.DECEPTION_PROF else '' }}"></span></td>
+                            <td class="skill-name">Deception (CHA)</td>
+                            <td class="skill-modifier">{{ data.DECEPTION }}</td>
+                        </tr>
+                        <tr>
+                            <td class="skill-checkbox"><span class="checkbox {{ 'checked' if data.HISTORY_PROF else '' }}"></span></td>
+                            <td class="skill-name">History (INT)</td>
+                            <td class="skill-modifier">{{ data.HISTORY }}</td>
+                        </tr>
+                        <tr>
+                            <td class="skill-checkbox"><span class="checkbox {{ 'checked' if data.INSIGHT_PROF else '' }}"></span></td>
+                            <td class="skill-name">Insight (WIS)</td>
+                            <td class="skill-modifier">{{ data.INSIGHT }}</td>
+                        </tr>
+                        <tr>
+                            <td class="skill-checkbox"><span class="checkbox {{ 'checked' if data.INTIMIDATION_PROF else '' }}"></span></td>
+                            <td class="skill-name">Intimidation (CHA)</td>
+                            <td class="skill-modifier">{{ data.INTIMIDATION }}</td>
+                        </tr>
+                        <tr>
+                            <td class="skill-checkbox"><span class="checkbox {{ 'checked' if data.INVESTIGATION_PROF else '' }}"></span></td>
+                            <td class="skill-name">Investigation (INT)</td>
+                            <td class="skill-modifier">{{ data.INVESTIGATION }}</td>
+                        </tr>
+                        <tr>
+                            <td class="skill-checkbox"><span class="checkbox {{ 'checked' if data.MEDICINE_PROF else '' }}"></span></td>
+                            <td class="skill-name">Medicine (WIS)</td>
+                            <td class="skill-modifier">{{ data.MEDICINE }}</td>
+                        </tr>
+                        <tr>
+                            <td class="skill-checkbox"><span class="checkbox {{ 'checked' if data.NATURE_PROF else '' }}"></span></td>
+                            <td class="skill-name">Nature (INT)</td>
+                            <td class="skill-modifier">{{ data.NATURE }}</td>
+                        </tr>
+                        <tr>
+                            <td class="skill-checkbox"><span class="checkbox {{ 'checked' if data.PERCEPTION_PROF else '' }}"></span></td>
+                            <td class="skill-name">Perception (WIS)</td>
+                            <td class="skill-modifier">{{ data.PERCEPTION }}</td>
+                        </tr>
+                        <tr>
+                            <td class="skill-checkbox"><span class="checkbox {{ 'checked' if data.PERFORMANCE_PROF else '' }}"></span></td>
+                            <td class="skill-name">Performance (CHA)</td>
+                            <td class="skill-modifier">{{ data.PERFORMANCE }}</td>
+                        </tr>
+                        <tr>
+                            <td class="skill-checkbox"><span class="checkbox {{ 'checked' if data.PERSUASION_PROF else '' }}"></span></td>
+                            <td class="skill-name">Persuasion (CHA)</td>
+                            <td class="skill-modifier">{{ data.PERSUASION }}</td>
+                        </tr>
+                        <tr>
+                            <td class="skill-checkbox"><span class="checkbox {{ 'checked' if data.RELIGION_PROF else '' }}"></span></td>
+                            <td class="skill-name">Religion (INT)</td>
+                            <td class="skill-modifier">{{ data.RELIGION }}</td>
+                        </tr>
+                        <tr>
+                            <td class="skill-checkbox"><span class="checkbox {{ 'checked' if data.SLEIGHT_OF_HAND_PROF else '' }}"></span></td>
+                            <td class="skill-name">Sleight of Hand (DEX)</td>
+                            <td class="skill-modifier">{{ data.SLEIGHT_OF_HAND }}</td>
+                        </tr>
+                        <tr>
+                            <td class="skill-checkbox"><span class="checkbox {{ 'checked' if data.STEALTH_PROF else '' }}"></span></td>
+                            <td class="skill-name">Stealth (DEX)</td>
+                            <td class="skill-modifier">{{ data.STEALTH }}</td>
+                        </tr>
+                        <tr>
+                            <td class="skill-checkbox"><span class="checkbox {{ 'checked' if data.SURVIVAL_PROF else '' }}"></span></td>
+                            <td class="skill-name">Survival (WIS)</td>
+                            <td class="skill-modifier">{{ data.SURVIVAL }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+            
+            <!-- Right Column: Combat Stats -->
+            <td width="50%">
+                <div class="section-box">
+                    <div class="section-title">Combat</div>
+                    <div class="stat-box">
+                        <div class="stat-label">Armor Class</div>
+                        <div class="stat-value">{{ data.AC }}</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Initiative</div>
+                        <div class="stat-value">{{ data.INITIATIVE }}</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Speed</div>
+                        <div class="stat-value">{{ data.SPEED }} ft</div>
+                    </div>
+                </div>
+                
+                <div class="section-box" style="margin-top: 0.1in;">
+                    <div class="section-title">Hit Points</div>
+                    <table class="hp-table">
+                        <tr>
+                            <td>
+                                <div class="stat-label">Current</div>
+                                <div class="stat-value">{{ data.CURRENT_HP }}</div>
+                            </td>
+                            <td>
+                                <div class="stat-label">Maximum</div>
+                                <div class="stat-value">{{ data.MAX_HP }}</div>
+                            </td>
+                            <td>
+                                <div class="stat-label">Temporary</div>
+                                <div class="stat-value">{{ data.TEMP_HP }}</div>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="stat-box" style="margin-top: 0.1in;">
+                        <div class="stat-label">Hit Dice</div>
+                        <div class="stat-value">{{ data.HIT_DICE }}</div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+    
+    <!-- Equipment & Features -->
+    <table class="main-layout">
+        <tr>
+            <td>
+                <div class="section-box">
+                    <div class="section-title">Equipment</div>
+                    <div style="font-size: 9pt; line-height: 1.4;">
+                        <strong>Coins:</strong> PP: {{ data.PP }}, GP: {{ data.GP }}, EP: {{ data.EP }}, SP: {{ data.SP }}, CP: {{ data.CP }}<br>
+                        <strong>Equipment:</strong><br>
+                        {{ data.EQUIPMENT }}
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="section-box">
+                    <div class="section-title">Features & Traits</div>
+                    <div style="font-size: 9pt; line-height: 1.4;">
+                        <strong>Class Features:</strong><br>
+                        {{ data.CLASS_FEATURES }}<br><br>
+                        <strong>Racial Traits:</strong><br>
+                        {{ data.RACIAL_TRAITS }}<br><br>
+                        <strong>Proficiencies:</strong> Armor: {{ data.ARMOR_PROF }}, Weapons: {{ data.WEAPON_PROF }}, Tools: {{ data.TOOL_PROF }}, Languages: {{ data.LANGUAGES }}
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

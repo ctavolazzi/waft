@@ -1,0 +1,170 @@
+---
+name: The Blend Architecture Setup
+overview: "Set up editable links between `_pyrite` (frontend host) and two sibling repositories: `empirica` (The Brain) and `NovaSystem-Codex` (The Body) using `uv` package manager."
+todos:
+  - id: clone_empirica
+    content: Clone empirica repository from GitHub to /Users/ctavolazzi/Code/active/empirica
+    status: completed
+  - id: check_empirica_package
+    content: Verify empirica has pyproject.toml or setup.py and determine package name
+    status: completed
+    dependencies:
+      - clone_empirica
+  - id: create_pyproject_toml
+    content: Create pyproject.toml in _pyrite root for uv dependency management
+    status: completed
+  - id: add_novasystem_editable
+    content: Add NovaSystem-Codex as editable dependency using uv add --editable
+    status: completed
+    dependencies:
+      - create_pyproject_toml
+  - id: add_empirica_editable
+    content: Add empirica as editable dependency using uv add --editable
+    status: completed
+    dependencies:
+      - check_empirica_package
+      - create_pyproject_toml
+  - id: create_verification_script
+    content: Create blend_test.py with import verification logic
+    status: completed
+    dependencies:
+      - check_empirica_package
+  - id: run_verification
+    content: Execute blend_test.py and report Green Lights or Red Lights status
+    status: completed
+    dependencies:
+      - create_verification_script
+      - add_novasystem_editable
+      - add_empirica_editable
+  - id: verify_paths
+    content: Ensure verification script validates paths point to sibling directories, not site-packages
+    status: completed
+    dependencies:
+      - create_verification_script
+  - id: handle_dependency_conflicts
+    content: Document any dependency conflicts reported by uv and determine resolution strategy
+    status: completed
+    dependencies:
+      - add_novasystem_editable
+      - add_empirica_editable
+---
+
+# The Ble
+
+nd Architecture Setup
+
+## Overview
+
+Establish physical editable links between `_pyrite` and two sibling repositories (`empirica` and `NovaSystem-Codex`) to enable "The Blend" architecture where `_pyrite` acts as the frontend host.
+
+## Current State
+
+- ✅ `NovaSystem-Codex` exists at `/Users/ctavolazzi/Code/active/NovaSystem-Codex` with `pyproject.toml` (package name: `novasystem`)
+
+- ❌ `empirica` is missing locally (needs to be cloned from `https://github.com/ctavolazzi/empirica`)
+
+- ❌ `_pyrite` has no `pyproject.toml` (needs to be created for `uv` dependency management)
+
+- ✅ `uv` is installed and available
+
+## Implementation Steps
+
+### 1. Directory Reconnaissance
+
+- [x] Verify `NovaSystem-Codex` exists (confirmed)
+
+- [ ] Clone `empirica` from GitHub if missing
+
+- Run: `git clone https://github.com/ctavolazzi/empirica /Users/ctavolazzi/Code/active/empirica`
+
+- Verify `empirica` has a `pyproject.toml` or `setup.py` to determine package name
+
+### 2. Initialize `_pyrite` for `uv`
+
+- [ ] Create `pyproject.toml` in `_pyrite` root
+
+- Minimal configuration for `uv` to manage editable dependencies
+- Set project name: `pyrite`
+
+- Set Python version requirement
+
+### 3. Establish Editable Links
+
+- [ ] Add `NovaSystem-Codex` as editable dependency
+
+- Run: `uv add --editable ../NovaSystem-Codex` (from `_pyrite` root)
+
+- [ ] Add `empirica` as editable dependency
+
+- Run: `uv add --editable ../empirica` (from `_pyrite` root)
+
+- [ ] Verify `uv.lock` and `pyproject.toml` are updated
+
+- [ ] **Note**: `uv` will create/manage a `.venv` directory (already in `.gitignore`)
+
+- [ ] **Handle dependency conflicts**: If `uv` reports conflicts, document them for resolution
+
+### 4. Create Verification Protocol
+
+- [ ] Create `blend_test.py` in `_pyrite` root
+
+- Import `empirica` (handle case variations: `empirica`, `Empirica`)
+
+- Import `novasystem` (from `NovaSystem-Codex`)
+
+- Print `os.path.dirname(module.__file__)` for each
+
+- **Validate paths explicitly**: Check that paths contain `../NovaSystem-Codex` or `../empirica` (not site-packages)
+
+- **Check for site-packages**: Verify paths do NOT contain `site-packages` or `dist-packages`
+
+- Handle import errors gracefully with clear messages
+
+- **Test from correct directory**: Script should verify it's running from `_pyrite` root
+
+### 5. Execute & Report
+
+- [ ] Run `python blend_test.py` (or `uv run python blend_test.py` if using uv's venv)
+
+- [ ] Report status:
+
+- "Green Lights" if both imports succeed from local paths AND paths validate correctly
+
+- "Red Lights" with specific error details if any fail
+
+- [ ] **Include in report**: Actual file paths, Python version, and any warnings
+
+## Files to Create/Modify
+
+1. **`/Users/ctavolazzi/Code/active/_pyrite/pyproject.toml`** (new)
+
+- Minimal `uv`-compatible configuration
+
+2. **`/Users/ctavolazzi/Code/active/_pyrite/blend_test.py`** (new)
+
+- Verification script with import tests
+
+3. **`/Users/ctavolazzi/Code/active/_pyrite/uv.lock`** (auto-generated by `uv`)
+
+- Dependency lock file
+
+## Notes
+
+- Package name discovery: `NovaSystem-Codex` uses package name `novasystem` (from its `pyproject.toml`)
+
+- `empirica` package name will be determined after cloning
+
+- Editable installs allow live code changes without reinstallation
+
+- Verification script must handle case variations in package names
+- Python version: Both repos use Python 3.10.0 (compatible)
+- Virtual environment: `uv` will create `.venv/` in `_pyrite` root (already in `.gitignore`)
+- Lock file: `uv.lock` should be committed to version control (standard practice)
+- Working directory: All commands must be run from `/Users/ctavolazzi/Code/active/_pyrite`
+
+## Potential Issues & Mitigations
+
+1. **`empirica` missing package structure**: If no `pyproject.toml` or `setup.py`, stop and alert user
+2. **Package name mismatch**: Verification script handles case variations (`empirica` vs `Empirica`)
+3. **Dependency conflicts**: `uv` will report conflicts; document for manual resolution
+4. **Import path issues**: Verification script explicitly checks paths contain sibling directory names

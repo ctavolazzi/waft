@@ -452,6 +452,48 @@ AI: [Presents decision matrix, calculations, rankings, recommendations]
 - **`/verify`**: Verify data before decision
 - **`/checkpoint`**: Document decision process
 - **`/explore`**: Understand context before deciding
+- **`/love-you`**: Record positive feedback that influences future decisions
+- **`/hate-this`**: Record negative feedback that influences future decisions
+
+---
+
+## Emotional Feedback Integration
+
+The `/decide` command incorporates your emotional feedback from `/love-you` and `/hate-this` commands:
+
+### How It Works
+
+1. **Feedback Retrieval**: When you run `/decide`, the system retrieves your recent feedback from The One Being
+2. **Pattern Matching**: Alternatives are matched against patterns in your feedback
+3. **Implicit Criterion**: An implicit "user_satisfaction" criterion is added based on your feedback
+4. **Score Adjustment**: Alternatives that align with what you've loved get bonus points; those matching what you've hated get penalties
+
+### Example
+
+```
+1. You use /love-you: "The decision to use FastAPI - it's so clean and simple!"
+2. Later, you run /decide to choose between FastAPI, Flask, and Django
+3. The system sees your positive feedback about FastAPI
+4. FastAPI gets a +0.1 adjustment in the user_satisfaction criterion
+5. The decision matrix shows: "FastAPI: +0.1 (loved patterns)"
+```
+
+### Feedback Display
+
+When feedback influences a decision, you'll see:
+
+```
+💚 Emotional Feedback Influence
+
+Your emotional feedback (via /love-you and /hate-this) has been considered:
+
+  + FastAPI: +0.10 (loved patterns)
+  - Django: -0.05 (hated patterns)
+
+An implicit 'user_satisfaction' criterion has been added based on your feedback.
+```
+
+This ensures decisions align with your emotional preferences and what resonates with you.
 
 ---
 

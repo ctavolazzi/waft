@@ -76,6 +76,10 @@ After syncing, these commands are available globally:
 ### Code Analysis Commands
 12. **`/deep-analyze`** - Deep code analysis and algorithm extraction from GitHub repositories
 
+### Monitoring Commands
+12. **`/chronicle`** - TheChronicler self-monitoring system (start, stats, reports)
+13. **`/good-morning`** - Morning briefing dashboard (entry point to ecosystem)
+
 ### Quick Status Commands
 13. **`/status`** - Quick, immediate status report (< 5 seconds)
 
@@ -96,6 +100,8 @@ After syncing, these commands are available globally:
 ### Quality Assurance Commands
 16. **`/version-bake`** - Complete quality workflow: reflect → run-it → improve → check-assumptions → verify → hypothesis → prove-it (tracks genetic lineage of ideas)
 17. **`/evolve`** - Spawn new Being from Source, then run complete version-bake workflow (tracks genetic lineage from Source outward and back)
+18. **`/critique`** - Adversarial plan critique (security-first, bad-faith analysis)
+19. **`/respond-to-critique`** - Automatically validate and fix issues from critiques
 
 ### Documentation
 17. **`/COMMAND_RECOMMENDATIONS`** - Command recommendations guide

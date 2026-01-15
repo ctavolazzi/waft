@@ -1,0 +1,12 @@
+[
+  {
+    "type": "world_change",
+    "description": "First Crown fragment recovered. The realm's magic begins to stabilize slightly.",
+    "session_number": 2,
+    "date": "2026-01-12T21:22:18.608566",
+    "metadata": {
+      "magic_stability": "+5%",
+      "realm_health": "improving"
+    }
+  }
+]

@@ -20,8 +20,8 @@ from typing import Optional, Dict, Any, List
 from datetime import datetime
 import re
 
-from src.waft.evolution.chat_distiller import ChatDistiller, DistilledChat
-from src.waft.evolution.styling_genome import StylingGenome, StylingGenomeRegistry
+from .chat_distiller import ChatDistiller, DistilledChat
+from .styling_genome import StylingGenome, StylingGenomeRegistry
 
 
 class LaTeXGenerator:

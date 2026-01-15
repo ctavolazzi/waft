@@ -1,0 +1,138 @@
+{
+  "template": {
+    "name": "WAFT Field Guide",
+    "version": "1.0.0",
+    "description": "Field guide template inspired by pdfme, LaTTe, and LaTeX Cookbook",
+    "baseStyle": {
+      "fontFamily": "Times New Roman, Times, serif",
+      "fontSize": "11pt",
+      "lineHeight": "1.5",
+      "color": "#000000",
+      "margin": {
+        "top": "0.75in",
+        "right": "0.5in",
+        "bottom": "0.75in",
+        "left": "0.5in"
+      }
+    },
+    "pages": [
+      {
+        "id": "cover",
+        "type": "cover",
+        "elements": [
+          {
+            "type": "text",
+            "id": "series_number",
+            "position": {
+              "x": "center",
+              "y": "1in"
+            },
+            "style": {
+              "fontFamily": "Courier New, monospace",
+              "fontSize": "14pt",
+              "fontWeight": "bold",
+              "textTransform": "uppercase",
+              "textAlign": "center"
+            },
+            "content": "{{series}} {{number}}"
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "position": {
+              "x": "center",
+              "y": "2in"
+            },
+            "style": {
+              "fontSize": "24pt",
+              "fontWeight": "bold",
+              "textTransform": "uppercase",
+              "textAlign": "center"
+            },
+            "content": "{{title}}"
+          },
+          {
+            "type": "text",
+            "id": "subtitle",
+            "position": {
+              "x": "center",
+              "y": "3in"
+            },
+            "style": {
+              "fontSize": "14pt",
+              "fontStyle": "italic",
+              "textAlign": "center"
+            },
+            "content": "{{subtitle}}",
+            "conditional": "{{subtitle}}"
+          },
+          {
+            "type": "box",
+            "id": "classification",
+            "position": {
+              "x": "center",
+              "y": "4.5in"
+            },
+            "style": {
+              "backgroundColor": "#ffff00",
+              "borderColor": "#cc0000",
+              "borderWidth": "3pt",
+              "padding": "0.15in 0.3in",
+              "textAlign": "center",
+              "fontWeight": "bold"
+            },
+            "content": "{{classification}}",
+            "conditional": "{{classification}}"
+          }
+        ]
+      },
+      {
+        "id": "content",
+        "type": "content",
+        "elements": [
+          {
+            "type": "header",
+            "id": "page_header",
+            "position": {
+              "x": "left",
+              "y": "top"
+            },
+            "style": {
+              "fontFamily": "Courier New, monospace",
+              "fontSize": "9pt",
+              "fontWeight": "bold"
+            },
+            "content": "{{series}} {{number}}"
+          },
+          {
+            "type": "footer",
+            "id": "page_footer",
+            "position": {
+              "x": "center",
+              "y": "bottom"
+            },
+            "style": {
+              "fontFamily": "Courier New, monospace",
+              "fontSize": "8pt",
+              "color": "#cc0000",
+              "fontWeight": "bold"
+            },
+            "content": "{{classification}}"
+          },
+          {
+            "type": "content",
+            "id": "main_content",
+            "position": {
+              "x": "left",
+              "y": "top"
+            },
+            "style": {
+              "marginTop": "0.3in"
+            },
+            "content": "{{content}}"
+          }
+        ]
+      }
+    ]
+  }
+}

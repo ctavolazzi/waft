@@ -1,0 +1,16 @@
+{
+  "timestamp": "2026-01-12T17:01:54.181801",
+  "title": "D&D Campaign PDF Evolution - Complete Work Effort",
+  "scores": {
+    "completeness": 0.5869565217391305,
+    "structure": 1.0
+  },
+  "gaps": [],
+  "suggestions": [
+    "Add more detailed content to improve completeness"
+  ],
+  "comparison": {
+    "vs_previous_avg": 0.0015968580569274415,
+    "trend": "improving"
+  }
+}

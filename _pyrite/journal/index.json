@@ -1,0 +1,95 @@
+{
+  "created": "2026-01-12T16:38:16.393780",
+  "entries": [
+    {
+      "id": "2026-01-12-1638",
+      "date": "2026-01-12",
+      "time": "16:38",
+      "timestamp": "2026-01-12T16:38:17.072095",
+      "topic": null,
+      "sections": [
+        "reflection"
+      ]
+    },
+    {
+      "id": "2026-01-12-1645",
+      "date": "2026-01-12",
+      "time": "16:45",
+      "timestamp": "2026-01-12T16:45:06.296054",
+      "topic": null,
+      "sections": [
+        "reflection"
+      ]
+    },
+    {
+      "id": "2026-01-12-1814",
+      "date": "2026-01-12",
+      "time": "18:14",
+      "timestamp": "2026-01-12T18:14:01.665965",
+      "topic": null,
+      "sections": [
+        "What Doing",
+        "What Thinking",
+        "What Learning",
+        "Patterns",
+        "Questions",
+        "Feelings",
+        "Differently",
+        "Meta"
+      ]
+    },
+    {
+      "id": "2026-01-12-2021",
+      "date": "2026-01-12",
+      "time": "20:21",
+      "timestamp": "2026-01-12T20:21:25.463281",
+      "topic": null,
+      "sections": [
+        "reflection"
+      ]
+    },
+    {
+      "id": "2026-01-12-2025",
+      "date": "2026-01-12",
+      "time": "20:25",
+      "timestamp": "2026-01-12T20:25:20.364045",
+      "topic": null,
+      "sections": [
+        "What Doing",
+        "What Thinking",
+        "What Learning",
+        "Patterns",
+        "Questions",
+        "Feelings",
+        "Differently",
+        "Meta"
+      ]
+    },
+    {
+      "id": "2026-01-14-1046",
+      "date": "2026-01-14",
+      "time": "10:46",
+      "timestamp": "2026-01-14T10:46:54.000000",
+      "topic": "security-critique-assumption-validation",
+      "sections": [
+        "What Doing",
+        "What Thinking",
+        "What Learning",
+        "Patterns",
+        "Questions",
+        "Feelings",
+        "Differently",
+        "Meta"
+      ]
+    }
+  ],
+  "tags": {},
+  "topics": {
+    "security-critique-assumption-validation": ["2026-01-14-1046"]
+  },
+  "stats": {
+    "total_entries": 6,
+    "first_entry": "2026-01-12T16:38:17.072095",
+    "last_entry": "2026-01-14T10:46:54.000000"
+  }
+}

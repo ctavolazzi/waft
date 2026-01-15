@@ -33,15 +33,19 @@ Essential commands for daily development workflow.
 
 7. **`/check-assumptions`** - Identify all assumptions in conversation and validate them with evidence. Use when need to prove/disprove assumptions before proceeding.
 
-7. **`/reflect`** - Prompt AI to write reflective journal entries. Use when want AI to document thoughts, learnings, experiences.
+8. **`/critique`** - Adversarial plan critique (security-first, bad-faith analysis). Use when need brutally honest critique of plan before implementation.
 
-8. **`/journal`** - Comprehensive AI journal system hub - view, search, reflect, and analyze journal. Use when want to interact with journal system, view entries, search history, check statistics.
+9. **`/respond-to-critique`** - Automatically validate criticisms and apply fixes. Use after running `/critique` to automatically fix validated issues.
 
-9. **`/checkpoint`** - Document current state, progress, todos. Use when need snapshot of current situation.
+10. **`/reflect`** - Prompt AI to write reflective journal entries. Use when want AI to document thoughts, learnings, experiences.
 
-10. **`/verify`** - Verify project state with traceable evidence. Use when need to verify project is in good state.
+11. **`/journal`** - Comprehensive AI journal system hub - view, search, reflect, and analyze journal. Use when want to interact with journal system, view entries, search history, check statistics.
 
-11. **`/checkout`** - Run cleanup, documentation, summary tasks. Use when ending session, want comprehensive wrap-up.
+12. **`/checkpoint`** - Document current state, progress, todos. Use when need snapshot of current situation.
+
+13. **`/verify`** - Verify project state with traceable evidence. Use when need to verify project is in good state.
+
+14. **`/checkout`** - Run cleanup, documentation, summary tasks. Use when ending session, want comprehensive wrap-up.
 
 ---
 
@@ -52,11 +56,13 @@ Commands for analysis, decision-making, and planning.
 
 10. **`/decide`** - Run decision matrix calculations (WSM, AHP, WPM, BWM). Use when need quantitative decision analysis.
 
-11. **`/explore`** - Deep codebase exploration and analysis. Use when need to understand codebase deeply.
+11. **`/deep-think`** - Comprehensive cognitive workflow: critique → reflect → think → check-assumptions → verify → consider → decide → synthesize. Use when need deep analysis of plans/decisions before implementation, want full cognitive review with evidence-based validation.
 
-12. **`/deep-analyze`** - Deep code analysis and algorithm extraction from GitHub repositories. Use when need to extract algorithms, patterns, or prepare code for integration.
+12. **`/explore`** - Deep codebase exploration and analysis. Use when need to understand codebase deeply.
 
-13. **`/status`** - Quick, immediate status report (< 5 seconds). Use when need fast status check or current state snapshot.
+13. **`/deep-analyze`** - Deep code analysis and algorithm extraction from GitHub repositories. Use when need to extract algorithms, patterns, or prepare code for integration.
+
+14. **`/status`** - Quick, immediate status report (< 5 seconds). Use when need fast status check or current state snapshot.
 
 ---
 
@@ -91,6 +97,17 @@ Commands for tracking larger goals and identifying next steps.
 
 20. **`/next`** - Identify next step based on goals. Use when want to know what to do next, need direction.
 
+### Document Generation Commands
+Commands for creating professional documents and reports.
+
+**`/brief`** - Create full binder-ready brief documents with TM-ARCH-009 style cover page. Use when need session briefs, project briefs, status reports, or handoff documents.
+
+**`/dossier`** - Create comprehensive mission sitrep dossier with cover, section dividers, and complete status briefing. Use when need to get someone up to speed with full situation report - perfect for mission briefings, handoffs, and binder documentation.
+
+**`/pdf-me`** - Generate professional PDFs from markdown files. Use when need PDF from markdown file with professional formatting.
+
+**`/midday-dossier`** - Create comprehensive midday status dossier. Use for midday status reviews and afternoon planning.
+
 ### Master Orchestration Commands
 Commands that orchestrate multiple workflows into comprehensive cycles.
 
@@ -118,6 +135,7 @@ Commands that orchestrate multiple workflows into comprehensive cycles.
 **Decision Making:**
 - `/consider` - Analyze options
 - `/decide` - Quantitative decision matrix
+- `/deep-think` - Comprehensive cognitive workflow for deep analysis
 
 **Analysis:**
 - `/analyze` - Analyze Phase 1 data
@@ -133,11 +151,11 @@ Commands that orchestrate multiple workflows into comprehensive cycles.
 
 ## Command Count
 
-**Total Commands**: 21+
+**Total Commands**: 22+
 
 **By Category:**
 - Core Workflow: 9 commands
-- Analysis & Planning: 3 commands
+- Analysis & Planning: 4 commands
 - Project Management: 4 commands
 - Utility: 4 commands
 - Goal Management: 2 commands

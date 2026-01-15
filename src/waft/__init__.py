@@ -7,6 +7,11 @@ The "Operating System" for projects, orchestrating:
 - Agents (crewai)
 """
 
-__version__ = "0.7.0"
+__version__ = "0.8.1"
 __author__ = "Waft Team"
+
+# Unified PDF class - single entry point for all PDF generation
+from .pdf import PDF
+
+__all__ = ["PDF"]
 

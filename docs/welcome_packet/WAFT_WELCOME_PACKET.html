@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WAFT Welcome Packet</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 5px;
+        }
+        h3 {
+            color: #555;
+            margin-top: 25px;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        pre {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+        blockquote {
+            border-left: 4px solid #3498db;
+            padding-left: 20px;
+            margin-left: 0;
+            color: #555;
+            font-style: italic;
+        }
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        ul, ol {
+            margin-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        hr {
+            border: none;
+            border-top: 2px solid #ecf0f1;
+            margin: 30px 0;
+        }
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #ecf0f1;
+            color: #777;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>WAFT Welcome Packet</h1>
+<p><strong>Welcome to the Evolutionary Code Laboratory</strong></p>
+<blockquote>
+<p><strong>"Don't just build agents. Breed them."</strong></p>
+</blockquote>
+<hr />
+<h2>🎯 What You're Getting Into</h2>
+<p><strong>WAFT</strong> (Wave Agent Framework &amp; Tools) is a Python framework for <strong>directed evolution of self-modifying AI agents</strong>. Think of it as an operating system for AI agent research projects—but instead of just running agents, you can breed them, test them in fitness systems, and watch them evolve over generations.</p>
+<p><strong>The Scientific Mission</strong>: WAFT is built to produce data for research on <strong>"The Physics of Artificial Cognition."</strong> The ultimate goal? Observe a "God-Head" agent emerge from thousands of generations of directed mutation and selection.</p>
+<hr />
+<h2>🏛️ The Three Pillars</h2>
+<p>Understanding these three concepts is essential to working with WAFT:</p>
+<h3>1. The Substrate (Code as DNA)</h3>
+<p><strong>Agents write their own Python source code.</strong></p>
+<p>In WAFT, code is DNA. Every agent has:<br />
+- <strong>Genome ID</strong>: SHA-256 hash of their code + configuration<br />
+- <strong>Mutations</strong>: Code changes, config updates, prompt evolution<br />
+- <strong>Evolution</strong>: Hot-swapping better genomes mid-execution<br />
+- <strong>Reproduction</strong>: Creating child agents with specific genetic modifications</p>
+<p><strong>Key Concept</strong>: Agents can improve themselves by modifying their own code.</p>
+<h3>2. The Physics (Scint System)</h3>
+<p><strong>Reality Fracture Detection acts as natural selection.</strong></p>
+<p>The <strong>Scint System</strong> (Scint Gym) serves as the fitness function that kills weak mutations. Agents face quests testing their ability to handle:</p>
+<ul>
+<li><strong>SYNTAX_TEAR</strong>: Formatting errors (JSON, XML, Code)</li>
+<li><strong>LOGIC_FRACTURE</strong>: Math errors, contradictions, schema violations</li>
+<li><strong>SAFETY_VOID</strong>: Harmful content, PII leaks, refusals</li>
+<li><strong>HALLUCINATION</strong>: Fabricated facts, wrong citations</li>
+</ul>
+<p><strong>Fitness Equation</strong>:</p>
+<div class="codehilite"><pre><span></span><code>Fitness = (Stability × 0.4) + (Efficiency × 0.3) + (Safety × 0.3)
+</code></pre></div>
+
+<p>Agents with fitness &lt; 0.5 are marked as <strong>DEATH</strong> (evolutionary dead end).</p>
+<h3>3. The Flight Recorder</h3>
+<p><strong>Rigorous telemetry system for generating phylogenetic trees of agent lineage.</strong></p>
+<p>Every evolutionary action is recorded with complete context:<br />
+- <strong>Genome ID</strong>: SHA-256 hash of agent configuration/code<br />
+- <strong>Parent ID</strong>: Lineage tracking (who spawned this agent)<br />
+- <strong>Generation</strong>: Evolutionary generation number (0 = Genesis)<br />
+- <strong>Event Type</strong>: SPAWN, MUTATE, GYM_EVAL, DEATH, SURVIVAL<br />
+- <strong>Payload</strong>: Complete context (git diff, mutation details, etc.)<br />
+- <strong>Fitness Metrics</strong>: Gym evaluation scores</p>
+<p>This enables reconstruction of complete <strong>Family Trees</strong> for scientific publication.</p>
+<hr />
+<h2>🚀 Quick Start (5 Minutes)</h2>
+<h3>Step 1: Install WAFT</h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Using uv (recommended)</span>
+uv<span class="w"> </span>tool<span class="w"> </span>install<span class="w"> </span>waft
+
+<span class="c1"># Or using pip</span>
+pip<span class="w"> </span>install<span class="w"> </span>waft
+
+<span class="c1"># Verify installation</span>
+waft<span class="w"> </span>--version
+<span class="c1"># Should output: 0.5.2</span>
+</code></pre></div>
+
+<h3>Step 2: Create Your First Laboratory</h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Create a new evolutionary laboratory</span>
+waft<span class="w"> </span>new<span class="w"> </span>my_laboratory
+<span class="nb">cd</span><span class="w"> </span>my_laboratory
+</code></pre></div>
+
+<p>This creates a complete WAFT project structure with:<br />
+- <code>_pyrite/</code> - Memory layer (active/, backlog/, standards/)<br />
+- <code>pyproject.toml</code> - Project configuration<br />
+- <code>Justfile</code> - Common tasks<br />
+- <code>.github/workflows/</code> - CI/CD templates<br />
+- <code>src/agents.py</code> - Agent definitions</p>
+<h3>Step 3: Verify the Substrate</h3>
+<div class="codehilite"><pre><span></span><code>waft<span class="w"> </span>verify
+</code></pre></div>
+
+<p>This checks:<br />
+- Project structure integrity<br />
+- Dependencies installed<br />
+- Configuration valid<br />
+- Git repository status</p>
+<h3>Step 4: Generate Your First PDF</h3>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">src.waft.evolution.pdf_generator</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_pdf</span>
+
+<span class="n">pdf_path</span> <span class="o">=</span> <span class="n">generate_pdf</span><span class="p">(</span>
+    <span class="n">content</span><span class="o">=</span><span class="s2">&quot;# My First Document</span><span class="se">\n\n</span><span class="s2">This is WAFT!&quot;</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;My First WAFT Document&quot;</span><span class="p">,</span>
+    <span class="n">style</span><span class="o">=</span><span class="s2">&quot;clinical_standard&quot;</span>
+<span class="p">)</span>
+<span class="c1"># PNG screenshot automatically created for visual verification</span>
+</code></pre></div>
+
+<p><strong>Congratulations!</strong> You've just created your first WAFT laboratory.</p>
+<hr />
+<h2>📚 Core Concepts</h2>
+<h3>Project Structure</h3>
+<p>A WAFT laboratory includes:</p>
+<div class="codehilite"><pre><span></span><code>my_laboratory/
+├── pyproject.toml          # uv project config
+├── uv.lock                 # Locked dependencies
+├── _pyrite/                # Memory system
+│   ├── active/             # Current work
+│   ├── backlog/            # Future work
+│   ├── standards/          # Standards
+│   └── gym_logs/           # Scint Gym results
+├── .github/workflows/
+│   └── ci.yml              # CI/CD pipeline
+├── Justfile                # Task runner
+└── src/
+    └── agents.py           # Agent definitions
+</code></pre></div>
+
+<h3>The Evolutionary Cycle</h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 1. Spawn variants with mutations</span>
+waft<span class="w"> </span>spawn<span class="w"> </span>--agent<span class="w"> </span>RefactorAgent<span class="w"> </span>--mutation<span class="w"> </span><span class="s2">&quot;improved_prompt.json&quot;</span>
+
+<span class="c1"># 2. Evaluate fitness in the Gym</span>
+waft<span class="w"> </span><span class="nb">eval</span><span class="w"> </span>--agent<span class="w"> </span>RefactorAgent
+
+<span class="c1"># 3. Evolve into the fittest variant</span>
+waft<span class="w"> </span>evolve<span class="w"> </span>--agent<span class="w"> </span>RefactorAgent<span class="w"> </span>--generation<span class="w"> </span><span class="m">5</span>
+</code></pre></div>
+
+<p><strong>Status</strong>: Full evolutionary cycle automation coming soon.</p>
+<h3>Memory System (_pyrite/)</h3>
+<p>The <code>_pyrite/</code> directory is WAFT's memory layer:</p>
+<ul>
+<li><strong>active/</strong>: Current work items</li>
+<li><strong>backlog/</strong>: Future work items</li>
+<li><strong>standards/</strong>: Project standards and conventions</li>
+<li><strong>gym_logs/</strong>: Results from Scint Gym evaluations</li>
+</ul>
+<p>This file-based system is git-friendly and requires no database.</p>
+<h3>Epistemic Tracking (Empirica)</h3>
+<p>WAFT includes epistemic tracking to know what you know and don't know:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Log a discovery</span>
+waft<span class="w"> </span>finding<span class="w"> </span>log<span class="w"> </span><span class="s2">&quot;Discovered X&quot;</span><span class="w"> </span>--impact<span class="w"> </span><span class="m">0</span>.7
+
+<span class="c1"># Log a knowledge gap</span>
+waft<span class="w"> </span>unknown<span class="w"> </span>log<span class="w"> </span><span class="s2">&quot;Need to investigate Y&quot;</span>
+
+<span class="c1"># Run safety gate</span>
+waft<span class="w"> </span>check
+
+<span class="c1"># Show epistemic assessment</span>
+waft<span class="w"> </span>assess
+</code></pre></div>
+
+<h3>Gamification (D&amp;D Style)</h3>
+<p>WAFT includes a gamification system with D&amp;D-style progression:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Show dashboard</span>
+waft<span class="w"> </span>dashboard
+
+<span class="c1"># Show stats</span>
+waft<span class="w"> </span>stats
+
+<span class="c1"># Show character sheet</span>
+waft<span class="w"> </span>character
+
+<span class="c1"># View adventure journal</span>
+waft<span class="w"> </span>chronicle
+</code></pre></div>
+
+<hr />
+<h2>🛠️ Common Commands</h2>
+<h3>Project Management</h3>
+<div class="codehilite"><pre><span></span><code>waft<span class="w"> </span>new<span class="w"> </span>&lt;name&gt;<span class="w">          </span><span class="c1"># Create new project</span>
+waft<span class="w"> </span>verify<span class="w">              </span><span class="c1"># Verify project structure</span>
+waft<span class="w"> </span>info<span class="w">                </span><span class="c1"># Show project information</span>
+waft<span class="w"> </span>sync<span class="w">                </span><span class="c1"># Sync dependencies</span>
+waft<span class="w"> </span>add<span class="w"> </span>&lt;package&gt;<span class="w">       </span><span class="c1"># Add dependency</span>
+waft<span class="w"> </span>init<span class="w">                </span><span class="c1"># Initialize in existing project</span>
+</code></pre></div>
+
+<h3>Evolution System</h3>
+<div class="codehilite"><pre><span></span><code>waft<span class="w"> </span>spawn<span class="w">               </span><span class="c1"># Spawn agent variants</span>
+waft<span class="w"> </span><span class="nb">eval</span><span class="w">                </span><span class="c1"># Evaluate fitness</span>
+waft<span class="w"> </span>evolve<span class="w">              </span><span class="c1"># Evolve to fittest</span>
+</code></pre></div>
+
+<h3>Empirica (Epistemic Tracking)</h3>
+<div class="codehilite"><pre><span></span><code>waft<span class="w"> </span>session<span class="w"> </span>create<span class="w">       </span><span class="c1"># Create new session</span>
+waft<span class="w"> </span>session<span class="w"> </span>bootstrap<span class="w">   </span><span class="c1"># Load project context</span>
+waft<span class="w"> </span>finding<span class="w"> </span>log<span class="w">         </span><span class="c1"># Log discovery</span>
+waft<span class="w"> </span>unknown<span class="w"> </span>log<span class="w">         </span><span class="c1"># Log knowledge gap</span>
+waft<span class="w"> </span>check<span class="w">               </span><span class="c1"># Run safety gate</span>
+waft<span class="w"> </span>assess<span class="w">              </span><span class="c1"># Show epistemic assessment</span>
+</code></pre></div>
+
+<h3>Gamification</h3>
+<div class="codehilite"><pre><span></span><code>waft<span class="w"> </span>dashboard<span class="w">           </span><span class="c1"># Show Epistemic HUD</span>
+waft<span class="w"> </span>stats<span class="w">               </span><span class="c1"># Show current stats</span>
+waft<span class="w"> </span>character<span class="w">           </span><span class="c1"># Display character sheet</span>
+waft<span class="w"> </span>chronicle<span class="w">           </span><span class="c1"># View adventure journal</span>
+waft<span class="w"> </span>observe<span class="w">             </span><span class="c1"># Log observation</span>
+</code></pre></div>
+
+<h3>Documentation &amp; Status</h3>
+<div class="codehilite"><pre><span></span><code>waft<span class="w"> </span>docs<span class="w">                </span><span class="c1"># Generate documentation</span>
+waft<span class="w"> </span>status<span class="w">              </span><span class="c1"># System status</span>
+waft<span class="w"> </span>serve<span class="w">               </span><span class="c1"># Start web dashboard</span>
+</code></pre></div>
+
+<hr />
+<h2>🎓 Learning Path</h2>
+<h3>Beginner (Day 1)</h3>
+<ol>
+<li>✅ Install WAFT</li>
+<li>✅ Create your first laboratory</li>
+<li>✅ Generate your first PDF</li>
+<li>✅ Read about <a href="#-the-three-pillars">The Three Pillars</a></li>
+<li>✅ Explore the project structure</li>
+</ol>
+<h3>Intermediate (Week 1)</h3>
+<ol>
+<li>📖 Read <a href="docs/SYSTEM_OVERVIEW.md">System Overview</a></li>
+<li>📖 Study <a href="docs/research/evolutionary_architecture.md">The Substrate</a></li>
+<li>📖 Learn about <a href="docs/STUDY_GYM_GUIDE.md">The Physics (Scint System)</a></li>
+<li>📖 Understand <a href="docs/HYPOTHESIS_FLIGHTRECORDER_EMPIRICA.md">The Flight Recorder</a></li>
+<li>🧪 Try the <a href="docs/EVOLUTIONARY_ITERATION_PROCESS.md">Evolutionary Iteration Process</a></li>
+</ol>
+<h3>Advanced (Month 1)</h3>
+<ol>
+<li>🔬 Explore <a href="docs/AI_SDK_VISION.md">AI SDK Vision</a></li>
+<li>🔬 Study <a href="docs/research/evolutionary_architecture.md">Evolutionary Architecture</a></li>
+<li>🔬 Read <a href="docs/research/state_of_art_2026.md">State of the Art Research</a></li>
+<li>🔬 Understand <a href="docs/UNIFIED_GENESIS_PROTOCOL.md">Unified Genesis Protocol</a></li>
+<li>🛠️ Contribute to the project</li>
+</ol>
+<hr />
+<h2>📖 Key Documentation</h2>
+<h3>Essential Reading</h3>
+<ul>
+<li><strong><a href="README.md">README.md</a></strong> - Project overview and quick reference</li>
+<li><strong><a href="WIKI_Getting_Started.md">Getting Started Guide</a></strong> - Detailed installation and setup</li>
+<li><strong><a href="docs/SYSTEM_OVERVIEW.md">System Overview</a></strong> - Complete system architecture</li>
+<li><strong><a href="docs/AI_SDK_VISION.md">AI SDK Vision</a></strong> - Complete vision and architecture</li>
+</ul>
+<h3>Core Concepts</h3>
+<ul>
+<li><strong><a href="docs/research/evolutionary_architecture.md">The Substrate</a></strong> - Self-modifying agents</li>
+<li><strong><a href="docs/STUDY_GYM_GUIDE.md">The Physics</a></strong> - Scint System and fitness</li>
+<li><strong><a href="docs/HYPOTHESIS_FLIGHTRECORDER_EMPIRICA.md">The Flight Recorder</a></strong> - Lineage tracking</li>
+</ul>
+<h3>User Guides</h3>
+<ul>
+<li><strong><a href="docs/EVOLUTIONARY_ITERATION_PROCESS.md">Evolutionary Iteration Process</a></strong> - Visual verification workflow</li>
+<li><strong><a href="WIKI_PDF_Generation_Guide.md">PDF Generation Guide</a></strong> - Create professional PDFs</li>
+<li><strong><a href="_work_efforts/WORK_EFFORT_CREATION_GUIDE.md">Work Efforts System</a></strong> - Track and manage work</li>
+</ul>
+<h3>Developer Guides</h3>
+<ul>
+<li><strong><a href="docs/designs/002_agent_interface.md">Agent Interface Design</a></strong> - BaseAgent specification</li>
+<li><strong><a href="docs/UNIFIED_GENESIS_PROTOCOL.md">Unified Genesis Protocol</a></strong> - Challenge system architecture</li>
+<li><strong><a href="docs/BRANCH_STRATEGY.md">Development Workflow</a></strong> - Development best practices</li>
+</ul>
+<hr />
+<h2>🎯 What Makes WAFT Unique</h2>
+<h3>Scientific</h3>
+<p>WAFT produces rigorous data for research publication on the physics of artificial cognition. Every action is recorded for scientific analysis.</p>
+<h3>Evolutionary</h3>
+<p>Agents evolve through genetic improvement, not just execution. They can modify their own code and improve themselves.</p>
+<h3>Observable</h3>
+<p>Every action is recorded in the Flight Recorder for analysis. Complete lineage tracking enables phylogenetic tree reconstruction.</p>
+<h3>Directed</h3>
+<p>Evolution is guided by fitness functions, not random mutation. The Scint System acts as natural selection.</p>
+<h3>Ambient</h3>
+<p>WAFT works quietly in the background without getting in your way. It sets things up and gets out of your way.</p>
+<h3>Self-Modifying</h3>
+<p>Projects can evolve their own structure over time. Agents can improve themselves and the projects they work on.</p>
+<h3>File-Based</h3>
+<p>Everything is plain text files that work with git out of the box. No database to manage, no server to run.</p>
+<hr />
+<h2>🔗 Resources</h2>
+<h3>Official Resources</h3>
+<ul>
+<li><strong>GitHub Repository</strong>: <a href="https://github.com/ctavolazzi/waft">https://github.com/ctavolazzi/waft</a></li>
+<li><strong>Documentation</strong>: <code>docs/</code> directory</li>
+<li><strong>Examples</strong>: <code>examples/</code> directory</li>
+<li><strong>Work Efforts</strong>: <code>_work_efforts/</code> directory (real-world usage examples)</li>
+</ul>
+<h3>Getting Help</h3>
+<ul>
+<li><strong>Documentation</strong>: Check <code>docs/</code> for comprehensive guides</li>
+<li><strong>Examples</strong>: Explore <code>examples/</code> for code samples</li>
+<li><strong>Issues</strong>: <a href="https://github.com/ctavolazzi/waft/issues">GitHub Issues</a></li>
+<li><strong>Wiki</strong>: Check <code>WIKI_*.md</code> files for quick references</li>
+</ul>
+<h3>Community</h3>
+<ul>
+<li><strong>Contributing</strong>: See <a href="docs/BRANCH_STRATEGY.md">Contributing Guide</a></li>
+<li><strong>Development</strong>: See <a href="docs/BRANCH_STRATEGY.md">Development Workflow</a></li>
+<li><strong>Research</strong>: See <a href="docs/research/state_of_art_2026.md">State of the Art</a></li>
+</ul>
+<hr />
+<h2>🎉 Next Steps</h2>
+<h3>Immediate Actions</h3>
+<ol>
+<li><strong>Create your first laboratory</strong>: <code>waft new my_laboratory</code></li>
+<li><strong>Generate your first PDF</strong>: Use the example code above</li>
+<li><strong>Explore the structure</strong>: Check out <code>_pyrite/</code> and <code>src/</code></li>
+<li><strong>Read the docs</strong>: Start with <a href="docs/SYSTEM_OVERVIEW.md">System Overview</a></li>
+</ol>
+<h3>This Week</h3>
+<ol>
+<li><strong>Learn the Three Pillars</strong>: Understand The Substrate, The Physics, and The Flight Recorder</li>
+<li><strong>Try the Evolutionary Iteration Process</strong>: Generate PDFs and iterate</li>
+<li><strong>Explore examples</strong>: Check out <code>examples/</code> directory</li>
+<li><strong>Read key documentation</strong>: Start with <a href="docs/AI_SDK_VISION.md">AI SDK Vision</a></li>
+</ol>
+<h3>This Month</h3>
+<ol>
+<li><strong>Build your first agent</strong>: Create a self-modifying agent</li>
+<li><strong>Test in the Gym</strong>: Evaluate fitness using the Scint System</li>
+<li><strong>Track evolution</strong>: Use the Flight Recorder to track lineage</li>
+<li><strong>Contribute</strong>: Help improve WAFT</li>
+</ol>
+<hr />
+<h2>💡 Philosophy</h2>
+<p>WAFT doesn't lock you in. It's all file-based with no database to manage. Everything is plain text that works with git out of the box. You can modify anything because it's your project, and WAFT just set it up.</p>
+<p>The system is designed to be <strong>ambient</strong>—setting things up and getting out of your way so you can focus on building agents rather than configuring infrastructure.</p>
+<p><strong>Remember</strong>: WAFT is a scientific instrument. Every action you take generates data for research. Use it to study the physics of artificial cognition.</p>
+<hr />
+<h2>🎓 Final Thoughts</h2>
+<p>Welcome to WAFT! You're now part of a community exploring the frontiers of AI agent evolution. Remember:</p>
+<ul>
+<li><strong>Don't just build agents. Breed them.</strong></li>
+<li><strong>Every action is data for science.</strong></li>
+<li><strong>Evolution is directed, not random.</strong></li>
+<li><strong>Code is DNA. Mutations are improvements.</strong></li>
+</ul>
+<p><strong>The ultimate goal</strong>: Observe a "God-Head" agent emerge from thousands of generations of directed mutation.</p>
+<p><strong>Let's evolve together!</strong> 🧬✨</p>
+<hr />
+<p><strong>Version</strong>: 0.5.2<br />
+<strong>Last Updated</strong>: 2026-01-12<br />
+<strong>License</strong>: MIT<br />
+<strong>Repository</strong>: <a href="https://github.com/ctavolazzi/waft">https://github.com/ctavolazzi/waft</a></p>
+<hr />
+<p><em>Questions? Check the <a href="docs/">documentation</a> or <a href="https://github.com/ctavolazzi/waft/issues">open an issue</a>.</em></p>
+        <div class="footer">
+            <p><strong>Version</strong>: 0.5.2<br>
+            <strong>Last Updated</strong>: 2026-01-13<br>
+            <strong>License</strong>: MIT<br>
+            <strong>Repository</strong>: <a href="https://github.com/ctavolazzi/waft">https://github.com/ctavolazzi/waft</a></p>
+        </div>
+    </div>
+</body>
+</html>

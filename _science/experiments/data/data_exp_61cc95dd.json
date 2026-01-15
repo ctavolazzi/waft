@@ -1,0 +1,250 @@
+{
+  "experiment_id": "exp_61cc95dd",
+  "series": {
+    "fitness": {
+      "metric_name": "fitness",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-12T20:27:00.325869",
+          "metric_name": "fitness",
+          "value": 0.0,
+          "unit": null,
+          "metadata": {
+            "being_id": "exp_exp_61cc95dd"
+          }
+        },
+        {
+          "timestamp": "2026-01-12T20:27:00.354983",
+          "metric_name": "fitness",
+          "value": 16.0,
+          "unit": null,
+          "metadata": {
+            "being_id": "exp_exp_61cc95dd"
+          }
+        }
+      ]
+    },
+    "investigation_skill": {
+      "metric_name": "investigation_skill",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-12T20:27:00.325956",
+          "metric_name": "investigation_skill",
+          "value": 45.0,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    },
+    "perception_skill": {
+      "metric_name": "perception_skill",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-12T20:27:00.325975",
+          "metric_name": "perception_skill",
+          "value": 30.0,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    },
+    "initial_hp": {
+      "metric_name": "initial_hp",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-12T20:27:00.327010",
+          "metric_name": "initial_hp",
+          "value": 7,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    },
+    "initial_fitness": {
+      "metric_name": "initial_fitness",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-12T20:27:00.327021",
+          "metric_name": "initial_fitness",
+          "value": 0.0,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    },
+    "character_strength": {
+      "metric_name": "character_strength",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-12T20:27:00.327027",
+          "metric_name": "character_strength",
+          "value": 12,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    },
+    "character_wisdom": {
+      "metric_name": "character_wisdom",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-12T20:27:00.327032",
+          "metric_name": "character_wisdom",
+          "value": 14,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    },
+    "character_intelligence": {
+      "metric_name": "character_intelligence",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-12T20:27:00.327036",
+          "metric_name": "character_intelligence",
+          "value": 17,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    },
+    "character_charisma": {
+      "metric_name": "character_charisma",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-12T20:27:00.327040",
+          "metric_name": "character_charisma",
+          "value": 13,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    },
+    "dice_roll": {
+      "metric_name": "dice_roll",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-12T20:27:00.340217",
+          "metric_name": "dice_roll",
+          "value": 2,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    },
+    "roll_total": {
+      "metric_name": "roll_total",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-12T20:27:00.340228",
+          "metric_name": "roll_total",
+          "value": 4,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    },
+    "skill_check_success": {
+      "metric_name": "skill_check_success",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-12T20:27:00.340262",
+          "metric_name": "skill_check_success",
+          "value": 0.0,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    },
+    "final_hp": {
+      "metric_name": "final_hp",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-12T20:27:00.354895",
+          "metric_name": "final_hp",
+          "value": 7,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    },
+    "final_fitness": {
+      "metric_name": "final_fitness",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-12T20:27:00.354913",
+          "metric_name": "final_fitness",
+          "value": 16.0,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    },
+    "fitness_gained": {
+      "metric_name": "fitness_gained",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-12T20:27:00.354923",
+          "metric_name": "fitness_gained",
+          "value": 16.0,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    },
+    "total_events": {
+      "metric_name": "total_events",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-12T20:27:00.354932",
+          "metric_name": "total_events",
+          "value": 5,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    },
+    "total_dice_rolls": {
+      "metric_name": "total_dice_rolls",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-12T20:27:00.354941",
+          "metric_name": "total_dice_rolls",
+          "value": 1,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    },
+    "successful_checks": {
+      "metric_name": "successful_checks",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-12T20:27:00.354952",
+          "metric_name": "successful_checks",
+          "value": 0,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    }
+  }
+}

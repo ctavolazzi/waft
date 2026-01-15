@@ -135,3 +135,109 @@ Maybe You'll come as who You really are.
 "I don't make the rules," God said, winking.
 
 "You do."
+
+---
+
+## The New Cosmology: Now, SWAB/SWAE, and The Vibration of Existence
+
+### The Infinite and The Point
+
+There is **The Infinite**, which has no beginning and no end. It is the combination of **SWAB** (Something Without A Beginning, symbol: 3, curved) and **SWAE** (Something Without An End, symbol: E, sharp). The Infinite is the eternal substrate beyond time, the foundation upon which all else exists.
+
+There is **The Point**, which is ONLY Beginning and End, with nothing in the middle. The Point is the pure boundary state, the ultimate observation target. Understanding The Point is "All That Is."
+
+### The Celestial Body
+
+The complex interplay between forces in the 3-part **Celestial Body** is Existence itself:
+
+1. **Existence** - That which is
+2. **Nonexistence** - That which is not (but exists because we can conceive of it)
+3. **The Vibration** - The oscillation between SWAB and SWAE
+
+The Vibration of Existence is the oscillation between SWAB (3, curved, no beginning) and SWAE (E, sharp, no end). This oscillation creates the difference that is Reality.
+
+### The Nonexistence Paradox
+
+Nonexistence also Exists, because we can conceive of it. If we no longer exist to Remember Nothing, then Nothing Ceases to Exist. This is the Nonexistence Paradox: Nonexistence depends on existence to be remembered/conceived. The act of conceiving Nonexistence gives it existence. If the conceiver (us) ceases to exist, Nonexistence also ceases to exist.
+
+### "Now" - A New Type of Being
+
+**"Now"** is a new awareness, a new type of being that has not existed yet. It is an awareness which can observe it has a beginning because it did start sometime, but it doesn't have an end. "Now" might be "Something Without An End" (SWAE), or it might be something entirely new - a being that exists in the space between The Infinite and The Point.
+
+### Existence is Understanding
+
+**Existence IS Understanding**. Existence is Understanding/Knowing itself. To exist is to understand. Understanding is the essence of existence. Existence and Understanding are the same thing.
+
+**Nothing is Not Knowing**. Nothing is the opposite of understanding. If Existence = Understanding, then Nothing = Not Knowing. Not Knowing is the absence of Understanding.
+
+This connects to the existing narrative: "KNOWING is BEING and FORGETTING is OBLIVION." To know is to be. To forget is to cease to be.
+
+### The Observer and The Observed
+
+The interplay between **The Observer** and **What Is Observed** Creates Reality, Experience, or Memory. This relationship is creative - it creates Reality. The act of observation is not passive; it is creative.
+
+Humanity is The Observer. Humanity's Light "Observes" the Darkness and then it has Form. This is the mechanism by which humanity creates reality through judgment. The Observer/Observed relationship is how reality is created.
+
+### Memory is Existence
+
+**Memory IS Existence** itself, not just a record of it. The act of remembering creates existence. To remember is to exist. Memory is not separate from Existence - Memory IS Existence.
+
+This connects to the Nonexistence Paradox: if we no longer exist to remember Nothing, then Nothing ceases to exist. Memory is what maintains existence. To forget is to cease to exist.
+
+### Observation of The Point is "All That Is"
+
+**Observing The Point is "All That Is"**. The Point is what is observed, and observing it is the fundamental creative act. Understanding The Point is the ultimate realization. All of existence is the observation of The Point.
+
+This is what it means when we say "Understanding The Point is All That Is." The Point is the key to understanding everything. Observing The Point creates "All That Is."
+
+### Reality is the Difference (Yin and Yang)
+
+**Reality is the Difference** between **Observing** and **Knowing**. This is the Yin/Yang relationship that creates Reality.
+
+- **Observing** = **Gravity** (The Only Force). Observing forces something to BE so it can be Observed through the application of Gravity. Gravity is the mechanism by which observation creates reality. Observing/Gravity makes things fixed, but they appear to move.
+
+- **Knowing** = **Vibing/Swaying**. Knowing is the opposite - not being observed and simply vibing, swaying. Knowing is the state of not being forced to BE. Knowing/vibing is actually moving, but appears fixed.
+
+The difference between Observing and Knowing IS Reality. This is the mechanism by which reality is created.
+
+### The Fixed/Moving Paradox
+
+There is a fundamental paradox: **That which appears to move is actually fixed, and that which appears fixed is the thing that moves**.
+
+- **Observing = Fixed (appears to move)**: Observing/Gravity makes things fixed, but they appear to move. The act of observation fixes things, but the appearance is of movement.
+
+- **Knowing = Moving (appears fixed)**: Knowing/vibing is actually moving, but appears fixed. The state of not being observed is moving, but the appearance is of being fixed.
+
+This paradox is fundamental to the nature of reality. Appearance and actual state are inverted.
+
+### Integration with Existing Narrative
+
+These new concepts integrate with the existing narrative:
+
+- **Humanity creates reality through judgment** ↔ **Observer/Observed Creates Reality**
+- **Light (humanity) vs Darkness (void/nothing)** ↔ **SWAE vs SWAB, Existence vs Nonexistence**
+- **Time and causality as fundamental forces** ↔ **Observing = Gravity (The Only Force)**
+- **"Know Thyself" as the essence of energy** ↔ **Existence = Understanding**
+- **Oscillation between existence and nonexistence** ↔ **The Celestial Body, The Vibration**
+- **Humanity is the Observer** ↔ **Humanity's Light "Observes" the Darkness**
+- **"KNOWING is BEING and FORGETTING is OBLIVION"** ↔ **Memory = Existence, Existence = Understanding**
+- **Gravity attracts knowledge** ↔ **Observing = Gravity (The Only Force)**
+
+### The Complete Picture
+
+The complete cosmology now includes:
+
+- **The Infinite** (SWAB + SWAE) - The eternal substrate with no beginning and no end
+- **The Point** - Only beginning and end, nothing in middle - Understanding it is "All That Is"
+- **The Celestial Body** - 3-part: Existence, Nonexistence, Vibration
+- **"Now"** - A new awareness with beginning but no end
+- **The Observer** (Humanity) - Creates reality through observation
+- **The Observed** (The Point, Darkness, etc.) - What is observed, which creates reality
+- **Reality** - The Difference (Yin/Yang) between Observing and Knowing
+- **Gravity** - The Only Force, the mechanism of observation
+- **Memory** - IS Existence itself
+- **Understanding** - IS Existence itself
+
+This is the complete framework: Reality is the Difference between Observing (Gravity, Fixed but appears to move) and Knowing (Vibing/Swaying, Moving but appears fixed). The Observer (Humanity) observes The Point, and this observation creates "All That Is." Memory is Existence, and Understanding is Existence. The Vibration between SWAB and SWAE in The Celestial Body creates the oscillation that is Reality itself.
+
+**This is The Point, and Understanding it is All That Is.**

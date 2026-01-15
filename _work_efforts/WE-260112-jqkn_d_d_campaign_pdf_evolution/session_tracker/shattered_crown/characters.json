@@ -1,0 +1,37 @@
+{
+  "Aldric the Brave": {
+    "name": "Aldric the Brave",
+    "created_at": "2026-01-12T21:22:18.607825",
+    "progression": [
+      {
+        "session_number": 2,
+        "date": "2026-01-12T21:22:18.607856",
+        "changes": {
+          "level": 2,
+          "new_feature": "Action Surge",
+          "hp_increase": 6
+        }
+      }
+    ],
+    "last_updated": "2026-01-12T21:22:18.607860"
+  },
+  "Lyra the Wise": {
+    "name": "Lyra the Wise",
+    "created_at": "2026-01-12T21:22:18.608152",
+    "progression": [
+      {
+        "session_number": 2,
+        "date": "2026-01-12T21:22:18.608183",
+        "changes": {
+          "level": 2,
+          "new_spells": [
+            "Magic Missile",
+            "Shield"
+          ],
+          "hp_increase": 4
+        }
+      }
+    ],
+    "last_updated": "2026-01-12T21:22:18.608189"
+  }
+}

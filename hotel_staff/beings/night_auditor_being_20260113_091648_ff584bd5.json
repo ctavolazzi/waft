@@ -1,0 +1,15 @@
+{
+  "role_key": "night_auditor",
+  "role_name": "Night Auditor",
+  "being_id": "being_20260113_091648_ff584bd5",
+  "custom_name": "Vera",
+  "reality_id": "treasure_tavern_inn",
+  "initial_skills": {
+    "code_review": 30.0,
+    "auditing": 28.0,
+    "analysis": 32.0,
+    "detail_oriented": 30.0
+  },
+  "personality_type": "analytical",
+  "spawned_at": "2026-01-13T09:16:50.645508"
+}

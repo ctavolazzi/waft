@@ -1,0 +1,316 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PDF Formatting Evolution Ideas</title>
+
+    <style>
+        @page {
+            size: letter;
+            margin: 25.4mm 25.4mm 25.4mm 25.4mm;
+        }
+
+        body {
+            font-family: 'Times New Roman', 'Times', serif;
+            font-size: 11pt;
+            line-height: 1.4;
+            color: #000000;
+            background: #FFFFFF;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Prevent orphans/widows */
+        p, li {
+            orphans: 2;
+            widows: 2;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 16pt;
+            color: #000000;
+            margin-top: 0;
+            margin-bottom: 12pt;
+            page-break-after: avoid;
+            border-bottom: 2pt solid #000000;
+            padding-bottom: 4pt;
+        }
+
+        h2 {
+            font-size: 14pt;
+            color: #000000;
+            margin-top: 12pt;
+            margin-bottom: 6.0pt;
+            page-break-after: avoid;
+            border-bottom: 1pt solid #000000;
+            padding-bottom: 2pt;
+        }
+
+        h2 + p, h2 + ul, h2 + ol, h2 + blockquote {
+            margin-top: 4.0pt;
+        }
+
+        h3 {
+            font-size: 12pt;
+            color: #000000;
+            margin-top: 8pt;
+            margin-bottom: 4.0pt;
+            page-break-after: avoid;
+        }
+
+        h4, h5, h6 {
+            font-size: 11pt;
+            color: #000000;
+            margin-top: 6.0pt;
+            margin-bottom: 4.0pt;
+            page-break-after: avoid;
+        }
+
+        p {
+            margin: 0 0 8pt 0;
+        }
+
+        p:empty {
+            display: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Lists - improved spacing */
+        ul, ol {
+            margin: 8pt 0 8pt 0;
+            padding-left: 20pt;
+        }
+
+        li {
+            margin-bottom: 4.0pt;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+        }
+
+        /* Nested lists */
+        ul ul, ol ol, ul ol, ol ul {
+            margin-top: 4.0pt;
+            margin-bottom: 4.0pt;
+            padding-left: 30pt;
+        }
+
+        ul ul ul, ol ol ol {
+            padding-left: 40pt;
+        }
+
+        /* Code blocks - preserve formatting */
+        code {
+            font-family: monospace;
+            font-size: 9pt;
+            background: #f5f5f580;
+            color: #000000;
+            padding: 1pt 3pt;
+            border-radius: 2pt;
+        }
+
+        pre {
+            background: #f5f5f5;
+            padding: 4.0pt;
+            border-left: 3pt solid #000000;
+            font-size: 9pt;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            overflow-x: auto;
+            page-break-inside: avoid;
+            margin: 8pt 0;
+        }
+
+        pre code {
+            white-space: pre;
+            display: block;
+            background: #f5f5f5;
+            padding: 4.0pt;
+        }
+
+        /* Blockquotes */
+        blockquote {
+            border-left: 4pt solid #000000;
+            background: #f5f5f520;
+            padding: 4.0pt 8pt;
+            margin: 8pt 0;
+            padding-left: 8pt;
+            font-style: italic;
+            color: #000000dd;
+            page-break-inside: avoid;
+        }
+
+        blockquote p {
+            margin-bottom: 4.0pt;
+        }
+
+        blockquote p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Links */
+        a {
+            color: #000000;
+            text-decoration: underline;
+        }
+
+        a:visited {
+            color: #000000aa;
+        }
+
+        /* Horizontal rules */
+        hr {
+            border: none;
+            border-top: 1pt solid #00000033;
+            margin: 8pt 0 8pt 0;
+            padding: 0;
+            height: 0;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 8pt 0;
+            font-size: 10pt;
+            page-break-inside: avoid;
+        }
+
+        th {
+            background: #000000;
+            color: #FFFFFF;
+            border: 1pt solid #000000;
+            padding: 6pt 8pt;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            border: 1pt solid #00000033;
+            padding: 6pt 8pt;
+        }
+
+        tr:nth-child(even) {
+            background: #f5f5f5;
+        }
+
+        /* Emphasis combinations */
+        strong {
+            font-weight: bold;
+        }
+
+        em {
+            font-style: italic;
+        }
+
+        strong em, em strong {
+            font-weight: bold;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <h1>PDF Formatting Evolution Ideas</h1>
+    
+    
+    <div style="font-size: 9pt; color: #00000088; margin-bottom: 8pt;">
+        
+        <p><strong>Generated:</strong> 2026-01-12</p>
+        
+        <p><strong>Purpose:</strong> Evolving PDF formatting ideas</p>
+        
+    </div>
+    
+
+    <div class="content">
+        <h1>PDF Formatting Evolution Ideas</h1>
+
+<h2>Common First-Time Mistakes</h2>
+
+<h3>1. List Spacing Issues</h3>
+
+<p><strong>Problem</strong>: Lists often have inconsistent vertical rhythm</p>
+
+<p><strong>Ideas</strong>:</p>
+<ul>
+<li>Add consistent margin-top and margin-bottom</li>
+<li>Ensure li items have proper spacing</li>
+<li>Nested lists should have increased left padding</li>
+</ul>
+
+<h3>2. Code Block Line Breaks</h3>
+
+<p><strong>Problem</strong>: Code blocks don't preserve line breaks properly</p>
+
+<p><strong>Ideas</strong>:</p>
+<ul>
+<li>Add <code>white-space: pre-wrap</code> to pre blocks</li>
+<li>Ensure code inside pre preserves formatting</li>
+</ul>
+
+<h3>3. Blockquote Styling</h3>
+
+<p><strong>Problem</strong>: Blockquotes aren't styled</p>
+
+<p><strong>Ideas</strong>:</p>
+<ul>
+<li>Add blockquote styling with left border</li>
+<li>Use subtle background color</li>
+<li>Indent from left margin</li>
+</ul>
+
+<blockquote>This is a blockquote example to test formatting.</blockquote>
+
+<h3>4. Link Styling</h3>
+
+<p><strong>Problem</strong>: Links aren't visually distinct</p>
+
+<p><strong>Ideas</strong>:</p>
+<ul>
+<li>Add underline or color to links</li>
+<li>Use accent color for links</li>
+<li>Make links stand out but not distract</li>
+</ul>
+
+<p>Here's a <a href="https://example.com">link to example</a> in text.</p>
+
+<h3>5. Nested Lists</h3>
+
+<p><strong>Problem</strong>: Nested lists don't have proper indentation</p>
+
+<p><strong>Ideas</strong>:</p>
+<ul>
+<li>Increase padding for each nesting level</li>
+<li>Use different spacing</li>
+</ul>
+
+<ul>
+<li>First level</li>
+<li>Second level</li>
+<li>Third level</li>
+<li>Fourth level</li>
+</ul>
+
+<h3>6. Code Examples</h3>
+
+<p>Inline code: <code>const x = 42;</code></p>
+
+<p>Code block:</p>
+
+<pre><code class="language-python">def test():
+<p>    return True</p>
+<p></code></pre></p>
+
+<p>---</p>
+
+<h2>Summary</h2>
+
+<p>These are common formatting issues that anyone would make on their first go around.</p>
+
+    </div>
+</body>
+</html>

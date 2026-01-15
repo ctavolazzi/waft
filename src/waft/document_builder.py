@@ -60,10 +60,23 @@ import json
 from jinja2 import Template
 from weasyprint import HTML
 from pypdf import PdfReader
+import sys
 
 from .templates.registry import get_registry, TemplateRegistry, TemplateMetadata
 from .binder import Binder, DocumentEntry, BinderSection
-from scripts.printer_friendly_helper import convert_html_template_to_printer_friendly
+from .pdf_improvements import PDFContentProcessor, PDFStylingEnhancer
+
+# Import printer_friendly_helper with path manipulation
+# This is needed because scripts/ is not in the package path
+try:
+    # Try relative import first (if scripts is in path)
+    from scripts.printer_friendly_helper import convert_html_template_to_printer_friendly
+except ImportError:
+    # Fallback: add project root to path
+    project_root = Path(__file__).parent.parent.parent
+    if str(project_root) not in sys.path:
+        sys.path.insert(0, str(project_root))
+    from scripts.printer_friendly_helper import convert_html_template_to_printer_friendly
 
 
 class TemplateType(Enum):
@@ -551,15 +564,53 @@ class DocumentBuilder:
         # Generate PDF
         HTML(string=html_output).write_pdf(output_path)
         
+        # Post-process to add blank page markers
+        try:
+            from ..utils import process_pdf_for_blank_pages
+            process_pdf_for_blank_pages(output_path)
+        except Exception as e:
+            print(f"⚠️  Blank page marker processing failed: {e}")
+        
         self._generated_path = output_path
         return output_path
 
     def _render_template(self, template: Template) -> str:
         """Render template with config data."""
+        # #region agent log
+        with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
+            import json
+            import re
+            f.write(json.dumps({"sessionId":"debug-session","runId":"post-fix","hypothesisId":"F","location":"document_builder.py:557","message":"_render_template entry","data":{"content_length":len(self.config.content) if self.config.content else 0,"content_preview":self.config.content[:300] if self.config.content else "","content_is_html":bool(re.search(r'<[^>]+>', self.config.content)) if self.config.content else False,"has_h1":bool(re.search(r'<h1[^>]*>', self.config.content)) if self.config.content else False,"has_hr":bool(re.search(r'<hr[^>]*>', self.config.content)) if self.config.content else False},"timestamp":int(__import__('time').time()*1000)}) + '\n')
+        # #endregion
+        
+        # Process content with improved algorithms
+        processed_content = self.config.content
+        # #region agent log
+        with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
+            import json
+            import re
+            f.write(json.dumps({"sessionId":"debug-session","runId":"post-fix","hypothesisId":"G","location":"document_builder.py:565","message":"before content processing","data":{"content_length":len(processed_content) if processed_content else 0,"content_is_html":bool(re.search(r'<[^>]+>', processed_content)) if processed_content else False,"has_h1":bool(re.search(r'<h1[^>]*>', processed_content)) if processed_content else False},"timestamp":int(__import__('time').time()*1000)}) + '\n')
+        # #endregion
+        
+        if processed_content:
+            # If content is markdown, convert to HTML
+            if not re.search(r'<[^>]+>', processed_content):
+                processed_content = PDFContentProcessor.markdown_to_html(processed_content)
+            else:
+                # If already HTML, clean it
+                processed_content = PDFContentProcessor.clean_html_content(processed_content)
+        
+        # #region agent log
+        with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
+            import json
+            import re
+            f.write(json.dumps({"sessionId":"debug-session","runId":"post-fix","hypothesisId":"G","location":"document_builder.py:578","message":"after content processing","data":{"processed_length":len(processed_content) if processed_content else 0,"has_h1_after":bool(re.search(r'<h1[^>]*>', processed_content)) if processed_content else False,"has_hr_after":bool(re.search(r'<hr[^>]*>', processed_content)) if processed_content else False},"timestamp":int(__import__('time').time()*1000)}) + '\n')
+        # #endregion
+        
         # Build template context
         context = {
             "title": self.config.title,
-            "content": self.config.content,
+            "content": processed_content,
             "series": self.config.series,
             "number": self.config.number,
             "subtitle": self.config.subtitle,
@@ -574,7 +625,38 @@ class DocumentBuilder:
             if key not in context and not key.startswith("_"):
                 context[key] = value
         
-        return template.render(**context)
+        html_output = template.render(**context)
+        
+        # Apply enhanced styling (includes all formatting improvements)
+        enhanced_css = PDFStylingEnhancer.get_complete_styles()
+        # #region agent log
+        with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
+            import json
+            f.write(json.dumps({"sessionId":"debug-session","runId":"post-fix","hypothesisId":"G","location":"document_builder.py:595","message":"before CSS injection","data":{"has_style_tag":bool('<style>' in html_output),"enhanced_css_length":len(enhanced_css) if enhanced_css else 0,"css_preview":enhanced_css[:200] if enhanced_css else ""},"timestamp":int(__import__('time').time()*1000)}) + '\n')
+        # #endregion
+        
+        # Inject CSS into HTML if not already present
+        if '<style>' in html_output and enhanced_css not in html_output:
+            html_output = html_output.replace('</style>', f'\n{enhanced_css}\n</style>', 1)
+        elif '<style>' not in html_output:
+            # Add style block if missing
+            html_output = html_output.replace('<head>', f'<head>\n<style>\n{enhanced_css}\n</style>', 1)
+        
+        # #region agent log
+        with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
+            import json
+            import re
+            f.write(json.dumps({"sessionId":"debug-session","runId":"post-fix","hypothesisId":"G","location":"document_builder.py:603","message":"after CSS injection","data":{"html_output_length":len(html_output) if html_output else 0,"has_enhanced_css":bool(enhanced_css in html_output) if enhanced_css else False,"has_h1_in_final":bool(re.search(r'<h1[^>]*>', html_output)) if html_output else False},"timestamp":int(__import__('time').time()*1000)}) + '\n')
+        # #endregion
+        
+        # #region agent log
+        with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
+            import json
+            import re
+            f.write(json.dumps({"sessionId":"debug-session","runId":"post-fix","hypothesisId":"F","location":"document_builder.py:577","message":"_render_template exit","data":{"html_output_length":len(html_output) if html_output else 0,"html_output_preview":html_output[html_output.find('<div class="content">'):html_output.find('<div class="content">')+500] if html_output and '<div class="content">' in html_output else html_output[:500] if html_output else "","has_h1_in_output":bool(re.search(r'<h1[^>]*>', html_output)) if html_output else False,"has_hr_in_output":bool(re.search(r'<hr[^>]*>', html_output)) if html_output else False,"has_raw_hash":bool(re.search(r'#\s+WAFT', html_output)) if html_output else False},"timestamp":int(__import__('time').time()*1000)}) + '\n')
+        # #endregion
+        
+        return html_output
 
     def save(self, output_path: Optional[Path] = None) -> Path:
         """Alias for generate() - more intuitive name."""
