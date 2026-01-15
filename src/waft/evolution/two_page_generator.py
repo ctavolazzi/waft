@@ -575,6 +575,14 @@ class TwoPageGenerator:
             # Generate PDF
             if self.weasyprint_available:
                 self.HTML(string=best_layout.metadata['html_content']).write_pdf(output_path)
+                
+                # Post-process to add blank page markers
+                try:
+                    from ...utils import process_pdf_for_blank_pages
+                    process_pdf_for_blank_pages(output_path)
+                except Exception as e:
+                    # If blank page handling fails, continue anyway (non-critical)
+                    print(f"⚠️  Blank page marker processing failed: {e}")
                 pdf_path = str(output_path)
                 print(f"  ✓ PDF saved: {output_path}")
 

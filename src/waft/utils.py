@@ -997,3 +997,170 @@ def add_code_examples_to_case_file(
     case_file_path.write_text(new_content, encoding='utf-8')
     return True
 
+
+# ============================================================================
+# PDF Blank Page Handler
+# ============================================================================
+
+try:
+    import fitz  # PyMuPDF
+    PYMUPDF_AVAILABLE = True
+except ImportError:
+    PYMUPDF_AVAILABLE = False
+
+try:
+    from weasyprint import HTML
+    WEASYPRINT_AVAILABLE = True
+except ImportError:
+    WEASYPRINT_AVAILABLE = False
+
+from pypdf import PdfReader, PdfWriter
+
+
+def is_page_blank(page) -> bool:
+    """
+    Check if a PDF page is blank (has no meaningful content).
+    
+    Args:
+        page: pypdf Page object
+        
+    Returns:
+        True if page is blank, False otherwise
+    """
+    try:
+        text = page.extract_text().strip()
+        # Consider page blank if it has less than 10 characters of text
+        # (allowing for headers/footers that might be on every page)
+        return len(text) < 10
+    except Exception:
+        # If extraction fails, assume not blank (safer)
+        return False
+
+
+def add_blank_page_marker(
+    pdf_path: Path,
+    output_path: Optional[Path] = None,
+    marker_text: str = "[ THIS PAGE IS BLANK ON PURPOSE ]"
+) -> Path:
+    """
+    Add blank page markers to all blank pages in a PDF.
+    
+    Args:
+        pdf_path: Path to input PDF
+        output_path: Path to output PDF (default: overwrites input)
+        marker_text: Text to display on blank pages
+        
+    Returns:
+        Path to output PDF
+    """
+    if output_path is None:
+        output_path = pdf_path
+    
+    reader = PdfReader(str(pdf_path))
+    
+    # Check if we have any blank pages
+    blank_pages = []
+    for page_num, page in enumerate(reader.pages):
+        if is_page_blank(page):
+            blank_pages.append(page_num)
+    
+    if not blank_pages:
+        # No blank pages, return as-is
+        return output_path
+    
+    # Use PyMuPDF if available (best option)
+    if PYMUPDF_AVAILABLE:
+        doc = fitz.open(str(pdf_path))
+        
+        for page_num in blank_pages:
+            page = doc[page_num]
+            page_rect = page.rect
+            
+            # Insert text centered
+            page.insert_text(
+                page_rect.center,  # Center point (x, y tuple)
+                marker_text,
+                fontsize=12,
+                color=(0.5, 0.5, 0.5),  # Gray color
+                align=1  # Center alignment
+            )
+        
+        # Save updated PDF
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        doc.save(str(output_path))
+        doc.close()
+        return output_path
+    
+    # Fallback: Use WeasyPrint to create overlay pages
+    if WEASYPRINT_AVAILABLE:
+        writer = PdfWriter()
+        
+        # Create overlay HTML for blank page marker
+        overlay_html = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                @page {{
+                    size: letter;
+                    margin: 0;
+                }}
+                body {{
+                    margin: 0;
+                    padding: 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    height: 100vh;
+                    font-family: Helvetica, Arial, sans-serif;
+                    font-size: 12pt;
+                    color: #808080;
+                }}
+            </style>
+        </head>
+        <body>
+            {marker_text}
+        </body>
+        </html>
+        """
+        
+        # Generate overlay PDF
+        import tempfile
+        with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as tmp:
+            overlay_path = Path(tmp.name)
+            HTML(string=overlay_html).write_pdf(overlay_path)
+            overlay_reader = PdfReader(str(overlay_path))
+            overlay_page = overlay_reader.pages[0]
+            overlay_path.unlink()  # Clean up temp file
+        
+        # Process all pages
+        for page_num, page in enumerate(reader.pages):
+            if page_num in blank_pages:
+                # Merge overlay onto blank page
+                page.merge_page(overlay_page)
+            writer.add_page(page)
+        
+        # Write output
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(output_path, 'wb') as output_file:
+            writer.write(output_file)
+        
+        return output_path
+    
+    # Final fallback: Graceful degradation
+    print("⚠️  Neither PyMuPDF nor WeasyPrint available - blank page markers skipped")
+    return output_path
+
+
+def process_pdf_for_blank_pages(pdf_path: Path) -> Path:
+    """
+    Process PDF to add blank page markers (convenience function).
+    
+    Args:
+        pdf_path: Path to PDF file
+        
+    Returns:
+        Path to processed PDF (same file, updated in place)
+    """
+    return add_blank_page_marker(pdf_path, output_path=pdf_path)
+

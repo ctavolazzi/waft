@@ -428,4 +428,12 @@ def generate_waft_town_document(
     )
 
     HTML(string=html_output).write_pdf(output_path)
+    
+    # Post-process to add blank page markers
+    try:
+        from ..utils import process_pdf_for_blank_pages
+        process_pdf_for_blank_pages(output_path)
+    except Exception as e:
+        print(f"⚠️  Blank page marker processing failed: {e}")
+    
     return output_path

@@ -104,6 +104,55 @@ ACADEMIC_PAPER_TEMPLATE = """
             line-height: 1.4;
         }
 
+        /* Artifact Metadata Section */
+        .artifact-metadata {
+            column-span: all;
+            margin: 0.2in 0;
+            padding: 0.15in;
+            background: #f0f0f0;
+            border: 1px solid #999;
+            font-size: 8pt;
+            line-height: 1.3;
+        }
+
+        .artifact-metadata-title {
+            font-weight: bold;
+            font-size: 9pt;
+            margin-bottom: 0.1in;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .artifact-metadata-section {
+            margin-bottom: 0.1in;
+        }
+
+        .artifact-metadata-section-title {
+            font-weight: bold;
+            font-size: 8pt;
+            margin-bottom: 0.05in;
+            text-transform: uppercase;
+            border-bottom: 1px solid #999;
+            padding-bottom: 0.02in;
+        }
+
+        .artifact-metadata-item {
+            margin-left: 0.1in;
+            margin-bottom: 0.03in;
+        }
+
+        .artifact-metadata-key {
+            font-weight: bold;
+            display: inline;
+        }
+
+        .artifact-metadata-value {
+            display: inline;
+            font-family: 'Courier New', monospace;
+            font-size: 7.5pt;
+        }
+
         /* Sections */
         h1 {
             column-span: all;
@@ -374,6 +423,100 @@ ACADEMIC_PAPER_TEMPLATE = """
     </div>
     {% endif %}
 
+    {% if spacetime_context %}
+    <div class="artifact-metadata">
+        <div class="artifact-metadata-title">Artifact Metadata: Spacetime Context</div>
+        
+        <div class="artifact-metadata-section">
+            <div class="artifact-metadata-section-title">Invocation Point</div>
+            <div class="artifact-metadata-item">
+                <span class="artifact-metadata-key">Generation ID:</span>
+                <span class="artifact-metadata-value">{{ spacetime_context.artifact_metadata.generation_id[:8] }}...</span>
+            </div>
+            <div class="artifact-metadata-item">
+                <span class="artifact-metadata-key">Timestamp:</span>
+                <span class="artifact-metadata-value">{{ spacetime_context.spacetime.timestamp }}</span>
+            </div>
+            <div class="artifact-metadata-item">
+                <span class="artifact-metadata-key">Date/Time:</span>
+                <span class="artifact-metadata-value">{{ spacetime_context.spacetime.date }} {{ spacetime_context.spacetime.time }} ({{ spacetime_context.spacetime.timezone }})</span>
+            </div>
+        </div>
+
+        <div class="artifact-metadata-section">
+            <div class="artifact-metadata-section-title">Project State</div>
+            <div class="artifact-metadata-item">
+                <span class="artifact-metadata-key">Project:</span>
+                <span class="artifact-metadata-value">{{ spacetime_context.project.name }}</span>
+            </div>
+            <div class="artifact-metadata-item">
+                <span class="artifact-metadata-key">Path:</span>
+                <span class="artifact-metadata-value">{{ spacetime_context.project.path }}</span>
+            </div>
+        </div>
+
+        {% if spacetime_context.git.initialized %}
+        <div class="artifact-metadata-section">
+            <div class="artifact-metadata-section-title">Git State</div>
+            <div class="artifact-metadata-item">
+                <span class="artifact-metadata-key">Branch:</span>
+                <span class="artifact-metadata-value">{{ spacetime_context.git.branch }}</span>
+            </div>
+            {% if spacetime_context.git.commit_hash %}
+            <div class="artifact-metadata-item">
+                <span class="artifact-metadata-key">Commit:</span>
+                <span class="artifact-metadata-value">{{ spacetime_context.git.commit_hash[:8] }} - {{ spacetime_context.git.commit_message[:60] }}...</span>
+            </div>
+            {% endif %}
+            <div class="artifact-metadata-item">
+                <span class="artifact-metadata-key">Uncommitted Files:</span>
+                <span class="artifact-metadata-value">{{ spacetime_context.git.uncommitted_count }}</span>
+            </div>
+            {% if spacetime_context.git.uncommitted_files %}
+            <div class="artifact-metadata-item" style="margin-left: 0.15in; font-size: 7pt;">
+                {% for file in spacetime_context.git.uncommitted_files[:5] %}
+                • {{ file }}<br>
+                {% endfor %}
+                {% if spacetime_context.git.uncommitted_files|length > 5 %}
+                ... and {{ spacetime_context.git.uncommitted_files|length - 5 }} more
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <div class="artifact-metadata-section">
+            <div class="artifact-metadata-section-title">System State</div>
+            <div class="artifact-metadata-item">
+                <span class="artifact-metadata-key">Platform:</span>
+                <span class="artifact-metadata-value">{{ spacetime_context.system.platform }} {{ spacetime_context.system.platform_release }}</span>
+            </div>
+            <div class="artifact-metadata-item">
+                <span class="artifact-metadata-key">Python:</span>
+                <span class="artifact-metadata-value">{{ spacetime_context.system.python_version }}</span>
+            </div>
+            {% if spacetime_context.system.disk_usage %}
+            <div class="artifact-metadata-item">
+                <span class="artifact-metadata-key">Disk:</span>
+                <span class="artifact-metadata-value">{{ spacetime_context.system.disk_usage.used }} / {{ spacetime_context.system.disk_usage.total }} ({{ spacetime_context.system.disk_usage.percent }})</span>
+            </div>
+            {% endif %}
+        </div>
+
+        {% if spacetime_context.project_state.active_work_efforts %}
+        <div class="artifact-metadata-section">
+            <div class="artifact-metadata-section-title">Active Work Efforts</div>
+            {% for we in spacetime_context.project_state.active_work_efforts[:3] %}
+            <div class="artifact-metadata-item">
+                <span class="artifact-metadata-key">•</span>
+                <span class="artifact-metadata-value">{{ we.name }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
     <div class="content">
         {{ content|safe }}
     </div>
@@ -404,7 +547,8 @@ def generate_academic_paper(
     references: list = None,
     page_numbers: bool = True,
     model_name: str = "Auto",
-    generation_date: str = None
+    generation_date: str = None,
+    spacetime_context: dict = None
 ) -> Path:
     """
     Generate an academic paper PDF.
@@ -440,6 +584,19 @@ def generate_academic_paper(
     # Build footer text with model information
     footer_text = f"Generated by {model_name} (Cursor AI Assistant) • {generation_date}"
 
+    # Convert spacetime_context dict to object-like structure for Jinja2
+    class ContextObject:
+        def __init__(self, d):
+            for k, v in d.items():
+                if isinstance(v, dict):
+                    setattr(self, k, ContextObject(v))
+                elif isinstance(v, list):
+                    setattr(self, k, [ContextObject(item) if isinstance(item, dict) else item for item in v])
+                else:
+                    setattr(self, k, v)
+    
+    context_obj = ContextObject(spacetime_context) if spacetime_context else None
+    
     template = Template(ACADEMIC_PAPER_TEMPLATE)
     html_output = template.render(
         title=title,
@@ -452,8 +609,17 @@ def generate_academic_paper(
         year=year,
         references=references or [],
         page_numbers=page_numbers,
-        footer_text=footer_text
+        footer_text=footer_text,
+        spacetime_context=context_obj
     )
 
     HTML(string=html_output).write_pdf(output_path)
+    
+    # Post-process to add blank page markers
+    try:
+        from ..utils import process_pdf_for_blank_pages
+        process_pdf_for_blank_pages(output_path)
+    except Exception as e:
+        print(f"⚠️  Blank page marker processing failed: {e}")
+    
     return output_path

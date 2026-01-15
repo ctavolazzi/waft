@@ -356,6 +356,14 @@ class PDFGenerator:
             
             self._generated_path = pdf_path
             
+            # Post-process to add blank page markers
+            try:
+                from ..utils import process_pdf_for_blank_pages
+                process_pdf_for_blank_pages(pdf_path)
+            except Exception as e:
+                # If blank page handling fails, continue anyway (non-critical)
+                print(f"⚠️  Blank page marker processing failed: {e}")
+            
             # Convert to PNG if requested
             if convert_to_png:
                 try:
@@ -373,6 +381,14 @@ class PDFGenerator:
                         print(f"📸 PNG screenshot saved: {img_path}")
                 except Exception as e:
                     print(f"⚠️  PNG conversion failed: {e}")
+            
+            # Post-process to add blank page markers
+            try:
+                from ..utils import process_pdf_for_blank_pages
+                process_pdf_for_blank_pages(pdf_path)
+            except Exception as e:
+                # If blank page handling fails, continue anyway (non-critical)
+                print(f"⚠️  Blank page marker processing failed: {e}")
             
             # Open if requested
             if open_pdf:
@@ -432,6 +448,14 @@ class PDFGenerator:
             output_path = Path(result['pdf_path'])
         
         self._generated_path = output_path
+        
+        # Post-process to add blank page markers
+        try:
+            from ..utils import process_pdf_for_blank_pages
+            process_pdf_for_blank_pages(output_path)
+        except Exception as e:
+            # If blank page handling fails, continue anyway (non-critical)
+            print(f"⚠️  Blank page marker processing failed: {e}")
         
         # Convert to PNG if requested (evolutionary iteration process)
         if convert_to_png:

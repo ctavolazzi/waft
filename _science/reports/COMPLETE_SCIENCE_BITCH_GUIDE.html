@@ -1,0 +1,512 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Science-Bitch: Complete Command Reference & Guide</title>
+
+    <style>
+        /* Strict 2-page setup */
+        @page {
+            size: letter;
+            margin: 25.4mm 25.4mm 25.4mm 25.4mm;
+        }
+
+        body {
+            font-family: 'Times New Roman', 'Times', serif;
+            font-size: 11pt;
+            line-height: 1.4;
+            color: #000000;
+            background: #FFFFFF;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Prevent orphans/widows */
+        p, li {
+            orphans: 2;
+            widows: 2;
+        }
+
+        /* Page break control */
+        .page-break {
+            page-break-after: always;
+            break-after: page;
+        }
+
+        .no-break {
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 16pt;
+            color: #000000;
+            margin-top: 0;
+            margin-bottom: 12pt;
+            page-break-after: avoid;
+            border-bottom: 2pt solid #000000;
+            padding-bottom: 4pt;
+        }
+
+        h2 {
+            font-size: 14pt;
+            color: #000000;
+            margin-top: 12pt;
+            margin-bottom: 8pt;
+            page-break-after: avoid;
+            border-bottom: 1pt solid #000000;
+            padding-bottom: 2pt;
+        }
+
+        h3 {
+            font-size: 12pt;
+            color: #000000;
+            margin-top: 8pt;
+            margin-bottom: 4.0pt;
+            page-break-after: avoid;
+        }
+
+        p {
+            margin: 0 0 8pt 0;
+        }
+
+        ul, ol {
+            margin: 8pt 0 8pt 0;
+            padding-left: 20pt;
+        }
+
+        li {
+            margin-bottom: 4.0pt;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        /* Nested lists */
+        ul ul, ol ol, ul ol, ol ul {
+            margin-top: 4.0pt;
+            margin-bottom: 4.0pt;
+            padding-left: 30pt;
+        }
+
+        /* Visual boxes - inspired by field guide */
+        .note-box {
+            border-left: 4pt solid #000000;
+            background: #f5f5f5;
+            padding: 8pt;
+            margin: 8pt 0;
+            page-break-inside: avoid;
+        }
+
+        .note-title {
+            font-weight: bold;
+            color: #000000;
+            font-size: 11pt;
+            margin-bottom: 4.0pt;
+        }
+
+        .highlight-box {
+            border: 2pt solid #000000;
+            background: #f5f5f5;
+            padding: 8pt;
+            margin: 8pt 0;
+            page-break-inside: avoid;
+        }
+
+        /* Tables for structured data */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 8pt 0;
+            font-size: 10pt;
+            page-break-inside: avoid;
+        }
+
+        th {
+            background: #000000;
+            color: #FFFFFF;
+            border: 1pt solid #000000;
+            padding: 4pt;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        td {
+            border: 1pt solid #00000033;
+            padding: 4pt;
+        }
+
+        tr:nth-child(even) {
+            background: #f5f5f5;
+        }
+
+        /* Pillar boxes - visual representation */
+        .pillar {
+            border: 2pt solid #000000;
+            background: #FFFFFF;
+            padding: 8pt;
+            margin: 8pt 0;
+            page-break-inside: avoid;
+        }
+
+        .pillar-title {
+            font-weight: bold;
+            color: #000000;
+            font-size: 12pt;
+            margin-bottom: 4.0pt;
+        }
+
+        /* Ideas - prose presentation with varied formatting */
+        .idea {
+            margin-bottom: 9.6pt;
+            padding: 6.4pt 0;
+            page-break-inside: avoid;
+        }
+
+        /* Alternate between different visual styles */
+        .idea:nth-child(odd) {
+            padding-left: 8pt;
+            border-left: 2pt solid #000000;
+            background: #f5f5f510;
+        }
+
+        .idea:nth-child(even) {
+            padding-left: 0;
+            border-left: none;
+            background: transparent;
+            border-top: 1pt solid #00000020;
+            padding-top: 4.8pt;
+            margin-top: 3.2pt;
+        }
+
+        .idea:nth-child(3n) {
+            padding-left: 0;
+            border-left: none;
+            background: #f5f5f508;
+            border-radius: 3pt;
+            padding: 4.8pt;
+        }
+
+        .idea-content {
+            font-size: 11pt;
+            line-height: 1.6;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+            text-align: justify;
+            margin: 0;
+        }
+
+        /* Metadata - compact */
+        .metadata {
+            font-size: 9pt;
+            color: #00000088;
+            line-height: 1.3;
+            border-top: 1pt solid #00000033;
+            padding-top: 4.0pt;
+            margin-top: 8pt;
+        }
+
+        .metadata p {
+            margin-bottom: 2.6666666666666665pt;
+        }
+
+        /* Summary box - prominent */
+        .summary-box {
+            background: #f5f5f5;
+            padding: 8pt;
+            margin-bottom: 12pt;
+            border-left: 4pt solid #000000;
+            border-top: 1pt solid #000000;
+            border-right: 1pt solid #000000;
+            border-bottom: 1pt solid #000000;
+        }
+
+        /* Scientific name styling */
+        .scientific-name {
+            font-style: italic;
+            color: #000000;
+        }
+
+        /* Code blocks */
+        code {
+            font-family: monospace;
+            font-size: 9pt;
+            background: #f5f5f5;
+            color: #000000;
+            padding: 2pt 4pt;
+            border-radius: 2pt;
+        }
+
+        pre {
+            background: #f5f5f5;
+            padding: 4.0pt;
+            border-left: 3pt solid #000000;
+            font-size: 9pt;
+            overflow-x: auto;
+            page-break-inside: avoid;
+        }
+
+        /* Visual separators */
+        .divider {
+            border-top: 1pt solid #00000033;
+            margin: 8pt 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- PAGE 1 -->
+    <div class="page-1">
+        <h1>Science-Bitch: Complete Command Reference & Guide</h1>
+
+        <div class="summary-box">
+            <strong>Summary:</strong> Science-Bitch is a comprehensive command-line tool that implements the complete scientific method workflow for systematic hypothesis testing, controlled experimentation, and...
+        </div>
+
+        <div class="metadata">
+            <p><strong>Generated:</strong> 2026-01-15 03:57 UTC | <strong>Ideas Extracted:</strong> 56</p>
+        </div>
+
+        <h2>What Happened</h2>
+
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Science-Bitch is a comprehensive command-line tool that implements the complete scientific method workflow for systematic hypothesis testing, controlled experimentation, and evidence-based conclusions.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Don't use <code>/science-bitch</code> when: ❌ Just need quick testing (use direct testing) ❌ Don't need systematic approach ❌ Hypothesis is already verified ❌ Just need data collection (use data tools directly) ❌ Time-constrained (full workflow takes time).</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Key Benefits: Systematic Approach: Structured workflow ensures completeness Evidence-Based: All conclusions traceable to data Reproducible: State capture enables reproduction Professional: High-quality documentation Integrated: Works with WAFT ecosystem.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>This command provides: Complete Scientific Method: Full workflow from hypothesis to conclusion State Capture: Initial state (A) and final state (B) tracking Data Collection: Systematic data collection during experiments (C) Hypothesis Testing: Form, test, and verify hypotheses Report Generation: Generate field guides and project status reports Evidence-Based Analysis: Systematic analysis with traceable evidence.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Complete Scientific Method Implementation: Full workflow from hypothesis formation to conclusion State Capture System: Automatic tracking of system states before (A) and after (B) experiments Systematic Data Collection: Comprehensive data collection during experiments (C) Hypothesis Testing Framework: Structured approach to forming, testing, and verifying hypotheses Automated Report Generation: Professional PDF reports with full documentation Evidence-Based Analysis: Systematic analysis with traceable evidence chains.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Process: Identify the question or phenomenon to investigate Formulate a clear, testable hypothesis Define variables (independent, dependent, control) Specify what would verify or refute the hypothesis.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Process: Define experiment structure Specify variables and their types Design data collection methods Plan state capture points (A and B) Define success criteria.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Use when: Hypothesis and design already exist Want to re-run experiment Need to skip interactive prompts.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>This command integrates with: Scientific Method Tool: <code>scientific_method_tool/</code> provides core functionality PDF Generation: Uses <code>waft.evolution.pdf_generator</code> for reports Work Efforts: Tracks progress in <code>WE-260112-az3z</code> State Capture: Captures system states before/after experiments Data Collection: Records all measurements during experiments.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Core functionality provided by <code>scientific_method_tool/</code>: Hypothesis formation and validation Experiment design State capture utilities Data collection framework Analysis tools.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Solution: Ensure scientific_method_tool is available Check: <code>python3 -c "from scientific_method_tool import Hypothesis"</code>.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Science-Bitch provides a complete, systematic approach to scientific research and experimentation. By implementing the full scientific method workflow with automatic state capture, systematic data collection, and professional report generation, it enables rigorous, evidence-based research with full traceability.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Key Components: Independent Variables: What you're changing Dependent Variables: What you're measuring Control Variables: What stays constant Data Collection Plan: When and how to collect data State Capture Points: When to capture system state.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Key Methods: <code>run_interactive()</code>: Run full interactive workflow <code>generate_field_guide()</code>: Generate field guide PDF <code>generate_project_status_report()</code>: Generate status report PDF <code>_create_field_guide_content()</code>: Create field guide markdown <code>_create_project_status_content()</code>: Create status report markdown.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p><a href="#overview">Overview</a> <a href="#quick-start">Quick Start</a> <a href="#complete-workflow-sequence">Complete Workflow Sequence</a> <a href="#command-options">Command Options</a> <a href="#usage-examples">Usage Examples</a> <a href="#scientific-method-cycle">Scientific Method Cycle</a> <a href="#file-structure">File Structure</a> <a href="#integration">Integration</a> <a href="#best-practices">Best Practices</a> <a href="#troubleshooting">Troubleshooting</a> <a href="#technical-implementation">Technical Implementation</a> <a href="#related-commands">Related Commands</a>.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Components Captured: System configuration Current metrics Environment state Resource usage Any relevant system state.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>{ "state_id": "state_a", "timestamp": "2026-01-14T19:44:33Z", "state_hash": "abc123...", "components": { "fitness_score": 0.65, "iteration_count": 0, "system_load": 0.3 } }.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Process: Execute experiment according to design Collect data points during execution (C) Record measurements and observations Track experiment progress Handle errors and edge cases.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Process: Capture final state snapshot Generate state hash for comparison Compare with initial state (A) Identify changes Save state to <code>_science/experiments/[exp_id]/state_b.json</code>.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>{ "state_id": "state_b", "timestamp": "2026-01-14T19:50:00Z", "state_hash": "def456...", "components": { "fitness_score": 0.85, "iteration_count": 15, "system_load": 0.5 }, "changes_from_a": { "fitness_score": {"old": 0.65, "new": 0.85, "delta": 0.20}, "iteration_count": {"old": 0, "new": 15, "delta": 15}, "system_load": {"old": 0.3, "new": 0.5, "delta": 0.2} } }.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Analysis Performed: Compare states A and B Analyze collected data (C) Verify or refute hypothesis Calculate confidence level Generate conclusions Identify patterns and insights.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>What it does: Prompts for hypothesis formation Guides through experiment design Captures initial state (A) Runs experiment with data collection (C) Captures final state (B) Analyzes results Generates report.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>What it does: Starts with pre-defined hypothesis Skips hypothesis formation phase Proceeds directly to experiment design Runs complete workflow.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>What it does: Prompts for hypothesis formation Guides through experiment design Captures initial state (A) Runs experiment with data collection (C) Captures final state (B) Analyzes results Generates report.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>What it does: Generates comprehensive field guide PDF Documents all workflow phases Provides examples and best practices Includes command reference.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>What it does: Generates project status report PDF Shows current state and goals Documents evidence collected Lists next steps.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>What it does: Starts with pre-defined hypothesis Skips hypothesis formation phase Proceeds directly to experiment design Runs complete workflow.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Observe: Identify phenomenon or question Hypothesize: Form testable hypothesis Design: Create experiment with variables Capture State A: Initial system state Run Experiment: Execute with data collection Collect Data C: Measurements during experiment Capture State B: Final system state Analyze: Verify/refute hypothesis Report: Generate conclusions and documentation Iterate: Modify variables and repeat.</p></div>
+        </div>
+        
+    </div>
+
+    <!-- Forced page break -->
+    <div class="page-break"></div>
+
+    <!-- PAGE 2 -->
+    <div class="page-2">
+        
+        <h2>Additional Details</h2>
+
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p><em>science/ ├── README.md # Overview and quick start ├── SUMMARY.md # Implementation summary ├── experiments/ # Experiment definitions and results │ ├── [exp_id]/ # Individual experiment │ │ ├── experiment.json # Experiment definition │ │ ├── state_a.json # Initial state (A) │ │ ├── state_b.json # Final state (B) │ │ └── results.json # Experiment results ├── data/ # Collected data (C) │ └── [exp_id]/ # Data for each experiment │ └── data_series.json # Collected measurements ├── reports/ # Generated reports │ ├── field_guide.pdf # Usage guide │ ├── field_guide.md # Source markdown │ ├── project_status.pdf # Status report │ ├── project_status.md # Source markdown │ └── experiment</em>*.md # Experiment reports └── tools/ # Helper utilities ├── generate_field_guide_pdf.py └── generate_status_pdf.py.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Tracks progress in work effort: <code>WE-260112-az3z_science_bitch_command_full_scientific_method_cli</code> Tickets and progress tracking Implementation documentation.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Clear Hypotheses: Formulate specific, testable hypotheses Be specific about what you're testing Define clear success criteria Specify variables explicitly.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Systematic Design: Plan experiments carefully Control for confounding variables Design reproducible experiments Plan data collection points.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Complete State Capture: Capture all relevant components Identify all system components Capture comprehensive state Generate state hashes for comparison.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Careful Analysis: Verify all claims with evidence Compare states systematically Analyze data trends Calculate confidence levels.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Document Everything: Generate reports for future reference Create comprehensive reports Include all evidence Document conclusions.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Iterate: Refine hypotheses and experiments based on results Learn from each experiment Refine hypotheses Improve experimental design.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Solution: Ensure you're in a project with <code>waft</code> installed Check: <code>waft --help</code> should show <code>science-bitch</code> command.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>When <code>/science-bitch</code> is executed: AI reads this command file Executes <code>waft science-bitch</code> with appropriate options Processes results and displays output Generates reports if requested.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p><code>/hypothesis</code>: Form and verify hypotheses (complementary workflow) <code>/prove-it</code>: Prove scientific method tool works <code>/verify</code>: Verify claims with evidence <code>/analyze</code>: Analyze data and generate insights <code>/checkpoint</code>: Document current state <code>/reflect</code>: Capture learnings and insights.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Use <code>/science-bitch</code> when: ✅ Need to test a hypothesis systematically ✅ Want to run controlled experiments ✅ Need evidence-based conclusions ✅ Want to track state changes (A → B) ✅ Need systematic data collection ✅ Want to generate scientific reports ✅ Need to verify or refute a hypothesis.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>After completion, provides: Hypothesis: Testable hypothesis statement Experiment Design: Complete experiment structure State Snapshots: Initial (A) and final (B) states Collected Data: All measurements (C) Analysis: Hypothesis verification/refutation with confidence Report: Comprehensive documentation (if requested).</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Resources: Work Effort: <code>WE-260112-az3z_science_bitch_command_full_scientific_method_cli</code> Source Code: <code>src/waft/core/science_bitch.py</code> Documentation: <code>_science/README.md</code> Examples: <code>scientific_method_tool/example_usage.py</code>.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>This guide provides complete documentation for the Science-Bitch command, covering all aspects from quick start through advanced usage, troubleshooting, and technical implementation.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Runs the complete interactive scientific method workflow.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Purpose: Create experiment design based on hypothesis.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Output: Experiment design with variables, data collection plan, and state capture strategy.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Purpose: Systematic data collection during experiment.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Output: Final state snapshot with comparison to initial state.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Current project state Goals and objectives Evidence collected Next steps Progress tracking.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Generates comprehensive field guide PDF showing how to use the command.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Content: Current project state Goals and objectives Evidence collected Next steps Progress tracking.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Starts workflow with a hypothesis already defined.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Runs experiment without interactive prompts (uses existing hypothesis/design).</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Output: Complete experiment with analysis and report.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>The command implements the complete scientific method:.</p></div>
+        </div>
+        
+        <div class="idea no-break">
+            <div class="idea-content"><p>Solution: Check file permissions on <code>_science/</code> directory Fix: <code>chmod -R u+w _science/</code>.</p></div>
+        </div>
+        
+        
+    </div>
+</body>
+</html>

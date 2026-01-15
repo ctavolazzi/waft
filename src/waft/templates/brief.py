@@ -257,6 +257,37 @@ BRIEF_TEMPLATE = """
             margin-top: 0.2in;
         }
 
+        /* Section Dividers */
+        .section-divider {
+            page-break-before: always;
+            text-align: center;
+            padding: 1.5in 0;
+            background: linear-gradient(to bottom, #f8f9fa 0%, #fff 100%);
+            border-top: 4px solid #000;
+            border-bottom: 4px solid #000;
+            margin: 0 -0.5in;
+            padding-left: 0.5in;
+            padding-right: 0.5in;
+        }
+
+        .section-title {
+            font-family: 'Arial Black', sans-serif;
+            font-size: 36pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #000;
+            margin-bottom: 0.2in;
+            letter-spacing: 0.05in;
+        }
+
+        .section-subtitle {
+            font-family: 'Georgia', serif;
+            font-size: 14pt;
+            font-style: italic;
+            color: #666;
+            margin-top: 0.1in;
+        }
+
         /* Section Headers */
         h2 {
             font-family: 'Arial Black', sans-serif;
@@ -531,4 +562,13 @@ def generate_brief_document(
     )
 
     HTML(string=html_output).write_pdf(output_path)
+    
+    # Post-process to add blank page markers
+    try:
+        from ..utils import process_pdf_for_blank_pages
+        process_pdf_for_blank_pages(output_path)
+    except Exception as e:
+        # If blank page handling fails, continue anyway (non-critical)
+        print(f"⚠️  Blank page marker processing failed: {e}")
+    
     return output_path

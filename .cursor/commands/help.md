@@ -97,6 +97,17 @@ Commands for tracking larger goals and identifying next steps.
 
 20. **`/next`** - Identify next step based on goals. Use when want to know what to do next, need direction.
 
+### Document Generation Commands
+Commands for creating professional documents and reports.
+
+**`/brief`** - Create full binder-ready brief documents with TM-ARCH-009 style cover page. Use when need session briefs, project briefs, status reports, or handoff documents.
+
+**`/dossier`** - Create comprehensive mission sitrep dossier with cover, section dividers, and complete status briefing. Use when need to get someone up to speed with full situation report - perfect for mission briefings, handoffs, and binder documentation.
+
+**`/pdf-me`** - Generate professional PDFs from markdown files. Use when need PDF from markdown file with professional formatting.
+
+**`/midday-dossier`** - Create comprehensive midday status dossier. Use for midday status reviews and afternoon planning.
+
 ### Master Orchestration Commands
 Commands that orchestrate multiple workflows into comprehensive cycles.
 
