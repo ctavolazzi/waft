@@ -60,11 +60,23 @@ import json
 from jinja2 import Template
 from weasyprint import HTML
 from pypdf import PdfReader
+import sys
 
 from .templates.registry import get_registry, TemplateRegistry, TemplateMetadata
 from .binder import Binder, DocumentEntry, BinderSection
-from scripts.printer_friendly_helper import convert_html_template_to_printer_friendly
 from .pdf_improvements import PDFContentProcessor, PDFStylingEnhancer
+
+# Import printer_friendly_helper with path manipulation
+# This is needed because scripts/ is not in the package path
+try:
+    # Try relative import first (if scripts is in path)
+    from scripts.printer_friendly_helper import convert_html_template_to_printer_friendly
+except ImportError:
+    # Fallback: add project root to path
+    project_root = Path(__file__).parent.parent.parent
+    if str(project_root) not in sys.path:
+        sys.path.insert(0, str(project_root))
+    from scripts.printer_friendly_helper import convert_html_template_to_printer_friendly
 
 
 class TemplateType(Enum):
@@ -551,6 +563,13 @@ class DocumentBuilder:
         
         # Generate PDF
         HTML(string=html_output).write_pdf(output_path)
+        
+        # Post-process to add blank page markers
+        try:
+            from ..utils import process_pdf_for_blank_pages
+            process_pdf_for_blank_pages(output_path)
+        except Exception as e:
+            print(f"⚠️  Blank page marker processing failed: {e}")
         
         self._generated_path = output_path
         return output_path
