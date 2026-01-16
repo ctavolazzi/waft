@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Hypothesis Testing Framework</title>
+    <style>
+        @page {
+            size: 6.375in 9.25in;
+            margin: 0.8125in 0.5in 0.9375in 0.5in;
+        }
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 11pt;
+            line-height: 1.4;
+            color: #000;
+        }
+        .title-page {
+            text-align: center;
+            page-break-after: always;
+            padding-top: 2in;
+        }
+        .title-page h1 {
+            font-size: 48pt;
+            font-weight: bold;
+            margin-bottom: 0.5in;
+        }
+        .title-page .subtitle {
+            font-size: 14pt;
+            font-style: italic;
+            margin-bottom: 1in;
+        }
+        .title-page .author {
+            font-size: 14pt;
+            margin-top: 2in;
+        }
+        h1 {
+            font-size: 24pt;
+            font-weight: bold;
+            margin-top: 1in;
+            margin-bottom: 0.5in;
+            page-break-before: always;
+        }
+        h2 {
+            font-size: 18pt;
+            font-weight: bold;
+            margin-top: 0.75in;
+            margin-bottom: 0.25in;
+        }
+        h3 {
+            font-size: 14pt;
+            font-weight: bold;
+            margin-top: 0.5in;
+            margin-bottom: 0.25in;
+        }
+        p {
+            margin-bottom: 0.5em;
+            text-align: justify;
+        }
+        ul, ol {
+            margin-left: 1.5em;
+            margin-bottom: 0.5em;
+        }
+        li {
+            margin-bottom: 0.25em;
+        }
+        code {
+            font-family: 'Courier New', monospace;
+            font-size: 9pt;
+            background-color: #f5f5f5;
+            padding: 2px 4px;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 1em;
+            border: 1px solid #ccc;
+            font-family: 'Courier New', monospace;
+            font-size: 9pt;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="title-page">
+        <h1>Hypothesis Testing Framework</h1>
+        <div class="subtitle">Design and Implementation of Iterative Scientific Method Systems</div>
+        <div class="author">WAFT Research Team</div>
+        <div class="author">2026</div>
+    </div>
+    <h1>Introduction to Hypothesis Testing Systems</h1>
+    <h2>The Problem Statement</h2>
+    <p>The goal is to create a testing framework and user interface where artificial intelligence can solve hypotheses iteratively over time using the scientific method. The system should:</p>
+    <h2>System Requirements</h2>
+    <p>The framework must support:</p>
+    <h1>Existing Scientific Method Infrastructure</h1>
+    <h2>Architecture Overview</h2>
+    <p>The system architecture consists of three main components:</p>
+    <h2>Investigation Methodology</h2>
+    <p>Before designing new components, a systematic investigation was conducted to understand what infrastructure already existed. This investigation followed a structured approach:</p>
+    <h2>Scientific Method Tool Structure</h2>
+    <p>The existing scientific method tool (scientific\_method\_tool/) provides a complete foundation:</p>
+    <h3>Core Components</h3>
+    <h3>Experiment Result Structure</h3>
+    <p> The ExperimentResult dataclass contains: class ExperimentResult: experiment_id: str hypothesis_verified: Optional[bool] confidence: float data_summary: Dict[str, Any] state_changes: Dict[str, Any] metadata: Dict[str, Any]</p>
+    <h2>Analysis System Limitations</h2>
+    <p>The existing ExperimentAnalyzer.analyze\_iteration\_results() method provides basic aggregation:</p>
+    <p>This basic analysis is insufficient for determining true consensus, necessitating the design of a more sophisticated consensus engine.</p>
+    <h1>Consensus Algorithm Design</h1>
+    <h2>FastAPI Server Infrastructure</h2>
+    <p>The existing FastAPI server (src/waft/api/main.py) provides:</p>
+    <h2>The Need for Consensus</h2>
+    <p>Simple majority voting is insufficient for scientific hypothesis testing. A more sophisticated approach is needed that:</p>
+    <h2>Weighted Confidence Consensus Algorithm</h2>
+    <h3>Core Principles</h3>
+    <p> The weighted confidence consensus algorithm is based on three principles:</p>
+    <h3>Algorithm Specification</h3>
+    <p> The consensus calculation proceeds as follows: Where the weight for each experiment is its own confidence value. This gives more weight to high-confidence experiments.</p>
+    <h3>Algorithm Implementation</h3>
+    <p> def calculate_consensus( experiments: List[ExperimentResult] ) -> ConsensusResult: """Calculate consensus from experiment results.""" # Minimum requirement if len(experiments) < 3: return ConsensusResult( verdict="INCONCLUSIVE", confidence=0.0, experiment_count=len(experiments) # Weighted confidence calculation total_weight = sum(e.confidence for e in experiments) weighted_sum = sum( e.confidence * e.confidence for e in experiments weighted_confidence = ( weighted_sum / total_weight if total_weight > 0 else 0.0 # Count verdicts verified = sum( 1 for e in experiments if e.hypothesis_verified is True refuted = sum( 1 for e in experiments if e.hypothesis_verified is False total = len(experiments) # Consensus criteria if verified / total >= 0.7 and weighted_confidence > 0.75: return ConsensusResult( verdict="VERIFIED", confidence=weighted_confidence, experiment_count=total elif refuted / total >= 0.7 and weighted_confidence > 0.75: return ConsensusResult( verdict="REFUTED", confidence=weighted_confidence, experiment_count=total return ConsensusResult( verdict="INCONCLUSIVE", confidence=weighted_confidence, experiment_count=total</p>
+    <h1>System Architecture</h1>
+    <h2>Why Weighted Confidence?</h2>
+    <p>The weighted confidence approach is superior to simple averaging because:</p>
+    <h2>Component Overview</h2>
+    <p>The system consists of three main layers:</p>
+    <h2>Backend Components</h2>
+    <h3>Consensus Engine</h3>
+    <h3>Experiment Runner</h3>
+    <h3>API Server</h3>
+    <h2>Frontend Architecture</h2>
+    <h3>Electron App Structure</h3>
+    <h3>React Components</h3>
+    <h1>Implementation Details</h1>
+    <h2>Data Flow</h2>
+    <p>The data flows through the system as follows:</p>
+    <h2>Halt Mechanism</h2>
+    <p>The halt mechanism allows users to stop experiments gracefully:</p>
+    <h2>WebSocket Protocol</h2>
+    <p>The WebSocket connection provides real-time updates:</p>
+    <p>"type": "experiment_started",</p>
+    <p>"experiment_id": "exp_abc123",</p>
+    <p>"hypothesis": "...",</p>
+    <p>"timestamp": "2026-01-14T22:30:00Z"</p>
+    <p>"type": "experiment_completed",</p>
+    <p>"experiment_id": "exp_abc123",</p>
+    <p>"result": {</p>
+    <p>"hypothesis_verified": true,</p>
+    <p>"confidence": 0.82</p>
+    <p>"timestamp": "2026-01-14T22:35:00Z"</p>
+    <p>"type": "consensus_updated",</p>
+    <p>"consensus": {</p>
+    <p>"verdict": "VERIFIED",</p>
+    <p>"confidence": 0.85,</p>
+    <p>"experiment_count": 5</p>
+    <p>"timestamp": "2026-01-14T22:40:00Z"</p>
+    <h1>Real-Time Visualization</h1>
+    <h2>State Management</h2>
+    <p>The system maintains state at multiple levels:</p>
+    <h2>UI Layout</h2>
+    <p>The Electron UI is organized hierarchically:</p>
+    <h2>Consensus Visualization</h2>
+    <p>When consensus is achieved:</p>
+    <h1>Testing and Validation</h1>
+    <h2>Progress Indicators</h2>
+    <p>Each experiment loop displays:</p>
+    <h2>Testing Scenarios</h2>
+    <p>The system should be tested with various scenarios:</p>
+    <h1>Conclusion and Future Work</h1>
+    <h2>Validation Criteria</h2>
+    <p>The system is considered successful when:</p>
+    <h2>Summary</h2>
+    <p>This textbook has documented the design and implementation of a hypothesis testing framework that enables iterative scientific method execution with real-time visualization. Key contributions include:</p>
+    <h2>Future Enhancements</h2>
+    <p>Potential future improvements include:</p>
+    <h2>Lessons Learned</h2>
+    <p>The investigation and design process revealed several important insights:</p>
+</body>
+</html>

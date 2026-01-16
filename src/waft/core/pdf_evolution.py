@@ -93,6 +93,26 @@ class PDFEvolution:
         # Save PDF
         pdf_path = pdf.save()
         
+        # Register in storage registry
+        try:
+            from ...utils import StorageRegistry, classify_content_type
+            registry = StorageRegistry(self.project_path)
+            # Get relative path for registry
+            try:
+                rel_path = pdf_path.relative_to(self.project_path)
+            except ValueError:
+                rel_path = Path(pdf_path.name)
+            
+            content_type = classify_content_type(rel_path)
+            registry.register(
+                str(rel_path),
+                str(pdf_path),
+                content_type
+            )
+        except Exception as e:
+            # Non-critical, just log
+            pass
+        
         # Log to Oracle if available
         if self.oracle:
             try:
@@ -344,13 +364,12 @@ class PDFEvolution:
         
         # Use appropriate directory based on type
         if pdf_type == "work_effort":
-            output_dir = self.project_path / "_work_efforts"
+            relative_path = Path("_work_efforts") / f"{pdf_type}_{timestamp}.pdf"
         elif pdf_type == "oracle_insights":
-            output_dir = self.project_path / "_pyrite" / "oracle"
+            relative_path = Path("_pyrite") / "oracle" / f"{pdf_type}_{timestamp}.pdf"
         else:
-            output_dir = self.project_path / "_pyrite" / "evolved"
+            relative_path = Path("_pyrite") / "evolved" / f"{pdf_type}_{timestamp}.pdf"
         
-        output_dir.mkdir(parents=True, exist_ok=True)
-        
-        filename = f"{pdf_type}_{timestamp}.pdf"
-        return output_dir / filename
+        # Use storage path resolver to route to external drive if available
+        from ...utils import resolve_output_path
+        return resolve_output_path(relative_path, self.project_path)

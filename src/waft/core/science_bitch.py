@@ -353,3 +353,199 @@ class ScienceBitchManager:
                                           for k, v in waft_vars.items()}
         
         return env_state
+    
+    def generate_field_guide(self) -> Optional[Path]:
+        """
+        Generate field guide PDF from markdown.
+        
+        Returns:
+            Path to generated PDF, or None if failed
+        """
+        field_guide_md = self.science_path / "reports" / "field_guide.md"
+        
+        if not field_guide_md.exists():
+            self.console.print(f"[red]❌ Field guide markdown not found: {field_guide_md}[/red]")
+            return None
+        
+        try:
+            # Read markdown content
+            content = field_guide_md.read_text()
+            
+            # Generate PDF
+            from ..evolution.pdf_generator import PDFGenerator
+            
+            generator = PDFGenerator.from_content(
+                content=content,
+                title="Science-Bitch Field Guide",
+                style="clinical_standard"
+            )
+            
+            output_path = self.science_path / "reports" / "field_guide.pdf"
+            pdf_path = generator.save(output_path=output_path, open_pdf=False)
+            
+            self.console.print(f"[green]✅ Field guide PDF generated:[/green] {pdf_path}")
+            return pdf_path
+            
+        except Exception as e:
+            self.console.print(f"[red]❌ Failed to generate field guide: {e}[/red]")
+            return None
+    
+    def generate_project_status_report(self) -> Optional[Path]:
+        """
+        Generate project status report PDF.
+        
+        Returns:
+            Path to generated PDF, or None if failed
+        """
+        # Try to read existing project status markdown, or generate it
+        status_md = self.science_path / "reports" / "project_status.md"
+        
+        if not status_md.exists():
+            # Generate project status markdown dynamically
+            content = self._generate_project_status_markdown()
+        else:
+            content = status_md.read_text()
+        
+        try:
+            # Generate PDF
+            from ..evolution.pdf_generator import PDFGenerator
+            
+            generator = PDFGenerator.from_content(
+                content=content,
+                title="Science-Bitch Project Status",
+                style="clinical_standard"
+            )
+            
+            output_path = self.science_path / "reports" / "project_status.pdf"
+            pdf_path = generator.save(output_path=output_path, open_pdf=False)
+            
+            self.console.print(f"[green]✅ Project status PDF generated:[/green] {pdf_path}")
+            return pdf_path
+            
+        except Exception as e:
+            self.console.print(f"[red]❌ Failed to generate project status report: {e}[/red]")
+            return None
+    
+    def _generate_project_status_markdown(self) -> str:
+        """Generate project status markdown content."""
+        context = self._capture_spacetime_context()
+        
+        markdown = f"""# Science-Bitch Project Status
+
+**Generated**: {datetime.now().isoformat()}  
+**Work Effort**: WE-260112-az3z
+
+---
+
+## Project Goals
+
+Create a comprehensive `/science-bitch` command that runs the full scientific method workflow:
+- Hypothesis formation
+- Experiment design
+- State capture (A and B)
+- Data collection (C)
+- Analysis and reporting
+- PDF generation for documentation
+
+---
+
+## Current Status
+
+### System Information
+
+- **Platform**: {context['system']['platform']} {context['system']['platform_release']}
+- **Python**: {context['system']['python_version']}
+- **Project Path**: {context['project']['path']}
+
+### Git Status
+
+"""
+        
+        if context['git']['initialized']:
+            markdown += f"""- **Branch**: {context['git']['branch'] or 'N/A'}
+- **Commit**: {context['git']['commit_hash'][:8] if context['git']['commit_hash'] else 'N/A'}
+- **Uncommitted Files**: {context['git']['uncommitted_count']}
+"""
+        else:
+            markdown += "- Git not initialized\n"
+        
+        markdown += f"""
+---
+
+## Spacetime Context
+
+This report was generated at:
+- **Timestamp**: {context['spacetime']['timestamp']}
+- **Timezone**: {context['spacetime']['timezone']}
+
+---
+
+## Next Steps
+
+1. Complete interactive workflow implementation
+2. Add experiment execution capabilities
+3. Enhance data collection
+4. Improve analysis tools
+
+---
+
+**Status**: 🚧 In Development
+"""
+        
+        return markdown
+    
+    def run_interactive(self) -> Dict[str, Any]:
+        """
+        Run interactive scientific method workflow.
+        
+        Returns:
+            Dictionary with success status and results
+        """
+        try:
+            self.console.print("\n[bold cyan]🔬 Science-Bitch: Full Scientific Method Workflow[/bold cyan]\n")
+            
+            # Capture initial spacetime context
+            context = self._capture_spacetime_context()
+            
+            # Save context artifact
+            context_path = self.science_path / "experiments" / f"context_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+            context_path.parent.mkdir(parents=True, exist_ok=True)
+            context_path.write_text(json.dumps(context, indent=2))
+            
+            self.console.print(f"[dim]📦 Spacetime context captured: {context_path.name}[/dim]\n")
+            
+            # Display workflow phases
+            phases = [
+                "1. Form Hypothesis",
+                "2. Design Experiment",
+                "3. Capture Initial State (A)",
+                "4. Run Experiment",
+                "5. Collect Data (C)",
+                "6. Capture Final State (B)",
+                "7. Analyze Results",
+                "8. Generate Reports"
+            ]
+            
+            table = Table(title="Scientific Method Workflow")
+            table.add_column("Phase", style="cyan")
+            table.add_column("Status", style="green")
+            
+            for phase in phases:
+                table.add_row(phase, "⏳ Pending")
+            
+            self.console.print(table)
+            self.console.print("\n[dim]💡 Interactive workflow implementation in progress...[/dim]")
+            self.console.print("[dim]   For now, use --field-guide or --report to generate PDFs[/dim]\n")
+            
+            return {
+                "success": True,
+                "context_path": str(context_path),
+                "message": "Spacetime context captured. Interactive workflow coming soon."
+            }
+            
+        except Exception as e:
+            self.console.print(f"[red]❌ Workflow failed: {e}[/red]")
+            return {
+                "success": False,
+                "error": str(e)
+            }

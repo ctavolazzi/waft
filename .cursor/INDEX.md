@@ -58,6 +58,7 @@
 #### Decision Support
 - `/consider` - Qualitative analysis and recommendations
 - `/decide` - Quantitative decision matrix calculations
+- `/deep-think` - Comprehensive cognitive workflow: critique → reflect → think → check-assumptions → verify → consider → decide → synthesize
 
 #### Orientation & Exploration
 - `/orient` - Complete project startup process

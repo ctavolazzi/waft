@@ -1,0 +1,69 @@
+# Electron Docker Container with VNC Support
+# Allows remote viewing of Electron app via VNC
+
+FROM node:20-slim AS builder
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y \
+    python3 \
+    make \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY package.json package-lock.json* ./
+RUN npm ci --only=production && npm cache clean --force
+COPY . .
+
+# Runtime with VNC
+FROM node:20-slim
+
+# Install Electron dependencies, Xvfb, and VNC server
+RUN apt-get update && apt-get install -y \
+    # Electron dependencies
+    libgtk-3-0 \
+    libnotify4 \
+    libnss3 \
+    libxss1 \
+    libasound2 \
+    libxtst6 \
+    libxrandr2 \
+    libpangocairo-1.0-0 \
+    libatk1.0-0 \
+    libcairo-gobject2 \
+    libgdk-pixbuf2.0-0 \
+    # Display server
+    xvfb \
+    # VNC server
+    tigervnc-standalone-server \
+    tigervnc-common \
+    # Window manager
+    fluxbox \
+    # Fonts
+    fonts-liberation \
+    fonts-dejavu-core \
+    # Utilities
+    wget \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create non-root user
+RUN groupadd -r electron && useradd -r -g electron -u 1000 electron \
+    && mkdir -p /home/electron/.vnc && chown -R electron:electron /home/electron
+
+WORKDIR /app
+
+COPY --from=builder --chown=electron:electron /app /app
+
+ENV DISPLAY=:1
+ENV VNC_PASSWORD=electron
+
+USER electron
+
+EXPOSE 5900
+
+# VNC startup script
+COPY --chown=electron:electron docker-vnc-start.sh /app/
+RUN chmod +x /app/docker-vnc-start.sh
+
+CMD ["/app/docker-vnc-start.sh"]

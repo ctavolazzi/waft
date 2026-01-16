@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: recap-review-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount project root for access to WAFT system
+      - ../:/workspace:ro
+      # Mount output directory for generated files
+      - ./backend/output:/app/output
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/api/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - recap-review-network
+
+  # Optional: Development backend with hot reload
+  backend-dev:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: recap-review-backend-dev
+    ports:
+      - "8001:8000"
+    volumes:
+      - ../:/workspace:ro
+      - ./backend:/app
+      - ./backend/output:/app/output
+    environment:
+      - PYTHONUNBUFFERED=1
+      - ENVIRONMENT=development
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    profiles:
+      - dev
+    networks:
+      - recap-review-network
+
+networks:
+  recap-review-network:
+    driver: bridge
+
+volumes:
+  output:
+    driver: local

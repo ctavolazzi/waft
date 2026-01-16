@@ -6,7 +6,13 @@ file operations, formatting, and validation.
 """
 
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Dict, Any, List
+import os
+import json
+import shutil
+import logging
+from datetime import datetime
+from threading import Lock
 
 
 def resolve_project_path(path: Optional[str] = None) -> Path:
@@ -996,6 +1002,1053 @@ def add_code_examples_to_case_file(
     
     case_file_path.write_text(new_content, encoding='utf-8')
     return True
+
+
+# ============================================================================
+# External Drive Storage System
+# ============================================================================
+
+# Logger for storage operations
+_storage_logger = logging.getLogger(__name__)
+
+
+def _validate_project_name(project_name: str) -> bool:
+    """
+    CRITICAL: Security validation for project_name.
+    
+    Validates project_name is safe for filesystem use.
+    
+    Args:
+        project_name: Project name to validate
+        
+    Returns:
+        True if valid, False otherwise
+    """
+    if not project_name:
+        return False
+    
+    # Length limit (255 characters for filesystem compatibility)
+    if len(project_name) > 255:
+        return False
+    
+    # Reject path traversal and dangerous characters
+    if any(c in project_name for c in ['..', '/', '\\', '\x00']):
+        return False
+    
+    # Reject control characters (except tab, newline, carriage return)
+    if any(ord(c) < 32 and c not in ['\t', '\n', '\r'] for c in project_name):
+        return False
+    
+    # Allow only: alphanumeric + underscore + hyphen
+    if not project_name.replace('_', '').replace('-', '').isalnum():
+        return False
+    
+    return True
+
+
+def classify_content_type(path: Path) -> str:
+    """
+    Classify content type as 'core' or 'augmented'.
+    
+    Args:
+        path: Path to classify
+        
+    Returns:
+        'core' or 'augmented'
+    """
+    path_str = str(path).replace('\\', '/')  # Normalize path separators
+    
+    # Core content patterns (stays local)
+    core_patterns = [
+        'src/',
+        'pyproject.toml',
+        'uv.lock',
+        '.cursor/',
+        '.empirica/',
+        '_pyrite/active/',
+        '_pyrite/standards/',
+        # Note: _work_efforts/ is augmented (PDFs go to external drive)
+    ]
+    
+    # Check if path matches core patterns
+    for pattern in core_patterns:
+        if pattern in path_str:
+            return "core"
+    
+    # Augmented content patterns (routes to external drive)
+    augmented_patterns = [
+        '_experiments/',
+        '_genetics/',
+        '_science/',
+        '_science_textbook/',
+        '_archive/',
+        '_epic_run/',
+        '_notebook/',
+        '_pantheon/',
+        '_probe_data/',
+        '_temp_',
+        'NARRATIVE-WAFT/',
+        'experiments/',
+        'scientific_method_tool/',
+        'WAFT-',
+        '-Research/',
+        'demo_output/',
+        'advanced_demo_output/',
+        'session_recaps/',  # PDF outputs in _work_efforts
+        'evolved/',  # Evolved PDFs in _pyrite
+        'oracle/',  # Oracle insights PDFs
+        '_work_efforts/',  # Work efforts (augmented - contains PDFs, experiments, etc.)
+    ]
+    
+    # Check for PDF files specifically (always augmented)
+    if path_str.endswith('.pdf'):
+        # Check if it's in a core directory that should stay local
+        if any(core in path_str for core in ['src/', 'pyproject.toml', '.cursor/', '.empirica/']):
+            return "core"
+        # All other PDFs are augmented
+        return "augmented"
+    
+    # Check if path matches augmented patterns
+    for pattern in augmented_patterns:
+        if pattern in path_str:
+            return "augmented"
+    
+    # Default to local (safe fallback)
+    return "core"
+
+
+def is_augmented_content(path: Path) -> bool:
+    """
+    Convenience function to check if content should go to external drive.
+    
+    Args:
+        path: Path to check
+        
+    Returns:
+        True if content should go to external drive
+    """
+    return classify_content_type(path) == "augmented"
+
+
+def detect_external_drive(drive_name: str = "Easystore") -> Optional[Path]:
+    """
+    Detect external drive and validate it's available and writable.
+    
+    Args:
+        drive_name: Name of the external drive (default: "Easystore")
+        
+    Returns:
+        Path to external drive if available and writable, None otherwise
+    """
+    drive_path = Path(f"/Volumes/{drive_name}")
+    
+    # Check if drive exists
+    if not drive_path.exists():
+        _storage_logger.debug(f"External drive not found: {drive_path}")
+        return None
+    
+    # Check if it's a directory
+    if not drive_path.is_dir():
+        _storage_logger.warning(f"External drive path is not a directory: {drive_path}")
+        return None
+    
+    # Check if it's writable
+    if not os.access(drive_path, os.W_OK):
+        _storage_logger.warning(f"External drive is not writable: {drive_path}")
+        return None
+    
+    # Check if it's readable
+    if not os.access(drive_path, os.R_OK):
+        _storage_logger.warning(f"External drive is not readable: {drive_path}")
+        return None
+    
+    # Check for symlinks (security)
+    try:
+        if drive_path.is_symlink():
+            _storage_logger.warning(f"External drive path is a symlink (security risk): {drive_path}")
+            return None
+    except (OSError, ValueError):
+        pass  # Some systems don't support is_symlink()
+    
+    return drive_path
+
+
+def get_external_drive_base(project_name: Optional[str] = None) -> Optional[Path]:
+    """
+    Get base path on external drive for project storage.
+    
+    CRITICAL: Validates project_name and resolved path for security.
+    
+    Args:
+        project_name: Project name (auto-detected from current directory if None)
+        
+    Returns:
+        Base path on external drive, or None if drive not available
+        
+    Raises:
+        ValueError: If project_name is invalid
+    """
+    # Detect external drive
+    drive_path = detect_external_drive()
+    if not drive_path:
+        return None
+    
+    # Auto-detect project name if not provided
+    if project_name is None:
+        project_name = Path.cwd().name
+        if not project_name or project_name == '.':
+            project_name = "waft"
+    
+    # CRITICAL: Validate project_name
+    if not _validate_project_name(project_name):
+        raise ValueError(f"Invalid project_name: {project_name} (contains unsafe characters)")
+    
+    # Build base path
+    base_path = drive_path / "waft" / project_name
+    
+    # CRITICAL: Validate resolved path is within /Volumes/Easystore/waft/
+    try:
+        resolved = base_path.resolve()
+        expected_base = (drive_path / "waft").resolve()
+        
+        # Check path is within expected base
+        if not str(resolved).startswith(str(expected_base)):
+            raise ValueError(f"Path traversal detected: {resolved} not within {expected_base}")
+        
+        # CRITICAL: Check for symlinks before creating
+        if resolved.is_symlink():
+            raise ValueError(f"Symlink detected in path: {resolved}")
+        
+        # Create directory structure if it doesn't exist
+        resolved.mkdir(parents=True, exist_ok=True)
+        
+        # CRITICAL: Set directory permissions (0o700)
+        try:
+            resolved.chmod(0o700)
+            # Also set parent directories
+            for parent in resolved.parents:
+                if parent.exists() and str(parent).startswith(str(drive_path)):
+                    try:
+                        parent.chmod(0o700)
+                    except (OSError, PermissionError):
+                        pass  # Ignore if permissions can't be set
+        except (OSError, PermissionError):
+            _storage_logger.warning(f"Could not set permissions on {resolved}")
+        
+        return resolved
+    except (OSError, ValueError) as e:
+        _storage_logger.error(f"Error creating external drive base path: {e}")
+        return None
+
+
+def _validate_path_in_storage(relative_path: Path, base_path: Path) -> bool:
+    """
+    CRITICAL: Security validation for paths in storage.
+    
+    Validates path is within storage base directory.
+    
+    Args:
+        relative_path: Relative path to validate
+        base_path: Base storage path
+        
+    Returns:
+        True if valid, False otherwise
+    """
+    try:
+        # Reject absolute paths
+        if relative_path.is_absolute():
+            return False
+        
+        # Reject path traversal
+        if '..' in relative_path.parts:
+            return False
+        
+        # Reject null bytes
+        if '\x00' in str(relative_path):
+            return False
+        
+        # Resolve and check
+        resolved = (base_path / relative_path).resolve()
+        base_resolved = base_path.resolve()
+        
+        # Check path is within base
+        if not str(resolved).startswith(str(base_resolved)):
+            return False
+        
+        # Check for symlinks in path components
+        current = base_path
+        for part in relative_path.parts:
+            current = current / part
+            if current.exists() and current.is_symlink():
+                return False
+        
+        return True
+    except (OSError, ValueError):
+        return False
+
+
+def get_storage_path(
+    relative_path: Path,
+    project_path: Optional[Path] = None,
+    content_type: Optional[str] = None,
+    realm_name: Optional[str] = None
+) -> Path:
+    """
+    Primary storage path resolver.
+    
+    Routes content based on type:
+    - Core content → local project
+    - Augmented content → external drive (if available)
+    - If realm_name provided, routes to External Drive Realm structure
+    
+    CRITICAL: Validates paths and sets permissions for security.
+    
+    Args:
+        relative_path: Relative path from project root
+        project_path: Project root path (default: current directory)
+        content_type: Content type ('core' or 'augmented'), auto-detected if None
+        realm_name: Optional realm name for realm-based routing (e.g., "Universe", "Earth")
+        
+    Returns:
+        Resolved absolute path where content should be stored
+        
+    Raises:
+        ValueError: If path validation fails
+    """
+    if project_path is None:
+        project_path = Path.cwd()
+    else:
+        project_path = Path(project_path)
+    
+    # Classify content if not provided
+    if content_type is None:
+        content_type = classify_content_type(relative_path)
+    
+    # Route based on content type
+    if content_type == "core":
+        # Core content stays local
+        output_path = project_path / relative_path
+    else:
+        # Augmented content routes to external drive
+        # If realm_name provided, use External Drive Realm Entity
+        if realm_name:
+            try:
+                from .pantheon.external_drive_realm import ExternalDriveRealm
+                realm = ExternalDriveRealm(project_path)
+                realm_storage = realm.route_content_to_realm(
+                    content_path=relative_path,
+                    realm_name=realm_name,
+                    project_name=project_path.name
+                )
+                if realm_storage:
+                    output_path = realm_storage
+                    _storage_logger.info(f"Routing augmented content to realm '{realm_name}': {output_path}")
+                else:
+                    # Fallback to standard routing
+                    external_base = get_external_drive_base()
+                    if external_base:
+                        if not _validate_path_in_storage(relative_path, external_base):
+                            _storage_logger.warning(
+                                f"Path validation failed for {relative_path}, falling back to local"
+                            )
+                            output_path = project_path / relative_path
+                        else:
+                            output_path = external_base / relative_path
+                            _storage_logger.info(f"Routing augmented content to external drive: {output_path}")
+                    else:
+                        _storage_logger.warning(
+                            f"External drive not available, storing augmented content locally: {relative_path}"
+                        )
+                        output_path = project_path / relative_path
+            except Exception as e:
+                _storage_logger.warning(f"Realm routing failed: {e}, falling back to standard routing")
+                # Fallback to standard routing
+                external_base = get_external_drive_base()
+                if external_base:
+                    if not _validate_path_in_storage(relative_path, external_base):
+                        _storage_logger.warning(
+                            f"Path validation failed for {relative_path}, falling back to local"
+                        )
+                        output_path = project_path / relative_path
+                    else:
+                        output_path = external_base / relative_path
+                        _storage_logger.info(f"Routing augmented content to external drive: {output_path}")
+                else:
+                    _storage_logger.warning(
+                        f"External drive not available, storing augmented content locally: {relative_path}"
+                    )
+                    output_path = project_path / relative_path
+        else:
+            # Standard routing (no realm)
+            external_base = get_external_drive_base()
+            if external_base:
+                # CRITICAL: Validate path before use
+                if not _validate_path_in_storage(relative_path, external_base):
+                    _storage_logger.warning(
+                        f"Path validation failed for {relative_path}, falling back to local"
+                    )
+                    output_path = project_path / relative_path
+                else:
+                    output_path = external_base / relative_path
+                    _storage_logger.info(f"Routing augmented content to external drive: {output_path}")
+            else:
+                # Fallback to local with warning
+                _storage_logger.warning(
+                    f"External drive not available, storing augmented content locally: {relative_path}"
+                )
+                output_path = project_path / relative_path
+    
+    # Create directory structure
+    try:
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        
+        # CRITICAL: Set directory permissions (0o700)
+        try:
+            output_path.parent.chmod(0o700)
+        except (OSError, PermissionError):
+            pass  # Ignore on Windows or if permissions can't be set
+    except (OSError, PermissionError) as e:
+        _storage_logger.error(f"Error creating directory structure: {e}")
+        raise
+    
+    # Check available disk space (basic check)
+    try:
+        stat = shutil.disk_usage(output_path.parent)
+        if stat.free < 1024 * 1024:  # Less than 1MB free
+            _storage_logger.warning(f"Low disk space on {output_path.parent}")
+    except (OSError, ValueError):
+        pass  # Ignore if disk space check fails
+    
+    return output_path.resolve()
+
+
+def track_pdf_move(old_path: Path, new_path: Path, project_path: Optional[Path] = None) -> None:
+    """
+    Track a PDF file move/rename operation in the storage registry.
+    
+    Use this when moving or renaming PDF files to maintain traceability.
+    
+    Args:
+        old_path: Old path (relative or absolute)
+        new_path: New path (relative or absolute)
+        project_path: Project root path (default: current directory)
+    """
+    if project_path is None:
+        project_path = Path.cwd()
+    else:
+        project_path = Path(project_path)
+    
+    # Convert to relative paths
+    try:
+        if old_path.is_absolute():
+            old_rel = old_path.relative_to(project_path)
+        else:
+            old_rel = old_path
+        
+        if new_path.is_absolute():
+            new_rel = new_path.relative_to(project_path)
+        else:
+            new_rel = new_path
+    except ValueError:
+        # Paths outside project, skip tracking
+        return
+    
+    # Register the move
+    registry = StorageRegistry(project_path)
+    registry.track_move(str(old_rel), str(new_rel))
+
+
+def find_pdf_location(pdf_path: str, project_path: Optional[Path] = None) -> Optional[str]:
+    """
+    Find the current location of a PDF file.
+    
+    Convenience function to trace PDF locations.
+    
+    Args:
+        pdf_path: Relative path to PDF or filename
+        project_path: Project root path (default: current directory)
+        
+    Returns:
+        Current absolute path where PDF is stored, or None if not found
+        
+    Example:
+        >>> find_pdf_location("session_recap_20260115.pdf")
+        '/Volumes/Easystore/waft/active-waft/_work_efforts/session_recaps/session_recap_20260115.pdf'
+    """
+    if project_path is None:
+        project_path = Path.cwd()
+    else:
+        project_path = Path(project_path)
+    
+    registry = StorageRegistry(project_path)
+    return registry.get_pdf_location(pdf_path)
+
+
+def trace_pdf(pdf_path: str, project_path: Optional[Path] = None) -> Dict[str, Any]:
+    """
+    Get full trace information for a PDF file.
+    
+    Shows current location, history of moves, and all locations it's been at.
+    
+    Args:
+        pdf_path: Relative path to PDF or filename
+        project_path: Project root path (default: current directory)
+        
+    Returns:
+        Dictionary with trace information:
+        - found: bool
+        - current_location: str
+        - content_type: str
+        - history: list of operations
+        - all_locations: list of all locations
+        - move_count: int
+        
+    Example:
+        >>> trace = trace_pdf("session_recap_20260115.pdf")
+        >>> print(trace['current_location'])
+        '/Volumes/Easystore/waft/active-waft/_work_efforts/session_recaps/...'
+        >>> print(trace['history'])
+        [{'operation': 'created', 'location': '...', 'timestamp': '...'}, ...]
+    """
+    if project_path is None:
+        project_path = Path.cwd()
+    else:
+        project_path = Path(project_path)
+    
+    registry = StorageRegistry(project_path)
+    return registry.trace_pdf(pdf_path)
+
+
+def resolve_output_path(
+    output_path: Path,
+    project_path: Optional[Path] = None
+) -> Path:
+    """
+    Convenience wrapper for get_storage_path().
+    
+    Handles both relative and absolute paths.
+    Maintains backward compatibility.
+    
+    CRITICAL: Validates paths before resolution.
+    
+    Args:
+        output_path: Output path (relative or absolute)
+        project_path: Project root path (default: current directory)
+        
+    Returns:
+        Resolved absolute path where content should be stored
+    """
+    if project_path is None:
+        project_path = Path.cwd()
+    else:
+        project_path = Path(project_path)
+    
+    # If absolute path, check if it's within project
+    if output_path.is_absolute():
+        try:
+            resolved = output_path.resolve()
+            project_resolved = project_path.resolve()
+            if str(resolved).startswith(str(project_resolved)):
+                # It's within project, make it relative
+                relative = resolved.relative_to(project_resolved)
+                return get_storage_path(relative, project_path)
+            else:
+                # It's outside project, use as-is (but log warning)
+                _storage_logger.warning(f"Absolute path outside project: {output_path}")
+                return resolved
+        except (ValueError, OSError):
+            # Can't resolve, use as-is
+            return output_path
+    
+    # Relative path - use get_storage_path
+    return get_storage_path(output_path, project_path)
+
+
+class StorageRegistry:
+    """
+    Storage registry to track where content is stored.
+    
+    Maintains manifest of storage locations for system awareness.
+    Tracks file movements, locations, and provides tracing capabilities.
+    """
+    
+    def __init__(self, project_path: Optional[Path] = None):
+        """
+        Initialize storage registry.
+        
+        Args:
+            project_path: Project root path (default: current directory)
+        """
+        if project_path is None:
+            project_path = Path.cwd()
+        else:
+            project_path = Path(project_path)
+        
+        self.project_path = project_path
+        self.registry_file = project_path / "_pyrite" / ".storage_registry.json"
+        self.audit_log_file = project_path / "_pyrite" / ".storage_audit_log.jsonl"
+        self.registry_file.parent.mkdir(parents=True, exist_ok=True)
+        
+        # CRITICAL: Set directory permissions (0o700)
+        try:
+            self.registry_file.parent.chmod(0o700)
+        except (OSError, PermissionError):
+            pass
+        
+        # File lock for concurrent access
+        self._lock = Lock()
+        
+        # Load registry
+        self.registry = self._load_registry()
+    
+    def _load_registry(self) -> Dict[str, Any]:
+        """Load registry from file."""
+        if not self.registry_file.exists():
+            return {}
+        
+        try:
+            with open(self.registry_file, 'r') as f:
+                return json.load(f)
+        except (json.JSONDecodeError, IOError) as e:
+            _storage_logger.warning(f"Error loading registry: {e}, starting with empty registry")
+            return {}
+    
+    def _save_registry(self) -> bool:
+        """
+        Save registry to file.
+        
+        CRITICAL: Uses file locking and sets permissions.
+        """
+        with self._lock:
+            try:
+                # Write to temp file first (atomic write)
+                temp_file = self.registry_file.with_suffix('.tmp')
+                with open(temp_file, 'w') as f:
+                    json.dump(self.registry, f, indent=2)
+                
+                # CRITICAL: Set file permissions (0o600)
+                try:
+                    temp_file.chmod(0o600)
+                except (OSError, PermissionError):
+                    pass
+                
+                # Atomic rename
+                temp_file.replace(self.registry_file)
+                
+                # CRITICAL: Set file permissions on final file
+                try:
+                    self.registry_file.chmod(0o600)
+                except (OSError, PermissionError):
+                    pass
+                
+                return True
+            except (IOError, OSError) as e:
+                _storage_logger.error(f"Error saving registry: {e}")
+                return False
+    
+    def query_audit_log(
+        self,
+        content_path: Optional[str] = None,
+        operation: Optional[str] = None,
+        date_from: Optional[str] = None,
+        date_to: Optional[str] = None,
+        limit: int = 100
+    ) -> List[Dict[str, Any]]:
+        """
+        Query audit log for file operations.
+        
+        Args:
+            content_path: Filter by content path (partial match)
+            operation: Filter by operation type
+            date_from: Filter by date (ISO format, inclusive)
+            date_to: Filter by date (ISO format, inclusive)
+            limit: Maximum number of results
+            
+        Returns:
+            List of audit log entries
+        """
+        if not self.audit_log_file.exists():
+            return []
+        
+        results = []
+        try:
+            with open(self.audit_log_file, 'r') as f:
+                for line in f:
+                    if not line.strip():
+                        continue
+                    try:
+                        entry = json.loads(line)
+                        
+                        # Apply filters
+                        if content_path and content_path not in entry.get("content_path", ""):
+                            continue
+                        if operation and entry.get("operation") != operation:
+                            continue
+                        if date_from and entry.get("timestamp", "") < date_from:
+                            continue
+                        if date_to and entry.get("timestamp", "") > date_to:
+                            continue
+                        
+                        results.append(entry)
+                        if len(results) >= limit:
+                            break
+                    except json.JSONDecodeError:
+                        continue
+            
+            # Return most recent first
+            return list(reversed(results))
+        except (IOError, OSError) as e:
+            _storage_logger.warning(f"Error reading audit log: {e}")
+            return []
+    
+    def register(
+        self,
+        content_path: str,
+        storage_location: str,
+        content_type: str,
+        operation: str = "created"
+    ) -> None:
+        """
+        Register content in storage registry.
+        
+        Args:
+            content_path: Relative path to content
+            storage_location: Where content is stored (absolute path)
+            content_type: Content type ('core' or 'augmented')
+            operation: Operation type ('created', 'moved', 'updated')
+        """
+        timestamp = datetime.now().isoformat()
+        
+        # Check if this is an update to existing entry
+        existing = self.registry.get(content_path)
+        if existing:
+            # Track movement if location changed
+            if existing.get("storage_location") != storage_location:
+                self._log_audit(
+                    content_path=content_path,
+                    operation="moved",
+                    old_location=existing.get("storage_location"),
+                    new_location=storage_location,
+                    content_type=content_type
+                )
+                operation = "moved"
+            else:
+                operation = "updated"
+        else:
+            # New file
+            self._log_audit(
+                content_path=content_path,
+                operation="created",
+                location=storage_location,
+                content_type=content_type
+            )
+        
+        # Update registry
+        self.registry[content_path] = {
+            "storage_location": storage_location,
+            "content_type": content_type,
+            "timestamp": timestamp,
+            "last_operation": operation,
+            "history": existing.get("history", []) if existing else []
+        }
+        
+        # Add to history
+        self.registry[content_path]["history"].append({
+            "operation": operation,
+            "location": storage_location,
+            "timestamp": timestamp
+        })
+        
+        # Keep history limited (last 50 entries)
+        if len(self.registry[content_path]["history"]) > 50:
+            self.registry[content_path]["history"] = self.registry[content_path]["history"][-50:]
+        
+        self._save_registry()
+    
+    def find_content(self, content_path: str) -> Optional[Dict[str, Any]]:
+        """
+        Find content in registry.
+        
+        Args:
+            content_path: Relative path to content
+            
+        Returns:
+            Registry entry or None if not found
+        """
+        return self.registry.get(content_path)
+    
+    def list_external_content(self) -> List[Dict[str, Any]]:
+        """
+        List all content stored on external drive.
+        
+        Returns:
+            List of registry entries for external content
+        """
+        return [
+            {"content_path": path, **info}
+            for path, info in self.registry.items()
+            if info.get("content_type") == "augmented"
+        ]
+    
+    def _log_audit(
+        self,
+        content_path: str,
+        operation: str,
+        location: Optional[str] = None,
+        old_location: Optional[str] = None,
+        new_location: Optional[str] = None,
+        content_type: Optional[str] = None
+    ) -> None:
+        """
+        Log audit entry for file operations.
+        
+        Args:
+            content_path: Relative path to content
+            operation: Operation type ('created', 'moved', 'deleted', 'updated')
+            location: Current location (for created/updated)
+            old_location: Previous location (for moved)
+            new_location: New location (for moved)
+            content_type: Content type
+        """
+        try:
+            audit_entry = {
+                "timestamp": datetime.now().isoformat(),
+                "content_path": content_path,
+                "operation": operation,
+                "content_type": content_type
+            }
+            
+            if operation == "moved":
+                audit_entry["old_location"] = old_location
+                audit_entry["new_location"] = new_location
+            else:
+                audit_entry["location"] = location
+            
+            # Append to audit log (JSONL format)
+            with self._lock:
+                with open(self.audit_log_file, 'a') as f:
+                    f.write(json.dumps(audit_entry) + '\n')
+        except Exception as e:
+            _storage_logger.warning(f"Failed to log audit entry: {e}")
+    
+    def trace_pdf(self, pdf_path: str) -> Dict[str, Any]:
+        """
+        Trace a PDF file - find its current location and full history.
+        
+        Args:
+            pdf_path: Relative path to PDF or filename
+            
+        Returns:
+            Dictionary with trace information:
+            - found: bool
+            - current_location: str (if found)
+            - content_type: str
+            - history: list of operations
+            - all_locations: list of all locations it's been at
+        """
+        # Try exact match first
+        entry = self.registry.get(pdf_path)
+        
+        # If not found, try searching by filename
+        if not entry:
+            pdf_name = Path(pdf_path).name
+            for path, info in self.registry.items():
+                if Path(path).name == pdf_name and Path(path).suffix == '.pdf':
+                    entry = info
+                    pdf_path = path
+                    break
+        
+        if not entry:
+            return {
+                "found": False,
+                "pdf_path": pdf_path,
+                "message": "PDF not found in registry"
+            }
+        
+        # Get all unique locations from history
+        all_locations = set()
+        all_locations.add(entry.get("storage_location"))
+        for hist_entry in entry.get("history", []):
+            if "location" in hist_entry:
+                all_locations.add(hist_entry["location"])
+            if "new_location" in hist_entry:
+                all_locations.add(hist_entry["new_location"])
+            if "old_location" in hist_entry:
+                all_locations.add(hist_entry["old_location"])
+        
+        return {
+            "found": True,
+            "pdf_path": pdf_path,
+            "current_location": entry.get("storage_location"),
+            "content_type": entry.get("content_type"),
+            "last_operation": entry.get("last_operation"),
+            "created_at": entry.get("timestamp"),
+            "history": entry.get("history", []),
+            "all_locations": sorted(list(all_locations)),
+            "move_count": sum(1 for h in entry.get("history", []) if h.get("operation") == "moved")
+        }
+    
+    def find_pdfs(
+        self,
+        pattern: Optional[str] = None,
+        content_type: Optional[str] = None,
+        location: Optional[str] = None,
+        date_from: Optional[str] = None,
+        date_to: Optional[str] = None,
+        limit: int = 100
+    ) -> List[Dict[str, Any]]:
+        """
+        Find PDFs matching criteria.
+        
+        Args:
+            pattern: Filename pattern to search (e.g., "session_recap", "*.pdf")
+            content_type: Filter by content type ('core' or 'augmented')
+            location: Filter by storage location (partial match)
+            date_from: Filter by date (ISO format, inclusive)
+            date_to: Filter by date (ISO format, inclusive)
+            limit: Maximum number of results to return
+            
+        Returns:
+            List of matching PDF entries with trace information
+        """
+        results = []
+        
+        for content_path, info in self.registry.items():
+            # Only PDFs
+            if not content_path.endswith('.pdf'):
+                continue
+            
+            # Filter by pattern
+            if pattern:
+                if pattern not in content_path and pattern not in Path(content_path).name:
+                    continue
+            
+            # Filter by content type
+            if content_type and info.get("content_type") != content_type:
+                continue
+            
+            # Filter by location
+            if location and location not in info.get("storage_location", ""):
+                continue
+            
+            # Filter by date
+            if date_from or date_to:
+                file_date = info.get("timestamp", "")
+                if date_from and file_date < date_from:
+                    continue
+                if date_to and file_date > date_to:
+                    continue
+            
+            # Get trace info
+            trace = self.trace_pdf(content_path)
+            results.append(trace)
+            
+            # Apply limit
+            if len(results) >= limit:
+                break
+        
+        return results
+    
+    def get_pdf_location(self, pdf_path: str) -> Optional[str]:
+        """
+        Get current location of a PDF.
+        
+        Args:
+            pdf_path: Relative path to PDF or filename
+            
+        Returns:
+            Current absolute path where PDF is stored, or None if not found
+        """
+        trace = self.trace_pdf(pdf_path)
+        if trace.get("found"):
+            return trace.get("current_location")
+        return None
+    
+    def track_move(self, old_path: str, new_path: str, content_type: Optional[str] = None) -> None:
+        """
+        Track a file move/rename operation.
+        
+        Args:
+            old_path: Old relative path
+            new_path: New relative path
+            content_type: Content type (auto-detected if None)
+        """
+        # Find old entry
+        old_entry = self.registry.get(old_path)
+        if not old_entry:
+            # Try to find by filename
+            old_name = Path(old_path).name
+            for path, info in list(self.registry.items()):
+                if Path(path).name == old_name:
+                    old_path = path
+                    old_entry = info
+                    break
+        
+        if old_entry:
+            old_location = old_entry.get("storage_location")
+            
+            # Determine new location
+            if content_type is None:
+                content_type = classify_content_type(Path(new_path))
+            
+            # Resolve new storage location
+            new_storage = get_storage_path(Path(new_path), self.project_path, content_type)
+            new_location = str(new_storage)
+            
+            # Update registry
+            self.register(
+                content_path=new_path,
+                storage_location=new_location,
+                content_type=content_type,
+                operation="moved"
+            )
+            
+            # Remove old entry
+            if old_path != new_path:
+                del self.registry[old_path]
+                self._save_registry()
+            
+            # Log audit
+            self._log_audit(
+                content_path=new_path,
+                operation="moved",
+                old_location=old_location,
+                new_location=new_location,
+                content_type=content_type
+            )
+    
+    def get_storage_stats(self) -> Dict[str, Any]:
+        """
+        Get storage statistics.
+        
+        Returns:
+            Dictionary with storage statistics
+        """
+        total = len(self.registry)
+        pdfs = sum(1 for path in self.registry.keys() if path.endswith('.pdf'))
+        core = sum(1 for info in self.registry.values() if info.get("content_type") == "core")
+        augmented = sum(1 for info in self.registry.values() if info.get("content_type") == "augmented")
+        
+        # Count PDFs by location
+        external_pdfs = 0
+        local_pdfs = 0
+        for path, info in self.registry.items():
+            if path.endswith('.pdf'):
+                location = info.get("storage_location", "")
+                if "/Volumes/" in location:
+                    external_pdfs += 1
+                else:
+                    local_pdfs += 1
+        
+        return {
+            "total_content": total,
+            "total_pdfs": pdfs,
+            "core_content": core,
+            "augmented_content": augmented,
+            "pdfs_on_external": external_pdfs,
+            "pdfs_local": local_pdfs,
+            "external_drive_available": detect_external_drive() is not None
+        }
 
 
 # ============================================================================

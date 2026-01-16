@@ -1,0 +1,20 @@
+{
+  "project_id": "proj_20260116_120538",
+  "title": "Campaign Book Generation System",
+  "description": "Build comprehensive campaign book generation system with LaTeX templates and D&D 5e integration",
+  "status": "active",
+  "created_at": "2026-01-16T12:05:38.902726",
+  "updated_at": "2026-01-16T12:05:38.902748",
+  "progress_percent": 0.0,
+  "tags": [
+    "campaign",
+    "pdf",
+    "dnd",
+    "latex"
+  ],
+  "milestones": [],
+  "progress_entries": [],
+  "related_work_efforts": [],
+  "notes": "",
+  "version": 1
+}

@@ -40,6 +40,7 @@ from .cli.epistemic_display import (
 from .cli.hud import render_hud
 from .core.analytics_cli import app as analytics_app
 from .cli.pyrite_cli import app as pyrite_app
+from .cli.project_commands import app as project_app
 
 app = typer.Typer(
     name="waft",
@@ -693,27 +694,27 @@ def evolve(
 ):
     """
     Run the evolutionary cycle (Spawn -> Gym -> Select) for a target agent.
-    
+
     This command orchestrates the complete evolutionary process:
     1. Spawn multiple variants with mutations
     2. Evaluate fitness in the Scint Gym
     3. Select the fittest variant
     4. Evolve the agent into the selected genome
     5. Record all events in the Flight Recorder
-    
+
     Status: Coming Soon
-    
+
     This is a placeholder for the evolutionary cycle implementation.
     """
     project_path = resolve_project_path(path)
-    
+
     # Check if this is a Waft project
     is_valid, error = validate_waft_project(project_path)
     if not is_valid:
         console.print("[bold red]❌ Not a Waft project[/bold red]")
         console.print(f"[dim]{error}[/dim]")
         raise typer.Exit(1)
-    
+
     console.print("\n[bold cyan]🧬 Evolutionary Code Laboratory[/bold cyan]")
     console.print("[yellow]⚠️[/yellow]  Evolutionary cycle coming soon")
     console.print(f"[dim]→[/dim] Project: {project_path.resolve()}")
@@ -742,6 +743,7 @@ app.add_typer(unknown_app, name="unknown")
 app.add_typer(goal_app, name="goal")
 app.add_typer(github_app, name="github")
 app.add_typer(journal_app, name="journal")
+app.add_typer(project_app, name="project")
 
 
 @session_app.command("create")
@@ -1142,7 +1144,7 @@ def stats(
 ):
     """
     Show statistics.
-    
+
     By default shows gamification stats (Integrity, Insight, Level).
     Use --session to show session statistics (files created, lines written, etc.).
     """
@@ -1151,15 +1153,15 @@ def stats(
     if session:
         # Session statistics
         from .core.session_stats import SessionStats
-        
+
         console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Session Statistics\n")
-        
+
         stats_tracker = SessionStats(project_path)
         stats_data = stats_tracker.calculate_session_stats()
         formatted = stats_tracker.format_stats(stats_data, detailed=detailed)
-        
+
         console.print(Panel(formatted, title="📊 Session Activity", border_style="cyan"))
-        
+
         if detailed:
             # Save to file
             stats_file = project_path / "_pyrite" / "phase1" / f"session-stats-{datetime.now().strftime('%Y-%m-%d-%H%M%S')}.json"
@@ -1200,14 +1202,14 @@ def checkout(
 ):
     """
     End chat session - run all relevant cleanup, documentation, and summary tasks.
-    
+
     Orchestrates comprehensive end-of-session workflow including statistics,
     checkpoint creation, documentation updates, session summaries, and analytics tracking.
     """
     from .core.checkout import CheckoutManager
-    
+
     project_path = resolve_project_path(path)
-    
+
     checkout_manager = CheckoutManager(project_path)
     checkout_manager.run_checkout(quick=quick, silent=silent)
 
@@ -1223,31 +1225,31 @@ def decide(
 ):
     """
     Run decision matrix analysis using standardized methodology.
-    
+
     This command uses DecisionCLI for standardized decision matrix calculations.
     The decision matrix is built from the /consider command's output or can be
     provided directly. Uses the DecisionMatrixCalculator for mathematical rigor.
-    
+
     Standardized workflow:
     1. Use /consider to identify options and criteria
     2. /decide uses DecisionCLI.run_decision_matrix() for calculations
     3. Results are displayed in consistent format with sensitivity analysis
     """
     project_path = resolve_project_path(path)
-    
+
     # Check for topic-specific analyzers
     if topic == "workflow":
         from .core.workflow_decision import WorkflowDecisionAnalyzer
-        
+
         analyzer = WorkflowDecisionAnalyzer(project_path)
         analyzer.analyze_workflow_options()
         return
-    
+
     # Default: Show usage
     from .core.decision_cli import DecisionCLI
-    
+
     cli = DecisionCLI(project_path)
-    
+
     console.print("[bold cyan]🎯 Decision Matrix Analysis[/bold cyan]\n")
     console.print("[dim]The /decide command uses DecisionCLI for standardized calculations.")
     console.print("DecisionCLI.run_decision_matrix() provides a reusable interface.")
@@ -1748,14 +1750,14 @@ def resume(
 ):
     """
     Pick up where you left off - restore context and continue work.
-    
+
     Loads the most recent session summary, compares current state with what was left,
     identifies what was in progress, and provides clear next steps.
     """
     project_path = resolve_project_path(path)
-    
+
     from .core.resume import ResumeManager
-    
+
     resume_manager = ResumeManager(project_path)
     resume_manager.run_resume(
         session_file=session,
@@ -1773,14 +1775,14 @@ def continue_work(
 ):
     """
     Keep doing what you're doing, but take this opportunity to really reflect on what you're doing.
-    
+
     Pauses to deeply reflect on current work, approach, and progress, then continues
     with improved awareness and potentially adjusted direction.
     """
     project_path = resolve_project_path(path)
-    
+
     from .core.continue_work import ContinueManager
-    
+
     continue_manager = ContinueManager(project_path)
     continue_manager.run_continue(
         deep=deep,
@@ -1798,14 +1800,14 @@ def reflect(
 ):
     """
     Induce the AI to write in its journal - reflect on current work, thoughts, and experiences.
-    
+
     The AI definitely needs a journal if it doesn't have one. This command ensures it exists
     and prompts the AI to write reflective entries about its work, thoughts, and learnings.
     """
     project_path = resolve_project_path(path)
-    
+
     from .core.reflect import ReflectManager
-    
+
     reflect_manager = ReflectManager(project_path)
     reflect_manager.run_reflect(
         prompt=prompt,
@@ -1827,10 +1829,10 @@ def journal_search(
     Search journal entries by query, topic, or date range.
     """
     project_path = resolve_project_path(path)
-    
+
     from .core.reflect import ReflectManager
     from rich.table import Table
-    
+
     reflect_manager = ReflectManager(project_path)
     results = reflect_manager.search_entries(
         query=query,
@@ -1839,16 +1841,16 @@ def journal_search(
         date_to=date_to,
         limit=limit
     )
-    
+
     if not results:
         reflect_manager.console.print("[yellow]No entries found matching your criteria.[/yellow]\n")
         return
-    
+
     table = Table(title=f"📔 Journal Search Results ({len(results)} found)", show_header=True)
     table.add_column("Date", style="dim")
     table.add_column("Time", style="dim")
     table.add_column("Preview", style="cyan")
-    
+
     for entry in results:
         preview = entry.get("content", "")[:100].replace("\n", " ")
         table.add_row(
@@ -1856,7 +1858,7 @@ def journal_search(
             entry.get("time", "Unknown"),
             preview + "..." if len(preview) >= 100 else preview
         )
-    
+
     reflect_manager.console.print("\n")
     reflect_manager.console.print(table)
     reflect_manager.console.print("\n")
@@ -1871,14 +1873,14 @@ def journal_stats(
     Display journal statistics and analytics.
     """
     project_path = resolve_project_path(path)
-    
+
     from .core.reflect import ReflectManager
-    
+
     reflect_manager = ReflectManager(project_path)
-    
+
     if cleanup:
         reflect_manager.cleanup_old_archives()
-    
+
     reflect_manager.display_statistics()
 
 
@@ -1892,14 +1894,14 @@ def help_cmd(
 ):
     """
     Discover and understand available Cursor commands.
-    
+
     Lists all available commands, organized by category, with brief descriptions
     and usage guidance. Helps you discover commands and understand when to use each one.
     """
     project_path = resolve_project_path(path)
-    
+
     from .core.help import HelpManager
-    
+
     help_manager = HelpManager(project_path)
     help_manager.run_help(
         category=category,
@@ -1918,43 +1920,43 @@ def encapsulated_environments_pdf(
 ):
     """
     Generate research PDF explaining Encapsulated Environments system.
-    
+
     Creates a multi-section research PDF with simple prose and scientific design elements
     explaining the framework for Being storytelling and information exchange.
     """
     project_path = resolve_project_path(path)
     console.print(f"\n[bold cyan]📄 Waft[/bold cyan] - Generating Encapsulated Environments Research PDF\n")
-    
+
     from pathlib import Path
-    
+
     # Read the research document
     research_file = project_path / "_pyrite" / "research" / "encapsulated-environments-research.md"
-    
+
     if not research_file.exists():
         console.print(f"[red]❌ Research file not found: {research_file}[/red]")
         raise typer.Exit(1)
-    
+
     # Use the working example script with uv run to ensure dependencies
     import subprocess
     import shutil
-    
+
     example_script = project_path / "examples" / "generate_encapsulated_environments_pdf.py"
-    
+
     if not example_script.exists():
         console.print(f"[red]❌ Example script not found: {example_script}[/red]")
         raise typer.Exit(1)
-    
+
     # Generate output path
     if output:
         output_path = Path(output)
     else:
         output_path = project_path / "encapsulated_environments_research.pdf"
-    
+
     console.print(f"[yellow]→[/yellow] Generating PDF...")
-    
+
     # Check if uv is available, use it if so
     uv_available = shutil.which("uv") is not None
-    
+
     try:
         if uv_available:
             # Use uv run to ensure dependencies are available
@@ -1974,7 +1976,7 @@ def encapsulated_environments_pdf(
                 capture_output=True,
                 text=True
             )
-        
+
         if result.returncode == 0:
             # Check if PDF was created (script creates it at default location)
             default_pdf = project_path / "encapsulated_environments_research.pdf"
@@ -1982,14 +1984,14 @@ def encapsulated_environments_pdf(
                 # Move to requested location if different
                 if output_path != default_pdf:
                     default_pdf.rename(output_path)
-                
+
                 console.print(f"[green]✅ PDF generated:[/green] {output_path}")
                 console.print(f"[dim]Style: {style} | Pages: Auto[/dim]")
-                
+
                 if open_pdf:
                     import subprocess as sp
                     sp.run(["open", str(output_path)], check=False)
-                
+
                 return output_path
             else:
                 console.print(f"[yellow]⚠️[/yellow]  Script completed but PDF not found")
@@ -2006,7 +2008,7 @@ def encapsulated_environments_pdf(
             else:
                 console.print(f"[dim]{error_msg}[/dim]")
             raise typer.Exit(1)
-            
+
     except FileNotFoundError:
         console.print(f"[red]❌ Python not found. Please ensure Python 3 is installed.[/red]")
         raise typer.Exit(1)
@@ -2028,9 +2030,9 @@ def create(
 ):
     """Create a new goal with objective."""
     project_path = resolve_project_path(path)
-    
+
     from .core.goal import GoalManager
-    
+
     goal_manager = GoalManager(project_path)
     goal_manager.create_goal(name, objective)
 
@@ -2042,36 +2044,36 @@ def goal_list(
 ):
     """List all goals."""
     project_path = resolve_project_path(path)
-    
+
     from .core.goal import GoalManager
     from rich.table import Table
-    
+
     goal_manager = GoalManager(project_path)
     goals = goal_manager.list_goals(status=status)
-    
+
     if not goals:
         console.print("[dim]No goals found.[/dim]")
         return
-    
+
     table = Table(show_header=True)
     table.add_column("Name", style="bold")
     table.add_column("Status", width=12)
     table.add_column("Objective", ratio=2)
     table.add_column("Progress", width=15)
-    
+
     for goal in goals:
         steps = goal.get("steps", [])
         completed = sum(1 for s in steps if s.get("completed", False))
         total = len(steps)
         progress = f"{completed}/{total}" if total > 0 else "0/0"
-        
+
         table.add_row(
             goal.get("name", ""),
             goal.get("status", ""),
             goal.get("objective", "")[:60] + "..." if len(goal.get("objective", "")) > 60 else goal.get("objective", ""),
             progress
         )
-    
+
     console.print("\n[bold cyan]🎯 Goals[/bold cyan]\n")
     console.print(table)
     console.print()
@@ -2084,9 +2086,9 @@ def show(
 ):
     """Show goal details."""
     project_path = resolve_project_path(path)
-    
+
     from .core.goal import GoalManager
-    
+
     goal_manager = GoalManager(project_path)
     goal_manager.show_goal(name)
 
@@ -2099,23 +2101,23 @@ def next_cmd(
 ):
     """
     Identify next step based on goals, context, and priorities.
-    
+
     Analyzes current goals, work in progress, and context to identify
     the most important next action.
     """
     project_path = resolve_project_path(path)
-    
+
     from .core.goal import GoalManager
-    
+
     goal_manager = GoalManager(project_path)
     next_steps = goal_manager.get_next_step(goal_name=goal, count=count)
-    
+
     if not next_steps:
         console.print("[dim]No next steps found. Create a goal first with: waft goal create <name> <objective>[/dim]")
         return
-    
+
     console.print("\n[bold cyan]🎯 Next Steps[/bold cyan]\n")
-    
+
     for i, step in enumerate(next_steps, 1):
         console.print(f"[bold]{i}. {step.get('step', '')}[/bold]")
         console.print(f"   [dim]From Goal:[/dim] {step.get('goal', '')}")
@@ -2132,16 +2134,36 @@ def recap(
 ):
     """
     Create conversation recap and session summary.
-    
+
     Creates comprehensive recap of current conversation/session, extracting
     key points, decisions, accomplishments, and questions.
     """
     project_path = resolve_project_path(path)
-    
+
     from .core.recap import RecapManager
-    
+
     recap_manager = RecapManager(project_path)
     recap_manager.run_recap(output_path=output)
+
+
+@app.command(name="recap-and-review")
+def recap_and_review(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    output: Optional[str] = typer.Option(None, "--output", "-o", help="Custom output path"),
+):
+    """
+    Capture mindspace and generate review PDF.
+
+    Creates comprehensive documentation of the current mindspace - thoughts,
+    context, state, decisions, and observations - then generates a PDF document
+    and opens it on your desktop.
+    """
+    project_path = resolve_project_path(path)
+
+    from .core.recap_and_review import RecapAndReviewManager
+
+    manager = RecapAndReviewManager(project_path)
+    manager.run_recap_and_review(output_path=output)
 
 
 @app.command(name="science-bitch")
@@ -2154,7 +2176,7 @@ def science_bitch(
 ):
     """
     Science-Bitch: Full scientific method workflow.
-    
+
     Runs the complete scientific method:
     1. Form hypothesis
     2. Design experiment
@@ -2166,11 +2188,11 @@ def science_bitch(
     8. Generate reports
     """
     project_path = resolve_project_path(path)
-    
+
     from .core.science_bitch import ScienceBitchManager
-    
+
     manager = ScienceBitchManager(project_path)
-    
+
     if field_guide:
         # Generate field guide PDF
         console.print("\n[bold cyan]📖 Generating Field Guide PDF...[/bold cyan]\n")
@@ -2181,7 +2203,7 @@ def science_bitch(
             console.print("[red]❌ Failed to generate field guide[/red]")
             raise typer.Exit(1)
         return
-    
+
     if report:
         # Generate project status report
         console.print("\n[bold cyan]📊 Generating Project Status Report...[/bold cyan]\n")
@@ -2192,10 +2214,10 @@ def science_bitch(
             console.print("[red]❌ Failed to generate report[/red]")
             raise typer.Exit(1)
         return
-    
+
     # Run interactive workflow
     result = manager.run_interactive()
-    
+
     if result.get("success"):
         console.print("\n[green]✅ Scientific method workflow complete![/green]")
         if result.get("report_path"):
@@ -2215,27 +2237,27 @@ def improve(
 ):
     """
     Analyze work and suggest improvements.
-    
+
     Analyzes code, documentation, architecture, and implementation to identify
     improvement opportunities with prioritized recommendations.
     """
     project_path = resolve_project_path(path)
-    
+
     from .core.improve import ImproveManager
-    
+
     improve_manager = ImproveManager(project_path)
-    
+
     output_path = None
     if output:
         output_path = Path(output)
-    
+
     result = improve_manager.run_improve(
         focus=focus,
         category=category,
         recent_only=recent_only,
         output_path=output_path
     )
-    
+
     if result["success"]:
         summary = result["summary"]
         console.print(f"\n[green]✅[/green] Analysis complete: {summary['total']} improvements identified")
@@ -2255,21 +2277,21 @@ def celebrate(
 ):
     """
     Generate and print a celebratory PDF!
-    
+
     Creates a beautiful ArXiv-style celebration PDF and prints it to the material world.
     Perfect for acknowledging achievements, milestones, and moments of success.
     """
     project_path = resolve_project_path(path)
-    
+
     from .core.celebrate import CelebrateManager
-    
+
     celebrate_manager = CelebrateManager(project_path)
     pdf_path = celebrate_manager.celebrate(
         achievement=achievement,
         message=message,
         print_pdf=not no_print
     )
-    
+
     if pdf_path:
         console.print(f"\n[green]✅ Celebration PDF ready![/green]")
         console.print(f"[dim]Location: {pdf_path.relative_to(project_path)}[/dim]")
@@ -2285,14 +2307,14 @@ def audit(
 ):
     """
     Audit the conversation - analyze quality, completeness, issues, and improvements.
-    
+
     Analyzes current conversation for quality, completeness, potential issues,
     and provides recommendations for improvement.
     """
     project_path = resolve_project_path(path)
-    
+
     from .core.audit import AuditManager
-    
+
     audit_manager = AuditManager(project_path)
     audit_manager.run_audit(output_path=output)
 
@@ -2306,15 +2328,15 @@ def proceed(
 ):
     """
     Keep doing what you're doing, but verify context and assumptions first.
-    
+
     Pauses to check larger context, reflect on assumptions, ask clarifying questions,
     perform a "flight check", then proceeds with verified understanding. Ensures no
     unverified assumptions or unclear ambiguity before taking actions.
     """
     project_path = resolve_project_path(path)
-    
+
     from .core.proceed import ProceedManager
-    
+
     proceed_manager = ProceedManager(project_path)
     proceed_manager.run_proceed(
         focus=focus,
@@ -2333,15 +2355,15 @@ def check_assumptions(
 ):
     """
     Identify all assumptions in conversation and validate them with evidence.
-    
+
     Analyzes conversation history to extract implicit assumptions, then systematically
     validates each one using code analysis, file system checks, test results, Empirica
     epistemic state, and other available evidence sources.
     """
     project_path = resolve_project_path(path)
-    
+
     from .core.check_assumptions import CheckAssumptionsManager
-    
+
     manager = CheckAssumptionsManager(project_path)
     manager.run_check_assumptions(
         focus=focus,
@@ -2359,30 +2381,30 @@ def oracle(
 ):
     """
     Consult TheOracle for epistemic insights and guidance.
-    
+
     TheOracle provides epistemic intelligence based on Empirica state, offering
     insights, recommendations, and decision support.
     """
     project_path = resolve_project_path(path)
-    
+
     console.print(f"\n[bold cyan]🔮 Waft[/bold cyan] - Consulting TheOracle\n")
-    
+
     from .core.science import TheOracle
     from rich.table import Table
-    
+
     try:
         oracle = TheOracle(project_path)
-        
+
         # Get epistemic state
         console.print("[yellow]→[/yellow] Gathering epistemic state...")
         state = oracle.get_epistemic_state()
-        
+
         if not state.get("initialized"):
             console.print("[yellow]⚠️[/yellow]  Empirica not fully initialized")
             console.print(f"  Message: {state.get('message', 'Unknown')}")
             console.print("\n[dim]The Oracle requires Empirica to be initialized.[/dim]")
             console.print("[dim]Run: waft init (if not done) or initialize Empirica first.[/dim]")
-            
+
             # Still provide basic guidance
             console.print("\n[bold cyan]🔮 Oracle Basic Guidance:[/bold cyan]")
             console.print(Panel(
@@ -2393,42 +2415,42 @@ def oracle(
             ))
             _process_tavern_hook(project_path, "oracle", True)
             return
-        
+
         # Display epistemic state
         epistemic_state = state.get("epistemic_state", {})
         vectors = epistemic_state.get("vectors", {})
         foundation = vectors.get("foundation", {})
-        
+
         know = foundation.get("know", 0.0)
         uncertainty = vectors.get("uncertainty", 1.0)
         engagement = vectors.get("engagement", 0.0)
-        
+
         console.print("[green]✓[/green] Epistemic state retrieved")
-        
+
         # Get phase
         phase = oracle.get_epistemic_phase()
         console.print(f"\n[bold]Epistemic Phase:[/bold] [cyan]{phase}[/cyan]")
-        
+
         # Display vectors table
         table = Table(title="Epistemic Vectors", show_header=True, header_style="bold magenta")
         table.add_column("Vector", style="cyan")
         table.add_column("Value", style="yellow")
         table.add_column("Interpretation", style="dim")
-        
+
         table.add_row("Knowledge", f"{know:.0%}", "What we know" if know > 0.5 else "Low knowledge")
         table.add_row("Uncertainty", f"{uncertainty:.0%}", "High uncertainty" if uncertainty > 0.5 else "Low uncertainty")
         table.add_row("Engagement", f"{engagement:.0%}", "Active engagement" if engagement > 0.5 else "Low engagement")
-        
+
         console.print("\n")
         console.print(table)
-        
+
         # Get recent insights
         console.print("\n[yellow]→[/yellow] Retrieving recent insights...")
         insights = oracle.get_insights(limit=5)
         unknowns = oracle.get_unknowns(limit=5)
-        
+
         console.print(f"[green]✓[/green] Found {len(insights)} insights, {len(unknowns)} unknowns")
-        
+
         if insights:
             console.print("\n[bold]Recent Insights:[/bold]")
             for i, insight in enumerate(insights[-5:], 1):
@@ -2439,7 +2461,7 @@ def oracle(
                     console.print(f"  {i}. {insight_text}")
         else:
             console.print("  [dim]No recent insights recorded[/dim]")
-        
+
         if unknowns:
             console.print("\n[bold]Open Unknowns:[/bold]")
             for i, unknown in enumerate(unknowns[-5:], 1):
@@ -2451,7 +2473,7 @@ def oracle(
         else:
             console.print("\n[bold]Open Unknowns:[/bold]")
             console.print("  [dim]No open unknowns recorded[/dim]")
-        
+
         # Handle question or assessment
         if assess:
             # Decision assessment
@@ -2461,7 +2483,7 @@ def oracle(
                 "scope": "medium",
                 "type": "implementation"
             })
-            
+
             gate_result = assessment.get("gate_result", "UNKNOWN")
             if gate_result == "PROCEED":
                 gate_color = "green"
@@ -2469,42 +2491,42 @@ def oracle(
                 gate_color = "yellow"
             else:
                 gate_color = "red"
-            
+
             console.print(f"\n[bold]Decision Assessment:[/bold]")
             console.print(f"  Gate Result: [{gate_color}]{gate_result}[/{gate_color}]")
             console.print(f"  Recommendation: {assessment.get('recommendation', 'No recommendation')}")
-            
+
         elif question:
             # Specific question
             console.print(f"\n[yellow]→[/yellow] Seeking guidance: {question}")
             guidance = oracle.provide_guidance(question)
-            
+
             console.print("\n[bold cyan]🔮 Oracle Guidance:[/bold cyan]")
             console.print(Panel(
                 guidance.get("recommendation", "No recommendation available"),
                 title="Recommendation",
                 border_style="cyan"
             ))
-            
+
             console.print(f"\n[dim]Knowledge Coverage: {guidance.get('knowledge_coverage', 0):.0%}[/dim]")
             console.print(f"[dim]Phase: {guidance.get('epistemic_phase', 'UNKNOWN')}[/dim]")
         else:
             # General guidance
             console.print("\n[yellow]→[/yellow] Seeking general guidance...")
             guidance = oracle.provide_guidance("What should we focus on next?")
-            
+
             console.print("\n[bold cyan]🔮 Oracle Guidance:[/bold cyan]")
             console.print(Panel(
                 guidance.get("recommendation", "No recommendation available"),
                 title="Recommendation",
                 border_style="cyan"
             ))
-            
+
             console.print(f"\n[dim]Knowledge Coverage: {guidance.get('knowledge_coverage', 0):.0%}[/dim]")
             console.print(f"[dim]Phase: {guidance.get('epistemic_phase', 'UNKNOWN')}[/dim]")
-        
+
         _process_tavern_hook(project_path, "oracle", True)
-        
+
     except RuntimeError as e:
         console.print(f"[red]❌ Error: {e}[/red]")
         _process_tavern_hook(project_path, "oracle", False)
@@ -2528,24 +2550,24 @@ def tell_story(
 ):
     """
     Tell a story using TheOracle, Storyteller, and TavernKeeper.
-    
+
     Generates a narrative PDF from your story input, enriched with epistemic insights
     from TheOracle and narrative elements from TavernKeeper.
     """
     project_path = resolve_project_path(path)
-    
+
     console.print(f"\n[bold cyan]📖 Waft[/bold cyan] - Telling Your Story\n")
-    
+
     from .core.campfire import TheCampfire
     from pathlib import Path
     import subprocess
-    
+
     try:
         # Use TheCampfire to gather around the campfire
         console.print("[yellow]→[/yellow] Gathering around the campfire...")
         campfire = TheCampfire(project_path)
         console.print("[green]✓[/green] Campfire ready")
-        
+
         # Tell the story
         console.print("[yellow]→[/yellow] Telling story...")
         result = campfire.gather_around_the_campfire(
@@ -2557,16 +2579,16 @@ def tell_story(
             include_oracle=not no_oracle,
             save_story=True
         )
-        
+
         pdf_path = Path(result["pdf_path"])
         story_metadata = result["story"]
-        
+
         console.print(f"[green]✓[/green] Story told! (ID: {story_metadata['id']})")
         console.print(f"[green]✓[/green] PDF generated: {pdf_path}")
-        
+
         if result.get("oracle_insights"):
             console.print(f"[green]✓[/green] Oracle insights included (Phase: {result['oracle_insights']['phase']})")
-        
+
         # Open PDF
         console.print("[yellow]→[/yellow] Opening PDF...")
         try:
@@ -2583,7 +2605,7 @@ def tell_story(
             except (subprocess.CalledProcessError, FileNotFoundError):
                 console.print(f"[yellow]⚠️[/yellow]  Could not open PDF automatically")
                 console.print(f"[dim]PDF saved at: {pdf_path}[/dim]")
-        
+
         # Process TavernKeeper hook
         _process_tavern_hook(project_path, "tell_story", True, {
             "pdf_path": str(pdf_path),
@@ -2591,11 +2613,11 @@ def tell_story(
             "title": story_metadata["title"],
             "style": style
         })
-        
+
         console.print(f"\n[bold green]✅ Story complete![/bold green]")
         console.print(f"[dim]PDF: {pdf_path}[/dim]")
         console.print(f"[dim]Story saved to campfire. Start with: waft campfire[/dim]")
-        
+
     except Exception as e:
         console.print(f"\n[bold red]❌ Error:[/bold red] {e}")
         logger.exception("Error in tell_story command")
@@ -2612,25 +2634,25 @@ def print_pdf(
 ):
     """
     Print most relevant PDF or create evolved PDF using WAFT.
-    
+
     Intelligently finds the most relevant PDF based on conversation context,
     active files, work efforts, and Oracle epistemic state. If no relevant PDF
     exists or relevance is low, creates an evolved PDF using WAFT principles.
     """
     project_path = resolve_project_path(path)
-    
+
     console.print(f"\n[bold cyan]🖨️  Waft[/bold cyan] - Print PDF\n")
-    
+
     from .core.pdf_discovery import PDFDiscovery
     from .core.pdf_evolution import PDFEvolution
     from .core.science import TheOracle
     import subprocess
     import platform
-    
+
     try:
         # Gather context
         console.print("[yellow]→[/yellow] Gathering context...")
-        
+
         # Build context dictionary
         # Note: In a real implementation, this would gather from conversation history,
         # active files, etc. For now, we use minimal context.
@@ -2639,7 +2661,7 @@ def print_pdf(
             "active_files": [],  # Would be populated from active files
             "work_efforts": [],  # Would be populated from active work efforts
         }
-        
+
         # Try to initialize Oracle
         oracle = None
         oracle_state = None
@@ -2652,43 +2674,43 @@ def print_pdf(
             console.print("[dim]Oracle not available (Empirica not initialized)[/dim]")
         except Exception as e:
             console.print(f"[dim]Oracle error: {e}[/dim]")
-        
+
         # Discover relevant PDF
         console.print("[yellow]→[/yellow] Discovering relevant PDF...")
         discovery = PDFDiscovery(project_path)
-        
+
         pdf_path = None
         if not force_create:
             pdf_path = discovery.find_relevant_pdf(context)
-        
+
         # If found and relevant, use it
         if pdf_path and pdf_path.exists():
             # Score it to check relevance
             score = discovery.score_pdf(pdf_path, context)
-            
+
             if score >= 0.5:  # Threshold for relevance
                 console.print(f"[green]✓[/green] Found relevant PDF: {pdf_path.name} (relevance: {score:.0%})")
                 console.print(f"[dim]   Path: {pdf_path}[/dim]")
             else:
                 console.print(f"[yellow]⚠️[/yellow]  Found PDF but low relevance ({score:.0%}), creating new one...")
                 pdf_path = None
-        
+
         # If no relevant PDF found, create evolved PDF
         if not pdf_path:
             console.print("[yellow]→[/yellow] Creating evolved PDF using WAFT principles...")
-            
+
             evolution = PDFEvolution(project_path, oracle)
             pdf_path = evolution.evolve_pdf(context, style=style)
-            
+
             console.print(f"[green]✓[/green] Created evolved PDF: {pdf_path}")
-        
+
         # Print PDF if requested
         if not no_print:
             console.print("[yellow]→[/yellow] Printing PDF...")
-            
+
             # Use PDF class print method
             from .pdf import PDF, PDFConfig
-            
+
             # Create PDF instance to use print method
             # Note: We need to load the existing PDF or recreate it
             # For now, use direct lpr command
@@ -2716,7 +2738,7 @@ def print_pdf(
                         text=True,
                         check=False
                     )
-                
+
                 if result.returncode == 0:
                     console.print(f"[green]✓[/green] PDF sent to printer!")
                 else:
@@ -2730,7 +2752,7 @@ def print_pdf(
                 console.print(f"[dim]PDF saved at: {pdf_path}[/dim]")
         else:
             console.print(f"[dim]PDF saved at: {pdf_path} (not printed)[/dim]")
-        
+
         # Log to Oracle if available
         if oracle:
             try:
@@ -2740,17 +2762,17 @@ def print_pdf(
                 )
             except Exception:
                 pass
-        
+
         # Process TavernKeeper hook
         _process_tavern_hook(project_path, "print_pdf", True, {
             "pdf_path": str(pdf_path),
             "created": not force_create and pdf_path and pdf_path.exists(),
             "style": style
         })
-        
+
         console.print(f"\n[bold green]✅ Complete![/bold green]")
         console.print(f"[dim]PDF: {pdf_path}[/dim]")
-        
+
     except Exception as e:
         console.print(f"\n[bold red]❌ Error:[/bold red] {e}")
         logger.exception("Error in print_pdf command")
@@ -2767,24 +2789,24 @@ def evolve_another_template(
 ):
     """
     Generate evolution report using alternative template format.
-    
+
     Creates a new version of the complete evolution report using a different
     template style (academic paper, field guide, lab notes, etc.) instead
     of the default format.
-    
+
     Requires a previous /evolve run to have evolution data available.
     """
     project_path = resolve_project_path(path)
-    
+
     import subprocess
     import sys
-    
+
     script_path = project_path / "scripts" / "evolve_another_template.py"
-    
+
     if not script_path.exists():
         console.print(f"[red]❌ Script not found: {script_path}[/red]")
         raise typer.Exit(1)
-    
+
     # Build command
     cmd = [sys.executable, str(script_path)]
     if list_templates:
@@ -2793,10 +2815,10 @@ def evolve_another_template(
         cmd.append("--all")
     elif template:
         cmd.extend(["--template", template])
-    
+
     # Run script
     result = subprocess.run(cmd, cwd=str(project_path))
-    
+
     if result.returncode != 0:
         raise typer.Exit(result.returncode)
 
@@ -2808,33 +2830,33 @@ def chronicler_start(
 ):
     """
     Start TheChronicler - Self-monitoring system.
-    
+
     TheChronicler observes, records, and reports on all activity within WAFT:
     - File system changes (genesis, exodus, mutations)
     - Git repository activity
     - Work effort lifecycle
-    
+
     Generates:
     - Hourly reports on the hour
     - Daily reports at 5 AM (reset cycle)
-    
+
     Observations stored in: _chronicler/observations/
     Reports stored in: _chronicler/reports/
     """
     project_path = resolve_project_path(path)
-    
+
     console.print(f"\n[bold cyan]📜[/bold cyan] [bold]TheChronicler[/bold]")
     console.print(f"[dim]The Chronicler of All System Activity - Observing Genesis and Exodus[/dim]\n")
-    
+
     from .core.chronicler import TheChronicler
-    
+
     try:
         chronicler = TheChronicler(project_path, reset_hour=reset_hour)
         chronicler.start()
-        
+
         console.print(f"[green]✅[/green] TheChronicler monitoring active")
         console.print(f"[dim]Press Ctrl+C to stop[/dim]\n")
-        
+
         # Keep running until interrupted
         try:
             while True:
@@ -2855,13 +2877,13 @@ def chronicler_stats(
 ):
     """Show TheChronicler statistics."""
     project_path = resolve_project_path(path)
-    
+
     from .core.chronicler import TheChronicler
-    
+
     try:
         chronicler = TheChronicler(project_path)
         stats = chronicler.get_stats()
-        
+
         console.print(f"\n[bold cyan]📊 TheChronicler Statistics[/bold cyan]\n")
         console.print(f"Date: {stats['date']}")
         console.print(f"Genesis (Created): {stats['genesis_count']}")
@@ -2885,19 +2907,19 @@ def chronicler_report(
     if not hourly and not daily:
         console.print("[red]❌ Error:[/red] Must specify --hourly or --daily")
         raise typer.Exit(1)
-    
+
     project_path = resolve_project_path(path)
-    
+
     from .core.chronicler import TheChronicler
-    
+
     try:
         chronicler = TheChronicler(project_path)
-        
+
         if hourly:
             console.print("[dim]Generating hourly report...[/dim]")
             chronicler.generate_immediate_hourly_report()
             console.print("[green]✅[/green] Hourly report generated")
-        
+
         if daily:
             console.print("[dim]Generating daily report...[/dim]")
             chronicler.generate_immediate_daily_report()
@@ -2916,19 +2938,19 @@ def campfire(
 ):
     """
     Start TheCampfire - Gather around to tell stories.
-    
+
     TheCampfire is a self-contained full-stack application that embodies
     the essence of sitting around a campfire to tell stories.
-    
+
     True Name: "Essence of Sitting Around a Campfire to Tell Stories"
     """
     project_path = resolve_project_path(path)
-    
+
     console.print(f"\n[bold yellow]🔥[/bold yellow] [bold]TheCampfire[/bold]")
     console.print(f"[dim]The Essence of Sitting Around a Campfire to Tell Stories[/dim]\n")
-    
+
     from .core.campfire import TheCampfire
-    
+
     try:
         campfire = TheCampfire(project_path, port=port, host=host)
         campfire.serve()
@@ -2951,35 +2973,35 @@ def rag_query(
 ):
     """
     Query RAG chatbot with a question.
-    
+
     Examples:
         waft rag query "What is WAFT?" --pdfs docs/welcome_packet/WAFT_WELCOME_PACKET.pdf
         waft rag query "How do agents work?" --pdfs docs/**,_work_efforts/**
     """
     project_path = resolve_project_path(path)
-    
+
     try:
         from .rag import RAGChatbot
-        
+
         console.print(f"\n[bold cyan]🤖[/bold cyan] [bold]RAG Chatbot[/bold]\n")
-        
+
         chatbot = RAGChatbot(project_path=project_path)
-        
+
         # Parse PDF paths
         pdf_list = []
         if pdfs:
             pdf_list = [p.strip() for p in pdfs.split(",")]
-        
+
         # Query
         console.print(f"[dim]Question:[/dim] {question}")
         if pdf_list:
             console.print(f"[dim]PDFs:[/dim] {', '.join(pdf_list)}")
-        
+
         console.print("\n[dim]Querying...[/dim]")
         answer = chatbot.query(question=question, pdfs=pdf_list if pdf_list else None)
-        
+
         console.print(f"\n[bold]Answer:[/bold]\n{answer}\n")
-        
+
     except Exception as e:
         console.print(f"[red]❌ Error:[/red] {e}")
         logger.exception("Error querying RAG")
@@ -2993,31 +3015,31 @@ def rag_index(
 ):
     """
     Index PDFs into the vector store.
-    
+
     Examples:
         waft rag index docs/welcome_packet/WAFT_WELCOME_PACKET.pdf
         waft rag index docs/**,_work_efforts/briefs/**
     """
     project_path = resolve_project_path(path)
-    
+
     try:
         from .rag import RAGChatbot
         from pathlib import Path
-        
+
         console.print(f"\n[bold cyan]📚[/bold cyan] [bold]RAG Indexing[/bold]\n")
-        
+
         chatbot = RAGChatbot(project_path=project_path)
-        
+
         # Parse paths
         path_list = [p.strip() for p in pdfs.split(",")]
-        
+
         # Index
         console.print(f"[dim]Indexing {len(path_list)} path(s)...[/dim]")
         for pdf_path in path_list:
             p = Path(pdf_path)
             if not p.is_absolute():
                 p = project_path / p
-            
+
             if p.is_file() and p.suffix.lower() == ".pdf":
                 chatbot.add_pdfs([str(p)])
                 console.print(f"[green]✓[/green] Indexed: {p.name}")
@@ -3027,10 +3049,10 @@ def rag_index(
                 console.print(f"[green]✓[/green] Indexed {pdf_count} PDF(s) from: {p}")
             else:
                 console.print(f"[yellow]⚠[/yellow]  Skipped (not a PDF or directory): {p}")
-        
+
         indexed = chatbot.get_indexed_files()
         console.print(f"\n[green]✅[/green] Indexing complete. {len(indexed)} file(s) indexed.")
-        
+
     except Exception as e:
         console.print(f"[red]❌ Error:[/red] {e}")
         logger.exception("Error indexing PDFs")
@@ -3045,27 +3067,27 @@ def rag_ui(
 ):
     """
     Launch RAG Chatbot Gradio UI.
-    
+
     Opens an interactive web interface for querying PDFs.
     """
     project_path = resolve_project_path(path)
-    
+
     try:
         import sys
         from pathlib import Path
-        
+
         # Add rag-chatbot to path
         rag_chatbot_path = project_path / "_integrations" / "rag-chatbot"
         if str(rag_chatbot_path) not in sys.path:
             sys.path.insert(0, str(rag_chatbot_path))
-        
+
         from rag_chatbot import LocalRAGPipeline
         from rag_chatbot.ui.ui import LocalChatbotUI
         from rag_chatbot.logger import Logger
-        
+
         console.print(f"\n[bold cyan]🎨[/bold cyan] [bold]RAG Chatbot UI[/bold]\n")
         console.print(f"[dim]Starting Gradio interface on http://{host}:{port}[/dim]\n")
-        
+
         pipeline = LocalRAGPipeline(host="localhost")
         logger = Logger()
         ui = LocalChatbotUI(
@@ -3074,9 +3096,9 @@ def rag_ui(
             host="localhost",
             data_dir=str(project_path / "_hidden" / ".truth" / "rag" / "data"),
         )
-        
+
         ui.launch(server_name=host, server_port=port, share=False)
-        
+
     except KeyboardInterrupt:
         console.print("\n[dim]UI stopped.[/dim]")
     except Exception as e:
@@ -3093,7 +3115,7 @@ def rag_serve(
 ):
     """
     Serve RAG Chatbot API (alias for 'ui' command).
-    
+
     Serves the RAG chatbot with both UI and API access.
     """
     rag_ui(path=path, port=port, host=host)

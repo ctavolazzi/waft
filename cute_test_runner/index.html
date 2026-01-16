@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 Cute Test Runner</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧪 Cute Test Runner</h1>
+            <p class="subtitle">Run your tests with style! ✨</p>
+        </header>
+
+        <div class="controls">
+            <button id="runTests" class="btn btn-primary">
+                <span class="btn-icon">🚀</span>
+                <span class="btn-text">Run Tests</span>
+            </button>
+            <button id="clearResults" class="btn btn-secondary">
+                <span class="btn-icon">🧹</span>
+                <span class="btn-text">Clear</span>
+            </button>
+        </div>
+
+        <div id="status" class="status hidden">
+            <div class="spinner"></div>
+            <span class="status-text">Running tests...</span>
+        </div>
+
+        <div id="results" class="results"></div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

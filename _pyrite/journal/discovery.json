@@ -1,0 +1,26 @@
+{
+  "journal_path": "_pyrite/journal",
+  "structure": "hierarchical",
+  "format": "markdown",
+  "entry_types": [
+    "structured",
+    "simple",
+    "being"
+  ],
+  "time_segmentation": {
+    "levels": [
+      "year",
+      "month",
+      "day",
+      "hour"
+    ],
+    "format": "YYYY/MM/DD/HH"
+  },
+  "discovery_hints": [
+    "Look for _pyrite/journal/chronicles/",
+    "Entries organized by time: YYYY/MM/DD/HH/entries.md",
+    "Master index at _pyrite/journal/index.json",
+    "Discovery manifest at _pyrite/journal/discovery.json"
+  ],
+  "last_updated": "2026-01-15T22:24:40.325472"
+}

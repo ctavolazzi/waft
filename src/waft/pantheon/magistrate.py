@@ -172,6 +172,18 @@ class BodyOfProof:
 
 class Magistrate:
     """
+    Magistrate: Pantheon Entity (Timeless Force that Binds Reality Together)
+    
+    The Magistrate is the God of Precedent and Body of Proof - a timeless Entity
+    that maintains legal precedents and the body of evidence. As a Force that Binds
+    Reality Together, the Magistrate holds the Aspect of Creation related to precedent
+    and proof, which should not change until evidence collected by Beings proves
+    that change is needed.
+    
+    The Magistrate doesn't move much - it maintains stable precedents and only evolves
+    when sufficient evidence warrants modification of its fundamental nature.
+    """
+    """
     Magistrate: God of Precedent and Body of Proof
     
     Organizes case files from _work_efforts/proof_cases/ into Precedent categories,

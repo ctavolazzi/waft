@@ -195,6 +195,19 @@ class RealitySystem:
         # Save reality
         self._save_reality(reality)
         
+        # Add reference to Prime Directive
+        try:
+            from .prime_directive import CelestialBody
+            celestial_body = CelestialBody(project_path=self.project_path)
+            celestial_body.heart.add_reference(
+                reference_type="reality",
+                reference_id=reality.reality_id,
+                description=f"Reality {reality.reality_id} ({reality.reality_type.value})"
+            )
+        except ImportError:
+            # Prime Directive module not available
+            pass
+        
         return reality
     
     def start_reality(self, reality_id: str) -> Reality:

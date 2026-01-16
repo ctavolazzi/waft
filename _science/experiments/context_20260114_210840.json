@@ -1,0 +1,458 @@
+{
+  "artifact_metadata": {
+    "generation_id": "75967a4a-f996-4eeb-8b7e-6915c5143da7",
+    "artifact_type": "science-bitch-invocation",
+    "version": "1.0",
+    "created_at": "2026-01-14T21:08:40.404699",
+    "timezone": "PST"
+  },
+  "spacetime": {
+    "timestamp": "2026-01-14T21:08:40.405285",
+    "timestamp_unix": 1768453720.405439,
+    "date": "2026-01-14",
+    "time": "21:08:40",
+    "timezone": "PST"
+  },
+  "project": {
+    "path": "/Users/ctavolazzi/Code/active/waft",
+    "name": "waft",
+    "absolute_path": "/Users/ctavolazzi/Code/active/waft"
+  },
+  "git": {
+    "initialized": true,
+    "branch": "main",
+    "commit_hash": "4fa232bcd7926d8d3d464d6db9851a6ca3c8443c",
+    "commit_message": "docs: Add implementation summary for Vibration Adventure system",
+    "commit_author": "Christopher Tavolazzi",
+    "commit_date": "2026-01-14 20:59:28 -0800",
+    "uncommitted_files": [
+      "cursor/INDEX.md",
+      ".empirica/sessions/sessions.db",
+      ".obsidian/workspace.json",
+      "_genetics/pdf_generator/index.json",
+      "_integrations/choose-your-own-adventure",
+      "_pyrite/journal/ai-journal.md",
+      "_work_efforts/CONSIDER_OPENHANDS_TAVERN_GAME_2026-01-14.md",
+      "_work_efforts/WE-260114-vibr_choose_your_own_adventure_integration/WE-260114-vibr_index.md",
+      "_work_efforts/proof_cases/iteration2_preparation.md",
+      "pyproject.toml",
+      "src/waft/cli/pyrite_cli.py",
+      "src/waft/core/reflect.py",
+      "src/waft/core/science_bitch.py",
+      "uv.lock",
+      ".cursor/commands/deep-think-examples.md",
+      ".cursor/commands/evening-report.md",
+      "NARRATIVE-WAFT/THE_VIBRATION_STORY.html",
+      "NARRATIVE-WAFT/THE_VIBRATION_STORY.pdf",
+      "_genetics/pdf_generator/9d4f9b240875c61c.json",
+      "_genetics/pdf_generator/9d4f9b240875c61c_events.jsonl",
+      "_genetics/pdf_generator/a9fb6d5d79ab050e.json",
+      "_genetics/pdf_generator/a9fb6d5d79ab050e_events.jsonl",
+      "_pyrite/analyze/analyze-2026-01-14-204831.md",
+      "_work_efforts/OPENHANDS_CONTEXT_CONDENSER_2026-01-14.md",
+      "_work_efforts/OPENHANDS_IMPLEMENTATION_GUIDE_2026-01-14.md",
+      "_work_efforts/OPENHANDS_LLM_REGISTRY_2026-01-14.md",
+      "_work_efforts/OPENHANDS_MCP_INTEGRATION_2026-01-14.md",
+      "_work_efforts/OPENHANDS_METRICS_TRACKING_2026-01-14.md",
+      "_work_efforts/OPENHANDS_MODEL_ROUTING_2026-01-14.md",
+      "_work_efforts/OPENHANDS_OBSERVABILITY_2026-01-14.md",
+      "_work_efforts/OPENHANDS_PERSISTENCE_2026-01-14.md",
+      "_work_efforts/OPENHANDS_REASONING_2026-01-14.md",
+      "_work_efforts/OPENHANDS_SECRET_REGISTRY_2026-01-14.md",
+      "_work_efforts/OPENHANDS_SKILLS_INTEGRATION_2026-01-14.md",
+      "_work_efforts/OPENHANDS_SUB_AGENT_DELEGATION_2026-01-14.md",
+      "_work_efforts/OPENHANDS_TOOLS_REFERENCE_2026-01-14.md",
+      "_work_efforts/REVISED_OPENHANDS_TAVERN_GAME_2026-01-14.md",
+      "_work_efforts/SESSION_RECAP_2026-01-14_deep-think-implementation.md",
+      "\"_work_efforts/briefs/Evening Report - 2026-01-14_20260114.pdf\"",
+      "_work_efforts/proof_cases/Iteration2_Preparation_20260114_204608.pdf",
+      "\"_work_efforts/proof_cases/PDF Generation Improvements_Cycle1_20260114_204605.pdf\"",
+      "_work_efforts/proof_cases/pdf_generation_improvements_observations.md",
+      "scripts/create_evening_report.py",
+      "scripts/example_custom_tool_dnd_validator.py",
+      "scripts/generate_tavern_game_complete.py",
+      "scripts/generate_tavern_game_with_mcp.py",
+      "scripts/generate_tavern_game_with_skills.py",
+      "scripts/generate_tavern_server_openhands.py",
+      "scripts/record_and_loop.py",
+      "scripts/test_openhands_setup.py"
+    ],
+    "staged_files": [
+      "cursor/INDEX.md",
+      ".cursor/commands/deep-think-examples.md",
+      ".cursor/commands/evening-report.md",
+      "NARRATIVE-WAFT/THE_VIBRATION_STORY.html",
+      "NARRATIVE-WAFT/THE_VIBRATION_STORY.pdf",
+      "_genetics/pdf_generator/9d4f9b240875c61c.json",
+      "_genetics/pdf_generator/9d4f9b240875c61c_events.jsonl",
+      "_genetics/pdf_generator/a9fb6d5d79ab050e.json",
+      "_genetics/pdf_generator/a9fb6d5d79ab050e_events.jsonl",
+      "_pyrite/analyze/analyze-2026-01-14-204831.md",
+      "_work_efforts/OPENHANDS_CONTEXT_CONDENSER_2026-01-14.md",
+      "_work_efforts/OPENHANDS_IMPLEMENTATION_GUIDE_2026-01-14.md",
+      "_work_efforts/OPENHANDS_LLM_REGISTRY_2026-01-14.md",
+      "_work_efforts/OPENHANDS_MCP_INTEGRATION_2026-01-14.md",
+      "_work_efforts/OPENHANDS_METRICS_TRACKING_2026-01-14.md",
+      "_work_efforts/OPENHANDS_MODEL_ROUTING_2026-01-14.md",
+      "_work_efforts/OPENHANDS_OBSERVABILITY_2026-01-14.md",
+      "_work_efforts/OPENHANDS_PERSISTENCE_2026-01-14.md",
+      "_work_efforts/OPENHANDS_REASONING_2026-01-14.md",
+      "_work_efforts/OPENHANDS_SECRET_REGISTRY_2026-01-14.md",
+      "_work_efforts/OPENHANDS_SKILLS_INTEGRATION_2026-01-14.md",
+      "_work_efforts/OPENHANDS_SUB_AGENT_DELEGATION_2026-01-14.md",
+      "_work_efforts/OPENHANDS_TOOLS_REFERENCE_2026-01-14.md",
+      "_work_efforts/REVISED_OPENHANDS_TAVERN_GAME_2026-01-14.md",
+      "_work_efforts/SESSION_RECAP_2026-01-14_deep-think-implementation.md",
+      "\"_work_efforts/briefs/Evening Report - 2026-01-14_20260114.pdf\"",
+      "_work_efforts/proof_cases/Iteration2_Preparation_20260114_204608.pdf",
+      "\"_work_efforts/proof_cases/PDF Generation Improvements_Cycle1_20260114_204605.pdf\"",
+      "_work_efforts/proof_cases/pdf_generation_improvements_observations.md",
+      "scripts/create_evening_report.py",
+      "scripts/example_custom_tool_dnd_validator.py",
+      "scripts/generate_tavern_game_complete.py",
+      "scripts/generate_tavern_game_with_mcp.py",
+      "scripts/generate_tavern_game_with_skills.py",
+      "scripts/generate_tavern_server_openhands.py",
+      "scripts/record_and_loop.py",
+      "scripts/test_openhands_setup.py"
+    ],
+    "unstaged_files": [
+      ".empirica/sessions/sessions.db",
+      ".obsidian/workspace.json",
+      "_genetics/pdf_generator/index.json",
+      "_integrations/choose-your-own-adventure",
+      "_pyrite/journal/ai-journal.md",
+      "_work_efforts/CONSIDER_OPENHANDS_TAVERN_GAME_2026-01-14.md",
+      "_work_efforts/WE-260114-vibr_choose_your_own_adventure_integration/WE-260114-vibr_index.md",
+      "_work_efforts/proof_cases/iteration2_preparation.md",
+      "pyproject.toml",
+      "src/waft/cli/pyrite_cli.py",
+      "src/waft/core/reflect.py",
+      "src/waft/core/science_bitch.py",
+      "uv.lock",
+      ".cursor/commands/deep-think-examples.md",
+      ".cursor/commands/evening-report.md",
+      "NARRATIVE-WAFT/THE_VIBRATION_STORY.html",
+      "NARRATIVE-WAFT/THE_VIBRATION_STORY.pdf",
+      "_genetics/pdf_generator/9d4f9b240875c61c.json",
+      "_genetics/pdf_generator/9d4f9b240875c61c_events.jsonl",
+      "_genetics/pdf_generator/a9fb6d5d79ab050e.json",
+      "_genetics/pdf_generator/a9fb6d5d79ab050e_events.jsonl",
+      "_pyrite/analyze/analyze-2026-01-14-204831.md",
+      "_work_efforts/OPENHANDS_CONTEXT_CONDENSER_2026-01-14.md",
+      "_work_efforts/OPENHANDS_IMPLEMENTATION_GUIDE_2026-01-14.md",
+      "_work_efforts/OPENHANDS_LLM_REGISTRY_2026-01-14.md",
+      "_work_efforts/OPENHANDS_MCP_INTEGRATION_2026-01-14.md",
+      "_work_efforts/OPENHANDS_METRICS_TRACKING_2026-01-14.md",
+      "_work_efforts/OPENHANDS_MODEL_ROUTING_2026-01-14.md",
+      "_work_efforts/OPENHANDS_OBSERVABILITY_2026-01-14.md",
+      "_work_efforts/OPENHANDS_PERSISTENCE_2026-01-14.md",
+      "_work_efforts/OPENHANDS_REASONING_2026-01-14.md",
+      "_work_efforts/OPENHANDS_SECRET_REGISTRY_2026-01-14.md",
+      "_work_efforts/OPENHANDS_SKILLS_INTEGRATION_2026-01-14.md",
+      "_work_efforts/OPENHANDS_SUB_AGENT_DELEGATION_2026-01-14.md",
+      "_work_efforts/OPENHANDS_TOOLS_REFERENCE_2026-01-14.md",
+      "_work_efforts/REVISED_OPENHANDS_TAVERN_GAME_2026-01-14.md",
+      "_work_efforts/SESSION_RECAP_2026-01-14_deep-think-implementation.md",
+      "\"_work_efforts/briefs/Evening Report - 2026-01-14_20260114.pdf\"",
+      "_work_efforts/proof_cases/Iteration2_Preparation_20260114_204608.pdf",
+      "\"_work_efforts/proof_cases/PDF Generation Improvements_Cycle1_20260114_204605.pdf\"",
+      "_work_efforts/proof_cases/pdf_generation_improvements_observations.md",
+      "scripts/create_evening_report.py",
+      "scripts/example_custom_tool_dnd_validator.py",
+      "scripts/generate_tavern_game_complete.py",
+      "scripts/generate_tavern_game_with_mcp.py",
+      "scripts/generate_tavern_game_with_skills.py",
+      "scripts/generate_tavern_server_openhands.py",
+      "scripts/record_and_loop.py",
+      "scripts/test_openhands_setup.py"
+    ],
+    "untracked_files": [
+      ".cursor/commands/deep-think-examples.md",
+      ".cursor/commands/evening-report.md",
+      "NARRATIVE-WAFT/THE_VIBRATION_STORY.html",
+      "NARRATIVE-WAFT/THE_VIBRATION_STORY.pdf",
+      "_genetics/pdf_generator/9d4f9b240875c61c.json",
+      "_genetics/pdf_generator/9d4f9b240875c61c_events.jsonl",
+      "_genetics/pdf_generator/a9fb6d5d79ab050e.json",
+      "_genetics/pdf_generator/a9fb6d5d79ab050e_events.jsonl",
+      "_pyrite/analyze/analyze-2026-01-14-204831.md",
+      "_work_efforts/OPENHANDS_CONTEXT_CONDENSER_2026-01-14.md",
+      "_work_efforts/OPENHANDS_IMPLEMENTATION_GUIDE_2026-01-14.md",
+      "_work_efforts/OPENHANDS_LLM_REGISTRY_2026-01-14.md",
+      "_work_efforts/OPENHANDS_MCP_INTEGRATION_2026-01-14.md",
+      "_work_efforts/OPENHANDS_METRICS_TRACKING_2026-01-14.md",
+      "_work_efforts/OPENHANDS_MODEL_ROUTING_2026-01-14.md",
+      "_work_efforts/OPENHANDS_OBSERVABILITY_2026-01-14.md",
+      "_work_efforts/OPENHANDS_PERSISTENCE_2026-01-14.md",
+      "_work_efforts/OPENHANDS_REASONING_2026-01-14.md",
+      "_work_efforts/OPENHANDS_SECRET_REGISTRY_2026-01-14.md",
+      "_work_efforts/OPENHANDS_SKILLS_INTEGRATION_2026-01-14.md",
+      "_work_efforts/OPENHANDS_SUB_AGENT_DELEGATION_2026-01-14.md",
+      "_work_efforts/OPENHANDS_TOOLS_REFERENCE_2026-01-14.md",
+      "_work_efforts/REVISED_OPENHANDS_TAVERN_GAME_2026-01-14.md",
+      "_work_efforts/SESSION_RECAP_2026-01-14_deep-think-implementation.md",
+      "\"_work_efforts/briefs/Evening Report - 2026-01-14_20260114.pdf\"",
+      "_work_efforts/proof_cases/Iteration2_Preparation_20260114_204608.pdf",
+      "\"_work_efforts/proof_cases/PDF Generation Improvements_Cycle1_20260114_204605.pdf\"",
+      "_work_efforts/proof_cases/pdf_generation_improvements_observations.md",
+      "scripts/create_evening_report.py",
+      "scripts/example_custom_tool_dnd_validator.py",
+      "scripts/generate_tavern_game_complete.py",
+      "scripts/generate_tavern_game_with_mcp.py",
+      "scripts/generate_tavern_game_with_skills.py",
+      "scripts/generate_tavern_server_openhands.py",
+      "scripts/record_and_loop.py",
+      "scripts/test_openhands_setup.py"
+    ],
+    "uncommitted_count": 50,
+    "recent_commits": [
+      {
+        "hash": "4fa232bc",
+        "message": "docs: Add implementation summary for Vibration Adventure system",
+        "author": "Christopher Tavolazzi",
+        "date": "2026-01-14 20:59:28 -0800"
+      },
+      {
+        "hash": "66a17a1c",
+        "message": "feat: Complete Choose Your Own Adventure integration with The Vibration story",
+        "author": "Christopher Tavolazzi",
+        "date": "2026-01-14 20:58:39 -0800"
+      },
+      {
+        "hash": "29f68e4c",
+        "message": "docs: Add comprehensive Infinity release documentation with complete context",
+        "author": "Christopher Tavolazzi",
+        "date": "2026-01-14 20:30:12 -0800"
+      },
+      {
+        "hash": "bca9801a",
+        "message": "docs: Add v1.0.0 release plan with semantic versioning explanation",
+        "author": "Christopher Tavolazzi",
+        "date": "2026-01-14 20:28:10 -0800"
+      },
+      {
+        "hash": "9505b756",
+        "message": "docs: Add v1.0.0 Electron desktop app vision to release notes",
+        "author": "Christopher Tavolazzi",
+        "date": "2026-01-14 20:26:58 -0800"
+      }
+    ],
+    "remote_url": "https://github.com/ctavolazzi/waft.git",
+    "commits_ahead": 0,
+    "commits_behind": 2
+  },
+  "system": {
+    "platform": "Darwin",
+    "platform_release": "21.6.0",
+    "platform_version": "Darwin Kernel Version 21.6.0: Mon Jun 24 00:56:10 PDT 2024; root:xnu-8020.240.18.709.2~1/RELEASE_X86_64",
+    "machine": "x86_64",
+    "processor": "i386",
+    "python_version": "3.12.0",
+    "working_directory": "/Users/ctavolazzi/Code/active/waft",
+    "disk_usage": {
+      "total": "234Gi",
+      "used": "202Gi",
+      "available": "8.3Gi",
+      "percent": "97%"
+    }
+  },
+  "project_state": {
+    "active_work_efforts": [
+      {
+        "name": "CHECKPOINT_2026-01-11_one_pager_evolution.md",
+        "path": "_work_efforts/CHECKPOINT_2026-01-11_one_pager_evolution.md"
+      },
+      {
+        "name": "WORK_EFFORT_TOOL_BAG_STANDARD.md",
+        "path": "_work_efforts/WORK_EFFORT_TOOL_BAG_STANDARD.md"
+      },
+      {
+        "name": "CHECKPOINT_2026-01-13_010900_RUN_IT_WORKFLOW.md",
+        "path": "_work_efforts/CHECKPOINT_2026-01-13_010900_RUN_IT_WORKFLOW.md"
+      },
+      {
+        "name": "CHECKPOINT_2026-01-13_010341_VOTING_SYSTEM_IMPLEMENTATION.md",
+        "path": "_work_efforts/CHECKPOINT_2026-01-13_010341_VOTING_SYSTEM_IMPLEMENTATION.md"
+      },
+      {
+        "name": "COMPREHENSIVE_ORCHESTRATION_COMPLETE_2026-01-11.md",
+        "path": "_work_efforts/COMPREHENSIVE_ORCHESTRATION_COMPLETE_2026-01-11.md"
+      },
+      {
+        "name": "RELEASE_EXECUTION_v0.8.1_2026-01-14.md",
+        "path": "_work_efforts/RELEASE_EXECUTION_v0.8.1_2026-01-14.md"
+      },
+      {
+        "name": "CHECKPOINT_2026-01-08_SCINT_SYSTEM_FOUNDATION.md",
+        "path": "_work_efforts/CHECKPOINT_2026-01-08_SCINT_SYSTEM_FOUNDATION.md"
+      },
+      {
+        "name": "CHECKPOINT_2026-01-13_010000_voting_system_run_it.md",
+        "path": "_work_efforts/CHECKPOINT_2026-01-13_010000_voting_system_run_it.md"
+      },
+      {
+        "name": "CHECKPOINT_2026-01-13_082200_RUN_IT_WORKFLOW.md",
+        "path": "_work_efforts/CHECKPOINT_2026-01-13_082200_RUN_IT_WORKFLOW.md"
+      },
+      {
+        "name": "CHECKPOINT_2026-01-13_run-it_ai_town_verification.md",
+        "path": "_work_efforts/CHECKPOINT_2026-01-13_run-it_ai_town_verification.md"
+      },
+      {
+        "name": "REPORT_2026-01-13_local-rag-integration.md",
+        "path": "_work_efforts/REPORT_2026-01-13_local-rag-integration.md"
+      },
+      {
+        "name": "CHECKPOINT_2026-01-13_prime_directive_planning.md",
+        "path": "_work_efforts/CHECKPOINT_2026-01-13_prime_directive_planning.md"
+      },
+      {
+        "name": "DEMO_EXECUTION_REPORT_2026-01-11.md",
+        "path": "_work_efforts/DEMO_EXECUTION_REPORT_2026-01-11.md"
+      },
+      {
+        "name": "CHECKPOINT_2026-01-13_010004_run-it_workflow_ai_town_ui.md",
+        "path": "_work_efforts/CHECKPOINT_2026-01-13_010004_run-it_workflow_ai_town_ui.md"
+      },
+      {
+        "name": "ORDER_66_EXECUTION_2026-01-10.md",
+        "path": "_work_efforts/ORDER_66_EXECUTION_2026-01-10.md"
+      },
+      {
+        "name": "COMPREHENSIVE_ORCHESTRATION_PROGRESS_2026-01-11.md",
+        "path": "_work_efforts/COMPREHENSIVE_ORCHESTRATION_PROGRESS_2026-01-11.md"
+      },
+      {
+        "name": "GOAL_DAVEYJONES_INTEGRATION.md",
+        "path": "_work_efforts/GOAL_DAVEYJONES_INTEGRATION.md"
+      },
+      {
+        "name": "COMPLETE_CYCLE_EXECUTION_2026-01-12.md",
+        "path": "_work_efforts/COMPLETE_CYCLE_EXECUTION_2026-01-12.md"
+      },
+      {
+        "name": "DEMO_TEST_REPORT_2026-01-11.md",
+        "path": "_work_efforts/DEMO_TEST_REPORT_2026-01-11.md"
+      },
+      {
+        "name": "CHECKPOINT_2026-01-14_run-it_workflow.md",
+        "path": "_work_efforts/CHECKPOINT_2026-01-14_run-it_workflow.md"
+      },
+      {
+        "name": "BANNED_WORDS_SYSTEM.md",
+        "path": "_work_efforts/BANNED_WORDS_SYSTEM.md"
+      },
+      {
+        "name": "CHECKPOINT_2026-01-12_WAFT_FRAMEWORK_HANDBOOK.md",
+        "path": "_work_efforts/CHECKPOINT_2026-01-12_WAFT_FRAMEWORK_HANDBOOK.md"
+      },
+      {
+        "name": "CHECKPOINT_2026-01-12_run-it_workflow_execution.md",
+        "path": "_work_efforts/CHECKPOINT_2026-01-12_run-it_workflow_execution.md"
+      },
+      {
+        "name": "CHECKPOINT_2026-01-13_run-it_workflow_progress.md",
+        "path": "_work_efforts/CHECKPOINT_2026-01-13_run-it_workflow_progress.md"
+      },
+      {
+        "name": "CONSIDER_2026-01-11_comprehensive_orchestration.md",
+        "path": "_work_efforts/CONSIDER_2026-01-11_comprehensive_orchestration.md"
+      },
+      {
+        "name": "CHECKPOINT_2026-01-11_LATEX_RESEARCH_TOOLS_LIVE_RELOAD.md",
+        "path": "_work_efforts/CHECKPOINT_2026-01-11_LATEX_RESEARCH_TOOLS_LIVE_RELOAD.md"
+      }
+    ],
+    "recent_files": [
+      {
+        "path": "uv.lock",
+        "modified_hours_ago": 0.35
+      },
+      {
+        "path": "pyproject.toml",
+        "modified_hours_ago": 0.35
+      },
+      {
+        "path": "RELEASE_NOTES_v0.8.1.md",
+        "modified_hours_ago": 0.67
+      },
+      {
+        "path": "CHANGELOG.md",
+        "modified_hours_ago": 0.72
+      },
+      {
+        "path": "generate_creative_booklet.py",
+        "modified_hours_ago": 0.77
+      },
+      {
+        "path": "status_story_20260113.pdf",
+        "modified_hours_ago": 0.77
+      },
+      {
+        "path": "WAFT_DND_KARMA_HANDBOOK.pdf",
+        "modified_hours_ago": 0.77
+      },
+      {
+        "path": "PYRITE_DEMO_AND_OBSTACLE_COURSE.md",
+        "modified_hours_ago": 0.77
+      },
+      {
+        "path": "WAFT_GAME_RULES.html",
+        "modified_hours_ago": 0.77
+      },
+      {
+        "path": "evolved_test.pdf",
+        "modified_hours_ago": 0.77
+      },
+      {
+        "path": "WAFT_GAME_RULES_NO_BLACK_BARS.pdf",
+        "modified_hours_ago": 0.77
+      },
+      {
+        "path": "WAFT_GAME_RULES_EVOLVED.pdf",
+        "modified_hours_ago": 0.77
+      },
+      {
+        "path": "final_evolved.pdf",
+        "modified_hours_ago": 0.77
+      },
+      {
+        "path": "good_morning.py",
+        "modified_hours_ago": 0.77
+      },
+      {
+        "path": "PDF_LIBRARY_COMPARISON_SUMMARY.md",
+        "modified_hours_ago": 0.77
+      },
+      {
+        "path": "WAFT_DND_KARMA_HANDBOOK_arxiv.pdf",
+        "modified_hours_ago": 0.77
+      },
+      {
+        "path": "tldr-examples.md",
+        "modified_hours_ago": 0.77
+      },
+      {
+        "path": "PDF_FORMATTING_IMPROVEMENTS_COMPLETE.md",
+        "modified_hours_ago": 0.77
+      },
+      {
+        "path": "pdfme_realm_evolution_report.pdf",
+        "modified_hours_ago": 0.77
+      },
+      {
+        "path": "create_dnd_binder_fpdf.py",
+        "modified_hours_ago": 0.77
+      }
+    ],
+    "project_structure": {}
+  },
+  "environment": {
+    "python_path": null,
+    "virtual_env": null,
+    "conda_env": null,
+    "user": "ctavolazzi",
+    "home": "/Users/ctavolazzi"
+  }
+}

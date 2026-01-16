@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Control & The Village Dashboard - Evolved</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #4a9eff 0%, #00d4ff 50%, #7bff7b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            color: #a0a0a0;
+            font-size: 1.1em;
+            position: relative;
+            z-index: 1;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        .status-connected {
+            background: #7bff7b;
+        }
+
+        .status-connecting {
+            background: #ffaa00;
+        }
+
+        .status-disconnected {
+            background: #ff6464;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .panel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .panel-header-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .panel-icon {
+            font-size: 2.5em;
+            margin-right: 15px;
+        }
+
+        .mission-control .panel-icon {
+            color: #4a9eff;
+        }
+
+        .village .panel-icon {
+            color: #7bff7b;
+        }
+
+        .panel-title {
+            font-size: 1.8em;
+            font-weight: 600;
+        }
+
+        .mission-control .panel-title {
+            color: #4a9eff;
+        }
+
+        .village .panel-title {
+            color: #7bff7b;
+        }
+
+        .refresh-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #e0e0e0;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .refresh-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .refresh-btn:active {
+            transform: rotate(180deg);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: scale(1.05);
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .mission-control .stat-value {
+            color: #4a9eff;
+        }
+
+        .village .stat-value {
+            color: #7bff7b;
+        }
+
+        .stat-label {
+            color: #a0a0a0;
+            font-size: 0.9em;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid #4a9eff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .mission-list, .gathering-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .mission-item, .gathering-item {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .mission-item {
+            border-left-color: #4a9eff;
+        }
+
+        .gathering-item {
+            border-left-color: #7bff7b;
+        }
+
+        .mission-item:hover, .gathering-item:hover {
+            background: rgba(0, 0, 0, 0.5);
+            transform: translateX(5px);
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .item-id {
+            font-family: 'Courier New', monospace;
+            color: #a0a0a0;
+            font-size: 0.9em;
+        }
+
+        .item-status {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .status-monitoring {
+            background: rgba(74, 158, 255, 0.2);
+            color: #4a9eff;
+        }
+
+        .status-active {
+            background: rgba(123, 255, 123, 0.2);
+            color: #7bff7b;
+        }
+
+        .status-critical {
+            background: rgba(255, 100, 100, 0.2);
+            color: #ff6464;
+        }
+
+        .status-completed {
+            background: rgba(200, 200, 200, 0.2);
+            color: #c8c8c8;
+        }
+
+        .item-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .item-meta {
+            color: #a0a0a0;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            transition: width 0.5s ease;
+        }
+
+        .mission-control .progress-fill {
+            background: linear-gradient(90deg, #4a9eff, #00d4ff);
+        }
+
+        .village .progress-fill {
+            background: linear-gradient(90deg, #7bff7b, #00ff88);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .empty-state-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .command-section {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .command-input {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .command-input input {
+            flex: 1;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .command-input input:focus {
+            outline: none;
+            border-color: #4a9eff;
+        }
+
+        .command-input button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #4a9eff, #00d4ff);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .command-input button:hover {
+            transform: scale(1.05);
+        }
+
+        .command-input button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .insight-item {
+            background: rgba(123, 255, 123, 0.1);
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            border-left: 3px solid #7bff7b;
+            font-size: 0.95em;
+        }
+
+        .insight-contributor {
+            color: #7bff7b;
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+
+        .alert {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-success {
+            background: rgba(123, 255, 123, 0.2);
+            border-left: 4px solid #7bff7b;
+            color: #7bff7b;
+        }
+
+        .alert-error {
+            background: rgba(255, 100, 100, 0.2);
+            border-left: 4px solid #ff6464;
+            color: #ff6464;
+        }
+
+        .alert-info {
+            background: rgba(74, 158, 255, 0.2);
+            border-left: 4px solid #4a9eff;
+            color: #4a9eff;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: #1a1f3a;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #e0e0e0;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2em;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        @media (max-width: 968px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Mission Control & The Village</h1>
+            <p class="subtitle">
+                <span class="status-indicator status-connected"></span>
+                Inspired by Avatar & Fern Gully | Left Brain / Right Brain Coordination
+            </p>
+        </header>
+
+        <div class="dashboard-grid">
+            <!-- Mission Control Panel -->
+            <div class="panel mission-control">
+                <div class="panel-header">
+                    <div class="panel-header-left">
+                        <div class="panel-icon">🎯</div>
+                        <div class="panel-title">Mission Control</div>
+                    </div>
+                    <button class="refresh-btn" onclick="loadMissionControlData()" title="Refresh">↻</button>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="missions-monitored">-</div>
+                        <div class="stat-label">Missions Monitored</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="active-commands">-</div>
+                        <div class="stat-label">Active Commands</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="active-alerts">-</div>
+                        <div class="stat-label">Active Alerts</div>
+                    </div>
+                </div>
+
+                <div id="mission-alerts"></div>
+
+                <div class="mission-list" id="mission-list">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading missions...</p>
+                    </div>
+                </div>
+
+                <div class="command-section">
+                    <h3 style="margin-bottom: 15px; font-size: 1.1em;">Issue Command</h3>
+                    <div class="command-input">
+                        <input type="text" id="command-input" placeholder="mission_id command [params]" onkeypress="if(event.key==='Enter') issueCommand()" />
+                        <button onclick="issueCommand()" id="command-btn">Send</button>
+                    </div>
+                    <p style="margin-top: 10px; font-size: 0.85em; color: #a0a0a0;">
+                        Commands: halt, resume, prioritize, update_status
+                    </p>
+                </div>
+            </div>
+
+            <!-- The Village Panel -->
+            <div class="panel village">
+                <div class="panel-header">
+                    <div class="panel-header-left">
+                        <div class="panel-icon">🌳</div>
+                        <div class="panel-title">The Village</div>
+                    </div>
+                    <button class="refresh-btn" onclick="loadVillageData()" title="Refresh">↻</button>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="active-gatherings">-</div>
+                        <div class="stat-label">Active Gatherings</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-connections">-</div>
+                        <div class="stat-label">Connections</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="shared-quests">-</div>
+                        <div class="stat-label">Shared Quests</div>
+                    </div>
+                </div>
+
+                <div id="village-alerts"></div>
+
+                <div class="gathering-list" id="gathering-list">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading gatherings...</p>
+                    </div>
+                </div>
+
+                <div class="command-section">
+                    <h3 style="margin-bottom: 15px; font-size: 1.1em;">Create Gathering</h3>
+                    <div class="command-input">
+                        <input type="text" id="gathering-topic" placeholder="Gathering topic..." onkeypress="if(event.key==='Enter') createGathering()" />
+                        <button onclick="createGathering()" id="gathering-btn">Create</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mission Details Modal -->
+    <div class="modal" id="mission-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('mission-modal')">×</button>
+            <h2 id="modal-mission-title">Mission Details</h2>
+            <div id="modal-mission-content"></div>
+        </div>
+    </div>
+
+    <!-- Gathering Details Modal -->
+    <div class="modal" id="gathering-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('gathering-modal')">×</button>
+            <h2 id="modal-gathering-title">Gathering Details</h2>
+            <div id="modal-gathering-content"></div>
+        </div>
+    </div>
+
+    <script>
+        // API endpoint - connects to FastAPI backend
+        const API_BASE = 'http://localhost:8000/api';
+        
+        async function loadMissionControlData() {
+            try {
+                showLoading('mission-list');
+                
+                const response = await fetch(`${API_BASE}/mission-control`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                updateMissionControl(data);
+            } catch (error) {
+                console.error('Mission Control load error:', error);
+                showError('mission-alerts', 'Failed to load Mission Control data. Make sure the API server is running: python3 scripts/mission_control_village_api.py');
+                showEmptyState('mission-list', '📡', 'API server not connected');
+            }
+        }
+
+        async function loadVillageData() {
+            try {
+                showLoading('gathering-list');
+                
+                const response = await fetch(`${API_BASE}/village`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                updateVillage(data);
+            } catch (error) {
+                console.error('Village load error:', error);
+                showError('village-alerts', 'Failed to load Village data. Make sure the API server is running: python3 scripts/mission_control_village_api.py');
+                showEmptyState('gathering-list', '🌿', 'API server not connected');
+            }
+        }
+
+        function showLoading(elementId) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading...</p>
+                </div>
+            `;
+        }
+
+        function showEmptyState(elementId, icon, message) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">${icon}</div>
+                    <p>${message}</p>
+                </div>
+            `;
+        }
+
+        function showError(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `
+                <div class="alert alert-error">
+                    <strong>Error:</strong> ${message}
+                </div>
+            `;
+            setTimeout(() => {
+                element.innerHTML = '';
+            }, 5000);
+        }
+
+        function showSuccess(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `
+                <div class="alert alert-success">
+                    <strong>Success:</strong> ${message}
+                </div>
+            `;
+            setTimeout(() => {
+                element.innerHTML = '';
+            }, 3000);
+        }
+
+        function updateMissionControl(data) {
+            document.getElementById('missions-monitored').textContent = data.missions_monitored || 0;
+            document.getElementById('active-commands').textContent = data.active_commands || 0;
+            document.getElementById('active-alerts').textContent = data.active_alerts || 0;
+
+            const missionList = document.getElementById('mission-list');
+            if (data.missions && data.missions.length > 0) {
+                missionList.innerHTML = data.missions.map(mission => `
+                    <div class="mission-item" onclick="showMissionDetails('${mission.mission_id}')">
+                        <div class="item-header">
+                            <span class="item-id">${mission.mission_id}</span>
+                            <span class="item-status status-${mission.status}">${mission.status}</span>
+                        </div>
+                        <div class="item-title">${mission.name || 'Unnamed Mission'}</div>
+                        <div class="item-meta">Progress: ${(mission.progress * 100).toFixed(0)}% | Last Update: ${formatDate(mission.last_update)}</div>
+                        ${mission.alerts && mission.alerts.length > 0 ? `
+                            <div class="item-meta" style="color: #ff6464; margin-top: 5px;">
+                                ⚠️ ${mission.alerts.length} alert(s)
+                            </div>
+                        ` : ''}
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${mission.progress * 100}%"></div>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                showEmptyState('mission-list', '📡', 'No missions currently being monitored');
+            }
+        }
+
+        function updateVillage(data) {
+            document.getElementById('active-gatherings').textContent = data.active_gatherings || 0;
+            document.getElementById('total-connections').textContent = data.total_connections || 0;
+            document.getElementById('shared-quests').textContent = data.shared_quests || 0;
+
+            const gatheringList = document.getElementById('gathering-list');
+            if (data.gatherings && data.gatherings.length > 0) {
+                gatheringList.innerHTML = data.gatherings.map(gathering => `
+                    <div class="gathering-item" onclick="showGatheringDetails('${gathering.gathering_id}')">
+                        <div class="item-header">
+                            <span class="item-id">${gathering.gathering_id}</span>
+                            <span class="item-status status-active">${gathering.status}</span>
+                        </div>
+                        <div class="item-title">${gathering.topic}</div>
+                        <div class="item-meta">${gathering.description}</div>
+                        <div class="item-meta">Participants: ${gathering.participants?.length || 0} | Insights: ${gathering.insights?.length || 0}</div>
+                        ${gathering.insights && gathering.insights.length > 0 ? `
+                            <div style="margin-top: 15px;">
+                                <strong style="color: #7bff7b; font-size: 0.9em;">Recent Insights:</strong>
+                                ${gathering.insights.slice(-2).map(insight => `
+                                    <div class="insight-item">
+                                        ${insight.insight || insight}
+                                        ${insight.contributor ? `<div class="insight-contributor">— ${insight.contributor}</div>` : ''}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                `).join('');
+            } else {
+                showEmptyState('gathering-list', '🌿', 'No active gatherings in The Village');
+            }
+        }
+
+        async function issueCommand() {
+            const input = document.getElementById('command-input');
+            const command = input.value.trim();
+            if (!command) return;
+
+            const btn = document.getElementById('command-btn');
+            btn.disabled = true;
+            btn.textContent = 'Sending...';
+
+            try {
+                // Parse command: mission_id command [params]
+                const parts = command.split(' ');
+                const missionId = parts[0];
+                const cmd = parts[1];
+                let params = {};
+                
+                // Try to parse params if provided
+                if (parts.length > 2) {
+                    try {
+                        params = JSON.parse(parts.slice(2).join(' '));
+                    } catch {
+                        params = { value: parts.slice(2).join(' ') };
+                    }
+                }
+
+                const response = await fetch(`${API_BASE}/mission-control/command`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        mission_id: missionId,
+                        command: cmd,
+                        parameters: params
+                    })
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.detail || `HTTP ${response.status}`);
+                }
+
+                const result = await response.json();
+                showSuccess('mission-alerts', `Command "${cmd}" issued to ${missionId}`);
+                input.value = '';
+                
+                // Reload data
+                setTimeout(loadMissionControlData, 1000);
+            } catch (error) {
+                showError('mission-alerts', 'Failed to issue command: ' + error.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Send';
+            }
+        }
+
+        async function createGathering() {
+            const input = document.getElementById('gathering-topic');
+            const topic = input.value.trim();
+            if (!topic) return;
+
+            const btn = document.getElementById('gathering-btn');
+            btn.disabled = true;
+            btn.textContent = 'Creating...';
+
+            try {
+                const response = await fetch(`${API_BASE}/village/gathering`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        topic: topic,
+                        description: `Gathering about: ${topic}`,
+                        participants: []
+                    })
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.detail || `HTTP ${response.status}`);
+                }
+
+                const result = await response.json();
+                showSuccess('village-alerts', `Gathering "${topic}" created successfully`);
+                input.value = '';
+                
+                // Reload data
+                setTimeout(loadVillageData, 1000);
+            } catch (error) {
+                showError('village-alerts', 'Failed to create gathering: ' + error.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Create';
+            }
+        }
+
+        async function showMissionDetails(missionId) {
+            const modal = document.getElementById('mission-modal');
+            document.getElementById('modal-mission-title').textContent = `Mission: ${missionId}`;
+            document.getElementById('modal-mission-content').innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading mission details...</p></div>';
+            modal.classList.add('active');
+
+            try {
+                const response = await fetch(`${API_BASE}/mission-control/mission/${missionId}`);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                
+                const mission = await response.json();
+                
+                document.getElementById('modal-mission-content').innerHTML = `
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="color: #4a9eff; margin-bottom: 10px;">${mission.name || 'Unnamed Mission'}</h3>
+                        <p><strong>Objective:</strong> ${mission.objective || 'N/A'}</p>
+                        <p><strong>Classification:</strong> ${mission.classification || 'N/A'}</p>
+                        <p><strong>Status:</strong> <span class="item-status status-${mission.status}">${mission.status}</span></p>
+                        <p><strong>Progress:</strong> ${(mission.progress * 100).toFixed(0)}%</p>
+                        <p><strong>Last Update:</strong> ${formatDate(mission.last_update)}</p>
+                    </div>
+                    
+                    ${mission.briefing ? `
+                        <div style="margin-bottom: 20px; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 8px;">
+                            <h4 style="margin-bottom: 10px;">Briefing:</h4>
+                            <p style="white-space: pre-wrap;">${mission.briefing}</p>
+                        </div>
+                    ` : ''}
+                    
+                    ${mission.success_criteria && mission.success_criteria.length > 0 ? `
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="margin-bottom: 10px;">Success Criteria:</h4>
+                            <ul>
+                                ${mission.success_criteria.map(criterion => `<li>${criterion}</li>`).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+                    
+                    ${mission.alerts && mission.alerts.length > 0 ? `
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="color: #ff6464; margin-bottom: 10px;">⚠️ Alerts:</h4>
+                            <ul>
+                                ${mission.alerts.map(alert => `<li style="color: #ff6464;">${alert}</li>`).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+                    
+                    ${mission.telemetry && Object.keys(mission.telemetry).length > 0 ? `
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="margin-bottom: 10px;">Telemetry:</h4>
+                            <pre style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; overflow-x: auto;">${JSON.stringify(mission.telemetry, null, 2)}</pre>
+                        </div>
+                    ` : ''}
+                `;
+            } catch (error) {
+                document.getElementById('modal-mission-content').innerHTML = `
+                    <div class="alert alert-error">
+                        <strong>Error:</strong> Failed to load mission details: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        async function showGatheringDetails(gatheringId) {
+            const modal = document.getElementById('gathering-modal');
+            document.getElementById('modal-gathering-title').textContent = `Gathering: ${gatheringId}`;
+            document.getElementById('modal-gathering-content').innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading gathering details...</p></div>';
+            modal.classList.add('active');
+
+            try {
+                const response = await fetch(`${API_BASE}/village/gathering/${gatheringId}`);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                
+                const gathering = await response.json();
+                
+                document.getElementById('modal-gathering-content').innerHTML = `
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="color: #7bff7b; margin-bottom: 10px;">${gathering.topic}</h3>
+                        <p><strong>Description:</strong> ${gathering.description || 'N/A'}</p>
+                        <p><strong>Status:</strong> <span class="item-status status-active">${gathering.status}</span></p>
+                        <p><strong>Created:</strong> ${formatDate(gathering.created_at)}</p>
+                        <p><strong>Participants:</strong> ${gathering.participants?.length || 0}</p>
+                    </div>
+                    
+                    ${gathering.insights && gathering.insights.length > 0 ? `
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="color: #7bff7b; margin-bottom: 10px;">Insights (${gathering.insights.length}):</h4>
+                            ${gathering.insights.map(insight => `
+                                <div class="insight-item" style="margin-bottom: 10px;">
+                                    ${typeof insight === 'string' ? insight : insight.insight || JSON.stringify(insight)}
+                                    ${insight.contributor ? `<div class="insight-contributor">— ${insight.contributor}</div>` : ''}
+                                    ${insight.added_at ? `<div style="font-size: 0.8em; color: #666; margin-top: 5px;">${formatDate(insight.added_at)}</div>` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : '<p style="color: #666;">No insights yet. Be the first to share!</p>'}
+                    
+                    ${gathering.participants && gathering.participants.length > 0 ? `
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="margin-bottom: 10px;">Participants:</h4>
+                            <ul>
+                                ${gathering.participants.map(p => `<li>${p}</li>`).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+                `;
+            } catch (error) {
+                document.getElementById('modal-gathering-content').innerHTML = `
+                    <div class="alert alert-error">
+                        <strong>Error:</strong> Failed to load gathering details: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'Unknown';
+            const date = new Date(dateString);
+            return date.toLocaleString();
+        }
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+            }
+        }
+
+        // Load data on page load
+        loadMissionControlData();
+        loadVillageData();
+
+        // Auto-refresh every 30 seconds
+        setInterval(() => {
+            loadMissionControlData();
+            loadVillageData();
+        }, 30000);
+    </script>
+</body>
+</html>

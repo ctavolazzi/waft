@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Self-Playing DnD Campaign</title>
+    <link rel="stylesheet" href="dnd-campaign.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎲 Self-Playing DnD Campaign 🎲</h1>
+            <div class="controls">
+                <button id="start-btn" class="btn-primary">Start Campaign</button>
+                <button id="stop-btn" class="btn-secondary" disabled>Stop Campaign</button>
+            </div>
+        </header>
+
+        <div id="status-bar" class="status-bar">
+            <span id="status-text">Ready to start...</span>
+        </div>
+
+        <div class="main-content">
+            <section class="party-section">
+                <h2>⚔️ The Party</h2>
+                <div id="party-grid" class="party-grid">
+                    <!-- Party members will be inserted here -->
+                </div>
+            </section>
+
+            <section class="scene-section">
+                <h2>📍 Current Scene</h2>
+                <div id="current-scene" class="scene-display">
+                    <p>Waiting for campaign to start...</p>
+                </div>
+            </section>
+
+            <section class="encounters-section">
+                <h2>⚔️ Encounters</h2>
+                <div id="encounters-list" class="encounters-list">
+                    <!-- Encounters will be inserted here -->
+                </div>
+            </section>
+
+            <section class="log-section">
+                <h2>📜 Campaign Log</h2>
+                <div id="campaign-log" class="log-display">
+                    <!-- Log entries will be inserted here -->
+                </div>
+            </section>
+        </div>
+
+        <div id="victory-screen" class="victory-screen" style="display: none;">
+            <h2>🎉 VICTORY! 🎉</h2>
+            <p>The Shadow Lord Malachar has been defeated!</p>
+            <p>The realm is saved!</p>
+        </div>
+    </div>
+
+    <script src="dnd-campaign.js"></script>
+</body>
+</html>

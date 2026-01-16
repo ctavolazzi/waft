@@ -1,0 +1,306 @@
+"""
+D&D Campaign Desktop App - FastAPI Backend Server
+
+Self-running, self-monitoring D&D campaign backend.
+Wraps CampaignOrchestrator with FastAPI for Electron integration.
+"""
+
+from pathlib import Path
+from typing import Optional, Dict, Any, List
+from datetime import datetime
+import asyncio
+import sys
+import os
+
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+import uvicorn
+
+# Add parent directory to path to import CampaignOrchestrator
+sys.path.insert(0, str(Path(__file__).parent.parent.parent / "_work_efforts" / "WE-260113-wfbu_ai_dm_system_d_d_5e_campaign_orchestrator_with_story_booklet_generation" / "src"))
+
+try:
+    from campaign_orchestrator import CampaignOrchestrator
+    from campaign_state import CampaignState, CampaignSession, CampaignStatus, SessionStatus
+except ImportError as e:
+    print(f"Warning: Could not import CampaignOrchestrator: {e}")
+    CampaignOrchestrator = None
+
+app = FastAPI(title="D&D Campaign Desktop App API")
+
+# CORS for Electron
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Electron app
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Global state
+campaign_manager = None
+project_path = Path.cwd()
+active_campaigns: Dict[str, Dict[str, Any]] = {}
+websocket_connections: List[WebSocket] = []
+
+
+class CampaignCreateRequest(BaseModel):
+    campaign_name: str
+    scenario_file: Optional[str] = None
+    description: str = ""
+    difficulty: str = "medium"
+
+
+class CampaignStartRequest(BaseModel):
+    campaign_id: str
+    session_number: Optional[int] = None
+
+
+class DMDecisionRequest(BaseModel):
+    campaign_id: str
+    problem: str
+    alternatives: List[str]
+    criteria: Dict[str, float]
+    scores: Dict[str, Dict[str, float]]
+
+
+class SelfMonitoringCampaign:
+    """Wrapper around CampaignOrchestrator with self-monitoring."""
+
+    def __init__(self, project_path: Path):
+        self.project_path = project_path
+        self.orchestrator = None
+        self.running = False
+        self.metrics = {
+            "turns_completed": 0,
+            "errors": 0,
+            "uptime": 0,
+            "started_at": None
+        }
+        self._initialize_orchestrator()
+
+    def _initialize_orchestrator(self):
+        """Initialize CampaignOrchestrator."""
+        if CampaignOrchestrator is None:
+            raise RuntimeError("CampaignOrchestrator not available")
+        self.orchestrator = CampaignOrchestrator(self.project_path)
+
+    async def run_campaign(self, campaign_id: str):
+        """Run campaign with self-monitoring."""
+        self.running = True
+        self.metrics["started_at"] = datetime.now().isoformat()
+
+        try:
+            # Start campaign session
+            session = self.orchestrator.run_session(campaign_id)
+
+            # Broadcast campaign start
+            await self._broadcast_event({
+                "type": "campaign_started",
+                "campaign_id": campaign_id,
+                "session_id": session.session_id,
+                "timestamp": datetime.now().isoformat()
+            })
+
+            # TODO: Run actual campaign loop here
+            # For now, just mark as running
+
+        except Exception as e:
+            self.metrics["errors"] += 1
+            await self._broadcast_event({
+                "type": "campaign_error",
+                "campaign_id": campaign_id,
+                "error": str(e),
+                "timestamp": datetime.now().isoformat()
+            })
+        finally:
+            self.running = False
+
+    async def _broadcast_event(self, event: Dict[str, Any]):
+        """Broadcast event to all WebSocket connections."""
+        disconnected = []
+        for ws in websocket_connections:
+            try:
+                await ws.send_json(event)
+            except:
+                disconnected.append(ws)
+
+        # Remove disconnected connections
+        for ws in disconnected:
+            if ws in websocket_connections:
+                websocket_connections.remove(ws)
+
+
+# Initialize campaign manager
+try:
+    campaign_manager = SelfMonitoringCampaign(project_path)
+except Exception as e:
+    print(f"Warning: Could not initialize campaign manager: {e}")
+
+
+@app.get("/api/health")
+async def health():
+    """Health check endpoint."""
+    if campaign_manager is None:
+        return {
+            "status": "unhealthy",
+            "message": "Campaign manager not initialized",
+            "orchestrator_available": CampaignOrchestrator is not None
+        }
+
+    return {
+        "status": "healthy",
+        "running": campaign_manager.running,
+        "metrics": campaign_manager.metrics,
+        "orchestrator_available": CampaignOrchestrator is not None
+    }
+
+
+@app.get("/api/campaigns")
+async def list_campaigns():
+    """List all campaigns."""
+    if campaign_manager is None or campaign_manager.orchestrator is None:
+        raise HTTPException(status_code=503, detail="Campaign orchestrator not available")
+
+    # TODO: Get campaigns from state manager
+    return {
+        "campaigns": list(active_campaigns.values()),
+        "count": len(active_campaigns)
+    }
+
+
+@app.get("/api/campaigns/{campaign_id}")
+async def get_campaign(campaign_id: str):
+    """Get campaign details."""
+    if campaign_manager is None or campaign_manager.orchestrator is None:
+        raise HTTPException(status_code=503, detail="Campaign orchestrator not available")
+
+    if campaign_id not in active_campaigns:
+        raise HTTPException(status_code=404, detail="Campaign not found")
+
+    return active_campaigns[campaign_id]
+
+
+@app.post("/api/campaigns")
+async def create_campaign(request: CampaignCreateRequest):
+    """Create a new campaign."""
+    if campaign_manager is None or campaign_manager.orchestrator is None:
+        raise HTTPException(status_code=503, detail="Campaign orchestrator not available")
+
+    try:
+        campaign = campaign_manager.orchestrator.start_campaign(
+            campaign_name=request.campaign_name,
+            scenario_file=request.scenario_file,
+            description=request.description,
+            difficulty=request.difficulty
+        )
+
+        active_campaigns[campaign.campaign_id] = {
+            "campaign_id": campaign.campaign_id,
+            "campaign_name": campaign.campaign_name,
+            "status": campaign.status.value if hasattr(campaign.status, 'value') else str(campaign.status),
+            "created_at": campaign.created_at,
+            "description": campaign.description
+        }
+
+        await campaign_manager._broadcast_event({
+            "type": "campaign_created",
+            "campaign_id": campaign.campaign_id,
+            "campaign_name": campaign.campaign_name,
+            "timestamp": datetime.now().isoformat()
+        })
+
+        return campaign
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/campaigns/{campaign_id}/start")
+async def start_campaign(campaign_id: str):
+    """Start running a campaign."""
+    if campaign_manager is None or campaign_manager.orchestrator is None:
+        raise HTTPException(status_code=503, detail="Campaign orchestrator not available")
+
+    if campaign_id not in active_campaigns:
+        raise HTTPException(status_code=404, detail="Campaign not found")
+
+    # Run campaign in background
+    asyncio.create_task(campaign_manager.run_campaign(campaign_id))
+
+    return {
+        "status": "started",
+        "campaign_id": campaign_id,
+        "message": "Campaign started"
+    }
+
+
+@app.get("/api/campaigns/stats")
+async def get_stats():
+    """Get campaign statistics."""
+    if campaign_manager is None:
+        return {
+            "total_campaigns": 0,
+            "active_campaigns": 0,
+            "running_campaigns": 0,
+            "metrics": {}
+        }
+
+    running = sum(1 for c in active_campaigns.values() if c.get("status") == "active")
+
+    return {
+        "total_campaigns": len(active_campaigns),
+        "active_campaigns": running,
+        "running_campaigns": 1 if campaign_manager.running else 0,
+        "metrics": campaign_manager.metrics
+    }
+
+
+@app.websocket("/ws/campaign")
+async def campaign_websocket(websocket: WebSocket):
+    """WebSocket for real-time campaign updates."""
+    await websocket.accept()
+    websocket_connections.append(websocket)
+
+    try:
+        # Send initial state
+        await websocket.send_json({
+            "type": "connected",
+            "timestamp": datetime.now().isoformat(),
+            "active_campaigns": len(active_campaigns)
+        })
+
+        # Keep connection alive
+        while True:
+            try:
+                data = await websocket.receive_text()
+                # Echo back (can add command handling here)
+                await websocket.send_json({
+                    "type": "echo",
+                    "data": data,
+                    "timestamp": datetime.now().isoformat()
+                })
+            except WebSocketDisconnect:
+                break
+    except WebSocketDisconnect:
+        pass
+    finally:
+        if websocket in websocket_connections:
+            websocket_connections.remove(websocket)
+
+
+if __name__ == "__main__":
+    # Get project path from environment or use current directory
+    project_path = Path(os.getenv("WAFT_PROJECT_PATH", Path.cwd()))
+
+    print(f"Starting D&D Campaign Desktop App Backend...")
+    print(f"Project path: {project_path}")
+    print(f"CampaignOrchestrator available: {CampaignOrchestrator is not None}")
+
+    uvicorn.run(
+        "campaign_server:app",
+        host="127.0.0.1",
+        port=8000,
+        reload=True,
+        log_level="info"
+    )

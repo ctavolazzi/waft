@@ -1,0 +1,715 @@
+\documentclass{book}
+
+\title{Hypothesis Testing Framework}
+\newcommand{\booksubtitle}{Design and Implementation of Iterative Scientific Method Systems}
+\newcommand{\booklicense}{Creative Commons Zero 1.0 Universal}
+
+\author{WAFT Research Team}
+% Author subtitle could be a university or a geographical location, for example
+\newcommand{\authorsubtitle}{2026}
+
+% Create convenient commands \booktitle and \bookauthor
+\makeatletter
+\newcommand{\booktitle}{\@title}
+\newcommand{\bookauthor}{\@author}
+\makeatother
+
+% This utf8 declaration is not needed for versions of latex > 2018 but may
+% be helpful for older software. Eventually it may not be worth keeping.
+\usepackage[utf8]{inputenc}
+\usepackage{fix-cm}  % this package allows large \fontsize
+\usepackage{tikz}    % this is for graphics. e.g. rectangle on title page
+\usepackage{amsmath} % Used by equations
+\usepackage{listings} % For code listings
+\usepackage{xcolor} % For code syntax highlighting
+\usepackage{hyperref} % For hyperlinks
+
+% The following dimensions specify 4.75" X 7.5" content on 6 3/8" by 9 1/4"
+% paper. The paper width and height can be tweaked as required and the content
+% should size to fit within the margins accordingly.
+%
+% The (inside) bindingoffset should be larger for books with more pages. Some
+% standard recommended sizes are .375in minimum up to 1in for 600+ page books.
+% Sizes .75in and .875in are also recommended roughly at 150 and 400 pages.
+\usepackage[bindingoffset=0.625in,
+            left=.5in, right=.5in,
+            top=.8125in, bottom=.9375in,
+            paperwidth=6.375in, paperheight=9.25in]{geometry}
+% Here is an alternative geometry for reading on letter size paper:
+% \usepackage[margin=.75in, paperwidth=8.5in, paperheight=11in]{geometry}
+
+\renewcommand{\contentsname}{Table of Contents} % default is {Contents}
+\usepackage{makeidx}
+\makeindex % Initialize an index so we can add entries with \index
+
+% Code listing style - Enhanced for better readability
+\lstset{
+    basicstyle=\ttfamily\small\color{black!90},
+    keywordstyle=\color{blue!70!black}\bfseries,
+    commentstyle=\color{green!50!black}\itshape,
+    stringstyle=\color{red!70!black},
+    numberstyle=\tiny\color{gray!60},
+    identifierstyle=\color{black!90},
+    numbers=left,
+    stepnumber=1,
+    numbersep=8pt,
+    backgroundcolor=\color{gray!5},
+    frame=leftline,
+    framerule=2pt,
+    rulecolor=\color{blue!40!black},
+    framexleftmargin=8pt,
+    breaklines=true,
+    breakatwhitespace=true,
+    breakindent=0pt,
+    tabsize=4,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    captionpos=b,
+    aboveskip=12pt,
+    belowskip=8pt,
+    xleftmargin=0pt,
+    xrightmargin=0pt,
+    linewidth=\textwidth
+}
+
+% Content Starts Here
+\begin{document}
+\frontmatter
+
+% ---- Half Title Page ----
+% current geometry will be restored after title page
+\newgeometry{top=1.75in,bottom=.5in}
+\begin{titlepage}
+\begin{flushleft}
+
+% Title
+\textbf{\fontfamily{qcs}\fontsize{48}{54}\selectfont Hypothesis\\Testing\\Framework\\}
+
+% Draw a line 4pt high
+\par\noindent\rule{\textwidth}{4pt}\\
+
+% Subtitle
+% Shaded box from left to right. Text node is midway (centered).
+\begin{tikzpicture}
+\shade[bottom color=lightgray,top color=white]
+    (0,0) rectangle (\textwidth, 1.5)
+    node[midway] {\textbf{\large \textit{\booksubtitle}}};
+\end{tikzpicture}
+
+% Edition Number
+\begin{flushright}
+\Large First Edition
+\end{flushright}
+
+% \vspace{\fill}
+\vspace{\fill}
+
+\end{flushleft}
+\end{titlepage}
+\restoregeometry
+% ---- End of Half Title Page ----
+
+
+% No page numbers on the Frontispiece page
+\thispagestyle{empty}
+
+
+% ---- Title Page ----
+% current geometry will be restored after title page
+\newgeometry{top=1.75in,bottom=.5in}
+\begin{titlepage}
+\begin{flushleft}
+
+% Title
+\textbf{\fontfamily{qcs}\fontsize{48}{54}\selectfont Hypothesis\\Testing\\Framework\\}
+
+% Draw a line 4pt high
+\par\noindent\rule{\textwidth}{4pt}\\
+
+% Shaded box from left to right with Subtitle
+% The text node is midway (centered).
+\begin{tikzpicture}
+\shade[bottom color=lightgray,top color=white]
+    (0,0) rectangle (\textwidth, 1.5)
+    node[midway] {\textbf{\large \textit{\booksubtitle}}};
+\end{tikzpicture}
+
+% Edition Number
+\begin{flushright}
+\Large First Edition
+\end{flushright}
+
+\vspace{\fill}
+
+% Author and Location
+\textbf{\large \bookauthor}\\[3.5pt]
+\textbf{\large \textit{\authorsubtitle}}
+
+\vspace{\fill}
+
+% Self Publishing Logo. Free to use: CC0 license.
+% The source file is book.svg. If you change the svg, you must then convert
+% it to pdf. There are many online and offline tools available to do that.
+\begin{center}
+\includegraphics{booksvg.pdf}\\[4pt]
+\fontfamily{lmtt}\small{Self Publishers Worldwide\\
+Seattle San Francisco New York\\
+London Paris Rome Beijing Barcelona}
+\end{center}
+
+\end{flushleft}
+\end{titlepage}
+\restoregeometry
+% ---- End of Title Page ----
+
+% Do not show page numbers on colophon page
+\thispagestyle{empty}
+
+\begin{flushleft}
+\vspace*{\fill}
+This book was typeset using \LaTeX{} software.\\
+\vspace{\fill}
+Copyright \textcopyright{} \the\year{}  \bookauthor\\
+License: \booklicense
+\end{flushleft}
+
+% A title page resets the page # to 1, but the second title page
+% was actually page 3. So add two to page counter.
+\addtocounter{page}{2}
+
+% The asterisk excludes chapter from the table of contents.
+\chapter*{Preface}
+
+This textbook documents the design and implementation of a hypothesis testing framework that enables iterative scientific method execution with real-time visualization. The work presented here emerged from a systematic investigation of existing scientific method infrastructure and the design of a consensus mechanism for determining when sufficient evidence has been gathered to reach a verdict on a hypothesis.
+
+The framework combines established scientific method principles with modern software architecture, creating a system where artificial intelligence can test hypotheses iteratively, with each experiment contributing to an evolving consensus. The consensus mechanism uses weighted confidence calculations to determine when sufficient agreement has been reached among multiple experimental runs.
+
+This book is organized to guide readers through the complete process: from understanding the existing scientific method infrastructure, through the design of consensus algorithms, to the implementation of real-time visualization systems. Each chapter builds upon the previous, providing both theoretical foundations and practical implementation details.
+
+The content is derived from actual development conversations and codebase investigations, making this both a theoretical exploration and a practical guide for implementing similar systems.
+
+% Three-level Table of Contents
+\setcounter{tocdepth}{3}
+\tableofcontents
+
+\mainmatter
+
+\chapter{Introduction to Hypothesis Testing Systems}
+
+\section{The Problem Statement}
+
+The goal is to create a testing framework and user interface where artificial intelligence can solve hypotheses iteratively over time using the scientific method. The system should:
+
+\begin{itemize}
+    \item Display the hypothesis prominently at the top of the interface
+    \item Run multiple instances of scientific method loops to collect data, observe, and report
+    \item Show progress in real-time as experiments execute
+    \item Determine when consensus has been achieved among experiments
+    \item Bubble the verdict up the chain once consensus is reached
+    \item Provide a clear answer to the hypothesis question in the UI
+    \item Allow users to halt experiments at any time
+\end{itemize}
+
+\section{System Requirements}
+
+The framework must support:
+
+\begin{enumerate}
+    \item \textbf{Iterative Experimentation}: Multiple experiments running sequentially, each following the complete scientific method cycle
+    \item \textbf{Real-Time Visualization}: Live updates showing experiment progress, data collection, and analysis results
+    \item \textbf{Consensus Determination}: A mechanism to determine when sufficient evidence has been gathered
+    \item \textbf{User Control}: Ability to start, pause, and halt experiments
+    \item \textbf{Evidence Aggregation}: Combining results from multiple experiments into a coherent verdict
+\end{enumerate}
+
+\section{Architecture Overview}
+
+The system architecture consists of three main components:
+
+\begin{description}
+    \item[Backend] Python-based scientific method tool with consensus engine and experiment runner
+    \item[API Server] FastAPI server providing REST endpoints and WebSocket support for real-time updates
+    \item[Frontend] Electron desktop application with React UI for visualization
+\end{description}
+
+\chapter{Existing Scientific Method Infrastructure}
+
+\section{Investigation Methodology}
+
+Before designing new components, a systematic investigation was conducted to understand what infrastructure already existed. This investigation followed a structured approach:
+
+\begin{enumerate}
+    \item \textbf{Codebase Search}: Semantic searches for scientific method implementations
+    \item \textbf{File Analysis}: Reading key files to understand structure
+    \item \textbf{Import Verification}: Testing that existing components can be imported and used
+    \item \textbf{Pattern Recognition}: Identifying existing patterns for real-time updates and event handling
+\end{enumerate}
+
+\section{Scientific Method Tool Structure}
+
+The existing scientific method tool (\texttt{scientific\_method\_tool/}) provides a complete foundation:
+
+\subsection{Core Components}
+
+\begin{description}
+    \item[\texttt{hypothesis.py}] Defines the \texttt{Hypothesis} class with variables (independent, dependent, control, confounding) and the \texttt{Variable} system
+    \item[\texttt{experiment.py}] Contains \texttt{ExperimentManager} for experiment lifecycle management and \texttt{Experiment} class representing individual experiments
+    \item[\texttt{experiment\_loop.py}] Implements \texttt{ExperimentLoop} for running iterative experiments with variable changes
+    \item[\texttt{analysis.py}] Provides \texttt{ExperimentAnalyzer} for analyzing experiment results
+    \item[\texttt{state\_capture.py}] Handles initial state (A) and final state (B) capture
+    \item[\texttt{data\_collection.py}] Manages data collection during experiments (C)
+\end{description}
+
+\subsection{Experiment Result Structure}
+
+The \texttt{ExperimentResult} dataclass contains:
+
+\begin{lstlisting}[language=Python]
+@dataclass
+class ExperimentResult:
+    experiment_id: str
+    hypothesis_verified: Optional[bool]
+    confidence: float
+    data_summary: Dict[str, Any]
+    state_changes: Dict[str, Any]
+    metadata: Dict[str, Any]
+\end{lstlisting}
+
+\section{Analysis System Limitations}
+
+The existing \texttt{ExperimentAnalyzer.analyze\_iteration\_results()} method provides basic aggregation:
+
+\begin{itemize}
+    \item Counts verified vs. refuted experiments
+    \item Calculates simple average confidence
+    \item Uses majority voting (verified\_count > refuted\_count)
+    \item Does not implement weighted confidence consensus
+    \item Does not check for consensus criteria (minimum experiments, agreement threshold)
+\end{itemize}
+
+This basic analysis is insufficient for determining true consensus, necessitating the design of a more sophisticated consensus engine.
+
+\section{FastAPI Server Infrastructure}
+
+The existing FastAPI server (\texttt{src/waft/api/main.py}) provides:
+
+\begin{itemize}
+    \item FastAPI application setup
+    \item CORS middleware configuration
+    \item Multiple route modules (state, git, work\_efforts, empirica, etc.)
+    \item Static file serving capability
+    \item No WebSocket support (yet)
+\end{itemize}
+
+\chapter{Consensus Algorithm Design}
+
+\section{The Need for Consensus}
+
+Simple majority voting is insufficient for scientific hypothesis testing. A more sophisticated approach is needed that:
+
+\begin{itemize}
+    \item Accounts for confidence levels in individual experiments
+    \item Requires sufficient evidence before making a verdict
+    \item Prevents premature conclusions from small sample sizes
+    \item Provides clear criteria for when consensus is achieved
+\end{itemize}
+
+\section{Weighted Confidence Consensus Algorithm}
+
+\subsection{Core Principles}
+
+The weighted confidence consensus algorithm is based on three principles:
+
+\begin{enumerate}
+    \item \textbf{Weighted Aggregation}: Experiments with higher confidence contribute more to the final verdict
+    \item \textbf{Minimum Evidence}: A minimum number of experiments must be completed before consensus can be determined
+    \item \textbf{Agreement Threshold}: A sufficient percentage of experiments must agree on the same verdict
+\end{enumerate}
+
+\subsection{Algorithm Specification}
+
+The consensus calculation proceeds as follows:
+
+\begin{enumerate}
+    \item \textbf{Minimum Requirement Check}: If fewer than 3 experiments have completed, return \texttt{INCONCLUSIVE}
+
+    \item \textbf{Weighted Confidence Calculation}:
+    \begin{equation}
+        \text{weighted\_confidence} = \frac{\sum_{i=1}^{n} \text{confidence}_i^2}{\sum_{i=1}^{n} \text{confidence}_i}
+    \end{equation}
+
+    Where the weight for each experiment is its own confidence value. This gives more weight to high-confidence experiments.
+
+    \item \textbf{Verdict Counting}: Count experiments by their verification status:
+    \begin{itemize}
+        \item \texttt{verified\_count}: Experiments where \texttt{hypothesis\_verified = True}
+        \item \texttt{refuted\_count}: Experiments where \texttt{hypothesis\_verified = False}
+        \item \texttt{inconclusive\_count}: Experiments where \texttt{hypothesis\_verified = None}
+    \end{itemize}
+
+    \item \textbf{Consensus Criteria}: All of the following must be met:
+    \begin{itemize}
+        \item Weighted confidence > 0.75 (75\%)
+        \item At least 70\% of experiments agree on the same verdict (verified OR refuted)
+        \item Inconclusive experiments < 30\% of total
+    \end{itemize}
+
+    \item \textbf{Verdict Determination}:
+    \begin{itemize}
+        \item If \texttt{verified\_count / total >= 0.7} AND \texttt{weighted\_confidence > 0.75}: \texttt{VERIFIED}
+        \item If \texttt{refuted\_count / total >= 0.7} AND \texttt{weighted\_confidence > 0.75}: \texttt{REFUTED}
+        \item Otherwise: \texttt{INCONCLUSIVE} (continue running experiments)
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Algorithm Implementation}
+
+\begin{lstlisting}[language=Python, caption=Consensus Engine Algorithm, label=lst:consensus-algorithm]
+def calculate_consensus(
+    experiments: List[ExperimentResult]
+) -> ConsensusResult:
+    """Calculate consensus from experiment results."""
+
+    # Minimum requirement
+    if len(experiments) < 3:
+        return ConsensusResult(
+            verdict="INCONCLUSIVE",
+            confidence=0.0,
+            experiment_count=len(experiments)
+        )
+
+    # Weighted confidence calculation
+    total_weight = sum(e.confidence for e in experiments)
+    weighted_sum = sum(
+        e.confidence * e.confidence
+        for e in experiments
+    )
+    weighted_confidence = (
+        weighted_sum / total_weight
+        if total_weight > 0 else 0.0
+    )
+
+    # Count verdicts
+    verified = sum(
+        1 for e in experiments
+        if e.hypothesis_verified is True
+    )
+    refuted = sum(
+        1 for e in experiments
+        if e.hypothesis_verified is False
+    )
+    inconclusive = sum(
+        1 for e in experiments
+        if e.hypothesis_verified is None
+    )
+    total = len(experiments)
+
+    # Consensus criteria
+    # Check that inconclusive experiments < 30% (as per requirements)
+    if inconclusive / total >= 0.3:
+        return ConsensusResult(
+            verdict="INCONCLUSIVE",
+            confidence=weighted_confidence,
+            experiment_count=total
+        )
+
+    if verified / total >= 0.7 and weighted_confidence > 0.75:
+        return ConsensusResult(
+            verdict="VERIFIED",
+            confidence=weighted_confidence,
+            experiment_count=total
+        )
+    elif refuted / total >= 0.7 and weighted_confidence > 0.75:
+        return ConsensusResult(
+            verdict="REFUTED",
+            confidence=weighted_confidence,
+            experiment_count=total
+        )
+    else:
+        return ConsensusResult(
+            verdict="INCONCLUSIVE",
+            confidence=weighted_confidence,
+            experiment_count=total
+        )
+\end{lstlisting}
+
+\section{Why Weighted Confidence?}
+
+The weighted confidence approach is superior to simple averaging because:
+
+\begin{itemize}
+    \item \textbf{High-confidence experiments matter more}: An experiment with 95\% confidence should influence the verdict more than one with 50\% confidence
+    \item \textbf{Reduces impact of low-quality experiments}: Low-confidence experiments contribute less to the final decision
+    \item \textbf{Reflects scientific practice}: In real science, well-designed, high-confidence experiments are given more weight
+    \item \textbf{Prevents dilution}: Simple averaging can be skewed by many low-confidence experiments
+\end{itemize}
+
+\chapter{System Architecture}
+
+\section{Component Overview}
+
+The system consists of three main layers:
+
+\begin{description}
+    \item[Backend Layer] Scientific method tool, consensus engine, experiment runner
+    \item[API Layer] FastAPI server with REST and WebSocket endpoints
+    \item[Frontend Layer] Electron desktop application with React UI
+\end{description}
+
+\section{Backend Components}
+
+\subsection{Consensus Engine}
+
+\texttt{src/waft/hypothesis\_testing/consensus\_engine.py}
+
+\begin{itemize}
+    \item \texttt{ConsensusResult} dataclass: verdict, confidence, evidence, experiment\_count
+    \item \texttt{ConsensusEngine} class with \texttt{calculate\_consensus()} method
+    \item \texttt{has\_consensus()} method for checking if consensus criteria are met
+\end{itemize}
+
+\subsection{Experiment Runner}
+
+\texttt{src/waft/hypothesis\_testing/experiment\_runner.py}
+
+\begin{itemize}
+    \item Wraps \texttt{ExperimentLoop} with halt support
+    \item Emits events for UI updates (experiment started, completed, consensus updated)
+    \item Manages state: running, paused, halted, stopped
+    \item Integrates with consensus engine to check consensus after each experiment
+\end{itemize}
+
+\subsection{API Server}
+
+\texttt{src/waft/hypothesis\_testing/api\_server.py}
+
+\begin{itemize}
+    \item FastAPI routes:
+    \begin{itemize}
+        \item \texttt{POST /hypothesis/start}: Start testing a hypothesis
+        \item \texttt{GET /hypothesis/status}: Get current status
+        \item \texttt{POST /hypothesis/halt}: Halt experiments
+        \item \texttt{GET /experiments}: List all experiments
+        \item \texttt{GET /consensus}: Get current consensus status
+    \end{itemize}
+    \item WebSocket endpoint: \texttt{ws://localhost:PORT/ws}
+    \item Real-time experiment updates broadcast to connected clients
+\end{itemize}
+
+\section{Frontend Architecture}
+
+\subsection{Electron App Structure}
+
+\texttt{hypothesis\_ui/}
+
+\begin{itemize}
+    \item \texttt{package.json}: Electron and React dependencies
+    \item \texttt{main.js}: Electron main process
+    \item \texttt{preload.js}: Secure IPC bridge
+    \item \texttt{src/}: React application
+\end{itemize}
+
+\subsection{React Components}
+
+\begin{description}
+    \item[\texttt{HypothesisHeader}] Displays hypothesis statement and current verdict (updates when consensus reached)
+    \item[\texttt{ExperimentLoop}] Shows individual experiment loop with progress indicators
+    \item[\texttt{ExperimentList}] Lists all experiment loops with their status
+    \item[\texttt{Controls}] Start, pause, and halt buttons
+\end{description}
+
+\section{Data Flow}
+
+The data flows through the system as follows:
+
+\begin{enumerate}
+    \item User inputs hypothesis via Electron UI
+    \item UI sends \texttt{POST /hypothesis/start} to API server
+    \item API server creates \texttt{ExperimentRunner} instance
+    \item \texttt{ExperimentRunner} starts \texttt{ExperimentLoop.run\_iterative\_experiment()}
+    \item Each experiment runs through scientific method cycle:
+    \begin{itemize}
+        \item Capture initial state (A)
+        \item Run experiment, collect data (C)
+        \item Capture final state (B)
+        \item Analyze results
+    \end{itemize}
+    \item After each experiment, \texttt{ConsensusEngine} calculates consensus
+    \item Results and consensus status broadcast via WebSocket
+    \item Electron UI receives updates and displays in real-time
+    \item When consensus reached, verdict bubbles to top of UI
+\end{enumerate}
+
+\chapter{Implementation Details}
+
+\section{Halt Mechanism}
+
+The halt mechanism allows users to stop experiments gracefully:
+
+\begin{enumerate}
+    \item User clicks halt button in UI
+    \item UI sends \texttt{POST /hypothesis/halt} to API server
+    \item \texttt{ExperimentRunner} sets \texttt{halt\_flag = True}
+    \item \texttt{ExperimentLoop} checks halt flag between iterations
+    \item Current experiment completes, but no new experiments start
+    \item State saved, results preserved
+\end{enumerate}
+
+\section{WebSocket Protocol}
+
+The WebSocket connection provides real-time updates:
+
+\begin{lstlisting}[language=JSON, caption=WebSocket Message Format]
+{
+    "type": "experiment_started",
+    "experiment_id": "exp_abc123",
+    "hypothesis": "...",
+    "timestamp": "2026-01-14T22:30:00Z"
+}
+
+{
+    "type": "experiment_completed",
+    "experiment_id": "exp_abc123",
+    "result": {
+        "hypothesis_verified": true,
+        "confidence": 0.82
+    },
+    "timestamp": "2026-01-14T22:35:00Z"
+}
+
+{
+    "type": "consensus_updated",
+    "consensus": {
+        "verdict": "VERIFIED",
+        "confidence": 0.85,
+        "experiment_count": 5
+    },
+    "timestamp": "2026-01-14T22:40:00Z"
+}
+\end{lstlisting}
+
+\section{State Management}
+
+The system maintains state at multiple levels:
+
+\begin{description}
+    \item[Experiment State] Individual experiment status (designed, initialized, running, completed, failed)
+    \item[Runner State] Overall testing session status (idle, running, paused, halted, stopped)
+    \item[Consensus State] Current consensus result (verdict, confidence, evidence)
+    \item[UI State] Frontend state synchronized via WebSocket
+\end{description}
+
+\chapter{Real-Time Visualization}
+
+\section{UI Layout}
+
+The Electron UI is organized hierarchically:
+
+\begin{enumerate}
+    \item \textbf{Top Section}: Hypothesis statement and current verdict (prominent display)
+    \item \textbf{Middle Section}: List of experiment loops, each showing:
+    \begin{itemize}
+        \item Current phase (Observe → Hypothesize → Experiment → Analyze)
+        \item Progress indicators
+        \item Results summary (confidence, verification status)
+    \end{itemize}
+    \item \textbf{Bottom Section}: Control buttons (Start, Pause, Halt)
+\end{enumerate}
+
+\section{Consensus Visualization}
+
+When consensus is achieved:
+
+\begin{itemize}
+    \item Verdict appears prominently at top with hypothesis
+    \item Animation/transition to draw attention
+    \item Confidence level displayed
+    \item Number of experiments contributing to consensus
+    \item Evidence summary available on click
+\end{itemize}
+
+\section{Progress Indicators}
+
+Each experiment loop displays:
+
+\begin{itemize}
+    \item Phase indicator: Current step in scientific method cycle
+    \item Progress bar: Overall experiment progress
+    \item Status badge: Running, Completed, Failed
+    \item Confidence meter: Visual representation of confidence level
+    \item Data collection indicator: Number of data points collected
+\end{itemize}
+
+\chapter{Testing and Validation}
+
+\section{Testing Scenarios}
+
+The system should be tested with various scenarios:
+
+\begin{enumerate}
+    \item \textbf{Clear Verification}: 3+ experiments all verify hypothesis → consensus reached quickly
+    \item \textbf{Clear Refutation}: 3+ experiments all refute hypothesis → consensus reached quickly
+    \item \textbf{Mixed Results}: Experiments with mixed results → no consensus, continues running
+    \item \textbf{Low Confidence}: Experiments with low confidence → no consensus until confidence improves
+    \item \textbf{Halt Mid-Experiment}: User halts during experiment run → graceful stop
+    \item \textbf{WebSocket Disconnection}: Client disconnects and reconnects → state recovery
+\end{enumerate}
+
+\section{Validation Criteria}
+
+The system is considered successful when:
+
+\begin{itemize}
+    \item Consensus algorithm correctly identifies when sufficient evidence exists
+    \item Real-time updates appear in UI within 1 second of experiment events
+    \item Halt mechanism stops experiments gracefully without data loss
+    \item Verdict bubbles to top when consensus achieved
+    \item System handles edge cases (single experiment, all inconclusive, etc.)
+\end{itemize}
+
+\chapter{Conclusion and Future Work}
+
+\section{Summary}
+
+This textbook has documented the design and implementation of a hypothesis testing framework that enables iterative scientific method execution with real-time visualization. Key contributions include:
+
+\begin{itemize}
+    \item Weighted confidence consensus algorithm for determining when sufficient evidence exists
+    \item Architecture for real-time experiment visualization
+    \item Integration of existing scientific method infrastructure with new consensus mechanisms
+    \item Design for Electron-based desktop application with WebSocket real-time updates
+\end{itemize}
+
+\section{Future Enhancements}
+
+Potential future improvements include:
+
+\begin{enumerate}
+    \item \textbf{Experiment Result Visualization}: Charts and graphs showing data trends across experiments
+    \item \textbf{PDF Export}: Generate scientific reports from experiment results using existing PDF generator
+    \item \textbf{Session Persistence}: Save and load hypothesis testing sessions
+    \item \textbf{Experiment Configuration UI}: Visual interface for configuring variable ranges and iteration counts
+    \item \textbf{Integration with Science Bitch}: Connect with existing \texttt{/science-bitch} command workflow
+    \item \textbf{Multi-Hypothesis Testing}: Support for testing multiple related hypotheses simultaneously
+    \item \textbf{Statistical Analysis}: Advanced statistical tests (t-tests, ANOVA, etc.) for hypothesis validation
+\end{enumerate}
+
+\section{Lessons Learned}
+
+The investigation and design process revealed several important insights:
+
+\begin{itemize}
+    \item \textbf{Systematic Investigation is Essential}: Understanding existing infrastructure before building new components prevents reinventing the wheel
+    \item \textbf{Consensus is Different from Analysis}: Consensus determination requires different logic than simple result aggregation
+    \item \textbf{Weighted Confidence is Superior}: Giving more weight to high-confidence experiments produces better verdicts
+    \item \textbf{Real-Time Updates Require Careful Design}: WebSocket architecture must handle disconnections, reconnections, and state synchronization
+    \item \textbf{User Control is Critical}: Ability to halt experiments provides necessary user agency
+\end{itemize}
+
+\backmatter
+
+\addcontentsline{toc}{chapter}{Index}
+\printindex
+
+\end{document}

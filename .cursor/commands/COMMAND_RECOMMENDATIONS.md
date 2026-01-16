@@ -38,6 +38,7 @@
 29. **`/plan-evolve`** ✅ - Create comprehensive plan to evolve a new feature: extract → spawn → analyze → plan → document (tracks planning genetic lineage)
 30. **`/another-cycle`** ✅ - Complete development cycle: onboard → explore → check-assumptions → hypothesis → critique → comprehensive-orchestration → analyze → engineer → improve → version-bake → run-it → prove-it → evolve → journal → next → goal → checkpoint
 31. **`/ai-town-analysis`** ✅ - Comprehensive analysis workflow for repositories and research papers: context → oracle → run-it → evolve (optional) → print-PDF → oracle
+32. **`/goose-eval`** ✅ - Systematic evaluation and decision-making workflow: 12-phase evaluation with hypothesis formation, verification, and structured decision matrix
 
 ---
 

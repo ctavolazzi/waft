@@ -1,0 +1,13 @@
+🎲 SELF-PLAYING DND CAMPAIGN - QUICK START
+==========================================
+
+WATCH IT PLAY (Electron Window):
+  ./run_campaign_electron.sh
+
+PDF ONLY:
+  ./run_campaign.sh
+
+OPEN PDF:
+  ./OPEN_CAMPAIGN_PDF.sh
+
+That's it! Enjoy your adventure! 🎲

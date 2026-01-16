@@ -3,7 +3,7 @@
     "name": "waft",
     "level": 1,
     "integrity": 100.0,
-    "insight": 0.0,
+    "insight": 5.0,
     "credits": 0,
     "ability_scores": {
       "strength": 8,
@@ -15,11 +15,12 @@
     },
     "proficiency_bonus": 2,
     "hit_dice": "d8",
-    "max_hp": 10,
-    "current_hp": 10,
-    "created_at": "2026-01-13T01:53:15.841210"
+    "max_hp": 7,
+    "current_hp": 7,
+    "created_at": "2026-01-16T12:16:01.231219",
+    "updated_at": "2026-01-16T12:16:02.454176"
   },
-  "updated_at": "2026-01-13T01:53:20.519872",
+  "updated_at": "2026-01-16T12:16:04.699700",
   "adventure_journal": [
     {
       "timestamp": "2026-01-06T00:13:34.681830",
@@ -226,16 +227,18 @@
       "outcome": "info"
     },
     {
-      "timestamp": "2026-01-13T01:53:20.519216",
-      "event": "observation",
-      "narrative": "Story told around the campfire: The Oracle's Silence",
-      "mood": "delighted",
-      "source": "ai",
-      "context": {
-        "story_id": "story_20260113_015318",
-        "pdf_path": "_pyrite/campfire/story_20260113_015318.pdf"
+      "event": "oracle",
+      "narrative": "The TavernKeeper nods approvingly: 'Wisdom accumulates.'",
+      "dice_roll": "1d20+-1",
+      "result": 15,
+      "outcome": "success",
+      "rewards": {
+        "insight": 5,
+        "credits": 0,
+        "integrity": 2.0
       },
-      "type": "narrative"
+      "classification": "optimal",
+      "timestamp": "2026-01-16T12:16:04.699477"
     }
   ]
 }

@@ -113,6 +113,8 @@ Commands that orchestrate multiple workflows into comprehensive cycles.
 
 21. **`/another-cycle`** - Complete development cycle from orientation to evolution. Orchestrates all major workflows: onboard → explore → check-assumptions → hypothesis → critique → comprehensive-orchestration → analyze → engineer → improve → version-bake → run-it → prove-it → evolve → journal → next → goal → checkpoint. Use when starting major new initiative, need complete systematic approach, want full lifecycle coverage.
 
+22. **`/goose-eval`** - Systematic evaluation and decision-making workflow. Executes 12-phase evaluation: orientation → analysis → data gathering → hypothesis formation → verification → reflection → decision. Use when need systematic tool/technology evaluation, want hypothesis-driven approach, need structured decision-making with complete documentation trail.
+
 ---
 
 ## Command Discovery
@@ -136,6 +138,7 @@ Commands that orchestrate multiple workflows into comprehensive cycles.
 - `/consider` - Analyze options
 - `/decide` - Quantitative decision matrix
 - `/deep-think` - Comprehensive cognitive workflow for deep analysis
+- `/goose-eval` - Systematic evaluation workflow with hypothesis testing and decision matrix
 
 **Analysis:**
 - `/analyze` - Analyze Phase 1 data

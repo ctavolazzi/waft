@@ -11,8 +11,12 @@ from pathlib import Path
 from typing import Optional
 
 import click
+import typer
 
 from ..pyrite import Pyrite, EvolutionaryStrategy, WorkEffortStatus, get_pyrite
+
+# Create typer app for commands that use typer
+app = typer.Typer()
 
 
 @click.group()
@@ -31,7 +35,7 @@ def think(
     pyrite_path: str = typer.Option("_pyrite", "--pyrite-path")
 ):
     """Initialize cognitive systems (/think ability)."""
-    pyrite = get_pyrite_instance(work_efforts_path, pyrite_path)
+    pyrite = get_pyrite(Path(work_efforts_path), Path(pyrite_path))
     result = pyrite.execute_ability("/think")
     typer.echo(json.dumps(result, indent=2))
 
@@ -55,7 +59,7 @@ def monitor(
     pyrite_path: str = typer.Option("_pyrite", "--pyrite-path")
 ):
     """Monitor work efforts (/monitor ability)."""
-    pyrite = get_pyrite_instance(work_efforts_path, pyrite_path)
+    pyrite = get_pyrite(Path(work_efforts_path), Path(pyrite_path))
     result = pyrite.execute_ability("/monitor", we_id)
     typer.echo(json.dumps(result, indent=2))
 
@@ -77,7 +81,7 @@ def lock(
     pyrite_path: str = typer.Option("_pyrite", "--pyrite-path")
 ):
     """Lock a work effort (/lock ability)."""
-    pyrite = get_pyrite_instance(work_efforts_path, pyrite_path)
+    pyrite = get_pyrite(Path(work_efforts_path), Path(pyrite_path))
     result = pyrite.execute_ability("/lock", we_id, lock_id)
     typer.echo(json.dumps(result, indent=2))
 
@@ -90,7 +94,7 @@ def unlock(
     pyrite_path: str = typer.Option("_pyrite", "--pyrite-path")
 ):
     """Unlock a work effort (/unlock ability)."""
-    pyrite = get_pyrite_instance(work_efforts_path, pyrite_path)
+    pyrite = get_pyrite(Path(work_efforts_path), Path(pyrite_path))
     result = pyrite.execute_ability("/unlock", we_id, lock_id)
     typer.echo(json.dumps(result, indent=2))
 
@@ -101,7 +105,7 @@ def status(
     pyrite_path: str = typer.Option("_pyrite", "--pyrite-path")
 ):
     """Get Pyrite status (/status ability)."""
-    pyrite = get_pyrite_instance(work_efforts_path, pyrite_path)
+    pyrite = get_pyrite(Path(work_efforts_path), Path(pyrite_path))
     result = pyrite.execute_ability("/status")
     typer.echo(json.dumps(result, indent=2))
 
@@ -149,7 +153,7 @@ def get_work_effort(
     pyrite_path: str = typer.Option("_pyrite", "--pyrite-path")
 ):
     """Get work effort details."""
-    pyrite = get_pyrite_instance(work_efforts_path, pyrite_path)
+    pyrite = get_pyrite(Path(work_efforts_path), Path(pyrite_path))
     node = pyrite.get_work_effort(we_id)
     
     if node:
@@ -195,7 +199,7 @@ def get_children(
     pyrite_path: str = typer.Option("_pyrite", "--pyrite-path")
 ):
     """Get children of a work effort."""
-    pyrite = get_pyrite_instance(work_efforts_path, pyrite_path)
+    pyrite = get_pyrite(Path(work_efforts_path), Path(pyrite_path))
     children = pyrite.get_children(we_id)
     
     result = [
@@ -216,7 +220,7 @@ def get_ancestors(
     pyrite_path: str = typer.Option("_pyrite", "--pyrite-path")
 ):
     """Get ancestors of a work effort."""
-    pyrite = get_pyrite_instance(work_efforts_path, pyrite_path)
+    pyrite = get_pyrite(Path(work_efforts_path), Path(pyrite_path))
     ancestors = pyrite.get_ancestors(we_id)
     
     result = [
@@ -237,7 +241,7 @@ def evolution_history(
     pyrite_path: str = typer.Option("_pyrite", "--pyrite-path")
 ):
     """Get evolutionary history for a work effort."""
-    pyrite = get_pyrite_instance(work_efforts_path, pyrite_path)
+    pyrite = get_pyrite(Path(work_efforts_path), Path(pyrite_path))
     history = pyrite.get_evolutionary_history(we_id)
     
     result = [
@@ -262,7 +266,7 @@ def personality(
     pyrite_path: str = typer.Option("_pyrite", "--pyrite-path")
 ):
     """Get Pyrite's personality summary."""
-    pyrite = get_pyrite_instance(work_efforts_path, pyrite_path)
+    pyrite = get_pyrite(Path(work_efforts_path), Path(pyrite_path))
     result = pyrite.get_personality_summary()
     typer.echo(json.dumps(result, indent=2))
 

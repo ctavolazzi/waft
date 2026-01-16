@@ -88,9 +88,24 @@ class ExperimentManager:
         Initialize experiment manager.
         
         Args:
-            storage_path: Path to store experiments
+            storage_path: Path to store experiments (relative or absolute)
         """
-        self.storage_path = Path(storage_path)
+        # Use storage path resolver to route to external drive if available
+        try:
+            import sys
+            from pathlib import Path as PathType
+            # Try to import from src/waft/utils
+            project_root = PathType(__file__).parent.parent
+            sys.path.insert(0, str(project_root))
+            from src.waft.utils import get_storage_path
+            
+            # Resolve storage path (routes to external drive if augmented content)
+            resolved_storage = get_storage_path(PathType(storage_path))
+            self.storage_path = resolved_storage
+        except (ImportError, Exception) as e:
+            # Fallback to original behavior if storage resolver not available
+            self.storage_path = Path(storage_path)
+        
         self.storage_path.mkdir(parents=True, exist_ok=True)
         
         self.experiments_path = self.storage_path / "experiments"

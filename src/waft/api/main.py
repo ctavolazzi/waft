@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 
-from .routes import state, git, work_efforts, empirica, decision, gym, being, campfire, protocel, cartographer
+from .routes import state, git, work_efforts, empirica, decision, gym, being, campfire, protocel, cartographer, projects
 
 
 def create_app(project_path: Path, static_dir: Path | None = None) -> FastAPI:
@@ -55,6 +55,7 @@ def create_app(project_path: Path, static_dir: Path | None = None) -> FastAPI:
     app.include_router(campfire.router, prefix="/api", tags=["campfire"])
     app.include_router(protocel.router, prefix="/api/protocel", tags=["protocel"])
     app.include_router(cartographer.router, prefix="/api", tags=["cartographer"])
+    app.include_router(projects.router, prefix="/api", tags=["projects"])
 
     # Serve static files if provided (must be last route)
     if static_dir and static_dir.exists():

@@ -1,0 +1,44 @@
+# Git
+.git/
+.gitignore
+
+# Documentation
+*.md
+!README.md
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node
+frontend/node_modules/
+frontend/dist/
+frontend/.npm/
+
+# Python
+backend/__pycache__/
+backend/*.py[cod]
+backend/venv/
+backend/.venv/
+backend/*.egg-info/
+
+# Output
+backend/output/
+*.pdf
+*.md
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
+
+# Docker
+docker-compose.override.yml

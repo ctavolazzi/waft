@@ -1,15 +1,28 @@
 """
-Beings System: Entities in Realities
+Beings System: Timeful Agents in Realities
 
-Beings are entities that exist in realities, learn skills, and evolve.
-They can spawn into realities, learn through experience, evolve through
-natural selection, and pass memories/lessons upward.
+Beings are timeful, dynamic entities that exist in realities, learn skills, and evolve.
+They move a lot, change things rapidly, and collect evidence that may influence
+the timeless Entities in the Pantheon.
+
+Unlike Entities (which are timeless Forces that Bind Reality Together), Beings are:
+- **Timeful**: They move a lot and change things rapidly
+- **Dynamic**: Constantly learning, evolving, and adapting
+- **Evidence Collectors**: They gather evidence that may prove Entities need to change
+- **Explorers**: They spawn into realities, learn through experience, evolve through
+  natural selection, and pass memories/lessons upward
 
 Beings have:
 - Skills (learned abilities)
 - Memories (experiences)
 - Lessons (what worked/didn't work)
 - Fitness (evolutionary success)
+- Lifecycle attributes (will_to_live, luck, decision_fatigue, pleasure, pain)
+- Personality and goals
+- Sleep state
+
+**Contrast with Entities**: See `src/waft/pantheon/README.md` for the timeless nature
+of Pantheon Entities (Forces that Bind Reality Together).
 """
 
 from pathlib import Path
@@ -33,7 +46,11 @@ class BeingState(Enum):
 
 class Being:
     """
-    A being - an entity that exists in realities, learns skills, and evolves.
+    A Being - a timeful, dynamic entity that exists in realities, learns skills, and evolves.
+    
+    Beings are timeful agents that move a lot, change things rapidly, and collect evidence.
+    Unlike Entities (timeless Forces that Bind Reality Together), Beings are dynamic explorers
+    that constantly evolve and adapt.
     
     Beings have:
     - Skills (learned abilities with levels)
@@ -44,6 +61,9 @@ class Being:
     - Lifecycle attributes (will_to_live, luck, decision_fatigue, pleasure, pain)
     - Personality and goals
     - Sleep state
+    
+    The evidence collected by Beings may influence the timeless Entities in the Pantheon,
+    proving that Aspects of Creation need to change.
     """
     
     def __init__(
@@ -1510,6 +1530,65 @@ class BeingSystem:
             }
         )
         
+        # Initialize CelestialBody and Guardian Beings
+        try:
+            from .prime_directive import (
+                CelestialBody,
+                MaintenanceStaff,
+                SecurityTeam,
+                Curator,
+                PRIME_DIRECTIVE_BEING_IDS
+            )
+            
+            # Initialize CelestialBody (Heart, Mind, Body, Spirit)
+            celestial_body = CelestialBody(
+                project_path=self.project_path,
+                the_one_being_id=self.THE_ONE_BEING_ID
+            )
+            
+            # Create Guardian Beings
+            maintenance_staff = MaintenanceStaff(
+                being_id=PRIME_DIRECTIVE_BEING_IDS["maintenance_staff"],
+                reality_id=genesis_reality_id,
+                project_path=self.project_path,
+                parent_being_id=self.THE_ONE_BEING_ID
+            )
+            self._save_being(maintenance_staff)
+            
+            security_team = SecurityTeam(
+                being_id=PRIME_DIRECTIVE_BEING_IDS["security_team"],
+                reality_id=genesis_reality_id,
+                project_path=self.project_path,
+                parent_being_id=self.THE_ONE_BEING_ID
+            )
+            self._save_being(security_team)
+            
+            curator = Curator(
+                being_id=PRIME_DIRECTIVE_BEING_IDS["curator"],
+                reality_id=genesis_reality_id,
+                project_path=self.project_path,
+                parent_being_id=self.THE_ONE_BEING_ID
+            )
+            self._save_being(curator)
+            
+            # Record initialization in CelestialBody
+            celestial_body.record_cycle({
+                "type": "initialization",
+                "event": "CelestialBody and Guardian Beings created",
+                "guardian_beings": list(PRIME_DIRECTIVE_BEING_IDS.values()),
+            })
+            
+            # Add reference to Prime Directive
+            celestial_body.heart.add_reference(
+                reference_type="being",
+                reference_id=self.THE_ONE_BEING_ID,
+                description="TheOne Being - root ancestor with CelestialBody"
+            )
+            
+        except ImportError:
+            # Prime Directive module not available - continue without it
+            pass
+        
         return the_one
     
     def _validate_being_id(self, being_id: str) -> bool:
@@ -1694,6 +1773,19 @@ class BeingSystem:
         
         # Save being
         self._save_being(being)
+        
+        # Add reference to Prime Directive
+        try:
+            from .prime_directive import CelestialBody
+            celestial_body = CelestialBody(project_path=self.project_path)
+            celestial_body.heart.add_reference(
+                reference_type="being",
+                reference_id=being.being_id,
+                description=f"Being {being.being_id} spawned in reality {reality_id}"
+            )
+        except ImportError:
+            # Prime Directive module not available
+            pass
         
         # Generate character sheet .txt (default, automatic)
         # Only generates .txt by default - .md and .pdf are on-demand
@@ -1931,6 +2023,23 @@ class BeingSystem:
             pass
         
         return 0.0
+    
+    def save_being(self, being: Being) -> None:
+        """
+        Save a Being to disk.
+        
+        Public API for saving beings (wraps _save_being).
+        
+        CRITICAL: Sets file permissions (0o600) and validates paths.
+        
+        Args:
+            being: Being instance to save
+        
+        Raises:
+            ValueError: If being_id is invalid
+            OSError: If file cannot be written
+        """
+        self._save_being(being)
     
     def _save_being(self, being: Being) -> None:
         """

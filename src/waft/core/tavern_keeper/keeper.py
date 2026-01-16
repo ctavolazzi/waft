@@ -83,6 +83,26 @@ class TavernKeeper:
         # Log character initialization to Empirica if available
         if self.empirica.is_initialized():
             self._log_character_init_to_empirica()
+        
+        # Initialize Heart (Prime Directive at center of TreasureTavern)
+        self._heart = None
+        self._celestial_body = None
+        self._karma_museum = None
+        try:
+            from ...prime_directive import CelestialBody, KarmaMuseum
+            self._celestial_body = CelestialBody(project_path=self.project_path)
+            self._heart = self._celestial_body.heart
+            self._karma_museum = KarmaMuseum(project_path=self.project_path)
+            
+            # Add reference to Prime Directive
+            self._heart.add_reference(
+                reference_type="system",
+                reference_id="tavern_keeper",
+                description="TavernKeeper - Heart at center of TreasureTavern"
+            )
+        except ImportError:
+            # Prime Directive module not available
+            pass
     
     def _log_character_init_to_empirica(self) -> None:
         """Log character initialization to Empirica."""
@@ -784,4 +804,42 @@ class TavernKeeper:
             "rewards": reward_result,
             "xp_gained": xp_gained,
         }
+    
+    def get_heart(self):
+        """
+        Get the Heart (Prime Directive) at the center of TreasureTavern.
+        
+        Returns:
+            PrimeDirective instance or None if not available
+        """
+        return self._heart
+    
+    def get_celestial_body(self):
+        """
+        Get the CelestialBody structure.
+        
+        Returns:
+            CelestialBody instance or None if not available
+        """
+        return self._celestial_body
+    
+    def get_karma_museum(self):
+        """
+        Get the Karma Museum for exploring evolution history.
+        
+        Returns:
+            KarmaMuseum instance or None if not available
+        """
+        return self._karma_museum
+    
+    def get_prime_directive_principles(self) -> List[str]:
+        """
+        Get Prime Directive principles.
+        
+        Returns:
+            List of principles or empty list if not available
+        """
+        if self._heart:
+            return self._heart.get_principles()
+        return []
 

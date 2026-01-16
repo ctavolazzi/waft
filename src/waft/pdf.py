@@ -592,6 +592,10 @@ class PDF:
             safe_title = safe_title.replace(' ', '_')[:50]
             output_path = Path(f"_work_efforts/{safe_title}_{timestamp}.pdf")
         
+        # Use storage path resolver to route to external drive if available
+        from .utils import resolve_output_path
+        output_path = resolve_output_path(Path(output_path))
+        
         # Check if we have a builder from from_pdf()
         if hasattr(self, '_builder'):
             return self._builder.recreate(output_path)

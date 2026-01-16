@@ -47,6 +47,8 @@ class ReflectManager:
         self.archive_dir = self.journal_dir / "archive"
         self.stats_dir = self.journal_dir / "stats"
         self.index_file = self.journal_dir / "index.json"
+        self.chronicles_dir = self.journal_dir / "chronicles"  # NEW: Hierarchical structure
+        self.discovery_file = self.journal_dir / "discovery.json"  # NEW: Being discovery manifest
         
         # Journal length threshold for archiving (default: 500 lines)
         self.archive_threshold = 500
@@ -54,11 +56,33 @@ class ReflectManager:
         # Archive retention policy (days to keep archives)
         self.archive_retention_days = 365  # Keep archives for 1 year
         
+        # CRITICAL: Validate journal_dir is within project_path (security)
+        self._validate_journal_path()
+        
         # Ensure journal structure exists
         self._ensure_journal_exists()
         
         # Check if journal needs archiving
         self._check_and_archive_if_needed()
+    
+    def _validate_journal_path(self):
+        """
+        CRITICAL: Validate journal_dir is within project_path (prevent path traversal).
+        
+        Raises:
+            ValueError: If journal_dir escapes project_path
+        """
+        try:
+            resolved_journal = self.journal_dir.resolve()
+            resolved_project = self.project_path.resolve()
+            
+            if not resolved_journal.is_relative_to(resolved_project):
+                raise ValueError(
+                    f"Security violation: journal_dir ({self.journal_dir}) "
+                    f"is not within project_path ({self.project_path})"
+                )
+        except (ValueError, OSError) as e:
+            raise ValueError(f"Failed to validate journal path: {e}")
     
     def _ensure_journal_exists(self):
         """Ensure journal directory and file exist."""
@@ -66,6 +90,14 @@ class ReflectManager:
         self.entries_dir.mkdir(parents=True, exist_ok=True)
         self.archive_dir.mkdir(parents=True, exist_ok=True)
         self.stats_dir.mkdir(parents=True, exist_ok=True)
+        self.chronicles_dir.mkdir(parents=True, exist_ok=True)  # NEW: Create chronicles directory
+        
+        # CRITICAL: Set restrictive file permissions (0700 for dirs, 0600 for files)
+        try:
+            self.journal_dir.chmod(0o700)
+            self.chronicles_dir.chmod(0o700)
+        except OSError:
+            pass  # Permissions may not be changeable on all systems
         
         # Create journal file if it doesn't exist
         if not self.journal_file.exists():
@@ -74,6 +106,10 @@ class ReflectManager:
         # Initialize index if it doesn't exist
         if not self.index_file.exists():
             self._create_index()
+        
+        # Create discovery manifest if it doesn't exist
+        if not self.discovery_file.exists():
+            self._create_discovery_manifest()
     
     def _check_and_archive_if_needed(self):
         """
@@ -485,14 +521,20 @@ Entries are appended chronologically, providing a record of the AI's cognitive j
     
     def _save_journal_entry(self, entry: Dict[str, Any]) -> Path:
         """
-        Save journal entry to file.
+        Save journal entry to file with dual-write strategy (hierarchical + legacy).
+        
+        NEW: Writes to hierarchical chronicle structure (YYYY/MM/DD/HH/entries.md)
+        LEGACY: Also writes to flat structure for backward compatibility
         
         Args:
             entry: Journal entry dictionary
             
         Returns:
-            Path to saved entry
+            Path to saved entry (chronicle path)
         """
+        # Parse timestamp
+        timestamp = datetime.fromisoformat(entry['timestamp'])
+        
         # Build markdown content with enhanced metadata
         content = []
         content.append(f"\n## Journal Entry: {entry['date']} {entry['time']}\n")
@@ -524,19 +566,60 @@ Entries are appended chronologically, providing a record of the AI's cognitive j
             content.append(f"{section_content}\n\n")
         
         content.append("---\n")
+        content_text = "".join(content)
         
-        # Append to main journal file
-        with open(self.journal_file, "a", encoding="utf-8") as f:
-            f.write("".join(content))
+        # NEW: Write to hierarchical chronicle structure
+        chronicle_path = self._get_chronicle_path(timestamp)
+        chronicle_path.mkdir(parents=True, exist_ok=True)
         
-        # Also save as individual entry file
+        # CRITICAL: Set restrictive permissions on directory
+        try:
+            chronicle_path.chmod(0o700)
+        except OSError:
+            pass
+        
+        chronicle_entries_file = chronicle_path / "entries.md"
+        
+        # Append to hour-level entries.md
+        try:
+            with open(chronicle_entries_file, "a", encoding="utf-8") as f:
+                f.write(content_text)
+            
+            # CRITICAL: Set restrictive permissions on file (0600)
+            try:
+                chronicle_entries_file.chmod(0o600)
+            except OSError:
+                pass
+        except OSError as e:
+            self.console.print(f"[bold red]Error writing to chronicle: {e}[/bold red]")
+            # Fall back to legacy structure if chronicle write fails
+        
+        # Update hour-level index.json
+        self._update_hour_index(chronicle_path, entry)
+        
+        # LEGACY: Also append to main journal file (backward compatibility)
+        try:
+            with open(self.journal_file, "a", encoding="utf-8") as f:
+                f.write(content_text)
+        except OSError as e:
+            self.console.print(f"[bold yellow]Warning: Could not write to legacy journal: {e}[/bold yellow]")
+        
+        # LEGACY: Also save as individual entry file
         entry_file = self.entries_dir / f"{entry['date']}-{entry['time'].replace(':', '')}.md"
-        entry_file.write_text("".join(content), encoding="utf-8")
+        try:
+            entry_file.write_text(content_text, encoding="utf-8")
+            # CRITICAL: Set restrictive permissions
+            try:
+                entry_file.chmod(0o600)
+            except OSError:
+                pass
+        except OSError as e:
+            self.console.print(f"[bold yellow]Warning: Could not write legacy entry file: {e}[/bold yellow]")
         
-        # Update index
+        # Update master index
         self._update_index(entry)
         
-        return self.journal_file
+        return chronicle_entries_file
     
     def _display_entry_summary(self, entry: Dict[str, Any]):
         """Display summary of created entry."""
@@ -594,6 +677,162 @@ Entries are appended chronologically, providing a record of the AI's cognitive j
             }
         }
         self.index_file.write_text(json.dumps(index, indent=2), encoding="utf-8")
+    
+    def _get_chronicle_path(self, timestamp: datetime) -> Path:
+        """
+        Generate YYYY/MM/DD/HH path for entry with CRITICAL security validation.
+        
+        This method implements the hierarchical chronicling structure while preventing
+        path traversal attacks through comprehensive validation.
+        
+        Args:
+            timestamp: Datetime for the entry
+            
+        Returns:
+            Path to chronicle directory (YYYY/MM/DD/HH)
+            
+        Raises:
+            ValueError: If timestamp components are invalid or path traversal detected
+        """
+        # CRITICAL: Validate timestamp components
+        year = timestamp.year
+        month = timestamp.month
+        day = timestamp.day
+        hour = timestamp.hour
+        
+        if not (1900 <= year <= 2100):
+            raise ValueError(f"Invalid year: {year} (must be 1900-2100)")
+        if not (1 <= month <= 12):
+            raise ValueError(f"Invalid month: {month} (must be 1-12)")
+        if not (1 <= day <= 31):
+            raise ValueError(f"Invalid day: {day} (must be 1-31)")
+        if not (0 <= hour <= 23):
+            raise ValueError(f"Invalid hour: {hour} (must be 0-23)")
+        
+        # Build path using formatted strings (safe - no user input)
+        chronicle_path = (
+            self.journal_dir / "chronicles" /
+            f"{year:04d}" / f"{month:02d}" / f"{day:02d}" / f"{hour:02d}"
+        )
+        
+        # CRITICAL: Resolve and validate path stays within journal_dir
+        # This prevents symlink attacks and path traversal
+        try:
+            resolved_path = chronicle_path.resolve()
+            resolved_journal_dir = self.journal_dir.resolve()
+            
+            if not resolved_path.is_relative_to(resolved_journal_dir):
+                raise ValueError(
+                    f"Path traversal detected: {chronicle_path} "
+                    f"resolves outside journal_dir {resolved_journal_dir}"
+                )
+        except (ValueError, OSError) as e:
+            raise ValueError(f"Failed to validate chronicle path: {e}")
+        
+        return chronicle_path
+    
+    def _create_discovery_manifest(self):
+        """
+        Create discovery.json manifest for Being discovery mechanism.
+        
+        This file enables Beings to discover and understand the journal structure
+        through probing mechanisms.
+        """
+        manifest = {
+            "journal_path": str(self.journal_dir.relative_to(self.project_path)),
+            "structure": "hierarchical",
+            "format": "markdown",
+            "entry_types": ["structured", "simple", "being"],
+            "time_segmentation": {
+                "levels": ["year", "month", "day", "hour"],
+                "format": "YYYY/MM/DD/HH"
+            },
+            "discovery_hints": [
+                "Look for _pyrite/journal/chronicles/",
+                "Entries organized by time: YYYY/MM/DD/HH/entries.md",
+                "Master index at _pyrite/journal/index.json",
+                "Discovery manifest at _pyrite/journal/discovery.json"
+            ],
+            "last_updated": datetime.now().isoformat()
+        }
+        
+        self.discovery_file.write_text(
+            json.dumps(manifest, indent=2),
+            encoding="utf-8"
+        )
+        
+        # CRITICAL: Set restrictive permissions (0600)
+        try:
+            self.discovery_file.chmod(0o600)
+        except OSError:
+            pass  # Permissions may not be changeable on all systems
+    
+    def _update_hour_index(self, chronicle_path: Path, entry: Dict[str, Any]):
+        """
+        Update hour-level index.json for hierarchical chronicle structure.
+        
+        Args:
+            chronicle_path: Path to chronicle directory (YYYY/MM/DD/HH)
+            entry: Journal entry dictionary
+        """
+        hour_index_file = chronicle_path / "index.json"
+        
+        try:
+            if hour_index_file.exists():
+                hour_index = json.loads(hour_index_file.read_text(encoding="utf-8"))
+            else:
+                hour_index = {
+                    "hour": entry['time'].split(':')[0],
+                    "date": entry['date'],
+                    "entries": [],
+                    "entry_count": 0
+                }
+        except (json.JSONDecodeError, FileNotFoundError):
+            hour_index = {
+                "hour": entry['time'].split(':')[0],
+                "date": entry['date'],
+                "entries": [],
+                "entry_count": 0
+            }
+        
+        entry_id = f"{entry['date']}-{entry['time'].replace(':', '')}"
+        entry_info = {
+            "id": entry_id,
+            "timestamp": entry['timestamp'],
+            "format": self._detect_entry_format(entry)
+        }
+        
+        hour_index["entries"].append(entry_info)
+        hour_index["entry_count"] = len(hour_index["entries"])
+        hour_index["last_updated"] = datetime.now().isoformat()
+        
+        hour_index_file.write_text(
+            json.dumps(hour_index, indent=2),
+            encoding="utf-8"
+        )
+        
+        # CRITICAL: Set restrictive permissions (0600)
+        try:
+            hour_index_file.chmod(0o600)
+        except OSError:
+            pass
+    
+    def _detect_entry_format(self, entry: Dict[str, Any]) -> str:
+        """
+        Detect entry format: structured, simple, or being.
+        
+        Args:
+            entry: Journal entry dictionary
+            
+        Returns:
+            Format string: "structured", "simple", or "being"
+        """
+        if entry.get('being_id'):
+            return 'being'
+        elif entry.get('sections') and len(entry.get('sections', {})) > 1:
+            return 'structured'
+        else:
+            return 'simple'
     
     def _update_index(self, entry: Dict[str, Any]):
         """Update journal index with new entry."""

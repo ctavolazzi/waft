@@ -30,8 +30,8 @@ BRIEF_TEMPLATE = """
 
         @page {
             size: letter;
-            margin: 0.75in 0.5in;
-            background: #fff;
+            margin: 0.75in 0.6in;
+            background: #fafafa;
 
             @top-left {
                 content: "{{ doc_id }}";
@@ -62,54 +62,59 @@ BRIEF_TEMPLATE = """
         }
 
         body {
-            font-family: 'Arial', 'Helvetica', sans-serif;
-            font-size: 10pt;
-            line-height: 1.5;
-            color: #000;
-            background: #fff;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-size: 11pt;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #fafafa;
         }
 
-        /* Cover Page */
+        /* Cover Page - Enhanced Design */
         .cover-page {
-            border: 4px double #000;
-            padding: 0.5in;
+            border: 4px double #1a1a1a;
+            padding: 0.6in;
             margin-bottom: 0.3in;
-            background: #fff;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
             text-align: center;
             page-break-after: always;
             position: relative;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .cover-header {
-            font-family: 'Arial Black', sans-serif;
-            font-size: 16pt;
-            font-weight: bold;
+            font-family: 'Helvetica Neue', 'Arial', sans-serif;
+            font-size: 14pt;
+            font-weight: 600;
             text-transform: uppercase;
-            margin-bottom: 0.3in;
-            border-bottom: 3px solid #000;
-            padding-bottom: 0.15in;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.4in;
+            border-bottom: 2px solid #2c3e50;
+            padding-bottom: 0.12in;
+            color: #2c3e50;
         }
 
         .cover-title {
-            font-family: 'Arial Black', sans-serif;
-            font-size: 22pt;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-size: 28pt;
             font-weight: bold;
-            text-transform: uppercase;
-            line-height: 1.4;
-            margin-bottom: 0.2in;
-            margin-top: 0.1in;
+            line-height: 1.3;
+            margin-bottom: 0.25in;
+            margin-top: 0.15in;
             word-wrap: break-word;
             overflow-wrap: break-word;
             hyphens: auto;
             max-width: 100%;
-            padding: 0.05in 0;
+            padding: 0.08in 0;
+            color: #1a1a1a;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
         }
 
         .cover-subtitle {
-            font-size: 12pt;
+            font-size: 13pt;
             font-style: italic;
-            color: #333;
-            margin-bottom: 0.3in;
+            color: #5a6c7d;
+            margin-bottom: 0.35in;
+            font-weight: 300;
         }
 
         .cover-doc-id {
@@ -120,14 +125,16 @@ BRIEF_TEMPLATE = """
             text-transform: uppercase;
         }
 
-        /* KeyValue Block (Cover) */
+        /* KeyValue Block (Cover) - Enhanced */
         .keyvalue-block {
-            border: 2px solid #000;
-            padding: 0.2in;
-            margin: 0.2in auto;
-            background: #fff;
+            border: 2px solid #2c3e50;
+            border-radius: 4px;
+            padding: 0.25in;
+            margin: 0.25in auto;
+            background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
             text-align: left;
-            max-width: 4in;
+            max-width: 4.5in;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
         .keyvalue-item {
@@ -136,10 +143,13 @@ BRIEF_TEMPLATE = """
         }
 
         .keyvalue-key {
-            font-weight: bold;
+            font-weight: 600;
             display: inline-block;
             width: 1.8in;
             text-transform: uppercase;
+            color: #2c3e50;
+            font-size: 9pt;
+            letter-spacing: 0.05em;
         }
 
         .keyvalue-value {
@@ -252,9 +262,12 @@ BRIEF_TEMPLATE = """
             z-index: -1;
         }
 
-        /* Content Pages */
+        /* Content Pages - Enhanced */
         .content-page {
             margin-top: 0.2in;
+            background: #ffffff;
+            padding: 0.15in;
+            border-radius: 2px;
         }
 
         /* Section Dividers */
@@ -288,28 +301,33 @@ BRIEF_TEMPLATE = """
             margin-top: 0.1in;
         }
 
-        /* Section Headers */
+        /* Section Headers - Enhanced Typography */
         h2 {
-            font-family: 'Arial Black', sans-serif;
-            font-size: 14pt;
-            font-weight: bold;
+            font-family: 'Helvetica Neue', 'Arial', sans-serif;
+            font-size: 16pt;
+            font-weight: 600;
             text-transform: uppercase;
-            color: #000;
-            border-bottom: 3px solid #000;
-            padding-bottom: 0.05in;
-            margin-top: 0.3in;
-            margin-bottom: 0.15in;
+            letter-spacing: 0.08em;
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 0.08in;
+            margin-top: 0.4in;
+            margin-bottom: 0.2in;
             page-break-after: avoid;
+            background: linear-gradient(to right, rgba(52, 152, 219, 0.1), transparent);
+            padding-left: 0.1in;
+            padding-right: 0.1in;
         }
 
         h3 {
-            font-size: 12pt;
-            font-weight: bold;
-            border-bottom: 2px solid #000;
-            padding-bottom: 0.05in;
-            margin-top: 0.2in;
-            margin-bottom: 0.12in;
+            font-size: 13pt;
+            font-weight: 600;
+            border-bottom: 2px solid #95a5a6;
+            padding-bottom: 0.06in;
+            margin-top: 0.25in;
+            margin-bottom: 0.15in;
             page-break-after: avoid;
+            color: #34495e;
         }
 
         h4 {
@@ -320,84 +338,122 @@ BRIEF_TEMPLATE = """
             margin-bottom: 0.1in;
         }
 
-        /* Status Box */
+        /* Status Box - Enhanced Design */
         .status-box {
-            border: 2px solid #000;
-            padding: 0.15in;
-            margin: 0.15in 0;
-            background: #fff;
+            border: 2px solid #3498db;
+            border-radius: 6px;
+            padding: 0.2in;
+            margin: 0.2in 0;
+            background: linear-gradient(to bottom, #ebf5fb 0%, #ffffff 100%);
             page-break-inside: avoid;
+            box-shadow: 0 2px 6px rgba(52, 152, 219, 0.15);
         }
 
         .status-title {
-            font-weight: bold;
+            font-weight: 600;
             font-size: 10pt;
-            margin-bottom: 0.08in;
+            margin-bottom: 0.1in;
             text-transform: uppercase;
+            color: #2980b9;
+            letter-spacing: 0.05em;
         }
 
-        /* Tables */
+        /* Tables - Enhanced Design */
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 0.15in 0;
-            font-size: 9.5pt;
+            margin: 0.2in 0;
+            font-size: 10pt;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
         }
 
         th {
-            background: #333;
+            background: linear-gradient(to bottom, #34495e 0%, #2c3e50 100%);
             color: #fff;
-            border: 1px solid #000;
-            padding: 0.08in;
+            border: 1px solid #1a1a1a;
+            padding: 0.1in 0.12in;
             text-align: left;
-            font-weight: bold;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 9pt;
+            letter-spacing: 0.05em;
         }
 
         td {
-            border: 1px solid #666;
-            padding: 0.08in;
+            border: 1px solid #e0e0e0;
+            padding: 0.1in 0.12in;
+            background: #fff;
         }
 
-        tr:nth-child(even) {
-            background: #f9f9f9;
+        tr:nth-child(even) td {
+            background: #f8f9fa;
         }
 
-        /* Lists */
+        tr:hover td {
+            background: #ecf0f1;
+        }
+
+        /* Lists - Enhanced Design */
         ul, ol {
-            margin-left: 0.3in;
-            margin-bottom: 0.12in;
+            margin-left: 0.35in;
+            margin-bottom: 0.15in;
+            padding-left: 0.1in;
         }
 
         li {
-            margin-bottom: 0.06in;
+            margin-bottom: 0.08in;
+            line-height: 1.6;
         }
 
-        /* Paragraphs */
+        ul li::marker {
+            color: #3498db;
+        }
+
+        ol li::marker {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        /* Paragraphs - Enhanced Typography */
         p {
-            margin: 0.1in 0;
+            margin: 0.12in 0;
             text-align: justify;
+            text-indent: 0;
+            orphans: 2;
+            widows: 2;
         }
 
-        /* Code Blocks */
+        p:first-of-type {
+            margin-top: 0;
+        }
+
+        /* Code Blocks - Enhanced Design */
         pre {
-            background: #f5f5f5;
-            border: 1px solid #ddd;
-            border-left: 4px solid #06c;
-            padding: 0.15in;
-            margin: 0.15in 0;
+            background: linear-gradient(to bottom, #2c3e50 0%, #34495e 100%);
+            border: 1px solid #1a1a1a;
+            border-left: 5px solid #3498db;
+            border-radius: 4px;
+            padding: 0.18in;
+            margin: 0.2in 0;
             overflow-x: auto;
-            font-family: 'Courier New', monospace;
+            font-family: 'Monaco', 'Courier New', monospace;
             font-size: 9pt;
-            line-height: 1.4;
+            line-height: 1.5;
             page-break-inside: avoid;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            color: #ecf0f1;
         }
 
         code {
-            font-family: 'Courier New', monospace;
-            font-size: 9pt;
-            background: #f5f5f5;
-            padding: 0.02in 0.05in;
-            border-radius: 2px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 9.5pt;
+            background: #f1f3f5;
+            padding: 0.03in 0.06in;
+            border-radius: 3px;
+            color: #e74c3c;
+            border: 1px solid #dee2e6;
         }
 
         pre code {
@@ -405,6 +461,8 @@ BRIEF_TEMPLATE = """
             padding: 0;
             border-radius: 0;
             display: block;
+            color: #ecf0f1;
+            border: none;
         }
 
         /* Code highlighting (basic) */
@@ -419,29 +477,40 @@ BRIEF_TEMPLATE = """
         .highlight .o { color: #000000; } /* Operators */
         .highlight .p { color: #000000; } /* Punctuation */
 
-        /* Note Box */
+        /* Note Box - Enhanced Design */
         .note {
-            border-left: 4px solid #06c;
-            background: #f0f8ff;
-            padding: 0.1in 0.15in;
-            margin: 0.15in 0;
+            border-left: 5px solid #3498db;
+            background: linear-gradient(to right, #ebf5fb 0%, #ffffff 100%);
+            padding: 0.15in 0.2in;
+            margin: 0.2in 0;
+            border-radius: 0 4px 4px 0;
+            box-shadow: 0 2px 6px rgba(52, 152, 219, 0.12);
         }
 
         .note-title {
-            font-weight: bold;
-            color: #06c;
+            font-weight: 600;
+            color: #2980b9;
             text-transform: uppercase;
             font-size: 9pt;
-            margin-bottom: 0.05in;
+            margin-bottom: 0.08in;
+            letter-spacing: 0.05em;
         }
 
-        /* Emphasis */
+        /* Emphasis - Enhanced */
         strong {
-            font-weight: bold;
+            font-weight: 600;
+            color: #2c3e50;
         }
 
         em {
             font-style: italic;
+            color: #5a6c7d;
+        }
+
+        strong em, em strong {
+            font-weight: 600;
+            font-style: italic;
+            color: #34495e;
         }
     </style>
 </head>
@@ -451,19 +520,19 @@ BRIEF_TEMPLATE = """
         {% if cover_badge %}
         <div class="corner-badge">{{ cover_badge }}</div>
         {% endif %}
-        
+
         {% if cover_header %}
         <div class="cover-header">{{ cover_header | e }}</div>
         {% endif %}
-        
+
         <div class="cover-title">{{ title | e }}</div>
-        
+
         {% if subtitle %}
         <div class="cover-subtitle">{{ subtitle | e }}</div>
         {% endif %}
-        
+
         <div class="cover-doc-id">{{ doc_id | e }}</div>
-        
+
         {% if cover_metadata %}
         <div class="keyvalue-block">
             {% for key, value in cover_metadata.items() %}
@@ -474,14 +543,14 @@ BRIEF_TEMPLATE = """
             {% endfor %}
         </div>
         {% endif %}
-        
+
         {% if cover_warning %}
         <div class="warning-block {{ cover_warning.severity|lower }}">
             <div class="warning-title">{{ cover_warning.severity | e }}</div>
             <p>{{ cover_warning.message | e }}</p>
         </div>
         {% endif %}
-        
+
         {% if cover_signature %}
         <div class="signature-block">
             <div class="signature-line">
@@ -493,7 +562,7 @@ BRIEF_TEMPLATE = """
             </div>
         </div>
         {% endif %}
-        
+
         {% if cover_footer %}
         <div class="cover-footer">
             {{ cover_footer | e }}
@@ -562,7 +631,7 @@ def generate_brief_document(
     )
 
     HTML(string=html_output).write_pdf(output_path)
-    
+
     # Post-process to add blank page markers
     try:
         from ..utils import process_pdf_for_blank_pages
@@ -570,5 +639,5 @@ def generate_brief_document(
     except Exception as e:
         # If blank page handling fails, continue anyway (non-critical)
         print(f"⚠️  Blank page marker processing failed: {e}")
-    
+
     return output_path

@@ -1,0 +1,191 @@
+{
+  "campaign_info": {
+    "title": "The Tavern Heroes: A Self-Playing Adventure",
+    "party": [
+      {
+        "name": "Thorin Ironforge",
+        "class": "Fighter",
+        "race": "Dwarf",
+        "level": 8,
+        "being_id": "being_20260115_132210_4bf9338b"
+      },
+      {
+        "name": "Lyra Moonwhisper",
+        "class": "Wizard",
+        "race": "Elf",
+        "level": 8,
+        "being_id": "being_20260115_132210_4bf9338b"
+      },
+      {
+        "name": "Rogar Swiftfoot",
+        "class": "Rogue",
+        "race": "Halfling",
+        "level": 8,
+        "being_id": "being_20260115_132210_4bf9338b"
+      },
+      {
+        "name": "Aria Brightshield",
+        "class": "Cleric",
+        "race": "Human",
+        "level": 8,
+        "being_id": "being_20260115_132210_4bf9338b"
+      }
+    ],
+    "final_boss_defeated": true,
+    "total_chapters": 6
+  },
+  "campaign_log": [
+    {
+      "timestamp": "2026-01-15T13:22:10.263524",
+      "event": "tavern_scene",
+      "location": "The Rusty Tankard",
+      "description": "Party receives quest"
+    },
+    {
+      "timestamp": "2026-01-15T13:22:10.266810",
+      "event": "encounter",
+      "encounter_name": "Goblin Ambush",
+      "difficulty": "medium",
+      "rounds": 1
+    },
+    {
+      "timestamp": "2026-01-15T13:22:10.269095",
+      "event": "encounter",
+      "encounter_name": "Wolves of the Darkwood",
+      "difficulty": "medium",
+      "rounds": 1
+    },
+    {
+      "timestamp": "2026-01-15T13:22:10.270042",
+      "event": "encounter",
+      "encounter_name": "Bandit Encounter",
+      "difficulty": "medium",
+      "rounds": 1
+    },
+    {
+      "timestamp": "2026-01-15T13:22:10.273063",
+      "event": "encounter",
+      "encounter_name": "Skeleton Warriors",
+      "difficulty": "medium",
+      "rounds": 1
+    },
+    {
+      "timestamp": "2026-01-15T13:22:10.273849",
+      "event": "encounter",
+      "encounter_name": "Dark Cultists",
+      "difficulty": "medium",
+      "rounds": 1
+    },
+    {
+      "timestamp": "2026-01-15T13:22:10.276086",
+      "event": "encounter",
+      "encounter_name": "Shadow Beasts",
+      "difficulty": "medium",
+      "rounds": 1
+    },
+    {
+      "timestamp": "2026-01-15T13:22:10.277372",
+      "event": "encounter",
+      "encounter_name": "Corrupted Guards",
+      "difficulty": "medium",
+      "rounds": 1
+    },
+    {
+      "timestamp": "2026-01-15T13:22:10.280206",
+      "event": "encounter",
+      "encounter_name": "Undead Servants",
+      "difficulty": "medium",
+      "rounds": 1
+    },
+    {
+      "timestamp": "2026-01-15T13:22:10.281187",
+      "event": "encounter",
+      "encounter_name": "The Keep's Lieutenant",
+      "difficulty": "medium",
+      "rounds": 1
+    },
+    {
+      "timestamp": "2026-01-15T13:22:10.284599",
+      "event": "encounter",
+      "encounter_name": "Trap Rooms",
+      "difficulty": "medium",
+      "rounds": 1
+    },
+    {
+      "timestamp": "2026-01-15T13:22:10.285615",
+      "event": "encounter",
+      "encounter_name": "Ancient Guardians",
+      "difficulty": "medium",
+      "rounds": 1
+    },
+    {
+      "timestamp": "2026-01-15T13:22:10.288071",
+      "event": "encounter",
+      "encounter_name": "The Shadow Lord's Minions",
+      "difficulty": "boss",
+      "rounds": 3
+    },
+    {
+      "timestamp": "2026-01-15T13:22:10.290883",
+      "event": "final_boss_defeated",
+      "boss_name": "The Shadow Lord Malachar",
+      "victory": true
+    }
+  ],
+  "chapters": [
+    {
+      "title": "Prologue: The Rusty Tankard",
+      "content": "\nThe warm glow of the hearth casts dancing shadows across the worn wooden tables of The Rusty Tankard. \nThe air is thick with the smell of ale, roasted meat, and the murmur of travelers sharing tales.\n\nThorin Ironforge, Lyra Moonwhisper, Rogar Swiftfoot, Aria Brightshield sit together at a corner table, their gear stacked beside them. The tavern is alive with \nactivity - merchants discussing trade routes, guards off duty sharing war stories, and mysterious \nfigures in dark corners watching everything.\n\nSuddenly, the tavern door bursts open. A figure stumbles in, covered in mud and breathing heavily. \nIt's a messenger, and he's clearly been through something terrible.\n\n\"The road to Blackmoor Keep is no longer safe!\" he gasps, collapsing at the bar. \"Something... \nsomething dark has taken hold of the old fortress. The villagers are terrified. We need heroes!\"\n\nThe tavern falls silent. All eyes turn to your table.\n\nThe messenger looks directly at you. \"Please... you look like capable adventurers. Will you help us?\"\n\nThis is where your story begins.\n            ",
+      "read_aloud": "\nThe messenger's eyes are wide with fear. \"The Keep has been overrun by shadows. \nSomething ancient has awakened. We need brave souls to face whatever darkness lies within.\"\n            ",
+      "sidebar": {
+        "title": "The Quest",
+        "content": "Investigate Blackmoor Keep and defeat the darkness that has taken hold."
+      }
+    },
+    {
+      "title": "Chapter 1: The Road to Blackmoor",
+      "content": "# The Road to Blackmoor\n\nThe party continues their journey toward Blackmoor Keep. The Road to Blackmoor\n\n## Goblin Ambush\n\n\nThe party faces Goblin Ambush in a fierce battle that lasts 1 rounds. \nThrough teamwork and determination, they emerge victorious, though not without taking some damage.\n\nExperience gained: 50 XP per party member.\n            \n\n## Wolves of the Darkwood\n\n\nThe party faces Wolves of the Darkwood in a fierce battle that lasts 1 rounds. \nThrough teamwork and determination, they emerge victorious, though not without taking some damage.\n\nExperience gained: 50 XP per party member.\n            \n\n## Bandit Encounter\n\n\nThe party faces Bandit Encounter in a fierce battle that lasts 1 rounds. \nThrough teamwork and determination, they emerge victorious, though not without taking some damage.\n\nExperience gained: 50 XP per party member.\n            \n\n",
+      "read_aloud": "\nThe battle is intense. Steel clashes, spells fly, and the party fights as one. \nAfter 1 rounds of combat, Goblin Ambush falls, defeated by the heroes' resolve.\n            \n\n\nThe battle is intense. Steel clashes, spells fly, and the party fights as one. \nAfter 1 rounds of combat, Wolves of the Darkwood falls, defeated by the heroes' resolve.\n            \n\n\nThe battle is intense. Steel clashes, spells fly, and the party fights as one. \nAfter 1 rounds of combat, Bandit Encounter falls, defeated by the heroes' resolve.\n            ",
+      "encounters": [
+        "Goblin Ambush",
+        "Wolves of the Darkwood",
+        "Bandit Encounter"
+      ]
+    },
+    {
+      "title": "Chapter 2: Approaching the Keep",
+      "content": "# Approaching the Keep\n\nThe party continues their journey toward Blackmoor Keep. Approaching the Keep\n\n## Skeleton Warriors\n\n\nThe party faces Skeleton Warriors in a fierce battle that lasts 1 rounds. \nThrough teamwork and determination, they emerge victorious, though not without taking some damage.\n\nExperience gained: 50 XP per party member.\n            \n\n## Dark Cultists\n\n\nThe party faces Dark Cultists in a fierce battle that lasts 1 rounds. \nThrough teamwork and determination, they emerge victorious, though not without taking some damage.\n\nExperience gained: 50 XP per party member.\n            \n\n## Shadow Beasts\n\n\nThe party faces Shadow Beasts in a fierce battle that lasts 1 rounds. \nThrough teamwork and determination, they emerge victorious, though not without taking some damage.\n\nExperience gained: 50 XP per party member.\n            \n\n",
+      "read_aloud": "\nThe battle is intense. Steel clashes, spells fly, and the party fights as one. \nAfter 1 rounds of combat, Skeleton Warriors falls, defeated by the heroes' resolve.\n            \n\n\nThe battle is intense. Steel clashes, spells fly, and the party fights as one. \nAfter 1 rounds of combat, Dark Cultists falls, defeated by the heroes' resolve.\n            \n\n\nThe battle is intense. Steel clashes, spells fly, and the party fights as one. \nAfter 1 rounds of combat, Shadow Beasts falls, defeated by the heroes' resolve.\n            ",
+      "encounters": [
+        "Skeleton Warriors",
+        "Dark Cultists",
+        "Shadow Beasts"
+      ]
+    },
+    {
+      "title": "Chapter 3: Within the Keep",
+      "content": "# Within the Keep\n\nThe party continues their journey toward Blackmoor Keep. Within the Keep\n\n## Corrupted Guards\n\n\nThe party faces Corrupted Guards in a fierce battle that lasts 1 rounds. \nThrough teamwork and determination, they emerge victorious, though not without taking some damage.\n\nExperience gained: 50 XP per party member.\n            \n\n## Undead Servants\n\n\nThe party faces Undead Servants in a fierce battle that lasts 1 rounds. \nThrough teamwork and determination, they emerge victorious, though not without taking some damage.\n\nExperience gained: 50 XP per party member.\n            \n\n## The Keep's Lieutenant\n\n\nThe party faces The Keep's Lieutenant in a fierce battle that lasts 1 rounds. \nThrough teamwork and determination, they emerge victorious, though not without taking some damage.\n\nExperience gained: 50 XP per party member.\n            \n\n",
+      "read_aloud": "\nThe battle is intense. Steel clashes, spells fly, and the party fights as one. \nAfter 1 rounds of combat, Corrupted Guards falls, defeated by the heroes' resolve.\n            \n\n\nThe battle is intense. Steel clashes, spells fly, and the party fights as one. \nAfter 1 rounds of combat, Undead Servants falls, defeated by the heroes' resolve.\n            \n\n\nThe battle is intense. Steel clashes, spells fly, and the party fights as one. \nAfter 1 rounds of combat, The Keep's Lieutenant falls, defeated by the heroes' resolve.\n            ",
+      "encounters": [
+        "Corrupted Guards",
+        "Undead Servants",
+        "The Keep's Lieutenant"
+      ]
+    },
+    {
+      "title": "Chapter 4: The Depths",
+      "content": "# The Depths\n\nThe party continues their journey toward Blackmoor Keep. The Depths\n\n## Trap Rooms\n\n\nThe party faces Trap Rooms in a fierce battle that lasts 1 rounds. \nThrough teamwork and determination, they emerge victorious, though not without taking some damage.\n\nExperience gained: 50 XP per party member.\n            \n\n## Ancient Guardians\n\n\nThe party faces Ancient Guardians in a fierce battle that lasts 1 rounds. \nThrough teamwork and determination, they emerge victorious, though not without taking some damage.\n\nExperience gained: 50 XP per party member.\n            \n\n## The Shadow Lord's Minions\n\n\nThe party faces The Shadow Lord's Minions in a fierce battle that lasts 3 rounds. \nThrough teamwork and determination, they emerge victorious, though not without taking some damage.\n\nExperience gained: 150 XP per party member.\n            \n\n",
+      "read_aloud": "\nThe battle is intense. Steel clashes, spells fly, and the party fights as one. \nAfter 1 rounds of combat, Trap Rooms falls, defeated by the heroes' resolve.\n            \n\n\nThe battle is intense. Steel clashes, spells fly, and the party fights as one. \nAfter 1 rounds of combat, Ancient Guardians falls, defeated by the heroes' resolve.\n            \n\n\nThe battle is intense. Steel clashes, spells fly, and the party fights as one. \nAfter 3 rounds of combat, The Shadow Lord's Minions falls, defeated by the heroes' resolve.\n            ",
+      "encounters": [
+        "Trap Rooms",
+        "Ancient Guardians",
+        "The Shadow Lord's Minions"
+      ]
+    },
+    {
+      "title": "The Final Battle: The Shadow Lord Malachar",
+      "content": "\n# The Final Battle\n\nThe party has reached the heart of Blackmoor Keep. Before them stands The Shadow Lord Malachar, \na being of pure darkness that has corrupted the ancient fortress.\n\nThe battle is epic. Spells of immense power clash with dark magic. Swords strike \nagainst shadowy armor. The very foundations of the keep shake with the force of combat.\n\nAfter 5 grueling rounds, the party's determination and teamwork overcome the darkness. \nThe Shadow Lord Malachar lets out a final, terrible scream as the light of the heroes' resolve banishes \nthe shadow forever.\n\nThe keep is free. The darkness is defeated. The party has saved the realm.\n\n## Victory!\n\nThe party stands victorious. They have:\n- Defeated The Shadow Lord Malachar\n- Cleansed Blackmoor Keep\n- Saved the surrounding villages\n- Gained 500 experience each\n- Reached level 8\n\nThe adventure is complete, but new quests await...\n            ",
+      "read_aloud": "\nThe final blow strikes true. The Shadow Lord Malachar shrieks as darkness is banished from the keep. \nLight floods the chamber. The corruption is gone. You have won.\n            "
+    }
+  ]
+}

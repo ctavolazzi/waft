@@ -1,0 +1,311 @@
+"""
+LaTeX Template Registry
+======================
+
+Central registry for discovering and managing LaTeX templates.
+Auto-discovers wrapper modules by scanning for generate_* functions.
+"""
+
+import importlib
+import inspect
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Dict, List, Optional, Callable, Any
+import re
+
+
+@dataclass
+class LaTeXTemplateMetadata:
+    """Metadata for a LaTeX template."""
+    name: str
+    module_name: str
+    description: str
+    category: str = "general"
+    tags: List[str] = field(default_factory=list)
+    generate_function: Optional[str] = None
+    parameters: Dict[str, Any] = field(default_factory=dict)
+    example_usage: Optional[str] = None
+    author: Optional[str] = None
+    version: str = "1.0.0"
+    status: str = "production"  # production, beta, deprecated
+    source_repo: Optional[str] = None  # e.g., "xuehai", "andres"
+
+
+class LaTeXTemplateRegistry:
+    """Registry for LaTeX templates with auto-discovery."""
+    
+    def __init__(self, wrappers_dir: Optional[Path] = None):
+        """
+        Initialize LaTeX template registry.
+        
+        Args:
+            wrappers_dir: Path to wrappers directory (defaults to this module's parent/wrappers)
+        """
+        if wrappers_dir is None:
+            wrappers_dir = Path(__file__).parent / "wrappers"
+        
+        self.wrappers_dir = wrappers_dir
+        self._templates: Dict[str, LaTeXTemplateMetadata] = {}
+        self._load_templates()
+    
+    def _load_templates(self) -> None:
+        """Load all templates from the wrappers directory."""
+        if not self.wrappers_dir.exists():
+            return
+        
+        excluded = {"__init__.py", "__pycache__"}
+        
+        for wrapper_file in self.wrappers_dir.glob("*.py"):
+            if wrapper_file.name in excluded:
+                continue
+            
+            try:
+                metadata = self._extract_metadata(wrapper_file)
+                if metadata:
+                    self._templates[metadata.name] = metadata
+            except Exception as e:
+                print(f"⚠️  Failed to load LaTeX template {wrapper_file.name}: {e}")
+    
+    def _extract_metadata(self, wrapper_file: Path) -> Optional[LaTeXTemplateMetadata]:
+        """
+        Extract metadata from a wrapper file.
+        
+        Args:
+            wrapper_file: Path to wrapper Python file
+            
+        Returns:
+            LaTeXTemplateMetadata or None if extraction fails
+        """
+        module_name = wrapper_file.stem
+        module_path = f"src.waft.templates.latex.wrappers.{module_name}"
+        
+        try:
+            module = importlib.import_module(module_path)
+        except Exception as e:
+            print(f"⚠️  Could not import {module_path}: {e}")
+            return None
+        
+        # Extract docstring
+        docstring = module.__doc__ or ""
+        description = self._extract_description(docstring)
+        
+        # Find generate function
+        generate_func = None
+        generate_func_name = None
+        for name, obj in inspect.getmembers(module, inspect.isfunction):
+            if name.startswith("generate_"):
+                generate_func = obj
+                generate_func_name = name
+                break
+        
+        if not generate_func:
+            return None  # No generate function found
+        
+        # Extract parameters from generate function
+        parameters = {}
+        if generate_func:
+            sig = inspect.signature(generate_func)
+            for param_name, param in sig.parameters.items():
+                if param_name in ["output_path", "title", "content"]:
+                    continue  # Skip common required params
+                param_info = {
+                    "name": param_name,
+                    "default": param.default if param.default != inspect.Parameter.empty else None,
+                    "type": str(param.annotation) if param.annotation != inspect.Parameter.empty else "Any",
+                    "required": param.default == inspect.Parameter.empty
+                }
+                parameters[param_name] = param_info
+        
+        # Extract category and tags from docstring
+        category = self._extract_category(docstring, module_name)
+        tags = self._extract_tags(docstring, module_name)
+        
+        # Extract source repo from module name or docstring
+        source_repo = self._extract_source_repo(module_name, docstring)
+        
+        # Generate display name
+        display_name = self._generate_display_name(module_name)
+        
+        return LaTeXTemplateMetadata(
+            name=display_name,
+            module_name=module_name,
+            description=description,
+            category=category,
+            tags=tags,
+            generate_function=generate_func_name,
+            parameters=parameters,
+            source_repo=source_repo
+        )
+    
+    def _extract_description(self, docstring: str) -> str:
+        """Extract description from docstring."""
+        if not docstring:
+            return ""
+        
+        # Get first paragraph
+        lines = docstring.strip().split("\n")
+        description_lines = []
+        for line in lines:
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            if line.startswith("Args:") or line.startswith("Returns:"):
+                break
+            description_lines.append(line)
+        
+        return " ".join(description_lines).strip()
+    
+    def _extract_category(self, docstring: str, module_name: str) -> str:
+        """Extract category from docstring or infer from module name."""
+        # Look for category in docstring
+        category_match = re.search(r"category:\s*(\w+)", docstring, re.IGNORECASE)
+        if category_match:
+            return category_match.group(1).lower()
+        
+        # Infer from module name
+        if "cv" in module_name.lower() or "resume" in module_name.lower():
+            return "cv"
+        elif "thesis" in module_name.lower():
+            return "thesis"
+        elif "report" in module_name.lower():
+            return "report"
+        elif "presentation" in module_name.lower() or "beamer" in module_name.lower():
+            return "presentation"
+        elif "essay" in module_name.lower():
+            return "essay"
+        elif "assignment" in module_name.lower():
+            return "assignment"
+        elif "paper" in module_name.lower() or "neurips" in module_name.lower():
+            return "paper"
+        else:
+            return "general"
+    
+    def _extract_tags(self, docstring: str, module_name: str) -> List[str]:
+        """Extract tags from docstring."""
+        tags = []
+        
+        # Look for tags in docstring
+        tags_match = re.search(r"tags?:\s*\[(.*?)\]", docstring, re.IGNORECASE)
+        if tags_match:
+            tags_str = tags_match.group(1)
+            tags.extend([t.strip().strip('"\'') for t in tags_str.split(",")])
+        
+        # Add inferred tags from module name
+        module_lower = module_name.lower()
+        if "latex" not in tags:
+            tags.append("latex")
+        if "pdf" not in tags:
+            tags.append("pdf")
+        
+        return tags
+    
+    def _extract_source_repo(self, module_name: str, docstring: str) -> Optional[str]:
+        """Extract source repository from module name or docstring."""
+        # Check docstring for source repo
+        repo_match = re.search(r"source[:\s]+(\w+)", docstring, re.IGNORECASE)
+        if repo_match:
+            return repo_match.group(1).lower()
+        
+        # Infer from module name patterns
+        if "xuehai" in module_name.lower():
+            return "xuehai"
+        elif "andres" in module_name.lower():
+            return "andres"
+        
+        return None
+    
+    def _generate_display_name(self, module_name: str) -> str:
+        """Generate display name from module name."""
+        # Convert snake_case to Title Case
+        parts = module_name.split("_")
+        return " ".join(word.capitalize() for word in parts)
+    
+    def list_templates(self) -> List[LaTeXTemplateMetadata]:
+        """List all registered templates."""
+        return list(self._templates.values())
+    
+    def get_template(self, name: str) -> Optional[LaTeXTemplateMetadata]:
+        """
+        Get template by name.
+        
+        Args:
+            name: Template name (case-insensitive)
+            
+        Returns:
+            LaTeXTemplateMetadata or None
+        """
+        name_lower = name.lower()
+        for template in self._templates.values():
+            if template.name.lower() == name_lower or template.module_name.lower() == name_lower:
+                return template
+        return None
+    
+    def get_generate_function(self, template_name: str) -> Optional[Callable]:
+        """
+        Get the generate function for a template.
+        
+        Args:
+            template_name: Template name
+            
+        Returns:
+            Generate function or None
+        """
+        template = self.get_template(template_name)
+        if not template or not template.generate_function:
+            return None
+        
+        module_path = f"src.waft.templates.latex.wrappers.{template.module_name}"
+        try:
+            module = importlib.import_module(module_path)
+            return getattr(module, template.generate_function)
+        except Exception:
+            return None
+    
+    def search(self, query: str) -> List[LaTeXTemplateMetadata]:
+        """
+        Search templates by name, description, or tags.
+        
+        Args:
+            query: Search query
+            
+        Returns:
+            List of matching LaTeXTemplateMetadata
+        """
+        query_lower = query.lower()
+        results = []
+        
+        for template in self._templates.values():
+            if (query_lower in template.name.lower() or
+                query_lower in template.description.lower() or
+                any(query_lower in tag.lower() for tag in template.tags) or
+                query_lower in template.category.lower()):
+                results.append(template)
+        
+        return results
+    
+    def get_categories(self) -> List[str]:
+        """Get all unique categories."""
+        return sorted(set(t.category for t in self._templates.values()))
+    
+    def get_tags(self) -> List[str]:
+        """Get all unique tags."""
+        all_tags = set()
+        for template in self._templates.values():
+            all_tags.update(template.tags)
+        return sorted(all_tags)
+    
+    def count(self) -> int:
+        """Get total number of templates."""
+        return len(self._templates)
+
+
+# Global registry instance
+_registry: Optional[LaTeXTemplateRegistry] = None
+
+
+def get_latex_registry() -> LaTeXTemplateRegistry:
+    """Get the global LaTeX template registry instance."""
+    global _registry
+    if _registry is None:
+        _registry = LaTeXTemplateRegistry()
+    return _registry

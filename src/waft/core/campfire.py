@@ -294,7 +294,12 @@ class CampfireHandler(BaseHTTPRequestHandler):
                     pass
         
         # Fallback: try direct path
-        pdf_file = self.campfire.stories_dir / f"{story_id}.pdf"
+        # Use storage path resolver for PDF output
+        from ..utils import resolve_output_path
+        pdf_file = resolve_output_path(
+            Path("_pyrite") / "campfire" / f"{story_id}.pdf",
+            self.campfire.project_path
+        )
         if pdf_file.exists():
             try:
                 with open(pdf_file, "rb") as f:
@@ -356,7 +361,10 @@ class TheCampfire:
         self.project_path = Path(project_path)
         self.port = port
         self.host = host
-        self.stories_dir = self.project_path / "_pyrite" / "campfire"
+        # Use storage path resolver for augmented content (routes to external drive if available)
+        from ..utils import get_storage_path
+        stories_rel = Path("_pyrite") / "campfire"
+        self.stories_dir = get_storage_path(stories_rel, self.project_path)
         self.stories_dir.mkdir(parents=True, exist_ok=True)
         self.stories_index = self.stories_dir / "stories_index.json"
         
@@ -511,7 +519,12 @@ class TheCampfire:
                     pdf_style=story_data["style"],
                     narrator=self.narrator
                 )
-                pdf_file = self.stories_dir / f"{story_id}.pdf"
+                # Use storage path resolver for PDF output
+                from ..utils import resolve_output_path
+                pdf_file = resolve_output_path(
+                    Path("_pyrite") / "campfire" / f"{story_id}.pdf",
+                    self.project_path
+                )
                 pdf_path = storyteller.tell_story(
                     output_path=pdf_file,
                     title=title,

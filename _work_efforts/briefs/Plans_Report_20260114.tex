@@ -1,0 +1,3494 @@
+\documentclass{book}
+
+\title{Plans Report - Sample}
+\newcommand{\booksubtitle}{Comprehensive Plans Collection}
+\newcommand{\booklicense}{Internal Use Only}
+
+\author{W.A.F.T. System}
+\newcommand{\authorsubtitle}{January 14, 2026}
+
+% Create convenient commands
+\makeatletter
+\newcommand{\booktitle}{\@title}
+\newcommand{\bookauthor}{\@author}
+\makeatother
+
+\usepackage[utf8]{inputenc}
+\usepackage{fix-cm}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Geometry for letter size paper (better for viewing)
+\usepackage[margin=.75in, paperwidth=8.5in, paperheight=11in]{geometry}
+
+\renewcommand{\contentsname}{Table of Contents}
+\usepackage{makeidx}
+\makeindex
+
+% Configure code listings
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    backgroundcolor=\color{gray!10}
+}
+
+% Content Starts Here
+\begin{document}
+\frontmatter
+
+% ---- Half Title Page ----
+\newgeometry{top=1.75in,bottom=.5in}
+\begin{titlepage}
+\begin{flushleft}
+
+% Title
+\textbf{\fontfamily{qcs}\fontsize{48}{54}\selectfont Plans Report - Sample\\}
+
+% Draw a line 4pt high
+\par\noindent\rule{\textwidth}{4pt}\\
+
+% Subtitle
+\begin{tikzpicture}
+\shade[bottom color=lightgray,top color=white]
+    (0,0) rectangle (\textwidth, 1.5)
+    node[midway] {\textbf{\large \textit{\booksubtitle}}};
+\end{tikzpicture}
+
+% Edition Number
+\begin{flushright}
+\Large Generated January 14, 2026
+\end{flushright}
+
+\vspace{\fill}
+
+\end{flushleft}
+\end{titlepage}
+\restoregeometry
+
+% ---- Title Page ----
+\thispagestyle{empty}
+\newgeometry{top=1.75in,bottom=.5in}
+\begin{titlepage}
+\begin{flushleft}
+
+% Title
+\textbf{\fontfamily{qcs}\fontsize{48}{54}\selectfont Plans Report - Sample\\}
+
+\par\noindent\rule{\textwidth}{4pt}\\
+
+\begin{tikzpicture}
+\shade[bottom color=lightgray,top color=white]
+    (0,0) rectangle (\textwidth, 1.5)
+    node[midway] {\textbf{\large \textit{\booksubtitle}}};
+\end{tikzpicture}
+
+\begin{flushright}
+\Large Generated January 14, 2026
+\end{flushright}
+
+\vspace{\fill}
+
+\textbf{\large \bookauthor}\\[3.5pt]
+\textbf{\large \textit{\authorsubtitle}}
+
+\vspace{\fill}
+
+\end{flushleft}
+\end{titlepage}
+\restoregeometry
+
+\thispagestyle{empty}
+\begin{flushleft}
+\vspace*{\fill}
+This report was typeset using \LaTeX{} software.\\
+Generated on January 14, 2026\\
+Total Plans: 10\\
+\vspace{\fill}
+\end{flushleft}
+
+\addtocounter{page}{2}
+
+\chapter*{Preface}
+This report contains 10 plans gathered from the work efforts system.
+Each plan represents a documented intention, goal, or project outline.
+Plans are organized chronologically and by category where applicable.
+
+\setcounter{tocdepth}{2}
+\tableofcontents
+
+\mainmatter
+
+\chapter{70's/80's Retro-Modern Visual Overhaul}
+
+\begin{itemize}
+\item \textbf{Overview:} Transform the FogSift website from cold brutalist aesthetic to warm 70's/80's retro-modern style matching the logo and profile badge, with simplified structure and removed complexity.
+\item \textbf{Todos:} 12 items
+\end{itemize}
+
+
+\subsection{Vision}
+Transform FogSift from cold brutalist tech aesthetic to warm, confident 70's/80's retro-modern style that matches the logo and profile badge.
+
+---
+
+\subsection{Phase 1: Foundation (Tokens and Box Model)}
+
+\subsubsection{1.1 Color Palette Overhaul}
+\textbf{File:} \texttt{src/css/tokens.css}
+
+Replace current palette with brand-derived colors:
+
+\begin{verbatim}
+/\textit{ 70's/80's Retro Palette }/
+--cream: #f5f0e6;        /\textit{ Primary background }/
+--cream-dark: #e8e0d0;   /\textit{ Secondary background }/
+--chocolate: #4a2c2a;    /\textit{ Primary text, borders }/
+--chocolate-light: #6b4423; /\textit{ Secondary text }/
+--burnt-orange: #e07b3c; /\textit{ CTA, accents }/
+--rust: #c2410c;         /\textit{ Hover states }/
+--earth-mid: #8b5a2b;    /\textit{ Decorative }/
+--earth-dark: #5c3d2e;   /\textit{ Decorative }/
+
+\end{verbatim}
+
+\subsubsection{1.2 Typography System}
+\textbf{File:} \texttt{src/css/tokens.css}
+
+\begin{itemize}
+\item Keep Inter but increase weight usage
+\item Add geometric display font option (Outfit or DM Sans)
+\item Bolder headings, confident letter-spacing
+\end{enumerate}
+
+\begin{verbatim}
+--font-display: 'Outfit', 'Inter', sans-serif;
+--text-headline: clamp(2.5rem, 6vw, 4rem);
+--letter-spacing-tight: -0.02em;
+--letter-spacing-wide: 0.1em; /\textit{ For labels }/
+
+\end{verbatim}
+
+\subsubsection{1.3 Box Model / Border System}
+\textbf{File:} \texttt{src/css/tokens.css}
+
+\begin{itemize}
+\item Rounded corners (badge aesthetic)
+\item Softer shadows (no hard offset)
+\item Double-line borders (retro feel)
+\end{enumerate}
+
+\begin{verbatim}
+--radius: 8px;
+--radius-lg: 16px;
+--radius-badge: 24px;
+--border-width: 3px;
+--shadow-soft: 0 4px 20px rgba(74, 44, 42, 0.1);
+--shadow-card: 0 8px 30px rgba(74, 44, 42, 0.15);
+
+\end{verbatim}
+
+---
+
+\subsection{Phase 2: Structure (Wireframe and Sections)}
+
+\subsubsection{2.1 Simplified Page Structure}
+\textbf{File:} \texttt{src/index.html}
+
+Reduce to 5 clean sections:
+
+\begin{verbatim}
+┌─────────────────────────────────────┐
+│            NAVIGATION               │  Minimal, logo left, links right
+├─────────────────────────────────────┤
+│              HERO                   │  Badge-style centered card
+│   "Straight answers to complicated  │
+│         questions."                 │
+│         [Contact CTA]               │
+├─────────────────────────────────────┤
+│           THE PROCESS               │  3 horizontal steps, icon badges
+│    [Deconstruct] [Trace] [Solve]    │
+├─────────────────────────────────────┤
+│             ABOUT                   │  Photo + bio in badge card
+│     Christopher - Owner             │
+├─────────────────────────────────────┤
+│            PRICING                  │  3 tier cards, horizontal
+│   [Call] [Deep Dive] [Engagement]   │
+├─────────────────────────────────────┤
+│             FOOTER                  │  Minimal, links + copyright
+└─────────────────────────────────────┘
+
+\end{verbatim}
+
+\subsubsection{2.2 Remove Complexity}
+\textbf{Files:} \texttt{src/index.html}, \texttt{src/js/main.js}, \texttt{src/css/components.css}
+
+\textbf{Remove:}
+\begin{itemize}
+\item Floating CTA button
+\item Progress bar
+\item Breadcrumb system
+\item Diagnostic checklist (move to copy)
+\item Complex timeline with IO boxes
+\item Tech stack tags
+\item Capabilities grid
+\end{enumerate}
+
+\textbf{Keep:}
+\begin{itemize}
+\item Toast notifications (useful feedback)
+\item Theme toggle (user preference)
+\item Mobile hamburger menu (necessary)
+\end{enumerate}
+
+---
+
+\subsection{Phase 3: Component Design}
+
+\subsubsection{3.1 Badge-Style Cards}
+Primary design pattern: rounded rectangles with cream backgrounds, chocolate borders
+
+\begin{verbatim}
+.card {
+  background: var(--cream);
+  border: var(--border-width) solid var(--chocolate);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+}
+
+\end{verbatim}
+
+\subsubsection{3.2 Section Dividers}
+Horizontal rules with decorative elements (matching logo underline)
+
+\begin{verbatim}
+.section-divider {
+  height: 4px;
+  background: var(--chocolate);
+  width: 60%;
+  margin: 0 auto;
+  border-radius: 2px;
+}
+
+\end{verbatim}
+
+\subsubsection{3.3 CTA Button Style}
+Pill-shaped, bold, matches brand orange
+
+\begin{verbatim}
+.cta-button {
+  background: var(--burnt-orange);
+  color: var(--cream);
+  border-radius: var(--radius-badge);
+  padding: 1rem 2.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+\end{verbatim}
+
+\subsubsection{3.4 Navigation}
+Minimal top bar, logo left, few links right, no breadcrumbs
+
+---
+
+\subsection{Phase 4: Content Hydration}
+
+\subsubsection{4.1 Hero Section}
+\begin{itemize}
+\item Large badge-style card
+\item Headline in bold display font
+\item Single CTA button
+\item No subtext clutter
+\end{enumerate}
+
+\subsubsection{4.2 Process Section}
+\begin{itemize}
+\item 3 numbered badges in a row
+\item Simple icon + title + one sentence
+\item No input/output boxes
+\end{enumerate}
+
+\subsubsection{4.3 About Section}
+\begin{itemize}
+\item Christopher badge image (already perfect)
+\item Name, title, one-liner bio
+\item No tech stack, no capabilities grid
+\end{enumerate}
+
+\subsubsection{4.4 Pricing Section}
+\begin{itemize}
+\item 3 clean cards
+\item Clear pricing
+\item No emoji decorations
+\end{enumerate}
+
+---
+
+\subsection{Phase 5: Polish and Cleanup}
+
+\subsubsection{5.1 Remove Dead Code}
+\begin{itemize}
+\item Delete floating CTA HTML/CSS/JS
+\item Delete progress bar
+\item Delete breadcrumb system
+\item Delete diagnostic checklist
+\item Delete unused CSS classes
+\end{enumerate}
+
+\subsubsection{5.2 Simplify JS}
+\begin{itemize}
+\item Keep: Toast, Theme, Nav (mobile menu)
+\item Remove: Diagnostic counter, floating CTA observer, complex scroll handlers
+\end{enumerate}
+
+\subsubsection{5.3 Dark Mode Adaptation}
+Invert to dark chocolate background with cream text, keep orange accent
+
+---
+
+\subsection{Key Files to Modify}
+
+| File | Changes |
+|------|---------|
+| \texttt{src/css/tokens.css} | Complete palette and token overhaul |
+| \texttt{src/css/base.css} | Typography, layout simplification |
+| \texttt{src/css/components.css} | New card/badge components, remove old |
+| \texttt{src/index.html} | Simplified 5-section structure |
+| \texttt{src/js/main.js} | Remove floating CTA, diagnostic, progress |
+
+---
+
+\subsection{Success Criteria}
+
+\begin{enumerate}
+\item Site matches logo/badge aesthetic (warm, retro, confident)
+\item Fewer than 100 lines of JS
+\item Single-page flow with 5 clear sections
+\item No floating elements or complex interactions
+\item Works perfectly on mobile
+\item Fast load time (less CSS/JS)
+\end{itemize}
+
+
+\chapter{70's/80's Retro-Modern Visual Overhaul}
+
+\begin{itemize}
+\item \textbf{Overview:} Transform the FogSift website from cold brutalist aesthetic to warm 70's/80's retro-modern style matching the logo and profile badge, with simplified structure and removed complexity.
+\item \textbf{Todos:} 12 items
+\end{itemize}
+
+
+\subsection{Vision}
+Transform FogSift from cold brutalist tech aesthetic to warm, confident 70's/80's retro-modern style that matches the logo and profile badge.
+
+---
+
+\subsection{Phase 1: Foundation (Tokens and Box Model)}
+
+\subsubsection{1.1 Color Palette Overhaul}
+\textbf{File:} \texttt{src/css/tokens.css}
+
+Replace current palette with brand-derived colors:
+
+\begin{verbatim}
+/\textit{ 70's/80's Retro Palette }/
+--cream: #f5f0e6;        /\textit{ Primary background }/
+--cream-dark: #e8e0d0;   /\textit{ Secondary background }/
+--chocolate: #4a2c2a;    /\textit{ Primary text, borders }/
+--chocolate-light: #6b4423; /\textit{ Secondary text }/
+--burnt-orange: #e07b3c; /\textit{ CTA, accents }/
+--rust: #c2410c;         /\textit{ Hover states }/
+--earth-mid: #8b5a2b;    /\textit{ Decorative }/
+--earth-dark: #5c3d2e;   /\textit{ Decorative }/
+
+\end{verbatim}
+
+\subsubsection{1.2 Typography System}
+\textbf{File:} \texttt{src/css/tokens.css}
+
+\begin{itemize}
+\item Keep Inter but increase weight usage
+\item Add geometric display font option (Outfit or DM Sans)
+\item Bolder headings, confident letter-spacing
+\end{enumerate}
+
+\begin{verbatim}
+--font-display: 'Outfit', 'Inter', sans-serif;
+--text-headline: clamp(2.5rem, 6vw, 4rem);
+--letter-spacing-tight: -0.02em;
+--letter-spacing-wide: 0.1em; /\textit{ For labels }/
+
+\end{verbatim}
+
+\subsubsection{1.3 Box Model / Border System}
+\textbf{File:} \texttt{src/css/tokens.css}
+
+\begin{itemize}
+\item Rounded corners (badge aesthetic)
+\item Softer shadows (no hard offset)
+\item Double-line borders (retro feel)
+\end{enumerate}
+
+\begin{verbatim}
+--radius: 8px;
+--radius-lg: 16px;
+--radius-badge: 24px;
+--border-width: 3px;
+--shadow-soft: 0 4px 20px rgba(74, 44, 42, 0.1);
+--shadow-card: 0 8px 30px rgba(74, 44, 42, 0.15);
+
+\end{verbatim}
+
+---
+
+\subsection{Phase 2: Structure (Wireframe and Sections)}
+
+\subsubsection{2.1 Simplified Page Structure}
+\textbf{File:} \texttt{src/index.html}
+
+Reduce to 5 clean sections:
+
+\begin{verbatim}
+┌─────────────────────────────────────┐
+│            NAVIGATION               │  Minimal, logo left, links right
+├─────────────────────────────────────┤
+│              HERO                   │  Badge-style centered card
+│   "Straight answers to complicated  │
+│         questions."                 │
+│         [Contact CTA]               │
+├─────────────────────────────────────┤
+│           THE PROCESS               │  3 horizontal steps, icon badges
+│    [Deconstruct] [Trace] [Solve]    │
+├─────────────────────────────────────┤
+│             ABOUT                   │  Photo + bio in badge card
+│     Christopher - Owner             │
+├─────────────────────────────────────┤
+│            PRICING                  │  3 tier cards, horizontal
+│   [Call] [Deep Dive] [Engagement]   │
+├─────────────────────────────────────┤
+│             FOOTER                  │  Minimal, links + copyright
+└─────────────────────────────────────┘
+
+\end{verbatim}
+
+\subsubsection{2.2 Remove Complexity}
+\textbf{Files:} \texttt{src/index.html}, \texttt{src/js/main.js}, \texttt{src/css/components.css}
+
+\textbf{Remove:}
+\begin{itemize}
+\item Floating CTA button
+\item Progress bar
+\item Breadcrumb system
+\item Diagnostic checklist (move to copy)
+\item Complex timeline with IO boxes
+\item Tech stack tags
+\item Capabilities grid
+\end{enumerate}
+
+\textbf{Keep:}
+\begin{itemize}
+\item Toast notifications (useful feedback)
+\item Theme toggle (user preference)
+\item Mobile hamburger menu (necessary)
+\end{enumerate}
+
+---
+
+\subsection{Phase 3: Component Design}
+
+\subsubsection{3.1 Badge-Style Cards}
+Primary design pattern: rounded rectangles with cream backgrounds, chocolate borders
+
+\begin{verbatim}
+.card {
+  background: var(--cream);
+  border: var(--border-width) solid var(--chocolate);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+}
+
+\end{verbatim}
+
+\subsubsection{3.2 Section Dividers}
+Horizontal rules with decorative elements (matching logo underline)
+
+\begin{verbatim}
+.section-divider {
+  height: 4px;
+  background: var(--chocolate);
+  width: 60%;
+  margin: 0 auto;
+  border-radius: 2px;
+}
+
+\end{verbatim}
+
+\subsubsection{3.3 CTA Button Style}
+Pill-shaped, bold, matches brand orange
+
+\begin{verbatim}
+.cta-button {
+  background: var(--burnt-orange);
+  color: var(--cream);
+  border-radius: var(--radius-badge);
+  padding: 1rem 2.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+\end{verbatim}
+
+\subsubsection{3.4 Navigation}
+Minimal top bar, logo left, few links right, no breadcrumbs
+
+---
+
+\subsection{Phase 4: Content Hydration}
+
+\subsubsection{4.1 Hero Section}
+\begin{itemize}
+\item Large badge-style card
+\item Headline in bold display font
+\item Single CTA button
+\item No subtext clutter
+\end{enumerate}
+
+\subsubsection{4.2 Process Section}
+\begin{itemize}
+\item 3 numbered badges in a row
+\item Simple icon + title + one sentence
+\item No input/output boxes
+\end{enumerate}
+
+\subsubsection{4.3 About Section}
+\begin{itemize}
+\item Christopher badge image (already perfect)
+\item Name, title, one-liner bio
+\item No tech stack, no capabilities grid
+\end{enumerate}
+
+\subsubsection{4.4 Pricing Section}
+\begin{itemize}
+\item 3 clean cards
+\item Clear pricing
+\item No emoji decorations
+\end{enumerate}
+
+---
+
+\subsection{Phase 5: Polish and Cleanup}
+
+\subsubsection{5.1 Remove Dead Code}
+\begin{itemize}
+\item Delete floating CTA HTML/CSS/JS
+\item Delete progress bar
+\item Delete breadcrumb system
+\item Delete diagnostic checklist
+\item Delete unused CSS classes
+\end{enumerate}
+
+\subsubsection{5.2 Simplify JS}
+\begin{itemize}
+\item Keep: Toast, Theme, Nav (mobile menu)
+\item Remove: Diagnostic counter, floating CTA observer, complex scroll handlers
+\end{enumerate}
+
+\subsubsection{5.3 Dark Mode Adaptation}
+Invert to dark chocolate background with cream text, keep orange accent
+
+---
+
+\subsection{Key Files to Modify}
+
+| File | Changes |
+|------|---------|
+| \texttt{src/css/tokens.css} | Complete palette and token overhaul |
+| \texttt{src/css/base.css} | Typography, layout simplification |
+| \texttt{src/css/components.css} | New card/badge components, remove old |
+| \texttt{src/index.html} | Simplified 5-section structure |
+| \texttt{src/js/main.js} | Remove floating CTA, diagnostic, progress |
+
+---
+
+\subsection{Success Criteria}
+
+\begin{enumerate}
+\item Site matches logo/badge aesthetic (warm, retro, confident)
+\item Fewer than 100 lines of JS
+\item Single-page flow with 5 clear sections
+\item No floating elements or complex interactions
+\item Works perfectly on mobile
+\item Fast load time (less CSS/JS)
+\end{itemize}
+
+
+\chapter{Achievements System Enhancement Plan}
+
+\begin{itemize}
+\item \textbf{Overview:} Enhance the achievements system with a dedicated achievements page, improved floating panel, Fab Lab skill progression, and proper privacy controls with local data management.
+\item \textbf{Todos:} 8 items
+\end{itemize}
+
+
+\subsection{Overview}
+
+Transform the existing achievements system into a comprehensive gamified learning experience that tracks both site interactions and Fab Lab skill progression, with a dedicated achievements page, improved floating panel, and proper privacy controls.
+
+---
+
+\subsection{Phase 1: Data Architecture & Privacy Controls}
+
+\subsubsection{1.1 Enhanced Achievement Data Model}
+
+Expand the current \texttt{CFL.achievements} system in \href{}layouts/default.html}{\texttt{\textit{layouts/default.html}} (lines 418-545) to include:
+
+\begin{itemize}
+\item \textbf{Skill-based achievements} for Fab Lab learning paths (3D Printing, Laser Cutting, CNC, Electronics)
+\item \textbf{Rarity tiers}: Common, Uncommon, Rare, Epic, Legendary
+\item \textbf{XP/Points system} for overall progression level
+\item \textbf{Streak tracking} for consecutive visits/actions
+\end{enumerate}
+
+\subsubsection{1.2 Privacy Disclaimer Component}
+
+Create a dismissible floating disclaimer that:
+\begin{itemize}
+\item Appears on first visit (stored in localStorage)
+\item Explains what data is stored locally
+\item Provides "Clear All Data" and "Export Data" buttons
+\item Uses existing alert/callout components from \href{}includes/components/alert.html}{\texttt{\textit{includes/components/alert.html}}
+\end{enumerate}
+
+\begin{verbatim}
+// Key storage items to document
+localStorage.cflAchievements  // Unlocked achievements
+localStorage.cflStats         // Click counts, pages visited
+localStorage.cflPrivacyAccepted // Disclaimer dismissed
+
+\end{verbatim}
+
+---
+
+\subsection{Phase 2: Floating Panel Improvements}
+
+\subsubsection{2.1 Stability Fixes}
+
+Address issues in current panel (lines 946-1143 of \texttt{default.html}):
+\begin{itemize}
+\item Add error boundaries for localStorage failures
+\item Fix scroll lock behavior on mobile
+\item Improve close-on-outside-click reliability
+\end{enumerate}
+
+\subsubsection{2.2 Enhanced Panel UI}
+
+\begin{itemize}
+\item \textbf{Overall Level Display}: Show user's total XP and current level with progress bar to next level
+\item \textbf{Recent Achievements}: Highlight newly unlocked badges with animation
+\item \textbf{Quick Stats}: Use \href{_includes/components/stat.html}{\texttt{stat.html}} component for click count, pages visited, achievements unlocked
+\item \textbf{Level Progress Bar}: Use \href{_includes/components/progress.html}{\texttt{progress.html}} with animated variant
+\end{enumerate}
+
+\subsubsection{2.3 Improved Achievement Cards}
+
+\begin{itemize}
+\item Add rarity border colors (gold for legendary, purple for epic, etc.)
+\item Show category icons more prominently
+\item Add hover tooltips with detailed unlock requirements
+\item Improve progress bar visibility for in-progress achievements
+\end{enumerate}
+
+---
+
+\subsection{Phase 3: Dedicated Achievements Page}
+
+\subsubsection{3.1 Create \texttt{/wiki/achievements.md}}
+
+A full-page experience with:
+
+\textbf{Header Section:}
+\begin{itemize}
+\item User level badge with XP progress
+\item Total achievements unlocked (X/Y)
+\item Fun title based on level ("Apprentice Maker", "Fab Lab Expert", etc.)
+\end{enumerate}
+
+\textbf{Learning Paths Section (Tabs):}
+Using \href{_includes/components/tabs.html}{\texttt{tabs.html}} with these categories:
+\begin{itemize}
+\item All Achievements
+\item Site Explorer (page visits, interactions)
+\item 3D Printing Path
+\item Laser Cutting Path
+\item CNC Path
+\item Secret/Easter Eggs
+\end{enumerate}
+
+\textbf{Achievement Grid:}
+Card-based layout using enhanced achievement cards showing:
+\begin{itemize}
+\item Icon, name, description
+\item Progress bar for incomplete
+\item Unlock date for completed
+\item Rarity badge
+\item XP value
+\end{enumerate}
+
+\textbf{Stats Dashboard:}
+Using \href{_includes/components/stat.html}{\texttt{stat.html}} components:
+\begin{itemize}
+\item Total XP earned
+\item Current streak
+\item Rarest achievement unlocked
+\item Time played (pages viewed)
+\end{enumerate}
+
+\textbf{Privacy Controls Footer:}
+\begin{itemize}
+\item "Export My Data" button (JSON download)
+\item "Clear All Progress" button with confirmation
+\item Privacy explanation text
+\end{enumerate}
+
+\subsubsection{3.2 Add New Fab Lab Achievements}
+
+Expand from 16 to ~30 achievements:
+
+\textbf{3D Printing Path (5 new):}
+\begin{itemize}
+\item \texttt{3d-curious} - Visit the 3D Printing wiki page
+\item \texttt{filament-fan} - Learn about 3 different filament types
+\item \texttt{slicer-starter} - Read about slicing software
+\item \texttt{print-pro} - Complete all 3D printing wiki pages
+\item \texttt{layer-legend} - Master level (complete all + quiz)
+\end{enumerate}
+
+\textbf{Laser Cutting Path (5 new):}
+\begin{itemize}
+\item \texttt{beam-beginner} - Visit Laser Cutting wiki
+\item \texttt{material-master} - Learn about different materials
+\item \texttt{focus-finder} - Read about focus calibration
+\item \texttt{cut-champion} - Complete all laser wiki pages
+\item \texttt{precision-pro} - Master level
+\end{enumerate}
+
+\textbf{CNC Path (4 new):}
+\begin{itemize}
+\item \texttt{mill-curious} - Visit CNC wiki
+\item \texttt{feeds-speeds} - Read about feeds and speeds
+\item \texttt{toolpath-trainee} - Learn about toolpaths
+\item \texttt{cnc-commander} - Complete all CNC pages
+\end{enumerate}
+
+---
+
+\subsection{Phase 4: Gamification Enhancements}
+
+\subsubsection{4.1 Level System}
+
+\begin{verbatim}
+// XP thresholds for levels
+Level 1: 0 XP - "Curious Visitor"
+Level 2: 50 XP - "Apprentice Maker"
+Level 3: 150 XP - "Fab Lab Regular"
+Level 4: 300 XP - "Workshop Warrior"
+Level 5: 500 XP - "Master Maker"
+Level 6: 750 XP - "Fab Lab Legend"
+
+\end{verbatim}
+
+\subsubsection{4.2 XP Values by Rarity}
+
+\begin{itemize}
+\item Common: 5 XP
+\item Uncommon: 15 XP
+\item Rare: 30 XP
+\item Epic: 50 XP
+\item Legendary: 100 XP
+\end{enumerate}
+
+\subsubsection{4.3 Visual Polish}
+
+\begin{itemize}
+\item Level-up celebration animation (confetti particles)
+\item Achievement unlock toast enhancements
+\item Sound effects for different rarities (already have \texttt{CFL.sounds})
+\item Holographic effect for legendary achievements using \texttt{.cfl-holo} utilities
+\end{enumerate}
+
+---
+
+\subsection{Files to Create/Modify}
+
+| File | Action | Description |
+|------|--------|-------------|
+| \texttt{_wiki/achievements.md} | Create | Dedicated achievements page |
+| \texttt{_layouts/default.html} | Modify | Enhanced achievement system JS |
+| \texttt{assets/css/main.css} | Modify | New achievement styles, rarity colors |
+| \texttt{_includes/privacy-disclaimer.html} | Create | Floating privacy disclaimer component |
+
+---
+
+\subsection{Implementation Order}
+
+\begin{enumerate}
+\item Privacy disclaimer component (establishes consent pattern)
+\item Enhanced data model with new achievements
+\item Floating panel improvements
+\item Dedicated achievements page
+\item Level system and XP calculations
+\item Visual polish and animations
+\end{itemize}
+
+
+\chapter{Adapti}
+
+\begin{itemize}
+\item \textbf{Overview:} Implement an adaptive architecture that starts simple (file-based only) and automatically scales to complex mode (queue + sidecar index) when needed. Threshold-based switching ensures we only add complexity when performance requires it.
+\end{itemize}
+
+
+ve Core Architecture Implementation Plan
+
+\subsection{Context}
+
+Building on the core data structure analysis, this plan implements an \textbf{adaptive architecture} that:
+
+\begin{itemize}
+\item Starts \textbf{simple} (file-based only) for small scale (< 100 work efforts)
+\item Automatically switches to \textbf{complex} (queue + sidecar index) when scale requires it (>= 100 work efforts)
+\item Provides seamless transition between modes
+\end{enumerate}
+
+\subsection{Architecture Modes}
+
+\subsubsection{Tiny Mode (< 10 work efforts, no concurrency)}
+
+\begin{itemize}
+\item \textbf{Storage}: File system only
+\item \textbf{Lookups}: O(n) directory scan (~0.01-0.05s)
+\item \textbf{Writes}: Direct file I/O
+\item \textbf{Git}: Direct git commands
+\item \textbf{Use Case}: Initial setup, tiny personal projects
+\end{enumerate}
+
+\subsubsection{Simple Mode (10-20 work efforts, no concurrency)}
+
+\begin{itemize}
+\item \textbf{Storage}: File system only
+\item \textbf{Lookups}: O(n) directory scan (~0.05-0.1s)
+\item \textbf{Writes}: Direct file I/O (no queue)
+\item \textbf{Git}: Direct git commands (no queue)
+\item \textbf{Use Case}: Small projects, sequential access only
+\end{enumerate}
+
+\subsubsection{Standard Mode (>= 20 work efforts OR concurrency detected)}
+
+\begin{itemize}
+\item \textbf{Storage}: File system + Sidecar SQLite index (if >= 20 items)
+\item \textbf{Lookups}: O(1) index queries (~0.005s) OR O(n) scan if index disabled
+\item \textbf{Writes}: FIFO queue (always enabled if concurrency)
+\item \textbf{Git}: Queued git operations (sequential processing)
+\item \textbf{Use Case}: Most real-world usage (your case: medium scale + always concurrent)
+\end{enumerate}
+
+\subsubsection{Performance Mode (>= 50 work efforts)}
+
+\begin{itemize}
+\item \textbf{Storage}: File system + Sidecar SQLite index (required)
+\item \textbf{Lookups}: O(1) index queries only (~0.005s)
+\item \textbf{Writes}: FIFO queue (required)
+\item \textbf{Git}: Queued git operations (required)
+\item \textbf{Use Case}: Medium to large scale, performance critical
+\end{enumerate}
+
+\subsection{Threshold Configuration}
+
+\begin{verbatim}
+const SCALE_THRESHOLDS = {
+  // Queue: Enabled based on concurrency, not scale
+  QUEUE\textit{ENABLED}ALWAYS: true,   // Always enabled (concurrent writes expected)
+
+  // Index: Enabled based on performance requirements
+  INDEX\textit{ENABLED}MIN: 20,        // Enable index at 20 items for instant lookups
+  INDEX\textit{REQUIRED}MIN: 50,       // Index required at 50 items (performance critical)
+
+  // Simple Mode: Only for tiny scale with no concurrency
+  SIMPLE\textit{MODE}MAX: 20,          // Simple mode only < 20 items (rare case)
+  TINY\textit{MODE}MAX: 10             // No queue/index needed < 10 items
+};
+
+\end{verbatim}
+
+
+
+\subsubsection{Rationale}
+
+\textbf{Queue (Concurrency Safety):}
+
+\begin{itemize}
+\item \textbf{Why always enabled}: You have "always concurrent" writes (human + AI)
+\item \textbf{Not scale-based}: Queue prevents git lock contention, which happens at any scale with concurrency
+\item \textbf{Decision}: Enable queue from day 1 if concurrent writes detected, or always if configured
+\end{enumerate}
+
+\textbf{Index (Performance):}
+
+\begin{itemize}
+\item \textbf{Why 20 items}: For "instant" performance (< 0.01s), directory scans become too slow
+\item 20 items: ~0.05-0.1s scan (not instant)
+\item 50 items: ~0.1-0.2s scan (not instant)
+\item Index lookup: ~0.005s (instant)
+\item \textbf{Why 50 required}: At 50+ items, scans are consistently > 0.1s, index becomes essential
+\item \textbf{Decision}: Enable index at 20 items, require at 50 items
+\end{enumerate}
+
+\textbf{Simple Mode:}
+
+\begin{itemize}
+\item \textbf{Why < 20 items}: Only makes sense if:
+\item No concurrency (but you have "always concurrent")
+\item Small scale (< 20 items)
+\item Performance tolerance is higher (but you want "instant")
+\item \textbf{Decision}: Simple mode is rare, mostly for initial setup or tiny projects
+\end{enumerate}
+
+\subsection{Adaptive Detection}
+
+\textbf{On System Startup:}
+
+\begin{enumerate}
+\item Count work efforts in \texttt{\textit{work}efforts/} directory
+\item Detect concurrency pattern (check config or detect concurrent writes)
+\item Determine mode:
+\end{enumerate}
+
+\begin{itemize}
+\item \textbf{Tiny Mode}: count < 10 AND no concurrency
+\item \textbf{Simple Mode}: count < 20 AND no concurrency
+\item \textbf{Standard Mode}: count >= 20 OR concurrency detected
+\item \textbf{Performance Mode}: count >= 50 (index required)
+\end{enumerate}
+
+\begin{enumerate}
+\item Enable features:
+\end{enumerate}
+
+\begin{itemize}
+\item \textbf{Queue}: Always if concurrency detected, or if count >= 20
+\item \textbf{Index}: If count >= 20 (enabled), required if count >= 50
+\end{enumerate}
+
+\begin{enumerate}
+\item Store mode in config file (\texttt{.pyrite/config.json})
+\end{enumerate}
+
+\textbf{On Work Effort Creation:}
+
+\begin{enumerate}
+\item Check current count and concurrency status
+\item If transitioning to new mode:
+\end{enumerate}
+
+\begin{itemize}
+\item \textbf{10 → 20 items}: Enable index (if not already)
+\item \textbf{20 → 50 items}: Index becomes required
+\item \textbf{Any count + concurrency detected}: Enable queue immediately
+\end{enumerate}
+
+\begin{enumerate}
+\item Migrate if needed:
+\end{enumerate}
+
+\begin{itemize}
+\item Initialize sidecar index (if count >= 20)
+\item Enable write queue (if concurrency or count >= 20)
+\item Populate index from existing work efforts
+\end{enumerate}
+
+\subsection{Implementation Phases}
+
+\subsubsection{Phase 1: Simple Mode Foundation}
+
+\textbf{Files to Create:}
+
+\begin{itemize}
+\item \texttt{core/SimpleMode.js} - Simple file-based operations
+\item \texttt{core/ModeDetector.js} - Detect and switch modes
+\end{enumerate}
+
+\textbf{SimpleMode Class:}
+
+\begin{itemize}
+\item \texttt{countWorkEfforts()} - Scan directory, return count
+\item \texttt{getWorkEffort(id)} - O(n) scan to find by ID
+\item \texttt{createWorkEffort(data)} - Direct file write
+\item \texttt{updateWorkEffort(id, data)} - Direct file write
+\item \texttt{deleteWorkEffort(id)} - Direct file deletion
+\end{enumerate}
+
+\textbf{ModeDetector:}
+
+\begin{itemize}
+\item \texttt{detectMode()} - Count work efforts, return 'simple' or 'complex'
+\item \texttt{shouldMigrate()} - Check if migration needed
+\item \texttt{migrateToComplex()} - Initialize index, enable queue
+\end{enumerate}
+
+\textbf{Key Features:}
+
+\begin{itemize}
+\item No dependencies (pure file system)
+\item Fast for small scale
+\item Easy to test
+\item No database required
+\end{enumerate}
+
+\subsubsection{Phase 2: Command Pattern Foundation (Job & JobQueue)}
+
+\textbf{Files to Create:}
+
+\begin{itemize}
+\item \texttt{core/QueueSystem.js} - Job and JobQueue classes
+\item \texttt{test-queue.js} - Validation script
+\end{enumerate}
+
+\textbf{Job Class:}
+
+\begin{itemize}
+\item Properties: \texttt{id}, \texttt{type}, \texttt{payload}, \texttt{status}, \texttt{logs}, \texttt{createdAt}
+\item Method: \texttt{log(message)} for audit trail
+\end{enumerate}
+
+\textbf{JobQueue Class:}
+
+\begin{itemize}
+\item Properties: \texttt{queue[]}, \texttt{isProcessing} flag, \texttt{enabled} flag
+\item Methods:
+\item \texttt{add(type, payload)} - Enqueue if enabled, else execute directly
+\item \texttt{processNext()} - Sequential processing (only if enabled)
+\item \texttt{enable()} - Switch queue on
+\item \texttt{disable()} - Switch queue off, process remaining jobs
+\end{enumerate}
+
+\textbf{Adaptive Behavior:}
+
+\begin{itemize}
+\item If queue disabled: Execute operations directly (Simple Mode)
+\item If queue enabled: Enqueue and process sequentially (Complex Mode)
+\end{enumerate}
+
+\subsubsection{Phase 3: Sidecar Index (Conditional)}
+
+\textbf{Files to Create:}
+
+\begin{itemize}
+\item \texttt{core/SidecarIndex.js} - SQLite index operations (conditional)
+\item \texttt{core/index-schema.sql} - Database schema
+\end{enumerate}
+
+\textbf{SidecarIndex Class:}
+
+\begin{itemize}
+\item \texttt{isEnabled()} - Check if index should be used
+\item \texttt{initialize()} - Create database if needed
+\item \texttt{get(id)} - O(1) lookup (if enabled), fallback to scan
+\item \texttt{set(id, file_path, etag)} - Update index (if enabled)
+\item \texttt{rebuild()} - Rebuild from file system
+\end{enumerate}
+
+\textbf{Adaptive Behavior:}
+
+\begin{itemize}
+\item If Simple Mode: Index methods return null/fallback to scan
+\item If Complex Mode: Index methods execute normally
+\end{enumerate}
+
+\subsubsection{Phase 4: Adaptive Write Operations}
+
+\textbf{Files to Create:}
+
+\begin{itemize}
+\item \texttt{core/WorkEffortManager.js} - Unified interface for both modes
+\end{itemize}
+
+\textbf{WorkEffortManager Class:}
+
+\begin{itemize}
+\item \texttt{mode} - Current mode ('simple' or 'complex')
+\item \texttt{create(data)} - Adaptive: Simple = direct write, Complex = queue
+\item \texttt{get(id)} - Adaptive: Simple = scan, Complex = index lookup
+\item \texttt{update(id, data)} - Adaptive: Simple = direct write, Complex = queue
+\item \texttt{delete(id)} - Adaptive: Simple = direct delete, Complex = queue
+\end{enumerate}
+
+\textbf{Mode Switching:}
+
+\begin{verbatim}
+async create(data) {
+  const count = await this.countWorkEfforts();
+  const hasConcurrency = await this.detectConcurrency();
+
+  // Check if we need to migrate
+  if (hasConcurrency && !this.queue.isEnabled()) {
+    await this.enableQueue();
+  }
+
+  if (count >= 20 && !this.index.isEnabled()) {
+    await this.enableIndex();
+  }
+
+  if (count >= 50 && !this.index.isRequired()) {
+    await this.requireIndex();
+  }
+
+  // Execute in current mode
+  if (this.queue.isEnabled()) {
+    return await this.queue.add('CREATE\textit{WORK}EFFORT', data);
+  } else {
+    return await this.simpleMode.create(data);
+  }
+}
+
+\end{verbatim}
+
+
+
+\subsubsection{Phase 5: Migration Logic}
+
+\textbf{Files to Create:}
+
+\begin{itemize}
+\item \texttt{core/Migration.js} - Handle mode transitions
+\end{itemize}
+
+\textbf{Migration Process:}
+
+\begin{enumerate}
+\item \textbf{Detect Need}: Count work efforts, check threshold
+\item \textbf{Backup}: Create backup of current state
+\item \textbf{Initialize Complex Mode}:
+\end{enumerate}
+
+\begin{itemize}
+\item Create sidecar index database
+\item Enable write queue
+\item Scan all work efforts
+\item Populate index
+\end{enumerate}
+
+\begin{enumerate}
+\item \textbf{Verify}: Validate index matches file system
+\item \textbf{Switch Mode}: Update config, enable complex features
+\end{enumerate}
+
+\textbf{Rollback:}
+
+\begin{itemize}
+\item If migration fails, restore from backup
+\item Continue in Simple Mode
+\item Log error for user review
+\end{enumerate}
+
+\subsection{File Structure}
+
+\begin{verbatim}
+_pyrite/
+├── core/
+│   ├── SimpleMode.js           # Simple file-based operations
+│   ├── QueueSystem.js          # Job & JobQueue (conditional)
+│   ├── SidecarIndex.js         # SQLite index (conditional)
+│   ├── WorkEffortManager.js    # Unified interface
+│   ├── ModeDetector.js         # Mode detection & switching
+│   ├── Migration.js            # Mode migration logic
+│   ├── PathGenerator.js        # Path generation utilities
+│   ├── IDGenerator.js          # ID generation
+│   └── index-schema.sql        # SQLite schema
+├── .pyrite/
+│   └── config.json             # Mode configuration
+└── test-queue.js               # Validation script
+
+\end{verbatim}
+
+
+
+\subsection{Configuration File}
+
+\texttt{.pyrite/config.json}:
+
+\begin{verbatim}
+{
+  "mode": "standard",
+  "workEffortCount": 45,
+  "concurrencyDetected": true,
+  "queueEnabled": true,
+  "indexEnabled": true,
+  "indexRequired": false,
+  "lastMigration": "2026-01-02T12:00:00Z"
+}
+
+\end{verbatim}
+
+
+
+\subsection{Success Criteria}
+
+\textbf{Phase 1 Complete:}
+
+\begin{itemize}
+\item ✅ Simple Mode working for < 100 work efforts
+\item ✅ Mode detection working
+\item ✅ No dependencies (pure file system)
+\end{enumerate}
+
+\textbf{Phase 2 Complete:}
+
+\begin{itemize}
+\item ✅ Queue system working (when enabled)
+\item ✅ Adaptive queue (enabled/disabled based on mode)
+\item ✅ Test script validates behavior
+\end{enumerate}
+
+\textbf{Phase 3 Complete:}
+
+\begin{itemize}
+\item ✅ Sidecar index working (when enabled)
+\item ✅ Adaptive index (enabled/disabled based on mode)
+\item ✅ Fallback to scan when index disabled
+\end{enumerate}
+
+\textbf{Phase 4 Complete:}
+
+\begin{itemize}
+\item ✅ Unified WorkEffortManager interface
+\item ✅ Automatic mode switching
+\item ✅ Seamless transition between modes
+\end{enumerate}
+
+\textbf{Phase 5 Complete:}
+
+\begin{itemize}
+\item ✅ Migration logic working
+\item ✅ Rollback on failure
+\item ✅ Index population from file system
+\end{enumerate}
+
+\subsection{Performance Characteristics}
+
+\textbf{Tiny Mode (< 10 work efforts):}
+
+\begin{itemize}
+\item Full scan: ~0.01-0.05 seconds
+\item Single lookup: ~0.01-0.05 seconds
+\item Write: ~0.01 seconds (direct)
+\end{enumerate}
+
+\textbf{Simple Mode (10-20 work efforts):}
+
+\begin{itemize}
+\item Full scan: ~0.05-0.1 seconds
+\item Single lookup: ~0.05-0.1 seconds
+\item Write: ~0.01 seconds (direct)
+\end{enumerate}
+
+\textbf{Standard Mode (>= 20 work efforts):}
+
+\begin{itemize}
+\item Index lookup: ~0.005 seconds (O(1)) ✅ Instant
+\item Full scan: ~0.1-0.5 seconds (fallback only)
+\item Write: ~0.5-1.5 seconds (queued, but safe)
+\end{enumerate}
+
+\textbf{Performance Mode (>= 50 work efforts):}
+
+\begin{itemize}
+\item Index lookup: ~0.005 seconds (O(1)) ✅ Instant (required)
+\item Full scan: Not used (index required)
+\item Write: ~0.5-1.5 seconds (queued, required)
+\end{enumerate}
+
+\subsection{Risk Mitigation}
+
+\textbf{Mode Switching:}
+
+\begin{itemize}
+\item ✅ Automatic detection on startup
+\item ✅ Migration only when needed
+\item ✅ Rollback on failure
+\item ✅ Config file tracks current mode
+\end{enumerate}
+
+\textbf{Performance:}
+
+\begin{itemize}
+\item ✅ Simple Mode fast for small scale
+\item ✅ Complex Mode fast for large scale
+\item ✅ No unnecessary complexity
+\end{enumerate}
+
+\textbf{Backwards Compatibility:}
+
+\begin{itemize}
+\item ✅ Simple Mode works without database
+\item ✅ Can disable complex features
+\item ✅ Migration is one-way (can't go back, but can disable)
+\end{enumerate}
+
+\subsection{Dependencies (Conditional)}
+
+\textbf{Simple Mode:}
+
+\begin{itemize}
+\item No dependencies (pure Node.js)
+\end{itemize}
+
+\textbf{Complex Mode:}
+
+\begin{itemize}
+\item \texttt{better-sqlite3} or \texttt{sqlite3} - SQLite database (only if enabled)
+\item \texttt{gray-matter} - YAML frontmatter parsing
+\item \texttt{fs/promises} - File system operations
+\item \texttt{child_process} - Git command execution
+\end{enumerate}
+
+\subsection{Out of Scope (Future Phases)}
+
+\begin{itemize}
+\item API layer implementation
+\item Authentication/authorization
+\item Multi-repository coordination
+\item Performance benchmarking
+\end{itemize}
+
+
+\chapter{Add webdev-mcp MCP Server Globally}
+
+\begin{itemize}
+\item \textbf{Overview:} Add the webdev-mcp server to your global Cursor MCP configuration to enable screenshot and screen listing tools across all projects.
+\item \textbf{Todos:} 1 items
+\end{itemize}
+
+
+\subsection{What This Does}
+
+The \texttt{webdev-mcp} server provides two tools:
+
+\begin{itemize}
+\item \texttt{takeScreenshot} - Takes a screenshot and returns it as base64
+\item \texttt{listScreens} - Lists available screens for screenshot targeting
+\end{enumerate}
+
+\subsection{Change Required}
+
+Edit \href{/Users/ctavolazzi/.cursor/mcp.json}{\texttt{~/.cursor/mcp.json}} to add this entry to \texttt{mcpServers}:
+
+\begin{verbatim}
+"webdev": {
+  "command": "npx",
+  "args": ["webdev-mcp"]
+}
+
+\end{verbatim}
+
+
+
+\subsection{Post-Installation}
+
+\begin{enumerate}
+\item Restart Cursor IDE (or reload the window) for the new MCP server to be recognized
+\item On macOS, you may need to grant Cursor screen recording permissions in System Preferences > Privacy & Security > Screen Recording
+\end{enumerate}
+
+\subsection{Notes}
+
+\begin{itemize}
+\item The server runs via \texttt{npx}, so it will auto-install on first use
+\end{itemize}
+
+
+\chapter{Add Wiki Page to CFL Site}
+
+\begin{itemize}
+\item \textbf{Overview:} Delete the unnecessary Gemfile, create a properly-formatted wiki page matching existing conventions, and push to GitHub Pages for build/deploy.
+\item \textbf{Todos:} 4 items
+\end{itemize}
+
+
+\subsection{Cleanup}
+
+\begin{enumerate}
+\item \textbf{Delete Gemfile} - Remove \texttt{/Users/ctavolazzi/Code/chicofablab.github.io-1/Gemfile} (cruft I added; GitHub Pages ignores it per \texttt{_config.yml} exclude list)
+\end{enumerate}
+
+\subsection{Create Wiki Page}
+
+\begin{enumerate}
+\item \textbf{Create \texttt{\textit{wiki/getting-started.mkd}} - Use \texttt{.mkd} extension to match existing pages (\href{}wiki/cfl-kiosk.mkd}{\texttt{cfl-kiosk.mkd}}, \href{_wiki/cfl-task-dashboard.mkd}{\texttt{cfl-task-dashboard.mkd}})
+\end{enumerate}
+
+Front matter and content:
+
+\begin{verbatim}
+---
+title: Getting Started
+---
+
+\end{verbatim}
+
+Content will include:
+
+\begin{itemize}
+\item Welcome heading
+\item Location info (603 Orange Street, Chico, CA - from footer)
+\item What CFL is (makerspace/fab lab)
+\item How to visit/join
+\item Links to existing wiki pages (kiosk, task dashboard)
+\end{enumerate}
+
+\subsection{Deploy}
+
+\begin{enumerate}
+\item \textbf{Commit and push} to GitHub - GitHub Pages builds automatically; no local Jekyll needed
+\end{enumerate}
+
+\subsection{Verification}
+
+\begin{enumerate}
+\item \textbf{Check live site} at https://chicofl.org after GitHub Actions completes (~1-2 min):
+\end{enumerate}
+
+   - Homepage lists new page
+   - Page renders at /wiki/getting-started
+   - Links work
+
+No local development - network restrictions make \texttt{bundle install} impossible, and it's unnecessary for this task.
+
+
+\chapter{Advanced PDF Creator Safe Installation and Testing Plan}
+
+\begin{itemize}
+\item \textbf{Overview:} Install and test the advanced-pdf-creator Streamlit application (https://github.com/CodeByPinar/advanced-pdf-creator.git) in a safe, isolated environment. This will validate the sandbox infrastructure from WE-260112-yh09 while comprehensively testing the repository's features and comparing them with WAFT's existing PDF generation tools (WeasyPrint, ReportLab).
+\item \textbf{Todos:} 18 items
+\end{itemize}
+
+
+\subsection{Overview}
+
+Install and test the \texttt{advanced-pdf-creator} Streamlit application in a safe, isolated environment. This serves dual purposes:
+
+\begin{enumerate}
+\item \textbf{Validate sandbox infrastructure} from WE-260112-yh09 (pydyf testing and secure sandbox environment)
+\item \textbf{Comprehensive testing} of the advanced-pdf-creator repository, including feature testing and comparison with WAFT's existing PDF tools
+\end{enumerate}
+
+\subsection{Repository Analysis}
+
+\textbf{Repository}: https://github.com/CodeByPinar/advanced-pdf-creator.git
+
+\begin{itemize}
+\item \textbf{Type}: Streamlit web application
+\item \textbf{Technology Stack}: Python, Streamlit, FPDF, Pillow (PIL)
+\item \textbf{Purpose}: Generate customizable PDFs with rich text, tables, images
+\item \textbf{Features}: Multi-language support, real-time preview, auto-save, custom themes
+\end{enumerate}
+
+\subsection{Phase 1: Environment Setup and Sandbox Validation}
+
+\subsubsection{1.1 Check Sandbox Infrastructure Status}
+
+\begin{itemize}
+\item [ ] Review WE-260112-yh09 sandbox implementation status
+\item [ ] Check if Docker-based sandbox is available
+\item [ ] Check if Python venv + restrictions sandbox is available
+\item [ ] Document current sandbox capabilities
+\item [ ] Identify gaps if sandbox not ready
+\end{enumerate}
+
+\subsubsection{1.2 Create Isolated Test Environment}
+
+\textbf{If sandbox infrastructure ready:}
+
+\begin{itemize}
+\item [ ] Use existing sandbox framework to create isolated environment
+\item [ ] Configure resource limits (CPU, memory, disk, network)
+\item [ ] Set up filesystem isolation
+\item [ ] Configure network restrictions (if needed)
+\end{enumerate}
+
+\textbf{If sandbox infrastructure not ready:}
+
+\begin{itemize}
+\item [ ] Create temporary isolated environment using:
+\item Python virtual environment (\texttt{python -m venv})
+\item Docker container (if Docker available)
+\item Or hybrid approach
+\item [ ] Set up in dedicated directory: \texttt{_experiments/advanced-pdf-creator-test/}
+\item [ ] Configure resource limits using system tools
+\item [ ] Document environment setup
+\end{enumerate}
+
+\subsubsection{1.3 Repository Cloning and Initial Analysis}
+
+\begin{itemize}
+\item [ ] Clone repository to isolated environment
+\item [ ] Review repository structure and files
+\item [ ] Analyze \texttt{requirements.txt} for dependencies
+\item [ ] Check for security concerns (code review)
+\item [ ] Document repository structure and dependencies
+\item [ ] Create repository analysis document
+\end{enumerate}
+
+\subsection{Phase 2: Installation and Dependency Management}
+
+\subsubsection{2.1 Dependency Analysis}
+
+\begin{itemize}
+\item [ ] Review \texttt{requirements.txt} contents
+\item [ ] Check for version conflicts with WAFT dependencies
+\item [ ] Identify potential security vulnerabilities
+\item [ ] Document dependency tree
+\item [ ] Create dependency comparison with WAFT stack
+\end{enumerate}
+
+\subsubsection{2.2 Safe Installation}
+
+\begin{itemize}
+\item [ ] Create isolated Python environment
+\item [ ] Install dependencies in isolated environment
+\item [ ] Verify installation success
+\item [ ] Test import of all required modules
+\item [ ] Document installation process and any issues
+\item [ ] Create installation verification checklist
+\end{enumerate}
+
+\subsubsection{2.3 Environment Validation}
+
+\begin{itemize}
+\item [ ] Verify Streamlit is installed and working
+\item [ ] Verify FPDF is installed and working
+\item [ ] Verify Pillow is installed and working
+\item [ ] Test basic Streamlit app execution
+\item [ ] Document environment state
+\end{enumerate}
+
+\subsection{Phase 3: Application Testing}
+
+\subsubsection{3.1 Basic Functionality Testing}
+
+\begin{itemize}
+\item [ ] Start Streamlit application in isolated environment
+\item [ ] Test application startup and UI loading
+\item [ ] Test basic PDF generation
+\item [ ] Test text input and formatting
+\item [ ] Test image upload and embedding
+\item [ ] Test table creation
+\item [ ] Test real-time preview functionality
+\item [ ] Document basic functionality results
+\end{enumerate}
+
+\subsubsection{3.2 Feature Testing}
+
+\begin{itemize}
+\item [ ] Test multi-language support (if applicable)
+\item [ ] Test custom themes and templates
+\item [ ] Test auto-save and draft management
+\item [ ] Test PDF download functionality
+\item [ ] Test advanced formatting options
+\item [ ] Test complex layouts
+\item [ ] Test error handling
+\item [ ] Document feature test results
+\end{enumerate}
+
+\subsubsection{3.3 Performance Testing}
+
+\begin{itemize}
+\item [ ] Measure application startup time
+\item [ ] Measure PDF generation time for various document sizes
+\item [ ] Monitor memory usage during operation
+\item [ ] Test with large documents (stress testing)
+\item [ ] Document performance metrics
+\end{enumerate}
+
+\subsubsection{3.4 Security Testing}
+
+\begin{itemize}
+\item [ ] Test input validation
+\item [ ] Test file upload security
+\item [ ] Check for potential code injection vulnerabilities
+\item [ ] Verify network isolation (if sandboxed)
+\item [ ] Document security findings
+\end{enumerate}
+
+\subsection{Phase 4: Comparison with WAFT PDF Tools}
+
+\subsubsection{4.1 Feature Comparison}
+
+\begin{itemize}
+\item [ ] Compare advanced-pdf-creator features with WeasyPrint
+\item [ ] Compare advanced-pdf-creator features with ReportLab
+\item [ ] Compare API complexity and ease of use
+\item [ ] Compare output quality (visual inspection)
+\item [ ] Compare file size and performance
+\item [ ] Create comparison matrix
+\end{enumerate}
+
+\subsubsection{4.2 Use Case Analysis}
+
+\begin{itemize}
+\item [ ] Identify WAFT use cases that advanced-pdf-creator could address
+\item [ ] Identify use cases where WeasyPrint/ReportLab are better
+\item [ ] Identify use cases where advanced-pdf-creator is better
+\item [ ] Document use case recommendations
+\end{enumerate}
+
+\subsubsection{4.3 Integration Feasibility}
+
+\begin{itemize}
+\item [ ] Assess integration effort with WAFT codebase
+\item [ ] Identify integration points
+\item [ ] Identify potential conflicts or challenges
+\item [ ] Estimate integration complexity
+\item [ ] Document integration feasibility
+\end{enumerate}
+
+\subsection{Phase 5: Sandbox Infrastructure Validation}
+
+\subsubsection{5.1 Sandbox Effectiveness Testing}
+
+\begin{itemize}
+\item [ ] Verify filesystem isolation (can't access host files)
+\item [ ] Verify process isolation
+\item [ ] Verify resource limits are enforced
+\item [ ] Verify network restrictions (if configured)
+\item [ ] Test cleanup and teardown procedures
+\item [ ] Document sandbox validation results
+\end{enumerate}
+
+\subsubsection{5.2 Sandbox Improvements}
+
+\begin{itemize}
+\item [ ] Identify sandbox limitations discovered during testing
+\item [ ] Document improvements needed
+\item [ ] Create recommendations for sandbox enhancement
+\item [ ] Update WE-260112-yh09 with findings
+\end{enumerate}
+
+\subsection{Phase 6: Documentation and Reporting}
+
+\subsubsection{6.1 Test Results Documentation}
+
+\begin{itemize}
+\item [ ] Create comprehensive test results document
+\item [ ] Document all test cases and outcomes
+\item [ ] Include screenshots of application (if possible)
+\item [ ] Include sample generated PDFs
+\item [ ] Document any bugs or issues found
+\end{enumerate}
+
+\subsubsection{6.2 Comparison Report}
+
+\begin{itemize}
+\item [ ] Create detailed comparison report with WAFT PDF tools
+\item [ ] Include feature matrix
+\item [ ] Include performance benchmarks
+\item [ ] Include use case recommendations
+\item [ ] Include integration feasibility assessment
+\end{enumerate}
+
+\subsubsection{6.3 Sandbox Validation Report}
+
+\begin{itemize}
+\item [ ] Document sandbox infrastructure validation results
+\item [ ] Document any issues or limitations found
+\item [ ] Provide recommendations for improvements
+\item [ ] Update WE-260112-yh09 work effort with findings
+\end{enumerate}
+
+\subsubsection{6.4 Work Effort Integration}
+
+\begin{itemize}
+\item [ ] Create or update work effort for this testing
+\item [ ] Link to WE-260112-yh09 (sandbox infrastructure)
+\item [ ] Link to relevant PDF tool work efforts
+\item [ ] Update devlog with findings
+\item [ ] Create summary document
+\end{enumerate}
+
+\subsection{Technical Approach}
+
+\subsubsection{Isolation Strategy}
+
+\textbf{Primary Approach (if sandbox ready):}
+
+\begin{itemize}
+\item Use Docker-based sandbox from WE-260112-yh09
+\item Configure resource limits (CPU: 2 cores, Memory: 2GB, Disk: 5GB)
+\item Network: Restricted (only for Streamlit server)
+\item Filesystem: Isolated workspace, read-only base, writable temp
+\end{enumerate}
+
+\textbf{Fallback Approach (if sandbox not ready):}
+
+\begin{itemize}
+\item Python virtual environment in \texttt{_experiments/advanced-pdf-creator-test/}
+\item Docker container (if Docker available) with resource limits
+\item System-level resource limits using \texttt{ulimit} and \texttt{cgroups}
+\item Network isolation using firewall rules or Docker network
+\end{enumerate}
+
+\subsubsection{Testing Strategy}
+
+\begin{enumerate}
+\item \textbf{Incremental Testing}: Start with basic functionality, then advanced features
+\item \textbf{Comparative Testing}: Generate same documents with different tools
+\item \textbf{Performance Testing}: Measure and compare metrics
+\item \textbf{Security Testing}: Verify isolation and input validation
+\item \textbf{Documentation}: Comprehensive documentation at each phase
+\end{enumerate}
+
+\subsubsection{Safety Measures}
+
+\begin{enumerate}
+\item \textbf{Isolation}: Complete isolation from WAFT codebase
+\item \textbf{Resource Limits}: Prevent resource exhaustion
+\item \textbf{Network Restrictions}: Prevent external data exfiltration
+\item \textbf{Code Review}: Review repository code before execution
+\item \textbf{Cleanup}: Automatic cleanup after testing
+\end{enumerate}
+
+\subsection{Success Criteria}
+
+\subsubsection{Installation}
+
+\begin{itemize}
+\item ✅ Repository cloned successfully
+\item ✅ Dependencies installed without conflicts
+\item ✅ Application starts and runs in isolated environment
+\end{enumerate}
+
+\subsubsection{Testing}
+
+\begin{itemize}
+\item ✅ All basic functionality tests pass
+\item ✅ Feature tests document capabilities
+\item ✅ Performance metrics collected
+\item ✅ Security validation completed
+\end{enumerate}
+
+\subsubsection{Comparison}
+
+\begin{itemize}
+\item ✅ Comprehensive comparison with WAFT PDF tools completed
+\item ✅ Use case recommendations provided
+\item ✅ Integration feasibility assessed
+\end{enumerate}
+
+\subsubsection{Sandbox Validation}
+
+\begin{itemize}
+\item ✅ Sandbox infrastructure validated (or gaps identified)
+\item ✅ Isolation verified
+\item ✅ Resource limits enforced
+\item ✅ Recommendations for improvements documented
+\end{enumerate}
+
+\subsection{Risks & Mitigations}
+
+\subsubsection{Risk: Sandbox Infrastructure Not Ready}
+
+\begin{itemize}
+\item \textbf{Mitigation}: Use fallback approach (venv + Docker)
+\item \textbf{Impact}: Still achieve testing goals, validate sandbox design
+\end{enumerate}
+
+\subsubsection{Risk: Dependency Conflicts}
+
+\begin{itemize}
+\item \textbf{Mitigation}: Isolated environment prevents conflicts
+\item \textbf{Impact}: None - complete isolation
+\end{enumerate}
+
+\subsubsection{Risk: Security Vulnerabilities in Repository}
+
+\begin{itemize}
+\item \textbf{Mitigation}: Code review before execution, isolated environment
+\item \textbf{Impact}: Minimal - isolated from host system
+\end{enumerate}
+
+\subsubsection{Risk: Application Doesn't Work}
+
+\begin{itemize}
+\item \textbf{Mitigation}: Document issues, focus on what does work
+\item \textbf{Impact}: Still valuable for comparison and sandbox validation
+\end{enumerate}
+
+\subsubsection{Risk: Performance Issues}
+
+\begin{itemize}
+\item \textbf{Mitigation}: Resource limits prevent system impact
+\item \textbf{Impact}: Documented, doesn't affect host system
+\end{enumerate}
+
+\subsection{Timeline}
+
+\begin{itemize}
+\item \textbf{Phase 1}: Environment Setup (1-2 hours)
+\item \textbf{Phase 2}: Installation (1 hour)
+\item \textbf{Phase 3}: Application Testing (2-3 hours)
+\item \textbf{Phase 4}: Comparison (2-3 hours)
+\item \textbf{Phase 5}: Sandbox Validation (1 hour)
+\item \textbf{Phase 6}: Documentation (2-3 hours)
+\end{enumerate}
+
+\textbf{Total Estimated Time}: 9-13 hours (1-2 days)
+
+\subsection{Deliverables}
+
+\begin{enumerate}
+\item \textbf{Test Environment}: Isolated environment with application installed
+\item \textbf{Test Results Document}: Comprehensive test results
+\item \textbf{Comparison Report}: Detailed comparison with WAFT PDF tools
+\item \textbf{Sandbox Validation Report}: Sandbox infrastructure validation results
+\item \textbf{Work Effort}: Created/updated work effort with all findings
+\item \textbf{Sample PDFs}: Generated PDFs for quality comparison
+\item \textbf{Documentation}: All findings and recommendations
+\end{enumerate}
+
+\subsection{Integration Points}
+
+\begin{itemize}
+\item \textbf{WE-260112-yh09}: Sandbox infrastructure (validate and improve)
+\item \textbf{PDF Tool Work Efforts}: Comparison with existing tools
+\item \textbf{WAFT PDF Generation}: Potential integration points
+\item \textbf{Devlog}: Update with findings and progress
+\end{enumerate}
+
+\subsection{Next Steps After Testing}
+
+\begin{enumerate}
+\item Review test results and comparison report
+\item Decide on integration (if applicable)
+\item Implement sandbox improvements (if needed)
+\item Update WAFT documentation with findings
+\item Archive test environment (or keep for reference)
+\end{itemize}
+
+
+\chapter{Agent Interface Implementation Plan}
+
+\begin{itemize}
+\item \textbf{Overview:} Implement the BaseAgent class and example agent based on the completed design document, integrating with Waft's existing systems (Decision Engine, Empirica, TavernKeeper, Session Analytics).
+\item \textbf{Todos:} 12 items
+\end{itemize}
+
+
+\subsection{Overview}
+
+Implement the \texttt{BaseAgent} class and example \texttt{RefactorAgent} based on the completed design document (\texttt{docs/designs/002\textit{agent}interface.md}). This will create the foundation for Waft's self-modifying AI SDK by enabling agents to observe, decide, act, and reflect within Python projects.
+
+\subsection{Current State}
+
+\begin{itemize}
+\item \textbf{Design Phase}: ✅ Complete
+\end{itemize}
+  - Design document: \texttt{docs/designs/002\textit{agent}interface.md}
+  - Research document: \texttt{docs/research/state\textit{of}art_2026.md}
+  - Design includes: AgentState, AgentConfig, BaseAgent, OODA loop, integration points
+
+\begin{itemize}
+\item \textbf{Implementation Phase}: ⏳ Pending
+\end{itemize}
+  - Need to implement: \texttt{src/waft/core/agent.py}
+  - Need to create: Example agent (\texttt{src/waft/core/agent_example.py})
+  - Need to document: API reference (\texttt{docs/AGENT_INTERFACE.md})
+  - Need to test: Unit and integration tests
+
+\subsection{Architecture}
+
+The implementation follows the design document's architecture:
+
+\begin{verbatim}
+BaseAgent (Abstract)
+  ├── AgentState (Pydantic model)
+  ├── AgentConfig (Pydantic model)
+  ├── OODA Loop (observe → decide → act → reflect)
+  ├── Integration Points
+  │   ├── Decision Engine (decision_matrix.py)
+  │   ├── Empirica (empirica.py)
+  │   ├── TavernKeeper (tavern_keeper/)
+  │   └── Session Analytics (session_analytics.py)
+  └── Self-Modification (modify_self method)
+
+\end{verbatim}
+
+\subsection{Implementation Tasks}
+
+\subsubsection{Phase 1: Core Models (Foundation)}
+
+\textbf{Task 1.1}: Create Pydantic models for state and configuration
+\begin{itemize}
+\item \textbf{File}: \texttt{src/waft/core/agent.py}
+\item \textbf{Models to create}:
+\end{enumerate}
+  - \texttt{MessageRole} (Enum)
+  - \texttt{Message} (BaseModel)
+  - \texttt{ToolDefinition} (BaseModel)
+  - \texttt{AgentState} (BaseModel) - with all fields from design
+  - \texttt{AgentConfig} (BaseModel) - with all fields from design
+  - \texttt{AgentEvent} (BaseModel)
+  - \texttt{AgentStep} (BaseModel)
+  - \texttt{Modification} (BaseModel)
+\begin{itemize}
+\item \textbf{Dependencies}: \texttt{pydantic}, \texttt{datetime}, \texttt{typing}
+\item \textbf{Reference}: Design doc sections 1-2
+\end{enumerate}
+
+\textbf{Task 1.2}: Add validation and serialization
+\begin{itemize}
+\item Add Pydantic validators for state transitions
+\item Add JSON serialization methods
+\item Add state versioning support
+\item \textbf{Reference}: Design doc section 1 (State Management Rules)
+\end{enumerate}
+
+\subsubsection{Phase 2: BaseAgent Class (Core Implementation)}
+
+\textbf{Task 2.1}: Implement BaseAgent abstract class
+\begin{itemize}
+\item \textbf{File}: \texttt{src/waft/core/agent.py}
+\item \textbf{Methods to implement}:
+\end{enumerate}
+  - \texttt{\textbf{init}()} - Initialize agent with config and project path
+  - Abstract methods: \texttt{observe()}, \texttt{decide()}, \texttt{act()}, \texttt{reflect()}
+  - Abstract helpers: \texttt{\textit{create}sandbox()}, \texttt{\textit{init}empirica()}, \texttt{\textit{init}tavern\textit{keeper()}, \texttt{}init\textit{decision}engine()}, \texttt{\textit{handle}message()}, \texttt{\textit{validate}modification()}, \texttt{\textit{apply}modification()}
+\begin{itemize}
+\item \textbf{Reference}: Design doc section 3
+\end{itemize}
+
+\textbf{Task 2.2}: Implement OODA loop execution
+\begin{itemize}
+\item \textbf{Methods}:
+\end{itemize}
+  - \texttt{run()} - Main execution loop (async iterator)
+  - \texttt{step()} - Single OODA cycle
+\begin{itemize}
+\item \textbf{Features}:
+\end{itemize}
+  - Message processing (inbox/outbox)
+  - Iteration limits
+  - Error handling
+  - Event emission
+\begin{itemize}
+\item \textbf{Reference}: Design doc sections 3, 5
+\end{itemize}
+
+\textbf{Task 2.3}: Implement self-modification capability
+\begin{itemize}
+\item \textbf{Method}: \texttt{modify_self()}
+\item \textbf{Features}:
+\end{enumerate}
+  - Safety level validation
+  - Modification validation pipeline
+  - Rollback support
+  - State versioning
+\begin{itemize}
+\item \textbf{Reference}: Design doc section 3 (Self-Modification), section 8 (Safety Model)
+\end{itemize}
+
+\textbf{Task 2.4}: Implement communication protocol
+\begin{itemize}
+\item \textbf{Methods}:
+\end{itemize}
+  - \texttt{send_message()} - Send to other agents
+  - \texttt{receive_message()} - Receive from other agents
+  - \texttt{\textit{process}inbox()} - Process incoming messages
+  - \texttt{\textit{process}outbox()} - Process outgoing messages
+\begin{itemize}
+\item \textbf{Reference}: Design doc section 4
+\end{itemize}
+
+\subsubsection{Phase 3: Integration Points}
+
+\textbf{Task 3.1}: Integrate Decision Engine
+\begin{itemize}
+\item \textbf{File}: \texttt{src/waft/core/agent.py}
+\item \textbf{Integration}: Use \texttt{DecisionMatrixCalculator} from \texttt{decision_matrix.py}
+\item \textbf{Location}: In \texttt{decide()} method
+\item \textbf{Reference}: Design doc section 6 (Decision Engine)
+\item \textbf{Existing code}: \texttt{src/waft/core/decision_matrix.py}
+\end{enumerate}
+
+\textbf{Task 3.2}: Integrate Empirica
+\begin{itemize}
+\item \textbf{File}: \texttt{src/waft/core/agent.py}
+\item \textbf{Integration}: Use \texttt{EmpiricaManager} from \texttt{empirica.py}
+\item \textbf{Location}: In \texttt{reflect()} method, initialization
+\item \textbf{Reference}: Design doc section 6 (Empirica)
+\item \textbf{Existing code}: \texttt{src/waft/core/empirica.py}
+\end{enumerate}
+
+\textbf{Task 3.3}: Integrate TavernKeeper
+\begin{itemize}
+\item \textbf{File}: \texttt{src/waft/core/agent.py}
+\item \textbf{Integration}: Use \texttt{TavernKeeper} from \texttt{tavern_keeper/keeper.py}
+\item \textbf{Location}: In \texttt{act()} method, initialization
+\item \textbf{Reference}: Design doc section 6 (TavernKeeper)
+\item \textbf{Existing code}: \texttt{src/waft/core/tavern_keeper/keeper.py}
+\end{enumerate}
+
+\textbf{Task 3.4}: Integrate Session Analytics
+\begin{itemize}
+\item \textbf{File}: \texttt{src/waft/core/agent.py}
+\item \textbf{Integration}: Use \texttt{SessionAnalytics} from \texttt{session_analytics.py}
+\item \textbf{Location}: Throughout lifecycle (observe, act, reflect)
+\item \textbf{Reference}: Design doc (implicit - for learning system)
+\item \textbf{Existing code}: \texttt{src/waft/core/session_analytics.py}
+\end{enumerate}
+
+\subsubsection{Phase 4: Example Implementation}
+
+\textbf{Task 4.1}: Create RefactorAgent example
+\begin{itemize}
+\item \textbf{File}: \texttt{src/waft/core/agent_example.py}
+\item \textbf{Class}: \texttt{RefactorAgent(BaseAgent)}
+\item \textbf{Implementation}:
+\end{enumerate}
+  - \texttt{observe()} - Scan for complex functions
+  - \texttt{decide()} - Use decision engine to choose refactoring strategy
+  - \texttt{act()} - Execute refactoring
+  - \texttt{reflect()} - Learn from outcome
+\begin{itemize}
+\item \textbf{Reference}: Design doc section 7
+\end{itemize}
+
+\textbf{Task 4.2}: Add helper methods for RefactorAgent
+\begin{itemize}
+\item Code complexity analysis
+\item Function extraction logic
+\item Test execution
+\item \textbf{Reference}: Design doc section 7
+\end{enumerate}
+
+\subsubsection{Phase 5: Documentation}
+
+\textbf{Task 5.1}: Create API reference documentation
+\begin{itemize}
+\item \textbf{File}: \texttt{docs/AGENT_INTERFACE.md}
+\item \textbf{Sections}:
+\end{enumerate}
+  - Overview
+  - BaseAgent API reference
+  - AgentState schema
+  - AgentConfig schema
+  - OODA loop usage
+  - Integration examples
+  - Self-modification guide
+  - Multi-agent communication
+\begin{itemize}
+\item \textbf{Reference}: Design doc + implementation
+\end{itemize}
+
+\textbf{Task 5.2}: Add docstrings to all classes and methods
+\begin{itemize}
+\item Follow Python docstring conventions
+\item Include type hints
+\item Add usage examples in docstrings
+\item \textbf{Files}: \texttt{src/waft/core/agent.py}, \texttt{src/waft/core/agent_example.py}
+\end{enumerate}
+
+\subsubsection{Phase 6: Testing}
+
+\textbf{Task 6.1}: Unit tests for models
+\begin{itemize}
+\item \textbf{File}: \texttt{tests/test\textit{agent}models.py}
+\item \textbf{Tests}:
+\end{enumerate}
+  - AgentState validation
+  - AgentConfig validation
+  - Message protocol
+  - State transitions
+\begin{itemize}
+\item \textbf{Reference}: Design doc section 9
+\end{itemize}
+
+\textbf{Task 6.2}: Unit tests for BaseAgent
+\begin{itemize}
+\item \textbf{File}: \texttt{tests/test_agent.py}
+\item \textbf{Tests}:
+\end{enumerate}
+  - Initialization
+  - OODA loop execution
+  - Self-modification validation
+  - Message handling
+\begin{itemize}
+\item \textbf{Reference}: Design doc section 9
+\end{itemize}
+
+\textbf{Task 6.3}: Integration tests
+\begin{itemize}
+\item \textbf{File}: \texttt{tests/test\textit{agent}integration.py}
+\item \textbf{Tests}:
+\end{enumerate}
+  - Decision Engine integration
+  - Empirica integration
+  - TavernKeeper integration
+  - Session Analytics integration
+\begin{itemize}
+\item \textbf{Reference}: Design doc section 9
+\end{itemize}
+
+\textbf{Task 6.4}: Example agent tests
+\begin{itemize}
+\item \textbf{File}: \texttt{tests/test\textit{agent}example.py}
+\item \textbf{Tests}:
+\end{enumerate}
+  - RefactorAgent observe/decide/act/reflect
+  - Refactoring logic
+  - Error handling
+\begin{itemize}
+\item \textbf{Reference}: Design doc section 9
+\end{itemize}
+
+\subsection{File Structure}
+
+\begin{verbatim}
+src/waft/core/
+  ├── agent.py              # BaseAgent implementation (NEW)
+  └── agent_example.py      # RefactorAgent example (NEW)
+
+docs/
+  └── AGENT_INTERFACE.md    # API reference (NEW)
+
+tests/
+  ├── test\textit{agent}models.py      # Model tests (NEW)
+  ├── test_agent.py             # BaseAgent tests (NEW)
+  ├── test\textit{agent}integration.py # Integration tests (NEW)
+  └── test\textit{agent}example.py     # Example agent tests (NEW)
+
+\end{verbatim}
+
+\subsection{Dependencies}
+
+\subsubsection{Existing Dependencies (Already in project)}
+\begin{itemize}
+\item \texttt{pydantic} - For models (already used)
+\item \texttt{typing} - Type hints
+\item \texttt{datetime} - Timestamps
+\item \texttt{pathlib} - Path handling
+\end{enumerate}
+
+\subsubsection{New Dependencies (May need to add)}
+\begin{itemize}
+\item None - All dependencies already available
+\end{itemize}
+
+\subsubsection{Integration Dependencies}
+\begin{itemize}
+\item \texttt{src/waft/core/decision_matrix.py} - Decision Engine
+\item \texttt{src/waft/core/empirica.py} - Empirica Manager
+\item \texttt{src/waft/core/tavern_keeper/keeper.py} - TavernKeeper
+\item \texttt{src/waft/core/session_analytics.py} - Session Analytics
+\end{enumerate}
+
+\subsection{Implementation Order}
+
+\begin{enumerate}
+\item \textbf{Phase 1} (Foundation): Create Pydantic models - enables type safety
+\item \textbf{Phase 2} (Core): Implement BaseAgent class - core functionality
+\item \textbf{Phase 3} (Integration): Connect to existing systems - makes it functional
+\item \textbf{Phase 4} (Example): Create RefactorAgent - demonstrates usage
+\item \textbf{Phase 5} (Documentation): Write API docs - enables adoption
+\item \textbf{Phase 6} (Testing): Write tests - ensures quality
+\end{enumerate}
+
+\subsection{Success Criteria}
+
+\begin{itemize}
+\item [ ] All Pydantic models implemented and validated
+\item [ ] BaseAgent class fully implemented with all abstract methods
+\item [ ] OODA loop executes correctly (observe → decide → act → reflect)
+\item [ ] All integration points working (Decision Engine, Empirica, TavernKeeper, Session Analytics)
+\item [ ] RefactorAgent example works end-to-end
+\item [ ] API documentation complete
+\item [ ] Unit tests passing (>80% coverage)
+\item [ ] Integration tests passing
+\item [ ] Example agent tests passing
+\end{enumerate}
+
+\subsection{Risks & Mitigations}
+
+\textbf{Risk 1}: Integration complexity with existing systems
+\begin{itemize}
+\item \textbf{Mitigation}: Use existing manager classes, don't duplicate logic
+\end{itemize}
+
+\textbf{Risk 2}: Async/await complexity
+\begin{itemize}
+\item \textbf{Mitigation}: Follow design doc patterns, use async/await consistently
+\end{itemize}
+
+\textbf{Risk 3}: Self-modification safety
+\begin{itemize}
+\item \textbf{Mitigation}: Implement validation pipeline strictly, defer to safety model
+\end{itemize}
+
+\textbf{Risk 4}: State management complexity
+\begin{itemize}
+\item \textbf{Mitigation}: Use Pydantic for validation, immutable state updates
+\end{itemize}
+
+\subsection{Next Steps After Completion}
+
+\begin{enumerate}
+\item Design Self-Modification Engine (TKT-ai-sdk-003) - depends on BaseAgent
+\item Design Learning System (TKT-ai-sdk-004) - depends on BaseAgent + Session Analytics
+\item Create more example agents (testing agent, documentation agent, etc.)
+\end{enumerate}
+
+\subsection{References}
+
+\begin{itemize}
+\item Design Document: \texttt{docs/designs/002\textit{agent}interface.md}
+\item Vision Document: \texttt{docs/AI\textit{SDK}VISION.md}
+\item Decision Matrix: \texttt{src/waft/core/decision_matrix.py}
+\item Empirica: \texttt{src/waft/core/empirica.py}
+\item TavernKeeper: \texttt{src/waft/core/tavern_keeper/keeper.py}
+\item Session Analytics: \texttt{src/waft/core/session_analytics.py}
+\end{itemize}
+
+
+\chapter{AI-Scientist Integration Study Plan}
+
+\begin{itemize}
+\item \textbf{Overview:} Conduct a comprehensive reference study of the AI-Scientist repository to understand its architecture, patterns, and methodologies, then adapt key concepts to enhance WAFT's existing scientific research capabilities.
+\item \textbf{Todos:} 12 items
+\end{itemize}
+
+
+\subsection{Overview}
+
+This plan outlines a reference study approach to explore the AI-Scientist repository (https://github.com/ctavolazzi/AI-Scientist), understand its architecture and methodologies, and adapt key concepts to enhance WAFT's scientific research capabilities.
+
+\subsection{Phase 1: Repository Exploration & Documentation}
+
+\subsubsection{1.1 Clone and Initial Analysis}
+
+\begin{itemize}
+\item Clone repository to \texttt{../AI-Scientist} (sibling to waft directory)
+\item Create work effort: \texttt{WE-260113-XXXX\textit{ai}scientist\textit{reference}study}
+\item Document repository structure and organization
+\item Read and analyze README.md for project overview
+\item Review commit history to understand evolution
+\end{enumerate}
+
+\subsubsection{1.2 Core Module Analysis}
+
+Analyze key modules in \texttt{ai_scientist/}:
+
+\begin{itemize}
+\item \texttt{generate_ideas.py} - Research idea generation methodology
+\item \texttt{perform_experiments.py} - Experiment execution patterns
+\item \texttt{perform_writeup.py} - Paper writing workflow
+\item \texttt{perform_review.py} - Peer review simulation
+\item \texttt{llm.py} - LLM integration patterns
+\end{enumerate}
+
+\subsubsection{1.3 Architecture Documentation}
+
+\begin{itemize}
+\item Document the overall system architecture
+\item Identify design patterns and principles
+\item Map workflow: Idea → Experiment → Analysis → Paper → Review
+\item Document data structures and state management
+\end{enumerate}
+
+\subsection{Phase 2: Pattern Extraction & Comparison}
+
+\subsubsection{2.1 Compare with WAFT Systems}
+
+Map AI-Scientist concepts to WAFT equivalents:
+
+| AI-Scientist | WAFT Equivalent | Integration Opportunity |
+|--------------|------------------|-------------------------|
+| \texttt{generate_ideas.py} | Study Gym (QUESTION phase) | Enhance question generation |
+| \texttt{perform_experiments.py} | Scientific Method Tool | Improve experiment execution |
+| \texttt{perform_writeup.py} | Scientific Paper Generator | Enhance paper structure |
+| \texttt{perform_review.py} | PDF Quality Analysis | Add peer review simulation |
+| \texttt{llm.py} | Existing LLM integrations | Standardize LLM patterns |
+
+\subsubsection{2.2 Key Concepts to Extract}
+
+\begin{itemize}
+\item \textbf{Automated Research Pipeline}: End-to-end automation patterns
+\item \textbf{Experiment Management}: How experiments are structured and executed
+\item \textbf{Paper Generation}: Template-based paper writing approach
+\item \textbf{Review System}: Automated quality assessment methodology
+\item \textbf{LLM Orchestration}: Multi-step LLM workflow patterns
+\end{enumerate}
+
+\subsection{Phase 3: Adaptation Strategy}
+
+\subsubsection{3.1 Enhance Study Gym}
+
+\begin{itemize}
+\item Integrate AI-Scientist's idea generation patterns into Study Gym's QUESTION phase
+\item Add automated research question formulation
+\item Enhance hypothesis generation with structured templates
+\end{enumerate}
+
+\subsubsection{3.2 Enhance Scientific Method Tool}
+
+\begin{itemize}
+\item Adapt AI-Scientist's experiment execution patterns
+\item Improve experiment state management
+\item Add automated experiment result analysis
+\end{enumerate}
+
+\subsubsection{3.3 Enhance Scientific Paper Generator}
+
+\begin{itemize}
+\item Integrate AI-Scientist's paper writing structure
+\item Add automated section generation
+\item Improve paper template system
+\end{enumerate}
+
+\subsubsection{3.4 Add Peer Review Capability}
+
+\begin{itemize}
+\item Create new \texttt{peer_review.py} module based on AI-Scientist's review system
+\item Integrate with PDF quality analysis
+\item Add automated review scoring
+\end{enumerate}
+
+\subsection{Phase 4: Implementation}
+
+\subsubsection{4.1 Create Integration Module}
+
+Create \texttt{src/waft/science/ai\textit{scientist}integration.py}:
+
+\begin{itemize}
+\item Wrapper functions that adapt AI-Scientist patterns to WAFT
+\item Bridge between AI-Scientist concepts and WAFT systems
+\item Maintain separation while enabling cross-pollination
+\end{enumerate}
+
+\subsubsection{4.2 Enhance Existing Modules}
+
+Update existing WAFT modules with adapted patterns:
+
+\begin{itemize}
+\item \texttt{src/waft/study_gym.py} - Add idea generation methods
+\item \texttt{scientific\textit{method}tool/experiment.py} - Enhance experiment patterns
+\item \texttt{src/waft/evolution/scientific\textit{paper}generator.py} - Improve paper structure
+\item \texttt{src/waft/evolution/scientific\textit{pdf}generator.py} - Add review capabilities
+\end{enumerate}
+
+\subsubsection{4.3 Documentation}
+
+\begin{itemize}
+\item Create \texttt{docs/AI\textit{SCIENTIST}INTEGRATION.md} documenting:
+\item Patterns extracted
+\item Adaptations made
+\item Integration points
+\item Usage examples
+\end{enumerate}
+
+\subsection{Phase 5: Testing & Validation}
+
+\subsubsection{5.1 Test Enhanced Systems}
+
+\begin{itemize}
+\item Test enhanced Study Gym with AI-Scientist patterns
+\item Validate improved experiment execution
+\item Test enhanced paper generation
+\item Verify peer review functionality
+\end{enumerate}
+
+\subsubsection{5.2 Create Example Workflows}
+
+\begin{itemize}
+\item Document example workflows using integrated patterns
+\item Create demonstration scripts
+\item Generate example outputs
+\end{enumerate}
+
+\subsection{Files to Create/Modify}
+
+\subsubsection{New Files}
+
+\begin{itemize}
+\item \texttt{\textit{work}efforts/WE-260113-XXXX\textit{ai}scientist\textit{reference}study/} - Work effort directory
+\item \texttt{\textit{work}efforts/WE-260113-XXXX\textit{ai}scientist\textit{reference}study/AI\textit{SCIENTIST}ANALYSIS.md} - Comprehensive analysis
+\item \texttt{\textit{work}efforts/WE-260113-XXXX\textit{ai}scientist\textit{reference}study/ARCHITECTURE_COMPARISON.md} - Architecture mapping
+\item \texttt{\textit{work}efforts/WE-260113-XXXX\textit{ai}scientist\textit{reference}study/INTEGRATION_PATTERNS.md} - Extracted patterns
+\item \texttt{src/waft/science/\textbf{init}.py} - New science module
+\item \texttt{src/waft/science/ai\textit{scientist}integration.py} - Integration bridge
+\item \texttt{src/waft/science/peer_review.py} - Peer review system
+\item \texttt{docs/AI\textit{SCIENTIST}INTEGRATION.md} - Integration documentation
+\end{enumerate}
+
+\subsubsection{Modified Files}
+
+\begin{itemize}
+\item \texttt{src/waft/study_gym.py} - Add idea generation methods
+\item \texttt{scientific\textit{method}tool/experiment.py} - Enhance experiment patterns
+\item \texttt{src/waft/evolution/scientific\textit{paper}generator.py} - Improve structure
+\item \texttt{src/waft/evolution/scientific\textit{pdf}generator.py} - Add review integration
+\end{enumerate}
+
+\subsection{Success Criteria}
+
+\begin{enumerate}
+\item ✅ Complete analysis of AI-Scientist repository documented
+\item ✅ Key patterns extracted and documented
+\item ✅ Integration points identified and mapped
+\item ✅ Enhanced WAFT systems with adapted patterns
+\item ✅ Peer review capability added
+\item ✅ Documentation complete with examples
+\item ✅ Example workflows tested and validated
+\end{enumerate}
+
+\subsection{Notes}
+
+\begin{itemize}
+\item Maintain WAFT's existing architecture and patterns
+\item Adapt rather than replace - enhance existing systems
+\item Keep AI-Scientist as reference, not dependency
+\item Document all adaptations and rationale
+\item Preserve WAFT's unique characteristics (karma, evolution, etc.)
+\end{itemize}
+
+
+\chapter{AI-Town Comprehensive Analysis Workflow Plan (Final - AI Town Version)}
+
+\begin{itemize}
+\item \textbf{Overview:} Comprehensive analysis workflow to understand ai-town repository, the Generative Agents paper, explore integration opportunities with WAFT, and make evidence-based decisions using systematic verification and critique.
+\item \textbf{Todos:} 6 items
+\end{itemize}
+
+
+\subsection{Major Redesign: AI Town with Voting}
+
+\textbf{Transformation}: Changed from individual analysis workflow to \textbf{AI Town democracy} where Beings vote and produce collective output.
+
+\textbf{Key Changes}:
+
+\begin{enumerate}
+\item ✅ \textbf{AI Town Formation}: Spawns 3-5 Beings into analysis town
+\item ✅ \textbf{Distributed Analysis}: Each Being analyzes different aspects
+\item ✅ \textbf{Voting System}: Command randomly selects some Beings to vote (mostly at random, weighted by relevance)
+\item ✅ \textbf{Town Choice}: Town votes on PDF format (binder vs single PDF)
+\item ✅ \textbf{Collaborative Output}: All Beings contribute to final PDF/binder
+\item ✅ \textbf{Democratic Process}: Majority vote determines decisions, ties broken by Oracle
+\end{enumerate}
+
+\subsection{Overview}
+
+This plan orchestrates an \textbf{AI Town workflow} where:
+
+\begin{enumerate}
+\item \textbf{Town Forms}: 3-5 Beings spawn into analysis reality
+\item \textbf{Distributed Work}: Each Being analyzes different aspects (architecture, algorithms, paper, integration, synthesis)
+\item \textbf{Democratic Voting}: Command randomly selects some Beings to vote on key decisions
+\item \textbf{Collective Output}: Town produces PDF/binder based on their vote
+\item \textbf{Town Reflection}: Beings reflect individually, town synthesizes learnings
+\end{enumerate}
+
+\textbf{Key Insight}: This is not just analysis - it's a democratic AI town that collectively analyzes and decides together.
+
+\subsection{Workflow Phases}
+
+\subsubsection{Phase 1: Initial Orientation & Epistemic State}
+
+\textbf{Commands}: \texttt{/context}, \texttt{/oracle}
+
+\textbf{Purpose}: Get oriented and understand what we know/don't know before starting analysis
+
+\textbf{Actions}:
+
+\begin{itemize}
+\item Get current context summary (working state, active work, recent activity)
+\item Consult Oracle for initial epistemic state:
+\item What do we know about ai-town?
+\item What do we know about Generative Agents?
+\item What are the knowledge gaps?
+\item Set analysis focus based on epistemic gaps
+\end{enumerate}
+
+\textbf{Outputs}:
+
+\begin{itemize}
+\item Context document: \texttt{\textit{work}efforts/CONTEXT\textit{YYYY-MM-DD}HHMMSS.md}
+\item Oracle epistemic state summary
+\item Knowledge gaps identified
+\end{enumerate}
+
+\textbf{Time}: ~2-3 minutes
+
+---
+
+\subsubsection{Phase 2: Comprehensive Systematic Analysis (Core Workflow)}
+
+\textbf{Command}: \texttt{/run-it --focus "ai-town repository and Generative Agents paper"}
+
+\textbf{Purpose}: Execute complete systematic workflow with ai-town-specific focus
+
+\textbf{What \texttt{/run-it} Does (15 phases)}:
+
+\begin{enumerate}
+\item \texttt{/consider} - Analyze options for ai-town analysis
+\item \texttt{/think} - Initialize cognitive tools (Empirica, Sequential Thinking)
+\item \texttt{/check-assumptions} - Validate assumptions about ai-town and paper
+\item \texttt{/deep-analyze} - \textbf{Analyze ai-town repository} (algorithms, patterns, data structures)
+\end{enumerate}
+
+                                                                                                                                                                                                - \textbf{Also analyze Generative Agents paper} (extract concepts, compare to implementation)
+                                                                                                                                                                                                - \textbf{Paper Analysis Steps}:
+                                                                                                                                                                                                                                                                                                                                - Read and parse PDF (extract text, identify sections)
+                                                                                                                                                                                                                                                                                                                                - Extract key concepts (architecture, algorithms, design patterns)
+                                                                                                                                                                                                                                                                                                                                - Map paper concepts to ai-town implementation
+                                                                                                                                                                                                                                                                                                                                - Identify what matches, what differs, what's missing
+                                                                                                                                                                                                                                                                                                                                - Document comparison matrix
+
+\begin{enumerate}
+\item \texttt{/critique} - Adversarial review (security-first, balanced by deep analysis)
+\item \texttt{/status} - Quick status check
+\item \texttt{/hypothesis} - Form hypotheses about ai-town implementation and integration
+\end{enumerate}
+
+                                                                                                                                                                                                - \textbf{Hypothesis Types}:
+                                                                                                                                                                                                                                                                                                                                - "ai-town implements X from Generative Agents paper" (with evidence)
+                                                                                                                                                                                                                                                                                                                                - "ai-town extends paper with Y" (with evidence)
+                                                                                                                                                                                                                                                                                                                                - "Integration opportunity: WAFT + ai-town pattern Z" (with evaluation)
+
+\begin{enumerate}
+\item \texttt{/prove-it} - Demonstrate scientific method functionality
+\item \texttt{/verify} - Verify all claims and hypotheses with evidence
+\item \texttt{/proceed} - Final verification before proceeding
+\item \texttt{/reflect} - Reflect on analysis process and learnings
+\item \texttt{/checkpoint} - Create checkpoint with state snapshot
+\item \texttt{/decide} - Make decisions about next steps
+\item \texttt{/next} - Identify next action
+\item \texttt{/goal} - Create/update goal for ai-town work
+\end{enumerate}
+
+\textbf{Key Integration Points}:
+
+\begin{itemize}
+\item \textbf{Paper Analysis}: Integrated into \texttt{/deep-analyze} phase - analyze paper alongside code
+\item \textbf{Paper Reading}: Use PDF parsing or ask user to provide paper text if PDF parsing unavailable
+\item \textbf{Comparison Matrix}: Create side-by-side comparison of paper concepts vs implementation
+\item \textbf{Hypothesis Formation}: \texttt{/hypothesis} phase forms testable hypotheses with evidence
+\end{enumerate}
+
+\textbf{Outputs} (from \texttt{/run-it}):
+
+\begin{itemize}
+\item Consideration analysis
+\item Assumption validation report
+\item Deep analysis documents (code + paper)
+\item Critique report
+\item Hypothesis documents
+\item Verification traces
+\item Reflection journal entry
+\item Checkpoint document
+\item Decision matrix and recommendations
+\item Next step identified
+\item Goal created/updated
+\end{enumerate}
+
+\textbf{Time}: ~35-70 minutes (standard \texttt{/run-it} time)
+
+---
+
+\subsubsection{Phase 3: Integration Exploration (Optional)}
+
+\textbf{Command}: \texttt{/evolve --reality "ai-town_integration"}
+
+\textbf{Purpose}: Spawn Being to explore integration opportunities with genetic lineage tracking
+
+\textbf{Note}: This is \textbf{optional} and creates a nested workflow:
+
+\begin{itemize}
+\item \texttt{/evolve} → spawns Being → \texttt{/version-bake} → \texttt{/run-it} (15 phases) + other phases
+\item Total time: ~60-115 minutes (includes nested \texttt{/run-it})
+\end{enumerate}
+
+\textbf{When to Use}:
+
+\begin{itemize}
+\item ✅ Want genetic lineage tracking for integration exploration
+\item ✅ Need Being context for integration analysis
+\item ✅ Have time for comprehensive Being evolution cycle
+\end{enumerate}
+
+\textbf{When to Skip}:
+
+\begin{itemize}
+\item ❌ Time-constrained
+\item ❌ Integration exploration not needed yet
+\item ❌ \texttt{/run-it} analysis sufficient for now
+\end{enumerate}
+
+\textbf{Actions} (if used):
+
+\begin{itemize}
+\item Spawn Being from Source with reality "ai-town_integration"
+\item Being executes \texttt{/version-bake} workflow:
+\item Reflects on integration opportunities
+\item Runs \texttt{/run-it} focused on integration
+\item Analyzes integration patterns
+\item Forms integration hypotheses
+\item Verifies integration assumptions
+\item Track genetic lineage: Source → Being → Work → Evolution → Source
+\item Document Being evolution and learnings
+\end{enumerate}
+
+\textbf{Outputs} (if used):
+
+\begin{itemize}
+\item Being spawn record
+\item Being evolution record
+\item Genetic lineage document
+\item Integration analysis (from Being's perspective)
+\item Learnings flowed back to Source
+\end{enumerate}
+
+\textbf{Time}: ~60-115 minutes (if used)
+
+---
+
+\subsubsection{Phase 4: Documentation & PDF Generation}
+
+\textbf{Commands}: \texttt{/print-PDF}, \texttt{/checkpoint} (if not already done by \texttt{/run-it})
+
+\textbf{Purpose}: Generate final documentation and PDF for reference
+
+\textbf{Actions}:
+
+\begin{itemize}
+\item Create/update checkpoint (if not done in \texttt{/run-it})
+\item Generate PDF of key findings:
+\item Analysis summary (from \texttt{/run-it})
+\item Integration opportunities (if \texttt{/evolve} was used)
+\item Decision recommendations (from \texttt{/run-it})
+\item Next steps (from \texttt{/run-it})
+\item Print PDF for reference
+\end{enumerate}
+
+\textbf{Outputs}:
+
+\begin{itemize}
+\item Checkpoint: \texttt{\textit{work}efforts/CHECKPOINT\textit{YYYY-MM-DD}AI\textit{TOWN}ANALYSIS.md}
+\item PDF document (printed)
+\item Devlog updated
+\end{enumerate}
+
+\textbf{Time}: ~1-2 minutes
+
+---
+
+\subsubsection{Phase 5: Final Epistemic Guidance}
+
+\textbf{Command}: \texttt{/oracle "What should we focus on next for ai-town integration?"}
+
+\textbf{Purpose}: Get final epistemic guidance based on completed analysis
+
+\textbf{Actions}:
+
+\begin{itemize}
+\item Consult Oracle with specific question about next steps
+\item Get guidance based on:
+\item What we learned (from \texttt{/run-it} analysis)
+\item Current epistemic state (updated from Phase 1)
+\item Open unknowns (identified during analysis)
+\item Decision recommendations (from \texttt{/run-it})
+\end{enumerate}
+
+\textbf{Outputs}:
+
+\begin{itemize}
+\item Oracle guidance and recommendations
+\item Updated epistemic state summary
+\end{enumerate}
+
+\textbf{Time}: ~1 minute
+
+---
+
+\subsection{Execution Strategy}
+
+\subsubsection{Recommended: AI Town Workflow}
+
+\textbf{Standard Execution} (Recommended):
+
+\begin{enumerate}
+\item Phase 1: Town Formation - Spawn 3-5 Beings into town (~3-5 min)
+\item Phase 2: Distributed Analysis - Each Being analyzes their aspect (~20-40 min, parallel)
+\item Phase 3: Town Voting - Beings vote on decisions (optional voting) (~5-10 min)
+\item Phase 4: Collaborative Output - Town produces PDF/binder (town's choice) (~5-10 min)
+\item Phase 5: Town Reflection - Beings reflect, town synthesizes (~3-5 min)
+\item Phase 6: Final Oracle - Town consults Oracle (~1 min)
+\end{enumerate}
+
+\textbf{Total Time}: ~37-71 minutes
+
+\textbf{Key Features}:
+
+\begin{itemize}
+\item \textbf{Town Democracy}: Beings vote on decisions (voting is optional)
+\item \textbf{Town Choice}: Town votes on PDF format (binder vs single PDF)
+\item \textbf{Collaborative}: All Beings contribute to final output
+\item \textbf{Distributed}: Analysis happens in parallel across Beings
+\end{enumerate}
+
+\subsubsection{Alternative: Quick Town Analysis (Time-Constrained)}
+
+If time is limited:
+
+\begin{enumerate}
+\item Phase 1: Spawn 3 Beings (minimum town) (~2-3 min)
+\item Phase 2: Quick analysis (essential phases only) (~10-20 min, parallel)
+\item Phase 3: Key votes only (PDF format, top priorities) (~3-5 min)
+\item Phase 4: Single PDF (faster than binder) (~3-5 min)
+\item Phase 5: Brief reflection (~2-3 min)
+\item Phase 6: Oracle (~1 min)
+\end{enumerate}
+
+\textbf{Total Time}: ~20-35 minutes
+
+\subsubsection{Alternative: Large Town (More Perspectives)}
+
+If you want more diverse perspectives:
+
+\begin{enumerate}
+\item Phase 1: Spawn 7-10 Beings (larger town) (~5-7 min)
+\item Phase 2: Comprehensive analysis (all Beings) (~30-50 min, parallel)
+\item Phase 3: Full voting on all decisions (~8-12 min)
+\item Phase 4: Binder format (better for large analyses) (~8-12 min)
+\item Phase 5: Comprehensive reflection (~5-7 min)
+\item Phase 6: Oracle (~1 min)
+\end{enumerate}
+
+\textbf{Total Time}: ~56-87 minutes
+
+---
+
+\subsection{Key Files to Reference}
+
+\textbf{ai-town Repository}:
+
+\begin{itemize}
+\item \texttt{README.md} - Project overview
+\item \texttt{ARCHITECTURE.md} - Architecture documentation
+\item \texttt{convex/} - Backend functions (Convex)
+\item \texttt{src/} - Frontend code
+\item \texttt{data/characters.ts} - Character definitions
+\end{enumerate}
+
+\textbf{Generative Agents Paper}:
+
+\begin{itemize}
+\item \texttt{/Users/ctavolazzi/Code/active/waft/GenerativeAgents-Simulacra2304.03442v2.pdf}
+\end{itemize}
+
+\textbf{WAFT Context}:
+
+\begin{itemize}
+\item \texttt{\textit{work}efforts/AI\textit{ORIENTATION}RECAP.md} - WAFT overview
+\item \texttt{README.md} - WAFT documentation
+\item \texttt{docs/} - WAFT documentation
+\end{enumerate}
+
+---
+
+\subsection{Success Criteria}
+
+\textbf{Measurable Outcomes}:
+
+\begin{enumerate}
+\item ✅ \textbf{Town Formed}:
+\end{enumerate}
+
+                                                                                                                                                                                                - 3-5 Beings spawned into town reality
+                                                                                                                                                                                                - Each Being has unique skills and focus area
+                                                                                                                                                                                                - Town reality created and active
+                                                                                                                                                                                                - Town roster documented
+
+\begin{enumerate}
+\item ✅ \textbf{Distributed Analysis Complete}:
+\end{enumerate}
+
+                                                                                                                                                                                                - Each Being completed their analysis aspect
+                                                                                                                                                                                                - All aspects covered (architecture, algorithms, paper, integration, synthesis)
+                                                                                                                                                                                                - Findings shared in town reality
+                                                                                                                                                                                                - Individual Being analyses documented
+
+\begin{enumerate}
+\item ✅ \textbf{Voting Completed}:
+\end{enumerate}
+
+                                                                                                                                                                                                - All key decisions voted on
+                                                                                                                                                                                                - Vote records documented (including selection process)
+                                                                                                                                                                                                - Town consensus reached on PDF format (binder vs single PDF) ⭐ \textbf{Town's Choice}
+                                                                                                                                                                                                - Town consensus reached on priorities and next steps
+
+\begin{enumerate}
+\item ✅ \textbf{Collaborative Output Generated}:
+\end{enumerate}
+
+                                                                                                                                                                                                - PDF/binder created based on town vote
+                                                                                                                                                                                                - All Being contributions included
+                                                                                                                                                                                                - Town voting records included
+                                                                                                                                                                                                - Output printed (town's choice)
+                                                                                                                                                                                                - Format matches town's vote (binder or single PDF)
+
+\begin{enumerate}
+\item ✅ \textbf{Town Reflection Complete}:
+\end{enumerate}
+
+                                                                                                                                                                                                - Each Being reflected on experience
+                                                                                                                                                                                                - Town synthesis created
+                                                                                                                                                                                                - Learnings flowed back to Source
+                                                                                                                                                                                                - Town evolution documented
+
+\begin{enumerate}
+\item ✅ \textbf{All Findings Documented}:
+\end{enumerate}
+
+                                                                                                                                                                                                - Individual Being analyses documented
+                                                                                                                                                                                                - Town voting records preserved
+                                                                                                                                                                                                - Town output generated
+                                                                                                                                                                                                - Genetic lineage for each Being tracked
+                                                                                                                                                                                                - Town work effort structure complete
+
+\textbf{Quality Metrics}:
+
+\begin{itemize}
+\item \textbf{Town Participation}: All Beings participated in analysis (or documented why not)
+\item \textbf{Voting Participation}: Voting records show who was selected to vote and who was not selected
+\item \textbf{Democratic Process}: Majority vote determined outcomes, ties broken by Oracle
+\item \textbf{Collaborative Quality}: All Being contributions included in final output
+\item \textbf{Coverage}: All major components analyzed across Beings
+\item \textbf{Depth}: Algorithms and patterns extracted, not just surface-level
+\item \textbf{Evidence}: Every claim has verification trace
+\item \textbf{Completeness}: All phases executed (or documented why skipped)
+\item \textbf{Usability}: Outputs organized in town work effort structure
+\end{enumerate}
+
+---
+
+\subsection{Estimated Time}
+
+\textbf{AI Town Workflow Estimates}:
+
+\begin{itemize}
+\item Phase 1: ~3-5 minutes (town formation)
+\item Phase 2: ~20-40 minutes (distributed analysis - parallel, longest Being determines time)
+\item Phase 3: ~5-10 minutes (town voting)
+\item Phase 4: ~5-10 minutes (collaborative output generation)
+\item Phase 5: ~3-5 minutes (town reflection)
+\item Phase 6: ~1 minute (final Oracle)
+\end{enumerate}
+
+\textbf{Total Time}:
+
+\begin{itemize}
+\item \textbf{Standard (3-5 Beings)}: ~37-71 minutes
+\item \textbf{Quick (3 Beings, fast analysis)}: ~20-35 minutes
+\item \textbf{Deep (5 Beings, comprehensive analysis)}: ~50-90 minutes
+\item \textbf{Large Town (7-10 Beings)}: ~56-87 minutes
+\end{enumerate}
+
+---
+
+\subsection{Key Features of AI Town Design}
+
+\begin{enumerate}
+\item \textbf{AI Town Democracy}: Multiple Beings (3-5) work together democratically
+\item \textbf{Distributed Analysis}: Each Being specializes in different aspects (architecture, algorithms, paper, integration, synthesis)
+\item \textbf{Voting System}: Command randomly selects some Beings to vote (mostly at random, weighted by relevance)
+\item \textbf{Town Choice}: Town votes on PDF format (binder vs single PDF) - majority wins
+\item \textbf{Collaborative Output}: All Beings contribute sections to final PDF/binder
+\item \textbf{Being Autonomy}: Each Being chooses whether to vote, what to analyze, how to contribute
+\item \textbf{Parallel Execution}: Beings analyze in parallel for efficiency
+\item \textbf{Town Reality}: All Beings exist in shared reality for collaboration
+\item \textbf{Genetic Lineage}: Each Being's analysis tracked with individual lineage
+\item \textbf{Town Synthesis}: Individual reflections synthesized into town learnings
+\item \textbf{Democratic Process}: Majority vote determines decisions, ties broken by Oracle
+\item \textbf{Voting Transparency}: All votes and selection process documented (which Beings selected, which not)
+\item \textbf{Work Effort Integration}: Automatic work effort creation with town structure
+\item \textbf{Implementation Details}: Clear guidelines for AI execution, voting system, and edge cases
+\item \textbf{Validation Checklists}: Pre-execution and post-execution validation to ensure quality
+\item \textbf{Measurable Success Criteria}: Specific, measurable outcomes for town process
+\end{enumerate}
+
+\subsection{Implementation Details}
+
+\subsubsection{Repository & Paper Specification}
+
+\textbf{How to Specify}:
+
+\begin{itemize}
+\item \textbf{Repository}: From conversation context (e.g., "https://github.com/ctavolazzi/ai-town.git") or user input
+\item \textbf{Paper}: From conversation context (e.g., file path) or user input
+\item \textbf{Default Behavior}: If not specified, prompt user or infer from conversation context
+\end{enumerate}
+
+\textbf{Repository Formats Accepted}:
+
+\begin{itemize}
+\item GitHub URL: \texttt{https://github.com/owner/repo.git}
+\item Owner/Repo: \texttt{owner/repo}
+\item Full path: \texttt{/path/to/local/repo}
+\end{enumerate}
+
+\textbf{Paper Formats Accepted}:
+
+\begin{itemize}
+\item File path: \texttt{/path/to/paper.pdf}
+\item Relative path: \texttt{paper.pdf} (searched in current directory and common locations)
+\item URL: \texttt{https://example.com/paper.pdf} (download first)
+\end{enumerate}
+
+\subsubsection{Work Effort Integration}
+
+\textbf{Automatic Work Effort Creation}:
+
+\begin{itemize}
+\item Creates work effort in \texttt{\textit{work}efforts/} with Johnny Decimal structure
+\item Work effort ID format: \texttt{WE-YYMMDD-[hash]\textit{[repository]}analysis}
+\item All outputs organized within work effort directory
+\item Links to related work efforts if found
+\end{enumerate}
+
+\textbf{Work Effort Structure}:
+
+\begin{verbatim}
+\textit{work}efforts/WE-YYMMDD-[hash]\textit{[repo]}analysis/
+├── 00.00_index.md
+├── 00.01\textit{analysis}summary.md
+├── 00.02\textit{integration}opportunities.md
+├── CONTEXT\textit{YYYY-MM-DD}HHMMSS.md
+├── CHECKPOINT\textit{YYYY-MM-DD}[REPO]_ANALYSIS.md
+└── [other outputs from /run-it]
+
+\end{verbatim}
+
+\subsubsection{Error Handling & Edge Cases}
+
+\textbf{Missing Repository}:
+
+\begin{itemize}
+\item If repository URL invalid or inaccessible:
+\end{itemize}
+
+                                                                                                                                1. Document error
+                                                                                                                                2. Ask user for correct repository
+                                                                                                                                3. Continue with paper analysis if available
+                                                                                                                                4. Skip repository-specific phases
+
+\textbf{Missing Paper}:
+
+\begin{itemize}
+\item If paper file not found:
+\end{itemize}
+
+                                                                                                                                1. Document error
+                                                                                                                                2. Ask user for paper location
+                                                                                                                                3. Continue with repository analysis
+                                                                                                                                4. Skip paper comparison in \texttt{/deep-analyze}
+
+\textbf{Phase Failures}:
+
+\begin{itemize}
+\item \textbf{Critical Phases} (Phase 1, Phase 2 start): Stop and ask user
+\item \textbf{Non-Critical Phases}: Document failure, continue with available phases
+\item \textbf{Partial Failures}: Document what succeeded, what failed, suggest remediation
+\end{enumerate}
+
+\textbf{Network/API Issues}:
+
+\begin{itemize}
+\item If GitHub API unavailable: Use local clone if available, or document limitation
+\item If Empirica unavailable: Continue without epistemic tracking, document limitation
+\item If PDF generation fails: Create markdown summary instead
+\end{enumerate}
+
+\subsubsection{Default Behavior}
+
+\textbf{When No Repository/Paper Specified}:
+
+\begin{enumerate}
+\item Check conversation context for mentions
+\item Check for recent files (PDFs, git repos)
+\item Prompt user: "Which repository and paper should I analyze?"
+\item Wait for user input before proceeding
+\end{enumerate}
+
+\textbf{When Quick Mode Requested}:
+
+\begin{itemize}
+\item Skip Phase 3 (\texttt{/evolve})
+\item Use \texttt{/run-it --quick} instead of full \texttt{/run-it}
+\item Skip Phase 4 PDF generation (or generate minimal summary)
+\item Focus on essential analysis only
+\end{enumerate}
+
+\textbf{When Integration Focus Requested}:
+
+\begin{itemize}
+\item Emphasize Phase 3 (\texttt{/evolve})
+\item Focus \texttt{/run-it} on integration patterns
+\item Generate integration-specific PDF
+\item Oracle question focuses on integration next steps
+\end{enumerate}
+
+\subsubsection{Output Organization}
+
+\textbf{Town Work Effort Structure}:
+
+\begin{verbatim}
+\textit{work}efforts/WE-YYMMDD-[hash]\textit{[repo]}town_analysis/
+├── 00.00_index.md                    # Town work effort index
+├── 00.01\textit{town}roster.md              # List of all Beings in town
+├── 00.02\textit{town}voting_records.md      # All voting records
+├── 00.03\textit{town}consensus.md           # Town decisions and consensus
+├── being\textit{001}analysis/                # Being 1's individual analysis
+│   ├── architecture_analysis.md
+│   └── patterns_catalog.md
+├── being\textit{002}analysis/               # Being 2's individual analysis
+│   ├── algorithms_extracted.md
+│   └── data_structures.md
+├── being\textit{003}analysis/                # Being 3's individual analysis
+│   ├── paper_analysis.md
+│   └── comparison_matrix.md
+├── being\textit{004}analysis/                # Being 4's individual analysis
+│   ├── integration_opportunities.md
+│   └── waft\textit{integration}plan.md
+├── being\textit{005}analysis/                # Being 5's individual analysis
+│   ├── executive_summary.md
+│   └── synthesis.md
+├── town_output/                       # Town's collective output
+│   ├── [REPO]\textit{TOWN}ANALYSIS_BINDER/  # If binder chosen (town's choice)
+│   │   ├── 00_index.pdf
+│   │   ├── 01_architecture.pdf
+│   │   ├── 02_algorithms.pdf
+│   │   ├── 03\textit{paper}comparison.pdf
+│   │   ├── 04_integration.pdf
+│   │   └── 05_synthesis.pdf
+│   └── [REPO]\textit{TOWN}ANALYSIS.pdf      # If single PDF chosen (town's choice)
+└── town_reflections/                  # Town's collective reflections
+    ├── being\textit{001}reflection.md
+    ├── being\textit{002}reflection.md
+    ├── being\textit{003}reflection.md
+    ├── being\textit{004}reflection.md
+    ├── being\textit{005}reflection.md
+    └── town_synthesis.md
+
+\end{verbatim}
+
+\textbf{Additional Outputs}:
+
+\begin{itemize}
+\item Individual Being journal entries: \texttt{_pyrite/journal/ai-journal.md} (appended)
+\item Individual Being hypothesis files: \texttt{\textit{pyrite/hypothesis/YYYY-MM-DD}*.md}
+\item Individual Being verification traces: \texttt{_pyrite/standards/verification/traces/}
+\item Being records: \texttt{\textit{pyrite/active/BEING}\textit{.md}, \texttt{GENETIC\textit{LINEAGE}}.md}
+\end{enumerate}
+
+\textbf{PDF Output} (Town's Choice):
+
+\begin{itemize}
+\item \textbf{If binder chosen}: Multiple PDFs in \texttt{town\textit{output/[REPO]}TOWN\textit{ANALYSIS}BINDER/}
+\item \textbf{If single PDF chosen}: One PDF \texttt{town\textit{output/[REPO]}TOWN_ANALYSIS.pdf}
+\item Generated in town work effort directory
+\item Also printed to default printer (town's choice)
+\item Format determined by town vote (majority wins)
+\end{enumerate}
+
+\subsection{Validation Checklists}
+
+\subsubsection{Pre-Execution Validation}
+
+\textbf{Before starting, verify}:
+
+\begin{itemize}
+\item [ ] Repository URL or path identified (from conversation or user input)
+\item [ ] Paper file path identified (from conversation or user input)
+\item [ ] Town work effort directory can be created
+\item [ ] BeingSystem can spawn Beings (check BeingSystem availability)
+\item [ ] RealitySystem can create realities (check RealitySystem availability)
+\item [ ] User has time for selected execution path (standard/quick/large town)
+\item [ ] Required tools available (GitHub API access, PDF reading, etc.)
+\end{enumerate}
+
+\textbf{If any check fails}: Document limitation, ask user, or adapt workflow accordingly.
+
+\subsubsection{Post-Execution Validation}
+
+\textbf{After completion, verify}:
+
+\begin{itemize}
+\item [ ] Town work effort created with all outputs organized
+\item [ ] Town roster documented (all Beings with IDs and skills)
+\item [ ] All Beings completed their analysis aspects
+\item [ ] Town voting records documented (all votes including selection process)
+\item [ ] Town consensus reached on PDF format (binder vs single PDF) ⭐ \textbf{Town's Choice}
+\item [ ] PDF/binder generated based on town vote
+\item [ ] All Being contributions included in final output
+\item [ ] Individual Being analyses documented in subdirectories
+\item [ ] Town synthesis created from individual reflections
+\item [ ] Genetic lineage tracked for each Being
+\item [ ] Town voting records included in output
+\item [ ] Output printed (town's choice)
+\item [ ] All outputs linked in town work effort index
+\end{enumerate}
+
+\textbf{If any check fails}: Document what's missing, suggest remediation, note in final summary.
+
+\subsection{Voting System Implementation}
+
+\subsubsection{Voting Mechanics}
+
+\textbf{Vote Types}:
+
+\begin{itemize}
+\item \textbf{Binary}: Yes/No, Option A/Option B (e.g., binder vs single PDF)
+\item \textbf{Multiple Choice}: Option A/B/C/D (e.g., output style)
+\item \textbf{Ranked}: Rank options 1-3 (e.g., top integration opportunities)
+\item \textbf{Weighted}: Assign weights to options (optional, for skill-based weighting)
+\end{enumerate}
+
+\textbf{Voting Process}:
+
+\begin{enumerate}
+\item \textbf{Command randomly selects some Beings} (mostly at random) to participate in voting
+\item Selection is weighted slightly by relevance (e.g., Being with integration skills more likely selected for integration decisions)
+\item Selection size: Typically 50-70% of town (e.g., 2-3 Beings from 5, or 3-4 from 7)
+\item Present decision and options to selected Beings only
+\item Selected Beings vote (with reasoning)
+\item Other Beings are not asked (they don't participate in this vote)
+\item Collect votes from selected Beings
+\item Calculate results:
+\end{enumerate}
+
+                                                - Count votes (from selected Beings only)
+                                                - Majority vote wins
+                                                - If tie: Oracle breaks tie
+
+\begin{enumerate}
+\item Document all votes and selection process
+\end{enumerate}
+
+\textbf{Selection Documentation}:
+
+\begin{itemize}
+\item Which Beings were selected (and why - relevance weighting)
+\item Which Beings were not selected (not asked to vote)
+\item Selection method documented for transparency
+\item All votes preserved for transparency
+\end{enumerate}
+
+\subsubsection{Voting System Code Structure}
+
+\textbf{Implementation Location}: Can be added to \texttt{src/waft/core/town_voting.py} (new file)
+
+\textbf{Key Classes}:
+
+\begin{verbatim}
+class TownVotingSystem:
+    """
+    Voting system for AI town decisions.
+
+    Handles:
+ - Presenting decisions to Beings
+ - Collecting votes from selected Beings only
+ - Calculating results (majority wins, ties broken by Oracle)
+ - Documenting all votes for transparency
+    """
+
+    def collect_vote(
+        self,
+        being: Being,
+        decision_id: str,
+        question: str,
+        options: List[str]
+    ) -> Dict[str, Any]:
+        """
+        Collect vote from a selected Being.
+        
+        Returns:
+            Vote record with being_id, vote choice, reasoning, selected status
+        """
+        # Being was selected - collect their vote
+        vote\textit{choice = self.}get\textit{being}vote(being, question, options)
+        reasoning = self.\textit{get}being\textit{reasoning(being, vote}choice)
+        
+        return {
+            "being\textit{id": being.being}id,
+            "vote": vote_choice,
+            "reasoning": reasoning,
+            "selected": True
+        }
+
+    def conduct\textit{town}vote(
+        self,
+        town_beings: List[Being],
+        decision_id: str,
+        question: str,
+        options: List[str],
+        oracle: Optional[Any] = None
+    ) -> Dict[str, Any]:
+        """
+        Conduct a town vote on a decision.
+
+        Returns:
+            Complete voting record with results
+        """
+        votes = []
+        for being in town_beings:
+            vote = self.collect\textit{vote(being, decision}id, question, options)
+            votes.append(vote)
+
+        results = self.calculate_results(votes)
+
+        # Break tie with Oracle if needed
+        if results["is_tie"] and oracle:
+            results["result"] = oracle.break_tie(question, options, votes)
+            results["tie\textit{broken}by"] = "oracle"
+
+        return {
+            "decision\textit{id": decision}id,
+            "question": question,
+            "options": options,
+            "votes": votes,
+            "result": results["result"],
+            "vote\textit{count": results["vote}counts"],
+            "non\textit{selected}beings": [b.being\textit{id for b in non}selected_beings],
+            "total\textit{votes": results["total}votes"],
+            "is\textit{tie": results["is}tie"],
+            "tie\textit{broken}by": results.get("tie\textit{broken}by")
+        }
+
+    def calculate_results(
+        self,
+        votes: List[Dict[str, Any]]
+    ) -> Dict[str, Any]:
+        """
+        Calculate voting results.
+
+        Returns:
+            Result with winning option, vote counts, tie status
+        """
+        vote_counts = {}
+        for vote in votes:
+            choice = vote["vote"]
+            vote\textit{counts[choice] = vote}counts.get(choice, 0) + 1
+
+        # Find winner (majority)
+        if vote_counts:
+            winner = max(vote_counts.items(), key=lambda x: x[1])
+            is\textit{tie = list(vote}counts.values()).count(winner[1]) > 1
+
+            return {
+                "result": winner[0] if not is_tie else None,
+                "vote\textit{counts": vote}counts,
+                "is\textit{tie": is}tie,
+                "total_votes": len(votes)
+            }
+
+        return {
+            "result": None,
+            "vote_counts": {},
+            "is_tie": False,
+            "total_votes": 0
+        }
+
+\end{verbatim}
+
+\subsubsection{Key Decisions the Town Votes On}
+
+\begin{enumerate}
+\item \textbf{PDF Format} ⭐ \textbf{Town's Choice}:
+\end{enumerate}
+
+                                                                                                                                                                                                - Option A: Binder (multiple PDFs with index)
+                                                - Option B: Single PDF (one comprehensive document)
+                                                - \textbf{This is the town's choice} - selected Beings vote, majority determines format
+                                                - \textbf{Selection}: Random, slightly weighted toward Beings with documentation/synthesis skills
+                                                - \textbf{Critical Decision}: This determines how the final output is structured
+
+\begin{enumerate}
+\item \textbf{Top Integration Opportunities}:
+\end{enumerate}
+
+                                                                                                                                                                                                - Rank top 3 opportunities (ranked choice voting)
+                                                - \textbf{Selection}: Random, slightly weighted toward Being 4 (integration specialist)
+                                                - Selected Beings rank their top 3
+                                                - Town consensus on priorities
+
+\begin{enumerate}
+\item \textbf{Next Steps Priority}:
+\end{enumerate}
+
+                                                                                                                                                                                                - What should be done next?
+                                                - \textbf{Selection}: Random, slightly weighted toward all Beings (all perspectives valuable)
+                                                - Multiple choice from Being suggestions
+                                                - Selected Beings vote, town decides priority
+
+\begin{enumerate}
+\item \textbf{Section Inclusion}:
+\end{enumerate}
+
+                                                                                                                                                                                                - What sections to include in output?
+                                                                                                                                                                                                - Multiple choice (architecture, algorithms, paper, integration, synthesis, voting records, etc.)
+                                                                                                                                                                                                - Town decides what's included
+
+\begin{enumerate}
+\item \textbf{Output Style}:
+\end{enumerate}
+
+                                                                                                                                                                                                - Academic, technical, executive summary, field guide, etc.
+                                                                                                                                                                                                - Town decides presentation style
+
+---
+
+\subsection{Notes}
+
+\begin{itemize}
+\item \textbf{AI Town}: This is a democratic AI town, not just individual analysis
+\item \textbf{Random Selection}: Command randomly selects some Beings to vote (mostly at random, weighted by relevance)
+\item \textbf{Not All Beings Vote}: Only selected Beings participate in each vote - other Beings are not asked
+\item \textbf{Town Choice}: Selected Beings vote on PDF format (binder vs single PDF) - majority wins
+\item \textbf{Distributed Work}: Analysis happens in parallel across Beings for efficiency
+\item \textbf{Collaborative Output}: All Beings contribute to final PDF/binder
+\item \textbf{Voting Transparency}: All votes and selection process documented (which Beings selected, which not)
+\item \textbf{Town Reality}: All Beings exist in shared reality for collaboration
+\item \textbf{Genetic Lineage}: Each Being's analysis tracked with individual lineage
+\item \textbf{Town Synthesis}: Individual reflections synthesized into town learnings
+\item \textbf{Context-Aware}: Repository and paper inferred from conversation or explicitly specified
+\item \textbf{Graceful Degradation}: Continues with available phases even if some fail
+\item \textbf{Validation Checklists}: Pre-execution and post-execution validation ensure quality
+\end{enumerate}
+
+---
+
+\subsection{AI Execution Guidelines for Town Approach}
+
+\textbf{When executing this command as AI:}
+
+\begin{enumerate}
+\item \textbf{Town Formation}:
+\end{enumerate}
+
+                                                                                                                                                                                                - Spawn 3-5 Beings (default: 5 for diverse perspectives)
+                                                                                                                                                                                                - Each Being with unique skills matching their role
+                                                                                                                                                                                                - Create town reality before spawning
+                                                                                                                                                                                                - Document town roster immediately
+
+\begin{enumerate}
+\item \textbf{Distributed Analysis}:
+\end{enumerate}
+
+                                                                                                                                                                                                - Assign clear tasks to each Being
+                                                                                                                                                                                                - Run Being analyses in parallel when possible
+                                                                                                                                                                                                - Each Being works in their own subdirectory
+                                                                                                                                                                                                - Beings share findings via town reality
+
+\begin{enumerate}
+\item \textbf{Voting Process}:
+\end{enumerate}
+
+                                                                                                                                                                                                - \textbf{For each decision}:
+                                                                                                                                                                                                                                                                                                                                - Present decision clearly to each Being
+                                                                                                                                                                                                                                                                                                                                - \textbf{Command randomly selects some Beings} (mostly at random, weighted by relevance)
+                                                                                                                                                                                                                                                                                                                                - Present decision clearly to selected Beings only
+                                                                                                                                                                                                                                                                                                                                - Selected Beings vote (with reasoning)
+                                                                                                                                                                                                                                                                                                                                - Other Beings are not asked (they don't participate in this vote)
+                                                                                                                                                                                                - \textbf{After all votes collected}:
+                                                                                                                                                                                                                                                                                                                                - Calculate results (majority wins from selected Beings)
+                                                                                                                                                                                                                                                                                                                                - If tie: Consult Oracle to break tie
+                                                                                                                                                                                                                                                                                                                                - Document all votes and selection process (which Beings selected, which not)
+
+\begin{enumerate}
+\item \textbf{PDF Format Decision} (Town's Choice):
+\end{enumerate}
+
+                                                                                                                                                                                                - This is the \textbf{critical vote} - town decides binder vs single PDF
+                                                                                                                                                                                                - Present both options clearly
+                                                                                                                                                                                                - Collect votes from selected Beings only
+                                                                                                                                                                                                - Majority vote determines format
+                                                                                                                                                                                                - Document town's choice prominently
+
+\begin{enumerate}
+\item \textbf{Collaborative Output}:
+\end{enumerate}
+
+                                                                                                                                                                                                - Based on town vote (binder or single PDF)
+                                                                                                                                                                                                - Each Being contributes their section
+                                                                                                                                                                                                - Combine all contributions
+                                                                                                                                                                                                - Include town voting records
+                                                                                                                                                                                                - Print output (town's choice)
+
+\begin{enumerate}
+\item \textbf{Town Reflection}:
+\end{enumerate}
+
+                                                                                                                                                                                                - Each Being reflects individually
+                                                                                                                                                                                                - Synthesize into town learnings
+                                                                                                                                                                                                - Document town evolution
+
+\begin{enumerate}
+\item \textbf{Progress Updates}:
+\end{enumerate}
+
+                                                                                                                                                                                                - Show which phase is executing
+                                                                                                                                                                                                - Show Being participation: "Being 1 analyzing architecture..."
+                                                                                                                                                                                                - Show voting results as they happen: "Town voted: binder (3 votes) vs single PDF (2 votes)"
+                                                                                                                                                                                                - Highlight town consensus: "Town consensus: Binder format chosen"
+
+\textbf{Key Principles}:
+
+\begin{itemize}
+\item \textbf{Random Selection}: Command randomly selects some Beings to vote (mostly at random)
+\item \textbf{Relevance Weighting}: Selection slightly weighted by relevance (but still mostly random)
+\item \textbf{Town Democracy}: Majority vote wins (from selected Beings), ties broken by Oracle
+\item \textbf{Town Choice}: Selected Beings vote on PDF format - majority wins
+\item \textbf{Transparency}: All votes and selection process documented (which Beings selected, which not)
+\item \textbf{Collaboration}: All Beings contribute to final output (even if not selected for voting)
+\end{itemize}
+
+
+\backmatter
+
+\chapter*{Index of Plans}
+\begin{itemize}
+\item \textbf{70's/80's Retro-Modern Visual Overhaul}
+  \textit{(70s\textbackslash{}_retro\textbackslash{}_visual\textbackslash{}_overhaul\textbackslash{}_74b53ff1.plan.md)}
+\item \textbf{70's/80's Retro-Modern Visual Overhaul}
+  \textit{(\textbackslash{}_organized\textbackslash{}_constellation/\textbackslash{}_originals\textbackslash{}_backup/70s\textbackslash{}_retro\textbackslash{}_visual\textbackslash{}_overhaul\textbackslash{}_74b53ff1.plan.md)}
+\item \textbf{Achievements System Enhancement Plan}
+  \textit{(\textbackslash{}_organized\textbackslash{}_constellation/\textbackslash{}_originals\textbackslash{}_backup/achievements\textbackslash{}_system\textbackslash{}_enhancement\textbackslash{}_feaa2ee4.plan.md)}
+\item \textbf{Adapti}
+  \textit{(\textbackslash{}_organized\textbackslash{}_constellation/\textbackslash{}_originals\textbackslash{}_backup/adaptive\textbackslash{}_core\textbackslash{}_architecture\textbackslash{}_-\textbackslash{}_simple\textbackslash{}_to\textbackslash{}_complex\textbackslash{}_scaling\textbackslash{}_7133a722.plan.md)}
+\item \textbf{Add webdev-mcp MCP Server Globally}
+  \textit{(\textbackslash{}_organized\textbackslash{}_constellation/\textbackslash{}_originals\textbackslash{}_backup/add\textbackslash{}_webdev-mcp\textbackslash{}_globally\textbackslash{}_69eb4bfe.plan.md)}
+\item \textbf{Add Wiki Page to CFL Site}
+  \textit{(\textbackslash{}_organized\textbackslash{}_constellation/\textbackslash{}_originals\textbackslash{}_backup/add\textbackslash{}_wiki\textbackslash{}_page\textbackslash{}_b12dfe7a.plan.md)}
+\item \textbf{Advanced PDF Creator Safe Installation and Testing Plan}
+  \textit{(\textbackslash{}_organized\textbackslash{}_constellation/\textbackslash{}_originals\textbackslash{}_backup/advanced\textbackslash{}_pdf\textbackslash{}_creator\textbackslash{}_safe\textbackslash{}_installation\textbackslash{}_and\textbackslash{}_testing\textbackslash{}_f226dbca.plan.md)}
+\item \textbf{Agent Interface Implementation Plan}
+  \textit{(\textbackslash{}_organized\textbackslash{}_constellation/\textbackslash{}_originals\textbackslash{}_backup/agent\textbackslash{}_interface\textbackslash{}_implementation\textbackslash{}_1cb61762.plan.md)}
+\item \textbf{AI-Scientist Integration Study Plan}
+  \textit{(\textbackslash{}_organized\textbackslash{}_constellation/\textbackslash{}_originals\textbackslash{}_backup/ai-scientist\textbackslash{}_integration\textbackslash{}_study\textbackslash{}_fc13594f.plan.md)}
+\item \textbf{AI-Town Comprehensive Analysis Workflow Plan (Final - AI Town Version)}
+  \textit{(\textbackslash{}_organized\textbackslash{}_constellation/\textbackslash{}_originals\textbackslash{}_backup/ai-town\textbackslash{}_comprehensive\textbackslash{}_analysis\textbackslash{}_workflow\textbackslash{}_67b64354.plan.md)}
+\end{itemize}
+
+\end{document}

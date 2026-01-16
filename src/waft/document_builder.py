@@ -547,8 +547,9 @@ class DocumentBuilder:
         if not output_path:
             output_path = Path(f"{self.config.title.lower().replace(' ', '_')}.pdf")
         
-        output_path = Path(output_path)
-        output_path.parent.mkdir(parents=True, exist_ok=True)
+        # Use storage path resolver to route to external drive if available
+        from ..utils import resolve_output_path
+        output_path = resolve_output_path(Path(output_path))
         
         # Get template using registry
         template_str = self._get_template()
@@ -570,6 +571,35 @@ class DocumentBuilder:
             process_pdf_for_blank_pages(output_path)
         except Exception as e:
             print(f"⚠️  Blank page marker processing failed: {e}")
+        
+        # Register in storage registry
+        try:
+            from ..utils import StorageRegistry, is_inside_waft_project, classify_content_type
+            project_path = None
+            # Try to find project path
+            if output_path.is_absolute():
+                is_inside, proj_path = is_inside_waft_project(output_path)
+                if is_inside and proj_path:
+                    project_path = proj_path
+            if project_path is None:
+                project_path = Path.cwd()
+            
+            registry = StorageRegistry(project_path)
+            # Get relative path for registry
+            try:
+                rel_path = output_path.relative_to(project_path)
+            except ValueError:
+                rel_path = Path(output_path.name)
+            
+            content_type = classify_content_type(rel_path)
+            registry.register(
+                str(rel_path),
+                str(output_path),
+                content_type
+            )
+        except Exception as e:
+            # Non-critical, just log
+            pass
         
         self._generated_path = output_path
         return output_path

@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Control & The Village Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #4a9eff 0%, #00d4ff 50%, #7bff7b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #a0a0a0;
+            font-size: 1.1em;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .panel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .panel-icon {
+            font-size: 2.5em;
+            margin-right: 15px;
+        }
+
+        .mission-control .panel-icon {
+            color: #4a9eff;
+        }
+
+        .village .panel-icon {
+            color: #7bff7b;
+        }
+
+        .panel-title {
+            font-size: 1.8em;
+            font-weight: 600;
+        }
+
+        .mission-control .panel-title {
+            color: #4a9eff;
+        }
+
+        .village .panel-title {
+            color: #7bff7b;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .mission-control .stat-value {
+            color: #4a9eff;
+        }
+
+        .village .stat-value {
+            color: #7bff7b;
+        }
+
+        .stat-label {
+            color: #a0a0a0;
+            font-size: 0.9em;
+        }
+
+        .mission-list, .gathering-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .mission-item, .gathering-item {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid;
+            transition: background 0.3s ease;
+        }
+
+        .mission-item {
+            border-left-color: #4a9eff;
+        }
+
+        .gathering-item {
+            border-left-color: #7bff7b;
+        }
+
+        .mission-item:hover, .gathering-item:hover {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .item-id {
+            font-family: 'Courier New', monospace;
+            color: #a0a0a0;
+            font-size: 0.9em;
+        }
+
+        .item-status {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .status-monitoring {
+            background: rgba(74, 158, 255, 0.2);
+            color: #4a9eff;
+        }
+
+        .status-active {
+            background: rgba(123, 255, 123, 0.2);
+            color: #7bff7b;
+        }
+
+        .status-critical {
+            background: rgba(255, 100, 100, 0.2);
+            color: #ff6464;
+        }
+
+        .item-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .item-meta {
+            color: #a0a0a0;
+            font-size: 0.9em;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .mission-control .progress-fill {
+            background: linear-gradient(90deg, #4a9eff, #00d4ff);
+        }
+
+        .village .progress-fill {
+            background: linear-gradient(90deg, #7bff7b, #00ff88);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .empty-state-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .command-section {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .command-input {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .command-input input {
+            flex: 1;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .command-input button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #4a9eff, #00d4ff);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .command-input button:hover {
+            transform: scale(1.05);
+        }
+
+        .insight-item {
+            background: rgba(123, 255, 123, 0.1);
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            border-left: 3px solid #7bff7b;
+            font-size: 0.95em;
+        }
+
+        .insight-contributor {
+            color: #7bff7b;
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 968px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Mission Control & The Village</h1>
+            <p class="subtitle">Inspired by Avatar & Fern Gully | Left Brain / Right Brain Coordination</p>
+        </header>
+
+        <div class="dashboard-grid">
+            <!-- Mission Control Panel -->
+            <div class="panel mission-control">
+                <div class="panel-header">
+                    <div class="panel-icon">🎯</div>
+                    <div class="panel-title">Mission Control</div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="missions-monitored">0</div>
+                        <div class="stat-label">Missions Monitored</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="active-commands">0</div>
+                        <div class="stat-label">Active Commands</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="active-alerts">0</div>
+                        <div class="stat-label">Active Alerts</div>
+                    </div>
+                </div>
+
+                <div class="mission-list" id="mission-list">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📡</div>
+                        <p>No missions currently being monitored</p>
+                        <p style="margin-top: 10px; font-size: 0.9em; color: #666;">
+                            Missions are automatically registered when created via Military Brass
+                        </p>
+                    </div>
+                </div>
+
+                <div class="command-section">
+                    <h3 style="margin-bottom: 15px; font-size: 1.1em;">Issue Command</h3>
+                    <div class="command-input">
+                        <input type="text" id="command-input" placeholder="mission_id command [params]" />
+                        <button onclick="issueCommand()">Send</button>
+                    </div>
+                    <p style="margin-top: 10px; font-size: 0.85em; color: #a0a0a0;">
+                        Commands: halt, resume, prioritize, update_status
+                    </p>
+                </div>
+            </div>
+
+            <!-- The Village Panel -->
+            <div class="panel village">
+                <div class="panel-header">
+                    <div class="panel-icon">🌳</div>
+                    <div class="panel-title">The Village</div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="active-gatherings">0</div>
+                        <div class="stat-label">Active Gatherings</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-connections">0</div>
+                        <div class="stat-label">Connections</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="shared-quests">0</div>
+                        <div class="stat-label">Shared Quests</div>
+                    </div>
+                </div>
+
+                <div class="gathering-list" id="gathering-list">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🌿</div>
+                        <p>No active gatherings in The Village</p>
+                        <p style="margin-top: 10px; font-size: 0.9em; color: #666;">
+                            Create a gathering to coordinate with the community
+                        </p>
+                    </div>
+                </div>
+
+                <div class="command-section">
+                    <h3 style="margin-bottom: 15px; font-size: 1.1em;">Create Gathering</h3>
+                    <div class="command-input">
+                        <input type="text" id="gathering-topic" placeholder="Gathering topic..." />
+                        <button onclick="createGathering()">Create</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load data from Mission Control and The Village
+        async function loadData() {
+            try {
+                // In a real implementation, these would be API calls
+                // For now, we'll use placeholder data
+                updateMissionControl({
+                    missions_monitored: 0,
+                    active_commands: 0,
+                    active_alerts: 0,
+                    missions: []
+                });
+
+                updateVillage({
+                    active_gatherings: 0,
+                    total_connections: 0,
+                    shared_quests: 0,
+                    gatherings: []
+                });
+            } catch (error) {
+                console.error('Error loading data:', error);
+            }
+        }
+
+        function updateMissionControl(data) {
+            document.getElementById('missions-monitored').textContent = data.missions_monitored || 0;
+            document.getElementById('active-commands').textContent = data.active_commands || 0;
+            document.getElementById('active-alerts').textContent = data.active_alerts || 0;
+
+            const missionList = document.getElementById('mission-list');
+            if (data.missions && data.missions.length > 0) {
+                missionList.innerHTML = data.missions.map(mission => `
+                    <div class="mission-item">
+                        <div class="item-header">
+                            <span class="item-id">${mission.mission_id}</span>
+                            <span class="item-status status-${mission.status}">${mission.status}</span>
+                        </div>
+                        <div class="item-title">${mission.name || 'Unnamed Mission'}</div>
+                        <div class="item-meta">Progress: ${(mission.progress * 100).toFixed(0)}%</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${mission.progress * 100}%"></div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function updateVillage(data) {
+            document.getElementById('active-gatherings').textContent = data.active_gatherings || 0;
+            document.getElementById('total-connections').textContent = data.total_connections || 0;
+            document.getElementById('shared-quests').textContent = data.shared_quests || 0;
+
+            const gatheringList = document.getElementById('gathering-list');
+            if (data.gatherings && data.gatherings.length > 0) {
+                gatheringList.innerHTML = data.gatherings.map(gathering => `
+                    <div class="gathering-item">
+                        <div class="item-header">
+                            <span class="item-id">${gathering.gathering_id}</span>
+                            <span class="item-status status-active">${gathering.status}</span>
+                        </div>
+                        <div class="item-title">${gathering.topic}</div>
+                        <div class="item-meta">${gathering.description}</div>
+                        ${gathering.insights && gathering.insights.length > 0 ? `
+                            <div style="margin-top: 15px;">
+                                <strong style="color: #7bff7b; font-size: 0.9em;">Insights:</strong>
+                                ${gathering.insights.map(insight => `
+                                    <div class="insight-item">
+                                        ${insight.insight}
+                                        <div class="insight-contributor">— ${insight.contributor || 'Unknown'}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                `).join('');
+            }
+        }
+
+        function issueCommand() {
+            const input = document.getElementById('command-input');
+            const command = input.value.trim();
+            if (!command) return;
+
+            // In a real implementation, this would call the Mission Control API
+            alert(`Command issued: ${command}\n\nIn a real implementation, this would send the command to Mission Control.`);
+            input.value = '';
+        }
+
+        function createGathering() {
+            const input = document.getElementById('gathering-topic');
+            const topic = input.value.trim();
+            if (!topic) return;
+
+            // In a real implementation, this would call The Village API
+            alert(`Gathering created: ${topic}\n\nIn a real implementation, this would create a new gathering in The Village.`);
+            input.value = '';
+        }
+
+        // Load data on page load
+        loadData();
+
+        // Auto-refresh every 30 seconds
+        setInterval(loadData, 30000);
+    </script>
+</body>
+</html>

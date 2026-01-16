@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WAFT Projects Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-card .number {
+            font-size: 3em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .label {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .project-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .project-id {
+            font-size: 0.85em;
+            color: #999;
+            font-family: monospace;
+        }
+
+        .status-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-planning { background: #e3f2fd; color: #1976d2; }
+        .status-active { background: #e8f5e9; color: #388e3c; }
+        .status-paused { background: #fff3e0; color: #f57c00; }
+        .status-completed { background: #f3e5f5; color: #7b1fa2; }
+        .status-archived { background: #eceff1; color: #546e7a; }
+
+        .progress-bar-container {
+            margin: 15px 0;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .progress-bar {
+            height: 25px;
+            background: #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.85em;
+        }
+
+        .project-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .tag {
+            background: #f0f0f0;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            color: #666;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #666;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            color: #667eea;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 2em;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 1em;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .milestones-list {
+            margin-top: 20px;
+        }
+
+        .milestone-item {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .milestone-item.completed {
+            opacity: 0.6;
+        }
+
+        .refresh-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #667eea;
+            color: white;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+        }
+
+        .refresh-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: white;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌊 WAFT Projects Dashboard</h1>
+            <p>Long-Term Project Management System</p>
+        </div>
+
+        <div class="stats" id="stats">
+            <div class="stat-card">
+                <div class="number" id="total-projects">0</div>
+                <div class="label">Total Projects</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="active-projects">0</div>
+                <div class="label">Active Projects</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="avg-progress">0%</div>
+                <div class="label">Average Progress</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="total-milestones">0</div>
+                <div class="label">Total Milestones</div>
+            </div>
+        </div>
+
+        <div id="projects-container">
+            <div class="loading">Loading projects...</div>
+        </div>
+    </div>
+
+    <button class="refresh-btn" onclick="loadProjects()" title="Refresh">🔄</button>
+
+    <div class="modal" id="project-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Project Details</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script>
+        let projects = [];
+
+        async function loadProjects() {
+            try {
+                // Load from API
+                document.getElementById('projects-container').innerHTML = '<div class="loading">Loading projects...</div>';
+
+                try {
+                    const response = await fetch('/api/projects');
+                    if (response.ok) {
+                        projects = await response.json();
+                    } else {
+                        throw new Error('API request failed');
+                    }
+                } catch (apiError) {
+                    console.warn('API not available, using mock data:', apiError);
+                    // Fallback to mock data if API not available
+                    projects = [
+                    {
+                        project_id: "proj_20260116_112841",
+                        title: "Campaign Book Generation System",
+                        description: "Build comprehensive campaign book generation system with LaTeX templates",
+                        status: "active",
+                        progress_percent: 75.0,
+                        tags: ["campaign", "pdf", "dnd"],
+                        milestones: [
+                            { milestone_id: "m1", title: "Core Implementation", completed: true },
+                            { milestone_id: "m2", title: "Security Hardening", completed: true },
+                            { milestone_id: "m3", title: "CLI Integration", completed: false }
+                        ],
+                        created_at: "2026-01-16T11:28:41",
+                        updated_at: "2026-01-16T12:00:00",
+                        related_work_efforts: ["WE-260116-298w"]
+                    },
+                    {
+                        project_id: "proj_20260116_114724",
+                        title: "Projects Feature Implementation",
+                        description: "Long-term project management system with incremental work support",
+                        status: "completed",
+                        progress_percent: 100.0,
+                        tags: ["projects", "management", "cli"],
+                        milestones: [
+                            { milestone_id: "m1", title: "Core Module", completed: true },
+                            { milestone_id: "m2", title: "CLI Commands", completed: true },
+                            { milestone_id: "m3", title: "Security Measures", completed: true },
+                            { milestone_id: "m4", title: "Milestone Management", completed: true }
+                        ],
+                        created_at: "2026-01-16T11:47:24",
+                        updated_at: "2026-01-16T12:00:00",
+                        related_work_efforts: ["WE-260116-298w"]
+                    }
+                ];
+
+                renderProjects();
+                updateStats();
+            } catch (error) {
+                document.getElementById('projects-container').innerHTML =
+                    `<div class="loading" style="color: #ff4444;">Error loading projects: ${error.message}</div>`;
+            }
+        }
+
+        function renderProjects() {
+            const container = document.getElementById('projects-container');
+
+            if (projects.length === 0) {
+                container.innerHTML = '<div class="loading">No projects found. Create your first project!</div>';
+                return;
+            }
+
+            container.innerHTML = '<div class="projects-grid"></div>';
+            const grid = container.querySelector('.projects-grid');
+
+            projects.forEach(project => {
+                const card = document.createElement('div');
+                card.className = 'project-card';
+                card.onclick = () => showProjectDetails(project);
+
+                const completedMilestones = project.milestones.filter(m => m.completed).length;
+                const totalMilestones = project.milestones.length;
+
+                card.innerHTML = `
+                    <div class="project-header">
+                        <div>
+                            <div class="project-title">${escapeHtml(project.title)}</div>
+                            <div class="project-id">${project.project_id}</div>
+                        </div>
+                        <span class="status-badge status-${project.status}">${project.status}</span>
+                    </div>
+
+                    <div class="progress-bar-container">
+                        <div class="progress-label">
+                            <span>Progress</span>
+                            <span>${project.progress_percent.toFixed(1)}%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${project.progress_percent}%">
+                                ${project.progress_percent >= 10 ? project.progress_percent.toFixed(0) + '%' : ''}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="project-meta">
+                        <div class="meta-item">
+                            <span>📅</span>
+                            <span>${formatDate(project.created_at)}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span>🎯</span>
+                            <span>${completedMilestones}/${totalMilestones} milestones</span>
+                        </div>
+                    </div>
+
+                    ${project.tags.length > 0 ? `
+                        <div class="tags">
+                            ${project.tags.map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}
+                        </div>
+                    ` : ''}
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        function updateStats() {
+            const total = projects.length;
+            const active = projects.filter(p => p.status === 'active').length;
+            const avgProgress = projects.length > 0
+                ? (projects.reduce((sum, p) => sum + p.progress_percent, 0) / projects.length).toFixed(1) + '%'
+                : '0%';
+            const totalMilestones = projects.reduce((sum, p) => sum + p.milestones.length, 0);
+
+            document.getElementById('total-projects').textContent = total;
+            document.getElementById('active-projects').textContent = active;
+            document.getElementById('avg-progress').textContent = avgProgress;
+            document.getElementById('total-milestones').textContent = totalMilestones;
+        }
+
+        function showProjectDetails(project) {
+            const modal = document.getElementById('project-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalBody = document.getElementById('modal-body');
+
+            modalTitle.textContent = project.title;
+
+            const completedMilestones = project.milestones.filter(m => m.completed).length;
+
+            modalBody.innerHTML = `
+                <div class="form-group">
+                    <label>Project ID</label>
+                    <input type="text" value="${project.project_id}" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label>Status</label>
+                    <input type="text" value="${project.status}" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label>Progress</label>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${project.progress_percent}%">
+                            ${project.progress_percent.toFixed(1)}%
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea rows="4" readonly>${escapeHtml(project.description || 'No description')}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Tags</label>
+                    <div class="tags">
+                        ${project.tags.map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}
+                    </div>
+                </div>
+
+                <div class="milestones-list">
+                    <h3>Milestones (${completedMilestones}/${project.milestones.length} completed)</h3>
+                    ${project.milestones.map(m => `
+                        <div class="milestone-item ${m.completed ? 'completed' : ''}">
+                            <div>
+                                <strong>${escapeHtml(m.title)}</strong>
+                                ${m.description ? `<div style="font-size: 0.9em; color: #666; margin-top: 5px;">${escapeHtml(m.description)}</div>` : ''}
+                            </div>
+                            <span style="font-size: 1.5em;">${m.completed ? '✅' : '⏳'}</span>
+                        </div>
+                    `).join('')}
+                </div>
+
+                ${project.related_work_efforts.length > 0 ? `
+                    <div class="form-group">
+                        <label>Related Work Efforts</label>
+                        <div>
+                            ${project.related_work_efforts.map(we => `<span class="tag">${escapeHtml(we)}</span>`).join('')}
+                        </div>
+                    </div>
+                ` : ''}
+
+                <div class="form-group">
+                    <label>Created</label>
+                    <input type="text" value="${formatDate(project.created_at)}" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label>Last Updated</label>
+                    <input type="text" value="${formatDate(project.updated_at)}" readonly>
+                </div>
+            `;
+
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('project-modal').classList.remove('active');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+
+        // Close modal on outside click
+        document.getElementById('project-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'project-modal') {
+                closeModal();
+            }
+        });
+
+        // Load projects on page load
+        loadProjects();
+
+        // Auto-refresh every 30 seconds
+        setInterval(loadProjects, 30000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evolved UI - "Gemini AI-DnD Integration for D&D Campaign PDFs"</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #1e293b;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .header .subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        
+        .context-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #6366f1;
+            border-bottom: 2px solid #6366f1;
+            padding-bottom: 10px;
+        }
+        
+        .work-efforts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .work-effort-card {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .work-effort-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            border-color: #6366f1;
+        }
+        
+        .we-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 10px;
+        }
+        
+        .we-header h3 {
+            font-size: 18px;
+            color: #1e293b;
+            flex: 1;
+        }
+        
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .we-id {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 10px;
+            font-family: monospace;
+        }
+        
+        .we-description {
+            font-size: 14px;
+            color: #475569;
+            line-height: 1.6;
+        }
+        
+        .activity-list {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-icon {
+            font-size: 20px;
+            margin-right: 12px;
+        }
+        
+        .activity-file {
+            font-family: monospace;
+            font-size: 14px;
+            color: #1e293b;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .info-card {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .info-card .value {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .info-card .label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        @media (max-width: 768px) {
+            .work-efforts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎨 Evolved UI Dashboard</h1>
+            <div class="subtitle">Context-Aware Interface</div>
+            <div class="context-badge">Feature</div>
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <h2 class="section-title">Active Work Efforts</h2>
+                <div class="work-efforts-grid">
+                    
+        <div class="work-effort-card">
+            <div class="we-header">
+                <h3>"Gemini AI-DnD Integration for D&D Campaign PDFs"</h3>
+                <span class="status-badge" style="background: #6366f1">active</span>
+            </div>
+            <div class="we-id">WE-260115-weul</div>
+            <div class="we-description">---
+id: WE-260115-weul
+title: "Gemini AI-DnD Integration for D&D Campaign PDFs"
+status: active
+created: 2026-01-15T00:01:41.000Z
+created_by: ctavolazzi
+last_updated: 2026-01-15T00:01:41.000Z
+branch: f...</div>
+        </div>
+        
+        <div class="work-effort-card">
+            <div class="we-header">
+                <h3>"LaTeX Exam Template Study & Integration"</h3>
+                <span class="status-badge" style="background: #6366f1">active</span>
+            </div>
+            <div class="we-id">WE-260114-latex</div>
+            <div class="we-description">---
+id: WE-260114-latex
+title: "LaTeX Exam Template Study & Integration"
+status: active
+created: 2026-01-14T21:13:13.000Z
+created_by: ctavolazzi
+last_updated: 2026-01-14T21:13:13.000Z
+branch: feature/...</div>
+        </div>
+        
+        <div class="work-effort-card">
+            <div class="we-header">
+                <h3>"Voting System and TheCouncil Town Court System"</h3>
+                <span class="status-badge" style="background: #6366f1">active</span>
+            </div>
+            <div class="we-id">WE-260112-ccw3</div>
+            <div class="we-description">---
+id: WE-260112-ccw3
+title: "Voting System and TheCouncil Town Court System"
+status: active
+created: 2026-01-13T07:38:37.392Z
+created_by: ctavolazzi
+last_updated: 2026-01-13T09:21:37.352Z
+branch: fe...</div>
+        </div>
+        
+        <div class="work-effort-card">
+            <div class="we-header">
+                <h3>"RAG Chatbot Permanent Integration (Replaced Local-RAG)"</h3>
+                <span class="status-badge" style="background: #6366f1">active</span>
+            </div>
+            <div class="we-id">WE-260113-tya7</div>
+            <div class="we-description">---
+id: WE-260113-tya7
+title: "RAG Chatbot Permanent Integration (Replaced Local-RAG)"
+status: active
+created: 2026-01-13T17:35:16.482Z
+created_by: ctavolazzi
+last_updated: 2026-01-13T17:52:00.000Z
+br...</div>
+        </div>
+        
+        <div class="work-effort-card">
+            <div class="we-header">
+                <h3>"Critical Security & Portability Fixes"</h3>
+                <span class="status-badge" style="background: #8b5cf6">open</span>
+            </div>
+            <div class="we-id">WE-260109-sec1</div>
+            <div class="we-description">---
+id: WE-260109-sec1
+title: "Critical Security & Portability Fixes"
+status: open
+priority: CRITICAL
+created: 2026-01-09T00:00:00.000Z
+created_by: claude_audit
+last_updated: 2026-01-09T00:00:00.000Z
+...</div>
+        </div>
+        
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">Recent Activity</h2>
+                <div class="activity-list">
+                    
+        <div class="activity-item">
+            <span class="activity-icon">📝</span>
+            <span class="activity-file">cursor/INDEX.md</span>
+        </div>
+        
+        <div class="activity-item">
+            <span class="activity-icon">📝</span>
+            <span class="activity-file">.cursor/commands/COMMAND_RECOMMENDATIONS.md</span>
+        </div>
+        
+        <div class="activity-item">
+            <span class="activity-icon">📝</span>
+            <span class="activity-file">.cursor/commands/help.md</span>
+        </div>
+        
+        <div class="activity-item">
+            <span class="activity-icon">📝</span>
+            <span class="activity-file">.empirica/sessions/sessions.db</span>
+        </div>
+        
+        <div class="activity-item">
+            <span class="activity-icon">📝</span>
+            <span class="activity-file">.obsidian/workspace.json</span>
+        </div>
+        
+        <div class="activity-item">
+            <span class="activity-icon">📝</span>
+            <span class="activity-file">README.md</span>
+        </div>
+        
+        <div class="activity-item">
+            <span class="activity-icon">📝</span>
+            <span class="activity-file">_genetics/pdf_generator/index.json</span>
+        </div>
+        
+        <div class="activity-item">
+            <span class="activity-icon">📝</span>
+            <span class="activity-file">_integrations/choose-your-own-adventure</span>
+        </div>
+        
+        <div class="activity-item">
+            <span class="activity-icon">📝</span>
+            <span class="activity-file">_pyrite/.waft/chronicles.json</span>
+        </div>
+        
+        <div class="activity-item">
+            <span class="activity-icon">📝</span>
+            <span class="activity-file">_pyrite/journal/ai-journal.md</span>
+        </div>
+        
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">Project Info</h2>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="value">42</div>
+                        <div class="label">Active Work Efforts</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="value">20</div>
+                        <div class="label">Modified Files</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="value">main</div>
+                        <div class="label">Current Branch</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

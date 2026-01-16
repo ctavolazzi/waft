@@ -4,6 +4,10 @@
 
 **Don't just build agents. Breed them.**
 
+> **Everything points back to the Prime Directive.**
+
+The Prime Directive serves as the central organizing principle of WAFT, housed within a CelestialBody structure at the Heart of TreasureTavern. All systems, Beings, and Realities reference the Prime Directive, creating a unified foundation for evolution. See [Prime Directive Documentation](docs/PRIME_DIRECTIVE.md) for details.
+
 ---
 
 ## The Promise

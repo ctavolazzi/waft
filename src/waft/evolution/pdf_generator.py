@@ -335,8 +335,9 @@ class PDFGenerator:
             safe_title = safe_title.replace(' ', '_')[:50]
             output_path = Path(f"_work_efforts/session_recaps/{safe_title}_{timestamp}.pdf")
         
-        output_path = Path(output_path)
-        output_path.parent.mkdir(parents=True, exist_ok=True)
+        # Use storage path resolver to route to external drive if available
+        from ..utils import resolve_output_path, StorageRegistry
+        output_path = resolve_output_path(Path(output_path))
         
         # If using golden triangle (simpler path for direct markdown→PDF)
         if self.distilled_chat is None and self.styling_genome is None:
@@ -389,6 +390,35 @@ class PDFGenerator:
             except Exception as e:
                 # If blank page handling fails, continue anyway (non-critical)
                 print(f"⚠️  Blank page marker processing failed: {e}")
+            
+            # Register in storage registry
+            try:
+                from ..utils import StorageRegistry, is_inside_waft_project, classify_content_type
+                project_path = None
+                # Try to find project path
+                if pdf_path.is_absolute():
+                    is_inside, proj_path = is_inside_waft_project(pdf_path)
+                    if is_inside and proj_path:
+                        project_path = proj_path
+                if project_path is None:
+                    project_path = Path.cwd()
+                
+                registry = StorageRegistry(project_path)
+                # Get relative path for registry
+                try:
+                    rel_path = pdf_path.relative_to(project_path)
+                except ValueError:
+                    rel_path = Path(pdf_path.name)
+                
+                content_type = classify_content_type(rel_path)
+                registry.register(
+                    str(rel_path),
+                    str(pdf_path),
+                    content_type
+                )
+            except Exception as e:
+                # Non-critical, just log
+                print(f"⚠️  Storage registry update failed: {e}")
             
             # Open if requested
             if open_pdf:
@@ -487,6 +517,35 @@ class PDFGenerator:
                         print(f"📸 PNG screenshot saved: {img_path}")
                 except Exception:
                     print(f"⚠️  PNG conversion failed: {e}")
+        
+        # Register in storage registry
+        try:
+            from ..utils import StorageRegistry, is_inside_waft_project, classify_content_type
+            project_path = None
+            # Try to find project path
+            if output_path.is_absolute():
+                is_inside, proj_path = is_inside_waft_project(output_path)
+                if is_inside and proj_path:
+                    project_path = proj_path
+            if project_path is None:
+                project_path = Path.cwd()
+            
+            registry = StorageRegistry(project_path)
+            # Get relative path for registry
+            try:
+                rel_path = output_path.relative_to(project_path)
+            except ValueError:
+                rel_path = Path(output_path.name)
+            
+            content_type = classify_content_type(rel_path)
+            registry.register(
+                str(rel_path),
+                str(output_path),
+                content_type
+            )
+        except Exception as e:
+            # Non-critical, just log
+            print(f"⚠️  Storage registry update failed: {e}")
         
         # Open if requested
         if open_pdf:

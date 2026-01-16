@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: recap-review-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount project root for access to WAFT system
+      - ../../:/workspace:ro
+      # Mount output directory for generated files
+      - ../backend/output:/app/output
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    networks:
+      - recap-review-network
+
+  electron-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: recap-review-electron
+    depends_on:
+      - backend
+    environment:
+      - DISPLAY=:99
+      - NODE_ENV=production
+      - API_URL=http://backend:8000
+      # Optional: Set DnD campaign mode on startup
+      # - DND_CAMPAIGN=1
+    volumes:
+      # Mount output directory to view generated PDFs
+      - ../backend/output:/app/output:ro
+      # Optional: Mount for development
+      # - .:/app
+    restart: unless-stopped
+    # Security: Run as non-root
+    user: "1000:1000"
+    networks:
+      - recap-review-network
+
+  # VNC version for remote viewing
+  electron-app-vnc:
+    build:
+      context: .
+      dockerfile: Dockerfile.vnc
+    container_name: recap-review-electron-vnc
+    ports:
+      - "5900:5900"  # VNC port
+    environment:
+      - DISPLAY=:1
+      - VNC_PASSWORD=electron
+      - NODE_ENV=production
+    volumes:
+      - ../backend/output:/app/output:ro
+    restart: unless-stopped
+    user: "1000:1000"
+    profiles:
+      - vnc
+    networks:
+      - recap-review-network
+
+networks:
+  recap-review-network:
+    driver: bridge

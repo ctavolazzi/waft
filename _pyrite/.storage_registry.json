@@ -1,0 +1,15 @@
+{
+  "storage_test.pdf": {
+    "storage_location": "/Volumes/Easystore/waft/waft/_work_efforts/session_recaps/storage_test.pdf",
+    "content_type": "augmented",
+    "timestamp": "2026-01-15T08:02:21.534581",
+    "last_operation": "created",
+    "history": [
+      {
+        "operation": "created",
+        "location": "/Volumes/Easystore/waft/waft/_work_efforts/session_recaps/storage_test.pdf",
+        "timestamp": "2026-01-15T08:02:21.534581"
+      }
+    ]
+  }
+}

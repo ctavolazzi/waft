@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Adventure Begins - Book Preview</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Crimson Text', serif;
+            background: #f5f1e8;
+            color: #2c1810;
+            line-height: 1.8;
+            padding: 2rem;
+        }
+        
+        .book-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 0 30px rgba(0,0,0,0.2);
+            padding: 3rem;
+        }
+        
+        .book-title {
+            font-family: 'Cinzel', serif;
+            font-size: 3rem;
+            text-align: center;
+            color: #8b4513;
+            margin-bottom: 1rem;
+            border-bottom: 3px solid #d4a574;
+            padding-bottom: 1rem;
+        }
+        
+        .book-subtitle {
+            text-align: center;
+            font-style: italic;
+            color: #666;
+            margin-bottom: 3rem;
+        }
+        
+        .chapter {
+            margin-bottom: 3rem;
+            page-break-after: always;
+        }
+        
+        .chapter-title {
+            font-family: 'Cinzel', serif;
+            font-size: 2rem;
+            color: #8b4513;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #d4a574;
+            padding-bottom: 0.5rem;
+        }
+        
+        .read-aloud {
+            background: #fff9e6;
+            border-left: 4px solid #d4a574;
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            font-style: italic;
+            color: #5c4a37;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .read-aloud::before {
+            content: "📖 ";
+            font-size: 1.2em;
+        }
+        
+        .sidebar {
+            background: #f0e6d2;
+            border: 2px solid #d4a574;
+            border-radius: 5px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar-title {
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            color: #8b4513;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .content {
+            text-align: justify;
+            font-size: 1.1rem;
+            margin: 1rem 0;
+        }
+        
+        .content p {
+            margin-bottom: 1rem;
+            text-indent: 1.5rem;
+        }
+        
+        .monster-block {
+            background: #1a1a1a;
+            color: #e8e8e8;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .monster-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #d4a574;
+            margin-bottom: 0.5rem;
+        }
+        
+        .monster-type {
+            font-style: italic;
+            color: #aaa;
+            margin-bottom: 1rem;
+        }
+        
+        .monster-stats {
+            margin-top: 1rem;
+        }
+        
+        .monster-stats p {
+            margin: 0.3rem 0;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .author {
+            font-size: 1.2rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="book-container">
+        <div class="header">
+            <h1 class="book-title">The Adventure Begins</h1>
+            <p class="book-subtitle">A D&D 5e Storybook</p>
+            <p class="author">by WAFT Storyteller</p>
+        </div>
+        
+        <div class="chapter">
+            <h2 class="chapter-title">Chapter 1: The Beginning</h2>
+            
+            <div class="read-aloud">
+                The tavern door creaks open, and a chill wind follows the mysterious figure inside. All eyes turn to the newcomer.
+            </div>
+            
+            <div class="sidebar">
+                <div class="sidebar-title">The Wandering Star</div>
+                <div>This ancient tavern has stood for over five hundred years, serving adventurers from all corners of the realm.</div>
+            </div>
+            
+            <div class="content">
+                <p>In a world where magic flows through every stone and tree, a group of adventurers gathered at the ancient tavern known as The Wandering Star. The tavern keeper, a wise old dwarf named Thorgrim, had seen many heroes come and go.</p>
+                
+                <p>Tonight was different. The stars aligned in a way that hadn't been seen in a thousand years. The adventurers felt a pull, a calling to something greater than themselves.</p>
+                
+                <p>As they sat around the fire, sharing stories and ale, a mysterious figure entered the tavern. Cloaked in shadows and carrying an ancient tome, the stranger approached their table.</p>
+                
+                <p>"I have been waiting for you," the figure said, placing the tome on the table. "Your destiny begins tonight."</p>
+            </div>
+        </div>
+        
+        <div class="chapter">
+            <h2 class="chapter-title">Chapter 2: The Quest</h2>
+            
+            <div class="read-aloud">
+                The map glows brighter as you touch it, and you feel a surge of energy flow through your body.
+            </div>
+            
+            <div class="content">
+                <p>The tome opened of its own accord, revealing a map of the realm marked with glowing runes. The adventurers leaned in, their eyes wide with wonder and anticipation.</p>
+                
+                <p>"The Dark Lord has awakened," the stranger explained. "Only you can stop him. But first, you must gather the three artifacts of power: the Sword of Light, the Shield of Truth, and the Crown of Wisdom."</p>
+                
+                <p>The quest was clear. The adventurers looked at each other, knowing that their lives would never be the same. They had trained for this moment, and now it was time to prove their worth.</p>
+                
+                <p>Thorgrim the tavern keeper approached, placing a small pouch on the table. "Take this," he said. "It contains provisions for your journey. May the stars guide you."</p>
+            </div>
+        </div>
+        
+        <div class="chapter">
+            <h2 class="chapter-title">Chapter 3: The Journey Begins</h2>
+            
+            <div class="read-aloud">
+                The troll's eyes gleam with intelligence as he poses his riddle, and you realize this is no ordinary encounter.
+            </div>
+            
+            <div class="content">
+                <p>With the map in hand and provisions secured, the adventurers set out at dawn. The path led them through the Whispering Woods, where ancient trees seemed to watch their every move.</p>
+                
+                <p>As they traveled deeper into the forest, they encountered their first challenge: a bridge guarded by a riddle-speaking troll. The troll, named Grom, was not hostile but demanded they answer his riddle before crossing.</p>
+                
+                <p>"What has roots as nobody sees, is taller than trees, up, up it goes, and yet never grows?" Grom asked, his voice rumbling like thunder.</p>
+                
+                <p>After a moment of thought, one of the adventurers answered: "A mountain!" Grom smiled, a rare sight, and allowed them to pass.</p>
+                
+                <p>The journey had truly begun, and the adventurers knew that greater challenges lay ahead.</p>
+            </div>
+            
+            <div class="monster-block">
+                <div class="monster-name">Grom the Bridge Troll</div>
+                <div class="monster-type">Large giant, neutral</div>
+                <div class="monster-stats">
+                    <p><strong>Armor Class:</strong> 15</p>
+                    <p><strong>Hit Points:</strong> 84 (8d10 + 40)</p>
+                    <p><strong>Speed:</strong> 30 ft.</p>
+                    <p><strong>STR:</strong> 18 (+4) | <strong>DEX:</strong> 8 (-1) | <strong>CON:</strong> 16 (+3)</p>
+                    <p><strong>INT:</strong> 12 (+1) | <strong>WIS:</strong> 14 (+2) | <strong>CHA:</strong> 10 (+0)</p>
+                    <p style="margin-top: 1rem;"><strong>Description:</strong> A wise old troll who guards the bridge, more interested in riddles than combat.</p>
+                    <p style="margin-top: 1rem;"><strong>Actions:</strong></p>
+                    <p style="margin-left: 1rem;"><strong>Club:</strong> Melee Weapon Attack: +6 to hit, reach 10 ft., one target. Hit: 13 (2d6 + 6) bludgeoning damage.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 3rem; padding-top: 2rem; border-top: 2px solid #d4a574; color: #666;">
+            <p><em>Generated by WAFT Storyteller</em></p>
+            <p style="margin-top: 0.5rem; font-size: 0.9rem;">This is a preview. The actual PDF uses the D&D 5e LaTeX template for authentic book styling.</p>
+        </div>
+    </div>
+</body>
+</html>

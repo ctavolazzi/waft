@@ -1,0 +1,15 @@
+{
+  "mission_id": "realm_scout_EasyStore_Realm_20260115_095649",
+  "status": "active",
+  "progress": 1.0,
+  "last_update": "2026-01-15T09:56:49.684304",
+  "alerts": [],
+  "telemetry": {
+    "realm_name": "EasyStore_Realm",
+    "scout_id": "full_mission_scout_20260115_095648",
+    "network_nodes": 31,
+    "tendrils": 30,
+    "strings_sent": 3,
+    "vision_screenshots": 5
+  }
+}

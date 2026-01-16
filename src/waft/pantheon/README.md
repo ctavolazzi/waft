@@ -4,6 +4,21 @@
 
 The Pantheon houses Higher Beings (Gods) as Aspects of Creation, following "as above, so below" principles from the spiritual cosmology.
 
+## Timeless Nature of Entities
+
+**Pantheon Entities are Timeless Forces that Bind Reality Together.**
+
+Unlike Beings (which are timeful, dynamic agents that change rapidly), Entities in the Pantheon are:
+
+- **Timeless**: They don't move much and change very slowly
+- **Stable**: They hold Aspects of Creation that should not change until a body of evidence collected by Beings proves that change is needed
+- **Forces of Binding**: They maintain the fundamental structure of reality
+- **Evidence-Based Change**: They only evolve when Beings collect sufficient evidence to warrant modification
+
+This distinction ensures that while Beings explore, learn, and evolve rapidly (collecting evidence), Entities provide the stable foundation that binds reality together, only changing when the evidence demands it.
+
+**Contrast with Beings**: See `src/waft/being.py` for the timeful, dynamic nature of Beings.
+
 ## Magistrate
 
 The Magistrate is the God of Precedent and Body of Proof. See `_pantheon/magistrate/README.md` for details.
