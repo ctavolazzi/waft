@@ -119,6 +119,8 @@ class BackendManager {
 
     console.log('Starting Python backend...');
 
+    const electronStartTime = Date.now();
+
     // Determine Python path
     const pythonCommand = process.platform === 'win32' ? 'python' : 'python3';
     const backendPath = path.join(__dirname, '../backend/campaign_server.py');
@@ -131,6 +133,7 @@ class BackendManager {
         ...process.env,
         WAFT_PROJECT_PATH: projectPath,
         PYTHONUNBUFFERED: '1',
+        ELECTRON_START_TIME: electronStartTime.toString(),
       },
       stdio: ['pipe', 'pipe', 'pipe'],
     });

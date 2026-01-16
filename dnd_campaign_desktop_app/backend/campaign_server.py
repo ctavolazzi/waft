@@ -11,6 +11,7 @@ from datetime import datetime
 import asyncio
 import sys
 import os
+import time
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -27,6 +28,15 @@ except ImportError as e:
     print(f"Warning: Could not import CampaignOrchestrator: {e}")
     CampaignOrchestrator = None
 
+# Import monitoring system
+from monitoring import (
+    init_monitoring,
+    get_monitoring,
+    EventType,
+    MonitoringCollector
+)
+from monitoring_api import router as monitoring_router
+
 app = FastAPI(title="D&D Campaign Desktop App API")
 
 # CORS for Electron
@@ -37,6 +47,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Include monitoring router
+app.include_router(monitoring_router)
 
 # Global state
 campaign_manager = None
@@ -132,29 +145,64 @@ class SelfMonitoringCampaign:
                 websocket_connections.remove(ws)
 
 
+# Initialize monitoring
+monitoring = init_monitoring(project_path, component="backend")
+
 # Initialize campaign manager
 try:
     campaign_manager = SelfMonitoringCampaign(project_path)
+    backend_start_time = (time.time() - monitoring.start_time) * 1000
+
+    # Record first startup
+    if monitoring.is_first_startup:
+        monitoring.record_first_startup(
+            backend_start_time=backend_start_time,
+            health_check_passed=False  # Will be updated after first health check
+        )
+        monitoring.record_event(EventType.BACKEND_START)
 except Exception as e:
     print(f"Warning: Could not initialize campaign manager: {e}")
+    if monitoring:
+        monitoring.record_error("initialization_error", str(e))
 
 
 @app.get("/api/health")
 async def health():
     """Health check endpoint."""
+    health_check_start = time.time()
+
     if campaign_manager is None:
-        return {
+        status = {
             "status": "unhealthy",
             "message": "Campaign manager not initialized",
             "orchestrator_available": CampaignOrchestrator is not None
         }
+        if monitoring:
+            monitoring.record_metric("health_check_duration", (time.time() - health_check_start) * 1000)
+        return status
 
-    return {
+    health_check_passed = True
+    status = {
         "status": "healthy",
         "running": campaign_manager.running,
         "metrics": campaign_manager.metrics,
         "orchestrator_available": CampaignOrchestrator is not None
     }
+
+    # Record health check metric
+    if monitoring:
+        duration_ms = (time.time() - health_check_start) * 1000
+        monitoring.record_metric("health_check_duration", duration_ms)
+        monitoring.record_event(EventType.HEALTH_CHECK, {"passed": health_check_passed})
+
+        # Update startup data if first startup
+        if monitoring.is_first_startup and monitoring.startup_data:
+            monitoring.startup_data.health_check_passed = health_check_passed
+            with open(monitoring.startup_data_file, 'w') as f:
+                from dataclasses import asdict
+                json.dump(asdict(monitoring.startup_data), f, indent=2)
+
+    return status
 
 
 @app.get("/api/campaigns")
@@ -204,6 +252,14 @@ async def create_campaign(request: CampaignCreateRequest):
             "description": campaign.description
         }
 
+        # Record feature access
+        if monitoring:
+            monitoring.record_feature_access("campaign_create")
+            monitoring.record_event(EventType.CAMPAIGN_CREATED, {
+                "campaign_id": campaign.campaign_id,
+                "campaign_name": campaign.campaign_name
+            })
+
         await campaign_manager._broadcast_event({
             "type": "campaign_created",
             "campaign_id": campaign.campaign_id,
@@ -213,6 +269,8 @@ async def create_campaign(request: CampaignCreateRequest):
 
         return campaign
     except Exception as e:
+        if monitoring:
+            monitoring.record_error("campaign_creation_error", str(e))
         raise HTTPException(status_code=500, detail=str(e))
 
 
