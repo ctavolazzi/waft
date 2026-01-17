@@ -16,6 +16,8 @@ Waft is a scientific instrument for studying the **physics of artificial cogniti
 
 **The goal**: Observe a "God-Head" agent emerge from the evolutionary process.
 
+> *Read [The Philosophy of WAFT](docs/PHILOSOPHY.md) for the deeper why.*
+
 ---
 
 ## Core Pillars
