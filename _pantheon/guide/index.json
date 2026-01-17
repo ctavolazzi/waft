@@ -7,7 +7,23 @@
       "completed": "2026-01-17T16:55:59.817992",
       "iterations": 1,
       "quality_score": 0.91
+    },
+    {
+      "session_id": "session_20260117_175024",
+      "problem_summary": "How do I implement rate limiting?",
+      "created": "2026-01-17T17:50:24.670624",
+      "completed": "2026-01-17T17:50:24.670601",
+      "iterations": 1,
+      "quality_score": 0.91
+    },
+    {
+      "session_id": "session_20260117_175040",
+      "problem_summary": "Review this Python code for best practices and potential issues:\n\n```python\ndef process_data(file_pa",
+      "created": "2026-01-17T17:50:40.681225",
+      "completed": "2026-01-17T17:50:40.681157",
+      "iterations": 3,
+      "quality_score": 0.5
     }
   ],
-  "last_updated": "2026-01-17T16:55:59.818640"
+  "last_updated": "2026-01-17T17:50:40.682850"
 }

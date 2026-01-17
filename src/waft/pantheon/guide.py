@@ -221,8 +221,15 @@ class TheGuide:
         Create Guide LLM from configuration.
 
         Returns:
-            OpenHands LLM instance for Guide
+            OpenHands LLM instance for Guide (or compatible mock)
         """
+        # Check if we have a demo/mock model specified
+        model = self.guide_llm_config.get("model", "anthropic/claude-sonnet-4-5-20250929")
+
+        # If model is "demo" or "mock", just return a copy of client_llm
+        if "demo" in model.lower() or "mock" in model.lower():
+            return self.client_llm
+
         try:
             from openhands.sdk import LLM
         except ImportError:
@@ -231,7 +238,6 @@ class TheGuide:
             )
 
         # Create Guide LLM from config
-        model = self.guide_llm_config.get("model", "anthropic/claude-sonnet-4-5-20250929")
         api_key = self.guide_llm_config.get("api_key")
         base_url = self.guide_llm_config.get("base_url")
 
