@@ -17,6 +17,7 @@ from .the_village import TheVillage, VillageGathering, VillageConnection
 from .external_drive_realm import ExternalDriveRealm
 from .reasoner import TheReasoner
 from .github_god import GitHubGod
+from .guide import TheGuide, Protocol, EvaluationScores
 
 __all__ = [
     "Magistrate",
@@ -40,5 +41,8 @@ __all__ = [
     "VillageConnection",
     "ExternalDriveRealm",
     "TheReasoner",
-    "GitHubGod"
+    "GitHubGod",
+    "TheGuide",
+    "Protocol",
+    "EvaluationScores"
 ]
