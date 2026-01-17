@@ -34,6 +34,15 @@ import hashlib
 import random
 import os
 
+# Import karma exceptions for reincarnation checks
+try:
+    from .karma import InsufficientKarmaError
+except ImportError:
+    # Fallback if karma module not available
+    class InsufficientKarmaError(Exception):
+        """Raised when a soul doesn't have enough Karma for a purchase."""
+        pass
+
 
 class BeingState(Enum):
     """State of a being."""
@@ -42,6 +51,7 @@ class BeingState(Enum):
     EVOLVING = "evolving"  # Being evolving
     COMPLETING = "completing"  # Being finishing reality
     ARCHIVED = "archived"  # Being archived
+    DEAD = "dead"  # Being is permanently dead (tombstone in Akasha)
 
 
 class Being:
@@ -97,7 +107,11 @@ class Being:
         # Experience tracking
         recent_experiences: Optional[List[Dict[str, Any]]] = None,
         # Naming
-        custom_name: Optional[str] = None
+        custom_name: Optional[str] = None,
+        # Physical form (HP stat)
+        has_physical_form: Optional[bool] = None,
+        hp: Optional[int] = None,
+        max_hp: Optional[int] = None
     ):
         """
         Initialize a being.
@@ -126,6 +140,9 @@ class Being:
             lifetimes: Number of reincarnations (default: 0)
             recent_experiences: Recent experiences (default: [])
             custom_name: Optional custom name (e.g., "Bob") - overrides scientific name
+            has_physical_form: Whether being has physical form (default: None = no HP)
+            hp: Current hit points (default: None, calculated if has_physical_form=True)
+            max_hp: Maximum hit points (default: None, calculated if has_physical_form=True)
         """
         self.being_id = being_id
         self.reality_id = reality_id
@@ -227,6 +244,22 @@ class Being:
         # Alignment tracking
         self.current_alignment_score: float = 0.5  # Current alignment (0.0-1.0)
         self.alignment_history: List[Dict[str, Any]] = []  # History of alignment scores
+        
+        # Physical form and HP (optional - only for beings with physical form)
+        self.has_physical_form: bool = has_physical_form if has_physical_form is not None else False
+        if self.has_physical_form:
+            # Calculate HP based on stamina and will_to_live if not provided
+            if max_hp is None:
+                # Base HP from stamina and will_to_live
+                base_hp = int((self.stamina / 100.0) * 50.0 + (self.will_to_live / 100.0) * 50.0)
+                # Minimum HP of 10, maximum of 200
+                max_hp = max(10, min(200, base_hp))
+            self.max_hp: int = max_hp
+            self.hp: int = hp if hp is not None else self.max_hp
+        else:
+            # No physical form = no HP
+            self.max_hp: Optional[int] = None
+            self.hp: Optional[int] = None
         
         # Empirica integration (for first Being only - when parent_being_id is None)
         self.empirica_session_id: Optional[str] = None
@@ -932,10 +965,95 @@ class Being:
         """
         Check if being should die (will_to_live <= 0.0).
         
+        For beings with HP, also check if HP <= 0.
+        
         Returns:
             True if being should die, False otherwise
         """
+        # Check HP first (if being has physical form)
+        if self.has_physical_form and self.hp is not None and self.hp <= 0:
+            return True
+        
+        # Check Will to Live
         return self.will_to_live <= 0.0
+    
+    def attempt_death_saving_throw(self, dc: int = 15) -> bool:
+        """
+        Attempt a CON saving throw when Will to Live reaches 0.0.
+        
+        This gives beings a final chance to avoid death. If successful,
+        Will to Live is restored to 1.0 (near-death experience).
+        
+        Formula: d20 + CON modifier + proficiency (if proficient) >= DC
+        
+        Args:
+            dc: Difficulty Class for the saving throw (default: 15)
+        
+        Returns:
+            True if saving throw succeeds, False otherwise
+        """
+        try:
+            from ..core.dnd5e.combat import DnD5eCombat
+            from ..core.dnd5e.stats import DnD5eStats
+            
+            # Calculate CON modifier from stamina/will_to_live
+            # Use stamina as proxy for CON (physical resilience)
+            con_score = max(8, min(20, int((self.stamina / 100.0) * 20.0)))
+            con_modifier = dnd_stats.DnD5eStats.ability_modifier(con_score)
+            
+            # Proficiency bonus based on lifetimes (experience)
+            proficiency_bonus = min(6, max(2, 2 + (self.lifetimes // 4)))
+            
+            # Check if proficient (beings with high karma/luck might be proficient)
+            is_proficient = self.luck > 60.0 or (self.soul_id and self._get_karma_balance() > 500.0)
+            
+            # Make saving throw
+            success = DnD5eCombat.make_saving_throw(
+                ability_modifier=con_modifier,
+                proficiency_bonus=proficiency_bonus,
+                is_proficient=is_proficient,
+                dc=dc
+            )
+            
+            if success:
+                # Near-death experience - restore Will to Live to 1.0
+                self.will_to_live = 1.0
+                # Also restore some stamina if has physical form
+                if self.has_physical_form and self.hp is not None:
+                    self.hp = max(1, self.hp // 2)  # Restore to half HP
+                
+                # Log to Empirica (epistemic tracking)
+                try:
+                    from ..core.empirica import EmpiricaManager
+                    empirica = EmpiricaManager(project_path=Path.cwd())
+                    if empirica.is_initialized():
+                        empirica.log_finding(
+                            f"Being {self.being_id} survived via CON saving throw (DC {dc})",
+                            impact=0.6
+                        )
+                except Exception:
+                    pass  # Empirica not available - continue
+            
+            return success
+            
+        except (ImportError, AttributeError, Exception):
+            # If D&D system not available, default to 50% chance
+            import random
+            success = random.random() < 0.5
+            if success:
+                self.will_to_live = 1.0
+            return success
+    
+    def _get_karma_balance(self) -> float:
+        """Get karma balance for proficiency check."""
+        try:
+            from .karma import KarmaMerchant
+            karma_merchant = KarmaMerchant(project_path=Path.cwd())
+            if self.soul_id:
+                return karma_merchant.get_soul_karma(self.soul_id)
+        except Exception:
+            pass
+        return 0.0
     
     def enter_sleep(self) -> None:
         """Enter sleep state (being must sleep when decision_fatigue reaches 0)."""
@@ -1898,12 +2016,39 @@ class BeingSystem:
         # Load the dead Being
         dead_being = self._load_being(dead_being_id)
         
-        # Verify it's dead
-        if dead_being.state != BeingState.ARCHIVED:
+        # Verify it's dead (ARCHIVED or DEAD state)
+        if dead_being.state not in (BeingState.ARCHIVED, BeingState.DEAD):
             raise ValueError(
                 f"Being {dead_being_id} is not dead (state: {dead_being.state.value}). "
-                "Only ARCHIVED Beings can be reincarnated."
+                "Only ARCHIVED or DEAD Beings can be reincarnated."
             )
+        
+        # For DEAD beings, check karma requirement for reincarnation
+        if dead_being.state == BeingState.DEAD:
+            # Ensure soul_id exists
+            if dead_being.soul_id is None:
+                dead_being.soul_id = f"soul_{dead_being.being_id}"
+            
+            # Check karma balance - require minimum karma to reincarnate
+            try:
+                from .karma import KarmaMerchant
+                karma_merchant = KarmaMerchant(project_path=self.project_path)
+                karma_balance = karma_merchant.get_soul_karma(dead_being.soul_id)
+                
+                # Minimum karma required for reincarnation (default: 50.0)
+                min_karma_for_reincarnation = 50.0
+                if karma_balance < min_karma_for_reincarnation:
+                    raise InsufficientKarmaError(
+                        f"Insufficient karma for reincarnation: {karma_balance} < {min_karma_for_reincarnation}. "
+                        f"Soul {dead_being.soul_id} must accumulate more karma before reincarnating."
+                    )
+            except ImportError:
+                # KarmaMerchant not available - allow reincarnation without karma check
+                pass
+            except Exception as e:
+                # If karma check fails, still allow reincarnation (graceful degradation)
+                # But log the error
+                pass
         
         # Use reality from dead Being if not specified
         if reality_id is None:

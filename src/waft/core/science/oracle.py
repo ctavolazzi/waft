@@ -209,6 +209,12 @@ class TheOracle:
         uncertainty = vectors.get("uncertainty", 1.0)
         coverage = know * (1.0 - uncertainty) if know > 0 else 0.0
         
+        # Log consultation to Empirica (track Oracle usage)
+        try:
+            self.log_insight(f"Oracle consultation: {question[:100]}", impact=0.3)
+        except Exception:
+            pass  # Continue even if logging fails
+        
         return {
             "question": question,
             "epistemic_phase": phase,
@@ -265,6 +271,20 @@ class TheOracle:
         
         # Get relevant unknowns
         unknowns = self.get_unknowns(limit=3)
+        
+        # Log decision assessment to Empirica
+        try:
+            decision_desc = decision_context.get("description", "Decision assessment")
+            if gate_result == "PROCEED":
+                self.log_insight(f"Decision approved: {decision_desc[:100]}", impact=0.5)
+            elif gate_result == "HALT":
+                self.log_insight(f"Decision halted: {decision_desc[:100]} - requires human approval", impact=0.8)
+            elif gate_result == "BRANCH":
+                self.log_unknown(f"Decision needs investigation: {decision_desc[:100]}")
+            elif gate_result == "REVISE":
+                self.log_insight(f"Decision needs revision: {decision_desc[:100]}", impact=0.6)
+        except Exception:
+            pass  # Continue even if logging fails
         
         return {
             "gate_result": gate_result,

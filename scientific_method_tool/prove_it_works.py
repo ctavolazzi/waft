@@ -30,6 +30,18 @@ from scientific_method_tool import (
     Experiment
 )
 
+# Empirica integration (optional)
+try:
+    import sys
+    from pathlib import Path
+    project_root = Path(__file__).parent.parent
+    sys.path.insert(0, str(project_root / "src"))
+    from waft.core.empirica import EmpiricaManager
+    EMPIRICA_AVAILABLE = True
+except ImportError:
+    EMPIRICA_AVAILABLE = False
+    EmpiricaManager = None
+
 def simple_experiment(experiment):
     """Simple experiment that just increments a counter."""
     # Record initial value
@@ -153,6 +165,20 @@ def main():
         print(f"   ✓ Hypothesis verified: {analysis.verified}")
         print(f"   ✓ Confidence: {analysis.confidence:.2%}")
         print(f"   ✓ Conclusions: {len(analysis.conclusions)}")
+        
+        # Log to Empirica if available
+        if EMPIRICA_AVAILABLE:
+            try:
+                empirica = EmpiricaManager(project_root)
+                if empirica.is_initialized():
+                    result_status = "VERIFIED" if analysis.verified else "REFUTED"
+                    empirica.log_finding(
+                        f"Proof experiment: {hypothesis.statement} - {result_status} (confidence: {analysis.confidence:.0%})",
+                        impact=0.7 if analysis.verified else 0.5
+                    )
+                    print(f"   ✓ Logged to Empirica")
+            except Exception:
+                pass  # Empirica not available - continue
         print()
         
         # 10. Verify files saved
@@ -194,6 +220,13 @@ def main():
         print("  ✅ Compares states")
         print("  ✅ Analyzes results")
         print("  ✅ Saves all data to files")
+        if EMPIRICA_AVAILABLE:
+            try:
+                empirica = EmpiricaManager(project_root)
+                if empirica.is_initialized():
+                    print("  ✅ Logged findings to Empirica")
+            except Exception:
+                pass
         print()
         print("The system works!")
         print()

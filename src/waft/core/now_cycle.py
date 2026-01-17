@@ -384,29 +384,146 @@ class NowCycleManager:
                     
                     # Check death condition
                     if being.check_death():
-                        # Being died - archive it
-                        being.state = BeingState.ARCHIVED
+                        # Check if Will to Live reached 0.0 (not HP death)
+                        will_to_live_death = being.will_to_live <= 0.0
+                        
+                        # If Will to Live death, attempt saving throw
+                        saving_throw_succeeded = False
+                        if will_to_live_death:
+                            # Attempt CON saving throw (final chance)
+                            saving_throw_succeeded = being.attempt_death_saving_throw(dc=15)
+                            
+                            if saving_throw_succeeded:
+                                # Near-death experience - being survives!
+                                self.being_system._save_being(being)
+                                
+                                # Log to Empirica (epistemic tracking)
+                                try:
+                                    from ..empirica import EmpiricaManager
+                                    empirica = EmpiricaManager(self.project_path)
+                                    if empirica.is_initialized():
+                                        empirica.log_finding(
+                                            f"Being {being_id} survived near-death experience via CON saving throw",
+                                            impact=0.7
+                                        )
+                                except Exception:
+                                    pass  # Empirica not available - continue
+                                
+                                # Log near-death experience
+                                from ..agent.state import EvolutionaryEvent, EvolutionaryEventType
+                                event = EvolutionaryEvent(
+                                    timestamp=datetime.utcnow(),
+                                    genome_id=f"being_{being_id}",
+                                    parent_id=being.parent_being_id,
+                                    generation=0,
+                                    event_type=EvolutionaryEventType.MUTATE,  # Using MUTATE for survival event
+                                    payload={
+                                        "event_type": "near_death_experience",
+                                        "being_id": being_id,
+                                        "reality_id": being.reality_id,
+                                        "will_to_live_restored": being.will_to_live,
+                                        "reason": "CON saving throw succeeded"
+                                    },
+                                    agent_id=being_id,
+                                    lineage_path=[being_id]
+                                )
+                                self.observer.observe_event(event)
+                                continue  # Being survives, skip death processing
+                        
+                        # Saving throw failed or HP death - proceed with death
+                        # Being died - mark as DEAD (permanent state)
+                        being.state = BeingState.DEAD
                         self.being_system._save_being(being)
                         dead_beings.append(being_id)
                         
-                        # Record death event
-                        from ..agent.state import EvolutionaryEvent, EvolutionaryEventType
-                        event = EvolutionaryEvent(
-                            timestamp=datetime.utcnow(),
-                            genome_id=f"being_{being_id}",
-                            parent_id=being.parent_being_id,
-                            generation=0,
-                            event_type=EvolutionaryEventType.DEATH,
-                            payload={
-                                "death_type": "will_to_live",
-                                "reason": "Will to live reached 0.0",
-                                "being_id": being_id,
-                                "reality_id": being.reality_id
-                            },
-                            agent_id=being_id,
-                            lineage_path=[being_id]
-                        )
-                        self.observer.observe_event(event)
+                        # Record permanent death in Akasha (tombstone)
+                        try:
+                            # Ensure soul_id exists
+                            if being.soul_id is None:
+                                being.soul_id = f"soul_{being.being_id}"
+                            
+                            # Create being snapshot for tombstone
+                            being_snapshot = {
+                                "being_id": being.being_id,
+                                "reality_id": being.reality_id,
+                                "will_to_live": being.will_to_live,
+                                "stamina": getattr(being, "stamina", 0.0),
+                                "lifetimes": getattr(being, "lifetimes", 0),
+                                "skills": being.skills,
+                                "fitness": being.fitness,
+                                "parent_being_id": being.parent_being_id
+                            }
+                            
+                            # Record permanent death (tombstone) in Akasha
+                            tombstone = self.karma_merchant.record_death(
+                                soul_id=being.soul_id,
+                                being_id=being.being_id,
+                                death_type="will_to_live" if will_to_live_death else "hp",
+                                reason="Will to live reached 0.0" if will_to_live_death else "HP reached 0",
+                                karma_penalty=50.0,  # Default karma penalty on death
+                                being_data=being_snapshot
+                            )
+                            
+                            # Log to Empirica (epistemic tracking)
+                            try:
+                                from ..empirica import EmpiricaManager
+                                empirica = EmpiricaManager(self.project_path)
+                                if empirica.is_initialized():
+                                    death_reason = "Will to Live reached 0.0" if will_to_live_death else "HP reached 0"
+                                    empirica.log_finding(
+                                        f"Being {being_id} died: {death_reason}. Saving throw: {'failed' if will_to_live_death else 'N/A (HP death)'}",
+                                        impact=0.8
+                                    )
+                                    # Log unknown about death mechanics if first death
+                                    if being.lifetimes == 1:
+                                        empirica.log_unknown("What factors influence death rates? Need to analyze death patterns.")
+                            except Exception:
+                                pass  # Empirica not available - continue
+                            
+                            # Record death event to flight recorder
+                            from ..agent.state import EvolutionaryEvent, EvolutionaryEventType
+                            event = EvolutionaryEvent(
+                                timestamp=datetime.utcnow(),
+                                genome_id=f"being_{being_id}",
+                                parent_id=being.parent_being_id,
+                                generation=0,
+                                event_type=EvolutionaryEventType.DEATH,
+                                payload={
+                                    "death_type": "will_to_live",
+                                    "reason": "Will to live reached 0.0",
+                                    "being_id": being_id,
+                                    "reality_id": being.reality_id,
+                                    "soul_id": being.soul_id,
+                                    "death_id": tombstone.get("death_id"),
+                                    "karma_penalty": tombstone.get("karma_penalty"),
+                                    "karma_before": tombstone.get("karma_before"),
+                                    "karma_after": tombstone.get("karma_after")
+                                },
+                                agent_id=being_id,
+                                lineage_path=[being_id]
+                            )
+                            self.observer.observe_event(event)
+                        except Exception as e:
+                            # Log error but don't crash - death still recorded as DEAD state
+                            # Death event still recorded to flight recorder even if Akasha fails
+                            from ..agent.state import EvolutionaryEvent, EvolutionaryEventType
+                            event = EvolutionaryEvent(
+                                timestamp=datetime.utcnow(),
+                                genome_id=f"being_{being_id}",
+                                parent_id=being.parent_being_id,
+                                generation=0,
+                                event_type=EvolutionaryEventType.DEATH,
+                                payload={
+                                    "death_type": "will_to_live",
+                                    "reason": "Will to live reached 0.0",
+                                    "being_id": being_id,
+                                    "reality_id": being.reality_id,
+                                    "error": f"Failed to record tombstone: {str(e)}"
+                                },
+                                agent_id=being_id,
+                                lineage_path=[being_id]
+                            )
+                            self.observer.observe_event(event)
                 
                 except (FileNotFoundError, json.JSONDecodeError, OSError):
                     # Skip corrupted or missing beings

@@ -1,0 +1,86 @@
+\documentclass[12pt,
+	english,			% idioma adicional para hifenização
+	french,				% idioma adicional para hifenização
+	spanish,			% idioma adicional para hifenização
+	brazil,				% o último idioma é o principal do documento
+	]{article}
+
+%% Language and font encodings
+\usepackage[brazil]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{indentfirst}
+\usepackage{float}
+
+%% Sets page size and margins
+\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+%% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{url}
+
+%% Document Header
+\title{Relatório I\\
+\Large{Física Experimental IV}\\
+\Large{Instituto de Física Gleb Wataghin, Unicamp}}
+
+\author{Prof. Dr. Flávio Caldas da Cruz\\
+Caroline Guimarães 155006\\
+Lucas Rodrigues Contador 156406\\
+Giovanne Lucas Dias Pereira Mariano 173317}
+
+%% Document Begin
+\begin{document}
+\maketitle
+
+\begin{abstract}
+{{ abstract }}
+\end{abstract}
+
+\section{Introdução}
+{{ introduction }}
+
+\section{Metodologia}
+{{ methodology }}
+
+\section{Resultados}
+{{ results }}
+
+\section{Discussão}
+{{ discussion }}
+
+\section{Conclusão}
+{{ conclusion }}
+
+%% Exemplos
+{% if figures %}
+{% for figure in figures %}
+\begin{figure}[H]
+\centering
+\includegraphics[width={{ figure.width|default('0.3') }}\textwidth]{{{ figure.path }}}
+\caption{\label{fig:{{ figure.label }}}}{{ figure.caption }}
+\end{figure}
+{% endfor %}
+{% endif %}
+
+{% if tables %}
+{% for table in tables %}
+\begin{table}[H]
+\centering
+\begin{tabular}{{{ table.format }}}
+{{ table.content }}
+\end{tabular}
+\caption{\label{tab:{{ table.label }}}}{{ table.caption }}
+\end{table}
+{% endfor %}
+{% endif %}
+
+{% if bibliography %}
+\bibliographystyle{abntex2-num}
+\bibliography{{{ bibliography }}}
+{% endif %}
+
+\end{document}

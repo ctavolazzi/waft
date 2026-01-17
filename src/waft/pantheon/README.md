@@ -46,6 +46,37 @@ summary = magistrate.get_body_of_proof_summary()
 
 The Judge is the God of Judgment and Evaluation. See `_pantheon/judge/README.md` for details.
 
+## The Reasoner
+
+The Reasoner is the God of Reasoning Traces and Chain of Thought. Maintains traceable reasoning chains showing the "why" behind decisions.
+
+### Quick Start
+
+```python
+from waft.pantheon import TheReasoner
+from pathlib import Path
+
+# Initialize
+reasoner = TheReasoner(project_path=Path.cwd())
+
+# Create a trace
+trace_id = reasoner.create_trace(
+    decision="Redesigned template",
+    reasoning="User feedback indicated previous design was too bright and bland. Created clean, functional design focused on utility.",
+    context={"user_request": "more useful and multipurpose"},
+    outcome="New template created"
+)
+
+# Get recent traces
+traces = reasoner.get_recent_traces(limit=10)
+
+# Build reasoning chain
+chain = reasoner.build_chain(trace_id)
+
+# Search traces
+results = reasoner.search_traces("template")
+```
+
 ### Quick Start
 
 ```python

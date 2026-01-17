@@ -16,6 +16,7 @@ from typing import Dict, Any, Optional, List
 from datetime import datetime
 import json
 import os
+import hashlib
 
 
 class KarmaMerchant:
@@ -200,6 +201,7 @@ class KarmaMerchant:
                 "lifetimes": [],
                 "last_incarnation": None,
                 "memory_fragments": [],
+                "deaths": [],  # Permanent death records (tombstones)
                 "created_at": datetime.now().isoformat()
             }
             
@@ -255,6 +257,7 @@ class KarmaMerchant:
         data.setdefault("lifetimes", [])
         data.setdefault("last_incarnation", None)
         data.setdefault("memory_fragments", [])
+        data.setdefault("deaths", [])  # Permanent death records (tombstones)
         
         return data
     
@@ -353,6 +356,143 @@ class KarmaMerchant:
         except (ValueError, OSError, Exception):
             # Return 0.0 on any error
             return 0.0
+    
+    def record_death(
+        self,
+        soul_id: str,
+        being_id: str,
+        death_type: str,
+        reason: str,
+        karma_penalty: float = 50.0,
+        being_data: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
+        """
+        Record a permanent death (tombstone) in Akasha.
+        
+        Creates a permanent death record that persists across sessions. This is the
+        mechanism for permanence - deaths are never forgotten.
+        
+        Process:
+        1. Load soul record from Akasha
+        2. Create tombstone record with death details
+        3. Apply karma penalty (deduct from karma_balance)
+        4. Add tombstone to deaths array
+        5. Save updated soul record
+        
+        Args:
+            soul_id: Soul identifier
+            being_id: Being that died
+            death_type: Type of death (e.g., "will_to_live", "stamina", "manual")
+            reason: Reason for death
+            karma_penalty: Karma to deduct on death (default: 50.0)
+            being_data: Optional snapshot of being state at death
+        
+        Returns:
+            Tombstone record dictionary
+        
+        Raises:
+            ValueError: If soul_id is invalid
+            OSError: If file cannot be written
+        """
+        if not self._validate_soul_id(soul_id):
+            raise ValueError(f"Invalid soul_id: {soul_id}")
+        
+        # Load soul record
+        soul_data = self.access_akasha(soul_id)
+        
+        # Create tombstone record
+        tombstone = {
+            "death_id": f"death_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{hashlib.sha256(f'{soul_id}{being_id}'.encode()).hexdigest()[:8]}",
+            "being_id": being_id,
+            "death_type": death_type,
+            "reason": reason,
+            "karma_penalty": karma_penalty,
+            "karma_before": soul_data.get("karma_balance", 0.0),
+            "died_at": datetime.now().isoformat(),
+            "being_snapshot": being_data or {}
+        }
+        
+        # Apply karma penalty
+        current_karma = soul_data.get("karma_balance", 0.0)
+        new_karma = max(0.0, current_karma - karma_penalty)
+        soul_data["karma_balance"] = new_karma
+        tombstone["karma_after"] = new_karma
+        
+        # Add to deaths array
+        if "deaths" not in soul_data:
+            soul_data["deaths"] = []
+        soul_data["deaths"].append(tombstone)
+        
+        # Save updated soul record
+        soul_file = self.akasha_path / f"{soul_id}.json"
+        if not self._validate_path_in_project(soul_file):
+            raise ValueError(f"Path traversal detected: {soul_file}")
+        
+        try:
+            with open(soul_file, "w", encoding="utf-8") as f:
+                json.dump(soul_data, f, indent=2, ensure_ascii=False)
+            
+            # Set restrictive file permissions (0o600)
+            try:
+                soul_file.chmod(0o600)
+            except (OSError, PermissionError):
+                pass
+        except (IOError, OSError, PermissionError) as e:
+            raise OSError(f"Failed to save death record: {e}")
+        
+        return tombstone
+    
+    def get_death_history(self, soul_id: str) -> List[Dict[str, Any]]:
+        """
+        Get complete death history for a soul.
+        
+        Args:
+            soul_id: Soul identifier
+        
+        Returns:
+            List of death records (tombstones), most recent first
+        """
+        try:
+            soul_data = self.access_akasha(soul_id)
+            deaths = soul_data.get("deaths", [])
+            # Return most recent first
+            return list(reversed(deaths))
+        except (ValueError, OSError, Exception):
+            return []
+    
+    def get_tombstone(self, soul_id: str, death_id: str) -> Optional[Dict[str, Any]]:
+        """
+        Get a specific death record (tombstone) by death_id.
+        
+        Args:
+            soul_id: Soul identifier
+            death_id: Death record identifier
+        
+        Returns:
+            Death record dictionary, or None if not found
+        """
+        try:
+            deaths = self.get_death_history(soul_id)
+            for death in deaths:
+                if death.get("death_id") == death_id:
+                    return death
+            return None
+        except (ValueError, OSError, Exception):
+            return None
+    
+    def get_recent_deaths(self, soul_id: str, limit: int = 5) -> List[Dict[str, Any]]:
+        """
+        Get most recent deaths for a soul.
+        
+        Args:
+            soul_id: Soul identifier
+            limit: Maximum number of deaths to return (default: 5)
+        
+        Returns:
+            List of recent death records
+        """
+        deaths = self.get_death_history(soul_id)
+        return deaths[:limit]
 
 
 # Exception classes for Karma system

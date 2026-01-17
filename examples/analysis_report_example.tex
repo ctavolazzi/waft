@@ -1,0 +1,78 @@
+\documentclass{article}
+
+% ============================================================================
+% Package Imports (Organized by Category)
+% ============================================================================
+
+% Encoding and Fonts
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{microtype}  % Typography improvements
+
+% Language Support (uncomment if needed)
+% \usepackage[spanish]{babel}
+
+% Layout and Geometry
+\usepackage[a4paper]{geometry}
+
+% Graphics and Figures
+\usepackage{graphicx}
+\graphicspath{{figures/}{images/}{./}}  % Centralized graphics path
+
+% Colors and Styling
+\usepackage[dvipsnames]{xcolor}
+\usepackage{analysis_orax}  % Custom analysis report package
+
+% Hyperlinks and References
+\usepackage[colorlinks=true, linkcolor=analysisorange, urlcolor=analysisorange, citecolor=analysisdarkorange]{hyperref}
+\usepackage{cleveref}  % Smart cross-referencing
+
+% Bibliography (uncomment if needed)
+% \usepackage{natbib}
+
+% Utilities
+% \usepackage{lipsum}  % For placeholder text (uncomment if needed)
+
+% ============================================================================
+% Document Metadata
+% ============================================================================
+
+\title{Analysis Report}
+\author{Your Name}
+\date{\today}
+
+% ============================================================================
+% Document Content
+% ============================================================================
+
+\begin{document}
+
+% Title page (uncomment if needed)
+% \begin{titlepage}
+%     \maketitle
+% \end{titlepage}
+
+% Main content
+\maketitle
+
+\section{Analysis Report}
+
+\subsection{Subtitle}
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec fermentum augue. Integer id neque sit amet augue lacinia fringilla. Donec leo ipsum, dapibus vel orci et, viverra viverra sem. Morbi maximus neque ipsum, in vulputate libero porta a. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nulla at libero arcu.
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=1\textwidth]{figures/figure1.png}
+    \caption{Figure Description}
+    \label{fig:1}
+\end{figure}
+
+\subsubsection{Subsection}
+
+In pretium enim dui, quis ornare odio varius et. Nulla facilisi. Nunc tristique tortor at urna vehicula, elementum bibendum tortor hendrerit. Ut eu risus nisi. Vestibulum nunc lorem, tristique sed ultrices nec, porta et ligula. Nam facilisis felis a congue auctor. Fusce id odio in libero blandit cursus nec nec arcu. Nulla eu ultricies massa, id dapibus nisi. Donec tellus urna, maximus nec semper id, consectetur eu mi. Vestibulum elit eros, porta ac eros a, mattis pulvinar magna. Nulla pellentesque dapibus leo molestie varius. Duis ut rutrum urna, at condimentum dui. Sed orci magna, faucibus nec quam et, malesuada ultrices velit. Nam a lorem a massa facilisis rutrum eget id nunc. Morbi aliquet felis et tincidunt scelerisque.
+
+% Alternative: Using custom analysis figure command
+% \analysisfigure[htb]{1\textwidth}{figures/figure1.png}{Figure Description}
+
+\end{document}

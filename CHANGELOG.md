@@ -23,6 +23,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Target**: Stable Electron app for v1.0.0 - the first production-ready desktop application for WAFT.
 
+## [0.9.1] - 2026-01-16
+
+### Changed
+
+- **Version Update**: Incremental patch release (0.9.0 → 0.9.1)
+- **Version Consistency**: Updated version in `pyproject.toml` and `src/waft/__init__.py` to maintain consistency
+
 ## [0.9.0] - 2026-01-15
 
 ### Added

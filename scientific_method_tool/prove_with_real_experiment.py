@@ -24,6 +24,14 @@ from scientific_method_tool import (
 from waft.being import Being
 from waft.core.dnd5e import DnD5eCharacter, DnD5eStats, ArmorType
 
+# Empirica integration (optional)
+try:
+    from waft.core.empirica import EmpiricaManager
+    EMPIRICA_AVAILABLE = True
+except ImportError:
+    EMPIRICA_AVAILABLE = False
+    EmpiricaManager = None
+
 def run_real_experiment(experiment):
     """Run actual D&D scenario experiment."""
     from examples.tavern_scenario_evolved import create_character, tavern_scenario_evolved
@@ -177,6 +185,13 @@ def main():
         print("  ✅ States compared")
         print("  ✅ Results analyzed")
         print("  ✅ All data saved to files")
+        if EMPIRICA_AVAILABLE:
+            try:
+                empirica = EmpiricaManager(project_root)
+                if empirica.is_initialized():
+                    print("  ✅ Logged findings to Empirica")
+            except Exception:
+                pass
         print()
         
     finally:

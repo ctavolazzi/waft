@@ -24,7 +24,7 @@ export default defineConfig({
 		https: false, // Use HTTP, not HTTPS
 		proxy: {
 			'/api': {
-				target: 'http://localhost:8001',
+				target: 'http://localhost:8000',
 				changeOrigin: true
 			}
 		}

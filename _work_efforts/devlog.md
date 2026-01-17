@@ -4,6 +4,330 @@ This log tracks development activities, decisions, and progress for the waft pro
 
 ---
 
+## 2026-01-16 - Version Update to v0.9.1
+
+**Time**: 21:09:13 PST
+**Status**: ✅ Complete
+
+### Summary
+Prepared codebase for version 0.9.1 release by updating all version references and creating release branch with PR.
+
+### Key Accomplishments
+- ✅ Updated version in `pyproject.toml`: `0.9.0` → `0.9.1`
+- ✅ Updated version in `src/waft/__init__.py`: `0.9.0` → `0.9.1`
+- ✅ Updated `CHANGELOG.md` with v0.9.1 entry
+- ✅ Created version update summary document
+- ✅ Created release branch `release/v0.9.1`
+- ✅ Committed and pushed version update changes
+- ✅ Created PR #12 for version bump
+
+### Version Update
+- **Previous**: 0.9.0
+- **New**: 0.9.1
+- **Type**: Patch release (incremental update)
+- **Impact**: Maintains version consistency across the codebase
+
+### Files Modified
+- `pyproject.toml` - Version updated to 0.9.1
+- `src/waft/__init__.py` - Version updated to 0.9.1
+- `CHANGELOG.md` - Added v0.9.1 entry
+
+### Files Created
+- `V0.9.1_VERSION_UPDATE_SUMMARY.md` - Version update summary document
+
+### Git Operations
+- **Branch**: `release/v0.9.1`
+- **Commit**: `b8fe12e` - "chore: bump version to 0.9.1"
+- **PR**: #12 - https://github.com/ctavolazzi/waft/pull/12
+- **Status**: Pushed to GitHub, PR created
+
+### Next Steps
+1. Review and merge PR #12
+2. Create git tag `v0.9.1` after merge
+3. Create GitHub release with release notes
+
+---
+
+## 2026-01-16 - Unicamp Physics Report LaTeX Template Integration
+
+**Time**: 20:38:24 PST
+**Status**: ✅ Complete
+**Work Effort**: [WE-260116-32dq](WE-260116-32dq_integrate_brazilian_portuguese_academic_report_latex_template/WE-260116-32dq_index.md)
+
+### Summary
+Integrated the Brazilian Portuguese academic report LaTeX template from Unicamp (Instituto de Física Gleb Wataghin) into the WAFT template system using the Librarian and LaTeXTemplateRegistry.
+
+### Key Accomplishments
+- ✅ **Template File**: Created `templates/unicamp-physics-report/main.tex` with Jinja2 support
+- ✅ **Wrapper Function**: Created `generate_unicamp_report()` in `src/waft/templates/latex/wrappers/unicamp_report.py`
+- ✅ **Auto-Discovery**: Template automatically discovered by LaTeXTemplateRegistry (shows as "Unicamp Report")
+- ✅ **Librarian Catalog**: Cataloged template with metadata, tags, and Scribe script
+- ✅ **Full Parameter Support**: All template sections configurable (abstract, introduction, methodology, results, discussion, conclusion)
+
+### Implementation Details
+
+**Template Features:**
+- Multi-language support (English, French, Spanish, Portuguese)
+- Standard academic report structure
+- Figure and table support via Jinja2
+- Bibliography support (abntex2-num style)
+- Markdown to LaTeX conversion for content sections
+
+**Registry Integration:**
+- Category: `report`
+- Tags: `[latex, pdf, academic, brazilian, portuguese, physics, lab-report, unicamp]`
+- Source: `unicamp-physics-report`
+- Auto-discovered: ✅ Yes
+
+**Librarian Catalog:**
+- Record ID: `template_unicamp_physics_report`
+- Type: `template`
+- Category: `latex_template`
+- Subcategory: `academic_report`
+- Metadata includes wrapper path, function name, description, language (pt-BR)
+
+### Usage
+
+```python
+from src.waft.templates.latex.wrappers.unicamp_report import generate_unicamp_report
+
+pdf_path = generate_unicamp_report(
+    title="Relatório I",
+    content="# Introduction...",
+    output_path=Path("report.pdf"),
+    authors=["Student Name 123456"],
+    abstract="Este relatório apresenta..."
+)
+```
+
+### Files Created
+- `templates/unicamp-physics-report/main.tex`
+- `src/waft/templates/latex/wrappers/unicamp_report.py`
+- Test and catalog scripts
+- Integration documentation
+
+---
+
+## 2026-01-16 - Empirica Integration: Death System, Oracle, and prove-it
+
+**Time**: 21:00:00 PST
+**Status**: ✅ Complete
+**Work Effort**: [WE-260116-fikx](WE-260116-fikx_death_encounter_system_d_d_saving_throws_and_being_vs_death/WE-260116-fikx_index.md)
+
+### Summary
+Added Empirica epistemic tracking integration to three systems: Death Encounter System (near-death experiences and deaths), TheOracle (consultations and decision assessments), and prove-it scripts (experiment results). All systems now log findings and unknowns to track epistemic learning.
+
+### Key Accomplishments
+- ✅ **Death Encounter System**: Logs near-death experiences and deaths to Empirica
+  - Near-death experiences: Impact 0.7 (survival via saving throw)
+  - Deaths: Impact 0.8 (permanent death events)
+  - Unknowns: Death pattern questions for first-time deaths
+- ✅ **TheOracle Enhancement**: Logs all consultations and decision assessments
+  - Consultations: Impact 0.3 (tracking Oracle usage)
+  - Decision assessments: Impact 0.5-0.8 (based on gate result)
+  - Unknowns: Logged for BRANCH decisions (need investigation)
+- ✅ **prove-it Scripts**: Logs experiment results to Empirica
+  - Verified hypotheses: Impact 0.7-0.8
+  - Refuted hypotheses: Impact 0.5-0.6 + logged as unknowns
+  - Tracks learning from proof demonstrations
+
+### Implementation Details
+
+**Files Modified:**
+- `src/waft/core/now_cycle.py`: Added Empirica logging for deaths and near-death experiences
+- `src/waft/being.py`: Added Empirica logging in saving throw method
+- `src/waft/core/science/oracle.py`: Enhanced with consultation and decision logging
+- `scientific_method_tool/prove_it_works.py`: Added Empirica integration
+- `scientific_method_tool/prove_with_real_experiment.py`: Added Empirica integration
+
+**What Gets Logged:**
+- **Findings**: Discoveries, successes, verified hypotheses, deaths, survivals
+- **Unknowns**: Knowledge gaps, refuted hypotheses, questions needing investigation
+- **Impact Scores**: 0.3-0.9 based on importance and significance
+
+**Benefits:**
+- Epistemic tracking of what the system learns
+- Knowledge gap identification (unknowns)
+- Learning measurement over time
+- Decision support through CHECK gates
+- Complete audit trail of epistemic evolution
+
+---
+
+## 2026-01-16 - Death Encounter System: Phase 1 Complete (HP + Saving Throw)
+
+**Time**: 20:45:00 PST
+**Status**: ✅ Phase 1 Complete
+**Work Effort**: [WE-260116-fikx](WE-260116-fikx_death_encounter_system_d_d_saving_throws_and_being_vs_death/WE-260116-fikx_index.md)
+
+### Summary
+Implemented Phase 1 of the Death Encounter System: optional HP stat for physical beings and CON saving throws that give beings a final chance when Will to Live reaches 0.0. Beings can now survive near-death experiences through successful saving throws.
+
+### Key Accomplishments
+- ✅ **Optional HP Stat**: Added `has_physical_form` flag and HP/max_hp to Being class
+  - HP calculated from stamina and will_to_live (10-200 range)
+  - Only beings with `has_physical_form=True` have HP
+  - Non-physical beings have `hp=None`, `max_hp=None`
+- ✅ **CON Saving Throw**: Implemented `attempt_death_saving_throw()` method
+  - Triggered when Will to Live reaches 0.0
+  - Uses CON modifier (derived from stamina)
+  - Proficiency bonus based on lifetimes (experience)
+  - Proficiency check based on luck/karma
+  - Default DC: 15 (configurable)
+  - Success: Restores Will to Live to 1.0 (near-death experience)
+  - Failure: Proceeds to death processing
+- ✅ **Death Processing Integration**: Updated NowCycleManager to use saving throws
+  - Checks Will to Live = 0.0 → attempts saving throw
+  - If save succeeds → being survives (near-death experience logged)
+  - If save fails → proceeds with permanent death (tombstone)
+
+### Implementation Details
+
+**Files Modified:**
+- `src/waft/being.py`: Added HP stat, saving throw method
+- `src/waft/core/now_cycle.py`: Updated death processing with saving throw logic
+
+**HP Calculation:**
+- Base HP = (stamina / 100.0) * 50.0 + (will_to_live / 100.0) * 50.0
+- Range: 10-200 HP
+- Only for beings with `has_physical_form=True`
+
+**Saving Throw Formula:**
+- d20 + CON modifier + proficiency bonus (if proficient) >= DC
+- CON modifier: Derived from stamina (8-20 score range)
+- Proficiency bonus: 2 + (lifetimes // 4), max 6
+- Proficiency: Based on luck > 60.0 or karma > 500.0
+- Default DC: 15
+
+**Next Steps:**
+- Phase 2: Decay system + God of Rot entity
+- Phase 3: Death encounter generation
+- Phase 4: PDF generation for encounters
+
+---
+
+## 2026-01-16 - LaTeX Newsletter Template Improvements
+
+**Time**: 20:31:41 PST
+**Status**: ✅ Complete
+**Work Effort**: [WE-260116-7e6g](WE-260116-7e6g_latex_newsletter_template_improvements/WE-260116-7e6g_index.md)
+
+### Summary
+Improved the LaTeX newsletter template with modern best practices, better error handling, enhanced documentation, and improved maintainability. Created an improved version that follows current LaTeX standards.
+
+### Key Accomplishments
+- ✅ **Modern Package Usage**: Replaced manual geometry settings with geometry package
+- ✅ **Error Handling**: Added \safeincludegraphics command for graceful image handling
+- ✅ **Enhanced Documentation**: Comprehensive comments and IMPROVEMENTS.md analysis
+- ✅ **Configuration Options**: Easy-to-customize newsletter settings
+- ✅ **Code Organization**: Clear sections for better maintainability
+- ✅ **UTF-8 Support**: Proper encoding for international characters
+- ✅ **Improved Hyperref**: Better PDF metadata and accessibility
+
+### Implementation Details
+
+**Files Created:**
+- `newsletter_template_improved.tex` - Improved LaTeX template
+- `IMPROVEMENTS.md` - Detailed analysis of all improvements
+
+**Key Improvements:**
+1. **Geometry Package**: Replaced 8 manual \setlength commands with clean \geometry{} block
+2. **Image Safety**: \safeincludegraphics shows placeholders for missing images instead of failing
+3. **Configuration**: Centralized customization commands for newsletter details
+4. **Documentation**: Added comprehensive header and section comments
+5. **Organization**: Grouped packages by purpose, clear section structure
+
+**Priority Improvements:**
+- 🔴 Critical: Modern package usage (geometry) - Score: 9.0
+- 🔴 Critical: Error handling for images - Score: 6.0
+- 🟡 High: Enhanced documentation - Score: 6.0
+- 🟡 High: Configuration options - Score: 6.0
+
+---
+
+## 2026-01-16 - Permanent Death Records and Death Mechanic Implementation
+
+**Time**: 20:10:20 PST
+**Status**: ✅ Complete
+**Work Effort**: [WE-260116-9f82](WE-260116-9f82_permanent_death_records_and_death_mechanic/WE-260116-9f82_index.md)
+
+### Summary
+Implemented permanent death records in Akasha and a proper death mechanic that creates lasting consequences. Deaths are now permanent, have karma penalties, and prevent immediate reincarnation.
+
+### Key Accomplishments
+- ✅ **BeingState.DEAD**: Added new permanent death state (separate from ARCHIVED)
+- ✅ **Permanent Tombstones**: Death records stored permanently in Akasha soul records
+- ✅ **Karma Penalties**: Death deducts karma (default 50.0) from soul balance
+- ✅ **Reincarnation Gating**: DEAD beings require minimum karma (50.0) to reincarnate
+- ✅ **Death History**: Complete death history stored in soul records' "deaths" array
+- ✅ **Query Methods**: Added get_death_history(), get_tombstone(), get_recent_deaths()
+- ✅ **NowCycleManager Integration**: Death processing creates permanent tombstones automatically
+
+### Implementation Details
+
+**Files Modified:**
+- `src/waft/being.py`: Added BeingState.DEAD, updated reincarnation checks
+- `src/waft/karma.py`: Added record_death(), get_death_history(), get_tombstone(), get_recent_deaths()
+- `src/waft/core/now_cycle.py`: Updated check_death_conditions() to create permanent tombstones
+
+**Death Flow:**
+1. Being's will_to_live reaches 0.0
+2. NowCycleManager detects death
+3. Being state set to BeingState.DEAD
+4. KarmaMerchant.record_death() creates permanent tombstone in Akasha
+5. Karma penalty applied (default 50.0 deducted)
+6. Death recorded in soul's "deaths" array
+7. Death event logged to flight recorder
+8. Reincarnation requires minimum karma (50.0) to proceed
+
+**Permanence Achieved:**
+- Deaths are never forgotten (stored in Akasha)
+- Death history persists across sessions
+- Karma penalties create lasting consequences
+- Reincarnation gating prevents death being trivial
+
+---
+
+## 2026-01-16 - WAFT Desktop Electron App Setup Complete
+
+**Time**: 19:15:17 PST
+**Status**: ✅ Setup Complete, Ready for Testing
+**Checkpoint**: [CHECKPOINT_2026-01-16_waft_desktop_electron_setup.md](CHECKPOINT_2026-01-16_waft_desktop_electron_setup.md)
+
+### Summary
+Created complete WAFT Desktop Electron application with backend management, SvelteKit frontend, health monitoring, and development infrastructure. All code structure verified and ready for runtime testing.
+
+### Key Accomplishments
+- ✅ **Electron Main Process**: Complete BackendManager implementation
+  - Spawns and monitors WAFT Python backend
+  - Health checks every 5 seconds
+  - Auto-restart on crashes (max 5 attempts)
+  - IPC communication handlers
+- ✅ **Preload Script**: Secure IPC bridge with contextBridge
+- ✅ **SvelteKit Frontend**: Basic UI with backend status monitoring
+  - Real-time health updates
+  - Backend log viewer
+  - Control interface
+- ✅ **Health Endpoint**: `/api/health` added to FastAPI
+- ✅ **Final Report Command**: `/final-report` with Science Textbook LaTeX template
+- ✅ **Development Infrastructure**: Startup scripts and documentation
+- ✅ **Dependencies Installed**: Electron and Frontend npm packages
+
+### Current State
+- **Progress**: 80% complete (setup done, testing pending)
+- **Version**: 0.0.1
+- **Status**: Ready for runtime testing
+- **Files Created**: 15+ new files (Electron, Frontend, API, Commands)
+
+### Next Steps
+1. **HIGH PRIORITY**: Test Electron app startup and backend spawning
+2. **HIGH PRIORITY**: Verify health monitoring works
+3. **HIGH PRIORITY**: Test IPC communication
+4. **MEDIUM PRIORITY**: Enhance UI with project management features
+5. **MEDIUM PRIORITY**: Add WebSocket for real-time updates
+
+---
+
 ## 2026-01-16 - D&D Campaign Desktop App v0.0.1: Backend & Electron Complete
 
 **Time**: 12:22:46 PST

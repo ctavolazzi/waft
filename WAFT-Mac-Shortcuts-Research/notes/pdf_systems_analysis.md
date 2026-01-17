@@ -172,3 +172,9 @@
 ---
 
 **Status:** Analysis complete, awaiting decision on approach
+
+---
+
+## Related Evaluations
+
+- **LaTeX Alternatives**: See [`docs/LATEX_ALTERNATIVES_EVALUATION.md`](../../docs/LATEX_ALTERNATIVES_EVALUATION.md) for comprehensive evaluation of Typst, ConTeXt, Quarto, and Pandoc as modern alternatives to LaTeX.
