@@ -2374,6 +2374,55 @@ def check_assumptions(
 
 
 @app.command()
+def final_report(
+    title: str = typer.Option("Final Report", "--title", "-t", help="Report title"),
+    subtitle: Optional[str] = typer.Option(None, "--subtitle", "-s", help="Report subtitle"),
+    output_name: Optional[str] = typer.Option(None, "--output", "-o", help="Output filename (without extension)"),
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+):
+    """
+    Generate a comprehensive final report PDF using the Science Textbook LaTeX template.
+
+    Gathers session data, work progress, and context, then compiles into a professional PDF.
+    """
+    project_path = resolve_project_path(path)
+
+    console.print(f"\n[bold cyan]📚 Waft[/bold cyan] - Generating Final Report\n")
+
+    from .core.final_report import FinalReportGenerator
+
+    try:
+        generator = FinalReportGenerator(project_path)
+
+        console.print(f"[yellow]→[/yellow] Gathering session data...")
+        pdf_path = generator.generate_report(
+            title=title,
+            subtitle=subtitle,
+            output_name=output_name
+        )
+
+        console.print(f"\n[green]✅[/green] Final report generated successfully!")
+        console.print(f"   Location: {pdf_path}")
+        console.print(f"   PDF opened in default viewer")
+
+        _process_tavern_hook(project_path, "final_report", True)
+
+    except FileNotFoundError as e:
+        console.print(f"[red]❌[/red] Error: {e}")
+        console.print(f"[dim]Science Textbook template not found. Expected at: {project_path / '_science_textbook' / 'stb-template.tex'}[/dim]")
+        _process_tavern_hook(project_path, "final_report", False)
+    except RuntimeError as e:
+        console.print(f"[red]❌[/red] LaTeX compilation failed: {e}")
+        console.print(f"[dim]Make sure pdflatex is installed:[/dim]")
+        console.print(f"[dim]  macOS: brew install --cask mactex[/dim]")
+        console.print(f"[dim]  Linux: sudo apt-get install texlive-full[/dim]")
+        _process_tavern_hook(project_path, "final_report", False)
+    except Exception as e:
+        console.print(f"[red]❌[/red] Error generating report: {e}")
+        _process_tavern_hook(project_path, "final_report", False)
+
+
+@app.command()
 def oracle(
     question: Optional[str] = typer.Argument(None, help="Question or context for guidance"),
     assess: Optional[str] = typer.Option(None, "--assess", "-a", help="Assess a decision (provide description)"),
