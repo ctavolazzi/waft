@@ -1,0 +1,13 @@
+{
+  "sessions": [
+    {
+      "session_id": "session_20260117_165559",
+      "problem_summary": "How do I implement OAuth2 authentication in Python?",
+      "created": "2026-01-17T16:55:59.818009",
+      "completed": "2026-01-17T16:55:59.817992",
+      "iterations": 1,
+      "quality_score": 0.91
+    }
+  ],
+  "last_updated": "2026-01-17T16:55:59.818640"
+}

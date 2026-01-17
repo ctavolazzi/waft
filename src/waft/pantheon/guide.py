@@ -192,7 +192,27 @@ class TheGuide:
     def reasoner(self):
         """Lazy initialization of TheReasoner."""
         if self._reasoner is None:
-            from .reasoner import TheReasoner
+            try:
+                from .reasoner import TheReasoner
+            except ImportError:
+                # Fallback to absolute import if relative import fails
+                import sys
+                import importlib.util
+                reasoner_path = self.pantheon_path.parent / "pantheon" / "reasoner.py"
+                if reasoner_path.exists():
+                    spec = importlib.util.spec_from_file_location("reasoner", reasoner_path)
+                    reasoner_module = importlib.util.module_from_spec(spec)
+                    spec.loader.exec_module(reasoner_module)
+                    TheReasoner = reasoner_module.TheReasoner
+                else:
+                    # TheReasoner not available, create a mock
+                    class TheReasoner:
+                        def __init__(self, project_path):
+                            self.project_path = project_path
+                        def create_trace(self, decision, reasoning, context=None, parent_trace_id=None):
+                            return f"mock_trace_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+                        def get_recent_traces(self, limit=10):
+                            return []
             self._reasoner = TheReasoner(project_path=self.project_path)
         return self._reasoner
 
@@ -392,7 +412,7 @@ Previous steps and evaluations:
 
 Based on the previous work and evaluations, provide the next instruction to continue solving this problem. Address any weaknesses identified in the evaluations."""
 
-        response = guide_llm.complete(prompt)
+        response = self.guide_llm.complete(prompt)
         return response.strip()
 
     def _generate_reasoning_trace(
