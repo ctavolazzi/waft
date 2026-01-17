@@ -23,7 +23,39 @@
       "completed": "2026-01-17T17:50:40.681157",
       "iterations": 3,
       "quality_score": 0.5
+    },
+    {
+      "session_id": "session_20260117_182839",
+      "problem_summary": "Explain the CAP theorem and its implications",
+      "created": "2026-01-17T18:28:39.311307",
+      "completed": "2026-01-17T18:28:39.311275",
+      "iterations": 3,
+      "quality_score": 0.5
+    },
+    {
+      "session_id": "session_20260117_182900",
+      "problem_summary": "Explain the CAP theorem and its implications",
+      "created": "2026-01-17T18:29:00.836026",
+      "completed": "2026-01-17T18:29:00.835994",
+      "iterations": 3,
+      "quality_score": 0.5
+    },
+    {
+      "session_id": "session_20260117_182924",
+      "problem_summary": "Explain the CAP theorem and its implications",
+      "created": "2026-01-17T18:29:24.064067",
+      "completed": "2026-01-17T18:29:24.064039",
+      "iterations": 3,
+      "quality_score": 0.5
+    },
+    {
+      "session_id": "session_20260117_182951",
+      "problem_summary": "Explain the CAP theorem and its implications",
+      "created": "2026-01-17T18:29:51.769356",
+      "completed": "2026-01-17T18:29:51.769329",
+      "iterations": 1,
+      "quality_score": 0.95
     }
   ],
-  "last_updated": "2026-01-17T17:50:40.682850"
+  "last_updated": "2026-01-17T18:29:51.770014"
 }
