@@ -1,0 +1,209 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% LaTeX Template: Newsletter (Improved Version)
+% Source: Based on http://www.howtotex.com, enhanced with modern practices
+% Date: January 2026
+% 
+% Improvements:
+% - Modern package usage (geometry instead of manual settings)
+% - Better error handling for missing images
+% - Enhanced documentation
+% - Configuration options
+% - UTF-8 support
+% - Improved hyperref setup
+% - Better code organization
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% ---------------
+%%% DOCUMENT CLASS
+%%% ---------------
+\documentclass[10pt,a4paper]{article}
+
+%%% ---------------
+%%% PACKAGES
+%%% ---------------
+% Encoding and fonts
+\usepackage[utf8]{inputenc}			% UTF-8 input encoding
+\usepackage[T1]{fontenc}				% T1 font encoding for better hyphenation
+\usepackage{charter} 					% Charter font for main content
+
+% Language
+\usepackage[english]{babel}				% English language support
+\frenchspacing							% Better looking spacing
+
+% Layout
+\usepackage{geometry}					% Modern page layout (replaces manual settings)
+\geometry{
+	a4paper,
+	left=0.5in,
+	right=0.5in,
+	top=0.5in,
+	bottom=0.5in,
+	headheight=12pt,
+	headsep=25pt,
+	footskip=30pt
+}
+
+% Graphics and figures
+\usepackage{graphicx}					% Enhanced graphics support
+\usepackage{wrapfig}					% Wrapping text around figures
+\graphicspath{{images/}}				% Default image directory
+
+% Typography
+\usepackage{multicol}					% Multi-column layout
+\usepackage{microtype}					% Micro-typography improvements
+
+% Math
+\usepackage{amssymb,amsmath}			% Advanced math symbols and environments
+
+% Links and references
+\usepackage{url}						% Clickable URLs
+\usepackage[pdfpagemode=FullScreen,
+			colorlinks=false,
+			pdfauthor={Newsletter Author},
+			pdftitle={Newsletter},
+			pdfsubject={Newsletter}]{hyperref}	% Hyperlinks and PDF metadata
+
+% Symbols
+\usepackage{marvosym}					% Additional symbols
+
+% Date formatting
+\usepackage{datetime}					% Custom date formatting
+\newdateformat{mydate}{\monthname[\THEMONTH] \THEYEAR}
+
+% Dummy text (remove in production)
+\usepackage{blindtext}					% Dummy text for testing
+
+% Header and footer
+\usepackage{fancyhdr}					% Custom headers and footers
+\pagestyle{fancy}
+\lfoot{	\footnotesize 
+		Science \& Technology Newsletter \\
+		\Mundus\ \href{http://www.howtotex.com}{HowToTeX.com}	\quad
+		\Telefon\ 555-5555											\quad
+		\Letter\ \href{mailto:frits@howtotex.com}{frits@howtotex.com}
+	  }
+\cfoot{}
+\rfoot{\footnotesize ~\\ Page \thepage}
+\renewcommand{\headrulewidth}{0.0pt}	% No bar on top of page
+\renewcommand{\footrulewidth}{0.4pt}	% Bar on bottom of page
+
+%%% ---------------
+%%% CONFIGURATION
+%%% ---------------
+% Image error handling: Use placeholder if image not found
+\newcommand{\safeincludegraphics}[2][width=\textwidth]{%
+	\IfFileExists{#2}{%
+		\includegraphics[#1]{#2}%
+	}{%
+		\fbox{\parbox{0.9\textwidth}{\centering\itshape Image not found: #2}}%
+		\typeout{Warning: Image '#2' not found}%
+	}%
+}
+
+% Newsletter configuration (customize these)
+\newcommand{\newslettername}{Science \& Technology}
+\newcommand{\newsletterissue}{1}
+\newcommand{\newslettercontacturl}{http://www.howtotex.com}
+\newcommand{\newsletterphone}{555-5555}
+\newcommand{\newsletteremail}{frits@howtotex.com}
+
+%%% ---------------
+%%% CUSTOM COMMANDS
+%%% ---------------
+
+% Horizontal rule
+\newcommand{\HorRule}[1]{\noindent\rule{\linewidth}{#1}}
+
+% Separator rule
+\newcommand{\SepRule}{\noindent
+	\begin{center}
+		\rule{250pt}{1pt}
+	\end{center}
+}
+
+% Journal name (title)
+\newcommand{\JournalName}[1]{%
+	\begin{center}	
+		\Huge \usefont{T1}{augie}{m}{n}
+		#1%
+	\end{center}	
+	\par \normalsize \normalfont
+}
+
+% Journal issue (date and number)
+\newcommand{\JournalIssue}[1]{%
+	\hfill \textsc{\mydate \today, No #1}
+	\par \normalsize \normalfont
+}
+
+% News item title
+\newcommand{\NewsItem}[1]{%
+	\usefont{T1}{augie}{m}{n} 	
+	\large #1 \vspace{4pt}
+	\par \normalsize \normalfont
+}
+
+% News author
+\newcommand{\NewsAuthor}[1]{%
+	\hfill by \textsc{#1} \vspace{4pt}
+	\par \normalfont
+}
+
+%%% ---------------
+%%% DOCUMENT
+%%% ---------------
+\begin{document}
+
+% Title section
+% -----
+\JournalIssue{\newsletterissue}
+\JournalName{\newslettername}
+\noindent\HorRule{3pt} \\[-0.75\baselineskip]
+\HorRule{1pt}
+% -----
+
+% Front article
+% -----
+\vspace{0.5cm}
+\SepRule
+\vspace{0.5cm}
+
+\begin{center}
+\begin{minipage}[h]{0.75\linewidth}
+	\begin{wrapfigure}{l}{0.41\textwidth}
+		\safeincludegraphics[width=0.42\textwidth]{frog.jpg}
+		\\	% Spacer for text alignment
+	\end{wrapfigure}
+	
+	\NewsItem{Frog eats monkey}
+	\emph{\blindtext}
+\end{minipage}
+\end{center}
+% -----
+
+% Other news articles
+% -----
+\vspace{0.5cm}
+\SepRule
+\vspace{0.5cm}
+
+\begin{multicols}{3}
+	% Article 1
+	\NewsItem{Monkey eats elephant}
+	\NewsAuthor{F. Wenneker}
+	\blindtext[2]
+	
+	\vspace{1cm}
+	
+	% Article 2
+	\NewsItem{Elephant eats frog}
+	\NewsAuthor{J. Doe}
+	\blindtext[1]
+	\begin{center}
+		\safeincludegraphics[width=0.8\linewidth]{elephant}
+	\end{center}
+	\blindtext[1]
+\end{multicols}
+% -----
+
+\end{document}

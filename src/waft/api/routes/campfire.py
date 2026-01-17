@@ -42,14 +42,14 @@ async def create_story(
 ):
     """
     Gather around the campfire to tell a story.
-    
+
     Creates a new story using TheCampfire, orchestrating
     TheOracle, Storyteller, and TavernKeeper.
     """
     from ...core.campfire import TheCampfire
-    
+
     project_path = get_project_path(request)
-    
+
     try:
         campfire = TheCampfire(project_path)
         result = campfire.gather_around_the_campfire(
@@ -68,18 +68,18 @@ async def create_story(
 
 @router.get("/campfire/stories")
 async def list_stories(
-    limit: Optional[int] = None,
-    request: Request
+    request: Request,
+    limit: Optional[int] = None
 ):
     """
     Get all stories from the campfire.
-    
+
     Returns list of story metadata, sorted by creation date (newest first).
     """
     from ...core.campfire import TheCampfire
-    
+
     project_path = get_project_path(request)
-    
+
     try:
         campfire = TheCampfire(project_path)
         stories = campfire.get_stories(limit=limit)
@@ -95,20 +95,20 @@ async def get_story(
 ):
     """
     Get a specific story by ID.
-    
+
     Returns story metadata including PDF path and Oracle insights.
     """
     from ...core.campfire import TheCampfire
-    
+
     project_path = get_project_path(request)
-    
+
     try:
         campfire = TheCampfire(project_path)
         story = campfire.get_story(story_id)
-        
+
         if not story:
             raise HTTPException(status_code=404, detail="Story not found")
-        
+
         return story
     except HTTPException:
         raise
@@ -123,20 +123,20 @@ async def get_story_content(
 ):
     """
     Get the full content of a story.
-    
+
     Returns the markdown content of the story.
     """
     from ...core.campfire import TheCampfire
-    
+
     project_path = get_project_path(request)
-    
+
     try:
         campfire = TheCampfire(project_path)
         content = campfire.get_story_content(story_id)
-        
+
         if not content:
             raise HTTPException(status_code=404, detail="Story content not found")
-        
+
         return {"content": content}
     except HTTPException:
         raise

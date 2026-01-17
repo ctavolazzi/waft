@@ -1,0 +1,26 @@
+{
+  "project_id": "proj_20260116_201713",
+  "title": "WAFT API Enhancement",
+  "description": "Transform the WAFT API from read-only to a fully-featured REST API with complete CRUD operations, comprehensive documentation, testing, and standardized error handling.",
+  "status": "planning",
+  "created_at": "2026-01-16T20:17:13.159510",
+  "updated_at": "2026-01-16T20:18:34.716649",
+  "progress_percent": 0.0,
+  "tags": [
+    "api",
+    "crud",
+    "documentation",
+    "testing",
+    "error-handling"
+  ],
+  "milestones": [],
+  "progress_entries": [],
+  "related_work_efforts": [
+    "WE-260116-279z",
+    "WE-260116-g7c0",
+    "WE-260116-pdqs",
+    "WE-260116-x6vz"
+  ],
+  "notes": "",
+  "version": 1
+}

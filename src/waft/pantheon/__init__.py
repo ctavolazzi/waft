@@ -15,6 +15,7 @@ from .fae import Fae, Quest
 from .mission_control import MissionControl, MissionStatus
 from .the_village import TheVillage, VillageGathering, VillageConnection
 from .external_drive_realm import ExternalDriveRealm
+from .reasoner import TheReasoner
 
 __all__ = [
     "Magistrate",
@@ -36,5 +37,6 @@ __all__ = [
     "TheVillage",
     "VillageGathering",
     "VillageConnection",
-    "ExternalDriveRealm"
+    "ExternalDriveRealm",
+    "TheReasoner"
 ]

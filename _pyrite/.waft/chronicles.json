@@ -17,10 +17,10 @@
     "hit_dice": "d8",
     "max_hp": 7,
     "current_hp": 7,
-    "created_at": "2026-01-16T12:16:01.231219",
-    "updated_at": "2026-01-16T12:16:02.454176"
+    "created_at": "2026-01-16T21:43:46.349806",
+    "updated_at": "2026-01-16T21:43:47.318289"
   },
-  "updated_at": "2026-01-16T12:16:04.699700",
+  "updated_at": "2026-01-16T21:43:48.871374",
   "adventure_journal": [
     {
       "timestamp": "2026-01-06T00:13:34.681830",
@@ -228,17 +228,17 @@
     },
     {
       "event": "oracle",
-      "narrative": "The TavernKeeper nods approvingly: 'Wisdom accumulates.'",
+      "narrative": "The TavernKeeper nods approvingly: 'Structural integrity confirmed.'",
       "dice_roll": "1d20+-1",
-      "result": 15,
+      "result": 8,
       "outcome": "success",
       "rewards": {
         "insight": 5,
         "credits": 0,
         "integrity": 2.0
       },
-      "classification": "optimal",
-      "timestamp": "2026-01-16T12:16:04.699477"
+      "classification": "failure",
+      "timestamp": "2026-01-16T21:43:48.871211"
     }
   ]
 }

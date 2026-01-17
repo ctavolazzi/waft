@@ -1,26 +1,27 @@
-# /prove-it - Interactive AI-Driven Proof System
+# /prove-it - Prove Claims with Evidence
 
-**Makes the AI prove any claim from the conversation with evidence, right here in chat.**
+**Investigates claims from conversation, proves/disproves them, checks assumptions, and generates proof reports.**
 
 ---
 
 ## Purpose
 
-This command makes the AI (Auto) prove claims interactively by:
-1. **Extracting the claim** - From conversation context or explicit statement
-2. **Investigating the codebase** - Searching files, reading code, checking implementations
-3. **Gathering evidence** - Finding proof in actual code/files, not just scripts
-4. **Presenting proof in chat** - Shows evidence directly in the conversation
-5. **Optional case file** - Can generate PDF documentation if requested
+This command investigates claims from the conversation and proves or disproves them by:
+1. **Extracting claims** - From conversation context or explicit statement
+2. **Running verification** - Checks system state, files, git status, etc.
+3. **Checking assumptions** - Validates assumptions made during conversation
+4. **Gathering evidence** - Searches codebase, reads files, checks implementations
+5. **Building case file** - Creates comprehensive markdown case file with evidence
+6. **Generating PDF report** - Creates PDF binder with verdict on cover
 
-**If claims are false, the AI will state so clearly with evidence.**
+**If claims are false, the system will state so clearly with evidence.**
 
 **Use when:**
-- You want the AI to prove something it said or you claimed
-- You need evidence-based verification of any claim
-- You want to see proof in the chat conversation
-- You need the AI to investigate and present findings
-- You want verification beyond reasonable doubt
+- You want the AI to prove something it claimed
+- You made a claim and want evidence
+- You need verification of any statement
+- You want to check assumptions made during conversation
+- You need evidence-based confirmation with a report
 
 ---
 
@@ -28,24 +29,27 @@ This command makes the AI (Auto) prove claims interactively by:
 
 **Command**: `/prove-it [claim]` or `/prove [claim]`
 
-**What the AI does:**
-1. **Extracts claim** from conversation context or your explicit statement
-2. **Investigates** by searching codebase, reading relevant files
-3. **Gathers evidence** from actual code, files, git history, etc.
-4. **Presents proof** directly in chat with evidence
-5. **Provides verdict** - PROVEN, DISPROVEN, or INCONCLUSIVE with confidence
-
-**AI Actions:**
-- Searches codebase for relevant code
-- Reads files to verify claims
-- Checks git history if relevant
-- Examines implementations
-- Presents findings with evidence
-- States clear verdict with confidence level
+**What it does:**
+1. Extracts claim from conversation context or your explicit statement
+2. Runs verification checks (date/time, disk space, git status, file existence, templates)
+3. Checks assumptions made during conversation
+4. Investigates codebase to gather evidence
+5. Builds comprehensive case file with all evidence
+6. Generates PDF report with verdict on cover
+7. Opens PDF automatically (macOS/Windows/Linux)
 
 **If no claim provided:**
 - AI extracts the most recent claim from conversation context
 - Or asks you to specify what to prove
+
+**Execution:**
+When you use `/prove-it [claim]`, you should:
+1. Extract the claim from conversation context if not provided
+2. Run: `python3 scripts/prove_it_comprehensive.py "[claim]"`
+3. The script will:
+   - Create case file in `_work_efforts/proof_cases/case_YYYYMMDD_HHMMSS.md`
+   - Generate PDF in `_work_efforts/proof_cases/case_YYYYMMDD_HHMMSS.pdf`
+   - Open the PDF automatically
 
 ---
 
@@ -56,14 +60,28 @@ This command makes the AI (Auto) prove claims interactively by:
 - ✅ Or uses explicit claim you provide
 - ✅ Clarifies ambiguous claims
 
-### 2. Codebase Investigation
+### 2. Verification Checks
+- ✅ Date/Time verification
+- ✅ Disk space check
+- ✅ Working directory verification
+- ✅ Git status check
+- ✅ File existence verification
+- ✅ Template verification
+
+### 3. Assumption Checking
+- ✅ Validates assumptions made during conversation
+- ✅ Checks if assumptions are still valid
+- ✅ Identifies invalid or outdated assumptions
+- ✅ Provides evidence for each assumption
+
+### 4. Codebase Investigation
 - ✅ Searches for relevant code/files
 - ✅ Reads implementations
 - ✅ Checks function definitions
 - ✅ Verifies actual behavior
 - ✅ Examines git history if relevant
 
-### 3. Evidence Gathering
+### 5. Evidence Gathering
 - ✅ Code snippets as evidence
 - ✅ File contents as proof
 - ✅ Git commits/logs if relevant
@@ -71,17 +89,12 @@ This command makes the AI (Auto) prove claims interactively by:
 - ✅ Configuration files
 - ✅ Documentation
 
-### 4. Proof Presentation (In Chat)
-- ✅ Clear statement of what's being proven
-- ✅ Evidence presented with code/file references
-- ✅ Verdict: PROVEN/DISPROVEN/INCONCLUSIVE
+### 6. Case File & PDF Generation
+- ✅ Comprehensive markdown case file
+- ✅ PDF binder with verdict on cover
+- ✅ All evidence organized and presented
+- ✅ Clear verdict: PROVEN/DISPROVEN/INCONCLUSIVE
 - ✅ Confidence level (0-100%)
-- ✅ Reasoning for the verdict
-
-### 5. Optional Case File (If Requested)
-- ✅ Can generate markdown case file
-- ✅ Can create PDF binder
-- ✅ Only if you explicitly ask for it
 
 ---
 
@@ -125,53 +138,53 @@ This command makes the AI (Auto) prove claims interactively by:
 
 ## Example Output
 
-**User**: `/prove-it The PDF generator footer now shows AI assistant info instead of arXiv 2026`
-
-**AI Response**:
-
 ```
-🔍 PROVING: "The PDF generator footer now shows AI assistant info instead of arXiv 2026"
+============================================================
+PROOF: Scientific Method Tool Works
+============================================================
 
-**Investigation:**
+1️⃣  Creating Hypothesis...
+   ✓ Hypothesis: Incrementing a counter increases its value
 
-1. Checking academic_paper.py template...
-   ✅ Found: `src/waft/templates/academic_paper.py`
-   
-2. Examining footer implementation...
-   ✅ Found footer code at lines 267-272:
-   ```python
-   @bottom-right {
-       content: "{{ footer_text }}";
-       font-size: 7pt;
-       font-family: 'Times New Roman', serif;
-       color: #666;
-   }
-   ```
-   
-3. Checking footer_text generation...
-   ✅ Found at line 441:
-   ```python
-   footer_text = f"Generated by {model_name} (Cursor AI Assistant) • {generation_date}"
-   ```
-   
-4. Searching for "arXiv 2026" references...
-   ✅ No matches found in academic_paper.py
-   ✅ Removed from template (line 256 comment confirms)
-   
-5. Verifying function parameters...
-   ✅ Function accepts `model_name` and `generation_date` parameters
-   ✅ Default values: model_name="Auto", generation_date=current timestamp
+2️⃣  Creating Experiment Manager...
+   ✓ Manager created
 
-**Evidence:**
-- ✅ Footer displays: "Generated by Auto (Cursor AI Assistant) • 2026-01-14 10:47"
-- ✅ No "arXiv 2026" text in template
-- ✅ Footer text is dynamically generated with model info
-- ✅ All call sites updated to pass model information
+3️⃣  Creating Experiment...
+   ✓ Experiment ID: exp_411664a5
 
-**VERDICT: ✅ PROVEN**
-**Confidence: 95%**
+4️⃣  Capturing Initial State (A)...
+   ✓ Initial state captured: 04fe4591
+   ✓ Components: ['counter', 'test_var']
 
-The claim is proven. The PDF generator footer now displays AI assistant information (model name and generation date) and the "arXiv 2026" reference has been removed.
+5️⃣  Running Experiment...
+   ✓ Experiment completed
+   ✓ Results: {'initial': 10, 'final': 15, 'change': 5}
+
+6️⃣  Verifying Data Collection (C)...
+   ✓ Collected 2 data series
+      - counter: 2 data points
+        Values: [10, 15]
+      - change: 1 data points
+        Values: [5]
+
+7️⃣  Verifying Final State (B)...
+   ✓ Final state captured: 05698f80
+   ✓ Components: ['counter', 'test_var']
+
+8️⃣  Comparing States (A vs B)...
+   ✓ State comparison complete
+   ✓ Components changed: 0
+
+9️⃣  Analyzing Results...
+   ✓ Hypothesis verified: True
+   ✓ Confidence: 90.00%
+
+🔟 Verifying Files Saved...
+   ✓ Experiment files: 1
+   ✓ State files: 3
+   ✓ Data files: 1
+
+✅ PROOF COMPLETE
 ```
 
 ---
@@ -219,16 +232,16 @@ The proof demonstrates the complete cycle:
 ## When to Use
 
 **Use `/prove-it` when**:
-- ✅ You want the AI to prove something it claimed
-- ✅ You made a claim and want evidence
-- ✅ You need verification of any statement
-- ✅ You want to see proof in chat conversation
-- ✅ You need evidence-based confirmation
+- ✅ Want to verify the scientific method tool works
+- ✅ Need to demonstrate the system to others
+- ✅ Want to test the experimental framework
+- ✅ Need to see the full cycle in action
+- ✅ Want to verify file persistence
 
 **Don't use `/prove-it` when**:
-- ❌ You just want to run a script (use the script directly)
-- ❌ You need automated testing (use test commands)
-- ❌ You want to modify code (just ask for changes)
+- ❌ Need to run actual experiments (use the tool directly)
+- ❌ Need to analyze existing experiments (use analysis tools)
+- ❌ Need to modify experiments (edit experiment code)
 
 ---
 
@@ -256,18 +269,18 @@ The proof demonstrates the complete cycle:
 
 ---
 
-## How It Works
+## The Scientific Method Cycle
 
-When you use `/prove-it`, the AI will:
-
-1. **Extract the claim** - Either from your explicit statement or from recent conversation context
-2. **Search the codebase** - Use semantic search and file reading to find relevant code
-3. **Gather evidence** - Read actual files, check implementations, verify behavior
-4. **Present proof** - Show evidence directly in chat with code snippets and file references
-5. **State verdict** - Clearly state PROVEN, DISPROVEN, or INCONCLUSIVE with confidence
-
-The AI does this **interactively in the chat**, not by running external scripts. It investigates the actual codebase and presents findings with evidence.
-
-**This is an AI-driven proof system, not a script runner.**
+The proof demonstrates the complete cycle:
+1. **Observe**: System detects patterns
+2. **Hypothesize**: Form testable hypothesis
+3. **Design Experiment**: Define variables
+4. **Capture Initial State (A)**: Save system state before
+5. **Run Experiment**: Execute with data collection
+6. **Collect Data (C)**: Record all measurements during
+7. **Capture Final State (B)**: Save system state after
+8. **Analyze**: Compare states, analyze data, verify/refute
+9. **Iterate**: Modify variables and repeat
+10. **Conclude**: Draw evidence-based conclusions
 
 --- End Command ---

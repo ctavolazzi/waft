@@ -2,6 +2,8 @@
 
 > **Note**: This roadmap will be expanded to include the [Unified Genesis Protocol](UNIFIED_GENESIS_PROTOCOL.md) challenge system architecture.
 
+> **Related**: See [LaTeX Alternatives Evaluation](../docs/LATEX_ALTERNATIVES_EVALUATION.md) for evaluation of Typst, ConTeXt, Quarto, and Pandoc as alternatives to LaTeX for template-based PDF generation.
+
 ## Current State: Foundation V2 ✅
 
 **Status:** Shipped and tested

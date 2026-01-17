@@ -5,7 +5,7 @@
  * with the SvelteKit frontend renderer process.
  */
 
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu } = require('electron');
 const path = require('path');
 const { spawn } = require('child_process');
 const http = require('http');
@@ -24,31 +24,40 @@ class BackendManager {
 
   /**
    * Find WAFT installation path
+   * A WAFT project must have _pyrite directory and pyproject.toml
    */
   findWaftPath() {
+    const fs = require('fs');
+
     // Check environment variable
     if (process.env.WAFT_PATH) {
-      return process.env.WAFT_PATH;
+      const envPath = path.resolve(process.env.WAFT_PATH);
+      if (fs.existsSync(path.join(envPath, '_pyrite')) && fs.existsSync(path.join(envPath, 'pyproject.toml'))) {
+        return envPath;
+      }
     }
 
     // Check parent directory (if running from waft_desktop/electron)
-    const parentPath = path.resolve(__dirname, '../..');
-    const waftPath = path.join(parentPath, 'waft');
-
-    // Try to find waft command
-    try {
-      const { execSync } = require('child_process');
-      const result = execSync('which waft', { encoding: 'utf-8' });
-      if (result.trim()) {
-        // Extract path from command location
-        const waftBin = result.trim();
-        return path.dirname(path.dirname(waftBin));
-      }
-    } catch (e) {
-      // Fallback to parent directory
+    // __dirname is waft_desktop/electron, so go up two levels to get to waft project root
+    const projectRoot = path.resolve(__dirname, '../..');
+    if (fs.existsSync(path.join(projectRoot, '_pyrite')) && fs.existsSync(path.join(projectRoot, 'pyproject.toml'))) {
+      return projectRoot;
     }
 
-    return parentPath;
+    // Try to find by walking up from current working directory
+    let currentPath = process.cwd();
+    const pathParts = currentPath.split(path.sep);
+
+    for (let i = pathParts.length; i > 0; i--) {
+      const testPath = pathParts.slice(0, i).join(path.sep);
+      if (fs.existsSync(path.join(testPath, '_pyrite')) && fs.existsSync(path.join(testPath, 'pyproject.toml'))) {
+        return testPath;
+      }
+    }
+
+    // Fallback to parent directory (may not be valid, but better than nothing)
+    console.warn(`Warning: Could not find valid WAFT project. Using: ${projectRoot}`);
+    return projectRoot;
   }
 
   /**
@@ -64,39 +73,50 @@ class BackendManager {
     console.log(`Starting WAFT backend from: ${waftPath}`);
 
     // Spawn WAFT serve command
+    // Use 'inherit' for stdio to avoid EPIPE errors - let backend write directly to console
     this.backendProcess = spawn('waft', ['serve', '--port', this.backendPort.toString()], {
       cwd: waftPath,
-      stdio: ['ignore', 'pipe', 'pipe'],
+      stdio: ['ignore', 'inherit', 'inherit'], // Changed from 'pipe' to 'inherit' to avoid EPIPE
       shell: true,
       env: {
         ...process.env,
         ELECTRON_START_TIME: Date.now().toString(),
-      }
+      },
+      detached: false
     });
 
     this.startTime = Date.now();
 
-    // Handle stdout
-    this.backendProcess.stdout.on('data', (data) => {
-      const message = data.toString();
-      console.log(`[Backend] ${message}`);
-      // Send to renderer if window exists
-      if (mainWindow && !mainWindow.isDestroyed()) {
-        mainWindow.webContents.send('backend-log', { type: 'stdout', message });
-      }
-    });
+    // #region agent log
+    fetch('http://127.0.0.1:7248/ingest/ceee6b95-45b6-41a1-900d-ebc6e869bf02',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'main.js:77',message:'Backend process spawned',data:{pid:this.backendProcess.pid,waftPath:waftPath,port:this.backendPort},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+    // #endregion
 
-    // Handle stderr
-    this.backendProcess.stderr.on('data', (data) => {
-      const message = data.toString();
-      console.error(`[Backend Error] ${message}`);
+    // Note: Using 'inherit' for stdio means we can't capture stdout/stderr directly
+    // Backend output will go to Electron's console instead
+    // For log capture, we'd need to use 'pipe' but handle EPIPE errors gracefully
+
+    // Handle process errors
+    this.backendProcess.on('error', (err) => {
+      // #region agent log
+      fetch('http://127.0.0.1:7248/ingest/ceee6b95-45b6-41a1-900d-ebc6e869bf02',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'main.js:90',message:'process spawn error',data:{error:err.message,code:err.code},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'F'})}).catch(()=>{});
+      // #endregion
+      console.error(`[Backend spawn error] ${err.message}`);
+      this.backendProcess = null;
+      this.isHealthy = false;
+
       if (mainWindow && !mainWindow.isDestroyed()) {
-        mainWindow.webContents.send('backend-log', { type: 'stderr', message });
+        mainWindow.webContents.send('backend-status', {
+          status: 'error',
+          error: err.message
+        });
       }
     });
 
     // Handle process exit
     this.backendProcess.on('exit', (code, signal) => {
+      // #region agent log
+      fetch('http://127.0.0.1:7248/ingest/ceee6b95-45b6-41a1-900d-ebc6e869bf02',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'main.js:107',message:'process exit',data:{code:code,signal:signal,restartAttempts:this.restartAttempts},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'G'})}).catch(()=>{});
+      // #endregion
       console.log(`Backend process exited with code ${code}, signal ${signal}`);
       this.backendProcess = null;
       this.isHealthy = false;
@@ -264,12 +284,70 @@ function createWindow() {
     show: false // Don't show until ready
   });
 
+  // Create context menu that works in DevTools (enables copy-paste)
+  // This MUST be set up BEFORE DevTools opens to work properly
+  mainWindow.webContents.on('context-menu', (e, params) => {
+      // #region agent log
+      fetch('http://127.0.0.1:7248/ingest/ceee6b95-45b6-41a1-900d-ebc6e869bf02',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'main.js:302',message:'Context menu event',data:{hasSelection:!!params.selectionText,isEditable:params.isEditable,linkURL:params.linkURL||'none'},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'J'})}).catch(()=>{});
+      // #endregion
+
+      const template = [];
+
+      // Always show copy if there's selection (works in DevTools console)
+      if (params.selectionText) {
+        template.push({ role: 'copy', label: 'Copy', enabled: true });
+      }
+
+      // Show cut/paste if in editable area
+      if (params.isEditable) {
+        template.push(
+          { role: 'cut', label: 'Cut', enabled: true },
+          { role: 'copy', label: 'Copy', enabled: true },
+          { role: 'paste', label: 'Paste', enabled: true }
+        );
+      }
+
+      // If no selection but we're in DevTools, still show copy (for console text)
+      // DevTools console text might not register as selectionText, so we always show copy
+      if (!params.selectionText && !params.isEditable) {
+        template.push({ role: 'copy', label: 'Copy', enabled: true });
+      }
+
+      // Show select all if in editable area or if there's text
+      if (params.isEditable || params.selectionText) {
+        if (template.length > 0) template.push({ type: 'separator' });
+        template.push({ role: 'selectAll', label: 'Select All', enabled: true });
+      }
+
+      // Always show these for DevTools
+      if (template.length > 0) template.push({ type: 'separator' });
+      template.push(
+        { role: 'reload', label: 'Reload', enabled: true },
+        { role: 'forceReload', label: 'Force Reload', enabled: true },
+        { role: 'toggleDevTools', label: 'Toggle Developer Tools', enabled: true }
+      );
+
+      // If we have menu items, show the menu
+      if (template.length > 0) {
+        const menu = Menu.buildFromTemplate(template);
+        // Use popup with window reference to ensure it works in DevTools
+        menu.popup({ window: mainWindow });
+      }
+    });
+
   // Load frontend
   if (isDev) {
-    // Development: Load from Vite dev server
-    mainWindow.loadURL('http://localhost:5173');
-    // Open DevTools in development
-    mainWindow.webContents.openDevTools();
+    // Development: Load from Vite dev server (try 5173, fallback to 5174)
+    const devPort = 5173;
+    mainWindow.loadURL(`http://localhost:${devPort}`).catch(() => {
+      // If 5173 fails, try 5174
+      mainWindow.loadURL('http://localhost:5174');
+    });
+    // Open DevTools in development (AFTER context menu is set up)
+    mainWindow.webContents.openDevTools({
+      mode: 'right', // Dock DevTools to the right
+      activate: true
+    });
   } else {
     // Production: Load from build
     mainWindow.loadFile(path.join(__dirname, '../frontend/build/index.html'));
@@ -288,10 +366,19 @@ function createWindow() {
 
 // App lifecycle
 app.whenReady().then(() => {
+  // #region agent log
+  fetch('http://127.0.0.1:7248/ingest/ceee6b95-45b6-41a1-900d-ebc6e869bf02',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'main.js:290',message:'App ready',data:{isDev:process.argv.includes('--dev')},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'H'})}).catch(()=>{});
+  // #endregion
+
   createWindow();
 
-  // Start backend
-  backendManager.startBackend();
+  // Start backend after window is ready
+  mainWindow.webContents.once('did-finish-load', () => {
+    // #region agent log
+    fetch('http://127.0.0.1:7248/ingest/ceee6b95-45b6-41a1-900d-ebc6e869bf02',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'main.js:298',message:'Window loaded, starting backend',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'I'})}).catch(()=>{});
+    // #endregion
+    backendManager.startBackend();
+  });
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {

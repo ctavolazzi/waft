@@ -2587,6 +2587,47 @@ def oracle(
 
 
 @app.command()
+def pantheon(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+):
+    """
+    Summon the ENTIRE PANTHEON to weigh in and pass judgment.
+    
+    The Pantheon gathers to review evidence, discuss, and collectively determine
+    what should be done next based on current state and context.
+    """
+    project_path = resolve_project_path(path)
+    
+    console.print(f"\n[bold gold1]⚡ Waft[/bold gold1] - Summoning The Pantheon\n")
+    
+    try:
+        from .cli.pantheon_command import pantheon_command
+        judgment = pantheon_command(project_path)
+        
+        # Log to Empirica if available
+        try:
+            from .core.empirica import EmpiricaManager
+            empirica = EmpiricaManager(project_path)
+            if empirica.is_initialized():
+                primary = judgment.get("primary_focus", {})
+                entity = primary.get("entity", "Unknown")
+                recommendation = primary.get("recommendation", "")
+                empirica.log_finding(
+                    f"Pantheon judgment: {entity} recommends {recommendation[:100]}",
+                    impact=0.7
+                )
+        except Exception:
+            pass
+        
+        _process_tavern_hook(project_path, "pantheon", True, {"judgment": judgment})
+        
+    except Exception as e:
+        console.print(f"[red]❌ Error summoning Pantheon: {e}[/red]")
+        _process_tavern_hook(project_path, "pantheon", False)
+        raise typer.Exit(1)
+
+
+@app.command()
 def tell_story(
     story: str = typer.Argument(..., help="Story input (text, can be multi-line)"),
     title: Optional[str] = typer.Option(None, "--title", "-t", help="PDF title (default: auto-generated)"),
