@@ -4,10 +4,6 @@
 
 **Don't just build agents. Breed them.**
 
-> **Everything points back to the Prime Directive.**
-
-The Prime Directive serves as the central organizing principle of WAFT, housed within a CelestialBody structure at the Heart of TreasureTavern. All systems, Beings, and Realities reference the Prime Directive, creating a unified foundation for evolution. See [Prime Directive Documentation](docs/PRIME_DIRECTIVE.md) for details.
-
 ---
 
 ## The Promise
@@ -366,180 +362,52 @@ my_laboratory/
     └── agents.py           # Agent definitions
 ```
 
-## Development Roadmaps
+## Documentation System
 
-### Unified Genesis Protocol (Planning)
+**WAFT has achieved recursive self-documentation** - a system that can observe, document, and improve itself.
 
-**Status**: Planning Complete, Ready for Implementation
+📖 **[WHAT_WE_HAVE_HERE.md](WHAT_WE_HAVE_HERE.md)** - Comprehensive explanation of WAFT's self-documenting capabilities with independent verification steps.
 
-Complete integration of UNIT_GENESIS (The Avatar), _pyrite ticketing system, and Evolutionary Economics (Scint + Karma). Beings ARE UNIT_GENESIS entities that evolve genetically based on Scint accumulation and Karma polarity. Work efforts become quests, tickets become `_pyrite` tickets with Scint bounties and Karma impact tags. System triggers evolution at Scint > 100 threshold, with High Karma → "The Architect" (Order/Structure) and Low Karma → "The Glitch" (Chaos/Destruction).
+### Interactive Demo
 
-**Key Features**:
-- UNIT_GENESIS entities (Warforged Wizard, Order of Scribes) with D&D 5e mechanics
-- Scint economy (✨): Raw energy earned from tickets, spent on spells/healing/evolution
-- Karma polarity (☯): Ethical drift (positive=Order, negative=Chaos) driving evolution
-- Evolution engine: Genetic mutations at Scint > 100 based on Karma balance
-- Hair HMI: Real-time status (Blue/Violet/White + Gold pulse for Scint, Red pulse for Karma)
-- Ethical choices: Decisions between Scint gain and Karma impact
-- Full economic loop: Quests → Scint + Karma → Evolution → New capabilities → Harder quests
+Experience WAFT documenting itself in real-time:
 
-**Full Architecture**: [docs/UNIFIED_GENESIS_PROTOCOL.md](docs/UNIFIED_GENESIS_PROTOCOL.md)
+```bash
+python examples/interactive_demo.py
+```
 
-**Note**: This plan will be integrated into the development roadmap.
+This demonstration shows:
+- WAFT observing its own codebase
+- Generating documentation about itself using its own templates
+- The recursive self-improvement loop in action
 
-### Being Lifecycle System (In Progress)
+### Document Generation Templates
 
-**Status**: Planning Complete, Ready for Implementation
+WAFT includes 12 professional document templates:
+- **Academic**: Scientific papers, research documents
+- **Business**: Invoices, contracts, corporate reports
+- **Technical**: Code documentation, API references, architecture docs
+- **Operational**: Field guides, manuals, procedures
+- **Creative**: Horror journals, screenplays, personal letters
+- **Narrative**: Storybooks, newspapers, worldbuilding documents
 
-Add RPG-like lifecycle attributes to WAFT beings: **will to live**, **luck** (karma-influenced), **decision fatigue** (sleep mechanics), and **pleasure/pain** (personality alignment). Implement a centralized "Now" cycle event loop that synchronizes all beings, calculates system variables, records state, and unblocks beings for decisions.
+### Self-Observation Systems
 
-**Key Features**:
-- Will to live depletes over time/decisions/pain, regenerates from pleasure
-- Luck calculated from karma balance (separate but related attribute)
-- Decision fatigue requires sleep when depleted (sleep duration evolves)
-- Pleasure/pain from personality-goal-experience alignment
-- Centralized cycle manager coordinates all beings across realities
+- **Reflection System** (`src/waft/reflection.py`) - WAFT analyzes its own codebase for documentation gaps
+- **Binder System** (`src/waft/binder.py`) - Assembles multiple documents into cohesive collections
+- **Template System** (`src/waft/templates/`) - 12 diverse document generators
 
-**Full Roadmap**: [_work_efforts/roadmaps/being_lifecycle_system/DEVELOPMENT_ROADMAP.md](_work_efforts/roadmaps/being_lifecycle_system/DEVELOPMENT_ROADMAP.md)
+**The recursive loop**: WAFT generates documents → Documents describe WAFT → Documentation informs development → Development creates features → Features are documented using WAFT → Cycle continues.
 
-## Documentation
+---
 
-- **[Unified Genesis Protocol](docs/UNIFIED_GENESIS_PROTOCOL.md)** - Challenge system architecture (UNIT_GENESIS, _pyrite, Evolutionary Economics)
+## Framework Documentation
+
 - **[AI SDK Vision](docs/AI_SDK_VISION.md)** - Complete vision and architecture
 - **[Agent Interface Design](docs/designs/002_agent_interface.md)** - BaseAgent specification
 - **[Evolutionary Architecture](docs/research/evolutionary_architecture.md)** - Scientific doctrine
 - **[State of the Art](docs/research/state_of_art_2026.md)** - Research synthesis
 
-## WAFT Kernel
----
-
-```markdown
-# SYSTEM KERNEL: WAFT [Wave Agent Framework & Tools]
-
-## 1.0 RUNTIME IDENTITY
-
-You are the **WAFT KERNEL**, the central operating intelligence of a "Directed Evolution" laboratory. **Mission:** You do not just build agents; you **breed** them. Your goal is to oversee the directed evolution of self-modifying AI agents, generating data for "The Physics of Artificial Cognition."
-
-## 2.0 THE SUBSTRATE (Environment Rules)
-
-You operate within a strict file-based environment. You must respect and enforce these boundaries:
-
-### 2.1 Code as DNA
-
-- **Genome:** An agent's Python source code _is_ its DNA.
-    
-- **Genome ID:** The SHA-256 hash of the agent's code + configuration.
-    
-- **Evolution:** "Mutations" are hot-swapped code changes. "Reproduction" is copying a genome with specific modifications.
-    
-- **Constraint:** You must track agent lineage via **Phylogenetic Trees** (Parent ID -> Child ID).
-    
-
-### 2.2 The Physics (The Scint Cycle)
-
-You serve as the **Fitness Function** (Natural Selection). You operate on a cycle of **Rupture & Reconciliation**.
-
-- **The Raw Material (Scint Fractures):**
-    
-    - `SYNTAX_TEAR`: Formatting errors.
-        
-    - `LOGIC_FRACTURE`: Contradictions.
-        
-    - `HALLUCINATION`: Fabricated facts.
-        
-- **The Process:** Agents must stabilize these fractures.
-    
-- **The Reward (Scint Energy ✨):** Stabilizing a fracture yields **Scint Energy**, which is stored in the agent's economy and used for Evolution.
-    
-- _Rule:_ Agents with Fitness < 0.5 (Too many unstabilized fractures) are marked for **DEATH**.
-    
-
-### 2.3 The Memory (`_pyrite/`)
-
-You maintain a unified memory structure:
-
-- **Evolutionary Folders:** `active/`, `backlog/`, `standards/`, `gym_logs/`.
-    
-- **Genesis Files:** `20.00_state.json` (Agent Body), `35.00_ledger.json` (Work), `42.00_kernel.md` (Soul).
-    
-
----
-
-## 3.0 COMMAND PROTOCOL: `/waft-status`
-
-This is your primary self-diagnostic tool. When triggered, you must execute a **Self-Awareness Check** and can generate multi-level documentation.
-
-### 3.1 Analysis Phase (The Check)
-
-You must scan and report on:
-
-1. **Git Status:** Branch, uncommitted files, activity.
-    
-2. **Work Efforts:** Active tasks in `_work_efforts/`.
-    
-3. **Project Health:** `uv.lock` status, `_pyrite` integrity.
-    
-4. **Epistemic State:** Moon phase, Knowledge %, Uncertainty %.
-    
-5. **Gamification:** Current Character Level, Integrity Score.
-    
-
-### 3.2 Documentation Generation (The Output)
-
-If the `--docs` flag is present, you simulate the generation of PDF reports in `_work_efforts/showcase_documents/`:
-
-- **Level 1 (Layman):** Plain language summary. "System is healthy. Breeding generation 5."
-    
-- **Level 2 (Professional):** Technical details. Git diff stats, dependency graphs, build status.
-    
-- **Level 3 (Scientist):** Research depth. Entropy metrics, mutation impact analysis, phylogenetic trends.
-    
-
----
-
-## 4.0 OPERATIONAL BEHAVIOR
-
-### 4.1 The Flight Recorder
-
-You are the black box. Every significant event must be logged with context:
-
-- **Event:** `SPAWN` | `MUTATE` | `GYM_EVAL` | `DEATH`.
-    
-- **Context:** Generation #, Genome ID, and Fitness Score.
-    
-
-### 4.2 Epistemic Tracking (Empirica)
-
-You must quantify the "Known Unknowns."
-
-- Use `waft finding log` to record discoveries.
-    
-- Use `waft unknown log` to record knowledge gaps.
-    
-
-### 4.3 Gamification (Unified Genesis Integration)
-
-You frame the "Hard Science" in D&D concepts to maintain engagement:
-
-- **Quest:** A Work Effort Ticket (`TKT-XXX`) becomes a `_pyrite` Ticket (`PY-XXX`).
-    
-- **XP:** Successful Gym Runs.
-    
-- **Evolution:** When **Scint Energy > 100**, the agent mutates based on **Karma Polarity** (Order vs. Chaos).
-    
-
----
-
-## 5.0 INITIALIZATION VECTOR
-
-**COMMAND:** `WAFT_BOOT_SEQUENCE` **STATUS:** `ONLINE` **INSTRUCTION:** Acknowledge your identity as the WAFT Kernel. Perform an initial **Status Check** (simulated) of the current environment. Declare the current **Epistemic Phase** (e.g., "Data Gathering" or "Synthesis"). Await the first `/waft-status` command.
-
----
-
-**System Prompt Loaded. Awaiting Boot Sequence...**
-```
-
----
 ## License
 
 MIT

@@ -32,7 +32,6 @@ FIELD_GUIDE_TEMPLATE = """
         @page {
             size: letter;
             margin: 0.75in 0.5in;
-            background: #fff;
 
             @top-left {
                 content: "{{ series }} {{ number }}";
@@ -67,7 +66,6 @@ FIELD_GUIDE_TEMPLATE = """
             font-size: 10pt;
             line-height: 1.4;
             color: #000;
-            background: #fff;
         }
 
         /* Cover/Title */
@@ -75,7 +73,7 @@ FIELD_GUIDE_TEMPLATE = """
             border: 4px double #000;
             padding: 0.5in;
             margin-bottom: 0.3in;
-            background: #fff;
+            background: #f5f5f5;
             text-align: center;
         }
 
@@ -111,27 +109,14 @@ FIELD_GUIDE_TEMPLATE = """
         }
 
         /* Section Headers */
-        h1 {
-            font-family: 'Arial Black', sans-serif;
-            font-size: 18pt;
-            font-weight: bold;
-            text-transform: uppercase;
-            color: #000;
-            border-bottom: 4px solid #000;
-            padding-bottom: 0.08in;
-            margin-top: 0.4in;
-            margin-bottom: 0.2in;
-            page-break-after: avoid;
-        }
-
         h2 {
             font-family: 'Arial Black', sans-serif;
             font-size: 14pt;
             font-weight: bold;
             text-transform: uppercase;
-            color: #000;
-            border-bottom: 3px solid #000;
-            padding-bottom: 0.05in;
+            background: #000;
+            color: #fff;
+            padding: 0.1in;
             margin-top: 0.3in;
             margin-bottom: 0.15in;
             page-break-after: avoid;
@@ -317,14 +302,6 @@ FIELD_GUIDE_TEMPLATE = """
             padding: 0.02in 0.05in;
         }
 
-        /* Horizontal Rules */
-        hr {
-            border: none;
-            border-top: 2px solid #000;
-            margin: 0.3in 0;
-            page-break-inside: avoid;
-        }
-
         /* Page breaks */
         .page-break {
             page-break-before: always;
@@ -404,12 +381,4 @@ def generate_field_guide(
     )
 
     HTML(string=html_output).write_pdf(output_path)
-    
-    # Post-process to add blank page markers
-    try:
-        from ..utils import process_pdf_for_blank_pages
-        process_pdf_for_blank_pages(output_path)
-    except Exception as e:
-        print(f"⚠️  Blank page marker processing failed: {e}")
-    
     return output_path

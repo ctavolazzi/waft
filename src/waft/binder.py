@@ -210,6 +210,8 @@ class Binder:
         .section-name {
             font-size: 14pt;
             font-weight: bold;
+            color: {{ section.color }};
+            border-left: 4px solid {{ section.color }};
             padding-left: 0.1in;
             margin-bottom: 0.1in;
         }
