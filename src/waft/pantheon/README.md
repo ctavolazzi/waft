@@ -50,6 +50,29 @@ The Judge is the God of Judgment and Evaluation. See `_pantheon/judge/README.md`
 
 The Reasoner is the God of Reasoning Traces and Chain of Thought. Maintains traceable reasoning chains showing the "why" behind decisions.
 
+## The GitHub God
+
+The GitHub God is the God of Repository Management and Version Control. Maintains repository state, generates rollups, and tracks GitHub operations.
+
+### Quick Start
+
+```python
+from waft.pantheon import GitHubGod
+from pathlib import Path
+
+# Initialize
+github_god = GitHubGod(project_path=Path.cwd())
+
+# Generate full rollup
+rollup = github_god.generate_rollup(since="2026-01-01")
+
+# Get repository state
+state = github_god.get_repository_state()
+
+# Get branch summary
+branches = github_god.get_branch_summary()
+```
+
 ### Quick Start
 
 ```python

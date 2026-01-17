@@ -1,0 +1,11 @@
+{
+  "operation_id": "op_20260116_220540",
+  "timestamp": "2026-01-16T22:05:40.137617",
+  "operation": "full_rollup_generation",
+  "details": {
+    "requested_by": "user",
+    "scope": "all_recent_changes",
+    "since": "2026-01-01"
+  },
+  "result": "success"
+}

@@ -16,6 +16,7 @@ from .mission_control import MissionControl, MissionStatus
 from .the_village import TheVillage, VillageGathering, VillageConnection
 from .external_drive_realm import ExternalDriveRealm
 from .reasoner import TheReasoner
+from .github_god import GitHubGod
 
 __all__ = [
     "Magistrate",
@@ -38,5 +39,6 @@ __all__ = [
     "VillageGathering",
     "VillageConnection",
     "ExternalDriveRealm",
-    "TheReasoner"
+    "TheReasoner",
+    "GitHubGod"
 ]
