@@ -419,6 +419,34 @@ class AutoRedactor:
     def add_sensitive_terms(self, terms: List[str]) -> None:
         """Add terms to automatically redact."""
         self.sensitive_terms.extend(terms)
+    
+    def _clean_unicode(self, text: str) -> str:
+        """Replace Unicode characters with ASCII equivalents for fpdf2 compatibility."""
+        replacements = {
+            "–": "-",  # en-dash
+            "—": "--",  # em-dash
+            "•": "-",  # bullet
+            "·": "*",  # middle dot
+            """: '"',  # left double quote
+            """: '"',  # right double quote
+            "'": "'",  # left single quote
+            "'": "'",  # right single quote
+            "…": "...",  # ellipsis
+            "°": "deg",  # degree symbol
+        }
+        
+        for unicode_char, ascii_replacement in replacements.items():
+            text = text.replace(unicode_char, ascii_replacement)
+        
+        # Final pass: replace any remaining non-ASCII with space
+        result = []
+        for char in text:
+            if ord(char) < 128 or char in ['\n', '\t', '\r']:
+                result.append(char)
+            else:
+                result.append(' ')
+        
+        return ''.join(result)
 
     def render_text(
         self, pdf: FPDF, text: str, x: float, y: float, font_size: int
@@ -433,6 +461,9 @@ class AutoRedactor:
             y: Y position
             font_size: Font size
         """
+        # Clean Unicode characters for fpdf2 compatibility (latin-1 encoding)
+        text = self._clean_unicode(text)
+        
         if not self.sensitive_terms:
             # No redaction needed, render normally
             pdf.text(x, y, text)
