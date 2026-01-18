@@ -159,6 +159,10 @@ class TheGuide:
         self.index_file = self.guide_path / "index.json"
         self.index = self._load_index()
 
+        # Create index file on first initialization
+        if not self.index_file.exists():
+            self._save_index()
+
         # LLM configuration
         self.client_llm = client_llm
         self.guide_llm_config = guide_llm_config or {}
@@ -268,8 +272,9 @@ class TheGuide:
         Returns:
             Tuple of (final_answer, protocol)
         """
-        # Create session ID
-        session_id = f"session_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        # Create session ID (with microseconds for uniqueness in concurrent scenarios)
+        now = datetime.now()
+        session_id = f"session_{now.strftime('%Y%m%d_%H%M%S')}_{now.microsecond:06d}"
 
         # Initialize Guide LLM if needed
         if self.guide_llm is None:
@@ -858,8 +863,9 @@ Provide your evaluation in this exact JSON format:
             ...     quality_threshold=0.8
             ... )
         """
-        # Create session ID
-        session_id = f"session_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        # Create session ID (with microseconds for uniqueness in concurrent scenarios)
+        now = datetime.now()
+        session_id = f"session_{now.strftime('%Y%m%d_%H%M%S')}_{now.microsecond:06d}"
 
         # Run guidance loop
         final_answer, protocol = self._guidance_loop(
