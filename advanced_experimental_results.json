@@ -1,0 +1,49 @@
+{
+  "exp4_endurance": {
+    "hypothesis_accepted": false,
+    "data": {
+      "initial_time": 0.0012451529502868653,
+      "final_time": 0.006370365619659424,
+      "percent_change": 411.6131008798384,
+      "slope": 0.0005984580300071023
+    }
+  },
+  "exp5_memory": {
+    "hypothesis_accepted": true,
+    "data": {
+      "peak_memory_mb": 1.0315971374511719,
+      "memory_per_session_kb": 0.5748803274972099,
+      "total_sessions": 500.0
+    }
+  },
+  "exp6_breaking_point": {
+    "hypothesis_accepted": true,
+    "data": {
+      "max_threads": 100.0,
+      "tested_loads": [
+        10.0,
+        20.0,
+        50.0,
+        100.0
+      ],
+      "success_rates": [
+        100.0,
+        100.0,
+        100.0,
+        100.0
+      ]
+    }
+  },
+  "exp7_distributions": {
+    "hypothesis_accepted": true,
+    "data": {
+      "mean": 0.0016939496994018554,
+      "median": 0.0016683340072631836,
+      "stdev": 0.000493817073139842,
+      "skewness": 0.20617459257005888,
+      "kurtosis": 0.1413770075878702,
+      "p95": 0.0024368762969970703,
+      "p99": 0.002728700637817383
+    }
+  }
+}
