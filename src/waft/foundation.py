@@ -63,27 +63,52 @@ def evaluate_text(text: str) -> Score:
 class Evaluation:
     """
     Multi-dimensional quality assessment.
-    Built from 6 atomic Scores (FVCU+F+C taxonomy).
+    Built from 8 atomic Scores (FVCU+F+CDC taxonomy).
+
+    Balancing forces to prevent ego and dogfooding:
+    - Confidence ↔ Doubt (certainty vs skepticism)
+    - Conviction ↔ Curiosity (satisfied vs exploring alternatives)
     """
+    # Core quality dimensions
     factuality: Score      # Is it factually correct?
     validity: Score        # Is the reasoning valid?
     coherence: Score       # Does it make sense?
     utility: Score         # Is it useful?
     faithfulness: Score    # Is it faithful to the problem?
-    confidence: Score      # How certain are we about this evaluation? (META-COGNITIVE)
+
+    # Meta-cognitive dimensions (prevent ego/dogfooding)
+    confidence: Score      # How certain are we? (HIGH = certain)
+    doubt: Score           # Should we question this? (HIGH = skeptical)
+    curiosity: Score       # Should we explore alternatives? (HIGH = explore more)
 
     @property
     def overall(self) -> Score:
-        """Aggregate all dimensions into one score."""
+        """Aggregate all dimensions into one score.
+
+        Note: Doubt reduces overall (high doubt = lower confidence in result)
+        Curiosity is neutral (just indicates exploration needed)
+        """
         avg = (
             self.factuality.value +
             self.validity.value +
             self.coherence.value +
             self.utility.value +
             self.faithfulness.value +
-            self.confidence.value
-        ) / 6.0
+            self.confidence.value +
+            (1.0 - self.doubt.value) +  # Doubt REDUCES overall (inverse)
+            self.curiosity.value * 0.5  # Curiosity has half weight
+        ) / 7.5  # Adjusted denominator
         return Score(avg)
+
+    @property
+    def epistemic_humility(self) -> Score:
+        """How humble is the system about its knowledge?
+
+        High humility = high doubt OR high curiosity OR low confidence
+        This prevents ego and dogfooding.
+        """
+        humility = (self.doubt.value + self.curiosity.value + (1.0 - self.confidence.value)) / 3.0
+        return Score(humility)
 
     def is_good(self, threshold: float = 0.8) -> bool:
         """Is the overall quality good enough?"""
@@ -109,13 +134,44 @@ def evaluate_answer(answer: str, problem: str) -> Evaluation:
     confidence_value = min(len(answer) / 150.0, 1.0)  # Longer = more confident
     confidence_score = Score(confidence_value)
 
+    # Doubt: skepticism about the evaluation (ANTI-DOGFOODING)
+    # Higher when:
+    # - Answer is short (less evidence)
+    # - Problem is complex but answer is simple
+    # - High confidence might indicate overconfidence
+    problem_complexity = min(len(problem) / 100.0, 1.0)
+    answer_simplicity = 1.0 - confidence_value  # Short answer = high simplicity
+    complexity_mismatch = max(0, problem_complexity - confidence_value)
+    doubt_value = min(
+        (answer_simplicity + complexity_mismatch + (0.3 if confidence_value > 0.9 else 0)) / 2.0,
+        1.0
+    )
+    doubt_score = Score(doubt_value)
+
+    # Curiosity: desire to explore alternatives (ANTI-EGO)
+    # Higher when:
+    # - Problem suggests multiple approaches
+    # - Answer seems too definitive
+    # - Complexity suggests there might be more to explore
+    definitiveness = confidence_value  # High confidence = definitive answer
+    has_questions = 1.0 if '?' in problem else 0.5
+    curiosity_value = min(
+        (problem_complexity + (1.0 - definitiveness) * 0.5 + has_questions * 0.3) / 2.0,
+        1.0
+    )
+    curiosity_score = Score(curiosity_value)
+
     return Evaluation(
+        # Core dimensions
         factuality=base_score,
         validity=base_score,
         coherence=base_score,
         utility=base_score,
         faithfulness=base_score,
-        confidence=confidence_score  # NEW: Meta-cognitive dimension
+        # Meta-cognitive dimensions (prevent ego/dogfooding)
+        confidence=confidence_score,
+        doubt=doubt_score,           # Questions the evaluation
+        curiosity=curiosity_score    # Seeks alternatives
     )
 
 

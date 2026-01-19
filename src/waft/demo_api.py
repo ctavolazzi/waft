@@ -135,13 +135,18 @@ class MetaCognitiveAPI:
                 'iteration': step.iteration_number,
                 'answer': step.answer,
                 'quality': step.evaluation.overall.value,
+                'epistemic_humility': step.evaluation.epistemic_humility.value,
                 'dimensions': {
+                    # Core quality
                     'factuality': step.evaluation.factuality.value,
                     'validity': step.evaluation.validity.value,
                     'coherence': step.evaluation.coherence.value,
                     'utility': step.evaluation.utility.value,
                     'faithfulness': step.evaluation.faithfulness.value,
-                    'confidence': step.evaluation.confidence.value,  # NEW: Meta-cognitive
+                    # Meta-cognitive (prevent ego/dogfooding)
+                    'confidence': step.evaluation.confidence.value,  # Certainty
+                    'doubt': step.evaluation.doubt.value,            # Skepticism
+                    'curiosity': step.evaluation.curiosity.value,    # Explore alternatives
                 }
             }
             for step in session.steps

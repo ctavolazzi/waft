@@ -32,13 +32,18 @@ class LengthBasedStrategy(EvaluationStrategy):
     def evaluate(self, text: str, context: str = "") -> Evaluation:
         score = evaluate_text(text)
         confidence = Score(min(len(text) / 150.0, 1.0))
+        # Length-based: moderate doubt and curiosity
+        doubt = Score(0.3)
+        curiosity = Score(0.4)
         return Evaluation(
             factuality=score,
             validity=score,
             coherence=score,
             utility=score,
             faithfulness=score,
-            confidence=confidence
+            confidence=confidence,
+            doubt=doubt,
+            curiosity=curiosity
         )
 
 
@@ -49,15 +54,20 @@ class StrictStrategy(EvaluationStrategy):
         base = evaluate_text(text)
         # Penalize by 30%
         penalized = Score(base.value * 0.7)
-        # Strict = high confidence in strict evaluation
+        # Strict = high confidence, low doubt, low curiosity
+        # (Certain about standards, not questioning, not exploring)
         confidence = Score(0.9)
+        doubt = Score(0.2)  # Low doubt = certain about judgment
+        curiosity = Score(0.2)  # Low curiosity = not seeking alternatives
         return Evaluation(
             factuality=penalized,
             validity=penalized,
             coherence=penalized,
             utility=penalized,
             faithfulness=penalized,
-            confidence=confidence
+            confidence=confidence,
+            doubt=doubt,
+            curiosity=curiosity
         )
 
 
@@ -68,15 +78,20 @@ class LenientStrategy(EvaluationStrategy):
         base = evaluate_text(text)
         # Boost by 30%
         boosted = Score(min(base.value * 1.3, 1.0))
-        # Lenient = lower confidence (being generous)
+        # Lenient = lower confidence, high doubt, high curiosity
+        # (Being generous means uncertain, open to alternatives)
         confidence = Score(0.6)
+        doubt = Score(0.7)  # High doubt = questioning the evaluation
+        curiosity = Score(0.8)  # High curiosity = exploring alternatives
         return Evaluation(
             factuality=boosted,
             validity=boosted,
             coherence=boosted,
             utility=boosted,
             faithfulness=boosted,
-            confidence=confidence
+            confidence=confidence,
+            doubt=doubt,
+            curiosity=curiosity
         )
 
 
@@ -137,7 +152,9 @@ class MinimumScoreHandler(EvaluationHandler):
             coherence=clamp(evaluation.coherence),
             utility=clamp(evaluation.utility),
             faithfulness=clamp(evaluation.faithfulness),
-            confidence=clamp(evaluation.confidence)
+            confidence=clamp(evaluation.confidence),
+            doubt=clamp(evaluation.doubt),
+            curiosity=clamp(evaluation.curiosity)
         )
         return self._pass_to_next(modified)
 
