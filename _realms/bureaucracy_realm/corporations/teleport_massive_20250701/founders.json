@@ -1,12 +1,9 @@
 [
   {
-    "being_id": "being_20260119_030210_f8e06283",
-    "name": "Dr. Elena Voss",
-    "role": "CEO & Co-Founder"
-  },
-  {
-    "being_id": "being_20260119_030210_f8e06283",
-    "name": "Dr. Marcus Chen",
-    "role": "CTO & Co-Founder"
+    "being_id": "being_20260119_101033_f8e06283",
+    "name": "Fai Wei",
+    "role": "Founder & CEO",
+    "founded_date": "2025-07-01",
+    "story": "Fai Wei is the founder of Teleport Massive. They believe themselves to be human and founded the company on July 1, 2025 with a vision to make quantum teleportation a reality. This is their story, their memory, their reality."
   }
 ]
