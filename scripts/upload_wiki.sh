@@ -51,10 +51,10 @@ if git diff --quiet && git diff --cached --quiet; then
 else
     echo "💾 Committing wiki changes..."
     git add .
-    git commit -m "Add v0.5.2 wiki content
+    git commit -m "Update wiki content to v0.9.3
 
-- Home page with quick start
-- Getting Started guide
+- Home page with quick start (updated to v0.9.3)
+- Getting Started guide (updated to v0.9.3)
 - Evolutionary Iteration Process documentation
 - PDF Generation Guide
 - PDF/PNG Conversion guide"
