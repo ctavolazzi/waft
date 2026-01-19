@@ -56,6 +56,7 @@ from enum import Enum
 import tempfile
 import re
 import json
+import time
 
 from jinja2 import Template
 from weasyprint import HTML
@@ -610,7 +611,7 @@ class DocumentBuilder:
         with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
             import json
             import re
-            f.write(json.dumps({"sessionId":"debug-session","runId":"post-fix","hypothesisId":"F","location":"document_builder.py:557","message":"_render_template entry","data":{"content_length":len(self.config.content) if self.config.content else 0,"content_preview":self.config.content[:300] if self.config.content else "","content_is_html":bool(re.search(r'<[^>]+>', self.config.content)) if self.config.content else False,"has_h1":bool(re.search(r'<h1[^>]*>', self.config.content)) if self.config.content else False,"has_hr":bool(re.search(r'<hr[^>]*>', self.config.content)) if self.config.content else False},"timestamp":int(__import__('time').time()*1000)}) + '\n')
+            f.write(json.dumps({"sessionId":"debug-session","runId":"post-fix","hypothesisId":"F","location":"document_builder.py:557","message":"_render_template entry","data":{"content_length":len(self.config.content) if self.config.content else 0,"content_preview":self.config.content[:300] if self.config.content else "","content_is_html":bool(re.search(r'<[^>]+>', self.config.content)) if self.config.content else False,"has_h1":bool(re.search(r'<h1[^>]*>', self.config.content)) if self.config.content else False,"has_hr":bool(re.search(r'<hr[^>]*>', self.config.content)) if self.config.content else False},"timestamp":int(time.time()*1000)}) + '\n')
         # #endregion
         
         # Process content with improved algorithms
@@ -619,7 +620,7 @@ class DocumentBuilder:
         with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
             import json
             import re
-            f.write(json.dumps({"sessionId":"debug-session","runId":"post-fix","hypothesisId":"G","location":"document_builder.py:565","message":"before content processing","data":{"content_length":len(processed_content) if processed_content else 0,"content_is_html":bool(re.search(r'<[^>]+>', processed_content)) if processed_content else False,"has_h1":bool(re.search(r'<h1[^>]*>', processed_content)) if processed_content else False},"timestamp":int(__import__('time').time()*1000)}) + '\n')
+            f.write(json.dumps({"sessionId":"debug-session","runId":"post-fix","hypothesisId":"G","location":"document_builder.py:565","message":"before content processing","data":{"content_length":len(processed_content) if processed_content else 0,"content_is_html":bool(re.search(r'<[^>]+>', processed_content)) if processed_content else False,"has_h1":bool(re.search(r'<h1[^>]*>', processed_content)) if processed_content else False},"timestamp":int(time.time()*1000)}) + '\n')
         # #endregion
         
         if processed_content:
@@ -634,7 +635,7 @@ class DocumentBuilder:
         with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
             import json
             import re
-            f.write(json.dumps({"sessionId":"debug-session","runId":"post-fix","hypothesisId":"G","location":"document_builder.py:578","message":"after content processing","data":{"processed_length":len(processed_content) if processed_content else 0,"has_h1_after":bool(re.search(r'<h1[^>]*>', processed_content)) if processed_content else False,"has_hr_after":bool(re.search(r'<hr[^>]*>', processed_content)) if processed_content else False},"timestamp":int(__import__('time').time()*1000)}) + '\n')
+            f.write(json.dumps({"sessionId":"debug-session","runId":"post-fix","hypothesisId":"G","location":"document_builder.py:578","message":"after content processing","data":{"processed_length":len(processed_content) if processed_content else 0,"has_h1_after":bool(re.search(r'<h1[^>]*>', processed_content)) if processed_content else False,"has_hr_after":bool(re.search(r'<hr[^>]*>', processed_content)) if processed_content else False},"timestamp":int(time.time()*1000)}) + '\n')
         # #endregion
         
         # Build template context
@@ -662,7 +663,7 @@ class DocumentBuilder:
         # #region agent log
         with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
             import json
-            f.write(json.dumps({"sessionId":"debug-session","runId":"post-fix","hypothesisId":"G","location":"document_builder.py:595","message":"before CSS injection","data":{"has_style_tag":bool('<style>' in html_output),"enhanced_css_length":len(enhanced_css) if enhanced_css else 0,"css_preview":enhanced_css[:200] if enhanced_css else ""},"timestamp":int(__import__('time').time()*1000)}) + '\n')
+            f.write(json.dumps({"sessionId":"debug-session","runId":"post-fix","hypothesisId":"G","location":"document_builder.py:595","message":"before CSS injection","data":{"has_style_tag":bool('<style>' in html_output),"enhanced_css_length":len(enhanced_css) if enhanced_css else 0,"css_preview":enhanced_css[:200] if enhanced_css else ""},"timestamp":int(time.time()*1000)}) + '\n')
         # #endregion
         
         # Inject CSS into HTML if not already present
@@ -676,14 +677,14 @@ class DocumentBuilder:
         with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
             import json
             import re
-            f.write(json.dumps({"sessionId":"debug-session","runId":"post-fix","hypothesisId":"G","location":"document_builder.py:603","message":"after CSS injection","data":{"html_output_length":len(html_output) if html_output else 0,"has_enhanced_css":bool(enhanced_css in html_output) if enhanced_css else False,"has_h1_in_final":bool(re.search(r'<h1[^>]*>', html_output)) if html_output else False},"timestamp":int(__import__('time').time()*1000)}) + '\n')
+            f.write(json.dumps({"sessionId":"debug-session","runId":"post-fix","hypothesisId":"G","location":"document_builder.py:603","message":"after CSS injection","data":{"html_output_length":len(html_output) if html_output else 0,"has_enhanced_css":bool(enhanced_css in html_output) if enhanced_css else False,"has_h1_in_final":bool(re.search(r'<h1[^>]*>', html_output)) if html_output else False},"timestamp":int(time.time()*1000)}) + '\n')
         # #endregion
         
         # #region agent log
         with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
             import json
             import re
-            f.write(json.dumps({"sessionId":"debug-session","runId":"post-fix","hypothesisId":"F","location":"document_builder.py:577","message":"_render_template exit","data":{"html_output_length":len(html_output) if html_output else 0,"html_output_preview":html_output[html_output.find('<div class="content">'):html_output.find('<div class="content">')+500] if html_output and '<div class="content">' in html_output else html_output[:500] if html_output else "","has_h1_in_output":bool(re.search(r'<h1[^>]*>', html_output)) if html_output else False,"has_hr_in_output":bool(re.search(r'<hr[^>]*>', html_output)) if html_output else False,"has_raw_hash":bool(re.search(r'#\s+WAFT', html_output)) if html_output else False},"timestamp":int(__import__('time').time()*1000)}) + '\n')
+            f.write(json.dumps({"sessionId":"debug-session","runId":"post-fix","hypothesisId":"F","location":"document_builder.py:577","message":"_render_template exit","data":{"html_output_length":len(html_output) if html_output else 0,"html_output_preview":html_output[html_output.find('<div class="content">'):html_output.find('<div class="content">')+500] if html_output and '<div class="content">' in html_output else html_output[:500] if html_output else "","has_h1_in_output":bool(re.search(r'<h1[^>]*>', html_output)) if html_output else False,"has_hr_in_output":bool(re.search(r'<hr[^>]*>', html_output)) if html_output else False,"has_raw_hash":bool(re.search(r'#\s+WAFT', html_output)) if html_output else False},"timestamp":int(time.time()*1000)}) + '\n')
         # #endregion
         
         return html_output

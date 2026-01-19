@@ -19,6 +19,7 @@ from typing import Optional, Union, Dict, Any, List
 from datetime import datetime
 import re
 import html
+import time
 
 from .document_builder import DocumentBuilder
 from .templates.one_pager import ONE_PAGER_TEMPLATE
@@ -124,7 +125,7 @@ class OnePager:
         # #region agent log
         with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
             import json
-            f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"B","location":"one_pager.py:121","message":"_markdown_to_html entry","data":{"markdown_length":len(markdown) if markdown else 0,"markdown_preview":markdown[:150] if markdown else "","has_bold":bool(re.search(r'\*\*|__', markdown)) if markdown else False,"has_lists":bool(re.search(r'^[-*]\s', markdown, re.MULTILINE)) if markdown else False},"timestamp":int(__import__('time').time()*1000)}) + '\n')
+            f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"B","location":"one_pager.py:121","message":"_markdown_to_html entry","data":{"markdown_length":len(markdown) if markdown else 0,"markdown_preview":markdown[:150] if markdown else "","has_bold":bool(re.search(r'\*\*|__', markdown)) if markdown else False,"has_lists":bool(re.search(r'^[-*]\s', markdown, re.MULTILINE)) if markdown else False},"timestamp":int(time.time()*1000)}) + '\n')
         # #endregion
         
         html_parts = []
@@ -269,7 +270,7 @@ class OnePager:
         # #region agent log
         with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
             import json
-            f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"B","location":"one_pager.py:263","message":"_markdown_to_html exit","data":{"result_length":len(result) if result else 0,"result_preview":result[:200] if result else "","has_html_tags":bool(re.search(r'<[^>]+>', result)) if result else False,"has_strong_tags":bool(re.search(r'<strong>', result)) if result else False,"has_list_tags":bool(re.search(r'<[uo]l>', result)) if result else False},"timestamp":int(__import__('time').time()*1000)}) + '\n')
+            f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"B","location":"one_pager.py:263","message":"_markdown_to_html exit","data":{"result_length":len(result) if result else 0,"result_preview":result[:200] if result else "","has_html_tags":bool(re.search(r'<[^>]+>', result)) if result else False,"has_strong_tags":bool(re.search(r'<strong>', result)) if result else False,"has_list_tags":bool(re.search(r'<[uo]l>', result)) if result else False},"timestamp":int(time.time()*1000)}) + '\n')
         # #endregion
         
         return result
@@ -279,7 +280,7 @@ class OnePager:
         # #region agent log
         with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
             import json
-            f.write(json.dumps({"sessionId":"debug-session","runId":"post-fix","hypothesisId":"C","location":"one_pager.py:265","message":"_process_inline_markdown entry","data":{"text_length":len(text) if text else 0,"text_preview":text[:100] if text else "","has_bold_markers":bool(re.search(r'\*\*|__', text)) if text else False,"has_underscores":bool('_' in text) if text else False},"timestamp":int(__import__('time').time()*1000)}) + '\n')
+            f.write(json.dumps({"sessionId":"debug-session","runId":"post-fix","hypothesisId":"C","location":"one_pager.py:265","message":"_process_inline_markdown entry","data":{"text_length":len(text) if text else 0,"text_preview":text[:100] if text else "","has_bold_markers":bool(re.search(r'\*\*|__', text)) if text else False,"has_underscores":bool('_' in text) if text else False},"timestamp":int(time.time()*1000)}) + '\n')
         # #endregion
         
         # Process markdown BEFORE escaping to preserve structure
@@ -324,7 +325,7 @@ class OnePager:
         # #region agent log
         with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
             import json
-            f.write(json.dumps({"sessionId":"debug-session","runId":"post-fix","hypothesisId":"C","location":"one_pager.py:304","message":"_process_inline_markdown exit","data":{"result_length":len(final_result) if final_result else 0,"result_preview":final_result[:150] if final_result else "","has_strong_tags":bool(re.search(r'<strong>', final_result)) if final_result else False,"has_incorrect_em_tags":bool(re.search(r'<em>latex</em>|<em>self</em>|<em>batch</em>', final_result)) if final_result else False,"preserves_underscores":bool('test_latex' in final_result or 'test_self' in final_result) if final_result else False},"timestamp":int(__import__('time').time()*1000)}) + '\n')
+            f.write(json.dumps({"sessionId":"debug-session","runId":"post-fix","hypothesisId":"C","location":"one_pager.py:304","message":"_process_inline_markdown exit","data":{"result_length":len(final_result) if final_result else 0,"result_preview":final_result[:150] if final_result else "","has_strong_tags":bool(re.search(r'<strong>', final_result)) if final_result else False,"has_incorrect_em_tags":bool(re.search(r'<em>latex</em>|<em>self</em>|<em>batch</em>', final_result)) if final_result else False,"preserves_underscores":bool('test_latex' in final_result or 'test_self' in final_result) if final_result else False},"timestamp":int(time.time()*1000)}) + '\n')
         # #endregion
         
         return final_result
@@ -459,7 +460,7 @@ class OnePager:
                     # #region agent log
                     with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
                         import json
-                        f.write(json.dumps({"sessionId":"debug-session","runId":"overview-debug","hypothesisId":"A","location":"one_pager.py:447","message":"Section processing","data":{"title":title,"body_length":len(body) if body else 0,"body_preview":body[:200] if body else "","body_starts_with_dash":body.strip().startswith('-') if body else False},"timestamp":int(__import__('time').time()*1000)}) + '\n')
+                        f.write(json.dumps({"sessionId":"debug-session","runId":"overview-debug","hypothesisId":"A","location":"one_pager.py:447","message":"Section processing","data":{"title":title,"body_length":len(body) if body else 0,"body_preview":body[:200] if body else "","body_starts_with_dash":body.strip().startswith('-') if body else False},"timestamp":int(time.time()*1000)}) + '\n')
                     # #endregion
                     
                     # Process body content - convert markdown to HTML
@@ -474,7 +475,7 @@ class OnePager:
                         # #region agent log
                         with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
                             import json
-                            f.write(json.dumps({"sessionId":"debug-session","runId":"overview-debug","hypothesisId":"B","location":"one_pager.py:456","message":"Markdown processing result","data":{"body_html_length":len(body_html) if body_html else 0,"body_html_preview":body_html[:300] if body_html else "","has_ul_tags":bool(re.search(r'<ul>', body_html)) if body_html else False,"has_p_tags":bool(re.search(r'<p[^>]*>', body_html)) if body_html else False},"timestamp":int(__import__('time').time()*1000)}) + '\n')
+                            f.write(json.dumps({"sessionId":"debug-session","runId":"overview-debug","hypothesisId":"B","location":"one_pager.py:456","message":"Markdown processing result","data":{"body_html_length":len(body_html) if body_html else 0,"body_html_preview":body_html[:300] if body_html else "","has_ul_tags":bool(re.search(r'<ul>', body_html)) if body_html else False,"has_p_tags":bool(re.search(r'<p[^>]*>', body_html)) if body_html else False},"timestamp":int(time.time()*1000)}) + '\n')
                         # #endregion
                     else:
                         body_html = ""
@@ -521,7 +522,7 @@ class OnePager:
         # #region agent log
         with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
             import json
-            f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"D","location":"one_pager.py:430","message":"Template context before render","data":{"has_sections":"sections" in context and context["sections"] is not None,"sections_count":len(context.get("sections", [])) if context.get("sections") else 0,"has_content":bool(context.get("content"))},"timestamp":int(__import__('time').time()*1000)}) + '\n')
+            f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"D","location":"one_pager.py:430","message":"Template context before render","data":{"has_sections":"sections" in context and context["sections"] is not None,"sections_count":len(context.get("sections", [])) if context.get("sections") else 0,"has_content":bool(context.get("content"))},"timestamp":int(time.time()*1000)}) + '\n')
         # #endregion
         
         html_output = template.render(**context)
@@ -529,7 +530,7 @@ class OnePager:
         # #region agent log
         with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
             import json
-            f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"D","location":"one_pager.py:440","message":"HTML output after render","data":{"html_length":len(html_output) if html_output else 0,"html_preview":html_output[:300] if html_output else "","has_section_tags":bool(re.search(r'<section', html_output)) if html_output else False},"timestamp":int(__import__('time').time()*1000)}) + '\n')
+            f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"D","location":"one_pager.py:440","message":"HTML output after render","data":{"html_length":len(html_output) if html_output else 0,"html_preview":html_output[:300] if html_output else "","has_section_tags":bool(re.search(r'<section', html_output)) if html_output else False},"timestamp":int(time.time()*1000)}) + '\n')
         # #endregion
         
         # Save HTML preview if requested

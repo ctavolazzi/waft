@@ -343,11 +343,12 @@ class RecapAndReviewManager:
     def _open_pdf_on_desktop(self, pdf_path: Path) -> bool:
         """Open PDF on desktop using system command."""
         try:
+            import os
             system = platform.system()
             if system == "Darwin":  # macOS
                 subprocess.run(["open", str(pdf_path)], check=True)
             elif system == "Windows":
-                subprocess.run(["start", str(pdf_path)], shell=True, check=True)
+                os.startfile(str(pdf_path))
             else:  # Linux
                 subprocess.run(["xdg-open", str(pdf_path)], check=True)
             

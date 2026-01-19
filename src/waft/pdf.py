@@ -869,13 +869,14 @@ class PDF:
         """Open PDF in default viewer."""
         import subprocess
         import platform
+        import os
         
         if platform.system() == "Darwin":  # macOS
-            subprocess.run(["open", str(pdf_path)])
+            subprocess.run(["open", str(pdf_path)], check=False)
         elif platform.system() == "Windows":
-            subprocess.run(["start", str(pdf_path)], shell=True)
+            os.startfile(str(pdf_path))
         else:  # Linux
-            subprocess.run(["xdg-open", str(pdf_path)])
+            subprocess.run(["xdg-open", str(pdf_path)], check=False)
     
     # ============================================================================
     # Utility Methods
@@ -899,10 +900,11 @@ class PDF:
         
         import subprocess
         import platform
+        import os
         
         if platform.system() == "Darwin":  # macOS
-            subprocess.run(["lpr", str(self._generated_path)])
+            subprocess.run(["lpr", str(self._generated_path)], check=False)
         elif platform.system() == "Windows":
-            subprocess.run(["print", str(self._generated_path)], shell=True)
+            os.startfile(str(self._generated_path), "print")
         else:  # Linux
-            subprocess.run(["lpr", str(self._generated_path)])
+            subprocess.run(["lpr", str(self._generated_path)], check=False)
