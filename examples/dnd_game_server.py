@@ -91,6 +91,12 @@ class CombatActionRequest(BaseModel):
     spell_id: Optional[str] = None  # Required if action is "cast"
 
 
+class QuestActionRequest(BaseModel):
+    game_id: str
+    quest_id: str
+    action: str  # "accept", "complete", or "abandon"
+
+
 # Shop items
 SHOP_ITEMS = {
     "sword": {"name": "Longsword", "cost": 15, "type": "weapon", "damage": "1d8"},
@@ -262,24 +268,24 @@ async def game_action(request: GameActionRequest):
         result["data"] = {"gold_found": gold_found, "gold": state["gold"]}
         
         # Check if encounter should happen
-                if "bandit" in story.lower() or "ruin" in story.lower():
-                    result["data"]["encounter"] = True
-                
-                # Update quest progress for exploration objectives
-                if "active_quests" in state and state["active_quests"]:
-                    for quest_id in state["active_quests"]:
-                        if quest_id in state.get("quest_progress", {}):
-                            progress = state["quest_progress"][quest_id]
-                            objectives = progress.get("objectives", [])
-                            completed = progress.get("objectives_completed", [])
-                            
-                            if "explore" in objectives and "explore" not in completed:
-                                completed.append("explore")
-                                progress["objectives_completed"] = completed
-                            
-                            if "explore_ruins" in objectives and "ruin" in story.lower() and "explore_ruins" not in completed:
-                                completed.append("explore_ruins")
-                                progress["objectives_completed"] = completed
+        if "bandit" in story.lower() or "ruin" in story.lower():
+            result["data"]["encounter"] = True
+        
+        # Update quest progress for exploration objectives
+        if "active_quests" in state and state["active_quests"]:
+            for quest_id in state["active_quests"]:
+                if quest_id in state.get("quest_progress", {}):
+                    progress = state["quest_progress"][quest_id]
+                    objectives = progress.get("objectives", [])
+                    completed = progress.get("objectives_completed", [])
+                    
+                    if "explore" in objectives and "explore" not in completed:
+                        completed.append("explore")
+                        progress["objectives_completed"] = completed
+                    
+                    if "explore_ruins" in objectives and "ruin" in story.lower() and "explore_ruins" not in completed:
+                        completed.append("explore_ruins")
+                        progress["objectives_completed"] = completed
     
     elif request.action == "rest":
         healing = DnDRoller.roll("1d8") + character.con_modifier
@@ -663,28 +669,28 @@ async def combat_action(request: CombatActionRequest):
         result["combat_over"] = True
         result["victory"] = True
         
-            xp_gain = enemy["xp"]
-            gold_gain = random.randint(5, 15)
-            state["gold"] += gold_gain
-            state["encounters_completed"] += 1
-            
-            # Update quest progress
-            if "active_quests" in state and state["active_quests"]:
-                for quest_id in state["active_quests"]:
-                    if quest_id in state.get("quest_progress", {}):
-                        progress = state["quest_progress"][quest_id]
-                        objectives = progress.get("objectives", [])
-                        completed = progress.get("objectives_completed", [])
-                        
-                        # Check if this enemy type matches quest objective
-                        if "defeat_goblin" in objectives and enemy_type == "goblin" and "defeat_goblin" not in completed:
-                            completed.append("defeat_goblin")
-                            progress["objectives_completed"] = completed
-                        elif "defeat_guardian" in objectives and enemy_type in ["skeleton", "orc"] and "defeat_guardian" not in completed:
-                            completed.append("defeat_guardian")
-                            progress["objectives_completed"] = completed
-            
-            # Simple leveling (every 3 encounters)
+        xp_gain = enemy["xp"]
+        gold_gain = random.randint(5, 15)
+        state["gold"] += gold_gain
+        state["encounters_completed"] += 1
+        
+        # Update quest progress
+        if "active_quests" in state and state["active_quests"]:
+            for quest_id in state["active_quests"]:
+                if quest_id in state.get("quest_progress", {}):
+                    progress = state["quest_progress"][quest_id]
+                    objectives = progress.get("objectives", [])
+                    completed = progress.get("objectives_completed", [])
+                    
+                    # Check if this enemy type matches quest objective
+                    if "defeat_goblin" in objectives and enemy_type == "goblin" and "defeat_goblin" not in completed:
+                        completed.append("defeat_goblin")
+                        progress["objectives_completed"] = completed
+                    elif "defeat_guardian" in objectives and enemy_type in ["skeleton", "orc"] and "defeat_guardian" not in completed:
+                        completed.append("defeat_guardian")
+                        progress["objectives_completed"] = completed
+        
+        # Simple leveling (every 3 encounters)
         if state["encounters_completed"] % 3 == 0:
             character.level += 1
             hp_gain = DnDRoller.roll(f"1d{character.hit_die}") + character.con_modifier
