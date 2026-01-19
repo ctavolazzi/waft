@@ -21,6 +21,7 @@
     vat-id: "US000000001",
     address: (
       city: "Unknown",
+      postal-code: "00000",
       country: "USA",
     ),
   ),

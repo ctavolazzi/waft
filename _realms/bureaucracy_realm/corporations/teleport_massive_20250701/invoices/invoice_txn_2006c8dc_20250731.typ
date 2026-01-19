@@ -2,7 +2,7 @@
 
 #show: invoice.with(
   language: "en",
-  invoice-id: "txn_14277a64_20250731",
+  invoice-id: "txn_2006c8dc_20250731",
   issuing-date: "2026-01-19",
   hourly-rate: 100,
   biller: (
@@ -28,7 +28,7 @@
   items: (
     (
       date: "2026-01-19",
-      description: "Payroll payment for being_20260119_025414_f8e06283",
+      description: "Payroll payment for being_20260119_030049_f8e06283",
       quantity: 1,
       unit: "payment",
       price: 15000.00,
