@@ -308,9 +308,11 @@ def _format_party(party: Dict[str, Any], party_name: str) -> str:
                     result += f'      country: "{_escape_typst(line)}",\n'
                     country_set = True
             
-            # Ensure at least city is set (required by template)
+            # Ensure all required fields are set (template requires city, postal-code, country)
             if not city_set:
                 result += '      city: "Unknown",\n'
+            if not postal_set:
+                result += '      postal-code: "00000",\n'
             if not country_set:
                 result += '      country: "USA",\n'
             
@@ -322,12 +324,14 @@ def _format_party(party: Dict[str, Any], party_name: str) -> str:
                 result += f'      city: "{_escape_typst(address)}",\n'
             else:
                 result += '      city: "Unknown",\n'
+            result += '      postal-code: "00000",\n'
             result += '      country: "USA",\n'
             result += "    ),\n"
     else:
         # No address provided - provide minimal required structure
         result += "    address: (\n"
         result += '      city: "Unknown",\n'
+        result += '      postal-code: "00000",\n'
         result += '      country: "USA",\n'
         result += "    ),\n"
     
