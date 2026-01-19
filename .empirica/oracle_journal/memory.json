@@ -1,0 +1,16 @@
+{
+  "insights": [],
+  "successful_recommendations": [],
+  "learned_patterns": [],
+  "epistemic_history": [
+    {
+      "timestamp": "2026-01-19T03:00:23.640968",
+      "phase": "UNKNOWN",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    }
+  ],
+  "consultation_count": 1,
+  "first_consultation": "2026-01-19T03:00:23.640968",
+  "last_consultation": "2026-01-19T03:00:23.640968"
+}
