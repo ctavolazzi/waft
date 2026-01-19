@@ -5,87 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teleport Massive Corporation - Dashboard</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: #ffffff;
             padding: 20px;
-            color: #333;
+            color: #000000;
         }
         
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
         }
         
         .header {
-            background: white;
-            border-radius: 16px;
-            padding: 30px;
+            border: 2px solid #000000;
+            padding: 20px;
             margin-bottom: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            background: #f0f0f0;
         }
         
         .header h1 {
-            font-size: 2.5em;
-            color: #667eea;
+            font-size: 2em;
             margin-bottom: 10px;
         }
         
-        .header .subtitle {
-            color: #666;
-            font-size: 1.1em;
-        }
-        
         .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+            display: table;
+            width: 100%;
             margin-bottom: 20px;
         }
         
         .card {
-            background: white;
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            border: 1px solid #000000;
+            padding: 15px;
+            margin-bottom: 20px;
+            background: #ffffff;
         }
         
         .card h2 {
-            color: #667eea;
-            font-size: 1.3em;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .card h2::before {
-            content: '';
-            width: 4px;
-            height: 24px;
-            background: #667eea;
-            border-radius: 2px;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #000000;
+            padding-bottom: 5px;
         }
         
         .stat {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            padding: 12px 0;
-            border-bottom: 1px solid #f0f0f0;
+            padding: 8px 0;
+            border-bottom: 1px solid #cccccc;
         }
         
         .stat:last-child {
@@ -93,66 +59,31 @@
         }
         
         .stat-label {
-            color: #666;
-            font-size: 0.95em;
+            display: inline-block;
+            width: 200px;
         }
         
         .stat-value {
-            font-size: 1.3em;
-            font-weight: 600;
-            color: #333;
-        }
-        
-        .stat-value.positive {
-            color: #10b981;
-        }
-        
-        .stat-value.negative {
-            color: #ef4444;
-        }
-        
-        .stat-value.money {
-            color: #667eea;
-            font-family: 'Courier New', monospace;
+            font-weight: bold;
         }
         
         .full-width {
-            grid-column: 1 / -1;
+            width: 100%;
         }
         
         .employee-list {
             list-style: none;
+            padding: 0;
         }
         
         .employee-item {
-            padding: 12px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .employee-info {
-            flex: 1;
+            padding: 10px;
+            border: 1px solid #cccccc;
+            margin-bottom: 5px;
         }
         
         .employee-name {
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 4px;
-        }
-        
-        .employee-role {
-            color: #666;
-            font-size: 0.9em;
-        }
-        
-        .employee-salary {
-            font-weight: 600;
-            color: #667eea;
-            font-family: 'Courier New', monospace;
+            font-weight: bold;
         }
         
         .transaction-list {
@@ -161,116 +92,81 @@
         }
         
         .transaction-item {
-            padding: 12px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            border-left: 4px solid #667eea;
+            padding: 10px;
+            border: 1px solid #cccccc;
+            margin-bottom: 5px;
         }
         
         .transaction-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-        
-        .transaction-type {
-            font-weight: 600;
-            color: #667eea;
-            text-transform: capitalize;
-        }
-        
-        .transaction-amount {
-            font-weight: 600;
-            color: #333;
-            font-family: 'Courier New', monospace;
-        }
-        
-        .transaction-details {
-            font-size: 0.9em;
-            color: #666;
+            font-weight: bold;
+            margin-bottom: 5px;
         }
         
         .invoice-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 12px;
+            display: table;
+            width: 100%;
         }
         
         .invoice-item {
-            padding: 12px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        
-        .invoice-item:hover {
-            background: #e9ecef;
-        }
-        
-        .invoice-name {
-            font-size: 0.85em;
-            color: #666;
-            word-break: break-all;
+            display: inline-block;
+            padding: 10px;
+            border: 1px solid #cccccc;
+            margin: 5px;
+            width: 200px;
         }
         
         .badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 0.85em;
-            font-weight: 600;
-        }
-        
-        .badge.success {
-            background: #d1fae5;
-            color: #065f46;
-        }
-        
-        .badge.warning {
-            background: #fef3c7;
-            color: #92400e;
-        }
-        
-        .badge.info {
-            background: #dbeafe;
-            color: #1e40af;
+            padding: 2px 8px;
+            border: 1px solid #000000;
+            font-size: 0.9em;
         }
         
         .progress-bar {
             width: 100%;
-            height: 8px;
-            background: #e5e7eb;
-            border-radius: 4px;
-            overflow: hidden;
+            height: 20px;
+            border: 1px solid #000000;
+            background: #ffffff;
             margin-top: 8px;
         }
         
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            transition: width 0.3s;
+            background: #000000;
         }
         
         .footer {
             text-align: center;
-            color: white;
             margin-top: 30px;
-            opacity: 0.9;
+            padding: 10px;
+            border-top: 1px solid #000000;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        th, td {
+            border: 1px solid #000000;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        th {
+            background: #f0f0f0;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🚀 Teleport Massive Corporation</h1>
-            <div class="subtitle">Quantum Teleportation Technology | Founded July 1, 2025</div>
+            <h1>Teleport Massive Corporation</h1>
+            <div>Quantum Teleportation Technology | Founded July 1, 2025</div>
         </div>
         
-        <div class="grid">
+        <div>
             <!-- Financial Overview -->
             <div class="card">
                 <h2>💰 Financial Overview</h2>
@@ -302,7 +198,7 @@
             
             <!-- Financial Health -->
             <div class="card">
-                <h2>📊 Financial Health</h2>
+                <h2>Financial Health</h2>
                 <div class="stat">
                     <span class="stat-label">Monthly Burn Rate</span>
                     <span class="stat-value money" id="burn-rate">Loading...</span>
@@ -343,7 +239,7 @@
         
         <!-- Employees -->
         <div class="card full-width">
-            <h2>👥 Employees</h2>
+            <h2>Employees</h2>
             <ul class="employee-list" id="employee-list">
                 <li>Loading employees...</li>
             </ul>
@@ -359,7 +255,7 @@
         
         <!-- Invoices -->
         <div class="card full-width">
-            <h2>📄 Generated Invoices</h2>
+            <h2>Generated Invoices</h2>
             <div class="invoice-grid" id="invoice-grid">
                 <div>Loading invoices...</div>
             </div>
