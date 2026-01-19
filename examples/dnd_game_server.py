@@ -41,6 +41,34 @@ app.add_middleware(
 # In-memory game state storage (in production, use a database)
 game_states: Dict[str, Dict[str, Any]] = {}
 
+# Quest system
+QUESTS = {
+    "goblin_hunt": {
+        "id": "goblin_hunt",
+        "name": "Goblin Hunt",
+        "description": "Clear out the goblin infestation in the nearby cave",
+        "objectives": ["defeat_goblin", "defeat_goblin", "defeat_goblin"],
+        "rewards": {"xp": 150, "gold": 50},
+        "status": "available"
+    },
+    "merchant_delivery": {
+        "id": "merchant_delivery",
+        "name": "Merchant's Delivery",
+        "description": "Deliver goods to the next town",
+        "objectives": ["explore", "reach_town"],
+        "rewards": {"xp": 100, "gold": 75},
+        "status": "available"
+    },
+    "ancient_ruins": {
+        "id": "ancient_ruins",
+        "name": "Explore Ancient Ruins",
+        "description": "Investigate the mysterious ruins and discover their secrets",
+        "objectives": ["explore_ruins", "defeat_guardian"],
+        "rewards": {"xp": 200, "gold": 100, "item": "Ancient Artifact"},
+        "status": "available"
+    }
+}
+
 
 class CreateCharacterRequest(BaseModel):
     name: str
@@ -142,12 +170,15 @@ async def create_character_endpoint(request: CreateCharacterRequest):
     game_state = {
         "game_id": game_id,
         "character": character.to_dict(),
-        "gold": 50,
-        "inventory": [],
-        "story_log": [],
-        "encounters_completed": 0,
-        "combat_state": None,  # Current combat encounter
-    }
+            "gold": 50,
+            "inventory": [],
+            "story_log": [],
+            "encounters_completed": 0,
+            "combat_state": None,  # Current combat encounter
+            "active_quests": [],  # List of active quest IDs
+            "completed_quests": [],  # List of completed quest IDs
+            "quest_progress": {},  # Quest ID -> progress dict
+        }
     
     game_states[game_id] = game_state
     
@@ -198,8 +229,24 @@ async def game_action(request: GameActionRequest):
         result["data"] = {"gold_found": gold_found, "gold": state["gold"]}
         
         # Check if encounter should happen
-        if "bandit" in story.lower() or "ruin" in story.lower():
-            result["data"]["encounter"] = True
+                if "bandit" in story.lower() or "ruin" in story.lower():
+                    result["data"]["encounter"] = True
+                
+                # Update quest progress for exploration objectives
+                if "active_quests" in state and state["active_quests"]:
+                    for quest_id in state["active_quests"]:
+                        if quest_id in state.get("quest_progress", {}):
+                            progress = state["quest_progress"][quest_id]
+                            objectives = progress.get("objectives", [])
+                            completed = progress.get("objectives_completed", [])
+                            
+                            if "explore" in objectives and "explore" not in completed:
+                                completed.append("explore")
+                                progress["objectives_completed"] = completed
+                            
+                            if "explore_ruins" in objectives and "ruin" in story.lower() and "explore_ruins" not in completed:
+                                completed.append("explore_ruins")
+                                progress["objectives_completed"] = completed
     
     elif request.action == "rest":
         healing = DnDRoller.roll("1d8") + character.con_modifier
@@ -279,6 +326,121 @@ async def shop_purchase(request: ShopPurchaseRequest):
 async def get_shop_items():
     """Get shop items list."""
     return JSONResponse({"items": SHOP_ITEMS})
+
+
+@app.get("/api/quests")
+async def get_quests():
+    """Get available quests."""
+    return JSONResponse({"quests": QUESTS})
+
+
+@app.get("/api/game/{game_id}/quests")
+async def get_game_quests(game_id: str):
+    """Get quests for a specific game."""
+    if game_id not in game_states:
+        raise HTTPException(status_code=404, detail="Game not found")
+    
+    state = game_states[game_id]
+    active_quests = [QUESTS[qid] for qid in state.get("active_quests", []) if qid in QUESTS]
+    available_quests = [q for q in QUESTS.values() if q["id"] not in state.get("completed_quests", []) and q["id"] not in state.get("active_quests", [])]
+    
+    return JSONResponse({
+        "active": active_quests,
+        "available": available_quests,
+        "completed": state.get("completed_quests", [])
+    })
+
+
+@app.post("/api/quest/action")
+async def quest_action(request: QuestActionRequest):
+    """Perform a quest action (accept, complete, abandon)."""
+    if request.game_id not in game_states:
+        raise HTTPException(status_code=404, detail="Game not found")
+    
+    if request.quest_id not in QUESTS:
+        raise HTTPException(status_code=404, detail="Quest not found")
+    
+    state = game_states[request.game_id]
+    quest = QUESTS[request.quest_id]
+    
+    if request.action == "accept":
+        if request.quest_id in state.get("active_quests", []):
+            raise HTTPException(status_code=400, detail="Quest already active")
+        if request.quest_id in state.get("completed_quests", []):
+            raise HTTPException(status_code=400, detail="Quest already completed")
+        
+        if "active_quests" not in state:
+            state["active_quests"] = []
+        state["active_quests"].append(request.quest_id)
+        
+        if "quest_progress" not in state:
+            state["quest_progress"] = {}
+        state["quest_progress"][request.quest_id] = {
+            "objectives_completed": [],
+            "objectives": quest["objectives"].copy()
+        }
+        
+        game_states[request.game_id] = state
+        
+        return JSONResponse({
+            "success": True,
+            "message": f"Quest '{quest['name']}' accepted!",
+            "quest": quest
+        })
+    
+    elif request.action == "complete":
+        if request.quest_id not in state.get("active_quests", []):
+            raise HTTPException(status_code=400, detail="Quest not active")
+        
+        progress = state["quest_progress"].get(request.quest_id, {})
+        objectives = progress.get("objectives", quest["objectives"])
+        completed = progress.get("objectives_completed", [])
+        
+        if len(completed) < len(objectives):
+            return JSONResponse({
+                "success": False,
+                "message": f"Quest not complete. {len(completed)}/{len(objectives)} objectives done."
+            })
+        
+        # Give rewards
+        rewards = quest["rewards"]
+        state["gold"] += rewards.get("gold", 0)
+        
+        # Remove from active, add to completed
+        state["active_quests"].remove(request.quest_id)
+        if "completed_quests" not in state:
+            state["completed_quests"] = []
+        state["completed_quests"].append(request.quest_id)
+        
+        # Add item if reward has one
+        if "item" in rewards:
+            state["inventory"].append(rewards["item"])
+        
+        game_states[request.game_id] = state
+        
+        return JSONResponse({
+            "success": True,
+            "message": f"Quest '{quest['name']}' completed!",
+            "rewards": rewards
+        })
+    
+    elif request.action == "abandon":
+        if request.quest_id not in state.get("active_quests", []):
+            raise HTTPException(status_code=400, detail="Quest not active")
+        
+        state["active_quests"].remove(request.quest_id)
+        if request.quest_id in state.get("quest_progress", {}):
+            del state["quest_progress"][request.quest_id]
+        
+        game_states[request.game_id] = state
+        
+        return JSONResponse({
+            "success": True,
+            "message": f"Quest '{quest['name']}' abandoned."
+        })
+    
+    else:
+        raise HTTPException(status_code=400, detail="Invalid action")
 
 
 @app.post("/api/combat/action")
@@ -364,12 +526,28 @@ async def combat_action(request: CombatActionRequest):
         result["combat_over"] = True
         result["victory"] = True
         
-        xp_gain = enemy["xp"]
-        gold_gain = random.randint(5, 15)
-        state["gold"] += gold_gain
-        state["encounters_completed"] += 1
-        
-        # Simple leveling (every 3 encounters)
+            xp_gain = enemy["xp"]
+            gold_gain = random.randint(5, 15)
+            state["gold"] += gold_gain
+            state["encounters_completed"] += 1
+            
+            # Update quest progress
+            if "active_quests" in state and state["active_quests"]:
+                for quest_id in state["active_quests"]:
+                    if quest_id in state.get("quest_progress", {}):
+                        progress = state["quest_progress"][quest_id]
+                        objectives = progress.get("objectives", [])
+                        completed = progress.get("objectives_completed", [])
+                        
+                        # Check if this enemy type matches quest objective
+                        if "defeat_goblin" in objectives and enemy_type == "goblin" and "defeat_goblin" not in completed:
+                            completed.append("defeat_goblin")
+                            progress["objectives_completed"] = completed
+                        elif "defeat_guardian" in objectives and enemy_type in ["skeleton", "orc"] and "defeat_guardian" not in completed:
+                            completed.append("defeat_guardian")
+                            progress["objectives_completed"] = completed
+            
+            # Simple leveling (every 3 encounters)
         if state["encounters_completed"] % 3 == 0:
             character.level += 1
             hp_gain = DnDRoller.roll(f"1d{character.hit_die}") + character.con_modifier

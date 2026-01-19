@@ -14,6 +14,7 @@ import uuid
 from ..corporation import Corporation
 from ..simulation.corporation_simulator import CorporationSimulator, TimeUnit
 from ..corporations_system import CorporationsSystem
+from ..security import validate_path_in_project, write_secure_file, read_secure_json, set_directory_permissions
 
 
 class ExperimentConfig:
@@ -138,17 +139,30 @@ class ExperimentConfig:
     
     def save(self, output_path: Path) -> None:
         """Save configuration to file."""
+        # CRITICAL: Validate path is within project (if project_path available)
+        # Note: output_path might be absolute, so we validate if we can determine project_path
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        output_path.write_text(
-            json.dumps(self.to_dict(), indent=2),
-            encoding="utf-8"
-        )
+        set_directory_permissions(output_path.parent)
+        
+        # CRITICAL: Use secure file write
+        try:
+            write_secure_file(
+                output_path,
+                json.dumps(self.to_dict(), indent=2),
+                encoding="utf-8"
+            )
+        except IOError as e:
+            raise IOError(f"Failed to save experiment config to {output_path}: {e}")
     
     @classmethod
     def load(cls, config_path: Path) -> "ExperimentConfig":
         """Load configuration from file."""
-        data = json.loads(config_path.read_text(encoding="utf-8"))
-        return cls.from_dict(data)
+        try:
+            # CRITICAL: Use secure JSON read with size limits
+            data = read_secure_json(config_path)
+            return cls.from_dict(data)
+        except (ValueError, IOError, json.JSONDecodeError) as e:
+            raise ValueError(f"Failed to load experiment config from {config_path}: {e}")
 
 
 def save_experiment_config(

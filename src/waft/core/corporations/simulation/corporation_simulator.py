@@ -15,6 +15,7 @@ import uuid
 from ..corporation import Corporation
 from ..economics.transaction import Transaction, TransactionType, create_salary_transaction, create_vendor_invoice_transaction
 from ..economics.accounting import AccountingSystem
+from ..security import validate_path_in_project, write_secure_file, read_secure_json, set_directory_permissions
 from .time_manager import TimeManager, TimeUnit
 from .event_system import EconomicEvent, EventType, generate_payroll_events, generate_monthly_expenses
 
@@ -69,7 +70,14 @@ class CorporationSimulator:
             corporation.project_path / "_realms" / "bureaucracy_realm" / "corporations"
             / corporation.corp_id / "simulation" / "state.json"
         )
+        
+        # CRITICAL: Validate path is within project
+        if not validate_path_in_project(self.simulation_path, corporation.project_path):
+            raise ValueError(f"Invalid simulation path: {self.simulation_path} is outside project directory")
+        
         self.simulation_path.parent.mkdir(parents=True, exist_ok=True)
+        # CRITICAL: Set secure directory permissions
+        set_directory_permissions(self.simulation_path.parent)
     
     def add_monthly_expense(
         self,
@@ -255,27 +263,46 @@ class CorporationSimulator:
             "last_updated": datetime.utcnow().isoformat()
         }
         
-        self.simulation_path.write_text(
-            json.dumps(state, indent=2),
-            encoding="utf-8"
-        )
+        # CRITICAL: Use secure file write
+        try:
+            write_secure_file(
+                self.simulation_path,
+                json.dumps(state, indent=2),
+                encoding="utf-8"
+            )
+        except IOError as e:
+            raise IOError(f"Failed to save simulation state to {self.simulation_path}: {e}")
     
     def load_state(self) -> None:
         """Load simulation state from disk."""
         if not self.simulation_path.exists():
             return
         
-        state = json.loads(self.simulation_path.read_text(encoding="utf-8"))
+        try:
+            # CRITICAL: Use secure JSON read with size limits
+            state = read_secure_json(self.simulation_path)
+        except (ValueError, IOError, json.JSONDecodeError) as e:
+            # If state is invalid, start fresh
+            return
         
         # Load time manager
         if "time_manager" in state:
-            self.time_manager = TimeManager.from_dict(state["time_manager"])
+            try:
+                self.time_manager = TimeManager.from_dict(state["time_manager"])
+            except (KeyError, ValueError):
+                # If time manager invalid, keep default
+                pass
         
         # Load event queue
         if "event_queue" in state:
-            self.event_queue = [
-                EconomicEvent.from_dict(e) for e in state["event_queue"]
-            ]
+            self.event_queue = []
+            for e in state["event_queue"]:
+                try:
+                    event = EconomicEvent.from_dict(e)
+                    self.event_queue.append(event)
+                except (KeyError, ValueError):
+                    # Skip invalid event data
+                    continue
         
         # Load monthly expenses
         if "monthly_expenses" in state:

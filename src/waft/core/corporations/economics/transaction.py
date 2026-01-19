@@ -11,6 +11,8 @@ from datetime import datetime
 from enum import Enum
 import json
 
+from ..security import validate_financial_amount
+
 
 class TransactionType(Enum):
     """Types of economic transactions."""
@@ -60,7 +62,14 @@ class Transaction:
             to_party: Party receiving (for revenue, investments)
             timestamp: Transaction timestamp
             metadata: Additional transaction metadata
+            
+        Raises:
+            ValueError: If amount is invalid or negative
         """
+        # CRITICAL: Validate amount is positive
+        if not validate_financial_amount(Decimal(str(amount)), min_amount=Decimal("0"), allow_negative=False):
+            raise ValueError(f"Invalid transaction amount: {amount} (must be positive)")
+        
         self.transaction_id = transaction_id
         self.transaction_type = transaction_type
         self.amount = Decimal(str(amount))
@@ -198,13 +207,20 @@ def create_salary_transaction(
     Args:
         transaction_id: Unique transaction ID
         employee_id: Employee (Being) ID
-        amount: Salary amount
+        amount: Salary amount (must be positive)
         period: Payment period (monthly, biweekly, etc.)
         description: Optional description
         
     Returns:
         Transaction object
+        
+    Raises:
+        ValueError: If amount is invalid or negative
     """
+    # CRITICAL: Validate amount (Transaction.__init__ will also validate, but validate here for clearer error)
+    if not validate_financial_amount(amount, min_amount=Decimal("0"), allow_negative=False):
+        raise ValueError(f"Invalid salary amount: {amount} (must be positive)")
+    
     if description is None:
         description = f"Salary payment - {period}"
     
@@ -232,13 +248,20 @@ def create_vendor_invoice_transaction(
     Args:
         transaction_id: Unique transaction ID
         vendor_name: Vendor name
-        amount: Invoice amount
+        amount: Invoice amount (must be positive)
         description: Invoice description
         expense_account: Expense account name
         
     Returns:
         Transaction object
+        
+    Raises:
+        ValueError: If amount is invalid or negative
     """
+    # CRITICAL: Validate amount
+    if not validate_financial_amount(amount, min_amount=Decimal("0"), allow_negative=False):
+        raise ValueError(f"Invalid invoice amount: {amount} (must be positive)")
+    
     return Transaction(
         transaction_id=transaction_id,
         transaction_type=TransactionType.VENDOR_INVOICE,
@@ -262,12 +285,19 @@ def create_customer_invoice_transaction(
     Args:
         transaction_id: Unique transaction ID
         customer_name: Customer name
-        amount: Invoice amount
+        amount: Invoice amount (must be positive)
         description: Invoice description
         
     Returns:
         Transaction object
+        
+    Raises:
+        ValueError: If amount is invalid or negative
     """
+    # CRITICAL: Validate amount
+    if not validate_financial_amount(amount, min_amount=Decimal("0"), allow_negative=False):
+        raise ValueError(f"Invalid invoice amount: {amount} (must be positive)")
+    
     return Transaction(
         transaction_id=transaction_id,
         transaction_type=TransactionType.CUSTOMER_INVOICE,

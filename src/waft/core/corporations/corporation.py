@@ -10,8 +10,10 @@ from typing import Dict, Any, Optional, List
 from datetime import datetime
 from decimal import Decimal
 import json
+import os
 
 from .financial_state import FinancialState
+from .security import validate_corp_id, validate_path_in_project, write_secure_file, read_secure_json, set_directory_permissions
 
 
 class Department:
@@ -175,7 +177,9 @@ class Corporation:
                 "employees": [],
                 "financial_state": self.financial_state.to_dict()
             }
-            self.manifest_path.write_text(
+            # CRITICAL: Use secure file write
+            write_secure_file(
+                self.manifest_path,
                 json.dumps(manifest, indent=2),
                 encoding="utf-8"
             )
@@ -237,11 +241,24 @@ class Corporation:
             department: Department name
             title: Job title
             level: Seniority level (1-10)
-            salary: Annual salary
+            salary: Annual salary (must be positive if provided)
             
         Returns:
             Created Employee record
+            
+        Raises:
+            ValueError: If salary is invalid or negative
         """
+        # HIGH: Validate salary if provided
+        if salary is not None:
+            from .security import validate_financial_amount
+            if not validate_financial_amount(salary, min_amount=Decimal("0"), allow_negative=False):
+                raise ValueError(f"Invalid salary: {salary} (must be positive)")
+        
+        # HIGH: Validate level is in valid range
+        if not (1 <= level <= 10):
+            raise ValueError(f"Invalid level: {level} (must be between 1 and 10)")
+        
         # Ensure department exists
         dept_id = None
         for dept in self.departments.values():
@@ -312,10 +329,15 @@ class Corporation:
             "financial_state": self.financial_state.to_dict()
         }
         
-        self.manifest_path.write_text(
-            json.dumps(manifest, indent=2),
-            encoding="utf-8"
-        )
+        # CRITICAL: Use secure file write
+        try:
+            write_secure_file(
+                self.manifest_path,
+                json.dumps(manifest, indent=2),
+                encoding="utf-8"
+            )
+        except IOError as e:
+            raise IOError(f"Failed to save corporate manifest to {self.manifest_path}: {e}")
     
     def to_dict(self) -> Dict[str, Any]:
         """Convert corporation to dictionary."""

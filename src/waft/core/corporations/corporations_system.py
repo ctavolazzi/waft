@@ -10,8 +10,10 @@ from typing import Dict, Any, Optional, List
 from datetime import datetime
 from decimal import Decimal
 import json
+import os
 
 from .corporation import Corporation
+from .security import validate_corp_id, validate_path_in_project, write_secure_file, read_secure_json, set_directory_permissions
 
 
 class CorporationsSystem:
@@ -57,10 +59,14 @@ class CorporationsSystem:
                 "created_at": datetime.utcnow().isoformat(),
                 "last_updated": datetime.utcnow().isoformat()
             }
-            self.manifest_path.write_text(
+            # CRITICAL: Use secure file write with permissions
+            write_secure_file(
+                self.manifest_path,
                 json.dumps(manifest, indent=2),
                 encoding="utf-8"
             )
+            # Set directory permissions
+            set_directory_permissions(self.manifest_path.parent)
     
     def create_corporation(
         self,
@@ -93,6 +99,10 @@ class CorporationsSystem:
             timestamp = founded_date.strftime("%Y%m%d_%H%M%S")
             safe_name = name.lower().replace(" ", "_").replace("-", "_")
             corp_id = f"{safe_name}_{timestamp}"
+        
+        # CRITICAL: Validate corp_id for security
+        if not validate_corp_id(corp_id):
+            raise ValueError(f"Invalid corp_id: {corp_id}. Must contain only alphanumeric characters, underscores, and hyphens.")
         
         # Create corporation
         corporation = Corporation(
@@ -166,7 +176,15 @@ class CorporationsSystem:
     
     def _update_manifest(self) -> None:
         """Update system manifest with current corporations."""
-        manifest = json.loads(self.manifest_path.read_text(encoding="utf-8"))
+        try:
+            manifest = read_secure_json(self.manifest_path)
+        except (ValueError, IOError, json.JSONDecodeError):
+            # If manifest is invalid, create new one
+            manifest = {
+                "corporations": [],
+                "created_at": datetime.utcnow().isoformat(),
+                "last_updated": datetime.utcnow().isoformat()
+            }
         
         # Update corporation list
         corp_ids = list(self._corporations.keys())
@@ -174,14 +192,18 @@ class CorporationsSystem:
         # Also check disk for any not in memory
         if self.corporations_path.exists():
             for corp_dir in self.corporations_path.iterdir():
-                if corp_dir.is_dir() and (corp_dir / "corporate_manifest.json").exists():
-                    if corp_dir.name not in corp_ids:
-                        corp_ids.append(corp_dir.name)
+                # CRITICAL: Validate directory name before using
+                if corp_dir.is_dir() and validate_corp_id(corp_dir.name):
+                    if (corp_dir / "corporate_manifest.json").exists():
+                        if corp_dir.name not in corp_ids:
+                            corp_ids.append(corp_dir.name)
         
         manifest["corporations"] = sorted(set(corp_ids))
         manifest["last_updated"] = datetime.utcnow().isoformat()
         
-        self.manifest_path.write_text(
+        # CRITICAL: Use secure file write
+        write_secure_file(
+            self.manifest_path,
             json.dumps(manifest, indent=2),
             encoding="utf-8"
         )

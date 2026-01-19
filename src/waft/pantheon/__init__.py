@@ -18,6 +18,8 @@ from .external_drive_realm import ExternalDriveRealm
 from .reasoner import TheReasoner
 from .github_god import GitHubGod
 from .bureaucracy_god import BureaucracyGod, PersonnelRecord
+from .paperwork_god import PaperworkGod, PaperworkRecord
+from .skurl import Skurl, RedTapeObstacle
 
 __all__ = [
     "Magistrate",
@@ -43,5 +45,9 @@ __all__ = [
     "TheReasoner",
     "GitHubGod",
     "BureaucracyGod",
-    "PersonnelRecord"
+    "PersonnelRecord",
+    "PaperworkGod",
+    "PaperworkRecord",
+    "Skurl",
+    "RedTapeObstacle"
 ]

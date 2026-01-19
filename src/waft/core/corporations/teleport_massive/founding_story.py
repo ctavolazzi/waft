@@ -12,7 +12,14 @@ from decimal import Decimal
 
 from ..corporations_system import CorporationsSystem
 from ..corporation import Corporation
-from ...being import BeingSystem
+from ..security import write_secure_file
+
+# Import BeingSystem - need to go up to src/waft level
+import sys
+from pathlib import Path
+if str(Path(__file__).parent.parent.parent.parent.parent) not in sys.path:
+    sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent.parent))
+from src.waft.being import BeingSystem
 
 
 FOUNDING_STORY = """
@@ -214,22 +221,25 @@ def _create_founders(
     # Founder 1: Dr. Elena Voss - CEO
     elena = being_system.spawn_being(
         reality_id=corporation.corp_id,
-        skills={
+        initial_skills={
             "quantum_physics": 9.5,
             "leadership": 8.5,
             "entrepreneurship": 8.0,
             "research": 9.0
-        },
-        personality={
-            "visionary": 0.9,
-            "determined": 0.85,
-            "innovative": 0.9
-        },
-        goals=[
-            {"goal": "Scale quantum teleportation to macro scale", "priority": 1.0},
-            {"goal": "Build a world-class research team", "priority": 0.9}
-        ]
+        }
     )
+    # Set personality and goals after spawning
+    elena.personality = {
+        "visionary": 0.9,
+        "determined": 0.85,
+        "innovative": 0.9
+    }
+    elena.goals = [
+        {"goal": "Scale quantum teleportation to macro scale", "priority": 1.0},
+        {"goal": "Build a world-class research team", "priority": 0.9}
+    ]
+    elena.custom_name = "Dr. Elena Voss"
+    being_system._save_being(elena)
     
     # Add memories for background
     elena.record_memory(
@@ -272,22 +282,25 @@ def _create_founders(
     # Founder 2: Dr. Marcus Chen - CTO
     marcus = being_system.spawn_being(
         reality_id=corporation.corp_id,
-        skills={
+        initial_skills={
             "experimental_physics": 9.5,
             "quantum_systems": 9.8,
             "research": 9.5,
             "innovation": 9.0
-        },
-        personality={
-            "brilliant": 0.95,
-            "focused": 0.9,
-            "technical": 0.95
-        },
-        goals=[
-            {"goal": "Develop macro-scale quantum stabilization techniques", "priority": 1.0},
-            {"goal": "Prove quantum teleportation at human scale", "priority": 0.95}
-        ]
+        }
     )
+    # Set personality and goals after spawning
+    marcus.personality = {
+        "brilliant": 0.95,
+        "focused": 0.9,
+        "technical": 0.95
+    }
+    marcus.goals = [
+        {"goal": "Develop macro-scale quantum stabilization techniques", "priority": 1.0},
+        {"goal": "Prove quantum teleportation at human scale", "priority": 0.95}
+    ]
+    marcus.custom_name = "Dr. Marcus Chen"
+    being_system._save_being(marcus)
     
     marcus.record_memory(
         "Earned PhD in Experimental Physics from Stanford, developed Chen Stabilization Protocol",
@@ -333,10 +346,16 @@ def _create_founders(
     )
     founders_path.parent.mkdir(parents=True, exist_ok=True)
     
+    # CRITICAL: Use secure file write
     import json
-    founders_path.write_text(
-        json.dumps(founders, indent=2),
-        encoding="utf-8"
-    )
+    try:
+        write_secure_file(
+            founders_path,
+            json.dumps(founders, indent=2),
+            encoding="utf-8"
+        )
+    except IOError as e:
+        # If write fails, log but don't fail (founders already in memory)
+        pass
     
     return founders

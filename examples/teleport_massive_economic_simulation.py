@@ -5,8 +5,14 @@ Demonstrates the economic simulation system for Teleport Massive Corporation.
 Shows how to create the corporation, run simulations, and generate invoices.
 """
 
-import asyncio
+import sys
 from pathlib import Path
+
+# Add project root to path
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
+
+import asyncio
 from datetime import datetime
 from decimal import Decimal
 

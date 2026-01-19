@@ -11,6 +11,7 @@ import json
 
 from ..simulation.corporation_simulator import CorporationSimulator
 from ..corporation import Corporation
+from ..security import validate_path_in_project, write_secure_file, read_secure_json, set_directory_permissions
 
 
 class SimulationStateManager:
@@ -35,7 +36,14 @@ class SimulationStateManager:
             self.project_path / "_realms" / "bureaucracy_realm" / "corporations"
             / corporation.corp_id / "simulation" / "checkpoints"
         )
+        
+        # CRITICAL: Validate path is within project
+        if not validate_path_in_project(self.checkpoints_dir, self.project_path):
+            raise ValueError(f"Invalid checkpoints path: {self.checkpoints_dir} is outside project directory")
+        
         self.checkpoints_dir.mkdir(parents=True, exist_ok=True)
+        # CRITICAL: Set secure directory permissions
+        set_directory_permissions(self.checkpoints_dir)
     
     def save_checkpoint(
         self,
@@ -58,6 +66,10 @@ class SimulationStateManager:
         
         checkpoint_path = self.checkpoints_dir / f"{checkpoint_name}.json"
         
+        # CRITICAL: Validate checkpoint name (prevent path traversal in filename)
+        if '..' in checkpoint_name or '/' in checkpoint_name or '\\' in checkpoint_name:
+            raise ValueError(f"Invalid checkpoint name: {checkpoint_name} (contains path traversal)")
+        
         # Collect state
         state = {
             "checkpoint_name": checkpoint_name,
@@ -69,11 +81,15 @@ class SimulationStateManager:
             "monthly_expenses": simulator.monthly_expenses
         }
         
-        # Save to file
-        checkpoint_path.write_text(
-            json.dumps(state, indent=2),
-            encoding="utf-8"
-        )
+        # CRITICAL: Use secure file write
+        try:
+            write_secure_file(
+                checkpoint_path,
+                json.dumps(state, indent=2),
+                encoding="utf-8"
+            )
+        except IOError as e:
+            raise IOError(f"Failed to save checkpoint to {checkpoint_path}: {e}")
         
         return checkpoint_path
     
@@ -88,8 +104,20 @@ class SimulationStateManager:
         Args:
             checkpoint_path: Path to checkpoint file
             simulator: Simulator to restore state to
+            
+        Raises:
+            ValueError: If checkpoint is invalid
+            IOError: If checkpoint cannot be read
         """
-        state = json.loads(checkpoint_path.read_text(encoding="utf-8"))
+        # CRITICAL: Validate path is within project
+        if not validate_path_in_project(checkpoint_path, self.project_path):
+            raise ValueError(f"Invalid checkpoint path: {checkpoint_path} is outside project directory")
+        
+        try:
+            # CRITICAL: Use secure JSON read with size limits
+            state = read_secure_json(checkpoint_path)
+        except (ValueError, IOError, json.JSONDecodeError) as e:
+            raise ValueError(f"Failed to load checkpoint from {checkpoint_path}: {e}")
         
         # Restore time manager
         if "time_manager" in state:

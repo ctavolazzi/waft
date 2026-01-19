@@ -9,6 +9,8 @@ from typing import Dict, Any, Optional, List
 from datetime import datetime
 import json
 
+from ..security import write_secure_file, read_secure_json
+
 
 class ExperimentManifest:
     """
@@ -125,16 +127,26 @@ class ExperimentManifest:
     def save(self, output_path: Path) -> None:
         """Save manifest to file."""
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        output_path.write_text(
-            json.dumps(self.to_dict(), indent=2),
-            encoding="utf-8"
-        )
+        
+        # CRITICAL: Use secure file write
+        try:
+            write_secure_file(
+                output_path,
+                json.dumps(self.to_dict(), indent=2),
+                encoding="utf-8"
+            )
+        except IOError as e:
+            raise IOError(f"Failed to save experiment manifest to {output_path}: {e}")
     
     @classmethod
     def load(cls, manifest_path: Path) -> "ExperimentManifest":
         """Load manifest from file."""
-        data = json.loads(manifest_path.read_text(encoding="utf-8"))
-        return cls.from_dict(data)
+        try:
+            # CRITICAL: Use secure JSON read with size limits
+            data = read_secure_json(manifest_path)
+            return cls.from_dict(data)
+        except (ValueError, IOError, json.JSONDecodeError) as e:
+            raise ValueError(f"Failed to load experiment manifest from {manifest_path}: {e}")
 
 
 def create_experiment_manifest(

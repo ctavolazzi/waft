@@ -9,8 +9,10 @@ from typing import Dict, Any, List, Optional
 from datetime import datetime
 from decimal import Decimal
 import json
+import os
 
 from .transaction import Transaction, TransactionType
+from ..security import validate_path_in_project, write_secure_file, read_secure_json, set_directory_permissions
 
 
 class AccountingSystem:
@@ -51,7 +53,14 @@ class AccountingSystem:
             self.project_path / "_realms" / "bureaucracy_realm" / "corporations" 
             / self.corp_id / "financials" / "ledger.json"
         )
+        
+        # CRITICAL: Validate path is within project
+        if not validate_path_in_project(self.ledger_path, self.project_path):
+            raise ValueError(f"Invalid ledger path: {self.ledger_path} is outside project directory")
+        
         self.ledger_path.parent.mkdir(parents=True, exist_ok=True)
+        # CRITICAL: Set secure directory permissions
+        set_directory_permissions(self.ledger_path.parent)
         
         # Load existing ledger if available
         self._load_ledger()
@@ -59,15 +68,31 @@ class AccountingSystem:
     def _load_ledger(self) -> None:
         """Load transaction ledger from disk."""
         if self.ledger_path.exists():
-            data = json.loads(self.ledger_path.read_text(encoding="utf-8"))
-            
-            # Load transactions
-            self.transactions = [
-                Transaction.from_dict(t) for t in data.get("transactions", [])
-            ]
-            
-            # Recalculate account balances
-            self._recalculate_accounts()
+            try:
+                # CRITICAL: Use secure JSON read with size limits
+                data = read_secure_json(self.ledger_path)
+                
+                # Load transactions
+                self.transactions = []
+                for t in data.get("transactions", []):
+                    try:
+                        transaction = Transaction.from_dict(t)
+                        self.transactions.append(transaction)
+                    except (KeyError, ValueError) as e:
+                        # Skip invalid transaction data
+                        continue
+                
+                # Recalculate account balances
+                self._recalculate_accounts()
+            except (ValueError, IOError, json.JSONDecodeError) as e:
+                # If ledger is invalid, start with empty ledger
+                self.transactions = []
+                self.accounts = {
+                    "cash": Decimal("0"),
+                    "revenue": Decimal("0"),
+                    "expenses": Decimal("0"),
+                    "equity": Decimal("0"),
+                }
     
     def _save_ledger(self) -> None:
         """Save transaction ledger to disk."""
@@ -78,10 +103,15 @@ class AccountingSystem:
             "last_updated": datetime.utcnow().isoformat()
         }
         
-        self.ledger_path.write_text(
-            json.dumps(data, indent=2),
-            encoding="utf-8"
-        )
+        # CRITICAL: Use secure file write
+        try:
+            write_secure_file(
+                self.ledger_path,
+                json.dumps(data, indent=2),
+                encoding="utf-8"
+            )
+        except IOError as e:
+            raise IOError(f"Failed to save ledger to {self.ledger_path}: {e}")
     
     def record_transaction(self, transaction: Transaction) -> None:
         """

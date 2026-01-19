@@ -61,6 +61,9 @@ class BureaucracyRealm:
             self.realm_path / "personnel_registry",
             self.realm_path / "forms",
             self.realm_path / "records",
+            self.realm_path / "creatures",
+            self.realm_path / "creatures" / "goblins",
+            self.realm_path / "creatures" / "ghouls",
         ]
         
         for directory in directories:
@@ -101,7 +104,12 @@ class BureaucracyRealm:
             "reality_id": reality.reality_id,
             "created_at": datetime.now().isoformat(),
             "purpose": "Personnel management and bureaucratic operations",
-            "god": "BureaucracyGod",
+            "god": "PaperworkGod",
+            "demi_god": "Skurl",
+            "creatures": {
+                "goblins": "Form filers and bureaucratic assistants",
+                "ghouls": "Record guardians and archive keepers"
+            }
         }
         
         manifest_path = self.realm_path / "realm_manifest.json"
@@ -124,3 +132,101 @@ class BureaucracyRealm:
             True if valid, False otherwise
         """
         return validate_realm_path(path, self.realm_path)
+    
+    def get_creatures_summary(self) -> Dict[str, Any]:
+        """
+        Get summary of creatures in the bureaucracy realm.
+        
+        Returns:
+            Dictionary with creature statistics
+        """
+        goblins_path = self.realm_path / "creatures" / "goblins"
+        ghouls_path = self.realm_path / "creatures" / "ghouls"
+        
+        # Count creature files
+        goblin_count = len(list(goblins_path.glob("*.json"))) if goblins_path.exists() else 0
+        ghoul_count = len(list(ghouls_path.glob("*.json"))) if ghouls_path.exists() else 0
+        
+        return {
+            "goblins": goblin_count,
+            "ghouls": ghoul_count,
+            "total_creatures": goblin_count + ghoul_count
+        }
+    
+    def create_goblin(
+        self,
+        goblin_id: str,
+        name: str,
+        role: str = "form_filer",
+        metadata: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
+        """
+        Create a goblin creature in the bureaucracy realm.
+        
+        Args:
+            goblin_id: Goblin identifier
+            name: Goblin name
+            role: Role in bureaucracy (form_filer, record_keeper, etc.)
+            metadata: Additional metadata
+            
+        Returns:
+            Goblin data dictionary
+        """
+        goblins_path = self.realm_path / "creatures" / "goblins"
+        goblins_path.mkdir(parents=True, exist_ok=True)
+        
+        goblin_data = {
+            "goblin_id": goblin_id,
+            "name": name,
+            "role": role,
+            "type": "goblin",
+            "created_at": datetime.now().isoformat(),
+            "metadata": metadata or {}
+        }
+        
+        goblin_file = goblins_path / f"{goblin_id}.json"
+        goblin_file.write_text(
+            json.dumps(goblin_data, indent=2),
+            encoding="utf-8"
+        )
+        
+        return goblin_data
+    
+    def create_ghoul(
+        self,
+        ghoul_id: str,
+        name: str,
+        role: str = "record_guardian",
+        metadata: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
+        """
+        Create a ghoul creature in the bureaucracy realm.
+        
+        Args:
+            ghoul_id: Ghoul identifier
+            name: Ghoul name
+            role: Role in bureaucracy (record_guardian, archive_keeper, etc.)
+            metadata: Additional metadata
+            
+        Returns:
+            Ghoul data dictionary
+        """
+        ghouls_path = self.realm_path / "creatures" / "ghouls"
+        ghouls_path.mkdir(parents=True, exist_ok=True)
+        
+        ghoul_data = {
+            "ghoul_id": ghoul_id,
+            "name": name,
+            "role": role,
+            "type": "ghoul",
+            "created_at": datetime.now().isoformat(),
+            "metadata": metadata or {}
+        }
+        
+        ghoul_file = ghouls_path / f"{ghoul_id}.json"
+        ghoul_file.write_text(
+            json.dumps(ghoul_data, indent=2),
+            encoding="utf-8"
+        )
+        
+        return ghoul_data

@@ -10,6 +10,8 @@ from typing import Dict, Any, Optional
 from datetime import datetime
 import json
 
+from .security import validate_financial_amount
+
 
 class FinancialState:
     """
@@ -73,8 +75,20 @@ class FinancialState:
         Args:
             amount: Amount to add (positive) or subtract (negative)
             description: Description of the transaction
+            
+        Raises:
+            ValueError: If amount is invalid or cash would go negative
         """
-        self.cash += Decimal(str(amount))
+        # CRITICAL: Validate amount
+        if not validate_financial_amount(amount, allow_negative=True):
+            raise ValueError(f"Invalid amount: {amount}")
+        
+        # HIGH: Check if cash would go negative
+        new_cash = self.cash + Decimal(str(amount))
+        if new_cash < 0:
+            raise ValueError(f"Insufficient funds: cash would go negative (current: {self.cash}, change: {amount})")
+        
+        self.cash = new_cash
         self._record_transaction("cash", amount, description)
         self._update_equity()
         self.last_updated = datetime.utcnow()
@@ -85,9 +99,16 @@ class FinancialState:
         
         Args:
             asset_type: Type of asset (e.g., "equipment", "property")
-            value: Asset value
+            value: Asset value (must be positive)
             description: Description of the asset
+            
+        Raises:
+            ValueError: If value is invalid or negative
         """
+        # CRITICAL: Validate value is positive
+        if not validate_financial_amount(value, min_amount=Decimal("0"), allow_negative=False):
+            raise ValueError(f"Invalid asset value: {value} (must be positive)")
+        
         if asset_type not in self.assets:
             self.assets[asset_type] = Decimal("0")
         self.assets[asset_type] += Decimal(str(value))
@@ -101,9 +122,16 @@ class FinancialState:
         
         Args:
             liability_type: Type of liability (e.g., "loan", "accounts_payable")
-            value: Liability value
+            value: Liability value (must be positive)
             description: Description of the liability
+            
+        Raises:
+            ValueError: If value is invalid or negative
         """
+        # CRITICAL: Validate value is positive
+        if not validate_financial_amount(value, min_amount=Decimal("0"), allow_negative=False):
+            raise ValueError(f"Invalid liability value: {value} (must be positive)")
+        
         if liability_type not in self.liabilities:
             self.liabilities[liability_type] = Decimal("0")
         self.liabilities[liability_type] += Decimal(str(value))
@@ -116,9 +144,16 @@ class FinancialState:
         Record revenue.
         
         Args:
-            amount: Revenue amount
+            amount: Revenue amount (must be positive)
             description: Description of revenue source
+            
+        Raises:
+            ValueError: If amount is invalid or negative
         """
+        # CRITICAL: Validate amount is positive
+        if not validate_financial_amount(amount, min_amount=Decimal("0"), allow_negative=False):
+            raise ValueError(f"Invalid revenue amount: {amount} (must be positive)")
+        
         self.revenue += Decimal(str(amount))
         self.cash += Decimal(str(amount))  # Revenue increases cash
         self._record_transaction("revenue", amount, description)
@@ -130,9 +165,20 @@ class FinancialState:
         Record an expense.
         
         Args:
-            amount: Expense amount
+            amount: Expense amount (must be positive)
             description: Description of expense
+            
+        Raises:
+            ValueError: If amount is invalid, negative, or cash would go negative
         """
+        # CRITICAL: Validate amount is positive
+        if not validate_financial_amount(amount, min_amount=Decimal("0"), allow_negative=False):
+            raise ValueError(f"Invalid expense amount: {amount} (must be positive)")
+        
+        # HIGH: Check if cash would go negative
+        if self.cash < Decimal(str(amount)):
+            raise ValueError(f"Insufficient funds: cannot pay expense of {amount} (cash: {self.cash})")
+        
         self.expenses += Decimal(str(amount))
         self.cash -= Decimal(str(amount))  # Expenses decrease cash
         self._record_transaction("expense", amount, description)
