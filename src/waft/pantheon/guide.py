@@ -188,8 +188,13 @@ class TheGuide:
         return {"sessions": [], "last_updated": None}
 
     def _save_index(self) -> None:
-        """Save session index."""
+        """Save session index with size limit to prevent O(n) degradation."""
         self.index["last_updated"] = datetime.now().isoformat()
+
+        # FIX: Only keep last 1000 sessions in index to maintain O(1) performance
+        if 'sessions' in self.index and len(self.index['sessions']) > 1000:
+            self.index['sessions'] = self.index['sessions'][-1000:]
+
         self.index_file.write_text(json.dumps(self.index, indent=2))
 
     @property
