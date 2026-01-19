@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Design Verification - Show-Me Page</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #f5f5f5;
+        }
+        .verification-section {
+            background: white;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .check-item {
+            padding: 0.5rem;
+            margin: 0.25rem 0;
+            border-left: 4px solid #ddd;
+        }
+        .check-item.pass {
+            border-left-color: #4caf50;
+            background: #f1f8f4;
+        }
+        .check-item.fail {
+            border-left-color: #f44336;
+            background: #fff5f5;
+        }
+        .check-item.partial {
+            border-left-color: #ff9800;
+            background: #fff8f0;
+        }
+        h1 { color: #333; }
+        h2 { color: #555; margin-top: 2rem; }
+        code {
+            background: #f0f0f0;
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .breakpoint-test {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        .breakpoint-card {
+            background: #e3f2fd;
+            padding: 1rem;
+            border-radius: 4px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Responsive Design Verification Report</h1>
+    <p><strong>File:</strong> <code>scripts/show_me_bulletproof.py</code></p>
+    <p><strong>Date:</strong> <span id="date"></span></p>
+
+    <div class="verification-section">
+        <h2>1. Code Inspection Results</h2>
+        
+        <h3>1.1 Navigation Bar</h3>
+        <div class="check-item pass">
+            ✅ <strong>PASS:</strong> Broken <code>flex-direction: column</code> on grid container removed
+        </div>
+        <div class="check-item pass">
+            ✅ <strong>PASS:</strong> 3-column grid layout maintained: <code>grid-template-columns: 1fr 1fr 1fr</code>
+        </div>
+        <div class="check-item pass">
+            ✅ <strong>PASS:</strong> Mobile breakpoint (&lt; 600px) has compact sizing (padding: 0.5rem, font-size: 0.8rem, gap: 0.25rem)
+        </div>
+        <div class="check-item pass">
+            ✅ <strong>PASS:</strong> Minimum 44px touch targets enforced (<code>min-height: 44px</code>)
+        </div>
+        <div class="check-item pass">
+            ✅ <strong>PASS:</strong> Tablet breakpoint (600px - 1023px) has medium sizing
+        </div>
+        <div class="check-item pass">
+            ✅ <strong>PASS:</strong> Desktop breakpoint (1024px+) has full sizing
+        </div>
+
+        <h3>1.2 Typography Scaling</h3>
+        <div class="check-item pass">
+            ✅ <strong>PASS:</strong> h1 uses <code>clamp(1.5rem, 4vw, 2rem)</code> with fallback
+        </div>
+        <div class="check-item pass">
+            ✅ <strong>PASS:</strong> h2 uses <code>clamp(1.25rem, 3vw, 1.5rem)</code> with fallback
+        </div>
+        <div class="check-item pass">
+            ✅ <strong>PASS:</strong> h3 and h4 also use fluid typography with clamp()
+        </div>
+
+        <h3>1.3 Stats Grid</h3>
+        <div class="check-item pass">
+            ✅ <strong>PASS:</strong> Mobile breakpoint uses 2 columns minimum (<code>repeat(2, 1fr)</code>)
+        </div>
+        <div class="check-item pass">
+            ✅ <strong>PASS:</strong> Tablet breakpoint uses 3 columns (<code>repeat(3, 1fr)</code>)
+        </div>
+        <div class="check-item pass">
+            ✅ <strong>PASS:</strong> Desktop uses <code>auto-fit</code> with <code>minmax(120px, 1fr)</code>
+        </div>
+        <div class="check-item pass">
+            ✅ <strong>PASS:</strong> Very small screens (&lt; 360px) use single column
+        </div>
+
+        <h3>1.4 Tables</h3>
+        <div class="check-item pass">
+            ✅ <strong>PASS:</strong> <code>.table-wrapper</code> class exists with <code>overflow-x: auto</code>
+        </div>
+        <div class="check-item pass">
+            ✅ <strong>PASS:</strong> JavaScript automatically wraps tables in <code>.table-wrapper</code>
+        </div>
+        <div class="check-item pass">
+            ✅ <strong>PASS:</strong> Mobile breakpoint has smaller font (0.85rem) and reduced padding (0.5rem)
+        </div>
+        <div class="check-item pass">
+            ✅ <strong>PASS:</strong> <code>-webkit-overflow-scrolling: touch</code> for smooth scrolling
+        </div>
+
+        <h3>1.5 Main Content Padding</h3>
+        <div class="check-item pass">
+            ✅ <strong>PASS:</strong> Mobile default padding is 1rem
+        </div>
+        <div class="check-item pass">
+            ✅ <strong>PASS:</strong> Tablet breakpoint (600px+) padding is 1.5rem
+        </div>
+        <div class="check-item pass">
+            ✅ <strong>PASS:</strong> Desktop breakpoint (1024px+) padding is 2rem
+        </div>
+
+        <h3>1.6 Header Section</h3>
+        <div class="check-item pass">
+            ✅ <strong>PASS:</strong> Responsive padding on <code>.header-section-wrapper</code> (1rem mobile, 1.5rem tablet, 2rem desktop)
+        </div>
+        <div class="check-item partial">
+            ⚠️ <strong>PARTIAL:</strong> h1 in header uses fixed 2rem (not fluid), but this may be intentional for header prominence
+        </div>
+
+        <h3>1.7 Dropdown Menus</h3>
+        <div class="check-item pass">
+            ✅ <strong>PASS:</strong> <code>.nav-dropdown-menu</code> has <code>max-height: 70vh</code> constraint
+        </div>
+        <div class="check-item pass">
+            ✅ <strong>PASS:</strong> <code>overflow-y: auto</code> for long menus
+        </div>
+        <div class="check-item pass">
+            ✅ <strong>PASS:</strong> <code>-webkit-overflow-scrolling: touch</code> for smooth scrolling
+        </div>
+        <div class="check-item pass">
+            ✅ <strong>PASS:</strong> Dropdowns use <code>left: 0; right: 0</code> to fit viewport width
+        </div>
+
+        <h3>1.8 Floating Oracle Button</h3>
+        <div class="check-item partial">
+            ⚠️ <strong>PARTIAL:</strong> Button is repositioned (not hidden) on mobile - moved to top-right instead of bottom-center
+        </div>
+        <div class="check-item pass">
+            ✅ <strong>PASS:</strong> Button is visible and clickable on tablet+ (600px+)
+        </div>
+        <div class="check-item pass">
+            ✅ <strong>PASS:</strong> Button positioning prevents overlap on mobile
+        </div>
+
+        <h3>1.9 Touch Targets</h3>
+        <div class="check-item pass">
+            ✅ <strong>PASS:</strong> Navigation buttons have <code>min-height: 44px</code> (WCAG 2.1 Level AAA)
+        </div>
+        <div class="check-item pass">
+            ✅ <strong>PASS:</strong> Dropdown items have adequate padding (0.75rem) for touch targets
+        </div>
+
+        <h3>1.10 Media Query Structure</h3>
+        <div class="check-item pass">
+            ✅ <strong>PASS:</strong> Three main breakpoints defined:
+            <ul>
+                <li>Mobile: <code>@media (max-width: 599px)</code></li>
+                <li>Tablet: <code>@media (min-width: 600px) and (max-width: 1023px)</code></li>
+                <li>Desktop: <code>@media (min-width: 1024px)</code></li>
+            </ul>
+        </div>
+        <div class="check-item pass">
+            ✅ <strong>PASS:</strong> Additional breakpoint for very small screens: <code>@media (max-width: 359px)</code>
+        </div>
+        <div class="check-item pass">
+            ✅ <strong>PASS:</strong> No conflicting or broken media queries found
+        </div>
+    </div>
+
+    <div class="verification-section">
+        <h2>2. Visual Testing Instructions</h2>
+        <p>To verify visual behavior, test the generated HTML at these breakpoints:</p>
+        
+        <div class="breakpoint-test">
+            <div class="breakpoint-card">
+                <h3>Mobile</h3>
+                <p><strong>320px</strong><br>375px<br>414px</p>
+            </div>
+            <div class="breakpoint-card">
+                <h3>Tablet</h3>
+                <p><strong>600px</strong><br>768px<br>1024px</p>
+            </div>
+            <div class="breakpoint-card">
+                <h3>Desktop</h3>
+                <p><strong>1280px</strong><br>1920px</p>
+            </div>
+        </div>
+
+        <h3>2.1 Mobile Viewports (320px, 375px, 414px)</h3>
+        <div class="check-item">
+            ⏳ <strong>TO TEST:</strong> Navigation maintains 3-button horizontal layout (not stacked)
+        </div>
+        <div class="check-item">
+            ⏳ <strong>TO TEST:</strong> Navigation buttons are appropriately sized (not too small/large)
+        </div>
+        <div class="check-item">
+            ⏳ <strong>TO TEST:</strong> Text is readable (not too small)
+        </div>
+        <div class="check-item">
+            ⏳ <strong>TO TEST:</strong> Tables scroll horizontally when needed
+        </div>
+        <div class="check-item">
+            ⏳ <strong>TO TEST:</strong> Oracle button is repositioned to top-right
+        </div>
+        <div class="check-item">
+            ⏳ <strong>TO TEST:</strong> Dropdown menus fit within viewport
+        </div>
+        <div class="check-item">
+            ⏳ <strong>TO TEST:</strong> Touch targets are at least 44px
+        </div>
+        <div class="check-item">
+            ⏳ <strong>TO TEST:</strong> No horizontal scrolling on page (except tables)
+        </div>
+
+        <h3>2.2 Tablet Viewports (600px, 768px, 1024px)</h3>
+        <div class="check-item">
+            ⏳ <strong>TO TEST:</strong> Navigation maintains 3-button horizontal layout
+        </div>
+        <div class="check-item">
+            ⏳ <strong>TO TEST:</strong> Medium-sized buttons and spacing
+        </div>
+        <div class="check-item">
+            ⏳ <strong>TO TEST:</strong> Stats grid shows 3 columns
+        </div>
+        <div class="check-item">
+            ⏳ <strong>TO TEST:</strong> Oracle button is visible and positioned correctly
+        </div>
+        <div class="check-item">
+            ⏳ <strong>TO TEST:</strong> Tables display appropriately
+        </div>
+
+        <h3>2.3 Desktop Viewports (1280px, 1920px)</h3>
+        <div class="check-item">
+            ⏳ <strong>TO TEST:</strong> Full-sized navigation buttons
+        </div>
+        <div class="check-item">
+            ⏳ <strong>TO TEST:</strong> Full padding (2rem) on main content
+        </div>
+        <div class="check-item">
+            ⏳ <strong>TO TEST:</strong> Stats grid uses auto-fit with larger minimum
+        </div>
+        <div class="check-item">
+            ⏳ <strong>TO TEST:</strong> All features visible and functional
+        </div>
+    </div>
+
+    <div class="verification-section">
+        <h2>3. Functional Testing</h2>
+        <div class="check-item">
+            ⏳ <strong>TO TEST:</strong> All three dropdown menus open/close correctly on all breakpoints
+        </div>
+        <div class="check-item">
+            ⏳ <strong>TO TEST:</strong> Dropdown items are clickable on all breakpoints
+        </div>
+        <div class="check-item">
+            ⏳ <strong>TO TEST:</strong> Navigation remains sticky on scroll
+        </div>
+        <div class="check-item">
+            ⏳ <strong>TO TEST:</strong> Tables scroll horizontally on mobile when content overflows
+        </div>
+        <div class="check-item">
+            ⏳ <strong>TO TEST:</strong> Oracle button is clickable on tablet+
+        </div>
+        <div class="check-item">
+            ⏳ <strong>TO TEST:</strong> Typography scales smoothly when resizing viewport
+        </div>
+    </div>
+
+    <div class="verification-section">
+        <h2>4. Summary</h2>
+        <h3>✅ Code Implementation: COMPLETE</h3>
+        <p>All responsive design changes from the plan have been correctly implemented in the code:</p>
+        <ul>
+            <li>✅ Navigation maintains 3-column grid on all sizes with responsive sizing</li>
+            <li>✅ Typography uses fluid scaling with clamp()</li>
+            <li>✅ Stats grid has responsive column counts (2/3/auto-fit)</li>
+            <li>✅ Tables have horizontal scroll wrapper</li>
+            <li>✅ Main content and header have responsive padding</li>
+            <li>✅ Dropdown menus have max-height and overflow handling</li>
+            <li>✅ Oracle button is repositioned (not hidden) on mobile</li>
+            <li>✅ Touch targets meet 44px minimum</li>
+            <li>✅ Three breakpoints properly defined</li>
+        </ul>
+
+        <h3>⚠️ Minor Notes</h3>
+        <ul>
+            <li>Oracle button is repositioned to top-right on mobile instead of hidden (may be intentional design choice)</li>
+            <li>Header h1 uses fixed 2rem instead of fluid (may be intentional for prominence)</li>
+        </ul>
+
+        <h3>⏳ Remaining: Visual & Functional Testing</h3>
+        <p>Code inspection is complete. Visual and functional testing should be performed in a browser with DevTools responsive mode to verify:</p>
+        <ul>
+            <li>Layout behavior at different viewport sizes</li>
+            <li>Interactive element functionality</li>
+            <li>No visual bugs or overflow issues</li>
+            <li>Cross-browser compatibility</li>
+        </ul>
+    </div>
+
+    <script>
+        document.getElementById('date').textContent = new Date().toLocaleString();
+    </script>
+</body>
+</html>

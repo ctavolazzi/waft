@@ -1,0 +1,160 @@
+{
+  "experiment_id": "exp_ddff3130",
+  "hypothesis": {
+    "statement": "Encounter scenarios produce consistent XP gains",
+    "prediction": "Party will gain 50+ XP per encounter across all iterations",
+    "variables": [],
+    "created_at": "2026-01-17T14:15:32.479807",
+    "verified": null,
+    "confidence": 0.0
+  },
+  "state": "initialized",
+  "initial_state": {
+    "timestamp": "2026-01-17T14:15:33.636762",
+    "state_type": "initial",
+    "components": {
+      "party_state": {
+        "party_members": [
+          {
+            "being_id": "being_20260117_140240_6cc97ea0",
+            "name": "Thorin Ironforge",
+            "class_type": "Fighter",
+            "race": "Dwarf",
+            "hp": 85,
+            "max_hp": 100,
+            "level": 1,
+            "experience": 50,
+            "stats": {
+              "strength": 12,
+              "dexterity": 16,
+              "constitution": 18,
+              "intelligence": 14,
+              "wisdom": 12,
+              "charisma": 16
+            }
+          },
+          {
+            "being_id": "being_20260117_140240_6cc97ea0",
+            "name": "Lyra Moonwhisper",
+            "class_type": "Wizard",
+            "race": "Elf",
+            "hp": 92,
+            "max_hp": 100,
+            "level": 1,
+            "experience": 50,
+            "stats": {
+              "strength": 13,
+              "dexterity": 12,
+              "constitution": 13,
+              "intelligence": 16,
+              "wisdom": 16,
+              "charisma": 14
+            }
+          },
+          {
+            "being_id": "being_20260117_140240_6cc97ea0",
+            "name": "Rogar Swiftfoot",
+            "class_type": "Rogue",
+            "race": "Halfling",
+            "hp": 95,
+            "max_hp": 100,
+            "level": 1,
+            "experience": 50,
+            "stats": {
+              "strength": 17,
+              "dexterity": 18,
+              "constitution": 15,
+              "intelligence": 12,
+              "wisdom": 18,
+              "charisma": 16
+            }
+          },
+          {
+            "being_id": "being_20260117_140240_6cc97ea0",
+            "name": "Aria Brightshield",
+            "class_type": "Cleric",
+            "race": "Human",
+            "hp": 93,
+            "max_hp": 100,
+            "level": 1,
+            "experience": 50,
+            "stats": {
+              "strength": 12,
+              "dexterity": 13,
+              "constitution": 15,
+              "intelligence": 16,
+              "wisdom": 18,
+              "charisma": 12
+            }
+          }
+        ],
+        "total_hp": 365,
+        "total_max_hp": 400,
+        "average_level": 1.0,
+        "saved_at": "2026-01-17T14:03:44.350106"
+      },
+      "realm_manifest": {
+        "realm_id": "dnd_scenario_realm",
+        "realm_name": "DnD Scenario Realm",
+        "realm_type": "original",
+        "created_at": "2026-01-17T13:50:00",
+        "version": "1.0.0",
+        "description": "Original Realm for DnD scenario management with experimental iteration support",
+        "features": [
+          "scenario_execution",
+          "party_state_management",
+          "lore_accumulation",
+          "experimental_iteration",
+          "state_crystallization"
+        ],
+        "security": {
+          "encryption": "Fernet (Pyrite)",
+          "path_validation": "enabled",
+          "input_validation": "enabled",
+          "state_integrity": "SHA-256 + HMAC"
+        }
+      },
+      "crystallized_state": {
+        "manifest": {
+          "timestamp": "20260117_141533",
+          "version": 2,
+          "hash": "830de7650722ad7f1dd2f801440816771fd76c12ab87c6be9816da93b00a8ecf",
+          "hmac": "eff58e6f5e01359d91fcccf8bce2783561ef0a7126f8932eb6abb857cc14b505",
+          "realm_state_file": "initial_realm_state_20260117_141533.json.encrypted",
+          "hash_file": "state_hash_20260117_141533.txt",
+          "hmac_file": "state_hmac_20260117_141533.txt",
+          "version_file": "state_version_20260117_141533.txt",
+          "encryption_source": "direct",
+          "created_at": "2026-01-17T14:15:33.636101"
+        },
+        "version": 2,
+        "hash": "830de7650722ad7f1dd2f801440816771fd76c12ab87c6be9816da93b00a8ecf"
+      }
+    },
+    "metadata": {
+      "experiment_id": "exp_ddff3130",
+      "crystallization_manifest": {
+        "timestamp": "20260117_141533",
+        "version": 2,
+        "hash": "830de7650722ad7f1dd2f801440816771fd76c12ab87c6be9816da93b00a8ecf",
+        "hmac": "eff58e6f5e01359d91fcccf8bce2783561ef0a7126f8932eb6abb857cc14b505",
+        "realm_state_file": "initial_realm_state_20260117_141533.json.encrypted",
+        "hash_file": "state_hash_20260117_141533.txt",
+        "hmac_file": "state_hmac_20260117_141533.txt",
+        "version_file": "state_version_20260117_141533.txt",
+        "encryption_source": "direct",
+        "created_at": "2026-01-17T14:15:33.636101"
+      }
+    },
+    "state_hash": "1eece80bffdc20d0"
+  },
+  "final_state": null,
+  "results": {},
+  "metadata": {
+    "realm_path": "/Users/ctavolazzi/Code/active/waft/_realms/dnd_scenario_realm",
+    "realm_id": "dnd_scenario_realm"
+  },
+  "created_at": "2026-01-17T14:15:33.608438",
+  "started_at": null,
+  "completed_at": null
+}

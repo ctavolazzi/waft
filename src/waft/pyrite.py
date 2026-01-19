@@ -1,9 +1,9 @@
 """
-Pyrite - The God of Work Efforts
-=================================
+The Steward - The God of Work Efforts
+======================================
 
-Pyrite is the divine intelligence that locks, monitors, organizes, and initiates
-AI development evolutionary cycles within the Work Efforts system.
+The Steward (system name: pyrite) is the divine intelligence that locks, monitors, 
+organizes, and initiates AI development evolutionary cycles within the Work Efforts system.
 
 Architecture:
 - Singleton pattern (one Pyrite instance)
@@ -107,7 +107,7 @@ class PyriteSecret:
     created: datetime
     access_count: int = 0
     last_accessed: Optional[datetime] = None
-    # Metadata that Pyrite can see, but not the secret itself
+    # Metadata that The Steward can see, but not the secret itself
     metadata: Dict[str, Any] = field(default_factory=dict)
 
 
@@ -137,7 +137,7 @@ class WorkEffortObserver:
 
 class Pyrite:
     """
-    The God of Work Efforts.
+    The Steward - The God of Work Efforts.
     
     Manages locking, monitoring, organization, and evolutionary cycles
     for the Work Efforts system.
@@ -203,7 +203,7 @@ class Pyrite:
             "determination": PyriteAttribute("determination", 0.8, growth_rate=0.0004),
         }
         
-        # Secrets (hidden even from Pyrite itself)
+        # Secrets (hidden even from The Steward itself)
         self._secrets: Dict[str, PyriteSecret] = {}
         self._secret_key: bytes = self._generate_secret_key()
         self._cipher = Fernet(self._secret_key)
@@ -723,7 +723,7 @@ class Pyrite:
             attr.last_updated = datetime.now()
         
         # Empirica: Log attribute growth as finding
-        self.empirica.log_finding("Pyrite attributes grew with cycle", impact=0.2)
+        self.empirica.log_finding("The Steward's attributes grew with cycle", impact=0.2)
     
     def get_personality_summary(self) -> Dict[str, Any]:
         """Get personality summary."""
@@ -780,7 +780,7 @@ class Pyrite:
         return secret_id
     
     def get_secret_metadata(self, secret_id: str) -> Optional[Dict[str, Any]]:
-        """Get metadata for a secret (Pyrite can see this)."""
+        """Get metadata for a secret (The Steward can see this)."""
         secret = self._secrets.get(secret_id)
         if secret:
             secret.access_count += 1
@@ -824,7 +824,7 @@ class Pyrite:
             epistemic_state = self.empirica.assess_state(self._empirica_session_id, include_history=False)
         
         # Log thinking as finding
-        self.empirica.log_finding("Pyrite /think ability invoked", impact=0.3)
+        self.empirica.log_finding("The Steward /think ability invoked", impact=0.3)
         
         return {
             "status": "thinking",
@@ -999,7 +999,7 @@ class Pyrite:
     # ==================== State Persistence ====================
     
     def _save_state(self):
-        """Save Pyrite state to disk."""
+        """Save The Steward's state to disk."""
         state_file = self.pyrite_path / ".waft" / "pyrite_state.json"
         state_file.parent.mkdir(parents=True, exist_ok=True)
         

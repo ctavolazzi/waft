@@ -1,0 +1,139 @@
+{
+  "timestamp": "2026-01-17T14:20:45.211364",
+  "state_type": "initial",
+  "components": {
+    "party_state": {
+      "party_members": [
+        {
+          "being_id": "being_20260117_140240_6cc97ea0",
+          "name": "Thorin Ironforge",
+          "class_type": "Fighter",
+          "race": "Dwarf",
+          "hp": 150,
+          "max_hp": 150,
+          "level": 6,
+          "experience": 500,
+          "stats": {
+            "charisma": 16,
+            "constitution": 18,
+            "dexterity": 16,
+            "intelligence": 14,
+            "strength": 12,
+            "wisdom": 12
+          }
+        },
+        {
+          "being_id": "being_20260117_140240_6cc97ea0",
+          "name": "Lyra Moonwhisper",
+          "class_type": "Wizard",
+          "race": "Elf",
+          "hp": 150,
+          "max_hp": 150,
+          "level": 6,
+          "experience": 500,
+          "stats": {
+            "charisma": 14,
+            "constitution": 13,
+            "dexterity": 12,
+            "intelligence": 16,
+            "strength": 13,
+            "wisdom": 16
+          }
+        },
+        {
+          "being_id": "being_20260117_140240_6cc97ea0",
+          "name": "Rogar Swiftfoot",
+          "class_type": "Rogue",
+          "race": "Halfling",
+          "hp": 150,
+          "max_hp": 150,
+          "level": 6,
+          "experience": 500,
+          "stats": {
+            "charisma": 16,
+            "constitution": 15,
+            "dexterity": 18,
+            "intelligence": 12,
+            "strength": 17,
+            "wisdom": 18
+          }
+        },
+        {
+          "being_id": "being_20260117_140240_6cc97ea0",
+          "name": "Aria Brightshield",
+          "class_type": "Cleric",
+          "race": "Human",
+          "hp": 150,
+          "max_hp": 150,
+          "level": 6,
+          "experience": 500,
+          "stats": {
+            "charisma": 12,
+            "constitution": 15,
+            "dexterity": 13,
+            "intelligence": 16,
+            "strength": 12,
+            "wisdom": 18
+          }
+        }
+      ],
+      "total_hp": 600,
+      "total_max_hp": 600,
+      "average_level": 6.0,
+      "saved_at": "2026-01-17T14:19:16.987317"
+    },
+    "realm_manifest": {
+      "realm_id": "dnd_scenario_realm",
+      "realm_name": "DnD Scenario Realm",
+      "realm_type": "original",
+      "created_at": "2026-01-17T13:50:00",
+      "version": "1.0.0",
+      "description": "Original Realm for DnD scenario management with experimental iteration support",
+      "features": [
+        "scenario_execution",
+        "party_state_management",
+        "lore_accumulation",
+        "experimental_iteration",
+        "state_crystallization"
+      ],
+      "security": {
+        "encryption": "Fernet (Pyrite)",
+        "path_validation": "enabled",
+        "input_validation": "enabled",
+        "state_integrity": "SHA-256 + HMAC"
+      }
+    },
+    "crystallized_state": {
+      "manifest": {
+        "timestamp": "20260117_142045",
+        "version": 7,
+        "hash": "5563dd1f22e336f30937affc9106bcd3404bfb8e485ccc33728b95127f604033",
+        "hmac": "359614b102b5d83cdba66876035b5b8d5b18c7ea81653c0355fe6dc6df0c3f12",
+        "realm_state_file": "initial_realm_state_20260117_142045.json.encrypted",
+        "hash_file": "state_hash_20260117_142045.txt",
+        "hmac_file": "state_hmac_20260117_142045.txt",
+        "version_file": "state_version_20260117_142045.txt",
+        "encryption_source": "pyrite",
+        "created_at": "2026-01-17T14:20:45.210836"
+      },
+      "version": 7,
+      "hash": "5563dd1f22e336f30937affc9106bcd3404bfb8e485ccc33728b95127f604033"
+    }
+  },
+  "metadata": {
+    "experiment_id": "exp_c6a9351a",
+    "crystallization_manifest": {
+      "timestamp": "20260117_142045",
+      "version": 7,
+      "hash": "5563dd1f22e336f30937affc9106bcd3404bfb8e485ccc33728b95127f604033",
+      "hmac": "359614b102b5d83cdba66876035b5b8d5b18c7ea81653c0355fe6dc6df0c3f12",
+      "realm_state_file": "initial_realm_state_20260117_142045.json.encrypted",
+      "hash_file": "state_hash_20260117_142045.txt",
+      "hmac_file": "state_hmac_20260117_142045.txt",
+      "version_file": "state_version_20260117_142045.txt",
+      "encryption_source": "pyrite",
+      "created_at": "2026-01-17T14:20:45.210836"
+    }
+  },
+  "state_hash": "d2a20d25adfef701"
+}

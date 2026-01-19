@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WAFT Command Dashboard - Wireframe</title>
+    <style>
+        /* Wireframe Styles - Boxes Only, No Content */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, sans-serif;
+            background: #f5f5f5;
+            padding: 1rem;
+        }
+
+        /* Wireframe Box Styling */
+        .wireframe-box {
+            border: 2px solid #333;
+            background: #fff;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Header */
+        #main-header {
+            border: 3px solid #000;
+            background: #fff;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            min-height: 80px;
+        }
+
+        /* Main Content Grid */
+        #main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Column Sections */
+        .col-left,
+        .col-middle,
+        .col-right {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Section Boxes */
+        .section-box {
+            border: 2px solid #666;
+            background: #fff;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            min-height: 200px;
+        }
+
+        /* Footer */
+        #main-footer {
+            border: 2px solid #333;
+            background: #fff;
+            padding: 1rem;
+            min-height: 60px;
+            margin-top: 1rem;
+        }
+
+        /* Labels for wireframe boxes */
+        .wireframe-label {
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="main-header" class="wireframe-box">
+        <div class="wireframe-label">HEADER<br>WAFT Logo | Page Title | Search Bar</div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content">
+        <!-- Left Column -->
+        <div class="col-left">
+            <section id="command-launcher" class="section-box wireframe-box">
+                <div class="wireframe-label">COMMAND LAUNCHER<br>Command Grid | Search | Categories</div>
+            </section>
+        </div>
+
+        <!-- Middle Column -->
+        <div class="col-middle">
+            <section id="status-dashboard" class="section-box wireframe-box">
+                <div class="wireframe-label">STATUS DASHBOARD<br>Project Info | Git Status | System Health</div>
+            </section>
+            <section id="document-gallery" class="section-box wireframe-box">
+                <div class="wireframe-label">DOCUMENT GALLERY<br>Recent Files | Filters | Preview</div>
+            </section>
+        </div>
+
+        <!-- Right Column -->
+        <div class="col-right">
+            <section id="work-effort-tracker" class="section-box wireframe-box">
+                <div class="wireframe-label">WORK EFFORT TRACKER<br>Active Work | Status | Progress</div>
+            </section>
+            <section id="session-history" class="section-box wireframe-box">
+                <div class="wireframe-label">SESSION HISTORY<br>Recent Activity | Commands | Results</div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer id="main-footer" class="wireframe-box">
+        <div class="wireframe-label">FOOTER<br>System Status | Last Updated | Links</div>
+    </footer>
+</body>
+</html>

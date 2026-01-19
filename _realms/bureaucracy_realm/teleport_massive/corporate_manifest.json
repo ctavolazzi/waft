@@ -1,0 +1,76 @@
+{
+  "corporation_name": "Teleport Massive",
+  "founded": "2026-01-19T02:10:00.803117",
+  "sector": "Teleportation Technology",
+  "mission": "Revolutionizing transportation through instant teleportation technology",
+  "departments": [
+    {
+      "name": "Bureaucracy & Documentation",
+      "created_at": "2026-01-19T02:10:00.814067",
+      "employees": [
+        "being_20260119_020735_3e6f3a88",
+        "being_20260119_020735_3e6f3a88"
+      ]
+    },
+    {
+      "name": "Research & Development",
+      "created_at": "2026-01-19T02:11:14.240825",
+      "employees": [
+        "being_20260119_021114_3e6f3a88"
+      ]
+    }
+  ],
+  "employees": [
+    {
+      "being_id": "being_20260119_020735_3e6f3a88",
+      "role": "Corporate Documentation Specialist",
+      "department": "Bureaucracy & Documentation",
+      "title": "Senior Documentation Architect",
+      "level": 7,
+      "assigned_at": "2026-01-19T02:10:00.814048",
+      "status": "active"
+    },
+    {
+      "being_id": "being_20260119_020735_3e6f3a88",
+      "role": "Corporate Documentation Specialist",
+      "department": "Bureaucracy & Documentation",
+      "title": "Senior Documentation Architect",
+      "level": 7,
+      "assigned_at": "2026-01-19T02:10:25.845739",
+      "status": "active"
+    },
+    {
+      "being_id": "being_20260119_021114_3e6f3a88",
+      "role": "Head of Research & Development",
+      "department": "Research & Development",
+      "title": "Head of Research & Development",
+      "level": 9,
+      "assigned_at": "2026-01-18T00:00:00",
+      "status": "active",
+      "hiring_round": "First Hiring Round - January 2026",
+      "cohort": "Founding Research Team",
+      "promoted_at": "2026-02-15T00:00:00",
+      "previous_role": "Lead Scientist",
+      "promotion_reason": "Exceptional performance and leadership in early research phase"
+    }
+  ],
+  "documents": [
+    {
+      "type": "report",
+      "subtype": "mission",
+      "title": "Corporate Mission Statement",
+      "path": "/Users/ctavolazzi/Code/active/waft/_realms/bureaucracy_realm/teleport_massive/reports/mission_20260119.typ",
+      "created_at": "2026-01-19T02:10:25.850456",
+      "author": "being_20260119_020735_3e6f3a88"
+    },
+    {
+      "type": "report",
+      "subtype": "structure",
+      "title": "Organizational Structure",
+      "path": "/Users/ctavolazzi/Code/active/waft/_realms/bureaucracy_realm/teleport_massive/reports/structure_20260119.typ",
+      "created_at": "2026-01-19T02:10:25.853890",
+      "author": "being_20260119_020735_3e6f3a88"
+    }
+  ],
+  "worldbuilding_notes": []
+}

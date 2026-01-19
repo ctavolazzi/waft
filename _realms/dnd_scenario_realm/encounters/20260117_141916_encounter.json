@@ -1,0 +1,22 @@
+{
+  "encounter_id": "encounter_20260117_141916",
+  "title": "Goblin Ambush",
+  "content": "\n## Goblin Ambush\n\n\nThe party encounters Goblin Ambush in a fierce battle. The combat is intense, with spells flying, \nswords clashing, and the party working together to overcome their foe. After 1 rounds of \ndetermined fighting, the party emerges victorious.\n            \n\n### Combat Details\n\n- **Rounds of Combat**: 1\n- **Party Damage Taken**: 41 total\n- **Experience Gained**: 50 XP per party member\n- **Current Party HP**: 600/600\n            ",
+  "read_aloud": "\nThe battle is intense. Steel clashes, spells fly, and the party fights as one. \nAfter 1 rounds of combat, Goblin Ambush falls, defeated by the heroes' resolve.\n            ",
+  "difficulty": "medium",
+  "rounds": 1,
+  "xp_gained": 50,
+  "damage_taken": {
+    "Thorin Ironforge": 15,
+    "Lyra Moonwhisper": 13,
+    "Rogar Swiftfoot": 8,
+    "Aria Brightshield": 5
+  },
+  "level_ups": [
+    "Thorin Ironforge",
+    "Lyra Moonwhisper",
+    "Rogar Swiftfoot",
+    "Aria Brightshield"
+  ],
+  "generated_at": "2026-01-17T14:19:16.984897"
+}

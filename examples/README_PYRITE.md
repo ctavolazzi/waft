@@ -1,6 +1,6 @@
 # Pyrite Examples
 
-This directory contains examples and tests for Pyrite, the God of Work Efforts.
+This directory contains examples and tests for The Steward, the God of Work Efforts.
 
 ## Files
 
@@ -66,7 +66,7 @@ Results are saved to `pyrite_obstacle_course_results.json`.
 ### Demo Output
 ```
 ================================================================
-  PYRITE DEMO - The God of Work Efforts
+  THE STEWARD DEMO - The God of Work Efforts
 ================================================================
 
 ============================================================
@@ -74,7 +74,7 @@ Results are saved to `pyrite_obstacle_course_results.json`.
 ============================================================
 
 Pyrite's thoughts:
-  • I am Pyrite, the God of Work Efforts.
+  • I am The Steward, the God of Work Efforts.
   • I lock, monitor, organize, and evolve.
   ...
 ```

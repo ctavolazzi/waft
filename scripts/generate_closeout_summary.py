@@ -25,6 +25,76 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from examples.generate_waft_field_guide_printer_friendly import generate_field_guide_printer_friendly
 
 
+def generate_email_summaries(session_focus: str = "Session work", accomplishments: list = None, 
+                             errors_fixed: list = None, files_modified: list = None) -> dict:
+    """
+    Generate multi-level email summaries for different audiences.
+    
+    Args:
+        session_focus: Brief description of session focus
+        accomplishments: List of key accomplishments
+        errors_fixed: List of errors/bugs fixed
+        files_modified: List of files modified
+    
+    Returns:
+        Dictionary with 'technical', 'peer', 'boss', 'tldr' summaries
+    """
+    # Default values if not provided
+    accomplishments = accomplishments or ["Completed session work"]
+    errors_fixed = errors_fixed or []
+    files_modified = files_modified or []
+    
+    # Level 1: Advanced/Highly Technical
+    technical = f"""
+=== TECHNICAL SUMMARY ===
+
+{session_focus}
+
+Technical changes: {len(files_modified)} file(s) modified: {', '.join(files_modified) if files_modified else 'N/A'}
+"""
+    if errors_fixed:
+        technical += f"Fixed {len(errors_fixed)} bug(s): {', '.join(errors_fixed)}"
+    
+    # Level 2: Peer Filter (Technical but accessible)
+    peer = f"""
+=== PEER SUMMARY ===
+
+Worked on {session_focus.lower()}.
+
+Key improvements:
+"""
+    for acc in accomplishments[:5]:  # Top 5
+        peer += f"- {acc}\n"
+    if errors_fixed:
+        peer += f"\nFixed {len(errors_fixed)} issue(s) during development."
+    
+    # Level 3: Boss Filter (Goals and objectives)
+    boss = f"""
+=== EXECUTIVE SUMMARY ===
+
+Completed work on {session_focus.lower()}.
+
+Objectives Achieved:
+"""
+    for acc in accomplishments[:3]:  # Top 3
+        boss += f"✓ {acc}\n"
+    boss += "\nStatus: Complete and ready for use."
+    
+    # Level 4: Anyone/TLDR
+    tldr = f"""
+=== TLDR ===
+
+{session_focus.lower()}. Made improvements and fixed issues. Everything works better now.
+"""
+    
+    return {
+        "technical": technical.strip(),
+        "peer": peer.strip(),
+        "boss": boss.strip(),
+        "tldr": tldr.strip()
+    }
+
+
 def generate_closeout_summary():
     """Generate comprehensive closeout summary PDF."""
     
@@ -582,6 +652,45 @@ if __name__ == "__main__":
     
     print(f"✅ Generated: {pdf_path}")
     print(f"   Size: {pdf_path.stat().st_size / 1024:.1f} KB")
+    print()
+    
+    # Generate email summaries (using template data - in real usage, extract from session analysis)
+    summaries = generate_email_summaries(
+        session_focus="WAFT Document Generation & Global Commands",
+        accomplishments=[
+            "Created printer-friendly document system",
+            "Built DocumentBuilder framework",
+            "Created PDF redactor tool",
+            "Implemented global Cursor commands"
+        ],
+        errors_fixed=["Printer-friendly helper regex issue"],
+        files_modified=["scripts/generate_closeout_summary.py", "examples/generate_waft_field_guide_printer_friendly.py"]
+    )
+    
+    print("=" * 80)
+    print("EMAIL SUMMARIES (Copy & Paste Ready)")
+    print("=" * 80)
+    print()
+    print(summaries["technical"])
+    print()
+    print(summaries["peer"])
+    print()
+    print(summaries["boss"])
+    print()
+    print(summaries["tldr"])
+    print()
+    
+    # Save summaries to text file
+    summaries_file = pdf_path.parent / f"EMAIL_SUMMARIES_{datetime.now().strftime('%Y-%m-%d')}.txt"
+    with open(summaries_file, 'w') as f:
+        f.write("EMAIL SUMMARIES - Copy & Paste Ready\n")
+        f.write("=" * 80 + "\n\n")
+        f.write(summaries["technical"] + "\n\n")
+        f.write(summaries["peer"] + "\n\n")
+        f.write(summaries["boss"] + "\n\n")
+        f.write(summaries["tldr"] + "\n")
+    
+    print(f"📄 Email summaries also saved to: {summaries_file}")
     print()
     print("=" * 80)
     print("To open the PDF, run:")

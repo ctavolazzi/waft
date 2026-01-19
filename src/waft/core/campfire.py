@@ -818,6 +818,10 @@ class TheCampfire:
                             <option value="medium">Medium</option>
                             <option value="simple">Simple</option>
                         </select>
+                        <select id="storyStructure">
+                            <option value="linear">Linear</option>
+                            <option value="three_act">Three Act</option>
+                        </select>
                         <label>
                             <input type="checkbox" id="includeOracle" checked />
                             Include Oracle Insights
@@ -1392,7 +1396,7 @@ document.getElementById('storyForm').addEventListener('submit', async (e) => {
         title: document.getElementById('storyTitle').value || null,
         style: document.getElementById('storyStyle').value,
         narrative_style: document.getElementById('narrativeStyle').value,
-        structure: 'linear',
+        structure: document.getElementById('storyStructure').value,
         include_oracle: document.getElementById('includeOracle').checked
     };
     

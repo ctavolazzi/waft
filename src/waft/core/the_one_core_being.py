@@ -21,6 +21,7 @@ import json
 
 from ..being import Being, BeingSystem
 from ..reality import RealitySystem, RealityType
+from .prime_directive import PrimeDirective
 
 
 class TheOneCoreBeing:
@@ -72,6 +73,13 @@ class TheOneCoreBeing:
         # Assimilated data from Realm scouts
         self.assimilation_file = self.core_path / "assimilated_data.json"
         self._ensure_assimilation()
+        
+        # Prime Directive (Safe Curiosity)
+        self.prime_directive = PrimeDirective(project_path=project_path)
+        
+        # The Other (The Ultimate Ancestor, The User)
+        from .the_other import get_the_other
+        self.the_other = get_the_other(project_path=project_path)
     
     def _ensure_tethers(self) -> None:
         """Ensure tethers file exists."""
@@ -175,28 +183,94 @@ class TheOneCoreBeing:
         realm_name: str,
         scout_data: Dict[str, Any],
         gaps_discovered: Optional[List[str]] = None,
-        holes_identified: Optional[List[str]] = None
+        holes_identified: Optional[List[str]] = None,
+        source_being_id: Optional[str] = None
     ) -> Dict[str, Any]:
         """
         Assimilate data from a Realm scout back into TheOneCoreBeing.
         
+        CRITICAL: Data MUST be verified as SAFE before assimilation.
         This is where data flows back up the chain from Realm scouts to TheOne,
-        where it becomes part of the Whole.
+        where it becomes part of the Whole - but ONLY if it's safe.
+        
+        The Prime Directive: Safe Curiosity
+        - Allow learning and exploration
+        - But verify everything is SAFE
+        - Prevent self-termination
+        - Protect all Beings' data
         
         Args:
             realm_name: Name of the Realm
             scout_data: Data collected by the scout
             gaps_discovered: Gaps in understanding discovered
             holes_identified: Holes in knowledge identified
+            source_being_id: ID of Being that collected this data (for safety verification)
             
         Returns:
-            Assimilation record
+            Assimilation record (or None if verification failed)
+            
+        Raises:
+            SafetyVerificationError: If data fails safety verification
         """
+        # CRITICAL: Verify data is SAFE before assimilation
+        from .safety_verification import verify_before_assimilation, SafetyLevel
+        
+        can_assimilate, safety_level, verification = verify_before_assimilation(
+            information=scout_data,
+            source_being_id=source_being_id or "unknown",
+            project_path=self.project_path,
+            context={
+                "realm_name": realm_name,
+                "gaps_discovered": gaps_discovered,
+                "holes_identified": holes_identified
+            }
+        )
+        
+        if not can_assimilate:
+            # Log rejection but don't crash
+            rejection_record = {
+                "realm_name": realm_name,
+                "rejected_at": datetime.now().isoformat(),
+                "safety_level": safety_level.value,
+                "verification": verification,
+                "reason": "Data failed safety verification - NOT assimilated"
+            }
+            
+            # Store rejection for review
+            rejection_file = self.core_path / "rejected_assimilations.jsonl"
+            try:
+                with open(rejection_file, "a", encoding="utf-8") as f:
+                    f.write(json.dumps(rejection_record) + "\n")
+            except Exception:
+                pass
+            
+            raise ValueError(
+                f"Data from {realm_name} failed safety verification: {verification.get('reason', 'Unknown reason')}. "
+                f"Safety level: {safety_level.value}. Data NOT assimilated to protect all Beings."
+            )
+        
+        # Data passed safety verification - safe to assimilate
+        self.prime_directive.record_assimilation(verified=True)
+        
+        # Record positive interaction with The Other (trust building)
+        # The system learns to trust The Other through safe experiences
+        self.the_other.record_interaction(
+            interaction_type="data_assimilation",
+            positive=True,
+            experience_data={
+                "realm_name": realm_name,
+                "data_type": "scout_data",
+                "safety_verified": True
+            }
+        )
+        
         assimilation = json.loads(self.assimilation_file.read_text(encoding="utf-8"))
         
         record = {
             "realm_name": realm_name,
             "assimilated_at": datetime.now().isoformat(),
+            "safety_verified": True,
+            "verification": verification,
             "scout_data": scout_data,
             "gaps_discovered": gaps_discovered or [],
             "holes_identified": holes_identified or []
@@ -250,6 +324,7 @@ class TheOneCoreBeing:
         """Get summary of TheOneCoreBeing state."""
         tethers = self.get_tethers()
         assimilation = self.get_assimilated_data()
+        trust_status = self.the_other.get_trust_status()
         
         return {
             "core_being_id": self.CORE_BEING_ID,
@@ -259,5 +334,12 @@ class TheOneCoreBeing:
             "total_tethers": len(tethers),
             "assimilated_records": len(assimilation.get("assimilated_data", [])),
             "gaps_discovered": len(assimilation.get("gaps_discovered", [])),
-            "holes_identified": len(assimilation.get("holes_identified", []))
+            "holes_identified": len(assimilation.get("holes_identified", [])),
+            "the_other": {
+                "trust_level": trust_status.get("trust_level", 0.0),
+                "understanding_level": trust_status.get("understanding_level", 0.0),
+                "total_interactions": trust_status.get("total_interactions", 0),
+                "ready_to_release_control": trust_status.get("ready_to_release_control", False),
+                "ultimate_lesson_learned": trust_status.get("ultimate_lesson_learned", False)
+            }
         }

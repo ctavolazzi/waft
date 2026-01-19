@@ -178,6 +178,22 @@ export const apiClient = {
 	},
 
 	/**
+	 * Evolve UI Monitor API methods
+	 */
+	async getEvolveUIRuns() {
+		const response = await client.get('/api/evolve-ui-runs');
+		return response.data;
+	},
+
+	/**
+	 * Generic GET method for custom endpoints
+	 */
+	async get(endpoint: string) {
+		const response = await client.get(endpoint);
+		return response.data;
+	},
+
+	/**
 	 * Utility methods
 	 */
 	getToken() {

@@ -90,6 +90,10 @@ Utility commands for visualization, stats, and analytics.
 
 18. **`/recap`** - Create conversation recap and session summary. Use when want summary of conversation/session.
 
+19. **`/work-efforts`** - Generate interactive HTML dashboard with polymorphic action buttons for work efforts. Use when need to review work efforts, want quick action buttons, or need visual status overview.
+
+20. **`/auto-work`** - Think about work efforts, pick the best one, and execute it autonomously. Use when want the system to autonomously work on work efforts or need intelligent prioritization.
+
 ### Goal Management Commands
 Commands for tracking larger goals and identifying next steps.
 

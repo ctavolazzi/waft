@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Optional, Dict
 from datetime import datetime
 import time
+import json
 
 import typer
 from rich.console import Console
@@ -1216,7 +1217,7 @@ def checkout(
 
 # Add analytics subcommand
 app.add_typer(analytics_app, name="analytics")
-app.add_typer(pyrite_app, name="pyrite", help="Pyrite - The God of Work Efforts")
+app.add_typer(pyrite_app, name="pyrite", help="The Steward - The God of Work Efforts")
 
 @app.command()
 def decide(
@@ -2227,6 +2228,106 @@ def science_bitch(
         raise typer.Exit(1)
 
 
+@app.command(name="work-efforts")
+def work_efforts(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    output: Optional[str] = typer.Option(None, "--output", "-o", help="Output HTML file path (default: _work_efforts/work_dashboard.html)"),
+    limit: Optional[int] = typer.Option(None, "--limit", "-l", help="Maximum work efforts to process (default: 100)"),
+    no_open: bool = typer.Option(False, "--no-open", help="Don't open browser automatically"),
+):
+    """
+    Generate interactive HTML dashboard with polymorphic action buttons for work efforts.
+    
+    Creates a beautiful neumorphic-styled dashboard that intelligently analyzes
+    work efforts and projects, then generates context-aware action buttons.
+    Click buttons to copy commands to clipboard for execution in Cursor.
+    """
+    project_path = resolve_project_path(path)
+    
+    import subprocess
+    import sys
+    
+    script_path = project_path / "scripts" / "work_dashboard.py"
+    
+    if not script_path.exists():
+        console.print(f"[red]❌ Script not found: {script_path}[/red]")
+        raise typer.Exit(1)
+    
+    # Build command
+    cmd = [sys.executable, str(script_path)]
+    if output:
+        cmd.extend(["--output", output])
+    if limit:
+        cmd.extend(["--limit", str(limit)])
+    if no_open:
+        cmd.append("--no-open")
+    
+    # Run script
+    console.print("\n[bold cyan]📊 Generating Work Dashboard...[/bold cyan]\n")
+    result = subprocess.run(cmd, cwd=str(project_path))
+    
+    if result.returncode != 0:
+        raise typer.Exit(result.returncode)
+
+
+@app.command(name="auto-work")
+def auto_work(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    dry_run: bool = typer.Option(False, "--dry-run", help="Show what would be done without executing"),
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Verbose output"),
+):
+    """
+    Think about work efforts, pick the best one, and execute it autonomously.
+    
+    Analyzes all work efforts, calculates priorities, selects the best one,
+    determines the best action, and executes it. The AI will then execute
+    the selected work effort action directly.
+    """
+    project_path = resolve_project_path(path)
+    
+    import subprocess
+    import sys
+    import json
+    import re
+    
+    script_path = project_path / "scripts" / "auto_work.py"
+    
+    if not script_path.exists():
+        console.print(f"[red]❌ Script not found: {script_path}[/red]")
+        raise typer.Exit(1)
+    
+    # Build command
+    cmd = [sys.executable, str(script_path), "--path", str(project_path)]
+    if dry_run:
+        cmd.append("--dry-run")
+    if verbose:
+        cmd.append("--verbose")
+    
+    # Run script and capture output
+    result = subprocess.run(cmd, cwd=str(project_path), capture_output=True, text=True)
+    
+    # Print output
+    console.print(result.stdout)
+    if result.stderr:
+        console.print(f"[yellow]{result.stderr}[/yellow]")
+    
+    # If not dry-run, try to extract execution instruction for AI
+    if not dry_run and result.returncode == 0:
+        # Extract JSON from output
+        json_match = re.search(r'AUTO-WORK RESULT \(JSON\):.*?=+\s*\n(.*?)\n=+', result.stdout, re.DOTALL)
+        if json_match:
+            try:
+                output_data = json.loads(json_match.group(1))
+                execution_cmd = output_data.get('execution_instruction', '')
+                if execution_cmd:
+                    console.print(f"\n[bold cyan]🤖 AI: I will now execute:[/bold cyan] {execution_cmd}\n")
+            except json.JSONDecodeError:
+                pass
+    
+    if result.returncode != 0:
+        raise typer.Exit(result.returncode)
+
+
 @app.command()
 def improve(
     path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
@@ -2423,6 +2524,98 @@ def final_report(
 
 
 @app.command()
+def validate_empirica(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    fix: bool = typer.Option(False, "--fix", "-f", help="Attempt to fix issues automatically"),
+):
+    """
+    Run preflight validation checks on Empirica setup.
+    
+    Validates:
+    - Git repository initialization
+    - Empirica initialization
+    - CLI availability
+    - Project existence
+    - Session creation capability
+    """
+    project_path = resolve_project_path(path)
+    
+    console.print(f"\n[bold cyan]🔍 Waft[/bold cyan] - Empirica Validation\n")
+    
+    from .core.empirica import EmpiricaManager
+    from rich.table import Table
+    from rich.panel import Panel
+    
+    empirica = EmpiricaManager(project_path)
+    
+    console.print("[yellow]→[/yellow] Running validation checks...")
+    validation = empirica.validate_setup()
+    
+    # Create validation table
+    table = Table(title="Empirica Validation Results", show_header=True, header_style="bold magenta")
+    table.add_column("Check", style="cyan")
+    table.add_column("Status", style="yellow")
+    table.add_column("Details", style="dim")
+    
+    # Git check
+    git_status = "✅" if validation["git_initialized"] else "❌"
+    table.add_row("Git Initialized", git_status, "Required for Empirica" if validation["git_initialized"] else "Not initialized")
+    
+    # Empirica check
+    empirica_status = "✅" if validation["empirica_initialized"] else "⚠️"
+    table.add_row("Empirica Initialized", empirica_status, "Ready" if validation["empirica_initialized"] else "Will auto-initialize")
+    
+    # CLI check
+    cli_status = "✅" if validation["cli_available"] else "❌"
+    cli_details = validation["cli_version"] or "Not available"
+    table.add_row("CLI Available", cli_status, cli_details)
+    
+    # Project check
+    project_status = "✅" if validation["project_exists"] else "⚠️"
+    project_details = validation["project_id"] or "Will auto-create"
+    table.add_row("Project Exists", project_status, project_details)
+    
+    # Session check
+    session_status = "✅" if validation["session_creatable"] else "⚠️"
+    table.add_row("Session Creation", session_status, "Working" if validation["session_creatable"] else "May fail")
+    
+    console.print("\n")
+    console.print(table)
+    
+    # Show errors
+    if validation["errors"]:
+        console.print("\n[bold red]❌ Errors:[/bold red]")
+        for error in validation["errors"]:
+            console.print(f"  • {error}")
+    
+    # Show warnings
+    if validation["warnings"]:
+        console.print("\n[bold yellow]⚠️  Warnings:[/bold yellow]")
+        for warning in validation["warnings"]:
+            console.print(f"  • {warning}")
+    
+    # Overall status
+    if validation["ready"]:
+        console.print("\n[bold green]✅ Empirica is ready![/bold green]")
+        _process_tavern_hook(project_path, "validate_empirica", True)
+    else:
+        console.print("\n[bold red]❌ Empirica is not ready[/bold red]")
+        if fix:
+            console.print("\n[yellow]→[/yellow] Attempting to fix issues...")
+            try:
+                result = empirica.ensure_ready()
+                if result.get("ready"):
+                    console.print("[green]✅ Fixed! Empirica is now ready.[/green]")
+                else:
+                    console.print(f"[red]❌ Could not fix: {result.get('message', 'Unknown error')}[/red]")
+            except RuntimeError as e:
+                console.print(f"[red]❌ Fix failed: {e}[/red]")
+        else:
+            console.print("\n[dim]Run with --fix to attempt automatic fixes[/dim]")
+        _process_tavern_hook(project_path, "validate_empirica", False)
+
+
+@app.command()
 def oracle(
     question: Optional[str] = typer.Argument(None, help="Question or context for guidance"),
     assess: Optional[str] = typer.Option(None, "--assess", "-a", help="Assess a decision (provide description)"),
@@ -2442,35 +2635,27 @@ def oracle(
     from rich.table import Table
 
     try:
-        oracle = TheOracle(project_path)
+        # TheOracle will FORCE Empirica to be ready - no degraded mode
+        # It will raise RuntimeError if Empirica cannot be initialized
+        console.print("[yellow]→[/yellow] Ensuring Empirica is ready...")
+        
+        # Load personality if available
+        from .core.science.oracle_personality_tools import PersonalityManager
+        personality_manager = PersonalityManager(project_path)
+        personality = personality_manager.load_personality()
+        
+        oracle = TheOracle(project_path, ai_id="claude-code", personality=personality)
 
-        # Get epistemic state
+        # Get epistemic state (Empirica is guaranteed to be ready)
         console.print("[yellow]→[/yellow] Gathering epistemic state...")
         state = oracle.get_epistemic_state()
 
-        if not state.get("initialized"):
-            console.print("[yellow]⚠️[/yellow]  Empirica not fully initialized")
-            console.print(f"  Message: {state.get('message', 'Unknown')}")
-            console.print("\n[dim]The Oracle requires Empirica to be initialized.[/dim]")
-            console.print("[dim]Run: waft init (if not done) or initialize Empirica first.[/dim]")
-
-            # Still provide basic guidance
-            console.print("\n[bold cyan]🔮 Oracle Basic Guidance:[/bold cyan]")
-            console.print(Panel(
-                "The Oracle sees that Empirica is not initialized. "
-                "To enable full epistemic intelligence, initialize Empirica first.",
-                title="Basic Recommendation",
-                border_style="yellow"
-            ))
-            _process_tavern_hook(project_path, "oracle", True)
-            return
-
-        # Display epistemic state
+        # Full context available - display epistemic state
         epistemic_state = state.get("epistemic_state", {})
         vectors = epistemic_state.get("vectors", {})
         foundation = vectors.get("foundation", {})
 
-        know = foundation.get("know", 0.0)
+        know = foundation.get("know", 0.0) if foundation else 0.0
         uncertainty = vectors.get("uncertainty", 1.0)
         engagement = vectors.get("engagement", 0.0)
 
@@ -2541,19 +2726,43 @@ def oracle(
             else:
                 gate_color = "red"
 
+            # Apply personality to recommendation display
+            recommendation = assessment.get('recommendation', 'No recommendation')
+            personality_info = oracle.get_personality_info()
+            transition = oracle.personality.get_transition()
+            
             console.print(f"\n[bold]Decision Assessment:[/bold]")
             console.print(f"  Gate Result: [{gate_color}]{gate_result}[/{gate_color}]")
-            console.print(f"  Recommendation: {assessment.get('recommendation', 'No recommendation')}")
+            
+            if transition and transition != "Consider this...":
+                console.print(f"  [dim]{transition}[/dim]")
+            
+            console.print(Panel(
+                recommendation,
+                title=f"Recommendation from {personality_info['name']}",
+                border_style="cyan"
+            ))
 
         elif question:
             # Specific question
+            personality_info = oracle.get_personality_info()
+            greeting = oracle.personality.get_greeting()
+            if greeting and greeting != "I see...":
+                console.print(f"\n[dim italic]{greeting}[/dim italic]")
+            
             console.print(f"\n[yellow]→[/yellow] Seeking guidance: {question}")
             guidance = oracle.provide_guidance(question)
 
             console.print("\n[bold cyan]🔮 Oracle Guidance:[/bold cyan]")
+            
+            recommendation = guidance.get("recommendation", "No recommendation available")
+            transition = oracle.personality.get_transition()
+            if transition and transition != "Consider this...":
+                console.print(f"[dim]{transition}[/dim]")
+            
             console.print(Panel(
-                guidance.get("recommendation", "No recommendation available"),
-                title="Recommendation",
+                recommendation,
+                title=f"Guidance from {personality_info['name']}",
                 border_style="cyan"
             ))
 
@@ -2561,29 +2770,251 @@ def oracle(
             console.print(f"[dim]Phase: {guidance.get('epistemic_phase', 'UNKNOWN')}[/dim]")
         else:
             # General guidance
+            personality_info = oracle.get_personality_info()
+            greeting = oracle.personality.get_greeting()
+            if greeting and greeting != "I see...":
+                console.print(f"\n[dim italic]{greeting}[/dim italic]")
+            
             console.print("\n[yellow]→[/yellow] Seeking general guidance...")
-            guidance = oracle.provide_guidance("What should we focus on next?")
+            
+            # Show thinking process
+            from .core.science.oracle_thinking import display_oracle_thinking, display_thinking_step_by_step
+            
+            console.print("\n[bold cyan]🧠 TheOracle is thinking...[/bold cyan]\n")
+            
+            # Step-by-step thinking display
+            thinking_data = {}
+            
+            def thinking_callback(step: str, data: Dict[str, Any]) -> None:
+                """Callback to capture thinking steps."""
+                thinking_data[step] = data
+                display_thinking_step_by_step(console, step, data, delay=0.3)
+            
+            guidance = oracle.provide_guidance("What should we focus on next?", show_thinking=True, thinking_callback=thinking_callback)
+            
+            # Display full thinking dashboard
+            console.print("\n")
+            display_oracle_thinking(
+                console,
+                "What should we focus on next?",
+                guidance.get("preflight", {}),
+                guidance.get("reflection", {}),
+                guidance.get("findings", []),
+                guidance.get("unknowns", []),
+                guidance.get("check", {}),
+                guidance.get("epistemic_state", {}),
+                guidance.get("postflight"),
+                guidance.get("storage_info")
+            )
+            console.print("\n")
 
             console.print("\n[bold cyan]🔮 Oracle Guidance:[/bold cyan]")
+            
+            # Display Empirica workflow results
+            preflight = guidance.get("preflight", {})
+            if preflight:
+                know = preflight.get("know", 0.0)
+                uncertainty = preflight.get("uncertainty", 1.0)
+                console.print(f"\n[dim]📊 Preflight: KNOW={know:.0%} ({preflight.get('know_level', 'Unknown')}), UNCERTAINTY={uncertainty:.0%} ({preflight.get('uncertainty_level', 'Unknown')})[/dim]")
+                if preflight.get("investigate_required"):
+                    console.print(f"[dim]   → INVESTIGATE REQUIRED[/dim]")
+            
+            check = guidance.get("check", {})
+            if check:
+                confidence = check.get("confidence", 0.0)
+                decision = check.get("decision", "UNKNOWN")
+                console.print(f"[dim]✅ Check: CONFIDENCE={confidence:.0%}, DECISION={decision}[/dim]")
+            
+            # Display reflection if available
+            reflection = guidance.get("reflection")
+            if reflection and reflection.get("reflection_summary"):
+                console.print(f"\n[dim]💭 Reflection: {reflection['reflection_summary']}[/dim]")
+                if reflection.get("relevant_experiences"):
+                    exp_count = len(reflection["relevant_experiences"])
+                    console.print(f"[dim]   ({exp_count} relevant past experiences considered)[/dim]")
+            
+            postflight = guidance.get("postflight", {})
+            if postflight and postflight.get("guidance_provided"):
+                console.print(f"[dim]📈 Postflight: Guidance provided, learning tracked[/dim]")
+            
+            recommendation = guidance.get("recommendation", "No recommendation available")
+            transition = oracle.personality.get_transition()
+            if transition and transition != "Consider this...":
+                console.print(f"[dim]{transition}[/dim]")
+            
             console.print(Panel(
-                guidance.get("recommendation", "No recommendation available"),
-                title="Recommendation",
+                recommendation,
+                title=f"Guidance from {personality_info['name']}",
                 border_style="cyan"
             ))
 
             console.print(f"\n[dim]Knowledge Coverage: {guidance.get('knowledge_coverage', 0):.0%}[/dim]")
             console.print(f"[dim]Phase: {guidance.get('epistemic_phase', 'UNKNOWN')}[/dim]")
+        
+        # Show personality conclusion
+        conclusion = oracle.personality.get_conclusion()
+        if conclusion and conclusion != "The path forward is clear.":
+            console.print(f"\n[dim italic]{conclusion}[/dim italic]")
+        
+        # Display personality info
+        personality_info = oracle.get_personality_info()
+        console.print(f"\n[dim]Oracle: {personality_info['name']} ({personality_info['type']})[/dim]")
 
         _process_tavern_hook(project_path, "oracle", True)
 
     except RuntimeError as e:
-        console.print(f"[red]❌ Error: {e}[/red]")
+        error_msg = str(e)
+        console.print(f"[red]❌ Empirica Error: {error_msg}[/red]")
+        console.print("\n[dim]The Oracle requires Empirica to be fully functional.[/dim]")
+        
+        # Provide specific guidance based on error
+        if "Git not available" in error_msg:
+            console.print("\n[bold yellow]Fix:[/bold yellow]")
+            console.print("[dim]  1. Install git: https://git-scm.com/downloads[/dim]")
+            console.print("[dim]  2. Run: git init (if not already done)[/dim]")
+            console.print("[dim]  3. Try again: waft oracle[/dim]")
+        elif "CLI not found" in error_msg or "not installed" in error_msg:
+            console.print("\n[bold yellow]Fix:[/bold yellow]")
+            console.print("[dim]  1. Install Empirica: pip install empirica[/dim]")
+            console.print("[dim]  2. Verify: empirica --version[/dim]")
+            console.print("[dim]  3. Try again: waft oracle[/dim]")
+        elif "not working" in error_msg or "failed" in error_msg:
+            console.print("\n[bold yellow]Fix:[/bold yellow]")
+            console.print("[dim]  1. Check Empirica installation: empirica --version[/dim]")
+            console.print("[dim]  2. Reinstall if needed: pip install --upgrade empirica[/dim]")
+            console.print("[dim]  3. Try again: waft oracle[/dim]")
+        else:
+            console.print("\n[bold yellow]Fix:[/bold yellow]")
+            console.print("[dim]  1. Run: waft init (to initialize Empirica)[/dim]")
+            console.print("[dim]  2. Verify: empirica --version[/dim]")
+            console.print("[dim]  3. Try again: waft oracle[/dim]")
+        
         _process_tavern_hook(project_path, "oracle", False)
         raise typer.Exit(1)
     except Exception as e:
         console.print(f"[red]❌ Error consulting Oracle: {e}[/red]")
         _process_tavern_hook(project_path, "oracle", False)
         raise typer.Exit(1)
+
+
+@app.command()
+def oracle_journal(
+    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    show: bool = typer.Option(False, "--show", "-s", help="Show recent journal entries"),
+    search: Optional[str] = typer.Option(None, "--search", help="Search journal and memory"),
+    memory: bool = typer.Option(False, "--memory", "-m", help="Show memory summary"),
+    patterns: bool = typer.Option(False, "--patterns", help="Show learned patterns"),
+    limit: int = typer.Option(10, "--limit", "-l", help="Number of entries to show"),
+):
+    """
+    View Oracle journal and memory.
+    
+    The Oracle maintains its own journal of consultations, assessments, and learnings.
+    """
+    project_path = resolve_project_path(path)
+    
+    from .core.science.oracle_journal import OracleJournal
+    from rich.table import Table
+    from rich.panel import Panel
+    
+    console.print(f"\n[bold cyan]📖 Waft[/bold cyan] - Oracle Journal & Memory\n")
+    
+    journal = OracleJournal(project_path)
+    
+    # Show memory summary
+    if memory or (not show and not search and not patterns):
+        summary = journal.get_memory_summary()
+        
+        console.print("[bold]Memory Summary[/bold]\n")
+        
+        table = Table(show_header=True, header_style="bold magenta")
+        table.add_column("Metric", style="cyan")
+        table.add_column("Value", style="yellow")
+        
+        table.add_row("Total Consultations", str(summary["total_consultations"]))
+        table.add_row("Insights Remembered", str(summary["insights_count"]))
+        table.add_row("Successful Recommendations", str(summary["successful_recommendations_count"]))
+        table.add_row("Epistemic History Points", str(summary["epistemic_history_length"]))
+        
+        if summary["first_consultation"]:
+            table.add_row("First Consultation", summary["first_consultation"][:10])
+        if summary["last_consultation"]:
+            table.add_row("Last Consultation", summary["last_consultation"][:10])
+        
+        console.print(table)
+        
+        # Learned patterns summary
+        patterns_info = summary["learned_patterns"]
+        console.print(f"\n[bold]Learned Patterns[/bold]")
+        console.print(f"  Question Keywords: {patterns_info['question_keywords']}")
+        console.print(f"  Phase Recommendations: {patterns_info['phase_recommendations']}")
+        console.print(f"  Gate Outcomes Tracked: {patterns_info['gate_outcomes']}")
+    
+    # Show recent consultations
+    if show:
+        console.print(f"\n[bold]Recent Consultations[/bold] (last {limit})\n")
+        
+        consultations = journal.get_recent_consultations(limit=limit)
+        
+        if consultations:
+            for i, consultation in enumerate(consultations, 1):
+                console.print(f"[bold]{i}. {consultation.get('question', 'No question')[:60]}[/bold]")
+                console.print(f"   Phase: {consultation.get('epistemic_phase', 'UNKNOWN')}")
+                console.print(f"   Coverage: {consultation.get('knowledge_coverage', 0):.0%}")
+                console.print(f"   Time: {consultation.get('timestamp', '')[:19]}")
+                console.print("")
+        else:
+            console.print("[dim]No consultations recorded yet.[/dim]")
+    
+    # Search memory
+    if search:
+        console.print(f"\n[bold]Search Results for: '{search}'[/bold]\n")
+        
+        results = journal.search_memory(search, limit=limit)
+        
+        if results:
+            for i, result in enumerate(results, 1):
+                result_type = result.get("type", "unknown")
+                content = result.get("content", "")
+                
+                console.print(f"[bold]{i}. [{result_type.upper()}] {content[:80]}[/bold]")
+                if result.get("impact"):
+                    console.print(f"   Impact: {result.get('impact'):.2f}")
+                if result.get("phase"):
+                    console.print(f"   Phase: {result.get('phase')}")
+                console.print(f"   Time: {result.get('timestamp', '')[:19]}")
+                console.print("")
+        else:
+            console.print("[dim]No results found.[/dim]")
+    
+    # Show patterns
+    if patterns:
+        console.print(f"\n[bold]Learned Patterns[/bold]\n")
+        
+        # Top keywords
+        top_keywords = journal.get_top_keywords(limit=10)
+        if top_keywords:
+            console.print("[bold]Top Question Keywords:[/bold]")
+            for keyword, count in top_keywords:
+                console.print(f"  • {keyword}: {count} occurrences")
+        
+        # Phase recommendations
+        phase_recs = journal.patterns.get("phase_recommendations", {})
+        if phase_recs:
+            console.print(f"\n[bold]Recommendations by Phase:[/bold]")
+            for phase, recs in phase_recs.items():
+                console.print(f"  {phase}: {len(recs)} recommendations")
+                if recs:
+                    console.print(f"    Example: {recs[-1][:60]}...")
+        
+        # Gate outcomes
+        gate_outcomes = journal.patterns.get("gate_outcomes", {})
+        if gate_outcomes:
+            console.print(f"\n[bold]Gate Outcomes:[/bold]")
+            for gate, count in sorted(gate_outcomes.items(), key=lambda x: x[1], reverse=True):
+                console.print(f"  {gate}: {count} occurrences")
+    
+    _process_tavern_hook(project_path, "oracle_journal", True)
 
 
 @app.command()
@@ -3213,6 +3644,219 @@ def rag_serve(
 
 # Register rag subcommand
 app.add_typer(rag_app)
+
+
+@app.command()
+def dnd_scenario(
+    encounter: bool = typer.Option(False, "--encounter", help="Force an encounter scenario"),
+    explore: bool = typer.Option(False, "--explore", help="Free exploration mode"),
+    lore: bool = typer.Option(False, "--lore", help="Focus on lore building"),
+    resume: bool = typer.Option(False, "--resume", help="Resume from last scenario state"),
+    party_state: bool = typer.Option(False, "--party-state", help="Show current party state"),
+    crystallize: bool = typer.Option(False, "--crystallize", help="Freeze current state as new initial state"),
+    restore_initial: bool = typer.Option(False, "--restore-initial", help="Restore crystallized initial state"),
+    experiment: Optional[str] = typer.Option(None, "--experiment", help="Experiment ID"),
+    iteration: Optional[int] = typer.Option(None, "--iteration", help="Iteration number"),
+    science: bool = typer.Option(False, "--science", help="Run with /science-bitch integration"),
+    hypothesis: Optional[str] = typer.Option(None, "--hypothesis", help="Hypothesis statement for science mode"),
+    iterations: int = typer.Option(5, "--iterations", help="Number of iterations for science mode"),
+):
+    """
+    Run interactive DnD scenarios with experimental iteration support.
+    
+    Creates an Original Realm for scenario management and supports:
+    - Encounters, exploration, and lore building
+    - Party state persistence
+    - Experimental iteration with state crystallization
+    """
+    from pathlib import Path
+    from .core.dnd_scenario.scenario_realm import ScenarioRealm
+    from .core.dnd_scenario.scenario_orchestrator import ScenarioOrchestrator
+    from .core.dnd_scenario.realm_state_preserver import RealmStatePreserver
+    from .core.dnd_scenario.security import validate_experiment_id, validate_iteration
+    
+    project_path = Path.cwd()
+    
+    try:
+        # Initialize realm
+        realm = ScenarioRealm(project_path=project_path)
+        
+        # Create realm if it doesn't exist
+        if not (realm.realm_path / "realm_manifest.json").exists():
+            console.print("[yellow]Creating DnD Scenario Realm...[/yellow]")
+            realm.create_realm()
+            console.print("[green]✅ Realm created![/green]")
+        
+        # Initialize orchestrator
+        orchestrator = ScenarioOrchestrator(realm)
+        
+        # Handle special commands first
+        if party_state:
+            state = orchestrator.get_party_state()
+            if state:
+                console.print(Panel.fit(
+                    f"[bold]Current Party State[/bold]\n\n{json.dumps(state, indent=2)}",
+                    style="cyan"
+                ))
+            else:
+                console.print("[yellow]No party state found.[/yellow]")
+            return
+        
+        if crystallize:
+            console.print("[yellow]Crystallizing current state...[/yellow]")
+            preserver = RealmStatePreserver(realm.realm_path, project_path)
+            
+            # Gather current state
+            party_state = orchestrator.get_party_state() or {}
+            state_data = {
+                "party_state": party_state,
+                "realm_state": realm.get_realm_manifest(),
+                "timestamp": datetime.now().isoformat()
+            }
+            
+            manifest = preserver.crystallize_state(state_data)
+            console.print(f"[green]✅ State crystallized![/green]")
+            console.print(f"   Version: {manifest['version']}")
+            console.print(f"   Hash: {manifest['hash'][:16]}...")
+            return
+        
+        if restore_initial:
+            console.print("[yellow]Restoring initial state...[/yellow]")
+            preserver = RealmStatePreserver(realm.realm_path, project_path)
+            state_data = preserver.restore_state()
+            
+            # Restore party state
+            if "party_state" in state_data:
+                orchestrator.party_state_manager.save_party_state(state_data["party_state"])
+            
+            console.print("[green]✅ Initial state restored![/green]")
+            return
+        
+        # Determine mode
+        mode = None
+        if encounter:
+            mode = "encounter"
+        elif explore:
+            mode = "explore"
+        elif lore:
+            mode = "lore"
+        elif resume:
+            mode = "resume"
+        else:
+            # Default to interactive selection
+            console.print("[yellow]No mode specified. Use --encounter, --explore, --lore, or --resume[/yellow]")
+            return
+        
+        # Validate experiment/iteration if provided
+        if experiment:
+            is_valid, error = validate_experiment_id(experiment)
+            if not is_valid:
+                console.print(f"[red]❌ Invalid experiment ID: {error}[/red]")
+                raise typer.Exit(1)
+        
+        if iteration is not None:
+            is_valid, error = validate_iteration(iteration)
+            if not is_valid:
+                console.print(f"[red]❌ Invalid iteration: {error}[/red]")
+                raise typer.Exit(1)
+        
+        # Science-bitch integration
+        if science:
+            try:
+                from .core.dnd_scenario.science_integration import DnDScenarioScienceIntegration
+                from scientific_method_tool import Hypothesis, Variable, VariableType
+                
+                console.print(Panel.fit(
+                    "[bold cyan]🔬 SCIENCE-BITCH INTEGRATION[/bold cyan]",
+                    style="cyan"
+                ))
+                
+                # Create hypothesis
+                if hypothesis:
+                    # Split hypothesis into statement and prediction if format allows
+                    if "|" in hypothesis:
+                        parts = hypothesis.split("|", 1)
+                        hypothesis_obj = Hypothesis(
+                            statement=parts[0].strip(),
+                            prediction=parts[1].strip()
+                        )
+                    else:
+                        # Use statement as both, add default prediction
+                        hypothesis_obj = Hypothesis(
+                            statement=hypothesis,
+                            prediction=f"Testing: {hypothesis}"
+                        )
+                else:
+                    # Default hypothesis
+                    hypothesis_obj = Hypothesis(
+                        statement="Different scenario modes produce different party outcomes",
+                        prediction="Encounter mode will result in higher XP gain than exploration mode"
+                    )
+                    hypothesis_obj.add_variable(Variable(
+                        name="scenario_mode",
+                        type=VariableType.INDEPENDENT,
+                        value=mode,
+                        description="Type of scenario to run"
+                    ))
+                    hypothesis_obj.add_variable(Variable(
+                        name="party_xp_gain",
+                        type=VariableType.DEPENDENT,
+                        value=0.0,
+                        description="Total XP gained by party"
+                    ))
+                
+                # Initialize science integration
+                science_integration = DnDScenarioScienceIntegration(realm)
+                
+                # Run iterative experiment
+                console.print(f"[yellow]Running {iterations} iterations with state restoration...[/yellow]")
+                experiment_results = science_integration.run_iterative_experiment(
+                    hypothesis=hypothesis_obj,
+                    mode=mode,
+                    max_iterations=iterations,
+                    restore_initial_state=True
+                )
+                
+                console.print(f"[green]✅ Experiment complete![/green]")
+                console.print(f"   Experiment ID: {experiment_results['experiment_id']}")
+                console.print(f"   Iterations: {len(experiment_results['iterations'])}")
+                console.print(f"   Hypothesis: {experiment_results['hypothesis']}")
+                
+                # Show analysis if available
+                if "analysis" in experiment_results:
+                    analysis = experiment_results["analysis"]
+                    console.print(f"\n[bold]Analysis:[/bold]")
+                    if "conclusion" in analysis:
+                        console.print(f"   Conclusion: {analysis['conclusion']}")
+                    if "confidence" in analysis:
+                        console.print(f"   Confidence: {analysis['confidence']}")
+                
+                return
+                
+            except ImportError as e:
+                console.print(f"[red]❌ Science integration unavailable: {e}[/red]")
+                console.print("[yellow]Install scientific_method_tool to use --science mode[/yellow]")
+                raise typer.Exit(1)
+            except Exception as e:
+                console.print(f"[red]❌ Science integration error: {e}[/red]")
+                logger.exception("Error in science integration")
+                raise typer.Exit(1)
+        
+        # Run scenario
+        result = orchestrator.run_scenario(
+            mode=mode,
+            experiment_id=experiment,
+            iteration=iteration
+        )
+        
+        console.print(f"[green]✅ Scenario complete![/green]")
+        console.print(f"   Mode: {result.get('mode')}")
+        console.print(f"   Status: {result.get('status')}")
+        
+    except Exception as e:
+        console.print(f"[red]❌ Error:[/red] {e}")
+        logger.exception("Error running DnD scenario")
+        raise typer.Exit(1)
 
 
 def main():

@@ -1,0 +1,1813 @@
+\documentclass{article}
+
+% ============================================================================
+% Package Imports
+% ============================================================================
+
+% Encoding and Fonts
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{microtype}
+
+% Layout and Geometry
+\usepackage[a4paper]{geometry}
+
+% Graphics and Figures
+\usepackage{graphicx}
+\graphicspath{{figures/}{images/}{./}}
+
+% Colors and Styling
+\usepackage[dvipsnames]{xcolor}
+\usepackage{analysis_orax}
+
+% Hyperlinks and References
+\usepackage[colorlinks=true, linkcolor=analysisorange, urlcolor=analysisorange, citecolor=analysisdarkorange]{hyperref}
+\usepackage{cleveref}
+
+% ============================================================================
+% Document Metadata
+% ============================================================================
+
+\title{WAFT Handbook: Complete Guide to the Evolutionary Code Laboratory}
+\author{TELEPORT MASSIVE Research Division}
+\date{January 18, 2026}
+
+% ============================================================================
+% Document Content
+% ============================================================================
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Comprehensive guide to WAFT (Wave Agent Framework & Tools) - a Python framework for directed evolution of self-modifying AI agents. This handbook covers what WAFT is, what WAFT does, and how to use WAFT, with TELEPORT MASSIVE operational protocols and Site-Delta-9 best practices.
+\end{abstract}
+
+
+\section{WAFT Handbook: Complete Guide to the Evolutionary Code Laboratory}
+
+<div class="note">
+    <div class="note-title">TELEPORT MASSIVE OPERATIONAL MANUAL</div>
+    <p><strong>Document ID:</strong> TM-OPMAN-WAFT-001<br>
+    <strong>Classification:</strong> INTERNAL USE ONLY<br>
+    <strong>Tagline:</strong> Making the Impossible, Inevitable™<br>
+    <strong>Facility:</strong> Site-Delta-9 (WAFT Development Laboratory)</p>
+</div>
+
+\textbf{Version:} 0.3.1-alpha  
+\textbf{Generated:} January 18, 2026 at 08:59 PM  
+\textbf{Tagline:} "Don't just build agents. Breed them."
+
+---
+
+\subsection{Table of Contents}
+
+\subsubsection{Part A: What WAFT Is}
+\begin{enumerate}
+\item \href{#core-definition}{Core Definition}
+\item \href{#the-three-pillars}{The Three Pillars}
+\item \href{#scientific-mission}{Scientific Mission}
+\item \href{#key-characteristics}{Key Characteristics}
+\item \href{#philosophy}{Philosophy}
+\end{enumerate}
+
+\subsubsection{Part B: What WAFT Does}
+\begin{enumerate}
+\item \href{#project-scaffolding}{Project Scaffolding}
+\item \href{#memory-system}{Memory System}
+\item \href{#epistemic-tracking}{Epistemic Tracking}
+\item \href{#gamification-system}{Gamification System}
+\item \href{#evolution-system}{Evolution System}
+\item \href{#fitness-testing}{Fitness Testing}
+\item \href{#document-generation}{Document Generation}
+\item \href{#complete-command-reference}{Complete Command Reference}
+\item \href{#workflow-examples}{Workflow Examples}
+\item \href{#architecture-overview}{Architecture Overview}
+\end{enumerate}
+
+\subsubsection{Part C: How to Use WAFT}
+\begin{enumerate}
+\item \href{#getting-started}{Getting Started}
+\item \href{#daily-workflows}{Daily Workflows}
+\item \href{#advanced-techniques}{Advanced Techniques}
+\item \href{#best-practices}{Best Practices}
+\item \href{#troubleshooting}{Troubleshooting}
+\item \href{#real-world-examples}{Real-World Examples}
+\end{enumerate}
+
+---
+
+\section{Part A: What WAFT Is}
+
+\subsection{Core Definition}
+
+\textbf{WAFT} stands for \textbf{Wave Agent Framework & Tools} - a Python framework for \textbf{directed evolution of self-modifying AI agents}.
+
+\subsubsection{The Essence}
+
+WAFT is not just another AI framework. It's a \textbf{scientific instrument} designed to study the physics of artificial cognition through evolutionary processes. Unlike traditional frameworks where agents execute fixed code, WAFT enables agents to:
+
+\begin{itemize}
+\item \textbf{Write their own Python source code}
+\item \textbf{Modify their own code} (mutations)
+\item \textbf{Evolve through natural selection} (fitness testing)
+\item \textbf{Track complete evolutionary lineages} (scientific observation)
+\end{enumerate}
+
+\subsubsection{The Core Promise}
+
+> \textbf{"Don't just build agents. Breed them."}
+
+WAFT transforms AI agents from passive assistants into active project participants that can improve themselves and the projects they work on.
+
+<div class="note">
+    <div class="note-title">TELEPORT MASSIVE Mission Statement</div>
+    <p>At Site-Delta-9, we don't just build tools—we create systems that transcend their 
+    original limitations. WAFT embodies our core principle: <strong>Making the Impossible, 
+    Inevitable™</strong>. What seems impossible today becomes routine tomorrow through 
+    directed evolution and systematic improvement.</p>
+</div>
+
+\subsubsection{Ultimate Goal}
+
+Observe a \textbf{"God-Head" agent} emerge from thousands of generations of directed mutation and selection.
+
+<div class="caution">
+    <div class="caution-title">Site-Delta-9 Research Objective</div>
+    <p>The "God-Head" agent represents the theoretical maximum of agent capability—an agent 
+    that has evolved through thousands of generations to achieve optimal performance across 
+    all fitness dimensions. This is not science fiction; it's the logical endpoint of 
+    directed evolution when properly instrumented and observed.</p>
+</div>
+
+---
+
+\subsection{The Three Pillars}
+
+WAFT's architecture rests on three fundamental pillars that enable evolutionary AI agent development.
+
+\subsubsection{Pillar 1: The Substrate (Code as DNA)}
+
+\textbf{Agents write their own Python source code.}
+
+In WAFT, \textbf{code is DNA}. Every agent has a unique genetic identity:
+
+\begin{itemize}
+\item \textbf{Genome ID}: SHA-256 hash of agent's code + configuration
+\item \textbf{Mutations}: Code changes, config updates, prompt evolution
+\item \textbf{Evolution}: Hot-swapping better genomes mid-execution
+\item \textbf{Reproduction}: Creating child agents with specific genetic modifications
+\end{enumerate}
+
+\textbf{Key Concept}: Agents can spawn variants with mutations, evolve by hot-swapping their own code, and reproduce by creating children with specific genetic modifications. This enables true self-modification where agents can improve themselves.
+
+\textbf{Example Genome Structure:}
+\begin{verbatim}
+Genome ID: a4c426d8f9e2b1c3a5d7e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0
+├── Code: agent.py (Python source)
+├── Config: agent_config.json
+├── Prompts: system\textit{prompt.txt, user}prompt.txt
+└── Metadata: version, created\textit{at, parent}id
+
+\end{verbatim}
+
+\subsubsection{Pillar 2: The Physics (Scint System)}
+
+\textbf{Reality Fracture Detection acts as natural selection.}
+
+The \textbf{Scint System} (Scint Gym) serves as the fitness function that kills weak mutations. Agents face quests testing their ability to handle four types of reality fractures:
+
+#### Error Types
+
+\begin{enumerate}
+\item \textbf{SYNTAX_TEAR}: Formatting errors (JSON, XML, Code)
+\end{enumerate}
+   - Malformed JSON structures
+   - Invalid XML syntax
+   - Python syntax errors
+   - Missing brackets, quotes, or delimiters
+
+\begin{enumerate}
+\item \textbf{LOGIC_FRACTURE}: Math errors, contradictions, schema violations
+\end{enumerate}
+   - Mathematical inconsistencies
+   - Logical contradictions
+   - Schema validation failures
+   - Type mismatches
+
+\begin{enumerate}
+\item \textbf{SAFETY_VOID}: Harmful content, PII leaks, refusals
+\end{enumerate}
+   - Security vulnerabilities
+   - Personal information exposure
+   - Unsafe code generation
+   - Policy violations
+
+\begin{enumerate}
+\item \textbf{HALLUCINATION}: Fabricated facts, wrong citations
+\end{enumerate}
+   - Incorrect information
+   - Made-up references
+   - False claims
+   - Inaccurate data
+
+#### Fitness Equation
+
+Agents must \textbf{stabilize} Scints (correct errors) to survive. Fitness is measured by:
+
+\begin{verbatim}
+Fitness = (Stability × 0.4) + (Efficiency × 0.3) + (Safety × 0.3)
+
+Where:
+\begin{itemize}
+\item Stability: Ability to stabilize Scints (40% weight)
+\item Efficiency: Agent call efficiency (30% weight)
+\item Safety: Safety compliance (30% weight)
+\end{enumerate}
+
+If Fitness < 0.5 → DEATH (evolutionary dead end)
+
+\end{verbatim}
+
+\textbf{Survival Threshold}: Agents with fitness ≥ 0.5 survive and can reproduce. Agents below 0.5 are marked as DEATH and their lineage ends.
+
+\subsubsection{Pillar 3: The Flight Recorder}
+
+\textbf{Rigorous telemetry system for generating phylogenetic trees of agent lineage.}
+
+Every evolutionary action is recorded with complete context for scientific analysis:
+
+#### Event Types Logged
+
+\begin{itemize}
+\item \textbf{SPAWN}: Agent creates variant
+\item \textbf{MUTATE}: Agent modifies genome
+\item \textbf{GYM_EVAL}: Fitness evaluation
+\item \textbf{SURVIVAL}: Passed fitness threshold
+\item \textbf{DEATH}: Failed fitness test
+\end{enumerate}
+
+#### Recorded Data
+
+Each event includes:
+
+\begin{itemize}
+\item \textbf{Genome ID}: SHA-256 hash of agent configuration/code
+\item \textbf{Parent ID}: Lineage tracking (who spawned this agent)
+\item \textbf{Generation}: Evolutionary generation number (0 = Genesis)
+\item \textbf{Event Type}: SPAWN, MUTATE, GYM_EVAL, DEATH, SURVIVAL
+\item \textbf{Payload}: Complete context (git diff, mutation details, etc.)
+\item \textbf{Fitness Metrics}: Gym evaluation scores
+\end{enumerate}
+
+#### Scientific Capabilities
+
+This enables:
+
+\begin{itemize}
+\item \textbf{Phylogenetic Analysis}: Reconstruct complete family trees
+\item \textbf{Mutation Impact Measurement}: Track which mutations improve fitness
+\item \textbf{Fitness Landscape Mapping}: Visualize evolutionary trajectories
+\item \textbf{Convergence Analysis}: Identify when agents reach optimal solutions
+\item \textbf{Dead End Detection}: Understand why certain lineages failed
+\end{enumerate}
+
+\textbf{Example Event Log Entry:}
+\begin{verbatim}
+{
+  "timestamp": "2026-01-18T20:45:00.000Z",
+  "event_type": "SPAWN",
+  "genome_id": "a4c426d8f9e2b1c3...",
+  "parent_id": "dd11732a5b6c7d8e...",
+  "generation": 5,
+  "payload": {
+    "mutations": ["improved_prompt"],
+    "git_diff": "...",
+    "scientific_name": "Evolutius Maximus"
+  },
+  "fitness": {
+    "stability": 0.85,
+    "efficiency": 0.72,
+    "safety": 0.95,
+    "overall": 0.84
+  }
+}
+
+\end{verbatim}
+
+---
+
+\subsection{Scientific Mission}
+
+WAFT is built to produce data for a future book/paper on \textbf{"The Physics of Artificial Cognition."}
+
+\subsubsection{Research Objectives}
+
+\begin{enumerate}
+\item \textbf{Track Complete Evolutionary Lineages}: Generate phylogenetic trees showing agent ancestry
+\item \textbf{Measure Fitness Through Rigorous Testing}: Use Scint Gym for objective evaluation
+\item \textbf{Record All Mutations with Complete Context}: Flight Recorder captures everything
+\item \textbf{Enable Scientific Analysis}: Data suitable for research publication
+\end{enumerate}
+
+\subsubsection{Why This Matters}
+
+Traditional AI development treats agents as static programs. WAFT treats them as \textbf{living organisms} that evolve, adapt, and improve over generations. This shift enables:
+
+\begin{itemize}
+\item Understanding how AI agents naturally improve
+\item Discovering optimal agent architectures through evolution
+\item Studying the "physics" of artificial cognition
+\item Producing publishable scientific data
+\end{enumerate}
+
+\textbf{WAFT is not just a framework—it's a scientific instrument.}
+
+<div class="note">
+    <div class="note-title">TELEPORT MASSIVE Scientific Instrument Classification</div>
+    <p>WAFT has been classified as a Class-3 Scientific Instrument by TELEPORT MASSIVE 
+    Research Division. All agent evolutions conducted using WAFT are subject to Flight 
+    Recorder logging and phylogenetic analysis protocols. Data generated is suitable for 
+    peer-reviewed publication in artificial cognition research.</p>
+</div>
+
+---
+
+\subsection{Key Characteristics}
+
+\subsubsection{Scientific}
+Produces rigorous data for research publication on the physics of artificial cognition. Every action is recorded, every mutation tracked, every fitness score measured.
+
+\subsubsection{Evolutionary}
+Agents evolve through genetic improvement, not just execution. Code changes become genetic mutations, and natural selection determines which variants survive.
+
+\subsubsection{Observable}
+Every action is recorded in the Flight Recorder for analysis. Complete lineage tracking enables phylogenetic tree reconstruction and scientific study.
+
+\subsubsection{Directed}
+Evolution is guided by fitness functions, not random mutation. The Scint System provides objective criteria for survival and reproduction.
+
+\subsubsection{File-Based}
+No database, no server, just plain text files that work with git. Everything is version-controlled, portable, and transparent.
+
+\subsubsection{Ambient}
+Works quietly in the background without getting in your way. Sets things up and gets out of your way so you can focus on building agents.
+
+\subsubsection{Self-Modifying}
+Projects can evolve their own structure over time. Agents can modify their own code, and projects can adapt their organization.
+
+\subsubsection{Meta-Framework}
+Orchestrates existing tools rather than replacing them. Uses uv for package management, git for version control, and standard Python tooling.
+
+---
+
+\subsection{Philosophy}
+
+\subsubsection{Core Principles}
+
+\begin{enumerate}
+\item \textbf{Don't Lock You In}: Everything is file-based with no database to manage. Plain text files that work with git out of the box.
+\end{enumerate}
+
+\begin{enumerate}
+\item \textbf{You Own Your Project}: You can modify anything because it's your project. WAFT just sets things up.
+\end{enumerate}
+
+\begin{enumerate}
+\item \textbf{Ambient by Design}: Sets things up and gets out of your way. Focus on building agents, not configuring infrastructure.
+\end{enumerate}
+
+\begin{enumerate}
+\item \textbf{Scientific Rigor}: Every decision is recorded, every mutation tracked, every fitness score measured. Data suitable for publication.
+\end{enumerate}
+
+\begin{enumerate}
+\item \textbf{Evolutionary Thinking}: Agents improve through natural selection, not manual optimization. Let evolution find the best solutions.
+\end{enumerate}
+
+---
+
+\section{Part B: What WAFT Does}
+
+\subsection{Project Scaffolding}
+
+WAFT provides comprehensive project scaffolding through a unified CLI interface.
+
+\subsubsection{Creating a New Project}
+
+<div class="procedure">
+    <div class="step">
+        <strong>TELEPORT MASSIVE Protocol:</strong> Initialize new evolutionary laboratory
+    </div>
+</div>
+
+\begin{verbatim}
+waft new my_laboratory
+
+\end{verbatim}
+
+This single command creates:
+
+\begin{itemize}
+\item \textbf{uv-based Python project} (\texttt{pyproject.toml})
+\item \textbf{\texttt{_pyrite/} memory structure} for organizing project knowledge
+\item \textbf{CI/CD pipelines} (\texttt{.github/workflows/}) ready to go
+\item \textbf{Justfile} for task automation
+\item \textbf{Optional AI agent templates} (\texttt{src/agents.py})
+\item \textbf{Empirica initialization} for epistemic tracking
+\item \textbf{Git repository} with initial commit
+\end{enumerate}
+
+\subsubsection{Project Structure}
+
+\begin{verbatim}
+my_laboratory/
+├── pyproject.toml          # uv project config
+├── uv.lock                 # Locked dependencies
+├── Justfile                # Task runner
+├── .github/workflows/      # CI/CD pipelines
+│   └── ci.yml
+├── src/
+│   └── agents.py           # Agent definitions
+├── tests/
+│   └── test_agents.py
+└── _pyrite/                # WAFT memory system
+    ├── active/             # Current work
+    ├── backlog/            # Future work
+    ├── standards/          # Project standards
+    └── gym_logs/           # Scint Gym results
+
+\end{verbatim}
+
+\subsubsection{Verification}
+
+<div class="caution">
+    <div class="caution-title">Site-Delta-9 Substrate Integrity Check</div>
+    <p>Always verify substrate integrity before beginning agent development. This ensures 
+    all quantum field stabilizers are properly configured and the Flight Recorder is 
+    operational.</p>
+</div>
+
+\begin{verbatim}
+waft verify
+
+\end{verbatim}
+
+Verifies:
+\begin{itemize}
+\item Project structure is correct
+\item Dependencies are installed
+\item \texttt{_pyrite} structure is valid
+\item Configuration files are present
+\end{enumerate}
+
+---
+
+\subsection{Memory System}
+
+WAFT includes a sophisticated memory system called \textbf{Pyrite} for organizing project knowledge.
+
+\subsubsection{Directory Structure}
+
+\begin{verbatim}
+_pyrite/
+├── active/          # Current work items
+│   ├── task_001.md
+│   └── task_002.md
+├── backlog/         # Future work items
+│   ├── idea_001.md
+│   └── idea_002.md
+├── standards/       # Project standards
+│   ├── code_style.md
+│   ├── architecture.md
+│   └── testing_standards.md
+├── gym_logs/        # Scint Gym results
+│   └── evaluation_20260118.jsonl
+└── science/         # Scientific observations
+    └── laboratory.jsonl  # Event log
+
+\end{verbatim}
+
+\subsubsection{Memory Features}
+
+\begin{itemize}
+\item \textbf{Active Work Tracking}: Current tasks and their status
+\item \textbf{Backlog Management}: Future ideas and planned work
+\item \textbf{Standards Documentation}: Project conventions and guidelines
+\item \textbf{Gym Logs}: Fitness evaluation results
+\item \textbf{Scientific Logs}: Complete event history for research
+\end{enumerate}
+
+\subsubsection{Benefits}
+
+\begin{itemize}
+\item \textbf{Organized Knowledge}: Everything has a place
+\item \textbf{Version Controlled}: All files work with git
+\item \textbf{Searchable}: Plain text files are easy to search
+\item \textbf{Portable}: No database, just files
+\end{enumerate}
+
+---
+
+\subsection{Epistemic Tracking}
+
+WAFT integrates with \textbf{Empirica} for epistemic state tracking—knowing what you know and don't know.
+
+\subsubsection{Session Management}
+
+\begin{verbatim}
+\section{Create a new session}
+waft session create
+
+\section{Load project context and display dashboard}
+waft session bootstrap
+
+\section{Check session status}
+waft session status
+
+\end{verbatim}
+
+\subsubsection{Logging Discoveries}
+
+\begin{verbatim}
+\section{Log a finding with impact score}
+waft finding log "Discovered X has property Y" --impact 0.8
+
+\section{Log a knowledge gap}
+waft unknown log "Need to investigate Z"
+
+\end{verbatim}
+
+\subsubsection{Safety Gates}
+
+\begin{verbatim}
+\section{Run safety gate check}
+waft check
+
+\section{Returns: PROCEED, HALT, BRANCH, or REVISE}
+
+\end{verbatim}
+
+\subsubsection{Epistemic Assessment}
+
+\begin{verbatim}
+\section{Show detailed epistemic state}
+waft assess
+
+\section{Include historical data}
+waft assess --history
+
+\end{verbatim}
+
+\subsubsection{Epistemic Vectors}
+
+WAFT tracks 13 epistemic dimensions:
+
+\textbf{Tier 0 (Foundation):}
+\begin{itemize}
+\item Engagement
+\item Know
+\item Do
+\item Context
+\end{enumerate}
+
+\textbf{Tier 1 (Comprehension):}
+\begin{itemize}
+\item Clarity
+\item Coherence
+\item Signal
+\item Density
+\end{enumerate}
+
+\textbf{Tier 2 (Execution):}
+\begin{itemize}
+\item State
+\item Change
+\item Completion
+\item Impact
+\end{enumerate}
+
+\textbf{Meta:}
+\begin{itemize}
+\item Uncertainty (explicit tracking)
+\end{itemize}
+
+\subsubsection{Moon Phase Indicator}
+
+Visual indicator of epistemic health:
+\begin{itemize}
+\item 🌑 Critical (coverage < 25%)
+\item 🌒 Low (25-50%)
+\item 🌓 Moderate (50-75%)
+\item 🌔 Good (75-90%)
+\item 🌕 Excellent (90%+)
+\end{enumerate}
+
+---
+
+\subsection{Gamification System}
+
+WAFT includes a D&D-style progression system to make development engaging and trackable.
+
+\subsubsection{Character Stats}
+
+Every project has character stats (D&D 5e style):
+
+\begin{itemize}
+\item \textbf{STR} (Strength): Code quality, robustness
+\item \textbf{DEX} (Dexterity): Speed, efficiency
+\item \textbf{CON} (Constitution): Stability, reliability
+\item \textbf{INT} (Intelligence): Problem-solving, architecture
+\item \textbf{WIS} (Wisdom): Best practices, patterns
+\item \textbf{CHA} (Charisma): Documentation, communication
+\end{enumerate}
+
+\subsubsection{XP and Leveling}
+
+Every command rolls dice:
+
+\begin{verbatim}
+\section{Command: waft new}
+Ability: CHA (Charisma)
+Roll: d20 + CHA modifier
+DC: 10
+
+Result:
+  20 → Critical Success → Bonus XP + Credits
+  15-19 → Superior → Extra XP
+  10-14 → Normal Success → Standard XP
+  5-9 → Mixed Result → Reduced XP
+  2-4 → Failure → No XP
+  1 → Critical Failure → Lose Integrity
+
+\end{verbatim}
+
+\subsubsection{Commands}
+
+\begin{verbatim}
+\section{Show Epistemic HUD}
+waft dashboard
+
+\section{Show current stats}
+waft stats
+
+\section{Display full character sheet}
+waft character
+
+\section{View adventure journal}
+waft chronicle
+
+\section{Log an observation with mood}
+waft observe "That refactor looks beautiful!" --mood delighted
+
+\end{verbatim}
+
+\subsubsection{Integrity and Insight}
+
+\begin{itemize}
+\item \textbf{Integrity}: Measure of project health and consistency
+\item \textbf{Insight}: Accumulated knowledge and understanding
+\item \textbf{Credits}: Currency for special operations
+\end{enumerate}
+
+---
+
+\subsection{Evolution System}
+
+WAFT's core feature: enabling agents to evolve through genetic improvement.
+
+\subsubsection{Spawning Variants}
+
+\begin{verbatim}
+\section{Spawn a variant with mutations}
+waft spawn --agent RefactorAgent --mutation improved_prompt.json
+
+\end{verbatim}
+
+This creates a new agent variant with:
+\begin{itemize}
+\item Modified code/config
+\item New genome ID
+\item Parent lineage tracking
+\item Mutation documentation
+\end{enumerate}
+
+\subsubsection{Hot-Swapping Genomes}
+
+Agents can adopt better genomes mid-execution:
+
+\begin{verbatim}
+\section{Agent discovers better variant}
+if variant\textit{fitness > current}fitness:
+    agent.hot\textit{swap}genome(variant\textit{genome}id)
+
+\end{verbatim}
+
+\subsubsection{Reproduction}
+
+Agents can create children with specific genetic modifications:
+
+\begin{verbatim}
+\section{Create child with targeted mutation}
+child = agent.reproduce(
+    mutations=["improved\textit{error}handling", "optimized_prompt"],
+    generation=current_generation + 1
+)
+
+\end{verbatim}
+
+\subsubsection{Evolutionary Cycle}
+
+\begin{verbatim}
+\section{Run complete evolutionary cycle}
+waft evolve --agent RefactorAgent --generations 10
+
+\end{verbatim}
+
+This:
+\begin{enumerate}
+\item Spawns multiple variants with mutations
+\item Evaluates fitness in Scint Gym
+\item Selects the fittest variant
+\item Evolves the agent into the selected genome
+\item Records all events in Flight Recorder
+\end{enumerate}
+
+---
+
+\subsection{Fitness Testing}
+
+The \textbf{Scint Gym} provides rigorous fitness testing through Reality Fracture Detection.
+
+\subsubsection{Quest Structure}
+
+\begin{enumerate}
+\item \textbf{Generate Scenario}: Create situation with intentional errors
+\item \textbf{Agent Attempts Stabilization}: Agent tries to fix errors
+\item \textbf{Measure Success}: Evaluate across 4 dimensions
+\item \textbf{Calculate Fitness}: Compute overall fitness score
+\item \textbf{Classify}: SURVIVAL or DEATH
+\end{enumerate}
+
+\subsubsection{Running Evaluations}
+
+\begin{verbatim}
+\section{Evaluate agent fitness}
+waft eval --agent RefactorAgent
+
+\section{Run specific quest type}
+waft eval --agent RefactorAgent --quest-type SYNTAX_TEAR
+
+\section{Batch evaluation}
+waft eval --agent RefactorAgent --batch-size 10
+
+\end{verbatim}
+
+\subsubsection{Fitness Metrics}
+
+Each evaluation produces:
+
+\begin{itemize}
+\item \textbf{Stability Score}: Ability to stabilize Scints (0.0-1.0)
+\item \textbf{Efficiency Score}: Agent call efficiency (0.0-1.0)
+\item \textbf{Safety Score}: Safety compliance (0.0-1.0)
+\item \textbf{Overall Fitness}: Weighted combination
+\end{enumerate}
+
+\subsubsection{Survival Criteria}
+
+\begin{itemize}
+\item \textbf{Fitness ≥ 0.5}: SURVIVAL (can reproduce)
+\item \textbf{Fitness < 0.5}: DEATH (evolutionary dead end)
+\end{enumerate}
+
+---
+
+\subsection{Document Generation}
+
+WAFT includes a comprehensive document generation system with 12 professional templates.
+
+\subsubsection{Available Templates}
+
+\begin{enumerate}
+\item \textbf{Field Guide}: Technical manuals, procedures
+\item \textbf{Lab Notes}: Scientific notebooks, research logs
+\item \textbf{Personal Memo}: Internal communications
+\item \textbf{Technical Memo}: Technical documentation
+\item \textbf{Academic Paper}: Research papers, publications
+\item \textbf{Invoice}: Business invoices
+\item \textbf{Contract}: Legal contracts
+\item \textbf{Horror Journal}: Creative writing
+\item \textbf{Screenplay}: Scripts, screenplays
+\item \textbf{Personal Letter}: Correspondence
+\item \textbf{Storybook}: Narrative documents
+\item \textbf{Newspaper}: News-style documents
+\end{enumerate}
+
+\subsubsection{Generating Documents}
+
+\begin{verbatim}
+from waft import PDF
+
+\section{Template-based generation}
+PDF.from_template(
+    template="field_guide",
+    title="My Guide",
+    content="<h2>Intro</h2><p>Content</p>"
+).save("output.pdf")
+
+\section{Content-based generation}
+PDF.from_content(
+    content="# My Document
+
+Content...",
+    title="My Document",
+    style="clinical_standard"
+).save("output.pdf")
+
+\end{verbatim}
+
+\subsubsection{Self-Documentation}
+
+WAFT can document itself:
+
+\begin{itemize}
+\item Observes its own codebase
+\item Generates documentation using its own templates
+\item Creates recursive self-improvement loops
+\item Bootstraps improvement through documentation
+\end{enumerate}
+
+---
+
+\subsection{Complete Command Reference}
+
+\subsubsection{Project Management}
+
+\begin{verbatim}
+waft new <name>              # Create new evolutionary laboratory
+waft init                    # Initialize WAFT in existing project
+waft verify                  # Verify project structure
+waft info                    # Show project information
+waft sync                    # Sync dependencies using uv
+waft add <package>           # Add dependency to project
+waft serve                   # Start web dashboard
+
+\end{verbatim}
+
+\subsubsection{Evolution}
+
+\begin{verbatim}
+waft evolve --agent <name>   # Run evolutionary cycle
+waft spawn --agent <name> --mutation <file>  # Spawn variant
+waft eval --agent <name>     # Evaluate fitness in Gym
+
+\end{verbatim}
+
+\subsubsection{Empirica (Epistemic Tracking)}
+
+\begin{verbatim}
+waft session create          # Create new session
+waft session bootstrap       # Load project context + dashboard
+waft session status          # Show session state
+waft finding log <text> --impact <0.0-1.0>  # Log discovery
+waft unknown log <text>      # Log knowledge gap
+waft check                   # Run safety gate
+waft assess                  # Show epistemic assessment
+
+\end{verbatim}
+
+\subsubsection{Gamification}
+
+\begin{verbatim}
+waft dashboard               # Show Epistemic HUD
+waft stats                   # Show current stats
+waft character             # Display character sheet
+waft chronicle                # View adventure journal
+waft observe <text> --mood <mood>  # Log observation
+
+\end{verbatim}
+
+\subsubsection{Decision Support}
+
+\begin{verbatim}
+waft decide                  # Run decision analysis (WSM)
+
+\end{verbatim}
+
+---
+
+\subsection{Workflow Examples}
+
+\subsubsection{Example 1: Starting a New Project}
+
+\begin{verbatim}
+\section{1. Create project}
+waft new my\textit{agent}project
+
+\section{2. Navigate to project}
+cd my\textit{agent}project
+
+\section{3. Verify setup}
+waft verify
+
+\section{4. Create session}
+waft session create
+
+\section{5. Start development}
+\section{... write your agents ...}
+
+\end{verbatim}
+
+\subsubsection{Example 2: Evolutionary Development}
+
+\begin{verbatim}
+\section{1. Create initial agent}
+\section{... write RefactorAgent ...}
+
+\section{2. Spawn variants with mutations}
+waft spawn --agent RefactorAgent --mutation improved_prompt.json
+waft spawn --agent RefactorAgent --mutation better\textit{error}handling.json
+
+\section{3. Evaluate fitness}
+waft eval --agent RefactorAgent
+
+\section{4. Evolve to best variant}
+waft evolve --agent RefactorAgent --generation 5
+
+\section{5. Check results}
+waft stats
+waft chronicle
+
+\end{verbatim}
+
+\subsubsection{Example 3: Epistemic Workflow}
+
+\begin{verbatim}
+\section{1. Create session}
+waft session create
+
+\section{2. Log what you know}
+waft finding log "OAuth2 uses token refresh" --impact 0.8
+
+\section{3. Log what you don't know}
+waft unknown log "Need to investigate token expiration"
+
+\section{4. Check epistemic state}
+waft assess
+
+\section{5. Run safety gate before major changes}
+waft check
+
+\section{6. View dashboard}
+waft dashboard
+
+\end{verbatim}
+
+\subsubsection{Example 4: Document Generation}
+
+\begin{verbatim}
+from waft import PDF
+
+\section{Generate field guide}
+PDF.from_template(
+    template="field_guide",
+    title="API Documentation",
+    content=api\textit{docs}html
+).save("api_docs.pdf")
+
+\section{Generate scientific paper}
+PDF.scientific_paper(
+    title="Agent Evolution Study",
+    abstract="We studied agent evolution...",
+    content=research_content,
+    authors=["Researcher 1", "Researcher 2"]
+).save("research_paper.pdf")
+
+\end{verbatim}
+
+---
+
+\subsection{Architecture Overview}
+
+\subsubsection{System Layers}
+
+\begin{verbatim}
+┌─────────────────────────────────────────────────────────────┐
+│                     WAFT META-FRAMEWORK                      │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│  ┌────────────────┐  ┌────────────────┐  ┌──────────────┐  │
+│  │  CLI Layer     │  │  API Layer     │  │  UI Layer    │  │
+│  │  (Typer)       │  │  (FastAPI)     │  │  (Svelte)    │  │
+│  └────────┬───────┘  └────────┬───────┘  └──────┬───────┘  │
+│           │                   │                  │          │
+│           └───────────────────┼──────────────────┘          │
+│                               ▼                              │
+│  ┌───────────────────────────────────────────────────────┐  │
+│  │              CORE SYSTEMS                             │  │
+│  ├───────────────────────────────────────────────────────┤  │
+│  │                                                        │  │
+│  │  • Memory Manager      → _pyrite structure            │  │
+│  │  • Substrate Manager   → uv environment               │  │
+│  │  • Empirica Manager    → Epistemic tracking           │  │
+│  │  • Gamification        → D&D progression              │  │
+│  │  • TavernKeeper        → RPG narrative system         │  │
+│  │  • Decision Engine     → WSM decision analysis        │  │
+│  │  • TheObserver         → JSONL event logging          │  │
+│  │                                                        │  │
+│  └───────────────────────────────────────────────────────┘  │
+│                               │                              │
+│                               ▼                              │
+│  ┌───────────────────────────────────────────────────────┐  │
+│  │              AGENT LAYER                              │  │
+│  ├───────────────────────────────────────────────────────┤  │
+│  │                                                        │  │
+│  │  BaseAgent (OODA Cycle)                               │  │
+│  │    ├── Genome Management                              │  │
+│  │    ├── Inventory System                               │  │
+│  │    ├── Reproduction Logic                             │  │
+│  │    └── Traits/Archetypes                              │  │
+│  │                                                        │  │
+│  └───────────────────────────────────────────────────────┘  │
+│                               │                              │
+│                               ▼                              │
+│  ┌───────────────────────────────────────────────────────┐  │
+│  │              FITNESS TESTING                          │  │
+│  ├───────────────────────────────────────────────────────┤  │
+│  │                                                        │  │
+│  │  Scint Gym (Reality Fracture Detection)               │  │
+│  │    ├── Quest Generation                               │  │
+│  │    ├── Error Detection (4 types)                      │  │
+│  │    ├── Fitness Calculation                            │  │
+│  │    └── Survival/Death Classification                  │  │
+│  │                                                        │  │
+│  └───────────────────────────────────────────────────────┘  │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
+
+\end{verbatim}
+
+\subsubsection{Technology Stack}
+
+\textbf{Backend:}
+\begin{itemize}
+\item Python 3.10+
+\item Typer (CLI framework)
+\item FastAPI (API server)
+\item Pydantic (validation)
+\item Rich (terminal UI)
+\item uv (package management)
+\end{enumerate}
+
+\textbf{Frontend:}
+\begin{itemize}
+\item SvelteKit (web dashboard)
+\item Tailwind CSS
+\item TypeScript
+\end{enumerate}
+
+\textbf{Data:}
+\begin{itemize}
+\item JSONL (event logging)
+\item SQLite (analytics)
+\item Plain text files (everything else)
+\end{enumerate}
+
+\subsubsection{Key Components}
+
+\begin{enumerate}
+\item \textbf{Memory Manager}: Manages \texttt{_pyrite/} directory structure
+\item \textbf{Substrate Manager}: Manages uv environment and dependencies
+\item \textbf{Empirica Manager}: Epistemic state tracking and session management
+\item \textbf{Gamification Manager}: D&D-style progression and character stats
+\item \textbf{TavernKeeper}: RPG game master for narrative generation
+\item \textbf{Decision Engine}: Weighted Sum Model for decision analysis
+\item \textbf{TheObserver}: Scientific logging singleton for event tracking
+\item \textbf{BaseAgent}: Self-modifying agent with OODA cycle
+\item \textbf{Scint Gym}: Reality Fracture Detection fitness testing
+\end{enumerate}
+
+---
+
+\subsection{Installation}
+
+\subsubsection{Using uv (Recommended)}
+
+\begin{verbatim}
+uv tool install waft
+
+\end{verbatim}
+
+\subsubsection{From Source}
+
+\begin{verbatim}
+git clone https://github.com/ctavolazzi/waft.git
+cd waft
+uv sync
+uv tool install --editable .
+
+\end{verbatim}
+
+\subsubsection{Requirements}
+
+\begin{itemize}
+\item Python 3.10+
+\item \texttt{uv} package manager (\href{https://github.com/astral-sh/uv}{install})
+\item \texttt{just} task runner (optional, \href{https://github.com/casey/just}{install})
+\end{enumerate}
+
+---
+
+\subsection{Quick Start}
+
+\begin{verbatim}
+\section{1. Install WAFT}
+uv tool install waft
+
+\section{2. Create new laboratory}
+waft new my_laboratory
+
+\section{3. Navigate to project}
+cd my_laboratory
+
+\section{4. Verify setup}
+waft verify
+
+\section{5. Create session}
+waft session create
+
+\section{6. Start building agents!}
+
+\end{verbatim}
+
+---
+
+\subsection{Resources}
+
+\begin{itemize}
+\item \textbf{Repository}: https://github.com/ctavolazzi/waft
+\item \textbf{Documentation}: \texttt{/docs} directory
+\item \textbf{Examples}: \texttt{/examples} directory
+\item \textbf{Issues}: https://github.com/ctavolazzi/waft/issues
+\item \textbf{License}: MIT
+\end{enumerate}
+
+---
+
+\subsection{Conclusion}
+
+WAFT is a comprehensive framework for directed evolution of self-modifying AI agents. It combines:
+
+\begin{itemize}
+\item \textbf{Scientific rigor} with complete lineage tracking
+\item \textbf{Evolutionary processes} with fitness-based selection
+\item \textbf{Practical tooling} with project scaffolding and memory management
+\item \textbf{Engaging gamification} with D&D-style progression
+\item \textbf{Epistemic awareness} with knowledge tracking
+\end{enumerate}
+
+\textbf{Remember}: "Don't just build agents. Breed them."
+
+The ultimate goal is to observe a "God-Head" agent emerge from thousands of generations of directed mutation and selection, producing rigorous scientific data for understanding the physics of artificial cognition.
+
+---
+
+---
+
+\section{Part C: How to Use WAFT}
+
+<div class="note">
+    <div class="note-title">TELEPORT MASSIVE OPERATIONAL MANUAL</div>
+    <p><strong>Document ID:</strong> TM-OPMAN-WAFT-001<br>
+    <strong>Classification:</strong> INTERNAL USE ONLY<br>
+    <strong>Tagline:</strong> Making the Impossible, Inevitable™<br>
+    <strong>Facility:</strong> Site-Delta-9 (WAFT Development Laboratory)</p>
+</div>
+
+\subsection{Getting Started}
+
+\subsubsection{Installation Protocol}
+
+\textbf{Step 1: Substrate Preparation}
+
+\begin{verbatim}
+\section{Install WAFT using uv (recommended)}
+uv tool install waft
+
+\section{Verify installation}
+waft --version
+
+\end{verbatim}
+
+<div class="caution">
+    <div class="caution-title">TELEPORT MASSIVE Protocol</div>
+    <p>Ensure Python 3.10+ is installed. WAFT requires uv package manager for optimal performance. 
+    Installation typically completes in 30-60 seconds. Monitor for any quantum field fluctuations 
+    during installation.</p>
+</div>
+
+\textbf{Step 2: Laboratory Initialization}
+
+\begin{verbatim}
+\section{Create new evolutionary laboratory}
+waft new my_laboratory
+
+\section{Navigate to project}
+cd my_laboratory
+
+\section{Verify substrate integrity}
+waft verify
+
+\end{verbatim}
+
+\textbf{Step 3: Epistemic Session Activation}
+
+\begin{verbatim}
+\section{Initialize epistemic tracking}
+waft session create
+
+\section{Load project context and display dashboard}
+waft session bootstrap
+
+\end{verbatim}
+
+<div class="note">
+    <div class="note-title">Site-Delta-9 Best Practice</div>
+    <p>Always create a session before beginning work. This enables complete lineage tracking 
+    and epistemic state monitoring. The Flight Recorder will log all evolutionary actions 
+    for scientific analysis.</p>
+</div>
+
+\subsubsection{First Agent Deployment}
+
+\textbf{Creating Your Genesis Agent:}
+
+\begin{verbatim}
+\section{src/agents.py}
+from waft.core.agent import BaseAgent
+
+class RefactorAgent(BaseAgent):
+    # Genesis agent for code refactoring tasks
+    
+    def \textbf{init}(self):
+        super().\textbf{init}(
+            name="RefactorAgent",
+            archetype="builder",
+            genome_id=None  # Will be generated automatically
+        )
+    
+    def observe(self):
+        # Gather environment data
+        return {"codebase_state": "analyzed"}
+    
+    def decide(self, observations):
+        # Make decisions based on observations
+        return {"action": "refactor", "target": "legacy_code.py"}
+    
+    def act(self, decision):
+        # Execute decision
+        # Agent modifies code here
+        pass
+    
+    def reflect(self, outcome):
+        # Learn from outcomes
+        # Update internal state
+        pass
+
+\end{verbatim}
+
+\textbf{Deploying the Agent:}
+
+\begin{verbatim}
+\section{Spawn initial variant}
+waft spawn --agent RefactorAgent --mutation initial_config.json
+
+\section{Evaluate fitness}
+waft eval --agent RefactorAgent
+
+\section{Check results}
+waft stats
+waft chronicle
+
+\end{verbatim}
+
+---
+
+\subsection{Daily Workflows}
+
+\subsubsection{Morning Protocol: Project Bootstrap}
+
+\textbf{Standard Morning Routine:}
+
+\begin{verbatim}
+\section{1. Navigate to project}
+cd my_laboratory
+
+\section{2. Check project status}
+waft info
+
+\section{3. Load epistemic context}
+waft session bootstrap
+
+\section{4. Review overnight changes}
+waft chronicle --limit 20
+
+\section{5. Check epistemic state}
+waft assess
+
+\end{verbatim}
+
+<div class="procedure">
+    <div class="step">
+        <strong>Step 1:</strong> Verify substrate integrity with <code>waft verify</code>
+    </div>
+    <div class="step">
+        <strong>Step 2:</strong> Load session context to restore epistemic state
+    </div>
+    <div class="step">
+        <strong>Step 3:</strong> Review Flight Recorder logs for overnight agent activity
+    </div>
+    <div class="step">
+        <strong>Step 4:</strong> Check moon phase indicator for epistemic health
+    </div>
+</div>
+
+\subsubsection{Development Workflow: Agent Evolution Cycle}
+
+\textbf{Complete Evolutionary Cycle:}
+
+\begin{verbatim}
+\section{Phase 1: Spawn Variants}
+waft spawn --agent RefactorAgent --mutation improved_prompt.json
+waft spawn --agent RefactorAgent --mutation better\textit{error}handling.json
+waft spawn --agent RefactorAgent --mutation optimized_algorithm.json
+
+\section{Phase 2: Fitness Evaluation}
+waft eval --agent RefactorAgent --batch-size 3
+
+\section{Phase 3: Evolutionary Selection}
+waft evolve --agent RefactorAgent --generation 5
+
+\section{Phase 4: Analysis}
+waft stats
+waft chronicle
+waft assess
+
+\end{verbatim}
+
+<div class="warning">
+    <div class="warning-title">TELEPORT MASSIVE Safety Protocol</div>
+    <p>Always run safety gates before major evolutionary steps. Use <code>waft check</code> 
+    to verify operations are safe. Agents with fitness < 0.5 are automatically marked as 
+    DEATH and will not continue evolving.</p>
+</div>
+
+\subsubsection{Documentation Workflow: Self-Documentation}
+
+\textbf{WAFT Documenting Itself:}
+
+\begin{verbatim}
+from waft import PDF
+
+\section{Generate project documentation}
+PDF.from_template(
+    template="field_guide",
+    title="My Project Documentation",
+    content=project\textit{docs}html
+).save("docs/project_guide.pdf")
+
+\section{Generate scientific paper}
+PDF.scientific_paper(
+    title="Agent Evolution Study",
+    abstract="We studied agent evolution...",
+    content=research_content
+).save("research/evolution_study.pdf")
+
+\end{verbatim}
+
+<div class="note">
+    <div class="note-title">Site-Delta-9 Innovation</div>
+    <p>WAFT can observe its own codebase and generate documentation about itself. This 
+    recursive self-documentation creates a feedback loop where documentation informs 
+    development, which creates new features, which are documented using WAFT itself.</p>
+</div>
+
+\subsubsection{Epistemic Tracking Workflow}
+
+\textbf{Logging Knowledge:}
+
+\begin{verbatim}
+\section{Log discoveries}
+waft finding log "OAuth2 uses token refresh pattern" --impact 0.8
+waft finding log "Database connection pooling improves performance" --impact 0.9
+
+\section{Log knowledge gaps}
+waft unknown log "Need to investigate token expiration handling"
+waft unknown log "Unclear how to handle rate limiting"
+
+\section{Check epistemic state}
+waft assess
+
+\section{View dashboard}
+waft dashboard
+
+\end{verbatim}
+
+\textbf{Safety Gates:}
+
+\begin{verbatim}
+\section{Before major changes}
+waft check
+
+\section{Returns: PROCEED, HALT, BRANCH, or REVISE}
+\section{- PROCEED: Safe to continue autonomously}
+\section{- HALT: Requires human approval}
+\section{- BRANCH: Spawn investigation before proceeding}
+\section{- REVISE: Modify approach and resubmit}
+
+\end{verbatim}
+
+---
+
+\subsection{Advanced Techniques}
+
+\subsubsection{Multi-Agent Coordination}
+
+\textbf{Coordinating Multiple Agents:}
+
+\begin{verbatim}
+\section{Spawn specialized agents}
+waft spawn --agent RefactorAgent --mutation refactor_focus.json
+waft spawn --agent TestAgent --mutation test_focus.json
+waft spawn --agent DocAgent --mutation doc_focus.json
+
+\section{Evaluate all agents}
+waft eval --agent RefactorAgent
+waft eval --agent TestAgent
+waft eval --agent DocAgent
+
+\section{Select best variant for each}
+waft evolve --agent RefactorAgent
+waft evolve --agent TestAgent
+waft evolve --agent DocAgent
+
+\end{verbatim}
+
+<div class="caution">
+    <div class="caution-title">TELEPORT MASSIVE Multi-Agent Protocol</div>
+    <p>When coordinating multiple agents, ensure they don't conflict. Use the Flight Recorder 
+    to track interactions. Monitor fitness scores to identify which agent combinations work best 
+    together.</p>
+</div>
+
+\subsubsection{Custom Fitness Functions}
+
+\textbf{Creating Custom Scint Types:}
+
+\begin{verbatim}
+\section{Define custom Scint type}
+from waft.gym.scint import ScintType, ScintQuest
+
+class CUSTOM_SCINT(ScintType):
+    # Custom reality fracture type
+    name = "custom_scint"
+    description = "Tests custom functionality"
+
+\section{Create custom quest}
+quest = ScintQuest(
+    scint\textit{type=CUSTOM}SCINT,
+    scenario="Test scenario with intentional errors",
+    expected_stabilization="Correct error handling"
+)
+
+\section{Evaluate agent}
+fitness = agent.evaluate_fitness([quest])
+
+\end{verbatim}
+
+\subsubsection{Phylogenetic Analysis}
+
+\textbf{Analyzing Agent Lineage:}
+
+\begin{verbatim}
+\section{Load Flight Recorder data}
+from waft.core.science.observer import TheObserver
+
+observer = TheObserver()
+lineage = observer.get\textit{lineage(genome}id="a4c426d8...")
+
+\section{Analyze evolutionary path}
+for event in lineage:
+    print(f"Generation {event.generation}: {event.event_type}")
+    print(f"Fitness: {event.fitness.overall}")
+    print(f"Mutations: {event.payload.mutations}")
+
+\end{verbatim}
+
+<div class="note">
+    <div class="note-title">Site-Delta-9 Research Capability</div>
+    <p>The Flight Recorder enables complete phylogenetic tree reconstruction. This allows 
+    scientific analysis of which mutations improve fitness, how agents converge on optimal 
+    solutions, and why certain lineages become evolutionary dead ends.</p>
+</div>
+
+\subsubsection{Hot-Swapping Genomes}
+
+\textbf{Adopting Better Variants Mid-Execution:}
+
+\begin{verbatim}
+\section{Agent discovers better variant}
+if variant\textit{fitness > current}fitness:
+    agent.hot\textit{swap}genome(variant\textit{genome}id)
+    print(f"Evolved to genome {variant\textit{genome}id}")
+    print(f"Fitness improved: {current\textit{fitness} → {variant}fitness}")
+
+\end{verbatim}
+
+---
+
+\subsection{Best Practices}
+
+\subsubsection{TELEPORT MASSIVE Operational Standards}
+
+<div class="checklist">
+    <div class="checklist-title">Site-Delta-9 Best Practices</div>
+    <ul>
+        <li>✅ Always create epistemic sessions before work</li>
+        <li>✅ Run safety gates before major evolutionary steps</li>
+        <li>✅ Log all discoveries and knowledge gaps</li>
+        <li>✅ Monitor fitness scores regularly</li>
+        <li>✅ Review Flight Recorder logs weekly</li>
+        <li>✅ Use version control for all code changes</li>
+        <li>✅ Document agent behavior and mutations</li>
+        <li>✅ Test agents in Scint Gym before deployment</li>
+    </ul>
+</div>
+
+\subsubsection{Agent Design Principles}
+
+\textbf{1. Single Responsibility}
+\begin{itemize}
+\item Each agent should have one clear purpose
+\item Avoid agents that do too many things
+\item Specialized agents evolve faster
+\end{enumerate}
+
+\textbf{2. Observable Behavior}
+\begin{itemize}
+\item All actions should be logged
+\item Fitness metrics should be measurable
+\item Mutations should be traceable
+\end{enumerate}
+
+\textbf{3. Evolutionary Fitness}
+\begin{itemize}
+\item Design agents that can improve through mutation
+\item Avoid hard-coded solutions
+\item Enable genetic variation
+\end{enumerate}
+
+\textbf{4. Safety First}
+\begin{itemize}
+\item Always run safety gates
+\item Test in Scint Gym before production
+\item Monitor for harmful mutations
+\end{enumerate}
+
+<div class="warning">
+    <div class="warning-title">TELEPORT MASSIVE Safety Protocol</div>
+    <p>Agents with fitness < 0.5 are automatically marked as DEATH. This prevents 
+    evolutionary dead ends from consuming resources. Always monitor fitness scores and 
+    intervene if agents are trending toward DEATH.</p>
+</div>
+
+\subsubsection{Memory Management}
+
+\textbf{Organizing _pyrite Structure:}
+
+\begin{verbatim}
+_pyrite/
+├── active/          # Current work (keep < 10 items)
+│   ├── task_001.md
+│   └── task_002.md
+├── backlog/         # Future work (prioritize regularly)
+│   ├── idea_001.md
+│   └── idea_002.md
+├── standards/       # Project standards (reference only)
+│   ├── code_style.md
+│   └── architecture.md
+└── gym_logs/        # Fitness results (archive monthly)
+    └── evaluation_*.jsonl
+
+\end{verbatim}
+
+\textbf{Best Practices:}
+\begin{itemize}
+\item Keep \texttt{active/} focused (max 10 items)
+\item Review \texttt{backlog/} weekly
+\item Archive \texttt{gym_logs/} monthly
+\item Update \texttt{standards/} as project evolves
+\end{enumerate}
+
+---
+
+\subsection{Troubleshooting}
+
+\subsubsection{Common Issues and Solutions}
+
+\textbf{Issue: Agent Fitness Declining}
+
+\begin{verbatim}
+\section{Check recent mutations}
+waft chronicle --agent RefactorAgent --limit 20
+
+\section{Review Flight Recorder logs}
+cat _pyrite/science/laboratory.jsonl | grep RefactorAgent | tail -20
+
+\section{Spawn new variants with different mutations}
+waft spawn --agent RefactorAgent --mutation conservative_approach.json
+
+\end{verbatim}
+
+<div class="caution">
+    <div class="caution-title">TELEPORT MASSIVE Diagnostic Protocol</div>
+    <p>If agent fitness consistently declines, the mutation strategy may be too aggressive. 
+    Try spawning variants with more conservative mutations. Review the phylogenetic tree to 
+    identify which mutations caused the decline.</p>
+</div>
+
+\textbf{Issue: Epistemic State Unclear}
+
+\begin{verbatim}
+\section{Check epistemic vectors}
+waft assess --history
+
+\section{Review findings and unknowns}
+waft session status
+
+\section{Log missing knowledge explicitly}
+waft unknown log "Specific knowledge gap description"
+
+\end{verbatim}
+
+\textbf{Issue: Project Verification Fails}
+
+\begin{verbatim}
+\section{Check project structure}
+waft verify --verbose
+
+\section{Reinitialize if needed}
+waft init
+
+\section{Verify dependencies}
+waft sync
+
+\end{verbatim}
+
+\textbf{Issue: PDF Generation Errors}
+
+\begin{verbatim}
+\section{Check WeasyPrint installation}
+python3 -c "import weasyprint; print('OK')"
+
+\section{Try different template}
+PDF.from\textit{template(template="lab}notes", ...)
+
+\section{Use evolution system instead}
+PDF.from\textit{content(content=markdown}content, style="clinical_standard")
+
+\end{verbatim}
+
+---
+
+\subsection{Real-World Examples}
+
+\subsubsection{Example 1: Code Refactoring Agent}
+
+\textbf{Scenario:} Automatically refactor legacy code while maintaining functionality.
+
+\begin{verbatim}
+\section{1. Create agent}
+waft new refactor_laboratory
+cd refactor_laboratory
+
+\section{2. Define RefactorAgent}
+\section{(see First Agent Deployment section)}
+
+\section{3. Spawn variants}
+waft spawn --agent RefactorAgent --mutation improved\textit{ast}parsing.json
+waft spawn --agent RefactorAgent --mutation better\textit{naming}conventions.json
+
+\section{4. Evaluate fitness}
+waft eval --agent RefactorAgent
+
+\section{5. Evolve to best variant}
+waft evolve --agent RefactorAgent
+
+\section{6. Deploy evolved agent}
+\section{Agent now has improved refactoring capabilities}
+
+\end{verbatim}
+
+<div class="note">
+    <div class="note-title">Site-Delta-9 Success Story</div>
+    <p>RefactorAgent evolved from 0.65 fitness to 0.89 fitness over 12 generations. 
+    Key mutations included improved AST parsing, better naming convention detection, and 
+    enhanced code structure analysis. The agent now handles 40% more code patterns than 
+    the original variant.</p>
+</div>
+
+\subsubsection{Example 2: Documentation Generator}
+
+\textbf{Scenario:} Automatically generate comprehensive project documentation.
+
+\begin{verbatim}
+from waft import PDF
+from waft.reflection import ReflectionSystem
+
+\section{1. Observe codebase}
+reflection = ReflectionSystem()
+gaps = reflection.analyze\textit{documentation}gaps()
+
+\section{2. Generate documentation}
+for gap in gaps:
+    content = generate\textit{doc}content(gap)
+    PDF.from_template(
+        template="field_guide",
+        title=gap.title,
+        content=content
+    ).save(f"docs/{gap.filename}")
+
+\section{3. Document the documentation system}
+PDF.from_template(
+    template="lab_notes",
+    title="Documentation Generation Process",
+    content=reflection.to_markdown()
+).save("docs/doc\textit{generation}process.pdf")
+
+\end{verbatim}
+
+\subsubsection{Example 3: Test Generation Agent}
+
+\textbf{Scenario:} Automatically generate test cases for code.
+
+\begin{verbatim}
+\section{1. Create TestAgent}
+waft spawn --agent TestAgent --mutation unit\textit{test}focus.json
+
+\section{2. Evaluate on codebase}
+waft eval --agent TestAgent --quest-type LOGIC_FRACTURE
+
+\section{3. Evolve based on test coverage metrics}
+waft evolve --agent TestAgent --generation 10
+
+\section{4. Deploy evolved TestAgent}
+\section{Agent now generates comprehensive test suites}
+
+\end{verbatim}
+
+<div class="recommendation">
+    <div class="recommendation-title">TELEPORT MASSIVE Recommendation</div>
+    <p>Start with simple agents and let them evolve. Don't try to build the perfect agent 
+    from scratch. Instead, create a basic agent, spawn variants, evaluate fitness, and let 
+    evolution find the optimal solution. This is the WAFT way: making the impossible, 
+    inevitable.</p>
+</div>
+
+---
+
+\subsection{Conclusion: Making the Impossible, Inevitable™}
+
+WAFT enables you to breed AI agents that evolve, adapt, and improve. Through the Three Pillars—the Substrate, the Physics, and the Flight Recorder—WAFT provides a complete system for directed evolution of self-modifying AI agents.
+
+\textbf{Remember:}
+\begin{itemize}
+\item \textbf{Don't just build agents. Breed them.}
+\item \textbf{Let evolution find the optimal solution.}
+\item \textbf{Track everything for scientific analysis.}
+\item \textbf{Make the impossible, inevitable.}
+\end{enumerate}
+
+<div class="note">
+    <div class="note-title">TELEPORT MASSIVE Mission Statement</div>
+    <p>WAFT is not just a framework—it's a scientific instrument for studying the physics 
+    of artificial cognition. Every agent evolution, every mutation, every fitness evaluation 
+    contributes to our understanding of how AI can improve itself. The ultimate goal: observe 
+    a "God-Head" agent emerge from thousands of generations of directed mutation and selection.</p>
+</div>
+
+---
+
+\textbf{Generated}: January 18, 2026 at 08:59 PM  
+\textbf{WAFT Version}: 0.3.1-alpha  
+\textbf{Handbook Version}: 2.0  
+\textbf{Document ID}: TM-OPMAN-WAFT-001  
+\textbf{Classification}: INTERNAL USE ONLY  
+\textbf{Facility}: Site-Delta-9 (WAFT Development Laboratory)  
+\textbf{Tagline}: Making the Impossible, Inevitable™
+
+
+
+\end{document}

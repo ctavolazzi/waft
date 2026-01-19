@@ -23,6 +23,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Target**: Stable Electron app for v1.0.0 - the first production-ready desktop application for WAFT.
 
+## [0.9.3] - 2026-01-19
+
+### Added
+
+#### The Reasoner (God of Reasoning Traces) ⭐ NEW
+- **Pantheon Integration**: New god for tracking reasoning traces and cognitive processes
+- **Reasoning Trace System**: Complete system for capturing and analyzing AI reasoning patterns
+- **Work Effort**: Integrated into pantheon system
+
+#### WAFT Metrics System ⭐ NEW
+- **v0.0.1**: Initial metrics collection system
+- **v0.0.2**: Enhanced metrics with additional tracking capabilities
+- **System Monitoring**: Comprehensive data collection for system health and performance
+
+#### GitHub God (MCP Server Tracking) ⭐ NEW
+- **MCP Integration**: Tracking and monitoring of Model Context Protocol servers
+- **Server Health**: Real-time status monitoring for MCP servers
+- **Integration**: Seamless integration with existing pantheon system
+
+#### Typst Template Infrastructure
+- **FHICT Document Template**: Initialized and documented (v1.2.1)
+- **Biz Report Template**: Initialized and documented (v0.3.1)
+- **Template Documentation**: Comprehensive guides for both templates
+- **Integration Strategy**: Roadmap for WAFT template system integration
+
+#### Enhanced Commands
+- **Midday Dossier**: Added prose abstract and summary generation
+- **Command Enhancements**: Various CLI command improvements
+
+### Changed
+
+- **Version Consistency**: Fixed version mismatch between `pyproject.toml` (0.4.0-alpha) and `src/waft/__init__.py` (0.9.2) - both now at 0.9.3
+- **Documentation**: Extensive updates to work efforts and devlog
+- **Pantheon System**: Enhanced with new gods and tracking capabilities
+
+### Fixed
+
+- **Version Sync**: Resolved long-standing version inconsistency in project files
+
 ## [0.9.1] - 2026-01-16
 
 ### Changed

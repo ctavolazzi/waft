@@ -1,0 +1,906 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WAFT Session Overview | WAFT</title>
+    <style>
+        /* ============================================
+           WAFT Multipurpose Template
+           Clean, functional, information-first design
+           ============================================ */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #ffffff;
+            padding: 0;
+            font-size: 15px;
+        }
+        
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0;
+        }
+        
+        /* Content Wrapper - supports sidebar layout */
+        .content-wrapper {
+            display: flex;
+            min-height: calc(100vh - 200px);
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 250px;
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-right: 1px solid #e5e5e5;
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+        
+        .sidebar h3 {
+            margin-top: 0;
+            font-size: 1.1rem;
+            color: #000;
+            margin-bottom: 1rem;
+        }
+        
+        .sidebar nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar nav li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .sidebar nav a {
+            color: #0066cc;
+            text-decoration: none;
+            display: block;
+            padding: 4px 0;
+        }
+        
+        .sidebar nav a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            padding: 2rem;
+            flex: 1;
+            max-width: calc(100% - 250px);
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+            .main-content {
+                margin-left: 0;
+                max-width: 100%;
+            }
+        }
+        
+        /* Header - Minimal and functional */
+        .header {
+            border-bottom: 2px solid #e5e5e5;
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .header h1 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 0.25rem;
+            letter-spacing: -0.02em;
+        }
+        
+        .header .meta {
+            font-size: 0.875rem;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+        
+        .header .meta-item {
+            display: inline-block;
+            margin-right: 1rem;
+        }
+        
+        /* Content Sections */
+        .section {
+            margin-bottom: 2.5rem;
+        }
+        
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e5e5e5;
+        }
+        
+        /* Typography */
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #000;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #000;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        h3 {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #333;
+            margin-top: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        li {
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+        
+        /* Lists - Clean and scannable */
+        .list-item {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .list-item:last-child {
+            border-bottom: none;
+        }
+        
+        .list-item-title {
+            font-weight: 500;
+            color: #000;
+            margin-bottom: 0.25rem;
+        }
+        
+        .list-item-meta {
+            font-size: 0.875rem;
+            color: #666;
+        }
+        
+        /* Tables - Clean and readable */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.9375rem;
+        }
+        
+        th {
+            text-align: left;
+            font-weight: 600;
+            color: #000;
+            padding: 0.75rem;
+            border-bottom: 2px solid #e5e5e5;
+            background: #fafafa;
+        }
+        
+        td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f0f0f0;
+            color: #333;
+        }
+        
+        tr:hover {
+            background: #fafafa;
+        }
+        
+        /* Code */
+        code {
+            font-family: 'SF Mono', 'Monaco', 'Menlo', 'Consolas', monospace;
+            font-size: 0.875em;
+            background: #f5f5f5;
+            padding: 0.125rem 0.375rem;
+            border-radius: 3px;
+            color: #d73a49;
+        }
+        
+        pre {
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border: 1px solid #e5e5e5;
+        }
+        
+        pre code {
+            background: transparent;
+            padding: 0;
+            color: #333;
+        }
+        
+        /* Badges/Tags - Subtle and functional */
+        .badge {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            background: #f0f0f0;
+            color: #666;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .badge-proven { background: #d4edda; color: #155724; border-color: #c3e6cb; }
+        .badge-disproven { background: #f8d7da; color: #721c24; border-color: #f5c6cb; }
+        .badge-inconclusive { background: #fff3cd; color: #856404; border-color: #ffeaa7; }
+        .badge-completed { background: #d4edda; color: #155724; border-color: #c3e6cb; }
+        .badge-active { background: #cce5ff; color: #004085; border-color: #b3d9ff; }
+        .badge-paused { background: #fff3cd; color: #856404; border-color: #ffeaa7; }
+        .badge-open { background: #e9ecef; color: #495057; border-color: #dee2e6; }
+        
+        /* Links */
+        a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Footer - Minimal */
+        .footer {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e5e5e5;
+            font-size: 0.875rem;
+            color: #666;
+            text-align: center;
+        }
+        
+        /* Grid/Stats - For data visualization */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .stat-card {
+            padding: 1rem;
+            background: #fafafa;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #000;
+        }
+        
+        .stat-label {
+            font-size: 0.875rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+        
+        /* Print optimizations */
+        @media print {
+            body {
+                background: white;
+            }
+            
+            .container {
+                padding: 0;
+            }
+            
+            .section {
+                page-break-inside: avoid;
+            }
+            
+            h1, h2 {
+                page-break-after: avoid;
+            }
+        }
+        
+        /* PDF-specific page rules */
+        @page {
+            size: letter;
+            margin: 0.75in;
+            
+            @top-right {
+                content: "WAFT Session Overview";
+                font-size: 9pt;
+                color: #666;
+            }
+            
+            @bottom-center {
+                content: "Page " counter(page);
+                font-size: 9pt;
+                color: #666;
+            }
+        }
+        
+        @page :first {
+            @top-right { content: none; }
+            @bottom-center { content: none; }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            table {
+                font-size: 0.875rem;
+            }
+            
+            th, td {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>WAFT Session Overview</h1>
+            <div class="meta">
+                <span class="meta-item">Generated: 2026-01-17 07:08:42</span>
+                <span class="meta-item">WAFT</span>
+            </div>
+        </div>
+        
+        <div class="content-wrapper">
+            
+        <style>
+            /* Dark Mode Override for Show-Me - Astigmatism-Friendly */
+            /* Avoids pure black (#000) and pure white (#fff) to prevent halation */
+            body {
+                background: #1a1a1a !important; /* Dark gray instead of pure black */
+                color: #d5d5d5 !important; /* Soft light gray instead of white */
+                line-height: 1.7 !important; /* Wider line spacing for readability */
+            }
+            /* Top navigation bar instead of sidebar */
+            nav[style*="position: sticky"] {
+                background: #222222 !important;
+                border-bottom: 1px solid #333333 !important;
+            }
+            .main-content {
+                background: #1a1a1a !important;
+                color: #d5d5d5 !important;
+                line-height: 1.7 !important; /* Improved line spacing */
+                margin-left: 0 !important;
+                max-width: 100% !important;
+                padding-top: 0 !important;
+            }
+            /* Remove sidebar styles if they exist */
+            .sidebar {
+                display: none !important;
+            }
+            .header {
+                border-bottom: 2px solid #333333 !important;
+                padding-bottom: 1.5rem !important;
+                margin-bottom: 2rem !important;
+                background: linear-gradient(to bottom, #222222 0%, transparent 100%) !important;
+                padding-top: 2rem !important; /* Extra top padding to prevent cutoff */
+                margin-top: 0 !important;
+            }
+            .header h1 {
+                color: #e8e8e8 !important; /* Soft white, not pure white */
+                font-weight: 700 !important;
+                font-size: 2rem !important;
+                letter-spacing: -0.01em !important; /* Slightly less tight */
+                margin-bottom: 0.5rem !important;
+                text-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+            }
+            .header .meta {
+                color: #999999 !important; /* Medium gray */
+                font-size: 0.875rem !important;
+                opacity: 0.9 !important;
+            }
+            .header .meta-item {
+                color: #aaaaaa !important;
+            }
+            h1 {
+                color: #e8e8e8 !important; /* Soft white */
+                font-weight: 700 !important;
+                font-size: 2rem !important;
+                margin-top: 0 !important;
+                margin-bottom: 1.5rem !important;
+                letter-spacing: -0.01em !important;
+                line-height: 1.4 !important;
+            }
+            h2 {
+                color: #e0e0e0 !important; /* Soft light gray */
+                border-bottom: 2px solid #333333 !important;
+                padding-bottom: 0.5rem !important;
+                margin-top: 2.5rem !important;
+                margin-bottom: 1.25rem !important;
+                font-weight: 600 !important;
+                letter-spacing: 0.2px !important; /* Slightly wider spacing */
+                line-height: 1.5 !important;
+            }
+            h3, h4 {
+                color: #d8d8d8 !important; /* Soft gray */
+                letter-spacing: 0.1px !important;
+                line-height: 1.5 !important;
+            }
+            p, li {
+                color: #d5d5d5 !important; /* Soft light gray */
+                line-height: 1.7 !important; /* Wider line spacing */
+                letter-spacing: 0.2px !important; /* Slightly wider letter spacing */
+            }
+            table {
+                background: #222222 !important; /* Slightly lighter than body */
+                border: 1px solid #333333 !important;
+            }
+            th {
+                background: #2a2a2a !important; /* Dark gray, not black */
+                color: #e5e5e5 !important; /* Soft white */
+                border-bottom: 2px solid #333333 !important;
+                border: 1px solid #333333 !important;
+                letter-spacing: 0.3px !important;
+            }
+            td {
+                color: #d5d5d5 !important; /* Soft light gray */
+                border-bottom: 1px solid #333333 !important;
+                border: 1px solid #333333 !important;
+                background: #222222 !important;
+                letter-spacing: 0.2px !important;
+                line-height: 1.6 !important;
+            }
+            tr:nth-child(even) td {
+                background: #252525 !important;
+            }
+            tr:hover td {
+                background: #2d2d2d !important;
+            }
+            code {
+                background: #252525 !important; /* Dark gray */
+                color: #d8d8d8 !important; /* Soft light gray */
+                border: 1px solid #333333 !important;
+                letter-spacing: 0.3px !important;
+                padding: 0.2em 0.4em !important;
+            }
+            pre {
+                background: #1f1f1f !important; /* Dark gray, not pure black */
+                color: #d5d5d5 !important; /* Soft light gray */
+                border: 1px solid #333333 !important;
+                line-height: 1.6 !important;
+                letter-spacing: 0.2px !important;
+            }
+            pre code {
+                color: #d5d5d5 !important;
+                background: transparent !important;
+                border: none !important;
+            }
+            a {
+                color: #8a9eff !important;
+                letter-spacing: 0.2px !important;
+            }
+            a:hover {
+                color: #a0b0ff !important;
+            }
+            .footer {
+                border-top: 1px solid #333333 !important;
+                color: #999999 !important; /* Medium gray */
+            }
+            /* Override any light backgrounds in markdown-generated content */
+            div[style*="background"] {
+                background: #222222 !important; /* Dark gray, not black */
+            }
+            /* Make sure stat cards are dark gray, not black */
+            div[style*="grid-template-columns"] > div {
+                background: #252525 !important; /* Dark gray */
+                border: 1px solid #333333 !important;
+            }
+            /* Polish the container */
+            .container {
+                background: #1a1a1a !important; /* Dark gray background */
+            }
+            /* Better spacing for sections */
+            .section {
+                margin-bottom: 3rem !important;
+            }
+            /* Improve link visibility in dark mode */
+            .sidebar nav a:visited {
+                color: #b5b5b5 !important;
+            }
+            /* Avoid italics - can be difficult for astigmatism */
+            em, i {
+                font-style: normal !important;
+                font-weight: 500 !important; /* Use weight instead of italic */
+            }
+            /* Ensure no pure white text anywhere */
+            * {
+                color: inherit !important;
+            }
+            /* Wider spacing for better readability */
+            ul, ol {
+                line-height: 1.8 !important;
+                letter-spacing: 0.1px !important;
+            }
+        </style>
+        
+        <nav style="background: #222222; border-bottom: 1px solid #333333; padding: 1rem 2rem; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+            <div style="display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto;">
+                <div style="display: flex; gap: 2rem; align-items: center; flex-wrap: wrap;">
+                    <a href="#quick-stats" style="color: #b5b5b5; text-decoration: none; font-size: 0.9rem; letter-spacing: 0.2px; transition: color 0.2s;" onmouseover="this.style.color='#8a9eff'" onmouseout="this.style.color='#b5b5b5'">📈 Quick Stats</a>
+                    <a href="#work-efforts" style="color: #b5b5b5; text-decoration: none; font-size: 0.9rem; letter-spacing: 0.2px; transition: color 0.2s;" onmouseover="this.style.color='#8a9eff'" onmouseout="this.style.color='#b5b5b5'">📋 Work Efforts</a>
+                    <a href="#latex-templates" style="color: #b5b5b5; text-decoration: none; font-size: 0.9rem; letter-spacing: 0.2px; transition: color 0.2s;" onmouseover="this.style.color='#8a9eff'" onmouseout="this.style.color='#b5b5b5'">📄 Templates</a>
+                    <a href="#librarian-catalog" style="color: #b5b5b5; text-decoration: none; font-size: 0.9rem; letter-spacing: 0.2px; transition: color 0.2s;" onmouseover="this.style.color='#8a9eff'" onmouseout="this.style.color='#b5b5b5'">📚 Catalog</a>
+                    <a href="#recent-experiments" style="color: #b5b5b5; text-decoration: none; font-size: 0.9rem; letter-spacing: 0.2px; transition: color 0.2s;" onmouseover="this.style.color='#8a9eff'" onmouseout="this.style.color='#b5b5b5'">🔬 Experiments</a>
+                    <a href="#recent-proof-cases" style="color: #b5b5b5; text-decoration: none; font-size: 0.9rem; letter-spacing: 0.2px; transition: color 0.2s;" onmouseover="this.style.color='#8a9eff'" onmouseout="this.style.color='#b5b5b5'">🔍 Proof Cases</a>
+                    <a href="#reasoning-trace" style="color: #b5b5b5; text-decoration: none; font-size: 0.9rem; letter-spacing: 0.2px; transition: color 0.2s;" onmouseover="this.style.color='#8a9eff'" onmouseout="this.style.color='#b5b5b5'">🧠 Reasoning</a>
+                    <a href="#chat-context" style="color: #b5b5b5; text-decoration: none; font-size: 0.9rem; letter-spacing: 0.2px; transition: color 0.2s;" onmouseover="this.style.color='#8a9eff'" onmouseout="this.style.color='#b5b5b5'">💬 Context</a>
+                </div>
+                <button id="consult-oracle-btn" style="padding: 0.5rem 1.25rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #e8e8e8; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: transform 0.2s, box-shadow 0.2s; letter-spacing: 0.2px;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.2)';">
+                    🔮 Consult the Oracle
+                </button>
+            </div>
+        </nav>
+        <div class="main-content" style="margin-left: 0; max-width: 100%; padding: 2rem;">
+        <div id='quick-stats'></div>
+<h1>📊 WAFT Session Overview</h1>
+<div style="background: #222222; padding: 1.25rem; border-radius: 8px; margin-bottom: 2.5rem; border: 1px solid #333333; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+<p style="margin: 0; color: #d5d5d5; font-size: 0.95rem; line-height: 1.6; letter-spacing: 0.2px;"><strong style="color: #e5e5e5; font-weight: 600;">Generated:</strong> <span style="color: #aaaaaa;">2026-01-17 07:08:42</span></p>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<p style="margin: 0; color: #d5d5d5; font-size: 0.95rem; line-height: 1.6; letter-spacing: 0.2px;"><strong style="color: #e5e5e5; font-weight: 600;">Session Date:</strong> <span style="color: #aaaaaa;">2026-01-17</span></p>
+</div>
+</div>
+
+<h2>📈 Quick Stats</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin: 1rem 0;">
+<div style="background: #252525; padding: 1rem; border-radius: 4px; border: 1px solid #333333; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+<strong style="font-size: 1.5rem; display: block; color: #e5e5e5; letter-spacing: 0.3px;">0</strong>
+<span style="color: #999999; letter-spacing: 0.2px;">Work Efforts</span>
+</div>
+<div style="background: #252525; padding: 1rem; border-radius: 4px; border: 1px solid #333333; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+<strong style="font-size: 1.5rem; display: block; color: #e5e5e5; letter-spacing: 0.3px;">0</strong>
+<span style="color: #999999; letter-spacing: 0.2px;">Active</span>
+</div>
+<div style="background: #252525; padding: 1rem; border-radius: 4px; border: 1px solid #333333; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+<strong style="font-size: 1.5rem; display: block; color: #e5e5e5; letter-spacing: 0.3px;">0</strong>
+<span style="color: #999999; letter-spacing: 0.2px;">Completed</span>
+</div>
+<div style="background: #252525; padding: 1rem; border-radius: 4px; border: 1px solid #333333; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+<strong style="font-size: 1.5rem; display: block; color: #e5e5e5; letter-spacing: 0.3px;">11</strong>
+<span style="color: #999999; letter-spacing: 0.2px;">Templates</span>
+</div>
+<div style="background: #252525; padding: 1rem; border-radius: 4px; border: 1px solid #333333; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+<strong style="font-size: 1.5rem; display: block; color: #e5e5e5; letter-spacing: 0.3px;">5</strong>
+<span style="color: #999999; letter-spacing: 0.2px;">Experiments</span>
+</div>
+<div style="background: #252525; padding: 1rem; border-radius: 4px; border: 1px solid #333333; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+<strong style="font-size: 1.5rem; display: block; color: #e5e5e5; letter-spacing: 0.3px;">10</strong>
+<span style="color: #999999; letter-spacing: 0.2px;">Proof Cases</span>
+</div>
+</div>
+
+<hr />
+<h2>📋 Work Efforts</h2>
+<p>No work efforts found.</p>
+<hr />
+<div id='latex-templates'></div>
+<h2>📄 LaTeX Templates</h2>
+<h3>Assignment (1)</h3>
+<ul>
+<li><strong>Assignment</strong>: Assignment LaTeX Template Wrapper ==========================... <span style='color: #666; font-size: 0.9em;'>(latex, pdf)</span></li>
+</ul>
+<h3>Essay (1)</h3>
+<ul>
+<li><strong>Essay</strong>: Essay LaTeX Template Wrapper ============================ Py... <span style='color: #666; font-size: 0.9em;'>(latex, pdf)</span></li>
+</ul>
+<h3>Letter (1)</h3>
+<ul>
+<li><strong>Formal Letter</strong>: Formal Letter LaTeX Template Wrapper =======================... <span style='color: #666; font-size: 0.9em;'>(latex, pdf, letter, formal, business)</span></li>
+</ul>
+<h3>Paper (1)</h3>
+<ul>
+<li><strong>Neurips2025</strong>: NeurIPS 2025 LaTeX Template Wrapper ========================... <span style='color: #666; font-size: 0.9em;'>(latex, pdf)</span></li>
+</ul>
+<h3>Presentation (1)</h3>
+<ul>
+<li><strong>Presentation</strong>: Presentation LaTeX Template Wrapper ========================... <span style='color: #666; font-size: 0.9em;'>(latex, pdf)</span></li>
+</ul>
+<h3>Proposal (2)</h3>
+<ul>
+<li><strong>Business Proposal</strong>: Business Proposal LaTeX Template Wrapper ===================... <span style='color: #666; font-size: 0.9em;'>(latex, pdf, business, proposal)</span></li>
+<li><strong>Project Proposal</strong>: Project Proposal LaTeX Template Wrapper ====================... <span style='color: #666; font-size: 0.9em;'>(latex, pdf, project, proposal)</span></li>
+</ul>
+<h3>Report (3)</h3>
+<ul>
+<li><strong>Analysis Report</strong>: Analysis Report LaTeX Template Wrapper =====================... <span style='color: #666; font-size: 0.9em;'>(latex, pdf, analysis, report, orange)</span></li>
+<li><strong>Unicamp Report</strong>: Unicamp Physics Report LaTeX Template Wrapper ==============... <span style='color: #666; font-size: 0.9em;'>(latex, pdf, academic, brazilian, portuguese)</span></li>
+<li><strong>Project Report</strong>: Project Report LaTeX Template Wrapper ======================... <span style='color: #666; font-size: 0.9em;'>(latex, pdf, project, report)</span></li>
+</ul>
+<h3>Specification (1)</h3>
+<ul>
+<li><strong>Srs</strong>: SRS LaTeX Template Wrapper =========================== Pytho... <span style='color: #666; font-size: 0.9em;'>(latex, pdf, srs, requirements, specification)</span></li>
+</ul>
+<hr />
+<div id='librarian-catalog'></div>
+<h2>📚 Librarian Catalog</h2>
+<div style='background: #2a2a2a; padding: 1rem; border-radius: 4px; border: 1px solid #444;'>
+<p style='color: #e0e0e0;'><strong>Total Records:</strong> 1</p>
+<p style='color: #e0e0e0;'><strong>Templates Cataloged:</strong> 1</p>
+</div>
+
+<h3>Recent Entries</h3>
+<ul>
+<li><strong>template_unicamp_physics_report</strong>: template - latex_template</li>
+</ul>
+<hr />
+<div id='recent-experiments'></div>
+<h2>🔬 Recent Experiments</h2>
+<table style='width: 100%; border-collapse: collapse; background: #2a2a2a;'>
+<thead><tr style='background: #333;'><th style='padding: 8px; text-align: left; color: #e0e0e0;'>ID</th><th style='padding: 8px; text-align: left; color: #e0e0e0;'>Hypothesis</th><th style='padding: 8px; text-align: left; color: #e0e0e0;'>Status</th><th style='padding: 8px; text-align: left; color: #e0e0e0;'>Verified</th></tr></thead>
+<tbody>
+<tr><td style='padding: 8px;'><code>exp_e4eed728...</code></td><td style='padding: 8px;'>Incrementing a counter increases its value...</td><td style='padding: 8px;'>unknown</td><td style='padding: 8px;'>❌</td></tr>
+<tr><td style='padding: 8px;'><code>exp_d24a4d3e...</code></td><td style='padding: 8px;'>Incrementing a counter increases its value...</td><td style='padding: 8px;'>unknown</td><td style='padding: 8px;'>❌</td></tr>
+<tr><td style='padding: 8px;'><code>exp_cb28ce51...</code></td><td style='padding: 8px;'>Incrementing a counter increases its value...</td><td style='padding: 8px;'>unknown</td><td style='padding: 8px;'>❌</td></tr>
+<tr><td style='padding: 8px;'><code>exp_bb06093f...</code></td><td style='padding: 8px;'>Incrementing a counter increases its value...</td><td style='padding: 8px;'>unknown</td><td style='padding: 8px;'>❌</td></tr>
+<tr><td style='padding: 8px;'><code>exp_457468d8...</code></td><td style='padding: 8px;'>Incrementing a counter increases its value...</td><td style='padding: 8px;'>unknown</td><td style='padding: 8px;'>❌</td></tr>
+</tbody></table>
+
+<hr />
+<div id='recent-proof-cases'></div>
+<h2>🔍 Recent Proof Cases</h2>
+<table style='width: 100%; border-collapse: collapse; background: #2a2a2a;'>
+<thead><tr style='background: #333;'><th style='padding: 8px; text-align: left; color: #e0e0e0;'>Case ID</th><th style='padding: 8px; text-align: left; color: #e0e0e0;'>Claim</th><th style='padding: 8px; text-align: left; color: #e0e0e0;'>Verdict</th></tr></thead>
+<tbody>
+<tr><td style='padding: 8px;'><code>case_20260116_224312_scie...</code></td><td style='padding: 8px;'>20260116 224312 scientific method tool proof...</td><td style='padding: 8px;'><span style='background: #2a2a2a; color: #b0b0b0; border: 1px solid #3a3a3a; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: bold;'>UNKNOWN</span></td></tr>
+<tr><td style='padding: 8px;'><code>case_20260116_083112...</code></td><td style='padding: 8px;'>20260116 083112...</td><td style='padding: 8px;'><span style='background: #2a2a2a; color: #b0b0b0; border: 1px solid #3a3a3a; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: bold;'>UNKNOWN</span></td></tr>
+<tr><td style='padding: 8px;'><code>case_20260115_125740_dock...</code></td><td style='padding: 8px;'>20260115 125740 dockerized electron app...</td><td style='padding: 8px;'><span style='background: #2a2a2a; color: #b0b0b0; border: 1px solid #3a3a3a; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: bold;'>UNKNOWN</span></td></tr>
+<tr><td style='padding: 8px;'><code>case_20260114_215508...</code></td><td style='padding: 8px;'>20260114 215508...</td><td style='padding: 8px;'><span style='background: #2a2a2a; color: #b0b0b0; border: 1px solid #3a3a3a; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: bold;'>UNKNOWN</span></td></tr>
+<tr><td style='padding: 8px;'><code>case_20260114_170400_blan...</code></td><td style='padding: 8px;'>20260114 170400 blank page handler FINAL PROOF...</td><td style='padding: 8px;'><span style='background: #2a2a2a; color: #b0b0b0; border: 1px solid #3a3a3a; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: bold;'>UNKNOWN</span></td></tr>
+<tr><td style='padding: 8px;'><code>case_20260114_170152_blan...</code></td><td style='padding: 8px;'>20260114 170152 blank page handler verification...</td><td style='padding: 8px;'><span style='background: #2a2a2a; color: #b0b0b0; border: 1px solid #3a3a3a; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: bold;'>UNKNOWN</span></td></tr>
+<tr><td style='padding: 8px;'><code>case_20260114_114258...</code></td><td style='padding: 8px;'>20260114 114258...</td><td style='padding: 8px;'><span style='background: #2a2a2a; color: #b0b0b0; border: 1px solid #3a3a3a; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: bold;'>UNKNOWN</span></td></tr>
+<tr><td style='padding: 8px;'><code>case_20260114_111123_crit...</code></td><td style='padding: 8px;'>20260114 111123 critique response implementation...</td><td style='padding: 8px;'><span style='background: #2a2a2a; color: #b0b0b0; border: 1px solid #3a3a3a; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: bold;'>UNKNOWN</span></td></tr>
+<tr><td style='padding: 8px;'><code>case_20260114_110856...</code></td><td style='padding: 8px;'>20260114 110856...</td><td style='padding: 8px;'><span style='background: #2a2a2a; color: #b0b0b0; border: 1px solid #3a3a3a; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: bold;'>UNKNOWN</span></td></tr>
+<tr><td style='padding: 8px;'><code>case_20260114_110517...</code></td><td style='padding: 8px;'>20260114 110517...</td><td style='padding: 8px;'><span style='background: #2a2a2a; color: #b0b0b0; border: 1px solid #3a3a3a; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: bold;'>UNKNOWN</span></td></tr>
+</tbody></table>
+
+<hr />
+<div id='reasoning-trace'></div>
+<h2>🧠 Reasoning Trace</h2>
+<p style='color: #999;'><em>Traceable chain of thought and decision-making</em></p>
+
+<div style='background: #2a2a2a; padding: 1rem; border-left: 4px solid #667eea; margin: 1rem 0; border-radius: 4px; border: 1px solid #444;'>
+<h4 style='color: #e0e0e0;'>Step 1: Created The Reasoner - God of Reasoning Traces</h4>
+<p style='color: #e0e0e0;'><strong>When:</strong> 2026-01-16T21:42:15.539354</p>
+<p style='color: #e0e0e0;'><strong>Reasoning:</strong></p>
+<p style='color: #e0e0e0;'>User asked "how would I use this system now? Do we have like a God of Reasoning Traces or something?" Created The Reasoner as a Pantheon Entity to maintain reasoning trace principles. This is a timele...</p>
+<p style='color: #e0e0e0;'><strong>Outcome:</strong> The Reasoner entity created, maintains traceable reasoning chains</p>
+</div>
+
+<div style='background: #2a2a2a; padding: 1rem; border-left: 4px solid #667eea; margin: 1rem 0; border-radius: 4px; border: 1px solid #444;'>
+<h4 style='color: #e0e0e0;'>Step 2: Implemented reasoning trace system in /show-me command</h4>
+<p style='color: #e0e0e0;'><strong>When:</strong> 2026-01-16T21:39:34.511760</p>
+<p style='color: #e0e0e0;'><strong>Reasoning:</strong></p>
+<p style='color: #e0e0e0;'>User wanted to see a traceable chain of thought. Integrated reasoning_trace.py system to extract and display decision chains from reasoning_traces/ directory and work efforts. Shows the "why" behind a...</p>
+<p style='color: #e0e0e0;'><strong>Outcome:</strong> Reasoning trace now visible in /show-me output, showing traceable decision chains</p>
+</div>
+
+<div style='background: #2a2a2a; padding: 1rem; border-left: 4px solid #667eea; margin: 1rem 0; border-radius: 4px; border: 1px solid #444;'>
+<h4 style='color: #e0e0e0;'>Step 3: Redesigned WAFT HTML template to be more useful and multipurpose</h4>
+<p style='color: #e0e0e0;'><strong>When:</strong> 2026-01-16T21:39:06.162581</p>
+<p style='color: #e0e0e0;'><strong>Reasoning:</strong></p>
+<p style='color: #e0e0e0;'>User feedback: "too bright and bland" and wanted something "more useful and multipurpose". Created clean, functional, information-first design that works for any content type. Focused on utility over ...</p>
+<p style='color: #e0e0e0;'><strong>Outcome:</strong> New clean template created with focus on readability and utility</p>
+</div>
+
+<div style='background: #2a2a2a; padding: 1rem; border-left: 4px solid #667eea; margin: 1rem 0; border-radius: 4px; border: 1px solid #444;'>
+<h4 style='color: #e0e0e0;'>Step 4: Redesigned WAFT HTML template</h4>
+<p style='color: #e0e0e0;'><strong>When:</strong> 2026-01-16T21:37:32.149212</p>
+<p style='color: #e0e0e0;'><strong>Reasoning:</strong></p>
+<p style='color: #e0e0e0;'>User wanted a more useful, multipurpose template. Previous design was too bright and bland. Created clean, functional design focused on information-first approach.</p>
+<p style='color: #e0e0e0;'><strong>Outcome:</strong> New clean, minimal template created</p>
+</div>
+
+<hr />
+<div id='chat-context'></div>
+<h2>💬 Chat Context</h2>
+<div style='background: #2a2a2a; padding: 1.5rem; border-radius: 6px; border: 1px solid #444;'>
+<h4>Key Concepts</h4>
+<ul>
+<li>LaTeX Template Integration</li>
+<li>Librarian Catalog System</li>
+<li>Scientific Method Tool</li>
+<li>Work Efforts Management</li>
+</ul>
+
+<h4>Operations</h4>
+<ul>
+<li>Integrated Unicamp Physics Report template</li>
+<li>Cataloged templates with Librarian</li>
+<li>Ran scientific method proofs</li>
+<li>Created work efforts</li>
+</ul>
+
+<h4>Systems Used</h4>
+<ul>
+<li>LaTeXTemplateRegistry</li>
+<li>Librarian</li>
+<li>Empirica</li>
+<li>Work Efforts System</li>
+</ul>
+</div></div>
+        <div id="oracle-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+            <div style="background: white; border-radius: 10px; padding: 2rem; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2 style="margin: 0; color: #667eea;">🔮 Consult the Oracle</h2>
+                    <button id="close-oracle-modal" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #666;" onclick="document.getElementById('oracle-modal').style.display='none';">&times;</button>
+                </div>
+                <form id="oracle-form" onsubmit="consultOracle(event);">
+                    <div style="margin-bottom: 1.5rem;">
+                        <label for="oracle-question" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">Your Question:</label>
+                        <textarea id="oracle-question" name="question" rows="4" style="width: 100%; padding: 0.75rem; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 1rem; font-family: inherit; resize: vertical;" placeholder="Ask the Oracle anything about your project, code, or decisions..." required></textarea>
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <button type="submit" style="flex: 1; padding: 0.75rem 1.5rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer;">Consult</button>
+                        <button type="button" onclick="document.getElementById('oracle-modal').style.display='none';" style="padding: 0.75rem 1.5rem; background: #e0e0e0; color: #333; border: none; border-radius: 6px; font-size: 1rem; cursor: pointer;">Cancel</button>
+                    </div>
+                </form>
+                <div id="oracle-response" style="margin-top: 1.5rem; padding: 1rem; background: #f8f9fa; border-radius: 6px; display: none;">
+                    <h3 style="margin-top: 0; color: #667eea;">Oracle's Guidance:</h3>
+                    <div id="oracle-response-content" style="color: #333; line-height: 1.6;"></div>
+                </div>
+                <div id="oracle-loading" style="display: none; text-align: center; padding: 2rem;">
+                    <div style="display: inline-block; width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #667eea; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                    <p style="margin-top: 1rem; color: #666;">The Oracle is thinking...</p>
+                </div>
+            </div>
+        </div>
+        <style>
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        </style>
+        <script>
+            // Open modal when button is clicked
+            document.getElementById('consult-oracle-btn').addEventListener('click', function() {
+                document.getElementById('oracle-modal').style.display = 'flex';
+            });
+            
+            // Close modal when clicking outside
+            document.getElementById('oracle-modal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.style.display = 'none';
+                }
+            });
+            
+            async function consultOracle(event) {
+                event.preventDefault();
+                const question = document.getElementById('oracle-question').value;
+                const responseDiv = document.getElementById('oracle-response');
+                const responseContent = document.getElementById('oracle-response-content');
+                const loadingDiv = document.getElementById('oracle-loading');
+                
+                // Show loading, hide response
+                loadingDiv.style.display = 'block';
+                responseDiv.style.display = 'none';
+                
+                try {
+                    // Try to call local API first (if WAFT API server is running)
+                    const apiUrl = 'http://localhost:8000/api/oracle/consult';
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ question: question })
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        displayOracleResponse(data);
+                    } else {
+                        throw new Error('API not available');
+                    }
+                } catch (error) {
+                    // Fallback: Show CLI instructions
+                    displayOracleInstructions(question);
+                } finally {
+                    loadingDiv.style.display = 'none';
+                }
+            }
+            
+            function displayOracleResponse(data) {
+                const responseDiv = document.getElementById('oracle-response');
+                const responseContent = document.getElementById('oracle-response-content');
+                
+                let html = '';
+                if (data.recommendation) {
+                    html += '<p style="font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem;">' + escapeHtml(data.recommendation) + '</p>';
+                }
+                if (data.insights && data.insights.length > 0) {
+                    html += '<h4 style="margin-top: 1.5rem; margin-bottom: 0.5rem;">Insights:</h4><ul>';
+                    data.insights.forEach(insight => {
+                        html += '<li>' + escapeHtml(insight) + '</li>';
+                    });
+                    html += '</ul>';
+                }
+                if (data.epistemic_phase) {
+                    html += '<p style="margin-top: 1rem; color: #666; font-size: 0.9rem;"><em>Epistemic Phase: ' + escapeHtml(data.epistemic_phase) + '</em></p>';
+                }
+                
+                responseContent.innerHTML = html;
+                responseDiv.style.display = 'block';
+            }
+            
+            function displayOracleInstructions(question) {
+                const responseDiv = document.getElementById('oracle-response');
+                const responseContent = document.getElementById('oracle-response-content');
+                
+                const escapedQuestion = escapeHtml(question);
+                const html = `
+                    <p style="margin-bottom: 1rem; color: #e0e0e0;">To consult the Oracle, run this command in your terminal:</p>
+                    <pre style="background: #1a1a1a; color: #e0e0e0; padding: 1rem; border-radius: 6px; overflow-x: auto; border: 1px solid #444;"><code>waft oracle "${escapedQuestion}"</code></pre>
+                    <p style="margin-top: 1rem; color: #999; font-size: 0.9rem;">
+                        <strong>Note:</strong> The WAFT API server is not running. Start it with:<br>
+                        <code style="background: #2a2a2a; color: #e0e0e0; padding: 0.25rem 0.5rem; border-radius: 3px; border: 1px solid #444;">uvicorn src.waft.api.main:app --reload</code>
+                    </p>
+                `;
+                
+                responseContent.innerHTML = html;
+                responseDiv.style.display = 'block';
+            }
+            
+            function escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+        </script>
+        
+        </div>
+        
+        <div class="footer">
+            <p>Generated by WAFT (Wave Agent Framework & Tools)</p>
+        </div>
+    </div>
+</body>
+</html>

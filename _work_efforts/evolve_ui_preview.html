@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evolve UI Monitor - Live Preview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0a0e1a 0%, #1a1e29 50%, #0f1419 100%);
+            color: #e8eaf6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: #8dafff;
+        }
+        
+        .subtitle {
+            color: #b0b8d0;
+            margin-bottom: 2rem;
+        }
+        
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .panel {
+            background: #1a1e29;
+            border: 2px solid rgba(124, 158, 255, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 600px;
+        }
+        
+        .panel h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #e8eaf6;
+        }
+        
+        .run-card {
+            background: #232834;
+            border: 1px solid rgba(124, 158, 255, 0.2);
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .run-card:hover {
+            border-color: #7c9eff;
+            background: #2a2f3a;
+        }
+        
+        .run-card.selected {
+            border-color: #7c9eff;
+            box-shadow: 0 0 0 2px #7c9eff;
+        }
+        
+        .run-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        
+        .badge.complete {
+            background: #4ade80;
+            color: #0a0e1a;
+        }
+        
+        .run-id {
+            font-size: 0.75rem;
+            color: #707890;
+            font-family: monospace;
+        }
+        
+        .run-timestamp {
+            font-size: 0.875rem;
+            color: #b0b8d0;
+            margin-bottom: 0.5rem;
+        }
+        
+        .run-stats {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.75rem;
+            color: #707890;
+        }
+        
+        .details-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .details-section h3 {
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+            color: #e8eaf6;
+        }
+        
+        .metadata-item {
+            margin-bottom: 0.75rem;
+        }
+        
+        .metadata-item strong {
+            color: #e8eaf6;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+        
+        .metadata-item code {
+            background: #232834;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.875rem;
+        }
+        
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .timeline-step {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+        
+        .timeline-step.completed {
+            background: #232834;
+        }
+        
+        .step-icon {
+            font-size: 1.25rem;
+        }
+        
+        .artifact-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .artifact-link {
+            background: #232834;
+            border: 1px solid rgba(124, 158, 255, 0.2);
+            border-radius: 4px;
+            padding: 0.5rem 0.75rem;
+            color: #e8eaf6;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .artifact-link:hover {
+            background: #7c9eff;
+            color: #0a0e1a;
+            border-color: #7c9eff;
+        }
+        
+        .empty {
+            text-align: center;
+            color: #707890;
+            padding: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Evolve UI Monitor</h1>
+        <p class="subtitle">Track and monitor all /evolve-a-ui command executions</p>
+        
+        <div class="layout">
+            <div class="panel">
+                <h2>Runs List</h2>
+                <div id="runs-list">
+                    <div class="empty">Loading runs...</div>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <h2>Run Details</h2>
+                <div id="run-details">
+                    <div class="empty">Select a run to view details</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let selectedRunId = null;
+        let runs = [];
+        
+        async function loadRuns() {
+            try {
+                const response = await fetch('http://localhost:8000/api/evolve-ui-runs');
+                const data = await response.json();
+                runs = data.runs || [];
+                renderRuns();
+            } catch (error) {
+                document.getElementById('runs-list').innerHTML = 
+                    `<div class="empty">Error loading runs: ${error.message}</div>`;
+            }
+        }
+        
+        function formatTimestamp(timestamp) {
+            const year = timestamp.substring(0, 4);
+            const month = timestamp.substring(4, 6);
+            const day = timestamp.substring(6, 8);
+            const hour = timestamp.substring(9, 11);
+            const minute = timestamp.substring(11, 13);
+            const second = timestamp.substring(13, 15);
+            
+            const date = new Date(
+                parseInt(year), parseInt(month) - 1, parseInt(day),
+                parseInt(hour), parseInt(minute), parseInt(second)
+            );
+            
+            return date.toLocaleString();
+        }
+        
+        function renderRuns() {
+            const container = document.getElementById('runs-list');
+            
+            if (runs.length === 0) {
+                container.innerHTML = '<div class="empty">No runs found</div>';
+                return;
+            }
+            
+            container.innerHTML = runs.map(run => `
+                <div class="run-card ${selectedRunId === run.run_id ? 'selected' : ''}" 
+                     onclick="selectRun('${run.run_id}')">
+                    <div class="run-header">
+                        <span class="badge complete">${run.phase}</span>
+                        <span class="run-id">${run.run_id}</span>
+                    </div>
+                    <div class="run-timestamp">${formatTimestamp(run.timestamp)}</div>
+                    <div class="run-stats">
+                        <span>${run.artifacts.html.length} HTML</span>
+                        <span>${run.artifacts.screenshots.length} Screenshots</span>
+                        <span>${run.artifacts.case_files.length} Cases</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function selectRun(runId) {
+            selectedRunId = runId;
+            renderRuns();
+            renderDetails();
+        }
+        
+        function renderDetails() {
+            const run = runs.find(r => r.run_id === selectedRunId);
+            const container = document.getElementById('run-details');
+            
+            if (!run) {
+                container.innerHTML = '<div class="empty">No run selected</div>';
+                return;
+            }
+            
+            container.innerHTML = `
+                <div class="details-section">
+                    <h3>Metadata</h3>
+                    <div class="metadata-item">
+                        <strong>Run ID:</strong>
+                        <code>${run.run_id}</code>
+                    </div>
+                    <div class="metadata-item">
+                        <strong>Timestamp:</strong>
+                        ${formatTimestamp(run.timestamp)}
+                    </div>
+                    <div class="metadata-item">
+                        <strong>Phase:</strong>
+                        <span class="badge complete">${run.phase}</span>
+                    </div>
+                </div>
+                
+                <div class="details-section">
+                    <h3>Process Timeline</h3>
+                    <div class="timeline">
+                        <div class="timeline-step ${run.artifacts.design_doc ? 'completed' : ''}">
+                            <span class="step-icon">${run.artifacts.design_doc ? '✅' : '⭕'}</span>
+                            <span>Analysis</span>
+                        </div>
+                        <div class="timeline-step ${run.artifacts.requirements ? 'completed' : ''}">
+                            <span class="step-icon">${run.artifacts.requirements ? '✅' : '⭕'}</span>
+                            <span>Requirements</span>
+                        </div>
+                        <div class="timeline-step ${run.artifacts.wireframe ? 'completed' : ''}">
+                            <span class="step-icon">${run.artifacts.wireframe ? '✅' : '⭕'}</span>
+                            <span>Wireframe</span>
+                        </div>
+                        <div class="timeline-step ${run.artifacts.screenshots.length > 1 ? 'completed' : ''}">
+                            <span class="step-icon">${run.artifacts.screenshots.length > 1 ? '✅' : '⭕'}</span>
+                            <span>Development</span>
+                        </div>
+                        <div class="timeline-step ${run.artifacts.html.length > 0 ? 'completed' : ''}">
+                            <span class="step-icon">${run.artifacts.html.length > 0 ? '✅' : '⭕'}</span>
+                            <span>Complete</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="details-section">
+                    <h3>Artifact Gallery</h3>
+                    ${run.artifacts.html.length > 0 ? `
+                        <div class="artifact-list">
+                            ${run.artifacts.html.map(html => `
+                                <a href="http://localhost:8000/api/files/${encodeURIComponent(html)}" 
+                                   target="_blank" class="artifact-link">
+                                    📄 ${html.split('/').pop()}
+                                </a>
+                            `).join('')}
+                        </div>
+                    ` : '<div class="empty">No HTML files</div>'}
+                </div>
+            `;
+        }
+        
+        // Load runs on page load
+        loadRuns();
+        
+        // Auto-refresh every 30 seconds
+        setInterval(loadRuns, 30000);
+    </script>
+</body>
+</html>

@@ -40,7 +40,7 @@ Welcome to the WAFT (The Evolutionary Code Laboratory) wiki!
 
 ## 🎯 Key Features
 
-### Evolutionary Iteration Process (v0.5.2)
+### Evolutionary Iteration Process (v0.9.3)
 
 **Generate → Visualize → Inspect → Iterate**
 
@@ -121,7 +121,7 @@ All PDF generators now automatically create PNG screenshots for visual verificat
 
 ## 📊 Project Status
 
-- **Current Version**: v0.5.2
+- **Current Version**: v0.9.3
 - **Status**: Active Development
 - **License**: MIT
 - **Python**: 3.10+
@@ -137,4 +137,4 @@ All PDF generators now automatically create PNG screenshots for visual verificat
 
 ---
 
-**Last Updated**: January 11, 2026
+**Last Updated**: January 19, 2026

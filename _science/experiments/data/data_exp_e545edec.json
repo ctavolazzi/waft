@@ -1,0 +1,194 @@
+{
+  "experiment_id": "exp_e545edec",
+  "series": {
+    "party_total_hp": {
+      "metric_name": "party_total_hp",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-17T14:15:47.074802",
+          "metric_name": "party_total_hp",
+          "value": 440,
+          "unit": null,
+          "metadata": {}
+        },
+        {
+          "timestamp": "2026-01-17T14:15:47.085985",
+          "metric_name": "party_total_hp",
+          "value": 411,
+          "unit": null,
+          "metadata": {}
+        },
+        {
+          "timestamp": "2026-01-17T14:15:47.099931",
+          "metric_name": "party_total_hp",
+          "value": 480,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    },
+    "party_total_max_hp": {
+      "metric_name": "party_total_max_hp",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-17T14:15:47.074822",
+          "metric_name": "party_total_max_hp",
+          "value": 440,
+          "unit": null,
+          "metadata": {}
+        },
+        {
+          "timestamp": "2026-01-17T14:15:47.086001",
+          "metric_name": "party_total_max_hp",
+          "value": 440,
+          "unit": null,
+          "metadata": {}
+        },
+        {
+          "timestamp": "2026-01-17T14:15:47.099946",
+          "metric_name": "party_total_max_hp",
+          "value": 480,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    },
+    "party_average_level": {
+      "metric_name": "party_average_level",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-17T14:15:47.074834",
+          "metric_name": "party_average_level",
+          "value": 2.0,
+          "unit": null,
+          "metadata": {}
+        },
+        {
+          "timestamp": "2026-01-17T14:15:47.086013",
+          "metric_name": "party_average_level",
+          "value": 2.0,
+          "unit": null,
+          "metadata": {}
+        },
+        {
+          "timestamp": "2026-01-17T14:15:47.099954",
+          "metric_name": "party_average_level",
+          "value": 3.0,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    },
+    "party_total_experience": {
+      "metric_name": "party_total_experience",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-17T14:15:47.074841",
+          "metric_name": "party_total_experience",
+          "value": 400,
+          "unit": null,
+          "metadata": {}
+        },
+        {
+          "timestamp": "2026-01-17T14:15:47.086022",
+          "metric_name": "party_total_experience",
+          "value": 600,
+          "unit": null,
+          "metadata": {}
+        },
+        {
+          "timestamp": "2026-01-17T14:15:47.099959",
+          "metric_name": "party_total_experience",
+          "value": 800,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    },
+    "encounter_rounds": {
+      "metric_name": "encounter_rounds",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-17T14:15:47.074847",
+          "metric_name": "encounter_rounds",
+          "value": 1,
+          "unit": null,
+          "metadata": {}
+        },
+        {
+          "timestamp": "2026-01-17T14:15:47.086033",
+          "metric_name": "encounter_rounds",
+          "value": 1,
+          "unit": null,
+          "metadata": {}
+        },
+        {
+          "timestamp": "2026-01-17T14:15:47.099965",
+          "metric_name": "encounter_rounds",
+          "value": 1,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    },
+    "encounter_xp_gained": {
+      "metric_name": "encounter_xp_gained",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-17T14:15:47.074854",
+          "metric_name": "encounter_xp_gained",
+          "value": 50,
+          "unit": null,
+          "metadata": {}
+        },
+        {
+          "timestamp": "2026-01-17T14:15:47.086054",
+          "metric_name": "encounter_xp_gained",
+          "value": 50,
+          "unit": null,
+          "metadata": {}
+        },
+        {
+          "timestamp": "2026-01-17T14:15:47.099970",
+          "metric_name": "encounter_xp_gained",
+          "value": 50,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    },
+    "encounter_damage_taken": {
+      "metric_name": "encounter_damage_taken",
+      "unit": null,
+      "data_points": [
+        {
+          "timestamp": "2026-01-17T14:15:47.074861",
+          "metric_name": "encounter_damage_taken",
+          "value": 39,
+          "unit": null,
+          "metadata": {}
+        },
+        {
+          "timestamp": "2026-01-17T14:15:47.086064",
+          "metric_name": "encounter_damage_taken",
+          "value": 29,
+          "unit": null,
+          "metadata": {}
+        },
+        {
+          "timestamp": "2026-01-17T14:15:47.099978",
+          "metric_name": "encounter_damage_taken",
+          "value": 36,
+          "unit": null,
+          "metadata": {}
+        }
+      ]
+    }
+  }
+}

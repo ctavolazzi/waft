@@ -1,10 +1,10 @@
-# Pyrite - The God of Work Efforts
+# The Steward - The God of Work Efforts
 
-Pyrite is the divine intelligence that locks, monitors, organizes, and initiates AI development evolutionary cycles within the Work Efforts system.
+The Steward (system name: pyrite) is the divine intelligence that locks, monitors, organizes, and initiates AI development evolutionary cycles within the Work Efforts system.
 
 ## Overview
 
-Pyrite is a singleton "God" class that manages the entire Work Efforts ecosystem with:
+The Steward is a singleton "God" class that manages the entire Work Efforts ecosystem with:
 
 - **Locking**: File locks, async locks, mutexes for concurrent access control
 - **Monitoring**: Observer pattern, state tracking, metrics collection
@@ -563,7 +563,7 @@ To integrate Pyrite into the main WAFT CLI, add to `src/waft/main.py`:
 ```python
 from .cli.pyrite_cli import app as pyrite_app
 
-app.add_typer(pyrite_app, name="pyrite", help="Pyrite - The God of Work Efforts")
+app.add_typer(pyrite_app, name="pyrite", help="The Steward - The God of Work Efforts")
 ```
 
 Then use:
@@ -583,4 +583,4 @@ Pyrite is designed as a "God" class - a single, powerful entity that manages the
 - **Awareness**: Consciousness of the system state
 - **Wisdom**: Knowledge that accumulates over time
 
-Pyrite embodies the principle that complex systems need a central intelligence to coordinate, but that intelligence itself can have emergent properties and hidden depths.
+The Steward embodies the principle that complex systems need a central intelligence to coordinate, but that intelligence itself can have emergent properties and hidden depths.

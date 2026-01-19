@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evolve UI Monitor - Wireframe</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .wireframe-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .wireframe-box {
+            border: 2px solid #000;
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        header.wireframe-box {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        main {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .runs-list-box {
+            min-height: 400px;
+        }
+
+        .run-details-box {
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .metadata-box,
+        .timeline-box,
+        .gallery-box,
+        .file-browser-box {
+            border: 2px solid #666;
+            padding: 15px;
+            min-height: 80px;
+        }
+
+        .metadata-box {
+            background-color: #f9f9f9;
+        }
+
+        .timeline-box {
+            background-color: #f0f0f0;
+        }
+
+        .gallery-box {
+            background-color: #f9f9f9;
+        }
+
+        .file-browser-box {
+            background-color: #f0f0f0;
+        }
+
+        @media (max-width: 768px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wireframe-container">
+        <header class="wireframe-box">
+            Evolve UI Monitor
+        </header>
+
+        <main>
+            <section class="wireframe-box runs-list-box">
+                <!-- Runs List Box -->
+            </section>
+
+            <section class="wireframe-box run-details-box">
+                <!-- Metadata Box -->
+                <div class="metadata-box"></div>
+
+                <!-- Process Timeline Box -->
+                <div class="timeline-box"></div>
+
+                <!-- Artifact Gallery Box -->
+                <div class="gallery-box"></div>
+
+                <!-- File Browser Box -->
+                <div class="file-browser-box"></div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

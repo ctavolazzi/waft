@@ -1,0 +1,20 @@
+{
+  "balance": 5,
+  "total_earned": 5,
+  "total_lost": 0,
+  "transactions": [
+    {
+      "timestamp": "2026-01-17T08:34:54.022119Z",
+      "points": 5,
+      "reason": "for implementing the WAFT SaaS landing page perfectly - completed all 19 todos, followed the plan exactly, created beautiful modern design",
+      "context": "Created waft_landing_page.html with all requirements met"
+    }
+  ],
+  "stats": {
+    "total_transactions": 1,
+    "average_per_transaction": 5.0,
+    "largest_award": 5,
+    "largest_deduction": 5,
+    "last_transaction": "2026-01-17T08:34:54.022119Z"
+  }
+}

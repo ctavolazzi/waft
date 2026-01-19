@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WAFT - The Evolutionary Code Laboratory | Don't just build agents. Breed them.</title>
+    <meta name="description" content="WAFT is a Python framework for directed evolution of self-modifying AI agents. A scientific instrument for studying the physics of artificial cognition.">
+    
+    <!-- Open Graph Tags (Social Sharing) -->
+    <meta property="og:title" content="WAFT - The Evolutionary Code Laboratory">
+    <meta property="og:description" content="Don't just build agents. Breed them. WAFT enables directed evolution of self-modifying AI agents.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://github.com/ctavolazzi/waft">
+    
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="WAFT - The Evolutionary Code Laboratory">
+    <meta name="twitter:description" content="Don't just build agents. Breed them.">
+    
+    <style>
+        /* ============================================
+           WAFT SaaS Landing Page
+           Modern, minimal, professional design
+           ============================================ */
+        
+        :root {
+            --primary: #1e3c72;
+            --primary-light: #2a5298;
+            --accent: #667eea;
+            --accent-dark: #764ba2;
+            --text-dark: #1a1a1a;
+            --text-light: #666;
+            --bg-light: #f8f9fa;
+            --border: #e5e5e5;
+            --warning-bg: #fff3cd;
+            --warning-text: #856404;
+            --warning-border: #ffeaa7;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: #ffffff;
+            font-size: 16px;
+        }
+        
+        /* Development Disclaimer Banner */
+        .dev-banner {
+            background: var(--warning-bg);
+            border-bottom: 2px solid var(--warning-border);
+            padding: 0.75rem 1rem;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            color: var(--warning-text);
+            font-size: 0.875rem;
+        }
+        
+        .dev-banner strong {
+            font-weight: 600;
+        }
+        
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 4rem 0 3rem;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 50%, var(--accent-dark) 100%);
+            color: #ffffff;
+            margin-top: 0;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .hero .tagline {
+            font-size: 1.5rem;
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+            opacity: 0.95;
+        }
+        
+        .hero .subheading {
+            font-size: 1.125rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.875rem 2rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .btn-primary {
+            background: #ffffff;
+            color: var(--primary);
+        }
+        
+        .btn-primary:hover {
+            background: var(--bg-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: #ffffff;
+            border-color: #ffffff;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+        }
+        
+        /* Section Styling */
+        .section {
+            padding: 4rem 0;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--text-dark);
+        }
+        
+        .section-subtitle {
+            font-size: 1.25rem;
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 3rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Value Props */
+        .value-props {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .value-card {
+            background: var(--bg-light);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .value-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+        
+        .value-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .value-card p {
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+        
+        /* Three Pillars */
+        .pillars {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            margin-top: 2rem;
+        }
+        
+        .pillar-card {
+            background: #ffffff;
+            padding: 2.5rem;
+            border-radius: 12px;
+            border: 2px solid var(--border);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .pillar-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.15);
+            transform: translateY(-4px);
+        }
+        
+        .pillar-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .pillar-card h3 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .pillar-card .pillar-subtitle {
+            font-size: 1rem;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .pillar-card p {
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+        
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .feature-item {
+            background: var(--bg-light);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-item:hover {
+            background: #ffffff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transform: translateX(4px);
+        }
+        
+        .feature-item h4 {
+            font-size: 1.125rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+        
+        /* Use Cases */
+        .use-cases {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .use-case-card {
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--accent) 100%);
+            color: #ffffff;
+            padding: 2.5rem;
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .use-case-card:hover {
+            transform: translateY(-4px) scale(1.02);
+        }
+        
+        .use-case-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 50%, var(--accent-dark) 100%);
+            color: #ffffff;
+            padding: 5rem 0;
+            text-align: center;
+        }
+        
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cta-section p {
+            font-size: 1.25rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Footer */
+        .footer {
+            background: var(--bg-light);
+            padding: 3rem 0 2rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+        
+        .footer .dev-disclaimer {
+            background: var(--warning-bg);
+            border: 1px solid var(--warning-border);
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            color: var(--warning-text);
+            font-size: 0.875rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-links a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+        
+        .footer .copyright {
+            color: var(--text-light);
+            font-size: 0.875rem;
+            margin-top: 1.5rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero .tagline {
+                font-size: 1.25rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .section {
+                padding: 3rem 0;
+            }
+            
+            .hero {
+                padding: 3rem 0 2rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .btn {
+                width: 100%;
+                text-align: center;
+        }
+        }
+        
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .value-props,
+            .pillars,
+            .use-cases {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        /* Print Styles */
+        @media print {
+            .dev-banner,
+            .cta-section,
+            .footer {
+                display: none;
+            }
+            
+            .section {
+                page-break-inside: avoid;
+            }
+        }
+        
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+        
+        /* Focus States */
+        a:focus,
+        button:focus {
+            outline: 3px solid var(--accent);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Development Disclaimer Banner -->
+    <div class="dev-banner" role="alert" aria-live="polite">
+        <strong>⚠️ WAFT is currently in development.</strong> This is a conceptual landing page imagining what WAFT could be as a product.
+    </div>
+    
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="container">
+            <h1>WAFT</h1>
+            <p class="tagline">Don't just build agents. Breed them.</p>
+            <p class="subheading">
+                A Python framework for directed evolution of self-modifying AI agents. 
+                A scientific instrument for studying the physics of artificial cognition.
+            </p>
+            <div class="cta-buttons">
+                <a href="https://github.com/ctavolazzi/waft" class="btn btn-primary" aria-label="View WAFT on GitHub">View on GitHub</a>
+                <a href="https://github.com/ctavolazzi/waft/blob/main/README.md" class="btn btn-secondary" aria-label="Read WAFT documentation">Read Documentation</a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Value Proposition Section -->
+    <section class="section" id="value-prop">
+        <div class="container">
+            <h2 class="section-title">The Evolutionary Code Laboratory</h2>
+            <p class="section-subtitle">
+                WAFT transforms AI agents from passive assistants into active participants 
+                that can improve themselves and the projects they work on.
+            </p>
+            <div class="value-props">
+                <div class="value-card">
+                    <h3>Self-Modifying Agents</h3>
+                    <p>
+                        Agents that write and modify their own Python source code. 
+                        In WAFT, code is DNA. Every agent has a unique genome ID, 
+                        and mutations are modifications to this genome.
+                    </p>
+                </div>
+                <div class="value-card">
+                    <h3>Scientific Instrument</h3>
+                    <p>
+                        Built to produce data for research on "The Physics of Artificial Cognition." 
+                        Complete lineage tracking, fitness evaluation, and telemetry systems 
+                        designed for scientific publication.
+                    </p>
+                </div>
+                <div class="value-card">
+                    <h3>Complete Lineage Tracking</h3>
+                    <p>
+                        Rigorous telemetry system for generating phylogenetic trees of agent lineage. 
+                        Every evolutionary action is recorded with complete context for scientific analysis.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Three Pillars Section -->
+    <section class="section" id="pillars" style="background: var(--bg-light);">
+        <div class="container">
+            <h2 class="section-title">Built on Three Pillars</h2>
+            <div class="pillars">
+                <div class="pillar-card">
+                    <div class="pillar-icon" aria-hidden="true">🧬</div>
+                    <p class="pillar-subtitle">Code as DNA</p>
+                    <h3>The Substrate</h3>
+                    <p>
+                        Agents write their own Python source code. Every agent has a unique genome ID 
+                        (SHA-256 hash of their code and configuration). Agents can spawn variants with mutations, 
+                        evolve by hot-swapping their own code, and reproduce by creating children with 
+                        specific genetic modifications.
+                    </p>
+                </div>
+                <div class="pillar-card">
+                    <div class="pillar-icon" aria-hidden="true">⚡</div>
+                    <p class="pillar-subtitle">Reality Fracture Detection</p>
+                    <h3>The Physics</h3>
+                    <p>
+                        The Scint System (Scint Gym) serves as the fitness function that tests agents 
+                        on four types of errors: SYNTAX_TEAR, LOGIC_FRACTURE, SAFETY_VOID, and HALLUCINATION. 
+                        Agents must stabilize these errors to survive. Fitness is measured by stability, 
+                        efficiency, and safety scores.
+                    </p>
+                </div>
+                <div class="pillar-card">
+                    <div class="pillar-icon" aria-hidden="true">📊</div>
+                    <p class="pillar-subtitle">Complete Telemetry</p>
+                    <h3>The Flight Recorder</h3>
+                    <p>
+                        A rigorous telemetry system for generating phylogenetic trees of agent lineage. 
+                        Every evolutionary action is recorded with complete context: genome ID, parent ID, 
+                        generation number, event type, payload, and fitness metrics. Enables scientific 
+                        analysis of agent evolution patterns.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Features Grid -->
+    <section class="section" id="features">
+        <div class="container">
+            <h2 class="section-title">Key Features</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <h4>Directed Evolution</h4>
+                    <p>Evolution guided by fitness functions, not random mutation</p>
+                </div>
+                <div class="feature-item">
+                    <h4>Fitness Evaluation</h4>
+                    <p>Automated Scint Gym testing for agent capabilities</p>
+                </div>
+                <div class="feature-item">
+                    <h4>Phylogenetic Trees</h4>
+                    <p>Complete family tree reconstruction for scientific publication</p>
+                </div>
+                <div class="feature-item">
+                    <h4>Self-Documentation</h4>
+                    <p>WAFT observes, documents, and improves itself</p>
+                </div>
+                <div class="feature-item">
+                    <h4>Template System</h4>
+                    <p>12 professional document templates for diverse use cases</p>
+                </div>
+                <div class="feature-item">
+                    <h4>File-Based Architecture</h4>
+                    <p>No database, just plain text files that work with git</p>
+                </div>
+                <div class="feature-item">
+                    <h4>Scientific Data Generation</h4>
+                    <p>Publication-ready lineage tracking and analysis</p>
+                </div>
+                <div class="feature-item">
+                    <h4>Open Source</h4>
+                    <p>MIT licensed and actively developed on GitHub</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Use Cases Section -->
+    <section class="section" id="use-cases" style="background: var(--bg-light);">
+        <div class="container">
+            <h2 class="section-title">Perfect For</h2>
+            <div class="use-cases">
+                <div class="use-case-card">
+                    <h3>Researchers</h3>
+                    <p>Studying artificial cognition and evolutionary algorithms. Track complete evolutionary lineages, measure fitness through rigorous testing, and enable scientific analysis of agent evolution.</p>
+                </div>
+                <div class="use-case-card">
+                    <h3>Developers</h3>
+                    <p>Building self-improving systems. Create agents that can modify their own code, evolve through genetic improvement, and be tested in fitness systems with complete lineage tracking.</p>
+                </div>
+                <div class="use-case-card">
+                    <h3>Scientists</h3>
+                    <p>Tracking evolutionary lineages. Generate phylogenetic trees, measure mutation impact, map fitness landscapes, and analyze convergence patterns for scientific publication.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Call to Action Section -->
+    <section class="cta-section" id="cta">
+        <div class="container">
+            <h2>Ready to Explore?</h2>
+            <p>
+                WAFT is a scientific instrument for studying the physics of artificial cognition. 
+                The ultimate goal: Observe a "God-Head" agent emerge from thousands of generations 
+                of directed mutation.
+            </p>
+            <div class="cta-buttons">
+                <a href="https://github.com/ctavolazzi/waft" class="btn btn-primary" aria-label="View WAFT on GitHub">View on GitHub</a>
+                <a href="https://github.com/ctavolazzi/waft/blob/main/WAFT_FRAMEWORK_HANDBOOK.md" class="btn btn-secondary" aria-label="Read WAFT Framework Handbook">Read the Handbook</a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div class="dev-disclaimer">
+                <strong>⚠️ Development Status:</strong> WAFT is currently in development. 
+                This is a conceptual landing page imagining what WAFT could be as a product. 
+                This is not a real product offering.
+            </div>
+            <nav class="footer-links" aria-label="Footer navigation">
+                <a href="https://github.com/ctavolazzi/waft">GitHub</a>
+                <a href="https://github.com/ctavolazzi/waft/blob/main/README.md">Documentation</a>
+                <a href="https://github.com/ctavolazzi/waft/blob/main/LICENSE">License</a>
+            </nav>
+            <p class="copyright">
+                &copy; 2026 WAFT (Wave Agent Framework & Tools). MIT License.
+            </p>
+            <p class="copyright" style="margin-top: 0.5rem; font-size: 0.75rem;">
+                This is a conceptual landing page. WAFT is in active development.
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

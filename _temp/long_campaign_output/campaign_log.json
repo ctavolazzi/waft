@@ -1,0 +1,428 @@
+{
+  "campaign_info": {
+    "title": "The Eternal Guardians: An Epic Adventure",
+    "party": [
+      {
+        "name": "Thorin Ironforge",
+        "class": "Fighter",
+        "race": "Dwarf",
+        "level": 24,
+        "hp": 330,
+        "max_hp": 330,
+        "experience": 3250,
+        "being_id": "being_20260116_222818_7f5a3f97"
+      },
+      {
+        "name": "Lyra Moonwhisper",
+        "class": "Wizard",
+        "race": "Elf",
+        "level": 24,
+        "hp": 330,
+        "max_hp": 330,
+        "experience": 3250,
+        "being_id": "being_20260116_222818_7f5a3f97"
+      },
+      {
+        "name": "Rogar Swiftfoot",
+        "class": "Rogue",
+        "race": "Halfling",
+        "level": 24,
+        "hp": 330,
+        "max_hp": 330,
+        "experience": 3250,
+        "being_id": "being_20260116_222818_7f5a3f97"
+      },
+      {
+        "name": "Aria Brightshield",
+        "class": "Cleric",
+        "race": "Human",
+        "level": 24,
+        "hp": 330,
+        "max_hp": 330,
+        "experience": 3250,
+        "being_id": "being_20260116_222818_7f5a3f97"
+      }
+    ],
+    "final_boss_defeated": true,
+    "total_chapters": 8,
+    "total_encounters": 36
+  },
+  "campaign_log": [
+    {
+      "timestamp": "2026-01-16T22:28:18.547056",
+      "event": "tavern_scene",
+      "location": "The Rusty Tankard",
+      "description": "Party receives quest"
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.551320",
+      "event": "encounter",
+      "encounter_name": "Goblin Ambush",
+      "difficulty": "easy",
+      "rounds": 1,
+      "encounter_number": 1
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.552611",
+      "event": "encounter",
+      "encounter_name": "Wolves of the Darkwood",
+      "difficulty": "medium",
+      "rounds": 1,
+      "encounter_number": 2
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.556875",
+      "event": "encounter",
+      "encounter_name": "Bandit Encounter",
+      "difficulty": "medium",
+      "rounds": 1,
+      "encounter_number": 3
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.557932",
+      "event": "encounter",
+      "encounter_name": "Mysterious Traveler",
+      "difficulty": "easy",
+      "rounds": 1,
+      "encounter_number": 4
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.561075",
+      "event": "encounter",
+      "encounter_name": "The Abandoned Village",
+      "difficulty": "medium",
+      "rounds": 1,
+      "encounter_number": 5
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.561944",
+      "event": "encounter",
+      "encounter_name": "Corrupted Wildlife",
+      "difficulty": "easy",
+      "rounds": 1,
+      "encounter_number": 6
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.565489",
+      "event": "encounter",
+      "encounter_name": "Spectral Apparitions",
+      "difficulty": "medium",
+      "rounds": 1,
+      "encounter_number": 7
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.567367",
+      "event": "encounter",
+      "encounter_name": "Giant Spiders",
+      "difficulty": "hard",
+      "rounds": 1,
+      "encounter_number": 8
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.572014",
+      "event": "encounter",
+      "encounter_name": "Ancient Treant",
+      "difficulty": "hard",
+      "rounds": 1,
+      "encounter_number": 9
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.575368",
+      "event": "encounter",
+      "encounter_name": "Forest Guardian",
+      "difficulty": "medium",
+      "rounds": 1,
+      "encounter_number": 10
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.576382",
+      "event": "encounter",
+      "encounter_name": "The Lost Shrine",
+      "difficulty": "medium",
+      "rounds": 1,
+      "encounter_number": 11
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.580416",
+      "event": "encounter",
+      "encounter_name": "The Whispering Trees",
+      "difficulty": "easy",
+      "rounds": 1,
+      "encounter_number": 12
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.582163",
+      "event": "encounter",
+      "encounter_name": "Skeleton Warriors",
+      "difficulty": "medium",
+      "rounds": 1,
+      "encounter_number": 13
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.584953",
+      "event": "encounter",
+      "encounter_name": "Dark Cultists",
+      "difficulty": "hard",
+      "rounds": 1,
+      "encounter_number": 14
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.588105",
+      "event": "encounter",
+      "encounter_name": "Shadow Beasts",
+      "difficulty": "hard",
+      "rounds": 1,
+      "encounter_number": 15
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.589169",
+      "event": "encounter",
+      "encounter_name": "The Keep's Gate",
+      "difficulty": "medium",
+      "rounds": 1,
+      "encounter_number": 16
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.591718",
+      "event": "encounter",
+      "encounter_name": "The Moat of Despair",
+      "difficulty": "medium",
+      "rounds": 1,
+      "encounter_number": 17
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.592826",
+      "event": "encounter",
+      "encounter_name": "The Outer Defenses",
+      "difficulty": "hard",
+      "rounds": 1,
+      "encounter_number": 18
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.596788",
+      "event": "encounter",
+      "encounter_name": "Corrupted Guards",
+      "difficulty": "medium",
+      "rounds": 1,
+      "encounter_number": 19
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.597738",
+      "event": "encounter",
+      "encounter_name": "Undead Servants",
+      "difficulty": "easy",
+      "rounds": 1,
+      "encounter_number": 20
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.600431",
+      "event": "encounter",
+      "encounter_name": "The Keep's Lieutenant",
+      "difficulty": "hard",
+      "rounds": 1,
+      "encounter_number": 21
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.604008",
+      "event": "encounter",
+      "encounter_name": "Ancient Traps",
+      "difficulty": "medium",
+      "rounds": 1,
+      "encounter_number": 22
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.606635",
+      "event": "encounter",
+      "encounter_name": "The Armory",
+      "difficulty": "medium",
+      "rounds": 1,
+      "encounter_number": 23
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.609473",
+      "event": "encounter",
+      "encounter_name": "The Barracks",
+      "difficulty": "hard",
+      "rounds": 1,
+      "encounter_number": 24
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.613153",
+      "event": "encounter",
+      "encounter_name": "Shadow Wraiths",
+      "difficulty": "hard",
+      "rounds": 1,
+      "encounter_number": 25
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.614056",
+      "event": "encounter",
+      "encounter_name": "Corrupted Artifacts",
+      "difficulty": "medium",
+      "rounds": 1,
+      "encounter_number": 26
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.616530",
+      "event": "encounter",
+      "encounter_name": "The Dark Council",
+      "difficulty": "hard",
+      "rounds": 1,
+      "encounter_number": 27
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.618895",
+      "event": "encounter",
+      "encounter_name": "The Guardian Chamber",
+      "difficulty": "boss",
+      "rounds": 3,
+      "encounter_number": 28
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.621977",
+      "event": "encounter",
+      "encounter_name": "The Corrupted Library",
+      "difficulty": "medium",
+      "rounds": 1,
+      "encounter_number": 29
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.624883",
+      "event": "encounter",
+      "encounter_name": "The Hall of Mirrors",
+      "difficulty": "hard",
+      "rounds": 1,
+      "encounter_number": 30
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.626902",
+      "event": "encounter",
+      "encounter_name": "Trap Rooms",
+      "difficulty": "medium",
+      "rounds": 1,
+      "encounter_number": 31
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.629898",
+      "event": "encounter",
+      "encounter_name": "Ancient Guardians",
+      "difficulty": "hard",
+      "rounds": 1,
+      "encounter_number": 32
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.633253",
+      "event": "encounter",
+      "encounter_name": "The Shadow Lord's Minions",
+      "difficulty": "boss",
+      "rounds": 4,
+      "encounter_number": 33
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.636092",
+      "event": "encounter",
+      "encounter_name": "The Corrupted Heart",
+      "difficulty": "hard",
+      "rounds": 1,
+      "encounter_number": 34
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.639583",
+      "event": "encounter",
+      "encounter_name": "The Descent",
+      "difficulty": "medium",
+      "rounds": 1,
+      "encounter_number": 35
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.640460",
+      "event": "encounter",
+      "encounter_name": "The Final Preparation",
+      "difficulty": "medium",
+      "rounds": 1,
+      "encounter_number": 36
+    },
+    {
+      "timestamp": "2026-01-16T22:28:18.643654",
+      "event": "final_boss_defeated",
+      "boss_name": "The Shadow Lord Malachar",
+      "victory": true
+    }
+  ],
+  "chapters": [
+    {
+      "title": "Prologue: The Rusty Tankard",
+      "encounters": []
+    },
+    {
+      "title": "Chapter 1: The Road to Blackmoor",
+      "encounters": [
+        "Goblin Ambush",
+        "Wolves of the Darkwood",
+        "Bandit Encounter",
+        "Mysterious Traveler",
+        "The Abandoned Village",
+        "Corrupted Wildlife"
+      ]
+    },
+    {
+      "title": "Chapter 2: The Darkwood Forest",
+      "encounters": [
+        "Spectral Apparitions",
+        "Giant Spiders",
+        "Ancient Treant",
+        "Forest Guardian",
+        "The Lost Shrine",
+        "The Whispering Trees"
+      ]
+    },
+    {
+      "title": "Chapter 3: Approaching the Keep",
+      "encounters": [
+        "Skeleton Warriors",
+        "Dark Cultists",
+        "Shadow Beasts",
+        "The Keep's Gate",
+        "The Moat of Despair",
+        "The Outer Defenses"
+      ]
+    },
+    {
+      "title": "Chapter 4: Within the Keep - The Outer Walls",
+      "encounters": [
+        "Corrupted Guards",
+        "Undead Servants",
+        "The Keep's Lieutenant",
+        "Ancient Traps",
+        "The Armory",
+        "The Barracks"
+      ]
+    },
+    {
+      "title": "Chapter 5: The Inner Sanctum",
+      "encounters": [
+        "Shadow Wraiths",
+        "Corrupted Artifacts",
+        "The Dark Council",
+        "The Guardian Chamber",
+        "The Corrupted Library",
+        "The Hall of Mirrors"
+      ]
+    },
+    {
+      "title": "Chapter 6: The Depths",
+      "encounters": [
+        "Trap Rooms",
+        "Ancient Guardians",
+        "The Shadow Lord's Minions",
+        "The Corrupted Heart",
+        "The Descent",
+        "The Final Preparation"
+      ]
+    },
+    {
+      "title": "The Final Battle: The Shadow Lord Malachar",
+      "encounters": []
+    }
+  ]
+}

@@ -25,7 +25,7 @@ pip install waft
 
 ```bash
 waft --version
-# Should output: 0.5.2
+# Should output: 0.9.3
 ```
 
 ---
