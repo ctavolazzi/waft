@@ -141,6 +141,7 @@ class MetaCognitiveAPI:
                     'coherence': step.evaluation.coherence.value,
                     'utility': step.evaluation.utility.value,
                     'faithfulness': step.evaluation.faithfulness.value,
+                    'confidence': step.evaluation.confidence.value,  # NEW: Meta-cognitive
                 }
             }
             for step in session.steps

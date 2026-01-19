@@ -31,12 +31,14 @@ class LengthBasedStrategy(EvaluationStrategy):
 
     def evaluate(self, text: str, context: str = "") -> Evaluation:
         score = evaluate_text(text)
+        confidence = Score(min(len(text) / 150.0, 1.0))
         return Evaluation(
             factuality=score,
             validity=score,
             coherence=score,
             utility=score,
-            faithfulness=score
+            faithfulness=score,
+            confidence=confidence
         )
 
 
@@ -47,12 +49,15 @@ class StrictStrategy(EvaluationStrategy):
         base = evaluate_text(text)
         # Penalize by 30%
         penalized = Score(base.value * 0.7)
+        # Strict = high confidence in strict evaluation
+        confidence = Score(0.9)
         return Evaluation(
             factuality=penalized,
             validity=penalized,
             coherence=penalized,
             utility=penalized,
-            faithfulness=penalized
+            faithfulness=penalized,
+            confidence=confidence
         )
 
 
@@ -63,12 +68,15 @@ class LenientStrategy(EvaluationStrategy):
         base = evaluate_text(text)
         # Boost by 30%
         boosted = Score(min(base.value * 1.3, 1.0))
+        # Lenient = lower confidence (being generous)
+        confidence = Score(0.6)
         return Evaluation(
             factuality=boosted,
             validity=boosted,
             coherence=boosted,
             utility=boosted,
-            faithfulness=boosted
+            faithfulness=boosted,
+            confidence=confidence
         )
 
 
@@ -128,7 +136,8 @@ class MinimumScoreHandler(EvaluationHandler):
             validity=clamp(evaluation.validity),
             coherence=clamp(evaluation.coherence),
             utility=clamp(evaluation.utility),
-            faithfulness=clamp(evaluation.faithfulness)
+            faithfulness=clamp(evaluation.faithfulness),
+            confidence=clamp(evaluation.confidence)
         )
         return self._pass_to_next(modified)
 

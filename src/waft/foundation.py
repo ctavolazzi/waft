@@ -63,13 +63,14 @@ def evaluate_text(text: str) -> Score:
 class Evaluation:
     """
     Multi-dimensional quality assessment.
-    Built from 5 atomic Scores.
+    Built from 6 atomic Scores (FVCU+F+C taxonomy).
     """
     factuality: Score      # Is it factually correct?
     validity: Score        # Is the reasoning valid?
     coherence: Score       # Does it make sense?
     utility: Score         # Is it useful?
     faithfulness: Score    # Is it faithful to the problem?
+    confidence: Score      # How certain are we about this evaluation? (META-COGNITIVE)
 
     @property
     def overall(self) -> Score:
@@ -79,8 +80,9 @@ class Evaluation:
             self.validity.value +
             self.coherence.value +
             self.utility.value +
-            self.faithfulness.value
-        ) / 5.0
+            self.faithfulness.value +
+            self.confidence.value
+        ) / 6.0
         return Score(avg)
 
     def is_good(self, threshold: float = 0.8) -> bool:
@@ -101,12 +103,19 @@ def evaluate_answer(answer: str, problem: str) -> Evaluation:
     # For now, toy heuristic
     base_score = evaluate_text(answer)
 
+    # Confidence: measure certainty about evaluation
+    # Higher for longer, more detailed answers
+    # Lower for short, vague answers
+    confidence_value = min(len(answer) / 150.0, 1.0)  # Longer = more confident
+    confidence_score = Score(confidence_value)
+
     return Evaluation(
         factuality=base_score,
         validity=base_score,
         coherence=base_score,
         utility=base_score,
-        faithfulness=base_score
+        faithfulness=base_score,
+        confidence=confidence_score  # NEW: Meta-cognitive dimension
     )
 
 
