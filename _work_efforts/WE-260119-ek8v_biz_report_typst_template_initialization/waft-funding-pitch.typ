@@ -1,4 +1,4 @@
-#import "@preview/biz-report:0.3.1": authorwrap, dropcappara, infobox, report  
+#import "@preview/biz-report:0.3.1": authorwrap, dropcappara, infobox, report
 
 #show: report.with(
   title: "WAFT: Funding Proposal for Evolutionary AI Research",
@@ -17,10 +17,10 @@
 ]
 
 #authorwrap(
-  authorimage: image("author.png", height: 3cm), 
+  authorimage: image("author.png", height: 3cm),
   authorcaption: "WAFT Development Team, Research & Innovation")[
   We are seeking funding to accelerate development of this revolutionary framework, expand our "research" capabilities, and produce publication-ready scientific data on artificial cognition. With support from forward-thinking funders, we can advance the frontier of "AI" "research" and contribute to humanity's understanding of intelligence itself.
-] 
+]
 
 This proposal outlines our vision, scientific approach, "market" "opportunity", and funding requirements. We invite you to join us in this groundbreaking journey toward understanding and creating truly adaptive artificial intelligence.
 
@@ -54,7 +54,7 @@ Traditional "AI" systems are fundamentally static:
 
 #infobox(icon: "warning")[
   #emph[The Static Intelligence Problem:]
-  
+
   Current "AI" systems cannot evolve. They are frozen in time, unable to adapt to new challenges or improve themselves. This represents a fundamental limitation in our quest for truly intelligent systems.
 ]
 
@@ -82,11 +82,11 @@ Without this understanding, we're building in the dark.
 
 = The Solution: WAFT Framework
 
-WAFT (Wave Agent Framework & "Tools") solves these problems through a revolutionary approach: #strong[directed evolution of self-modifying "AI" agents].
+"WAFT" (Wave Agent Framework & "Tools") solves these problems through a revolutionary approach: #strong[directed evolution of self-modifying "AI" agents].
 
 == Core Innovation
 
-WAFT enables "AI" agents to:
+"WAFT" enables "AI" agents to:
 
 - #strong[Write their own code] (code as DNA)
 - #strong[Evolve through mutations] (genetic improvement)
@@ -97,7 +97,7 @@ This is not incremental improvement—it's a fundamental shift in how we approac
 
 == The Three Pillars
 
-WAFT is built on three revolutionary pillars:
+"WAFT" is built on three revolutionary pillars:
 
 === Pillar 1: The Substrate (Code as DNA)
 
@@ -130,8 +130,8 @@ Complete telemetry system for generating phylogenetic trees:
 
 #infobox(icon: "laptop")[
   #emph[Scientific Instrument:]
-  
-  WAFT is not just a framework—it's a scientific instrument designed to produce data for "research" on "The Physics of Artificial Cognition." Every experiment generates publication-ready scientific data.
+
+  "WAFT" is not just a framework—it's a scientific instrument designed to produce data for "research" on "The Physics of Artificial Cognition." Every experiment generates publication-ready scientific data.
 ]
 
 = "Market" "Opportunity"
@@ -176,13 +176,13 @@ The "market" for adaptive "AI" systems is massive and growing rapidly.
 
 #infobox(icon: "app-store")[
   #emph[First-Mover Advantage:]
-  
-  WAFT is the first comprehensive framework for evolutionary "AI". We have a significant first-mover advantage in this emerging "market" category.
+
+  "WAFT" is the first comprehensive framework for evolutionary "AI". We have a significant first-mover advantage in this emerging "market" category.
 ]
 
 = "Scientific" "Value" and "Research" "Impact"
 
-WAFT is designed to produce groundbreaking scientific "research" on artificial cognition.
+"WAFT" is designed to produce groundbreaking scientific "research" on artificial cognition.
 
 == "Research" Goals
 
@@ -195,7 +195,7 @@ Our primary "research" objectives:
 
 == Publication Potential
 
-WAFT enables publication-ready "research":
+"WAFT" enables publication-ready "research":
 
 - "Phylogenetic" analysis of agent lineages
 - "Fitness" landscape mapping
@@ -213,7 +213,7 @@ This would represent a paradigm shift in "AI" "research" and potentially revolut
 
 = Competitive Advantage
 
-WAFT has several unique advantages that position us for success.
+"WAFT" has several unique advantages that position us for success.
 
 == Technical Advantages
 
@@ -238,13 +238,13 @@ WAFT has several unique advantages that position us for success.
 
 #infobox(icon: "shield-virus")[
   #emph[Defensible Moat:]
-  
+
   Our combination of scientific rigor, technical innovation, and first-mover advantage creates a defensible position in the "market". The complexity of the system and the scientific data we generate create significant barriers to entry.
 ]
 
 = Current Progress and Traction
 
-WAFT is not just a concept—it's a working system with demonstrated capabilities.
+"WAFT" is not just a concept—it's a working system with demonstrated capabilities.
 
 == "Development" Status
 
@@ -358,7 +358,7 @@ With proper funding, WAFT will deliver significant outcomes across multiple dime
 
 #infobox(icon: "database")[
   #emph[Multiplier Effect:]
-  
+
   Every dollar invested in WAFT has the potential to generate 10x-100x value through:
   - "Scientific" publications and citations
   - "Enterprise" licensing
@@ -451,7 +451,7 @@ We invite you to join us in this groundbreaking journey.
 
 == For Grant Funders
 
-WAFT represents a unique "opportunity" to fund cutting-edge "research" that will:
+"WAFT" represents a unique "opportunity" to fund cutting-edge "research" that will:
 
 - "Advance" scientific understanding of artificial cognition
 - "Produce" high-impact publications
@@ -462,7 +462,7 @@ WAFT represents a unique "opportunity" to fund cutting-edge "research" that will
 
 == For Angel Investors
 
-WAFT offers:
+"WAFT" offers:
 
 - "First"-mover advantage in evolutionary "AI"
 - "Multiple" revenue streams
@@ -484,7 +484,7 @@ Partnership opportunities include:
 
 = Conclusion
 
-WAFT represents a paradigm shift in artificial intelligence "research" and development. "By" enabling directed evolution of self-modifying "AI" agents, we're not just building better "AI"—we're unlocking the physics of artificial cognition.
+"WAFT" represents a paradigm shift in artificial intelligence "research" and development. "By" enabling directed evolution of self-modifying "AI" agents, we're not just building better "AI"—we're unlocking the physics of artificial cognition.
 
 With proper funding, WAFT will:
 

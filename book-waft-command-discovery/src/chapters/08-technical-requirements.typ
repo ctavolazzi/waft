@@ -60,7 +60,7 @@ This chapter documents the technical requirements for the WAFT Command Dashboard
 - Link to work effort details
 
 *[Data Source]*:
-- Scan `_work_efforts/WE-*` directories
+- Scan `_work_efforts/WE-`* directories
 - Read index files
 - Extract status and progress
 

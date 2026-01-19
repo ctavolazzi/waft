@@ -356,16 +356,8 @@
                 <div class="actions">
                     <button class="btn-danger" onclick="combatAction('attack')">Attack</button>
                     <button class="btn-warning" onclick="combatAction('flee')">Flee</button>
-                    <button style="background: #ec4899;" onclick="openSpells()">Cast Spell</button>
                 </div>
                 <div id="combat-messages"></div>
-            </div>
-            
-            <!-- Spells -->
-            <div id="spells-panel" class="card hidden">
-                <h2>Cast Spell</h2>
-                <div id="spells-list"></div>
-                <button onclick="closeSpells()" style="width: 100%; margin-top: 15px;">Cancel</button>
             </div>
             
             <!-- Shop -->
@@ -567,6 +559,87 @@
                     </div>
                 </div>
             `;
+        }
+        
+        let spells = null;
+        
+        async function loadSpells() {
+            try {
+                const response = await fetch('/api/spells');
+                spells = (await response.json()).spells;
+            } catch (error) {
+                showMessage('Error loading spells', 'error');
+            }
+        }
+        
+        function openSpells() {
+            if (!spells) {
+                loadSpells();
+                return;
+            }
+            
+            const listDiv = document.getElementById('spells-list');
+            listDiv.innerHTML = Object.entries(spells).map(([key, spell]) => {
+                const canCast = gameState.character.level >= spell.level + 1;
+                return `
+                    <div class="quest-item" style="${!canCast ? 'opacity: 0.5;' : ''}">
+                        <div class="quest-name">${spell.name} (Level ${spell.level})</div>
+                        <div class="quest-description">${spell.description}</div>
+                        ${spell.damage ? `<div style="color: #ef4444; margin-top: 5px;">Damage: ${spell.damage}</div>` : ''}
+                        ${spell.healing ? `<div style="color: #10b981; margin-top: 5px;">Healing: ${spell.healing}</div>` : ''}
+                        <button onclick="castSpell('${key}')" ${!canCast ? 'disabled' : ''} style="margin-top: 10px;">Cast</button>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('spells-panel').classList.remove('hidden');
+        }
+        
+        function closeSpells() {
+            document.getElementById('spells-panel').classList.add('hidden');
+        }
+        
+        async function castSpell(spellId) {
+            if (!gameId) return;
+            try {
+                const response = await fetch('/api/combat/action', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({game_id: gameId, action: 'cast', spell_id: spellId})
+                });
+                const data = await response.json();
+                
+                let msg = '';
+                if (data.player_result.spell) {
+                    msg += `Cast ${data.player_result.spell}! `;
+                }
+                if (data.player_result.hit) {
+                    msg += `Dealt ${data.player_result.damage} damage! `;
+                }
+                if (data.player_result.healed) {
+                    msg += `Healed ${data.player_result.healing} HP! `;
+                }
+                if (msg) showCombatMessage(msg, 'info');
+                
+                if (data.combat_over) {
+                    showCombatMessage(data.message, data.victory ? 'success' : 'error');
+                    if (data.level_up) {
+                        showCombatMessage(`LEVEL UP! Level ${data.new_level}!`, 'success');
+                    }
+                    setTimeout(() => {
+                        document.getElementById('combat-panel').classList.add('hidden');
+                        document.getElementById('game-actions').classList.remove('hidden');
+                        document.getElementById('combat-messages').innerHTML = '';
+                        closeSpells();
+                    }, 2000);
+                } else {
+                    updateCombatDisplay(data.enemy);
+                    closeSpells();
+                }
+                await loadGameState();
+            } catch (error) {
+                showMessage('Error: ' + error.message, 'error');
+            }
         }
         
         async function combatAction(action) {

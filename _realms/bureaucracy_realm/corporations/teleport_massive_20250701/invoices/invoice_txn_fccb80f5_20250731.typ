@@ -17,7 +17,7 @@
     ),
   ),
   recipient: (
-    name: "Chief Technology Officer & Co-Founder",
+    name: "Dr. Marcus Chen",
     vat-id: "US000000001",
   ),
   items: (
