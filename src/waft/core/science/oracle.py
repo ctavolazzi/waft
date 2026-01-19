@@ -80,6 +80,19 @@ class TheOracle:
         # Initialize personality
         self.personality = self._load_personality(personality, personality_type, personality_file)
         
+        # Personality state tracking
+        self._personality_interactions = []  # Track interactions for personality evolution
+        
+        # Get session ID for Empirica workflow
+        # Try to get from readiness status, or create one if needed
+        self._session_id = self._readiness_status.get("session_id")
+        if not self._session_id:
+            # Try to get current session from Empirica
+            try:
+                self._session_id = self.empirica.get_current_session_id()
+            except Exception:
+                pass  # Session ID not critical
+        
         # Initialize journal and memory
         self.journal = OracleJournal(self.project_path)
     
@@ -125,22 +138,7 @@ class TheOracle:
                 pass  # Fall through to default
         
         # Priority 4: Default personality
-        personality = OraclePersonality()
-        
-        # Personality state tracking
-        self._personality_interactions = []  # Track interactions for personality evolution
-        
-        # Get session ID for Empirica workflow
-        # Try to get from readiness status, or create one if needed
-        self._session_id = self._readiness_status.get("session_id")
-        if not self._session_id:
-            # Try to get current session from Empirica
-            try:
-                self._session_id = self.empirica.get_current_session_id()
-            except Exception:
-                pass  # Session ID not critical
-        
-        return personality
+        return OraclePersonality()
     
     def get_epistemic_state(self) -> Dict[str, Any]:
         """
