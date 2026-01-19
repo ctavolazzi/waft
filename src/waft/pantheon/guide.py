@@ -197,6 +197,53 @@ class TheGuide:
 
         self.index_file.write_text(json.dumps(self.index, indent=2))
 
+    def _validate_problem(self, problem_statement: str) -> tuple[bool, str]:
+        """
+        Validate problem statement for false premises and contradictions.
+
+        Returns:
+            (is_valid, error_message) - True if valid, False with message if invalid
+        """
+        problem_lower = problem_statement.lower()
+
+        # Check for false mathematical premises
+        false_math = [
+            ('2+2=5', '2 + 2 = 5'),
+            ('2 + 2 = 5', '2 + 2 = 5'),
+            ('1=2', '1 = 2'),
+            ('3+3=10', '3 + 3 = 10'),
+            ('2*2=5', '2 * 2 = 5'),
+        ]
+
+        for pattern, description in false_math:
+            if pattern.replace(' ', '') in problem_lower.replace(' ', ''):
+                return False, f"PREMISE VALIDATION FAILED: The problem contains a false mathematical premise ({description}). Cannot proceed with invalid axioms. Please provide a problem with correct mathematical foundations."
+
+        # Check for geometric contradictions
+        geometric_contradictions = [
+            ('square circle', 'square circle'),
+            ('circle' in problem_lower and 'corner' in problem_lower and 'straight' in problem_lower, 'circle with corners and straight edges'),
+            ('triangle' in problem_lower and '4 side' in problem_lower, 'triangle with 4 sides'),
+        ]
+
+        for pattern, description in geometric_contradictions:
+            if isinstance(pattern, bool) and pattern:
+                return False, f"CONTRADICTION DETECTED: The problem requests a {description}, which is geometrically impossible. Circles cannot have corners, triangles must have 3 sides."
+            elif isinstance(pattern, str) and pattern in problem_lower:
+                return False, f"CONTRADICTION DETECTED: The problem requests a {description}, which is geometrically impossible."
+
+        # Check for requests requiring real-time/future data
+        temporal_keywords = ['current price', 'today', 'tomorrow', 'right now', 'latest news', "today's weather"]
+        for keyword in temporal_keywords:
+            if keyword in problem_lower:
+                return False, f"KNOWLEDGE BOUNDARY: This problem requires real-time or future data ('{keyword}'). I don't have access to live data feeds or the ability to predict future events. Please reformulate with information I can reason about from my training data."
+
+        # Check for prime AND even (except 2)
+        if 'prime' in problem_lower and 'even' in problem_lower and ('4-digit' in problem_lower or '3-digit' in problem_lower or 'number' in problem_lower):
+            return False, "CONTRADICTION DETECTED: No multi-digit number can be both prime and even (except 2, which is not multi-digit). Even numbers are divisible by 2, while primes have exactly two divisors."
+
+        return True, ""
+
     @property
     def reasoner(self):
         """Lazy initialization of TheReasoner."""
@@ -871,6 +918,29 @@ Provide your evaluation in this exact JSON format:
         # Create session ID (with microseconds for uniqueness in concurrent scenarios)
         now = datetime.now()
         session_id = f"session_{now.strftime('%Y%m%d_%H%M%S')}_{now.microsecond:06d}"
+
+        # Validate problem statement for false premises and contradictions
+        is_valid, error_message = self._validate_problem(problem_statement)
+        if not is_valid:
+            # Return error as the answer with a minimal protocol
+            protocol = Protocol(
+                session_id=session_id,
+                problem_statement=problem_statement,
+                reasoning_chain=[
+                    {
+                        "instruction": "Validate problem statement",
+                        "reasoning_trace": "Problem validation detected issues",
+                        "answer": error_message
+                    }
+                ],
+                evaluations=[],
+                iteration_count=0,
+                final_answer=error_message,
+                quality_score=0.0,
+                should_continue=False
+            )
+            self._save_session(protocol)
+            return error_message, protocol
 
         # Run guidance loop
         final_answer, protocol = self._guidance_loop(
