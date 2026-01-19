@@ -2,8 +2,8 @@
   "character": {
     "name": "waft",
     "level": 1,
-    "integrity": 90.0,
-    "insight": 0.0,
+    "integrity": 100.0,
+    "insight": 5.0,
     "credits": 0,
     "ability_scores": {
       "strength": 8,
@@ -16,11 +16,11 @@
     "proficiency_bonus": 2,
     "hit_dice": "d8",
     "max_hp": 7,
-    "current_hp": 6,
-    "created_at": "2026-01-19T02:59:31.520220",
-    "updated_at": "2026-01-19T02:59:35.163880"
+    "current_hp": 7,
+    "created_at": "2026-01-19T03:04:07.324243",
+    "updated_at": "2026-01-19T03:04:08.123952"
   },
-  "updated_at": "2026-01-19T02:59:37.153503",
+  "updated_at": "2026-01-19T03:04:09.535160",
   "adventure_journal": [
     {
       "timestamp": "2026-01-06T00:13:34.681830",
@@ -228,17 +228,17 @@
     },
     {
       "event": "oracle",
-      "narrative": "The TavernKeeper notes the instability with concern.",
+      "narrative": "The TavernKeeper nods approvingly: 'Wisdom accumulates.'",
       "dice_roll": "1d20+-1",
-      "result": 1,
-      "outcome": "failure",
+      "result": 17,
+      "outcome": "success",
       "rewards": {
-        "insight": 0,
+        "insight": 5,
         "credits": 0,
-        "integrity": -10.0
+        "integrity": 2.0
       },
-      "classification": "failure",
-      "timestamp": "2026-01-19T02:59:37.153216"
+      "classification": "optimal",
+      "timestamp": "2026-01-19T03:04:09.535025"
     }
   ]
 }
