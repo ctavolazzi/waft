@@ -1,0 +1,63 @@
+{
+  "before": {
+    "results": [
+      {
+        "total_sessions": 100,
+        "mean_time": 0.0008974218368530273,
+        "last_10_mean": 0.001097702980041504
+      },
+      {
+        "total_sessions": 200,
+        "mean_time": 0.0015832269191741943,
+        "last_10_mean": 0.0020600080490112303
+      },
+      {
+        "total_sessions": 300,
+        "mean_time": 0.0028672011693318686,
+        "last_10_mean": 0.003945446014404297
+      },
+      {
+        "total_sessions": 400,
+        "mean_time": 0.005144906640052796,
+        "last_10_mean": 0.006055450439453125
+      },
+      {
+        "total_sessions": 500,
+        "mean_time": 0.007598708629608155,
+        "last_10_mean": 0.008481574058532716
+      }
+    ],
+    "degradation": 672.6656675571774
+  },
+  "after": {
+    "results": [
+      {
+        "total_sessions": 100,
+        "mean_time": 0.0008483505249023437,
+        "last_10_mean": 0.0010367155075073243
+      },
+      {
+        "total_sessions": 200,
+        "mean_time": 0.0015332317352294922,
+        "last_10_mean": 0.0019346714019775391
+      },
+      {
+        "total_sessions": 300,
+        "mean_time": 0.0028457252184549966,
+        "last_10_mean": 0.0037516117095947265
+      },
+      {
+        "total_sessions": 400,
+        "mean_time": 0.0047216123342514035,
+        "last_10_mean": 0.006271719932556152
+      },
+      {
+        "total_sessions": 500,
+        "mean_time": 0.00660404634475708,
+        "last_10_mean": 0.006299376487731934
+      }
+    ],
+    "degradation": 507.6282685187315
+  },
+  "improvement": 165.03739903844587
+}
