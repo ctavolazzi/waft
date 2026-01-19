@@ -260,7 +260,7 @@ def _format_party(party: Dict[str, Any], party_name: str) -> str:
     elif iban:
         result += f'    iban: "{_escape_typst(iban)}",\n'
     
-    # Format address as structured object
+    # Format address as structured object (REQUIRED by template)
     if address:
         # Try to parse address or use as simple string
         address_lines = [line.strip() for line in address.split("\n") if line.strip()]
@@ -308,10 +308,28 @@ def _format_party(party: Dict[str, Any], party_name: str) -> str:
                     result += f'      country: "{_escape_typst(line)}",\n'
                     country_set = True
             
+            # Ensure at least city is set (required by template)
+            if not city_set:
+                result += '      city: "Unknown",\n'
+            if not country_set:
+                result += '      country: "USA",\n'
+            
             result += "    ),\n"
         else:
-            # Simple string address
-            result += f'    address: "{_escape_typst(address)}",\n'
+            # Simple string address - convert to structured
+            result += "    address: (\n"
+            if address:
+                result += f'      city: "{_escape_typst(address)}",\n'
+            else:
+                result += '      city: "Unknown",\n'
+            result += '      country: "USA",\n'
+            result += "    ),\n"
+    else:
+        # No address provided - provide minimal required structure
+        result += "    address: (\n"
+        result += '      city: "Unknown",\n'
+        result += '      country: "USA",\n'
+        result += "    ),\n"
     
     result += "  ),\n"
     

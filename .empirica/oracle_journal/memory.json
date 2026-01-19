@@ -8,9 +8,15 @@
       "phase": "UNKNOWN",
       "coverage": 0.0,
       "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-01-19T03:01:17.165001",
+      "phase": "UNKNOWN",
+      "coverage": 0.0,
+      "uncertainty": 1.0
     }
   ],
-  "consultation_count": 1,
+  "consultation_count": 2,
   "first_consultation": "2026-01-19T03:00:23.640968",
-  "last_consultation": "2026-01-19T03:00:23.640968"
+  "last_consultation": "2026-01-19T03:01:17.165001"
 }

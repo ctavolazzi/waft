@@ -182,7 +182,7 @@ The "market" for adaptive "AI" systems is massive and growing rapidly.
 
 = "Scientific" "Value" and "Research" "Impact"
 
-[WAFT] is designed to produce groundbreaking scientific research on artificial cognition.
+#text[WAFT] is designed to produce groundbreaking scientific research on artificial cognition.
 
 == "Research" Goals
 

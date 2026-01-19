@@ -19,6 +19,10 @@
   recipient: (
     name: "Dr. Marcus Chen",
     vat-id: "US000000001",
+    address: (
+      city: "Unknown",
+      country: "USA",
+    ),
   ),
   items: (
     (
