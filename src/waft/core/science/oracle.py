@@ -125,7 +125,7 @@ class TheOracle:
                 pass  # Fall through to default
         
         # Priority 4: Default personality
-        return OraclePersonality()
+        personality = OraclePersonality()
         
         # Personality state tracking
         self._personality_interactions = []  # Track interactions for personality evolution
@@ -139,6 +139,8 @@ class TheOracle:
                 self._session_id = self.empirica.get_current_session_id()
             except Exception:
                 pass  # Session ID not critical
+        
+        return personality
     
     def get_epistemic_state(self) -> Dict[str, Any]:
         """
@@ -723,6 +725,39 @@ class TheOracle:
         
         # Apply personality
         return self._apply_personality_to_recommendation(base, phase, coverage, uncertainty)
+    
+    def _apply_personality_to_recommendation(
+        self,
+        base_recommendation: str,
+        phase: str,
+        coverage: float,
+        uncertainty: float
+    ) -> str:
+        """
+        Apply personality styling to recommendation.
+        
+        Args:
+            base_recommendation: Base recommendation text
+            phase: Current epistemic phase
+            coverage: Knowledge coverage (0.0-1.0)
+            uncertainty: Uncertainty level (0.0-1.0)
+            
+        Returns:
+            Recommendation with personality applied
+        """
+        # Get contextual adaptation
+        context = self.personality.adapt_to_context(phase, uncertainty, coverage)
+        
+        # Apply personality to text
+        styled = self.personality.apply_personality_to_text(base_recommendation, context)
+        
+        # Add personality-appropriate transition if needed
+        if not styled.startswith(("[")):  # Don't add transition to gate-tagged recommendations
+            transition = self.personality.get_transition()
+            if transition and transition not in styled:
+                styled = f"{transition} {styled}"
+        
+        return styled
     
     def assess_decision(self, decision_context: Dict[str, Any]) -> Dict[str, Any]:
         """

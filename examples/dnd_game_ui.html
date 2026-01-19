@@ -341,6 +341,10 @@
                     <button class="btn-success" onclick="rest()">Rest</button>
                     <button class="btn-warning" onclick="openShop()">Shop</button>
                     <button class="btn-danger" onclick="startCombat()">Combat</button>
+                    <button style="background: #8b5cf6;" onclick="openQuests()">Quests</button>
+                    <button style="background: #06b6d4;" onclick="openLocations()">Travel</button>
+                    <button style="background: #14b8a6;" onclick="openInventory()">Inventory</button>
+                    <button style="background: #64748b;" onclick="openSaveLoad()">Save/Load</button>
                 </div>
                 <div id="action-messages"></div>
             </div>
@@ -352,8 +356,16 @@
                 <div class="actions">
                     <button class="btn-danger" onclick="combatAction('attack')">Attack</button>
                     <button class="btn-warning" onclick="combatAction('flee')">Flee</button>
+                    <button style="background: #ec4899;" onclick="openSpells()">Cast Spell</button>
                 </div>
                 <div id="combat-messages"></div>
+            </div>
+            
+            <!-- Spells -->
+            <div id="spells-panel" class="card hidden">
+                <h2>Cast Spell</h2>
+                <div id="spells-list"></div>
+                <button onclick="closeSpells()" style="width: 100%; margin-top: 15px;">Cancel</button>
             </div>
             
             <!-- Shop -->
@@ -616,6 +628,274 @@
             el.textContent = msg;
             div.appendChild(el);
             setTimeout(() => el.remove(), 4000);
+        }
+        
+        async function openQuests() {
+            if (!gameId) return;
+            try {
+                const response = await fetch(`/api/game/${gameId}/quests`);
+                const data = await response.json();
+                
+                // Show active quests
+                const activeDiv = document.getElementById('active-quests');
+                if (data.active && data.active.length > 0) {
+                    activeDiv.innerHTML = '<h3 style="margin: 0 0 15px 0; color: #a78bfa; font-size: 1.1rem;">Active Quests</h3>' +
+                        data.active.map(quest => {
+                            const progress = gameState.quest_progress?.[quest.id] || {};
+                            const objectives = progress.objectives || quest.objectives || [];
+                            const completed = progress.objectives_completed || [];
+                            return `
+                                <div class="quest-item">
+                                    <div class="quest-name">${quest.name}</div>
+                                    <div class="quest-description">${quest.description}</div>
+                                    <div class="quest-objectives">
+                                        ${objectives.map(obj => 
+                                            `<span class="objective ${completed.includes(obj) ? 'completed' : ''}">${obj.replace(/_/g, ' ')}</span>`
+                                        ).join('')}
+                                    </div>
+                                    <div class="quest-rewards">Rewards: ${quest.rewards.xp} XP, ${quest.rewards.gold} gp</div>
+                                    <button onclick="completeQuest('${quest.id}')" style="margin-top: 10px;">Complete Quest</button>
+                                    <button onclick="abandonQuest('${quest.id}')" style="margin-top: 10px; margin-left: 5px; background: #64748b;">Abandon</button>
+                                </div>
+                            `;
+                        }).join('');
+                } else {
+                    activeDiv.innerHTML = '<p style="color: #94a3b8;">No active quests</p>';
+                }
+                
+                // Show available quests
+                const availableDiv = document.getElementById('available-quests');
+                if (data.available && data.available.length > 0) {
+                    availableDiv.innerHTML = data.available.map(quest => `
+                        <div class="quest-item">
+                            <div class="quest-name">${quest.name}</div>
+                            <div class="quest-description">${quest.description}</div>
+                            <div class="quest-rewards">Rewards: ${quest.rewards.xp} XP, ${quest.rewards.gold} gp${quest.rewards.item ? ', ' + quest.rewards.item : ''}</div>
+                            <button onclick="acceptQuest('${quest.id}')" style="margin-top: 10px;">Accept Quest</button>
+                        </div>
+                    `).join('');
+                } else {
+                    availableDiv.innerHTML = '<p style="color: #94a3b8;">No available quests</p>';
+                }
+                
+                document.getElementById('quest-panel').classList.remove('hidden');
+                document.getElementById('game-actions').classList.add('hidden');
+            } catch (error) {
+                showMessage('Error loading quests: ' + error.message, 'error');
+            }
+        }
+        
+        function closeQuests() {
+            document.getElementById('quest-panel').classList.add('hidden');
+            document.getElementById('game-actions').classList.remove('hidden');
+        }
+        
+        async function acceptQuest(questId) {
+            if (!gameId) return;
+            try {
+                const response = await fetch('/api/quest/action', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({game_id: gameId, quest_id: questId, action: 'accept'})
+                });
+                const data = await response.json();
+                showMessage(data.message, 'success');
+                await loadGameState();
+                openQuests();
+            } catch (error) {
+                showMessage('Error: ' + error.message, 'error');
+            }
+        }
+        
+        async function completeQuest(questId) {
+            if (!gameId) return;
+            try {
+                const response = await fetch('/api/quest/action', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({game_id: gameId, quest_id: questId, action: 'complete'})
+                });
+                const data = await response.json();
+                if (data.success) {
+                    showMessage(data.message, 'success');
+                    if (data.rewards) {
+                        showMessage(`Rewards: ${data.rewards.xp} XP, ${data.rewards.gold} gp${data.rewards.item ? ', ' + data.rewards.item : ''}`, 'success');
+                    }
+                } else {
+                    showMessage(data.message, 'error');
+                }
+                await loadGameState();
+                openQuests();
+            } catch (error) {
+                showMessage('Error: ' + error.message, 'error');
+            }
+        }
+        
+        async function abandonQuest(questId) {
+            if (!gameId) return;
+            if (!confirm('Abandon this quest?')) return;
+            try {
+                const response = await fetch('/api/quest/action', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({game_id: gameId, quest_id: questId, action: 'abandon'})
+                });
+                const data = await response.json();
+                showMessage(data.message, 'info');
+                await loadGameState();
+                openQuests();
+            } catch (error) {
+                showMessage('Error: ' + error.message, 'error');
+            }
+        }
+        
+        async function openLocations() {
+            if (!gameId) return;
+            try {
+                const response = await fetch('/api/locations');
+                const locations = (await response.json()).locations;
+                
+                await loadGameState();
+                const currentLoc = gameState.current_location || 'town';
+                document.getElementById('location-name').textContent = locations[currentLoc]?.name || 'Unknown';
+                
+                const listDiv = document.getElementById('locations-list');
+                listDiv.innerHTML = Object.entries(locations).map(([key, loc]) => `
+                    <div class="quest-item" style="${key === currentLoc ? 'border: 2px solid #a78bfa;' : ''}">
+                        <div class="quest-name">${loc.name} ${key === currentLoc ? '(Current)' : ''}</div>
+                        <div class="quest-description">${loc.description}</div>
+                        ${key !== currentLoc ? `<button onclick="travelTo('${key}')" style="margin-top: 10px;">Travel Here</button>` : ''}
+                    </div>
+                `).join('');
+                
+                document.getElementById('locations-panel').classList.remove('hidden');
+                document.getElementById('game-actions').classList.add('hidden');
+            } catch (error) {
+                showMessage('Error loading locations: ' + error.message, 'error');
+            }
+        }
+        
+        function closeLocations() {
+            document.getElementById('locations-panel').classList.add('hidden');
+            document.getElementById('game-actions').classList.remove('hidden');
+        }
+        
+        async function travelTo(locationId) {
+            if (!gameId) return;
+            try {
+                const response = await fetch('/api/game/action', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        game_id: gameId,
+                        action: 'travel',
+                        data: {location: locationId}
+                    })
+                });
+                const data = await response.json();
+                showMessage(data.message, 'success');
+                await loadGameState();
+                openLocations();
+            } catch (error) {
+                showMessage('Error: ' + error.message, 'error');
+            }
+        }
+        
+        async function openInventory() {
+            if (!gameId) return;
+            try {
+                const response = await fetch(`/api/game/${gameId}/inventory`);
+                const data = await response.json();
+                
+                const listDiv = document.getElementById('inventory-list');
+                if (data.inventory && data.inventory.length > 0) {
+                    listDiv.innerHTML = data.inventory.map(item => `
+                        <div class="quest-item">
+                            <div class="quest-name">${item.name}</div>
+                            <div class="quest-description">Type: ${item.type || 'Unknown'}</div>
+                            ${item.damage ? `<div style="color: #ef4444; margin-top: 5px;">Damage: ${item.damage}</div>` : ''}
+                            ${item.ac ? `<div style="color: #3b82f6; margin-top: 5px;">AC: ${item.ac}</div>` : ''}
+                            ${item.ac_bonus ? `<div style="color: #3b82f6; margin-top: 5px;">AC Bonus: +${item.ac_bonus}</div>` : ''}
+                            ${item.healing ? `<div style="color: #10b981; margin-top: 5px;">Healing: ${item.healing}</div>` : ''}
+                        </div>
+                    `).join('');
+                } else {
+                    listDiv.innerHTML = '<p style="color: #94a3b8;">Inventory is empty</p>';
+                }
+                
+                document.getElementById('inventory-panel').classList.remove('hidden');
+                document.getElementById('game-actions').classList.add('hidden');
+            } catch (error) {
+                showMessage('Error loading inventory: ' + error.message, 'error');
+            }
+        }
+        
+        function closeInventory() {
+            document.getElementById('inventory-panel').classList.add('hidden');
+            document.getElementById('game-actions').classList.remove('hidden');
+        }
+        
+        async function openSaveLoad() {
+            if (!gameId) {
+                showMessage('Create a character first', 'error');
+                return;
+            }
+            try {
+                const response = await fetch('/api/saves');
+                const data = await response.json();
+                
+                const listDiv = document.getElementById('saves-list');
+                if (data.saves && data.saves.length > 0) {
+                    listDiv.innerHTML = data.saves.map(save => {
+                        const date = new Date(save.saved_at * 1000);
+                        return `
+                            <div class="quest-item">
+                                <div class="quest-name">${save.character_name} (Level ${save.level})</div>
+                                <div class="quest-description">Saved: ${date.toLocaleString()}</div>
+                                <button onclick="loadGame('${save.game_id}')" style="margin-top: 10px;">Load</button>
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    listDiv.innerHTML = '<p style="color: #94a3b8;">No saved games</p>';
+                }
+                
+                document.getElementById('save-load-panel').classList.remove('hidden');
+                document.getElementById('game-actions').classList.add('hidden');
+            } catch (error) {
+                showMessage('Error loading saves: ' + error.message, 'error');
+            }
+        }
+        
+        function closeSaveLoad() {
+            document.getElementById('save-load-panel').classList.add('hidden');
+            document.getElementById('game-actions').classList.remove('hidden');
+        }
+        
+        async function saveGame() {
+            if (!gameId) return;
+            try {
+                const response = await fetch(`/api/game/${gameId}/save`, {method: 'POST'});
+                const data = await response.json();
+                showMessage(data.message, 'success');
+            } catch (error) {
+                showMessage('Error saving: ' + error.message, 'error');
+            }
+        }
+        
+        async function loadGame(loadGameId) {
+            if (!confirm('Load this game? Current progress will be lost.')) return;
+            try {
+                const response = await fetch(`/api/game/${loadGameId}/load`, {method: 'POST'});
+                const data = await response.json();
+                gameId = loadGameId;
+                gameState = data.game_state;
+                showMessage('Game loaded!', 'success');
+                updateCharacterSheet();
+                closeSaveLoad();
+            } catch (error) {
+                showMessage('Error loading: ' + error.message, 'error');
+            }
         }
     </script>
 </body>

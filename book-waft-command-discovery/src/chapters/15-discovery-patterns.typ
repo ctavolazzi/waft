@@ -21,11 +21,11 @@ This chapter documents the patterns discovered during the exploration of WAFT's 
 === Pattern 1: Command Categories
 
 Commands naturally group into categories:
-- **Documentation**: Checkpoint, dossier, one-pager
-- **Learning**: Study, science-bitch
-- **Generation**: Worldbuild, tell-story
-- **Status**: Show-me, visualize
-- **Evolution**: Evolve-a-ui
+- *[Documentation]*: Checkpoint, dossier, one-pager
+- *[Learning]*: Study, science-bitch
+- *[Generation]*: Worldbuild, tell-story
+- *[Status]*: Show-me, visualize
+- *[Evolution]*: Evolve-a-ui
 
 === Pattern 2: Document Generation
 

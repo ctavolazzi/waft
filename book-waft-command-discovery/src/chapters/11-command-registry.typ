@@ -20,9 +20,10 @@ Each command file follows a standard structure:
 ```markdown
 # Command Name
 
-**Brief description**
+*[Brief description
+```*
 
-**Use when:** When to use this command
+*[Use when:]* When to use this command
 
 ---
 
@@ -47,7 +48,8 @@ Step-by-step execution flow
 ## Integration
 
 How it integrates with other systems
-```
+
+]
 
 == Command Categories
 
@@ -85,11 +87,11 @@ The dashboard scans `.cursor/commands/` directory:
 === Command Metadata
 
 Each command has:
-- **Name**: Command identifier
-- **Description**: What it does
-- **Category**: Command type
-- **Usage**: How to invoke
-- **File Path**: Location of command file
+- *[Name]*: Command identifier
+- *[Description]*: What it does
+- *[Category]*: Command type
+- *[Usage]*: How to invoke
+- *[File Path]*: Location of command file
 
 == Integration with Dashboard
 

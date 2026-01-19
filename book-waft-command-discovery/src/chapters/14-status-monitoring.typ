@@ -53,10 +53,10 @@ Real-time status display:
 
 === Status Indicators
 
-- ✅ **Healthy**: All systems normal
-- ⚠️ **Warning**: Minor issues detected
-- ❌ **Error**: Critical issues found
-- 🔄 **Refreshing**: Status update in progress
+- ✅ *[Healthy]*: All systems normal
+- ⚠️ *[Warning]*: Minor issues detected
+- ❌ *[Error]*: Critical issues found
+- 🔄 *[Refreshing]*: Status update in progress
 
 == Status Updates
 

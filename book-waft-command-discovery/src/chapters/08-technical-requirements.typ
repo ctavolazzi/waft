@@ -6,18 +6,18 @@ This chapter documents the technical requirements for the WAFT Command Dashboard
 
 === Command Launcher Component
 
-**HTML Structure**:
+*[HTML Structure]*:
 - Search input for filtering commands
 - Grid layout for command cards
 - Category filtering
 - Command execution buttons
 
-**Data Source**:
+*[Data Source]*:
 - WAFT command registry
 - `.cursor/commands/*.md` files
 - Parse command documentation
 
-**Functionality**:
+*[Functionality]*:
 - Display all commands
 - Search/filter by name or category
 - Execute commands
@@ -25,13 +25,13 @@ This chapter documents the technical requirements for the WAFT Command Dashboard
 
 === Status Dashboard Component
 
-**HTML Structure**:
+*[HTML Structure]*:
 - Project overview card
 - Git status display
 - System health indicators
 - Refresh button
 
-**Data Source**:
+*[Data Source]*:
 - `waft info` command output`
 - `git status` command output
 - File system scanning
@@ -39,13 +39,13 @@ This chapter documents the technical requirements for the WAFT Command Dashboard
 
 === Document Gallery Component
 
-**HTML Structure**:
+*[HTML Structure]*:
 - Recently generated files list
 - File type filters
 - Preview thumbnails
 - Open/view buttons
 
-**Data Source**:
+*[Data Source]*:
 - Scan `_work_efforts/` for PDFs
 - Scan `_pyrite/.waft/` for HTML
 - Scan `_genetics/` for evolution outputs
@@ -53,20 +53,20 @@ This chapter documents the technical requirements for the WAFT Command Dashboard
 
 === Work Effort Tracker Component
 
-**HTML Structure**:
+*[HTML Structure]*:
 - Active work efforts list
 - Status badges
 - Progress bars
 - Link to work effort details
 
-**Data Source**:
+*[Data Source]*:
 - Scan `_work_efforts/WE-*` directories
 - Read index files
 - Extract status and progress
 
 == Layout Structure
 
-**CSS Grid Layout**:
+*[CSS Grid Layout]*:
 - 3 columns: Command Launcher (2fr), Status/Documents (1fr), Work/History (1fr)
 - Responsive design
 - Dark mode styling

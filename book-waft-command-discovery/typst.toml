@@ -1,0 +1,40 @@
+# Typst configuration for WAFT Command Discovery Book
+
+[compiler]
+# Output format: html (for shiroa) or pdf
+format = "html"
+
+# PDF-specific settings (when format = "pdf")
+[pdf]
+# Paper size
+paper = "us-letter"
+
+# Margins (in points)
+margin = (
+  top: 72pt,
+  bottom: 72pt,
+  left: 72pt,
+  right: 72pt,
+)
+
+# Font settings
+[font]
+# Default font families
+families = ["Times New Roman", "serif"]
+
+# Math font
+math-font = "Latin Modern Math"
+
+# Code font
+code-font = "Courier New"
+
+# Compilation settings
+[compile]
+# Enable incremental compilation
+incremental = true
+
+# Watch mode (for development)
+watch = false
+
+# Output directory
+output-dir = "book"

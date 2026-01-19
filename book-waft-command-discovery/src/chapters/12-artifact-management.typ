@@ -35,12 +35,12 @@ The dashboard scans multiple directories:
 === File Metadata Extraction
 
 For each artifact:
-- **Path**: Full file path
-- **Name**: Filename
-- **Type**: PDF, HTML, Markdown, etc.
-- **Size**: File size in bytes
-- **Modified**: Last modification time
-- **Category**: Based on directory/pattern
+- *[Path]*: Full file path
+- *[Name]*: Filename
+- *[Type]*: PDF, HTML, Markdown, etc.
+- *[Size]*: File size in bytes
+- *[Modified]*: Last modification time
+- *[Category]*: Based on directory/pattern
 
 == Artifact Display
 

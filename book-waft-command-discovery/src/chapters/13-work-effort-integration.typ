@@ -22,12 +22,12 @@ The dashboard scans `_work_efforts/` for:
 === Work Effort Metadata
 
 Each work effort has:
-- **ID**: `WE-YYMMDD-xxxx` format
-- **Title**: From directory name or index
-- **Status**: active, paused, completed
-- **Progress**: From status file or index
-- **Last Updated**: File modification time
-- **Path**: Directory path
+- *[ID]*: `WE-YYMMDD-xxxx` format
+- *[Title]*: From directory name or index
+- *[Status]*: active, paused, completed
+- *[Progress]*: From status file or index
+- *[Last Updated]*: File modification time
+- *[Path]*: Directory path
 
 == Work Effort Display
 
@@ -42,10 +42,10 @@ Displays work efforts in a list:
 
 === Status Indicators
 
-- 🟢 **Active**: Currently in progress
-- 🟡 **Paused**: Temporarily stopped
-- 🔵 **Completed**: Finished
-- ⚪ **Unknown**: Status not determined
+- 🟢 *[Active]*: Currently in progress
+- 🟡 *[Paused]*: Temporarily stopped
+- 🔵 *[Completed]*: Finished
+- ⚪ *[Unknown]*: Status not determined
 
 == Work Effort Actions
 

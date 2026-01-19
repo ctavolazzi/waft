@@ -87,7 +87,8 @@ class ShopPurchaseRequest(BaseModel):
 
 class CombatActionRequest(BaseModel):
     game_id: str
-    action: str  # "attack" or "flee"
+    action: str  # "attack", "flee", or "cast"
+    spell_id: Optional[str] = None  # Required if action is "cast"
 
 
 # Shop items
@@ -108,6 +109,38 @@ ENEMIES = {
     "skeleton": {"name": "Skeleton", "ac": 13, "hp": 13, "damage": "1d6+2", "xp": 50},
     "bandit": {"name": "Bandit", "ac": 12, "hp": 11, "damage": "1d6", "xp": 25},
     "wolf": {"name": "Wolf", "ac": 13, "hp": 11, "damage": "2d4+2", "xp": 50},
+}
+
+# Locations
+LOCATIONS = {
+    "town": {
+        "name": "Town Square",
+        "description": "A bustling town square with shops and taverns",
+        "encounters": ["merchant", "guard", "citizen"],
+        "enemies": ["bandit"],
+        "shop_available": True
+    },
+    "forest": {
+        "name": "Dark Forest",
+        "description": "A mysterious forest filled with danger",
+        "encounters": ["hermit", "ruins", "clearing"],
+        "enemies": ["goblin", "wolf"],
+        "shop_available": False
+    },
+    "cave": {
+        "name": "Goblin Cave",
+        "description": "A dark cave filled with goblins",
+        "encounters": ["treasure", "goblin_camp"],
+        "enemies": ["goblin", "orc"],
+        "shop_available": False
+    },
+    "ruins": {
+        "name": "Ancient Ruins",
+        "description": "Mysterious ruins from a forgotten age",
+        "encounters": ["artifact", "guardian", "puzzle"],
+        "enemies": ["skeleton", "orc"],
+        "shop_available": False
+    }
 }
 
 
@@ -326,6 +359,110 @@ async def shop_purchase(request: ShopPurchaseRequest):
 async def get_shop_items():
     """Get shop items list."""
     return JSONResponse({"items": SHOP_ITEMS})
+
+
+@app.get("/api/spells")
+async def get_spells():
+    """Get available spells."""
+    return JSONResponse({"spells": SPELLS})
+
+
+@app.get("/api/locations")
+async def get_locations():
+    """Get available locations."""
+    return JSONResponse({"locations": LOCATIONS})
+
+
+@app.get("/api/game/{game_id}/inventory")
+async def get_inventory(game_id: str):
+    """Get detailed inventory."""
+    if game_id not in game_states:
+        raise HTTPException(status_code=404, detail="Game not found")
+    
+    state = game_states[game_id]
+    inventory = state.get("inventory", [])
+    
+    # Build detailed inventory
+    detailed = []
+    for item_name in inventory:
+        # Find item details
+        item_details = None
+        for key, item in SHOP_ITEMS.items():
+            if item["name"] == item_name:
+                item_details = item.copy()
+                item_details["key"] = key
+                break
+        
+        if not item_details:
+            item_details = {"name": item_name, "type": "unknown"}
+        
+        detailed.append(item_details)
+    
+    return JSONResponse({"inventory": detailed})
+
+
+@app.post("/api/game/{game_id}/save")
+async def save_game(game_id: str):
+    """Save game to file."""
+    if game_id not in game_states:
+        raise HTTPException(status_code=404, detail="Game not found")
+    
+    state = game_states[game_id]
+    save_dir = Path(__file__).parent / "saves"
+    save_dir.mkdir(exist_ok=True)
+    
+    save_file = save_dir / f"{game_id}.json"
+    save_file.write_text(json.dumps(state, indent=2))
+    
+    return JSONResponse({
+        "success": True,
+        "message": "Game saved successfully",
+        "save_file": str(save_file)
+    })
+
+
+@app.get("/api/saves")
+async def list_saves():
+    """List all saved games."""
+    save_dir = Path(__file__).parent / "saves"
+    save_dir.mkdir(exist_ok=True)
+    
+    saves = []
+    for save_file in save_dir.glob("*.json"):
+        try:
+            data = json.loads(save_file.read_text())
+            saves.append({
+                "game_id": data.get("game_id", save_file.stem),
+                "character_name": data.get("character", {}).get("name", "Unknown"),
+                "level": data.get("character", {}).get("level", 1),
+                "saved_at": save_file.stat().st_mtime
+            })
+        except:
+            continue
+    
+    saves.sort(key=lambda x: x["saved_at"], reverse=True)
+    return JSONResponse({"saves": saves})
+
+
+@app.post("/api/game/{game_id}/load")
+async def load_game(game_id: str):
+    """Load game from file."""
+    save_dir = Path(__file__).parent / "saves"
+    save_file = save_dir / f"{game_id}.json"
+    
+    if not save_file.exists():
+        raise HTTPException(status_code=404, detail="Save file not found")
+    
+    try:
+        state = json.loads(save_file.read_text())
+        game_states[game_id] = state
+        return JSONResponse({
+            "success": True,
+            "message": "Game loaded successfully",
+            "game_state": state
+        })
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error loading game: {e}")
 
 
 @app.get("/api/quests")

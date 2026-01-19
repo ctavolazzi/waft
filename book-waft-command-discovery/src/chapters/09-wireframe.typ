@@ -8,17 +8,17 @@ The wireframe was created as HTML structure only, with visible borders to show l
 
 === Structure
 
-**Header**:
+*[Header]*:
 - WAFT logo/branding
 - Page title: "WAFT Command Dashboard"
 - Quick search bar
 
-**Main Content (Grid Layout)**:
+*[Main Content (Grid Layout)]*:
 - Left Column (2fr): Command Launcher
 - Middle Column (1fr): Status Dashboard + Document Gallery
 - Right Column (1fr): Work Effort Tracker + Session History
 
-**Footer**:
+*[Footer]*:
 - System status
 - Last updated timestamp
 - Links to documentation
@@ -78,7 +78,7 @@ After wireframe:
 
 == Key Design Decisions
 
-- **3-column grid**: Command launcher gets primary focus (2fr)
-- **Modular sections**: Each component is independent
-- **Responsive**: Grid adapts to screen size
-- **Dark mode**: Consistent with WAFT branding
+- *[3-column grid]*: Command launcher gets primary focus (2fr)
+- *[Modular sections]*: Each component is independent
+- *[Responsive]*: Grid adapts to screen size
+- *[Dark mode]*: Consistent with WAFT branding
