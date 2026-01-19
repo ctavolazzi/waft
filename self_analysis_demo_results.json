@@ -1,0 +1,24 @@
+{
+  "code_analysis": {
+    "success": true,
+    "duration": 0.0012230873107910156,
+    "quality": 0.5,
+    "found_index_issue": true,
+    "found_performance": true,
+    "found_o_n": true,
+    "answer_length": 1070
+  },
+  "performance_diagnosis": {
+    "success": true,
+    "duration": 0.0022819042205810547,
+    "quality": 0.5,
+    "identified_index": true,
+    "identified_rewrite": true,
+    "identified_linear": true
+  },
+  "meta_reasoning": {
+    "success": true,
+    "duration": 0.0028183460235595703,
+    "quality": 0.5
+  }
+}

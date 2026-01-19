@@ -1,0 +1,47 @@
+================================================================================
+SELF-ANALYSIS SUITE
+TheGuide Examines Itself - Meta-Cognitive Introspection
+================================================================================
+
+METHODOLOGY:
+  Using TheGuide's own meta-cognitive capabilities to:
+  1. Analyze its own source code
+  2. Diagnose its own performance bug
+  3. Reason about its own reasoning process
+
+================================================================================
+SELF-DIAGNOSTIC 1: TheGuide Analyzes Its Own Source Code
+================================================================================
+
+SETUP: Creating TheGuide instance with real LLM...
+
+⚠️  litellm not available, using mock LLM for demonstration
+
+================================================================================
+SELF-DIAGNOSTIC 2: TheGuide Diagnoses Its Own Performance Bug
+================================================================================
+
+⚠️  litellm not available
+
+================================================================================
+SELF-DIAGNOSTIC 3: TheGuide Reasons About Its Own Reasoning
+================================================================================
+
+⚠️  litellm not available
+
+================================================================================
+SELF-ANALYSIS SUMMARY
+================================================================================
+
+Diagnostics run: 3
+Successful: 0
+
+code_analysis: ⚠️  no_real_llm
+
+performance_diagnosis: ⚠️  unknown
+
+meta_reasoning: ⚠️  unknown
+
+📊 Results saved to: self_analysis_results.json
+
+================================================================================
