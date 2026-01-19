@@ -32,7 +32,7 @@ We added **two counterbalancing dimensions** that work against ego and dogfoodin
 
 ---
 
-## The Architecture: 8 Dimensions
+## The Architecture: 9 Dimensions (FVCU+F+CDC+A)
 
 ### Core Quality (5 dimensions)
 1. Factuality - Is it true?
@@ -45,6 +45,9 @@ We added **two counterbalancing dimensions** that work against ego and dogfoodin
 6. **Confidence** - How certain? (HIGH = certain)
 7. **Doubt** - Should question? (HIGH = skeptical)
 8. **Curiosity** - Explore alternatives? (HIGH = explore more)
+
+### Affective (1 dimension - prevents pure determinism)
+9. **Aesthetic** - Luck/fate (stochastic element)
 
 ### Derived Property
 ```python
@@ -217,9 +220,10 @@ This is **recursive meta-cognition**:
 ## Statistics
 
 ```
-Dimensions: 8 (was 6, added 2)
+Dimensions: 9 (FVCU+F+CDC+A)
   - 5 core quality dimensions
   - 3 meta-cognitive dimensions (balancing forces)
+  - 1 affective dimension (luck/fate - stochastic element)
 
 New property: epistemic_humility
   - Aggregates doubt, curiosity, and (1 - confidence)

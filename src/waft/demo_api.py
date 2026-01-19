@@ -147,6 +147,8 @@ class MetaCognitiveAPI:
                     'confidence': step.evaluation.confidence.value,  # Certainty
                     'doubt': step.evaluation.doubt.value,            # Skepticism
                     'curiosity': step.evaluation.curiosity.value,    # Explore alternatives
+                    # Affective (prevents pure rationality/determinism)
+                    'aesthetic': step.evaluation.aesthetic.value,    # Luck/fate - the stochastic element
                 }
             }
             for step in session.steps

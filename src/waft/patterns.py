@@ -12,6 +12,7 @@ from abc import ABC, abstractmethod
 from typing import Callable, List, Optional
 from dataclasses import dataclass, field
 from enum import Enum
+import random
 
 # ============================================================================
 # PATTERN 1: STRATEGY - Different evaluation strategies
@@ -35,6 +36,8 @@ class LengthBasedStrategy(EvaluationStrategy):
         # Length-based: moderate doubt and curiosity
         doubt = Score(0.3)
         curiosity = Score(0.4)
+        # Moderate luck - balanced fate
+        aesthetic = Score(random.random() * 0.5 + 0.25)  # Range: 0.25 to 0.75
         return Evaluation(
             factuality=score,
             validity=score,
@@ -43,7 +46,8 @@ class LengthBasedStrategy(EvaluationStrategy):
             faithfulness=score,
             confidence=confidence,
             doubt=doubt,
-            curiosity=curiosity
+            curiosity=curiosity,
+            aesthetic=aesthetic
         )
 
 
@@ -59,6 +63,8 @@ class StrictStrategy(EvaluationStrategy):
         confidence = Score(0.9)
         doubt = Score(0.2)  # Low doubt = certain about judgment
         curiosity = Score(0.2)  # Low curiosity = not seeking alternatives
+        # Low luck - fate is harsh when strict
+        aesthetic = Score(random.random() * 0.4 + 0.1)  # Range: 0.1 to 0.5
         return Evaluation(
             factuality=penalized,
             validity=penalized,
@@ -67,7 +73,8 @@ class StrictStrategy(EvaluationStrategy):
             faithfulness=penalized,
             confidence=confidence,
             doubt=doubt,
-            curiosity=curiosity
+            curiosity=curiosity,
+            aesthetic=aesthetic
         )
 
 
@@ -83,6 +90,8 @@ class LenientStrategy(EvaluationStrategy):
         confidence = Score(0.6)
         doubt = Score(0.7)  # High doubt = questioning the evaluation
         curiosity = Score(0.8)  # High curiosity = exploring alternatives
+        # High luck - fate is kind when lenient
+        aesthetic = Score(random.random() * 0.4 + 0.6)  # Range: 0.6 to 1.0
         return Evaluation(
             factuality=boosted,
             validity=boosted,
@@ -91,7 +100,8 @@ class LenientStrategy(EvaluationStrategy):
             faithfulness=boosted,
             confidence=confidence,
             doubt=doubt,
-            curiosity=curiosity
+            curiosity=curiosity,
+            aesthetic=aesthetic
         )
 
 
@@ -154,7 +164,8 @@ class MinimumScoreHandler(EvaluationHandler):
             faithfulness=clamp(evaluation.faithfulness),
             confidence=clamp(evaluation.confidence),
             doubt=clamp(evaluation.doubt),
-            curiosity=clamp(evaluation.curiosity)
+            curiosity=clamp(evaluation.curiosity),
+            aesthetic=clamp(evaluation.aesthetic)
         )
         return self._pass_to_next(modified)
 

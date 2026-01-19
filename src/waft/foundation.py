@@ -7,6 +7,7 @@ Start with the atomic data type and build up brick by brick.
 from dataclasses import dataclass
 from typing import Protocol as TypingProtocol
 from enum import Enum
+import random
 
 # ============================================================================
 # LEVEL 0: THE ATOMIC DATA TYPE
@@ -63,11 +64,13 @@ def evaluate_text(text: str) -> Score:
 class Evaluation:
     """
     Multi-dimensional quality assessment.
-    Built from 8 atomic Scores (FVCU+F+CDC taxonomy).
+    Built from 9 atomic Scores (FVCU+F+CDC+A taxonomy).
 
-    Balancing forces to prevent ego and dogfooding:
+    Balancing forces:
     - Confidence ↔ Doubt (certainty vs skepticism)
     - Conviction ↔ Curiosity (satisfied vs exploring alternatives)
+    - Logic ↔ Aesthetic (rational vs affective preference)
+    - Determinism ↔ Stochasticity (predictable vs random)
     """
     # Core quality dimensions
     factuality: Score      # Is it factually correct?
@@ -81,12 +84,16 @@ class Evaluation:
     doubt: Score           # Should we question this? (HIGH = skeptical)
     curiosity: Score       # Should we explore alternatives? (HIGH = explore more)
 
+    # Affective dimension (prevents pure rationality/determinism)
+    aesthetic: Score       # Do we "like" this? (preference, pleasure/pain, without logical reason)
+
     @property
     def overall(self) -> Score:
         """Aggregate all dimensions into one score.
 
         Note: Doubt reduces overall (high doubt = lower confidence in result)
         Curiosity is neutral (just indicates exploration needed)
+        Aesthetic adds luck/fate - the stochastic element
         """
         avg = (
             self.factuality.value +
@@ -96,8 +103,9 @@ class Evaluation:
             self.faithfulness.value +
             self.confidence.value +
             (1.0 - self.doubt.value) +  # Doubt REDUCES overall (inverse)
-            self.curiosity.value * 0.5  # Curiosity has half weight
-        ) / 7.5  # Adjusted denominator
+            self.curiosity.value * 0.5 +  # Curiosity has half weight
+            self.aesthetic.value * 0.7  # Aesthetic (luck/fate) influences outcome
+        ) / 8.2  # Adjusted denominator
         return Score(avg)
 
     @property
@@ -161,6 +169,18 @@ def evaluate_answer(answer: str, problem: str) -> Evaluation:
     )
     curiosity_score = Score(curiosity_value)
 
+    # Aesthetic: affective preference with luck/fate (ANTI-DETERMINISM)
+    # This is the d20 roll - introduces necessary randomness
+    # Even with identical inputs, this varies (prevents pure determinism)
+    # Components:
+    # - Luck: pure randomness (d20 roll)
+    # - Fate: deterministic pull based on content
+    # - "Luck is gravity" - influences outcome without logical reason
+    luck = random.random()  # The d20 roll: 0.0 to 1.0
+    fate = min((len(answer) + len(problem)) / 200.0, 1.0)  # Deterministic component
+    aesthetic_value = (luck * 0.7 + fate * 0.3)  # 70% luck, 30% fate
+    aesthetic_score = Score(aesthetic_value)
+
     return Evaluation(
         # Core dimensions
         factuality=base_score,
@@ -171,7 +191,9 @@ def evaluate_answer(answer: str, problem: str) -> Evaluation:
         # Meta-cognitive dimensions (prevent ego/dogfooding)
         confidence=confidence_score,
         doubt=doubt_score,           # Questions the evaluation
-        curiosity=curiosity_score    # Seeks alternatives
+        curiosity=curiosity_score,   # Seeks alternatives
+        # Affective dimension (prevents pure rationality/determinism)
+        aesthetic=aesthetic_score    # Luck/fate - the stochastic element
     )
 
 
