@@ -5,31 +5,36 @@ Generate Research PDF: eBook-Template Analysis & WAFT PDF Systems Comparison
 Creates a comprehensive research document comparing eBook-Template with WAFT's PDF systems.
 """
 
-from pathlib import Path
-from datetime import datetime
 import sys
+from datetime import datetime
+from pathlib import Path
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from src.waft.templates.academic_paper import generate_academic_paper
 import markdown
+
+from src.waft.templates.academic_paper import generate_academic_paper
 
 
 def generate_research_pdf():
     """Generate comprehensive research PDF about eBook-Template analysis."""
-    
+
     # Read the analysis document
-    analysis_path = project_root / "_work_efforts" / "WE-260112-q6gl_pdf_template_library_system" / "EBOCK_TEMPLATE_ANALYSIS.md"
+    analysis_path = (
+        project_root
+        / "_work_efforts"
+        / "WE-260112-q6gl_pdf_template_library_system"
+        / "EBOCK_TEMPLATE_ANALYSIS.md"
+    )
     analysis_content = analysis_path.read_text()
-    
+
     # Convert markdown to HTML
     html_content = markdown.markdown(
-        analysis_content,
-        extensions=['fenced_code', 'tables', 'nl2br', 'extra', 'codehilite']
+        analysis_content, extensions=["fenced_code", "tables", "nl2br", "extra", "codehilite"]
     )
-    
+
     # Enhance HTML with better styling
     html_content = f"""
     <div class="research-content">
@@ -130,16 +135,16 @@ def generate_research_pdf():
     }}
     </style>
     """
-    
+
     # Generate PDF
     output_dir = project_root / "_work_efforts" / "showcase_documents"
     output_dir.mkdir(parents=True, exist_ok=True)
-    
+
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     pdf_path = output_dir / f"eBook_Template_Research_Analysis_{timestamp}.pdf"
-    
+
     print(f"Generating research PDF: {pdf_path}")
-    
+
     generate_academic_paper(
         title="eBook-Template Repository Analysis: A Comparative Study of Multi-Format Document Generation Systems",
         content=html_content,
@@ -151,10 +156,7 @@ def generate_research_pdf():
         eBook-Template excels at multi-format output (PDF, ePub, Kindle), WAFT provides superior template 
         diversity and Python integration. The research identifies complementary strengths and proposes 
         integration strategies for enhanced document generation capabilities.""",
-        authors=[
-            {"name": "WAFT Research Team"},
-            {"name": "AI Assistant (Claude)"}
-        ],
+        authors=[{"name": "WAFT Research Team"}, {"name": "AI Assistant (Claude)"}],
         conference="WAFT Research",
         year="2026",
         references=[
@@ -162,11 +164,11 @@ def generate_research_pdf():
             "Asciidoctor Documentation: https://asciidoctor.org/",
             "WAFT Template System: src/waft/templates/",
             "WAFT DocumentBuilder: src/waft/document_builder.py",
-            "WAFT Template Registry: src/waft/templates/registry.py"
+            "WAFT Template Registry: src/waft/templates/registry.py",
         ],
-        page_numbers=True
+        page_numbers=True,
     )
-    
+
     print(f"✅ Research PDF generated: {pdf_path}")
     return pdf_path
 

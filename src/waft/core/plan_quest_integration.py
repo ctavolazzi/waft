@@ -305,7 +305,9 @@ def find_all_plans(plans_dir: Path | None = None) -> list[Path]:
 
 
 def create_quests_for_all_plans(
-    plans_dir: Path | None = None, project_path: Path | None = None, skip_existing: bool = True
+    plans_dir: Path | None = None,
+    project_path: Path | None = None,
+    skip_existing: bool = True,
 ) -> list[dict[str, Any]]:
     """
     Create quests for all existing plans.

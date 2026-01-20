@@ -1,7 +1,5 @@
 """Tests for gamification manager."""
 
-import json
-from pathlib import Path
 from waft.core.gamification import GamificationManager
 
 
@@ -59,5 +57,3 @@ def test_get_stats(temp_project_path):
     assert "insight" in stats
     assert "level" in stats
     assert "achievements" in stats
-
-

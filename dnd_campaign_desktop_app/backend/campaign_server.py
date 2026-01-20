@@ -5,36 +5,39 @@ Self-running, self-monitoring D&D campaign backend.
 Wraps CampaignOrchestrator with FastAPI for Electron integration.
 """
 
-from pathlib import Path
-from typing import Optional, Dict, Any, List
-from datetime import datetime
 import asyncio
-import sys
 import os
+import sys
 import time
+from datetime import datetime
+from pathlib import Path
+from typing import Any
 
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
+import uvicorn
+from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import uvicorn
 
 # Add parent directory to path to import CampaignOrchestrator
-sys.path.insert(0, str(Path(__file__).parent.parent.parent / "_work_efforts" / "WE-260113-wfbu_ai_dm_system_d_d_5e_campaign_orchestrator_with_story_booklet_generation" / "src"))
+sys.path.insert(
+    0,
+    str(
+        Path(__file__).parent.parent.parent
+        / "_work_efforts"
+        / "WE-260113-wfbu_ai_dm_system_d_d_5e_campaign_orchestrator_with_story_booklet_generation"
+        / "src"
+    ),
+)
 
 try:
     from campaign_orchestrator import CampaignOrchestrator
-    from campaign_state import CampaignState, CampaignSession, CampaignStatus, SessionStatus
+    from campaign_state import CampaignSession, CampaignState, CampaignStatus, SessionStatus
 except ImportError as e:
     print(f"Warning: Could not import CampaignOrchestrator: {e}")
     CampaignOrchestrator = None
 
 # Import monitoring system
-from monitoring import (
-    init_monitoring,
-    get_monitoring,
-    EventType,
-    MonitoringCollector
-)
+from monitoring import EventType, init_monitoring
 from monitoring_api import router as monitoring_router
 
 app = FastAPI(title="D&D Campaign Desktop App API")
@@ -54,28 +57,28 @@ app.include_router(monitoring_router)
 # Global state
 campaign_manager = None
 project_path = Path.cwd()
-active_campaigns: Dict[str, Dict[str, Any]] = {}
-websocket_connections: List[WebSocket] = []
+active_campaigns: dict[str, dict[str, Any]] = {}
+websocket_connections: list[WebSocket] = []
 
 
 class CampaignCreateRequest(BaseModel):
     campaign_name: str
-    scenario_file: Optional[str] = None
+    scenario_file: str | None = None
     description: str = ""
     difficulty: str = "medium"
 
 
 class CampaignStartRequest(BaseModel):
     campaign_id: str
-    session_number: Optional[int] = None
+    session_number: int | None = None
 
 
 class DMDecisionRequest(BaseModel):
     campaign_id: str
     problem: str
-    alternatives: List[str]
-    criteria: Dict[str, float]
-    scores: Dict[str, Dict[str, float]]
+    alternatives: list[str]
+    criteria: dict[str, float]
+    scores: dict[str, dict[str, float]]
 
 
 class SelfMonitoringCampaign:
@@ -85,12 +88,7 @@ class SelfMonitoringCampaign:
         self.project_path = project_path
         self.orchestrator = None
         self.running = False
-        self.metrics = {
-            "turns_completed": 0,
-            "errors": 0,
-            "uptime": 0,
-            "started_at": None
-        }
+        self.metrics = {"turns_completed": 0, "errors": 0, "uptime": 0, "started_at": None}
         self._initialize_orchestrator()
 
     def _initialize_orchestrator(self):
@@ -109,28 +107,32 @@ class SelfMonitoringCampaign:
             session = self.orchestrator.run_session(campaign_id)
 
             # Broadcast campaign start
-            await self._broadcast_event({
-                "type": "campaign_started",
-                "campaign_id": campaign_id,
-                "session_id": session.session_id,
-                "timestamp": datetime.now().isoformat()
-            })
+            await self._broadcast_event(
+                {
+                    "type": "campaign_started",
+                    "campaign_id": campaign_id,
+                    "session_id": session.session_id,
+                    "timestamp": datetime.now().isoformat(),
+                }
+            )
 
             # TODO: Run actual campaign loop here
             # For now, just mark as running
 
         except Exception as e:
             self.metrics["errors"] += 1
-            await self._broadcast_event({
-                "type": "campaign_error",
-                "campaign_id": campaign_id,
-                "error": str(e),
-                "timestamp": datetime.now().isoformat()
-            })
+            await self._broadcast_event(
+                {
+                    "type": "campaign_error",
+                    "campaign_id": campaign_id,
+                    "error": str(e),
+                    "timestamp": datetime.now().isoformat(),
+                }
+            )
         finally:
             self.running = False
 
-    async def _broadcast_event(self, event: Dict[str, Any]):
+    async def _broadcast_event(self, event: dict[str, Any]):
         """Broadcast event to all WebSocket connections."""
         disconnected = []
         for ws in websocket_connections:
@@ -157,7 +159,7 @@ try:
     if monitoring.is_first_startup:
         monitoring.record_first_startup(
             backend_start_time=backend_start_time,
-            health_check_passed=False  # Will be updated after first health check
+            health_check_passed=False,  # Will be updated after first health check
         )
         monitoring.record_event(EventType.BACKEND_START)
 except Exception as e:
@@ -175,10 +177,12 @@ async def health():
         status = {
             "status": "unhealthy",
             "message": "Campaign manager not initialized",
-            "orchestrator_available": CampaignOrchestrator is not None
+            "orchestrator_available": CampaignOrchestrator is not None,
         }
         if monitoring:
-            monitoring.record_metric("health_check_duration", (time.time() - health_check_start) * 1000)
+            monitoring.record_metric(
+                "health_check_duration", (time.time() - health_check_start) * 1000
+            )
         return status
 
     health_check_passed = True
@@ -186,7 +190,7 @@ async def health():
         "status": "healthy",
         "running": campaign_manager.running,
         "metrics": campaign_manager.metrics,
-        "orchestrator_available": CampaignOrchestrator is not None
+        "orchestrator_available": CampaignOrchestrator is not None,
     }
 
     # Record health check metric
@@ -198,8 +202,9 @@ async def health():
         # Update startup data if first startup
         if monitoring.is_first_startup and monitoring.startup_data:
             monitoring.startup_data.health_check_passed = health_check_passed
-            with open(monitoring.startup_data_file, 'w') as f:
+            with open(monitoring.startup_data_file, "w") as f:
                 from dataclasses import asdict
+
                 json.dump(asdict(monitoring.startup_data), f, indent=2)
 
     return status
@@ -212,10 +217,7 @@ async def list_campaigns():
         raise HTTPException(status_code=503, detail="Campaign orchestrator not available")
 
     # TODO: Get campaigns from state manager
-    return {
-        "campaigns": list(active_campaigns.values()),
-        "count": len(active_campaigns)
-    }
+    return {"campaigns": list(active_campaigns.values()), "count": len(active_campaigns)}
 
 
 @app.get("/api/campaigns/{campaign_id}")
@@ -241,31 +243,35 @@ async def create_campaign(request: CampaignCreateRequest):
             campaign_name=request.campaign_name,
             scenario_file=request.scenario_file,
             description=request.description,
-            difficulty=request.difficulty
+            difficulty=request.difficulty,
         )
 
         active_campaigns[campaign.campaign_id] = {
             "campaign_id": campaign.campaign_id,
             "campaign_name": campaign.campaign_name,
-            "status": campaign.status.value if hasattr(campaign.status, 'value') else str(campaign.status),
+            "status": campaign.status.value
+            if hasattr(campaign.status, "value")
+            else str(campaign.status),
             "created_at": campaign.created_at,
-            "description": campaign.description
+            "description": campaign.description,
         }
 
         # Record feature access
         if monitoring:
             monitoring.record_feature_access("campaign_create")
-            monitoring.record_event(EventType.CAMPAIGN_CREATED, {
-                "campaign_id": campaign.campaign_id,
-                "campaign_name": campaign.campaign_name
-            })
+            monitoring.record_event(
+                EventType.CAMPAIGN_CREATED,
+                {"campaign_id": campaign.campaign_id, "campaign_name": campaign.campaign_name},
+            )
 
-        await campaign_manager._broadcast_event({
-            "type": "campaign_created",
-            "campaign_id": campaign.campaign_id,
-            "campaign_name": campaign.campaign_name,
-            "timestamp": datetime.now().isoformat()
-        })
+        await campaign_manager._broadcast_event(
+            {
+                "type": "campaign_created",
+                "campaign_id": campaign.campaign_id,
+                "campaign_name": campaign.campaign_name,
+                "timestamp": datetime.now().isoformat(),
+            }
+        )
 
         return campaign
     except Exception as e:
@@ -286,23 +292,14 @@ async def start_campaign(campaign_id: str):
     # Run campaign in background
     asyncio.create_task(campaign_manager.run_campaign(campaign_id))
 
-    return {
-        "status": "started",
-        "campaign_id": campaign_id,
-        "message": "Campaign started"
-    }
+    return {"status": "started", "campaign_id": campaign_id, "message": "Campaign started"}
 
 
 @app.get("/api/campaigns/stats")
 async def get_stats():
     """Get campaign statistics."""
     if campaign_manager is None:
-        return {
-            "total_campaigns": 0,
-            "active_campaigns": 0,
-            "running_campaigns": 0,
-            "metrics": {}
-        }
+        return {"total_campaigns": 0, "active_campaigns": 0, "running_campaigns": 0, "metrics": {}}
 
     running = sum(1 for c in active_campaigns.values() if c.get("status") == "active")
 
@@ -310,7 +307,7 @@ async def get_stats():
         "total_campaigns": len(active_campaigns),
         "active_campaigns": running,
         "running_campaigns": 1 if campaign_manager.running else 0,
-        "metrics": campaign_manager.metrics
+        "metrics": campaign_manager.metrics,
     }
 
 
@@ -322,22 +319,22 @@ async def campaign_websocket(websocket: WebSocket):
 
     try:
         # Send initial state
-        await websocket.send_json({
-            "type": "connected",
-            "timestamp": datetime.now().isoformat(),
-            "active_campaigns": len(active_campaigns)
-        })
+        await websocket.send_json(
+            {
+                "type": "connected",
+                "timestamp": datetime.now().isoformat(),
+                "active_campaigns": len(active_campaigns),
+            }
+        )
 
         # Keep connection alive
         while True:
             try:
                 data = await websocket.receive_text()
                 # Echo back (can add command handling here)
-                await websocket.send_json({
-                    "type": "echo",
-                    "data": data,
-                    "timestamp": datetime.now().isoformat()
-                })
+                await websocket.send_json(
+                    {"type": "echo", "data": data, "timestamp": datetime.now().isoformat()}
+                )
             except WebSocketDisconnect:
                 break
     except WebSocketDisconnect:
@@ -351,14 +348,8 @@ if __name__ == "__main__":
     # Get project path from environment or use current directory
     project_path = Path(os.getenv("WAFT_PROJECT_PATH", Path.cwd()))
 
-    print(f"Starting D&D Campaign Desktop App Backend...")
+    print("Starting D&D Campaign Desktop App Backend...")
     print(f"Project path: {project_path}")
     print(f"CampaignOrchestrator available: {CampaignOrchestrator is not None}")
 
-    uvicorn.run(
-        "campaign_server:app",
-        host="127.0.0.1",
-        port=8000,
-        reload=True,
-        log_level="info"
-    )
+    uvicorn.run("campaign_server:app", host="127.0.0.1", port=8000, reload=True, log_level="info")

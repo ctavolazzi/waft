@@ -8,9 +8,8 @@ Creates multiple example documents demonstrating different template types and us
 """
 
 import sys
-from pathlib import Path
 from datetime import datetime
-from typing import List, Dict, Any
+from pathlib import Path
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
@@ -18,8 +17,8 @@ sys.path.insert(0, str(project_root))
 sys.path.insert(0, str(project_root / "src"))
 
 from rich.console import Console
-from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TimeElapsedColumn
 from rich.panel import Panel
+from rich.progress import BarColumn, Progress, SpinnerColumn, TextColumn, TimeElapsedColumn
 
 console = Console()
 
@@ -31,7 +30,7 @@ OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 def generate_tm_report_example() -> Path:
     """Generate a TELEPORT MASSIVE report example."""
     from src.waft.templates.tm_report import generate_tm_report
-    
+
     content = """
     <h2>Quarterly Operations Review</h2>
     
@@ -93,9 +92,9 @@ def generate_tm_report_example() -> Path:
         <li><strong>Safety Protocol Enhancement:</strong> Zero critical incidents this quarter</li>
     </ol>
     """
-    
+
     output_path = OUTPUT_DIR / "01_tm_report_example.pdf"
-    
+
     generate_tm_report(
         title="Q4 2025 Operations Review",
         content=content,
@@ -109,18 +108,26 @@ def generate_tm_report_example() -> Path:
         distribution="Executive Team, Facility Directors",
         summary="<p>Q4 operations exceeded expectations with 99.7% success rate and 15% growth in transfer volume. All facilities operational with minor maintenance scheduled for Site-Beta-7.</p>",
         signatures=[
-            {"name": "Dr. Sarah Chen", "title": "Chief Operations Officer", "date": datetime.now().strftime("%Y-%m-%d")},
-            {"name": "Marcus Rodriguez", "title": "Director of Facilities", "date": datetime.now().strftime("%Y-%m-%d")}
-        ]
+            {
+                "name": "Dr. Sarah Chen",
+                "title": "Chief Operations Officer",
+                "date": datetime.now().strftime("%Y-%m-%d"),
+            },
+            {
+                "name": "Marcus Rodriguez",
+                "title": "Director of Facilities",
+                "date": datetime.now().strftime("%Y-%m-%d"),
+            },
+        ],
     )
-    
+
     return output_path
 
 
 def generate_tm_brief_example() -> Path:
     """Generate a TELEPORT MASSIVE brief example."""
     from src.waft.brief import BriefDocument
-    
+
     doc = BriefDocument(
         title="Incident Report: Site-Delta-9 Anomaly",
         doc_id="TM-BRIEF-2026-001",
@@ -130,54 +137,60 @@ def generate_tm_brief_example() -> Path:
         cover_metadata={
             "OPERATIONAL MANUAL": "09-14",
             "CODENAME": "W.A.F.T.",
-            "FACILITY": "Site-Delta-9"
+            "FACILITY": "Site-Delta-9",
         },
         cover_warning={
             "message": "QUANTUM FLUCTUATION DETECTED - IMMEDIATE REVIEW REQUIRED",
-            "severity": "HIGH"
+            "severity": "HIGH",
         },
         cover_signature={
             "role": "Chief Science Officer",
             "name": "Dr. Elena Vasquez",
-            "date": datetime.now().strftime("%Y-%m-%d")
+            "date": datetime.now().strftime("%Y-%m-%d"),
         },
-        cover_footer="PROPERTY OF TELEPORT MASSIVE // SITE-DELTA-9"
+        cover_footer="PROPERTY OF TELEPORT MASSIVE // SITE-DELTA-9",
     )
-    
+
     doc.add_section_header("Incident Summary", level=2)
-    doc.add_text("On January 13, 2026 at 02:16 PST, Site-Delta-9 detected an anomalous quantum fluctuation during routine transfer operation TM-TX-8472.")
-    
+    doc.add_text(
+        "On January 13, 2026 at 02:16 PST, Site-Delta-9 detected an anomalous quantum fluctuation during routine transfer operation TM-TX-8472."
+    )
+
     doc.add_status_box(
         "Status",
-        "Incident resolved. No personnel injuries. Transfer completed successfully after 3.2 second delay."
+        "Incident resolved. No personnel injuries. Transfer completed successfully after 3.2 second delay.",
     )
-    
+
     doc.add_section_header("Technical Details", level=2)
-    doc.add_text("The fluctuation registered at 0.847 standard deviations above baseline, triggering automatic safety protocols. The system successfully compensated within 2.1 seconds.")
-    
+    doc.add_text(
+        "The fluctuation registered at 0.847 standard deviations above baseline, triggering automatic safety protocols. The system successfully compensated within 2.1 seconds."
+    )
+
     doc.add_table(
         headers=["Metric", "Baseline", "Anomaly", "Resolution"],
         rows=[
             ["Quantum Coherence", "0.999", "0.847", "0.998"],
             ["Transfer Time", "3.0s", "6.2s", "3.2s"],
             ["Energy Variance", "±0.1%", "+2.3%", "±0.05%"],
-            ["Safety Margin", "95%", "78%", "97%"]
-        ]
+            ["Safety Margin", "95%", "78%", "97%"],
+        ],
     )
-    
+
     doc.add_section_header("Root Cause Analysis", level=2)
-    doc.add_text("Preliminary analysis indicates localized quantum field interference from external source. Investigation ongoing.")
-    
+    doc.add_text(
+        "Preliminary analysis indicates localized quantum field interference from external source. Investigation ongoing."
+    )
+
     doc.add_note(
         "Action Required",
-        "Schedule full facility diagnostic scan. Review quantum field monitoring protocols. Update safety thresholds if necessary."
+        "Schedule full facility diagnostic scan. Review quantum field monitoring protocols. Update safety thresholds if necessary.",
     )
-    
+
     doc.add_section_header("Recommendations", level=2)
     doc.add_text("1. Increase monitoring frequency for Site-Delta-9 quantum field stability")
     doc.add_text("2. Implement enhanced filtering for external interference")
     doc.add_text("3. Review and update safety protocol thresholds")
-    
+
     output_path = doc.generate(OUTPUT_DIR / "02_tm_brief_example.pdf")
     return output_path
 
@@ -185,7 +198,7 @@ def generate_tm_brief_example() -> Path:
 def generate_tm_invoice_example() -> Path:
     """Generate a TELEPORT MASSIVE invoice example."""
     from src.waft.templates.tm_report import generate_tm_report
-    
+
     content = """
     <h2>Service Invoice</h2>
     
@@ -260,9 +273,9 @@ def generate_tm_invoice_example() -> Path:
         Not responsible for spontaneous duplication events.</p>
     </div>
     """
-    
+
     output_path = OUTPUT_DIR / "03_tm_invoice_example.pdf"
-    
+
     generate_tm_report(
         title="Service Invoice",
         content=content,
@@ -271,16 +284,16 @@ def generate_tm_invoice_example() -> Path:
         classification="CONFIDENTIAL",
         tagline="Making the Impossible, Inevitable™",
         date=datetime.now().strftime("%B %d, %Y"),
-        department="Billing & Finance"
+        department="Billing & Finance",
     )
-    
+
     return output_path
 
 
 def generate_tm_memo_example() -> Path:
     """Generate a TELEPORT MASSIVE personal memo example."""
     from src.waft.templates.personal_memo import generate_personal_memo
-    
+
     content = """
     <h2>Internal Memo</h2>
     
@@ -310,25 +323,25 @@ def generate_tm_memo_example() -> Path:
     
     <p style="margin-top: 0.4in;">— Dr. Elena Vasquez</p>
     """
-    
+
     output_path = OUTPUT_DIR / "04_tm_memo_example.pdf"
-    
+
     generate_personal_memo(
         content=content,
         output_path=output_path,
         from_name="Dr. Elena Vasquez",
         from_title="Chief Science Officer",
         date=datetime.now().strftime("%B %d, %Y"),
-        subject="Updated Safety Protocols"
+        subject="Updated Safety Protocols",
     )
-    
+
     return output_path
 
 
 def generate_tm_technical_spec_example() -> Path:
     """Generate a TELEPORT MASSIVE technical specification example."""
     from src.waft.templates.tm_report import generate_tm_report
-    
+
     content = """
     <h2>Technical Specification: Quantum Entanglement Array v3.2</h2>
     
@@ -406,9 +419,9 @@ def generate_tm_technical_spec_example() -> Path:
         during scheduled maintenance windows. New installations can begin immediately.</p>
     </div>
     """
-    
+
     output_path = OUTPUT_DIR / "05_tm_technical_spec_example.pdf"
-    
+
     generate_tm_report(
         title="Technical Specification: QEA v3.2",
         content=content,
@@ -419,16 +432,16 @@ def generate_tm_technical_spec_example() -> Path:
         date=datetime.now().strftime("%B %d, %Y"),
         author="Engineering Division",
         department="Research & Development",
-        summary="<p>QEA v3.2 technical specification document outlining capabilities, improvements, and deployment requirements for the latest quantum entanglement array.</p>"
+        summary="<p>QEA v3.2 technical specification document outlining capabilities, improvements, and deployment requirements for the latest quantum entanglement array.</p>",
     )
-    
+
     return output_path
 
 
 def generate_tm_incident_report_example() -> Path:
     """Generate a TELEPORT MASSIVE incident report example."""
     from src.waft.templates.tm_report import generate_tm_report
-    
+
     content = """
     <h2>Incident Report: Transfer Anomaly TM-TX-8472</h2>
     
@@ -509,9 +522,9 @@ def generate_tm_incident_report_example() -> Path:
         </tbody>
     </table>
     """
-    
+
     output_path = OUTPUT_DIR / "06_tm_incident_report_example.pdf"
-    
+
     generate_tm_report(
         title="Incident Report: Transfer Anomaly",
         content=content,
@@ -523,17 +536,21 @@ def generate_tm_incident_report_example() -> Path:
         author="Dr. Elena Vasquez",
         department="Safety & Operations",
         signatures=[
-            {"name": "Dr. Elena Vasquez", "title": "Chief Science Officer", "date": datetime.now().strftime("%Y-%m-%d")}
-        ]
+            {
+                "name": "Dr. Elena Vasquez",
+                "title": "Chief Science Officer",
+                "date": datetime.now().strftime("%Y-%m-%d"),
+            }
+        ],
     )
-    
+
     return output_path
 
 
 def generate_booklet_index() -> Path:
     """Generate the booklet index/cover page."""
     from src.waft.templates.tm_report import generate_tm_report
-    
+
     content = """
     <h2>TELEPORT MASSIVE Template Booklet</h2>
     
@@ -630,9 +647,9 @@ def generate_booklet_index() -> Path:
     <strong>Classification:</strong> INTERNAL USE ONLY
     </p>
     """.format(date=datetime.now().strftime("%B %d, %Y"))
-    
+
     output_path = OUTPUT_DIR / "00_tm_booklet_index.pdf"
-    
+
     generate_tm_report(
         title="TELEPORT MASSIVE Template Booklet",
         content=content,
@@ -642,88 +659,90 @@ def generate_booklet_index() -> Path:
         tagline="Making the Impossible, Inevitable™",
         date=datetime.now().strftime("%B %d, %Y"),
         department="Documentation Office",
-        summary="<p>Comprehensive template booklet showcasing all available TELEPORT MASSIVE document templates with examples and usage guidelines.</p>"
+        summary="<p>Comprehensive template booklet showcasing all available TELEPORT MASSIVE document templates with examples and usage guidelines.</p>",
     )
-    
+
     return output_path
 
 
 def main():
     """Generate the complete Teleport Massive template booklet."""
     console.print("\n" + "=" * 70)
-    console.print(Panel.fit(
-        "[bold cyan]TELEPORT MASSIVE Template Booklet Generator[/bold cyan]",
-        border_style="cyan"
-    ))
+    console.print(
+        Panel.fit(
+            "[bold cyan]TELEPORT MASSIVE Template Booklet Generator[/bold cyan]",
+            border_style="cyan",
+        )
+    )
     console.print("=" * 70)
     console.print(f"\n📁 Output directory: {OUTPUT_DIR}")
     console.print(f"📅 Generated: {datetime.now().strftime('%B %d, %Y at %I:%M %p')}\n")
-    
+
     generated_files = []
-    
+
     try:
         with Progress(
             SpinnerColumn(),
             TextColumn("[progress.description]{task.description}"),
             BarColumn(),
             TimeElapsedColumn(),
-            console=console
+            console=console,
         ) as progress:
-            
             # Generate index
             task1 = progress.add_task("Generating booklet index...", total=1)
             index_path = generate_booklet_index()
             generated_files.append(index_path)
             progress.update(task1, completed=1)
             console.print(f"  ✅ Generated: {index_path.name}")
-            
+
             # Generate report example
             task2 = progress.add_task("Generating TM Report example...", total=1)
             report_path = generate_tm_report_example()
             generated_files.append(report_path)
             progress.update(task2, completed=1)
             console.print(f"  ✅ Generated: {report_path.name}")
-            
+
             # Generate brief example
             task3 = progress.add_task("Generating TM Brief example...", total=1)
             brief_path = generate_tm_brief_example()
             generated_files.append(brief_path)
             progress.update(task3, completed=1)
             console.print(f"  ✅ Generated: {brief_path.name}")
-            
+
             # Generate invoice example
             task4 = progress.add_task("Generating TM Invoice example...", total=1)
             invoice_path = generate_tm_invoice_example()
             generated_files.append(invoice_path)
             progress.update(task4, completed=1)
             console.print(f"  ✅ Generated: {invoice_path.name}")
-            
+
             # Generate memo example
             task5 = progress.add_task("Generating TM Memo example...", total=1)
             memo_path = generate_tm_memo_example()
             generated_files.append(memo_path)
             progress.update(task5, completed=1)
             console.print(f"  ✅ Generated: {memo_path.name}")
-            
+
             # Generate technical spec example
             task6 = progress.add_task("Generating TM Technical Spec example...", total=1)
             spec_path = generate_tm_technical_spec_example()
             generated_files.append(spec_path)
             progress.update(task6, completed=1)
             console.print(f"  ✅ Generated: {spec_path.name}")
-            
+
             # Generate incident report example
             task7 = progress.add_task("Generating TM Incident Report example...", total=1)
             incident_path = generate_tm_incident_report_example()
             generated_files.append(incident_path)
             progress.update(task7, completed=1)
             console.print(f"  ✅ Generated: {incident_path.name}")
-        
+
         console.print("\n" + "=" * 70)
-        console.print(Panel.fit(
-            "[bold green]✅ BOOKLET GENERATION COMPLETE![/bold green]",
-            border_style="green"
-        ))
+        console.print(
+            Panel.fit(
+                "[bold green]✅ BOOKLET GENERATION COMPLETE![/bold green]", border_style="green"
+            )
+        )
         console.print("=" * 70)
         console.print(f"\n📚 Generated {len(generated_files)} PDF documents")
         console.print(f"📁 Location: {OUTPUT_DIR.absolute()}\n")
@@ -732,12 +751,13 @@ def main():
             size_kb = pdf_file.stat().st_size / 1024
             console.print(f"   {i:2d}. {pdf_file.name:40s} ({size_kb:6.1f} KB)")
         console.print("\n🎉 Enjoy your Teleport Massive template booklet!\n")
-        
+
         return 0
-        
+
     except Exception as e:
         console.print(f"\n[bold red]❌ Error generating booklet:[/bold red] {e}")
         import traceback
+
         traceback.print_exc()
         return 1
 

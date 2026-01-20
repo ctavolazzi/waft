@@ -93,21 +93,21 @@ Maybe You'll come as who You really are.
 def main():
     """Generate the PDF."""
     output_path = Path("god_devil_dialogue.pdf")
-    
+
     print("📄 Generating PDF from dialogue text...")
-    
+
     pdf_path = generate_pdf(
         content=CONTENT,
         title="The Apology",
         output_path=output_path,
         style="premium",  # Premium style for elegant formatting
         convert_to_png=True,
-        open_pdf=False
+        open_pdf=False,
     )
-    
+
     print(f"✅ PDF generated: {pdf_path}")
     print(f"📸 PNG screenshot also created: {pdf_path.with_suffix('.png')}")
-    
+
     return pdf_path
 
 

@@ -11,23 +11,23 @@ Source: typst-templates
 """
 
 from pathlib import Path
-from typing import Optional
+
 from ..compiler import TypstCompiler
 
 
 def generate_appreciated_letter(
     content: str,
     output_path: Path,
-    sender: Optional[str] = None,
-    recipient: Optional[str] = None,
-    date: Optional[str] = None,
-    subject: Optional[str] = None,
-    name: Optional[str] = None,
-    **kwargs
+    sender: str | None = None,
+    recipient: str | None = None,
+    date: str | None = None,
+    subject: str | None = None,
+    name: str | None = None,
+    **kwargs,
 ) -> Path:
     """
     Generate PDF using Appreciated Letter Typst template.
-    
+
     Args:
         content: Letter body content (Typst markup)
         output_path: Where to save PDF
@@ -37,7 +37,7 @@ def generate_appreciated_letter(
         subject: Subject line for the letter
         name: Name the letter closes with
         **kwargs: Additional template parameters
-        
+
     Returns:
         Path to generated PDF
     """
@@ -47,9 +47,9 @@ def generate_appreciated_letter(
     date_str = f"[{date}]" if date else "none"
     subject_str = f"[{subject}]" if subject else "none"
     name_str = f"[{name}]" if name else "none"
-    
+
     # Build Typst content
-    typst_content = f'''#import "@preview/appreciated-letter:0.1.0": letter
+    typst_content = f"""#import "@preview/appreciated-letter:0.1.0": letter
 
 #show: letter.with(
   sender: {sender_str},
@@ -60,10 +60,10 @@ def generate_appreciated_letter(
 )
 
 {content}
-'''
-    
+"""
+
     # Compile to PDF
     compiler = TypstCompiler()
     pdf_path = compiler.compile(typst_content, output_path)
-    
+
     return pdf_path

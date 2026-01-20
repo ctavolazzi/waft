@@ -16,9 +16,9 @@ Features:
 """
 
 from pathlib import Path
+
 from jinja2 import Template
 from weasyprint import HTML
-
 
 LAB_NOTES_TEMPLATE = """
 <!DOCTYPE html>
@@ -314,7 +314,7 @@ def generate_lab_notes(
     facility: str = None,
     project: str = None,
     date: str = None,
-    classification: str = "CONFIDENTIAL"
+    classification: str = "CONFIDENTIAL",
 ) -> Path:
     """
     Generate laboratory documentation in notebook style.
@@ -344,7 +344,7 @@ def generate_lab_notes(
         facility=facility,
         project=project,
         date=date,
-        classification=classification
+        classification=classification,
     )
 
     HTML(string=html_output).write_pdf(output_path)

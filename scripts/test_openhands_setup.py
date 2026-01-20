@@ -27,6 +27,7 @@ except ImportError as e:
     print("   pip install openhands-sdk openhands-tools")
     sys.exit(1)
 
+
 def main():
     # Check for API key
     api_key = os.getenv("LLM_API_KEY")
@@ -38,16 +39,16 @@ def main():
         print('   export LLM_API_KEY="your-openhands-api-key"')
         print('   export LLM_MODEL="openhands/claude-sonnet-4-5-20250929"')
         sys.exit(1)
-    
+
     # Get model (default to Anthropic)
     model = os.getenv("LLM_MODEL", "anthropic/claude-sonnet-4-5-20250929")
     base_url = os.getenv("LLM_BASE_URL", None)
-    
+
     print("🔧 Testing OpenHands SDK Setup")
     print(f"   Model: {model}")
     print(f"   API Key: {'*' * 10}{api_key[-4:] if len(api_key) > 4 else '****'}")
     print()
-    
+
     try:
         # Configure LLM
         print("📡 Configuring LLM...")
@@ -57,7 +58,7 @@ def main():
             base_url=base_url,
         )
         print("✅ LLM configured")
-        
+
         # Create agent with built-in tools
         # Available OpenHands tools:
         # - TerminalTool: Execute bash/terminal commands
@@ -71,21 +72,21 @@ def main():
         agent = Agent(
             llm=llm,
             tools=[
-                Tool(name=TerminalTool.name),      # Execute bash commands
-                Tool(name=FileEditorTool.name),    # Edit/create files
-                Tool(name=TaskTrackerTool.name),   # Track task progress
+                Tool(name=TerminalTool.name),  # Execute bash commands
+                Tool(name=FileEditorTool.name),  # Edit/create files
+                Tool(name=TaskTrackerTool.name),  # Track task progress
             ],
         )
         print("✅ Agent created with built-in tools")
-        
+
         # Set workspace to project root
         project_root = Path(__file__).parent.parent
         print(f"📁 Workspace: {project_root}")
-        
+
         # Create conversation
         print("💬 Starting conversation...")
         conversation = Conversation(agent=agent, workspace=str(project_root))
-        
+
         # Simple test task
         test_task = """
         Write a brief test file called OPENHANDS_TEST.txt with:
@@ -95,13 +96,13 @@ def main():
         
         Keep it brief - just 3-4 lines.
         """
-        
+
         print("📝 Sending test task to agent...")
         conversation.send_message(test_task)
-        
+
         print("🚀 Running agent...")
         conversation.run()
-        
+
         # Check if file was created
         test_file = project_root / "OPENHANDS_TEST.txt"
         if test_file.exists():
@@ -116,17 +117,17 @@ def main():
             print("   1. Review the test file above")
             print("   2. Run: python scripts/generate_tavern_game.py")
             print("   3. Or run individual phase scripts")
-            
+
             # Clean up test file (optional)
             cleanup = input("\n🗑️  Delete test file? (y/n): ").strip().lower()
-            if cleanup == 'y':
+            if cleanup == "y":
                 test_file.unlink()
                 print("✅ Test file deleted")
         else:
             print("⚠️  Warning: Test file not created")
             print("   Agent may have completed task differently")
             print("   Check agent output above")
-            
+
     except Exception as e:
         print(f"\n❌ Error during setup test: {e}")
         print("\n   Troubleshooting:")
@@ -135,6 +136,7 @@ def main():
         print("   3. Check network connection")
         print("   4. Verify OpenHands SDK is installed: pip install openhands-sdk openhands-tools")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

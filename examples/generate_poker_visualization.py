@@ -11,32 +11,29 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from src.waft.templates.typst.wrappers.deckz_poker import (
-    generate_deckz_poker,
-    Player
-)
+from src.waft.templates.typst.wrappers.deckz_poker import Player, generate_deckz_poker
 
 
 def example_simple_hand():
     """Example 1: Simple hand visualization."""
     print("Generating simple hand visualization...")
-    
+
     players = [
         Player(name="Alice", cards=["AS", "KS", "QS", "JS", "10S"]),  # Royal flush!
     ]
-    
+
     output_path = Path("_temp_pdf_examples/poker_simple_hand.pdf")
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     pdf_path = generate_deckz_poker(
         title="Royal Flush Example",
         content="This is a royal flush - the highest possible hand in poker!",
         output_path=output_path,
         players=players,
         card_format="large",
-        show_rules=True
+        show_rules=True,
     )
-    
+
     print(f"✅ Generated: {pdf_path}")
     return pdf_path
 
@@ -44,19 +41,19 @@ def example_simple_hand():
 def example_texas_holdem():
     """Example 2: Texas Hold'em game state."""
     print("Generating Texas Hold'em game state...")
-    
+
     players = [
         Player(name="Alice", cards=["AS", "KH"]),
         Player(name="Bob", cards=["QD", "JD"]),
         Player(name="Carol", cards=["10C", "9C"]),
         Player(name="Dave", cards=["2S", "3H"]),
     ]
-    
+
     community_cards = ["AC", "AD", "AH", "KS", "QS"]
-    
+
     output_path = Path("_temp_pdf_examples/poker_texas_holdem.pdf")
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     pdf_path = generate_deckz_poker(
         title="Texas Hold'em Game State",
         content="Example game state showing 4 players and community cards.",
@@ -65,9 +62,9 @@ def example_texas_holdem():
         players=players,
         community_cards=community_cards,
         card_format="medium",
-        show_rules=True
+        show_rules=True,
     )
-    
+
     print(f"✅ Generated: {pdf_path}")
     return pdf_path
 
@@ -75,7 +72,7 @@ def example_texas_holdem():
 def example_hand_rankings():
     """Example 3: Poker hand rankings guide."""
     print("Generating poker hand rankings guide...")
-    
+
     # Create examples of different hand types
     players = [
         Player(name="Royal Flush", cards=["AS", "KS", "QS", "JS", "10S"]),
@@ -89,19 +86,19 @@ def example_hand_rankings():
         Player(name="One Pair", cards=["10D", "10H", "KS", "QD", "2C"]),
         Player(name="High Card", cards=["AS", "KD", "QH", "JC", "9S"]),
     ]
-    
+
     output_path = Path("_temp_pdf_examples/poker_hand_rankings.pdf")
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     pdf_path = generate_deckz_poker(
         title="Poker Hand Rankings Guide",
         content="Visual guide to poker hand rankings from highest to lowest.",
         output_path=output_path,
         players=players,
         card_format="small",
-        show_rules=True
+        show_rules=True,
     )
-    
+
     print(f"✅ Generated: {pdf_path}")
     return pdf_path
 
@@ -109,18 +106,18 @@ def example_hand_rankings():
 def example_game_scenario():
     """Example 4: Complete game scenario."""
     print("Generating complete game scenario...")
-    
+
     players = [
         Player(name="Alice", cards=["AS", "AD"]),  # Pocket aces!
-        Player(name="Bob", cards=["KS", "KD"]),    # Pocket kings
+        Player(name="Bob", cards=["KS", "KD"]),  # Pocket kings
         Player(name="Carol", cards=["QS", "QD"]),  # Pocket queens
     ]
-    
+
     community_cards = ["AC", "KH", "QC", "10S", "9H"]
-    
+
     output_path = Path("_temp_pdf_examples/poker_game_scenario.pdf")
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     content = """
 This is a dramatic scenario where:
 - Alice has pocket aces (AS, AD) - the best starting hand
@@ -134,7 +131,7 @@ With the community cards (AC, KH, QC, 10S, 9H):
 
 Alice wins with four of a kind!
 """
-    
+
     pdf_path = generate_deckz_poker(
         title="Dramatic Poker Scenario",
         content=content.strip(),
@@ -143,9 +140,9 @@ Alice wins with four of a kind!
         players=players,
         community_cards=community_cards,
         card_format="medium",
-        show_rules=False
+        show_rules=False,
     )
-    
+
     print(f"✅ Generated: {pdf_path}")
     return pdf_path
 
@@ -156,28 +153,28 @@ def main():
     print("Deckz Poker Visualization Examples")
     print("=" * 60)
     print()
-    
+
     try:
         # Example 1: Simple hand
         example_simple_hand()
         print()
-        
+
         # Example 2: Texas Hold'em
         example_texas_holdem()
         print()
-        
+
         # Example 3: Hand rankings
         example_hand_rankings()
         print()
-        
+
         # Example 4: Game scenario
         example_game_scenario()
         print()
-        
+
         print("=" * 60)
         print("✅ All examples completed successfully!")
         print("=" * 60)
-        
+
     except Exception as e:
         print(f"❌ Error: {e}")
         raise

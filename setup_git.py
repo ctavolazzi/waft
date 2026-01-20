@@ -90,14 +90,13 @@ def main():
     success, output = run_cmd(["git", "push", "-u", "origin", "main"])
     if success:
         print("✅ Successfully pushed to GitHub!")
-        print(f"   View at: https://github.com/ctavolazzi/waft\n")
+        print("   View at: https://github.com/ctavolazzi/waft\n")
     else:
         print(f"❌ Failed to push: {output}")
         print("\nYou may need to authenticate or push manually:")
-        print(f"  git push -u origin main\n")
+        print("  git push -u origin main\n")
         sys.exit(1)
 
 
 if __name__ == "__main__":
     main()
-

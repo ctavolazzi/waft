@@ -11,7 +11,7 @@ Source: arkheion
 """
 
 from pathlib import Path
-from typing import Optional, List, Dict, Union
+
 from ..compiler import TypstCompiler
 
 
@@ -19,17 +19,17 @@ def generate_arkheion(
     title: str,
     content: str,
     output_path: Path,
-    authors: List[Dict[str, Optional[str]]],
+    authors: list[dict[str, str | None]],
     abstract: str = "",
-    keywords: Optional[List[str]] = None,
-    date: Optional[str] = None,
-    bibliography: Optional[str] = None,
+    keywords: list[str] | None = None,
+    date: str | None = None,
+    bibliography: str | None = None,
     include_appendices: bool = False,
-    **kwargs
+    **kwargs,
 ) -> Path:
     """
     Generate PDF using Arkheion Typst template (arXiv-style).
-    
+
     Args:
         title: Document title
         content: Main content (Typst markup)
@@ -45,10 +45,10 @@ def generate_arkheion(
         bibliography: Path to bibliography file (.bib) (optional)
         include_appendices: Whether to include appendices section (default: False)
         **kwargs: Additional template parameters
-        
+
     Returns:
         Path to generated PDF
-        
+
     Example:
         generate_arkheion(
             title="My Paper Title",
@@ -75,25 +75,25 @@ def generate_arkheion(
             author_dict["affiliation"] = f'"{author["affiliation"]}"'
         if "orcid" in author and author["orcid"]:
             author_dict["orcid"] = f'"{author["orcid"]}"'
-        
+
         # Format as dictionary string
         author_str = ", ".join(f"{k}: {v}" for k, v in author_dict.items())
         authors_list.append(f"({author_str})")
-    
+
     authors_str = "(\n    " + ",\n    ".join(authors_list) + ",\n  )"
-    
+
     # Format abstract
-    abstract_str = f'[{abstract}]' if abstract else 'lorem(55)'
-    
+    abstract_str = f"[{abstract}]" if abstract else "lorem(55)"
+
     # Format keywords
     keywords_str = "none"
     if keywords:
         keywords_list = ", ".join(f'"{k}"' for k in keywords)
         keywords_str = f"({keywords_list})"
-    
+
     # Format date
     date_str = f'"{date}"' if date else "none"
-    
+
     # Build Typst content
     typst_content = f'''#import "@preview/arkheion:0.1.1": arkheion, arkheion-appendices
 
@@ -109,25 +109,22 @@ def generate_arkheion(
 
 {content}
 '''
-    
+
     # Add bibliography if provided
     if bibliography:
         typst_content += f'\n#bibliography("{bibliography}")'
-    
+
     # Add appendices if requested
     if include_appendices:
-        typst_content += '''
+        typst_content += """
 
 // Create appendix section
 #show: arkheion-appendices
 =
-'''
-    
+"""
+
     # Compile to PDF
     compiler = TypstCompiler()
-    pdf_path = compiler.compile(
-        typst_content,
-        output_path
-    )
-    
+    pdf_path = compiler.compile(typst_content, output_path)
+
     return pdf_path

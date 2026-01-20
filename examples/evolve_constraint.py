@@ -19,21 +19,20 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.waft.evolution.chat_distiller import ChatDistiller
-from src.waft.evolution.styling_genome import (
-    StylingGenome,
-    StylingGene,
-    FontGene,
-    MarginGene,
-    ColorGene,
-    LayoutGene,
-    StylingGenomeRegistry,
-)
-from src.waft.evolution.two_page_generator_legacy import TwoPageGeneratorLegacy
-from src.waft.evolution.two_page_generator import TwoPageGenerator
-from src.waft.evolution.scint_detector import ScintDetector
 import json
 
+from src.waft.evolution.chat_distiller import ChatDistiller
+from src.waft.evolution.styling_genome import (
+    ColorGene,
+    FontGene,
+    LayoutGene,
+    MarginGene,
+    StylingGene,
+    StylingGenome,
+    StylingGenomeRegistry,
+)
+from src.waft.evolution.two_page_generator import TwoPageGenerator
+from src.waft.evolution.two_page_generator_legacy import TwoPageGeneratorLegacy
 
 # WAFT introduction text
 WAFT_INTRO = """
@@ -186,8 +185,7 @@ def main():
 
     distiller = ChatDistiller(importance_threshold=0.3)
     distilled = distiller.distill_text(
-        text=WAFT_INTRO,
-        title="WAFT: The Evolutionary Code Laboratory"
+        text=WAFT_INTRO, title="WAFT: The Evolutionary Code Laboratory"
     )
 
     print(f"✓ Distilled {distilled.total_ideas} ideas")
@@ -232,7 +230,7 @@ def main():
             density="compact",
         ),
         name="WAFT Intro Styling",
-        description="Compact styling for WAFT introduction"
+        description="Compact styling for WAFT introduction",
     )
 
     genome = StylingGenome.from_genes(genes)
@@ -255,10 +253,12 @@ def main():
         page_1_ideas=10,  # Probably too many
     )
 
-    print(f"✓ V1 Generation complete")
+    print("✓ V1 Generation complete")
     print(f"  - Fitness: {v1_result['fitness_metrics']['overall']:.3f}")
-    print(f"  - Constraint satisfaction (V1): {v1_result['fitness_metrics']['constraint_satisfaction']:.3f}")
-    print(f"  - ⚠ WARNING: V1 uses fake constraint metric (HTML length)")
+    print(
+        f"  - Constraint satisfaction (V1): {v1_result['fitness_metrics']['constraint_satisfaction']:.3f}"
+    )
+    print("  - ⚠ WARNING: V1 uses fake constraint metric (HTML length)")
 
     # ========================================================================
     # STEP 4: GENERATE WITH V2 (ADAPTIVE CONSTRAINT)
@@ -278,9 +278,11 @@ def main():
         target_pages=2,
     )
 
-    print(f"✓ V2 Generation complete")
+    print("✓ V2 Generation complete")
     print(f"  - Fitness: {v2_result['fitness_metrics']['overall']:.3f}")
-    print(f"  - Constraint satisfaction (V2): {v2_result['fitness_metrics']['constraint_satisfaction']:.3f}")
+    print(
+        f"  - Constraint satisfaction (V2): {v2_result['fitness_metrics']['constraint_satisfaction']:.3f}"
+    )
     print(f"  - Page count: {v2_result['page_count']}/{v2_result['target_pages']}")
     print(f"  - Constraint satisfied: {v2_result['constraint_satisfied']}")
     print(f"  - Ideas shown: {v2_result['ideas_shown']}")
@@ -292,30 +294,30 @@ def main():
 
     comparison = {
         "v1": {
-            "fitness": v1_result['fitness_metrics']['overall'],
-            "readability": v1_result['fitness_metrics']['readability'],
-            "completeness": v1_result['fitness_metrics']['completeness'],
-            "constraint": v1_result['fitness_metrics']['constraint_satisfaction'],
-            "aesthetics": v1_result['fitness_metrics']['aesthetic_appeal'],
+            "fitness": v1_result["fitness_metrics"]["overall"],
+            "readability": v1_result["fitness_metrics"]["readability"],
+            "completeness": v1_result["fitness_metrics"]["completeness"],
+            "constraint": v1_result["fitness_metrics"]["constraint_satisfaction"],
+            "aesthetics": v1_result["fitness_metrics"]["aesthetic_appeal"],
             "constraint_method": "HTML length heuristic (FAKE)",
         },
         "v2": {
-            "fitness": v2_result['fitness_metrics']['overall'],
-            "readability": v2_result['fitness_metrics']['readability'],
-            "completeness": v2_result['fitness_metrics']['completeness'],
-            "constraint": v2_result['fitness_metrics']['constraint_satisfaction'],
-            "aesthetics": v2_result['fitness_metrics']['aesthetic_appeal'],
-            "page_count": v2_result['page_count'],
-            "target_pages": v2_result['target_pages'],
-            "constraint_satisfied": v2_result['constraint_satisfied'],
+            "fitness": v2_result["fitness_metrics"]["overall"],
+            "readability": v2_result["fitness_metrics"]["readability"],
+            "completeness": v2_result["fitness_metrics"]["completeness"],
+            "constraint": v2_result["fitness_metrics"]["constraint_satisfaction"],
+            "aesthetics": v2_result["fitness_metrics"]["aesthetic_appeal"],
+            "page_count": v2_result["page_count"],
+            "target_pages": v2_result["target_pages"],
+            "constraint_satisfied": v2_result["constraint_satisfied"],
             "constraint_method": "Real page counting + adaptive iteration",
-        }
+        },
     }
 
     print("\n  Fitness Comparison:")
     print(f"    V1 Overall: {comparison['v1']['fitness']:.3f}")
     print(f"    V2 Overall: {comparison['v2']['fitness']:.3f}")
-    improvement = comparison['v2']['fitness'] - comparison['v1']['fitness']
+    improvement = comparison["v2"]["fitness"] - comparison["v1"]["fitness"]
     if improvement > 0:
         print(f"    → ✓ IMPROVEMENT: +{improvement:.3f}")
     else:
@@ -325,12 +327,12 @@ def main():
     print(f"    V1: {comparison['v1']['constraint']:.3f} ({comparison['v1']['constraint_method']})")
     print(f"    V2: {comparison['v2']['constraint']:.3f} ({comparison['v2']['constraint_method']})")
 
-    if 'page_count' in comparison['v2']:
+    if "page_count" in comparison["v2"]:
         print(f"    V2 Pages: {comparison['v2']['page_count']}/{comparison['v2']['target_pages']}")
-        if comparison['v2']['constraint_satisfied']:
-            print(f"    → ✓ CONSTRAINT SATISFIED!")
+        if comparison["v2"]["constraint_satisfied"]:
+            print("    → ✓ CONSTRAINT SATISFIED!")
         else:
-            print(f"    → Getting closer (adaptive iteration)")
+            print("    → Getting closer (adaptive iteration)")
 
     # Save comparison
     with open(output_dir / "v1_vs_v2_comparison.json", "w") as f:
@@ -344,10 +346,10 @@ def main():
     print("\n  Generator Evolution:")
     print(f"    V1 Genome ID: {TwoPageGenerator.__name__} (implicit)")
     print(f"    Generator Genome ID: {generator.GENERATOR_GENOME_ID[:16]}...")
-    print(f"\n  Key Mutation:")
-    print(f"    - V1: Fake constraint metric (HTML length)")
-    print(f"    - V2: Real constraint metric (page counting + adaptive iteration)")
-    print(f"\n  This is a MAJOR_SCINT - the generator itself evolved!")
+    print("\n  Key Mutation:")
+    print("    - V1: Fake constraint metric (HTML length)")
+    print("    - V2: Real constraint metric (page counting + adaptive iteration)")
+    print("\n  This is a MAJOR_SCINT - the generator itself evolved!")
 
     # ========================================================================
     # STEP 7: SUMMARY REPORT
@@ -370,7 +372,7 @@ def main():
 **Problem Identified:**
 - Fake constraint satisfaction metric based on HTML length
 - No actual page counting
-- Reported constraint: {comparison['v1']['constraint']:.3f} (likely incorrect)
+- Reported constraint: {comparison["v1"]["constraint"]:.3f} (likely incorrect)
 - Generated 4 pages instead of 2 in real usage
 
 **V1 Genome:**
@@ -396,20 +398,20 @@ def main():
 5. Repeat until target achieved or max iterations
 
 **V2 Results:**
-- Constraint satisfaction: {comparison['v2']['constraint']:.3f}
-- Page count: {comparison['v2'].get('page_count', 'unknown')}/{comparison['v2'].get('target_pages', 2)}
-- Constraint satisfied: {comparison['v2'].get('constraint_satisfied', False)}
-- Ideas shown: {v2_result.get('ideas_shown', 'unknown')}
+- Constraint satisfaction: {comparison["v2"]["constraint"]:.3f}
+- Page count: {comparison["v2"].get("page_count", "unknown")}/{comparison["v2"].get("target_pages", 2)}
+- Constraint satisfied: {comparison["v2"].get("constraint_satisfied", False)}
+- Ideas shown: {v2_result.get("ideas_shown", "unknown")}
 
 ## Fitness Comparison
 
 | Metric | V1 | V2 | Change |
 |--------|----|----|--------|
-| Overall | {comparison['v1']['fitness']:.3f} | {comparison['v2']['fitness']:.3f} | {comparison['v2']['fitness'] - comparison['v1']['fitness']:.3f} |
-| Readability | {comparison['v1']['readability']:.3f} | {comparison['v2']['readability']:.3f} | {comparison['v2']['readability'] - comparison['v1']['readability']:.3f} |
-| Completeness | {comparison['v1']['completeness']:.3f} | {comparison['v2']['completeness']:.3f} | {comparison['v2']['completeness'] - comparison['v1']['completeness']:.3f} |
-| Constraint | {comparison['v1']['constraint']:.3f} | {comparison['v2']['constraint']:.3f} | {comparison['v2']['constraint'] - comparison['v1']['constraint']:.3f} |
-| Aesthetics | {comparison['v1']['aesthetics']:.3f} | {comparison['v2']['aesthetics']:.3f} | {comparison['v2']['aesthetics'] - comparison['v1']['aesthetics']:.3f} |
+| Overall | {comparison["v1"]["fitness"]:.3f} | {comparison["v2"]["fitness"]:.3f} | {comparison["v2"]["fitness"] - comparison["v1"]["fitness"]:.3f} |
+| Readability | {comparison["v1"]["readability"]:.3f} | {comparison["v2"]["readability"]:.3f} | {comparison["v2"]["readability"] - comparison["v1"]["readability"]:.3f} |
+| Completeness | {comparison["v1"]["completeness"]:.3f} | {comparison["v2"]["completeness"]:.3f} | {comparison["v2"]["completeness"] - comparison["v1"]["completeness"]:.3f} |
+| Constraint | {comparison["v1"]["constraint"]:.3f} | {comparison["v2"]["constraint"]:.3f} | {comparison["v2"]["constraint"] - comparison["v1"]["constraint"]:.3f} |
+| Aesthetics | {comparison["v1"]["aesthetics"]:.3f} | {comparison["v2"]["aesthetics"]:.3f} | {comparison["v2"]["aesthetics"] - comparison["v1"]["aesthetics"]:.3f} |
 
 ## Conclusion
 
@@ -447,17 +449,19 @@ The one-pager evolution system is now more robust.
     print("EVOLUTION COMPLETE: V1 → V2")
     print("=" * 80)
 
-    print(f"\n🎯 Key Achievement:")
-    print(f"  - V2 enforces TRUE 2-page constraint")
-    print(f"  - Adaptive iteration until target achieved")
-    print(f"  - Accurate fitness metrics (no fake scores)")
+    print("\n🎯 Key Achievement:")
+    print("  - V2 enforces TRUE 2-page constraint")
+    print("  - Adaptive iteration until target achieved")
+    print("  - Accurate fitness metrics (no fake scores)")
 
-    print(f"\n📈 Results:")
-    print(f"  - V2 page count: {v2_result.get('page_count', 'unknown')}/{v2_result.get('target_pages', 2)}")
+    print("\n📈 Results:")
+    print(
+        f"  - V2 page count: {v2_result.get('page_count', 'unknown')}/{v2_result.get('target_pages', 2)}"
+    )
     print(f"  - Constraint satisfied: {v2_result.get('constraint_satisfied', False)}")
     print(f"  - Fitness: {comparison['v2']['fitness']:.3f}")
 
-    print(f"\n📁 Output:")
+    print("\n📁 Output:")
     print(f"  {output_dir.absolute()}")
 
     print("\n✨ The system evolved. Constraint enforcement improved.")

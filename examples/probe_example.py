@@ -13,7 +13,7 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 sys.path.insert(0, str(project_root / "src"))
 
-from waft.core.probe import ProbeCollector, HTTPProbe, FileSystemProbe, ServiceProbe
+from waft.core.probe import ProbeCollector
 
 
 def main():
@@ -22,10 +22,10 @@ def main():
     print("🔍 Probe System - Pokey Stick Demo")
     print("=" * 70)
     print()
-    
+
     # Create collector
     collector = ProbeCollector()
-    
+
     # Example 1: Probe HTTP endpoints
     print("📡 Probing HTTP endpoints...")
     collector.probe_http("http://localhost:8507")  # Good Morning dashboard
@@ -33,7 +33,7 @@ def main():
     collector.probe_http("http://localhost:8501")  # Main dashboard
     print("   ✓ Probed 3 HTTP endpoints")
     print()
-    
+
     # Example 2: Probe file system
     print("📁 Probing file system...")
     collector.probe_file("good_morning.py")
@@ -41,16 +41,16 @@ def main():
     collector.probe_file("_work_efforts")
     print("   ✓ Probed 3 file system paths")
     print()
-    
+
     # Example 3: Probe services
     print("🔌 Probing services...")
     collector.probe_service("localhost", 8507)  # Streamlit Good Morning
-    collector.probe_service("localhost", 8000)   # API server
+    collector.probe_service("localhost", 8000)  # API server
     collector.probe_service("localhost", 8501)  # Main dashboard
     collector.probe_service("localhost", 5432)  # PostgreSQL (probably not running)
     print("   ✓ Probed 4 service ports")
     print()
-    
+
     # Show summary
     print("=" * 70)
     print("📊 Probe Summary")
@@ -62,10 +62,10 @@ def main():
     print(f"Average duration: {summary['avg_duration_ms']:.2f}ms")
     print()
     print("By type:")
-    for probe_type, count in summary['by_type'].items():
+    for probe_type, count in summary["by_type"].items():
         print(f"  - {probe_type}: {count}")
     print()
-    
+
     # Show some results
     print("=" * 70)
     print("🔍 Sample Results")
@@ -85,7 +85,7 @@ def main():
             elif result.probe_type == "service":
                 print(f"   Open: {result.data.get('open', False)}")
         print()
-    
+
     # Save results
     print("=" * 70)
     print("💾 Saving Results")
@@ -93,7 +93,7 @@ def main():
     filepath = collector.save_results()
     print(f"Results saved to: {filepath}")
     print()
-    
+
     print("✅ Probe demo complete!")
 
 

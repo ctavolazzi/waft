@@ -6,10 +6,8 @@ Generates a step-by-step recap of the entire session from first message to now.
 Shows what we did, why we did it, and what the results were.
 """
 
-from pathlib import Path
 from datetime import datetime
-from typing import List, Dict, Any
-import json
+from pathlib import Path
 
 
 class SessionRecap:
@@ -210,7 +208,9 @@ class SessionRecap:
     def save_recap(self, output_path: Path = None):
         """Save the recap to a file."""
         if output_path is None:
-            output_path = self.work_efforts_dir / f"SESSION_RECAP_{datetime.now().strftime('%Y-%m-%d')}.md"
+            output_path = (
+                self.work_efforts_dir / f"SESSION_RECAP_{datetime.now().strftime('%Y-%m-%d')}.md"
+            )
 
         recap = self.generate_recap()
         output_path.write_text(recap)
@@ -220,7 +220,6 @@ class SessionRecap:
 
 def main():
     """Main entry point."""
-    import sys
 
     project_root = Path(__file__).parent.parent
     recap = SessionRecap(project_root)
@@ -232,4 +231,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

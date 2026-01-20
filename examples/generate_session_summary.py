@@ -11,17 +11,19 @@ Creates a comprehensive PDF covering all important information from this chat se
 """
 
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from examples.generate_waft_field_guide_printer_friendly import generate_field_guide_printer_friendly
+from examples.generate_waft_field_guide_printer_friendly import (
+    generate_field_guide_printer_friendly,
+)
 
 
 def generate_session_summary():
     """Generate comprehensive session summary PDF."""
-    
+
     content = """
 <h2>Session Summary: Document Generation Framework Simplification</h2>
 
@@ -368,10 +370,10 @@ This document was generated using WAFT's DocumentBuilder framework.<br>
 Demonstrating recursive self-documentation capabilities.
 </p>
     """
-    
+
     output_path = Path("_work_efforts/showcase_documents/SESSION_SUMMARY_2026-01-11.pdf")
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     generate_field_guide_printer_friendly(
         title="WAFT SESSION SUMMARY",
         content=content,
@@ -381,9 +383,9 @@ Demonstrating recursive self-documentation capabilities.
         subtitle="Document Generation Framework Simplification",
         classification="INTERNAL",
         issued_by="WAFT Development Team",
-        date=datetime.now().strftime("%B %d, %Y")
+        date=datetime.now().strftime("%B %d, %Y"),
     )
-    
+
     return output_path
 
 
@@ -392,9 +394,9 @@ if __name__ == "__main__":
     print("Generating Session Summary PDF")
     print("=" * 80)
     print()
-    
+
     pdf_path = generate_session_summary()
-    
+
     print(f"✅ Generated: {pdf_path}")
     print(f"   Size: {pdf_path.stat().st_size / 1024:.1f} KB")
     print()

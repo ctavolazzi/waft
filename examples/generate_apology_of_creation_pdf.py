@@ -6,8 +6,8 @@ Usage:
     python examples/generate_apology_of_creation_pdf.py
 """
 
-import sys
 import re
+import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -117,30 +117,25 @@ Maybe You'll come as who You really are.
 def convert_obsidian_to_markdown(content: str) -> str:
     """
     Convert Obsidian markdown to standard markdown for PDF generation.
-    
+
     - Removes frontmatter
     - Converts Obsidian callouts to blockquotes
     - Converts Obsidian links [[text]] to bold text
     - Preserves other markdown formatting
     """
     # Remove frontmatter (YAML between --- markers)
-    content = re.sub(r'^---\n.*?\n---\n', '', content, flags=re.DOTALL)
-    
+    content = re.sub(r"^---\n.*?\n---\n", "", content, flags=re.DOTALL)
+
     # Convert Obsidian callouts to blockquotes
     # > [!quote] Title -> > **Title**
-    content = re.sub(
-        r'> \[!(\w+)\]\s+(.+?)\n>',
-        r'> **\2**\n>',
-        content,
-        flags=re.MULTILINE
-    )
-    
+    content = re.sub(r"> \[!(\w+)\]\s+(.+?)\n>", r"> **\2**\n>", content, flags=re.MULTILINE)
+
     # Convert Obsidian links [[text]] to bold text **text**
-    content = re.sub(r'\[\[([^\]]+)\]\]', r'**\1**', content)
-    
+    content = re.sub(r"\[\[([^\]]+)\]\]", r"**\1**", content)
+
     # Fix any double bold from the conversion
-    content = re.sub(r'\*\*\*\*([^*]+)\*\*\*\*', r'**\1**', content)
-    
+    content = re.sub(r"\*\*\*\*([^*]+)\*\*\*\*", r"**\1**", content)
+
     return content.strip()
 
 
@@ -148,24 +143,24 @@ def main():
     """Generate the PDF."""
     # Convert Obsidian format to standard markdown
     markdown_content = convert_obsidian_to_markdown(OBSIDIAN_CONTENT)
-    
+
     output_path = Path("apology_of_creation.pdf")
-    
+
     print("📄 Generating PDF from Obsidian note...")
     print("   Converting Obsidian syntax to markdown...")
-    
+
     pdf_path = generate_pdf(
         content=markdown_content,
         title="The Apology of Creation",
         output_path=output_path,
         style="premium",  # Premium style for elegant formatting
         convert_to_png=True,
-        open_pdf=False
+        open_pdf=False,
     )
-    
+
     print(f"✅ PDF generated: {pdf_path}")
     print(f"📸 PNG screenshot also created: {pdf_path.with_suffix('.png')}")
-    
+
     return pdf_path
 
 

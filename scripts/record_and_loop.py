@@ -5,59 +5,59 @@ Record and Loop - Scientific Experiment Cycle
 Records observations from experiments, generates PDF reports, and prepares for next iteration.
 """
 
-import sys
-from pathlib import Path
-from datetime import datetime
-from typing import Optional, Dict, Any
 import re
+import sys
+from datetime import datetime
+from pathlib import Path
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 sys.path.insert(0, str(project_root / "src"))
 
-from src.waft.brief import BriefDocument
-from src.waft.utils import escape_title_for_filename
 import markdown
 
+from src.waft.brief import BriefDocument
+from src.waft.utils import escape_title_for_filename
 
-def generate_observations_pdf(observations_file: Path, output_path: Optional[Path] = None) -> Path:
+
+def generate_observations_pdf(observations_file: Path, output_path: Path | None = None) -> Path:
     """Generate PDF report from observations document."""
-    
+
     # Read observations
-    content = observations_file.read_text(encoding='utf-8')
-    
+    content = observations_file.read_text(encoding="utf-8")
+
     # Extract experiment name and cycle number
     experiment_name = "PDF Generation Improvements"
     cycle_num = "1"
-    
-    for line in content.split('\n'):
-        if line.startswith('**Experiment Date**:'):
+
+    for line in content.split("\n"):
+        if line.startswith("**Experiment Date**:"):
             # Extract date
             pass
-        elif '**Iteration**:' in line:
-            match = re.search(r'Cycle (\d+)', line)
+        elif "**Iteration**:" in line:
+            match = re.search(r"Cycle (\d+)", line)
             if match:
                 cycle_num = match.group(1)
-        elif line.startswith('# ') and 'Observations' in line:
+        elif line.startswith("# ") and "Observations" in line:
             # Extract experiment name
-            name_match = re.search(r'^# (.+?)\s*-', line)
+            name_match = re.search(r"^# (.+?)\s*-", line)
             if name_match:
                 experiment_name = name_match.group(1).strip()
-    
+
     # Convert markdown to HTML
     try:
         html_content = markdown.markdown(
             content,
-            extensions=['fenced_code', 'tables', 'nl2br', 'extra'],
+            extensions=["fenced_code", "tables", "nl2br", "extra"],
         )
     except ImportError:
         # Basic fallback
-        html_content = content.replace('\n', '<br>\n')
-    
+        html_content = content.replace("\n", "<br>\n")
+
     # Generate title
     title = f"{experiment_name} - Cycle {cycle_num} Observations"
-    
+
     # Create BriefDocument
     doc = BriefDocument(
         title=title,
@@ -69,50 +69,53 @@ def generate_observations_pdf(observations_file: Path, output_path: Optional[Pat
             "EXPERIMENT": experiment_name,
             "CYCLE": f"Cycle {cycle_num}",
             "DATE": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "STATUS": "Observations Recorded"
+            "STATUS": "Observations Recorded",
         },
         cover_footer="SCIENTIFIC METHOD - OBSERVE → DOCUMENT → ANALYZE → ITERATE",
-        include_system_status=False
+        include_system_status=False,
     )
-    
+
     doc.content_blocks.append(html_content)
-    
+
     # Generate PDF
     if output_path is None:
         safe_name = escape_title_for_filename(experiment_name)[:30]
-        output_path = observations_file.parent / f"{safe_name}_Cycle{cycle_num}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
-    
+        output_path = (
+            observations_file.parent
+            / f"{safe_name}_Cycle{cycle_num}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+        )
+
     pdf_path = doc.generate(output_path=output_path)
-    
+
     return Path(pdf_path)
 
 
-def generate_preparation_pdf(preparation_file: Path, output_path: Optional[Path] = None) -> Path:
+def generate_preparation_pdf(preparation_file: Path, output_path: Path | None = None) -> Path:
     """Generate PDF from iteration preparation document."""
-    
+
     # Read preparation
-    content = preparation_file.read_text(encoding='utf-8')
-    
+    content = preparation_file.read_text(encoding="utf-8")
+
     # Extract iteration number
     iteration_num = "2"
-    for line in content.split('\n'):
-        if '**Cycle**:' in line or '**Iteration**:' in line:
-            match = re.search(r'[N\+]?(\d+)', line)
+    for line in content.split("\n"):
+        if "**Cycle**:" in line or "**Iteration**:" in line:
+            match = re.search(r"[N\+]?(\d+)", line)
             if match:
                 iteration_num = match.group(1)
-    
+
     # Convert markdown to HTML
     try:
         html_content = markdown.markdown(
             content,
-            extensions=['fenced_code', 'tables', 'nl2br', 'extra'],
+            extensions=["fenced_code", "tables", "nl2br", "extra"],
         )
     except ImportError:
-        html_content = content.replace('\n', '<br>\n')
-    
+        html_content = content.replace("\n", "<br>\n")
+
     # Generate title
     title = f"Iteration {iteration_num} Preparation"
-    
+
     # Create BriefDocument
     doc = BriefDocument(
         title=title,
@@ -123,28 +126,31 @@ def generate_preparation_pdf(preparation_file: Path, output_path: Optional[Path]
         cover_metadata={
             "ITERATION": f"Iteration {iteration_num}",
             "DATE": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "STATUS": "Ready to Begin"
+            "STATUS": "Ready to Begin",
         },
         cover_footer="SCIENTIFIC METHOD - PREPARE → EXECUTE → OBSERVE → ITERATE",
-        include_system_status=False
+        include_system_status=False,
     )
-    
+
     doc.content_blocks.append(html_content)
-    
+
     # Generate PDF
     if output_path is None:
-        output_path = preparation_file.parent / f"Iteration{iteration_num}_Preparation_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
-    
+        output_path = (
+            preparation_file.parent
+            / f"Iteration{iteration_num}_Preparation_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+        )
+
     pdf_path = doc.generate(output_path=output_path)
-    
+
     return Path(pdf_path)
 
 
 def open_pdf_on_desktop(pdf_path: Path):
     """Open PDF on desktop (macOS)."""
-    import subprocess
     import platform
-    
+    import subprocess
+
     if platform.system() == "Darwin":  # macOS
         try:
             subprocess.run(["open", str(pdf_path)], check=False)
@@ -160,32 +166,32 @@ def main():
     print("📊 RECORD AND LOOP - Scientific Experiment Cycle")
     print("=" * 70)
     print()
-    
+
     # Find observations file (most recent or specified)
     proof_cases_dir = project_root / "_work_efforts" / "proof_cases"
     observations_file = proof_cases_dir / "pdf_generation_improvements_observations.md"
-    
+
     if not observations_file.exists():
         print(f"❌ Observations file not found: {observations_file}")
         print("   Please create observations document first.")
         return 1
-    
+
     # Step 1: Generate observations PDF
     print("📄 Step 1: Generating observations PDF...")
     obs_pdf = generate_observations_pdf(observations_file)
     print(f"  ✅ Generated: {obs_pdf}")
-    
+
     # Step 2: Create iteration 2 preparation
     print("\n📋 Step 2: Creating iteration 2 preparation...")
     prep_file = proof_cases_dir / "iteration2_preparation.md"
-    
+
     # Read observations to extract next iteration plan
-    obs_content = observations_file.read_text(encoding='utf-8')
-    
+    obs_content = observations_file.read_text(encoding="utf-8")
+
     # Extract next iteration plan section
     prep_content = f"""# PDF Generation Improvements - Iteration 2 Preparation
 
-**Prepared**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+**Prepared**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 **Cycle**: 2
 **Status**: Ready to Begin
 
@@ -284,22 +290,22 @@ def main():
 
 **Ready to begin Iteration 2**
 
-*Prepared: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}*
+*Prepared: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}*
 """
-    
-    prep_file.write_text(prep_content, encoding='utf-8')
+
+    prep_file.write_text(prep_content, encoding="utf-8")
     print(f"  ✅ Created: {prep_file}")
-    
+
     # Step 3: Generate preparation PDF
     print("\n📄 Step 3: Generating preparation PDF...")
     prep_pdf = generate_preparation_pdf(prep_file)
     print(f"  ✅ Generated: {prep_pdf}")
-    
+
     # Step 4: Open PDFs on desktop
     print("\n🖥️  Step 4: Opening PDFs on desktop...")
     open_pdf_on_desktop(obs_pdf)
     open_pdf_on_desktop(prep_pdf)
-    
+
     print("\n" + "=" * 70)
     print("✅ RECORD AND LOOP COMPLETE!")
     print("=" * 70)
@@ -309,7 +315,7 @@ def main():
     print(f"📋 Observations Markdown: {observations_file}")
     print(f"📋 Preparation Markdown: {prep_file}")
     print()
-    
+
     return 0
 
 

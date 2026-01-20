@@ -11,8 +11,8 @@ Following "as above, so below" principles:
 """
 
 from .librarian import Librarian
-from .scribe import Scribe
 from .record_catalog import RecordCatalog, RecordEntry
+from .scribe import Scribe
 
 __all__ = [
     "Librarian",

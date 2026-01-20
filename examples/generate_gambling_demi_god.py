@@ -7,28 +7,24 @@ Creates documentation for a demi-god who uses card visualization as their sacred
 
 import sys
 from pathlib import Path
-from datetime import datetime
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from src.waft.templates.typst.wrappers.deckz_poker import (
-    generate_deckz_poker,
-    Player
-)
+from src.waft.templates.typst.wrappers.deckz_poker import Player, generate_deckz_poker
 
 
 def create_river_king_profile():
     """Create The River King's profile and sacred tool documentation."""
-    
+
     # The River King's sacred hand - always the same, representing his power
     sacred_hand = ["AS", "KS", "QS", "JS", "10S"]  # Royal Flush of Spades
-    
+
     # His "reading" cards - cards he uses to see fate
     reading_cards = ["AH", "KD", "QC", "JH", "10H"]  # Royal Flush of Hearts (mirror)
-    
-    content = f"""
+
+    content = """
 # The River King
 ## Demi-God of Gambling, Luck, and the Mississippi
 
@@ -212,19 +208,19 @@ This is his power: **He makes the invisible visible, but he doesn't change what'
         Player(name="The Sacred Hand (Spades)", cards=sacred_hand),
         Player(name="The Mirror Hand (Hearts)", cards=reading_cards),
     ]
-    
+
     output_path = Path("_temp_pdf_examples/the_river_king.pdf")
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     pdf_path = generate_deckz_poker(
         title="The River King - Demi-God of Gambling",
         content=content,
         output_path=output_path,
         players=players,
         card_format="large",
-        show_rules=False
+        show_rules=False,
     )
-    
+
     return pdf_path
 
 
@@ -233,14 +229,15 @@ if __name__ == "__main__":
     print("Creating The River King - Demi-God of Gambling")
     print("=" * 60)
     print()
-    
+
     pdf_path = create_river_king_profile()
-    
+
     print(f"✅ Created: {pdf_path}")
     print()
     print("The River King's sacred tool is now documented!")
     print("=" * 60)
-    
+
     # Open the PDF
     import subprocess
+
     subprocess.run(["open", str(pdf_path)])

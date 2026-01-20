@@ -133,6 +133,7 @@ class ScenarioOrchestrator:
             "Mountain Pass",
             "River Crossing",
         ]
+
         location = random.choice(locations)
 
         console.print(f"[yellow]The party explores {location}...[/yellow]")
@@ -176,6 +177,7 @@ class ScenarioOrchestrator:
         party = self.party_manager.get_party()
 
         # Generate NPC or event
+
         npc_names = [
             "Elder Thorne",
             "Merchant Kael",

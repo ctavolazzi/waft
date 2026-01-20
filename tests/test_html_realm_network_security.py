@@ -10,23 +10,23 @@ Tests all security validation functions to ensure:
 - Secure permissions are set
 """
 
-import pytest
-import tempfile
-import shutil
-from pathlib import Path
 import os
-import stat
+import shutil
+import tempfile
+from pathlib import Path
+
+import pytest
 
 from waft.core.html_realm_network_security import (
-    SENSITIVE_PATTERNS,
+    DIR_PERM,
+    FILE_PERM,
     MAX_HTML_SIZE,
     MAX_PARSING_TIME,
-    FILE_PERM,
-    DIR_PERM,
+    SENSITIVE_PATTERNS,
     _is_sensitive_file,
     _validate_html_path,
-    parse_html_safely,
     extract_html_metadata,
+    parse_html_safely,
     set_secure_permissions,
 )
 
@@ -60,6 +60,7 @@ def sample_html():
 
 # --- Security Constants Tests ---
 
+
 def test_sensitive_patterns_defined():
     """Test that sensitive patterns are defined."""
     assert len(SENSITIVE_PATTERNS) > 0
@@ -70,6 +71,7 @@ def test_sensitive_patterns_defined():
 
 
 # --- Path Validation Tests ---
+
 
 def test_is_sensitive_file_hidden_directory(temp_project):
     """Test that _hidden/ directory is detected as sensitive."""
@@ -146,11 +148,12 @@ def test_validate_html_path_path_traversal(temp_project):
 
 # --- Safe HTML Parsing Tests ---
 
+
 def test_parse_html_safely_valid_file(temp_project, sample_html):
     """Test parsing a valid HTML file."""
     html_file = temp_project / "test.html"
     html_file.write_text(sample_html)
-    
+
     result = parse_html_safely(html_file)
     assert result is not None
     assert result["parsed"] is True
@@ -170,7 +173,7 @@ def test_parse_html_safely_too_large_file(temp_project):
     large_file = temp_project / "large.html"
     large_content = "<html>" + "x" * (MAX_HTML_SIZE + 1) + "</html>"
     large_file.write_text(large_content)
-    
+
     result = parse_html_safely(large_file)
     assert result is None
 
@@ -179,7 +182,7 @@ def test_parse_html_safely_malformed_html(temp_project):
     """Test parsing malformed HTML (should handle gracefully)."""
     malformed_file = temp_project / "malformed.html"
     malformed_file.write_text("<html><body><p>Unclosed tag")
-    
+
     # Should not crash, but may return None or partial result
     result = parse_html_safely(malformed_file)
     # BeautifulSoup is lenient, so it might still parse
@@ -188,14 +191,15 @@ def test_parse_html_safely_malformed_html(temp_project):
 
 # --- Metadata Extraction Tests ---
 
+
 def test_extract_html_metadata_with_soup(temp_project, sample_html):
     """Test metadata extraction from parsed HTML."""
     html_file = temp_project / "test.html"
     html_file.write_text(sample_html)
-    
+
     result = parse_html_safely(html_file)
     assert result is not None
-    
+
     metadata = extract_html_metadata(result["soup"])
     assert metadata["title"] == "Test Page"
     assert len(metadata["links"]) == 2
@@ -217,10 +221,10 @@ def test_extract_html_metadata_no_title(temp_project):
     html_content = "<html><body><p>No title</p></body></html>"
     html_file = temp_project / "notitle.html"
     html_file.write_text(html_content)
-    
+
     result = parse_html_safely(html_file)
     assert result is not None
-    
+
     metadata = extract_html_metadata(result["soup"])
     assert metadata["title"] == ""
     assert metadata["link_count"] == 0
@@ -228,20 +232,21 @@ def test_extract_html_metadata_no_title(temp_project):
 
 # --- File Permissions Tests ---
 
+
 def test_set_secure_permissions_file(temp_project):
     """Test setting secure permissions on a file."""
     test_file = temp_project / "test.txt"
     test_file.write_text("test content")
-    
+
     # Set permissions
     set_secure_permissions(test_file, is_dir=False)
-    
+
     # Check permissions (may not work on Windows)
     try:
         file_stat = test_file.stat()
         # On Unix, check that permissions are restrictive
         # 0o600 = rw------- (owner read/write only)
-        if os.name != 'nt':  # Not Windows
+        if os.name != "nt":  # Not Windows
             assert (file_stat.st_mode & 0o777) == FILE_PERM
     except (OSError, AttributeError):
         # Windows or permission check failed - that's okay
@@ -252,16 +257,16 @@ def test_set_secure_permissions_directory(temp_project):
     """Test setting secure permissions on a directory."""
     test_dir = temp_project / "test_dir"
     test_dir.mkdir()
-    
+
     # Set permissions
     set_secure_permissions(test_dir, is_dir=True)
-    
+
     # Check permissions (may not work on Windows)
     try:
         dir_stat = test_dir.stat()
         # On Unix, check that permissions are restrictive
         # 0o700 = rwx------ (owner read/write/execute only)
-        if os.name != 'nt':  # Not Windows
+        if os.name != "nt":  # Not Windows
             assert (dir_stat.st_mode & 0o777) == DIR_PERM
     except (OSError, AttributeError):
         # Windows or permission check failed - that's okay
@@ -277,25 +282,26 @@ def test_set_secure_permissions_nonexistent_file(temp_project):
 
 # --- Integration Tests ---
 
+
 def test_full_security_workflow(temp_project, sample_html):
     """Test the complete security workflow."""
     html_file = temp_project / "secure.html"
     html_file.write_text(sample_html)
-    
+
     # 1. Validate path
     assert _validate_html_path(html_file, temp_project) is True
-    
+
     # 2. Parse safely
     result = parse_html_safely(html_file)
     assert result is not None
-    
+
     # 3. Extract metadata
     metadata = extract_html_metadata(result["soup"])
     assert metadata["title"] == "Test Page"
-    
+
     # 4. Set secure permissions
     set_secure_permissions(html_file, is_dir=False)
-    
+
     # All steps completed successfully
     assert True
 
@@ -312,17 +318,19 @@ def test_security_rejects_all_sensitive_patterns(temp_project):
         temp_project / ".git" / "config",
         temp_project / "node_modules" / "package" / "file.html",
     ]
-    
+
     for path in sensitive_paths:
         path.parent.mkdir(parents=True, exist_ok=True)
         if path.suffix == ".html":
             path.write_text("<html></html>")
         else:
             path.write_text("content")
-        
+
         # Should be detected as sensitive
         assert _is_sensitive_file(path) is True, f"Path {path} should be sensitive"
-        
+
         # Should be rejected by validation
         if path.suffix == ".html":
-            assert _validate_html_path(path, temp_project) is False, f"Path {path} should be rejected"
+            assert _validate_html_path(path, temp_project) is False, (
+                f"Path {path} should be rejected"
+            )

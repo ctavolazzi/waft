@@ -12,8 +12,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.waft.study_gym import ChallengeGenerator, run_study_session
 from src.waft.one_pager import OnePager
+from src.waft.study_gym import ChallengeGenerator, run_study_session
 
 
 def test_markdown_content():
@@ -40,18 +40,14 @@ waft verify
 3. Fitness testing
 4. Scientific data collection
 """
-    
+
     challenge = ChallengeGenerator.generate_challenge(
-        "page_constraint",
-        {
-            "target_pages": 2,
-            "content": content
-        }
+        "page_constraint", {"target_pages": 2, "content": content}
     )
-    
+
     challenge["name"] = "One-Pager: Markdown Content"
     challenge["objective"] = "Create perfect 2-page document from markdown"
-    
+
     return run_study_session(challenge)
 
 
@@ -66,44 +62,36 @@ def create_one_pager(content, title=None):
 # Usage
 create_one_pager("# My Doc\\nContent", "My Title")
 """
-    
+
     challenge = ChallengeGenerator.generate_challenge(
         "page_constraint",
-        {
-            "target_pages": 2,
-            "content": f"<h2>Code Example</h2><pre><code>{content}</code></pre>"
-        }
+        {"target_pages": 2, "content": f"<h2>Code Example</h2><pre><code>{content}</code></pre>"},
     )
-    
+
     challenge["name"] = "One-Pager: Code Content"
     challenge["objective"] = "Create perfect 2-page document with code"
-    
+
     return run_study_session(challenge)
 
 
 def test_dict_content():
     """Test with dictionary content."""
-    from src.waft.one_pager import OnePager
-    
+
     content = {
         "title": "WAFT Configuration",
         "version": "0.5.0",
-        "features": [
-            "Self-modification",
-            "Evolutionary tracking",
-            "Fitness testing"
-        ],
+        "features": ["Self-modification", "Evolutionary tracking", "Fitness testing"],
         "commands": {
             "new": "Create new project",
             "verify": "Check system health",
-            "status": "Show current state"
-        }
+            "status": "Show current state",
+        },
     }
-    
+
     # Use OnePager directly
     pager = OnePager.from_dict(content, title="WAFT Config One-Pager")
     output = pager.generate()
-    
+
     print(f"✅ Generated: {output}")
     return output
 
@@ -193,19 +181,15 @@ Observe the "God-Head" agent emerge from thousands of generations. This produces
 - Python: 3.10+
 - Package Manager: uv
 """
-    
+
     challenge = ChallengeGenerator.generate_challenge(
         "content_fitting",
-        {
-            "content_length": len(content.split()),
-            "max_pages": 2,
-            "content": content
-        }
+        {"content_length": len(content.split()), "max_pages": 2, "content": content},
     )
-    
+
     challenge["name"] = "One-Pager: Long Content Condensation"
     challenge["objective"] = "Condense long content into perfect 2-page document"
-    
+
     return run_study_session(challenge)
 
 
@@ -215,30 +199,30 @@ def main():
     print("🔬 One-Pager Evolution Study")
     print("=" * 60)
     print()
-    
+
     print("📊 Test 1: Markdown Content")
     print("-" * 60)
     session1 = test_markdown_content()
     print(f"Session: {session1.session_id}")
     print()
-    
+
     print("📊 Test 2: Code Content")
     print("-" * 60)
     session2 = test_code_content()
     print(f"Session: {session2.session_id}")
     print()
-    
+
     print("📊 Test 3: Dictionary Content")
     print("-" * 60)
     output3 = test_dict_content()
     print()
-    
+
     print("📊 Test 4: Long Content Condensation")
     print("-" * 60)
     session4 = test_long_content()
     print(f"Session: {session4.session_id}")
     print()
-    
+
     print("=" * 60)
     print("✅ Evolution Study Complete!")
     print("=" * 60)

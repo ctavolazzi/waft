@@ -7,8 +7,9 @@ Creates a beautiful prose PDF of The Point narrative using elegant typography.
 """
 
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
+
 from jinja2 import Template
 from weasyprint import HTML
 
@@ -376,21 +377,27 @@ NARRATIVE_TEMPLATE = """
 
 def generate_the_point_narrative_pdf(output_path: Path = None) -> Path:
     """Generate The Point narrative PDF."""
-    
+
     if output_path is None:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        output_path = project_root / "_archive" / "daily" / datetime.now().strftime("%Y-%m-%d") / f"The_Point_Narrative_{timestamp}.pdf"
+        output_path = (
+            project_root
+            / "_archive"
+            / "daily"
+            / datetime.now().strftime("%Y-%m-%d")
+            / f"The_Point_Narrative_{timestamp}.pdf"
+        )
         output_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     # Render template
     template = Template(NARRATIVE_TEMPLATE)
     html_output = template.render()
-    
+
     # Generate PDF using WeasyPrint
     HTML(string=html_output).write_pdf(str(output_path))
-    
+
     print(f"✅ The Point narrative PDF created: {output_path}")
-    
+
     return output_path
 
 

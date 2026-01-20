@@ -7,65 +7,64 @@ Creates a comprehensive plans report using the science-textbook-template.
 Compiles all plans from _work_efforts/Plans/ into a beautiful LaTeX textbook.
 """
 
-import sys
-import yaml
 import re
-from pathlib import Path
+import sys
 from datetime import datetime
-from typing import Dict, Any, List, Optional
-import subprocess
-import shutil
-import tempfile
+from pathlib import Path
+from typing import Any
+
+import yaml
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.waft.templates.latex.content_builders import markdown_to_latex
 from src.waft.templates.latex.compiler import LaTeXCompiler
+from src.waft.templates.latex.content_builders import markdown_to_latex
 
 # Try to import WeasyPrint for fallback
 try:
     from weasyprint import HTML as WeasyHTML
+
     WEASYPRINT_AVAILABLE = True
 except ImportError:
     WEASYPRINT_AVAILABLE = False
 
 
-def parse_plan_file(plan_path: Path) -> Dict[str, Any]:
+def parse_plan_file(plan_path: Path) -> dict[str, Any]:
     """Parse a plan file with YAML frontmatter."""
-    content = plan_path.read_text(encoding='utf-8')
+    content = plan_path.read_text(encoding="utf-8")
 
     # Extract YAML frontmatter
-    frontmatter_match = re.match(r'^---\n(.*?)\n---\n', content, re.DOTALL)
+    frontmatter_match = re.match(r"^---\n(.*?)\n---\n", content, re.DOTALL)
     if frontmatter_match:
         try:
             metadata = yaml.safe_load(frontmatter_match.group(1))
         except Exception:
             metadata = {}
         # Remove frontmatter from content
-        markdown_content = content[frontmatter_match.end():].strip()
+        markdown_content = content[frontmatter_match.end() :].strip()
     else:
         metadata = {}
         markdown_content = content.strip()
 
     # Extract title from first H1 or use filename
-    title_match = re.search(r'^#\s+(.+)$', markdown_content, re.MULTILINE)
+    title_match = re.search(r"^#\s+(.+)$", markdown_content, re.MULTILINE)
     if title_match:
         title = title_match.group(1)
         # Remove title from content
-        markdown_content = re.sub(r'^#\s+.+$\n', '', markdown_content, count=1, flags=re.MULTILINE)
+        markdown_content = re.sub(r"^#\s+.+$\n", "", markdown_content, count=1, flags=re.MULTILINE)
     else:
-        title = metadata.get('name', plan_path.stem.replace('_', ' ').title())
+        title = metadata.get("name", plan_path.stem.replace("_", " ").title())
 
     return {
-        'title': title,
-        'metadata': metadata,
-        'content': markdown_content,
-        'filename': plan_path.name,
-        'path': str(plan_path.relative_to(Path.cwd() / '_work_efforts' / 'Plans'))
+        "title": title,
+        "metadata": metadata,
+        "content": markdown_content,
+        "filename": plan_path.name,
+        "path": str(plan_path.relative_to(Path.cwd() / "_work_efforts" / "Plans")),
     }
 
 
-def gather_all_plans(plans_dir: Path) -> List[Dict[str, Any]]:
+def gather_all_plans(plans_dir: Path) -> list[dict[str, Any]]:
     """Gather all plan files from the Plans directory."""
     plans = []
 
@@ -105,23 +104,23 @@ def gather_all_plans(plans_dir: Path) -> List[Dict[str, Any]]:
 def escape_latex(text: str) -> str:
     """Escape special LaTeX characters."""
     replacements = {
-        '&': r'\&',
-        '%': r'\%',
-        '$': r'\$',
-        '#': r'\#',
-        '^': r'\textasciicircum{}',
-        '_': r'\_',
-        '{': r'\{',
-        '}': r'\}',
-        '~': r'\textasciitilde{}',
-        '\\': r'\textbackslash{}',
+        "&": r"\&",
+        "%": r"\%",
+        "$": r"\$",
+        "#": r"\#",
+        "^": r"\textasciicircum{}",
+        "_": r"\_",
+        "{": r"\{",
+        "}": r"\}",
+        "~": r"\textasciitilde{}",
+        "\\": r"\textbackslash{}",
     }
     for char, replacement in replacements.items():
         text = text.replace(char, replacement)
     return text
 
 
-def generate_latex_document(plans: List[Dict[str, Any]], title: str = "Plans Report") -> str:
+def generate_latex_document(plans: list[dict[str, Any]], title: str = "Plans Report") -> str:
     """Generate LaTeX document from plans using science-textbook-template structure."""
 
     now = datetime.now()
@@ -131,139 +130,145 @@ def generate_latex_document(plans: List[Dict[str, Any]], title: str = "Plans Rep
     latex_parts = []
 
     # Document class and packages (from template)
-    latex_parts.append(r'\documentclass{book}')
-    latex_parts.append('')
-    latex_parts.append(f'\\title{{{escape_latex(title)}}}')
-    latex_parts.append(f'\\newcommand{{\\booksubtitle}}{{Comprehensive Plans Collection}}')
-    latex_parts.append(f'\\newcommand{{\\booklicense}}{{Internal Use Only}}')
-    latex_parts.append('')
-    latex_parts.append('\\author{W.A.F.T. System}')
-    latex_parts.append(f'\\newcommand{{\\authorsubtitle}}{{{date_str}}}')
-    latex_parts.append('')
-    latex_parts.append('% Create convenient commands')
-    latex_parts.append('\\makeatletter')
-    latex_parts.append('\\newcommand{\\booktitle}{\\@title}')
-    latex_parts.append('\\newcommand{\\bookauthor}{\\@author}')
-    latex_parts.append('\\makeatother')
-    latex_parts.append('')
-    latex_parts.append('\\usepackage[utf8]{inputenc}')
-    latex_parts.append('\\usepackage{fix-cm}')
-    latex_parts.append('\\usepackage{tikz}')
-    latex_parts.append('\\usepackage{amsmath}')
-    latex_parts.append('\\usepackage{listings}')
-    latex_parts.append('\\usepackage{xcolor}')
-    latex_parts.append('')
-    latex_parts.append('% Geometry for letter size paper (better for viewing)')
-    latex_parts.append('\\usepackage[margin=.75in, paperwidth=8.5in, paperheight=11in]{geometry}')
-    latex_parts.append('')
-    latex_parts.append('\\renewcommand{\\contentsname}{Table of Contents}')
-    latex_parts.append('\\usepackage{makeidx}')
-    latex_parts.append('\\makeindex')
-    latex_parts.append('')
-    latex_parts.append('% Configure code listings')
-    latex_parts.append('\\lstset{')
-    latex_parts.append('    basicstyle=\\ttfamily\\small,')
-    latex_parts.append('    breaklines=true,')
-    latex_parts.append('    frame=single,')
-    latex_parts.append('    backgroundcolor=\\color{gray!10}')
-    latex_parts.append('}')
-    latex_parts.append('')
-    latex_parts.append('% Content Starts Here')
-    latex_parts.append('\\begin{document}')
-    latex_parts.append('\\frontmatter')
-    latex_parts.append('')
+    latex_parts.append(r"\documentclass{book}")
+    latex_parts.append("")
+    latex_parts.append(f"\\title{{{escape_latex(title)}}}")
+    latex_parts.append("\\newcommand{\\booksubtitle}{Comprehensive Plans Collection}")
+    latex_parts.append("\\newcommand{\\booklicense}{Internal Use Only}")
+    latex_parts.append("")
+    latex_parts.append("\\author{W.A.F.T. System}")
+    latex_parts.append(f"\\newcommand{{\\authorsubtitle}}{{{date_str}}}")
+    latex_parts.append("")
+    latex_parts.append("% Create convenient commands")
+    latex_parts.append("\\makeatletter")
+    latex_parts.append("\\newcommand{\\booktitle}{\\@title}")
+    latex_parts.append("\\newcommand{\\bookauthor}{\\@author}")
+    latex_parts.append("\\makeatother")
+    latex_parts.append("")
+    latex_parts.append("\\usepackage[utf8]{inputenc}")
+    latex_parts.append("\\usepackage{fix-cm}")
+    latex_parts.append("\\usepackage{tikz}")
+    latex_parts.append("\\usepackage{amsmath}")
+    latex_parts.append("\\usepackage{listings}")
+    latex_parts.append("\\usepackage{xcolor}")
+    latex_parts.append("")
+    latex_parts.append("% Geometry for letter size paper (better for viewing)")
+    latex_parts.append("\\usepackage[margin=.75in, paperwidth=8.5in, paperheight=11in]{geometry}")
+    latex_parts.append("")
+    latex_parts.append("\\renewcommand{\\contentsname}{Table of Contents}")
+    latex_parts.append("\\usepackage{makeidx}")
+    latex_parts.append("\\makeindex")
+    latex_parts.append("")
+    latex_parts.append("% Configure code listings")
+    latex_parts.append("\\lstset{")
+    latex_parts.append("    basicstyle=\\ttfamily\\small,")
+    latex_parts.append("    breaklines=true,")
+    latex_parts.append("    frame=single,")
+    latex_parts.append("    backgroundcolor=\\color{gray!10}")
+    latex_parts.append("}")
+    latex_parts.append("")
+    latex_parts.append("% Content Starts Here")
+    latex_parts.append("\\begin{document}")
+    latex_parts.append("\\frontmatter")
+    latex_parts.append("")
 
     # Half Title Page
-    latex_parts.append('% ---- Half Title Page ----')
-    latex_parts.append('\\newgeometry{top=1.75in,bottom=.5in}')
-    latex_parts.append('\\begin{titlepage}')
-    latex_parts.append('\\begin{flushleft}')
-    latex_parts.append('')
-    latex_parts.append(f'% Title')
-    latex_parts.append(f'\\textbf{{\\fontfamily{{qcs}}\\fontsize{{48}}{{54}}\\selectfont {escape_latex(title)}\\\\}}')
-    latex_parts.append('')
-    latex_parts.append('% Draw a line 4pt high')
-    latex_parts.append('\\par\\noindent\\rule{\\textwidth}{4pt}\\\\')
-    latex_parts.append('')
-    latex_parts.append('% Subtitle')
-    latex_parts.append('\\begin{tikzpicture}')
-    latex_parts.append('\\shade[bottom color=lightgray,top color=white]')
-    latex_parts.append('    (0,0) rectangle (\\textwidth, 1.5)')
-    latex_parts.append('    node[midway] {\\textbf{\\large \\textit{\\booksubtitle}}};')
-    latex_parts.append('\\end{tikzpicture}')
-    latex_parts.append('')
-    latex_parts.append('% Edition Number')
-    latex_parts.append('\\begin{flushright}')
-    latex_parts.append(f'\\Large Generated {date_str}')
-    latex_parts.append('\\end{flushright}')
-    latex_parts.append('')
-    latex_parts.append('\\vspace{\\fill}')
-    latex_parts.append('')
-    latex_parts.append('\\end{flushleft}')
-    latex_parts.append('\\end{titlepage}')
-    latex_parts.append('\\restoregeometry')
-    latex_parts.append('')
+    latex_parts.append("% ---- Half Title Page ----")
+    latex_parts.append("\\newgeometry{top=1.75in,bottom=.5in}")
+    latex_parts.append("\\begin{titlepage}")
+    latex_parts.append("\\begin{flushleft}")
+    latex_parts.append("")
+    latex_parts.append("% Title")
+    latex_parts.append(
+        f"\\textbf{{\\fontfamily{{qcs}}\\fontsize{{48}}{{54}}\\selectfont {escape_latex(title)}\\\\}}"
+    )
+    latex_parts.append("")
+    latex_parts.append("% Draw a line 4pt high")
+    latex_parts.append("\\par\\noindent\\rule{\\textwidth}{4pt}\\\\")
+    latex_parts.append("")
+    latex_parts.append("% Subtitle")
+    latex_parts.append("\\begin{tikzpicture}")
+    latex_parts.append("\\shade[bottom color=lightgray,top color=white]")
+    latex_parts.append("    (0,0) rectangle (\\textwidth, 1.5)")
+    latex_parts.append("    node[midway] {\\textbf{\\large \\textit{\\booksubtitle}}};")
+    latex_parts.append("\\end{tikzpicture}")
+    latex_parts.append("")
+    latex_parts.append("% Edition Number")
+    latex_parts.append("\\begin{flushright}")
+    latex_parts.append(f"\\Large Generated {date_str}")
+    latex_parts.append("\\end{flushright}")
+    latex_parts.append("")
+    latex_parts.append("\\vspace{\\fill}")
+    latex_parts.append("")
+    latex_parts.append("\\end{flushleft}")
+    latex_parts.append("\\end{titlepage}")
+    latex_parts.append("\\restoregeometry")
+    latex_parts.append("")
 
     # Title Page
-    latex_parts.append('% ---- Title Page ----')
-    latex_parts.append('\\thispagestyle{empty}')
-    latex_parts.append('\\newgeometry{top=1.75in,bottom=.5in}')
-    latex_parts.append('\\begin{titlepage}')
-    latex_parts.append('\\begin{flushleft}')
-    latex_parts.append('')
-    latex_parts.append(f'% Title')
-    latex_parts.append(f'\\textbf{{\\fontfamily{{qcs}}\\fontsize{{48}}{{54}}\\selectfont {escape_latex(title)}\\\\}}')
-    latex_parts.append('')
-    latex_parts.append('\\par\\noindent\\rule{\\textwidth}{4pt}\\\\')
-    latex_parts.append('')
-    latex_parts.append('\\begin{tikzpicture}')
-    latex_parts.append('\\shade[bottom color=lightgray,top color=white]')
-    latex_parts.append('    (0,0) rectangle (\\textwidth, 1.5)')
-    latex_parts.append('    node[midway] {\\textbf{\\large \\textit{\\booksubtitle}}};')
-    latex_parts.append('\\end{tikzpicture}')
-    latex_parts.append('')
-    latex_parts.append('\\begin{flushright}')
-    latex_parts.append(f'\\Large Generated {date_str}')
-    latex_parts.append('\\end{flushright}')
-    latex_parts.append('')
-    latex_parts.append('\\vspace{\\fill}')
-    latex_parts.append('')
-    latex_parts.append('\\textbf{\\large \\bookauthor}\\\\[3.5pt]')
-    latex_parts.append('\\textbf{\\large \\textit{\\authorsubtitle}}')
-    latex_parts.append('')
-    latex_parts.append('\\vspace{\\fill}')
-    latex_parts.append('')
-    latex_parts.append('\\end{flushleft}')
-    latex_parts.append('\\end{titlepage}')
-    latex_parts.append('\\restoregeometry')
-    latex_parts.append('')
+    latex_parts.append("% ---- Title Page ----")
+    latex_parts.append("\\thispagestyle{empty}")
+    latex_parts.append("\\newgeometry{top=1.75in,bottom=.5in}")
+    latex_parts.append("\\begin{titlepage}")
+    latex_parts.append("\\begin{flushleft}")
+    latex_parts.append("")
+    latex_parts.append("% Title")
+    latex_parts.append(
+        f"\\textbf{{\\fontfamily{{qcs}}\\fontsize{{48}}{{54}}\\selectfont {escape_latex(title)}\\\\}}"
+    )
+    latex_parts.append("")
+    latex_parts.append("\\par\\noindent\\rule{\\textwidth}{4pt}\\\\")
+    latex_parts.append("")
+    latex_parts.append("\\begin{tikzpicture}")
+    latex_parts.append("\\shade[bottom color=lightgray,top color=white]")
+    latex_parts.append("    (0,0) rectangle (\\textwidth, 1.5)")
+    latex_parts.append("    node[midway] {\\textbf{\\large \\textit{\\booksubtitle}}};")
+    latex_parts.append("\\end{tikzpicture}")
+    latex_parts.append("")
+    latex_parts.append("\\begin{flushright}")
+    latex_parts.append(f"\\Large Generated {date_str}")
+    latex_parts.append("\\end{flushright}")
+    latex_parts.append("")
+    latex_parts.append("\\vspace{\\fill}")
+    latex_parts.append("")
+    latex_parts.append("\\textbf{\\large \\bookauthor}\\\\[3.5pt]")
+    latex_parts.append("\\textbf{\\large \\textit{\\authorsubtitle}}")
+    latex_parts.append("")
+    latex_parts.append("\\vspace{\\fill}")
+    latex_parts.append("")
+    latex_parts.append("\\end{flushleft}")
+    latex_parts.append("\\end{titlepage}")
+    latex_parts.append("\\restoregeometry")
+    latex_parts.append("")
 
     # Colophon
-    latex_parts.append('\\thispagestyle{empty}')
-    latex_parts.append('\\begin{flushleft}')
-    latex_parts.append('\\vspace*{\\fill}')
-    latex_parts.append('This report was typeset using \\LaTeX{} software.\\\\')
-    latex_parts.append(f'Generated on {date_str}\\\\')
-    latex_parts.append(f'Total Plans: {len(plans)}\\\\')
-    latex_parts.append('\\vspace{\\fill}')
-    latex_parts.append('\\end{flushleft}')
-    latex_parts.append('')
-    latex_parts.append('\\addtocounter{page}{2}')
-    latex_parts.append('')
+    latex_parts.append("\\thispagestyle{empty}")
+    latex_parts.append("\\begin{flushleft}")
+    latex_parts.append("\\vspace*{\\fill}")
+    latex_parts.append("This report was typeset using \\LaTeX{} software.\\\\")
+    latex_parts.append(f"Generated on {date_str}\\\\")
+    latex_parts.append(f"Total Plans: {len(plans)}\\\\")
+    latex_parts.append("\\vspace{\\fill}")
+    latex_parts.append("\\end{flushleft}")
+    latex_parts.append("")
+    latex_parts.append("\\addtocounter{page}{2}")
+    latex_parts.append("")
 
     # Preface
-    latex_parts.append('\\chapter*{Preface}')
-    latex_parts.append(f'This report contains {len(plans)} plans gathered from the work efforts system.')
-    latex_parts.append('Each plan represents a documented intention, goal, or project outline.')
-    latex_parts.append('Plans are organized chronologically and by category where applicable.')
-    latex_parts.append('')
+    latex_parts.append("\\chapter*{Preface}")
+    latex_parts.append(
+        f"This report contains {len(plans)} plans gathered from the work efforts system."
+    )
+    latex_parts.append("Each plan represents a documented intention, goal, or project outline.")
+    latex_parts.append("Plans are organized chronologically and by category where applicable.")
+    latex_parts.append("")
 
     # Table of Contents
-    latex_parts.append('\\setcounter{tocdepth}{2}')
-    latex_parts.append('\\tableofcontents')
-    latex_parts.append('')
-    latex_parts.append('\\mainmatter')
-    latex_parts.append('')
+    latex_parts.append("\\setcounter{tocdepth}{2}")
+    latex_parts.append("\\tableofcontents")
+    latex_parts.append("")
+    latex_parts.append("\\mainmatter")
+    latex_parts.append("")
 
     # Add each plan as a chapter
     total_plans = len(plans)
@@ -272,64 +277,72 @@ def generate_latex_document(plans: List[Dict[str, Any]], title: str = "Plans Rep
         print("   Progress: ", end="", flush=True)
 
     for i, plan in enumerate(plans, 1):
-        chapter_title = escape_latex(plan['title'])
-        latex_parts.append(f'\\chapter{{{chapter_title}}}')
-        latex_parts.append('')
+        chapter_title = escape_latex(plan["title"])
+        latex_parts.append(f"\\chapter{{{chapter_title}}}")
+        latex_parts.append("")
 
         # Progress indicator
         if total_plans > 50 and (i % 50 == 0 or i == total_plans):
             print(f"{i}/{total_plans} ", end="", flush=True)
 
         # Add metadata if available
-        if plan['metadata']:
+        if plan["metadata"]:
             metadata_items = []
-            if 'overview' in plan['metadata']:
-                metadata_items.append(f"\\textbf{{Overview:}} {escape_latex(plan['metadata']['overview'])}")
-            if 'status' in plan['metadata']:
-                metadata_items.append(f"\\textbf{{Status:}} {escape_latex(str(plan['metadata']['status']))}")
-            if 'todos' in plan['metadata']:
-                todo_count = len([t for t in plan['metadata']['todos'] if isinstance(t, dict)])
+            if "overview" in plan["metadata"]:
+                metadata_items.append(
+                    f"\\textbf{{Overview:}} {escape_latex(plan['metadata']['overview'])}"
+                )
+            if "status" in plan["metadata"]:
+                metadata_items.append(
+                    f"\\textbf{{Status:}} {escape_latex(str(plan['metadata']['status']))}"
+                )
+            if "todos" in plan["metadata"]:
+                todo_count = len([t for t in plan["metadata"]["todos"] if isinstance(t, dict)])
                 if todo_count > 0:
                     metadata_items.append(f"\\textbf{{Todos:}} {todo_count} items")
 
             if metadata_items:
-                latex_parts.append('\\begin{itemize}')
+                latex_parts.append("\\begin{itemize}")
                 for item in metadata_items:
-                    latex_parts.append(f'\\item {item}')
-                latex_parts.append('\\end{itemize}')
-                latex_parts.append('')
+                    latex_parts.append(f"\\item {item}")
+                latex_parts.append("\\end{itemize}")
+                latex_parts.append("")
 
         # Convert markdown content to LaTeX
         try:
-            latex_content = markdown_to_latex(plan['content'])
+            latex_content = markdown_to_latex(plan["content"])
             # Clean up any remaining issues
-            latex_content = re.sub(r'\\section\{', r'\\subsection{', latex_content)  # Demote H1 to H2
+            latex_content = re.sub(
+                r"\\section\{", r"\\subsection{", latex_content
+            )  # Demote H1 to H2
             latex_parts.append(latex_content)
         except Exception as e:
-            latex_parts.append(f'% Error converting content: {e}')
-            latex_parts.append(escape_latex(plan['content'][:500]))  # Fallback to escaped text
+            latex_parts.append(f"% Error converting content: {e}")
+            latex_parts.append(escape_latex(plan["content"][:500]))  # Fallback to escaped text
 
-        latex_parts.append('')
-        latex_parts.append('')
+        latex_parts.append("")
+        latex_parts.append("")
 
     # Back matter
-    latex_parts.append('\\backmatter')
-    latex_parts.append('')
-    latex_parts.append('\\chapter*{Index of Plans}')
-    latex_parts.append('\\begin{itemize}')
+    latex_parts.append("\\backmatter")
+    latex_parts.append("")
+    latex_parts.append("\\chapter*{Index of Plans}")
+    latex_parts.append("\\begin{itemize}")
     for i, plan in enumerate(plans, 1):
-        plan_title = escape_latex(plan['title'])
-        latex_parts.append(f'\\item \\textbf{{{plan_title}}}')
-        if plan.get('path'):
-            latex_parts.append(f'  \\textit{{({escape_latex(plan["path"])})}}')
-    latex_parts.append('\\end{itemize}')
-    latex_parts.append('')
-    latex_parts.append('\\end{document}')
+        plan_title = escape_latex(plan["title"])
+        latex_parts.append(f"\\item \\textbf{{{plan_title}}}")
+        if plan.get("path"):
+            latex_parts.append(f"  \\textit{{({escape_latex(plan['path'])})}}")
+    latex_parts.append("\\end{itemize}")
+    latex_parts.append("")
+    latex_parts.append("\\end{document}")
 
-    return '\n'.join(latex_parts)
+    return "\n".join(latex_parts)
 
 
-def generate_html_document(plans: List[Dict[str, Any]], title: str = "Plans Report", fallback_reason: Optional[str] = None) -> str:
+def generate_html_document(
+    plans: list[dict[str, Any]], title: str = "Plans Report", fallback_reason: str | None = None
+) -> str:
     """Generate HTML document from plans for WeasyPrint conversion."""
     import html as html_module
 
@@ -341,29 +354,29 @@ def generate_html_document(plans: List[Dict[str, Any]], title: str = "Plans Repo
         """Simple markdown to HTML converter."""
         html = md
         # Headers
-        html = re.sub(r'^# (.+)$', r'<h1>\1</h1>', html, flags=re.MULTILINE)
-        html = re.sub(r'^## (.+)$', r'<h2>\1</h2>', html, flags=re.MULTILINE)
-        html = re.sub(r'^### (.+)$', r'<h3>\1</h3>', html, flags=re.MULTILINE)
+        html = re.sub(r"^# (.+)$", r"<h1>\1</h1>", html, flags=re.MULTILINE)
+        html = re.sub(r"^## (.+)$", r"<h2>\1</h2>", html, flags=re.MULTILINE)
+        html = re.sub(r"^### (.+)$", r"<h3>\1</h3>", html, flags=re.MULTILINE)
         # Bold
-        html = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', html)
+        html = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", html)
         # Italic
-        html = re.sub(r'\*(.+?)\*', r'<em>\1</em>', html)
+        html = re.sub(r"\*(.+?)\*", r"<em>\1</em>", html)
         # Code blocks
-        html = re.sub(r'```(\w+)?\n(.*?)```', r'<pre><code>\2</code></pre>', html, flags=re.DOTALL)
+        html = re.sub(r"```(\w+)?\n(.*?)```", r"<pre><code>\2</code></pre>", html, flags=re.DOTALL)
         # Inline code
-        html = re.sub(r'`(.+?)`', r'<code>\1</code>', html)
+        html = re.sub(r"`(.+?)`", r"<code>\1</code>", html)
         # Paragraphs
-        html = re.sub(r'\n\n+', r'</p><p>', html)
-        return f'<p>{html}</p>'
+        html = re.sub(r"\n\n+", r"</p><p>", html)
+        return f"<p>{html}</p>"
 
     html_parts = []
-    html_parts.append('<!DOCTYPE html>')
+    html_parts.append("<!DOCTYPE html>")
     html_parts.append('<html lang="en">')
-    html_parts.append('<head>')
+    html_parts.append("<head>")
     html_parts.append('<meta charset="UTF-8">')
-    html_parts.append(f'<title>{html_module.escape(title)}</title>')
-    html_parts.append('<style>')
-    html_parts.append('''
+    html_parts.append(f"<title>{html_module.escape(title)}</title>")
+    html_parts.append("<style>")
+    html_parts.append("""
         @page {
             size: letter;
             margin: 0.75in 0.6in;
@@ -545,48 +558,56 @@ def generate_html_document(plans: List[Dict[str, Any]], title: str = "Plans Repo
         .index li {
             margin: 0.1in 0;
         }
-    ''')
-    html_parts.append('</style>')
-    html_parts.append('</head>')
-    html_parts.append('<body>')
+    """)
+    html_parts.append("</style>")
+    html_parts.append("</head>")
+    html_parts.append("<body>")
 
     # Title Page
     html_parts.append('<div class="title-page">')
-    html_parts.append(f'<h1>{html_module.escape(title)}</h1>')
+    html_parts.append(f"<h1>{html_module.escape(title)}</h1>")
     html_parts.append('<div class="subtitle">Comprehensive Plans Collection</div>')
     html_parts.append(f'<div class="date">Generated {date_str}</div>')
-    html_parts.append('</div>')
+    html_parts.append("</div>")
 
     # Colophon
     html_parts.append('<div class="colophon">')
-    html_parts.append('<p>This report was typeset using HTML/CSS and WeasyPrint.</p>')
-    html_parts.append(f'<p>Generated on {date_str}</p>')
-    html_parts.append(f'<p>Total Plans: {len(plans)}</p>')
+    html_parts.append("<p>This report was typeset using HTML/CSS and WeasyPrint.</p>")
+    html_parts.append(f"<p>Generated on {date_str}</p>")
+    html_parts.append(f"<p>Total Plans: {len(plans)}</p>")
     if fallback_reason:
-        html_parts.append('<div style="margin-top: 0.3in; padding: 0.2in; background: #fff3cd; border: 1pt solid #ffc107; border-radius: 3pt;">')
-        html_parts.append('<p><strong>Note:</strong> This report was generated using WeasyPrint (HTML/CSS) instead of LaTeX.</p>')
-        html_parts.append(f'<p><strong>Reason:</strong> {html_module.escape(fallback_reason)}</p>')
-        html_parts.append('<p>The report maintains the same textbook-style formatting and structure as the LaTeX version.</p>')
-        html_parts.append('</div>')
-    html_parts.append('</div>')
+        html_parts.append(
+            '<div style="margin-top: 0.3in; padding: 0.2in; background: #fff3cd; border: 1pt solid #ffc107; border-radius: 3pt;">'
+        )
+        html_parts.append(
+            "<p><strong>Note:</strong> This report was generated using WeasyPrint (HTML/CSS) instead of LaTeX.</p>"
+        )
+        html_parts.append(f"<p><strong>Reason:</strong> {html_module.escape(fallback_reason)}</p>")
+        html_parts.append(
+            "<p>The report maintains the same textbook-style formatting and structure as the LaTeX version.</p>"
+        )
+        html_parts.append("</div>")
+    html_parts.append("</div>")
 
     # Preface
     html_parts.append('<div class="preface">')
-    html_parts.append('<h1>Preface</h1>')
-    html_parts.append(f'<p>This report contains {len(plans)} plans gathered from the work efforts system.')
-    html_parts.append('Each plan represents a documented intention, goal, or project outline.')
-    html_parts.append('Plans are organized chronologically and by category where applicable.</p>')
-    html_parts.append('</div>')
+    html_parts.append("<h1>Preface</h1>")
+    html_parts.append(
+        f"<p>This report contains {len(plans)} plans gathered from the work efforts system."
+    )
+    html_parts.append("Each plan represents a documented intention, goal, or project outline.")
+    html_parts.append("Plans are organized chronologically and by category where applicable.</p>")
+    html_parts.append("</div>")
 
     # Table of Contents
     html_parts.append('<div class="toc">')
-    html_parts.append('<h1>Table of Contents</h1>')
-    html_parts.append('<ul>')
+    html_parts.append("<h1>Table of Contents</h1>")
+    html_parts.append("<ul>")
     for i, plan in enumerate(plans, 1):
-        plan_title = html_module.escape(plan['title'])
+        plan_title = html_module.escape(plan["title"])
         html_parts.append(f'<li><a href="#plan-{i}">{plan_title}</a></li>')
-    html_parts.append('</ul>')
-    html_parts.append('</div>')
+    html_parts.append("</ul>")
+    html_parts.append("</div>")
 
     # Chapters
     total_plans = len(plans)
@@ -596,62 +617,66 @@ def generate_html_document(plans: List[Dict[str, Any]], title: str = "Plans Repo
 
     for i, plan in enumerate(plans, 1):
         html_parts.append(f'<div class="chapter" id="plan-{i}">')
-        html_parts.append(f'<h1>{html_module.escape(plan["title"])}</h1>')
+        html_parts.append(f"<h1>{html_module.escape(plan['title'])}</h1>")
 
         # Progress indicator
         if total_plans > 50 and (i % 50 == 0 or i == total_plans):
             print(f"{i}/{total_plans} ", end="", flush=True)
 
         # Metadata
-        if plan['metadata']:
+        if plan["metadata"]:
             metadata_items = []
-            if 'overview' in plan['metadata']:
-                metadata_items.append(f"<strong>Overview:</strong> {html_module.escape(str(plan['metadata']['overview']))}")
-            if 'status' in plan['metadata']:
-                metadata_items.append(f"<strong>Status:</strong> {html_module.escape(str(plan['metadata']['status']))}")
-            if 'todos' in plan['metadata']:
-                todo_count = len([t for t in plan['metadata']['todos'] if isinstance(t, dict)])
+            if "overview" in plan["metadata"]:
+                metadata_items.append(
+                    f"<strong>Overview:</strong> {html_module.escape(str(plan['metadata']['overview']))}"
+                )
+            if "status" in plan["metadata"]:
+                metadata_items.append(
+                    f"<strong>Status:</strong> {html_module.escape(str(plan['metadata']['status']))}"
+                )
+            if "todos" in plan["metadata"]:
+                todo_count = len([t for t in plan["metadata"]["todos"] if isinstance(t, dict)])
                 if todo_count > 0:
                     metadata_items.append(f"<strong>Todos:</strong> {todo_count} items")
 
             if metadata_items:
                 html_parts.append('<div class="metadata">')
-                html_parts.append('<ul>')
+                html_parts.append("<ul>")
                 for item in metadata_items:
-                    html_parts.append(f'<li>{item}</li>')
-                html_parts.append('</ul>')
-                html_parts.append('</div>')
+                    html_parts.append(f"<li>{item}</li>")
+                html_parts.append("</ul>")
+                html_parts.append("</div>")
 
         # Content
         try:
-            html_content = markdown_to_html_simple(plan['content'])
+            html_content = markdown_to_html_simple(plan["content"])
             html_parts.append(html_content)
         except Exception as e:
-            html_parts.append(f'<p>Error converting content: {html_module.escape(str(e))}</p>')
-            html_parts.append(f'<pre>{html_module.escape(plan["content"][:500])}</pre>')
+            html_parts.append(f"<p>Error converting content: {html_module.escape(str(e))}</p>")
+            html_parts.append(f"<pre>{html_module.escape(plan['content'][:500])}</pre>")
 
-        html_parts.append('</div>')
+        html_parts.append("</div>")
 
     # Index
     html_parts.append('<div class="index">')
-    html_parts.append('<h1>Index of Plans</h1>')
-    html_parts.append('<ul>')
+    html_parts.append("<h1>Index of Plans</h1>")
+    html_parts.append("<ul>")
     for i, plan in enumerate(plans, 1):
-        plan_title = html_module.escape(plan['title'])
-        html_parts.append(f'<li><strong>{plan_title}</strong>')
-        if plan.get('path'):
-            html_parts.append(f' <em>({html_module.escape(plan["path"])})</em>')
-        html_parts.append('</li>')
-    html_parts.append('</ul>')
-    html_parts.append('</div>')
+        plan_title = html_module.escape(plan["title"])
+        html_parts.append(f"<li><strong>{plan_title}</strong>")
+        if plan.get("path"):
+            html_parts.append(f" <em>({html_module.escape(plan['path'])})</em>")
+        html_parts.append("</li>")
+    html_parts.append("</ul>")
+    html_parts.append("</div>")
 
-    html_parts.append('</body>')
-    html_parts.append('</html>')
+    html_parts.append("</body>")
+    html_parts.append("</html>")
 
-    return '\n'.join(html_parts)
+    return "\n".join(html_parts)
 
 
-def generate_city_plan(plans: List[Dict[str, Any]], title: str = "City Plan") -> str:
+def generate_city_plan(plans: list[dict[str, Any]], title: str = "City Plan") -> str:
     """Generate condensed City Plan - strategic overview of all plans."""
     import html as html_module
     from collections import defaultdict
@@ -666,56 +691,62 @@ def generate_city_plan(plans: List[Dict[str, Any]], title: str = "City Plan") ->
 
     for plan in plans:
         # Extract category from title/filename
-        title_lower = plan['title'].lower()
-        filename_lower = plan.get('filename', '').lower()
+        title_lower = plan["title"].lower()
+        filename_lower = plan.get("filename", "").lower()
         text = f"{title_lower} {filename_lower}"
 
         # Categorize by keywords
         category = "Other"
         for keyword, cat in [
-            ('api', 'APIs & Integration'),
-            ('ui', 'User Interface'),
-            ('pdf', 'Document Generation'),
-            ('test', 'Testing & Quality'),
-            ('system', 'System Architecture'),
-            ('workflow', 'Workflows'),
-            ('template', 'Templates'),
-            ('mcp', 'MCP Servers'),
-            ('dnd', 'D&D System'),
-            ('evolution', 'Evolution System'),
-            ('being', 'Being System'),
-            ('tavern', 'Tavern Game'),
-            ('latex', 'LaTeX'),
-            ('documentation', 'Documentation'),
-            ('refactor', 'Refactoring'),
-            ('feature', 'Features'),
-            ('fix', 'Bug Fixes'),
+            ("api", "APIs & Integration"),
+            ("ui", "User Interface"),
+            ("pdf", "Document Generation"),
+            ("test", "Testing & Quality"),
+            ("system", "System Architecture"),
+            ("workflow", "Workflows"),
+            ("template", "Templates"),
+            ("mcp", "MCP Servers"),
+            ("dnd", "D&D System"),
+            ("evolution", "Evolution System"),
+            ("being", "Being System"),
+            ("tavern", "Tavern Game"),
+            ("latex", "LaTeX"),
+            ("documentation", "Documentation"),
+            ("refactor", "Refactoring"),
+            ("feature", "Features"),
+            ("fix", "Bug Fixes"),
         ]:
             if keyword in text:
                 category = cat
                 break
 
         categories[category] += 1
-        themes[category].append({
-            'title': plan['title'],
-            'overview': plan['metadata'].get('overview', '')[:200] if plan['metadata'] else '',
-            'status': plan['metadata'].get('status', 'unknown') if plan['metadata'] else 'unknown',
-            'todos': len([t for t in plan['metadata'].get('todos', []) if isinstance(t, dict)]) if plan['metadata'] else 0
-        })
+        themes[category].append(
+            {
+                "title": plan["title"],
+                "overview": plan["metadata"].get("overview", "")[:200] if plan["metadata"] else "",
+                "status": plan["metadata"].get("status", "unknown")
+                if plan["metadata"]
+                else "unknown",
+                "todos": len([t for t in plan["metadata"].get("todos", []) if isinstance(t, dict)])
+                if plan["metadata"]
+                else 0,
+            }
+        )
 
-        if plan['metadata']:
-            status = plan['metadata'].get('status', 'unknown')
+        if plan["metadata"]:
+            status = plan["metadata"].get("status", "unknown")
             status_counts[status] += 1
 
     # Generate HTML
     html_parts = []
-    html_parts.append('<!DOCTYPE html>')
+    html_parts.append("<!DOCTYPE html>")
     html_parts.append('<html lang="en">')
-    html_parts.append('<head>')
+    html_parts.append("<head>")
     html_parts.append('<meta charset="UTF-8">')
-    html_parts.append(f'<title>{html_module.escape(title)}</title>')
-    html_parts.append('<style>')
-    html_parts.append('''
+    html_parts.append(f"<title>{html_module.escape(title)}</title>")
+    html_parts.append("<style>")
+    html_parts.append("""
         @page {
             size: letter;
             margin: 0.75in;
@@ -798,35 +829,43 @@ def generate_city_plan(plans: List[Dict[str, Any]], title: str = "City Plan") ->
             font-size: 8pt;
             margin-top: 0.05in;
         }
-    ''')
-    html_parts.append('</style>')
-    html_parts.append('</head>')
-    html_parts.append('<body>')
+    """)
+    html_parts.append("</style>")
+    html_parts.append("</head>")
+    html_parts.append("<body>")
 
     # Title Page
     html_parts.append('<div class="title-page">')
-    html_parts.append(f'<h1>{html_module.escape(title)}</h1>')
+    html_parts.append(f"<h1>{html_module.escape(title)}</h1>")
     html_parts.append('<div class="subtitle">Strategic Overview of All Plans</div>')
     html_parts.append(f'<div style="margin-top: 1in; font-size: 12pt;">Generated {date_str}</div>')
-    html_parts.append('</div>')
+    html_parts.append("</div>")
 
     # Statistics
-    html_parts.append('<h1>City Statistics</h1>')
+    html_parts.append("<h1>City Statistics</h1>")
     html_parts.append('<div class="stats">')
-    html_parts.append(f'<div class="stat-box"><h3>Total Plans</h3><div class="number">{len(plans)}</div></div>')
-    html_parts.append(f'<div class="stat-box"><h3>Categories</h3><div class="number">{len(categories)}</div></div>')
-    html_parts.append(f'<div class="stat-box"><h3>Active</h3><div class="number">{status_counts.get("active", 0) + status_counts.get("pending", 0)}</div></div>')
-    html_parts.append('</div>')
+    html_parts.append(
+        f'<div class="stat-box"><h3>Total Plans</h3><div class="number">{len(plans)}</div></div>'
+    )
+    html_parts.append(
+        f'<div class="stat-box"><h3>Categories</h3><div class="number">{len(categories)}</div></div>'
+    )
+    html_parts.append(
+        f'<div class="stat-box"><h3>Active</h3><div class="number">{status_counts.get("active", 0) + status_counts.get("pending", 0)}</div></div>'
+    )
+    html_parts.append("</div>")
 
     # Categories by size
     sorted_categories = sorted(categories.items(), key=lambda x: x[1], reverse=True)
 
-    html_parts.append('<h1>City Districts</h1>')
-    html_parts.append('<p>Plans organized by category - the districts of our AI Town:</p>')
+    html_parts.append("<h1>City Districts</h1>")
+    html_parts.append("<p>Plans organized by category - the districts of our AI Town:</p>")
 
     for category, count in sorted_categories:
-        html_parts.append(f'<div class="category">')
-        html_parts.append(f'<h2>{html_module.escape(category)} <span class="count">({count} plans)</span></h2>')
+        html_parts.append('<div class="category">')
+        html_parts.append(
+            f'<h2>{html_module.escape(category)} <span class="count">({count} plans)</span></h2>'
+        )
 
         # Show top plans in this category (limit to 5-10 most relevant)
         category_plans = themes[category][:8]  # Top 8 per category
@@ -834,48 +873,70 @@ def generate_city_plan(plans: List[Dict[str, Any]], title: str = "City Plan") ->
         for plan_item in category_plans:
             html_parts.append('<div class="plan-item">')
             html_parts.append(f'<div class="title">{html_module.escape(plan_item["title"])}</div>')
-            if plan_item['overview']:
-                overview_short = plan_item['overview'][:150] + ('...' if len(plan_item['overview']) > 150 else '')
-                html_parts.append(f'<div class="overview">{html_module.escape(overview_short)}</div>')
+            if plan_item["overview"]:
+                overview_short = plan_item["overview"][:150] + (
+                    "..." if len(plan_item["overview"]) > 150 else ""
+                )
+                html_parts.append(
+                    f'<div class="overview">{html_module.escape(overview_short)}</div>'
+                )
             meta_parts = []
-            if plan_item['status'] != 'unknown':
+            if plan_item["status"] != "unknown":
                 meta_parts.append(f"Status: {plan_item['status']}")
-            if plan_item['todos'] > 0:
+            if plan_item["todos"] > 0:
                 meta_parts.append(f"{plan_item['todos']} todos")
             if meta_parts:
                 html_parts.append(f'<div class="meta">{" • ".join(meta_parts)}</div>')
-            html_parts.append('</div>')
+            html_parts.append("</div>")
 
         if len(themes[category]) > 8:
             remaining = len(themes[category]) - 8
-            html_parts.append(f'<div class="plan-item" style="color: #888; font-style: italic;">... and {remaining} more plans in this category</div>')
+            html_parts.append(
+                f'<div class="plan-item" style="color: #888; font-style: italic;">... and {remaining} more plans in this category</div>'
+            )
 
-        html_parts.append('</div>')
+        html_parts.append("</div>")
 
     # Summary
-    html_parts.append('<div style="page-break-before: always; margin-top: 0.5in; padding: 0.3in; background: #f9f9f9; border: 1pt solid #ddd;">')
-    html_parts.append('<h2>City Summary</h2>')
-    html_parts.append(f'<p>This City Plan represents {len(plans)} documented plans across {len(categories)} major categories.')
-    html_parts.append('Each category represents a district of development activity in the W.A.F.T. ecosystem.</p>')
-    html_parts.append('<p><strong>Largest Districts:</strong> ' + ', '.join([f"{cat} ({count})" for cat, count in sorted_categories[:5]]) + '</p>')
-    html_parts.append('</div>')
+    html_parts.append(
+        '<div style="page-break-before: always; margin-top: 0.5in; padding: 0.3in; background: #f9f9f9; border: 1pt solid #ddd;">'
+    )
+    html_parts.append("<h2>City Summary</h2>")
+    html_parts.append(
+        f"<p>This City Plan represents {len(plans)} documented plans across {len(categories)} major categories."
+    )
+    html_parts.append(
+        "Each category represents a district of development activity in the W.A.F.T. ecosystem.</p>"
+    )
+    html_parts.append(
+        "<p><strong>Largest Districts:</strong> "
+        + ", ".join([f"{cat} ({count})" for cat, count in sorted_categories[:5]])
+        + "</p>"
+    )
+    html_parts.append("</div>")
 
-    html_parts.append('</body>')
-    html_parts.append('</html>')
+    html_parts.append("</body>")
+    html_parts.append("</html>")
 
-    return '\n'.join(html_parts)
+    return "\n".join(html_parts)
 
 
 def main():
     """Main CLI entry point."""
     import argparse
 
-    parser = argparse.ArgumentParser(description='Create plans report using science-textbook-template')
-    parser.add_argument('--title', default='Plans Report', help='Report title')
-    parser.add_argument('--output', default=None, help='Output PDF path')
-    parser.add_argument('--plans-dir', default=None, help='Plans directory path')
-    parser.add_argument('--limit', type=int, default=None, help='Limit number of plans to include')
-    parser.add_argument('--city-plan', action='store_true', help='Generate condensed City Plan view (strategic overview)')
+    parser = argparse.ArgumentParser(
+        description="Create plans report using science-textbook-template"
+    )
+    parser.add_argument("--title", default="Plans Report", help="Report title")
+    parser.add_argument("--output", default=None, help="Output PDF path")
+    parser.add_argument("--plans-dir", default=None, help="Plans directory path")
+    parser.add_argument("--limit", type=int, default=None, help="Limit number of plans to include")
+    parser.add_argument(
+        "--city-plan",
+        action="store_true",
+        help="Generate condensed City Plan view (strategic overview)",
+    )
     args = parser.parse_args()
 
     project_path = Path.cwd()
@@ -884,7 +945,7 @@ def main():
     if args.plans_dir:
         plans_dir = Path(args.plans_dir)
     else:
-        plans_dir = project_path / '_work_efforts' / 'Plans'
+        plans_dir = project_path / "_work_efforts" / "Plans"
 
     # Gather plans
     print("📋 Gathering plans...")
@@ -896,7 +957,7 @@ def main():
 
     # Limit if requested
     if args.limit:
-        all_plans = all_plans[:args.limit]
+        all_plans = all_plans[: args.limit]
         print(f"📊 Limited to {len(all_plans)} plans")
 
     print(f"✅ Found {len(all_plans)} plans")
@@ -911,20 +972,15 @@ def main():
             output_path = Path(args.output)
         else:
             now = datetime.now()
-            output_dir = project_path / '_work_efforts' / 'briefs'
+            output_dir = project_path / "_work_efforts" / "briefs"
             output_dir.mkdir(parents=True, exist_ok=True)
             output_path = output_dir / f"City_Plan_{now.strftime('%Y%m%d')}.pdf"
 
         # Convert HTML to PDF with WeasyPrint
         print("🔨 Converting to PDF with WeasyPrint...")
         try:
-            WeasyHTML(
-                string=html_content,
-                base_url=str(output_path.parent)
-            ).write_pdf(
-                output_path,
-                presentational_hints=True,
-                optimize_images=True
+            WeasyHTML(string=html_content, base_url=str(output_path.parent)).write_pdf(
+                output_path, presentational_hints=True, optimize_images=True
             )
 
             print("=" * 60)
@@ -939,8 +995,8 @@ def main():
             return 0
         except Exception as e:
             print(f"❌ Error generating PDF: {e}")
-            html_path = output_path.with_suffix('.html')
-            html_path.write_text(html_content, encoding='utf-8')
+            html_path = output_path.with_suffix(".html")
+            html_path.write_text(html_content, encoding="utf-8")
             print(f"💾 HTML source saved to: {html_path}")
             return 1
 
@@ -953,7 +1009,7 @@ def main():
         output_path = Path(args.output)
     else:
         now = datetime.now()
-        output_dir = project_path / '_work_efforts' / 'briefs'
+        output_dir = project_path / "_work_efforts" / "briefs"
         output_dir.mkdir(parents=True, exist_ok=True)
         output_path = output_dir / f"Plans_Report_{now.strftime('%Y%m%d')}.pdf"
 
@@ -964,7 +1020,7 @@ def main():
         pdf_path = compiler.compile(
             latex_content,
             output_path,
-            runs=2  # Need 2 runs for TOC
+            runs=2,  # Need 2 runs for TOC
         )
 
         print("=" * 60)
@@ -984,7 +1040,7 @@ def main():
             print("❌ WeasyPrint not available. Install with: pip install weasyprint")
             # Save LaTeX for debugging
             debug_path = output_path.parent / f"{output_path.stem}.tex"
-            debug_path.write_text(latex_content, encoding='utf-8')
+            debug_path.write_text(latex_content, encoding="utf-8")
             print(f"💾 LaTeX source saved to: {debug_path}")
             return 1
 
@@ -997,22 +1053,19 @@ def main():
                 fallback_reason = "LaTeX compiler (pdflatex) not found on this system. Please install a LaTeX distribution (e.g., TeX Live, MiKTeX) to use LaTeX compilation."
             else:
                 fallback_reason = f"LaTeX compilation failed: {error_msg}"
-            html_content = generate_html_document(all_plans, args.title, fallback_reason=fallback_reason)
+            html_content = generate_html_document(
+                all_plans, args.title, fallback_reason=fallback_reason
+            )
 
             # Save HTML for reference
-            html_path = output_path.with_suffix('.html')
-            html_path.write_text(html_content, encoding='utf-8')
+            html_path = output_path.with_suffix(".html")
+            html_path.write_text(html_content, encoding="utf-8")
             print(f"💾 HTML source saved to: {html_path}")
 
             # Convert HTML to PDF with WeasyPrint
             print("🔨 Converting HTML to PDF with WeasyPrint...")
-            WeasyHTML(
-                string=html_content,
-                base_url=str(output_path.parent)
-            ).write_pdf(
-                output_path,
-                presentational_hints=True,
-                optimize_images=True
+            WeasyHTML(string=html_content, base_url=str(output_path.parent)).write_pdf(
+                output_path, presentational_hints=True, optimize_images=True
             )
 
             print("=" * 60)
@@ -1029,11 +1082,11 @@ def main():
             print(f"❌ Error with WeasyPrint fallback: {e2}")
             # Save both LaTeX and HTML for debugging
             debug_path = output_path.parent / f"{output_path.stem}.tex"
-            debug_path.write_text(latex_content, encoding='utf-8')
+            debug_path.write_text(latex_content, encoding="utf-8")
             print(f"💾 LaTeX source saved to: {debug_path}")
-            if 'html_content' in locals():
+            if "html_content" in locals():
                 html_debug_path = output_path.parent / f"{output_path.stem}.html"
-                html_debug_path.write_text(html_content, encoding='utf-8')
+                html_debug_path.write_text(html_content, encoding="utf-8")
                 print(f"💾 HTML source saved to: {html_debug_path}")
             return 1
 

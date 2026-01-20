@@ -12,16 +12,16 @@ printer-friendly format with minimal graphics and colors.
 Then combines all three into a single booklet using the binder system.
 """
 
-from pathlib import Path
 import sys
 from datetime import datetime
+from pathlib import Path
+
 from jinja2 import Template
 from weasyprint import HTML
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.waft.binder import Binder, DocumentEntry
-
 
 # Printer-friendly template - black and white only
 PRINTER_FRIENDLY_TEMPLATE = """
@@ -387,7 +387,7 @@ def generate_field_guide_printer_friendly(
     subtitle: str = None,
     classification: str = "FOR OFFICIAL USE ONLY",
     issued_by: str = None,
-    date: str = None
+    date: str = None,
 ) -> Path:
     """Generate a printer-friendly field guide (black and white only)."""
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -401,7 +401,7 @@ def generate_field_guide_printer_friendly(
         subtitle=subtitle,
         classification=classification,
         issued_by=issued_by,
-        date=date
+        date=date,
     )
 
     HTML(string=html_output).write_pdf(output_path)
@@ -742,7 +742,7 @@ REMEMBER: WAFT is about understanding evolution, not just building tools.
 def get_level_2_content():
     """Get Level 2 content (same as original)."""
     # Import from original script - using same content
-    from examples.generate_waft_field_guide import generate_level_2_professional
+
     # Actually, let's just copy the content inline to avoid circular imports
     return """
 <h2>Introduction</h2>
@@ -1527,7 +1527,7 @@ WAFT enables investigation of fundamental questions about artificial cognition:
 def generate_level_1_layman(output_dir: Path) -> Path:
     """Generate Level 1: Layman's Guide (printer-friendly)."""
     output_path = output_dir / "WAFT_Field_Guide_Layman_PrinterFriendly.pdf"
-    
+
     generate_field_guide_printer_friendly(
         title="WAFT FIELD GUIDE",
         content=get_level_1_content(),
@@ -1537,16 +1537,16 @@ def generate_level_1_layman(output_dir: Path) -> Path:
         subtitle="Level 1: Layman's Guide (Printer Friendly)",
         classification="PUBLIC",
         issued_by="WAFT Documentation Team",
-        date=datetime.now().strftime("%B %d, %Y")
+        date=datetime.now().strftime("%B %d, %Y"),
     )
-    
+
     return output_path
 
 
 def generate_level_2_professional(output_dir: Path) -> Path:
     """Generate Level 2: Professional Guide (printer-friendly)."""
     output_path = output_dir / "WAFT_Field_Guide_Professional_PrinterFriendly.pdf"
-    
+
     generate_field_guide_printer_friendly(
         title="WAFT FIELD GUIDE",
         content=get_level_2_content(),
@@ -1556,16 +1556,16 @@ def generate_level_2_professional(output_dir: Path) -> Path:
         subtitle="Level 2: Professional Developer's Guide (Printer Friendly)",
         classification="TECHNICAL",
         issued_by="WAFT Engineering Team",
-        date=datetime.now().strftime("%B %d, %Y")
+        date=datetime.now().strftime("%B %d, %Y"),
     )
-    
+
     return output_path
 
 
 def generate_level_3_scientist(output_dir: Path) -> Path:
     """Generate Level 3: ML AI Scientist Guide (printer-friendly)."""
     output_path = output_dir / "WAFT_Field_Guide_Scientist_PrinterFriendly.pdf"
-    
+
     generate_field_guide_printer_friendly(
         title="WAFT FIELD GUIDE",
         content=get_level_3_content(),
@@ -1575,25 +1575,25 @@ def generate_level_3_scientist(output_dir: Path) -> Path:
         subtitle="Level 3: ML AI Scientist's Research Guide (Printer Friendly)",
         classification="RESEARCH",
         issued_by="WAFT Research Division",
-        date=datetime.now().strftime("%B %d, %Y")
+        date=datetime.now().strftime("%B %d, %Y"),
     )
-    
+
     return output_path
 
 
 def generate_complete_booklet(output_dir: Path) -> Path:
     """Generate complete printer-friendly booklet combining all three field guides."""
-    
+
     # Generate individual PDFs first
     print("Generating Level 1: Layman's Guide (Printer Friendly)...")
     level1_path = generate_level_1_layman(output_dir)
-    
+
     print("Generating Level 2: Professional Guide (Printer Friendly)...")
     level2_path = generate_level_2_professional(output_dir)
-    
+
     print("Generating Level 3: ML AI Scientist Guide (Printer Friendly)...")
     level3_path = generate_level_3_scientist(output_dir)
-    
+
     # Create binder
     print("\nAssembling complete booklet...")
     binder = Binder(
@@ -1603,74 +1603,80 @@ def generate_complete_booklet(output_dir: Path) -> Path:
         date=datetime.now().strftime("%B %d, %Y"),
         version="1.0",
         compiled_by="WAFT System",
-        cover_style="professional"
+        cover_style="professional",
     )
-    
+
     # Add sections (using black/gray colors for printer-friendly)
     level1_section = binder.add_section(
         "Level 1: Layman's Guide",
         description="Simple explanations for anyone",
-        color="#000000"  # Black
+        color="#000000",  # Black
     )
-    level1_section.add_document(DocumentEntry(
-        path=level1_path,
-        title="WAFT Field Guide - Level 1: Layman's Guide (Printer Friendly)",
-        author="WAFT Documentation Team",
-        date=datetime.now().strftime("%B %d, %Y"),
-        description="Simple explanations, analogies, and basic concepts"
-    ))
-    
+    level1_section.add_document(
+        DocumentEntry(
+            path=level1_path,
+            title="WAFT Field Guide - Level 1: Layman's Guide (Printer Friendly)",
+            author="WAFT Documentation Team",
+            date=datetime.now().strftime("%B %d, %Y"),
+            description="Simple explanations, analogies, and basic concepts",
+        )
+    )
+
     level2_section = binder.add_section(
         "Level 2: Professional Guide",
         description="Technical details for developers",
-        color="#333333"  # Dark gray
+        color="#333333",  # Dark gray
     )
-    level2_section.add_document(DocumentEntry(
-        path=level2_path,
-        title="WAFT Field Guide - Level 2: Professional Developer's Guide (Printer Friendly)",
-        author="WAFT Engineering Team",
-        date=datetime.now().strftime("%B %d, %Y"),
-        description="Architecture, APIs, integration patterns, and best practices"
-    ))
-    
+    level2_section.add_document(
+        DocumentEntry(
+            path=level2_path,
+            title="WAFT Field Guide - Level 2: Professional Developer's Guide (Printer Friendly)",
+            author="WAFT Engineering Team",
+            date=datetime.now().strftime("%B %d, %Y"),
+            description="Architecture, APIs, integration patterns, and best practices",
+        )
+    )
+
     level3_section = binder.add_section(
         "Level 3: ML AI Scientist Guide",
         description="Research methodology for scientists",
-        color="#666666"  # Medium gray
+        color="#666666",  # Medium gray
     )
-    level3_section.add_document(DocumentEntry(
-        path=level3_path,
-        title="WAFT Field Guide - Level 3: ML AI Scientist's Research Guide (Printer Friendly)",
-        author="WAFT Research Division",
-        date=datetime.now().strftime("%B %d, %Y"),
-        description="Evolutionary theory, fitness functions, phylogenetic analysis, and experimental protocols"
-    ))
-    
+    level3_section.add_document(
+        DocumentEntry(
+            path=level3_path,
+            title="WAFT Field Guide - Level 3: ML AI Scientist's Research Guide (Printer Friendly)",
+            author="WAFT Research Division",
+            date=datetime.now().strftime("%B %d, %Y"),
+            description="Evolutionary theory, fitness functions, phylogenetic analysis, and experimental protocols",
+        )
+    )
+
     # Generate binder
     output_path = output_dir / "WAFT_Field_Guide_Complete_Booklet_PrinterFriendly.pdf"
     binder.generate(output_path, include_dividers=True)
-    
+
     print(f"\n✓ Complete booklet generated: {output_path}")
-    print(f"  Individual guides:")
+    print("  Individual guides:")
     print(f"    - {level1_path.name}")
     print(f"    - {level2_path.name}")
     print(f"    - {level3_path.name}")
     print(f"  Combined booklet: {output_path.name}")
-    
+
     return output_path
 
 
 if __name__ == "__main__":
     output_dir = Path("_work_efforts/showcase_documents")
     output_dir.mkdir(parents=True, exist_ok=True)
-    
+
     print("=" * 60)
     print("WAFT Field Guide Booklet Generator - Printer Friendly")
     print("=" * 60)
     print()
-    
+
     generate_complete_booklet(output_dir)
-    
+
     print()
     print("=" * 60)
     print("Generation complete!")

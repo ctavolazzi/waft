@@ -1,10 +1,10 @@
 """Tests for epistemic display module."""
 
 from waft.cli.epistemic_display import (
-    get_moon_phase,
-    format_gate_result,
     format_epistemic_state,
     format_epistemic_summary,
+    format_gate_result,
+    get_moon_phase,
 )
 
 
@@ -52,6 +52,6 @@ def test_format_epistemic_summary():
     }
 
     summary = format_epistemic_summary(state)
-    assert "🌑" in summary or "🌒" in summary or "🌓" in summary or "🌔" in summary or "🌕" in summary
-
-
+    assert (
+        "🌑" in summary or "🌒" in summary or "🌓" in summary or "🌔" in summary or "🌕" in summary
+    )

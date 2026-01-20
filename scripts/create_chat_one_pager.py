@@ -8,28 +8,28 @@ evolved system with TRUE constraint enforcement and genomic tracking.
 """
 
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.waft.evolution import (
     ChatDistiller,
-    TwoPageGenerator,
+    ColorGene,
+    FontGene,
+    LayoutGene,
+    MarginGene,
+    StylingGene,
     StylingGenome,
     StylingGenomeRegistry,
-    StylingGene,
-    FontGene,
-    MarginGene,
-    ColorGene,
-    LayoutGene,
+    TwoPageGenerator,
 )
 
 
 def get_chat_content() -> str:
     """
     Extract chat content from this session in clear prose.
-    
+
     This session focused on implementing the WAFT Kernel Boot Sequence,
     integrating with existing infrastructure, and enhancing the status system.
     """
@@ -70,15 +70,15 @@ def main():
     """Create one-pager from chat session using evolution system."""
     print("🔬 Creating one-pager from chat session using evolution system...")
     print()
-    
+
     # Get chat content
     chat_content = get_chat_content()
-    
+
     # Distill chat into ideas
     print("📝 Distilling chat into ideas...")
     distiller = ChatDistiller()
     distilled = distiller.distill_text(chat_content, title="WAFT Kernel Implementation")
-    
+
     print(f"✓ Extracted {distilled.total_ideas} ideas")
     print(f"  - Concepts: {distilled.concepts_count}")
     print(f"  - Actions: {distilled.actions_count}")
@@ -86,11 +86,11 @@ def main():
     print(f"  - Insights: {distilled.insights_count}")
     print(f"  - Questions: {distilled.questions_count}")
     print()
-    
+
     # Get or create styling genome
     print("🎨 Creating styling genome...")
     registry = StylingGenomeRegistry(registry_dir=Path("_genetics/chat_one_pagers"))
-    
+
     # Create genesis genome if needed
     genesis_genes = StylingGene(
         font=FontGene(family="sans-serif", size_body=11),
@@ -103,19 +103,19 @@ def main():
     registry.register(genome)
     print(f"✓ Using: {genome.scientific_name} ({genome.genome_id[:8]}...)")
     print()
-    
+
     # Generate with adaptive constraint enforcement
     print("📄 Generating 2-page PDF with adaptive constraint enforcement...")
     generator = TwoPageGenerator(weasyprint_available=True)
-    
+
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_path = Path(f"_work_efforts/one_pagers/chat_session_{timestamp}.pdf")
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     # Enable metrics collection for evolution tracking
     # Set to True to collect comprehensive metrics for every PDF generation
     collect_metrics = False  # Change to True to enable metrics
-    
+
     result = generator.generate(
         distilled_chat=distilled,
         styling_genome=genome,
@@ -123,59 +123,59 @@ def main():
         target_pages=2,
         collect_metrics=collect_metrics,  # Enable metrics collection
     )
-    
+
     print()
     print("=" * 60)
     print("✅ Chat One-Pager Created!")
     print("=" * 60)
     print(f"📄 Output: {output_path}")
     print(f"📊 Pages: {result.get('page_count', 'N/A')}/2")
-    
-    constraint_satisfied = result.get('constraint_satisfied', result.get('page_count', 0) == 2)
+
+    constraint_satisfied = result.get("constraint_satisfied", result.get("page_count", 0) == 2)
     print(f"🎯 Constraint satisfied: {constraint_satisfied}")
-    
-    if 'fitness_metrics' in result:
-        fitness = result['fitness_metrics']
+
+    if "fitness_metrics" in result:
+        fitness = result["fitness_metrics"]
         print(f"💪 Fitness: {fitness.get('overall', 'N/A')}")
-        if isinstance(fitness.get('overall'), (int, float)):
+        if isinstance(fitness.get("overall"), (int, float)):
             print(f"   - Readability: {fitness.get('readability', 'N/A')}")
             print(f"   - Completeness: {fitness.get('completeness', 'N/A')}")
             print(f"   - Constraint: {fitness.get('constraint_satisfaction', 'N/A')}")
             print(f"   - Aesthetics: {fitness.get('aesthetic_appeal', 'N/A')}")
-    
-    if 'ideas_shown' in result:
+
+    if "ideas_shown" in result:
         print(f"🧬 Ideas shown: {result['ideas_shown']}/{distilled.total_ideas}")
-    
-    if 'generator_version' in result:
+
+    if "generator_version" in result:
         print(f"🔬 Generator: {result['generator_version']}")
-    
+
     # Show metrics if collected
     if collect_metrics and "metrics" in result:
         metrics = result["metrics"]
         print(f"📊 Quality Grade: {metrics.get('quality_grade', 'N/A')}")
         print(f"📊 Quality Score: {metrics.get('quality_score', 'N/A')}")
         print(f"📊 Metrics saved: {result.get('metrics_file', 'N/A')}")
-    
+
     print()
-    
+
     if constraint_satisfied:
         print("✅ Perfect 2-page document!")
     else:
-        page_count = result.get('page_count', 0)
+        page_count = result.get("page_count", 0)
         print(f"⚠️ Generated {page_count} pages (expected 2)")
-    
+
     print()
     print("Ready for printing and binder storage!")
     print()
-    
+
     # Convert PDF to PNG images (one per page)
     print("🖼️  Converting PDF to PNG images...")
     try:
         from src.waft.evolution.pdf_image_converter import convert_pdf_to_images
-        
+
         png_dir = output_path.parent / f"{output_path.stem}_pages"
         png_paths = convert_pdf_to_images(output_path, output_dir=png_dir, dpi=300)
-        
+
         print(f"✓ Created {len(png_paths)} PNG images")
         print(f"📁 Images saved to: {png_dir}")
         for i, png_path in enumerate(png_paths, 1):
@@ -185,12 +185,13 @@ def main():
         print(f"⚠️  Could not convert to PNG: {e}")
         print("   Install pdf2image: pip install pdf2image")
         print()
-    
+
     # Open the PDF
     import subprocess
+
     subprocess.run(["open", "-a", "Preview", str(output_path)])
-    
-    print(f"📖 PDF opened in Preview")
+
+    print("📖 PDF opened in Preview")
 
 
 if __name__ == "__main__":

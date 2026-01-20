@@ -13,16 +13,16 @@ Available Templates:
 
 Usage:
     from src.waft.templates.registry import get_registry
-    
+
     registry = get_registry()
     templates = registry.list_templates()
-    
+
     # Get a template
     template = registry.get_template("Field Guide")
-    
+
     # Get generate function
     generate_func = registry.get_generate_function("Field Guide")
-    
+
     # Generate PDF
     generate_func(
         title="My Document",
@@ -38,7 +38,8 @@ CLI:
 """
 
 from pathlib import Path
-from .registry import get_registry, TemplateRegistry, TemplateMetadata
+
+from .registry import TemplateMetadata, TemplateRegistry, get_registry
 from .validator import TemplateValidator, ValidationResult
 
 __all__ = [
@@ -413,6 +414,7 @@ uv.lock
             try:
                 content = pyproject_path.read_text()
                 import re
+
                 name_match = re.search(r'name\s*=\s*["\']([^"\']+)["\']', content)
                 if name_match:
                     project_name = name_match.group(1).replace("-", " ").replace("_", " ").title()
@@ -476,4 +478,3 @@ just clean
 MIT
 """
         readme_path.write_text(content)
-

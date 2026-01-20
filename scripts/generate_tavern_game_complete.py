@@ -32,6 +32,7 @@ except ImportError as e:
     print("   pip install openhands-sdk openhands-tools")
     sys.exit(1)
 
+
 def main():
     # Check for API key
     api_key = os.getenv("LLM_API_KEY")
@@ -40,11 +41,11 @@ def main():
         print("\n   Set it with:")
         print('   export LLM_API_KEY="your-api-key"')
         sys.exit(1)
-    
+
     # Get model
     model = os.getenv("LLM_MODEL", "anthropic/claude-sonnet-4-5-20250929")
     base_url = os.getenv("LLM_BASE_URL", None)
-    
+
     print("🚀 Generating Complete Electron Tavern Game with OpenHands SDK")
     print(f"   Model: {model}")
     print()
@@ -53,36 +54,36 @@ def main():
     print("   - FileEditorTool: Create/edit files")
     print("   - TaskTrackerTool: Track task progress")
     print()
-    
+
     # Configure LLM
     llm = LLM(
         model=model,
         api_key=api_key,
         base_url=base_url,
     )
-    
+
     # Create agent with recommended tool set
     agent = Agent(
         llm=llm,
         tools=[
-            Tool(name=TerminalTool.name),      # Execute commands
-            Tool(name=FileEditorTool.name),    # Create/edit files
-            Tool(name=TaskTrackerTool.name),   # Track tasks
+            Tool(name=TerminalTool.name),  # Execute commands
+            Tool(name=FileEditorTool.name),  # Create/edit files
+            Tool(name=TaskTrackerTool.name),  # Track tasks
         ],
     )
-    
+
     # Set workspace
     project_root = Path(__file__).parent.parent
     conversation = Conversation(agent=agent, workspace=str(project_root))
-    
+
     print("📁 Workspace:", project_root)
     print()
-    
+
     # Phase 1: FastAPI Server
     print("=" * 70)
     print("📡 Phase 1: Generating FastAPI Server")
     print("=" * 70)
-    
+
     task1 = """
     Create examples/tavern_game_server.py - a FastAPI server for the Electron Tavern Game Display.
     
@@ -126,17 +127,17 @@ def main():
     
     Create the file at examples/tavern_game_server.py with production-ready code.
     """
-    
+
     conversation.send_message(task1)
     conversation.run()
     print("✅ Phase 1 complete: FastAPI server generated")
     print()
-    
+
     # Phase 2: Electron App
     print("=" * 70)
     print("🖥️  Phase 2: Generating Electron App")
     print("=" * 70)
-    
+
     task2 = """
     Create the Electron app structure in tavern_display/ directory:
     
@@ -192,17 +193,17 @@ def main():
     
     Follow Electron security best practices and the plan specifications.
     """
-    
+
     conversation.send_message(task2)
     conversation.run()
     print("✅ Phase 2 complete: Electron app generated")
     print()
-    
+
     # Phase 3: Tests
     print("=" * 70)
     print("🧪 Phase 3: Generating Tests")
     print("=" * 70)
-    
+
     task3 = """
     Write comprehensive pytest tests for examples/tavern_game_server.py:
     
@@ -241,17 +242,17 @@ def main():
     Follow existing test patterns from tests/ directory.
     Create tests/test_tavern_game_server.py
     """
-    
+
     conversation.send_message(task3)
     conversation.run()
     print("✅ Phase 3 complete: Tests generated")
     print()
-    
+
     # Phase 4: Documentation
     print("=" * 70)
     print("📚 Phase 4: Generating Documentation")
     print("=" * 70)
-    
+
     task4 = """
     Generate comprehensive documentation:
     
@@ -277,12 +278,12 @@ def main():
     
     Follow markdown best practices and include code examples.
     """
-    
+
     conversation.send_message(task4)
     conversation.run()
     print("✅ Phase 4 complete: Documentation generated")
     print()
-    
+
     print("=" * 70)
     print("🎉 All Phases Complete!")
     print("=" * 70)
@@ -303,6 +304,7 @@ def main():
     print("      cd tavern_display && npm install && npm start")
     print()
     print("   5. Play the game!")
+
 
 if __name__ == "__main__":
     main()

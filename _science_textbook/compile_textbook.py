@@ -16,18 +16,20 @@ try:
 except ImportError:
     # Try alternative import
     import importlib.util
+
     compiler_path = project_root / "src" / "waft" / "templates" / "latex" / "compiler.py"
     spec = importlib.util.spec_from_file_location("compiler", compiler_path)
     compiler_module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(compiler_module)
     LaTeXCompiler = compiler_module.LaTeXCompiler
 
+
 def main():
     """Compile the textbook LaTeX file to PDF."""
     tex_file = Path(__file__).parent / "hypothesis-testing-framework.tex"
     output_pdf = Path(__file__).parent / "hypothesis-testing-framework.pdf"
 
-    print(f"📚 Compiling textbook...")
+    print("📚 Compiling textbook...")
     print(f"   Source: {tex_file}")
     print(f"   Output: {output_pdf}")
     print()
@@ -37,16 +39,17 @@ def main():
         pdf_path = compiler.compile_file(
             tex_file,
             output_pdf,
-            runs=2  # Two runs for TOC and references
+            runs=2,  # Two runs for TOC and references
         )
-        print(f"✅ PDF generated successfully!")
+        print("✅ PDF generated successfully!")
         print(f"   Location: {pdf_path}")
         print()
         print("📖 Opening PDF...")
 
         # Open PDF
-        import subprocess
         import platform
+        import subprocess
+
         if platform.system() == "Darwin":  # macOS
             subprocess.run(["open", str(pdf_path)])
         elif platform.system() == "Windows":
@@ -55,7 +58,7 @@ def main():
             subprocess.run(["xdg-open", str(pdf_path)])
 
     except RuntimeError as e:
-        print(f"❌ LaTeX compilation failed:")
+        print("❌ LaTeX compilation failed:")
         print(f"   {e}")
         print()
         print("💡 To install LaTeX:")
@@ -69,6 +72,7 @@ def main():
     except Exception as e:
         print(f"❌ Error: {e}")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

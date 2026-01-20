@@ -8,23 +8,19 @@ by inspecting itself - NO HARDCODED CONTENT.
 This is WAFT documenting itself through self-inspection.
 """
 
-from pathlib import Path
-from datetime import datetime
-from typing import Dict, List, Optional, Any
-import sys
 import ast
-import inspect
-import importlib.util
+import sys
+from datetime import datetime
+from pathlib import Path
+from typing import Any
 
 # Add project root to path
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from rich.console import Console
-from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TimeRemainingColumn
-from rich.panel import Panel
-from rich.table import Table
 from jinja2 import Template
+from rich.console import Console
+from rich.progress import BarColumn, Progress, SpinnerColumn, TextColumn, TimeRemainingColumn
 from weasyprint import HTML
 
 console = Console()
@@ -34,9 +30,10 @@ console = Console()
 # Data Collection - WAFT Inspects Itself
 # ============================================================================
 
+
 class FrameworkAnalyzer:
     """Analyzes WAFT's codebase to extract framework information."""
-    
+
     def __init__(self, waft_root: Path):
         self.waft_root = waft_root
         self.modules = {}
@@ -44,40 +41,43 @@ class FrameworkAnalyzer:
         self.functions = {}
         self.templates = {}
         self.structure = {}
-    
-    def analyze_codebase(self) -> Dict[str, Any]:
+
+    def analyze_codebase(self) -> dict[str, Any]:
         """Perform comprehensive analysis of WAFT codebase."""
         console.print("\n[bold cyan]🔍 PHASE 1: SCANNING CODEBASE[/bold cyan]\n")
-        
+
         with Progress(
             SpinnerColumn(),
             TextColumn("[progress.description]{task.description}"),
             BarColumn(),
             TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
             TimeRemainingColumn(),
-            console=console
+            console=console,
         ) as progress:
-            
             # Find all Python files
             task1 = progress.add_task("Finding Python files...", total=None)
             python_files = list(self.waft_root.rglob("*.py"))
-            python_files = [f for f in python_files if not f.name.startswith('__')]
+            python_files = [f for f in python_files if not f.name.startswith("__")]
             progress.update(task1, total=len(python_files))
             progress.update(task1, completed=len(python_files))
-            console.print(f"  [green]✅[/green] Found [bold]{len(python_files)}[/bold] Python files\n")
-            
+            console.print(
+                f"  [green]✅[/green] Found [bold]{len(python_files)}[/bold] Python files\n"
+            )
+
             # Analyze modules
             task2 = progress.add_task("Analyzing modules...", total=len(python_files))
             for py_file in python_files:
                 self._analyze_file(py_file)
                 progress.update(task2, advance=1)
-            
+
             # Show summary
             total_classes = sum(m.get("class_count", 0) for m in self.modules.values())
             total_functions = sum(m.get("function_count", 0) for m in self.modules.values())
             console.print(f"  [green]✅[/green] Analyzed [bold]{len(self.modules)}[/bold] modules")
-            console.print(f"     Found [bold]{total_classes}[/bold] classes, [bold]{total_functions}[/bold] functions\n")
-            
+            console.print(
+                f"     Found [bold]{total_classes}[/bold] classes, [bold]{total_functions}[/bold] functions\n"
+            )
+
             # Analyze templates
             task3 = progress.add_task("Analyzing templates...", total=None)
             templates_dir = self.waft_root / "templates"
@@ -87,94 +87,99 @@ class FrameworkAnalyzer:
                     self._analyze_template(template_file)
                 progress.update(task3, total=len(template_files))
                 progress.update(task3, completed=len(template_files))
-            console.print(f"  [green]✅[/green] Found [bold]{len(self.templates)}[/bold] templates\n")
-            
+            console.print(
+                f"  [green]✅[/green] Found [bold]{len(self.templates)}[/bold] templates\n"
+            )
+
             # Analyze structure
             task4 = progress.add_task("Analyzing structure...", total=None)
             self._analyze_structure()
             progress.update(task4, total=1)
             progress.update(task4, completed=1)
-            console.print(f"  [green]✅[/green] Structure analyzed")
-            console.print(f"     Core modules: [bold]{len(self.structure['core_modules'])}[/bold]\n")
-        
+            console.print("  [green]✅[/green] Structure analyzed")
+            console.print(
+                f"     Core modules: [bold]{len(self.structure['core_modules'])}[/bold]\n"
+            )
+
         return {
             "modules": self.modules,
             "classes": self.classes,
             "functions": self.functions,
             "templates": self.templates,
             "structure": self.structure,
-            "timestamp": datetime.now().isoformat()
+            "timestamp": datetime.now().isoformat(),
         }
-    
+
     def _analyze_file(self, file_path: Path):
         """Analyze a single Python file."""
         try:
             source = file_path.read_text()
             tree = ast.parse(source)
-            
+
             # Get module info
             module_docstring = ast.get_docstring(tree)
             rel_path = file_path.relative_to(self.waft_root.parent)
             module_name = str(rel_path).replace("/", ".").replace(".py", "")
-            
+
             # Extract classes
             classes = []
             for node in ast.walk(tree):
                 if isinstance(node, ast.ClassDef):
                     class_doc = ast.get_docstring(node)
                     methods = [n.name for n in node.body if isinstance(n, ast.FunctionDef)]
-                    classes.append({
-                        "name": node.name,
-                        "docstring": class_doc or "No documentation",
-                        "methods": methods,
-                        "method_count": len(methods)
-                    })
+                    classes.append(
+                        {
+                            "name": node.name,
+                            "docstring": class_doc or "No documentation",
+                            "methods": methods,
+                            "method_count": len(methods),
+                        }
+                    )
                     self.classes[f"{module_name}.{node.name}"] = {
                         "name": node.name,
                         "module": module_name,
                         "docstring": class_doc or "No documentation",
-                        "methods": methods
+                        "methods": methods,
                     }
-            
+
             # Extract functions
             functions = []
             for node in ast.walk(tree):
                 if isinstance(node, ast.FunctionDef) and not isinstance(node, ast.ClassDef):
                     func_doc = ast.get_docstring(node)
-                    if not node.name.startswith('_') or node.name.startswith('__'):
-                        functions.append({
-                            "name": node.name,
-                            "docstring": func_doc or "No documentation"
-                        })
+                    if not node.name.startswith("_") or node.name.startswith("__"):
+                        functions.append(
+                            {"name": node.name, "docstring": func_doc or "No documentation"}
+                        )
                         self.functions[f"{module_name}.{node.name}"] = {
                             "name": node.name,
                             "module": module_name,
-                            "docstring": func_doc or "No documentation"
+                            "docstring": func_doc or "No documentation",
                         }
-            
+
             self.modules[module_name] = {
                 "path": str(rel_path),
                 "docstring": module_docstring or "No module docstring",
                 "classes": classes,
                 "functions": functions,
                 "class_count": len(classes),
-                "function_count": len(functions)
+                "function_count": len(functions),
             }
-            
-        except Exception as e:
+
+        except Exception:
             # Skip files that can't be parsed
             pass
-    
+
     def _analyze_template(self, template_file: Path):
         """Analyze a template file."""
         try:
             source = template_file.read_text()
             tree = ast.parse(source)
-            
+
             # Get template name and docstring
             module_docstring = ast.get_docstring(tree)
             template_name = template_file.stem.replace("_", " ").title()
-            
+
             # Look for template constants or functions
             template_content = None
             for node in ast.walk(tree):
@@ -184,17 +189,17 @@ class FrameworkAnalyzer:
                             if isinstance(node.value, ast.Constant):
                                 template_content = node.value.value
                                 break
-            
+
             self.templates[template_name] = {
                 "file": template_file.name,
                 "name": template_name,
                 "docstring": module_docstring or "Template for document generation",
-                "has_content": template_content is not None
+                "has_content": template_content is not None,
             }
-            
-        except Exception as e:
+
+        except Exception:
             pass
-    
+
     def _analyze_structure(self):
         """Analyze WAFT's directory structure."""
         structure = {
@@ -202,15 +207,15 @@ class FrameworkAnalyzer:
             "template_count": len(self.templates),
             "total_modules": len(self.modules),
             "total_classes": len(self.classes),
-            "total_functions": len(self.functions)
+            "total_functions": len(self.functions),
         }
-        
+
         # Identify core modules
         core_patterns = ["core", "templates", "binder", "reflection", "foundation"]
         for module_name in self.modules.keys():
             if any(pattern in module_name.lower() for pattern in core_patterns):
                 structure["core_modules"].append(module_name)
-        
+
         self.structure = structure
 
 
@@ -691,11 +696,11 @@ FRAMEWORK_DOC_TEMPLATE = """
 def generate_framework_documentation(project_root: Path, output_path: Path) -> Path:
     """
     Generate comprehensive framework documentation by inspecting WAFT.
-    
+
     Args:
         project_root: Root directory of WAFT project
         output_path: Where to save the PDF
-        
+
     Returns:
         Path to generated PDF
     """
@@ -704,22 +709,24 @@ def generate_framework_documentation(project_root: Path, output_path: Path) -> P
     console.print("=" * 80)
     console.print()
     console.print("[yellow]This tool generates documentation by inspecting WAFT itself.[/yellow]")
-    console.print("[yellow]NO CONTENT IS HARDCODED - everything is discovered through analysis.[/yellow]")
+    console.print(
+        "[yellow]NO CONTENT IS HARDCODED - everything is discovered through analysis.[/yellow]"
+    )
     console.print()
-    
+
     waft_root = project_root / "src" / "waft"
-    
+
     if not waft_root.exists():
         console.print(f"[red]❌[/red] WAFT source not found: {waft_root}")
         return None
-    
+
     # Analyze codebase
     analyzer = FrameworkAnalyzer(waft_root)
     analysis_data = analyzer.analyze_codebase()
-    
+
     # Generate documentation
     console.print("\n[bold cyan]📄 PHASE 2: GENERATING DOCUMENTATION[/bold cyan]\n")
-    
+
     # Prepare data for template (convert dict_items to lists for slicing)
     template_data = {
         "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -728,23 +735,23 @@ def generate_framework_documentation(project_root: Path, output_path: Path) -> P
         "classes": dict(list(analysis_data["classes"].items())[:15]),  # Limit to 15 classes
         "templates": analysis_data["templates"],
         "functions": analysis_data["functions"],
-        "core_modules_list": analysis_data["structure"]["core_modules"][:10]  # Limit to 10
+        "core_modules_list": analysis_data["structure"]["core_modules"][:10],  # Limit to 10
     }
-    
+
     template = Template(FRAMEWORK_DOC_TEMPLATE)
     html_content = template.render(**template_data)
-    
+
     console.print("  [cyan]📝[/cyan] Rendering HTML...")
     console.print("  [cyan]📄[/cyan] Converting to PDF...")
-    
+
     with console.status("[bold cyan]Generating PDF...[/bold cyan]"):
         HTML(string=html_content).write_pdf(str(output_path))
-    
+
     size_mb = output_path.stat().st_size / (1024 * 1024)
     console.print(f"  [green]✅[/green] Documentation generated: [bold]{output_path}[/bold]")
     console.print(f"     Size: [bold]{size_mb:.2f} MB[/bold]")
     console.print()
-    
+
     return output_path
 
 
@@ -753,7 +760,7 @@ def open_pdf(pdf_path: Path):
     try:
         import platform
         import subprocess
-        
+
         system = platform.system()
         if system == "Darwin":  # macOS
             subprocess.run(["open", str(pdf_path)], check=True)
@@ -770,13 +777,13 @@ def open_pdf(pdf_path: Path):
 if __name__ == "__main__":
     project_root = Path(__file__).parent.parent.parent
     output_path = project_root / "WAFT_Framework_Documentation.pdf"
-    
+
     console.print(f"Project root: [cyan]{project_root}[/cyan]")
     console.print(f"Output: [cyan]{output_path}[/cyan]")
     console.print()
-    
+
     pdf_path = generate_framework_documentation(project_root, output_path)
-    
+
     if pdf_path:
         console.print("  [cyan]📖[/cyan] Opening documentation...")
         if open_pdf(pdf_path):

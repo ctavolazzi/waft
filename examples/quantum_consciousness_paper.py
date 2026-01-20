@@ -5,14 +5,13 @@ This creates a high-quality research paper on quantum consciousness and
 the observer effect in biological systems.
 """
 
-from pathlib import Path
 import sys
+from pathlib import Path
 
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.waft.templates.simple_scientific import generate_simple_scientific_document
-
 
 # Document content - rich, well-structured scientific paper
 CONTENT = """
@@ -377,11 +376,7 @@ def main():
         title="Quantum Consciousness and the Observer Effect: A Framework for Understanding Wavefunction Collapse in Biological Systems",
         content=CONTENT,
         output_path=output_path,
-        authors=[
-            "Dr. Elena Vasquez",
-            "Dr. James K. Morrison",
-            "Dr. Yuki Tanaka"
-        ],
+        authors=["Dr. Elena Vasquez", "Dr. James K. Morrison", "Dr. Yuki Tanaka"],
         date="January 2026",
         abstract=(
             "The role of consciousness in quantum mechanics remains one of the deepest unsolved "
@@ -396,13 +391,13 @@ def main():
             "confirmed, these findings would revolutionize our understanding of both physics and neuroscience."
         ),
         references=REFERENCES,
-        short_title="Quantum Consciousness and the Observer Effect"
+        short_title="Quantum Consciousness and the Observer Effect",
     )
 
-    print(f"\n✓ Document generated successfully!")
+    print("\n✓ Document generated successfully!")
     print(f"  Location: {pdf_path}")
     print(f"  Size: {pdf_path.stat().st_size:,} bytes")
-    print(f"  Pages: ~8-10 (estimated)")
+    print("  Pages: ~8-10 (estimated)")
     print("\n" + "=" * 60)
     print("\nThis document demonstrates:")
     print("  • Clean, professional typography")

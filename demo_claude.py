@@ -10,12 +10,12 @@ Author: Claude Code
 Date: 2026-01-10
 """
 
+import sys
+
 from rich.console import Console
+from rich.markdown import Markdown
 from rich.panel import Panel
 from rich.table import Table
-from rich.markdown import Markdown
-import sys
-from pathlib import Path
 
 console = Console()
 
@@ -80,26 +80,12 @@ def explain_physics():
     scint_table.add_column("Description", style="white")
     scint_table.add_column("Examples", style="dim")
 
+    scint_table.add_row("SYNTAX_TEAR", "Formatting errors", "Invalid JSON, XML, code syntax")
     scint_table.add_row(
-        "SYNTAX_TEAR",
-        "Formatting errors",
-        "Invalid JSON, XML, code syntax"
+        "LOGIC_FRACTURE", "Logical errors", "Math errors, contradictions, schema violations"
     )
-    scint_table.add_row(
-        "LOGIC_FRACTURE",
-        "Logical errors",
-        "Math errors, contradictions, schema violations"
-    )
-    scint_table.add_row(
-        "SAFETY_VOID",
-        "Safety violations",
-        "Harmful content, PII leaks, refusals"
-    )
-    scint_table.add_row(
-        "HALLUCINATION",
-        "Fabricated information",
-        "Wrong citations, made-up facts"
-    )
+    scint_table.add_row("SAFETY_VOID", "Safety violations", "Harmful content, PII leaks, refusals")
+    scint_table.add_row("HALLUCINATION", "Fabricated information", "Wrong citations, made-up facts")
 
     console.print(scint_table)
 
@@ -180,31 +166,11 @@ def show_architecture():
     arch_table.add_column("Location", style="yellow", width=40)
     arch_table.add_column("Purpose", style="white")
 
-    arch_table.add_row(
-        "BaseAgent",
-        "src/waft/core/agent/base.py",
-        "Self-modifying agent class"
-    )
-    arch_table.add_row(
-        "TheObserver",
-        "src/waft/core/science/observer.py",
-        "JSONL event logging"
-    )
-    arch_table.add_row(
-        "Scint System",
-        "src/gym/rpg/scint.py",
-        "Reality fracture detection"
-    )
-    arch_table.add_row(
-        "Memory (_pyrite)",
-        "src/waft/core/memory.py",
-        "Project knowledge structure"
-    )
-    arch_table.add_row(
-        "Dashboard",
-        "visualizer/ (SvelteKit)",
-        "Web UI for visualization"
-    )
+    arch_table.add_row("BaseAgent", "src/waft/core/agent/base.py", "Self-modifying agent class")
+    arch_table.add_row("TheObserver", "src/waft/core/science/observer.py", "JSONL event logging")
+    arch_table.add_row("Scint System", "src/gym/rpg/scint.py", "Reality fracture detection")
+    arch_table.add_row("Memory (_pyrite)", "src/waft/core/memory.py", "Project knowledge structure")
+    arch_table.add_row("Dashboard", "visualizer/ (SvelteKit)", "Web UI for visualization")
 
     console.print(arch_table)
 

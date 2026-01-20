@@ -13,11 +13,10 @@ Design Principles:
 - Fast to scan: Clear hierarchy and structure
 """
 
-from pathlib import Path
-from typing import Optional, Dict, Any
 from datetime import datetime
-from jinja2 import Template
+from pathlib import Path
 
+from jinja2 import Template
 
 WAFT_HTML_TEMPLATE = """
 <!DOCTYPE html>
@@ -427,13 +426,13 @@ def generate_waft_html(
     title: str,
     content: str,
     output_path: Path,
-    timestamp: Optional[str] = None,
+    timestamp: str | None = None,
     pdf_available: bool = True,
-    **kwargs
+    **kwargs,
 ) -> Path:
     """
     Generate WAFT multipurpose HTML document.
-    
+
     Args:
         title: Document title
         content: HTML content (markdown will be converted)
@@ -441,47 +440,41 @@ def generate_waft_html(
         timestamp: Optional timestamp (defaults to now)
         pdf_available: Whether PDF conversion is available
         **kwargs: Additional template variables
-    
+
     Returns:
         Path to generated HTML file
     """
     output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     if timestamp is None:
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    
+
     template = Template(WAFT_HTML_TEMPLATE)
     html_output = template.render(
-        title=title,
-        content=content,
-        timestamp=timestamp,
-        pdf_available=pdf_available,
-        **kwargs
+        title=title, content=content, timestamp=timestamp, pdf_available=pdf_available, **kwargs
     )
-    
+
     output_path.write_text(html_output)
     return output_path
 
 
 def convert_waft_html_to_pdf(
-    html_path: Path,
-    output_path: Optional[Path] = None,
-    optimize: bool = True
+    html_path: Path, output_path: Path | None = None, optimize: bool = True
 ) -> Path:
     """
     Convert WAFT HTML document to PDF using WeasyPrint.
-    
+
     This is WAFT's integrated PDF conversion algorithm.
-    
+
     Args:
         html_path: Path to HTML file
         output_path: Optional output path (defaults to html_path with .pdf extension)
         optimize: Whether to optimize PDF output
-    
+
     Returns:
         Path to generated PDF file
-    
+
     Raises:
         ImportError: If WeasyPrint is not available
         Exception: If PDF conversion fails
@@ -490,38 +483,31 @@ def convert_waft_html_to_pdf(
         from weasyprint import HTML
     except ImportError:
         raise ImportError(
-            "WeasyPrint required for PDF conversion. "
-            "Install with: pip install weasyprint"
+            "WeasyPrint required for PDF conversion. Install with: pip install weasyprint"
         )
-    
+
     if output_path is None:
-        output_path = html_path.with_suffix('.pdf')
+        output_path = html_path.with_suffix(".pdf")
     else:
         output_path = Path(output_path)
-    
+
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     # WAFT PDF Conversion Algorithm
-    html_doc = HTML(
-        filename=str(html_path),
-        base_url=str(html_path.parent)
-    )
-    
+    html_doc = HTML(filename=str(html_path), base_url=str(html_path.parent))
+
     # Generate PDF with optimizations
-    html_doc.write_pdf(
-        str(output_path),
-        presentational_hints=True,
-        optimize_images=optimize
-    )
-    
+    html_doc.write_pdf(str(output_path), presentational_hints=True, optimize_images=optimize)
+
     # Post-process to add blank page markers (if utility available)
     try:
         from ..utils import process_pdf_for_blank_pages
+
         process_pdf_for_blank_pages(output_path)
     except (ImportError, Exception):
         # Non-critical - continue without blank page markers
         pass
-    
+
     return output_path
 
 
@@ -529,53 +515,41 @@ def generate_waft_html_with_pdf(
     title: str,
     content: str,
     html_output_path: Path,
-    pdf_output_path: Optional[Path] = None,
-    **kwargs
-) -> Dict[str, Path]:
+    pdf_output_path: Path | None = None,
+    **kwargs,
+) -> dict[str, Path]:
     """
     Generate WAFT HTML and automatically convert to PDF.
-    
+
     This is the complete WAFT workflow: HTML → PDF.
-    
+
     Args:
         title: Document title
         content: HTML content
         html_output_path: Where to save HTML
         pdf_output_path: Optional PDF path (defaults to html_path with .pdf)
         **kwargs: Additional template variables
-    
+
     Returns:
         Dict with 'html' and 'pdf' keys pointing to generated files
     """
     # Generate HTML
     html_path = generate_waft_html(
-        title=title,
-        content=content,
-        output_path=html_output_path,
-        **kwargs
+        title=title, content=content, output_path=html_output_path, **kwargs
     )
-    
+
     # Convert to PDF
     try:
         if pdf_output_path is None:
-            pdf_output_path = html_path.with_suffix('.pdf')
-        
+            pdf_output_path = html_path.with_suffix(".pdf")
+
         pdf_path = convert_waft_html_to_pdf(html_path, pdf_output_path)
-        
-        return {
-            'html': html_path,
-            'pdf': pdf_path
-        }
+
+        return {"html": html_path, "pdf": pdf_path}
     except ImportError:
         # WeasyPrint not available - return HTML only
-        return {
-            'html': html_path,
-            'pdf': None
-        }
+        return {"html": html_path, "pdf": None}
     except Exception as e:
         # PDF conversion failed - return HTML only
         print(f"⚠️  PDF conversion failed: {e}")
-        return {
-            'html': html_path,
-            'pdf': None
-        }
+        return {"html": html_path, "pdf": None}

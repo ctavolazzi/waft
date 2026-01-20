@@ -6,45 +6,46 @@ Pulls all Teleport Massive data and generates a comprehensive D&D campaign book
 using the Typst template.
 """
 
-import sys
 import json
-from pathlib import Path
+import sys
 from datetime import datetime
-from typing import Dict, Any, List, Optional
+from pathlib import Path
+from typing import Any
 
 # Add src to path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root / "src"))
 
-def load_corporate_data(corp_path: Path) -> Dict[str, Any]:
+
+def load_corporate_data(corp_path: Path) -> dict[str, Any]:
     """Load all Teleport Massive corporate data."""
     data = {}
-    
+
     # Load manifest
     manifest_path = corp_path / "corporate_manifest.json"
     if manifest_path.exists():
         data["manifest"] = json.loads(manifest_path.read_text())
-    
+
     # Load founders
     founders_path = corp_path / "founders.json"
     if founders_path.exists():
         data["founders"] = json.loads(founders_path.read_text())
-    
+
     # Load financials
     ledger_path = corp_path / "financials" / "ledger.json"
     if ledger_path.exists():
         data["ledger"] = json.loads(ledger_path.read_text())
-    
+
     # Load simulation state
     sim_path = corp_path / "simulation" / "state.json"
     if sim_path.exists():
         data["simulation"] = json.loads(sim_path.read_text())
-    
+
     # Load founder lore
     lore_path = corp_path / "FAI_WEI_FOUNDER_LORE.md"
     if lore_path.exists():
         data["founder_lore"] = lore_path.read_text()
-    
+
     # Load experiments
     experiments = []
     exp_dir = corp_path / "experiments"
@@ -52,18 +53,18 @@ def load_corporate_data(corp_path: Path) -> Dict[str, Any]:
         for exp_file in exp_dir.glob("*.json"):
             experiments.append(json.loads(exp_file.read_text()))
     data["experiments"] = experiments
-    
+
     return data
 
 
-def generate_typst_content(data: Dict[str, Any], project_root: Path, output_dir: Path) -> str:
+def generate_typst_content(data: dict[str, Any], project_root: Path, output_dir: Path) -> str:
     """Generate Typst content from corporate data."""
     manifest = data.get("manifest", {})
     founders = data.get("founders", {})
     founder_lore = data.get("founder_lore", "")
-    
+
     sections = []
-    
+
     # Introduction
     intro = f"""
 #heading(level: 1)[Introduction]
@@ -74,9 +75,9 @@ This campaign setting brings the world of corporate intrigue, quantum physics, a
 
 #text(weight: "bold")[The Corporation]
 
-Teleport Massive was founded on {manifest.get('founded', 'July 1, 2025')} with a mission:
+Teleport Massive was founded on {manifest.get("founded", "July 1, 2025")} with a mission:
 #block(fill: rgb("#2a2a3e"), padding: 10pt, radius: 4pt)[
-  #text(style: "italic", fill: rgb("#e0e0e0"))["{manifest.get('mission', '')}"]
+  #text(style: "italic", fill: rgb("#e0e0e0"))["{manifest.get("mission", "")}"]
 ]
 
 #text(weight: "bold")[Sector:] #text[Quantum Teleportation Technology]
@@ -84,7 +85,7 @@ Teleport Massive was founded on {manifest.get('founded', 'July 1, 2025')} with a
 #v(12pt)
 """
     sections.append(intro)
-    
+
     # Corporate Structure
     dept_section = """
 #heading(level: 1)[Corporate Structure]
@@ -93,13 +94,13 @@ Teleport Massive was founded on {manifest.get('founded', 'July 1, 2025')} with a
 
 #v(12pt)
 """
-    
+
     departments = manifest.get("departments", [])
     for dept in departments:
         dept_name = dept.get("name", "Unknown")
         dept_id = dept.get("department_id", "")
         employees = dept.get("employees", [])
-        
+
         dept_section += f"""
 #heading(level: 2)[#dept_name]
 
@@ -111,9 +112,9 @@ Teleport Massive was founded on {manifest.get('founded', 'July 1, 2025')} with a
 
 #v(8pt)
 """
-    
+
     sections.append(dept_section)
-    
+
     # Founders & Key NPCs
     npc_section = """
 #heading(level: 1)[Key Personnel]
@@ -122,7 +123,7 @@ Teleport Massive was founded on {manifest.get('founded', 'July 1, 2025')} with a
 
 #v(12pt)
 """
-    
+
     # Add founder info
     if founder_lore:
         npc_section += f"""
@@ -136,15 +137,15 @@ Teleport Massive was founded on {manifest.get('founded', 'July 1, 2025')} with a
 
 #v(8pt)
 """
-    
+
     # Add employees as NPCs
     employees = manifest.get("employees", [])
     for emp in employees[:10]:  # Limit to first 10
         name = emp.get("title", "Employee")
         role = emp.get("role", "Unknown")
         level = emp.get("level", 1)
-        
-        npc_section += f"""
+
+        npc_section += """
 #stat-block(
   name: "#name",
   type: "#role",
@@ -156,9 +157,9 @@ Teleport Massive was founded on {manifest.get('founded', 'July 1, 2025')} with a
 
 #v(8pt)
 """
-    
+
     sections.append(npc_section)
-    
+
     # Locations
     locations_section = """
 #heading(level: 1)[Locations]
@@ -205,7 +206,7 @@ Teleport Massive was founded on {manifest.get('founded', 'July 1, 2025')} with a
 #v(12pt)
 """
     sections.append(locations_section)
-    
+
     # Quests/Adventures
     quests_section = """
 #heading(level: 1)[Quests & Adventures]
@@ -263,7 +264,7 @@ Teleport Massive was founded on {manifest.get('founded', 'July 1, 2025')} with a
 #v(12pt)
 """
     sections.append(quests_section)
-    
+
     # Equipment & Technology
     equipment_section = """
 #heading(level: 1)[Equipment & Technology]
@@ -300,7 +301,7 @@ Teleport Massive was founded on {manifest.get('founded', 'July 1, 2025')} with a
 #v(8pt)
 """
     sections.append(equipment_section)
-    
+
     # Financial Information
     financial_section = """
 #heading(level: 1)[Corporate Financials]
@@ -309,14 +310,14 @@ Teleport Massive was founded on {manifest.get('founded', 'July 1, 2025')} with a
 
 #v(12pt)
 """
-    
+
     financial_state = manifest.get("financial_state", {})
     if financial_state:
         cash = financial_state.get("cash", 0)
         revenue = financial_state.get("revenue", 0)
         expenses = financial_state.get("expenses", 0)
         runway = financial_state.get("runway_months", 0)
-        
+
         financial_section += f"""
 #block(fill: rgb("#2a2a3e"), padding: 12pt, radius: 4pt)[
   #text(weight: "bold")[Current Financial Status]
@@ -332,9 +333,9 @@ Teleport Massive was founded on {manifest.get('founded', 'July 1, 2025')} with a
 
 #v(12pt)
 """
-    
+
     sections.append(financial_section)
-    
+
     # Experiments
     if data.get("experiments"):
         exp_section = """
@@ -344,10 +345,10 @@ Teleport Massive was founded on {manifest.get('founded', 'July 1, 2025')} with a
 
 #v(12pt)
 """
-        
+
         for exp in data["experiments"][:5]:  # Limit to 5
             exp_id = exp.get("experiment_id", "Unknown")
-            exp_section += f"""
+            exp_section += """
 #block(fill: rgb("#2a2a3e"), padding: 10pt, radius: 4pt)[
   #text(weight: "bold")[Experiment: #exp_id]
   #v(4pt)
@@ -356,19 +357,20 @@ Teleport Massive was founded on {manifest.get('founded', 'July 1, 2025')} with a
 
 #v(8pt)
 """
-        
+
         sections.append(exp_section)
-    
+
     # Combine all sections
     sections_str = "\n".join(sections)
-    
+
     # Copy template to output directory for easier import
     template_path = project_root / "templates" / "typst" / "dnd" / "teleport_massive_campaign.typ"
     template_copy = output_dir / "teleport_massive_campaign.typ"
     if template_path.exists():
         import shutil
+
         shutil.copy2(template_path, template_copy)
-    
+
     # Generate full Typst document
     typst_content = f"""#import "teleport_massive_campaign.typ": teleport-massive-campaign
 
@@ -382,36 +384,49 @@ Teleport Massive was founded on {manifest.get('founded', 'July 1, 2025')} with a
   ),
 )
 """
-    
+
     return typst_content
 
 
 def main():
     """Main entry point."""
-    corp_path = project_root / "_realms" / "bureaucracy_realm" / "corporations" / "teleport_massive_20250701"
-    
+    corp_path = (
+        project_root
+        / "_realms"
+        / "bureaucracy_realm"
+        / "corporations"
+        / "teleport_massive_20250701"
+    )
+
     if not corp_path.exists():
         print(f"❌ Error: Teleport Massive directory not found at {corp_path}")
         sys.exit(1)
-    
+
     print("📊 Loading Teleport Massive data...")
     data = load_corporate_data(corp_path)
-    
+
     # Write Typst file
-    output_dir = project_root / "_realms" / "bureaucracy_realm" / "corporations" / "teleport_massive_20250701" / "campaign_book"
+    output_dir = (
+        project_root
+        / "_realms"
+        / "bureaucracy_realm"
+        / "corporations"
+        / "teleport_massive_20250701"
+        / "campaign_book"
+    )
     output_dir.mkdir(exist_ok=True)
-    
+
     print("📝 Generating Typst content...")
     typst_content = generate_typst_content(data, project_root, output_dir)
-    
+
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     typst_file = output_dir / f"teleport_massive_campaign_{timestamp}.typ"
     typst_file.write_text(typst_content)
-    
+
     print(f"✅ Generated Typst file: {typst_file}")
-    print(f"\n📖 To compile to PDF, run:")
+    print("\n📖 To compile to PDF, run:")
     print(f"   typst compile {typst_file}")
-    
+
     # Also create a main.typ that imports the template
     main_typ = output_dir / "main.typ"
     main_typ.write_text(typst_content)

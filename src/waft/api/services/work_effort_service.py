@@ -4,13 +4,14 @@ Work Effort Service - Handles file system operations for work efforts.
 Manages the file-based work effort system with YAML frontmatter parsing.
 """
 
+import os
 import re
 import secrets
 import shutil
-import os
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Any
+from typing import Any
+
 import yaml
 
 from ...logging import get_logger
@@ -39,18 +40,18 @@ class WorkEffortService:
 
     def _validate_work_effort_id(self, we_id: str) -> bool:
         """Validate work effort ID format: WE-YYMMDD-xxxx"""
-        pattern = r'^WE-\d{6}-[a-z0-9]{4}$'
+        pattern = r"^WE-\d{6}-[a-z0-9]{4}$"
         return bool(re.match(pattern, we_id))
 
     def _validate_path_in_work_efforts(self, file_path: Path) -> bool:
         """
         CRITICAL: Validate file path is within work efforts directory.
-        
+
         Prevents path traversal attacks.
-        
+
         Args:
             file_path: File path to validate
-            
+
         Returns:
             True if valid, False otherwise
         """
@@ -58,14 +59,14 @@ class WorkEffortService:
             # Ensure work_efforts_dir exists
             if not self.work_efforts_dir.exists():
                 return False
-            
+
             # Get relative path from work_efforts_dir
             try:
                 relative_path = file_path.relative_to(self.work_efforts_dir)
             except ValueError:
                 # Path is not relative to work_efforts_dir
                 return False
-            
+
             # Use existing validation utility
             return _validate_path_in_storage(relative_path, self.work_efforts_dir)
         except (OSError, ValueError):
@@ -73,14 +74,18 @@ class WorkEffortService:
 
     def _generate_work_effort_id(self) -> str:
         """Generate a new work effort ID: WE-YYMMDD-xxxx"""
-        date_str = datetime.now().strftime('%y%m%d')
-        random_suffix = ''.join(secrets.choice('abcdefghijklmnopqrstuvwxyz0123456789') for _ in range(4))
+        date_str = datetime.now().strftime("%y%m%d")
+        random_suffix = "".join(
+            secrets.choice("abcdefghijklmnopqrstuvwxyz0123456789") for _ in range(4)
+        )
         we_id = f"WE-{date_str}-{random_suffix}"
 
         # Ensure uniqueness
         counter = 1
         while self._work_effort_exists(we_id):
-            random_suffix = ''.join(secrets.choice('abcdefghijklmnopqrstuvwxyz0123456789') for _ in range(4))
+            random_suffix = "".join(
+                secrets.choice("abcdefghijklmnopqrstuvwxyz0123456789") for _ in range(4)
+            )
             we_id = f"WE-{date_str}-{random_suffix}"
             counter += 1
             if counter > 100:  # Safety limit
@@ -97,13 +102,13 @@ class WorkEffortService:
         """Generate filesystem-safe slug from title."""
         # Convert to lowercase, replace spaces with hyphens
         slug = title.lower()
-        slug = re.sub(r'[^a-z0-9\s-]', '', slug)  # Remove special chars
-        slug = re.sub(r'\s+', '-', slug)  # Replace spaces with hyphens
-        slug = re.sub(r'-+', '-', slug)  # Collapse multiple hyphens
-        slug = slug.strip('-')  # Remove leading/trailing hyphens
+        slug = re.sub(r"[^a-z0-9\s-]", "", slug)  # Remove special chars
+        slug = re.sub(r"\s+", "-", slug)  # Replace spaces with hyphens
+        slug = re.sub(r"-+", "-", slug)  # Collapse multiple hyphens
+        slug = slug.strip("-")  # Remove leading/trailing hyphens
         return slug[:50]  # Limit length
 
-    def _parse_frontmatter(self, content: str) -> tuple[Dict[str, Any], str]:
+    def _parse_frontmatter(self, content: str) -> tuple[dict[str, Any], str]:
         """
         Parse YAML frontmatter from markdown content.
 
@@ -113,25 +118,27 @@ class WorkEffortService:
             Tuple of (frontmatter_dict, markdown_content)
         """
         # Match YAML frontmatter (--- blocks)
-        frontmatter_match = re.match(r'^---\s*\n(.*?)\n---\s*\n', content, re.DOTALL)
+        frontmatter_match = re.match(r"^---\s*\n(.*?)\n---\s*\n", content, re.DOTALL)
         if frontmatter_match:
             frontmatter_text = frontmatter_match.group(1)
-            
+
             # CRITICAL: Limit YAML size to prevent DoS attacks
             if len(frontmatter_text) > MAX_FRONTMATTER_SIZE:
-                logger.warning(f"Frontmatter too large: {len(frontmatter_text)} bytes (max {MAX_FRONTMATTER_SIZE})")
+                logger.warning(
+                    f"Frontmatter too large: {len(frontmatter_text)} bytes (max {MAX_FRONTMATTER_SIZE})"
+                )
                 return {}, content
-            
+
             try:
                 frontmatter = yaml.safe_load(frontmatter_text) or {}
-                markdown_content = content[frontmatter_match.end():].strip()
+                markdown_content = content[frontmatter_match.end() :].strip()
                 return frontmatter, markdown_content
             except yaml.YAMLError as e:
                 logger.warning(f"Failed to parse frontmatter: {e}")
                 return {}, content
         return {}, content
 
-    def _write_frontmatter(self, frontmatter: Dict[str, Any], content: str) -> str:
+    def _write_frontmatter(self, frontmatter: dict[str, Any], content: str) -> str:
         """Write YAML frontmatter and content to markdown format."""
         frontmatter_text = yaml.dump(frontmatter, default_flow_style=False, sort_keys=False)
         return f"---\n{frontmatter_text}---\n\n{content}\n"
@@ -141,8 +148,8 @@ class WorkEffortService:
         title: str,
         description: str = "",
         status: str = "active",
-        tags: Optional[List[str]] = None
-    ) -> Dict[str, Any]:
+        tags: list[str] | None = None,
+    ) -> dict[str, Any]:
         """
         Create a new work effort.
 
@@ -162,13 +169,13 @@ class WorkEffortService:
 
         # Create directory
         we_dir = self.work_efforts_dir / we_dir_name
-        
+
         # CRITICAL: Validate path before creation
         if not self._validate_path_in_work_efforts(we_dir):
             raise ValueError(f"Invalid work effort path: {we_dir_name} (path traversal detected)")
-        
+
         we_dir.mkdir(parents=True, exist_ok=True)
-        
+
         # CRITICAL: Set restrictive permissions (owner only)
         try:
             we_dir.chmod(0o700)  # Owner read/write/execute only
@@ -178,7 +185,7 @@ class WorkEffortService:
         # Create tickets subdirectory
         tickets_dir = we_dir / "tickets"
         tickets_dir.mkdir(exist_ok=True)
-        
+
         # CRITICAL: Set restrictive permissions
         try:
             os.chmod(tickets_dir, 0o700)
@@ -197,7 +204,7 @@ class WorkEffortService:
             "created": now,
             "created_by": "api",
             "last_updated": now,
-            "tags": tags or []
+            "tags": tags or [],
         }
 
         # Create markdown content
@@ -205,8 +212,8 @@ class WorkEffortService:
 
         # Write file atomically
         content = self._write_frontmatter(frontmatter, markdown_content)
-        temp_file = index_file.with_suffix('.tmp')
-        temp_file.write_text(content, encoding='utf-8')
+        temp_file = index_file.with_suffix(".tmp")
+        temp_file.write_text(content, encoding="utf-8")
         temp_file.replace(index_file)
 
         logger.info(f"Created work effort: {we_id}")
@@ -220,10 +227,10 @@ class WorkEffortService:
             "created": now,
             "created_by": "api",
             "last_updated": now,
-            "path": str(we_dir.relative_to(self.project_path))
+            "path": str(we_dir.relative_to(self.project_path)),
         }
 
-    def get_work_effort(self, we_id: str) -> Optional[Dict[str, Any]]:
+    def get_work_effort(self, we_id: str) -> dict[str, Any] | None:
         """
         Get work effort by ID.
 
@@ -245,7 +252,7 @@ class WorkEffortService:
                 if item.is_symlink():
                     logger.warning(f"Skipping symlink in work_efforts: {item.name}")
                     continue
-                
+
                 if item.is_dir() and item.name.startswith(we_id):
                     # CRITICAL: Validate path before using
                     if not self._validate_path_in_work_efforts(item):
@@ -269,26 +276,22 @@ class WorkEffortService:
                 return None
 
         try:
-            content = index_file.read_text(encoding='utf-8')
+            content = index_file.read_text(encoding="utf-8")
             frontmatter, markdown_content = self._parse_frontmatter(content)
 
             # Extract title from markdown if not in frontmatter
-            if 'title' not in frontmatter:
-                title_match = re.search(r'^#\s+(.+)$', markdown_content, re.MULTILINE)
+            if "title" not in frontmatter:
+                title_match = re.search(r"^#\s+(.+)$", markdown_content, re.MULTILINE)
                 if title_match:
-                    frontmatter['title'] = title_match.group(1)
+                    frontmatter["title"] = title_match.group(1)
 
-            frontmatter['path'] = str(we_dir.relative_to(self.project_path))
+            frontmatter["path"] = str(we_dir.relative_to(self.project_path))
             return frontmatter
         except (OSError, UnicodeDecodeError) as e:
             logger.error(f"Failed to read work effort {we_id}: {e}")
             return None
 
-    def update_work_effort(
-        self,
-        we_id: str,
-        updates: Dict[str, Any]
-    ) -> Optional[Dict[str, Any]]:
+    def update_work_effort(self, we_id: str, updates: dict[str, Any]) -> dict[str, Any] | None:
         """
         Update work effort frontmatter.
 
@@ -321,20 +324,20 @@ class WorkEffortService:
 
         try:
             # Read current content
-            content = index_file.read_text(encoding='utf-8')
+            content = index_file.read_text(encoding="utf-8")
             frontmatter, markdown_content = self._parse_frontmatter(content)
 
             # Update frontmatter
             frontmatter.update(updates)
-            frontmatter['last_updated'] = datetime.now().isoformat()
+            frontmatter["last_updated"] = datetime.now().isoformat()
 
             # Write atomically
             new_content = self._write_frontmatter(frontmatter, markdown_content)
-            temp_file = index_file.with_suffix('.tmp')
-            temp_file.write_text(new_content, encoding='utf-8')
+            temp_file = index_file.with_suffix(".tmp")
+            temp_file.write_text(new_content, encoding="utf-8")
             temp_file.replace(index_file)
 
-            frontmatter['path'] = str(we_dir.relative_to(self.project_path))
+            frontmatter["path"] = str(we_dir.relative_to(self.project_path))
             return frontmatter
         except (OSError, UnicodeDecodeError) as e:
             logger.error(f"Failed to update work effort {we_id}: {e}")
@@ -362,7 +365,7 @@ class WorkEffortService:
                 if item.is_symlink():
                     logger.warning(f"Skipping symlink in work_efforts: {item.name}")
                     continue
-                
+
                 if item.is_dir() and item.name.startswith(we_id):
                     # CRITICAL: Validate path before deletion
                     if not self._validate_path_in_work_efforts(item):
@@ -387,11 +390,11 @@ class WorkEffortService:
 
     def list_work_efforts(
         self,
-        status: Optional[str] = None,
-        tags: Optional[List[str]] = None,
+        status: str | None = None,
+        tags: list[str] | None = None,
         limit: int = 50,
-        offset: int = 0
-    ) -> tuple[List[Dict[str, Any]], int]:
+        offset: int = 0,
+    ) -> tuple[list[dict[str, Any]], int]:
         """
         List work efforts with filtering and pagination.
 
@@ -417,18 +420,18 @@ class WorkEffortService:
         except (OSError, PermissionError) as e:
             logger.error(f"Error listing work_efforts directory: {e}")
             return [], 0
-        
+
         for item in items:
             # Reject symlinks (security)
             if item.is_symlink():
                 logger.warning(f"Skipping symlink in work_efforts: {item.name}")
                 continue
-            
+
             if not item.is_dir() or not item.name.startswith("WE-"):
                 continue
 
             # Extract WE ID from directory name
-            we_id_match = re.match(r'^(WE-\d{6}-[a-z0-9]{4})', item.name)
+            we_id_match = re.match(r"^(WE-\d{6}-[a-z0-9]{4})", item.name)
             if not we_id_match:
                 continue
 
@@ -438,22 +441,22 @@ class WorkEffortService:
                 continue
 
             # Apply filters
-            if status and we_data.get('status') != status:
+            if status and we_data.get("status") != status:
                 continue
 
             if tags:
-                we_tags = we_data.get('tags', [])
+                we_tags = we_data.get("tags", [])
                 if not all(tag in we_tags for tag in tags):
                     continue
 
             work_efforts.append(we_data)
 
         # Sort by last_updated (most recent first)
-        work_efforts.sort(key=lambda w: w.get('last_updated', ''), reverse=True)
+        work_efforts.sort(key=lambda w: w.get("last_updated", ""), reverse=True)
 
         total_count = len(work_efforts)
 
         # Apply pagination
-        paginated = work_efforts[offset:offset + limit]
+        paginated = work_efforts[offset : offset + limit]
 
         return paginated, total_count

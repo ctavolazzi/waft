@@ -12,11 +12,11 @@ Modules:
 - adapter: Adapter pattern for 4-stat to 6-stat conversion
 """
 
-from .stats import DnD5eStats, ArmorType
-from .dice import DnDRoller
+from .adapter import StatsAdapter
 from .character import DnD5eCharacter
 from .combat import DnD5eCombat
-from .adapter import StatsAdapter
+from .dice import DnDRoller
+from .stats import ArmorType, DnD5eStats
 
 __all__ = [
     "DnD5eStats",

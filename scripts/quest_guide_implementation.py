@@ -18,23 +18,23 @@ Quest System:
     - Fun rewards and achievements unlock as you progress!
 """
 
-import os
-import sys
 import json
-import subprocess
-from pathlib import Path
-from typing import Dict, Any, List, Optional, Callable, Tuple
-from datetime import datetime
+import sys
+from collections.abc import Callable
 from dataclasses import dataclass, field
+from datetime import datetime
 from enum import Enum
-
+from pathlib import Path
+from typing import Any
 
 # ============================================================================
 # Quest System
 # ============================================================================
 
+
 class QuestStatus(Enum):
     """Quest status enumeration."""
+
     LOCKED = "locked"
     AVAILABLE = "available"
     IN_PROGRESS = "in_progress"
@@ -45,53 +45,58 @@ class QuestStatus(Enum):
 @dataclass
 class Checkpoint:
     """A checkpoint that validates quest progress."""
+
     checkpoint_id: str
     name: str
     description: str
     validator: Callable[[Path], tuple[bool, str]]  # Returns (passed, message)
-    required_for: List[str] = field(default_factory=list)  # Quest IDs that require this
+    required_for: list[str] = field(default_factory=list)  # Quest IDs that require this
 
 
 @dataclass
 class Test:
     """A test that verifies implementation correctness."""
+
     test_id: str
     name: str
     description: str
-    test_func: Callable[[Path], Tuple[bool, str]]  # Returns (passed, message)
+    test_func: Callable[[Path], tuple[bool, str]]  # Returns (passed, message)
     quest_id: str  # Which quest this test belongs to
 
 
 @dataclass
 class Quest:
     """A quest - a phase of implementation."""
+
     quest_id: str
     name: str
     description: str
     difficulty: int  # 1-10
     xp_reward: int
-    checkpoints: List[str] = field(default_factory=list)  # Checkpoint IDs
-    tests: List[str] = field(default_factory=list)  # Test IDs
-    prerequisites: List[str] = field(default_factory=list)  # Quest IDs
+    checkpoints: list[str] = field(default_factory=list)  # Checkpoint IDs
+    tests: list[str] = field(default_factory=list)  # Test IDs
+    prerequisites: list[str] = field(default_factory=list)  # Quest IDs
     status: QuestStatus = QuestStatus.LOCKED
-    started_at: Optional[str] = None
-    completed_at: Optional[str] = None
-    achievements: List[str] = field(default_factory=list)
+    started_at: str | None = None
+    completed_at: str | None = None
+    achievements: list[str] = field(default_factory=list)
 
 
 @dataclass
 class QuestProgress:
     """Track quest progress."""
+
     quest_id: str
-    checkpoints_passed: List[str] = field(default_factory=list)
-    tests_passed: List[str] = field(default_factory=list)
+    checkpoints_passed: list[str] = field(default_factory=list)
+    tests_passed: list[str] = field(default_factory=list)
     current_step: str = ""
-    notes: List[str] = field(default_factory=list)
+    notes: list[str] = field(default_factory=list)
 
 
 # ============================================================================
 # Checkpoint Validators
 # ============================================================================
+
 
 def checkpoint_file_exists(project_path: Path, file_path: str) -> tuple[bool, str]:
     """Check if a file exists."""
@@ -101,11 +106,12 @@ def checkpoint_file_exists(project_path: Path, file_path: str) -> tuple[bool, st
     return False, f"❌ File missing: {file_path}"
 
 
-def checkpoint_imports_work(project_path: Path, module_path: str) -> Tuple[bool, str]:
+def checkpoint_imports_work(project_path: Path, module_path: str) -> tuple[bool, str]:
     """Check if a module can be imported."""
     try:
         # Try to import the module
         import importlib.util
+
         spec = importlib.util.spec_from_file_location("test_module", project_path / module_path)
         if spec and spec.loader:
             return True, f"✅ Module can be imported: {module_path}"
@@ -126,7 +132,7 @@ def checkpoint_has_class(project_path: Path, file_path: str, class_name: str) ->
     return False, f"❌ Class missing: {class_name} in {file_path}"
 
 
-def checkpoint_has_method(project_path: Path, file_path: str, method_name: str) -> Tuple[bool, str]:
+def checkpoint_has_method(project_path: Path, file_path: str, method_name: str) -> tuple[bool, str]:
     """Check if a file contains a specific method."""
     full_path = project_path / file_path
     if not full_path.exists():
@@ -146,11 +152,11 @@ def checkpoint_directory_exists(project_path: Path, dir_path: str) -> tuple[bool
     return False, f"❌ Directory missing: {dir_path}"
 
 
-def checkpoint_pantheon_export(project_path: Path, export_name: str) -> Tuple[bool, str]:
+def checkpoint_pantheon_export(project_path: Path, export_name: str) -> tuple[bool, str]:
     """Check if TheGuide is exported in pantheon __init__.py."""
     init_file = project_path / "src" / "waft" / "pantheon" / "__init__.py"
     if not init_file.exists():
-        return False, f"❌ Pantheon __init__.py missing"
+        return False, "❌ Pantheon __init__.py missing"
 
     content = init_file.read_text()
     if f'"{export_name}"' in content or f"'{export_name}'" in content:
@@ -162,12 +168,14 @@ def checkpoint_pantheon_export(project_path: Path, export_name: str) -> Tuple[bo
 # Test Functions
 # ============================================================================
 
+
 def test_guide_initialization(project_path: Path) -> tuple[bool, str]:
     """Test that TheGuide can be initialized."""
     try:
         sys.path.insert(0, str(project_path / "src"))
-        from waft.pantheon.guide import TheGuide
         from pathlib import Path
+
+        from waft.pantheon.guide import TheGuide
 
         # Try to initialize (without actual LLM for now)
         # This will fail if basic structure is wrong
@@ -178,7 +186,7 @@ def test_guide_initialization(project_path: Path) -> tuple[bool, str]:
         return False, f"❌ Initialization error: {str(e)}"
 
 
-def test_storage_structure(project_path: Path) -> Tuple[bool, str]:
+def test_storage_structure(project_path: Path) -> tuple[bool, str]:
     """Test that storage directories are created."""
     guide_path = project_path / "_pantheon" / "guide"
     sessions_path = guide_path / "sessions"
@@ -224,7 +232,7 @@ def test_fvcu_evaluation(project_path: Path) -> tuple[bool, str]:
     return False, "❌ FVCU evaluation method missing"
 
 
-def test_reasoner_integration(project_path: Path) -> Tuple[bool, str]:
+def test_reasoner_integration(project_path: Path) -> tuple[bool, str]:
     """Test that Reasoner integration is implemented."""
     guide_file = project_path / "src" / "waft" / "pantheon" / "guide.py"
     if not guide_file.exists():
@@ -240,7 +248,8 @@ def test_reasoner_integration(project_path: Path) -> Tuple[bool, str]:
 # Quest Definitions
 # ============================================================================
 
-def create_quests(project_path: Path) -> Dict[str, Quest]:
+
+def create_quests(project_path: Path) -> dict[str, Quest]:
     """Create all quest definitions."""
 
     checkpoints = {
@@ -248,71 +257,81 @@ def create_quests(project_path: Path) -> Dict[str, Quest]:
             checkpoint_id="cp_guide_file",
             name="Guide File Created",
             description="Check that src/waft/pantheon/guide.py exists",
-            validator=lambda p: checkpoint_file_exists(p, "src/waft/pantheon/guide.py")
+            validator=lambda p: checkpoint_file_exists(p, "src/waft/pantheon/guide.py"),
         ),
         "cp_guide_class": Checkpoint(
             checkpoint_id="cp_guide_class",
             name="TheGuide Class Defined",
             description="Check that TheGuide class exists in guide.py",
-            validator=lambda p: checkpoint_has_class(p, "src/waft/pantheon/guide.py", "TheGuide")
+            validator=lambda p: checkpoint_has_class(p, "src/waft/pantheon/guide.py", "TheGuide"),
         ),
         "cp_storage_dirs": Checkpoint(
             checkpoint_id="cp_storage_dirs",
             name="Storage Directories Created",
             description="Check that _pantheon/guide/sessions and protocols directories exist",
             validator=lambda p: (
-                checkpoint_directory_exists(p, "_pantheon/guide/sessions")[0] and
-                checkpoint_directory_exists(p, "_pantheon/guide/protocols")[0],
-                "Storage directories check"
-            )
+                checkpoint_directory_exists(p, "_pantheon/guide/sessions")[0]
+                and checkpoint_directory_exists(p, "_pantheon/guide/protocols")[0],
+                "Storage directories check",
+            ),
         ),
         "cp_protocol_models": Checkpoint(
             checkpoint_id="cp_protocol_models",
             name="Protocol Models Defined",
             description="Check that EvaluationScores and Protocol models exist",
-            validator=lambda p: checkpoint_has_class(p, "src/waft/pantheon/guide.py", "EvaluationScores")
+            validator=lambda p: checkpoint_has_class(
+                p, "src/waft/pantheon/guide.py", "EvaluationScores"
+            ),
         ),
         "cp_guidance_loop": Checkpoint(
             checkpoint_id="cp_guidance_loop",
             name="Guidance Loop Method",
             description="Check that _guidance_loop method exists",
-            validator=lambda p: checkpoint_has_method(p, "src/waft/pantheon/guide.py", "_guidance_loop")
+            validator=lambda p: checkpoint_has_method(
+                p, "src/waft/pantheon/guide.py", "_guidance_loop"
+            ),
         ),
         "cp_llm_integration": Checkpoint(
             checkpoint_id="cp_llm_integration",
             name="OpenHands LLM Integration",
             description="Check that OpenHands LLM is imported and used",
             validator=lambda p: (
-                "from openhands.sdk import LLM" in (p / "src/waft/pantheon/guide.py").read_text() if (p / "src/waft/pantheon/guide.py").exists() else False,
-                "OpenHands LLM integration"
-            )
+                "from openhands.sdk import LLM" in (p / "src/waft/pantheon/guide.py").read_text()
+                if (p / "src/waft/pantheon/guide.py").exists()
+                else False,
+                "OpenHands LLM integration",
+            ),
         ),
         "cp_fvcu_evaluation": Checkpoint(
             checkpoint_id="cp_fvcu_evaluation",
             name="FVCU Evaluation Method",
             description="Check that _evaluate_with_fvcu method exists",
-            validator=lambda p: checkpoint_has_method(p, "src/waft/pantheon/guide.py", "_evaluate_with_fvcu")
+            validator=lambda p: checkpoint_has_method(
+                p, "src/waft/pantheon/guide.py", "_evaluate_with_fvcu"
+            ),
         ),
         "cp_reasoner_integration": Checkpoint(
             checkpoint_id="cp_reasoner_integration",
             name="Reasoner Integration",
             description="Check that TheReasoner is imported and used",
             validator=lambda p: (
-                "TheReasoner" in (p / "src/waft/pantheon/guide.py").read_text() if (p / "src/waft/pantheon/guide.py").exists() else False,
-                "Reasoner integration"
-            )
+                "TheReasoner" in (p / "src/waft/pantheon/guide.py").read_text()
+                if (p / "src/waft/pantheon/guide.py").exists()
+                else False,
+                "Reasoner integration",
+            ),
         ),
         "cp_pantheon_export": Checkpoint(
             checkpoint_id="cp_pantheon_export",
             name="Pantheon Export",
             description="Check that TheGuide is exported in pantheon __init__.py",
-            validator=lambda p: checkpoint_pantheon_export(p, "TheGuide")
+            validator=lambda p: checkpoint_pantheon_export(p, "TheGuide"),
         ),
         "cp_readme": Checkpoint(
             checkpoint_id="cp_readme",
             name="README Documentation",
             description="Check that _pantheon/guide/README.md exists",
-            validator=lambda p: checkpoint_file_exists(p, "_pantheon/guide/README.md")
+            validator=lambda p: checkpoint_file_exists(p, "_pantheon/guide/README.md"),
         ),
     }
 
@@ -322,35 +341,35 @@ def create_quests(project_path: Path) -> Dict[str, Quest]:
             name="TheGuide Initialization Test",
             description="Test that TheGuide can be imported and initialized",
             test_func=test_guide_initialization,
-            quest_id="quest_1"
+            quest_id="quest_1",
         ),
         "test_storage": Test(
             test_id="test_storage",
             name="Storage Structure Test",
             description="Test that storage directories are created correctly",
             test_func=test_storage_structure,
-            quest_id="quest_2"
+            quest_id="quest_2",
         ),
         "test_models": Test(
             test_id="test_models",
             name="Protocol Models Test",
             description="Test that Protocol Pydantic models are defined",
             test_func=test_protocol_models,
-            quest_id="quest_3"
+            quest_id="quest_3",
         ),
         "test_fvcu": Test(
             test_id="test_fvcu",
             name="FVCU Evaluation Test",
             description="Test that FVCU evaluation method exists",
             test_func=test_fvcu_evaluation,
-            quest_id="quest_7"
+            quest_id="quest_7",
         ),
         "test_reasoner": Test(
             test_id="test_reasoner",
             name="Reasoner Integration Test",
             description="Test that Reasoner integration is implemented",
             test_func=test_reasoner_integration,
-            quest_id="quest_12"
+            quest_id="quest_12",
         ),
     }
 
@@ -367,7 +386,7 @@ def create_quests(project_path: Path) -> Dict[str, Quest]:
             checkpoints=["cp_guide_file", "cp_guide_class"],
             tests=["test_init"],
             prerequisites=[],
-            achievements=["🏗️ Foundation Builder"]
+            achievements=["🏗️ Foundation Builder"],
         ),
         "quest_2": Quest(
             quest_id="quest_2",
@@ -382,7 +401,7 @@ def create_quests(project_path: Path) -> Dict[str, Quest]:
             checkpoints=["cp_storage_dirs"],
             tests=["test_storage"],
             prerequisites=["quest_1"],
-            achievements=["📁 Storage Master"]
+            achievements=["📁 Storage Master"],
         ),
         "quest_3": Quest(
             quest_id="quest_3",
@@ -399,7 +418,7 @@ def create_quests(project_path: Path) -> Dict[str, Quest]:
             checkpoints=["cp_protocol_models"],
             tests=["test_models"],
             prerequisites=["quest_1"],
-            achievements=["📋 Model Architect"]
+            achievements=["📋 Model Architect"],
         ),
         "quest_4": Quest(
             quest_id="quest_4",
@@ -414,7 +433,7 @@ def create_quests(project_path: Path) -> Dict[str, Quest]:
             checkpoints=["cp_guidance_loop"],
             tests=[],
             prerequisites=["quest_1"],
-            achievements=["🔄 Loop Master"]
+            achievements=["🔄 Loop Master"],
         ),
         "quest_5": Quest(
             quest_id="quest_5",
@@ -431,7 +450,7 @@ def create_quests(project_path: Path) -> Dict[str, Quest]:
             checkpoints=["cp_llm_integration"],
             tests=[],
             prerequisites=["quest_1", "quest_4"],
-            achievements=["🤖 LLM Integrator"]
+            achievements=["🤖 LLM Integrator"],
         ),
         "quest_6": Quest(
             quest_id="quest_6",
@@ -447,7 +466,7 @@ def create_quests(project_path: Path) -> Dict[str, Quest]:
             checkpoints=[],
             tests=[],
             prerequisites=["quest_5"],
-            achievements=["💬 Conversation Starter"]
+            achievements=["💬 Conversation Starter"],
         ),
         "quest_7": Quest(
             quest_id="quest_7",
@@ -464,7 +483,7 @@ def create_quests(project_path: Path) -> Dict[str, Quest]:
             checkpoints=["cp_fvcu_evaluation"],
             tests=["test_fvcu"],
             prerequisites=["quest_6"],
-            achievements=["🎯 Evaluation Master", "🔍 Faithfulness Detective"]
+            achievements=["🎯 Evaluation Master", "🔍 Faithfulness Detective"],
         ),
         "quest_8": Quest(
             quest_id="quest_8",
@@ -480,7 +499,7 @@ def create_quests(project_path: Path) -> Dict[str, Quest]:
             checkpoints=[],
             tests=[],
             prerequisites=["quest_7"],
-            achievements=["🧩 Context Master"]
+            achievements=["🧩 Context Master"],
         ),
         "quest_9": Quest(
             quest_id="quest_9",
@@ -496,7 +515,7 @@ def create_quests(project_path: Path) -> Dict[str, Quest]:
             checkpoints=[],
             tests=[],
             prerequisites=["quest_7"],
-            achievements=["📊 Scaling Expert"]
+            achievements=["📊 Scaling Expert"],
         ),
         "quest_10": Quest(
             quest_id="quest_10",
@@ -512,7 +531,7 @@ def create_quests(project_path: Path) -> Dict[str, Quest]:
             checkpoints=[],
             tests=[],
             prerequisites=["quest_6"],
-            achievements=["✨ Self-Aware Guide"]
+            achievements=["✨ Self-Aware Guide"],
         ),
         "quest_11": Quest(
             quest_id="quest_11",
@@ -528,7 +547,7 @@ def create_quests(project_path: Path) -> Dict[str, Quest]:
             checkpoints=[],
             tests=[],
             prerequisites=["quest_10"],
-            achievements=["🔧 Self-Improving Guide"]
+            achievements=["🔧 Self-Improving Guide"],
         ),
         "quest_12": Quest(
             quest_id="quest_12",
@@ -545,7 +564,7 @@ def create_quests(project_path: Path) -> Dict[str, Quest]:
             checkpoints=["cp_reasoner_integration"],
             tests=["test_reasoner"],
             prerequisites=["quest_6"],
-            achievements=["🔗 Integration Master"]
+            achievements=["🔗 Integration Master"],
         ),
         "quest_13": Quest(
             quest_id="quest_13",
@@ -562,7 +581,7 @@ def create_quests(project_path: Path) -> Dict[str, Quest]:
             checkpoints=[],
             tests=[],
             prerequisites=["quest_7"],
-            achievements=["🚪 Termination Expert"]
+            achievements=["🚪 Termination Expert"],
         ),
         "quest_14": Quest(
             quest_id="quest_14",
@@ -579,7 +598,7 @@ def create_quests(project_path: Path) -> Dict[str, Quest]:
             checkpoints=[],
             tests=[],
             prerequisites=["quest_3", "quest_7"],
-            achievements=["❓ Explanation Master"]
+            achievements=["❓ Explanation Master"],
         ),
         "quest_15": Quest(
             quest_id="quest_15",
@@ -595,7 +614,7 @@ def create_quests(project_path: Path) -> Dict[str, Quest]:
             checkpoints=["cp_pantheon_export"],
             tests=[],
             prerequisites=["quest_1"],
-            achievements=["📦 Export Master"]
+            achievements=["📦 Export Master"],
         ),
         "quest_16": Quest(
             quest_id="quest_16",
@@ -612,7 +631,7 @@ def create_quests(project_path: Path) -> Dict[str, Quest]:
             checkpoints=["cp_readme"],
             tests=[],
             prerequisites=["quest_7", "quest_10", "quest_12"],
-            achievements=["📚 Documentation Master"]
+            achievements=["📚 Documentation Master"],
         ),
         "quest_17": Quest(
             quest_id="quest_17",
@@ -630,7 +649,7 @@ def create_quests(project_path: Path) -> Dict[str, Quest]:
             checkpoints=[],
             tests=[],
             prerequisites=["quest_7", "quest_12", "quest_14"],
-            achievements=["🧪 Testing Master", "🏆 Quest Complete!"]
+            achievements=["🧪 Testing Master", "🏆 Quest Complete!"],
         ),
     }
 
@@ -641,6 +660,7 @@ def create_quests(project_path: Path) -> Dict[str, Quest]:
 # Quest Manager
 # ============================================================================
 
+
 class QuestManager:
     """Manages quest progress and execution."""
 
@@ -648,10 +668,10 @@ class QuestManager:
         self.project_path = project_path
         self.quests, self.checkpoints, self.tests = create_quests(project_path)
         self.progress_file = project_path / "_pantheon" / "guide" / "quest_progress.json"
-        self.progress: Dict[str, QuestProgress] = self._load_progress()
+        self.progress: dict[str, QuestProgress] = self._load_progress()
         self._update_quest_statuses()
 
-    def _load_progress(self) -> Dict[str, QuestProgress]:
+    def _load_progress(self) -> dict[str, QuestProgress]:
         """Load quest progress from file."""
         if self.progress_file.exists():
             try:
@@ -662,7 +682,7 @@ class QuestManager:
                         checkpoints_passed=prog.get("checkpoints_passed", []),
                         tests_passed=prog.get("tests_passed", []),
                         current_step=prog.get("current_step", ""),
-                        notes=prog.get("notes", [])
+                        notes=prog.get("notes", []),
                     )
                     for qid, prog in data.items()
                 }
@@ -679,7 +699,7 @@ class QuestManager:
                 "checkpoints_passed": prog.checkpoints_passed,
                 "tests_passed": prog.tests_passed,
                 "current_step": prog.current_step,
-                "notes": prog.notes
+                "notes": prog.notes,
             }
             for qid, prog in self.progress.items()
         }
@@ -708,7 +728,10 @@ class QuestManager:
 
         quest = self.quests[quest_id]
         if quest.status == QuestStatus.LOCKED:
-            return False, f"Quest is locked. Complete prerequisites first: {', '.join(quest.prerequisites)}"
+            return (
+                False,
+                f"Quest is locked. Complete prerequisites first: {', '.join(quest.prerequisites)}",
+            )
 
         quest.status = QuestStatus.IN_PROGRESS
         quest.started_at = datetime.now().isoformat()
@@ -719,7 +742,7 @@ class QuestManager:
         self._save_progress()
         return True, f"Quest started: {quest.name}"
 
-    def check_checkpoint(self, checkpoint_id: str) -> Tuple[bool, str]:
+    def check_checkpoint(self, checkpoint_id: str) -> tuple[bool, str]:
         """Check a checkpoint."""
         if checkpoint_id not in self.checkpoints:
             return False, f"Checkpoint not found: {checkpoint_id}"
@@ -757,7 +780,7 @@ class QuestManager:
 
         return passed, message
 
-    def complete_quest(self, quest_id: str) -> Tuple[bool, str]:
+    def complete_quest(self, quest_id: str) -> tuple[bool, str]:
         """Mark a quest as completed."""
         if quest_id not in self.quests:
             return False, f"Quest not found: {quest_id}"
@@ -766,14 +789,22 @@ class QuestManager:
 
         # Check all checkpoints are passed
         for cp_id in quest.checkpoints:
-            if cp_id not in self.progress.get(quest_id, QuestProgress(quest_id=quest_id)).checkpoints_passed:
+            if (
+                cp_id
+                not in self.progress.get(
+                    quest_id, QuestProgress(quest_id=quest_id)
+                ).checkpoints_passed
+            ):
                 passed, msg = self.check_checkpoint(cp_id)
                 if not passed:
                     return False, f"Checkpoint not passed: {cp_id} - {msg}"
 
         # Check all tests are passed
         for test_id in quest.tests:
-            if test_id not in self.progress.get(quest_id, QuestProgress(quest_id=quest_id)).tests_passed:
+            if (
+                test_id
+                not in self.progress.get(quest_id, QuestProgress(quest_id=quest_id)).tests_passed
+            ):
                 passed, msg = self.run_test(test_id)
                 if not passed:
                     return False, f"Test not passed: {test_id} - {msg}"
@@ -785,7 +816,7 @@ class QuestManager:
 
         return True, f"🎉 Quest completed: {quest.name} (+{quest.xp_reward} XP)!"
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get overall quest status."""
         total_quests = len(self.quests)
         completed = sum(1 for q in self.quests.values() if q.status == QuestStatus.COMPLETED)
@@ -793,7 +824,9 @@ class QuestManager:
         available = sum(1 for q in self.quests.values() if q.status == QuestStatus.AVAILABLE)
         locked = sum(1 for q in self.quests.values() if q.status == QuestStatus.LOCKED)
 
-        total_xp = sum(q.xp_reward for q in self.quests.values() if q.status == QuestStatus.COMPLETED)
+        total_xp = sum(
+            q.xp_reward for q in self.quests.values() if q.status == QuestStatus.COMPLETED
+        )
 
         return {
             "total_quests": total_quests,
@@ -802,13 +835,14 @@ class QuestManager:
             "available": available,
             "locked": locked,
             "total_xp": total_xp,
-            "completion_percentage": (completed / total_quests * 100) if total_quests > 0 else 0
+            "completion_percentage": (completed / total_quests * 100) if total_quests > 0 else 0,
         }
 
 
 # ============================================================================
 # CLI Interface
 # ============================================================================
+
 
 def print_banner():
     """Print quest banner."""
@@ -835,10 +869,12 @@ def print_quest_list(manager: QuestManager):
             QuestStatus.LOCKED: "🔒",
             QuestStatus.AVAILABLE: "✅",
             QuestStatus.IN_PROGRESS: "🔄",
-            QuestStatus.COMPLETED: "🎉"
+            QuestStatus.COMPLETED: "🎉",
         }.get(quest.status, "❓")
 
-        print(f"{quest.quest_id:<12} {status_icon} {quest.status.value:<10} {'⭐' * quest.difficulty:<10} {quest.xp_reward:<6} {quest.name}")
+        print(
+            f"{quest.quest_id:<12} {status_icon} {quest.status.value:<10} {'⭐' * quest.difficulty:<10} {quest.xp_reward:<6} {quest.name}"
+        )
 
 
 def print_quest_details(manager: QuestManager, quest_id: str):
@@ -855,17 +891,17 @@ def print_quest_details(manager: QuestManager, quest_id: str):
     print(f"   Status: {quest.status.value}")
     print(f"   Difficulty: {'⭐' * quest.difficulty}")
     print(f"   XP Reward: {quest.xp_reward}")
-    print(f"\n📝 Description:")
+    print("\n📝 Description:")
     print(f"   {quest.description}")
 
     if quest.prerequisites:
-        print(f"\n🔗 Prerequisites:")
+        print("\n🔗 Prerequisites:")
         for prereq in quest.prerequisites:
             prereq_status = manager.quests[prereq].status.value
             print(f"   - {prereq}: {prereq_status}")
 
     if quest.checkpoints:
-        print(f"\n✅ Checkpoints:")
+        print("\n✅ Checkpoints:")
         for cp_id in quest.checkpoints:
             passed = cp_id in progress.checkpoints_passed
             status = "✅" if passed else "⏳"
@@ -873,7 +909,7 @@ def print_quest_details(manager: QuestManager, quest_id: str):
             print(f"   {status} {cp.name}: {cp.description}")
 
     if quest.tests:
-        print(f"\n🧪 Tests:")
+        print("\n🧪 Tests:")
         for test_id in quest.tests:
             passed = test_id in progress.tests_passed
             status = "✅" if passed else "⏳"
@@ -881,7 +917,7 @@ def print_quest_details(manager: QuestManager, quest_id: str):
             print(f"   {status} {test.name}: {test.description}")
 
     if quest.achievements:
-        print(f"\n🏆 Achievements:")
+        print("\n🏆 Achievements:")
         for achievement in quest.achievements:
             print(f"   {achievement}")
 
@@ -910,7 +946,7 @@ def main():
 
     if args.status:
         status = manager.get_status()
-        print(f"\n📊 Quest Status:")
+        print("\n📊 Quest Status:")
         print(f"   Total Quests: {status['total_quests']}")
         print(f"   🎉 Completed: {status['completed']}")
         print(f"   🔄 In Progress: {status['in_progress']}")
@@ -946,7 +982,7 @@ def main():
     else:
         # Default: show status and available quests
         status = manager.get_status()
-        print(f"\n📊 Quest Status:")
+        print("\n📊 Quest Status:")
         print(f"   🎉 Completed: {status['completed']}/{status['total_quests']}")
         print(f"   ⭐ Total XP: {status['total_xp']}")
         print(f"   📈 Completion: {status['completion_percentage']:.1f}%")
@@ -963,11 +999,17 @@ def main():
 
         print("\n💡 Usage:")
         print("   python scripts/quest_guide_implementation.py --list          # List all quests")
-        print("   python scripts/quest_guide_implementation.py --quest quest_1 # Show quest details")
+        print(
+            "   python scripts/quest_guide_implementation.py --quest quest_1 # Show quest details"
+        )
         print("   python scripts/quest_guide_implementation.py --start quest_1 # Start a quest")
-        print("   python scripts/quest_guide_implementation.py --checkpoint cp_guide_file  # Check checkpoint")
+        print(
+            "   python scripts/quest_guide_implementation.py --checkpoint cp_guide_file  # Check checkpoint"
+        )
         print("   python scripts/quest_guide_implementation.py --test test_init  # Run test")
-        print("   python scripts/quest_guide_implementation.py --complete quest_1  # Complete quest")
+        print(
+            "   python scripts/quest_guide_implementation.py --complete quest_1  # Complete quest"
+        )
 
 
 if __name__ == "__main__":

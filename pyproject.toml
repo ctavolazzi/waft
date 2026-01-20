@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "waft"
-version = "0.9.3"
+version = "0.9.4"
 description = "Waft - Ambient, self-modifying Meta-Framework for Python"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -35,13 +35,16 @@ dependencies = [
     "uvicorn[standard]>=0.24.0",
     "fpdf2>=2.7.0",
     "beautifulsoup4>=4.14.0",
+    "weasyprint>=60.0.0",
+    "pypdf>=3.0.0",
     "jinja2>=3.0.0",
-    "pypdf>=4.0.0",
+    "markdown>=3.0.0",
 ]
 
 [project.optional-dependencies]
 dev = [
     "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
     "ruff>=0.1.0",
     "watchdog>=3.0.0",
 ]
@@ -67,59 +70,26 @@ packages = ["waft", "waft.core", "waft.cli", "waft.templates", "waft.ui", "waft.
 [tool.ruff]
 line-length = 100
 target-version = "py310"
-# Exclude legacy/experimental directories and files from linting
 exclude = [
-    # Non-waft packages
-    "src/gym",
-    # Root-level Python scripts (legacy/demo)
-    "/*.py",
-    # Underscore-prefixed experimental directories
-    "_*",
-    # Legacy project directories
-    "Bubbles",
-    "Campaigns",
-    "Latex Source Code",
-    "NARRATIVE-WAFT",
-    "Obsidian_Archive",
-    "WAFT-Mac-Shortcuts-Research",
-    "WAFT-One-Pager-Feature-Research",
-    "WAFT-PDF-PNG-Conversion-Research",
-    # Demo and output directories
-    "advanced_demo_output",
+    ".git",
+    ".venv",
+    "__pycache__",
+    "build",
+    "dist",
+    "*.egg-info",
+    "_temp",
     "demo_output",
-    "demo",
-    "demo_template",
-    # API and frontend
-    "api",
-    "biz-report",
-    "book-waft-command-discovery",
-    "cli",
-    "cute_test_runner",
-    "dnd_campaign_desktop_app",
-    "docs",
-    "examples",
-    "experiments",
-    "frontend",
-    "hotel_staff",
-    "invoice-maker",
-    "lib",
-    "modern-cv",
-    "playground",
-    "playwright",
-    "react-being-test",
-    "recap_review_app",
-    "research_simulation",
-    "s6t5-page-bordering",
-    "saved_decisions",
-    "scientific_method_tool",
-    "scripts",
-    "templates",
-    "tools",
-    "unofficial-fhict-document-template",
-    "visualizer",
-    "waft_desktop",
-    "web",
+    ".empirica/cache",
+    "node_modules",
+    "scripts/generate_tavern_game_with_skills.py",  # TODO: Fix syntax errors in this file
 ]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v"
 
 [tool.ruff.lint]
 select = ["E", "W", "F", "I", "B", "C4", "UP"]
@@ -128,13 +98,6 @@ ignore = []
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
-
-[tool.pytest.ini_options]
-# Exclude standalone test scripts that use sys.exit()
-testpaths = ["tests"]
-python_files = ["test_*.py"]
-# Ignore standalone comprehensive test that has sys.exit()
-addopts = "--ignore=tests/test_the_absolute_begeesus.py"
 
 [tool.uv.workspace]
 members = ["_experiments/test_project_001", "_experiments/existing_project", "_experiments/test_project_002", "_experiments/test_project_001/nested_project"]

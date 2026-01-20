@@ -28,9 +28,6 @@ Thumbs.db
 .coverage
 htmlcov/
 
-# Pantheon runtime data (test artifacts, sessions, protocols)
-_pantheon/
-
 # SvelteKit Visualizer
 visualizer/node_modules/
 visualizer/.svelte-kit/
@@ -44,4 +41,7 @@ visualizer/vite.config.ts.timestamp-*
 
 # Temporary PDF examples (generated outputs)
 _temp_pdf_examples/*.pdf
-.empirica_reflex_logs/
+
+# Runtime data files
+.empirica/sessions/*.db
+_pyrite/.waft/*.json

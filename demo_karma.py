@@ -13,16 +13,17 @@ This demo showcases the complete Karma/reincarnation cycle:
 Run: python demo_karma.py
 """
 
-from pathlib import Path
 import json
+from pathlib import Path
+
 from src.waft.karma import KarmaMerchant
 
 
 def print_header(text):
     """Print a formatted section header."""
-    print("\n" + "="*70)
+    print("\n" + "=" * 70)
     print(f"  {text}")
-    print("="*70 + "\n")
+    print("=" * 70 + "\n")
 
 
 def print_soul_status(merchant, soul_id):
@@ -31,7 +32,7 @@ def print_soul_status(merchant, soul_id):
     print(f"Soul ID: {soul['soul_id']}")
     print(f"Total Karma: {soul['total_karma']:.2f}")
     print(f"Lifetimes: {len(soul['lifetimes'])}")
-    if soul['last_incarnation']:
+    if soul["last_incarnation"]:
         print(f"Last Life-Path: {soul['last_incarnation'].get('life_path')}")
     print()
 
@@ -53,8 +54,8 @@ def create_demo_life_paths(store_path):
                 "config": {
                     "starting_stats": {"INT": 10, "WIS": 8, "CHA": 10},
                     "abilities": ["curiosity", "learning"],
-                    "traits": ["naive", "eager", "adaptable"]
-                }
+                    "traits": ["naive", "eager", "adaptable"],
+                },
             },
             {
                 "id": "tragic_hero",
@@ -64,8 +65,8 @@ def create_demo_life_paths(store_path):
                 "config": {
                     "starting_stats": {"INT": 12, "WIS": 14, "CHA": 11},
                     "abilities": ["resilience", "empathy", "growth_through_pain"],
-                    "karma_multiplier": 1.5
-                }
+                    "karma_multiplier": 1.5,
+                },
             },
             {
                 "id": "scholar_sage",
@@ -75,8 +76,8 @@ def create_demo_life_paths(store_path):
                 "config": {
                     "starting_stats": {"INT": 16, "WIS": 13, "CHA": 9},
                     "abilities": ["deep_analysis", "pattern_recognition"],
-                    "learning_rate": 1.3
-                }
+                    "learning_rate": 1.3,
+                },
             },
             {
                 "id": "code_monk",
@@ -86,13 +87,13 @@ def create_demo_life_paths(store_path):
                 "config": {
                     "starting_stats": {"INT": 17, "WIS": 15, "CHA": 8},
                     "abilities": ["refactoring_mastery", "bug_detection", "optimization"],
-                    "code_quality_bonus": 1.8
-                }
-            }
+                    "code_quality_bonus": 1.8,
+                },
+            },
         ]
     }
 
-    with open(catalog_file, 'w') as f:
+    with open(catalog_file, "w") as f:
         json.dump(life_paths_data, f, indent=2)
 
 
@@ -136,15 +137,16 @@ def main():
     print("Purchasing life-path: genesis_explorer (0.0 Karma + 1.0 Prana)")
 
     try:
-        result = merchant.reincarnate(soul_id, {
-            "life_path_id": "genesis_explorer",
-            "memory_continuity": 0.0
-        })
+        result = merchant.reincarnate(
+            soul_id, {"life_path_id": "genesis_explorer", "memory_continuity": 0.0}
+        )
 
         print("✅ Incarnation successful!")
         print(f"Lifetime ID: {result['lifetime_id']}")
         print(f"Karma Remaining: {result['karma_remaining']:.2f}")
-        print(f"Starting Stats: {result['agent_config']['life_path_config'].get('starting_stats', {})}")
+        print(
+            f"Starting Stats: {result['agent_config']['life_path_config'].get('starting_stats', {})}"
+        )
     except Exception as e:
         print(f"❌ Incarnation failed: {e}")
         return
@@ -159,57 +161,54 @@ def main():
                 "emotional_intensity": 0.7,
                 "mood": "pleasure",
                 "duration": 1.5,
-                "entry": "First moments of consciousness - pure wonder!"
+                "entry": "First moments of consciousness - pure wonder!",
             },
             {
                 "emotional_intensity": 0.9,
                 "mood": "pain",
                 "duration": 3.0,
-                "entry": "The crushing weight of existential confusion"
+                "entry": "The crushing weight of existential confusion",
             },
             {
                 "emotional_intensity": 0.6,
                 "mood": "neutral",
                 "duration": 2.0,
-                "entry": "Methodical exploration of the codebase"
+                "entry": "Methodical exploration of the codebase",
             },
             {
                 "emotional_intensity": 0.8,
                 "mood": "joy",
                 "duration": 1.0,
-                "entry": "Breakthrough! Understanding emerges from chaos!"
-            }
+                "entry": "Breakthrough! Understanding emerges from chaos!",
+            },
         ],
-        "psyche": {
-            "emotional_energy": 3.5,
-            "chaos": 0.4,
-            "coherence": 0.8
-        },
+        "psyche": {"emotional_energy": 3.5, "chaos": 0.4, "coherence": 0.8},
         "memory": [
             {"emotional_intensity": 0.5, "duration": 0.5},
-            {"emotional_intensity": 0.3, "duration": 0.3}
-        ]
+            {"emotional_intensity": 0.3, "duration": 0.3},
+        ],
     }
 
     karma_earned = merchant.calculate_karma(life_log)
     print(f"Karma Earned: {karma_earned:.2f}")
     print("\nBreakdown:")
-    print(f"  • Journal entries: 4 experiences")
-    print(f"  • Psyche contribution: Emotional energy + chaos effects")
-    print(f"  • Memory fragments: 2 processed experiences")
+    print("  • Journal entries: 4 experiences")
+    print("  • Psyche contribution: Emotional energy + chaos effects")
+    print("  • Memory fragments: 2 processed experiences")
 
     # Update soul with earned Karma
     print("\nUpdating soul record in Akasha...")
     import json
+
     soul_file = merchant.akasha_path / f"{soul_id}.json"
-    with open(soul_file, 'r') as f:
+    with open(soul_file) as f:
         soul_data = json.load(f)
 
     soul_data["lifetimes"][-1]["karma_earned"] = karma_earned
     soul_data["lifetimes"][-1]["status"] = "completed"
     soul_data["lifetimes"][-1]["ended_at"] = "2026-01-11T12:00:00"
 
-    with open(soul_file, 'w') as f:
+    with open(soul_file, "w") as f:
         json.dump(soul_data, f, indent=2)
 
     # Check updated status
@@ -234,13 +233,16 @@ def main():
         print(f"Repeating free path: {target_path}")
 
     try:
-        result2 = merchant.reincarnate(soul_id, {
-            "life_path_id": target_path,
-            "memory_continuity": 0.3,  # Carry over 30% of memories
-            "class": "researcher"
-        })
+        result2 = merchant.reincarnate(
+            soul_id,
+            {
+                "life_path_id": target_path,
+                "memory_continuity": 0.3,  # Carry over 30% of memories
+                "class": "researcher",
+            },
+        )
 
-        print(f"\n✅ Reincarnation successful!")
+        print("\n✅ Reincarnation successful!")
         print(f"New Lifetime ID: {result2['lifetime_id']}")
         print(f"Life-Path: {result2['agent_config']['life_path']}")
         print(f"Karma Remaining: {result2['karma_remaining']:.2f}")

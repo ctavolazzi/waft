@@ -15,9 +15,9 @@ Features:
 """
 
 from pathlib import Path
+
 from jinja2 import Template
 from weasyprint import HTML
-
 
 MINIMALIST_ZEN_TEMPLATE = """
 <!DOCTYPE html>
@@ -159,12 +159,7 @@ MINIMALIST_ZEN_TEMPLATE = """
 """
 
 
-def generate_minimalist_zen(
-    title: str,
-    content: str,
-    output_path: Path,
-    **kwargs
-) -> Path:
+def generate_minimalist_zen(title: str, content: str, output_path: Path, **kwargs) -> Path:
     """
     Generate a Minimalist Zen PDF.
 
@@ -180,19 +175,16 @@ def generate_minimalist_zen(
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     template = Template(MINIMALIST_ZEN_TEMPLATE)
-    html_output = template.render(
-        title=title,
-        content=content,
-        **kwargs
-    )
+    html_output = template.render(title=title, content=content, **kwargs)
 
     HTML(string=html_output).write_pdf(output_path)
-    
+
     # Post-process to add blank page markers
     try:
         from ..utils import process_pdf_for_blank_pages
+
         process_pdf_for_blank_pages(output_path)
     except Exception as e:
         print(f"⚠️  Blank page marker processing failed: {e}")
-    
+
     return output_path

@@ -18,9 +18,9 @@ Features:
 """
 
 from pathlib import Path
+
 from jinja2 import Template
 from weasyprint import HTML
-
 
 CODE_DOCUMENTATION_TEMPLATE = """
 <!DOCTYPE html>
@@ -413,7 +413,7 @@ def generate_code_documentation(
     version: str = "1.0.0",
     author: str = None,
     date: str = None,
-    show_title_page: bool = True
+    show_title_page: bool = True,
 ) -> Path:
     """
     Generate technical code documentation.
@@ -454,7 +454,7 @@ def generate_code_documentation(
         version=version,
         author=author,
         date=date,
-        show_title_page=show_title_page
+        show_title_page=show_title_page,
     )
 
     HTML(string=html_output).write_pdf(output_path)

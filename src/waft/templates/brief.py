@@ -14,9 +14,9 @@ Perfect for:
 """
 
 from pathlib import Path
+
 from jinja2 import Template
 from weasyprint import HTML
-
 
 BRIEF_TEMPLATE = """
 <!DOCTYPE html>
@@ -591,7 +591,7 @@ def generate_brief_document(
     cover_warning: dict = None,
     cover_signature: dict = None,
     cover_footer: str = None,
-    cover_badge: str = None
+    cover_badge: str = None,
 ) -> Path:
     """
     Generate a full brief document with cover page (TM-ARCH-009 style).
@@ -627,7 +627,7 @@ def generate_brief_document(
         cover_warning=cover_warning,
         cover_signature=cover_signature,
         cover_footer=cover_footer,
-        cover_badge=cover_badge
+        cover_badge=cover_badge,
     )
 
     HTML(string=html_output).write_pdf(output_path)
@@ -635,6 +635,7 @@ def generate_brief_document(
     # Post-process to add blank page markers
     try:
         from ..utils import process_pdf_for_blank_pages
+
         process_pdf_for_blank_pages(output_path)
     except Exception as e:
         # If blank page handling fails, continue anyway (non-critical)

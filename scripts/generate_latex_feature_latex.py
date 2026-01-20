@@ -7,8 +7,8 @@ Full circle: using WAFT's LaTeX generator to document WAFT's LaTeX feature!
 """
 
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
@@ -17,12 +17,13 @@ if str(project_root) not in sys.path:
 
 from src.waft.evolution.latex_generator import generate_latex
 
+
 def generate_latex_documentation():
     """Generate LaTeX documentation using the LaTeX generator we just built."""
-    
+
     content = f"""# LaTeX & Research Tools with Live Reloading
 
-**Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}  
+**Generated**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}  
 **Branch**: `feature/latex-research-tools-live-reload`  
 **Status**: ✅ Core Implementation Complete
 
@@ -156,30 +157,33 @@ LaTeXGenerator
     # Generate LaTeX using the LaTeX generator we just built!
     output_dir = project_root / "_work_efforts" / "one_pagers"
     output_dir.mkdir(parents=True, exist_ok=True)
-    
+
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     latex_path = output_dir / f"LaTeX_Feature_Documentation_{timestamp}.tex"
-    
+
     print("📝 Generating LaTeX documentation using WAFT's LaTeXGenerator...")
     print("   (This is the LaTeX generator we just built!)")
-    
+
     latex_path = generate_latex(
         content=content,
         title="LaTeX & Research Tools with Live Reloading",
         output_path=latex_path,
         document_class="article",
         style="clinical_standard",
-        compile_pdf=False  # Don't compile, just generate .tex
+        compile_pdf=False,  # Don't compile, just generate .tex
     )
-    
+
     print(f"✅ LaTeX generated: {latex_path}")
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("✅ LaTeX documentation generated using WAFT's LaTeXGenerator!")
-    print("="*60)
+    print("=" * 60)
     print(f"\n📝 LaTeX: {latex_path}")
-    print("\nThis is the full circle: using WAFT's LaTeX generator to document WAFT's LaTeX feature! 🎯")
+    print(
+        "\nThis is the full circle: using WAFT's LaTeX generator to document WAFT's LaTeX feature! 🎯"
+    )
     print("\nTo compile to PDF:")
     print(f"  pdflatex {latex_path}")
+
 
 if __name__ == "__main__":
     generate_latex_documentation()

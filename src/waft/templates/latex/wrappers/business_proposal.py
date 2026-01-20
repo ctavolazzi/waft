@@ -11,6 +11,7 @@ source: ashad001
 """
 
 from pathlib import Path
+
 from ..compiler import LaTeXCompiler
 from ..content_builders import build_report_content
 
@@ -31,7 +32,7 @@ def generate_business_proposal(
     conclusion: str = "",
     final_message: str = "",
     slogan: str = "",
-    **kwargs
+    **kwargs,
 ) -> Path:
     """
     Generate PDF using Business Proposal LaTeX template.
@@ -58,7 +59,12 @@ def generate_business_proposal(
         Path to generated PDF
     """
     # Get template path (from wrappers/ to project root, then to templates/)
-    template_dir = Path(__file__).parent.parent.parent.parent.parent.parent / "templates" / "ashad001-latex-templates" / "Business Proposal Template"
+    template_dir = (
+        Path(__file__).parent.parent.parent.parent.parent.parent
+        / "templates"
+        / "ashad001-latex-templates"
+        / "Business Proposal Template"
+    )
     template_file = template_dir / "main.tex"
 
     if not template_file.exists():
@@ -76,11 +82,7 @@ def generate_business_proposal(
         members.append({"name": "", "position": "", "email": ""})
 
     # Build LaTeX content from markdown/HTML
-    latex_content = build_report_content(
-        title=title,
-        content=content,
-        **kwargs
-    )
+    latex_content = build_report_content(title=title, content=content, **kwargs)
 
     # Replace placeholders in template (templates use hardcoded placeholders, not Jinja2)
     filled_latex = template_content
@@ -92,23 +94,41 @@ def generate_business_proposal(
     # Replace member information
     filled_latex = filled_latex.replace("Member 1", members[0].get("name", "Member 1"))
     filled_latex = filled_latex.replace("Position/ID", members[0].get("position", "Position/ID"))
-    filled_latex = filled_latex.replace("member1@gmail.com", members[0].get("email", "member1@gmail.com"))
+    filled_latex = filled_latex.replace(
+        "member1@gmail.com", members[0].get("email", "member1@gmail.com")
+    )
 
     filled_latex = filled_latex.replace("Member 2", members[1].get("name", "Member 2"))
-    filled_latex = filled_latex.replace("Position/ID", members[1].get("position", "Position/ID"), 1)  # Replace second occurrence
-    filled_latex = filled_latex.replace("member2@gmail.com", members[1].get("email", "member2@gmail.com"))
+    filled_latex = filled_latex.replace(
+        "Position/ID", members[1].get("position", "Position/ID"), 1
+    )  # Replace second occurrence
+    filled_latex = filled_latex.replace(
+        "member2@gmail.com", members[1].get("email", "member2@gmail.com")
+    )
 
     filled_latex = filled_latex.replace("Member 3", members[2].get("name", "Member 3"))
-    filled_latex = filled_latex.replace("Position/ID", members[2].get("position", "Position/ID"), 1)  # Replace third occurrence
-    filled_latex = filled_latex.replace("member3@gmail.com", members[2].get("email", "member3@gmail.com"))
+    filled_latex = filled_latex.replace(
+        "Position/ID", members[2].get("position", "Position/ID"), 1
+    )  # Replace third occurrence
+    filled_latex = filled_latex.replace(
+        "member3@gmail.com", members[2].get("email", "member3@gmail.com")
+    )
 
     filled_latex = filled_latex.replace("Member 4", members[3].get("name", "Member 4"))
-    filled_latex = filled_latex.replace("Position/ID", members[3].get("position", "Position/ID"), 1)  # Replace fourth occurrence
-    filled_latex = filled_latex.replace("member4@gmail.com", members[3].get("email", "member4@gmail.com"))
+    filled_latex = filled_latex.replace(
+        "Position/ID", members[3].get("position", "Position/ID"), 1
+    )  # Replace fourth occurrence
+    filled_latex = filled_latex.replace(
+        "member4@gmail.com", members[3].get("email", "member4@gmail.com")
+    )
 
     filled_latex = filled_latex.replace("Member 5", members[4].get("name", "Member 5"))
-    filled_latex = filled_latex.replace("Position/ID", members[4].get("position", "Position/ID"), 1)  # Replace fifth occurrence
-    filled_latex = filled_latex.replace("member5@gmail.com", members[4].get("email", "member5@gmail.com"))
+    filled_latex = filled_latex.replace(
+        "Position/ID", members[4].get("position", "Position/ID"), 1
+    )  # Replace fifth occurrence
+    filled_latex = filled_latex.replace(
+        "member5@gmail.com", members[4].get("email", "member5@gmail.com")
+    )
 
     # Replace section content
     if introduction:
@@ -117,15 +137,27 @@ def generate_business_proposal(
         filled_latex = filled_latex.replace("RATIONAL", rationale)
     if proposed_solutions:
         # Find the Proposed Solutions section and insert content
-        filled_latex = filled_latex.replace("\\section{Proposed Solutions }", f"\\section{{Proposed Solutions}}\n\n{proposed_solutions}")
+        filled_latex = filled_latex.replace(
+            "\\section{Proposed Solutions }",
+            f"\\section{{Proposed Solutions}}\n\n{proposed_solutions}",
+        )
     if workflow_budget:
-        filled_latex = filled_latex.replace("\\section{Workflow \\& Budget Allocation}", f"\\section{{Workflow \\& Budget Allocation}}\n\n{workflow_budget}")
+        filled_latex = filled_latex.replace(
+            "\\section{Workflow \\& Budget Allocation}",
+            f"\\section{{Workflow \\& Budget Allocation}}\n\n{workflow_budget}",
+        )
     if budget_breakdown:
-        filled_latex = filled_latex.replace("\\section{Budget Breakdown}", f"\\section{{Budget Breakdown}}\n\n{budget_breakdown}")
+        filled_latex = filled_latex.replace(
+            "\\section{Budget Breakdown}", f"\\section{{Budget Breakdown}}\n\n{budget_breakdown}"
+        )
     if business_model:
-        filled_latex = filled_latex.replace("\\section{Business Model}", f"\\section{{Business Model}}\n\n{business_model}")
+        filled_latex = filled_latex.replace(
+            "\\section{Business Model}", f"\\section{{Business Model}}\n\n{business_model}"
+        )
     if conclusion:
-        filled_latex = filled_latex.replace("\\section{Conclusion}", f"\\section{{Conclusion}}\n\n{conclusion}")
+        filled_latex = filled_latex.replace(
+            "\\section{Conclusion}", f"\\section{{Conclusion}}\n\n{conclusion}"
+        )
     if final_message:
         filled_latex = filled_latex.replace("[Final Message]", final_message)
     if slogan:
@@ -133,11 +165,6 @@ def generate_business_proposal(
 
     # Compile to PDF
     compiler = LaTeXCompiler(compiler="pdflatex")
-    pdf_path = compiler.compile(
-        filled_latex,
-        output_path,
-        working_dir=template_dir,
-        runs=2
-    )
+    pdf_path = compiler.compile(filled_latex, output_path, working_dir=template_dir, runs=2)
 
     return pdf_path

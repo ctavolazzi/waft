@@ -7,8 +7,8 @@ This module provides:
 - Configuration management for models and vector stores
 """
 
-from .chatbot import RAGChatbot
 from .agent_integration import RAGAgentMixin
+from .chatbot import RAGChatbot
 from .config import RAGConfig
 
 __all__ = [

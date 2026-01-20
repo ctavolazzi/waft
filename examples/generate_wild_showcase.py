@@ -15,18 +15,15 @@ Generates 7 creative documents that push WAFT to its limits:
 This tests every edge case: layout, typography, emotion, technical precision.
 """
 
-from pathlib import Path
 import sys
+from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.waft.templates.eldritch_journal import generate_eldritch_journal
-from src.waft.templates.screenplay import generate_screenplay
 from src.waft.templates.heartfelt_letter import generate_heartfelt_letter
 from src.waft.templates.invoice_contract import generate_invoice_contract
-from src.waft.templates.code_documentation import generate_code_documentation
-from src.waft.templates.storybook import generate_storybook
-from src.waft.templates.newspaper import generate_newspaper
+from src.waft.templates.screenplay import generate_screenplay
 
 
 def generate_eldritch_horror_doc():
@@ -202,7 +199,7 @@ Including you. Reading this. Right now.
         researcher="Dr. Marcus Holloway",
         institution="Miskatonic University - Department of Theoretical Physics",
         project="Topological Implications of Hyperbolic Space",
-        show_warning=True
+        show_warning=True,
     )
 
     print(f"✓ Eldritch Horror: {output_path.name}")
@@ -398,7 +395,7 @@ In the darkness, we hear ALARMS from a dozen facilities. All SCREAMING.
         author="Claude AI",
         subtitle="A Thriller",
         draft="First Draft - January 2026",
-        contact="<strong>Contact:</strong><br>TELEPORT MASSIVE<br>Creative Division<br>nevada@tmassive.com"
+        contact="<strong>Contact:</strong><br>TELEPORT MASSIVE<br>Creative Division<br>nevada@tmassive.com",
     )
 
     print(f"✓ Screenplay: {output_path.name}")
@@ -515,7 +512,7 @@ Always and forever,
         closing="",  # Closing in content
         signature="Grandma Rose",
         show_header=True,
-        show_border=True
+        show_border=True,
     )
 
     print(f"✓ Heartfelt Letter: {output_path.name}")
@@ -666,7 +663,7 @@ def generate_invoice_doc():
         doc_number="INV-2026-00473",
         date="January 11, 2026",
         due_date="February 10, 2026",
-        accent_color="#c00"
+        accent_color="#c00",
     )
 
     print(f"✓ Invoice: {output_path.name}")

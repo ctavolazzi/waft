@@ -6,7 +6,7 @@ founders, and initial economic conditions.
 """
 
 from .founding_story import create_teleport_massive, get_founding_story
-from .initial_conditions import get_initial_conditions, InitialConditions
+from .initial_conditions import InitialConditions, get_initial_conditions
 
 __all__ = [
     "create_teleport_massive",

@@ -11,14 +11,12 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.waft.document_builder import DocumentBuilder
-
 
 def main():
     """Generate PDF about DocumentBuilder evolution."""
-    
+
     title = "DocumentBuilder Evolution: PDF Recreation from Scratch"
-    
+
     abstract = """
     This document describes the evolution of WAFT's DocumentBuilder class to support
     complete PDF recreation from scratch. The enhanced DocumentBuilder can now analyze
@@ -27,17 +25,11 @@ def main():
     system for dynamic template discovery and management, enabling bottom-up PDF reconstruction
     capabilities that were previously unavailable.
     """
-    
-    authors = [
-        {"name": "WAFT Development Team"},
-        {"name": "AI Assistant (Claude)"}
-    ]
-    
-    affiliations = [
-        "WAFT Project",
-        "Template Library System"
-    ]
-    
+
+    authors = [{"name": "WAFT Development Team"}, {"name": "AI Assistant (Claude)"}]
+
+    affiliations = ["WAFT Project", "Template Library System"]
+
     content = """
     <h1>Introduction</h1>
     
@@ -318,26 +310,26 @@ print(f"Sections: {len(analysis.sections)}")</code></pre>
     will focus on improving content preservation, styling matching, and support for
     more complex document elements like tables, figures, and equations.</p>
     """
-    
+
     references = [
         "[1] WAFT Template Library System - Work Effort WE-260112-q6gl",
         "[2] TemplateRegistry Implementation - src/waft/templates/registry.py",
         "[3] Academic Paper Template - src/waft/templates/academic_paper.py",
         "[4] GPT-4 Technical Report - OpenAI, 2023",
         "[5] WeasyPrint Documentation - https://weasyprint.org/",
-        "[6] Jinja2 Template Engine - https://jinja.palletsprojects.com/"
+        "[6] Jinja2 Template Engine - https://jinja.palletsprojects.com/",
     ]
-    
+
     # Generate the PDF
     output_path = Path("DocumentBuilder_Evolution_Report.pdf")
-    
+
     print("📄 Generating DocumentBuilder Evolution PDF...")
     print(f"   Title: {title}")
     print(f"   Output: {output_path}")
-    
+
     # Use the academic_paper template directly
     from src.waft.templates.academic_paper import generate_academic_paper
-    
+
     result_path = generate_academic_paper(
         title=title,
         content=content,
@@ -347,25 +339,25 @@ print(f"Sections: {len(analysis.sections)}")</code></pre>
         affiliations=affiliations,
         conference="WAFT Technical Reports",
         year="2026",
-        references=references
+        references=references,
     )
-    
-    print(f"\n✅ PDF generated successfully!")
+
+    print("\n✅ PDF generated successfully!")
     print(f"   📄 {result_path.absolute()}")
-    
+
     # Open the PDF
-    import subprocess
     import platform
-    
+    import subprocess
+
     if platform.system() == "Darwin":  # macOS
         subprocess.run(["open", str(result_path)])
     elif platform.system() == "Windows":
         subprocess.run(["start", str(result_path)], shell=True)
     else:  # Linux
         subprocess.run(["xdg-open", str(result_path)])
-    
-    print(f"   🚀 Opened in default PDF viewer")
-    
+
+    print("   🚀 Opened in default PDF viewer")
+
     return result_path
 
 

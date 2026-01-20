@@ -4,16 +4,16 @@ Pydantic schemas for Work Efforts API.
 Defines request and response models for work effort management endpoints.
 """
 
-from typing import List, Optional
 from pydantic import BaseModel, Field
 
 
 class WorkEffortCreateRequest(BaseModel):
     """Request model for creating a new work effort."""
+
     title: str = Field(..., min_length=1, max_length=200, description="Work effort title")
     description: str = Field(default="", max_length=10000, description="Work effort description")
     status: str = Field(default="active", description="Initial status (active, paused, completed)")
-    tags: List[str] = Field(default_factory=list, max_items=20, description="Work effort tags")
+    tags: list[str] = Field(default_factory=list, max_items=20, description="Work effort tags")
 
     class Config:
         json_schema_extra = {
@@ -21,17 +21,18 @@ class WorkEffortCreateRequest(BaseModel):
                 "title": "API Enhancement",
                 "description": "Enhance the API with CRUD operations",
                 "status": "active",
-                "tags": ["api", "backend"]
+                "tags": ["api", "backend"],
             }
         }
 
 
 class WorkEffortUpdateRequest(BaseModel):
     """Request model for full work effort update (PUT)."""
-    title: Optional[str] = Field(None, min_length=1, max_length=200, description="Work effort title")
-    description: Optional[str] = Field(None, max_length=10000, description="Work effort description")
-    status: Optional[str] = Field(None, description="Work effort status")
-    tags: Optional[List[str]] = Field(None, max_items=20, description="Work effort tags")
+
+    title: str | None = Field(None, min_length=1, max_length=200, description="Work effort title")
+    description: str | None = Field(None, max_length=10000, description="Work effort description")
+    status: str | None = Field(None, description="Work effort status")
+    tags: list[str] | None = Field(None, max_items=20, description="Work effort tags")
 
     class Config:
         json_schema_extra = {
@@ -39,35 +40,33 @@ class WorkEffortUpdateRequest(BaseModel):
                 "title": "Updated Work Effort Title",
                 "description": "Updated description",
                 "status": "paused",
-                "tags": ["updated", "tags"]
+                "tags": ["updated", "tags"],
             }
         }
 
 
 class WorkEffortPatchRequest(BaseModel):
     """Request model for partial work effort update (PATCH)."""
-    title: Optional[str] = Field(None, min_length=1, max_length=200, description="Work effort title")
-    description: Optional[str] = Field(None, max_length=10000, description="Work effort description")
-    status: Optional[str] = Field(None, description="Work effort status")
-    tags: Optional[List[str]] = Field(None, max_items=20, description="Work effort tags")
+
+    title: str | None = Field(None, min_length=1, max_length=200, description="Work effort title")
+    description: str | None = Field(None, max_length=10000, description="Work effort description")
+    status: str | None = Field(None, description="Work effort status")
+    tags: list[str] | None = Field(None, max_items=20, description="Work effort tags")
 
     class Config:
-        json_schema_extra = {
-            "example": {
-                "status": "completed"
-            }
-        }
+        json_schema_extra = {"example": {"status": "completed"}}
 
 
 class WorkEffortResponse(BaseModel):
     """Response model for work effort data."""
+
     id: str
     title: str
-    description: Optional[str] = None
+    description: str | None = None
     status: str
-    tags: List[str]
+    tags: list[str]
     created: str
-    created_by: Optional[str] = None
+    created_by: str | None = None
     last_updated: str
     path: str
 
@@ -82,14 +81,15 @@ class WorkEffortResponse(BaseModel):
                 "created": "2026-01-16T20:19:00",
                 "created_by": "api",
                 "last_updated": "2026-01-16T20:19:00",
-                "path": "_work_efforts/WE-260116-xxxx_api_enhancement"
+                "path": "_work_efforts/WE-260116-xxxx_api_enhancement",
             }
         }
 
 
 class WorkEffortListResponse(BaseModel):
     """Response model for paginated work effort list."""
-    items: List[WorkEffortResponse]
+
+    items: list[WorkEffortResponse]
     total: int
     limit: int
     offset: int
@@ -97,11 +97,5 @@ class WorkEffortListResponse(BaseModel):
 
     class Config:
         json_schema_extra = {
-            "example": {
-                "items": [],
-                "total": 0,
-                "limit": 50,
-                "offset": 0,
-                "has_more": False
-            }
+            "example": {"items": [], "total": 0, "limit": 50, "offset": 0, "has_more": False}
         }

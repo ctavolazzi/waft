@@ -6,16 +6,17 @@ Creates a 2-page summary of WAFT achievements for showing to partner.
 """
 
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.waft.one_pager import OnePager
 
+
 def main():
     """Create partner summary one-pager."""
-    
+
     content = """# WAFT: Scientific Learning System
 
 ## What We Built
@@ -66,39 +67,44 @@ waft-one-pager-chat
 **Output:** `_work_efforts/one_pagers/[title]_[date].pdf`  
 **Format:** 2 pages, printer-friendly, binder-ready
 """
-    
+
     # Create one-pager
     title = "WAFT Achievements - Partner Summary"
-    output_path = Path(f"_work_efforts/one_pagers/partner_summary_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf")
-    
+    output_path = Path(
+        f"_work_efforts/one_pagers/partner_summary_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+    )
+
     pager = OnePager.from_markdown(content, title=title)
     output = pager.generate(output_path)
-    
+
     # Check page count
     from pypdf import PdfReader
+
     reader = PdfReader(str(output))
     page_count = len(reader.pages)
-    
+
     print("=" * 60)
     print("✅ Partner Summary Created!")
     print("=" * 60)
     print(f"📄 Output: {output}")
     print(f"📊 Pages: {page_count} (target: 2)")
-    
+
     if page_count == 2:
         print("✅ Perfect 2-page document!")
     else:
         print(f"⚠️ Generated {page_count} pages (expected 2)")
-        print(f"📋 Study report available in: _work_efforts/study_gym/")
-    
+        print("📋 Study report available in: _work_efforts/study_gym/")
+
     print()
     print("Ready to show your partner!")
-    
+
     # Open the PDF (only this specific file)
     import subprocess
+
     subprocess.run(["open", "-a", "Preview", str(output)])
-    
+
     return output
+
 
 if __name__ == "__main__":
     main()

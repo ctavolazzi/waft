@@ -2,6 +2,7 @@
 """Quick test script for waft web server."""
 
 from pathlib import Path
+
 from src.waft.web import serve
 
 if __name__ == "__main__":
@@ -11,4 +12,3 @@ if __name__ == "__main__":
 
     print(f"Starting server for: {project_path.resolve()}")
     serve(project_path, port=8000)
-

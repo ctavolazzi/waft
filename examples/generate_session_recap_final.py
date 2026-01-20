@@ -18,20 +18,21 @@ from src.waft.evolution.pdf_generator import generate_pdf
 def get_session_content() -> str:
     """Get comprehensive session content."""
     from examples.generate_session_recap_pdf_waft import get_session_content
+
     return get_session_content()
 
 
 def main():
     """Generate PDF - super simple now!"""
-    
+
     # That's it! One function call.
     generate_pdf(
         content=get_session_content(),
         title="WAFT v0.5.3 MVP: Karma Economy & Source Consciousness",
         style="clinical_standard",  # or "premium" or "professional"
-        open_pdf=True
+        open_pdf=True,
     )
-    
+
     print("✅ Done! PDF generated and opened.")
 
 

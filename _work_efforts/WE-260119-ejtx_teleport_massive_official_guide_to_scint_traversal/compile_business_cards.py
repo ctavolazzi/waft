@@ -15,13 +15,13 @@ typst_files = sorted(business_cards_dir.glob("*.typ"))
 print(f"Compiling {len(typst_files)} business cards...\n")
 
 for typ_file in typst_files:
-    pdf_file = typ_file.with_suffix('.pdf')
+    pdf_file = typ_file.with_suffix(".pdf")
     try:
         result = subprocess.run(
             ["typst", "compile", str(typ_file), str(pdf_file)],
             capture_output=True,
             text=True,
-            check=True
+            check=True,
         )
         print(f"✅ Compiled: {typ_file.name} → {pdf_file.name}")
     except subprocess.CalledProcessError as e:
@@ -30,4 +30,4 @@ for typ_file in typst_files:
         print("❌ Error: typst command not found. Please install Typst.")
         break
 
-print(f"\n✅ Business card compilation complete!")
+print("\n✅ Business card compilation complete!")

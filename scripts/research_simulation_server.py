@@ -6,22 +6,18 @@ Web-based interface for running batching simulations, collecting data,
 analyzing results, and generating research reports.
 """
 
-import json
 import random
-import asyncio
-from pathlib import Path
-from datetime import datetime
-from typing import Dict, Any, List, Optional
-from dataclasses import dataclass, asdict
-
-from fastapi import FastAPI, HTTPException, BackgroundTasks
-from fastapi.responses import HTMLResponse, FileResponse, JSONResponse
-from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel
 
 # Import seeding functions
 import sys
+from dataclasses import dataclass
+from datetime import datetime
 from pathlib import Path
+from typing import Any
+
+from fastapi import BackgroundTasks, FastAPI, HTTPException
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
+from pydantic import BaseModel
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
@@ -31,6 +27,7 @@ if str(project_root) not in sys.path:
 # Import from seed_reincarnation_demo
 # We'll import the module and call functions directly
 import importlib.util
+
 seed_module_path = project_root / "scripts" / "seed_reincarnation_demo.py"
 spec = importlib.util.spec_from_file_location("seed_reincarnation_demo", seed_module_path)
 seed_module = importlib.util.module_from_spec(spec)
@@ -51,14 +48,16 @@ app = FastAPI(title="Research Simulation Server", version="1.0.0")
 # Data Models
 class SimulationConfig(BaseModel):
     """Simulation configuration from user input."""
+
     permutations: int = 10
-    max_pages: Optional[int] = None
-    max_file_size_mb: Optional[float] = None
+    max_pages: int | None = None
+    max_file_size_mb: float | None = None
     demo_path: str = "research_simulation"
 
 
 class SimulationMetrics(BaseModel):
     """Collected metrics from simulation."""
+
     total_permutations: int
     total_souls: int
     avg_karma: float
@@ -66,28 +65,29 @@ class SimulationMetrics(BaseModel):
     pdf_size_mb: float
     pdf_pages: int
     generation_time_seconds: float
-    max_iterations_calculated: Optional[int]
-    constraint_applied: Optional[str]  # "pages", "file_size", "none"
+    max_iterations_calculated: int | None
+    constraint_applied: str | None  # "pages", "file_size", "none"
 
 
 class ResearchReport(BaseModel):
     """Research report structure."""
+
     timestamp: str
-    config: Dict[str, Any]
-    metrics: Dict[str, Any]
-    observations: List[str]
-    findings: List[str]
-    hypothesis: Optional[str]
-    test_results: Optional[Dict[str, Any]]
-    conclusions: List[str]
-    report_path: Optional[str] = None
+    config: dict[str, Any]
+    metrics: dict[str, Any]
+    observations: list[str]
+    findings: list[str]
+    hypothesis: str | None
+    test_results: dict[str, Any] | None
+    conclusions: list[str]
+    report_path: str | None = None
 
 
 # Global state
-simulation_state: Dict[str, Any] = {
+simulation_state: dict[str, Any] = {
     "status": "ready",  # ready, running, complete, error
     "current_simulation": None,
-    "report": None
+    "report": None,
 }
 
 
@@ -95,13 +95,14 @@ simulation_state: Dict[str, Any] = {
 @dataclass
 class SimulationData:
     """Data collected during simulation."""
+
     config: SimulationConfig
     start_time: datetime
-    end_time: Optional[datetime] = None
-    permutations_data: List[Dict[str, Any]] = None
-    metrics: Optional[SimulationMetrics] = None
-    errors: List[str] = None
-    
+    end_time: datetime | None = None
+    permutations_data: list[dict[str, Any]] = None
+    metrics: SimulationMetrics | None = None
+    errors: list[str] = None
+
     def __post_init__(self):
         if self.permutations_data is None:
             self.permutations_data = []
@@ -110,13 +111,10 @@ class SimulationData:
 
 
 def collect_simulation_metrics(
-    data: SimulationData,
-    demo_path: Path,
-    pdf_path: Optional[Path]
+    data: SimulationData, demo_path: Path, pdf_path: Path | None
 ) -> SimulationMetrics:
     """Collect metrics from simulation run."""
-    import time
-    
+
     # Calculate karma statistics
     all_karma = []
     total_souls = 0
@@ -124,16 +122,16 @@ def collect_simulation_metrics(
         for soul in perm_data.get("souls", []):
             all_karma.append(soul.get("karma", 0))
             total_souls += 1
-    
+
     avg_karma = sum(all_karma) / len(all_karma) if all_karma else 0.0
-    
+
     # Calculate standard deviation
     if len(all_karma) > 1:
         variance = sum((x - avg_karma) ** 2 for x in all_karma) / len(all_karma)
-        std_dev = variance ** 0.5
+        std_dev = variance**0.5
     else:
         std_dev = 0.0
-    
+
     # PDF metrics
     pdf_size_mb = 0.0
     pdf_pages = 0
@@ -141,19 +139,18 @@ def collect_simulation_metrics(
         pdf_size_mb = pdf_path.stat().st_size / (1024 * 1024)
         # Try to count pages (simplified - would need PDF library for accurate count)
         pdf_pages = 2  # Estimate
-    
+
     # Generation time
     if data.end_time:
         generation_time = (data.end_time - data.start_time).total_seconds()
     else:
         generation_time = 0.0
-    
+
     # Max iterations calculation
     max_iterations = calculate_max_iterations(
-        max_pages=data.config.max_pages,
-        max_file_size_mb=data.config.max_file_size_mb
+        max_pages=data.config.max_pages, max_file_size_mb=data.config.max_file_size_mb
     )
-    
+
     # Determine which constraint was applied
     constraint_applied = None
     if max_iterations:
@@ -168,7 +165,7 @@ def collect_simulation_metrics(
             constraint_applied = "pages"
         elif data.config.max_file_size_mb:
             constraint_applied = "file_size"
-    
+
     return SimulationMetrics(
         total_permutations=len(data.permutations_data),
         total_souls=total_souls,
@@ -178,49 +175,57 @@ def collect_simulation_metrics(
         pdf_pages=pdf_pages,
         generation_time_seconds=round(generation_time, 2),
         max_iterations_calculated=max_iterations,
-        constraint_applied=constraint_applied
+        constraint_applied=constraint_applied,
     )
 
 
 # Analysis Algorithms
-def analyze_karma_distribution(data: SimulationData) -> Dict[str, Any]:
+def analyze_karma_distribution(data: SimulationData) -> dict[str, Any]:
     """Analyze karma distribution across permutations."""
     all_karma = []
     for perm_data in data.permutations_data:
         for soul in perm_data.get("souls", []):
             all_karma.append(soul.get("karma", 0))
-    
+
     if not all_karma:
         return {}
-    
+
     return {
         "min": min(all_karma),
         "max": max(all_karma),
         "mean": sum(all_karma) / len(all_karma),
         "median": sorted(all_karma)[len(all_karma) // 2],
         "range": max(all_karma) - min(all_karma),
-        "count": len(all_karma)
+        "count": len(all_karma),
     }
 
 
-def analyze_efficiency(data: SimulationData, metrics: SimulationMetrics) -> Dict[str, Any]:
+def analyze_efficiency(data: SimulationData, metrics: SimulationMetrics) -> dict[str, Any]:
     """Analyze efficiency metrics."""
     if metrics.pdf_pages == 0:
         return {}
-    
+
     return {
-        "pages_per_permutation": metrics.pdf_pages / metrics.total_permutations if metrics.total_permutations > 0 else 0,
-        "size_per_permutation_mb": metrics.pdf_size_mb / metrics.total_permutations if metrics.total_permutations > 0 else 0,
-        "souls_per_permutation": metrics.total_souls / metrics.total_permutations if metrics.total_permutations > 0 else 0,
-        "time_per_permutation_seconds": metrics.generation_time_seconds / metrics.total_permutations if metrics.total_permutations > 0 else 0
+        "pages_per_permutation": metrics.pdf_pages / metrics.total_permutations
+        if metrics.total_permutations > 0
+        else 0,
+        "size_per_permutation_mb": metrics.pdf_size_mb / metrics.total_permutations
+        if metrics.total_permutations > 0
+        else 0,
+        "souls_per_permutation": metrics.total_souls / metrics.total_permutations
+        if metrics.total_permutations > 0
+        else 0,
+        "time_per_permutation_seconds": metrics.generation_time_seconds / metrics.total_permutations
+        if metrics.total_permutations > 0
+        else 0,
     }
 
 
 # Scientific Method Workflow
-def generate_observations(data: SimulationData, metrics: SimulationMetrics) -> List[str]:
+def generate_observations(data: SimulationData, metrics: SimulationMetrics) -> list[str]:
     """Generate observations from simulation data."""
     observations = []
-    
+
     # Karma observations
     karma_dist = analyze_karma_distribution(data)
     if karma_dist:
@@ -228,7 +233,7 @@ def generate_observations(data: SimulationData, metrics: SimulationMetrics) -> L
             f"Karma distribution: mean={karma_dist['mean']:.1f}, "
             f"range={karma_dist['range']:.1f}, std_dev={metrics.karma_std_dev:.2f}"
         )
-    
+
     # Efficiency observations
     efficiency = analyze_efficiency(data, metrics)
     if efficiency:
@@ -236,7 +241,7 @@ def generate_observations(data: SimulationData, metrics: SimulationMetrics) -> L
             f"PDF efficiency: {metrics.pdf_size_mb:.4f} MB for {metrics.total_permutations} permutations "
             f"({efficiency['size_per_permutation_mb']:.4f} MB/permutation)"
         )
-    
+
     # Constraint observations
     if metrics.constraint_applied:
         observations.append(
@@ -245,58 +250,58 @@ def generate_observations(data: SimulationData, metrics: SimulationMetrics) -> L
         )
     else:
         observations.append("No constraints applied - all requested permutations generated")
-    
+
     # Time observations
     observations.append(
         f"Generation time: {metrics.generation_time_seconds:.2f} seconds "
         f"({efficiency.get('time_per_permutation_seconds', 0):.3f} seconds/permutation)"
     )
-    
+
     return observations
 
 
-def generate_findings(data: SimulationData, metrics: SimulationMetrics) -> List[str]:
+def generate_findings(data: SimulationData, metrics: SimulationMetrics) -> list[str]:
     """Generate findings from analysis."""
     findings = []
-    
+
     # Finding 1: PDF Efficiency
     if metrics.pdf_size_mb < 0.1:  # Less than 100KB
         findings.append(
             f"PDF generation is highly efficient: {metrics.pdf_size_mb:.4f} MB for "
             f"{metrics.total_permutations} permutations suggests excellent compression"
         )
-    
+
     # Finding 2: Karma Variation
     if metrics.karma_std_dev > 100:
         findings.append(
             f"Significant karma variation (std_dev={metrics.karma_std_dev:.2f}) "
             f"indicates good permutation diversity"
         )
-    
+
     # Finding 3: Constraint Behavior
     if metrics.constraint_applied:
         findings.append(
             f"Constraint system working: {metrics.constraint_applied} constraint "
             f"limited iterations to {metrics.max_iterations_calculated}"
         )
-    
+
     # Finding 4: Performance
     efficiency = analyze_efficiency(data, metrics)
-    if efficiency.get('time_per_permutation_seconds', 0) < 1.0:
+    if efficiency.get("time_per_permutation_seconds", 0) < 1.0:
         findings.append(
             f"Fast generation: {efficiency.get('time_per_permutation_seconds', 0):.3f} "
             f"seconds per permutation"
         )
-    
+
     return findings
 
 
-def generate_hypothesis(observations: List[str], findings: List[str]) -> Optional[str]:
+def generate_hypothesis(observations: list[str], findings: list[str]) -> str | None:
     """Generate hypothesis based on observations and findings."""
     # Look for patterns in observations
     efficiency_obs = [o for o in observations if "efficiency" in o.lower() or "MB" in o]
     constraint_obs = [o for o in observations if "constraint" in o.lower()]
-    
+
     if efficiency_obs and constraint_obs:
         return (
             "H₁: The constraint system effectively limits permutations while maintaining "
@@ -308,23 +313,16 @@ def generate_hypothesis(observations: List[str], findings: List[str]) -> Optiona
             "H₁: PDF generation efficiency is significantly better than estimated, "
             "allowing for more permutations within size constraints than initially calculated."
         )
-    
+
     return None
 
 
 def test_hypothesis(
-    hypothesis: str,
-    data: SimulationData,
-    metrics: SimulationMetrics
-) -> Dict[str, Any]:
+    hypothesis: str, data: SimulationData, metrics: SimulationMetrics
+) -> dict[str, Any]:
     """Test the generated hypothesis."""
-    test_results = {
-        "hypothesis": hypothesis,
-        "tested": True,
-        "supported": False,
-        "evidence": []
-    }
-    
+    test_results = {"hypothesis": hypothesis, "tested": True, "supported": False, "evidence": []}
+
     if "efficiency" in hypothesis.lower():
         # Test: Is PDF size significantly smaller than estimated?
         estimated_size = (metrics.total_permutations * 2 * 50) / 1024  # 50KB per page estimate
@@ -332,9 +330,9 @@ def test_hypothesis(
             test_results["supported"] = True
             test_results["evidence"].append(
                 f"Actual size ({metrics.pdf_size_mb:.4f} MB) is much smaller than "
-                f"estimated ({estimated_size/1024:.4f} MB)"
+                f"estimated ({estimated_size / 1024:.4f} MB)"
             )
-    
+
     if "constraint" in hypothesis.lower():
         # Test: Did constraint system work correctly?
         if metrics.constraint_applied and metrics.max_iterations_calculated:
@@ -344,38 +342,31 @@ def test_hypothesis(
                     f"Constraint correctly limited to {metrics.max_iterations_calculated} "
                     f"iterations, generated {metrics.total_permutations} permutations"
                 )
-    
+
     return test_results
 
 
-def generate_conclusions(
-    findings: List[str],
-    test_results: Optional[Dict[str, Any]]
-) -> List[str]:
+def generate_conclusions(findings: list[str], test_results: dict[str, Any] | None) -> list[str]:
     """Generate conclusions from findings and test results."""
     conclusions = []
-    
+
     if test_results and test_results.get("supported"):
-        conclusions.append(
-            f"Hypothesis supported: {test_results['hypothesis']}"
-        )
+        conclusions.append(f"Hypothesis supported: {test_results['hypothesis']}")
         for evidence in test_results.get("evidence", []):
             conclusions.append(f"  Evidence: {evidence}")
     elif test_results:
-        conclusions.append(
-            f"Hypothesis not fully supported: {test_results['hypothesis']}"
-        )
-    
+        conclusions.append(f"Hypothesis not fully supported: {test_results['hypothesis']}")
+
     conclusions.append("System is production-ready and performs efficiently")
     conclusions.append("Constraint system works as designed")
-    
+
     return conclusions
 
 
 # Helper functions for soul creation
 def create_test_souls_data_only(permutation: int = 0):
     """Create test souls data without writing files (for permutations > 0)."""
-    import random
+
     base_souls = [
         {"soul_id": "soul_demo_001", "karma": 1000.0, "state": "dead", "substate": "awake"},
         {"soul_id": "soul_demo_002", "karma": 500.0, "state": "dead", "substate": "awake"},
@@ -383,7 +374,7 @@ def create_test_souls_data_only(permutation: int = 0):
         {"soul_id": "soul_demo_004", "karma": 0.0, "state": "dead", "substate": "awake"},
         {"soul_id": "soul_demo_005", "karma": 150.0, "state": "dead", "substate": "awake"},
     ]
-    
+
     if permutation > 0:
         souls = []
         for soul in base_souls:
@@ -394,65 +385,64 @@ def create_test_souls_data_only(permutation: int = 0):
             new_soul["soul_id"] = f"{soul['soul_id']}_perm{permutation:02d}"
             souls.append(new_soul)
         return souls
-    
+
     return base_souls
 
 
 # Simulation Runner
 async def run_simulation(config: SimulationConfig) -> SimulationData:
     """Run the simulation and collect data."""
-    data = SimulationData(
-        config=config,
-        start_time=datetime.now()
-    )
-    
+    data = SimulationData(config=config, start_time=datetime.now())
+
     demo_path = Path(config.demo_path).resolve()
-    
+
     try:
         # Create demo structure
         create_demo_structure(demo_path)
-        
+
         # Generate permutations
         all_permutations = []
         catalog = None
-        
+
         for perm in range(config.permutations):
             # Create test souls for this permutation (only save files for perm 0)
             if perm == 0:
                 souls = create_test_souls(demo_path, permutation=perm)
             else:
                 souls = create_test_souls_data_only(permutation=perm)
-            
+
             # Create lifetime catalog (same for all, only create once)
             if perm == 0:
                 catalog = create_lifetime_catalog(demo_path)
-            
+
             # Store permutation data
-            all_permutations.append({
-                "permutation": perm,
-                "souls": [{"soul_id": s["soul_id"], "karma": s["karma"]} for s in souls],
-                "catalog": catalog
-            })
-        
+            all_permutations.append(
+                {
+                    "permutation": perm,
+                    "souls": [{"soul_id": s["soul_id"], "karma": s["karma"]} for s in souls],
+                    "catalog": catalog,
+                }
+            )
+
         data.permutations_data = all_permutations
-        
+
         # Generate batched PDF
         pdf_path = generate_batched_demo_pdf(
             demo_path,
             all_permutations,
             max_pages=config.max_pages,
-            max_file_size_mb=config.max_file_size_mb
+            max_file_size_mb=config.max_file_size_mb,
         )
-        
+
         # Collect metrics
         data.metrics = collect_simulation_metrics(data, demo_path, pdf_path)
         data.end_time = datetime.now()
-        
+
     except Exception as e:
         data.errors.append(str(e))
         data.end_time = datetime.now()
         raise
-    
+
     return data
 
 
@@ -901,35 +891,35 @@ async def run_simulation_endpoint(config: SimulationConfig, background_tasks: Ba
     """Run simulation and generate report."""
     try:
         simulation_state["status"] = "running"
-        
+
         # Run simulation
         data = await run_simulation(config)
-        
+
         # Collect metrics
         metrics = data.metrics
-        
+
         # Generate observations
         observations = generate_observations(data, metrics)
-        
+
         # Generate findings
         findings = generate_findings(data, metrics)
-        
+
         # Generate hypothesis
         hypothesis = generate_hypothesis(observations, findings)
-        
+
         # Test hypothesis
         test_results = None
         if hypothesis:
             test_results = test_hypothesis(hypothesis, data, metrics)
-        
+
         # Generate conclusions
         conclusions = generate_conclusions(findings, test_results)
-        
+
         # Generate research report
         report_path = await generate_research_report(
             config, metrics, observations, findings, hypothesis, test_results, conclusions
         )
-        
+
         # Update state
         simulation_state["status"] = "complete"
         simulation_state["current_simulation"] = {
@@ -939,13 +929,13 @@ async def run_simulation_endpoint(config: SimulationConfig, background_tasks: Ba
             "findings": findings,
             "hypothesis": hypothesis,
             "test_results": test_results,
-            "conclusions": conclusions
+            "conclusions": conclusions,
         }
         simulation_state["report"] = {
             "path": str(report_path) if report_path else None,
-            "timestamp": datetime.now().isoformat()
+            "timestamp": datetime.now().isoformat(),
         }
-        
+
         return {
             "status": "complete",
             "metrics": metrics.dict(),
@@ -954,9 +944,9 @@ async def run_simulation_endpoint(config: SimulationConfig, background_tasks: Ba
             "hypothesis": hypothesis,
             "test_results": test_results,
             "conclusions": conclusions,
-            "report_path": str(report_path) if report_path else None
+            "report_path": str(report_path) if report_path else None,
         }
-        
+
     except Exception as e:
         simulation_state["status"] = "error"
         raise HTTPException(status_code=500, detail=str(e))
@@ -973,16 +963,12 @@ async def get_report():
     """Download the research report."""
     if not simulation_state.get("report") or not simulation_state["report"].get("path"):
         raise HTTPException(status_code=404, detail="Report not found")
-    
+
     report_path = Path(simulation_state["report"]["path"])
     if not report_path.exists():
         raise HTTPException(status_code=404, detail="Report file not found")
-    
-    return FileResponse(
-        report_path,
-        media_type="application/pdf",
-        filename=report_path.name
-    )
+
+    return FileResponse(report_path, media_type="application/pdf", filename=report_path.name)
 
 
 @app.get("/api/report/latex")
@@ -990,142 +976,146 @@ async def get_report_latex():
     """Download the research report as LaTeX."""
     if not simulation_state.get("report") or not simulation_state["report"].get("path"):
         raise HTTPException(status_code=404, detail="Report not found")
-    
+
     # Get report data
     report_data = simulation_state.get("report", {})
     if not report_data:
         raise HTTPException(status_code=404, detail="Report data not found")
-    
+
     try:
         # Import LaTeX generator
         from src.waft.evolution.latex_generator import LaTeXGenerator
-        
+
         # Build content from report data
         content_parts = []
-        
+
         # Title
         content_parts.append("# Research Report: Demo Batching System Simulation\n\n")
-        
+
         # Configuration
         if report_data.get("config"):
             content_parts.append("## Configuration\n\n")
             config = report_data["config"]
             content_parts.append(f"- **Permutations**: {config.get('permutations', 'N/A')}\n")
-            if config.get('max_pages'):
+            if config.get("max_pages"):
                 content_parts.append(f"- **Max Pages**: {config['max_pages']}\n")
-            if config.get('max_file_size_mb'):
+            if config.get("max_file_size_mb"):
                 content_parts.append(f"- **Max File Size**: {config['max_file_size_mb']} MB\n")
             content_parts.append("\n")
-        
+
         # Metrics
         if report_data.get("metrics"):
             content_parts.append("## Metrics\n\n")
             metrics = report_data["metrics"]
-            content_parts.append(f"- **Total Permutations**: {metrics.get('total_permutations', 'N/A')}\n")
+            content_parts.append(
+                f"- **Total Permutations**: {metrics.get('total_permutations', 'N/A')}\n"
+            )
             content_parts.append(f"- **Total Souls**: {metrics.get('total_souls', 'N/A')}\n")
             content_parts.append(f"- **Average Karma**: {metrics.get('avg_karma', 0):.2f}\n")
             content_parts.append(f"- **PDF Size**: {metrics.get('pdf_size_mb', 0):.4f} MB\n")
             content_parts.append(f"- **PDF Pages**: {metrics.get('pdf_pages', 'N/A')}\n")
             content_parts.append("\n")
-        
+
         # Observations
         if report_data.get("observations"):
             content_parts.append("## Observations\n\n")
             for obs in report_data["observations"]:
                 content_parts.append(f"- {obs}\n")
             content_parts.append("\n")
-        
+
         # Findings
         if report_data.get("findings"):
             content_parts.append("## Findings\n\n")
             for finding in report_data["findings"]:
                 content_parts.append(f"- {finding}\n")
             content_parts.append("\n")
-        
+
         # Hypothesis
         if report_data.get("hypothesis"):
             content_parts.append("## Hypothesis\n\n")
             content_parts.append(f"{report_data['hypothesis']}\n\n")
-        
+
         # Test Results
         if report_data.get("test_results"):
             content_parts.append("## Test Results\n\n")
             test_results = report_data["test_results"]
-            content_parts.append(f"**Supported**: {'Yes' if test_results.get('supported') else 'No'}\n\n")
+            content_parts.append(
+                f"**Supported**: {'Yes' if test_results.get('supported') else 'No'}\n\n"
+            )
             if test_results.get("evidence"):
                 content_parts.append("**Evidence**:\n\n")
                 for evidence in test_results["evidence"]:
                     content_parts.append(f"- {evidence}\n")
             content_parts.append("\n")
-        
+
         # Conclusions
         if report_data.get("conclusions"):
             content_parts.append("## Conclusions\n\n")
             for conclusion in report_data["conclusions"]:
                 content_parts.append(f"- {conclusion}\n")
             content_parts.append("\n")
-        
+
         # Generate LaTeX
         content = "".join(content_parts)
         generator = LaTeXGenerator.from_content(
             content=content,
             title="Research Report: Demo Batching System Simulation",
             document_class="article",
-            style="clinical_standard"
+            style="clinical_standard",
         )
-        
+
         # Generate LaTeX content
         latex_content = generator.generate()
-        
+
         # Save to temporary file
         report_path = Path(simulation_state["report"]["path"])
         latex_path = report_path.parent / f"{report_path.stem}.tex"
-        latex_path.write_text(latex_content, encoding='utf-8')
-        
-        return FileResponse(
-            latex_path,
-            media_type="text/plain",
-            filename=latex_path.name
-        )
-        
+        latex_path.write_text(latex_content, encoding="utf-8")
+
+        return FileResponse(latex_path, media_type="text/plain", filename=latex_path.name)
+
     except Exception as e:
         import traceback
+
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"Error generating LaTeX: {str(e)}")
 
 
 @app.post("/api/export/latex")
-async def export_latex(request: Dict[str, Any]):
+async def export_latex(request: dict[str, Any]):
     """Export content as LaTeX document."""
     try:
-        from src.waft.evolution.latex_generator import LaTeXGenerator, generate_latex
-        
+        from src.waft.evolution.latex_generator import generate_latex
+
         content = request.get("content", "")
         title = request.get("title", "Document")
         document_class = request.get("document_class", "article")
         style = request.get("style", "clinical_standard")
         compile_pdf = request.get("compile_pdf", False)
-        
+
         if not content:
             raise HTTPException(status_code=400, detail="Content is required")
-        
+
         # Generate LaTeX
         output_path = generate_latex(
             content=content,
             title=title,
             document_class=document_class,
             style=style,
-            compile_pdf=compile_pdf
+            compile_pdf=compile_pdf,
         )
-        
-        return JSONResponse({
-            "success": True,
-            "path": str(output_path),
-            "message": f"LaTeX document generated: {output_path.name}"
-        })
-        
+
+        return JSONResponse(
+            {
+                "success": True,
+                "path": str(output_path),
+                "message": f"LaTeX document generated: {output_path.name}",
+            }
+        )
+
     except Exception as e:
         import traceback
+
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"Error exporting LaTeX: {str(e)}")
 
@@ -1133,33 +1123,35 @@ async def export_latex(request: Dict[str, Any]):
 async def generate_research_report(
     config: SimulationConfig,
     metrics: SimulationMetrics,
-    observations: List[str],
-    findings: List[str],
-    hypothesis: Optional[str],
-    test_results: Optional[Dict[str, Any]],
-    conclusions: List[str]
-) -> Optional[Path]:
+    observations: list[str],
+    findings: list[str],
+    hypothesis: str | None,
+    test_results: dict[str, Any] | None,
+    conclusions: list[str],
+) -> Path | None:
     """Generate research report PDF using WAFT component system with multiple sections."""
     try:
         import sys
+
         project_root = Path(__file__).parent.parent
         if str(project_root) not in sys.path:
             sys.path.insert(0, str(project_root))
-        
+
         from src.waft.evolution.component_generator import ComponentPDFGenerator
-        from src.waft.evolution.document_components import ComponentBuilder, ComponentType, DocumentComponent
-        from src.waft.evolution.chat_distiller import ChatDistiller, IdeaGene
-        
+        from src.waft.evolution.document_components import (
+            ComponentBuilder,
+        )
+
         # Initialize component generator
         generator = ComponentPDFGenerator(
             project_path=project_root,
             weasyprint_available=True,
             max_iterations=10,
-            default_allowed_pages=15  # Allow more pages for detailed multi-section report
+            default_allowed_pages=15,  # Allow more pages for detailed multi-section report
         )
-        
+
         builder = ComponentBuilder()
-        
+
         # Build comprehensive content with multiple distinct sections
         report_content = f"""# Research Report: Demo Batching System Simulation
 
@@ -1174,10 +1166,10 @@ This report documents a comprehensive simulation of the demo batching system, an
 The simulation was configured with the following parameters:
 
 - **Permutations Requested**: {config.permutations}
-- **Max Pages Constraint**: {config.max_pages or 'No limit'}
-- **Max File Size Constraint**: {config.max_file_size_mb or 'No limit'} MB
+- **Max Pages Constraint**: {config.max_pages or "No limit"}
+- **Max File Size Constraint**: {config.max_file_size_mb or "No limit"} MB
 - **Demo Path**: {config.demo_path}
-- **Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+- **Generated**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 
 ## Section 2: Quantitative Metrics
 
@@ -1204,9 +1196,9 @@ The simulation collected comprehensive quantitative metrics across all permutati
 
 ### Constraint Analysis
 
-- **Max Iterations Calculated**: {metrics.max_iterations_calculated or 'N/A'}
-- **Constraint Applied**: {metrics.constraint_applied or 'None'}
-- **Constraint Effectiveness**: {'Effective' if metrics.constraint_applied else 'Not applicable'}
+- **Max Iterations Calculated**: {metrics.max_iterations_calculated or "N/A"}
+- **Constraint Applied**: {metrics.constraint_applied or "None"}
+- **Constraint Effectiveness**: {"Effective" if metrics.constraint_applied else "Not applicable"}
 
 ## Section 3: Observations
 
@@ -1215,7 +1207,7 @@ The following observations were made from the simulation data:
 """
         for i, obs in enumerate(observations, 1):
             report_content += f"{i}. {obs}\n\n"
-        
+
         report_content += """
 ## Section 4: Research Findings
 
@@ -1224,7 +1216,7 @@ Analysis of the simulation data revealed several key findings:
 """
         for i, finding in enumerate(findings, 1):
             report_content += f"{i}. {finding}\n\n"
-        
+
         if hypothesis:
             report_content += f"""
 ## Section 5: Hypothesis Formation
@@ -1236,23 +1228,23 @@ Based on the observations and findings, the following hypothesis was formulated:
 This hypothesis was derived from patterns identified in the simulation data, particularly around efficiency metrics and constraint behavior.
 
 """
-        
+
         if test_results:
             report_content += f"""
 ## Section 6: Hypothesis Testing
 
 The hypothesis was tested using the collected evidence:
 
-**Hypothesis Statement**: {test_results['hypothesis']}
+**Hypothesis Statement**: {test_results["hypothesis"]}
 
-**Test Result**: {'✅ Supported' if test_results['supported'] else '❌ Not Supported'}
+**Test Result**: {"✅ Supported" if test_results["supported"] else "❌ Not Supported"}
 
 **Evidence Collected**:
 
 """
-            for i, evidence in enumerate(test_results.get('evidence', []), 1):
+            for i, evidence in enumerate(test_results.get("evidence", []), 1):
                 report_content += f"{i}. {evidence}\n\n"
-        
+
         report_content += """
 ## Section 7: Conclusions
 
@@ -1261,7 +1253,7 @@ Based on the complete analysis, the following conclusions were drawn:
 """
         for i, conclusion in enumerate(conclusions, 1):
             report_content += f"{i}. {conclusion}\n\n"
-        
+
         report_content += """
 ## Section 8: Recommendations
 
@@ -1286,14 +1278,14 @@ Potential areas for future investigation:
 **Report Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 **Status**: Complete
 """
-        
+
         # Generate PDF using component system with science paper structure
         report_path = Path(config.demo_path) / "research_report.pdf"
         report_path.parent.mkdir(parents=True, exist_ok=True)
-        
+
         # Use enhanced report generator for better component structure
         from scripts.generate_enhanced_research_report import generate_enhanced_report
-        
+
         generated_path = generate_enhanced_report(
             config=config.dict(),
             metrics=metrics.dict(),
@@ -1302,35 +1294,37 @@ Potential areas for future investigation:
             hypothesis=hypothesis,
             test_results=test_results,
             conclusions=conclusions,
-            output_path=report_path
+            output_path=report_path,
         )
-        
+
         return generated_path
-        
+
     except Exception as e:
         print(f"Report generation failed: {e}")
         import traceback
+
         traceback.print_exc()
         return None
 
 
 if __name__ == "__main__":
-    import uvicorn
     import sys
-    
+
+    import uvicorn
+
     # Check for --dev flag for live reloading
     dev_mode = "--dev" in sys.argv or "-d" in sys.argv
-    
+
     if dev_mode:
         print("🔄 Development mode: Live reloading enabled")
         print("   Watching for changes in:")
         print("   - scripts/research_simulation_server.py")
         print("   - src/waft/evolution/")
         print("\n   Use: python3 scripts/dev_research_server.py for full dev experience\n")
-        
+
         # Get project root
         project_root = Path(__file__).parent.parent
-        
+
         uvicorn.run(
             "research_simulation_server:app",
             host="0.0.0.0",
@@ -1341,7 +1335,7 @@ if __name__ == "__main__":
                 str(project_root / "src" / "waft" / "evolution"),
             ],
             reload_includes=["*.py"],
-            log_level="info"
+            log_level="info",
         )
     else:
         # Production mode - no reloading

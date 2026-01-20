@@ -16,6 +16,7 @@ added to binders for physical knowledge management.
 
 import html
 import re
+import time
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -145,7 +146,7 @@ class OnePager:
                             if markdown
                             else False,
                         },
-                        "timestamp": int(__import__("time").time() * 1000),
+                        "timestamp": int(time.time() * 1000),
                     }
                 )
                 + "\n"
@@ -334,7 +335,7 @@ class OnePager:
                             if result
                             else False,
                         },
-                        "timestamp": int(__import__("time").time() * 1000),
+                        "timestamp": int(time.time() * 1000),
                     }
                 )
                 + "\n"
@@ -365,7 +366,7 @@ class OnePager:
                             else False,
                             "has_underscores": bool("_" in text) if text else False,
                         },
-                        "timestamp": int(__import__("time").time() * 1000),
+                        "timestamp": int(time.time() * 1000),
                     }
                 )
                 + "\n"
@@ -446,7 +447,7 @@ class OnePager:
                             if final_result
                             else False,
                         },
-                        "timestamp": int(__import__("time").time() * 1000),
+                        "timestamp": int(time.time() * 1000),
                     }
                 )
                 + "\n"
@@ -619,7 +620,7 @@ class OnePager:
                                         if body
                                         else False,
                                     },
-                                    "timestamp": int(__import__("time").time() * 1000),
+                                    "timestamp": int(time.time() * 1000),
                                 }
                             )
                             + "\n"
@@ -661,7 +662,7 @@ class OnePager:
                                             if body_html
                                             else False,
                                         },
-                                        "timestamp": int(__import__("time").time() * 1000),
+                                        "timestamp": int(time.time() * 1000),
                                     }
                                 )
                                 + "\n"
@@ -733,7 +734,7 @@ class OnePager:
                             else 0,
                             "has_content": bool(context.get("content")),
                         },
-                        "timestamp": int(__import__("time").time() * 1000),
+                        "timestamp": int(time.time() * 1000),
                     }
                 )
                 + "\n"
@@ -761,7 +762,7 @@ class OnePager:
                             if html_output
                             else False,
                         },
-                        "timestamp": int(__import__("time").time() * 1000),
+                        "timestamp": int(time.time() * 1000),
                     }
                 )
                 + "\n"

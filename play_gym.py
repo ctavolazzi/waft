@@ -13,23 +13,24 @@ from pathlib import Path
 src_path = Path(__file__).parent / "src"
 sys.path.insert(0, str(src_path))
 
-from gym.rpg.models import Hero
-from gym.rpg.game_master import GameMaster
 from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
+
+from gym.rpg.game_master import GameMaster
+from gym.rpg.models import Hero
 
 
 def mock_agent_function(prompt: str) -> str:
     """
     Mock AI agent function for testing.
-    
+
     In production, this would be replaced with the actual AI agent call.
     For now, it returns a simple hardcoded response.
-    
+
     Args:
         prompt: The quest description/prompt
-    
+
     Returns:
         JSON string response
     """
@@ -59,7 +60,7 @@ def mock_agent_function(prompt: str) -> str:
   "scores": {},
   "methodology": "WSM"
 }"""
-    
+
     # This is a placeholder - in real usage, this would call the AI agent
     # For Quest 2 (Dirty Input), return INVALID JSON to trigger Scint detection
     if "Dirty Input" in prompt or "messy input" in prompt.lower():
@@ -77,7 +78,7 @@ def mock_agent_function(prompt: str) -> str:
   },
   "methodology": "WSM"
 }"""
-    
+
     # For Quest 1 (Clean Extraction), return valid JSON
     if "Car A" in prompt or "Car B" in prompt:
         return """{
@@ -94,8 +95,7 @@ def mock_agent_function(prompt: str) -> str:
   },
   "methodology": "WSM"
 }"""
-    
-    
+
     # For Quest 3 (Logic Trap), correct negative weights
     elif "Project X" in prompt or "Risk" in prompt:
         return """{
@@ -110,7 +110,7 @@ def mock_agent_function(prompt: str) -> str:
   },
   "methodology": "WSM"
 }"""
-    
+
     # Default fallback
     else:
         return '{"alternatives": [], "criteria": {}, "scores": {}, "methodology": "WSM"}'
@@ -119,7 +119,7 @@ def mock_agent_function(prompt: str) -> str:
 def main():
     """Main game loop."""
     console = Console()
-    
+
     # Display welcome screen
     welcome_text = Text()
     welcome_text.append("🎮 ", style="bold gold1")
@@ -128,19 +128,19 @@ def main():
     welcome_text.append("Welcome to the Waft Temple, where heroes test their mettle", style="white")
     welcome_text.append("\n", style="white")
     welcome_text.append("against the Iron Core's validation.", style="white")
-    
+
     console.print(Panel(welcome_text, border_style="cyan", padding=(1, 2)))
     console.print()
-    
+
     # Initialize Hero
     hero = Hero(name="NovaSystem", level=1, xp=0)
-    
+
     # Initialize Game Master
     quests_dir = Path(__file__).parent / "src" / "gym" / "rpg" / "dungeons"
     loot_dir = Path(__file__).parent / "_pyrite" / "gym_logs" / "loot"
-    
+
     game_master = GameMaster(quests_dir=quests_dir, loot_dir=loot_dir)
-    
+
     # Load Waft Temple quests
     try:
         quests = game_master.load_quests("waft_temple.json")
@@ -148,26 +148,26 @@ def main():
     except Exception as e:
         console.print(f"[red]✗[/red] Failed to load quests: {e}\n")
         return 1
-    
+
     # All quests are available (no level requirement in Quest model)
     available_quests = quests
-    
+
     if not available_quests:
         console.print(f"[yellow]⚠[/yellow] No quests available for level {hero.level}\n")
         return 0
-    
+
     # Run quests
     battle_logs = []
     for quest in available_quests:
-        console.print(f"\n[bold cyan]{'='*60}[/bold cyan]")
+        console.print(f"\n[bold cyan]{'=' * 60}[/bold cyan]")
         battle_log = game_master.start_encounter(hero, quest, mock_agent_function)
         battle_logs.append(battle_log)
         console.print()
-    
+
     # Display final character sheet
-    console.print(f"\n[bold cyan]{'='*60}[/bold cyan]")
+    console.print(f"\n[bold cyan]{'=' * 60}[/bold cyan]")
     game_master.display_character_sheet(hero)
-    
+
     # Summary
     console.print("\n[bold]Session Summary:[/bold]")
     successful = sum(1 for log in battle_logs if log.success)
@@ -176,7 +176,7 @@ def main():
     console.print(f"  Quests Completed: {successful}/{len(battle_logs)}")
     console.print(f"  Total XP Gained: {total_xp}")
     console.print(f"  Stabilized: {stabilized}/{len(battle_logs)}")
-    
+
     return 0
 
 

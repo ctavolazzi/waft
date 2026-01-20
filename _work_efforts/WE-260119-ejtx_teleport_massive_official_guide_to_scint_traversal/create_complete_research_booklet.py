@@ -8,11 +8,10 @@ Combines:
 3. All research PDFs
 """
 
-import sys
-from pathlib import Path
-from datetime import datetime
-from pypdf import PdfWriter, PdfReader
 import subprocess
+from pathlib import Path
+
+from pypdf import PdfReader, PdfWriter
 
 # Add project root to path
 project_root = Path(__file__).parent.parent.parent
@@ -38,6 +37,7 @@ RESEARCH_PDFS = [
     project_root / "2302.08756v1.pdf",
 ]
 
+
 def compile_typst(typ_path: Path, pdf_path: Path) -> bool:
     """Compile a Typst file to PDF."""
     try:
@@ -45,7 +45,7 @@ def compile_typst(typ_path: Path, pdf_path: Path) -> bool:
             ["typst", "compile", str(typ_path), str(pdf_path)],
             capture_output=True,
             text=True,
-            check=True
+            check=True,
         )
         return True
     except subprocess.CalledProcessError as e:
@@ -55,13 +55,14 @@ def compile_typst(typ_path: Path, pdf_path: Path) -> bool:
         print("Error: typst command not found. Please install Typst.")
         return False
 
+
 def create_complete_booklet():
     """Create the complete research booklet."""
     print("Creating Complete Quantum Teleportation Research Booklet...")
     print(f"Output: {output_pdf}\n")
-    
+
     writer = PdfWriter()
-    
+
     # 0. Compile and add Cover Page
     print("0. Compiling Cover Page...")
     if cover_typ.exists():
@@ -77,7 +78,7 @@ def create_complete_booklet():
             print("   ⚠️  Failed to compile Cover")
     else:
         print("   ⚠️  Cover Typst file not found")
-    
+
     # 1. Compile and add Mission Statement
     print("1. Compiling Mission Statement...")
     if mission_statement_typ.exists():
@@ -93,7 +94,7 @@ def create_complete_booklet():
             print("   ⚠️  Failed to compile Mission Statement")
     else:
         print("   ⚠️  Mission Statement Typst file not found")
-    
+
     # 2. Compile and add Abstract
     print("\n2. Compiling Research Abstract...")
     if abstract_typ.exists():
@@ -109,7 +110,7 @@ def create_complete_booklet():
             print("   ⚠️  Failed to compile Abstract")
     else:
         print("   ⚠️  Abstract Typst file not found")
-    
+
     # 3. Add all research PDFs
     print("\n3. Adding Research Papers...")
     for pdf_path in RESEARCH_PDFS:
@@ -123,15 +124,16 @@ def create_complete_booklet():
                 print(f"   ❌ Error adding {pdf_path.name}: {e}")
         else:
             print(f"   ⚠️  Missing: {pdf_path.name}")
-    
+
     # Write the merged PDF
-    print(f"\n4. Writing complete booklet...")
-    with open(output_pdf, 'wb') as output_file:
+    print("\n4. Writing complete booklet...")
+    with open(output_pdf, "wb") as output_file:
         writer.write(output_file)
-    
+
     print(f"\n✅ Complete booklet created: {output_pdf}")
     print(f"   Total pages: {len(writer.pages)}")
     return output_pdf
+
 
 if __name__ == "__main__":
     create_complete_booklet()

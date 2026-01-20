@@ -8,13 +8,13 @@ TamNotebook: Research notebook with dual-mode logging.
 LabEntryGenerator: Formal lab entry generator.
 """
 
+from .lab_entry import LabEntryGenerator
+from .notebook import TamNotebook
 from .observer import TheObserver
 from .oracle import TheOracle
-from .taxonomy import LineagePoet
-from .report import SessionReportGenerator, ObsidianGenerator
+from .report import ObsidianGenerator, SessionReportGenerator
 from .tam_psyche import TamPsyche
-from .notebook import TamNotebook
-from .lab_entry import LabEntryGenerator
+from .taxonomy import LineagePoet
 
 __all__ = [
     "TheObserver",

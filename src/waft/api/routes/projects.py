@@ -2,33 +2,34 @@
 Projects API endpoints.
 """
 
-from fastapi import APIRouter, Request, HTTPException, Depends, status
-from pathlib import Path
-from typing import List, Optional
-from pydantic import BaseModel
 import re
+from pathlib import Path
 
-from ...core.projects import ProjectManager, ProjectStatus, Project, Milestone, ProgressEntry
+from fastapi import APIRouter, Depends, HTTPException, Request, status
+from pydantic import BaseModel
+
+from ...api.dependencies import require_auth
 from ...api.schemas.projects import (
     ProjectCreateRequest,
-    ProjectUpdateRequest,
     ProjectPatchRequest,
-    ProjectResponse
+    ProjectResponse,
+    ProjectUpdateRequest,
 )
-from ...api.dependencies import require_auth
+from ...core.projects import ProjectManager, ProjectStatus
 
 router = APIRouter()
 
 
 class StatsResponse(BaseModel):
     """Statistics response model."""
+
     total_projects: int
     active_projects: int
     avg_progress: float
     total_milestones: int
 
 
-@router.get("/projects", response_model=List[ProjectResponse])
+@router.get("/projects", response_model=list[ProjectResponse])
 async def get_projects(request: Request):
     """
     Get all projects.
@@ -51,7 +52,7 @@ async def get_projects(request: Request):
                 milestones=[m.to_dict() for m in p.milestones],
                 created_at=p.created_at,
                 updated_at=p.updated_at,
-                related_work_efforts=p.related_work_efforts
+                related_work_efforts=p.related_work_efforts,
             )
             for p in projects
         ]
@@ -82,7 +83,7 @@ async def get_project(project_id: str, request: Request):
             milestones=[m.to_dict() for m in project.milestones],
             created_at=project.created_at,
             updated_at=project.updated_at,
-            related_work_efforts=project.related_work_efforts
+            related_work_efforts=project.related_work_efforts,
         )
     except HTTPException:
         raise
@@ -109,7 +110,7 @@ async def get_projects_stats(request: Request):
             total_projects=total,
             active_projects=active,
             avg_progress=round(avg_progress, 1),
-            total_milestones=total_milestones
+            total_milestones=total_milestones,
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -117,9 +118,7 @@ async def get_projects_stats(request: Request):
 
 @router.post("/projects", response_model=ProjectResponse, status_code=status.HTTP_201_CREATED)
 async def create_project(
-    request: Request,
-    project_data: ProjectCreateRequest,
-    token: str = Depends(require_auth)
+    request: Request, project_data: ProjectCreateRequest, token: str = Depends(require_auth)
 ):
     """
     Create a new project.
@@ -137,17 +136,20 @@ async def create_project(
                 status_enum = ProjectStatus(project_data.status.lower())
             except ValueError:
                 # Return 422 directly without raising HTTPException (which gets caught)
-                from fastapi.responses import JSONResponse
-                from ...api.responses import ErrorResponse, ErrorCodes
                 from datetime import datetime
+
+                from fastapi.responses import JSONResponse
+
+                from ...api.responses import ErrorCodes, ErrorResponse
+
                 error_response = ErrorResponse(
                     error=ErrorCodes.VALIDATION_ERROR,
                     message=f"Invalid status: {project_data.status}. Must be one of: {[s.value for s in ProjectStatus]}",
-                    timestamp=datetime.now().isoformat()
+                    timestamp=datetime.now().isoformat(),
                 )
                 return JSONResponse(
                     status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                    content=error_response.model_dump()
+                    content=error_response.model_dump(),
                 )
 
         # Create project
@@ -155,7 +157,7 @@ async def create_project(
             title=project_data.title,
             description=project_data.description,
             tags=project_data.tags,
-            status=status_enum
+            status=status_enum,
         )
 
         return ProjectResponse(
@@ -168,13 +170,10 @@ async def create_project(
             milestones=[m.to_dict() for m in project.milestones],
             created_at=project.created_at,
             updated_at=project.updated_at,
-            related_work_efforts=project.related_work_efforts
+            related_work_efforts=project.related_work_efforts,
         )
     except ValueError as e:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail=str(e)
-        )
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
@@ -188,27 +187,27 @@ async def create_project(
         200: {"description": "Project updated successfully"},
         401: {"description": "Authentication required"},
         404: {"description": "Project not found"},
-        422: {"description": "Validation error"}
+        422: {"description": "Validation error"},
     },
-    operation_id="update_project"
+    operation_id="update_project",
 )
 async def update_project(
     project_id: str,
     request: Request,
     project_data: ProjectUpdateRequest,
-    token: str = Depends(require_auth)
+    token: str = Depends(require_auth),
 ):
     """
     Update a project (full update).
 
     Requires authentication via Bearer token.
-    
+
     Updates all provided fields of the project. Fields not provided will be set to None
     (use PATCH for partial updates).
-    
+
     **Path Parameters:**
     - `project_id`: The project ID to update
-    
+
     **Request Body:**
     All fields are optional:
     - `title`: Project title
@@ -216,7 +215,7 @@ async def update_project(
     - `tags`: List of tags
     - `status`: Project status
     - `progress_percent`: Progress percentage (0.0-100.0)
-    
+
     **Response:**
     Returns the updated project with new timestamps.
     """
@@ -228,8 +227,7 @@ async def update_project(
         project = manager.get_project(project_id)
         if not project:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Project not found: {project_id}"
+                status_code=status.HTTP_404_NOT_FOUND, detail=f"Project not found: {project_id}"
             )
 
         # Update fields
@@ -245,7 +243,7 @@ async def update_project(
             except ValueError:
                 raise HTTPException(
                     status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                    detail=f"Invalid status: {project_data.status}"
+                    detail=f"Invalid status: {project_data.status}",
                 )
         if project_data.progress_percent is not None:
             project.progress_percent = project_data.progress_percent
@@ -266,15 +264,12 @@ async def update_project(
             milestones=[m.to_dict() for m in updated_project.milestones],
             created_at=updated_project.created_at,
             updated_at=updated_project.updated_at,
-            related_work_efforts=updated_project.related_work_efforts
+            related_work_efforts=updated_project.related_work_efforts,
         )
     except HTTPException:
         raise
     except ValueError as e:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail=str(e)
-        )
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
@@ -284,7 +279,7 @@ async def patch_project(
     project_id: str,
     request: Request,
     project_data: ProjectPatchRequest,
-    token: str = Depends(require_auth)
+    token: str = Depends(require_auth),
 ):
     """
     Partially update a project.
@@ -299,8 +294,7 @@ async def patch_project(
         project = manager.get_project(project_id)
         if not project:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Project not found: {project_id}"
+                status_code=status.HTTP_404_NOT_FOUND, detail=f"Project not found: {project_id}"
             )
 
         # Update only provided fields
@@ -316,7 +310,7 @@ async def patch_project(
             except ValueError:
                 raise HTTPException(
                     status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                    detail=f"Invalid status: {project_data.status}"
+                    detail=f"Invalid status: {project_data.status}",
                 )
         if project_data.progress_percent is not None:
             project.progress_percent = project_data.progress_percent
@@ -337,25 +331,18 @@ async def patch_project(
             milestones=[m.to_dict() for m in updated_project.milestones],
             created_at=updated_project.created_at,
             updated_at=updated_project.updated_at,
-            related_work_efforts=updated_project.related_work_efforts
+            related_work_efforts=updated_project.related_work_efforts,
         )
     except HTTPException:
         raise
     except ValueError as e:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail=str(e)
-        )
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 
 @router.delete("/projects/{project_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_project(
-    project_id: str,
-    request: Request,
-    token: str = Depends(require_auth)
-):
+async def delete_project(project_id: str, request: Request, token: str = Depends(require_auth)):
     """
     Delete a project.
 
@@ -369,16 +356,14 @@ async def delete_project(
         project = manager.get_project(project_id)
         if not project:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Project not found: {project_id}"
+                status_code=status.HTTP_404_NOT_FOUND, detail=f"Project not found: {project_id}"
             )
 
         # Delete project
         deleted = manager.delete_project(project_id)
         if not deleted:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Project not found: {project_id}"
+                status_code=status.HTTP_404_NOT_FOUND, detail=f"Project not found: {project_id}"
             )
 
         return None
@@ -390,16 +375,15 @@ async def delete_project(
 
 def _validate_work_effort_id(work_effort_id: str) -> bool:
     """Validate work effort ID format: WE-YYMMDD-xxxx"""
-    pattern = r'^WE-\d{6}-[a-z0-9]{4}$'
+    pattern = r"^WE-\d{6}-[a-z0-9]{4}$"
     return bool(re.match(pattern, work_effort_id))
 
 
-@router.post("/projects/{project_id}/work-efforts/{work_effort_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.post(
+    "/projects/{project_id}/work-efforts/{work_effort_id}", status_code=status.HTTP_204_NO_CONTENT
+)
 async def link_work_effort(
-    project_id: str,
-    work_effort_id: str,
-    request: Request,
-    token: str = Depends(require_auth)
+    project_id: str, work_effort_id: str, request: Request, token: str = Depends(require_auth)
 ):
     """
     Link a work effort to a project.
@@ -414,15 +398,14 @@ async def link_work_effort(
         if not _validate_work_effort_id(work_effort_id):
             raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                detail=f"Invalid work effort ID format: {work_effort_id}. Expected format: WE-YYMMDD-xxxx"
+                detail=f"Invalid work effort ID format: {work_effort_id}. Expected format: WE-YYMMDD-xxxx",
             )
 
         # Get project
         project = manager.get_project(project_id)
         if not project:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Project not found: {project_id}"
+                status_code=status.HTTP_404_NOT_FOUND, detail=f"Project not found: {project_id}"
             )
 
         # Add work effort if not already linked
@@ -437,12 +420,11 @@ async def link_work_effort(
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 
-@router.delete("/projects/{project_id}/work-efforts/{work_effort_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete(
+    "/projects/{project_id}/work-efforts/{work_effort_id}", status_code=status.HTTP_204_NO_CONTENT
+)
 async def unlink_work_effort(
-    project_id: str,
-    work_effort_id: str,
-    request: Request,
-    token: str = Depends(require_auth)
+    project_id: str, work_effort_id: str, request: Request, token: str = Depends(require_auth)
 ):
     """
     Unlink a work effort from a project.
@@ -457,15 +439,14 @@ async def unlink_work_effort(
         if not _validate_work_effort_id(work_effort_id):
             raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                detail=f"Invalid work effort ID format: {work_effort_id}. Expected format: WE-YYMMDD-xxxx"
+                detail=f"Invalid work effort ID format: {work_effort_id}. Expected format: WE-YYMMDD-xxxx",
             )
 
         # Get project
         project = manager.get_project(project_id)
         if not project:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Project not found: {project_id}"
+                status_code=status.HTTP_404_NOT_FOUND, detail=f"Project not found: {project_id}"
             )
 
         # Remove work effort if linked

@@ -14,31 +14,31 @@ def main():
     print("🔍 Probe System - Pokey Stick Demo")
     print("=" * 70)
     print()
-    
+
     # Create collector
     collector = ProbeCollector()
-    
+
     # Example 1: Probe HTTP endpoints
     print("📡 Probing HTTP endpoints...")
     collector.probe_http("http://httpbin.org/get")
     collector.probe_http("http://httpbin.org/status/200")
     print("   ✓ Probed 2 HTTP endpoints")
     print()
-    
+
     # Example 2: Probe file system
     print("📁 Probing file system...")
     collector.probe_file("README.md")
     collector.probe_file("src")
     print("   ✓ Probed 2 file system paths")
     print()
-    
+
     # Example 3: Probe services
     print("🔌 Probing services...")
     collector.probe_service("google.com", 80)
     collector.probe_service("github.com", 443)
     print("   ✓ Probed 2 service ports")
     print()
-    
+
     # Show summary
     print("=" * 70)
     print("📊 Probe Summary")
@@ -50,10 +50,10 @@ def main():
     print(f"Average duration: {summary['avg_duration_ms']:.2f}ms")
     print()
     print("By type:")
-    for probe_type, count in summary['by_type'].items():
+    for probe_type, count in summary["by_type"].items():
         print(f"  - {probe_type}: {count}")
     print()
-    
+
     # Show some results
     print("=" * 70)
     print("🔍 Sample Results")
@@ -73,7 +73,7 @@ def main():
             elif result.probe_type == "service":
                 print(f"   Open: {result.data.get('open', False)}")
         print()
-    
+
     # Save results
     print("=" * 70)
     print("💾 Saving Results")
@@ -81,7 +81,7 @@ def main():
     filepath = collector.save_results()
     print(f"Results saved to: {filepath}")
     print()
-    
+
     print("✅ Probe demo complete!")
 
 

@@ -15,16 +15,15 @@ Features:
 - Beautiful grayscale design optimized for first-time viewers
 """
 
-import sys
 import argparse
 import logging
 import platform
-import tempfile
-import webbrowser
-from pathlib import Path
-from datetime import datetime
-from typing import Optional, Dict, Any, List
+import sys
 import traceback
+import webbrowser
+from datetime import datetime
+from pathlib import Path
+from typing import Any
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
@@ -42,55 +41,59 @@ SCRIPT_NAME = "WAFT Intro One-Pager (Black & White)"
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S'
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
 )
 logger = logging.getLogger(__name__)
 
 
-def check_dependencies() -> Dict[str, bool]:
+def check_dependencies() -> dict[str, bool]:
     """
     Check for required dependencies.
-    
+
     Returns:
         Dictionary with dependency names as keys and availability as values
     """
     dependencies = {
-        'weasyprint': False,
-        'pypdf': False,
-        'jinja2': False,
+        "weasyprint": False,
+        "pypdf": False,
+        "jinja2": False,
     }
-    
+
     # Check WeasyPrint
     try:
         from weasyprint import HTML, __version__
-        dependencies['weasyprint'] = True
+
+        dependencies["weasyprint"] = True
         logger.debug(f"WeasyPrint {__version__} available")
     except ImportError:
         logger.warning("WeasyPrint not available - PDF generation will fail")
-    
+
     # Check pypdf
     try:
         from pypdf import PdfReader
-        dependencies['pypdf'] = True
+
+        dependencies["pypdf"] = True
         logger.debug("pypdf available")
     except ImportError:
         logger.warning("pypdf not available - page counting will fail")
-    
+
     # Check jinja2
     try:
         from jinja2 import Template
-        dependencies['jinja2'] = True
+
+        dependencies["jinja2"] = True
         logger.debug("jinja2 available")
     except ImportError:
         logger.warning("jinja2 not available - template rendering will fail")
-    
+
     return dependencies
 
 
 def check_python_version() -> bool:
     """Check if Python version is 3.10 or higher."""
     import sys
+
     version = sys.version_info
     if version.major < 3 or (version.major == 3 and version.minor < 10):
         logger.error(f"Python 3.10+ required, found {version.major}.{version.minor}")
@@ -99,39 +102,39 @@ def check_python_version() -> bool:
     return True
 
 
-def validate_content(content: str) -> tuple[bool, Optional[str]]:
+def validate_content(content: str) -> tuple[bool, str | None]:
     """
     Validate content for generation.
-    
+
     Args:
         content: Content string to validate
-        
+
     Returns:
         Tuple of (is_valid, error_message)
     """
     if not content:
         return False, "Content is empty"
-    
+
     if not isinstance(content, str):
         return False, "Content must be a string"
-    
+
     # Check reasonable length (100-5000 words)
     word_count = len(content.split())
     if word_count < 100:
         logger.warning(f"Content is short ({word_count} words) - may not fill 2 pages")
     elif word_count > 5000:
         logger.warning(f"Content is very long ({word_count} words) - may not fit in 2 pages")
-    
+
     return True, None
 
 
-def validate_output_path(output_path: Path) -> tuple[bool, Optional[str]]:
+def validate_output_path(output_path: Path) -> tuple[bool, str | None]:
     """
     Validate output path is writable.
-    
+
     Args:
         output_path: Path to validate
-        
+
     Returns:
         Tuple of (is_valid, error_message)
     """
@@ -144,11 +147,11 @@ def validate_output_path(output_path: Path) -> tuple[bool, Optional[str]]:
                 logger.debug(f"Created output directory: {parent}")
             except (PermissionError, OSError) as e:
                 return False, f"Cannot create output directory: {e}"
-        
+
         # Check if parent is writable
         if not parent.is_dir():
             return False, f"Output path parent is not a directory: {parent}"
-        
+
         # Try to create a test file
         test_file = parent / ".waft_test_write"
         try:
@@ -156,53 +159,55 @@ def validate_output_path(output_path: Path) -> tuple[bool, Optional[str]]:
             test_file.unlink()
         except (PermissionError, OSError) as e:
             return False, f"Output directory is not writable: {e}"
-        
+
         return True, None
     except Exception as e:
         return False, f"Error validating output path: {e}"
 
 
-def validate_styling_parameters(font_sizes: Dict[str, int], margins: Dict[str, int]) -> tuple[bool, Optional[str]]:
+def validate_styling_parameters(
+    font_sizes: dict[str, int], margins: dict[str, int]
+) -> tuple[bool, str | None]:
     """
     Validate styling parameters are in reasonable ranges.
-    
+
     Args:
         font_sizes: Dictionary of font size parameters
         margins: Dictionary of margin parameters
-        
+
     Returns:
         Tuple of (is_valid, error_message)
     """
     # Validate font sizes with different ranges for different elements
     size_ranges = {
-        'body': (8, 14),
-        'h1': (16, 32),  # Headers can be larger
-        'h2': (12, 24),
-        'h3': (10, 20),
-        'code': (7, 12),
+        "body": (8, 14),
+        "h1": (16, 32),  # Headers can be larger
+        "h2": (12, 24),
+        "h3": (10, 20),
+        "code": (7, 12),
     }
-    
+
     for name, size in font_sizes.items():
         if not isinstance(size, (int, float)):
             return False, f"Font size {name} must be numeric"
         min_size, max_size = size_ranges.get(name, (8, 24))
         if size < min_size or size > max_size:
             return False, f"Font size {name} ({size}pt) out of range ({min_size}-{max_size}pt)"
-    
+
     # Validate margins (5-50mm)
     for name, margin in margins.items():
         if not isinstance(margin, (int, float)):
             return False, f"Margin {name} must be numeric"
         if margin < 5 or margin > 50:
             return False, f"Margin {name} ({margin}mm) out of range (5-50mm)"
-    
+
     return True, None
 
 
 def get_waft_explanation_content() -> str:
     """
     WAFT explanation content structured as prose for ChatDistiller.
-    
+
     Written as natural paragraphs that explain WAFT to newcomers,
     covering all key concepts in a beginner-friendly way.
     """
@@ -267,7 +272,7 @@ class CustomTwoPageGenerator(TwoPageGenerator):
     """
     Custom generator that uses component system with custom grayscale template.
     """
-    
+
     def _render_html_from_layout(
         self,
         layout,
@@ -278,26 +283,27 @@ class CustomTwoPageGenerator(TwoPageGenerator):
         """Override to use custom grayscale template."""
         # Use the grayscale template from BlackWhiteWAFTGenerator
         bw_gen = BlackWhiteWAFTGenerator(weasyprint_available=self.weasyprint_available)
-        
+
         # Convert layout components back to page_1_ideas and page_2_ideas format
         # for compatibility with existing template
         page_1_ideas = []
         page_2_ideas = []
-        
+
         for comp in layout.components:
             if comp.component_type == ComponentType.SECTION:
                 # Extract ideas from section content
                 if isinstance(comp.content, dict):
-                    body = comp.content.get('body', '')
+                    body = comp.content.get("body", "")
                     if body:
                         # Create a simple idea-like object
                         from src.waft.evolution import IdeaGene
-                        idea = IdeaGene(content=body, category='concept')
+
+                        idea = IdeaGene(content=body, category="concept")
                         if len(page_1_ideas) < 4:
                             page_1_ideas.append(idea)
                         else:
                             page_2_ideas.append(idea)
-        
+
         # Use the custom grayscale template
         return bw_gen._render_html(distilled_chat, styling_genome, page_1_ideas, page_2_ideas)
 
@@ -305,11 +311,11 @@ class CustomTwoPageGenerator(TwoPageGenerator):
 class BlackWhiteWAFTGenerator:
     """
     Black and white one-pager generator.
-    
+
     Uses grayscale color scheme optimized for printer-friendly output.
     Extends TwoPageGenerator functionality with custom grayscale template.
     """
-    
+
     def __init__(self, weasyprint_available: bool = False, max_iterations: int = 5):
         """Initialize generator."""
         self.weasyprint_available = weasyprint_available
@@ -317,11 +323,12 @@ class BlackWhiteWAFTGenerator:
         if weasyprint_available:
             try:
                 from weasyprint import HTML
+
                 self.HTML = HTML
             except ImportError:
                 self.weasyprint_available = False
                 logger.warning("WeasyPrint import failed despite availability check")
-    
+
     # Beautiful grayscale template optimized for first-time viewers
     GRAYSCALE_TEMPLATE = """
 <!DOCTYPE html>
@@ -725,54 +732,54 @@ class BlackWhiteWAFTGenerator:
 </body>
 </html>
 """
-    
-    
+
     def _clean_markdown(self, text: str) -> str:
         """Clean markdown formatting from text."""
         import re
+
         # Remove markdown links but keep text
-        text = re.sub(r'\[([^\]]+)\]\([^\)]+\)', r'\1', text)
+        text = re.sub(r"\[([^\]]+)\]\([^\)]+\)", r"\1", text)
         # Remove markdown bold/italic
-        text = re.sub(r'\*\*([^\*]+)\*\*', r'\1', text)
-        text = re.sub(r'\*([^\*]+)\*', r'\1', text)
+        text = re.sub(r"\*\*([^\*]+)\*\*", r"\1", text)
+        text = re.sub(r"\*([^\*]+)\*", r"\1", text)
         # Remove code blocks
-        text = re.sub(r'`([^`]+)`', r'\1', text)
+        text = re.sub(r"`([^`]+)`", r"\1", text)
         return text
-    
+
     def _render_html(
         self,
         distilled_chat,
         styling_genome,
-        page_1_ideas: List,
-        page_2_ideas: List,
+        page_1_ideas: list,
+        page_2_ideas: list,
     ) -> str:
         """Render HTML template with grayscale styling."""
         from jinja2 import Template
-        
-        def clean_idea(idea) -> Dict[str, Any]:
+
+        def clean_idea(idea) -> dict[str, Any]:
             idea_dict = idea.to_dict()
-            idea_dict['content'] = self._clean_markdown(idea_dict.get('content', ''))
+            idea_dict["content"] = self._clean_markdown(idea_dict.get("content", ""))
             return idea_dict
-        
+
         # Create footer text with metadata
         footer_text = (
             f"{SCRIPT_NAME} v{SCRIPT_VERSION} | "
             f"Genome: {styling_genome.genome_id[:8]}... | "
             f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M')}"
         )
-        
+
         # Get image paths (file:// URLs for WeasyPrint)
         images_dir = Path(__file__).parent.parent / "_work_efforts" / "one_pagers" / "images"
         three_pillars_path = images_dir / "three_pillars.png"
         evolution_tree_path = images_dir / "evolution_tree.png"
         code_dna_path = images_dir / "code_dna.png"
-        
+
         def to_file_url(path: Path) -> str:
             """Convert Path to file:// URL for WeasyPrint."""
             if path.exists():
                 return path.absolute().as_uri()
             return ""
-        
+
         context = {
             "title": distilled_chat.title,
             "summary": distilled_chat.summary,
@@ -797,131 +804,132 @@ class BlackWhiteWAFTGenerator:
             "evolution_tree_image": to_file_url(evolution_tree_path),
             "code_dna_image": to_file_url(code_dna_path),
         }
-        
+
         template = Template(self.GRAYSCALE_TEMPLATE)
         return template.render(**context)
 
 
-def validate_pdf_output(pdf_path: Path) -> tuple[bool, Dict[str, Any]]:
+def validate_pdf_output(pdf_path: Path) -> tuple[bool, dict[str, Any]]:
     """
     Validate generated PDF output.
-    
+
     Args:
         pdf_path: Path to PDF file
-        
+
     Returns:
         Tuple of (is_valid, validation_report)
     """
     report = {
-        'exists': False,
-        'readable': False,
-        'page_count': None,
-        'file_size': 0,
-        'structure_valid': False,
-        'errors': [],
+        "exists": False,
+        "readable": False,
+        "page_count": None,
+        "file_size": 0,
+        "structure_valid": False,
+        "errors": [],
     }
-    
+
     try:
         # Check file exists
         if not pdf_path.exists():
-            report['errors'].append(f"PDF file does not exist: {pdf_path}")
+            report["errors"].append(f"PDF file does not exist: {pdf_path}")
             return False, report
-        
-        report['exists'] = True
-        
+
+        report["exists"] = True
+
         # Check file size
         file_size = pdf_path.stat().st_size
-        report['file_size'] = file_size
-        
+        report["file_size"] = file_size
+
         if file_size == 0:
-            report['errors'].append("PDF file is empty")
+            report["errors"].append("PDF file is empty")
             return False, report
-        
+
         if file_size < 10240:  # 10KB
-            report['errors'].append(f"PDF file is suspiciously small ({file_size} bytes)")
+            report["errors"].append(f"PDF file is suspiciously small ({file_size} bytes)")
             # Don't fail, just warn
-        
+
         # Check if readable
         try:
             from pypdf import PdfReader
+
             reader = PdfReader(str(pdf_path))
-            report['readable'] = True
-            
+            report["readable"] = True
+
             # Check page count
             page_count = len(reader.pages)
-            report['page_count'] = page_count
-            
+            report["page_count"] = page_count
+
             if page_count != 2:
-                report['errors'].append(f"Expected 2 pages, found {page_count}")
-            
+                report["errors"].append(f"Expected 2 pages, found {page_count}")
+
             # Check structure (try to read first page)
             try:
                 first_page = reader.pages[0]
                 text = first_page.extract_text()
                 if not text or len(text.strip()) < 10:
-                    report['errors'].append("PDF appears to have no extractable text")
+                    report["errors"].append("PDF appears to have no extractable text")
                 else:
-                    report['structure_valid'] = True
+                    report["structure_valid"] = True
             except Exception as e:
-                report['errors'].append(f"Error reading PDF structure: {e}")
-            
+                report["errors"].append(f"Error reading PDF structure: {e}")
+
         except ImportError:
-            report['errors'].append("pypdf not available for validation")
+            report["errors"].append("pypdf not available for validation")
         except Exception as e:
-            report['errors'].append(f"Error reading PDF: {e}")
+            report["errors"].append(f"Error reading PDF: {e}")
             logger.error(f"PDF validation error: {e}", exc_info=True)
-        
+
         # Overall validation
         is_valid = (
-            report['exists'] and
-            report['readable'] and
-            report['page_count'] == 2 and
-            report['structure_valid']
+            report["exists"]
+            and report["readable"]
+            and report["page_count"] == 2
+            and report["structure_valid"]
         )
-        
+
         return is_valid, report
-        
+
     except Exception as e:
-        report['errors'].append(f"Validation error: {e}")
+        report["errors"].append(f"Validation error: {e}")
         logger.error(f"PDF validation failed: {e}", exc_info=True)
         return False, report
 
 
 def generate_one_pager(
-    content: Optional[str] = None,
-    output_path: Optional[Path] = None,
+    content: str | None = None,
+    output_path: Path | None = None,
     open_pdf: bool = False,
     verbose: bool = False,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Generate black and white WAFT one-pager.
-    
+
     Args:
         content: Optional custom content (uses default if None)
         output_path: Optional output path (uses default if None)
         open_pdf: Whether to open PDF after generation
         verbose: Enable verbose logging
-        
+
     Returns:
         Dictionary with generation results
     """
     if verbose:
         logging.getLogger().setLevel(logging.DEBUG)
-    
+
     logger.info(f"Starting {SCRIPT_NAME} generation (v{SCRIPT_VERSION})")
-    
+
     # Check Python version
     if not check_python_version():
         return {
-            'success': False,
-            'error': 'Python 3.10+ required',
+            "success": False,
+            "error": "Python 3.10+ required",
         }
-    
+
     # Check dependencies
     logger.info("Checking dependencies...")
     deps = check_dependencies()
-    
-    if not deps['weasyprint']:
+
+    if not deps["weasyprint"]:
         error_msg = (
             "WeasyPrint is required but not installed.\n"
             "Install with: pip install weasyprint\n"
@@ -929,90 +937,88 @@ def generate_one_pager(
         )
         logger.error(error_msg)
         return {
-            'success': False,
-            'error': error_msg,
-            'dependencies': deps,
+            "success": False,
+            "error": error_msg,
+            "dependencies": deps,
         }
-    
-    if not deps['pypdf']:
+
+    if not deps["pypdf"]:
         logger.warning("pypdf not available - page counting will be limited")
-    
-    if not deps['jinja2']:
-        error_msg = (
-            "jinja2 is required but not installed.\n"
-            "Install with: pip install jinja2"
-        )
+
+    if not deps["jinja2"]:
+        error_msg = "jinja2 is required but not installed.\nInstall with: pip install jinja2"
         logger.error(error_msg)
         return {
-            'success': False,
-            'error': error_msg,
-            'dependencies': deps,
+            "success": False,
+            "error": error_msg,
+            "dependencies": deps,
         }
-    
+
     logger.info("All required dependencies available")
-    
+
     # Get content
     if content is None:
         logger.debug("Using default WAFT explanation content")
         content = get_waft_explanation_content()
     else:
         logger.debug("Using provided custom content")
-    
+
     # Validate content
     is_valid, error_msg = validate_content(content)
     if not is_valid:
         logger.error(f"Content validation failed: {error_msg}")
         return {
-            'success': False,
-            'error': f"Content validation failed: {error_msg}",
+            "success": False,
+            "error": f"Content validation failed: {error_msg}",
         }
-    
+
     # Set up output path
     if output_path is None:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         output_path = Path(f"_work_efforts/one_pagers/WAFT_Intro_BW_{timestamp}.pdf")
-    
+
     # Validate output path
     is_valid, error_msg = validate_output_path(output_path)
     if not is_valid:
         logger.error(f"Output path validation failed: {error_msg}")
         return {
-            'success': False,
-            'error': f"Output path validation failed: {error_msg}",
+            "success": False,
+            "error": f"Output path validation failed: {error_msg}",
         }
-    
+
     # Ensure output directory exists
     try:
         output_path.parent.mkdir(parents=True, exist_ok=True)
     except Exception as e:
         logger.error(f"Failed to create output directory: {e}")
         return {
-            'success': False,
-            'error': f"Failed to create output directory: {e}",
+            "success": False,
+            "error": f"Failed to create output directory: {e}",
         }
-    
+
     # Import required modules
     try:
+        from jinja2 import Template
+        from weasyprint import HTML
+
         from src.waft.evolution import (
             ChatDistiller,
+            ColorGene,
+            FontGene,
+            LayoutGene,
+            MarginGene,
+            StylingGene,
             StylingGenome,
             StylingGenomeRegistry,
-            StylingGene,
-            FontGene,
-            MarginGene,
-            ColorGene,
-            LayoutGene,
         )
-        from src.waft.evolution.document_components import DocumentLayout, ComponentType
-        from weasyprint import HTML
-        from jinja2 import Template
+        from src.waft.evolution.document_components import ComponentType, DocumentLayout
     except ImportError as e:
         logger.error(f"Failed to import required modules: {e}")
         return {
-            'success': False,
-            'error': f"Import error: {e}",
+            "success": False,
+            "error": f"Import error: {e}",
         }
-    
+
     # Distill content
     logger.info("Distilling content into ideas...")
     try:
@@ -1027,47 +1033,47 @@ def generate_one_pager(
     except Exception as e:
         logger.error(f"Content distillation failed: {e}", exc_info=True)
         return {
-            'success': False,
-            'error': f"Content distillation failed: {e}",
+            "success": False,
+            "error": f"Content distillation failed: {e}",
         }
-    
+
     # Create grayscale styling genome
     logger.info("Creating grayscale styling genome...")
     try:
         # Refined grayscale color scheme with elegant palette
         grayscale_colors = ColorGene(
-            text="#1a1a1a",        # Soft black (easier on eyes than pure black)
+            text="#1a1a1a",  # Soft black (easier on eyes than pure black)
             background="#FFFFFF",  # Pure white background
-            heading="#000000",     # Pure black for strong headings
-            accent="#4a4a4a",      # Medium gray for accents (more visible than #333)
-            code_bg="#f8f8f8",    # Very light gray for code blocks (softer than #f5f5f5)
-            code_text="#1a1a1a",   # Soft black for code text
-            border="#2a2a2a",      # Dark gray borders (softer than pure black)
+            heading="#000000",  # Pure black for strong headings
+            accent="#4a4a4a",  # Medium gray for accents (more visible than #333)
+            code_bg="#f8f8f8",  # Very light gray for code blocks (softer than #f5f5f5)
+            code_text="#1a1a1a",  # Soft black for code text
+            border="#2a2a2a",  # Dark gray borders (softer than pure black)
         )
-        
+
         # Refined typography with better hierarchy
         font_sizes = {
-            'body': 10.5,  # Slightly smaller for better fit
-            'h1': 26,      # Larger, more impactful
-            'h2': 16,      # Better proportion
-            'h3': 13,      # Refined
-            'code': 9.5,   # Slightly smaller
+            "body": 10.5,  # Slightly smaller for better fit
+            "h1": 26,  # Larger, more impactful
+            "h2": 16,  # Better proportion
+            "h3": 13,  # Refined
+            "code": 9.5,  # Slightly smaller
         }
         margins = {
-            'top': 18,     # Tighter top margin
-            'bottom': 18,
-            'left': 22,    # More left margin for elegance
-            'right': 22,
+            "top": 18,  # Tighter top margin
+            "bottom": 18,
+            "left": 22,  # More left margin for elegance
+            "right": 22,
         }
-        
+
         is_valid, error_msg = validate_styling_parameters(font_sizes, margins)
         if not is_valid:
             logger.error(f"Styling validation failed: {error_msg}")
             return {
-                'success': False,
-                'error': f"Styling validation failed: {error_msg}",
+                "success": False,
+                "error": f"Styling validation failed: {error_msg}",
             }
-        
+
         grayscale_genes = StylingGene(
             font=FontGene(
                 family="Georgia, serif",  # Elegant serif for body (falls back to serif)
@@ -1084,7 +1090,7 @@ def generate_one_pager(
                 left=20,
                 right=20,
                 paragraph_spacing=8,  # Tighter spacing
-                section_spacing=12,    # Tighter section spacing
+                section_spacing=12,  # Tighter section spacing
             ),
             color=grayscale_colors,
             layout=LayoutGene(
@@ -1097,9 +1103,9 @@ def generate_one_pager(
             ),
             name="WAFT Intro Handout Black & White",
         )
-        
+
         genome = StylingGenome.from_genes(grayscale_genes)
-        
+
         # Try to register (but don't fail if filesystem is read-only)
         try:
             registry = StylingGenomeRegistry(registry_dir=Path("_genetics/waft_intro_handouts_bw"))
@@ -1108,28 +1114,32 @@ def generate_one_pager(
         except Exception as e:
             logger.warning(f"Failed to register genome (filesystem may be read-only): {e}")
             # Continue anyway
-        
+
     except Exception as e:
         logger.error(f"Failed to create styling genome: {e}", exc_info=True)
         return {
-            'success': False,
-            'error': f"Styling genome creation failed: {e}",
+            "success": False,
+            "error": f"Styling genome creation failed: {e}",
         }
-    
+
     # Generate PDF using TwoPageGenerator with custom renderer
     logger.info("Generating 2-page PDF...")
     try:
         from src.waft.evolution import TwoPageGenerator
-        
+
         # Create a custom generator that uses our grayscale template
         class CustomTwoPageGenerator(TwoPageGenerator):
             def _render_html(self, distilled_chat, styling_genome, page_1_ideas, page_2_ideas):
                 # Use BlackWhiteWAFTGenerator's render method
                 bw_gen = BlackWhiteWAFTGenerator(weasyprint_available=self.weasyprint_available)
-                return bw_gen._render_html(distilled_chat, styling_genome, page_1_ideas, page_2_ideas)
-        
-        generator = CustomTwoPageGenerator(weasyprint_available=True, max_iterations=5, allowed_pages=2)
-        
+                return bw_gen._render_html(
+                    distilled_chat, styling_genome, page_1_ideas, page_2_ideas
+                )
+
+        generator = CustomTwoPageGenerator(
+            weasyprint_available=True, max_iterations=5, allowed_pages=2
+        )
+
         # Use the generator's generate method
         result = generator.generate(
             distilled_chat=distilled,
@@ -1138,20 +1148,20 @@ def generate_one_pager(
             target_pages=2,
             convert_to_png=False,
         )
-        
-        if not result.get('success', False):
+
+        if not result.get("success", False):
             logger.error("PDF generation failed")
             return {
-                'success': False,
-                'error': result.get('error', 'Unknown error during PDF generation'),
-                'result': result,
+                "success": False,
+                "error": result.get("error", "Unknown error during PDF generation"),
+                "result": result,
             }
-        
+
         logger.info(f"PDF generated: {output_path}")
-        
+
     except Exception as e:
         logger.error(f"PDF generation failed: {e}", exc_info=True)
-        
+
         # Fallback: Try to generate HTML at least
         try:
             logger.info("Attempting HTML fallback...")
@@ -1159,69 +1169,71 @@ def generate_one_pager(
             all_ideas = distilled.get_top_ideas(n=10, min_importance=0.3)
             page_1_ideas = all_ideas[:4]
             page_2_ideas = all_ideas[4:6] if len(all_ideas) > 4 else []
-            
+
             html_content = bw_generator._render_html(
                 distilled,
                 genome,
                 page_1_ideas,
                 page_2_ideas,
             )
-            
-            html_path = output_path.with_suffix('.html')
-            html_path.write_text(html_content, encoding='utf-8')
+
+            html_path = output_path.with_suffix(".html")
+            html_path.write_text(html_content, encoding="utf-8")
             logger.info(f"HTML fallback saved: {html_path}")
-            
+
             return {
-                'success': False,
-                'error': f"PDF generation failed: {e}",
-                'html_path': str(html_path),
-                'fallback': True,
+                "success": False,
+                "error": f"PDF generation failed: {e}",
+                "html_path": str(html_path),
+                "fallback": True,
             }
         except Exception as fallback_error:
             logger.error(f"HTML fallback also failed: {fallback_error}", exc_info=True)
             return {
-                'success': False,
-                'error': f"PDF generation failed: {e}. HTML fallback also failed: {fallback_error}",
+                "success": False,
+                "error": f"PDF generation failed: {e}. HTML fallback also failed: {fallback_error}",
             }
-    
+
     # Validate output
     logger.info("Validating PDF output...")
     is_valid, validation_report = validate_pdf_output(output_path)
-    
-    if validation_report['errors']:
-        for error in validation_report['errors']:
+
+    if validation_report["errors"]:
+        for error in validation_report["errors"]:
             logger.warning(f"Validation warning: {error}")
-    
+
     if not is_valid:
         logger.warning("PDF validation found issues, but continuing...")
-    
+
     # Open PDF if requested
     if open_pdf and output_path.exists():
         try:
             system = platform.system()
             if system == "Darwin":  # macOS
                 import subprocess
+
                 subprocess.run(["open", "-a", "Preview", str(output_path)], check=False)
             elif system == "Windows":
                 import os
+
                 os.startfile(str(output_path))
             else:  # Linux and others
                 webbrowser.open(f"file://{output_path.absolute()}")
             logger.info("PDF opened in default viewer")
         except Exception as e:
             logger.warning(f"Failed to open PDF: {e}")
-    
+
     # Prepare result
     result = {
-        'success': True,
-        'pdf_path': str(output_path),
-        'page_count': validation_report.get('page_count', result.get('page_count', 0)),
-        'file_size': validation_report.get('file_size', 0),
-        'validation': validation_report,
-        'genome_id': genome.genome_id[:8] if 'genome' in locals() else None,
-        'version': SCRIPT_VERSION,
+        "success": True,
+        "pdf_path": str(output_path),
+        "page_count": validation_report.get("page_count", result.get("page_count", 0)),
+        "file_size": validation_report.get("file_size", 0),
+        "validation": validation_report,
+        "genome_id": genome.genome_id[:8] if "genome" in locals() else None,
+        "version": SCRIPT_VERSION,
     }
-    
+
     logger.info("Generation complete!")
     return result
 
@@ -1237,54 +1249,52 @@ Examples:
   %(prog)s --output my_waft_intro.pdf
   %(prog)s --content custom_content.md --verbose
   %(prog)s --validate-only
-        """
+        """,
     )
-    
+
     parser.add_argument(
-        '--output', '-o',
+        "--output",
+        "-o",
         type=str,
-        help='Output PDF path (default: _work_efforts/one_pagers/WAFT_Intro_BW_[timestamp].pdf)'
+        help="Output PDF path (default: _work_efforts/one_pagers/WAFT_Intro_BW_[timestamp].pdf)",
     )
-    
+
     parser.add_argument(
-        '--content', '-c',
+        "--content",
+        "-c",
         type=str,
-        help='Path to custom content file (default: use built-in WAFT explanation)'
+        help="Path to custom content file (default: use built-in WAFT explanation)",
     )
-    
+
     parser.add_argument(
-        '--verbose', '-v',
-        action='store_true',
-        help='Enable verbose logging (DEBUG level)'
+        "--verbose", "-v", action="store_true", help="Enable verbose logging (DEBUG level)"
     )
-    
+
     parser.add_argument(
-        '--open',
-        action='store_true',
-        help='Open PDF in default viewer after generation'
+        "--open", action="store_true", help="Open PDF in default viewer after generation"
     )
-    
+
     parser.add_argument(
-        '--validate-only',
-        action='store_true',
-        help='Only validate existing PDF (requires --output)'
+        "--validate-only",
+        action="store_true",
+        help="Only validate existing PDF (requires --output)",
     )
-    
+
     args = parser.parse_args()
-    
+
     # Handle validate-only mode
     if args.validate_only:
         if not args.output:
             print("Error: --validate-only requires --output to specify PDF to validate")
             sys.exit(1)
-        
+
         pdf_path = Path(args.output)
         if not pdf_path.exists():
             print(f"Error: PDF file not found: {pdf_path}")
             sys.exit(1)
-        
+
         is_valid, report = validate_pdf_output(pdf_path)
-        
+
         print("\n" + "=" * 60)
         print("PDF Validation Report")
         print("=" * 60)
@@ -1294,19 +1304,19 @@ Examples:
         print(f"Page Count: {report.get('page_count', 'N/A')}")
         print(f"File Size: {report.get('file_size', 0):,} bytes")
         print(f"Structure Valid: {report['structure_valid']}")
-        
-        if report['errors']:
+
+        if report["errors"]:
             print("\nErrors/Warnings:")
-            for error in report['errors']:
+            for error in report["errors"]:
                 print(f"  - {error}")
-        
+
         if is_valid:
             print("\n✅ PDF is valid!")
             sys.exit(0)
         else:
             print("\n❌ PDF validation failed")
             sys.exit(1)
-    
+
     # Load custom content if provided
     content = None
     if args.content:
@@ -1315,17 +1325,17 @@ Examples:
             if not content_path.exists():
                 print(f"Error: Content file not found: {content_path}")
                 sys.exit(1)
-            content = content_path.read_text(encoding='utf-8')
+            content = content_path.read_text(encoding="utf-8")
             logger.info(f"Loaded custom content from: {content_path}")
         except Exception as e:
             print(f"Error reading content file: {e}")
             sys.exit(1)
-    
+
     # Set output path
     output_path = None
     if args.output:
         output_path = Path(args.output)
-    
+
     # Generate
     try:
         result = generate_one_pager(
@@ -1334,31 +1344,31 @@ Examples:
             open_pdf=args.open,
             verbose=args.verbose,
         )
-        
-        if result['success']:
+
+        if result["success"]:
             print("\n" + "=" * 60)
             print(f"✅ {SCRIPT_NAME} Created Successfully!")
             print("=" * 60)
             print(f"📄 Output: {result['pdf_path']}")
             print(f"📊 Pages: {result.get('page_count', 'N/A')}/2")
             print(f"📦 Size: {result.get('file_size', 0):,} bytes")
-            if result.get('genome_id'):
+            if result.get("genome_id"):
                 print(f"🧬 Genome: {result['genome_id']}...")
             print(f"🔖 Version: {result.get('version', 'N/A')}")
-            
-            if result.get('validation', {}).get('errors'):
+
+            if result.get("validation", {}).get("errors"):
                 print("\n⚠️  Validation Warnings:")
-                for error in result['validation']['errors']:
+                for error in result["validation"]["errors"]:
                     print(f"   - {error}")
-            
+
             print("\n✅ Ready for printing and distribution!")
             sys.exit(0)
         else:
             print(f"\n❌ Generation failed: {result.get('error', 'Unknown error')}")
-            if result.get('html_path'):
+            if result.get("html_path"):
                 print(f"📄 HTML fallback saved: {result['html_path']}")
             sys.exit(1)
-            
+
     except KeyboardInterrupt:
         print("\n\n⚠️  Generation interrupted by user")
         sys.exit(130)

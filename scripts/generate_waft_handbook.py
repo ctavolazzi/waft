@@ -7,20 +7,18 @@ A) What WAFT is
 B) What WAFT does
 """
 
-from pathlib import Path
 import sys
 from datetime import datetime
+from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.waft.templates.field_guide import generate_field_guide
-from src.waft.templates.neon_cyberpunk import generate_neon_cyberpunk
-from src.waft.templates.latex.wrappers.analysis_report import generate_analysis_report
-from src.waft.templates.latex.wrappers.essay import generate_essay
-from src.waft.templates.latex.wrappers.project_report import generate_project_report
-from src.waft.templates.latex.content_builders import markdown_to_latex, html_to_latex
-import markdown
 import re
+
+import markdown
+
+from src.waft.templates.latex.content_builders import html_to_latex
+from src.waft.templates.neon_cyberpunk import generate_neon_cyberpunk
 
 
 def enhanced_markdown_to_latex(markdown_text: str) -> str:
@@ -30,11 +28,11 @@ def enhanced_markdown_to_latex(markdown_text: str) -> str:
     """
     # First convert markdown to HTML to get structured content
     import markdown as md_lib
+
     html = md_lib.markdown(
-        markdown_text,
-        extensions=['fenced_code', 'tables', 'nl2br', 'extra', 'codehilite']
+        markdown_text, extensions=["fenced_code", "tables", "nl2br", "extra", "codehilite"]
     )
-    
+
     # Then convert HTML to LaTeX with enhanced handling
     return enhanced_html_to_latex(html)
 
@@ -45,162 +43,160 @@ def enhanced_html_to_latex(html: str) -> str:
     Converts note boxes, caution boxes, warning boxes, etc. to LaTeX environments.
     """
     latex = html
-    
+
     # First, we need to add tcolorbox package support
     # This will be handled by ensuring the template includes it, but for now
     # we'll use simpler box environments that work with standard LaTeX
-    
+
     # Convert note boxes to LaTeX (using mdframed or simple box)
     # Use a simpler approach that works without tcolorbox
     latex = re.sub(
         r'<div class="note">\s*<div class="note-title">(.+?)</div>\s*(.+?)\s*</div>',
-        lambda m: f'\\begin{{quote}}\n\\textbf{{\\textcolor{{blue}}{{{m.group(1)}}}}}\n\n' + 
-                  re.sub(r'<p>(.+?)</p>', r'\1\n\n', m.group(2), flags=re.DOTALL) +
-                  '\\end{quote}\n',
+        lambda m: f"\\begin{{quote}}\n\\textbf{{\\textcolor{{blue}}{{{m.group(1)}}}}}\n\n"
+        + re.sub(r"<p>(.+?)</p>", r"\1\n\n", m.group(2), flags=re.DOTALL)
+        + "\\end{quote}\n",
         latex,
-        flags=re.DOTALL
+        flags=re.DOTALL,
     )
-    
+
     # Convert caution boxes
     latex = re.sub(
         r'<div class="caution">\s*<div class="caution-title">(.+?)</div>\s*(.+?)\s*</div>',
-        lambda m: f'\\begin{{quote}}\n\\textbf{{\\textcolor{{orange}}{{{m.group(1)}}}}}\n\n' + 
-                  re.sub(r'<p>(.+?)</p>', r'\1\n\n', m.group(2), flags=re.DOTALL) +
-                  '\\end{quote}\n',
+        lambda m: f"\\begin{{quote}}\n\\textbf{{\\textcolor{{orange}}{{{m.group(1)}}}}}\n\n"
+        + re.sub(r"<p>(.+?)</p>", r"\1\n\n", m.group(2), flags=re.DOTALL)
+        + "\\end{quote}\n",
         latex,
-        flags=re.DOTALL
+        flags=re.DOTALL,
     )
-    
+
     # Convert warning boxes
     latex = re.sub(
         r'<div class="warning">\s*<div class="warning-title">(.+?)</div>\s*(.+?)\s*</div>',
-        lambda m: f'\\begin{{quote}}\n\\textbf{{\\textcolor{{red}}{{{m.group(1)}}}}}\n\n' + 
-                  re.sub(r'<p>(.+?)</p>', r'\1\n\n', m.group(2), flags=re.DOTALL) +
-                  '\\end{quote}\n',
+        lambda m: f"\\begin{{quote}}\n\\textbf{{\\textcolor{{red}}{{{m.group(1)}}}}}\n\n"
+        + re.sub(r"<p>(.+?)</p>", r"\1\n\n", m.group(2), flags=re.DOTALL)
+        + "\\end{quote}\n",
         latex,
-        flags=re.DOTALL
+        flags=re.DOTALL,
     )
-    
+
     # Convert checklist boxes
     latex = re.sub(
         r'<div class="checklist">\s*<div class="checklist-title">(.+?)</div>\s*<ul>(.+?)</ul>\s*</div>',
-        lambda m: f'\\begin{{quote}}\n\\textbf{{\\textcolor{{green}}{{{m.group(1)}}}}}\n\n\\begin{{itemize}}\n{m.group(2)}\n\\end{{itemize}}\n\\end{{quote}}\n',
+        lambda m: f"\\begin{{quote}}\n\\textbf{{\\textcolor{{green}}{{{m.group(1)}}}}}\n\n\\begin{{itemize}}\n{m.group(2)}\n\\end{{itemize}}\n\\end{{quote}}\n",
         latex,
-        flags=re.DOTALL
+        flags=re.DOTALL,
     )
-    
+
     # Convert procedure boxes
     latex = re.sub(
         r'<div class="procedure">\s*(.+?)\s*</div>',
-        lambda m: f'\\begin{{quote}}\n\\textbf{{Procedure:}}\n\n{m.group(1)}\n\\end{{quote}}\n',
+        lambda m: f"\\begin{{quote}}\n\\textbf{{Procedure:}}\n\n{m.group(1)}\n\\end{{quote}}\n",
         latex,
-        flags=re.DOTALL
+        flags=re.DOTALL,
     )
-    
+
     # Convert recommendation boxes
     latex = re.sub(
         r'<div class="recommendation">\s*<div class="recommendation-title">(.+?)</div>\s*(.+?)\s*</div>',
-        lambda m: f'\\begin{{quote}}\n\\textbf{{\\textcolor{{purple}}{{{m.group(1)}}}}}\n\n' + 
-                  re.sub(r'<p>(.+?)</p>', r'\1\n\n', m.group(2), flags=re.DOTALL) +
-                  '\\end{quote}\n',
+        lambda m: f"\\begin{{quote}}\n\\textbf{{\\textcolor{{purple}}{{{m.group(1)}}}}}\n\n"
+        + re.sub(r"<p>(.+?)</p>", r"\1\n\n", m.group(2), flags=re.DOTALL)
+        + "\\end{quote}\n",
         latex,
-        flags=re.DOTALL
+        flags=re.DOTALL,
     )
-    
+
     # Convert step divs
-    latex = re.sub(
-        r'<div class="step">(.+?)</div>',
-        r'\\item \1',
-        latex,
-        flags=re.DOTALL
-    )
-    
+    latex = re.sub(r'<div class="step">(.+?)</div>', r"\\item \1", latex, flags=re.DOTALL)
+
     # Convert code blocks with language specification
     latex = re.sub(
         r'<pre><code class="language-(\w+)">(.+?)</code></pre>',
-        lambda m: f'\\begin{{lstlisting}}[language={m.group(1)}]\n{m.group(2)}\n\\end{{lstlisting}}',
+        lambda m: f"\\begin{{lstlisting}}[language={m.group(1)}]\n{m.group(2)}\n\\end{{lstlisting}}",
         latex,
-        flags=re.DOTALL
+        flags=re.DOTALL,
     )
-    
+
     # Convert plain code blocks
     latex = re.sub(
-        r'<pre><code>(.+?)</code></pre>',
-        r'\\begin{verbatim}\n\1\n\\end{verbatim}',
+        r"<pre><code>(.+?)</code></pre>",
+        r"\\begin{verbatim}\n\1\n\\end{verbatim}",
         latex,
-        flags=re.DOTALL
+        flags=re.DOTALL,
     )
-    
+
     # Convert inline code
-    latex = re.sub(r'<code>(.+?)</code>', r'\\texttt{\1}', latex)
-    
+    latex = re.sub(r"<code>(.+?)</code>", r"\\texttt{\1}", latex)
+
     # Convert tables
     latex = re.sub(
-        r'<table>.*?<thead>(.+?)</thead>.*?<tbody>(.+?)</tbody>.*?</table>',
+        r"<table>.*?<thead>(.+?)</thead>.*?<tbody>(.+?)</tbody>.*?</table>",
         lambda m: convert_html_table_to_latex(m.group(1), m.group(2)),
         latex,
-        flags=re.DOTALL
+        flags=re.DOTALL,
     )
-    
+
     # Now use the standard html_to_latex for remaining HTML
     latex = html_to_latex(latex)
-    
+
     # Clean up any remaining HTML entities
-    latex = latex.replace('&nbsp;', ' ')
-    latex = latex.replace('&amp;', '&')
-    latex = latex.replace('&lt;', '<')
-    latex = latex.replace('&gt;', '>')
-    latex = latex.replace('&quot;', '"')
-    
+    latex = latex.replace("&nbsp;", " ")
+    latex = latex.replace("&amp;", "&")
+    latex = latex.replace("&lt;", "<")
+    latex = latex.replace("&gt;", ">")
+    latex = latex.replace("&quot;", '"')
+
     # Remove emojis and special characters that break LaTeX
-    emoji_pattern = re.compile("["
-        u"\U0001F600-\U0001F64F"  # emoticons
-        u"\U0001F300-\U0001F5FF"  # symbols & pictographs
-        u"\U0001F680-\U0001F6FF"  # transport & map symbols
-        u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
-        u"\U00002702-\U000027B0"  # dingbats
-        u"\U000024C2-\U0001F251"  # enclosed characters
-        "]+", flags=re.UNICODE)
-    latex = emoji_pattern.sub('', latex)
-    
+    emoji_pattern = re.compile(
+        "["
+        "\U0001f600-\U0001f64f"  # emoticons
+        "\U0001f300-\U0001f5ff"  # symbols & pictographs
+        "\U0001f680-\U0001f6ff"  # transport & map symbols
+        "\U0001f1e0-\U0001f1ff"  # flags (iOS)
+        "\U00002702-\U000027b0"  # dingbats
+        "\U000024c2-\U0001f251"  # enclosed characters
+        "]+",
+        flags=re.UNICODE,
+    )
+    latex = emoji_pattern.sub("", latex)
+
     # Escape special LaTeX characters that might cause issues
-    latex = latex.replace('™', '\\texttrademark{}')
-    latex = latex.replace('—', '---')
-    latex = latex.replace('–', '--')
-    
+    latex = latex.replace("™", "\\texttrademark{}")
+    latex = latex.replace("—", "---")
+    latex = latex.replace("–", "--")
+
     return latex
 
 
 def convert_html_table_to_latex(thead: str, tbody: str) -> str:
     """Convert HTML table to LaTeX tabular."""
     # Extract headers
-    headers = re.findall(r'<th>(.+?)</th>', thead, flags=re.DOTALL)
+    headers = re.findall(r"<th>(.+?)</th>", thead, flags=re.DOTALL)
     num_cols = len(headers)
-    
+
     # Extract rows
-    rows = re.findall(r'<tr>(.+?)</tr>', tbody, flags=re.DOTALL)
-    
+    rows = re.findall(r"<tr>(.+?)</tr>", tbody, flags=re.DOTALL)
+
     # Build LaTeX table
-    latex = '\\begin{tabular}{|' + 'l|' * num_cols + '}\n\\hline\n'
-    
+    latex = "\\begin{tabular}{|" + "l|" * num_cols + "}\n\\hline\n"
+
     # Headers
-    header_row = ' & '.join([h.strip() for h in headers]) + ' \\\\\n\\hline\n'
+    header_row = " & ".join([h.strip() for h in headers]) + " \\\\\n\\hline\n"
     latex += header_row
-    
+
     # Rows
     for row in rows:
-        cells = re.findall(r'<td>(.+?)</td>', row, flags=re.DOTALL)
+        cells = re.findall(r"<td>(.+?)</td>", row, flags=re.DOTALL)
         if len(cells) == num_cols:
-            row_latex = ' & '.join([c.strip() for c in cells]) + ' \\\\\n\\hline\n'
+            row_latex = " & ".join([c.strip() for c in cells]) + " \\\\\n\\hline\n"
             latex += row_latex
-    
-    latex += '\\end{tabular}\n'
+
+    latex += "\\end{tabular}\n"
     return latex
 
 
 def get_handbook_content() -> str:
     """Generate comprehensive handbook content."""
-    
+
     return """# WAFT Handbook: Complete Guide to the Evolutionary Code Laboratory
 
 <div class="note">
@@ -1811,50 +1807,52 @@ WAFT enables you to breed AI agents that evolve, adapt, and improve. Through the
 
 def main():
     """Generate comprehensive WAFT handbook PDF."""
-    
+
     print("=" * 80)
     print("📚 Generating Comprehensive WAFT Handbook PDF")
     print("=" * 80)
-    
+
     # Get content
     content = get_handbook_content()
-    
+
     # Create output directory
     output_dir = Path("_work_efforts/showcase_documents")
     output_dir.mkdir(parents=True, exist_ok=True)
-    
+
     # Generate timestamp
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_path = output_dir / f"WAFT_HANDBOOK_{timestamp}.pdf"
-    
+
     print(f"\n📝 Content length: {len(content):,} characters")
-    print(f"📄 Generating PDF with Neon Cyberpunk theme (perfect for Teleport Massive aesthetic!)...")
-    
+    print(
+        "📄 Generating PDF with Neon Cyberpunk theme (perfect for Teleport Massive aesthetic!)..."
+    )
+
     # Generate PDF using Field Guide template - this one works and includes all content
     try:
-        import subprocess
         import platform
+        import subprocess
+
         system = platform.system()
-        
+
         generated_pdfs = []
-        
-        import subprocess
+
         import platform
+
         system = platform.system()
-        
+
         # Convert markdown to HTML for template
         html_content = markdown.markdown(
-            content,
-            extensions=['fenced_code', 'tables', 'nl2br', 'extra', 'codehilite']
+            content, extensions=["fenced_code", "tables", "nl2br", "extra", "codehilite"]
         )
-        
+
         # Use Neon Cyberpunk template - perfect for "Teleport Massive" aesthetic!
         pdf_path = generate_neon_cyberpunk(
             title="WAFT HANDBOOK: COMPLETE GUIDE TO THE EVOLUTIONARY CODE LABORATORY",
             content=html_content,
-            output_path=output_path
+            output_path=output_path,
         )
-        
+
         # Open PDF
         if system == "Darwin":  # macOS
             subprocess.run(["open", str(pdf_path)], check=False)
@@ -1862,19 +1860,20 @@ def main():
             subprocess.run(["start", str(pdf_path)], shell=True, check=False)
         else:  # Linux
             subprocess.run(["xdg-open", str(pdf_path)], check=False)
-        
+
         print(f"✅ Generated: {output_path}")
         print(f"📊 File size: {output_path.stat().st_size / 1024 / 1024:.2f} MB")
         print("\n" + "=" * 80)
         print("🎉 Handbook generation complete!")
         print("=" * 80)
-        
+
     except Exception as e:
         print(f"❌ Error generating PDF: {e}")
         import traceback
+
         traceback.print_exc()
         return 1
-    
+
     return 0
 
 

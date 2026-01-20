@@ -19,18 +19,17 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.waft.evolution.chat_distiller import ChatDistiller
+from src.waft.evolution.scint_detector import ScintDetector
 from src.waft.evolution.styling_genome import (
-    StylingGenome,
-    StylingGene,
-    FontGene,
-    MarginGene,
     ColorGene,
+    FontGene,
     LayoutGene,
+    MarginGene,
+    StylingGene,
+    StylingGenome,
     StylingGenomeRegistry,
 )
 from src.waft.evolution.two_page_generator import TwoPageGenerator
-from src.waft.evolution.scint_detector import ScintDetector
-
 
 # Sample chat conversation for demonstration
 SAMPLE_CHAT = """
@@ -103,12 +102,9 @@ def main():
     print("\n📝 STEP 1: Distilling chat conversation into ideas...")
 
     distiller = ChatDistiller(importance_threshold=0.4)
-    distilled = distiller.distill_text(
-        text=SAMPLE_CHAT,
-        title="Component Evolution System Design"
-    )
+    distilled = distiller.distill_text(text=SAMPLE_CHAT, title="Component Evolution System Design")
 
-    print(f"✓ Distilled conversation")
+    print("✓ Distilled conversation")
     print(f"  - Total ideas extracted: {distilled.total_ideas}")
     print(f"  - Decisions: {distilled.decisions_count}")
     print(f"  - Insights: {distilled.insights_count}")
@@ -119,7 +115,7 @@ def main():
 
     # Show top ideas
     top_ideas = distilled.get_top_ideas(n=5)
-    print(f"\n  Top 5 Ideas:")
+    print("\n  Top 5 Ideas:")
     for i, idea in enumerate(top_ideas, 1):
         print(f"    {i}. [{idea.category}] {idea.content[:60]}...")
         print(f"       → {idea.scientific_name}")
@@ -154,7 +150,7 @@ def main():
             "margin.bottom": 15,
             "layout.density": "compact",
         },
-        mutation_description="Maximize content density for 2-page constraint"
+        mutation_description="Maximize content density for 2-page constraint",
     )
     registry.register(variant_dense)
     print(f"✓ Dense variant: {variant_dense.scientific_name}")
@@ -167,7 +163,7 @@ def main():
             "margin.paragraph_spacing": 12,
             "layout.density": "normal",
         },
-        mutation_description="Optimize for maximum readability"
+        mutation_description="Optimize for maximum readability",
     )
     registry.register(variant_readable)
     print(f"✓ Readable variant: {variant_readable.scientific_name}")
@@ -193,7 +189,7 @@ def main():
         output_path=Path("_genetics/one_pager_demo/genesis.pdf"),
         target_pages=2,  # V2 uses target_pages instead of page_1_ideas
     )
-    print(f"\n✓ Genesis PDF generated")
+    print("\n✓ Genesis PDF generated")
     print(f"  - Pages: {result_genesis.get('page_count', 'N/A')}/2")
     print(f"  - Fitness: {result_genesis['fitness_metrics']['overall']:.3f}")
     print(f"  - Readability: {result_genesis['fitness_metrics']['readability']:.3f}")
@@ -201,7 +197,7 @@ def main():
     print(f"  - Constraint: {result_genesis['fitness_metrics']['constraint_satisfaction']:.3f}")
 
     # Update genome fitness
-    genesis.evaluate_fitness(result_genesis['fitness_metrics'])
+    genesis.evaluate_fitness(result_genesis["fitness_metrics"])
 
     # Generate with dense variant
     result_dense = generator.generate(
@@ -210,14 +206,14 @@ def main():
         output_path=Path("_genetics/one_pager_demo/dense.pdf"),
         target_pages=2,  # V2 adaptively selects ideas to fit 2 pages
     )
-    print(f"\n✓ Dense variant PDF generated")
+    print("\n✓ Dense variant PDF generated")
     print(f"  - Pages: {result_dense.get('page_count', 'N/A')}/2")
     print(f"  - Fitness: {result_dense['fitness_metrics']['overall']:.3f}")
     print(f"  - Readability: {result_dense['fitness_metrics']['readability']:.3f}")
     print(f"  - Completeness: {result_dense['fitness_metrics']['completeness']:.3f}")
     print(f"  - Constraint: {result_dense['fitness_metrics']['constraint_satisfaction']:.3f}")
 
-    variant_dense.evaluate_fitness(result_dense['fitness_metrics'])
+    variant_dense.evaluate_fitness(result_dense["fitness_metrics"])
 
     # Generate with readable variant
     result_readable = generator.generate(
@@ -226,13 +222,13 @@ def main():
         output_path=Path("_genetics/one_pager_demo/readable.pdf"),
         target_pages=2,  # V2 adaptively selects ideas to fit 2 pages
     )
-    print(f"\n✓ Readable variant PDF generated")
+    print("\n✓ Readable variant PDF generated")
     print(f"  - Fitness: {result_readable['fitness_metrics']['overall']:.3f}")
     print(f"  - Readability: {result_readable['fitness_metrics']['readability']:.3f}")
     print(f"  - Completeness: {result_readable['fitness_metrics']['completeness']:.3f}")
     print(f"  - Constraint: {result_readable['fitness_metrics']['constraint_satisfaction']:.3f}")
 
-    variant_readable.evaluate_fitness(result_readable['fitness_metrics'])
+    variant_readable.evaluate_fitness(result_readable["fitness_metrics"])
 
     # ========================================================================
     # STEP 4: NATURAL SELECTION
@@ -258,7 +254,7 @@ def main():
                 "font.line_height": 1.5,  # But improve spacing
                 "margin.paragraph_spacing": 8,  # Tighter paragraphs
             },
-            mutation_description="Gen 2: Dense + improved readability"
+            mutation_description="Gen 2: Dense + improved readability",
         )
     elif best == variant_readable:
         # Readable won - maintain readability but increase density slightly
@@ -268,7 +264,7 @@ def main():
                 "margin.top": 18,  # Tighter margins
                 "margin.bottom": 18,
             },
-            mutation_description="Gen 2: Readable + increased density"
+            mutation_description="Gen 2: Readable + increased density",
         )
     else:
         # Genesis won - try balanced improvements
@@ -277,7 +273,7 @@ def main():
                 "font.line_height": 1.55,
                 "margin.paragraph_spacing": 9,
             },
-            mutation_description="Gen 2: Balanced refinement"
+            mutation_description="Gen 2: Balanced refinement",
         )
 
     registry.register(next_gen)
@@ -290,7 +286,7 @@ def main():
         output_path=Path("_genetics/one_pager_demo/gen2.pdf"),
         page_1_ideas=5,
     )
-    next_gen.evaluate_fitness(result_next_gen['fitness_metrics'])
+    next_gen.evaluate_fitness(result_next_gen["fitness_metrics"])
 
     print(f"  - Fitness: {next_gen.fitness_score:.3f}")
 
@@ -308,7 +304,7 @@ def main():
 
     # Save distilled chat
     distilled.save(Path("_genetics/one_pager_demo/distilled_chat.json"))
-    print(f"✓ Distilled chat saved")
+    print("✓ Distilled chat saved")
 
     # Evolution report
     evolution_report = registry.generate_report()
@@ -329,21 +325,21 @@ def main():
     print("DEMO COMPLETE!")
     print("=" * 80)
 
-    print(f"\n📈 Evolution Summary:")
+    print("\n📈 Evolution Summary:")
     print(f"  - Generations: {max(g.generation for g in registry.genomes.values()) + 1}")
     print(f"  - Total genomes: {len(registry.genomes)}")
     print(f"  - Best fitness: {best.fitness_score:.3f} ({best.scientific_name})")
     print(f"  - Scints detected: {len(scint_detector.detected_scints)}")
 
-    print(f"\n💡 Ideas Processed:")
+    print("\n💡 Ideas Processed:")
     print(f"  - Total ideas: {distilled.total_ideas}")
     print(f"  - Genome IDs assigned: {len([i.genome_id for i in distilled.ideas])}")
 
-    print(f"\n📁 Output:")
-    print(f"  - Location: _genetics/one_pager_demo/")
-    print(f"  - HTML files: genesis.html, dense.html, readable.html, gen2.html")
-    print(f"  - Reports: evolution_report.md, scint_report.md")
-    print(f"  - Data: distilled_chat.json, genome registry")
+    print("\n📁 Output:")
+    print("  - Location: _genetics/one_pager_demo/")
+    print("  - HTML files: genesis.html, dense.html, readable.html, gen2.html")
+    print("  - Reports: evolution_report.md, scint_report.md")
+    print("  - Data: distilled_chat.json, genome registry")
 
     print("\n✨ The one-pager evolution system is working!")
     print("=" * 80)

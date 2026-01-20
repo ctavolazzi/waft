@@ -4,10 +4,10 @@ Generate Pyrite God PDF using D&D Character Sheet styling
 Converts the Pyrite HTML writeup to PDF with D&D 5e character sheet aesthetic.
 """
 
-from pathlib import Path
-from weasyprint import HTML
-from datetime import datetime
 import sys
+from pathlib import Path
+
+from weasyprint import HTML
 
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
@@ -16,33 +16,33 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 def generate_pyrite_pdf(html_path: Path = None, output_path: Path = None) -> Path:
     """
     Generate PDF from Pyrite HTML using D&D character sheet styling.
-    
+
     Args:
         html_path: Path to Pyrite HTML file (default: docs/pyrite_god.html)
         output_path: Path for output PDF (default: docs/pyrite_god.pdf)
-    
+
     Returns:
         Path to generated PDF
     """
     if html_path is None:
         html_path = Path(__file__).parent.parent / "docs" / "pyrite_god.html"
-    
+
     if output_path is None:
-        output_path = html_path.with_suffix('.pdf')
-    
+        output_path = html_path.with_suffix(".pdf")
+
     # Read HTML content
     html_content = html_path.read_text()
-    
+
     # Adapt HTML for D&D character sheet styling
     adapted_html = adapt_html_for_dnd_style(html_content)
-    
+
     # Generate PDF using WeasyPrint
-    print(f"📄 Generating Pyrite God PDF...")
+    print("📄 Generating Pyrite God PDF...")
     print(f"   Input: {html_path}")
     print(f"   Output: {output_path}")
-    
+
     HTML(string=adapted_html).write_pdf(output_path)
-    
+
     print(f"   ✅ Generated: {output_path}")
     return output_path
 
@@ -357,50 +357,48 @@ def adapt_html_for_dnd_style(html_content: str) -> str:
         }
     </style>
     """
-    
+
     # Find and replace the style section
-    if '<style>' in html_content:
+    if "<style>" in html_content:
         # Extract everything before <style>
-        before_style = html_content.split('<style>')[0]
+        before_style = html_content.split("<style>")[0]
         # Extract everything after </style>
-        after_style = html_content.split('</style>')[1]
+        after_style = html_content.split("</style>")[1]
         # Reconstruct with D&D style
         adapted_html = before_style + dnd_style + after_style
     else:
         # If no style tag, insert it in head
-        if '</head>' in html_content:
-            adapted_html = html_content.replace('</head>', dnd_style + '</head>')
+        if "</head>" in html_content:
+            adapted_html = html_content.replace("</head>", dnd_style + "</head>")
         else:
             adapted_html = html_content
-    
+
     return adapted_html
 
 
 def main():
     """Main entry point."""
     import argparse
-    
+
     parser = argparse.ArgumentParser(
         description="Generate Pyrite God PDF using D&D character sheet styling"
     )
     parser.add_argument(
-        '--html',
+        "--html",
         type=Path,
         default=Path(__file__).parent.parent / "docs" / "pyrite_god.html",
-        help="Path to Pyrite HTML file"
+        help="Path to Pyrite HTML file",
     )
     parser.add_argument(
-        '--output',
-        type=Path,
-        help="Path for output PDF (default: same as HTML but .pdf)"
+        "--output", type=Path, help="Path for output PDF (default: same as HTML but .pdf)"
     )
-    
+
     args = parser.parse_args()
-    
+
     if not args.html.exists():
         print(f"❌ Error: HTML file not found: {args.html}")
         return 1
-    
+
     try:
         output_path = generate_pyrite_pdf(args.html, args.output)
         print(f"\n✅ Success! PDF generated: {output_path}")
@@ -408,6 +406,7 @@ def main():
     except Exception as e:
         print(f"❌ Error generating PDF: {e}")
         import traceback
+
         traceback.print_exc()
         return 1
 

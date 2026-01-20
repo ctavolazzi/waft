@@ -7,14 +7,14 @@ the systems we built for v0.5.3 MVP.
 """
 
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.waft.evolution.chat_distiller import ChatDistiller
-from src.waft.evolution.two_page_generator import TwoPageGenerator
 from src.waft.evolution.styling_genome import StylingGenome, StylingGenomeRegistry
+from src.waft.evolution.two_page_generator import TwoPageGenerator
 
 
 def get_session_content() -> str:
@@ -547,23 +547,28 @@ def main():
     print("=" * 80)
     print("📄 Generating Session Recap PDF")
     print("=" * 80)
-    
+
     # Get content
     content = get_session_content()
-    
+
     # Distill content
     distiller = ChatDistiller()
     distilled = distiller.distill_text(
-        content,
-        title="WAFT v0.5.3 MVP: Karma Economy & Source Consciousness"
+        content, title="WAFT v0.5.3 MVP: Karma Economy & Source Consciousness"
     )
-    
+
     # Get or create styling genome
-    from src.waft.evolution.styling_genome import StylingGene, FontGene, MarginGene, ColorGene, LayoutGene
-    
+    from src.waft.evolution.styling_genome import (
+        ColorGene,
+        FontGene,
+        LayoutGene,
+        MarginGene,
+        StylingGene,
+    )
+
     registry = StylingGenomeRegistry(registry_dir=Path("_genetics/session_recaps"))
     genome = registry.get_best_genome()
-    
+
     if not genome:
         # Create new genome for session recaps
         genes = StylingGene(
@@ -574,15 +579,10 @@ def main():
                 size_h2=12,
                 size_h3=11,
                 size_code=9,
-                line_height=1.4
+                line_height=1.4,
             ),
             margin=MarginGene(
-                top=20,
-                bottom=20,
-                left=20,
-                right=20,
-                paragraph_spacing=4,
-                section_spacing=8
+                top=20, bottom=20, left=20, right=20, paragraph_spacing=4, section_spacing=8
             ),
             color=ColorGene(
                 text="#000000",
@@ -591,7 +591,7 @@ def main():
                 accent="#333333",
                 code_bg="#f5f5f5",
                 code_text="#000000",
-                border="#cccccc"
+                border="#cccccc",
             ),
             layout=LayoutGene(
                 columns=1,
@@ -599,36 +599,39 @@ def main():
                 toc_enabled=False,
                 page_numbers=True,
                 header_enabled=True,
-                footer_enabled=True
+                footer_enabled=True,
             ),
-            name="Session Recap Styling"
+            name="Session Recap Styling",
         )
         genome = StylingGenome.from_genes(genes)
         registry.register(genome)
-    
+
     # Generate PDF (allow multiple pages for comprehensive recap)
-    generator = TwoPageGenerator(weasyprint_available=True, allowed_pages=10)  # Allow up to 10 pages
-    
+    generator = TwoPageGenerator(
+        weasyprint_available=True, allowed_pages=10
+    )  # Allow up to 10 pages
+
     output_dir = Path("_work_efforts/session_recaps")
     output_dir.mkdir(parents=True, exist_ok=True)
-    
+
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_path = output_dir / f"KARMA_ECONOMY_COMPLETE_{timestamp}.pdf"
-    
+
     result = generator.generate(
         distilled_chat=distilled,
         styling_genome=genome,
         output_path=output_path,
-        target_pages=None  # Let it be as long as needed
+        target_pages=None,  # Let it be as long as needed
     )
-    
+
     print(f"\n✅ PDF generated: {output_path}")
     print(f"📄 Pages: {result.get('pages_generated', 'N/A')}")
-    
+
     # Open PDF
     import subprocess
+
     subprocess.run(["open", str(output_path)])
-    
+
     print("\n✅ PDF opened!")
     return 0
 

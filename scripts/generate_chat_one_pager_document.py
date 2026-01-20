@@ -6,9 +6,9 @@ Creates a 2-page document with proper sections, not chat-style idea blocks.
 """
 
 import sys
-import re
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
+
 from markdown import markdown
 from weasyprint import HTML
 
@@ -17,14 +17,16 @@ project_root = Path(__file__).parent.parent
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
+
 def markdown_to_html_sections(markdown_text: str) -> str:
     """Convert markdown to HTML while preserving section structure."""
-    html = markdown(markdown_text, extensions=['extra', 'nl2br'])
+    html = markdown(markdown_text, extensions=["extra", "nl2br"])
     return html
+
 
 def generate_document_one_pager():
     """Generate one-pager as a proper document with sections."""
-    
+
     content = """# WAFT Self-Testing & Verification Session
 
 ## Abstract
@@ -101,13 +103,13 @@ Test scripts created: test_latex_generator.py, test_self_examination.py, generat
 
 Documentation generated: Checkpoint document, test summary PDF, improvements summary PDF, batch test results PDF, this one-pager.
 """
-    
+
     print("📄 Generating document-style one-pager with proper sections...")
     print()
-    
+
     # Convert markdown to HTML
     html_content = markdown_to_html_sections(content)
-    
+
     # Create proper document HTML template
     document_html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -181,27 +183,28 @@ Documentation generated: Checkpoint document, test summary PDF, improvements sum
 </body>
 </html>
 """
-    
+
     # Generate PDF
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_path = project_root / "_work_efforts" / "one_pagers" / f"Chat_Document_{timestamp}.pdf"
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    
-    print(f"📝 Title: WAFT Self-Testing & Verification Session")
-    print(f"📊 Format: Document with sections")
+
+    print("📝 Title: WAFT Self-Testing & Verification Session")
+    print("📊 Format: Document with sections")
     print(f"💾 Output: {output_path}")
     print()
-    
+
     HTML(string=document_html).write_pdf(str(output_path))
-    
-    print("="*70)
+
+    print("=" * 70)
     print("✅ Document Generated!")
-    print("="*70)
+    print("=" * 70)
     print(f"📄 Output: {output_path}")
     print()
     print("Ready for printing and binder storage! 📚")
-    
+
     return output_path
+
 
 if __name__ == "__main__":
     generate_document_one_pager()

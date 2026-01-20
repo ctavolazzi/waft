@@ -12,18 +12,18 @@ This demo showcases all of waft's capabilities:
 Run with: python3 demo.py
 """
 
-import tempfile
 import shutil
+import tempfile
+import time
 from pathlib import Path
+
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
-from rich.progress import Progress, SpinnerColumn, TextColumn
-import time
 
+from waft.core.gamification import GamificationManager
 from waft.core.memory import MemoryManager
 from waft.core.substrate import SubstrateManager
-from waft.core.gamification import GamificationManager
 
 console = Console()
 
@@ -73,7 +73,9 @@ def demo_memory_manager(project_path: Path):
 
     table.add_row("active/", ", ".join([f.name for f in active_files]))
     table.add_row("backlog/", ", ".join([f.name for f in backlog_files]))
-    table.add_row("standards/", ", ".join([f.name for f in standards_files]) if standards_files else "(empty)")
+    table.add_row(
+        "standards/", ", ".join([f.name for f in standards_files]) if standards_files else "(empty)"
+    )
 
     console.print(table)
 
@@ -99,7 +101,10 @@ def demo_substrate_manager(project_path: Path):
 
     table.add_row("Project Name", info.get("name", "Unknown"))
     table.add_row("Version", info.get("version", "Unknown"))
-    table.add_row("uv.lock", "[green]Exists[/green]" if substrate.verify_lock() else "[yellow]Missing[/yellow]")
+    table.add_row(
+        "uv.lock",
+        "[green]Exists[/green]" if substrate.verify_lock() else "[yellow]Missing[/yellow]",
+    )
 
     console.print(table)
 
@@ -126,8 +131,8 @@ def demo_gamification(project_path: Path):
 
     table.add_row("💎 Integrity", f"{stats['integrity']:.0f}%")
     table.add_row("🧠 Insight", f"{stats['insight']:.0f}")
-    table.add_row("⭐ Level", str(stats['level']))
-    table.add_row("🏆 Achievements", str(stats['achievements_count']))
+    table.add_row("⭐ Level", str(stats["level"]))
+    table.add_row("🏆 Achievements", str(stats["achievements_count"]))
 
     console.print(table)
 
@@ -136,7 +141,9 @@ def demo_gamification(project_path: Path):
     result = gamification.award_insight(100.0, reason="Completed demo exploration")
 
     if result["level_up"]:
-        console.print(f"[bold green]🎉 Level Up![/bold green] Level {result['old_level']} → {result['new_level']}")
+        console.print(
+            f"[bold green]🎉 Level Up![/bold green] Level {result['old_level']} → {result['new_level']}"
+        )
 
     # Show updated stats
     console.print("\n[bold]Updated Stats:[/bold]")
@@ -148,7 +155,7 @@ def demo_gamification(project_path: Path):
 
     table.add_row("💎 Integrity", f"{stats['integrity']:.0f}%")
     table.add_row("🧠 Insight", f"{stats['insight']:.0f}")
-    table.add_row("⭐ Level", str(stats['level']))
+    table.add_row("⭐ Level", str(stats["level"]))
 
     console.print(table)
 
@@ -213,9 +220,9 @@ description = "Waft demo project"
         demo_gamification(project_path)
 
         # Summary
-        console.print("\n" + "="*60)
+        console.print("\n" + "=" * 60)
         console.print("[bold green]Demo Complete![/bold green]")
-        console.print("="*60)
+        console.print("=" * 60)
 
         console.print("\n[bold]What we demonstrated:[/bold]")
         console.print("  • Memory Manager - _pyrite structure and file organization")
@@ -233,16 +240,18 @@ description = "Waft demo project"
 
 def main():
     """Run the interactive demo."""
-    console.print(Panel.fit(
-        "[bold cyan]🌊 Waft Framework - Interactive Demo[/bold cyan]\n\n"
-        "This demo showcases all of waft's core capabilities:\n"
-        "• Memory Manager (_pyrite structure)\n"
-        "• Substrate Manager (uv/environment)\n"
-        "• Gamification Manager (integrity, insight, achievements)\n"
-        "• Full project lifecycle",
-        title="Welcome",
-        border_style="cyan"
-    ))
+    console.print(
+        Panel.fit(
+            "[bold cyan]🌊 Waft Framework - Interactive Demo[/bold cyan]\n\n"
+            "This demo showcases all of waft's core capabilities:\n"
+            "• Memory Manager (_pyrite structure)\n"
+            "• Substrate Manager (uv/environment)\n"
+            "• Gamification Manager (integrity, insight, achievements)\n"
+            "• Full project lifecycle",
+            title="Welcome",
+            border_style="cyan",
+        )
+    )
 
     with console.status("[bold green]Running demo...", spinner="dots"):
         time.sleep(1)
@@ -253,5 +262,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
