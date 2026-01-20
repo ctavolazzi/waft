@@ -28,6 +28,9 @@ Thumbs.db
 .coverage
 htmlcov/
 
+# Pantheon runtime data (test artifacts, sessions, protocols)
+_pantheon/
+
 # SvelteKit Visualizer
 visualizer/node_modules/
 visualizer/.svelte-kit/

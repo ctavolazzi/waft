@@ -19,7 +19,6 @@ Features:
 
 import html as html_module
 import re
-import time
 from pathlib import Path
 
 try:
@@ -105,7 +104,7 @@ class GoldenTriangle:
                             "markdown_available": MARKDOWN_AVAILABLE,
                             "preserve_html": preserve_html,
                         },
-                        "timestamp": int(time.time() * 1000),
+                        "timestamp": int(__import__("time").time() * 1000),
                     }
                 )
                 + "\n"
@@ -145,7 +144,7 @@ class GoldenTriangle:
                                     if html
                                     else False,
                                 },
-                                "timestamp": int(time.time() * 1000),
+                                "timestamp": int(__import__("time").time() * 1000),
                             }
                         )
                         + "\n"
@@ -169,7 +168,7 @@ class GoldenTriangle:
                                 "location": "golden_triangle.py:107",
                                 "message": "markdown library exception",
                                 "data": {"error": str(e)},
-                                "timestamp": int(time.time() * 1000),
+                                "timestamp": int(__import__("time").time() * 1000),
                             }
                         )
                         + "\n"
@@ -200,7 +199,7 @@ class GoldenTriangle:
                             "has_hr_tag": bool(re.search(r"<hr[^>]*>", html)) if html else False,
                             "has_raw_hash": bool(re.search(r"#\s+WAFT", html)) if html else False,
                         },
-                        "timestamp": int(time.time() * 1000),
+                        "timestamp": int(__import__("time").time() * 1000),
                     }
                 )
                 + "\n"
@@ -347,7 +346,7 @@ class GoldenTriangle:
                             if text
                             else 0,
                         },
-                        "timestamp": int(time.time() * 1000),
+                        "timestamp": int(__import__("time").time() * 1000),
                     }
                 )
                 + "\n"
@@ -402,7 +401,7 @@ class GoldenTriangle:
                             if html
                             else 0,
                         },
-                        "timestamp": int(time.time() * 1000),
+                        "timestamp": int(__import__("time").time() * 1000),
                     }
                 )
                 + "\n"
@@ -435,7 +434,7 @@ class GoldenTriangle:
                             if html
                             else False,
                         },
-                        "timestamp": int(time.time() * 1000),
+                        "timestamp": int(__import__("time").time() * 1000),
                     }
                 )
                 + "\n"
@@ -480,7 +479,7 @@ class GoldenTriangle:
                             if html
                             else [],
                         },
-                        "timestamp": int(time.time() * 1000),
+                        "timestamp": int(__import__("time").time() * 1000),
                     }
                 )
                 + "\n"
@@ -507,7 +506,7 @@ class GoldenTriangle:
                             if html
                             else False,
                         },
-                        "timestamp": int(time.time() * 1000),
+                        "timestamp": int(__import__("time").time() * 1000),
                     }
                 )
                 + "\n"
@@ -537,7 +536,7 @@ class GoldenTriangle:
                             "final_h1_count": len(re.findall(r"<h1[^>]*>", html)) if html else 0,
                             "final_hr_count": len(re.findall(r"<hr[^>]*>", html)) if html else 0,
                         },
-                        "timestamp": int(time.time() * 1000),
+                        "timestamp": int(__import__("time").time() * 1000),
                     }
                 )
                 + "\n"

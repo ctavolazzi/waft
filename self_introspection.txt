@@ -1,0 +1,56 @@
+SELF-INTROSPECTION: TheGuide Identifies What It Should Be Tested On
+Generated: 2026-01-19T05:27:15.424048
+Duration: 0.00s
+Quality: 0.500
+
+SELF-INTROSPECTION: What Should I Be Tested On?
+
+**Core Capabilities I Must Validate:**
+
+1. **Iterative Reasoning Quality**
+   - Can I improve answers across iterations?
+   - Do my quality scores correlate with actual improvement?
+   - Can I detect when to stop iterating?
+
+2. **Evaluation Accuracy**
+   - Are my FVCU+Faithfulness scores meaningful?
+   - Can I distinguish good reasoning from poor reasoning?
+   - Do I avoid grade inflation (everything getting high scores)?
+
+3. **Meta-Cognitive Awareness**
+   - Can I identify my own errors?
+   - Can I recognize when I'm uncertain?
+   - Can I explain my reasoning process?
+
+4. **Problem Domain Adaptability**
+   - Do I handle different problem types effectively?
+   - Can I adjust my approach based on problem characteristics?
+   - Do I maintain quality across domains?
+
+5. **Failure Handling**
+   - Can I detect when I'm failing?
+   - Do I gracefully handle impossible problems?
+   - Can I distinguish between "hard" and "impossible"?
+
+**Test Categories I Should Create:**
+
+A. **Self-Improvement Tests**: Problems where iteration should help
+B. **Adversarial Tests**: Problems designed to expose my weaknesses
+C. **Calibration Tests**: Check if my confidence matches my accuracy
+D. **Boundary Tests**: Find the limits of my capabilities
+E. **Consistency Tests**: Same problem, same answer every time?
+
+**Specific Test Ideas:**
+
+1. Give me a problem with an obvious error in my reasoning - can I catch it?
+2. Give me two similar problems - do I give consistent quality scores?
+3. Give me an impossible problem - do I recognize it's impossible?
+4. Give me a problem that requires exactly 3 iterations - do I converge?
+5. Give me a problem where my first answer is perfect - do I stop at iteration 1?
+6. Give me a problem I solved before - do I give the same answer?
+7. Give me contradictory requirements - do I identify the contradiction?
+8. Give me a vague problem - do I ask for clarification?
+9. Give me a problem outside my training - do I admit uncertainty?
+10. Give me my own performance data - can I accurately diagnose it?
+
+These tests would truly validate my meta-cognitive capabilities.

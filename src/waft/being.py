@@ -688,13 +688,12 @@ class Being:
         """
         Record a memory.
 
-        Memories are bounded to MAX_MEMORIES to prevent resource exhaustion.
-        When limit is reached, oldest memories are dropped (FIFO).
+        Enhanced to include Harm/Help events and alignment information.
 
         Args:
             memory_content: Content of memory
             memory_type: Type of memory
-            metadata: Additional metadata
+            metadata: Additional metadata (can include harm_events, help_events, alignment_score)
 
         Returns:
             Memory record
@@ -705,6 +704,19 @@ class Being:
             "recorded_at": datetime.now().isoformat(),
             "metadata": metadata or {},
         }
+
+        # Include Harm/Help events if available
+        if self.recent_harm_events:
+            memory["metadata"]["harm_events"] = [harm.to_dict() for harm in self.recent_harm_events]
+        if self.recent_help_events:
+            memory["metadata"]["help_events"] = [
+                help_event.to_dict() for help_event in self.recent_help_events
+            ]
+
+        # Include alignment information
+        memory["metadata"]["alignment_score"] = self.current_alignment_score
+        memory["metadata"]["pleasure"] = self.pleasure
+        memory["metadata"]["pain"] = self.pain
 
         self.memories.append(memory)
 
@@ -721,8 +733,7 @@ class Being:
         """
         Learn a lesson (what worked/didn't work).
 
-        Lessons are bounded to MAX_MEMORIES to prevent resource exhaustion.
-        When limit is reached, oldest lessons are dropped (FIFO).
+        Enhanced to include alignment patterns and Harm/Help learning.
 
         Args:
             lesson: The lesson learned
@@ -739,12 +750,15 @@ class Being:
             "metadata": metadata or {},
         }
 
+        # Include alignment information for learning
+        lesson_record["metadata"]["alignment_score"] = self.current_alignment_score
+        lesson_record["metadata"]["pleasure"] = self.pleasure
+        lesson_record["metadata"]["pain"] = self.pain
+
         self.lessons_learned.append(lesson_record)
 
-        # Security: Bound lessons to prevent DoS (same limit as memories)
-        if len(self.lessons_learned) > MAX_MEMORIES:
-            # Remove oldest lesson (FIFO)
-            self.lessons_learned.pop(0)
+        # Learn from alignment patterns
+        self._learn_from_alignment_patterns()
 
         return lesson_record
 
@@ -1310,6 +1324,7 @@ class Being:
         Make a decision (decrements fatigue, consumes stamina, returns experience).
 
         When stamina is depleted, actions become sluggish, shitty, and make mistakes.
+        For the first Being, uses Empirica for epistemic thinking.
 
         Args:
             decision_type: Type of decision (learn_skill, record_memory, pursue_goal, rest, explore)
@@ -1461,14 +1476,9 @@ class Being:
         # Keep recent_experiences bounded (last 10)
         if len(self.recent_experiences) > 10:
             self.recent_experiences.pop(0)
-    
-    def to_dict(self) -> Dict[str, Any]:
-        """
-        Convert being to dictionary for serialization.
 
-        Returns:
-            Dictionary representation of the Being with all attributes
-        """
+    def to_dict(self) -> dict[str, Any]:
+        """Convert being to dictionary."""
         return {
             "being_id": self.being_id,
             "reality_id": self.reality_id,
@@ -1517,16 +1527,8 @@ class Being:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "Being":
-        """
-        Create being from dictionary (with backward compatibility for missing attributes).
-
-        Args:
-            data: Dictionary containing being data (from to_dict or storage)
-
-        Returns:
-            Being instance reconstructed from the dictionary data
-        """
+    def from_dict(cls, data: dict[str, Any]) -> "Being":
+        """Create being from dictionary (with backward compatibility for missing attributes)."""
         being = cls(
             being_id=data["being_id"],
             reality_id=data["reality_id"],

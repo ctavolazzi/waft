@@ -25,8 +25,8 @@ from .session_stats import SessionStats
 
 class ReflectManager:
     """Manages AI journal and reflection entries."""
-    
-    def __init__(self, project_path: Path, ai_name: Optional[str] = None):
+
+    def __init__(self, project_path: Path):
         """
         Initialize reflect manager.
 
@@ -41,26 +41,25 @@ class ReflectManager:
         self.github = GitHubManager(project_path)
         self.memory = MemoryManager(project_path)
 
-        # AI identification
-        self.ai_name = ai_name or "default"
+        # Journal location - placed in _pyrite/journal/ (memory layer)
+        # This is appropriate as the journal is part of the AI's memory system
+        self.journal_dir = project_path / "_pyrite" / "journal"
+        self.journal_file = self.journal_dir / "ai-journal.md"
+        self.entries_dir = self.journal_dir / "entries"
+        self.archive_dir = self.journal_dir / "archive"
+        self.stats_dir = self.journal_dir / "stats"
+        self.index_file = self.journal_dir / "index.json"
+        self.chronicles_dir = self.journal_dir / "chronicles"  # NEW: Hierarchical structure
+        self.discovery_file = self.journal_dir / "discovery.json"  # NEW: Being discovery manifest
 
-        # Journal location structure:
-        # _pyrite/journal/
-        # ├── registry.json
-        # ├── claude-code/
-        # │   ├── journal.md
-        # │   └── entries/
-        # ├── cursor/
-        # │   ├── journal.md
-        # │   └── entries/
-        # └── default/
-        #     ├── journal.md
-        #     └── entries/
-        self.journal_root = project_path / "_pyrite" / "journal"
-        self.ai_journal_dir = self.journal_root / self.ai_name
-        self.journal_file = self.ai_journal_dir / "journal.md"
-        self.entries_dir = self.ai_journal_dir / "entries"
-        self.registry_file = self.journal_root / "registry.json"
+        # Journal length threshold for archiving (default: 500 lines)
+        self.archive_threshold = 500
+
+        # Archive retention policy (days to keep archives)
+        self.archive_retention_days = 365  # Keep archives for 1 year
+
+        # CRITICAL: Validate journal_dir is within project_path (security)
+        self._validate_journal_path()
 
         # Ensure journal structure exists
         self._ensure_journal_exists()
@@ -92,45 +91,152 @@ class ReflectManager:
         self.journal_root.mkdir(parents=True, exist_ok=True)
         self.ai_journal_dir.mkdir(parents=True, exist_ok=True)
         self.entries_dir.mkdir(parents=True, exist_ok=True)
+        self.archive_dir.mkdir(parents=True, exist_ok=True)
+        self.stats_dir.mkdir(parents=True, exist_ok=True)
+        self.chronicles_dir.mkdir(parents=True, exist_ok=True)  # NEW: Create chronicles directory
 
-        # Create/update registry
-        self._update_registry()
+        # CRITICAL: Set restrictive file permissions (0700 for dirs, 0600 for files)
+        try:
+            self.journal_dir.chmod(0o700)
+            self.chronicles_dir.chmod(0o700)
+        except OSError:
+            pass  # Permissions may not be changeable on all systems
 
         # Create journal file if it doesn't exist
         if not self.journal_file.exists():
             self._create_initial_journal()
 
-    def _update_registry(self):
-        """Update the AI journal registry."""
-        import json
+        # Initialize index if it doesn't exist
+        if not self.index_file.exists():
+            self._create_index()
 
-        registry = {}
-        if self.registry_file.exists():
-            try:
-                registry = json.loads(self.registry_file.read_text(encoding="utf-8"))
-            except Exception:
-                registry = {}
+        # Create discovery manifest if it doesn't exist
+        if not self.discovery_file.exists():
+            self._create_discovery_manifest()
 
-        # Add or update this AI's entry
-        if self.ai_name not in registry:
-            registry[self.ai_name] = {
-                "created": datetime.now().isoformat(),
-                "last_updated": datetime.now().isoformat(),
-                "entry_count": 0,
-                "journal_path": str(self.journal_file.relative_to(self.project_path)),
-            }
-        else:
-            registry[self.ai_name]["last_updated"] = datetime.now().isoformat()
+    def _check_and_archive_if_needed(self):
+        """
+        Check journal length and archive if it exceeds threshold.
 
-        # Save registry
-        self.registry_file.write_text(json.dumps(registry, indent=2), encoding="utf-8")
-    
+        If journal is too long:
+        1. Extract all entries
+        2. Create archive file with date
+        3. Keep only recent entries in main journal (last 100 lines or 2 entries)
+        4. Move old entries to archive
+        """
+        if not self.journal_file.exists():
+            return
+
+        # Count lines in current journal
+        content = self.journal_file.read_text(encoding="utf-8")
+        line_count = len(content.splitlines())
+
+        if line_count <= self.archive_threshold:
+            return  # Journal is fine, no archiving needed
+
+        # Journal is too long - archive it
+        self.console.print(
+            f"\n[bold yellow]📦 Journal exceeds {self.archive_threshold} lines ({line_count} lines)[/bold yellow]"
+        )
+        self.console.print("[dim]Archiving old entries...[/dim]\n")
+
+        # Extract all entries
+        entries = self._extract_journal_entries(content)
+
+        if len(entries) < 2:
+            # Not enough entries to archive, just keep everything
+            return
+
+        # Create archive filename with date
+        archive_date = datetime.now().strftime("%Y-%m-%d")
+        archive_file = self.archive_dir / f"ai-journal-{archive_date}.md"
+
+        # If archive file already exists for today, append timestamp
+        if archive_file.exists():
+            timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+            archive_file = self.archive_dir / f"ai-journal-{archive_date}-{timestamp}.md"
+
+        # Write archived entries to archive file
+        archive_content = []
+        archive_content.append("# AI Journal Archive\n\n")
+        archive_content.append(f"**Archived**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+        archive_content.append(f"**Original Journal**: {self.journal_file.name}\n")
+        archive_content.append(f"**Total Entries Archived**: {len(entries) - 2}\n\n")
+        archive_content.append("---\n\n")
+
+        # Archive all entries except the last 2
+        for entry in entries[:-2]:
+            archive_content.append(entry)
+            archive_content.append("\n---\n\n")
+
+        archive_file.write_text("".join(archive_content), encoding="utf-8")
+
+        # Create new journal with header and last 2 entries
+        new_content = []
+        new_content.append("# AI Journal\n\n")
+        new_content.append(
+            "Reflections, thoughts, and learnings from working on the WAFT project.\n\n"
+        )
+        new_content.append("---\n\n")
+        new_content.append(f"*Previous entries archived to: {archive_file.name}*\n\n")
+        new_content.append("---\n\n")
+
+        # Add the last 2 entries
+        for entry in entries[-2:]:
+            new_content.append(entry)
+            new_content.append("\n---\n\n")
+
+        # Write new journal
+        self.journal_file.write_text("".join(new_content), encoding="utf-8")
+
+        self.console.print(
+            f"[bold green]✅ Archived {len(entries) - 2} entries to {archive_file.name}[/bold green]"
+        )
+        self.console.print(f"[dim]Kept {len(entries[-2:])} recent entries in main journal[/dim]\n")
+
+    def _extract_journal_entries(self, content: str) -> list[str]:
+        """
+        Extract individual journal entries from journal content.
+
+        Args:
+            content: Full journal content
+
+        Returns:
+            List of entry strings (each entry is a complete markdown section)
+        """
+        entries = []
+
+        # Pattern to match entry headers: ## YYYY-MM-DD HH:MM - Title
+        # or ## Journal Entry: YYYY-MM-DD HH:MM
+        pattern = r"^## (?:Journal Entry: )?(\d{4}-\d{2}-\d{2}(?:\s+\d{2}:\d{2})?(?:\s+-\s+.*)?)"
+
+        matches = list(re.finditer(pattern, content, re.MULTILINE))
+
+        if not matches:
+            # No entries found, return entire content as single entry
+            return [content]
+
+        # Extract each entry
+        for i, match in enumerate(matches):
+            start_pos = match.start()
+
+            # Find end position (start of next entry or end of file)
+            if i + 1 < len(matches):
+                end_pos = matches[i + 1].start()
+            else:
+                end_pos = len(content)
+
+            entry = content[start_pos:end_pos].strip()
+            if entry:
+                entries.append(entry)
+
+        return entries
+
     def _create_initial_journal(self):
         """Create initial journal file with header."""
         header = f"""# AI Journal: {self.ai_name}
 
-**Created**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
-**AI**: {self.ai_name}
+**Created**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 **Purpose**: Reflective journal for AI assistant thoughts, learnings, and experiences
 
 ---
@@ -417,9 +523,6 @@ Entries are appended chronologically, providing a record of this AI's cognitive 
         date_str = timestamp.strftime("%Y-%m-%d")
         time_str = timestamp.strftime("%H:%M")
 
-        # Gather AI metadata for signature
-        ai_metadata = self._gather_ai_metadata()
-
         entry = {
             "timestamp": timestamp.isoformat(),
             "date": date_str,
@@ -443,24 +546,7 @@ Entries are appended chronologically, providing a record of this AI's cognitive 
 
         return entry
 
-    def _gather_ai_metadata(self) -> Dict[str, str]:
-        """
-        Gather AI metadata for journal signature.
-
-        Returns:
-            Dictionary with AI identification information
-        """
-        # This should be populated by the AI assistant itself
-        # Default placeholder - AI should fill this in
-        return {
-            "model": "[AI should identify model name, e.g., 'Claude Sonnet 4.5']",
-            "model_id": "[AI should provide model ID, e.g., 'claude-sonnet-4-5-20250929']",
-            "system": "[AI should identify system, e.g., 'Claude Code', 'Cursor', 'ChatGPT']",
-            "session_id": "[AI should provide session/conversation ID if available]",
-            "notes": "[Any other identifying information the AI wants to include]",
-        }
-    
-    def _save_journal_entry(self, entry: Dict[str, Any]) -> Path:
+    def _save_journal_entry(self, entry: dict[str, Any]) -> Path:
         """
         Save journal entry to file with dual-write strategy (hierarchical + legacy).
 
@@ -479,29 +565,30 @@ Entries are appended chronologically, providing a record of this AI's cognitive 
         # Build markdown content with enhanced metadata
         content = []
         content.append(f"\n## Journal Entry: {entry['date']} {entry['time']}\n")
-        content.append(f"**Timestamp**: {entry['timestamp']}\n\n")
+        content.append(f"**Timestamp**: {entry['timestamp']}\n")
 
-        # Add AI signature
-        if entry.get('ai_metadata'):
-            ai = entry['ai_metadata']
-            content.append("**AI Signature:**\n")
-            if ai.get('model'):
-                content.append(f"- Model: {ai['model']}\n")
-            if ai.get('model_id'):
-                content.append(f"- Model ID: {ai['model_id']}\n")
-            if ai.get('system'):
-                content.append(f"- System: {ai['system']}\n")
-            if ai.get('session_id'):
-                content.append(f"- Session: {ai['session_id']}\n")
-            if ai.get('notes'):
-                content.append(f"- Notes: {ai['notes']}\n")
-            content.append("\n")
+        # Enhanced metadata section
+        metadata = []
+        if entry.get("topic"):
+            metadata.append(f"**Topic**: {entry['topic']}")
 
-        # Add context summary
-        if entry['context'].get('git', {}).get('initialized'):
-            content.append(f"**Context**: Branch `{entry['context']['git'].get('branch', 'unknown')}`, ")
-            content.append(f"{entry['context']['git'].get('uncommitted_count', 0)} uncommitted files\n\n")
-        
+        if entry["context"].get("git", {}).get("initialized"):
+            branch = entry["context"]["git"].get("branch", "unknown")
+            uncommitted = entry["context"]["git"].get("uncommitted_count", 0)
+            metadata.append(f"**Git**: Branch `{branch}`, {uncommitted} uncommitted files")
+
+        if entry["context"].get("stats"):
+            stats = entry["context"]["stats"]
+            if stats.get("files_created") or stats.get("files_modified"):
+                metadata.append(
+                    f"**Session**: {stats.get('files_created', 0)} created, {stats.get('files_modified', 0)} modified"
+                )
+
+        if metadata:
+            content.append(" | ".join(metadata))
+
+        content.append("\n")
+
         # Add sections
         for section_name, section_content in entry["sections"].items():
             content.append(f"### {section_name}\n")

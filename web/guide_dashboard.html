@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TheGuide Dashboard - Meta-Cognitive Guidance</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            color: #666;
+            font-size: 1.2em;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .score-bar {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .score-label {
+            width: 120px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .score-bar-bg {
+            flex: 1;
+            height: 20px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 0 10px;
+        }
+
+        .score-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.5s ease;
+        }
+
+        .score-value {
+            width: 50px;
+            text-align: right;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .session-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .session-item:hover {
+            background: #e9ecef;
+        }
+
+        .session-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-running {
+            background: #cfe2ff;
+            color: #084298;
+        }
+
+        .status-completed {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .status-failed {
+            background: #f8d7da;
+            color: #842029;
+        }
+
+        .explanation {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #842029;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .success {
+            background: #d1e7dd;
+            color: #0f5132;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧠 TheGuide Dashboard</h1>
+            <p class="tagline">Meta-Cognitive Guidance System</p>
+        </header>
+
+        <div class="cards">
+            <!-- Create Session Card -->
+            <div class="card">
+                <h2>🚀 New Session</h2>
+                <div class="input-group">
+                    <label for="problem">Problem Statement</label>
+                    <textarea id="problem" placeholder="Enter your problem or question..."></textarea>
+                </div>
+                <div class="input-group">
+                    <label for="iterations">Max Iterations</label>
+                    <input type="number" id="iterations" value="10" min="1" max="50">
+                </div>
+                <div class="input-group">
+                    <label for="threshold">Quality Threshold</label>
+                    <input type="number" id="threshold" value="0.8" min="0" max="1" step="0.05">
+                </div>
+                <button onclick="createSession()">Start Guidance Session</button>
+                <div id="create-status"></div>
+            </div>
+
+            <!-- Session Details Card -->
+            <div class="card">
+                <h2>📊 Session Details</h2>
+                <div class="input-group">
+                    <label for="sessionId">Session ID</label>
+                    <input type="text" id="sessionId" placeholder="Enter session ID...">
+                </div>
+                <button onclick="getSessionDetails()">Load Session</button>
+                <button onclick="getExplanation()" style="margin-left: 10px;">Get Explanation</button>
+                <div id="session-details"></div>
+            </div>
+
+            <!-- Recent Sessions Card -->
+            <div class="card">
+                <h2>📜 Recent Sessions</h2>
+                <button onclick="loadRecentSessions()">Refresh</button>
+                <div id="recent-sessions" style="margin-top: 15px;"></div>
+            </div>
+        </div>
+
+        <!-- Analytics Card -->
+        <div class="card">
+            <h2>📈 Analytics</h2>
+            <button onclick="loadAnalytics()">Load Analytics</button>
+            <div id="analytics" style="margin-top: 15px;"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8000';
+
+        async function createSession() {
+            const problem = document.getElementById('problem').value;
+            const iterations = parseInt(document.getElementById('iterations').value);
+            const threshold = parseFloat(document.getElementById('threshold').value);
+            const statusDiv = document.getElementById('create-status');
+
+            if (!problem) {
+                statusDiv.innerHTML = '<div class="error">Please enter a problem statement</div>';
+                return;
+            }
+
+            statusDiv.innerHTML = '<div class="loading"><div class="spinner"></div>Creating session...</div>';
+
+            try {
+                const response = await fetch(`${API_URL}/sessions`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        problem_statement: problem,
+                        max_iterations: iterations,
+                        quality_threshold: threshold
+                    })
+                });
+
+                if (!response.ok) throw new Error('Failed to create session');
+
+                const data = await response.json();
+                statusDiv.innerHTML = `<div class="success">Session created: ${data.session_id}<br>Processing in background...</div>`;
+
+                // Auto-load session details after a delay
+                setTimeout(() => {
+                    document.getElementById('sessionId').value = data.session_id;
+                    checkSessionStatus(data.session_id);
+                }, 2000);
+
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        async function checkSessionStatus(sessionId) {
+            const statusDiv = document.getElementById('session-details');
+
+            try {
+                const response = await fetch(`${API_URL}/sessions/${sessionId}/status`);
+                if (!response.ok) throw new Error('Failed to get status');
+
+                const data = await response.json();
+                statusDiv.innerHTML = `<div class="session-meta">Status: <span class="status status-${data.status}">${data.status}</span></div>`;
+
+                if (data.status === 'running' || data.status === 'pending') {
+                    // Poll again in 3 seconds
+                    setTimeout(() => checkSessionStatus(sessionId), 3000);
+                } else if (data.status === 'completed') {
+                    getSessionDetails();
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        async function getSessionDetails() {
+            const sessionId = document.getElementById('sessionId').value;
+            const detailsDiv = document.getElementById('session-details');
+
+            if (!sessionId) {
+                detailsDiv.innerHTML = '<div class="error">Please enter a session ID</div>';
+                return;
+            }
+
+            detailsDiv.innerHTML = '<div class="loading"><div class="spinner"></div>Loading...</div>';
+
+            try {
+                const response = await fetch(`${API_URL}/sessions/${sessionId}`);
+                if (!response.ok) throw new Error('Session not found');
+
+                const data = await response.json();
+
+                let html = `
+                    <div style="margin-top: 15px;">
+                        <div class="session-meta">
+                            <span>Quality: <strong>${data.quality_score.toFixed(2)}</strong></span>
+                            <span>Iterations: <strong>${data.iteration_count}</strong></span>
+                        </div>
+                        <h3 style="margin: 15px 0 10px 0;">Final Answer</h3>
+                        <div class="explanation">${data.final_answer}</div>
+                    </div>
+                `;
+
+                // Add FVCU scores button
+                html += '<button onclick="getScores()" style="margin-top: 15px;">View FVCU Scores</button>';
+
+                detailsDiv.innerHTML = html;
+
+            } catch (error) {
+                detailsDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        async function getScores() {
+            const sessionId = document.getElementById('sessionId').value;
+            const detailsDiv = document.getElementById('session-details');
+
+            try {
+                const response = await fetch(`${API_URL}/sessions/${sessionId}/scores`);
+                if (!response.ok) throw new Error('Failed to get scores');
+
+                const scores = await response.json();
+
+                let html = '<h3 style="margin: 15px 0;">FVCU+Faithfulness Scores</h3>';
+
+                scores.forEach((score, index) => {
+                    html += `<h4 style="margin: 15px 0 10px 0;">Iteration ${index + 1}</h4>`;
+
+                    ['factuality', 'validity', 'coherence', 'utility', 'faithfulness', 'overall'].forEach(metric => {
+                        const value = score[metric];
+                        const percentage = (value * 100).toFixed(0);
+
+                        html += `
+                            <div class="score-bar">
+                                <div class="score-label">${metric.charAt(0).toUpperCase() + metric.slice(1)}</div>
+                                <div class="score-bar-bg">
+                                    <div class="score-bar-fill" style="width: ${percentage}%"></div>
+                                </div>
+                                <div class="score-value">${value.toFixed(2)}</div>
+                            </div>
+                        `;
+                    });
+                });
+
+                detailsDiv.innerHTML = html;
+
+            } catch (error) {
+                detailsDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        async function getExplanation() {
+            const sessionId = document.getElementById('sessionId').value;
+            const detailsDiv = document.getElementById('session-details');
+
+            if (!sessionId) {
+                detailsDiv.innerHTML = '<div class="error">Please enter a session ID</div>';
+                return;
+            }
+
+            detailsDiv.innerHTML = '<div class="loading"><div class="spinner"></div>Loading explanation...</div>';
+
+            try {
+                const response = await fetch(`${API_URL}/sessions/${sessionId}/explain`);
+                if (!response.ok) throw new Error('Failed to get explanation');
+
+                const data = await response.json();
+
+                detailsDiv.innerHTML = `
+                    <h3 style="margin: 15px 0;">Why? Explanation</h3>
+                    <div class="explanation">${data.explanation}</div>
+                `;
+
+            } catch (error) {
+                detailsDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        async function loadRecentSessions() {
+            const sessionsDiv = document.getElementById('recent-sessions');
+            sessionsDiv.innerHTML = '<div class="loading"><div class="spinner"></div>Loading...</div>';
+
+            try {
+                const response = await fetch(`${API_URL}/sessions?limit=5`);
+                if (!response.ok) throw new Error('Failed to load sessions');
+
+                const sessions = await response.json();
+
+                if (sessions.length === 0) {
+                    sessionsDiv.innerHTML = '<p style="color: #666;">No sessions found</p>';
+                    return;
+                }
+
+                let html = '';
+                sessions.forEach(session => {
+                    html += `
+                        <div class="session-item" onclick="loadSession('${session.session_id}')">
+                            <div><strong>${session.problem_summary}</strong></div>
+                            <div class="session-meta">
+                                <span>Quality: ${session.quality_score.toFixed(2)}</span>
+                                <span>Iterations: ${session.iteration_count}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                sessionsDiv.innerHTML = html;
+
+            } catch (error) {
+                sessionsDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        function loadSession(sessionId) {
+            document.getElementById('sessionId').value = sessionId;
+            getSessionDetails();
+        }
+
+        async function loadAnalytics() {
+            const analyticsDiv = document.getElementById('analytics');
+            analyticsDiv.innerHTML = '<div class="loading"><div class="spinner"></div>Loading...</div>';
+
+            try {
+                const response = await fetch(`${API_URL}/analytics`);
+                if (!response.ok) throw new Error('Failed to load analytics');
+
+                const data = await response.json();
+
+                analyticsDiv.innerHTML = `
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 2em; font-weight: bold; color: #667eea;">${data.total_sessions}</div>
+                            <div style="color: #666;">Total Sessions</div>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 2em; font-weight: bold; color: #667eea;">${data.average_quality_score.toFixed(2)}</div>
+                            <div style="color: #666;">Avg Quality</div>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 2em; font-weight: bold; color: #667eea;">${data.average_iterations.toFixed(1)}</div>
+                            <div style="color: #666;">Avg Iterations</div>
+                        </div>
+                    </div>
+                `;
+
+            } catch (error) {
+                analyticsDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        // Auto-load recent sessions on page load
+        window.addEventListener('load', () => {
+            loadRecentSessions();
+            loadAnalytics();
+        });
+    </script>
+</body>
+</html>

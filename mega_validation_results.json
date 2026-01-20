@@ -1,0 +1,51 @@
+{
+  "ab_testing": {
+    "baseline_pass_rate": 0.0,
+    "improved_pass_rate": 0.0,
+    "improvement": 0.0,
+    "baseline_quality": 0.5,
+    "improved_quality": 0.5,
+    "quality_improvement": 0.0,
+    "sample_size": 20
+  },
+  "cross_validation": {
+    "mean_pass_rate": 75.0,
+    "stdev_pass_rate": 0.0,
+    "mean_quality": 0.5,
+    "stdev_quality": 0.0,
+    "runs": 10
+  },
+  "transfer_learning": {
+    "baseline_by_domain": {
+      "math": 0.0,
+      "logic": 0.0,
+      "impossible": 0.0,
+      "boundary": 0.0
+    },
+    "improved_by_domain": {
+      "math": 0.0,
+      "logic": 0.0,
+      "impossible": 0.0,
+      "boundary": 0.0
+    },
+    "avg_improvement": 0.0,
+    "all_improved": true
+  },
+  "stress_testing": {
+    "Rapid Fire": {
+      "failure_rate": 0.0,
+      "avg_time": 0.001069188117980957,
+      "repeats": 50
+    },
+    "Complex": {
+      "failure_rate": 0.0,
+      "avg_time": 0.0013480186462402344,
+      "repeats": 1
+    },
+    "Adversarial": {
+      "failure_rate": 0.0,
+      "avg_time": 0.0011556148529052734,
+      "repeats": 1
+    }
+  }
+}

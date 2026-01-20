@@ -1,0 +1,6 @@
+SELF-EVALUATION: TheGuide Evaluates Its Own Test Performance
+Generated: 2026-01-19T05:27:15.469501
+Duration: 0.00s
+Quality: 0.500
+
+Processing...

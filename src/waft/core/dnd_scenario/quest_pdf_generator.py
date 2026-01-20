@@ -156,7 +156,6 @@ class QuestPDFGenerator:
 
         Basic conversion - handles headers, bold, italic, lists, code blocks.
         """
-
         lines = markdown.split("\n")
         typst_lines = []
         in_code_block = False

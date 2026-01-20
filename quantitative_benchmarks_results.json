@@ -1,0 +1,94 @@
+{
+  "performance": {
+    "baseline_mean": 0.0011511723200480144,
+    "improved_mean": 0.001063227653503418,
+    "speedup": 1.0827148036027956,
+    "percent_change": -7.639574459271945,
+    "sample_size": 30
+  },
+  "capability_matrix": {
+    "baseline_matrix": {
+      "Basic Math": 0.0,
+      "Error Detection": 0.0,
+      "Impossibility": 0.0,
+      "Boundaries": 0.0,
+      "Logic": 100.0
+    },
+    "improved_matrix": {
+      "Basic Math": 0.0,
+      "Error Detection": 100.0,
+      "Impossibility": 0.0,
+      "Boundaries": 0.0,
+      "Logic": 0.0
+    },
+    "baseline_capable": 1,
+    "improved_capable": 1,
+    "capability_gain": 0
+  },
+  "quality_distribution": {
+    "baseline": {
+      "mean": 0.5,
+      "median": 0.5,
+      "stdev": 0.0,
+      "min": 0.5,
+      "max": 0.5,
+      "histogram": [
+        0,
+        0,
+        20,
+        0,
+        0,
+        0
+      ]
+    },
+    "improved": {
+      "mean": 0.5,
+      "median": 0.5,
+      "stdev": 0.0,
+      "min": 0.5,
+      "max": 0.5,
+      "histogram": [
+        0,
+        0,
+        20,
+        0,
+        0,
+        0
+      ]
+    },
+    "mean_improvement": 0.0
+  },
+  "effect_size": {
+    "cohens_d": 0,
+    "interpretation": "Negligible",
+    "baseline_mean": 0.5,
+    "improved_mean": 0.5,
+    "mean_difference": 0.0
+  },
+  "confusion_matrix": {
+    "baseline": {
+      "tp": 0,
+      "fp": 0,
+      "tn": 6,
+      "fn": 18,
+      "accuracy": 0.25,
+      "precision": 0,
+      "recall": 0.0,
+      "f1": 0,
+      "specificity": 1.0
+    },
+    "improved": {
+      "tp": 6,
+      "fp": 0,
+      "tn": 6,
+      "fn": 12,
+      "accuracy": 0.5,
+      "precision": 1.0,
+      "recall": 0.3333333333333333,
+      "f1": 0.5,
+      "specificity": 1.0
+    },
+    "accuracy_gain": 25.0,
+    "f1_gain": 0.5
+  }
+}

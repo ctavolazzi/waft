@@ -55,10 +55,7 @@ class Storyteller:
         self.timeline: list[dict] = []
 
     def tell_story(
-        self,
-        output_path: Path | None = None,
-        title: str | None = None,
-        open_pdf: bool = False,
+        self, output_path: Path | None = None, title: str | None = None, open_pdf: bool = False
     ) -> Path:
         """
         Generate complete narrative PDF.

@@ -1,0 +1,30 @@
+{
+  "exp1_uniqueness": {
+    "hypothesis_accepted": true,
+    "data": {
+      "uniqueness_rate": 100.0,
+      "total": 100.0,
+      "unique": 100.0,
+      "mean_time": 0.0009486913681030273,
+      "throughput": 1050.443162721738
+    }
+  },
+  "exp2_scaling": {
+    "hypothesis_accepted": true,
+    "data": {
+      "r_squared": 0.9921569925054937,
+      "slope": 6.922422097824883e-05,
+      "mean_time_per_iter": 0.00022150230407714844,
+      "cv": 115.08594243941594
+    }
+  },
+  "exp3_concurrency": {
+    "hypothesis_accepted": true,
+    "data": {
+      "error_rate": 0.0,
+      "corruption_rate": 0.0,
+      "uniqueness_rate": 100.0,
+      "throughput": 1090.0581634085108
+    }
+  }
+}

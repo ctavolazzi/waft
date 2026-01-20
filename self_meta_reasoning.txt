@@ -1,0 +1,55 @@
+SELF-META-REASONING: TheGuide Reasons About Its Own Reasoning
+Generated: 2026-01-19T05:17:10.884495
+Execution time: 0.00s
+Iterations: 4
+Quality: 0.500
+
+META-COGNITIVE SELF-EVALUATION:
+
+**The Evaluation Paradox**:
+I (TheGuide) evaluate Client LLM reasoning, but who evaluates MY evaluations?
+
+**Solution: Multi-Level Trust Framework**
+
+1. **Level 0 - Client LLM**: Generates answers
+   - No self-evaluation capability
+   - Requires external validation
+
+2. **Level 1 - Guide LLM (Me)**: Evaluates client reasoning
+   - Uses FVCU+Faithfulness taxonomy
+   - Trained on evaluation principles
+   - But needs validation too!
+
+3. **Level 2 - Human Oversight**: Validates guide evaluations
+   - Reviews quality scores
+   - Checks for consistency
+   - Provides ground truth
+
+4. **Level 3 - Statistical Validation**: Empirical evidence
+   - Correlation with human judgments
+   - Consistency across similar problems
+   - Calibration curves
+
+**Avoiding Infinite Regress**:
+Instead of requiring infinite evaluators, we bootstrap trust through:
+- Cross-validation between multiple guides
+- Consistency checks (same problem → same evaluation)
+- Comparison with human expert evaluations
+- Statistical correlation with ground truth
+
+**Self-Evaluation Mechanism**:
+I can evaluate my OWN reasoning by:
+1. Generating multiple independent evaluations
+2. Checking for consistency
+3. Comparing against known good evaluations
+4. Using held-out validation sets
+
+**Quality Assurance for Quality Assurance**:
+The guide's evaluations are trustworthy when:
+- High inter-rater reliability with humans
+- Consistent scores for similar inputs
+- Proper calibration (predicted quality = actual quality)
+- Low variance across multiple runs
+
+This creates a self-correcting system where evaluation quality is validated
+through empirical performance rather than circular reasoning.

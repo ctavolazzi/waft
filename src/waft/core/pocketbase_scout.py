@@ -857,7 +857,6 @@ class PocketBaseScout(RealmScout):
                 encoding="utf-8",
             )
             # Create a simple placeholder image using basic methods
-
             # Create minimal 1x1 PNG
             png_data = b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01\x08\x02\x00\x00\x00\x90wS\xde\x00\x00\x00\nIDATx\x9cc\x00\x01\x00\x00\x05\x00\x01\r\n-\xdb\x00\x00\x00\x00IEND\xaeB`\x82"
             output_path.write_bytes(png_data)

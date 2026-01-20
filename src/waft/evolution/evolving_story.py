@@ -185,10 +185,7 @@ class EvolvingStory:
         return True
 
     def generate_pdf(
-        self,
-        generation: int | None = None,
-        output_path: Path | None = None,
-        open_pdf: bool = False,
+        self, generation: int | None = None, output_path: Path | None = None, open_pdf: bool = False
     ) -> Path:
         """
         Generate PDF snapshot of current story state.

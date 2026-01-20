@@ -1,7 +1,5 @@
 import math
 from dataclasses import dataclass
-from typing import List, Dict, Optional, Tuple
-from .tracing import get_tracer, SpanStatus
 
 # ==========================================
 # 1. Immutable Data Structures
@@ -127,38 +125,22 @@ class DecisionMatrixCalculator:
                     weight = weight_map.get(score_obj.criterion_name, 0.0)
                     results[score_obj.alternative_name] += weight * score_obj.value
 
-            tracer.end_span(span, SpanStatus.SUCCESS, output_data={"results": results})
-            return results
-        except Exception as e:
-            tracer.end_span(span, SpanStatus.ERROR, error=e)
-            raise
-
     def rank_alternatives(self, scores: dict[str, float]) -> list[tuple[str, float, int]]:
         """
         Sorts alternatives deterministically.
         Primary Sort: Score (Descending)
         Secondary Sort: Name (Ascending) - Breaks ties alphabetically
         """
-        tracer = get_tracer()
-        span = tracer.start_span("decision_matrix.rank_alternatives", "core",
-                                data={"scores": scores})
+        # Sort key: (-score, name).
+        # Negative score makes Python sort descending for float.
+        # Name sorts ascending for string.
+        sorted_items = sorted(scores.items(), key=lambda item: (-item[1], item[0]))
 
-        try:
-            # Sort key: (-score, name).
-            # Negative score makes Python sort descending for float.
-            # Name sorts ascending for string.
-            sorted_items = sorted(scores.items(), key=lambda item: (-item[1], item[0]))
+        ranked_results = []
+        for rank, (name, score) in enumerate(sorted_items, start=1):
+            ranked_results.append((name, score, rank))
 
-            ranked_results = []
-            for rank, (name, score) in enumerate(sorted_items, start=1):
-                ranked_results.append((name, score, rank))
-
-            tracer.end_span(span, SpanStatus.SUCCESS,
-                           output_data={"rankings": [(name, score, rank) for name, score, rank in ranked_results]})
-            return ranked_results
-        except Exception as e:
-            tracer.end_span(span, SpanStatus.ERROR, error=e)
-            raise
+        return ranked_results
 
     def get_detailed_scores(self) -> dict[str, dict[str, float]]:
         """

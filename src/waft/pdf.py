@@ -73,21 +73,11 @@ from .evolution.latex_generator import LaTeXGenerator
 from .evolution.pdf_generator import PDFGenerator
 from .evolution.scientific_pdf_generator import ScientificPDFGenerator
 from .evolution.two_page_generator import TwoPageGenerator
-from .foundation import (
-    ContentBlock,
-)
-from .foundation import (
-    DocumentConfig as FoundationConfig,
-)
-from .foundation import (
-    DocumentEngine as FoundationV1Engine,
-)
-from .foundation_v2 import (
-    DocumentConfig as FoundationV2Config,
-)
-from .foundation_v2 import (
-    DocumentEngine as FoundationV2Engine,
-)
+from .foundation import ContentBlock
+from .foundation import DocumentConfig as FoundationConfig
+from .foundation import DocumentEngine as FoundationV1Engine
+from .foundation_v2 import DocumentConfig as FoundationV2Config
+from .foundation_v2 import DocumentEngine as FoundationV2Engine
 
 
 @dataclass
@@ -862,16 +852,15 @@ class PDF:
 
     def _open_pdf(self, pdf_path: Path) -> None:
         """Open PDF in default viewer."""
-        import os
         import platform
         import subprocess
 
         if platform.system() == "Darwin":  # macOS
-            subprocess.run(["open", str(pdf_path)], check=False)
+            subprocess.run(["open", str(pdf_path)])
         elif platform.system() == "Windows":
-            os.startfile(str(pdf_path))
+            subprocess.run(["start", str(pdf_path)], shell=True)
         else:  # Linux
-            subprocess.run(["xdg-open", str(pdf_path)], check=False)
+            subprocess.run(["xdg-open", str(pdf_path)])
 
     # ============================================================================
     # Utility Methods
@@ -893,13 +882,12 @@ class PDF:
         if not self._generated_path:
             raise ValueError("PDF not generated yet. Call save() first.")
 
-        import os
         import platform
         import subprocess
 
         if platform.system() == "Darwin":  # macOS
-            subprocess.run(["lpr", str(self._generated_path)], check=False)
+            subprocess.run(["lpr", str(self._generated_path)])
         elif platform.system() == "Windows":
-            os.startfile(str(self._generated_path), "print")
+            subprocess.run(["print", str(self._generated_path)], shell=True)
         else:  # Linux
-            subprocess.run(["lpr", str(self._generated_path)], check=False)
+            subprocess.run(["lpr", str(self._generated_path)])
