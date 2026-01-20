@@ -7,10 +7,9 @@ and level management.
 import logging
 import sys
 from pathlib import Path
-from typing import Optional
 
 
-def get_logger(name: str, level: Optional[int] = None) -> logging.Logger:
+def get_logger(name: str, level: int | None = None) -> logging.Logger:
     """Get a logger for the specified module.
 
     Args:
@@ -32,8 +31,7 @@ def get_logger(name: str, level: Optional[int] = None) -> logging.Logger:
         handler = logging.StreamHandler(sys.stderr)
 
         formatter = logging.Formatter(
-            '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-            datefmt='%Y-%m-%d %H:%M:%S'
+            "%(asctime)s - %(name)s - %(levelname)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
         )
         handler.setFormatter(formatter)
         logger.addHandler(handler)
@@ -44,11 +42,7 @@ def get_logger(name: str, level: Optional[int] = None) -> logging.Logger:
     return logger
 
 
-def get_file_logger(
-    name: str,
-    log_file: Path,
-    level: Optional[int] = None
-) -> logging.Logger:
+def get_file_logger(name: str, log_file: Path, level: int | None = None) -> logging.Logger:
     """Get a logger that writes to a file.
 
     Args:
@@ -68,8 +62,7 @@ def get_file_logger(
         handler = logging.FileHandler(log_file)
 
         formatter = logging.Formatter(
-            '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-            datefmt='%Y-%m-%d %H:%M:%S'
+            "%(asctime)s - %(name)s - %(levelname)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
         )
         handler.setFormatter(formatter)
         logger.addHandler(handler)
@@ -92,8 +85,7 @@ def configure_root_logger(level: int = logging.INFO) -> None:
     if not root_logger.handlers:
         handler = logging.StreamHandler(sys.stderr)
         formatter = logging.Formatter(
-            '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-            datefmt='%Y-%m-%d %H:%M:%S'
+            "%(asctime)s - %(name)s - %(levelname)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
         )
         handler.setFormatter(formatter)
         root_logger.addHandler(handler)

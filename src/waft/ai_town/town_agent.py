@@ -9,38 +9,37 @@ Agents can:
 - Form relationships
 """
 
-from pathlib import Path
-from typing import Dict, Any, Optional, List
-from datetime import datetime
 import random
+from datetime import datetime
+from pathlib import Path
+from typing import Any
 
 from ..core.agent.base import BaseAgent
-from ..core.agent.state import AgentState, AgentConfig, Message
-from ..core.agent.anatomy import AnatomicalArchetype
+from ..core.agent.state import AgentConfig, AgentState
 
 
 class TownAgent(BaseAgent):
     """
     An agent that lives in AI Town.
-    
+
     Extends BaseAgent with town-specific capabilities:
     - Position in town
     - Conversation state
     - Memory of past conversations
     - Social relationships
     """
-    
+
     def __init__(
         self,
         config: AgentConfig,
         project_path: Path,
         name: str,
-        personality: Optional[Dict[str, Any]] = None,
-        position: Optional[Dict[str, float]] = None,
+        personality: dict[str, Any] | None = None,
+        position: dict[str, float] | None = None,
     ):
         """
         Initialize a town agent.
-        
+
         Args:
             config: Agent configuration
             project_path: Path to project root
@@ -49,32 +48,32 @@ class TownAgent(BaseAgent):
             position: Initial position in town (x, y)
         """
         super().__init__(config, project_path)
-        
+
         self.name = name
         self.personality = personality or {
             "curiosity": random.uniform(0.3, 0.9),
             "sociability": random.uniform(0.3, 0.9),
             "energy": random.uniform(0.5, 1.0),
         }
-        
+
         # Town-specific state
         self.position = position or {
             "x": random.uniform(0, 100),
             "y": random.uniform(0, 100),
         }
-        
-        self.current_conversation: Optional[str] = None
-        self.conversation_partners: List[str] = []  # Agent IDs
-        self.memories: List[Dict[str, Any]] = []  # Conversation memories
-        self.relationships: Dict[str, float] = {}  # Agent ID -> relationship score
-        
+
+        self.current_conversation: str | None = None
+        self.conversation_partners: list[str] = []  # Agent IDs
+        self.memories: list[dict[str, Any]] = []  # Conversation memories
+        self.relationships: dict[str, float] = {}  # Agent ID -> relationship score
+
         # Activity state
-        self.current_activity: Optional[str] = None
-        self.activity_until: Optional[float] = None
-        
+        self.current_activity: str | None = None
+        self.activity_until: float | None = None
+
         # Initialize agent description
         self.description = self._generate_description()
-        
+
     def _generate_description(self) -> str:
         """Generate agent description based on personality."""
         traits = []
@@ -82,19 +81,19 @@ class TownAgent(BaseAgent):
             traits.append("very social")
         elif self.personality["sociability"] < 0.4:
             traits.append("somewhat reserved")
-            
+
         if self.personality["curiosity"] > 0.7:
             traits.append("curious")
         elif self.personality["curiosity"] < 0.4:
             traits.append("content")
-            
+
         trait_str = ", ".join(traits) if traits else "balanced"
         return f"{self.name} is {trait_str} and lives in the town."
-    
-    async def observe(self) -> Dict[str, Any]:
+
+    async def observe(self) -> dict[str, Any]:
         """
         Observe the town state.
-        
+
         Returns:
             Observation dictionary with nearby agents, conversations, etc.
         """
@@ -105,11 +104,11 @@ class TownAgent(BaseAgent):
             "available_conversations": [],
             "current_conversation": self.current_conversation,
         }
-    
-    async def decide(self, state: AgentState) -> Dict[str, Any]:
+
+    async def decide(self, state: AgentState) -> dict[str, Any]:
         """
         Decide what to do next.
-        
+
         Returns:
             Decision dictionary with action type and parameters
         """
@@ -120,7 +119,7 @@ class TownAgent(BaseAgent):
                 return {"action": "leave_conversation"}
             else:
                 return {"action": "continue_conversation"}
-        
+
         # Not in conversation - decide what to do
         if self.personality["sociability"] > 0.6 and random.random() < 0.3:
             # Social agent might want to start a conversation
@@ -131,19 +130,19 @@ class TownAgent(BaseAgent):
         else:
             # Default: wander
             return {"action": "wander"}
-    
-    async def act(self, decision: Dict[str, Any]) -> Dict[str, Any]:
+
+    async def act(self, decision: dict[str, Any]) -> dict[str, Any]:
         """
         Execute the decided action.
-        
+
         Args:
             decision: Decision dictionary from decide()
-            
+
         Returns:
             Action result dictionary
         """
         action = decision.get("action")
-        
+
         if action == "wander":
             # Move to random nearby position
             self.position["x"] += random.uniform(-5, 5)
@@ -152,10 +151,10 @@ class TownAgent(BaseAgent):
             self.position["x"] = max(0, min(100, self.position["x"]))
             self.position["y"] = max(0, min(100, self.position["y"]))
             return {"action": "wander", "new_position": self.position}
-            
+
         elif action == "seek_conversation":
             return {"action": "seek_conversation", "ready": True}
-            
+
         elif action == "explore":
             # Move towards a random point
             target = {
@@ -168,24 +167,24 @@ class TownAgent(BaseAgent):
             self.position["x"] += dx
             self.position["y"] += dy
             return {"action": "explore", "target": target, "new_position": self.position}
-            
+
         elif action == "continue_conversation":
             return {"action": "continue_conversation", "ready": True}
-            
+
         elif action == "leave_conversation":
             self.current_conversation = None
             return {"action": "leave_conversation"}
-            
+
         else:
             return {"action": "idle"}
-    
-    async def reflect(self, result: Dict[str, Any]) -> Dict[str, Any]:
+
+    async def reflect(self, result: dict[str, Any]) -> dict[str, Any]:
         """
         Reflect on the action result.
-        
+
         Args:
             result: Result from act()
-            
+
         Returns:
             Reflection dictionary
         """
@@ -195,37 +194,41 @@ class TownAgent(BaseAgent):
             "action": result.get("action"),
             "satisfaction": random.uniform(0.5, 1.0),  # Placeholder
         }
-        
+
         # Add to journal
-        self.state.journal.append({
-            "type": "Reflection",
-            "timestamp": reflection["timestamp"],
-            "content": reflection,
-        })
-        
+        self.state.journal.append(
+            {
+                "type": "Reflection",
+                "timestamp": reflection["timestamp"],
+                "content": reflection,
+            }
+        )
+
         return reflection
-    
-    def add_memory(self, memory: Dict[str, Any]):
+
+    def add_memory(self, memory: dict[str, Any]):
         """Add a conversation memory."""
-        self.memories.append({
-            **memory,
-            "timestamp": datetime.utcnow().isoformat(),
-        })
+        self.memories.append(
+            {
+                **memory,
+                "timestamp": datetime.utcnow().isoformat(),
+            }
+        )
         # Keep last 20 memories
         if len(self.memories) > 20:
             self.memories.pop(0)
-    
+
     def update_relationship(self, agent_id: str, delta: float):
         """Update relationship score with another agent."""
         if agent_id not in self.relationships:
             self.relationships[agent_id] = 0.5  # Neutral
         self.relationships[agent_id] = max(0, min(1, self.relationships[agent_id] + delta))
-    
+
     def get_memory_summary(self) -> str:
         """Get a summary of recent memories for conversation context."""
         if not self.memories:
             return f"{self.name} has no memories yet."
-        
+
         recent = self.memories[-5:]  # Last 5 memories
         summaries = [m.get("summary", m.get("content", "")) for m in recent]
         return f"{self.name} remembers: " + "; ".join(summaries[:3])

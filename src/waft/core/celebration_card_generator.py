@@ -8,82 +8,79 @@ Creates beautiful, certificate-style one-page celebration cards with:
 - Guaranteed single-page output
 """
 
-from pathlib import Path
-from typing import Optional, Dict, Any
 from datetime import datetime
 from html import escape
-from weasyprint import HTML, CSS
+from pathlib import Path
+
+from weasyprint import HTML
 
 
 class CelebrationCardGenerator:
     """Generates one-page celebration cards with creative design."""
-    
+
     def __init__(self):
         """Initialize the celebration card generator."""
         pass
-    
+
     def generate(
         self,
         achievement: str,
-        message: Optional[str] = None,
-        output_path: Optional[Path] = None,
-        timestamp: Optional[str] = None
+        message: str | None = None,
+        output_path: Path | None = None,
+        timestamp: str | None = None,
     ) -> Path:
         """
         Generate a one-page celebration card PDF.
-        
+
         Args:
             achievement: What was accomplished
             message: Optional celebration message
             output_path: Where to save the PDF
             timestamp: Optional timestamp (defaults to now)
-            
+
         Returns:
             Path to generated PDF
         """
         if timestamp is None:
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        
+
         if message is None:
             message = "This is a moment worth celebrating! Take time to acknowledge this achievement and feel the joy of success."
-        
+
         # Generate HTML with creative design
         html_content = self._create_celebration_html(achievement, message, timestamp)
-        
+
         # Generate PDF
         if output_path is None:
-            safe_achievement = "".join(c if c.isalnum() or c in (' ', '-', '_') else '' for c in achievement)
-            safe_achievement = safe_achievement.replace(' ', '_')[:40]
+            safe_achievement = "".join(
+                c if c.isalnum() or c in (" ", "-", "_") else "" for c in achievement
+            )
+            safe_achievement = safe_achievement.replace(" ", "_")[:40]
             timestamp_file = datetime.now().strftime("%Y%m%d_%H%M%S")
-            output_path = Path(f"_pyrite/celebrations/celebration_{safe_achievement}_{timestamp_file}.pdf")
-        
+            output_path = Path(
+                f"_pyrite/celebrations/celebration_{safe_achievement}_{timestamp_file}.pdf"
+            )
+
         output_path = Path(output_path)
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        
+
         # Generate PDF with WeasyPrint
         HTML(string=html_content).write_pdf(
-            str(output_path),
-            presentational_hints=True,
-            optimize_images=True
+            str(output_path), presentational_hints=True, optimize_images=True
         )
-        
+
         return output_path
-    
-    def _create_celebration_html(
-        self,
-        achievement: str,
-        message: str,
-        timestamp: str
-    ) -> str:
+
+    def _create_celebration_html(self, achievement: str, message: str, timestamp: str) -> str:
         """Create HTML for celebration card with creative design."""
-        
+
         # Escape HTML and split message into paragraphs if needed
         achievement_escaped = escape(achievement)
         message_escaped = escape(message)
-        message_paragraphs = [p.strip() for p in message_escaped.split('\n\n') if p.strip()]
+        message_paragraphs = [p.strip() for p in message_escaped.split("\n\n") if p.strip()]
         if not message_paragraphs:
             message_paragraphs = [message_escaped]
-        
+
         html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -293,7 +290,7 @@ class CelebrationCardGenerator:
         <div class="divider">━━━━━━━━━━━━━━━━━━━━</div>
         
         <div class="celebration-message">
-            {''.join(f'<p>{paragraph}</p>' for paragraph in message_paragraphs)}
+            {"".join(f"<p>{paragraph}</p>" for paragraph in message_paragraphs)}
         </div>
         
         <div class="divider">━━━━━━━━━━━━━━━━━━━━</div>
@@ -310,5 +307,5 @@ class CelebrationCardGenerator:
     </div>
 </body>
 </html>"""
-        
+
         return html

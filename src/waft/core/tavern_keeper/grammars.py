@@ -129,4 +129,3 @@ def get_grammar(grammar_type: str) -> dict:
         "critical_failure": CRITICAL_FAILURE_GRAMMAR,
     }
     return grammars.get(grammar_type, SUCCESS_GRAMMAR)
-

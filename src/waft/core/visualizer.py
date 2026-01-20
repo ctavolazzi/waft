@@ -10,16 +10,14 @@ import subprocess
 import webbrowser
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Any
-from urllib.parse import quote
+from typing import Any
 
 from ..logging import get_logger
-from .memory import MemoryManager
-from .substrate import SubstrateManager
-from .github import GitHubManager
 from .gamification import GamificationManager
+from .github import GitHubManager
+from .memory import MemoryManager
 from .session_analytics import SessionAnalytics
-from .devlog import DevlogManager
+from .substrate import SubstrateManager
 
 logger = get_logger(__name__)
 
@@ -41,7 +39,7 @@ class Visualizer:
         self.gamification = GamificationManager(project_path)
         self.analytics = SessionAnalytics(project_path)
 
-    def gather_state(self) -> Dict[str, Any]:
+    def gather_state(self) -> dict[str, Any]:
         """
         Gather current project state.
 
@@ -97,7 +95,7 @@ class Visualizer:
 
         return state
 
-    def _get_git_status(self) -> Dict[str, Any]:
+    def _get_git_status(self) -> dict[str, Any]:
         """Get detailed git status."""
         git_status = {
             "initialized": self.github.is_initialized(),
@@ -187,10 +185,9 @@ class Visualizer:
 
         return git_status
 
-    def _get_system_info(self) -> Dict[str, Any]:
+    def _get_system_info(self) -> dict[str, Any]:
         """Get system information."""
         import sys
-        import os
         from datetime import datetime
 
         return {
@@ -200,7 +197,7 @@ class Visualizer:
             "platform": sys.platform,
         }
 
-    def _get_work_efforts(self) -> List[Dict[str, Any]]:
+    def _get_work_efforts(self) -> list[dict[str, Any]]:
         """Get work efforts information."""
         work_efforts = []
         work_efforts_path = self.project_path / "_work_efforts"
@@ -229,7 +226,7 @@ class Visualizer:
 
         return work_efforts
 
-    def _get_recent_devlog(self) -> List[str]:
+    def _get_recent_devlog(self) -> list[str]:
         """Get recent devlog entries."""
         try:
             entries = self.devlog.get_recent_entries(limit=5)
@@ -253,7 +250,7 @@ class Visualizer:
             except (OSError, UnicodeDecodeError):
                 return []
 
-    def _run_git(self, args: List[str]) -> str:
+    def _run_git(self, args: list[str]) -> str:
         """Run git command and return output."""
         try:
             result = subprocess.run(
@@ -267,39 +264,39 @@ class Visualizer:
         except (subprocess.CalledProcessError, FileNotFoundError):
             return ""
 
-    def _get_analytics_data(self) -> Dict[str, Any]:
+    def _get_analytics_data(self) -> dict[str, Any]:
         """Get analytics data for visualization."""
         try:
             # Get recent sessions (last 30 days)
             from datetime import datetime, timedelta
-            from dataclasses import asdict
+
             end_date = datetime.now()
             start_date = end_date - timedelta(days=30)
-            
+
             sessions = self.analytics.get_sessions(
-                start_date=start_date,
-                end_date=end_date,
-                limit=50
+                start_date=start_date, end_date=end_date, limit=50
             )
-            
+
             # Get trends
             trends = self.analytics.analyze_productivity_trends(days=30)
-            
+
             # Get iteration chains
             chains = self.analytics.get_iteration_chains()
-            
+
             # Convert SessionRecord objects to dicts for JSON serialization
             recent_sessions_data = []
             for session in sessions[:10]:
-                recent_sessions_data.append({
-                    "session_id": session.session_id,
-                    "timestamp": session.timestamp,
-                    "files_created": session.files_created,
-                    "files_modified": session.files_modified,
-                    "net_lines": session.net_lines,
-                    "approach_category": session.approach_category,
-                })
-            
+                recent_sessions_data.append(
+                    {
+                        "session_id": session.session_id,
+                        "timestamp": session.timestamp,
+                        "files_created": session.files_created,
+                        "files_modified": session.files_modified,
+                        "net_lines": session.net_lines,
+                        "approach_category": session.approach_category,
+                    }
+                )
+
             return {
                 "sessions_count": len(sessions),
                 "recent_sessions": recent_sessions_data,  # Converted to dicts
@@ -313,7 +310,7 @@ class Visualizer:
                 "error": str(e),
             }
 
-    def generate_html(self, state: Dict[str, Any]) -> str:
+    def generate_html(self, state: dict[str, Any]) -> str:
         """
         Generate HTML dashboard from state.
 
@@ -331,7 +328,7 @@ class Visualizer:
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Waft Visual Dashboard - {state['project']['name']}</title>
+    <title>Waft Visual Dashboard - {state["project"]["name"]}</title>
     <style>
         * {{
             margin: 0;
@@ -843,9 +840,9 @@ class Visualizer:
 <body>
     <div class="container">
         <div class="header">
-            <h1>🌊 {state['project']['name']}</h1>
+            <h1>🌊 {state["project"]["name"]}</h1>
             <div class="subtitle">
-                v{state['project']['version']} • {state['system']['date_time']}
+                v{state["project"]["version"]} • {state["system"]["date_time"]}
             </div>
         </div>
 
@@ -871,7 +868,7 @@ class Visualizer:
         </div>
 
         <!-- Analytics & Trends -->
-        {self._render_analytics_section(state) if state.get('analytics', {}).get('available') else ''}
+        {self._render_analytics_section(state) if state.get("analytics", {}).get("available") else ""}
 
         <!-- Project Structure & Details -->
         <div class="grid" style="margin-bottom: 24px;">
@@ -995,17 +992,17 @@ class Visualizer:
 </body>
 </html>"""
 
-    def _render_key_metrics_bar(self, state: Dict[str, Any]) -> str:
+    def _render_key_metrics_bar(self, state: dict[str, Any]) -> str:
         """Render key metrics bar - at a glance metrics."""
         git = state["git"]
         pyrite = state["pyrite"]
         gam = state["gamification"]
-        
+
         uncommitted = len(git.get("uncommitted_files", []))
         commits_ahead = git.get("commits_ahead", 0)
         integrity = gam.get("integrity", 100.0)
         level = gam.get("level", 1)
-        
+
         # Calculate health
         health_score = 0
         if pyrite["valid"]:
@@ -1016,12 +1013,24 @@ class Visualizer:
             health_score += 25
         if uncommitted < 10:
             health_score += 25
-        
+
         health_icon = "🟢" if health_score >= 75 else "🟡" if health_score >= 50 else "🔴"
-        health_color = "var(--success)" if health_score >= 75 else "var(--warning)" if health_score >= 50 else "var(--error)"
-        
-        git_status_color = "var(--success)" if uncommitted == 0 else "var(--warning)" if uncommitted < 20 else "var(--error)"
-        
+        health_color = (
+            "var(--success)"
+            if health_score >= 75
+            else "var(--warning)"
+            if health_score >= 50
+            else "var(--error)"
+        )
+
+        git_status_color = (
+            "var(--success)"
+            if uncommitted == 0
+            else "var(--warning)"
+            if uncommitted < 20
+            else "var(--error)"
+        )
+
         return f"""
         <div style="background: var(--bg-card); border-radius: 12px; padding: 24px; margin-bottom: 24px; border: 1px solid var(--border);">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 20px; text-align: center;">
@@ -1042,28 +1051,28 @@ class Visualizer:
                 </div>
                 <div>
                     <div style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em;">Branch</div>
-                    <div style="font-size: 1.8em; font-weight: 700; color: var(--primary-light); margin-bottom: 4px; font-family: monospace;">{git.get('branch', 'N/A')}</div>
+                    <div style="font-size: 1.8em; font-weight: 700; color: var(--primary-light); margin-bottom: 4px; font-family: monospace;">{git.get("branch", "N/A")}</div>
                     {f'<div style="font-size: 0.9em; color: var(--text-secondary);">{commits_ahead} ahead</div>' if commits_ahead > 0 else '<div style="font-size: 0.9em; color: var(--text-muted);">up to date</div>'}
                 </div>
                 <div>
                     <div style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em;">Structure</div>
-                    <div style="font-size: 2em; margin-bottom: 4px;">{'✅' if pyrite['valid'] else '❌'}</div>
-                    <div style="font-size: 1.2em; font-weight: 600; color: {'var(--success)' if pyrite['valid'] else 'var(--error)'};">{'Valid' if pyrite['valid'] else 'Invalid'}</div>
+                    <div style="font-size: 2em; margin-bottom: 4px;">{"✅" if pyrite["valid"] else "❌"}</div>
+                    <div style="font-size: 1.2em; font-weight: 600; color: {"var(--success)" if pyrite["valid"] else "var(--error)"};">{"Valid" if pyrite["valid"] else "Invalid"}</div>
                 </div>
             </div>
         </div>
         """
 
-    def _render_status_overview_card(self, state: Dict[str, Any]) -> str:
+    def _render_status_overview_card(self, state: dict[str, Any]) -> str:
         """Render status overview card - quick health check."""
         pyrite = state["pyrite"]
         git = state["git"]
         gam = state["gamification"]
-        
+
         # Calculate overall health score
         health_score = 0
         health_items = []
-        
+
         if pyrite["valid"]:
             health_score += 25
             health_items.append("✓ Structure")
@@ -1076,21 +1085,31 @@ class Visualizer:
         if len(git.get("uncommitted_files", [])) < 10:
             health_score += 25
             health_items.append("✓ Clean")
-        
-        health_color = "success" if health_score >= 75 else "warning" if health_score >= 50 else "error"
-        health_text = "Excellent" if health_score >= 75 else "Good" if health_score >= 50 else "Needs Attention"
-        
+
+        health_color = (
+            "success" if health_score >= 75 else "warning" if health_score >= 50 else "error"
+        )
+        health_text = (
+            "Excellent"
+            if health_score >= 75
+            else "Good"
+            if health_score >= 50
+            else "Needs Attention"
+        )
+
         uncommitted = len(git.get("uncommitted_files", []))
         git_status_text = "Clean" if uncommitted == 0 else f"{uncommitted} files"
-        git_status_class = "success" if uncommitted == 0 else "warning" if uncommitted < 20 else "error"
-        
+        git_status_class = (
+            "success" if uncommitted == 0 else "warning" if uncommitted < 20 else "error"
+        )
+
         return f"""
             <div class="card" style="grid-column: span 1;">
                 <h2>⚡ Status Overview</h2>
                 <div class="card-content">
                     <div class="info-item" style="text-align: center; padding: 20px;">
                         <div style="font-size: 3em; margin-bottom: 10px;">
-                            {'🟢' if health_score >= 75 else '🟡' if health_score >= 50 else '🔴'}
+                            {"🟢" if health_score >= 75 else "🟡" if health_score >= 50 else "🔴"}
                         </div>
                         <div class="info-value" style="font-size: 1.5em; font-weight: 700; margin-bottom: 8px;">
                             {health_text}
@@ -1104,20 +1123,20 @@ class Visualizer:
                         <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
                             <span class="badge {health_color}">{health_text}</span>
                             <span class="badge {git_status_class}">{git_status_text}</span>
-                            <span class="badge {'success' if pyrite['valid'] else 'error'}">{'Valid' if pyrite['valid'] else 'Invalid'} Structure</span>
+                            <span class="badge {"success" if pyrite["valid"] else "error"}">{"Valid" if pyrite["valid"] else "Invalid"} Structure</span>
                         </div>
                     </div>
                     <div class="info-item">
                         <div class="info-label">Health Indicators</div>
                         <div style="margin-top: 8px; line-height: 1.8;">
-                            {'<br>'.join(health_items) if health_items else '<span class="empty">No health data</span>'}
+                            {"<br>".join(health_items) if health_items else '<span class="empty">No health data</span>'}
                         </div>
                     </div>
                 </div>
             </div>
         """
-    
-    def _render_git_summary_card(self, state: Dict[str, Any]) -> str:
+
+    def _render_git_summary_card(self, state: dict[str, Any]) -> str:
         """Render git summary card - quick git status."""
         git = state["git"]
         if not git["initialized"]:
@@ -1131,10 +1150,10 @@ class Visualizer:
                 </div>
             </div>
             """
-        
+
         uncommitted = len(git.get("uncommitted_files", []))
         status_class = "success" if uncommitted == 0 else "warning" if uncommitted < 20 else "error"
-        
+
         return f"""
             <div class="card">
                 <h2>🔀 Git Summary</h2>
@@ -1142,29 +1161,29 @@ class Visualizer:
                     <div class="info-item">
                         <div class="info-label">Branch</div>
                         <div class="info-value">
-                            <span style="font-family: monospace; color: var(--primary-light);">{git.get('branch', 'N/A')}</span>
+                            <span style="font-family: monospace; color: var(--primary-light);">{git.get("branch", "N/A")}</span>
                         </div>
                     </div>
                     <div class="info-item">
                         <div class="info-label">Uncommitted Changes</div>
                         <div class="info-value">
                             <span class="badge {status_class}" style="font-size: 1.1em; padding: 8px 16px;">
-                                {uncommitted} file{'' if uncommitted == 1 else 's'}
+                                {uncommitted} file{"" if uncommitted == 1 else "s"}
                             </span>
                         </div>
                     </div>
-                    {f'<div class="info-item"><div class="info-label">Commits Ahead</div><div class="info-value"><span class="badge info">{git.get("commits_ahead", 0)}</span></div></div>' if git.get("commits_ahead", 0) > 0 else ''}
-                    {f'<div class="info-item"><div class="info-label">Recent Activity</div><div class="info-value" style="font-size: 0.9em; color: var(--text-secondary);">{len(git.get("recent_commits", []))} commits in history</div></div>' if git.get("recent_commits") else ''}
+                    {f'<div class="info-item"><div class="info-label">Commits Ahead</div><div class="info-value"><span class="badge info">{git.get("commits_ahead", 0)}</span></div></div>' if git.get("commits_ahead", 0) > 0 else ""}
+                    {f'<div class="info-item"><div class="info-label">Recent Activity</div><div class="info-value" style="font-size: 0.9em; color: var(--text-secondary);">{len(git.get("recent_commits", []))} commits in history</div></div>' if git.get("recent_commits") else ""}
                 </div>
             </div>
         """
-    
-    def _render_health_card(self, state: Dict[str, Any]) -> str:
+
+    def _render_health_card(self, state: dict[str, Any]) -> str:
         """Render project health card."""
         pyrite = state["pyrite"]
         gam = state["gamification"]
         lock_exists = self.substrate.verify_lock()
-        
+
         return f"""
             <div class="card">
                 <h2>💚 Project Health</h2>
@@ -1172,8 +1191,8 @@ class Visualizer:
                     <div class="info-item">
                         <div class="info-label">Integrity</div>
                         <div class="info-value">
-                            <span class="badge {'success' if gam['integrity'] >= 90 else 'warning' if gam['integrity'] >= 70 else 'error'}" style="font-size: 1.1em; padding: 8px 16px;">
-                                {gam['integrity']:.1f}%
+                            <span class="badge {"success" if gam["integrity"] >= 90 else "warning" if gam["integrity"] >= 70 else "error"}" style="font-size: 1.1em; padding: 8px 16px;">
+                                {gam["integrity"]:.1f}%
                             </span>
                         </div>
                     </div>
@@ -1181,23 +1200,23 @@ class Visualizer:
                         <div class="info-label">Level</div>
                         <div class="info-value">
                             <span class="badge info" style="font-size: 1.1em; padding: 8px 16px;">
-                                Level {gam['level']}
+                                Level {gam["level"]}
                             </span>
                         </div>
                     </div>
                     <div class="info-item">
                         <div class="info-label">Structure</div>
                         <div class="info-value">
-                            <span class="status {'valid' if pyrite['valid'] else 'invalid'}">
-                                {'✅ Valid' if pyrite['valid'] else '❌ Invalid'}
+                            <span class="status {"valid" if pyrite["valid"] else "invalid"}">
+                                {"✅ Valid" if pyrite["valid"] else "❌ Invalid"}
                             </span>
                         </div>
                     </div>
                     <div class="info-item">
                         <div class="info-label">Dependencies</div>
                         <div class="info-value">
-                            <span class="status {'valid' if lock_exists else 'missing'}">
-                                {'✅ Locked' if lock_exists else '⚠️ Missing'}
+                            <span class="status {"valid" if lock_exists else "missing"}">
+                                {"✅ Locked" if lock_exists else "⚠️ Missing"}
                             </span>
                         </div>
                     </div>
@@ -1205,7 +1224,7 @@ class Visualizer:
             </div>
         """
 
-    def _render_git_card(self, state: Dict[str, Any]) -> str:
+    def _render_git_card(self, state: dict[str, Any]) -> str:
         """Render detailed git status card."""
         git = state["git"]
         if not git["initialized"]:
@@ -1224,8 +1243,14 @@ class Visualizer:
             """
 
         uncommitted_count = len(git["uncommitted_files"])
-        status_badge = "success" if uncommitted_count == 0 else "warning" if uncommitted_count < 20 else "error"
-        
+        status_badge = (
+            "success"
+            if uncommitted_count == 0
+            else "warning"
+            if uncommitted_count < 20
+            else "error"
+        )
+
         # Organize files by type
         staged_count = len(git.get("staged_files", []))
         modified_count = len(git.get("modified_files", []))
@@ -1234,10 +1259,12 @@ class Visualizer:
         files_html = ""
         if git["uncommitted_files"]:
             files_html = "<div style='margin-top: 12px;'>"
-            
+
             # Show file type breakdown
             if staged_count > 0 or modified_count > 0 or untracked_count > 0:
-                files_html += "<div style='display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;'>"
+                files_html += (
+                    "<div style='display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;'>"
+                )
                 if staged_count > 0:
                     files_html += f"<span class='badge success'>{staged_count} staged</span>"
                 if modified_count > 0:
@@ -1245,23 +1272,23 @@ class Visualizer:
                 if untracked_count > 0:
                     files_html += f"<span class='badge info'>{untracked_count} untracked</span>"
                 files_html += "</div>"
-            
+
             # Show file list
             files_html += "<ul class='file-list'>"
             for f in git["uncommitted_files"][:25]:  # Show more files
                 # Determine file type icon
                 icon = "📝"
-                if f.endswith(('.py', '.js', '.ts', '.jsx', '.tsx')):
+                if f.endswith((".py", ".js", ".ts", ".jsx", ".tsx")):
                     icon = "💻"
-                elif f.endswith(('.md', '.txt')):
+                elif f.endswith((".md", ".txt")):
                     icon = "📄"
-                elif f.endswith(('.json', '.yaml', '.yml', '.toml')):
+                elif f.endswith((".json", ".yaml", ".yml", ".toml")):
                     icon = "⚙️"
-                elif f.endswith(('.png', '.jpg', '.svg', '.gif')):
+                elif f.endswith((".png", ".jpg", ".svg", ".gif")):
                     icon = "🖼️"
-                elif '/.git' in f or '/node_modules' in f:
+                elif "/.git" in f or "/node_modules" in f:
                     icon = "🔧"
-                
+
                 files_html += f"<li>{icon} {f}</li>"
             if len(git["uncommitted_files"]) > 25:
                 files_html += f"<li class='empty'>... and {len(git['uncommitted_files']) - 25} more files</li>"
@@ -1274,11 +1301,11 @@ class Visualizer:
                 commits_html += f"""
                     <div class="commit-item">
                         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-                            <div class="commit-hash">{commit['hash']}</div>
-                            <div style="flex: 1; color: var(--text-secondary); font-size: 0.85em;">{commit['relative']}</div>
+                            <div class="commit-hash">{commit["hash"]}</div>
+                            <div style="flex: 1; color: var(--text-secondary); font-size: 0.85em;">{commit["relative"]}</div>
                         </div>
-                        <div class="commit-message">{commit['message']}</div>
-                        <div class="commit-meta">👤 {commit['author']}</div>
+                        <div class="commit-message">{commit["message"]}</div>
+                        <div class="commit-meta">👤 {commit["author"]}</div>
                     </div>
                 """
             commits_html += "</div>"
@@ -1291,33 +1318,37 @@ class Visualizer:
                         <div class="info-item">
                             <div class="info-label">Branch</div>
                             <div class="info-value" style="font-family: monospace; color: var(--primary-light); font-size: 1.1em;">
-                                {git['branch'] or 'N/A'}
+                                {git["branch"] or "N/A"}
                             </div>
                         </div>
                         <div class="info-item">
                             <div class="info-label">Uncommitted</div>
                             <div class="info-value">
                                 <span class="badge {status_badge}" style="font-size: 1.1em; padding: 8px 16px;">
-                                    {uncommitted_count} file{'' if uncommitted_count == 1 else 's'}
+                                    {uncommitted_count} file{"" if uncommitted_count == 1 else "s"}
                                 </span>
                             </div>
                         </div>
-                        {f'<div class="info-item"><div class="info-label">Commits Ahead</div><div class="info-value"><span class="badge info" style="font-size: 1.1em; padding: 8px 16px;">{git["commits_ahead"]}</span></div></div>' if git.get("commits_ahead", 0) > 0 else ''}
-                        {f'<div class="info-item"><div class="info-label">Remote</div><div class="info-value" style="font-size: 0.9em; word-break: break-all; color: var(--text-secondary);">{git.get("remote_url", "Not configured")}</div></div>' if git.get("remote_url") else ''}
+                        {f'<div class="info-item"><div class="info-label">Commits Ahead</div><div class="info-value"><span class="badge info" style="font-size: 1.1em; padding: 8px 16px;">{git["commits_ahead"]}</span></div></div>' if git.get("commits_ahead", 0) > 0 else ""}
+                        {f'<div class="info-item"><div class="info-label">Remote</div><div class="info-value" style="font-size: 0.9em; word-break: break-all; color: var(--text-secondary);">{git.get("remote_url", "Not configured")}</div></div>' if git.get("remote_url") else ""}
                     </div>
                     {f'<div class="info-item"><div class="info-label">Changed Files</div>{files_html}</div>' if files_html else '<div class="info-item"><div class="empty">No uncommitted files</div></div>'}
-                    {f'<div class="info-item" style="margin-top: 20px;"><div class="info-label">Recent Commits</div>{commits_html}</div>' if commits_html else ''}
+                    {f'<div class="info-item" style="margin-top: 20px;"><div class="info-label">Recent Commits</div>{commits_html}</div>' if commits_html else ""}
                 </div>
             </div>
         """
 
-    def _render_pyrite_card(self, state: Dict[str, Any]) -> str:
+    def _render_pyrite_card(self, state: dict[str, Any]) -> str:
         """Render _pyrite structure card with better organization."""
         pyrite = state["pyrite"]
         status_class = "valid" if pyrite["valid"] else "invalid"
         status_text = "✅ Valid" if pyrite["valid"] else "❌ Invalid"
-        
-        total_files = len(pyrite["active_files"]) + len(pyrite["backlog_files"]) + len(pyrite["standards_files"])
+
+        total_files = (
+            len(pyrite["active_files"])
+            + len(pyrite["backlog_files"])
+            + len(pyrite["standards_files"])
+        )
 
         # Group active files by date prefix if they have dates
         recent_files = []
@@ -1327,7 +1358,7 @@ class Visualizer:
                 recent_files.append(f)
             else:
                 older_files.append(f)
-        
+
         active_list = ""
         if recent_files or older_files:
             active_list = "<ul class='file-list' style='max-height: 300px;'>"
@@ -1338,7 +1369,9 @@ class Visualizer:
             for f in older_files[:3]:
                 active_list += f"<li>📄 {f}</li>"
             if len(pyrite["active_files"]) > 15:
-                active_list += f"<li class='empty'>... and {len(pyrite['active_files']) - 15} more files</li>"
+                active_list += (
+                    f"<li class='empty'>... and {len(pyrite['active_files']) - 15} more files</li>"
+                )
             active_list += "</ul>"
         else:
             active_list = '<div class="empty">No active files</div>'
@@ -1359,7 +1392,7 @@ class Visualizer:
                     <div class="info-item">
                         <div class="info-label">
                             Active Files 
-                            <span class="badge info" style="font-size: 0.8em; margin-left: 8px;">{len(pyrite['active_files'])}</span>
+                            <span class="badge info" style="font-size: 0.8em; margin-left: 8px;">{len(pyrite["active_files"])}</span>
                         </div>
                         {active_list}
                     </div>
@@ -1367,16 +1400,16 @@ class Visualizer:
                         <div class="info-item">
                             <div class="info-label">Backlog</div>
                             <div class="info-value">
-                                <span class="badge {'info' if len(pyrite['backlog_files']) > 0 else 'warning'}">
-                                    {len(pyrite['backlog_files'])} files
+                                <span class="badge {"info" if len(pyrite["backlog_files"]) > 0 else "warning"}">
+                                    {len(pyrite["backlog_files"])} files
                                 </span>
                             </div>
                         </div>
                         <div class="info-item">
                             <div class="info-label">Standards</div>
                             <div class="info-value">
-                                <span class="badge {'info' if len(pyrite['standards_files']) > 0 else 'warning'}">
-                                    {len(pyrite['standards_files'])} files
+                                <span class="badge {"info" if len(pyrite["standards_files"]) > 0 else "warning"}">
+                                    {len(pyrite["standards_files"])} files
                                 </span>
                             </div>
                         </div>
@@ -1384,12 +1417,12 @@ class Visualizer:
                 </div>
             </div>
         """
-    
-    def _render_project_details_card(self, state: Dict[str, Any]) -> str:
+
+    def _render_project_details_card(self, state: dict[str, Any]) -> str:
         """Render project details card - combines project info and system info."""
         project = state["project"]
         sys_info = state["system"]
-        
+
         return f"""
             <div class="card">
                 <h2>📦 Project Details</h2>
@@ -1397,14 +1430,14 @@ class Visualizer:
                     <div class="info-item">
                         <div class="info-label">Project</div>
                         <div class="info-value">
-                            <strong style="color: var(--primary-light);">{project['name']}</strong>
-                            <span style="color: var(--text-secondary); margin-left: 8px;">v{project['version']}</span>
+                            <strong style="color: var(--primary-light);">{project["name"]}</strong>
+                            <span style="color: var(--text-secondary); margin-left: 8px;">v{project["version"]}</span>
                         </div>
                     </div>
                     <div class="info-item">
                         <div class="info-label">Path</div>
                         <div class="info-value" style="font-size: 0.85em; word-break: break-all; color: var(--text-secondary); font-family: monospace;">
-                            {state['project_path']}
+                            {state["project_path"]}
                         </div>
                     </div>
                     <div style="border-top: 1px solid var(--border); margin: 16px 0; padding-top: 16px;">
@@ -1412,23 +1445,23 @@ class Visualizer:
                         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
                             <div style="padding: 8px; background: rgba(26, 30, 41, 0.4); border-radius: 6px;">
                                 <div style="font-size: 0.85em; color: var(--text-secondary);">Python</div>
-                                <div style="font-weight: 600; font-family: monospace;">{sys_info['python_version']}</div>
+                                <div style="font-weight: 600; font-family: monospace;">{sys_info["python_version"]}</div>
                             </div>
                             <div style="padding: 8px; background: rgba(26, 30, 41, 0.4); border-radius: 6px;">
                                 <div style="font-size: 0.85em; color: var(--text-secondary);">Platform</div>
-                                <div style="font-weight: 600;">{sys_info['platform']}</div>
+                                <div style="font-weight: 600;">{sys_info["platform"]}</div>
                             </div>
                         </div>
                         <div style="margin-top: 8px; padding: 8px; background: rgba(26, 30, 41, 0.4); border-radius: 6px;">
                             <div style="font-size: 0.85em; color: var(--text-secondary);">Generated</div>
-                            <div style="font-weight: 600; font-size: 0.9em;">{sys_info['date_time']}</div>
+                            <div style="font-weight: 600; font-size: 0.9em;">{sys_info["date_time"]}</div>
                         </div>
                     </div>
                 </div>
             </div>
         """
 
-    def _render_gamification_card(self, state: Dict[str, Any]) -> str:
+    def _render_gamification_card(self, state: dict[str, Any]) -> str:
         """Render gamification stats card."""
         gam = state["gamification"]
         integrity = gam["integrity"]
@@ -1443,7 +1476,7 @@ class Visualizer:
                     <div class="info-item">
                         <div class="info-label">Integrity</div>
                         <div class="info-value">
-                            <span class="badge {'success' if integrity >= 90 else 'warning' if integrity >= 70 else 'invalid'}">
+                            <span class="badge {"success" if integrity >= 90 else "warning" if integrity >= 70 else "invalid"}">
                                 {integrity:.1f}%
                             </span>
                         </div>
@@ -1451,7 +1484,7 @@ class Visualizer:
                     <div class="info-item">
                         <div class="info-label">Level</div>
                         <div class="info-value">
-                            <span class="badge info">Level {gam['level']}</span>
+                            <span class="badge info">Level {gam["level"]}</span>
                         </div>
                     </div>
                     <div class="info-item">
@@ -1467,14 +1500,14 @@ class Visualizer:
             </div>
         """
 
-    def _render_work_efforts_card(self, state: Dict[str, Any]) -> str:
+    def _render_work_efforts_card(self, state: dict[str, Any]) -> str:
         """Render work efforts and activity card."""
         efforts = state["work_efforts"]
         devlog_entries = state["devlog"]
-        
+
         # Only show this card prominently if there's actual work
         if not efforts and not devlog_entries:
-            return f"""
+            return """
             <div class="card">
                 <h2>📋 Work & Activity</h2>
                 <div class="card-content">
@@ -1488,14 +1521,16 @@ class Visualizer:
                 </div>
             </div>
             """
-        
+
         efforts_html = ""
         if efforts:
             efforts_html = "<ul class='file-list'>"
             for effort in efforts[:8]:
                 efforts_html += f"<li>📋 <strong>{effort['id']}</strong></li>"
             if len(efforts) > 8:
-                efforts_html += f"<li class='empty'>... and {len(efforts) - 8} more work efforts</li>"
+                efforts_html += (
+                    f"<li class='empty'>... and {len(efforts) - 8} more work efforts</li>"
+                )
             efforts_html += "</ul>"
         else:
             efforts_html = '<div class="empty">No active work efforts</div>'
@@ -1530,16 +1565,16 @@ class Visualizer:
             </div>
         """
 
-    def _render_analytics_section(self, state: Dict[str, Any]) -> str:
+    def _render_analytics_section(self, state: dict[str, Any]) -> str:
         """Render analytics section with trends and recent sessions."""
         analytics = state.get("analytics", {})
         if not analytics.get("available"):
             return ""
-        
+
         trends = analytics.get("trends", {})
         sessions = analytics.get("recent_sessions", [])
         chains_count = analytics.get("chains_count", 0)
-        
+
         # Build trends summary
         trends_html = ""
         if trends and "error" not in trends:
@@ -1549,36 +1584,46 @@ class Visualizer:
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px;">
                     <div style="background: rgba(124, 158, 255, 0.1); padding: 12px; border-radius: 8px;">
                         <div style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 4px;">Sessions</div>
-                        <div style="font-size: 1.4em; font-weight: 600; color: var(--primary-light);">{trends.get('total_sessions', 0)}</div>
+                        <div style="font-size: 1.4em; font-weight: 600; color: var(--primary-light);">{trends.get("total_sessions", 0)}</div>
                     </div>
                     <div style="background: rgba(124, 158, 255, 0.1); padding: 12px; border-radius: 8px;">
                         <div style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 4px;">Files</div>
-                        <div style="font-size: 1.4em; font-weight: 600; color: var(--primary-light);">{trends.get('total_files', 0):,}</div>
+                        <div style="font-size: 1.4em; font-weight: 600; color: var(--primary-light);">{trends.get("total_files", 0):,}</div>
                     </div>
                     <div style="background: rgba(124, 158, 255, 0.1); padding: 12px; border-radius: 8px;">
                         <div style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 4px;">Lines</div>
-                        <div style="font-size: 1.4em; font-weight: 600; color: var(--primary-light);">{trends.get('total_lines', 0):+,}</div>
+                        <div style="font-size: 1.4em; font-weight: 600; color: var(--primary-light);">{trends.get("total_lines", 0):+,}</div>
                     </div>
                     <div style="background: rgba(124, 158, 255, 0.1); padding: 12px; border-radius: 8px;">
                         <div style="font-size: 0.85em; color: var(--text-muted); margin-bottom: 4px;">Avg/Session</div>
-                        <div style="font-size: 1.4em; font-weight: 600; color: var(--primary-light);">{trends.get('avg_files_per_session', 0):.1f}</div>
+                        <div style="font-size: 1.4em; font-weight: 600; color: var(--primary-light);">{trends.get("avg_files_per_session", 0):.1f}</div>
                     </div>
                 </div>
             </div>
             """
-        
+
         # Build recent sessions list
         sessions_html = ""
         if sessions:
             sessions_list = ""
             for session_data in sessions[:5]:
                 if isinstance(session_data, dict):
-                    date_str = session_data.get("timestamp", "")[:10] if len(session_data.get("timestamp", "")) >= 10 else session_data.get("timestamp", "")
+                    date_str = (
+                        session_data.get("timestamp", "")[:10]
+                        if len(session_data.get("timestamp", "")) >= 10
+                        else session_data.get("timestamp", "")
+                    )
                     category = session_data.get("approach_category") or "uncategorized"
-                    files = session_data.get("files_created", 0) + session_data.get("files_modified", 0)
+                    files = session_data.get("files_created", 0) + session_data.get(
+                        "files_modified", 0
+                    )
                     lines = session_data.get("net_lines", 0)
                 else:
-                    date_str = session_data.timestamp[:10] if len(session_data.timestamp) >= 10 else session_data.timestamp
+                    date_str = (
+                        session_data.timestamp[:10]
+                        if len(session_data.timestamp) >= 10
+                        else session_data.timestamp
+                    )
                     category = session_data.approach_category or "uncategorized"
                     files = session_data.files_created + session_data.files_modified
                     lines = session_data.net_lines
@@ -1594,7 +1639,7 @@ class Visualizer:
                     </div>
                 </div>
                 """
-            
+
             sessions_html = f"""
             <div style="margin-top: 16px;">
                 <h3 style="font-size: 0.95em; color: var(--text-secondary); margin-bottom: 12px;">📋 Recent Sessions</h3>
@@ -1603,23 +1648,25 @@ class Visualizer:
                 </div>
             </div>
             """
-        
+
         # Build category breakdown
         category_html = ""
         if trends and "by_category" in trends and trends["by_category"]:
             category_list = ""
-            for category, data in sorted(trends["by_category"].items(), key=lambda x: x[1]["count"], reverse=True)[:5]:
+            for category, data in sorted(
+                trends["by_category"].items(), key=lambda x: x[1]["count"], reverse=True
+            )[:5]:
                 category_list += f"""
                 <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border);">
                     <span style="font-size: 0.9em; color: var(--text-primary);">{category}</span>
                     <div style="display: flex; gap: 16px; font-size: 0.85em; color: var(--text-secondary);">
-                        <span>{data['count']} sessions</span>
-                        <span>{data['files']:,} files</span>
-                        <span style="color: var(--primary-light); font-weight: 600;">{data['lines']:+,} lines</span>
+                        <span>{data["count"]} sessions</span>
+                        <span>{data["files"]:,} files</span>
+                        <span style="color: var(--primary-light); font-weight: 600;">{data["lines"]:+,} lines</span>
                     </div>
                 </div>
                 """
-            
+
             category_html = f"""
             <div style="margin-top: 16px;">
                 <h3 style="font-size: 0.95em; color: var(--text-secondary); margin-bottom: 12px;">📂 By Category</h3>
@@ -1628,7 +1675,7 @@ class Visualizer:
                 </div>
             </div>
             """
-        
+
         return f"""
         <div class="grid" style="margin-bottom: 24px;">
             <div class="card" style="grid-column: 1 / -1;">
@@ -1636,12 +1683,12 @@ class Visualizer:
                 {trends_html}
                 {category_html}
                 {sessions_html}
-                {f'<div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);"><span style="font-size: 0.85em; color: var(--text-muted);">🔗 {chains_count} iteration chains tracked</span></div>' if chains_count > 0 else ''}
+                {f'<div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);"><span style="font-size: 0.85em; color: var(--text-muted);">🔗 {chains_count} iteration chains tracked</span></div>' if chains_count > 0 else ""}
             </div>
         </div>
         """
 
-    def generate_and_open(self, output_path: Optional[Path] = None) -> Path:
+    def generate_and_open(self, output_path: Path | None = None) -> Path:
         """
         Generate dashboard and open in browser.
 
@@ -1701,6 +1748,7 @@ class Visualizer:
             print("Phase 1.1: Environment Verification", end="... ")
         import sys
         from datetime import datetime
+
         env_info = {
             "date_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "working_directory": str(Path.cwd()),
@@ -1724,7 +1772,7 @@ class Visualizer:
         project_name = project_info.get("name", "Unknown")
         project_version = project_info.get("version", "Unknown")
         if verbose:
-            print(f"  ✓ Waft project detected")
+            print("  ✓ Waft project detected")
             print(f"  ✓ Project path: {self.project_path.resolve()}")
             print(f"  ✓ Project name: {project_name}")
             print(f"  ✓ Version: {project_version}")
@@ -1739,13 +1787,13 @@ class Visualizer:
         git_status = self._get_git_status()
         if verbose:
             if git_status["initialized"]:
-                print(f"  ✓ Git initialized")
+                print("  ✓ Git initialized")
                 print(f"  ✓ Branch: {git_status.get('branch', 'N/A')}")
                 print(f"  ✓ Uncommitted files: {len(git_status.get('uncommitted_files', []))}")
                 print(f"  ✓ Commits ahead: {git_status.get('commits_ahead', 0)}")
                 print(f"  ✓ Recent commits: {len(git_status.get('recent_commits', []))} found")
             else:
-                print(f"  ⚠️  Git not initialized")
+                print("  ⚠️  Git not initialized")
         else:
             print("✓" if git_status["initialized"] else "⚠️")
 
@@ -1762,7 +1810,9 @@ class Visualizer:
             print(f"  ✓ uv.lock: {'Exists' if lock_exists else 'Missing'}")
             print(f"  ✓ Integrity: {stats.get('integrity', 100.0):.1f}%")
             print(f"  ✓ Level: {stats.get('level', 1)}")
-            print(f"  ✓ Insight: {stats.get('insight', 0.0):.0f}/{stats.get('insight_to_next_level', 100.0):.0f}")
+            print(
+                f"  ✓ Insight: {stats.get('insight', 0.0):.0f}/{stats.get('insight_to_next_level', 100.0):.0f}"
+            )
         else:
             print("✓")
 
@@ -1800,13 +1850,14 @@ class Visualizer:
         else:
             print("Phase 1.7: Integration Status", end="... ")
         from .empirica import EmpiricaManager
+
         empirica = EmpiricaManager(self.project_path)
         empirica_initialized = empirica.is_initialized()
         github_remote = self.github.get_remote_url()
         if verbose:
             print(f"  ✓ Empirica: {'Initialized' if empirica_initialized else 'Not initialized'}")
             print(f"  ✓ GitHub: {'Configured' if github_remote else 'Not configured'}")
-            print(f"  ✓ Templates: All present")
+            print("  ✓ Templates: All present")
         else:
             print("✓")
 
@@ -1817,18 +1868,18 @@ class Visualizer:
         else:
             print("Phase 1.8: Visualization Generation", end="... ")
         state = self.gather_state()
-        
+
         # Create Phase 1 output folder
         phase1_dir = self.project_path / "_pyrite" / "phase1"
         phase1_dir.mkdir(parents=True, exist_ok=True)
         timestamp = datetime.now().strftime("%Y-%m-%d-%H%M%S")
-        
+
         # Save raw state data as JSON
         json_path = phase1_dir / f"phase1-{timestamp}.json"
         json_path.write_text(json.dumps(state, indent=2), encoding="utf-8")
         if verbose:
             print(f"  ✓ State data saved: {json_path.name}")
-        
+
         # Generate and save HTML dashboard
         if verbose:
             print("  📄 Generating HTML dashboard...")
@@ -1840,7 +1891,7 @@ class Visualizer:
             print("  🌐 Opening in browser...")
         else:
             print("✓")
-        
+
         # Open dashboard in browser
         try:
             webbrowser.open(f"file://{html_path.resolve()}")
@@ -1850,7 +1901,7 @@ class Visualizer:
             print(f"  ⚠️  Could not open browser: {e}")
             print(f"  📄 Open manually: {html_path.resolve()}")
 
-        print(f"\n✅ Phase 1 Complete - All data gathered and visualized")
+        print("\n✅ Phase 1 Complete - All data gathered and visualized")
         print(f"   📁 Output folder: {phase1_dir.resolve()}")
         print(f"   📄 Dashboard: {html_path.name}")
         print(f"   📊 Data: {json_path.name}\n")
@@ -1877,10 +1928,10 @@ class Visualizer:
             print("Analyze 2.1: Data Loading & Validation")
         else:
             print("Analyze 2.1: Data Loading & Validation", end="... ")
-        
+
         phase1_dir = self.project_path / "_pyrite" / "phase1"
         phase1_data = None
-        
+
         # Find most recent Phase 1 JSON file
         if phase1_dir.exists():
             json_files = sorted(phase1_dir.glob("phase1-*.json"), reverse=True)
@@ -1893,7 +1944,7 @@ class Visualizer:
                 except Exception as e:
                     if verbose:
                         print(f"  ⚠️  Error loading Phase 1 data: {e}")
-        
+
         # If no Phase 1 data, run Phase 1 first
         if phase1_data is None:
             if verbose:
@@ -1914,10 +1965,10 @@ class Visualizer:
             print("\nAnalyze 2.2: Health Analysis")
         else:
             print("Analyze 2.2: Health Analysis", end="... ")
-        
+
         health_score = 0
         health_items = []
-        
+
         # Check integrity
         integrity = phase1_data.get("gamification", {}).get("integrity", 100.0)
         if integrity >= 90:
@@ -1928,7 +1979,7 @@ class Visualizer:
             health_items.append("⚠ Integrity good")
         else:
             health_items.append("❌ Integrity low")
-        
+
         # Check structure
         pyrite_valid = phase1_data.get("pyrite", {}).get("valid", False)
         if pyrite_valid:
@@ -1936,7 +1987,7 @@ class Visualizer:
             health_items.append("✓ Structure valid")
         else:
             health_items.append("❌ Structure invalid")
-        
+
         # Check git status
         uncommitted = len(phase1_data.get("git", {}).get("uncommitted_files", []))
         if uncommitted == 0:
@@ -1947,7 +1998,7 @@ class Visualizer:
             health_items.append("⚠ Git has changes")
         else:
             health_items.append("⚠ Git has many uncommitted files")
-        
+
         # Check dependencies
         lock_exists = self.substrate.verify_lock()
         if lock_exists:
@@ -1955,9 +2006,15 @@ class Visualizer:
             health_items.append("✓ Dependencies locked")
         else:
             health_items.append("⚠ Dependencies not locked")
-        
-        health_text = "Excellent" if health_score >= 75 else "Good" if health_score >= 50 else "Needs Attention"
-        
+
+        health_text = (
+            "Excellent"
+            if health_score >= 75
+            else "Good"
+            if health_score >= 50
+            else "Needs Attention"
+        )
+
         if verbose:
             print(f"  ✓ Overall Health: {health_score}% ({health_text})")
             for item in health_items:
@@ -1970,62 +2027,74 @@ class Visualizer:
             print("\nAnalyze 2.3: Issue Identification")
         else:
             print("Analyze 2.3: Issue Identification", end="... ")
-        
+
         issues = []
-        
+
         # Structural issues
         if not pyrite_valid:
-            issues.append({
-                "type": "structural",
-                "severity": "high",
-                "description": "_pyrite structure is invalid",
-                "priority": "urgent"
-            })
-        
+            issues.append(
+                {
+                    "type": "structural",
+                    "severity": "high",
+                    "description": "_pyrite structure is invalid",
+                    "priority": "urgent",
+                }
+            )
+
         # Git issues
         if uncommitted > 50:
-            issues.append({
-                "type": "git",
-                "severity": "medium",
-                "description": f"High number of uncommitted files ({uncommitted})",
-                "priority": "important"
-            })
+            issues.append(
+                {
+                    "type": "git",
+                    "severity": "medium",
+                    "description": f"High number of uncommitted files ({uncommitted})",
+                    "priority": "important",
+                }
+            )
         elif uncommitted > 20:
-            issues.append({
-                "type": "git",
-                "severity": "low",
-                "description": f"Multiple uncommitted files ({uncommitted})",
-                "priority": "nice-to-have"
-            })
-        
+            issues.append(
+                {
+                    "type": "git",
+                    "severity": "low",
+                    "description": f"Multiple uncommitted files ({uncommitted})",
+                    "priority": "nice-to-have",
+                }
+            )
+
         # Dependency issues
         if not lock_exists:
-            issues.append({
-                "type": "dependency",
-                "severity": "medium",
-                "description": "uv.lock file missing",
-                "priority": "important"
-            })
-        
+            issues.append(
+                {
+                    "type": "dependency",
+                    "severity": "medium",
+                    "description": "uv.lock file missing",
+                    "priority": "important",
+                }
+            )
+
         # Integrity issues
         if integrity < 70:
-            issues.append({
-                "type": "integrity",
-                "severity": "high",
-                "description": f"Low integrity ({integrity:.1f}%)",
-                "priority": "urgent"
-            })
-        
+            issues.append(
+                {
+                    "type": "integrity",
+                    "severity": "high",
+                    "description": f"Low integrity ({integrity:.1f}%)",
+                    "priority": "urgent",
+                }
+            )
+
         # Work effort issues
         work_efforts = phase1_data.get("work_efforts", [])
         if len(work_efforts) == 0:
-            issues.append({
-                "type": "work_effort",
-                "severity": "low",
-                "description": "No active work efforts",
-                "priority": "nice-to-have"
-            })
-        
+            issues.append(
+                {
+                    "type": "work_effort",
+                    "severity": "low",
+                    "description": "No active work efforts",
+                    "priority": "nice-to-have",
+                }
+            )
+
         if verbose:
             print(f"  ⚠️  Found {len(issues)} issues:")
             for i, issue in enumerate(issues, 1):
@@ -2038,45 +2107,53 @@ class Visualizer:
             print("\nAnalyze 2.4: Opportunity Discovery")
         else:
             print("Analyze 2.4: Opportunity Discovery", end="... ")
-        
+
         opportunities = []
-        
+
         # Quick wins
         if uncommitted > 0:
-            opportunities.append({
-                "type": "quick_win",
-                "impact": "high",
-                "effort": "low",
-                "description": "Commit uncommitted changes"
-            })
-        
+            opportunities.append(
+                {
+                    "type": "quick_win",
+                    "impact": "high",
+                    "effort": "low",
+                    "description": "Commit uncommitted changes",
+                }
+            )
+
         if not lock_exists:
-            opportunities.append({
-                "type": "optimization",
-                "impact": "medium",
-                "effort": "low",
-                "description": "Run 'uv sync' to create lock file"
-            })
-        
+            opportunities.append(
+                {
+                    "type": "optimization",
+                    "impact": "medium",
+                    "effort": "low",
+                    "description": "Run 'uv sync' to create lock file",
+                }
+            )
+
         # Enhancements
         if len(work_efforts) == 0:
-            opportunities.append({
-                "type": "enhancement",
-                "impact": "medium",
-                "effort": "low",
-                "description": "Create work effort for current work"
-            })
-        
+            opportunities.append(
+                {
+                    "type": "enhancement",
+                    "impact": "medium",
+                    "effort": "low",
+                    "description": "Create work effort for current work",
+                }
+            )
+
         # Optimizations
         active_files = len(phase1_data.get("pyrite", {}).get("active_files", []))
         if active_files > 20:
-            opportunities.append({
-                "type": "optimization",
-                "impact": "low",
-                "effort": "medium",
-                "description": "Review memory layer organization"
-            })
-        
+            opportunities.append(
+                {
+                    "type": "optimization",
+                    "impact": "low",
+                    "effort": "medium",
+                    "description": "Review memory layer organization",
+                }
+            )
+
         if verbose:
             print(f"  ✨ Found {len(opportunities)} opportunities:")
             for i, opp in enumerate(opportunities, 1):
@@ -2089,34 +2166,40 @@ class Visualizer:
             print("\nAnalyze 2.5: Pattern Analysis")
         else:
             print("Analyze 2.5: Pattern Analysis", end="... ")
-        
+
         patterns = []
-        
+
         # File change patterns
         if uncommitted > 0:
-            patterns.append({
-                "type": "file_changes",
-                "description": f"Recent activity: {uncommitted} uncommitted files",
-                "implication": "Active development in progress"
-            })
-        
+            patterns.append(
+                {
+                    "type": "file_changes",
+                    "description": f"Recent activity: {uncommitted} uncommitted files",
+                    "implication": "Active development in progress",
+                }
+            )
+
         # Work effort patterns
         if len(work_efforts) == 0:
-            patterns.append({
-                "type": "work_effort",
-                "description": "No active work efforts",
-                "implication": "All work completed or ready for new work"
-            })
-        
+            patterns.append(
+                {
+                    "type": "work_effort",
+                    "description": "No active work efforts",
+                    "implication": "All work completed or ready for new work",
+                }
+            )
+
         # Memory layer patterns
         backlog_count = len(phase1_data.get("pyrite", {}).get("backlog_files", []))
         if backlog_count == 0:
-            patterns.append({
-                "type": "memory_layer",
-                "description": "No backlog files",
-                "implication": "Memory layer is well-organized"
-            })
-        
+            patterns.append(
+                {
+                    "type": "memory_layer",
+                    "description": "No backlog files",
+                    "implication": "Memory layer is well-organized",
+                }
+            )
+
         if verbose:
             print(f"  📊 Patterns identified: {len(patterns)}")
             for pattern in patterns:
@@ -2129,48 +2212,58 @@ class Visualizer:
             print("\nAnalyze 2.6: Insight Generation")
         else:
             print("Analyze 2.6: Insight Generation", end="... ")
-        
+
         insights = []
-        
+
         # Generate insights from analysis
         if health_score >= 75:
-            insights.append({
-                "type": "health",
-                "priority": "high",
-                "insight": "Project is in good health overall",
-                "recommendation": "Continue current practices"
-            })
+            insights.append(
+                {
+                    "type": "health",
+                    "priority": "high",
+                    "insight": "Project is in good health overall",
+                    "recommendation": "Continue current practices",
+                }
+            )
         elif health_score >= 50:
-            insights.append({
-                "type": "health",
-                "priority": "medium",
-                "insight": "Project health is acceptable but could be improved",
-                "recommendation": "Address identified issues to improve health"
-            })
+            insights.append(
+                {
+                    "type": "health",
+                    "priority": "medium",
+                    "insight": "Project health is acceptable but could be improved",
+                    "recommendation": "Address identified issues to improve health",
+                }
+            )
         else:
-            insights.append({
-                "type": "health",
-                "priority": "high",
-                "insight": "Project health needs attention",
-                "recommendation": "Prioritize urgent issues"
-            })
-        
+            insights.append(
+                {
+                    "type": "health",
+                    "priority": "high",
+                    "insight": "Project health needs attention",
+                    "recommendation": "Prioritize urgent issues",
+                }
+            )
+
         if uncommitted > 0:
-            insights.append({
-                "type": "activity",
-                "priority": "medium",
-                "insight": f"High activity: {uncommitted} uncommitted files",
-                "recommendation": "Consider committing changes to maintain clean state"
-            })
-        
+            insights.append(
+                {
+                    "type": "activity",
+                    "priority": "medium",
+                    "insight": f"High activity: {uncommitted} uncommitted files",
+                    "recommendation": "Consider committing changes to maintain clean state",
+                }
+            )
+
         if len(work_efforts) == 0:
-            insights.append({
-                "type": "work_management",
-                "priority": "low",
-                "insight": "No active work efforts",
-                "recommendation": "Create work effort for current work if applicable"
-            })
-        
+            insights.append(
+                {
+                    "type": "work_management",
+                    "priority": "low",
+                    "insight": "No active work efforts",
+                    "recommendation": "Create work effort for current work if applicable",
+                }
+            )
+
         if verbose:
             print(f"  💡 Generated {len(insights)} insights:")
             for i, insight in enumerate(insights, 1):
@@ -2183,43 +2276,49 @@ class Visualizer:
             print("\nAnalyze 2.7: Action Planning")
         else:
             print("Analyze 2.7: Action Planning", end="... ")
-        
+
         actions = []
-        
+
         # Create actions from issues
         for issue in issues:
             if issue["priority"] == "urgent":
-                actions.append({
-                    "priority": "urgent",
-                    "effort": "low",
-                    "action": f"Fix: {issue['description']}",
-                    "source": "issue"
-                })
-        
+                actions.append(
+                    {
+                        "priority": "urgent",
+                        "effort": "low",
+                        "action": f"Fix: {issue['description']}",
+                        "source": "issue",
+                    }
+                )
+
         # Create actions from opportunities
         for opp in opportunities:
             if opp["type"] == "quick_win":
-                actions.append({
-                    "priority": "important",
-                    "effort": opp["effort"],
-                    "action": opp["description"],
-                    "source": "opportunity"
-                })
-        
+                actions.append(
+                    {
+                        "priority": "important",
+                        "effort": opp["effort"],
+                        "action": opp["description"],
+                        "source": "opportunity",
+                    }
+                )
+
         # Create actions from insights
         for insight in insights:
             if insight["priority"] == "high":
-                actions.append({
-                    "priority": "important",
-                    "effort": "medium",
-                    "action": insight["recommendation"],
-                    "source": "insight"
-                })
-        
+                actions.append(
+                    {
+                        "priority": "important",
+                        "effort": "medium",
+                        "action": insight["recommendation"],
+                        "source": "insight",
+                    }
+                )
+
         # Sort by priority
         priority_order = {"urgent": 0, "important": 1, "nice-to-have": 2}
         actions.sort(key=lambda x: priority_order.get(x["priority"], 3))
-        
+
         if verbose:
             print(f"  📋 Created {len(actions)} action items:")
             for i, action in enumerate(actions, 1):
@@ -2233,15 +2332,15 @@ class Visualizer:
             print("  📄 Generating analysis report...")
         else:
             print("Analyze 2.8: Report Generation", end="... ")
-        
+
         # Create analyze output directory
         analyze_dir = self.project_path / "_pyrite" / "analyze"
         analyze_dir.mkdir(parents=True, exist_ok=True)
         timestamp = datetime.now().strftime("%Y-%m-%d-%H%M%S")
-        
+
         # Generate markdown report
         report_path = analyze_dir / f"analyze-{timestamp}.md"
-        
+
         report_content = f"""# Analyze Report
 
 **Generated**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
@@ -2285,7 +2384,7 @@ class Visualizer:
 
 **Total Issues**: {len(issues)}
 
-{chr(10).join(f"### {i+1}. {issue['description']}{chr(10)}- **Type**: {issue['type']}{chr(10)}- **Severity**: {issue['severity']}{chr(10)}- **Priority**: {issue['priority']}" for i, issue in enumerate(issues)) if issues else "No issues identified."}
+{chr(10).join(f"### {i + 1}. {issue['description']}{chr(10)}- **Type**: {issue['type']}{chr(10)}- **Severity**: {issue['severity']}{chr(10)}- **Priority**: {issue['priority']}" for i, issue in enumerate(issues)) if issues else "No issues identified."}
 
 ---
 
@@ -2293,7 +2392,7 @@ class Visualizer:
 
 **Total Opportunities**: {len(opportunities)}
 
-{chr(10).join(f"### {i+1}. {opp['description']}{chr(10)}- **Type**: {opp['type']}{chr(10)}- **Impact**: {opp['impact']}{chr(10)}- **Effort**: {opp['effort']}" for i, opp in enumerate(opportunities)) if opportunities else "No opportunities identified."}
+{chr(10).join(f"### {i + 1}. {opp['description']}{chr(10)}- **Type**: {opp['type']}{chr(10)}- **Impact**: {opp['impact']}{chr(10)}- **Effort**: {opp['effort']}" for i, opp in enumerate(opportunities)) if opportunities else "No opportunities identified."}
 
 ---
 
@@ -2309,7 +2408,7 @@ class Visualizer:
 
 **Total Insights**: {len(insights)}
 
-{chr(10).join(f"### {i+1}. {insight['insight']}{chr(10)}- **Type**: {insight['type']}{chr(10)}- **Priority**: {insight['priority']}{chr(10)}- **Recommendation**: {insight['recommendation']}" for i, insight in enumerate(insights)) if insights else "No insights generated."}
+{chr(10).join(f"### {i + 1}. {insight['insight']}{chr(10)}- **Type**: {insight['type']}{chr(10)}- **Priority**: {insight['priority']}{chr(10)}- **Recommendation**: {insight['recommendation']}" for i, insight in enumerate(insights)) if insights else "No insights generated."}
 
 ---
 
@@ -2317,7 +2416,7 @@ class Visualizer:
 
 **Total Actions**: {len(actions)}
 
-{chr(10).join(f"### {i+1}. [{action['priority']}] {action['action']}{chr(10)}- **Effort**: {action['effort']}{chr(10)}- **Source**: {action['source']}" for i, action in enumerate(actions)) if actions else "No actions planned."}
+{chr(10).join(f"### {i + 1}. [{action['priority']}] {action['action']}{chr(10)}- **Effort**: {action['effort']}{chr(10)}- **Source**: {action['source']}" for i, action in enumerate(actions)) if actions else "No actions planned."}
 
 ---
 
@@ -2332,19 +2431,19 @@ class Visualizer:
 
 **Report generated by `/analyze` command**
 """
-        
+
         report_path.write_text(report_content, encoding="utf-8")
-        
+
         if verbose:
             print(f"  ✓ Report saved: {report_path.name}")
         else:
             print("✓")
-        
-        print(f"\n✅ Analyze Complete - Analysis and action plan ready")
+
+        print("\n✅ Analyze Complete - Analysis and action plan ready")
         print(f"   📁 Output folder: {analyze_dir.resolve()}")
         print(f"   📄 Report: {report_path.name}")
         if actions:
             print(f"   🎯 Top Priority: {actions[0]['action']}")
         print()
-        
+
         return report_path

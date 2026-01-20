@@ -1,0 +1,12 @@
+{
+  "code_analysis": {
+    "success": false,
+    "reason": "no_real_llm"
+  },
+  "performance_diagnosis": {
+    "success": false
+  },
+  "meta_reasoning": {
+    "success": false
+  }
+}

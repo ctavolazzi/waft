@@ -2,14 +2,14 @@
 Utility functions for Streamlit UI.
 """
 
-import streamlit as st
-from pathlib import Path
-from typing import Optional, Dict, Any
-import subprocess
 import json
-import shlex
 import re
+import shlex
+import subprocess
+from pathlib import Path
+from typing import Any
 
+import streamlit as st
 
 # Whitelist of allowed WAFT CLI commands
 ALLOWED_COMMANDS = {
@@ -27,17 +27,17 @@ ALLOWED_COMMANDS = {
 }
 
 
-def run_cli_command(command: str, project_path: Path) -> Dict[str, Any]:
+def run_cli_command(command: str, project_path: Path) -> dict[str, Any]:
     """
     Run a WAFT CLI command and return results.
-    
+
     Security: Validates command format and whitelists allowed commands
     to prevent command injection attacks.
-    
+
     Args:
         command: CLI command to run (e.g., "waft verify")
         project_path: Project path
-        
+
     Returns:
         Dict with 'success', 'output', 'error' keys
     """
@@ -47,71 +47,62 @@ def run_cli_command(command: str, project_path: Path) -> Dict[str, Any]:
             "success": False,
             "output": "",
             "error": "Invalid command: must be a non-empty string",
-            "returncode": -1
+            "returncode": -1,
         }
-    
+
     # Strip whitespace
     command = command.strip()
-    
+
     # Must start with "waft "
     if not command.startswith("waft "):
         return {
             "success": False,
             "output": "",
             "error": "Invalid command: must start with 'waft '",
-            "returncode": -1
+            "returncode": -1,
         }
-    
+
     # Check against whitelist
     if command not in ALLOWED_COMMANDS:
         return {
             "success": False,
             "output": "",
             "error": f"Command not allowed. Allowed commands: {', '.join(sorted(ALLOWED_COMMANDS))}",
-            "returncode": -1
+            "returncode": -1,
         }
-    
+
     # Additional validation: ensure no shell metacharacters
-    if re.search(r'[;&|`$(){}[\]<>]', command):
+    if re.search(r"[;&|`$(){}[\]<>]", command):
         return {
             "success": False,
             "output": "",
             "error": "Invalid command: contains illegal characters",
-            "returncode": -1
+            "returncode": -1,
         }
-    
+
     try:
         # Use shlex.split for safe command parsing
         safe_command = shlex.split(command)
-        
+
         result = subprocess.run(
-            safe_command,
-            cwd=str(project_path),
-            capture_output=True,
-            text=True,
-            timeout=30
+            safe_command, cwd=str(project_path), capture_output=True, text=True, timeout=30
         )
-        
+
         return {
             "success": result.returncode == 0,
             "output": result.stdout,
             "error": result.stderr,
-            "returncode": result.returncode
+            "returncode": result.returncode,
         }
     except subprocess.TimeoutExpired:
         return {
             "success": False,
             "output": "",
             "error": "Command timed out after 30 seconds",
-            "returncode": -1
+            "returncode": -1,
         }
     except Exception as e:
-        return {
-            "success": False,
-            "output": "",
-            "error": str(e),
-            "returncode": -1
-        }
+        return {"success": False, "output": "", "error": str(e), "returncode": -1}
 
 
 def display_error(error: str, title: str = "Error"):
@@ -134,22 +125,22 @@ def format_json(data: Any) -> str:
     return json.dumps(data, indent=2, default=str)
 
 
-def load_json_file(file_path: Path) -> Optional[Dict]:
+def load_json_file(file_path: Path) -> dict | None:
     """Load JSON file safely."""
     try:
         if file_path.exists():
-            with open(file_path, 'r') as f:
+            with open(file_path) as f:
                 return json.load(f)
     except Exception:
         pass
     return None
 
 
-def save_json_file(file_path: Path, data: Dict) -> bool:
+def save_json_file(file_path: Path, data: dict) -> bool:
     """Save data to JSON file safely."""
     try:
         file_path.parent.mkdir(parents=True, exist_ok=True)
-        with open(file_path, 'w') as f:
+        with open(file_path, "w") as f:
             json.dump(data, f, indent=2, default=str)
         return True
     except Exception:

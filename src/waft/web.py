@@ -5,18 +5,14 @@ Simple HTTP server to view project information and structure.
 """
 
 import json
-import os
-import sys
-import time
 import threading
+import time
+from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
-from http.server import HTTPServer, BaseHTTPRequestHandler
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import urlparse
 
 from .core.memory import MemoryManager
 from .core.substrate import SubstrateManager
-
-
 
 
 class WaftHandler(BaseHTTPRequestHandler):
@@ -101,7 +97,7 @@ class WaftHandler(BaseHTTPRequestHandler):
         """Generate dashboard HTML."""
         info = self._get_project_info()
         structure = self._get_structure_info()
-        dev_mode = getattr(self, 'dev_mode', False)
+        dev_mode = getattr(self, "dev_mode", False)
 
         # Status badges
         pyrite_status = "✅ Valid" if info["pyrite_structure"]["valid"] else "❌ Invalid"
@@ -124,7 +120,7 @@ class WaftHandler(BaseHTTPRequestHandler):
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Waft Dashboard - {info['project_name']}</title>
+    <title>Waft Dashboard - {info["project_name"]}</title>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
         * {{
@@ -332,7 +328,7 @@ class WaftHandler(BaseHTTPRequestHandler):
                 <a href="/api/structure" class="navbar-link" target="_blank">Structure</a>
                 <button class="navbar-button secondary" @click="openHelp = !openHelp">ℹ️ Help</button>
                 <button class="navbar-button" onclick="location.reload()">🔄 Refresh</button>
-                {f'<span class="dev-badge">DEV MODE</span>' if dev_mode else ''}
+                {'<span class="dev-badge">DEV MODE</span>' if dev_mode else ""}
             </div>
             <!-- Help dropdown (Alpine.js powered) -->
             <div x-show="openHelp"
@@ -340,14 +336,14 @@ class WaftHandler(BaseHTTPRequestHandler):
                  @click.away="openHelp = false"
                  style="position: absolute; top: 100%; right: 30px; margin-top: 10px; background: #1e1e2e; border: 1px solid #2d2d3e; border-radius: 8px; padding: 15px; min-width: 250px; z-index: 1000; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
                 <h3 style="color: #7c9eff; margin-bottom: 10px;">Waft Dashboard</h3>
-                <p style="color: #e0e0e0; margin: 5px 0;"><strong>Project:</strong> {info['project_name']}</p>
-                <p style="color: #e0e0e0; margin: 5px 0;"><strong>Version:</strong> {info['version']}</p>
-                {f'<p style="color: #7dd87d; margin-top: 10px;">✓ Live reloading enabled</p>' if dev_mode else ''}
+                <p style="color: #e0e0e0; margin: 5px 0;"><strong>Project:</strong> {info["project_name"]}</p>
+                <p style="color: #e0e0e0; margin: 5px 0;"><strong>Version:</strong> {info["version"]}</p>
+                {'<p style="color: #7dd87d; margin-top: 10px;">✓ Live reloading enabled</p>' if dev_mode else ""}
             </div>
         </nav>
         <div class="header">
             <h1>🌊 Waft Dashboard</h1>
-            <div class="subtitle">Project: {info['project_name']} v{info['version']}</div>
+            <div class="subtitle">Project: {info["project_name"]} v{info["version"]}</div>
         </div>
 
         <div class="grid">
@@ -355,15 +351,15 @@ class WaftHandler(BaseHTTPRequestHandler):
                 <h2>Project Information</h2>
                 <div class="info-item">
                     <div class="info-label">Project Path</div>
-                    <div class="info-value">{info['project_path']}</div>
+                    <div class="info-value">{info["project_path"]}</div>
                 </div>
                 <div class="info-item">
                     <div class="info-label">Project Name</div>
-                    <div class="info-value">{info['project_name']}</div>
+                    <div class="info-value">{info["project_name"]}</div>
                 </div>
                 <div class="info-item">
                     <div class="info-label">Version</div>
-                    <div class="info-value">{info['version']}</div>
+                    <div class="info-value">{info["version"]}</div>
                 </div>
             </div>
 
@@ -372,7 +368,7 @@ class WaftHandler(BaseHTTPRequestHandler):
                 <div class="info-item">
                     <div class="info-label">_pyrite Structure</div>
                     <div class="info-value">
-                        <span class="status {'valid' if info['pyrite_structure']['valid'] else 'invalid'}">
+                        <span class="status {"valid" if info["pyrite_structure"]["valid"] else "invalid"}">
                             {pyrite_status}
                         </span>
                     </div>
@@ -380,7 +376,7 @@ class WaftHandler(BaseHTTPRequestHandler):
                 <div class="info-item">
                     <div class="info-label">uv.lock</div>
                     <div class="info-value">
-                        <span class="status {'valid' if info['uv_lock'] else 'missing'}">
+                        <span class="status {"valid" if info["uv_lock"] else "missing"}">
                             {lock_status}
                         </span>
                     </div>
@@ -390,28 +386,28 @@ class WaftHandler(BaseHTTPRequestHandler):
             <div class="card">
                 <h2>Templates</h2>
                 <ul class="file-list">
-                    {''.join(f'<li>✅ {t}</li>' for t in templates_list) if templates_list else '<li class="empty">No templates found</li>'}
+                    {"".join(f"<li>✅ {t}</li>" for t in templates_list) if templates_list else '<li class="empty">No templates found</li>'}
                 </ul>
             </div>
 
             <div class="card">
                 <h2>_pyrite/active</h2>
                 <ul class="file-list">
-                    {''.join(f'<li>📄 {f}</li>' for f in structure['active']) if structure['active'] else '<li class="empty">No files</li>'}
+                    {"".join(f"<li>📄 {f}</li>" for f in structure["active"]) if structure["active"] else '<li class="empty">No files</li>'}
                 </ul>
             </div>
 
             <div class="card">
                 <h2>_pyrite/backlog</h2>
                 <ul class="file-list">
-                    {''.join(f'<li>📄 {f}</li>' for f in structure['backlog']) if structure['backlog'] else '<li class="empty">No files</li>'}
+                    {"".join(f"<li>📄 {f}</li>" for f in structure["backlog"]) if structure["backlog"] else '<li class="empty">No files</li>'}
                 </ul>
             </div>
 
             <div class="card">
                 <h2>_pyrite/standards</h2>
                 <ul class="file-list">
-                    {''.join(f'<li>📄 {f}</li>' for f in structure['standards']) if structure['standards'] else '<li class="empty">No files</li>'}
+                    {"".join(f"<li>📄 {f}</li>" for f in structure["standards"]) if structure["standards"] else '<li class="empty">No files</li>'}
                 </ul>
             </div>
         </div>
@@ -457,8 +453,8 @@ def _watch_files(project_path: Path, dev_mode: bool):
 
     # Try to use watchdog if available
     try:
-        from watchdog.observers import Observer
         from watchdog.events import FileSystemEventHandler
+        from watchdog.observers import Observer
 
         class ReloadHandler(FileSystemEventHandler):
             def __init__(self, files_to_watch):
@@ -474,7 +470,10 @@ def _watch_files(project_path: Path, dev_mode: bool):
                     try:
                         current_mtime = file_path.stat().st_mtime
                         # Debounce: only reload if file actually changed
-                        if file_path_str not in self.last_modified or self.last_modified[file_path_str] != current_mtime:
+                        if (
+                            file_path_str not in self.last_modified
+                            or self.last_modified[file_path_str] != current_mtime
+                        ):
                             self.last_modified[file_path_str] = current_mtime
                             print(f"\n🔄 File changed: {file_path.name}")
                             print("   Notifying clients to reload...")
@@ -504,7 +503,10 @@ def _watch_files(project_path: Path, dev_mode: bool):
                         try:
                             current_mtime = file_path.stat().st_mtime
                             file_path_str = str(file_path.resolve())
-                            if file_path_str not in last_modified or last_modified[file_path_str] != current_mtime:
+                            if (
+                                file_path_str not in last_modified
+                                or last_modified[file_path_str] != current_mtime
+                            ):
                                 last_modified[file_path_str] = current_mtime
                                 print(f"\n🔄 File changed: {file_path.name}")
                                 print("   Notifying clients to reload...")
@@ -520,13 +522,13 @@ def _watch_files(project_path: Path, dev_mode: bool):
 def serve(project_path: Path, port: int = 8000, host: str = "localhost", dev: bool = False):
     """Start the web server."""
     if dev:
-        print(f"\n🌊 Waft Dashboard (Development Mode)")
-        print(f"🔄 Live reloading enabled - browser will auto-refresh on changes")
+        print("\n🌊 Waft Dashboard (Development Mode)")
+        print("🔄 Live reloading enabled - browser will auto-refresh on changes")
     else:
-        print(f"\n🌊 Waft Dashboard")
+        print("\n🌊 Waft Dashboard")
     print(f"📍 Serving at http://{host}:{port}")
     print(f"📁 Project: {project_path.resolve()}")
-    print(f"\nPress Ctrl+C to stop\n")
+    print("\nPress Ctrl+C to stop\n")
 
     handler = create_handler(project_path, dev_mode=dev)
     server = HTTPServer((host, port), handler)
@@ -542,4 +544,3 @@ def serve(project_path: Path, port: int = 8000, host: str = "localhost", dev: bo
             observer.stop()
             observer.join()
         server.shutdown()
-

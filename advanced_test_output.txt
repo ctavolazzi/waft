@@ -1,0 +1,201 @@
+================================================================================
+ADVANCED EXPERIMENTAL SUITE
+Sophisticated Statistical Analysis of TheGuide
+================================================================================
+
+METHODOLOGY:
+  - Endurance testing (1000 sessions)
+  - Memory profiling (leak detection)
+  - Breaking point analysis (concurrent load)
+  - Statistical distribution analysis
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+================================================================================
+EXPERIMENT 4: Endurance Testing - Performance Over Time
+================================================================================
+
+RESEARCH QUESTION: Does performance remain constant over extended use?
+HYPOTHESIS: No performance degradation over 1000 sessions
+
+EXPERIMENTAL DESIGN:
+  Batch size: 100 sessions
+  Number of batches: 10
+  Total sessions: 1000
+
+DATA COLLECTION:
+  Batch  1: 1.245ms ± 0.181ms (802.5 sess/s)
+  Batch  2: 1.729ms ± 0.198ms (578.0 sess/s)
+  Batch  3: 2.183ms ± 0.207ms (457.9 sess/s)
+  Batch  4: 2.694ms ± 0.269ms (371.1 sess/s)
+  Batch  5: 3.377ms ± 0.459ms (296.1 sess/s)
+  Batch  6: 4.383ms ± 0.271ms (228.1 sess/s)
+  Batch  7: 4.774ms ± 0.201ms (209.4 sess/s)
+  Batch  8: 5.294ms ± 0.240ms (188.8 sess/s)
+  Batch  9: 5.989ms ± 0.348ms (166.9 sess/s)
+  Batch 10: 6.370ms ± 0.217ms (156.9 sess/s)
+
+STATISTICAL ANALYSIS:
+  Initial performance: 1.245ms
+  Final performance: 6.370ms
+  Change: +411.61%
+  Regression slope: 0.598458ms/batch
+  Mean throughput: 345.6 sess/s
+
+TREND ANALYSIS:
+  ⚠️  DEGRADATION: 411.61% slower
+
+HYPOTHESIS TEST:
+  ❌ HYPOTHESIS REJECTED: Performance changed by 411.61%
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+================================================================================
+EXPERIMENT 5: Memory Profiling
+================================================================================
+
+RESEARCH QUESTION: Does memory usage stabilize or leak?
+HYPOTHESIS: Memory usage plateaus (no leak)
+
+EXPERIMENTAL DESIGN:
+  Total sessions: 500
+  Sample interval: every 50 sessions
+
+DATA COLLECTION:
+  Initial memory: 0.00 MB
+  Session  50: 0.04 MB (Δ+0.04 MB)
+  Session 100: 0.07 MB (Δ+0.06 MB)
+  Session 150: 0.10 MB (Δ+0.09 MB)
+  Session 200: 0.12 MB (Δ+0.12 MB)
+  Session 250: 0.15 MB (Δ+0.15 MB)
+  Session 300: 0.18 MB (Δ+0.18 MB)
+  Session 350: 0.21 MB (Δ+0.21 MB)
+  Session 400: 0.24 MB (Δ+0.24 MB)
+  Session 450: 0.27 MB (Δ+0.27 MB)
+  Session 500: 0.30 MB (Δ+0.29 MB)
+
+STATISTICAL ANALYSIS:
+  Peak memory: 1.03 MB
+  Final memory: 0.30 MB
+  Total increase: 0.29 MB
+  Memory per session (after warmup): 0.575 KB/session
+
+LEAK DETECTION:
+  ✅ NO LEAK: 0.575 KB/session < 10 KB/session
+
+HYPOTHESIS TEST:
+  ✅ HYPOTHESIS ACCEPTED: Memory usage is stable
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+================================================================================
+EXPERIMENT 6: Breaking Point Analysis
+================================================================================
+
+RESEARCH QUESTION: What is the maximum concurrent load?
+HYPOTHESIS: Can handle ≥50 concurrent threads
+
+DATA COLLECTION (binary search for breaking point):
+
+  Testing 10 threads...
+    Success rate: 100.0% (10/10)
+
+  Testing 20 threads...
+    Success rate: 100.0% (20/20)
+
+  Testing 50 threads...
+    Success rate: 100.0% (50/50)
+
+  Testing 100 threads...
+    Success rate: 100.0% (100/100)
+
+STATISTICAL ANALYSIS:
+  Maximum successful load: 100 concurrent threads
+  ✅  10 threads: 100.0% success
+  ✅  20 threads: 100.0% success
+  ✅  50 threads: 100.0% success
+  ✅ 100 threads: 100.0% success
+
+HYPOTHESIS TEST:
+  ✅ HYPOTHESIS ACCEPTED: Handles ≥50 threads (100)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+================================================================================
+EXPERIMENT 7: Statistical Distribution Analysis
+================================================================================
+
+RESEARCH QUESTION: Are creation times normally distributed?
+HYPOTHESIS: Times follow normal distribution (skew ∈ [-1,1])
+
+EXPERIMENTAL DESIGN:
+  Sample size: 300
+
+DATA COLLECTION:
+  Progress: 100/300
+  Progress: 200/300
+  Progress: 300/300
+
+DESCRIPTIVE STATISTICS:
+  Mean:     1.694ms
+  Median:   1.668ms
+  Std Dev:  0.494ms
+  Variance: 0.244ms²
+  Min:      0.759ms
+  Max:      3.882ms
+
+PERCENTILES:
+  p50 (median): 1.670ms
+  p95:          2.437ms
+  p99:          2.729ms
+
+DISTRIBUTION SHAPE:
+  Skewness: 0.206
+  Kurtosis: 0.141
+
+INTERPRETATION:
+  Skewness: Approximately symmetric
+  Kurtosis: Approximately normal (mesokurtic)
+
+HYPOTHESIS TEST:
+  ✅ HYPOTHESIS ACCEPTED: Approximately normal distribution
+
+================================================================================
+ADVANCED EXPERIMENTAL RESULTS
+================================================================================
+
+Total Experiments: 4
+Hypotheses Accepted: 3
+Hypotheses Rejected: 1
+Acceptance Rate: 75.0%
+
+DETAILED RESULTS:
+
+exp4_endurance: ❌ REJECTED
+  initial_time: 0.0012
+  final_time: 0.0064
+  percent_change: 411.6131
+  slope: 0.0006
+
+exp5_memory: ✅ ACCEPTED
+  peak_memory_mb: 1.0316
+  memory_per_session_kb: 0.5749
+  total_sessions: 500
+
+exp6_breaking_point: ✅ ACCEPTED
+  max_threads: 100
+  tested_loads: [10, 20, 50, 100]
+  success_rates: [100.0, 100.0, 100.0, 100.0]
+
+exp7_distributions: ✅ ACCEPTED
+  mean: 0.0017
+  median: 0.0017
+  stdev: 0.0005
+  skewness: 0.2062
+  kurtosis: 0.1414
+  p95: 0.0024
+  p99: 0.0027
+
+📊 Advanced experimental data saved to: advanced_experimental_results.json
+
+================================================================================

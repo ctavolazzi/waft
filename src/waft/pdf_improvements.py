@@ -7,19 +7,19 @@ Focuses on WeasyPrint improvements since it's the chosen library.
 
 import re
 from html import unescape
-from typing import Optional, Dict, Any
 from pathlib import Path
+
 import markdown
 
 
 class PDFContentProcessor:
     """Enhanced content processing for PDF generation."""
-    
+
     @staticmethod
     def clean_html_content(html: str) -> str:
         """
         Clean HTML content to remove formatting artifacts.
-        
+
         Fixes:
         - Double-encoded HTML entities
         - Lingering markdown syntax
@@ -28,64 +28,64 @@ class PDFContentProcessor:
         """
         # Unescape HTML entities
         html = unescape(html)
-        
+
         # Fix double-encoded entities
-        html = html.replace('&amp;amp;', '&amp;')
-        html = html.replace('&amp;lt;', '&lt;')
-        html = html.replace('&amp;gt;', '&gt;')
-        html = html.replace('&amp;quot;', '&quot;')
-        html = html.replace('&amp;#39;', '&#39;')
-        
+        html = html.replace("&amp;amp;", "&amp;")
+        html = html.replace("&amp;lt;", "&lt;")
+        html = html.replace("&amp;gt;", "&gt;")
+        html = html.replace("&amp;quot;", "&quot;")
+        html = html.replace("&amp;#39;", "&#39;")
+
         # Remove inline styles that cause black bars
         html = re.sub(
             r'style="[^"]*background[^"]*(?:black|#000|#000000|rgb\(0,\s*0,\s*0\))[^"]*"',
-            '',
+            "",
             html,
-            flags=re.IGNORECASE
+            flags=re.IGNORECASE,
         )
-        
+
         # Remove background-color from inline styles
         html = re.sub(
-            r'background-color\s*:\s*(?:black|#000|#000000|rgb\(0,\s*0,\s*0\))\s*;?',
-            '',
+            r"background-color\s*:\s*(?:black|#000|#000000|rgb\(0,\s*0,\s*0\))\s*;?",
+            "",
             html,
-            flags=re.IGNORECASE
+            flags=re.IGNORECASE,
         )
-        
+
         # Remove background from inline styles
         html = re.sub(
-            r'background\s*:\s*(?:black|#000|#000000|rgb\(0,\s*0,\s*0\))\s*;?',
-            '',
+            r"background\s*:\s*(?:black|#000|#000000|rgb\(0,\s*0,\s*0\))\s*;?",
+            "",
             html,
-            flags=re.IGNORECASE
+            flags=re.IGNORECASE,
         )
-        
+
         # Normalize br tags
-        html = re.sub(r'<br\s*/?>', '<br>', html, flags=re.IGNORECASE)
-        html = re.sub(r'<br>\s*<br>\s*<br>+', '<br><br>', html)
-        
+        html = re.sub(r"<br\s*/?>", "<br>", html, flags=re.IGNORECASE)
+        html = re.sub(r"<br>\s*<br>\s*<br>+", "<br><br>", html)
+
         # Normalize hr tags
-        html = re.sub(r'<hr\s*/?>', '<hr>', html, flags=re.IGNORECASE)
-        
+        html = re.sub(r"<hr\s*/?>", "<hr>", html, flags=re.IGNORECASE)
+
         # Remove empty style attributes
-        html = re.sub(r'style="\s*"', '', html)
-        html = re.sub(r'class="\s*"', '', html)
-        
+        html = re.sub(r'style="\s*"', "", html)
+        html = re.sub(r'class="\s*"', "", html)
+
         # Remove lingering markdown syntax
-        html = re.sub(r'```(\w+)?\n', '<pre><code>', html)
-        html = re.sub(r'```\s*', '</code></pre>', html)
-        html = re.sub(r'`([^`]+)`', r'<code>\1</code>', html)
-        
+        html = re.sub(r"```(\w+)?\n", "<pre><code>", html)
+        html = re.sub(r"```\s*", "</code></pre>", html)
+        html = re.sub(r"`([^`]+)`", r"<code>\1</code>", html)
+
         # Clean up whitespace
-        html = re.sub(r'\n\s*\n\s*\n+', '\n\n', html)
-        
+        html = re.sub(r"\n\s*\n\s*\n+", "\n\n", html)
+
         return html
-    
+
     @staticmethod
     def enhance_markdown_for_pdf(markdown_content: str) -> str:
         """
         Enhance markdown content before conversion to HTML.
-        
+
         Adds:
         - Better table formatting
         - Code block preservation
@@ -94,71 +94,68 @@ class PDFContentProcessor:
         """
         # Preserve code blocks
         code_blocks = []
-        code_pattern = r'```(\w+)?\n(.*?)```'
-        
+        code_pattern = r"```(\w+)?\n(.*?)```"
+
         def replace_code(match):
-            lang = match.group(1) or ''
+            lang = match.group(1) or ""
             code = match.group(2)
             idx = len(code_blocks)
             code_blocks.append((lang, code))
-            return f'<CODE_BLOCK_{idx}>'
-        
+            return f"<CODE_BLOCK_{idx}>"
+
         # Extract code blocks
         markdown_content = re.sub(code_pattern, replace_code, markdown_content, flags=re.DOTALL)
-        
+
         # Enhance tables (ensure proper markdown table format)
         # Tables should already be in markdown format, but ensure spacing
-        markdown_content = re.sub(
-            r'\|(.+)\|\n\|([\s\-:]+)\|\n',
-            r'|\1|\n|\2|\n',
-            markdown_content
-        )
-        
+        markdown_content = re.sub(r"\|(.+)\|\n\|([\s\-:]+)\|\n", r"|\1|\n|\2|\n", markdown_content)
+
         # Enhance headers (add spacing)
-        markdown_content = re.sub(r'^(#{1,6})\s+(.+)$', r'\1 \2', markdown_content, flags=re.MULTILINE)
-        
+        markdown_content = re.sub(
+            r"^(#{1,6})\s+(.+)$", r"\1 \2", markdown_content, flags=re.MULTILINE
+        )
+
         # Enhance lists (ensure proper spacing)
-        markdown_content = re.sub(r'^(\s*[-*+])\s+', r'\1 ', markdown_content, flags=re.MULTILINE)
-        
+        markdown_content = re.sub(r"^(\s*[-*+])\s+", r"\1 ", markdown_content, flags=re.MULTILINE)
+
         # Restore code blocks
         for idx, (lang, code) in enumerate(code_blocks):
             markdown_content = markdown_content.replace(
-                f'<CODE_BLOCK_{idx}>',
-                f'```{lang}\n{code}```'
+                f"<CODE_BLOCK_{idx}>", f"```{lang}\n{code}```"
             )
-        
+
         return markdown_content
-    
+
     @staticmethod
-    def markdown_to_html(markdown_content: str, extensions: Optional[list] = None) -> str:
+    def markdown_to_html(markdown_content: str, extensions: list | None = None) -> str:
         """
         Convert markdown to HTML with enhanced processing.
-        
+
         Args:
             markdown_content: Markdown text
             extensions: Optional list of markdown extensions
-            
+
         Returns:
             Clean HTML content
         """
         if extensions is None:
-            extensions = ['fenced_code', 'tables', 'nl2br', 'extra', 'codehilite']
-        
+            extensions = ["fenced_code", "tables", "nl2br", "extra", "codehilite"]
+
         # Enhance markdown first
         enhanced_md = PDFContentProcessor.enhance_markdown_for_pdf(markdown_content)
-        
+
         # Convert to HTML
         html = markdown.markdown(enhanced_md, extensions=extensions)
-        
+
         # Clean HTML
         html = PDFContentProcessor.clean_html_content(html)
-        
+
         return html
 
 
 class PDFStylingEnhancer:
     """Enhanced CSS styling for PDF generation."""
-    
+
     @staticmethod
     def get_clean_header_styles() -> str:
         """Get CSS that ensures no black bars on headers."""
@@ -213,7 +210,7 @@ class PDFStylingEnhancer:
             background-color: #ffffff !important;
         }
         """
-    
+
     @staticmethod
     def get_enhanced_table_styles() -> str:
         """Get enhanced CSS for table styling."""
@@ -255,14 +252,14 @@ class PDFStylingEnhancer:
             background: #f8f9fa !important;
         }
         """
-    
+
     @staticmethod
     def get_enhanced_typography() -> str:
         """Get enhanced typography CSS with high-priority formatting fixes."""
         # Paragraph spacing constant (0.35in = ~25pt)
         paragraph_spacing = "0.35in"
         paragraph_spacing_pt = "25pt"
-        
+
         return f"""
         body {{
             font-family: 'Georgia', 'Times New Roman', serif;
@@ -428,7 +425,7 @@ class PDFStylingEnhancer:
             padding: 6pt 8pt !important;
         }}
         """
-    
+
     @staticmethod
     def get_page_styling() -> str:
         """Get page-level CSS styling."""
@@ -455,65 +452,61 @@ class PDFStylingEnhancer:
             @bottom-center { content: none; }
         }
         """
-    
+
     @staticmethod
     def get_complete_styles() -> str:
         """Get complete enhanced CSS for PDF generation."""
         return (
-            PDFStylingEnhancer.get_page_styling() +
-            PDFStylingEnhancer.get_clean_header_styles() +
-            PDFStylingEnhancer.get_enhanced_typography() +
-            PDFStylingEnhancer.get_enhanced_table_styles()
+            PDFStylingEnhancer.get_page_styling()
+            + PDFStylingEnhancer.get_clean_header_styles()
+            + PDFStylingEnhancer.get_enhanced_typography()
+            + PDFStylingEnhancer.get_enhanced_table_styles()
         )
 
 
 class ImprovedPDFGenerator:
     """Improved PDF generator with enhanced algorithms."""
-    
+
     def __init__(self):
         self.content_processor = PDFContentProcessor()
         self.styling_enhancer = PDFStylingEnhancer()
-    
+
     def generate_from_markdown(
         self,
         markdown_content: str,
         title: str,
         output_path: Path,
-        template_html: Optional[str] = None,
-        custom_css: Optional[str] = None
+        template_html: str | None = None,
+        custom_css: str | None = None,
     ) -> Path:
         """
         Generate PDF from markdown with improved algorithms.
-        
+
         Args:
             markdown_content: Markdown text
             title: Document title
             output_path: Output PDF path
             template_html: Optional HTML template (Jinja2 format)
             custom_css: Optional additional CSS
-            
+
         Returns:
             Path to generated PDF
         """
         from jinja2 import Template
         from weasyprint import HTML
-        
+
         # Process markdown to HTML
         html_content = self.content_processor.markdown_to_html(markdown_content)
-        
+
         # Get enhanced CSS
         base_css = self.styling_enhancer.get_complete_styles()
         if custom_css:
             base_css += f"\n/* Custom CSS */\n{custom_css}\n"
-        
+
         # Use template or create default
         if template_html:
             template = Template(template_html)
-            full_html = template.render(
-                title=title,
-                content=html_content,
-                css=base_css
-            )
+            full_html = template.render(title=title, content=html_content, css=base_css)
         else:
             full_html = f"""
             <!DOCTYPE html>
@@ -531,39 +524,36 @@ class ImprovedPDFGenerator:
             </body>
             </html>
             """
-        
+
         # Generate PDF
         HTML(string=full_html).write_pdf(str(output_path))
-        
+
         return output_path
-    
+
     def generate_binder(
-        self,
-        sections: Dict[str, str],
-        title: str,
-        output_path: Path,
-        toc: bool = True
+        self, sections: dict[str, str], title: str, output_path: Path, toc: bool = True
     ) -> Path:
         """
         Generate a multi-section binder PDF.
-        
+
         Args:
             sections: Dictionary of section_name -> markdown_content
             title: Binder title
             output_path: Output PDF path
             toc: Include table of contents
-            
+
         Returns:
             Path to generated PDF
         """
-        from jinja2 import Template
         from weasyprint import HTML
-        
+
         # Process all sections
         processed_sections = {}
         for section_name, markdown_content in sections.items():
-            processed_sections[section_name] = self.content_processor.markdown_to_html(markdown_content)
-        
+            processed_sections[section_name] = self.content_processor.markdown_to_html(
+                markdown_content
+            )
+
         # Build HTML
         toc_html = ""
         if toc:
@@ -571,14 +561,14 @@ class ImprovedPDFGenerator:
             for section_name in sections.keys():
                 toc_html += f"<li><a href='#{section_name}'>{section_name}</a></li>"
             toc_html += "</ul></div>"
-        
+
         sections_html = ""
         for section_name, html_content in processed_sections.items():
             sections_html += f"<div class='section' id='{section_name}'>"
             sections_html += f"<h1>{section_name}</h1>"
             sections_html += html_content
             sections_html += "</div>"
-        
+
         full_html = f"""
         <!DOCTYPE html>
         <html>
@@ -604,8 +594,8 @@ class ImprovedPDFGenerator:
         </body>
         </html>
         """
-        
+
         # Generate PDF
         HTML(string=full_html).write_pdf(str(output_path))
-        
+
         return output_path

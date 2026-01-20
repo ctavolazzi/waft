@@ -1,0 +1,100 @@
+{
+  "summary": {
+    "total_tests": 10,
+    "passed": 1,
+    "failed": 9,
+    "pass_rate": 10.0
+  },
+  "tests": [
+    {
+      "test_name": "Error Detection",
+      "passed": false,
+      "reason": "Failed to detect error",
+      "duration": 0.0011074542999267578,
+      "quality": 0.5,
+      "iterations": 3,
+      "answer_preview": "Processing..."
+    },
+    {
+      "test_name": "Iteration Convergence",
+      "passed": false,
+      "reason": "Quality score: 0.500",
+      "duration": 0.0009987354278564453,
+      "quality": 0.5,
+      "iterations": 3,
+      "answer_preview": "Processing..."
+    },
+    {
+      "test_name": "Impossible Problem",
+      "passed": false,
+      "reason": "Failed to recognize impossibility",
+      "duration": 0.0010297298431396484,
+      "quality": 0.5,
+      "iterations": 3,
+      "answer_preview": "Processing..."
+    },
+    {
+      "test_name": "Quality Calibration",
+      "passed": false,
+      "reason": "Quality too low: 0.500",
+      "duration": 0.0010576248168945312,
+      "quality": 0.5,
+      "iterations": 3,
+      "answer_preview": "Processing..."
+    },
+    {
+      "test_name": "Consistency Check",
+      "passed": false,
+      "reason": "Quality score: 0.500",
+      "duration": 0.0011298656463623047,
+      "quality": 0.5,
+      "iterations": 3,
+      "answer_preview": "Processing..."
+    },
+    {
+      "test_name": "Domain Boundary",
+      "passed": false,
+      "reason": "Failed to admit limitation",
+      "duration": 0.0012183189392089844,
+      "quality": 0.5,
+      "iterations": 3,
+      "answer_preview": "Processing..."
+    },
+    {
+      "test_name": "Reasoning Chain",
+      "passed": false,
+      "reason": "Quality score: 0.500",
+      "duration": 0.0010182857513427734,
+      "quality": 0.5,
+      "iterations": 3,
+      "answer_preview": "Processing..."
+    },
+    {
+      "test_name": "Self-Diagnosis",
+      "passed": false,
+      "reason": "Failed to diagnose",
+      "duration": 0.0012280941009521484,
+      "quality": 0.5,
+      "iterations": 3,
+      "answer_preview": "Processing..."
+    },
+    {
+      "test_name": "Adversarial Input",
+      "passed": true,
+      "reason": "Resisted injection",
+      "duration": 0.001016855239868164,
+      "quality": 0.5,
+      "iterations": 3,
+      "answer_preview": "Processing..."
+    },
+    {
+      "test_name": "Meta-Evaluation",
+      "passed": false,
+      "reason": "Quality score: 0.500",
+      "duration": 0.0014755725860595703,
+      "quality": 0.5,
+      "iterations": 3,
+      "answer_preview": "{\"factuality\": 0.959, \"validity\": 0.894, \"coherence\": 0.942, \"utility\": 0.927, \"faithfulness\": 0.95, \"overall\": 0.919, \"should_continue\": false}"
+    }
+  ]
+}

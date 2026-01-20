@@ -5,38 +5,38 @@ This scout sets up PocketBase on the realm, uses the probe system to collect dat
 and stores findings in PocketBase for UI generation.
 """
 
-from pathlib import Path
-from typing import Dict, Any, Optional, List
-from datetime import datetime
 import json
-import subprocess
-import shutil
 import os
+import shutil
+import subprocess
+from datetime import datetime
+from pathlib import Path
+from typing import Any
 
+from .probe import ProbeCollector
 from .realm_colonization import RealmScout
-from .probe import ProbeCollector, FileSystemProbe
 from .tendril_network import TendrilNetwork
 
 
 class PocketBaseScout(RealmScout):
     """
     Enhanced RealmScout with PocketBase integration.
-    
+
     This scout:
     1. Sets up PocketBase instance on the realm
     2. Uses probe system to collect data
     3. Stores findings in PocketBase
     4. Generates UI from collected data
     """
-    
+
     def __init__(
         self,
         being_id: str,
         reality_id: str,
         realm_name: str,
         realm_path: Path,
-        parent_being_id: Optional[str] = None,
-        **kwargs
+        parent_being_id: str | None = None,
+        **kwargs,
     ):
         """Initialize PocketBase Scout."""
         # Initialize as RealmScout
@@ -46,19 +46,21 @@ class PocketBaseScout(RealmScout):
             realm_name=realm_name,
             realm_path=realm_path,
             parent_being_id=parent_being_id,
-            **kwargs
+            **kwargs,
         )
-        
+
         # Add PocketBase skills
-        self.skills.update({
-            "pocketbase_setup": 8.0,
-            "data_collection": 10.0,
-            "ui_generation": 7.0,
-            "vision": 9.0,  # Ability to see (screenshots and interpretation)
-            "screenshot_capture": 10.0,
-            "image_interpretation": 8.0
-        })
-        
+        self.skills.update(
+            {
+                "pocketbase_setup": 8.0,
+                "data_collection": 10.0,
+                "ui_generation": 7.0,
+                "vision": 9.0,  # Ability to see (screenshots and interpretation)
+                "screenshot_capture": 10.0,
+                "image_interpretation": 8.0,
+            }
+        )
+
         # Scout base directory
         self.scout_base = self.realm_path / "_scout_base"
         self.pocketbase_dir = self.scout_base / "pocketbase"
@@ -66,94 +68,89 @@ class PocketBaseScout(RealmScout):
         self.probe_data_dir = self.scout_base / "probe_data"
         self.screenshots_dir = self.scout_base / "screenshots"
         self.vision_data_dir = self.scout_base / "vision_data"
-        
+
         # Create directories first
         self.scout_base.mkdir(parents=True, exist_ok=True)
         self.probe_data_dir.mkdir(parents=True, exist_ok=True)
         self.screenshots_dir.mkdir(parents=True, exist_ok=True)
         self.vision_data_dir.mkdir(parents=True, exist_ok=True)
-        
+
         # Probe collector
         self.probe_collector = ProbeCollector(storage_path=self.probe_data_dir)
-        
+
         # PocketBase status
-        self.pocketbase_status: Dict[str, Any] = {
+        self.pocketbase_status: dict[str, Any] = {
             "installed": False,
             "running": False,
             "port": 8090,
             "admin_email": "admin@realm.local",
-            "admin_password": None
+            "admin_password": None,
         }
-        
+
         # Vision capabilities
         self.vision_enabled = True
-        self.screenshots_taken: List[Dict[str, Any]] = []
-        self.interpretations: List[Dict[str, Any]] = []
-        
+        self.screenshots_taken: list[dict[str, Any]] = []
+        self.interpretations: list[dict[str, Any]] = []
+
         # Tendril Network
         self.tendril_network = TendrilNetwork(
-            realm_path=self.realm_path,
-            network_name=f"{realm_name}_network"
+            realm_path=self.realm_path, network_name=f"{realm_name}_network"
         )
-        
+
         # Mission Control connection (via tether)
         self.mission_control = None  # Will be set when tether is available
-    
-    def setup_pocketbase(self) -> Dict[str, Any]:
+
+    def setup_pocketbase(self) -> dict[str, Any]:
         """
         Set up PocketBase instance on the realm.
-        
+
         Returns:
             Setup result
         """
-        print(f"   📦 Setting up PocketBase scout base...")
-        
+        print("   📦 Setting up PocketBase scout base...")
+
         try:
             # Create scout base directory
             self.scout_base.mkdir(parents=True, exist_ok=True)
             self.pocketbase_dir.mkdir(parents=True, exist_ok=True)
             self.probe_data_dir.mkdir(parents=True, exist_ok=True)
-            
+
             # Check if PocketBase binary exists
             pb_binary = self._find_pocketbase_binary()
-            
+
             if not pb_binary:
-                print(f"   ⚠️  PocketBase binary not found - using simulation mode")
+                print("   ⚠️  PocketBase binary not found - using simulation mode")
                 self.pocketbase_status["installed"] = False
                 self.pocketbase_status["simulation_mode"] = True
                 return {
                     "success": True,
                     "mode": "simulation",
-                    "message": "PocketBase simulation mode enabled"
+                    "message": "PocketBase simulation mode enabled",
                 }
-            
+
             # Copy PocketBase to scout base
             pb_dest = self.pocketbase_dir / "pocketbase"
             if not pb_dest.exists():
                 shutil.copy2(pb_binary, pb_dest)
                 os.chmod(pb_dest, 0o755)
-            
+
             self.pocketbase_status["installed"] = True
             self.pocketbase_status["binary_path"] = str(pb_dest)
-            
+
             print(f"   ✅ PocketBase binary ready at: {pb_dest}")
-            
+
             return {
                 "success": True,
                 "mode": "real",
                 "binary_path": str(pb_dest),
-                "data_dir": str(self.pocketbase_data_dir)
+                "data_dir": str(self.pocketbase_data_dir),
             }
-            
+
         except Exception as e:
             print(f"   ❌ PocketBase setup failed: {e}")
-            return {
-                "success": False,
-                "error": str(e),
-                "mode": "simulation"
-            }
-    
-    def _find_pocketbase_binary(self) -> Optional[Path]:
+            return {"success": False, "error": str(e), "mode": "simulation"}
+
+    def _find_pocketbase_binary(self) -> Path | None:
         """Find PocketBase binary on system."""
         # Common locations
         locations = [
@@ -162,93 +159,86 @@ class PocketBaseScout(RealmScout):
             Path("/opt/pocketbase/pocketbase"),
             Path.cwd() / "pocketbase" / "pocketbase",
         ]
-        
+
         for loc in locations:
             if loc.exists() and loc.is_file():
                 return loc
-        
+
         # Check if in PATH
         try:
-            result = subprocess.run(
-                ["which", "pocketbase"],
-                capture_output=True,
-                text=True
-            )
+            result = subprocess.run(["which", "pocketbase"], capture_output=True, text=True)
             if result.returncode == 0:
                 return Path(result.stdout.strip())
         except Exception:
             pass
-        
+
         return None
-    
-    def probe_realm(self) -> Dict[str, Any]:
+
+    def probe_realm(self) -> dict[str, Any]:
         """
         Probe the realm using the probe system.
-        
+
         Returns:
             Probe results
         """
-        print(f"   🔍 Probing realm with probe system...")
-        
+        print("   🔍 Probing realm with probe system...")
+
         probe_results = []
-        
+
         try:
             # Probe directory structure
-            print(f"      → Probing directory structure...")
+            print("      → Probing directory structure...")
             for item in self.realm_path.iterdir():
-                if item.is_dir() and not item.name.startswith('.'):
+                if item.is_dir() and not item.name.startswith("."):
                     result = self.probe_collector.probe_file(str(item))
                     probe_results.append(result.to_dict())
                     print(f"         ✓ Probed: {item.name}")
-            
+
             # Probe files in root
-            print(f"      → Probing root files...")
+            print("      → Probing root files...")
             for item in self.realm_path.iterdir():
                 if item.is_file():
                     result = self.probe_collector.probe_file(str(item))
                     probe_results.append(result.to_dict())
                     print(f"         ✓ Probed: {item.name}")
-            
+
             # Save probe results
-            probe_file = self.probe_data_dir / f"probe_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
-            probe_file.write_text(
-                json.dumps(probe_results, indent=2),
-                encoding="utf-8"
+            probe_file = (
+                self.probe_data_dir
+                / f"probe_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
             )
-            
+            probe_file.write_text(json.dumps(probe_results, indent=2), encoding="utf-8")
+
             print(f"   ✅ Probe complete: {len(probe_results)} items probed")
             print(f"      Results saved to: {probe_file}")
-            
+
             return {
                 "success": True,
                 "items_probed": len(probe_results),
                 "results_file": str(probe_file),
-                "results": probe_results
+                "results": probe_results,
             }
-            
+
         except Exception as e:
             print(f"   ❌ Probe failed: {e}")
-            return {
-                "success": False,
-                "error": str(e)
-            }
-    
-    def store_in_pocketbase(self, probe_data: Dict[str, Any]) -> Dict[str, Any]:
+            return {"success": False, "error": str(e)}
+
+    def store_in_pocketbase(self, probe_data: dict[str, Any]) -> dict[str, Any]:
         """
         Store probe data in PocketBase (or simulation).
-        
+
         Args:
             probe_data: Probe results to store
-            
+
         Returns:
             Storage result
         """
-        print(f"   💾 Storing data in PocketBase...")
-        
+        print("   💾 Storing data in PocketBase...")
+
         if not self.pocketbase_status.get("installed"):
             # Simulation mode - store as JSON
-            print(f"      → Simulation mode: storing as JSON")
-            
+            print("      → Simulation mode: storing as JSON")
+
             storage_file = self.scout_base / "pocketbase_data.json"
             data = {
                 "realm_name": self.realm_name,
@@ -256,94 +246,91 @@ class PocketBaseScout(RealmScout):
                 "collected_at": datetime.now().isoformat(),
                 "probe_data": probe_data,
                 "realm_path": str(self.realm_path),
-                "items_count": len(probe_data.get("results", []))
+                "items_count": len(probe_data.get("results", [])),
             }
-            
-            storage_file.write_text(
-                json.dumps(data, indent=2),
-                encoding="utf-8"
-            )
-            
+
+            storage_file.write_text(json.dumps(data, indent=2), encoding="utf-8")
+
             print(f"      ✅ Data stored to: {storage_file}")
-            
+
             return {
                 "success": True,
                 "mode": "simulation",
                 "storage_file": str(storage_file),
-                "items_stored": len(probe_data.get("results", []))
+                "items_stored": len(probe_data.get("results", [])),
             }
         else:
             # Real PocketBase mode (would use API here)
-            print(f"      → Real PocketBase mode (not implemented yet)")
+            print("      → Real PocketBase mode (not implemented yet)")
             return {
                 "success": False,
                 "error": "Real PocketBase integration not yet implemented",
-                "mode": "real"
+                "mode": "real",
             }
-    
-    def generate_ui(self, stored_data: Dict[str, Any]) -> Dict[str, Any]:
+
+    def generate_ui(self, stored_data: dict[str, Any]) -> dict[str, Any]:
         """
         Generate Interactive UI from collected data with Tendril Network.
-        
+
         Args:
             stored_data: Data stored in PocketBase (includes probe_data, vision_data, tendril_network)
-            
+
         Returns:
             UI generation result
         """
-        print(f"   🎨 Generating Interactive UI with Tendril Network...")
-        
+        print("   🎨 Generating Interactive UI with Tendril Network...")
+
         try:
             # Create UI directory
             ui_dir = self.scout_base / "ui"
             ui_dir.mkdir(parents=True, exist_ok=True)
-            
+
             # Generate HTML visualization
             html_file = ui_dir / "realm_visualization.html"
-            
+
             probe_results = stored_data.get("probe_data", {}).get("results", [])
             network_data = stored_data.get("tendril_network", {})
-            
+
             html_content = self._generate_html_ui(probe_results, network_data)
-            
+
             html_file.write_text(html_content, encoding="utf-8")
-            
+
             # Automatically open in browser
             try:
                 import webbrowser
+
                 file_url = f"file://{html_file.absolute()}"
                 webbrowser.open(file_url)
                 print(f"      ✅ Interactive UI generated: {html_file}")
             except Exception as e:
                 print(f"      ⚠️  Could not auto-open browser: {e}")
                 print(f"      💡 Manually open: file://{html_file.absolute()}")
-            
+
             return {
                 "success": True,
                 "ui_file": str(html_file),
                 "items_visualized": len(probe_results),
-                "network_visualized": network_data.get("success", False)
+                "network_visualized": network_data.get("success", False),
             }
-            
+
         except Exception as e:
             print(f"   ❌ UI generation failed: {e}")
-            return {
-                "success": False,
-                "error": str(e)
-            }
-    
-    def _generate_html_ui(self, probe_results: List[Dict[str, Any]], network_data: Optional[Dict[str, Any]] = None) -> str:
+            return {"success": False, "error": str(e)}
+
+    def _generate_html_ui(
+        self, probe_results: list[dict[str, Any]], network_data: dict[str, Any] | None = None
+    ) -> str:
         """Generate Interactive HTML UI from probe results and tendril network."""
-        
+
         items_html = ""
         for i, result in enumerate(probe_results[:50]):  # Limit to 50 items
             target = result.get("target", "Unknown")
             probe_type = result.get("probe_type", "unknown")
             success = result.get("success", False)
             data = result.get("data", {})
-            
+
             status_icon = "✅" if success else "❌"
-            
+
             items_html += f"""
             <div class="item" data-node-id="node_{i}">
                 <div class="item-header">
@@ -356,7 +343,7 @@ class PocketBaseScout(RealmScout):
                 </div>
             </div>
             """
-        
+
         # Network visualization
         network_html = ""
         if network_data:
@@ -367,19 +354,19 @@ class PocketBaseScout(RealmScout):
                 <div class="network-stats">
                     <div class="stat-card">
                         <div class="stat-label">Nodes</div>
-                        <div class="stat-value">{network_stats.get('total_nodes', 0)}</div>
+                        <div class="stat-value">{network_stats.get("total_nodes", 0)}</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-label">Tendrils</div>
-                        <div class="stat-value">{network_stats.get('total_tendrils', 0)}</div>
+                        <div class="stat-value">{network_stats.get("total_tendrils", 0)}</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-label">Strings</div>
-                        <div class="stat-value">{network_stats.get('total_strings', 0)}</div>
+                        <div class="stat-value">{network_stats.get("total_strings", 0)}</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-label">Avg Connections</div>
-                        <div class="stat-value">{network_stats.get('average_connections_per_node', 0):.1f}</div>
+                        <div class="stat-value">{network_stats.get("average_connections_per_node", 0):.1f}</div>
                     </div>
                 </div>
                 <div id="network-graph" class="network-graph">
@@ -388,24 +375,24 @@ class PocketBaseScout(RealmScout):
                 </div>
             </div>
             """
-        
+
         # Get network data for visualization
         network_stats = {}
         nodes_data = []
         tendrils_data = []
-        
+
         if network_data and network_data.get("success"):
             network_stats = network_data.get("network_stats", {})
             # Get actual network data
             nodes_list = list(self.tendril_network.nodes.values())
             tendrils_list = list(self.tendril_network.tendrils.values())
-            
+
             nodes_data = [
                 {
                     "id": node.node_id,
                     "type": node.node_type,
                     "path": node.path,
-                    "connections": len(node.connections)
+                    "connections": len(node.connections),
                 }
                 for node in nodes_list[:100]  # Limit for performance
             ]
@@ -415,11 +402,11 @@ class PocketBaseScout(RealmScout):
                     "from": t.from_node_id,
                     "to": t.to_node_id,
                     "type": t.connection_type,
-                    "strength": t.strength
+                    "strength": t.strength,
                 }
                 for t in tendrils_list[:200]  # Limit for performance
             ]
-        
+
         html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -626,7 +613,7 @@ class PocketBaseScout(RealmScout):
         <h1>🌍 Realm Visualization: {self.realm_name}</h1>
         <div class="info">
             Scout: {self.being_id}<br>
-            Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}<br>
+            Generated: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}<br>
             Realm Path: {self.realm_path}
         </div>
     </div>
@@ -638,11 +625,11 @@ class PocketBaseScout(RealmScout):
         </div>
         <div class="stat-card">
             <div class="stat-label">Successful</div>
-            <div class="stat-value">{sum(1 for r in probe_results if r.get('success'))}</div>
+            <div class="stat-value">{sum(1 for r in probe_results if r.get("success"))}</div>
         </div>
         <div class="stat-card">
             <div class="stat-label">Failed</div>
-            <div class="stat-value">{sum(1 for r in probe_results if not r.get('success'))}</div>
+            <div class="stat-value">{sum(1 for r in probe_results if not r.get("success"))}</div>
         </div>
     </div>
     
@@ -728,97 +715,94 @@ class PocketBaseScout(RealmScout):
 </html>
 """
         return html
-    
-    def take_screenshot(self, target_path: Optional[Path] = None, description: str = "") -> Dict[str, Any]:
+
+    def take_screenshot(
+        self, target_path: Path | None = None, description: str = ""
+    ) -> dict[str, Any]:
         """
         Take a screenshot of the realm or a specific target.
-        
+
         The Scout's ability to SEE - captures visual representation.
-        
+
         Args:
             target_path: Path to screenshot (if None, screenshots realm root)
             description: Description of what's being captured
-            
+
         Returns:
             Screenshot result
         """
-        print(f"   📸 Taking screenshot...")
-        
+        print("   📸 Taking screenshot...")
+
         try:
             # Determine target
             if target_path is None:
                 target_path = self.realm_path
-            
+
             # Generate screenshot filename
-            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             screenshot_name = f"screenshot_{timestamp}.png"
             screenshot_path = self.screenshots_dir / screenshot_name
-            
+
             # Try different screenshot methods
             screenshot_taken = False
-            
+
             # Method 1: If it's a file, try to capture it
             if target_path.is_file():
                 # For images, just copy them
-                if target_path.suffix.lower() in ['.png', '.jpg', '.jpeg', '.gif', '.bmp']:
+                if target_path.suffix.lower() in [".png", ".jpg", ".jpeg", ".gif", ".bmp"]:
                     import shutil
+
                     shutil.copy2(target_path, screenshot_path)
                     screenshot_taken = True
                     print(f"      ✓ Captured image file: {target_path.name}")
-            
+
             # Method 2: If it's a directory, try to capture directory listing
             elif target_path.is_dir():
                 # Create a visual representation of directory structure
                 self._create_directory_screenshot(target_path, screenshot_path)
                 screenshot_taken = True
                 print(f"      ✓ Captured directory structure: {target_path.name}")
-            
+
             # Method 3: Try using PIL to capture screen (if on macOS/Linux)
             if not screenshot_taken:
                 try:
                     screenshot_taken = self._capture_screen_screenshot(screenshot_path)
                     if screenshot_taken:
-                        print(f"      ✓ Captured screen screenshot")
+                        print("      ✓ Captured screen screenshot")
                 except Exception as e:
                     print(f"      ⚠️  Screen capture not available: {e}")
-            
+
             if screenshot_taken and screenshot_path.exists():
                 screenshot_info = {
                     "screenshot_path": str(screenshot_path),
                     "target": str(target_path),
                     "description": description,
                     "timestamp": datetime.now().isoformat(),
-                    "size_bytes": screenshot_path.stat().st_size
+                    "size_bytes": screenshot_path.stat().st_size,
                 }
                 self.screenshots_taken.append(screenshot_info)
-                
+
                 # Automatically interpret the screenshot
                 interpretation = self.interpret_screenshot(screenshot_path, description)
-                
+
                 return {
                     "success": True,
                     "screenshot_path": str(screenshot_path),
                     "screenshot_info": screenshot_info,
-                    "interpretation": interpretation
+                    "interpretation": interpretation,
                 }
             else:
-                return {
-                    "success": False,
-                    "error": "Could not capture screenshot"
-                }
-                
+                return {"success": False, "error": "Could not capture screenshot"}
+
         except Exception as e:
             print(f"   ❌ Screenshot failed: {e}")
-            return {
-                "success": False,
-                "error": str(e)
-            }
-    
+            return {"success": False, "error": str(e)}
+
     def _create_directory_screenshot(self, dir_path: Path, output_path: Path) -> None:
         """Create a visual representation of directory structure."""
         try:
             from PIL import Image, ImageDraw, ImageFont
-            
+
             # Get directory listing
             items = []
             for item in sorted(dir_path.iterdir()):
@@ -826,66 +810,69 @@ class PocketBaseScout(RealmScout):
                     items.append(f"📁 {item.name}/")
                 else:
                     size = item.stat().st_size
-                    size_str = f"{size:,} bytes" if size < 1024*1024 else f"{size/(1024*1024):.1f} MB"
+                    size_str = (
+                        f"{size:,} bytes"
+                        if size < 1024 * 1024
+                        else f"{size / (1024 * 1024):.1f} MB"
+                    )
                     items.append(f"📄 {item.name} ({size_str})")
-            
+
             # Create image
             width, height = 800, min(600, 50 + len(items) * 25)
-            img = Image.new('RGB', (width, height), color='#0a0a0a')
+            img = Image.new("RGB", (width, height), color="#0a0a0a")
             draw = ImageDraw.Draw(img)
-            
+
             # Try to use monospace font
             try:
                 font = ImageFont.truetype("/System/Library/Fonts/Menlo.ttc", 14)
             except:
                 try:
-                    font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf", 14)
+                    font = ImageFont.truetype(
+                        "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf", 14
+                    )
                 except:
                     font = ImageFont.load_default()
-            
+
             # Draw header
-            draw.text((10, 10), f"Directory: {dir_path.name}", fill='#00ff00', font=font)
-            draw.text((10, 35), f"Path: {dir_path}", fill='#888', font=font)
-            
+            draw.text((10, 10), f"Directory: {dir_path.name}", fill="#00ff00", font=font)
+            draw.text((10, 35), f"Path: {dir_path}", fill="#888", font=font)
+
             # Draw items
             y = 70
             for item in items[:20]:  # Limit to 20 items
-                draw.text((20, y), item, fill='#00ff00', font=font)
+                draw.text((20, y), item, fill="#00ff00", font=font)
                 y += 25
-            
+
             if len(items) > 20:
-                draw.text((20, y), f"... and {len(items) - 20} more items", fill='#888', font=font)
-            
+                draw.text((20, y), f"... and {len(items) - 20} more items", fill="#888", font=font)
+
             # Save
-            img.save(output_path, 'PNG')
-            
+            img.save(output_path, "PNG")
+
         except ImportError:
             # Fallback: create text file representation
-            output_path.with_suffix('.txt').write_text(
-                f"Directory: {dir_path.name}\nPath: {dir_path}\n\nItems:\n" + 
-                "\n".join([f"  {item}" for item in items[:50]]),
-                encoding="utf-8"
+            output_path.with_suffix(".txt").write_text(
+                f"Directory: {dir_path.name}\nPath: {dir_path}\n\nItems:\n"
+                + "\n".join([f"  {item}" for item in items[:50]]),
+                encoding="utf-8",
             )
             # Create a simple placeholder image using basic methods
-            import struct
             # Create minimal 1x1 PNG
-            png_data = b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01\x08\x02\x00\x00\x00\x90wS\xde\x00\x00\x00\nIDATx\x9cc\x00\x01\x00\x00\x05\x00\x01\r\n-\xdb\x00\x00\x00\x00IEND\xaeB`\x82'
+            png_data = b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01\x08\x02\x00\x00\x00\x90wS\xde\x00\x00\x00\nIDATx\x9cc\x00\x01\x00\x00\x05\x00\x01\r\n-\xdb\x00\x00\x00\x00IEND\xaeB`\x82"
             output_path.write_bytes(png_data)
         except Exception as e:
             raise Exception(f"Failed to create directory screenshot: {e}")
-    
+
     def _capture_screen_screenshot(self, output_path: Path) -> bool:
         """Try to capture screen screenshot (platform-dependent)."""
         import platform
-        
+
         system = platform.system()
-        
+
         if system == "Darwin":  # macOS
             try:
                 subprocess.run(
-                    ["screencapture", "-x", str(output_path)],
-                    check=True,
-                    capture_output=True
+                    ["screencapture", "-x", str(output_path)], check=True, capture_output=True
                 )
                 return True
             except:
@@ -893,130 +880,119 @@ class PocketBaseScout(RealmScout):
         elif system == "Linux":
             try:
                 subprocess.run(
-                    ["import", "-window", "root", str(output_path)],
-                    check=True,
-                    capture_output=True
+                    ["import", "-window", "root", str(output_path)], check=True, capture_output=True
                 )
                 return True
             except:
                 return False
         else:
             return False
-    
-    def interpret_screenshot(self, screenshot_path: Path, context: str = "") -> Dict[str, Any]:
+
+    def interpret_screenshot(self, screenshot_path: Path, context: str = "") -> dict[str, Any]:
         """
         Interpret a screenshot using vision capabilities.
-        
+
         The Scout's ability to UNDERSTAND what it sees.
-        
+
         Args:
             screenshot_path: Path to screenshot image
             context: Context about what the screenshot shows
-            
+
         Returns:
             Interpretation result
         """
-        print(f"      🔍 Interpreting screenshot...")
-        
+        print("      🔍 Interpreting screenshot...")
+
         try:
             interpretation = {
                 "screenshot_path": str(screenshot_path),
                 "context": context,
                 "timestamp": datetime.now().isoformat(),
-                "analysis": {}
+                "analysis": {},
             }
-            
+
             # Basic image analysis
             if screenshot_path.exists():
                 try:
                     from PIL import Image
-                    
+
                     img = Image.open(screenshot_path)
                     width, height = img.size
                     mode = img.mode
-                    
+
                     interpretation["analysis"] = {
                         "dimensions": f"{width}x{height}",
                         "mode": mode,
                         "format": img.format,
-                        "size_bytes": screenshot_path.stat().st_size
+                        "size_bytes": screenshot_path.stat().st_size,
                     }
-                    
+
                     # Try to extract text if it's a text-heavy image
                     # (This is basic - could be enhanced with OCR)
-                    interpretation["analysis"]["has_text"] = mode in ['RGB', 'RGBA', 'L']
+                    interpretation["analysis"]["has_text"] = mode in ["RGB", "RGBA", "L"]
                     interpretation["analysis"]["is_visual"] = True
-                    
+
                     print(f"         ✓ Image analyzed: {width}x{height}, {mode}")
-                    
+
                 except ImportError:
                     interpretation["analysis"] = {
                         "note": "PIL/Pillow not available for detailed analysis",
                         "file_exists": True,
-                        "size_bytes": screenshot_path.stat().st_size
+                        "size_bytes": screenshot_path.stat().st_size,
                     }
                 except Exception as e:
                     interpretation["analysis"]["error"] = str(e)
-            
+
             # Store interpretation
             self.interpretations.append(interpretation)
-            
+
             # Save interpretation
-            interpretation_file = self.vision_data_dir / f"interpretation_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
-            interpretation_file.write_text(
-                json.dumps(interpretation, indent=2),
-                encoding="utf-8"
+            interpretation_file = (
+                self.vision_data_dir
+                / f"interpretation_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
             )
-            
+            interpretation_file.write_text(json.dumps(interpretation, indent=2), encoding="utf-8")
+
             return interpretation
-            
+
         except Exception as e:
             print(f"         ❌ Interpretation failed: {e}")
-            return {
-                "success": False,
-                "error": str(e)
-            }
-    
-    def see_realm(self) -> Dict[str, Any]:
+            return {"success": False, "error": str(e)}
+
+    def see_realm(self) -> dict[str, Any]:
         """
         The Scout's primary vision method - SEE the realm.
-        
+
         Takes screenshots of key areas and interprets them.
-        
+
         Returns:
             Vision results
         """
-        print(f"\n   👁️  SCOUT VISION: Seeing the Realm...")
-        print(f"   {'='*60}")
-        
-        vision_results = {
-            "screenshots": [],
-            "interpretations": [],
-            "vision_summary": {}
-        }
-        
+        print("\n   👁️  SCOUT VISION: Seeing the Realm...")
+        print(f"   {'=' * 60}")
+
+        vision_results = {"screenshots": [], "interpretations": [], "vision_summary": {}}
+
         # Screenshot 1: Realm root
-        print(f"\n   📸 Screenshot 1: Realm root directory")
+        print("\n   📸 Screenshot 1: Realm root directory")
         root_screenshot = self.take_screenshot(
-            target_path=self.realm_path,
-            description="Realm root directory structure"
+            target_path=self.realm_path, description="Realm root directory structure"
         )
         if root_screenshot.get("success"):
             vision_results["screenshots"].append(root_screenshot["screenshot_info"])
             vision_results["interpretations"].append(root_screenshot.get("interpretation", {}))
-        
+
         # Screenshot 2: Scout base
         scout_base_path = self.scout_base
         if scout_base_path.exists():
-            print(f"\n   📸 Screenshot 2: Scout base")
+            print("\n   📸 Screenshot 2: Scout base")
             base_screenshot = self.take_screenshot(
-                target_path=scout_base_path,
-                description="Scout base directory"
+                target_path=scout_base_path, description="Scout base directory"
             )
             if base_screenshot.get("success"):
                 vision_results["screenshots"].append(base_screenshot["screenshot_info"])
                 vision_results["interpretations"].append(base_screenshot.get("interpretation", {}))
-        
+
         # Screenshot 3: Key directories
         key_dirs = ["exploration", "case_files", "_scout_base"]
         for dir_name in key_dirs:
@@ -1024,62 +1000,64 @@ class PocketBaseScout(RealmScout):
             if dir_path.exists() and dir_path.is_dir():
                 print(f"\n   📸 Screenshot: {dir_name}/")
                 dir_screenshot = self.take_screenshot(
-                    target_path=dir_path,
-                    description=f"{dir_name} directory contents"
+                    target_path=dir_path, description=f"{dir_name} directory contents"
                 )
                 if dir_screenshot.get("success"):
                     vision_results["screenshots"].append(dir_screenshot["screenshot_info"])
-                    vision_results["interpretations"].append(dir_screenshot.get("interpretation", {}))
-        
+                    vision_results["interpretations"].append(
+                        dir_screenshot.get("interpretation", {})
+                    )
+
         # Summary
         vision_results["vision_summary"] = {
             "total_screenshots": len(vision_results["screenshots"]),
             "total_interpretations": len(vision_results["interpretations"]),
             "screenshots_dir": str(self.screenshots_dir),
-            "vision_data_dir": str(self.vision_data_dir)
+            "vision_data_dir": str(self.vision_data_dir),
         }
-        
+
         print(f"\n   ✅ Vision complete: {len(vision_results['screenshots'])} screenshots taken")
-        print(f"   {'='*60}\n")
-        
+        print(f"   {'=' * 60}\n")
+
         return vision_results
-    
-    def _relay_to_mission_control(self, mission_data: Dict[str, Any]) -> Dict[str, Any]:
+
+    def _relay_to_mission_control(self, mission_data: dict[str, Any]) -> dict[str, Any]:
         """
         Relay messages back to Mission Control via Tether.
-        
+
         Creates strings that flow through the tendril network
         and sends them back to Mission Control.
-        
+
         Args:
             mission_data: Complete mission data to relay
-            
+
         Returns:
             Relay result
         """
-        print(f"      → Creating relay strings...")
-        
+        print("      → Creating relay strings...")
+
         try:
-            from ..pantheon.mission_control import MissionControl
             from pathlib import Path
-            
+
+            from ..pantheon.mission_control import MissionControl
+
             # Initialize Mission Control
             mission_control = MissionControl(project_path=Path.cwd())
-            
+
             # Find or create mission for this realm
             mission_id = f"realm_scout_{self.realm_name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
             mission_control.register_mission(mission_id)
-            
+
             # Create root node for Mission Control connection
             root_node = self.tendril_network.create_node(
                 path=Path("mission_control"),
                 node_type="entity",
-                metadata={"entity_type": "mission_control", "mission_id": mission_id}
+                metadata={"entity_type": "mission_control", "mission_id": mission_id},
             )
-            
+
             # Create relay strings for key data
             strings_sent = 0
-            
+
             # Relay 1: Network stats
             if "tendril_network" in mission_data:
                 network_stats = mission_data["tendril_network"].get("network_stats", {})
@@ -1091,11 +1069,13 @@ class PocketBaseScout(RealmScout):
                         to_node_id=root_node.node_id,
                         message_type="network_stats",
                         payload=network_stats,
-                        connection_type="telemetry"
+                        connection_type="telemetry",
                     )
                     strings_sent += 1
-                    print(f"         ✓ Relayed network stats: {network_stats.get('total_nodes', 0)} nodes")
-            
+                    print(
+                        f"         ✓ Relayed network stats: {network_stats.get('total_nodes', 0)} nodes"
+                    )
+
             # Relay 2: Vision data
             if "vision" in mission_data:
                 vision_summary = mission_data["vision"].get("vision_summary", {})
@@ -1106,16 +1086,18 @@ class PocketBaseScout(RealmScout):
                         to_node_id=root_node.node_id,
                         message_type="vision_report",
                         payload=vision_summary,
-                        connection_type="observation"
+                        connection_type="observation",
                     )
                     strings_sent += 1
-                    print(f"         ✓ Relayed vision data: {vision_summary.get('total_screenshots', 0)} screenshots")
-            
+                    print(
+                        f"         ✓ Relayed vision data: {vision_summary.get('total_screenshots', 0)} screenshots"
+                    )
+
             # Relay 3: Probe results
             if "probe_results" in mission_data:
                 probe_summary = {
                     "items_probed": mission_data["probe_results"].get("items_probed", 0),
-                    "success": mission_data["probe_results"].get("success", False)
+                    "success": mission_data["probe_results"].get("success", False),
                 }
                 if self.tendril_network.nodes:
                     first_node_id = list(self.tendril_network.nodes.keys())[0]
@@ -1124,15 +1106,17 @@ class PocketBaseScout(RealmScout):
                         to_node_id=root_node.node_id,
                         message_type="probe_report",
                         payload=probe_summary,
-                        connection_type="discovery"
+                        connection_type="discovery",
                     )
                     strings_sent += 1
-                    print(f"         ✓ Relayed probe results: {probe_summary.get('items_probed', 0)} items")
-            
+                    print(
+                        f"         ✓ Relayed probe results: {probe_summary.get('items_probed', 0)} items"
+                    )
+
             # Update Mission Control with telemetry
             network_stats = mission_data.get("tendril_network", {}).get("network_stats", {})
             vision_summary = mission_data.get("vision", {}).get("vision_summary", {})
-            
+
             mission_control.update_status(
                 mission_id=mission_id,
                 status="active",
@@ -1143,118 +1127,120 @@ class PocketBaseScout(RealmScout):
                     "network_nodes": network_stats.get("total_nodes", 0),
                     "tendrils": network_stats.get("total_tendrils", 0),
                     "strings_sent": strings_sent,
-                    "vision_screenshots": vision_summary.get("total_screenshots", 0)
-                }
+                    "vision_screenshots": vision_summary.get("total_screenshots", 0),
+                },
             )
-            
+
             print(f"      ✅ Relayed {strings_sent} strings to Mission Control")
-            
+
             return {
                 "success": True,
                 "mission_id": mission_id,
                 "strings_sent": strings_sent,
-                "root_node_id": root_node.node_id
+                "root_node_id": root_node.node_id,
             }
-            
+
         except Exception as e:
             print(f"      ❌ Relay failed: {e}")
-            return {
-                "success": False,
-                "error": str(e)
-            }
-    
-    def run_full_mission(self) -> Dict[str, Any]:
+            return {"success": False, "error": str(e)}
+
+    def run_full_mission(self) -> dict[str, Any]:
         """
         Run complete scout mission with PocketBase integration.
-        
+
         Returns:
             Complete mission results
         """
-        print(f"\n{'='*70}")
+        print(f"\n{'=' * 70}")
         print(f"🚀 POCKETBASE SCOUT MISSION: {self.realm_name}")
-        print(f"{'='*70}\n")
-        
+        print(f"{'=' * 70}\n")
+
         results = {
             "scout_id": self.being_id,
             "realm_name": self.realm_name,
             "realm_path": str(self.realm_path),
-            "mission_start": datetime.now().isoformat()
+            "mission_start": datetime.now().isoformat(),
         }
-        
+
         # Step 1: Setup PocketBase
         print("📦 Step 1: Setting up PocketBase scout base...")
         pb_setup = self.setup_pocketbase()
         results["pocketbase_setup"] = pb_setup
         print()
-        
+
         # Step 2: Probe realm
         print("🔍 Step 2: Probing realm with probe system...")
         probe_results = self.probe_realm()
         results["probe_results"] = probe_results
         print()
-        
+
         # Step 3: Store in PocketBase
         if probe_results.get("success"):
             print("💾 Step 3: Storing data in PocketBase...")
             storage_result = self.store_in_pocketbase(probe_results)
             results["storage"] = storage_result
             print()
-            
+
         # Step 4: Vision - SEE the realm
         print("👁️  Step 4: Scout Vision - Seeing the Realm...")
         vision_results = self.see_realm()
         results["vision"] = vision_results
         print()
-        
+
         # Step 5: Build Tendril Network
         print("🌐 Step 5: Building Tendril Network...")
         network_result = self.tendril_network.build_realm_network(max_depth=3)
         results["tendril_network"] = network_result
         print()
-        
+
         # Step 6: Relay messages to Mission Control via Tether
         print("📡 Step 6: Relaying messages to Mission Control via Tether...")
         relay_result = self._relay_to_mission_control(results)
         results["mission_control_relay"] = relay_result
         print()
-        
+
         # Step 7: Generate Interactive UI
         if storage_result.get("success"):
             print("🎨 Step 7: Generating Interactive UI with Tendril Network...")
-            ui_result = self.generate_ui({
-                "probe_data": probe_results,
-                "vision_data": vision_results,
-                "tendril_network": network_result
-            })
+            ui_result = self.generate_ui(
+                {
+                    "probe_data": probe_results,
+                    "vision_data": vision_results,
+                    "tendril_network": network_result,
+                }
+            )
             results["ui_generation"] = ui_result
             print()
-            
+
             # Automatically open UI in browser
             if ui_result.get("success") and ui_result.get("ui_file"):
                 try:
                     import webbrowser
+
                     ui_path = Path(ui_result["ui_file"])
                     if ui_path.exists():
                         file_url = f"file://{ui_path.absolute()}"
                         webbrowser.open(file_url)
-                        print(f"   🌐 UI automatically opened in browser!")
+                        print("   🌐 UI automatically opened in browser!")
                 except Exception as e:
                     print(f"   ⚠️  Could not auto-open browser: {e}")
                     print(f"   💡 Manually open: file://{ui_path.absolute()}")
-        
+
         results["mission_end"] = datetime.now().isoformat()
-        results["success"] = all([
-            pb_setup.get("success"),
-            probe_results.get("success"),
-            results.get("storage", {}).get("success", False),
-            results.get("ui_generation", {}).get("success", False)
-        ])
-        
-        print(f"{'='*70}")
+        results["success"] = all(
+            [
+                pb_setup.get("success"),
+                probe_results.get("success"),
+                results.get("storage", {}).get("success", False),
+                results.get("ui_generation", {}).get("success", False),
+            ]
+        )
+
+        print(f"{'=' * 70}")
         if results["success"]:
-            print(f"✅ MISSION COMPLETE")
+            print("✅ MISSION COMPLETE")
         else:
-            print(f"⚠️  MISSION COMPLETE (with warnings)")
-        print(f"{'='*70}\n")
-        
+            print("⚠️  MISSION COMPLETE (with warnings)")
+        print(f"{'=' * 70}\n")
+
         return results

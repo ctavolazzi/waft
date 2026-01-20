@@ -16,9 +16,9 @@ import hashlib
 import json
 import re
 from dataclasses import dataclass, field
-from typing import List, Dict, Any, Optional
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 from ..core.science.taxonomy import LineagePoet
 
@@ -31,6 +31,7 @@ class IdeaGene:
     Each idea gets a unique genome ID and scientific name, enabling
     lineage tracking and evolution over time.
     """
+
     content: str  # The idea itself
     category: str  # "decision", "insight", "question", "action", "concept"
     context: str = ""  # Surrounding context
@@ -43,7 +44,7 @@ class IdeaGene:
     # Metadata
     extracted_at: datetime = field(default_factory=datetime.utcnow)
     source_location: str = ""  # File/line reference
-    tags: List[str] = field(default_factory=list)
+    tags: list[str] = field(default_factory=list)
 
     def __post_init__(self):
         """Compute genome ID and scientific name after initialization."""
@@ -62,7 +63,7 @@ class IdeaGene:
         combined = f"{self.category}:{self.content}"
         return hashlib.sha256(combined.encode()).hexdigest()
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for serialization."""
         return {
             "content": self.content,
@@ -84,9 +85,10 @@ class DistilledChat:
 
     This is the processed output that feeds into the 2-page PDF generator.
     """
+
     title: str  # Chat title/summary
     summary: str  # Brief overview (1-2 sentences)
-    ideas: List[IdeaGene]  # Extracted ideas
+    ideas: list[IdeaGene]  # Extracted ideas
 
     # Metadata
     source_file: str = ""  # Source chat file
@@ -109,7 +111,7 @@ class DistilledChat:
         self.concepts_count = sum(1 for i in self.ideas if i.category == "concept")
         self.questions_count = sum(1 for i in self.ideas if i.category == "question")
 
-    def get_top_ideas(self, n: int = 10, min_importance: float = 0.5) -> List[IdeaGene]:
+    def get_top_ideas(self, n: int = 10, min_importance: float = 0.5) -> list[IdeaGene]:
         """
         Get top N most important ideas.
 
@@ -123,11 +125,11 @@ class DistilledChat:
         filtered = [i for i in self.ideas if i.importance >= min_importance]
         return sorted(filtered, key=lambda x: x.importance, reverse=True)[:n]
 
-    def get_by_category(self, category: str) -> List[IdeaGene]:
+    def get_by_category(self, category: str) -> list[IdeaGene]:
         """Get all ideas in a specific category."""
         return [i for i in self.ideas if i.category == category]
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for serialization."""
         return {
             "title": self.title,
@@ -255,7 +257,7 @@ class ChatDistiller:
             source_file="text_input",
         )
 
-    def _extract_ideas_from_text(self, text: str, source: str) -> List[IdeaGene]:
+    def _extract_ideas_from_text(self, text: str, source: str) -> list[IdeaGene]:
         """
         Extract ideas from text content, prioritizing meaningful prose.
 
@@ -270,15 +272,15 @@ class ChatDistiller:
             List of extracted IdeaGenes with prose content
         """
         ideas = []
-        
+
         # Split into paragraphs (meaningful prose blocks)
         paragraphs = []
         current_para = []
-        
+
         lines = text.split("\n")
         for i, line in enumerate(lines):
             line = line.strip()
-            
+
             # Skip empty lines - they mark paragraph breaks
             if not line:
                 if current_para:
@@ -288,7 +290,7 @@ class ChatDistiller:
                         paragraphs.append((para_text, i - len(current_para)))
                     current_para = []
                 continue
-            
+
             # Skip markdown headers - they're structure, not content
             if line.startswith("#"):
                 if current_para:
@@ -297,7 +299,7 @@ class ChatDistiller:
                         paragraphs.append((para_text, i - len(current_para)))
                     current_para = []
                 continue
-            
+
             # Skip code blocks entirely
             if line.startswith("```"):
                 if current_para:
@@ -306,43 +308,43 @@ class ChatDistiller:
                         paragraphs.append((para_text, i - len(current_para)))
                     current_para = []
                 continue
-            
+
             # Skip list markers at start (they're formatting, not content)
-            if re.match(r'^[-*+]\s+', line):
-                line = re.sub(r'^[-*+]\s+', '', line)
-            
+            if re.match(r"^[-*+]\s+", line):
+                line = re.sub(r"^[-*+]\s+", "", line)
+
             # Skip numbered list markers
-            if re.match(r'^\d+\.\s+', line):
-                line = re.sub(r'^\d+\.\s+', '', line)
-            
+            if re.match(r"^\d+\.\s+", line):
+                line = re.sub(r"^\d+\.\s+", "", line)
+
             # Skip markdown bold/italic markers
-            line = re.sub(r'\*\*([^*]+)\*\*', r'\1', line)
-            line = re.sub(r'\*([^*]+)\*', r'\1', line)
-            
+            line = re.sub(r"\*\*([^*]+)\*\*", r"\1", line)
+            line = re.sub(r"\*([^*]+)\*", r"\1", line)
+
             if line:  # Only add non-empty lines
                 current_para.append(line)
-        
+
         # Add last paragraph
         if current_para:
             para_text = " ".join(current_para).strip()
             if len(para_text) >= 50:
                 paragraphs.append((para_text, len(lines)))
-        
+
         # Extract ideas from paragraphs
         for para_text, line_num in paragraphs:
             # Determine category and importance
             category, importance = self._classify_line(para_text)
-            
+
             if importance < self.importance_threshold:
                 continue
-            
+
             # Clean up the content - ensure it's readable prose
-            para_text = re.sub(r'\s+', ' ', para_text).strip()
-            
+            para_text = re.sub(r"\s+", " ", para_text).strip()
+
             # Ensure it ends with proper punctuation
-            if para_text and para_text[-1] not in '.!?':
-                para_text += '.'
-            
+            if para_text and para_text[-1] not in ".!?":
+                para_text += "."
+
             # Create idea gene with prose content
             idea = IdeaGene(
                 content=para_text,
@@ -351,9 +353,9 @@ class ChatDistiller:
                 importance=importance,
                 source_location=f"{source}:L{line_num}",
             )
-            
+
             ideas.append(idea)
-        
+
         return ideas
 
     def _classify_line(self, line: str) -> tuple[str, float]:
@@ -400,7 +402,7 @@ class ChatDistiller:
 
         return category, importance
 
-    def _pattern_score(self, text: str, patterns: List[str]) -> float:
+    def _pattern_score(self, text: str, patterns: list[str]) -> float:
         """
         Score text against a list of regex patterns.
 
@@ -419,7 +421,7 @@ class ChatDistiller:
         # Normalize by number of patterns
         return min(matches / len(patterns), 1.0) if patterns else 0.0
 
-    def _generate_summary(self, ideas: List[IdeaGene]) -> str:
+    def _generate_summary(self, ideas: list[IdeaGene]) -> str:
         """
         Generate an explanatory prose summary from extracted ideas.
 
@@ -434,16 +436,16 @@ class ChatDistiller:
 
         # Get top ideas for summary
         top_ideas = sorted(ideas, key=lambda x: x.importance, reverse=True)[:2]
-        
+
         # Build prose summary from actual content
         if top_ideas:
             # Use the first substantial idea as the main summary
             main_content = top_ideas[0].content
-            
+
             # Extract first sentence or first 200 chars for summary
-            if '.' in main_content:
+            if "." in main_content:
                 # Take first complete sentence
-                first_sentence = main_content.split('.')[0] + '.'
+                first_sentence = main_content.split(".")[0] + "."
                 if len(first_sentence) > 200:
                     # If sentence is too long, truncate at word boundary
                     words = first_sentence.split()
@@ -463,8 +465,8 @@ class ChatDistiller:
                     summary = " ".join(words[:-1]) + "..."
                 else:
                     summary = main_content
-            
+
             return summary
-        
+
         # Fallback: simple descriptive summary
         return f"This conversation explored {len(ideas)} key topics and ideas."

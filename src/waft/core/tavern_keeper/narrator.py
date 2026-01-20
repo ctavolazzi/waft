@@ -6,8 +6,7 @@ observations, and reflections to the adventure journal.
 """
 
 from datetime import datetime
-from typing import Optional, Dict, Any
-from pathlib import Path
+from typing import Any
 
 from .keeper import TavernKeeper
 
@@ -32,7 +31,7 @@ class Narrator:
     def observe(
         self,
         observation: str,
-        context: Optional[Dict[str, Any]] = None,
+        context: dict[str, Any] | None = None,
         mood: str = "neutral",
         source: str = "ai",
     ) -> None:
@@ -60,8 +59,8 @@ class Narrator:
     def reflect(
         self,
         reflection: str,
-        trigger: Optional[str] = None,
-        insight: Optional[str] = None,
+        trigger: str | None = None,
+        insight: str | None = None,
     ) -> None:
         """
         Log a reflection - deeper thoughts about the codebase or process.
@@ -85,7 +84,7 @@ class Narrator:
     def celebrate(
         self,
         celebration: str,
-        achievement: Optional[str] = None,
+        achievement: str | None = None,
     ) -> None:
         """
         Log a celebration - moments of delight and beauty.
@@ -108,7 +107,7 @@ class Narrator:
     def question(
         self,
         question: str,
-        concern: Optional[str] = None,
+        concern: str | None = None,
     ) -> None:
         """
         Log a question or concern - moments of uncertainty.
@@ -132,7 +131,7 @@ class Narrator:
         self,
         note: str,
         category: str = "general",
-        tags: Optional[list] = None,
+        tags: list | None = None,
     ) -> None:
         """
         Log a general note - any observation or thought.
@@ -152,4 +151,3 @@ class Narrator:
         }
 
         self.tavern.log_adventure(entry)
-

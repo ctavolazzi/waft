@@ -5,14 +5,12 @@ Generates comprehensive final report PDFs using the Science Textbook LaTeX templ
 Integrates WAFT lore and philosophy for meaningful, useful documentation.
 """
 
-from pathlib import Path
-from typing import Dict, Any, Optional, List
-from datetime import datetime
-import json
-import subprocess
 import platform
-import sys
 import re
+import subprocess
+from datetime import datetime
+from pathlib import Path
+from typing import Any
 
 
 class FinalReportGenerator:
@@ -31,7 +29,7 @@ class FinalReportGenerator:
         self.output_dir = self.project_path / "_work_efforts"
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
-    def gather_session_data(self) -> Dict[str, Any]:
+    def gather_session_data(self) -> dict[str, Any]:
         """
         Gather comprehensive session data with WAFT context.
 
@@ -53,10 +51,10 @@ class FinalReportGenerator:
                 cwd=self.project_path,
                 capture_output=True,
                 text=True,
-                timeout=5
+                timeout=5,
             )
             if result.returncode == 0:
-                commits = result.stdout.strip().split('\n')
+                commits = result.stdout.strip().split("\n")
                 data["recent_commits"] = commits
                 data["commit_count"] = len(commits)
         except:
@@ -68,13 +66,15 @@ class FinalReportGenerator:
                 cwd=self.project_path,
                 capture_output=True,
                 text=True,
-                timeout=5
+                timeout=5,
             )
             if result.returncode == 0:
-                status_lines = result.stdout.strip().split('\n')
+                status_lines = result.stdout.strip().split("\n")
                 data["git_status"] = [s for s in status_lines if s.strip()]
-                data["modified_files"] = len([s for s in status_lines if s.startswith('M')])
-                data["new_files"] = len([s for s in status_lines if s.startswith('??') or s.startswith('A')])
+                data["modified_files"] = len([s for s in status_lines if s.startswith("M")])
+                data["new_files"] = len(
+                    [s for s in status_lines if s.startswith("??") or s.startswith("A")]
+                )
         except:
             pass
 
@@ -84,7 +84,7 @@ class FinalReportGenerator:
                 cwd=self.project_path,
                 capture_output=True,
                 text=True,
-                timeout=5
+                timeout=5,
             )
             if result.returncode == 0:
                 data["git_branch"] = result.stdout.strip()
@@ -100,7 +100,9 @@ class FinalReportGenerator:
                 content = f.read_text()[:500]  # First 500 chars
                 # Extract summary if available
                 if "## Summary" in content:
-                    summary_match = re.search(r"## Summary\s*\n\n(.*?)(?=\n##|\Z)", content, re.DOTALL)
+                    summary_match = re.search(
+                        r"## Summary\s*\n\n(.*?)(?=\n##|\Z)", content, re.DOTALL
+                    )
                     if summary_match:
                         checkpoint_data["summary"] = summary_match.group(1).strip()[:200]
             except:
@@ -122,7 +124,9 @@ class FinalReportGenerator:
             data["assumption_validations"].append(validation_data)
 
         # Check for work efforts
-        work_effort_dirs = [d for d in self.output_dir.iterdir() if d.is_dir() and d.name.startswith("WE-")]
+        work_effort_dirs = [
+            d for d in self.output_dir.iterdir() if d.is_dir() and d.name.startswith("WE-")
+        ]
         data["work_efforts"] = []
         for d in sorted(work_effort_dirs, key=lambda x: x.stat().st_mtime, reverse=True)[:10]:
             we_data = {"name": d.name}
@@ -138,7 +142,9 @@ class FinalReportGenerator:
                     if status_match:
                         we_data["status"] = status_match.group(1)
                     # Extract objective
-                    obj_match = re.search(r"\*\*Objective\*\*:\s*\n\n(.*?)(?=\n\n|\Z)", content, re.DOTALL)
+                    obj_match = re.search(
+                        r"\*\*Objective\*\*:\s*\n\n(.*?)(?=\n\n|\Z)", content, re.DOTALL
+                    )
                     if obj_match:
                         we_data["objective"] = obj_match.group(1).strip()[:150]
                 except:
@@ -150,18 +156,18 @@ class FinalReportGenerator:
         if devlog_path.exists():
             devlog_content = devlog_path.read_text()
             # Extract recent entries with better parsing
-            lines = devlog_content.split('\n')
+            lines = devlog_content.split("\n")
             recent_entries = []
             current_entry = []
             for line in lines:
                 if line.startswith("## ") and " - " in line:
                     if current_entry:
-                        recent_entries.append('\n'.join(current_entry))
+                        recent_entries.append("\n".join(current_entry))
                     current_entry = [line]
                 elif current_entry:
                     current_entry.append(line)
             if current_entry:
-                recent_entries.append('\n'.join(current_entry))
+                recent_entries.append("\n".join(current_entry))
 
             data["devlog_entries"] = []
             for entry in recent_entries[:5]:
@@ -188,8 +194,9 @@ class FinalReportGenerator:
 
         return data
 
-    def format_latex_content(self, data: Dict[str, Any], title: str = "Final Report",
-                            subtitle: Optional[str] = None) -> str:
+    def format_latex_content(
+        self, data: dict[str, Any], title: str = "Final Report", subtitle: str | None = None
+    ) -> str:
         """
         Format data into LaTeX content with WAFT lore integration.
 
@@ -212,20 +219,18 @@ class FinalReportGenerator:
 
         # Replace title and metadata
         template_content = template_content.replace(
-            r"\title{Science Textbook}",
-            f"\\title{{{self._escape_latex(title)}}}"
+            r"\title{Science Textbook}", f"\\title{{{self._escape_latex(title)}}}"
         )
         template_content = template_content.replace(
             r"\newcommand{\booksubtitle}{A Latex Template for a Science Textbook}",
-            f"\\newcommand{{\\booksubtitle}}{{{self._escape_latex(subtitle)}}}"
+            f"\\newcommand{{\\booksubtitle}}{{{self._escape_latex(subtitle)}}}",
         )
         template_content = template_content.replace(
-            r"\author{Author Name}",
-            r"\author{WAFT Development System}"
+            r"\author{Author Name}", r"\author{WAFT Development System}"
         )
         template_content = template_content.replace(
             r"\newcommand{\authorsubtitle}{City, Country}",
-            r"\newcommand{\authorsubtitle}{Wave Agent Framework \& Tools}"
+            r"\newcommand{\authorsubtitle}{Wave Agent Framework \& Tools}",
         )
 
         # Find where mainmatter starts
@@ -248,9 +253,7 @@ class FinalReportGenerator:
             if preface_end != -1:
                 waft_preface = self._generate_waft_preface(data)
                 template_content = (
-                    template_content[:preface_start] +
-                    waft_preface +
-                    template_content[preface_end:]
+                    template_content[:preface_start] + waft_preface + template_content[preface_end:]
                 )
 
         # Generate report content
@@ -258,18 +261,19 @@ class FinalReportGenerator:
 
         # Replace everything between \mainmatter and \backmatter with our content
         template_content = (
-            template_content[:mainmatter_pos + len(r"\mainmatter")] +
-            "\n" +
-            report_content +
-            "\n" +
-            template_content[backmatter_pos:]
+            template_content[: mainmatter_pos + len(r"\mainmatter")]
+            + "\n"
+            + report_content
+            + "\n"
+            + template_content[backmatter_pos:]
         )
 
         return template_content
 
-    def _generate_waft_preface(self, data: Dict[str, Any]) -> str:
+    def _generate_waft_preface(self, data: dict[str, Any]) -> str:
         """Generate WAFT-specific preface with lore and context."""
-        return r"""
+        return (
+            r"""
 \chapter*{Preface}
 
 This report documents a development session within the \textbf{Wave Agent Framework \& Tools} (WAFT), a scientific instrument for studying the physics of artificial cognition through directed evolution of self-modifying AI agents.
@@ -292,7 +296,17 @@ This document captures:
 
 \section*{Session Context}
 
-This session occurred on \textbf{""" + data.get('date', 'unknown date') + r"""} took place in the \texttt{""" + self._escape_latex(data.get('project_name', 'waft')) + r"""} project. The system recorded """ + str(data.get('metrics', {}).get('commits_count', 0)) + r""" commits, """ + str(data.get('metrics', {}).get('work_efforts_count', 0)) + r""" work efforts, and """ + str(data.get('metrics', {}).get('checkpoints_count', 0)) + r""" checkpoints during this period.
+This session occurred on \textbf{"""
+            + data.get("date", "unknown date")
+            + r"""} took place in the \texttt{"""
+            + self._escape_latex(data.get("project_name", "waft"))
+            + r"""} project. The system recorded """
+            + str(data.get("metrics", {}).get("commits_count", 0))
+            + r""" commits, """
+            + str(data.get("metrics", {}).get("work_efforts_count", 0))
+            + r""" work efforts, and """
+            + str(data.get("metrics", {}).get("checkpoints_count", 0))
+            + r""" checkpoints during this period.
 
 \section*{The Scientific Record}
 
@@ -303,8 +317,9 @@ Every session contributes to WAFT's evolutionary record. This report serves as a
 \textit{Generated by WAFT Development System}\\
 \textit{Part of the scientific mission: ``The Physics of Artificial Cognition''}
 """
+        )
 
-    def _generate_report_chapters(self, data: Dict[str, Any]) -> str:
+    def _generate_report_chapters(self, data: dict[str, Any]) -> str:
         """Generate LaTeX chapters from data."""
         chapters = []
 
@@ -338,7 +353,7 @@ Every session contributes to WAFT's evolutionary record. This report serves as a
 
         return "\n\n".join(chapters)
 
-    def _format_executive_summary(self, data: Dict[str, Any]) -> str:
+    def _format_executive_summary(self, data: dict[str, Any]) -> str:
         """Format executive summary chapter with metrics."""
         content = [
             r"\section{Session Overview}",
@@ -357,21 +372,23 @@ Every session contributes to WAFT's evolutionary record. This report serves as a
         ]
 
         if data.get("recent_commits"):
-            content.extend([
-                r"\section{Key Accomplishments}",
-                r"Recent commits indicate the following work:",
-                r"\begin{itemize}",
-            ])
+            content.extend(
+                [
+                    r"\section{Key Accomplishments}",
+                    r"Recent commits indicate the following work:",
+                    r"\begin{itemize}",
+                ]
+            )
             for commit in data["recent_commits"][:8]:
-                commit_msg = commit.split(' ', 1)[1] if ' ' in commit else commit
+                commit_msg = commit.split(" ", 1)[1] if " " in commit else commit
                 # Clean up commit message
-                commit_msg = commit_msg.split('(')[0].strip()  # Remove branch info
+                commit_msg = commit_msg.split("(")[0].strip()  # Remove branch info
                 content.append(f"\\item {self._escape_latex(commit_msg)}")
             content.append(r"\end{itemize}")
 
         return "\n".join(content)
 
-    def _format_session_recap(self, data: Dict[str, Any]) -> str:
+    def _format_session_recap(self, data: dict[str, Any]) -> str:
         """Format session recap chapter."""
         content = [
             r"\section{Session Information}",
@@ -385,29 +402,35 @@ Every session contributes to WAFT's evolutionary record. This report serves as a
         if data.get("git_branch"):
             content.append(f"\\item[Branch] {self._escape_latex(data.get('git_branch'))}")
 
-        content.extend([
-            r"\end{description}",
-            "",
-        ])
+        content.extend(
+            [
+                r"\end{description}",
+                "",
+            ]
+        )
 
         if data.get("checkpoints"):
-            content.extend([
-                r"\section{Checkpoints Created}",
-                r"Checkpoints serve as snapshots of progress and decision points:",
-                r"\begin{itemize}",
-            ])
+            content.extend(
+                [
+                    r"\section{Checkpoints Created}",
+                    r"Checkpoints serve as snapshots of progress and decision points:",
+                    r"\begin{itemize}",
+                ]
+            )
             for checkpoint in data["checkpoints"]:
                 checkpoint_name = checkpoint.get("name", "Unknown")
                 summary = checkpoint.get("summary", "")
                 if summary:
-                    content.append(f"\\item \\textbf{{{self._escape_latex(checkpoint_name)}}}: {self._escape_latex(summary)}")
+                    content.append(
+                        f"\\item \\textbf{{{self._escape_latex(checkpoint_name)}}}: {self._escape_latex(summary)}"
+                    )
                 else:
                     content.append(f"\\item {self._escape_latex(checkpoint_name)}")
             content.append(r"\end{itemize}")
 
         return "\n".join(content)
 
-    def _format_work_progress(self, data: Dict[str, Any]) -> str:
+    def _format_work_progress(self, data: dict[str, Any]) -> str:
         """Format work progress chapter."""
         content = [
             r"\section{Active Work Efforts}",
@@ -430,18 +453,20 @@ Every session contributes to WAFT's evolutionary record. This report serves as a
             content.append("No active work efforts found.")
 
         if data.get("git_status"):
-            content.extend([
-                "",
-                r"\section{Current Git Status}",
-                r"The following files have been modified or are untracked:",
-                r"\begin{verbatim}",
-            ])
+            content.extend(
+                [
+                    "",
+                    r"\section{Current Git Status}",
+                    r"The following files have been modified or are untracked:",
+                    r"\begin{verbatim}",
+                ]
+            )
             content.extend(data["git_status"][:25])  # Limit to 25 lines
             content.append(r"\end{verbatim}")
 
         return "\n".join(content)
 
-    def _format_technical_details(self, data: Dict[str, Any]) -> str:
+    def _format_technical_details(self, data: dict[str, Any]) -> str:
         """Format technical details chapter."""
         content = [
             r"\section{Implementation Summary}",
@@ -450,20 +475,22 @@ Every session contributes to WAFT's evolutionary record. This report serves as a
         ]
 
         if data.get("recent_commits"):
-            content.extend([
-                r"\section{Recent Commits}",
-                r"The following commits were made during this session:",
-                r"\begin{itemize}",
-            ])
+            content.extend(
+                [
+                    r"\section{Recent Commits}",
+                    r"The following commits were made during this session:",
+                    r"\begin{itemize}",
+                ]
+            )
             for commit in data["recent_commits"][:12]:
-                commit_msg = commit.split(' ', 1)[1] if ' ' in commit else commit
-                commit_msg = commit_msg.split('(')[0].strip()
+                commit_msg = commit.split(" ", 1)[1] if " " in commit else commit
+                commit_msg = commit_msg.split("(")[0].strip()
                 content.append(f"\\item {self._escape_latex(commit_msg)}")
             content.append(r"\end{itemize}")
 
         return "\n".join(content)
 
-    def _format_assumptions(self, data: Dict[str, Any]) -> str:
+    def _format_assumptions(self, data: dict[str, Any]) -> str:
         """Format assumptions chapter."""
         content = [
             r"\section{Assumption Validation Reports}",
@@ -486,7 +513,7 @@ Every session contributes to WAFT's evolutionary record. This report serves as a
 
         return "\n".join(content)
 
-    def _format_documentation(self, data: Dict[str, Any]) -> str:
+    def _format_documentation(self, data: dict[str, Any]) -> str:
         """Format documentation chapter."""
         content = [
             r"\section{Documentation Artifacts}",
@@ -495,23 +522,27 @@ Every session contributes to WAFT's evolutionary record. This report serves as a
         ]
 
         if data.get("checkpoints"):
-            content.extend([
-                r"\subsection{Checkpoints}",
-                r"Checkpoints provide decision snapshots:",
-                r"\begin{itemize}",
-            ])
+            content.extend(
+                [
+                    r"\subsection{Checkpoints}",
+                    r"Checkpoints provide decision snapshots:",
+                    r"\begin{itemize}",
+                ]
+            )
             for checkpoint in data["checkpoints"]:
                 checkpoint_name = checkpoint.get("name", "Unknown")
                 content.append(f"\\item {self._escape_latex(checkpoint_name)}")
             content.append(r"\end{itemize}")
 
         if data.get("devlog_entries"):
-            content.extend([
-                "",
-                r"\subsection{Recent Devlog Entries}",
-                r"The development log records key activities:",
-                r"\begin{description}",
-            ])
+            content.extend(
+                [
+                    "",
+                    r"\subsection{Recent Devlog Entries}",
+                    r"The development log records key activities:",
+                    r"\begin{description}",
+                ]
+            )
             for entry in data["devlog_entries"][:5]:
                 title = entry.get("title", "Unknown Entry")
                 status = entry.get("status", "")
@@ -523,7 +554,7 @@ Every session contributes to WAFT's evolutionary record. This report serves as a
 
         return "\n".join(content)
 
-    def _format_next_steps(self, data: Dict[str, Any]) -> str:
+    def _format_next_steps(self, data: dict[str, Any]) -> str:
         """Format next steps chapter."""
         content = [
             r"\section{Immediate Actions}",
@@ -554,24 +585,27 @@ Every session contributes to WAFT's evolutionary record. This report serves as a
         if not text:
             return ""
         replacements = {
-            '\\': r'\textbackslash{}',
-            '{': r'\{',
-            '}': r'\}',
-            '$': r'\$',
-            '&': r'\&',
-            '%': r'\%',
-            '#': r'\#',
-            '^': r'\textasciicircum{}',
-            '_': r'\_',
-            '~': r'\textasciitilde{}',
+            "\\": r"\textbackslash{}",
+            "{": r"\{",
+            "}": r"\}",
+            "$": r"\$",
+            "&": r"\&",
+            "%": r"\%",
+            "#": r"\#",
+            "^": r"\textasciicircum{}",
+            "_": r"\_",
+            "~": r"\textasciitilde{}",
         }
         for char, replacement in replacements.items():
             text = text.replace(char, replacement)
         return text
 
-    def generate_report(self, title: str = "Final Report",
-                       subtitle: Optional[str] = None,
-                       output_name: Optional[str] = None) -> Path:
+    def generate_report(
+        self,
+        title: str = "Final Report",
+        subtitle: str | None = None,
+        output_name: str | None = None,
+    ) -> Path:
         """
         Generate final report PDF.
 
@@ -594,7 +628,9 @@ Every session contributes to WAFT's evolutionary record. This report serves as a
         # Generate output name
         if output_name is None:
             timestamp = datetime.now().strftime("%Y-%m-%d_%H%M%S")
-            safe_title = "".join(c if c.isalnum() or c in ('-', '_') else '_' for c in title.lower())
+            safe_title = "".join(
+                c if c.isalnum() or c in ("-", "_") else "_" for c in title.lower()
+            )
             output_name = f"FINAL_REPORT_{timestamp}_{safe_title}"
 
         tex_file = self.output_dir / f"{output_name}.tex"
@@ -602,40 +638,49 @@ Every session contributes to WAFT's evolutionary record. This report serves as a
 
         # Write LaTeX file
         print(f"💾 Writing LaTeX file: {tex_file}")
-        tex_file.write_text(latex_content, encoding='utf-8')
+        tex_file.write_text(latex_content, encoding="utf-8")
 
         # Copy index style file
         ist_file = self.template_path.parent / "stb-template.ist"
         if ist_file.exists():
             output_ist = self.output_dir / f"{output_name}.ist"
             import shutil
+
             shutil.copy(ist_file, output_ist)
 
         # Copy booksvg.pdf if it exists
         booksvg_file = self.template_path.parent / "booksvg.pdf"
         if booksvg_file.exists():
             import shutil
+
             shutil.copy(booksvg_file, self.output_dir / "booksvg.pdf")
 
         # Compile LaTeX
         print("🔨 Compiling LaTeX to PDF...")
         try:
             from ..templates.latex.compiler import LaTeXCompiler
+
             compiler = LaTeXCompiler(compiler="pdflatex")
             pdf_path = compiler.compile_file(
                 tex_file,
                 pdf_file,
-                runs=2  # Two runs for TOC
+                runs=2,  # Two runs for TOC
             )
         except (ImportError, RuntimeError) as e:
             # Fallback to direct pdflatex
             print(f"⚠️  Using fallback compilation method: {e}")
             result = subprocess.run(
-                ["pdflatex", "-interaction=nonstopmode", "-output-directory", str(self.output_dir), str(tex_file)],
+                [
+                    "pdflatex",
+                    "-interaction=nonstopmode",
+                    "-output-directory",
+                    str(self.output_dir),
+                    str(tex_file),
+                ],
                 cwd=str(self.output_dir),
                 capture_output=True,
                 text=True,
-                timeout=60
+                timeout=60,
             )
             # Check if PDF was generated even if returncode != 0 (warnings are OK)
             if not pdf_file.exists() and result.returncode != 0:
@@ -645,11 +690,17 @@ Every session contributes to WAFT's evolutionary record. This report serves as a
 
             # Second run for TOC
             subprocess.run(
-                ["pdflatex", "-interaction=nonstopmode", "-output-directory", str(self.output_dir), str(tex_file)],
+                [
+                    "pdflatex",
+                    "-interaction=nonstopmode",
+                    "-output-directory",
+                    str(self.output_dir),
+                    str(tex_file),
+                ],
                 cwd=str(self.output_dir),
                 capture_output=True,
                 text=True,
-                timeout=60
+                timeout=60,
             )
 
             if not pdf_file.exists():

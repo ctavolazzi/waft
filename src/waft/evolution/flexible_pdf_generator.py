@@ -12,15 +12,12 @@ Use this instead of TwoPageGenerator when you need:
 - Evolving CSS styling
 """
 
-from pathlib import Path
-from typing import Optional, Dict, Any
-from datetime import datetime
-from jinja2 import Template
 import re
+from pathlib import Path
+
+from jinja2 import Template
 
 from .styling_genome import StylingGenome
-from .chat_distiller import ChatDistiller, DistilledChat
-
 
 # Flexible HTML template - no page constraints, full markdown support
 FLEXIBLE_TEMPLATE = """
@@ -260,42 +257,39 @@ FLEXIBLE_TEMPLATE = """
 class FlexiblePDFGenerator:
     """
     Flexible PDF generator with no page constraints.
-    
+
     Designed for:
     - Testing formatting improvements
     - Evolving CSS styling
     - Full markdown content rendering
     - No page limits
     """
-    
-    def __init__(
-        self,
-        styling_genome: StylingGenome,
-        weasyprint_available: bool = True
-    ):
+
+    def __init__(self, styling_genome: StylingGenome, weasyprint_available: bool = True):
         """
         Initialize flexible PDF generator.
-        
+
         Args:
             styling_genome: Styling configuration
             weasyprint_available: Whether WeasyPrint is available
         """
         self.styling_genome = styling_genome
         self.weasyprint_available = weasyprint_available
-        
+
         if weasyprint_available:
             try:
                 from weasyprint import HTML, __version__
+
                 self.HTML = HTML
                 print(f"WeasyPrint {__version__} available")
             except ImportError:
                 self.weasyprint_available = False
                 print("WeasyPrint not available - HTML output only")
-    
+
     def _markdown_to_html(self, text: str) -> str:
         """
         Convert markdown to HTML with comprehensive formatting support.
-        
+
         Handles:
         - Headers (h1-h6)
         - Bold/italic (including nested)
@@ -308,144 +302,136 @@ class FlexiblePDFGenerator:
         """
         if not text:
             return ""
-        
+
         # Try markdown library first (best quality)
         try:
             import markdown
+
             html = markdown.markdown(
-                text,
-                extensions=['fenced_code', 'tables', 'nl2br', 'extra', 'codehilite']
+                text, extensions=["fenced_code", "tables", "nl2br", "extra", "codehilite"]
             )
             return html
         except ImportError:
             # Fallback: manual conversion
             pass
-        
+
         # Manual conversion (comprehensive fallback)
         html = text
-        
+
         # Code blocks first (before other processing)
         html = re.sub(
-            r'```(\w+)?\n(.*?)```',
+            r"```(\w+)?\n(.*?)```",
             r'<pre><code class="language-\1">\2</code></pre>',
             html,
-            flags=re.DOTALL
+            flags=re.DOTALL,
         )
-        
+
         # Inline code
-        html = re.sub(r'`([^`]+)`', r'<code>\1</code>', html)
-        
+        html = re.sub(r"`([^`]+)`", r"<code>\1</code>", html)
+
         # Blockquotes (process before paragraphs)
-        html = re.sub(
-            r'^>\s+(.+)$',
-            r'<blockquote>\1</blockquote>',
-            html,
-            flags=re.MULTILINE
-        )
-        
+        html = re.sub(r"^>\s+(.+)$", r"<blockquote>\1</blockquote>", html, flags=re.MULTILINE)
+
         # Headers (h6 to h1 to avoid conflicts)
-        html = re.sub(r'^######\s+(.+)$', r'<h6>\1</h6>', html, flags=re.MULTILINE)
-        html = re.sub(r'^#####\s+(.+)$', r'<h5>\1</h5>', html, flags=re.MULTILINE)
-        html = re.sub(r'^####\s+(.+)$', r'<h4>\1</h4>', html, flags=re.MULTILINE)
-        html = re.sub(r'^###\s+(.+)$', r'<h3>\1</h3>', html, flags=re.MULTILINE)
-        html = re.sub(r'^##\s+(.+)$', r'<h2>\1</h2>', html, flags=re.MULTILINE)
-        html = re.sub(r'^#\s+(.+)$', r'<h1>\1</h1>', html, flags=re.MULTILINE)
-        
+        html = re.sub(r"^######\s+(.+)$", r"<h6>\1</h6>", html, flags=re.MULTILINE)
+        html = re.sub(r"^#####\s+(.+)$", r"<h5>\1</h5>", html, flags=re.MULTILINE)
+        html = re.sub(r"^####\s+(.+)$", r"<h4>\1</h4>", html, flags=re.MULTILINE)
+        html = re.sub(r"^###\s+(.+)$", r"<h3>\1</h3>", html, flags=re.MULTILINE)
+        html = re.sub(r"^##\s+(.+)$", r"<h2>\1</h2>", html, flags=re.MULTILINE)
+        html = re.sub(r"^#\s+(.+)$", r"<h1>\1</h1>", html, flags=re.MULTILINE)
+
         # Bold (**text** or __text__)
-        html = re.sub(r'\*\*([^*]+)\*\*', r'<strong>\1</strong>', html)
-        html = re.sub(r'__([^_]+)__', r'<strong>\1</strong>', html)
-        
+        html = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", html)
+        html = re.sub(r"__([^_]+)__", r"<strong>\1</strong>", html)
+
         # Italic (*text* or _text_) - careful with nested emphasis
-        html = re.sub(r'(?<!<strong>)(?<!\*)\*([^*<]+)\*(?!\*)(?!</strong>)', r'<em>\1</em>', html)
-        html = re.sub(r'(?<!<strong>)(?<!_)_([^_<]+)_(?!_)(?!</strong>)', r'<em>\1</em>', html)
-        
+        html = re.sub(r"(?<!<strong>)(?<!\*)\*([^*<]+)\*(?!\*)(?!</strong>)", r"<em>\1</em>", html)
+        html = re.sub(r"(?<!<strong>)(?<!_)_([^_<]+)_(?!_)(?!</strong>)", r"<em>\1</em>", html)
+
         # Links
-        html = re.sub(r'\[([^\]]+)\]\(([^\)]+)\)', r'<a href="\2">\1</a>', html)
-        
+        html = re.sub(r"\[([^\]]+)\]\(([^\)]+)\)", r'<a href="\2">\1</a>', html)
+
         # Lists - process line by line
-        lines = html.split('\n')
+        lines = html.split("\n")
         result = []
         in_list = False
         list_type = None
-        
+
         for line in lines:
             # Ordered list
-            if re.match(r'^\s*\d+\.\s+', line):
-                if not in_list or list_type != 'ol':
+            if re.match(r"^\s*\d+\.\s+", line):
+                if not in_list or list_type != "ol":
                     if in_list:
-                        result.append(f'</{list_type}>')
-                    result.append('<ol>')
+                        result.append(f"</{list_type}>")
+                    result.append("<ol>")
                     in_list = True
-                    list_type = 'ol'
-                item_text = re.sub(r'^\s*\d+\.\s+', '', line)
-                result.append(f'<li>{item_text}</li>')
+                    list_type = "ol"
+                item_text = re.sub(r"^\s*\d+\.\s+", "", line)
+                result.append(f"<li>{item_text}</li>")
             # Unordered list
-            elif re.match(r'^\s*[-*+]\s+', line):
-                if not in_list or list_type != 'ul':
+            elif re.match(r"^\s*[-*+]\s+", line):
+                if not in_list or list_type != "ul":
                     if in_list:
-                        result.append(f'</{list_type}>')
-                    result.append('<ul>')
+                        result.append(f"</{list_type}>")
+                    result.append("<ul>")
                     in_list = True
-                    list_type = 'ul'
-                item_text = re.sub(r'^\s*[-*+]\s+', '', line)
-                result.append(f'<li>{item_text}</li>')
+                    list_type = "ul"
+                item_text = re.sub(r"^\s*[-*+]\s+", "", line)
+                result.append(f"<li>{item_text}</li>")
             else:
                 if in_list:
-                    result.append(f'</{list_type}>')
+                    result.append(f"</{list_type}>")
                     in_list = False
                     list_type = None
                 if line.strip():
                     # Don't wrap if already HTML tag
-                    if not (line.strip().startswith('<h') or 
-                            line.strip().startswith('<pre') or
-                            line.strip().startswith('<code') or
-                            line.strip().startswith('<ul') or
-                            line.strip().startswith('<ol') or
-                            line.strip().startswith('<blockquote') or
-                            line.strip().startswith('<hr') or
-                            line.strip().startswith('<table')):
-                        result.append(f'<p>{line}</p>')
+                    if not (
+                        line.strip().startswith("<h")
+                        or line.strip().startswith("<pre")
+                        or line.strip().startswith("<code")
+                        or line.strip().startswith("<ul")
+                        or line.strip().startswith("<ol")
+                        or line.strip().startswith("<blockquote")
+                        or line.strip().startswith("<hr")
+                        or line.strip().startswith("<table")
+                    ):
+                        result.append(f"<p>{line}</p>")
                     else:
                         result.append(line)
                 else:
-                    result.append('')
-        
+                    result.append("")
+
         if in_list:
-            result.append(f'</{list_type}>')
-        
-        html = '\n'.join(result)
-        
+            result.append(f"</{list_type}>")
+
+        html = "\n".join(result)
+
         # Horizontal rules
-        html = re.sub(r'^---$', r'<hr>', html, flags=re.MULTILINE)
-        html = re.sub(r'^\*\*\*$', r'<hr>', html, flags=re.MULTILINE)
-        
+        html = re.sub(r"^---$", r"<hr>", html, flags=re.MULTILINE)
+        html = re.sub(r"^\*\*\*$", r"<hr>", html, flags=re.MULTILINE)
+
         return html
-    
-    def _render_html(
-        self,
-        content: str,
-        title: str,
-        metadata: Optional[Dict[str, str]] = None
-    ) -> str:
+
+    def _render_html(self, content: str, title: str, metadata: dict[str, str] | None = None) -> str:
         """
         Render HTML from markdown content.
-        
+
         Args:
             content: Markdown content
             title: Document title
             metadata: Optional metadata dict
-            
+
         Returns:
             HTML string
         """
         # Convert markdown to HTML
         html_content = self._markdown_to_html(content)
-        
+
         # Get styling values
         font = self.styling_genome.genes.font
         margin = self.styling_genome.genes.margin
         color = self.styling_genome.genes.color
-        
+
         # Render template
         template = Template(FLEXIBLE_TEMPLATE)
         html = template.render(
@@ -453,117 +439,121 @@ class FlexiblePDFGenerator:
             content=html_content,
             metadata=metadata or {},
             font={
-                'family': font.family,
-                'size_body': font.size_body,
-                'size_h1': font.size_h1,
-                'size_h2': font.size_h2,
-                'size_h3': font.size_h3,
-                'size_code': font.size_code,
-                'line_height': font.line_height
+                "family": font.family,
+                "size_body": font.size_body,
+                "size_h1": font.size_h1,
+                "size_h2": font.size_h2,
+                "size_h3": font.size_h3,
+                "size_code": font.size_code,
+                "line_height": font.line_height,
             },
             margin={
-                'top': margin.top,
-                'right': margin.right,
-                'bottom': margin.bottom,
-                'left': margin.left,
-                'section_spacing': margin.section_spacing,
-                'paragraph_spacing': margin.paragraph_spacing
+                "top": margin.top,
+                "right": margin.right,
+                "bottom": margin.bottom,
+                "left": margin.left,
+                "section_spacing": margin.section_spacing,
+                "paragraph_spacing": margin.paragraph_spacing,
             },
             color={
-                'text': color.text,
-                'background': color.background,
-                'heading': color.heading,
-                'accent': color.accent,
-                'code_bg': color.code_bg,
-                'code_text': color.code_text
-            }
+                "text": color.text,
+                "background": color.background,
+                "heading": color.heading,
+                "accent": color.accent,
+                "code_bg": color.code_bg,
+                "code_text": color.code_text,
+            },
         )
-        
+
         return html
-    
+
     def generate(
-        self,
-        content: str,
-        title: str,
-        output_path: Path,
-        metadata: Optional[Dict[str, str]] = None
+        self, content: str, title: str, output_path: Path, metadata: dict[str, str] | None = None
     ) -> Path:
         """
         Generate PDF from markdown content.
-        
+
         Args:
             content: Markdown content
             title: Document title
             output_path: Output PDF path
             metadata: Optional metadata dict
-            
+
         Returns:
             Path to generated PDF
         """
         output_path = Path(output_path)
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        
+
         # Render HTML
         html_content = self._render_html(content, title, metadata)
-        
+
         # Save HTML
-        html_path = output_path.with_suffix('.html')
+        html_path = output_path.with_suffix(".html")
         html_path.write_text(html_content)
-        
+
         # Generate PDF
         if self.weasyprint_available:
             self.HTML(string=html_content, base_url=str(output_path.parent)).write_pdf(
-                output_path,
-                presentational_hints=True,
-                optimize_images=True
+                output_path, presentational_hints=True, optimize_images=True
             )
             print(f"✅ PDF generated: {output_path}")
         else:
             print(f"⚠️  WeasyPrint not available - HTML saved: {html_path}")
-        
+
         return output_path
-    
+
     @classmethod
     def from_content(
-        cls,
-        content: str,
-        title: str,
-        style: str = "clinical_standard",
-        **overrides
+        cls, content: str, title: str, style: str = "clinical_standard", **overrides
     ) -> "FlexiblePDFGenerator":
         """
         Create flexible PDF generator from content.
-        
+
         Args:
             content: Markdown content
             title: Document title
             style: Preset style name
             **overrides: Style overrides
-            
+
         Returns:
             FlexiblePDFGenerator instance
         """
         from .pdf_generator import PDFGenerator
-        
+
         # Get preset
         if style not in PDFGenerator.PRESETS:
             raise ValueError(f"Unknown style: {style}")
-        
+
         preset = PDFGenerator.PRESETS[style].copy()
-        
+
         # Apply overrides
         if "font_size" in overrides:
             preset["font"]["size_body"] = overrides.pop("font_size")
         if "margins" in overrides:
             margins = overrides.pop("margins")
             if isinstance(margins, (int, float)):
-                preset["margin"]["top"] = preset["margin"]["bottom"] = preset["margin"]["left"] = preset["margin"]["right"] = margins
+                preset["margin"]["top"] = preset["margin"]["bottom"] = preset["margin"][
+                    "left"
+                ] = preset["margin"]["right"] = margins
             elif len(margins) == 4:
-                preset["margin"]["top"], preset["margin"]["right"], preset["margin"]["bottom"], preset["margin"]["left"] = margins
-        
+                (
+                    preset["margin"]["top"],
+                    preset["margin"]["right"],
+                    preset["margin"]["bottom"],
+                    preset["margin"]["left"],
+                ) = margins
+
         # Create styling genome
-        from .styling_genome import StylingGenome, StylingGene, FontGene, MarginGene, ColorGene, LayoutGene
-        
+        from .styling_genome import (
+            ColorGene,
+            FontGene,
+            LayoutGene,
+            MarginGene,
+            StylingGene,
+            StylingGenome,
+        )
+
         styling_genes = StylingGene(
             font=FontGene(**preset["font"]),
             margin=MarginGene(**preset["margin"]),
@@ -574,31 +564,27 @@ class FlexiblePDFGenerator:
                 toc_enabled=False,
                 page_numbers=True,
                 header_enabled=False,
-                footer_enabled=False
+                footer_enabled=False,
             ),
-            name=f"{style.title()} - {title[:30]}"
+            name=f"{style.title()} - {title[:30]}",
         )
-        
+
         genome = StylingGenome.from_genes(styling_genes)
-        
+
         return cls(styling_genome=genome, weasyprint_available=True)
-    
+
     def save(
-        self,
-        content: str,
-        title: str,
-        output_path: Path,
-        metadata: Optional[Dict[str, str]] = None
+        self, content: str, title: str, output_path: Path, metadata: dict[str, str] | None = None
     ) -> Path:
         """
         Generate and save PDF.
-        
+
         Args:
             content: Markdown content
             title: Document title
             output_path: Output PDF path
             metadata: Optional metadata
-            
+
         Returns:
             Path to generated PDF
         """

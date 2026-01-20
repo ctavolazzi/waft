@@ -1,0 +1,26 @@
+[
+  {
+    "test": "Error Detection",
+    "passed": false,
+    "quality": 0.5,
+    "duration": 0.0010211467742919922
+  },
+  {
+    "test": "Impossible Problem",
+    "passed": false,
+    "quality": 0.5,
+    "duration": 0.001394033432006836
+  },
+  {
+    "test": "Domain Boundary",
+    "passed": false,
+    "quality": 0.5,
+    "duration": 0.0010759830474853516
+  },
+  {
+    "test": "Self-Diagnosis",
+    "passed": false,
+    "quality": 0.5,
+    "duration": 0.00091552734375
+  }
+]

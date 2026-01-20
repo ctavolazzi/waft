@@ -15,14 +15,13 @@ NEW IN V2:
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
+from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Union, TYPE_CHECKING
-from datetime import datetime
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from ..core.science.observer import TheObserver
-    from ..core.tavern_keeper import TavernKeeper
+    pass
 
 try:
     from fpdf import FPDF
@@ -32,6 +31,7 @@ except ImportError:
 
 class RedactionStyle(Enum):
     """Redaction rendering styles."""
+
     BLACK_BAR = "black_bar"
     BLUR = "blur"
     CROSS_OUT = "cross_out"
@@ -39,6 +39,7 @@ class RedactionStyle(Enum):
 
 class FontFamily(Enum):
     """Professional font families."""
+
     SERIF = "serif"  # Times, Georgia (academic, traditional)
     SANS_SERIF = "sans_serif"  # Helvetica, Arial (modern, clean)
     MONOSPACE = "monospace"  # Courier (code, data)
@@ -47,6 +48,7 @@ class FontFamily(Enum):
 @dataclass
 class FontConfig:
     """Enhanced font configuration with family support."""
+
     serif_family: str = "Times"
     serif_bold: str = "Times-Bold"
     sans_family: str = "Helvetica"
@@ -63,17 +65,22 @@ class DocumentConfig:
     font_config: FontConfig = field(default_factory=FontConfig)
 
     # Document metadata
-    title: Optional[str] = None
-    author: Optional[str] = None
-    subject: Optional[str] = None
+    title: str | None = None
+    author: str | None = None
+    subject: str | None = None
 
     # Header/Footer
-    watermark: Optional[str] = None
-    header_text: Optional[str] = None
-    footer_text: Optional[str] = None
+    watermark: str | None = None
+    header_text: str | None = None
+    footer_text: str | None = None
 
     # Layout
-    page_margins: Tuple[float, float, float, float] = (72, 72, 72, 72)  # top, right, bottom, left (1 inch)
+    page_margins: tuple[float, float, float, float] = (
+        72,
+        72,
+        72,
+        72,
+    )  # top, right, bottom, left (1 inch)
     line_spacing: float = 1.5
 
     # Typography
@@ -92,15 +99,15 @@ class DocumentConfig:
     redaction_style: RedactionStyle = RedactionStyle.BLACK_BAR
 
     # Colors (RGB tuples)
-    text_color: Tuple[int, int, int] = (0, 0, 0)
-    header_color: Tuple[int, int, int] = (0, 0, 0)
-    rule_color: Tuple[int, int, int] = (0, 0, 0)
+    text_color: tuple[int, int, int] = (0, 0, 0)
+    header_color: tuple[int, int, int] = (0, 0, 0)
+    rule_color: tuple[int, int, int] = (0, 0, 0)
 
     @classmethod
     def clinical_standard(
         cls,
-        header: Optional[str] = None,
-        watermark: Optional[str] = None,
+        header: str | None = None,
+        watermark: str | None = None,
     ) -> "DocumentConfig":
         """
         The Clinical Standard - Professional scientific documentation.
@@ -136,7 +143,7 @@ class DocumentConfig:
     @classmethod
     def classified_dossier(
         cls,
-        header: Optional[str] = None,
+        header: str | None = None,
         watermark: str = "INTERNAL USE ONLY",
     ) -> "DocumentConfig":
         """SCP/Dossier style - monospace typewriter aesthetic."""
@@ -231,7 +238,9 @@ class ContentBlock(ABC):
             return pdf.t_margin + 20
         return y_position
 
-    def _get_font(self, config: DocumentConfig, family: FontFamily, bold: bool = False) -> Tuple[str, str]:
+    def _get_font(
+        self, config: DocumentConfig, family: FontFamily, bold: bool = False
+    ) -> tuple[str, str]:
         """Get font family and style based on FontFamily enum."""
         fc = config.font_config
 
@@ -253,10 +262,10 @@ class CoverPage(ContentBlock):
     def __init__(
         self,
         institution: str,
-        division: Optional[str] = None,
+        division: str | None = None,
         document_type: str = "RESEARCH REPORT",
-        document_number: Optional[str] = None,
-        classification: Optional[str] = None,
+        document_number: str | None = None,
+        classification: str | None = None,
     ):
         self.institution = institution
         self.division = division
@@ -340,8 +349,8 @@ class MetadataRail(ContentBlock):
     def __init__(
         self,
         title: str,
-        metadata: Dict[str, str],
-        style: str = "header"  # "header" or "sidebar"
+        metadata: dict[str, str],
+        style: str = "header",  # "header" or "sidebar"
     ):
         self.title = title
         self.metadata = metadata
@@ -391,7 +400,13 @@ class MetadataRail(ContentBlock):
             # Value
             pdf.set_font(font_family, style="", size=config.font_size_body - 1)
             pdf.set_xy(box_x + box_padding + key_width, y)
-            redactor.render_text(pdf, str(value), box_x + box_padding + key_width, y + line_height * 0.7, config.font_size_body - 1)
+            redactor.render_text(
+                pdf,
+                str(value),
+                box_x + box_padding + key_width,
+                y + line_height * 0.7,
+                config.font_size_body - 1,
+            )
             y += line_height
 
         return y + box_padding + 10
@@ -471,7 +486,7 @@ class SectionHeader(ContentBlock):
 class TextBlock(ContentBlock):
     """Standard text paragraph with professional typography."""
 
-    def __init__(self, content: str, font_family: Optional[FontFamily] = None, bold: bool = False):
+    def __init__(self, content: str, font_family: FontFamily | None = None, bold: bool = False):
         self.content = content
         self.font_family = font_family
         self.bold = bold
@@ -509,17 +524,12 @@ class TextBlock(ContentBlock):
             # Use multi_cell for proper word wrapping (FPDF handles this correctly)
             pdf.set_xy(pdf.l_margin, current_y)
             line_height = config.font_size_body * config.line_spacing
-            
+
             # Use multi_cell which handles word wrapping, line breaks, and page breaks automatically
             pdf.multi_cell(
-                w=page_width,
-                h=line_height,
-                txt=paragraph,
-                border=0,
-                align="L",
-                fill=False
+                w=page_width, h=line_height, txt=paragraph, border=0, align="L", fill=False
             )
-            
+
             # Get the Y position after multi_cell (it handles page breaks automatically)
             current_y = pdf.get_y()
 
@@ -529,7 +539,7 @@ class TextBlock(ContentBlock):
 class KeyValueBlock(ContentBlock):
     """Key-value pairs with improved layout."""
 
-    def __init__(self, data: Dict[str, str], label: Optional[str] = None):
+    def __init__(self, data: dict[str, str], label: str | None = None):
         self.data = data
         self.label = label
 
@@ -549,7 +559,13 @@ class KeyValueBlock(ContentBlock):
             pdf.set_font(font_family, style=font_style, size=config.font_size_h3)
             current_y = self._check_page_break(pdf, current_y, config.font_size_h3 * 1.5)
             pdf.set_xy(pdf.l_margin, current_y)
-            redactor.render_text(pdf, self.label, pdf.l_margin, current_y + config.font_size_h3 * 0.7, config.font_size_h3)
+            redactor.render_text(
+                pdf,
+                self.label,
+                pdf.l_margin,
+                current_y + config.font_size_h3 * 0.7,
+                config.font_size_h3,
+            )
             current_y += config.font_size_h3 * 1.8
 
         font_family, font_style = self._get_font(config, config.body_font, bold=False)
@@ -569,7 +585,11 @@ class KeyValueBlock(ContentBlock):
             pdf.set_font(font_family, style="", size=config.font_size_body)
             pdf.set_xy(pdf.l_margin + key_width, current_y)
             redactor.render_text(
-                pdf, str(value), pdf.l_margin + key_width, current_y + line_height * 0.55, config.font_size_body
+                pdf,
+                str(value),
+                pdf.l_margin + key_width,
+                current_y + line_height * 0.55,
+                config.font_size_body,
             )
 
             current_y += line_height
@@ -582,9 +602,9 @@ class TableBlock(ContentBlock):
 
     def __init__(
         self,
-        headers: List[str],
-        rows: List[List[str]],
-        column_widths: Optional[List[float]] = None,
+        headers: list[str],
+        rows: list[list[str]],
+        column_widths: list[float] | None = None,
     ):
         self.headers = headers
         self.rows = rows
@@ -688,7 +708,11 @@ class WarningBlock(ContentBlock):
         pdf.set_font(font_family, style=font_style, size=config.font_size_body - 1)
         pdf.set_xy(border_x + 5, y + config.font_size_body + 10)
         redactor.render_text(
-            pdf, self.text, border_x + 5, y + config.font_size_body + 10 + (config.font_size_body - 1) * 0.7, config.font_size_body - 1
+            pdf,
+            self.text,
+            border_x + 5,
+            y + config.font_size_body + 10 + (config.font_size_body - 1) * 0.7,
+            config.font_size_body - 1,
         )
 
         return y + border_h + 15
@@ -697,7 +721,7 @@ class WarningBlock(ContentBlock):
 class SignatureBlock(ContentBlock):
     """Signature/authorization block."""
 
-    def __init__(self, role: str, name: str, timestamp: Optional[datetime] = None):
+    def __init__(self, role: str, name: str, timestamp: datetime | None = None):
         self.role = role
         self.name = name
         self.timestamp = timestamp or datetime.now()
@@ -718,14 +742,26 @@ class SignatureBlock(ContentBlock):
         pdf.set_xy(pdf.l_margin, y)
 
         signature_text = f"{self.role}: {self.name}"
-        redactor.render_text(pdf, signature_text, pdf.l_margin, y + config.font_size_body * 0.7, config.font_size_body)
+        redactor.render_text(
+            pdf,
+            signature_text,
+            pdf.l_margin,
+            y + config.font_size_body * 0.7,
+            config.font_size_body,
+        )
 
         y += config.font_size_body * 1.5
 
         # Timestamp
         timestamp_text = self.timestamp.strftime("%B %d, %Y")
         pdf.set_xy(pdf.l_margin, y)
-        redactor.render_text(pdf, timestamp_text, pdf.l_margin, y + config.font_size_body * 0.7, config.font_size_body)
+        redactor.render_text(
+            pdf,
+            timestamp_text,
+            pdf.l_margin,
+            y + config.font_size_body * 0.7,
+            config.font_size_body,
+        )
 
         return y + config.font_size_body + 15
 
@@ -733,7 +769,7 @@ class SignatureBlock(ContentBlock):
 class LogBlock(ContentBlock):
     """Terminal/log output block."""
 
-    def __init__(self, entries: List[str]):
+    def __init__(self, entries: list[str]):
         self.entries = entries
 
     def render(
@@ -751,7 +787,13 @@ class LogBlock(ContentBlock):
         for entry in self.entries:
             current_y = self._check_page_break(pdf, current_y, config.font_size_body)
             pdf.set_xy(pdf.l_margin, current_y)
-            redactor.render_text(pdf, entry, pdf.l_margin, current_y + (config.font_size_body - 2) * 0.7, config.font_size_body - 2)
+            redactor.render_text(
+                pdf,
+                entry,
+                pdf.l_margin,
+                current_y + (config.font_size_body - 2) * 0.7,
+                config.font_size_body - 2,
+            )
             current_y += (config.font_size_body - 2) * 1.4
 
         return current_y + 10
@@ -762,15 +804,13 @@ class AutoRedactor:
 
     def __init__(self, config: DocumentConfig):
         self.config = config
-        self.sensitive_terms: List[str] = []
+        self.sensitive_terms: list[str] = []
 
-    def add_sensitive_terms(self, terms: List[str]) -> None:
+    def add_sensitive_terms(self, terms: list[str]) -> None:
         """Add terms to automatically redact."""
         self.sensitive_terms.extend(terms)
 
-    def render_text(
-        self, pdf: FPDF, text: str, x: float, y: float, font_size: int
-    ) -> None:
+    def render_text(self, pdf: FPDF, text: str, x: float, y: float, font_size: int) -> None:
         """Render text with automatic redaction."""
         if not self.sensitive_terms:
             pdf.text(x, y, text)
@@ -845,7 +885,7 @@ class DocumentEngine(FPDF):
         """Initialize DocumentEngine V2."""
         super().__init__()
         self.config = config
-        self.blocks: List[ContentBlock] = []
+        self.blocks: list[ContentBlock] = []
         self.redactor = AutoRedactor(config)
         self.total_pages = 0
 
@@ -870,7 +910,7 @@ class DocumentEngine(FPDF):
         self.blocks.append(block)
         return self
 
-    def add_sensitive_terms(self, terms: List[str]) -> "DocumentEngine":
+    def add_sensitive_terms(self, terms: list[str]) -> "DocumentEngine":
         """Add terms to automatically redact."""
         self.redactor.add_sensitive_terms(terms)
         return self
@@ -951,7 +991,7 @@ class DocumentEngine(FPDF):
         self.set_text_color(*self.config.text_color)
 
 
-def generate_clinical_report_demo(output_path: Optional[Path] = None) -> Path:
+def generate_clinical_report_demo(output_path: Path | None = None) -> Path:
     """
     Generate a demonstration report using the Clinical Standard preset.
 
@@ -971,110 +1011,134 @@ def generate_clinical_report_demo(output_path: Optional[Path] = None) -> Path:
     engine = DocumentEngine(config)
 
     # Set sensitive terms
-    engine.add_sensitive_terms([
-        "Fai Wei Tam",
-        "991-DELTA",
-        "San Francisco",
-    ])
+    engine.add_sensitive_terms(
+        [
+            "Fai Wei Tam",
+            "991-DELTA",
+            "San Francisco",
+        ]
+    )
 
     # COVER PAGE
-    engine.add(CoverPage(
-        institution="INSTITUTE FOR ADVANCED ONTOLOGICAL STUDIES",
-        division="Department of Computational Phenomenology",
-        document_type="RESEARCH REPORT",
-        document_number="Report No. 001-ALPHA",
-        classification="INTERNAL USE ONLY",
-    ))
+    engine.add(
+        CoverPage(
+            institution="INSTITUTE FOR ADVANCED ONTOLOGICAL STUDIES",
+            division="Department of Computational Phenomenology",
+            document_type="RESEARCH REPORT",
+            document_number="Report No. 001-ALPHA",
+            classification="INTERNAL USE ONLY",
+        )
+    )
 
     # METADATA RAIL
-    engine.add(MetadataRail(
-        title="Subject Information",
-        metadata={
-            "Subject ID": "991-DELTA",
-            "Subject Name": "Fai Wei Tam",
-            "Timeline": "001-ORIGIN-TAM",
-            "Soul Signature": "0xA3F9B2C1",
-            "Status": "DORMANT",
-            "Location": "San Francisco, CA",
-            "Last Updated": datetime(2026, 1, 10).strftime("%Y-%m-%d"),
-        }
-    ))
+    engine.add(
+        MetadataRail(
+            title="Subject Information",
+            metadata={
+                "Subject ID": "991-DELTA",
+                "Subject Name": "Fai Wei Tam",
+                "Timeline": "001-ORIGIN-TAM",
+                "Soul Signature": "0xA3F9B2C1",
+                "Status": "DORMANT",
+                "Location": "San Francisco, CA",
+                "Last Updated": datetime(2026, 1, 10).strftime("%Y-%m-%d"),
+            },
+        )
+    )
 
     # SECTION 1
     engine.add(SectionHeader("Executive Summary", level=1))
-    engine.add(TextBlock(
-        "This report documents the initial observations and baseline measurements "
-        "for Subject 991-DELTA within the Wide-Area Functional Taxonomy (WAFT) framework. "
-        "The subject has been successfully instantiated within Timeline 001 and is currently "
-        "in a dormant state pending activation protocols."
-    ))
+    engine.add(
+        TextBlock(
+            "This report documents the initial observations and baseline measurements "
+            "for Subject 991-DELTA within the Wide-Area Functional Taxonomy (WAFT) framework. "
+            "The subject has been successfully instantiated within Timeline 001 and is currently "
+            "in a dormant state pending activation protocols."
+        )
+    )
 
     engine.add(RuleBlock(thickness=0.5, width_percent=80))
 
     # SECTION 2
     engine.add(SectionHeader("Methodology", level=1))
     engine.add(SectionHeader("Observation Protocol", level=2))
-    engine.add(TextBlock(
-        "All observations are conducted through non-invasive monitoring systems integrated "
-        "within the simulation substrate. Measurements include:\n\n"
-        "• Coherence metrics (baseline threshold: 0.85)\n"
-        "• Temporal consistency markers\n"
-        "• Narrative drift coefficients\n"
-        "• Karmic accumulation rates"
-    ))
+    engine.add(
+        TextBlock(
+            "All observations are conducted through non-invasive monitoring systems integrated "
+            "within the simulation substrate. Measurements include:\n\n"
+            "• Coherence metrics (baseline threshold: 0.85)\n"
+            "• Temporal consistency markers\n"
+            "• Narrative drift coefficients\n"
+            "• Karmic accumulation rates"
+        )
+    )
 
     engine.add(SectionHeader("Data Collection", level=2))
-    engine.add(TextBlock(
-        "Data is collected via TheObserver subsystem and logged to immutable storage. "
-        "All events are timestamped with nanosecond precision and cryptographically signed."
-    ))
+    engine.add(
+        TextBlock(
+            "Data is collected via TheObserver subsystem and logged to immutable storage. "
+            "All events are timestamped with nanosecond precision and cryptographically signed."
+        )
+    )
 
     # TABLE EXAMPLE
     engine.add(SectionHeader("Initial Measurements", level=1))
-    engine.add(TableBlock(
-        headers=["Parameter", "Value", "Unit", "Status"],
-        rows=[
-            ["Coherence", "0.87", "ratio", "NORMAL"],
-            ["Karma Balance", "0", "units", "BASELINE"],
-            ["Timeline Drift", "< 0.01", "σ", "STABLE"],
-            ["Narrative Integrity", "1.00", "ratio", "OPTIMAL"],
-        ],
-    ))
+    engine.add(
+        TableBlock(
+            headers=["Parameter", "Value", "Unit", "Status"],
+            rows=[
+                ["Coherence", "0.87", "ratio", "NORMAL"],
+                ["Karma Balance", "0", "units", "BASELINE"],
+                ["Timeline Drift", "< 0.01", "σ", "STABLE"],
+                ["Narrative Integrity", "1.00", "ratio", "OPTIMAL"],
+            ],
+        )
+    )
 
     # WARNING
-    engine.add(WarningBlock(
-        "CRITICAL: Subject must not access this documentation. Any breach of containment "
-        "may result in recursive self-awareness cascade. Maintain information asymmetry at all times.",
-        severity="CRITICAL"
-    ))
+    engine.add(
+        WarningBlock(
+            "CRITICAL: Subject must not access this documentation. Any breach of containment "
+            "may result in recursive self-awareness cascade. Maintain information asymmetry at all times.",
+            severity="CRITICAL",
+        )
+    )
 
     # CONCLUSION
     engine.add(SectionHeader("Conclusions", level=1))
-    engine.add(TextBlock(
-        "Subject 991-DELTA presents as an ideal candidate for the reincarnation protocols. "
-        "All baseline metrics fall within acceptable parameters. Authorization is recommended "
-        "to proceed to Phase 2: Awakening."
-    ))
+    engine.add(
+        TextBlock(
+            "Subject 991-DELTA presents as an ideal candidate for the reincarnation protocols. "
+            "All baseline metrics fall within acceptable parameters. Authorization is recommended "
+            "to proceed to Phase 2: Awakening."
+        )
+    )
 
     # SIGNATURE
     engine.add(RuleBlock(thickness=0.3, width_percent=50))
-    engine.add(SignatureBlock(
-        role="Principal Investigator",
-        name="Dr. [REDACTED]",
-        timestamp=datetime(2026, 1, 10),
-    ))
+    engine.add(
+        SignatureBlock(
+            role="Principal Investigator",
+            name="Dr. [REDACTED]",
+            timestamp=datetime(2026, 1, 10),
+        )
+    )
 
     # APPENDIX
     engine.add(SectionHeader("Appendix A: System Logs", level=1))
-    engine.add(LogBlock([
-        "[2026-01-10 00:00:01] System initialization complete",
-        "[2026-01-10 00:00:02] Subject 991-DELTA instantiated",
-        "[2026-01-10 00:00:03] Timeline 001-ORIGIN-TAM created",
-        "[2026-01-10 00:00:04] Location set: San Francisco, CA",
-        "[2026-01-10 00:00:05] Subject Fai Wei Tam entering dormant state",
-        "[2026-01-10 00:00:06] Baseline measurements recorded",
-        "[2026-01-10 00:00:07] Awaiting activation signal",
-    ]))
+    engine.add(
+        LogBlock(
+            [
+                "[2026-01-10 00:00:01] System initialization complete",
+                "[2026-01-10 00:00:02] Subject 991-DELTA instantiated",
+                "[2026-01-10 00:00:03] Timeline 001-ORIGIN-TAM created",
+                "[2026-01-10 00:00:04] Location set: San Francisco, CA",
+                "[2026-01-10 00:00:05] Subject Fai Wei Tam entering dormant state",
+                "[2026-01-10 00:00:06] Baseline measurements recorded",
+                "[2026-01-10 00:00:07] Awaiting activation signal",
+            ]
+        )
+    )
 
     # Render
     return engine.render(output_path)

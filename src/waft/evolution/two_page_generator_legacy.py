@@ -14,16 +14,15 @@ The generator:
 This is the core of the one-pager evolution system.
 """
 
-import hashlib
-from pathlib import Path
-from typing import Optional, Dict, Any
 from datetime import datetime
+from pathlib import Path
+from typing import Any
+
 from jinja2 import Template
 
+from ..core.agent.state import EvolutionaryEvent, EvolutionaryEventType
 from .chat_distiller import DistilledChat
 from .styling_genome import StylingGenome
-from ..core.agent.state import EvolutionaryEvent, EvolutionaryEventType
-
 
 # HTML template for 2-page PDFs with evolutionary styling
 TWO_PAGE_TEMPLATE = """
@@ -238,6 +237,7 @@ class TwoPageGeneratorLegacy:
         if weasyprint_available:
             try:
                 from weasyprint import HTML
+
                 self.HTML = HTML
             except ImportError:
                 self.weasyprint_available = False
@@ -246,9 +246,9 @@ class TwoPageGeneratorLegacy:
         self,
         distilled_chat: DistilledChat,
         styling_genome: StylingGenome,
-        output_path: Optional[Path] = None,
+        output_path: Path | None = None,
         page_1_ideas: int = 5,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Generate 2-page PDF from distilled chat with styling genome.
 
@@ -278,7 +278,6 @@ class TwoPageGeneratorLegacy:
             },
             "top_ideas": [idea.to_dict() for idea in top_ideas],
             "page_1_ideas": page_1_ideas,
-
             # Styling genome
             "font": styling_genome.genes.font.to_dict(),
             "margin": styling_genome.genes.margin.to_dict(),
@@ -286,7 +285,6 @@ class TwoPageGeneratorLegacy:
             "layout": styling_genome.genes.layout.to_dict(),
             "styling_genome_name": styling_genome.scientific_name,
             "styling_genome_id": styling_genome.genome_id,
-
             # Metadata
             "generated_at": datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC"),
         }
@@ -306,7 +304,7 @@ class TwoPageGeneratorLegacy:
 
         # Save HTML fallback
         if output_path:
-            html_path = Path(str(output_path).replace('.pdf', '.html'))
+            html_path = Path(str(output_path).replace(".pdf", ".html"))
             html_path.write_text(html_content)
 
         # Evaluate fitness
@@ -340,7 +338,7 @@ class TwoPageGeneratorLegacy:
         top_ideas: list,
         styling_genome: StylingGenome,
         html_content: str,
-    ) -> Dict[str, float]:
+    ) -> dict[str, float]:
         """
         Evaluate fitness of generated 2-page PDF.
 
@@ -402,19 +400,16 @@ class TwoPageGeneratorLegacy:
             "constraint_satisfaction": constraint,
             "aesthetic_appeal": aesthetics,
             "overall": (
-                readability * 0.35 +
-                completeness * 0.30 +
-                constraint * 0.25 +
-                aesthetics * 0.10
-            )
+                readability * 0.35 + completeness * 0.30 + constraint * 0.25 + aesthetics * 0.10
+            ),
         }
 
     def _record_generation_event(
         self,
         distilled_chat: DistilledChat,
         styling_genome: StylingGenome,
-        fitness_metrics: Dict[str, float],
-        output_path: Optional[str],
+        fitness_metrics: dict[str, float],
+        output_path: str | None,
     ):
         """
         Record PDF generation as evolutionary event.

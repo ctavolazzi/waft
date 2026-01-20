@@ -1,0 +1,227 @@
+================================================================================
+SELF-ANALYSIS SUITE - META-COGNITIVE INTROSPECTION DEMO
+================================================================================
+
+FRAMEWORK:
+  This demonstrates TheGuide's self-examination architecture
+  using mock LLM responses that simulate realistic meta-cognitive analysis.
+
+EXPERIMENTS:
+  1. TheGuide analyzes its own source code
+  2. TheGuide diagnoses its own performance bug
+  3. TheGuide reasons about its own reasoning process
+
+================================================================================
+SELF-DIAGNOSTIC 1: TheGuide Analyzes Its Own Source Code
+================================================================================
+
+SETUP: Creating TheGuide with self-analysis capability...
+
+INPUT:
+  Code length: 38820 characters
+  Analyzing first: 5000 characters
+  Focus: _save_session and indexing operations
+
+METRICS:
+  Execution time: 0.00s
+  Iterations: 3
+  Quality score: 0.500
+  Client LLM calls: 4
+  Guide LLM calls: 6
+
+THEGUIDE'S SELF-ANALYSIS:
+  ============================================================================
+  CODE ANALYSIS - Performance Issues Identified:
+  
+  **CRITICAL ISSUE 1: Index File Operations**
+  The `_save_index()` method writes the entire index file on every session save:
+  ```python
+  self.index_file.write_text(json.dumps(self.index, indent=2))
+  ```
+  
+  This causes O(n) performance degradation:
+  - With 100 sessions: ~1.2ms per save
+  - With 1000 sessions: ~6.4ms per save
+  - The index grows linearly, so write time grows linearly
+  
+  **Root Cause**: The index dict grows with every session, but we rewrite the ENTIRE
+  file each time instead of appending.
+  
+  **CRITICAL ISSUE 2: JSON Serialization Cost**
+  Every session save triggers:
+  1. Read entire index file
+  2. Parse JSON
+  3. Modify dict
+  4. Serialize entire dict to JSON
+  5. Write entire file
+  
+  Cost scales with number of sessions stored.
+  
+  **Proposed Fixes**:
+  1. Use append-only log instead of rewriting index
+  2. Batch index updates
+  3. Use SQLite for O(1) lookups
+  4. Add index versioning/compaction
+  5. Cache index in memory, only write periodically
+  
+  **Performance Impact**: This explains the 411% degradation observed over 1000 sessions.
+  ============================================================================
+
+📄 Full analysis saved to: self_analysis_code.txt
+
+KEY FINDINGS:
+  ✅ Identified index operations: True
+  ✅ Identified performance issue: True
+  ✅ Identified O(n) complexity: True
+
+================================================================================
+SELF-DIAGNOSTIC 2: TheGuide Diagnoses Its Own Performance Bug
+================================================================================
+
+INPUT:
+  Performance data: 10 batches of 100 sessions each
+  Degradation: 411% over 1000 sessions
+  Pattern: Linear growth
+
+METRICS:
+  Execution time: 0.00s
+  Iterations: 5
+  Quality score: 0.500
+
+THEGUIDE'S SELF-DIAGNOSIS:
+  ============================================================================
+  PERFORMANCE BUG DIAGNOSIS:
+  
+  **Root Cause Identified**: Index File Rewriting
+  
+  The linear performance degradation (411% over 1000 sessions) is caused by:
+  
+  1. **Index Growth**: Each session adds an entry to `self.index` dict
+  2. **Full Rewrite**: `_save_index()` rewrites the ENTIRE index file every time
+  3. **JSON Serialization**: Cost increases with index size
+  4. **File I/O**: Disk write time grows with file size
+  
+  **Why Linear Degradation?**
+  - Session 1: Write 100 bytes → ~1.2ms
+  - Session 100: Write 10KB → ~1.7ms
+  - Session 1000: Write 100KB → ~6.4ms
+  
+  The relationship is linear: O(n) where n = number of sessions.
+  
+  **Mathematical Model**:
+  ```
+  time_per_save = base_time + (k * num_sessions)
+  ```
+  Where k ≈ 0.0005984 ms/session (from experimental data).
+  
+  **Verification**:
+  - Observed slope: 0.000598 ms/session
+  - Predicted at session 1000: 1.245 + (0.598 * 9) = 6.627ms
+  - Actual at session 1000: 6.370ms
+  - Error: 4% (excellent fit)
+  
+  **Fix Priority**: HIGH - This will cause production issues at scale.
+  ============================================================================
+
+📄 Full diagnosis saved to: self_diagnosis_performance.txt
+
+KEY FINDINGS:
+  ✅ Identified index operations: True
+  ✅ Identified full rewrite issue: True
+  ✅ Identified linear complexity: True
+  ✅ Calculated slope correctly: True
+
+================================================================================
+SELF-DIAGNOSTIC 3: TheGuide Reasons About Its Own Reasoning
+================================================================================
+
+INPUT:
+  Topic: Meta-cognitive self-evaluation paradox
+  Question: Who evaluates the evaluator?
+
+METRICS:
+  Execution time: 0.00s
+  Iterations: 4
+  Quality score: 0.500
+
+THEGUIDE'S META-REASONING:
+  ============================================================================
+  META-COGNITIVE SELF-EVALUATION:
+  
+  **The Evaluation Paradox**:
+  I (TheGuide) evaluate Client LLM reasoning, but who evaluates MY evaluations?
+  
+  **Solution: Multi-Level Trust Framework**
+  
+  1. **Level 0 - Client LLM**: Generates answers
+     - No self-evaluation capability
+     - Requires external validation
+  
+  2. **Level 1 - Guide LLM (Me)**: Evaluates client reasoning
+     - Uses FVCU+Faithfulness taxonomy
+     - Trained on evaluation principles
+     - But needs validation too!
+  
+  3. **Level 2 - Human Oversight**: Validates guide evaluations
+     - Reviews quality scores
+     - Checks for consistency
+     - Provides ground truth
+  
+  4. **Level 3 - Statistical Validation**: Empirical evidence
+     - Correlation with human judgments
+     - Consistency across similar problems
+     - Calibration curves
+  
+  **Avoiding Infinite Regress**:
+  Instead of requiring infinite evaluators, we bootstrap trust through:
+  - Cross-validation between multiple guides
+  - Consistency checks (same problem → same evaluation)
+  - Comparison with human expert evaluations
+  - Statistical correlation with ground truth
+  
+  **Self-Evaluation Mechanism**:
+  I can evaluate my OWN reasoning by:
+  1. Generating multiple independent evaluations
+  2. Checking for consistency
+  3. Comparing against known good evaluations
+  4. Using held-out validation sets
+  
+  **Quality Assurance for Quality Assurance**:
+  The guide's evaluations are trustworthy when:
+  - High inter-rater reliability with humans
+  - Consistent scores for similar inputs
+  - Proper calibration (predicted quality = actual quality)
+  - Low variance across multiple runs
+  
+  This creates a self-correcting system where evaluation quality is validated
+  through empirical performance rather than circular reasoning.
+  ============================================================================
+
+📄 Meta-reasoning saved to: self_meta_reasoning.txt
+
+================================================================================
+SELF-ANALYSIS SUMMARY
+================================================================================
+
+✅ Diagnostics completed: 3/3
+
+CODE_ANALYSIS:
+  Duration: 0.00s
+  Quality: 0.500
+  Found index issue: True
+  Found performance: True
+  Found O(n): True
+
+PERFORMANCE_DIAGNOSIS:
+  Duration: 0.00s
+  Quality: 0.500
+
+META_REASONING:
+  Duration: 0.00s
+  Quality: 0.500
+
+📊 Results saved to: self_analysis_demo_results.json
+
+================================================================================
+META-COGNITIVE SELF-EXAMINATION COMPLETE
+================================================================================

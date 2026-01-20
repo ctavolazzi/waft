@@ -14,10 +14,10 @@ enabling lineage tracking, evolution, and scientific naming.
 
 import hashlib
 import json
-from dataclasses import dataclass, field, asdict
-from typing import Dict, List, Optional, Any
+from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from pathlib import Path
+from typing import Any, Optional
 
 from ..core.agent.state import EvolutionaryEvent, EvolutionaryEventType
 from ..core.science.taxonomy import LineagePoet
@@ -26,6 +26,7 @@ from ..core.science.taxonomy import LineagePoet
 @dataclass
 class FontGene:
     """Font configuration as genetic material."""
+
     family: str = "sans-serif"  # Font family name
     size_body: int = 11  # Body text size (pt)
     size_h1: int = 24  # H1 size (pt)
@@ -34,7 +35,7 @@ class FontGene:
     size_code: int = 10  # Code block size (pt)
     line_height: float = 1.5  # Line height multiplier
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for hashing."""
         return asdict(self)
 
@@ -42,6 +43,7 @@ class FontGene:
 @dataclass
 class MarginGene:
     """Margin/spacing configuration as genetic material."""
+
     top: int = 20  # Top margin (mm)
     bottom: int = 20  # Bottom margin (mm)
     left: int = 20  # Left margin (mm)
@@ -49,7 +51,7 @@ class MarginGene:
     paragraph_spacing: int = 10  # Space between paragraphs (pt)
     section_spacing: int = 15  # Space between sections (pt)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for hashing."""
         return asdict(self)
 
@@ -57,6 +59,7 @@ class MarginGene:
 @dataclass
 class ColorGene:
     """Color scheme as genetic material."""
+
     text: str = "#000000"  # Primary text color
     background: str = "#FFFFFF"  # Background color
     heading: str = "#1a1a1a"  # Heading color
@@ -65,7 +68,7 @@ class ColorGene:
     code_text: str = "#333333"  # Code block text
     border: str = "#cccccc"  # Border color
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for hashing."""
         return asdict(self)
 
@@ -73,6 +76,7 @@ class ColorGene:
 @dataclass
 class LayoutGene:
     """Layout configuration as genetic material."""
+
     columns: int = 1  # Number of columns (1 or 2)
     density: str = "normal"  # "compact", "normal", "spacious"
     toc_enabled: bool = False  # Table of contents
@@ -80,7 +84,7 @@ class LayoutGene:
     header_enabled: bool = True  # Header on each page
     footer_enabled: bool = True  # Footer on each page
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for hashing."""
         return asdict(self)
 
@@ -93,6 +97,7 @@ class StylingGene:
     This represents the full "DNA" of a document's visual design.
     Any change to these genes produces a new genome with a new ID.
     """
+
     font: FontGene = field(default_factory=FontGene)
     margin: MarginGene = field(default_factory=MarginGene)
     color: ColorGene = field(default_factory=ColorGene)
@@ -102,7 +107,7 @@ class StylingGene:
     name: str = "default"  # Human-readable name
     description: str = ""  # Optional description
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for hashing and serialization."""
         return {
             "font": self.font.to_dict(),
@@ -129,25 +134,28 @@ class StylingGenome:
     - Track lineage through generations
     - Record evolutionary events
     """
+
     genome_id: str  # SHA-256 hash of styling configuration
     genes: StylingGene  # The actual styling DNA
     generation: int = 0  # Generation number (0 = genesis)
-    parent_id: Optional[str] = None  # Parent genome ID (lineage)
-    lineage_path: List[str] = field(default_factory=list)  # Full lineage
+    parent_id: str | None = None  # Parent genome ID (lineage)
+    lineage_path: list[str] = field(default_factory=list)  # Full lineage
 
     # Scientific naming (using WAFT taxonomy)
     scientific_name: str = ""  # Generated from genome_id
 
     # Evolution tracking
-    fitness_score: Optional[float] = None  # 0.0-1.0 fitness
-    flight_recorder: List[EvolutionaryEvent] = field(default_factory=list)
+    fitness_score: float | None = None  # 0.0-1.0 fitness
+    flight_recorder: list[EvolutionaryEvent] = field(default_factory=list)
 
     # Timestamps
     created_at: datetime = field(default_factory=datetime.utcnow)
-    last_evaluated_at: Optional[datetime] = None
+    last_evaluated_at: datetime | None = None
 
     @classmethod
-    def from_genes(cls, genes: StylingGene, parent: Optional["StylingGenome"] = None) -> "StylingGenome":
+    def from_genes(
+        cls, genes: StylingGene, parent: Optional["StylingGenome"] = None
+    ) -> "StylingGenome":
         """
         Create a new genome from styling genes.
 
@@ -191,7 +199,7 @@ class StylingGenome:
                 "parent_genome_id": parent_id,
                 "generation": generation,
                 "scientific_name": scientific_name,
-            }
+            },
         )
 
         return genome
@@ -214,9 +222,7 @@ class StylingGenome:
         return hashlib.sha256(genes_json.encode()).hexdigest()
 
     def spawn_variant(
-        self,
-        mutations: Dict[str, Any],
-        mutation_description: str = ""
+        self, mutations: dict[str, Any], mutation_description: str = ""
     ) -> "StylingGenome":
         """
         Spawn a variant genome with mutations.
@@ -261,12 +267,12 @@ class StylingGenome:
                 "description": mutation_description,
                 "parent_genome_id": self.genome_id,
                 "parent_scientific_name": self.scientific_name,
-            }
+            },
         )
 
         return variant
 
-    def evaluate_fitness(self, metrics: Dict[str, float]) -> float:
+    def evaluate_fitness(self, metrics: dict[str, float]) -> float:
         """
         Evaluate and record fitness score.
 
@@ -289,7 +295,7 @@ class StylingGenome:
                 "metrics": metrics,
                 "fitness": fitness,
             },
-            fitness_metrics=metrics
+            fitness_metrics=metrics,
         )
 
         return fitness
@@ -297,8 +303,8 @@ class StylingGenome:
     def _record_event(
         self,
         event_type: EvolutionaryEventType,
-        payload: Dict[str, Any],
-        fitness_metrics: Optional[Dict[str, Any]] = None
+        payload: dict[str, Any],
+        fitness_metrics: dict[str, Any] | None = None,
     ):
         """Record evolutionary event to Flight Recorder."""
         event = EvolutionaryEvent(
@@ -314,7 +320,7 @@ class StylingGenome:
         )
         self.flight_recorder.append(event)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for serialization."""
         return {
             "genome_id": self.genome_id,
@@ -325,7 +331,9 @@ class StylingGenome:
             "scientific_name": self.scientific_name,
             "fitness_score": self.fitness_score,
             "created_at": self.created_at.isoformat(),
-            "last_evaluated_at": self.last_evaluated_at.isoformat() if self.last_evaluated_at else None,
+            "last_evaluated_at": self.last_evaluated_at.isoformat()
+            if self.last_evaluated_at
+            else None,
         }
 
     def save(self, output_dir: Path):
@@ -361,14 +369,14 @@ class StylingGenomeRegistry:
     - Analyze evolution patterns
     """
 
-    def __init__(self, registry_dir: Optional[Path] = None):
+    def __init__(self, registry_dir: Path | None = None):
         """
         Initialize registry.
 
         Args:
             registry_dir: Directory for storing registry data
         """
-        self.genomes: Dict[str, StylingGenome] = {}
+        self.genomes: dict[str, StylingGenome] = {}
         self.registry_dir = Path(registry_dir) if registry_dir else Path("_genetics/styling")
         self.registry_dir.mkdir(parents=True, exist_ok=True)
 
@@ -388,15 +396,15 @@ class StylingGenomeRegistry:
         # Update registry index
         self._save_index()
 
-    def get(self, genome_id: str) -> Optional[StylingGenome]:
+    def get(self, genome_id: str) -> StylingGenome | None:
         """Get genome by ID."""
         return self.genomes.get(genome_id)
 
-    def get_by_generation(self, generation: int) -> List[StylingGenome]:
+    def get_by_generation(self, generation: int) -> list[StylingGenome]:
         """Get all genomes from a specific generation."""
         return [g for g in self.genomes.values() if g.generation == generation]
 
-    def get_lineage(self, genome_id: str) -> List[StylingGenome]:
+    def get_lineage(self, genome_id: str) -> list[StylingGenome]:
         """Get full lineage path for a genome."""
         genome = self.get(genome_id)
         if not genome:
@@ -410,7 +418,7 @@ class StylingGenomeRegistry:
 
         return lineage
 
-    def get_best_genome(self, min_fitness: float = 0.0) -> Optional[StylingGenome]:
+    def get_best_genome(self, min_fitness: float = 0.0) -> StylingGenome | None:
         """
         Get genome with highest fitness score.
 
@@ -421,7 +429,8 @@ class StylingGenomeRegistry:
             Best genome or None
         """
         candidates = [
-            g for g in self.genomes.values()
+            g
+            for g in self.genomes.values()
             if g.fitness_score is not None and g.fitness_score >= min_fitness
         ]
 
@@ -473,7 +482,9 @@ class StylingGenomeRegistry:
         index_data = {
             "total_genomes": len(self.genomes),
             "generations": max((g.generation for g in self.genomes.values()), default=0),
-            "best_fitness": max((g.fitness_score or 0.0 for g in self.genomes.values()), default=0.0),
+            "best_fitness": max(
+                (g.fitness_score or 0.0 for g in self.genomes.values()), default=0.0
+            ),
             "genome_ids": list(self.genomes.keys()),
         }
 
@@ -514,7 +525,9 @@ class StylingGenomeRegistry:
             gen_genomes = self.get_by_generation(gen)
             report += f"\n### Generation {gen}\n"
             for genome in gen_genomes:
-                fitness_str = f"{genome.fitness_score:.3f}" if genome.fitness_score else "not evaluated"
+                fitness_str = (
+                    f"{genome.fitness_score:.3f}" if genome.fitness_score else "not evaluated"
+                )
                 report += f"- {genome.scientific_name} (fitness: {fitness_str})\n"
 
         return report

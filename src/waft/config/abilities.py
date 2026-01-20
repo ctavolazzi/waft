@@ -5,7 +5,7 @@ for the gamification system.
 """
 
 from dataclasses import dataclass
-from typing import List, Literal
+from typing import Literal
 
 AbilityType = Literal["STR", "DEX", "CON", "INT", "WIS", "CHA"]
 
@@ -22,35 +22,28 @@ class CommandAbility:
         """Validate ability is one of the six D&D abilities."""
         valid_abilities = {"STR", "DEX", "CON", "INT", "WIS", "CHA"}
         if self.ability not in valid_abilities:
-            raise ValueError(
-                f"Invalid ability: {self.ability}. "
-                f"Must be one of {valid_abilities}"
-            )
+            raise ValueError(f"Invalid ability: {self.ability}. Must be one of {valid_abilities}")
 
 
 # Command → Ability mapping
 # This determines which ability score is tested when executing a command
-COMMAND_ABILITIES: List[CommandAbility] = [
+COMMAND_ABILITIES: list[CommandAbility] = [
     # Project management (Charisma - leadership, creativity)
     CommandAbility("new", "CHA"),
     CommandAbility("add", "CHA"),
     CommandAbility("goal_create", "CHA"),
-
     # System verification (Constitution - endurance, reliability)
     CommandAbility("verify", "CON"),
-
     # Knowledge & analysis (Intelligence - logic, analysis)
     CommandAbility("sync", "INT"),
     CommandAbility("finding_log", "INT"),
     CommandAbility("analyze", "INT"),
-
     # Decision making (Wisdom - judgment, insight)
     CommandAbility("init", "WIS"),
     CommandAbility("info", "WIS"),
     CommandAbility("assess", "WIS"),
     CommandAbility("check", "WIS"),
     CommandAbility("decide", "WIS"),
-
     # Quick actions (Dexterity - speed, precision)
     CommandAbility("serve", "DEX"),
     CommandAbility("dashboard", "DEX"),

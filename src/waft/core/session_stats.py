@@ -6,10 +6,10 @@ files created, modified, deleted, and lines written/changed.
 """
 
 import subprocess
+from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Tuple, Optional, Any
-from collections import defaultdict
+from typing import Any
 
 
 class SessionStats:
@@ -24,7 +24,7 @@ class SessionStats:
         """
         self.project_path = project_path
 
-    def get_git_diff_stats(self) -> Dict[str, Any]:
+    def get_git_diff_stats(self) -> dict[str, Any]:
         """
         Get git diff statistics for modified files.
 
@@ -66,12 +66,14 @@ class SessionStats:
                     additions += add
                     deletions += delete
                     files_changed += 1
-                    file_details.append({
-                        "file": filename,
-                        "additions": add,
-                        "deletions": delete,
-                        "net": add - delete,
-                    })
+                    file_details.append(
+                        {
+                            "file": filename,
+                            "additions": add,
+                            "deletions": delete,
+                            "net": add - delete,
+                        }
+                    )
 
             return {
                 "additions": additions,
@@ -87,7 +89,7 @@ class SessionStats:
                 "file_details": [],
             }
 
-    def get_new_files_stats(self) -> Dict[str, Any]:
+    def get_new_files_stats(self) -> dict[str, Any]:
         """
         Get statistics for new (untracked) files.
 
@@ -127,7 +129,9 @@ class SessionStats:
             for filename in new_files:
                 file_path = self.project_path / filename
                 try:
-                    line_count = len(file_path.read_text(encoding="utf-8", errors="ignore").splitlines())
+                    line_count = len(
+                        file_path.read_text(encoding="utf-8", errors="ignore").splitlines()
+                    )
                     total_lines += line_count
 
                     # Get file extension
@@ -135,11 +139,13 @@ class SessionStats:
                     by_type[ext]["count"] += 1
                     by_type[ext]["lines"] += line_count
 
-                    file_details.append({
-                        "file": filename,
-                        "lines": line_count,
-                        "type": ext,
-                    })
+                    file_details.append(
+                        {
+                            "file": filename,
+                            "lines": line_count,
+                            "type": ext,
+                        }
+                    )
                 except Exception:
                     pass
 
@@ -159,7 +165,7 @@ class SessionStats:
                 "file_details": [],
             }
 
-    def get_modified_files(self) -> List[str]:
+    def get_modified_files(self) -> list[str]:
         """
         Get list of modified files.
 
@@ -190,7 +196,7 @@ class SessionStats:
         except Exception:
             return []
 
-    def calculate_session_stats(self) -> Dict[str, Any]:
+    def calculate_session_stats(self) -> dict[str, Any]:
         """
         Calculate comprehensive session statistics.
 
@@ -203,28 +209,32 @@ class SessionStats:
 
         # Combine file details
         all_files = []
-        
+
         # Add new files
         for file_info in new_files["file_details"]:
-            all_files.append({
-                "file": file_info["file"],
-                "status": "created",
-                "lines": file_info["lines"],
-                "additions": file_info["lines"],
-                "deletions": 0,
-                "net": file_info["lines"],
-            })
+            all_files.append(
+                {
+                    "file": file_info["file"],
+                    "status": "created",
+                    "lines": file_info["lines"],
+                    "additions": file_info["lines"],
+                    "deletions": 0,
+                    "net": file_info["lines"],
+                }
+            )
 
         # Add modified files
         for file_info in diff_stats["file_details"]:
-            all_files.append({
-                "file": file_info["file"],
-                "status": "modified",
-                "lines": 0,  # We don't have total lines for modified files easily
-                "additions": file_info["additions"],
-                "deletions": file_info["deletions"],
-                "net": file_info["net"],
-            })
+            all_files.append(
+                {
+                    "file": file_info["file"],
+                    "status": "modified",
+                    "lines": 0,  # We don't have total lines for modified files easily
+                    "additions": file_info["additions"],
+                    "deletions": file_info["deletions"],
+                    "net": file_info["net"],
+                }
+            )
 
         # Sort by net change
         all_files.sort(key=lambda x: x["net"], reverse=True)
@@ -263,7 +273,7 @@ class SessionStats:
             "top_files": all_files[:10],
         }
 
-    def format_stats(self, stats: Dict[str, Any], detailed: bool = False) -> str:
+    def format_stats(self, stats: dict[str, Any], detailed: bool = False) -> str:
         """
         Format statistics for display.
 
@@ -276,7 +286,6 @@ class SessionStats:
         """
         from rich.console import Console
         from rich.table import Table
-        from rich.panel import Panel
         from rich.text import Text
 
         console = Console()
@@ -290,14 +299,18 @@ class SessionStats:
         files = stats["files"]
         summary_table.add_row("📁 Files Created", f"{files['created']} files", style="green")
         summary_table.add_row("📝 Files Modified", f"{files['modified']} files", style="yellow")
-        summary_table.add_row("📦 Total Operations", f"{files['total_operations']} operations", style="bold")
+        summary_table.add_row(
+            "📦 Total Operations", f"{files['total_operations']} operations", style="bold"
+        )
 
         summary_table.add_row("", "")  # Spacer
 
         # Code section
         code = stats["code"]
         summary_table.add_row("➕ Lines Written", f"{code['lines_written']:,} lines", style="green")
-        summary_table.add_row("🔄 Lines Modified", f"{code['lines_modified']:,} lines", style="yellow")
+        summary_table.add_row(
+            "🔄 Lines Modified", f"{code['lines_modified']:,} lines", style="yellow"
+        )
         summary_table.add_row("➖ Lines Deleted", f"{code['lines_deleted']:,} lines", style="red")
         summary_table.add_row("📊 Net Change", f"{code['net_change']:+,} lines", style="bold cyan")
 
@@ -309,7 +322,7 @@ class SessionStats:
         if detailed and stats["top_files"]:
             output.append("\n\n", style="reset")
             output.append("🔝 Top Files by Changes:\n", style="bold")
-            
+
             for i, file_info in enumerate(stats["top_files"][:10], 1):
                 status_icon = "✨" if file_info["status"] == "created" else "📝"
                 net = file_info["net"]
@@ -322,14 +335,16 @@ class SessionStats:
         if detailed and stats["by_type"]:
             output.append("\n\n", style="reset")
             output.append("📂 Files by Type:\n", style="bold")
-            
+
             type_table = Table(show_header=True, header_style="bold", box=None)
             type_table.add_column("Type", style="cyan")
             type_table.add_column("Created", style="green", justify="right")
             type_table.add_column("Modified", style="yellow", justify="right")
             type_table.add_column("Net Lines", style="bold", justify="right")
 
-            for ext, data in sorted(stats["by_type"].items(), key=lambda x: x[1]["lines"], reverse=True):
+            for ext, data in sorted(
+                stats["by_type"].items(), key=lambda x: x[1]["lines"], reverse=True
+            ):
                 ext_display = ext if ext != "no-ext" else "(no ext)"
                 type_table.add_row(
                     ext_display,
