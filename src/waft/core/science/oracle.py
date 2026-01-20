@@ -166,13 +166,25 @@ class TheOracle:
                 "timestamp": datetime.now().isoformat(),
             }
 
+        # If bootstrap lacks epistemic_state, try assess_state using session_id
+        epistemic_state = context.get("epistemic_state", {})
+        if not epistemic_state and self._session_id:
+            try:
+                assessment = self.empirica.assess_state(session_id=self._session_id)
+                if assessment and isinstance(assessment, dict):
+                    vectors = assessment.get("vectors", {})
+                    if vectors:
+                        epistemic_state = {"vectors": vectors}
+            except Exception:
+                pass
+
         # Full context available
         return {
             "initialized": True,
             "has_context": True,
             "ready": True,
             "message": "Empirica ready with epistemic context",
-            "epistemic_state": context.get("epistemic_state", {}),
+            "epistemic_state": epistemic_state,
             "findings": context.get("findings", []),
             "unknowns": context.get("unknowns", []),
             "goals": context.get("goals", []),
@@ -279,7 +291,10 @@ class TheOracle:
             return "UNKNOWN"
 
         foundation = vectors.get("foundation", {})
-        know = foundation.get("know", 0.0) if foundation else 0.0
+        if foundation:
+            know = foundation.get("know", 0.0)
+        else:
+            know = vectors.get("know", 0.0)
         uncertainty = vectors.get("uncertainty", 1.0)
 
         # Validate ranges
