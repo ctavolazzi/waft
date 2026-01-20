@@ -343,7 +343,7 @@ class NotebookManager:
         # Log reflection insights to Empirica if available and enabled
         if use_empirica and self.empirica_manager and self.empirica_manager.is_initialized():
             # Get epistemic state to inform reflection
-            epistemic_context = self.empirica_manager.project_bootstrap()
+            self.empirica_manager.project_bootstrap()
 
             # Log insights as findings
             for insight in insights or []:

@@ -160,7 +160,7 @@ def create_teleport_massive(
 
     # Create founders if requested
     if create_founders and being_system:
-        founders = _create_founders(being_system, corporation, project_path)
+        _create_founders(being_system, corporation, project_path)
         # Founders are automatically added to corporation via hire_employee
 
     # Set up initial departments

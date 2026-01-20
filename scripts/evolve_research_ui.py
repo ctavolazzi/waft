@@ -189,7 +189,7 @@ def generate_evolved_html(design_insights: dict[str, Any]) -> str:
     typography = design_insights["typography"]
     spacing = design_insights["spacing"]
     components = design_insights["components"]
-    animations = design_insights["animations"]
+    design_insights["animations"]
 
     html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -203,7 +203,7 @@ def generate_evolved_html(design_insights: dict[str, Any]) -> str:
             padding: 0;
             box-sizing: border-box;
         }}
-        
+
         body {{
             font-family: {typography["font_family"]};
             background: linear-gradient(135deg, {colors["primary"]} 0%, {colors["secondary"]} 100%);
@@ -211,7 +211,7 @@ def generate_evolved_html(design_insights: dict[str, Any]) -> str:
             padding: 20px;
             color: {colors["text"]};
         }}
-        
+
         .container {{
             max-width: 900px;
             margin: 0 auto;
@@ -220,7 +220,7 @@ def generate_evolved_html(design_insights: dict[str, Any]) -> str:
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow: hidden;
         }}
-        
+
         .header {{
             background: linear-gradient(135deg, {colors["primary"]} 0%, {colors["secondary"]} 50%, {colors.get("accent", colors["secondary"])} 100%);
             color: white;
@@ -229,7 +229,7 @@ def generate_evolved_html(design_insights: dict[str, Any]) -> str:
             position: relative;
             overflow: hidden;
         }}
-        
+
         .header::before {{
             content: '';
             position: absolute;
@@ -240,12 +240,12 @@ def generate_evolved_html(design_insights: dict[str, Any]) -> str:
             background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
             animation: pulse 8s ease-in-out infinite;
         }}
-        
+
         @keyframes pulse {{
             0%, 100% {{ transform: scale(1); opacity: 0.5; }}
             50% {{ transform: scale(1.1); opacity: 0.8; }}
         }}
-        
+
         h1 {{
             font-size: {typography["heading_size"]};
             margin-bottom: 10px;
@@ -254,7 +254,7 @@ def generate_evolved_html(design_insights: dict[str, Any]) -> str:
             z-index: 1;
             text-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }}
-        
+
         .subtitle {{
             font-size: 18px;
             opacity: 0.95;
@@ -262,7 +262,7 @@ def generate_evolved_html(design_insights: dict[str, Any]) -> str:
             position: relative;
             z-index: 1;
         }}
-        
+
         .refresh-button {{
             position: fixed;
             top: 20px;
@@ -279,26 +279,26 @@ def generate_evolved_html(design_insights: dict[str, Any]) -> str:
             z-index: 1000;
             font-size: 14px;
         }}
-        
+
         .refresh-button:hover {{
             background: {colors["primary"]};
             color: white;
             transform: translateY(-2px);
             box-shadow: 0 6px 16px rgba(102, 126, 234, 0.3);
         }}
-        
+
         .refresh-button:active {{
             transform: translateY(0);
         }}
-        
+
         .content {{
             padding: {spacing["container_padding"]};
         }}
-        
+
         .form-group {{
             margin-bottom: {spacing["form_group_margin"]};
         }}
-        
+
         label {{
             display: block;
             margin-bottom: 8px;
@@ -306,7 +306,7 @@ def generate_evolved_html(design_insights: dict[str, Any]) -> str:
             font-weight: 500;
             font-size: 15px;
         }}
-        
+
         input[type="number"] {{
             width: 100%;
             padding: 14px;
@@ -316,14 +316,14 @@ def generate_evolved_html(design_insights: dict[str, Any]) -> str:
             transition: all 0.3s ease;
             font-family: {typography["font_family"]};
         }}
-        
+
         input[type="number"]:focus {{
             outline: none;
             border-color: {colors["primary"]};
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
             transform: translateY(-1px);
         }}
-        
+
         .start-button {{
             width: 100%;
             padding: {spacing["button_padding"]};
@@ -339,7 +339,7 @@ def generate_evolved_html(design_insights: dict[str, Any]) -> str:
             position: relative;
             overflow: hidden;
         }}
-        
+
         .start-button::before {{
             content: '';
             position: absolute;
@@ -352,27 +352,27 @@ def generate_evolved_html(design_insights: dict[str, Any]) -> str:
             transform: translate(-50%, -50%);
             transition: width 0.6s, height 0.6s;
         }}
-        
+
         .start-button:hover:not(:disabled)::before {{
             width: 300px;
             height: 300px;
         }}
-        
+
         .start-button:hover:not(:disabled) {{
             transform: translateY(-3px);
             box-shadow: 0 12px 24px rgba(102, 126, 234, 0.4);
         }}
-        
+
         .start-button:active:not(:disabled) {{
             transform: translateY(-1px);
         }}
-        
+
         .start-button:disabled {{
             opacity: 0.7;
             cursor: not-allowed;
             transform: none;
         }}
-        
+
         .status {{
             margin-top: 30px;
             padding: 25px;
@@ -380,7 +380,7 @@ def generate_evolved_html(design_insights: dict[str, Any]) -> str:
             display: none;
             animation: fadeIn 0.5s ease;
         }}
-        
+
         @keyframes fadeIn {{
             from {{
                 opacity: 0;
@@ -391,39 +391,39 @@ def generate_evolved_html(design_insights: dict[str, Any]) -> str:
                 transform: translateY(0);
             }}
         }}
-        
+
         .status.ready {{
             background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
             border: 2px solid {colors["success"]};
             color: #155724;
             display: block;
         }}
-        
+
         .status.running {{
             background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
             border: 2px solid {colors["warning"]};
             color: #856404;
             display: block;
         }}
-        
+
         .status.error {{
             background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
             border: 2px solid {colors["error"]};
             color: #721c24;
             display: block;
         }}
-        
+
         .status-content {{
             font-size: 16px;
             line-height: {typography["line_height"]};
         }}
-        
+
         .status-content strong {{
             font-size: 18px;
             display: block;
             margin-bottom: 12px;
         }}
-        
+
         .report-link {{
             display: inline-block;
             margin-top: 15px;
@@ -436,13 +436,13 @@ def generate_evolved_html(design_insights: dict[str, Any]) -> str:
             transition: all 0.3s ease;
             box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
         }}
-        
+
         .report-link:hover {{
             background: #218838;
             transform: translateY(-2px);
             box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4);
         }}
-        
+
         .loading {{
             display: inline-block;
             width: 20px;
@@ -454,50 +454,50 @@ def generate_evolved_html(design_insights: dict[str, Any]) -> str:
             margin-right: 10px;
             vertical-align: middle;
         }}
-        
+
         @keyframes spin {{
             to {{ transform: rotate(360deg); }}
         }}
-        
+
         .metrics-grid {{
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
             margin-top: 15px;
         }}
-        
+
         .metric-card {{
             background: rgba(255, 255, 255, 0.9);
             padding: 15px;
             border-radius: 8px;
             text-align: center;
         }}
-        
+
         .metric-value {{
             font-size: 24px;
             font-weight: bold;
             color: {colors["primary"]};
         }}
-        
+
         .metric-label {{
             font-size: 12px;
             color: #666;
             margin-top: 5px;
         }}
-        
+
         @media (max-width: 768px) {{
             .container {{
                 margin: 10px;
             }}
-            
+
             .header {{
                 padding: 30px 20px;
             }}
-            
+
             h1 {{
                 font-size: 28px;
             }}
-            
+
             .content {{
                 padding: 30px 20px;
             }}
@@ -513,41 +513,41 @@ def generate_evolved_html(design_insights: dict[str, Any]) -> str:
             <h1>🔬 Research Simulation</h1>
             <p class="subtitle">Demo Batching System - Interactive Research Platform</p>
         </div>
-        
+
         <div class="content">
             <form id="simulationForm">
                 <div class="form-group">
                     <label for="permutations">Number of Permutations:</label>
                     <input type="number" id="permutations" name="permutations" value="10" min="1" max="100" required>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="maxPages">Max Pages (optional):</label>
                     <input type="number" id="maxPages" name="maxPages" min="1" placeholder="Leave empty for no limit">
                 </div>
-                
+
                 <div class="form-group">
                     <label for="maxFileSize">Max File Size MB (optional):</label>
                     <input type="number" id="maxFileSize" name="maxFileSize" min="0.1" step="0.1" placeholder="Leave empty for no limit">
                 </div>
-                
+
                 <button type="submit" class="start-button" id="startButton">
                     🚀 Start Simulation
                 </button>
             </form>
-            
+
             <div id="status" class="status"></div>
         </div>
     </div>
-    
+
     <script>
         const form = document.getElementById('simulationForm');
         const startButton = document.getElementById('startButton');
         const statusDiv = document.getElementById('status');
-        
+
         form.addEventListener('submit', async (e) => {{
             e.preventDefault();
-            
+
             const formData = new FormData(form);
             const config = {{
                 permutations: parseInt(formData.get('permutations')),
@@ -555,26 +555,26 @@ def generate_evolved_html(design_insights: dict[str, Any]) -> str:
                 max_file_size_mb: formData.get('maxFileSize') ? parseFloat(formData.get('maxFileSize')) : null,
                 demo_path: 'research_simulation'
             }};
-            
+
             // Update UI
             startButton.disabled = true;
             startButton.innerHTML = '<span class="loading"></span>Running Simulation...';
             statusDiv.className = 'status running';
             statusDiv.innerHTML = '<div class="status-content"><strong>🔄 Simulation Running</strong><br>Please wait while we collect data and analyze results...</div>';
-            
+
             try {{
                 const response = await fetch('/api/run-simulation', {{
                     method: 'POST',
                     headers: {{'Content-Type': 'application/json'}},
                     body: JSON.stringify(config)
                 }});
-                
+
                 if (!response.ok) {{
                     throw new Error('Simulation failed');
                 }}
-                
+
                 const result = await response.json();
-                
+
                 // Show ready status with metrics
                 statusDiv.className = 'status ready';
                 let statusHTML = '<div class="status-content">';
@@ -588,7 +588,7 @@ def generate_evolved_html(design_insights: dict[str, Any]) -> str:
                 statusHTML += '<br><a href="/api/report" class="report-link" target="_blank">📄 View Research Report</a>';
                 statusHTML += '</div>';
                 statusDiv.innerHTML = statusHTML;
-                
+
             }} catch (error) {{
                 statusDiv.className = 'status error';
                 statusDiv.innerHTML = `<div class="status-content"><strong>❌ Error</strong><br>${{error.message}}</div>`;
@@ -597,13 +597,13 @@ def generate_evolved_html(design_insights: dict[str, Any]) -> str:
                 startButton.innerHTML = '🚀 Start Simulation';
             }}
         }});
-        
+
         // Poll for status on page load
         async function checkStatus() {{
             try {{
                 const response = await fetch('/api/status');
                 const status = await response.json();
-                
+
                 if (status.status === 'complete' && status.report) {{
                     statusDiv.className = 'status ready';
                     let statusHTML = '<div class="status-content">';
@@ -616,7 +616,7 @@ def generate_evolved_html(design_insights: dict[str, Any]) -> str:
                 // Ignore errors on status check
             }}
         }}
-        
+
         checkStatus();
     </script>
 </body>

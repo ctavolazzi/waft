@@ -104,7 +104,7 @@ class RefinementDetector:
             tree = ast.parse(code)
 
             # Find unused imports (simplified - would need full analysis)
-            imports = [
+            [
                 node for node in ast.walk(tree) if isinstance(node, (ast.Import, ast.ImportFrom))
             ]
 

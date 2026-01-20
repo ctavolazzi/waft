@@ -165,7 +165,6 @@ def parse_pytest_output(
     summary = {"total": 0, "passed": 0, "failed": 0, "skipped": 0, "duration": duration}
 
     lines = stdout.split("\n")
-    current_test = None
 
     for line in lines:
         line = line.strip()

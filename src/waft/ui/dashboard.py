@@ -223,11 +223,9 @@ class RedOctoberDashboard:
                 if effect_type == "buff":
                     symbol = f"[{GLORY_GOLD}]▲[/]"
                     color = GLORY_GOLD
-                    bg_color = f"on {GLORY_GOLD}"
                 else:
                     symbol = f"[{CRISIS_RED}]▼[/]"
                     color = CRISIS_RED
-                    bg_color = f"on {CRISIS_RED}"
 
                 duration_str = (
                     f" [{CONCRETE_GREY}]{duration}s[/]" if duration else f" [{PURPLE_MAGIC}]Perm[/]"

@@ -322,7 +322,7 @@ def get_system_health(project_path: Path) -> dict[str, Any]:
 
     # Check Gamification
     try:
-        gamification = GamificationManager(project_path)
+        GamificationManager(project_path)
         health["gamification"]["available"] = True
     except Exception:
         pass
@@ -512,8 +512,8 @@ def main():
                         f"""
                     <div class="work-effort-card">
                         <strong>{title}</strong><br>
-                        <small class="{status_class}">{status.upper()}</small> | 
-                        <small>{ticket_count} tickets</small> | 
+                        <small class="{status_class}">{status.upper()}</small> |
+                        <small>{ticket_count} tickets</small> |
                         <small>{we.get("id", "")}</small>
                     </div>
                     """,

@@ -158,8 +158,8 @@ class WAFTKernel:
         git_active = self._check_git_activity()
 
         # Check project health
-        pyrite_exists = (self.project_path / "_pyrite").exists()
-        lock_exists = (self.project_path / "uv.lock").exists()
+        (self.project_path / "_pyrite").exists()
+        (self.project_path / "uv.lock").exists()
 
         # Determine phase based on system state
         if active_efforts == 0 and not git_active:
@@ -214,8 +214,8 @@ class WAFTKernel:
         epistemic_state = context.get("epistemic_state", {})
         vectors = epistemic_state.get("vectors", {})
         foundation = vectors.get("foundation", {})
-        comprehension = vectors.get("comprehension", {})
-        execution = vectors.get("execution", {})
+        vectors.get("comprehension", {})
+        vectors.get("execution", {})
 
         know = foundation.get("know", 0.0)
         do = foundation.get("do", 0.0)
@@ -255,7 +255,7 @@ class WAFTKernel:
         """
         # Analyze project structure
         work_efforts_dir = self.project_path / "_work_efforts"
-        pyrite_dir = self.project_path / "_pyrite"
+        self.project_path / "_pyrite"
         docs_dir = self.project_path / "docs"
         tests_dir = self.project_path / "tests"
 

@@ -170,14 +170,14 @@ class PDFStylingEnhancer:
             padding: 0 !important;
             margin: 0.5in 0 0.3in 0 !important;
         }
-        
+
         h1 {
             font-size: 32pt !important;
             font-weight: 300 !important;
             line-height: 1.2 !important;
             letter-spacing: -1px !important;
         }
-        
+
         h2 {
             font-size: 22pt !important;
             font-weight: 500 !important;
@@ -187,12 +187,12 @@ class PDFStylingEnhancer:
             margin-top: 0.7in !important;
             margin-bottom: calc(25pt * 0.75) !important;  /* 75% of paragraph spacing */
         }
-        
+
         /* Connect first element after header */
         h2 + p, h2 + ul, h2 + ol {
             margin-top: calc(25pt * 0.5) !important;  /* 50% of paragraph spacing */
         }
-        
+
         h3 {
             font-size: 17pt !important;
             font-weight: 500 !important;
@@ -200,12 +200,12 @@ class PDFStylingEnhancer:
             margin-top: 0.5in !important;
             margin-bottom: 0.25in !important;
         }
-        
+
         /* Remove any inline styles that might add backgrounds */
         * {
             background-color: transparent !important;
         }
-        
+
         body {
             background-color: #ffffff !important;
         }
@@ -224,7 +224,7 @@ class PDFStylingEnhancer:
             border-radius: 4px;
             overflow: hidden;
         }
-        
+
         th {
             background: #34495e !important;
             color: #ffffff !important;
@@ -235,7 +235,7 @@ class PDFStylingEnhancer:
             font-size: 10.5pt;
             letter-spacing: 0.3px;
         }
-        
+
         td {
             border: none;
             border-bottom: 1px solid #e9ecef;
@@ -243,11 +243,11 @@ class PDFStylingEnhancer:
             color: #2c3e50;
             background: #ffffff !important;
         }
-        
+
         tr:last-child td {
             border-bottom: none;
         }
-        
+
         tr:nth-child(even) td {
             background: #f8f9fa !important;
         }
@@ -269,76 +269,76 @@ class PDFStylingEnhancer:
             text-align: justify;
             hyphens: auto;
         }}
-        
+
         /* Paragraphs - consistent spacing */
         p {{
             margin: 0 0 {paragraph_spacing} 0;
             text-align: justify;
             line-height: 1.75;
         }}
-        
+
         p:first-child {{
             margin-top: 0;
         }}
-        
+
         p:empty {{
             display: none;
             margin: 0;
             padding: 0;
         }}
-        
+
         /* HIGH PRIORITY FIX #1: List Spacing - consistent vertical rhythm */
         ul, ol {{
             margin: {paragraph_spacing} 0 {paragraph_spacing} 0;
             padding-left: 20pt;
         }}
-        
+
         li {{
             margin-bottom: calc({paragraph_spacing_pt} / 2);
             word-wrap: break-word;
             overflow-wrap: break-word;
             hyphens: auto;
         }}
-        
+
         /* Nested lists - proper indentation hierarchy */
         ul ul, ol ol, ul ol, ol ul {{
             margin-top: calc({paragraph_spacing_pt} / 2);
             margin-bottom: calc({paragraph_spacing_pt} / 2);
             padding-left: 25pt;
         }}
-        
+
         ul ul ul, ol ol ol {{
             padding-left: 30pt;
         }}
-        
+
         /* Bold/Italic in lists */
         li strong, li em {{
             font-weight: bold;
             font-style: normal;
         }}
-        
+
         li em {{
             font-style: italic;
         }}
-        
+
         li strong em, li em strong {{
             font-weight: bold;
             font-style: italic;
         }}
-        
+
         /* HIGH PRIORITY FIX #2: Paragraph spacing after headers */
         h2 {{
             margin-bottom: calc({paragraph_spacing_pt} * 0.75) !important;
         }}
-        
+
         h2 + p, h2 + ul, h2 + ol, h2 + blockquote {{
             margin-top: calc({paragraph_spacing_pt} * 0.5);
         }}
-        
+
         h3 + p, h3 + ul, h3 + ol {{
             margin-top: calc({paragraph_spacing_pt} * 0.5);
         }}
-        
+
         /* HIGH PRIORITY FIX #3: Code block line breaks - preserve formatting */
         code {{
             font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
@@ -349,7 +349,7 @@ class PDFStylingEnhancer:
             color: #e83e8c;
             border: 1px solid #e9ecef;
         }}
-        
+
         pre {{
             background: #f8f9fa;
             border-left: 4px solid #3498db;
@@ -364,7 +364,7 @@ class PDFStylingEnhancer:
             overflow-wrap: break-word;
             page-break-inside: avoid;
         }}
-        
+
         pre code {{
             white-space: pre !important;
             display: block;
@@ -373,13 +373,13 @@ class PDFStylingEnhancer:
             color: #2c3e50;
             border: none;
         }}
-        
+
         /* Inline code vs block code distinction */
         code:not(pre code) {{
             background: #f8f9fa80;
             padding: 1pt 3pt;
         }}
-        
+
         /* HIGH PRIORITY FIX #4: Horizontal rules spacing */
         hr {{
             border: none;
@@ -388,17 +388,17 @@ class PDFStylingEnhancer:
             padding: 0;
             height: 0;
         }}
-        
+
         /* HIGH PRIORITY FIX #5: Link styling */
         a {{
             color: #3498db;
             text-decoration: underline;
         }}
-        
+
         a:visited {{
             color: #2980b9aa;
         }}
-        
+
         /* Blockquotes - enhanced styling */
         blockquote {{
             border-left: 4px solid #3498db;
@@ -411,15 +411,15 @@ class PDFStylingEnhancer:
             border-radius: 0 4px 4px 0;
             page-break-inside: avoid;
         }}
-        
+
         blockquote p {{
             margin-bottom: calc({paragraph_spacing_pt} / 2);
         }}
-        
+
         blockquote p:last-child {{
             margin-bottom: 0;
         }}
-        
+
         /* Table cell padding - increased for readability */
         th, td {{
             padding: 6pt 8pt !important;
@@ -446,7 +446,7 @@ class PDFStylingEnhancer:
                 color: #7f8c8d;
             }
         }
-        
+
         @page :first {
             @top-center { content: none; }
             @bottom-center { content: none; }

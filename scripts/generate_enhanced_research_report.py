@@ -182,7 +182,7 @@ def generate_enhanced_report(
     """Generate enhanced research report with multiple sections and components."""
 
     # Build components
-    components = build_enhanced_report_components(
+    build_enhanced_report_components(
         config, metrics, observations, findings, hypothesis, test_results, conclusions
     )
 

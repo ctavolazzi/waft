@@ -154,6 +154,15 @@ def _build_character_sheet_latex(character: Any, use_dndbook_class: bool) -> str
     if not use_dndbook_class:
         latex += r"\usepackage[layout=true]{dnd}" + "\n"
 
+    # Extract backslash sequences for Python 3.10 compatibility
+    checkmark = "\\checkmark"
+    str_prof = checkmark if "STR" in character.proficient_saves else ""
+    dex_prof = checkmark if "DEX" in character.proficient_saves else ""
+    con_prof = checkmark if "CON" in character.proficient_saves else ""
+    int_prof = checkmark if "INT" in character.proficient_saves else ""
+    wis_prof = checkmark if "WIS" in character.proficient_saves else ""
+    cha_prof = checkmark if "CHA" in character.proficient_saves else ""
+
     latex += f"""
 \\title{{{escape_latex(character.name)}}}
 \\large D&D 5e Character Sheet}}
@@ -180,12 +189,12 @@ def _build_character_sheet_latex(character: Any, use_dndbook_class: bool) -> str
 \\begin{{tabular}}{{lcccc}}
     \\textbf{{Ability}} & \\textbf{{Score}} & \\textbf{{Modifier}} & \\textbf{{Saving Throw}} & \\textbf{{Proficiency}} \\\\
     \\hline
-    Strength & {character.strength} & {fmt_mod(str_mod)} & {fmt_mod(str_mod + (character.proficiency_bonus if "STR" in character.proficient_saves else 0))} & {"\\checkmark" if "STR" in character.proficient_saves else ""} \\\\
-    Dexterity & {character.dexterity} & {fmt_mod(dex_mod)} & {fmt_mod(dex_mod + (character.proficiency_bonus if "DEX" in character.proficient_saves else 0))} & {"\\checkmark" if "DEX" in character.proficient_saves else ""} \\\\
-    Constitution & {character.constitution} & {fmt_mod(con_mod)} & {fmt_mod(con_mod + (character.proficiency_bonus if "CON" in character.proficient_saves else 0))} & {"\\checkmark" if "CON" in character.proficient_saves else ""} \\\\
-    Intelligence & {character.intelligence} & {fmt_mod(int_mod)} & {fmt_mod(int_mod + (character.proficiency_bonus if "INT" in character.proficient_saves else 0))} & {"\\checkmark" if "INT" in character.proficient_saves else ""} \\\\
-    Wisdom & {character.wisdom} & {fmt_mod(wis_mod)} & {fmt_mod(wis_mod + (character.proficiency_bonus if "WIS" in character.proficient_saves else 0))} & {"\\checkmark" if "WIS" in character.proficient_saves else ""} \\\\
-    Charisma & {character.charisma} & {fmt_mod(cha_mod)} & {fmt_mod(cha_mod + (character.proficiency_bonus if "CHA" in character.proficient_saves else 0))} & {"\\checkmark" if "CHA" in character.proficient_saves else ""} \\\\
+    Strength & {character.strength} & {fmt_mod(str_mod)} & {fmt_mod(str_mod + (character.proficiency_bonus if "STR" in character.proficient_saves else 0))} & {str_prof} \\\\
+    Dexterity & {character.dexterity} & {fmt_mod(dex_mod)} & {fmt_mod(dex_mod + (character.proficiency_bonus if "DEX" in character.proficient_saves else 0))} & {dex_prof} \\\\
+    Constitution & {character.constitution} & {fmt_mod(con_mod)} & {fmt_mod(con_mod + (character.proficiency_bonus if "CON" in character.proficient_saves else 0))} & {con_prof} \\\\
+    Intelligence & {character.intelligence} & {fmt_mod(int_mod)} & {fmt_mod(int_mod + (character.proficiency_bonus if "INT" in character.proficient_saves else 0))} & {int_prof} \\\\
+    Wisdom & {character.wisdom} & {fmt_mod(wis_mod)} & {fmt_mod(wis_mod + (character.proficiency_bonus if "WIS" in character.proficient_saves else 0))} & {wis_prof} \\\\
+    Charisma & {character.charisma} & {fmt_mod(cha_mod)} & {fmt_mod(cha_mod + (character.proficiency_bonus if "CHA" in character.proficient_saves else 0))} & {cha_prof} \\\\
 \\end{{tabular}}
 
 \\textbf{{Proficiency Bonus:}} +{character.proficiency_bonus}
@@ -685,7 +694,8 @@ def _build_monster_stat_block(monster: dict[str, Any]) -> str:
         basics.append(f"speed = {{{monster['speed']}}}")
 
     if basics:
-        latex += f"    \\DndMonsterBasics[\n        {',\n        '.join(basics)}\n      ]\n\n"
+        separator = ',\n        '
+        latex += f"    \\DndMonsterBasics[\n        {separator.join(basics)}\n      ]\n\n"
 
     # Add ability scores if present
     if "ability_scores" in monster:
@@ -711,7 +721,8 @@ def _build_monster_stat_block(monster: dict[str, Any]) -> str:
         details.append(f"challenge = {monster['challenge']}")
 
     if details:
-        latex += f"    \\DndMonsterDetails[\n        {',\n        '.join(details)}\n      ]\n\n"
+        separator = ',\n        '
+        latex += f"    \\DndMonsterDetails[\n        {separator.join(details)}\n      ]\n\n"
 
     # Add description/traits
     if "description" in monster:

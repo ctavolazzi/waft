@@ -244,7 +244,7 @@ def main():
     # ========================================================================
     print("\n📄 STEP 3: Generating with V1 (expected to fail constraint)...")
 
-    legacy_generator = TwoPageGeneratorLegacy(weasyprint_available=False)
+    TwoPageGeneratorLegacy(weasyprint_available=False)
 
     v1_result = v1_generator.generate(
         distilled_chat=distilled,

@@ -55,12 +55,12 @@ PDF_TEMPLATE = """
                 color: #7f8c8d;
             }
         }
-        
+
         @page :first {
             @top-center { content: none; }
             @bottom-center { content: none; }
         }
-        
+
         body {
             font-family: 'Georgia', 'Times New Roman', serif;
             font-size: 11pt;
@@ -68,13 +68,13 @@ PDF_TEMPLATE = """
             color: #2c2c2c;
             background: #ffffff;
         }
-        
+
         .cover-page {
             text-align: center;
             padding: 2in 0;
             page-break-after: always;
         }
-        
+
         .cover-title {
             font-size: 48pt;
             font-weight: 300;
@@ -82,14 +82,14 @@ PDF_TEMPLATE = """
             color: #1a1a1a;
             letter-spacing: -2px;
         }
-        
+
         .cover-subtitle {
             font-size: 24pt;
             color: #666;
             font-style: italic;
             margin: 0.2in 0 0.5in 0;
         }
-        
+
         h1 {
             font-size: 32pt;
             font-weight: 300;
@@ -100,7 +100,7 @@ PDF_TEMPLATE = """
             background: transparent !important;
             border: none !important;
         }
-        
+
         h2 {
             font-size: 22pt;
             font-weight: 500;
@@ -111,21 +111,21 @@ PDF_TEMPLATE = """
             border-bottom: 2px solid #3498db;
             padding-bottom: 0.12in;
         }
-        
+
         h3 {
             font-size: 17pt;
             font-weight: 500;
             margin: 0.5in 0 0.25in 0;
             color: #34495e;
         }
-        
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin: 0.4in 0;
             font-size: 10pt;
         }
-        
+
         th {
             background: #34495e !important;
             color: #ffffff !important;
@@ -134,7 +134,7 @@ PDF_TEMPLATE = """
             text-align: left;
             font-weight: 600;
         }
-        
+
         td {
             border: none;
             border-bottom: 1px solid #e9ecef;
@@ -142,11 +142,11 @@ PDF_TEMPLATE = """
             color: #2c3e50;
             background: #ffffff !important;
         }
-        
+
         tr:nth-child(even) td {
             background: #f8f9fa !important;
         }
-        
+
         .proof-box {
             border: 2px solid #3498db;
             border-radius: 4px;
@@ -155,17 +155,17 @@ PDF_TEMPLATE = """
             background: #ebf5fb;
             page-break-inside: avoid;
         }
-        
+
         .proof-box.verified {
             border-color: #27ae60;
             background: #e8f8f5;
         }
-        
+
         .proof-box h3 {
             margin-top: 0;
             color: #2c3e50;
         }
-        
+
         .metric {
             display: inline-block;
             margin: 0.1in 0.2in 0.1in 0;
@@ -174,19 +174,19 @@ PDF_TEMPLATE = """
             border-radius: 3px;
             border: 1px solid #ddd;
         }
-        
+
         .metric-label {
             font-size: 8pt;
             color: #7f8c8d;
             text-transform: uppercase;
         }
-        
+
         .metric-value {
             font-size: 14pt;
             font-weight: 600;
             color: #2c3e50;
         }
-        
+
         .data-series {
             margin: 0.2in 0;
             padding: 0.15in;
@@ -194,19 +194,19 @@ PDF_TEMPLATE = """
             border-left: 3px solid #3498db;
             border-radius: 3px;
         }
-        
+
         .data-series h4 {
             margin: 0 0 0.1in 0;
             font-size: 12pt;
             color: #34495e;
         }
-        
+
         .data-values {
             font-family: 'Monaco', 'Courier New', monospace;
             font-size: 9pt;
             color: #555;
         }
-        
+
         code {
             font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
             font-size: 9.5pt;
@@ -215,14 +215,14 @@ PDF_TEMPLATE = """
             border-radius: 2px;
             color: #e83e8c;
         }
-        
+
         .summary-stats {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 0.2in;
             margin: 0.3in 0;
         }
-        
+
         .stat-box {
             text-align: center;
             padding: 0.2in;
@@ -230,13 +230,13 @@ PDF_TEMPLATE = """
             border-radius: 4px;
             border: 1px solid #ddd;
         }
-        
+
         .stat-value {
             font-size: 24pt;
             font-weight: 600;
             color: #2c3e50;
         }
-        
+
         .stat-label {
             font-size: 9pt;
             color: #7f8c8d;
@@ -257,10 +257,10 @@ PDF_TEMPLATE = """
             Generated: {{ timestamp }}
         </div>
     </div>
-    
+
     <!-- Summary -->
     <h1>Executive Summary</h1>
-    
+
     <div class="summary-stats">
         <div class="stat-box">
             <div class="stat-value">{{ total_proofs }}</div>
@@ -279,7 +279,7 @@ PDF_TEMPLATE = """
             <div class="stat-label">Files Created</div>
         </div>
     </div>
-    
+
     <h2>Proof Results Overview</h2>
     <table>
         <thead>
@@ -305,14 +305,14 @@ PDF_TEMPLATE = """
             {% endfor %}
         </tbody>
     </table>
-    
+
     <!-- Individual Proofs -->
     <h1>Individual Proof Experiments</h1>
-    
+
     {% for proof in proofs %}
     <div class="proof-box {% if proof.analysis.verified %}verified{% endif %}">
         <h3>Proof #{{ proof.proof_id }}</h3>
-        
+
         <div style="margin: 0.2in 0;">
             <div class="metric">
                 <div class="metric-label">Experiment ID</div>
@@ -331,7 +331,7 @@ PDF_TEMPLATE = """
                 <div class="metric-value" style="font-size: 10pt;">{{ proof.timestamp }}</div>
             </div>
         </div>
-        
+
         <h4>State Capture</h4>
         <table>
             <tr>
@@ -347,7 +347,7 @@ PDF_TEMPLATE = """
                 <td>{% if proof.initial_state_hash != proof.final_state_hash %}✅ Yes - State evolution detected{% else %}❌ No{% endif %}</td>
             </tr>
         </table>
-        
+
         <h4>Results</h4>
         <table>
             {% for key, value in proof.results.items() %}
@@ -357,7 +357,7 @@ PDF_TEMPLATE = """
             </tr>
             {% endfor %}
         </table>
-        
+
         <h4>Data Collection (C)</h4>
         {% for name, series in proof.data_series.items() %}
         <div class="data-series">
@@ -368,7 +368,7 @@ PDF_TEMPLATE = """
             </div>
         </div>
         {% endfor %}
-        
+
         <h4>Analysis</h4>
         <table>
             <tr>
@@ -384,7 +384,7 @@ PDF_TEMPLATE = """
                 <td>{{ proof.analysis.conclusions_count }}</td>
             </tr>
         </table>
-        
+
         <h4>Files Created</h4>
         <table>
             <tr>
@@ -402,12 +402,12 @@ PDF_TEMPLATE = """
         </table>
     </div>
     {% endfor %}
-    
+
     <!-- Conclusion -->
     <h1>Conclusion</h1>
-    
+
     <p><strong>The Scientific Method Tool has been successfully verified.</strong></p>
-    
+
     <p>All {{ total_proofs }} proof experiments demonstrate:</p>
     <ul>
         <li>✅ <strong>Initial State Capture (A):</strong> All experiments captured system state before execution</li>
@@ -418,11 +418,11 @@ PDF_TEMPLATE = """
         <li>✅ <strong>File Persistence:</strong> All data saved to disk ({{ total_files }} files total)</li>
         <li>✅ <strong>Reproducibility:</strong> Consistent results across all {{ total_proofs }} experiments</li>
     </ul>
-    
+
     <p><strong>Average Confidence:</strong> {{ avg_confidence }}%</p>
-    
+
     <p>The system is fully functional and ready for experimental verification of hypotheses.</p>
-    
+
     <div style="page-break-before: always; text-align: center; padding: 1in 0; color: #7f8c8d; font-style: italic;">
         <p>End of Proof Report</p>
         <p>Generated: {{ timestamp }}</p>

@@ -53,7 +53,6 @@ def clean_unicode_for_fpdf(text: str) -> str:
         """: '"',
         """: '"',
         "'": "'",
-        "'": "'",
         # Ellipsis
         "…": "...",
         # Other common Unicode

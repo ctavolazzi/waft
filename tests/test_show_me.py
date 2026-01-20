@@ -65,7 +65,7 @@ class TestGetWorkEfforts:
         """Test date filtering with days_back parameter."""
         # Get all work efforts (days_back=0 means show all)
         all_work_efforts = get_work_efforts(temp_project_path, days_back=0)
-        all_ids = {w["id"] for w in all_work_efforts}
+        {w["id"] for w in all_work_efforts}
 
         # Get only recent (should exclude WE-260115-old which is from 260115, more than 30 days ago)
         # Note: Today is 260117, so 260115 is only 2 days ago, not 30+
@@ -504,7 +504,6 @@ class TestGenerateRecommendedNextStep:
     def test_recommended_next_step_active_work_priority(self):
         """Test priority logic: active work > open work."""
         active_work = [{"id": "WE-001", "title": "Active", "status": "active"}]
-        open_work = [{"id": "WE-002", "title": "Open", "status": "open"}]
         projects = []
         experiments = []
         proof_cases = []

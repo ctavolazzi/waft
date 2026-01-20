@@ -210,7 +210,7 @@ def being_to_character_data(
     }
 
     skills = {}
-    for skill_name, (ability, base_mod) in skill_map.items():
+    for skill_name, (_ability, base_mod) in skill_map.items():
         is_prof = skill_name in character.proficient_skills
         skills[skill_name] = {
             "modifier": base_mod + (prof_bonus if is_prof else 0),
@@ -580,11 +580,11 @@ def convert_to_dnd5e_html(data: dict[str, Any]) -> str:
             size: letter;
             margin: 0.25in;
         }
-        
+
         * {
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Arial', 'Helvetica', sans-serif;
             font-size: 10pt;
@@ -592,21 +592,21 @@ def convert_to_dnd5e_html(data: dict[str, Any]) -> str:
             padding: 0;
             background: #fff;
         }
-        
+
         .character-sheet {
             width: 100%;
         }
-        
+
         .main-layout {
             width: 100%;
             border-collapse: collapse;
         }
-        
+
         .main-layout td {
             vertical-align: top;
             padding: 0.05in;
         }
-        
+
         .header-section {
             grid-column: 1 / -1;
             border: 2px solid #000;
@@ -616,12 +616,12 @@ def convert_to_dnd5e_html(data: dict[str, Any]) -> str:
             grid-template-columns: 2fr 1fr 1fr 1fr;
             gap: 0.1in;
         }
-        
+
         .header-field {
             display: flex;
             flex-direction: column;
         }
-        
+
         .header-label {
             font-size: 8pt;
             font-weight: bold;
@@ -630,18 +630,18 @@ def convert_to_dnd5e_html(data: dict[str, Any]) -> str:
             padding-bottom: 2pt;
             margin-bottom: 4pt;
         }
-        
+
         .header-value {
             font-size: 11pt;
             font-weight: bold;
         }
-        
+
         .ability-scores {
             grid-column: 1;
             border: 2px solid #000;
             padding: 0.1in;
         }
-        
+
         .ability-score-box {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -650,7 +650,7 @@ def convert_to_dnd5e_html(data: dict[str, Any]) -> str:
             border: 1px solid #000;
             padding: 0.05in;
         }
-        
+
         .ability-name {
             font-weight: bold;
             font-size: 11pt;
@@ -660,7 +660,7 @@ def convert_to_dnd5e_html(data: dict[str, Any]) -> str:
             padding-bottom: 2pt;
             margin-bottom: 4pt;
         }
-        
+
         .ability-value {
             text-align: center;
             font-size: 18pt;
@@ -668,7 +668,7 @@ def convert_to_dnd5e_html(data: dict[str, Any]) -> str:
             border: 1px solid #000;
             padding: 0.05in;
         }
-        
+
         .ability-modifier {
             text-align: center;
             font-size: 14pt;
@@ -676,21 +676,21 @@ def convert_to_dnd5e_html(data: dict[str, Any]) -> str:
             border: 1px solid #000;
             padding: 0.05in;
         }
-        
+
         .saving-throw {
             display: flex;
             align-items: center;
             gap: 4pt;
             margin-top: 4pt;
         }
-        
+
         .checkbox {
             width: 12pt;
             height: 12pt;
             border: 1px solid #000;
             display: inline-block;
         }
-        
+
         .checkbox.checked::after {
             content: "✓";
             display: block;
@@ -698,14 +698,14 @@ def convert_to_dnd5e_html(data: dict[str, Any]) -> str:
             line-height: 12pt;
             font-size: 10pt;
         }
-        
+
         .skills-section {
             grid-column: 1;
             border: 2px solid #000;
             padding: 0.1in;
             margin-top: 0.1in;
         }
-        
+
         .section-title {
             font-weight: bold;
             font-size: 12pt;
@@ -714,7 +714,7 @@ def convert_to_dnd5e_html(data: dict[str, Any]) -> str:
             padding-bottom: 4pt;
             margin-bottom: 0.1in;
         }
-        
+
         .skill-row {
             display: grid;
             grid-template-columns: 12pt 1fr 40pt;
@@ -723,35 +723,35 @@ def convert_to_dnd5e_html(data: dict[str, Any]) -> str:
             margin-bottom: 2pt;
             font-size: 9pt;
         }
-        
+
         .skill-name {
             font-weight: bold;
         }
-        
+
         .skill-modifier {
             text-align: right;
             font-weight: bold;
         }
-        
+
         .right-column {
             grid-column: 2;
             display: flex;
             flex-direction: column;
             gap: 0.1in;
         }
-        
+
         .combat-stats {
             border: 2px solid #000;
             padding: 0.1in;
         }
-        
+
         .stat-box {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 0.05in;
             margin-bottom: 0.1in;
         }
-        
+
         .stat-label {
             font-size: 8pt;
             font-weight: bold;
@@ -759,7 +759,7 @@ def convert_to_dnd5e_html(data: dict[str, Any]) -> str:
             border-bottom: 1px solid #000;
             padding-bottom: 2pt;
         }
-        
+
         .stat-value {
             font-size: 16pt;
             font-weight: bold;
@@ -767,33 +767,33 @@ def convert_to_dnd5e_html(data: dict[str, Any]) -> str:
             border: 1px solid #000;
             padding: 0.05in;
         }
-        
+
         .hp-section {
             border: 2px solid #000;
             padding: 0.1in;
             margin-top: 0.1in;
         }
-        
+
         .hp-boxes {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             gap: 0.05in;
         }
-        
+
         .equipment-section {
             border: 2px solid #000;
             padding: 0.1in;
             margin-top: 0.1in;
             grid-column: 1 / -1;
         }
-        
+
         .features-section {
             border: 2px solid #000;
             padding: 0.1in;
             margin-top: 0.1in;
             grid-column: 1 / -1;
         }
-        
+
         .proficiency-bonus {
             text-align: center;
             font-size: 14pt;
@@ -837,12 +837,12 @@ def convert_to_dnd5e_html(data: dict[str, Any]) -> str:
                 <div class="header-value">{{ data.XP }}</div>
             </div>
         </div>
-        
+
         <!-- Ability Scores -->
         <div class="ability-scores">
             <div class="section-title">Ability Scores</div>
             <div class="proficiency-bonus">Proficiency Bonus: +{{ data.PROF_BONUS }}</div>
-            
+
             <!-- Strength -->
             <div class="ability-score-box">
                 <div class="ability-name">Strength</div>
@@ -853,7 +853,7 @@ def convert_to_dnd5e_html(data: dict[str, Any]) -> str:
                     <span>Save: {{ data.STR_SAVE }}</span>
                 </div>
             </div>
-            
+
             <!-- Dexterity -->
             <div class="ability-score-box">
                 <div class="ability-name">Dexterity</div>
@@ -864,7 +864,7 @@ def convert_to_dnd5e_html(data: dict[str, Any]) -> str:
                     <span>Save: {{ data.DEX_SAVE }}</span>
                 </div>
             </div>
-            
+
             <!-- Constitution -->
             <div class="ability-score-box">
                 <div class="ability-name">Constitution</div>
@@ -875,7 +875,7 @@ def convert_to_dnd5e_html(data: dict[str, Any]) -> str:
                     <span>Save: {{ data.CON_SAVE }}</span>
                 </div>
             </div>
-            
+
             <!-- Intelligence -->
             <div class="ability-score-box">
                 <div class="ability-name">Intelligence</div>
@@ -886,7 +886,7 @@ def convert_to_dnd5e_html(data: dict[str, Any]) -> str:
                     <span>Save: {{ data.INT_SAVE }}</span>
                 </div>
             </div>
-            
+
             <!-- Wisdom -->
             <div class="ability-score-box">
                 <div class="ability-name">Wisdom</div>
@@ -897,7 +897,7 @@ def convert_to_dnd5e_html(data: dict[str, Any]) -> str:
                     <span>Save: {{ data.WIS_SAVE }}</span>
                 </div>
             </div>
-            
+
             <!-- Charisma -->
             <div class="ability-score-box">
                 <div class="ability-name">Charisma</div>
@@ -909,7 +909,7 @@ def convert_to_dnd5e_html(data: dict[str, Any]) -> str:
                 </div>
             </div>
         </div>
-        
+
         <!-- Skills -->
         <div class="skills-section">
             <div class="section-title">Skills</div>
@@ -1004,7 +1004,7 @@ def convert_to_dnd5e_html(data: dict[str, Any]) -> str:
                 <span class="skill-modifier">{{ data.SURVIVAL }}</span>
             </div>
         </div>
-        
+
         <!-- Right Column -->
         <div class="right-column">
             <!-- Combat Stats -->
@@ -1023,7 +1023,7 @@ def convert_to_dnd5e_html(data: dict[str, Any]) -> str:
                     <div class="stat-value">{{ data.SPEED }} ft</div>
                 </div>
             </div>
-            
+
             <!-- Hit Points -->
             <div class="hp-section">
                 <div class="section-title">Hit Points</div>
@@ -1047,7 +1047,7 @@ def convert_to_dnd5e_html(data: dict[str, Any]) -> str:
                 </div>
             </div>
         </div>
-        
+
         <!-- Equipment -->
         <div class="equipment-section">
             <div class="section-title">Equipment</div>
@@ -1057,7 +1057,7 @@ def convert_to_dnd5e_html(data: dict[str, Any]) -> str:
                 {{ data.EQUIPMENT }}
             </div>
         </div>
-        
+
         <!-- Features & Traits -->
         <div class="features-section">
             <div class="section-title">Features & Traits</div>
@@ -1114,12 +1114,12 @@ def convert_to_markdown(data: dict[str, Any]) -> str:
 
 ## Character Information
 
-**Name:** {data["NAME"]}  
-**Class & Level:** {data["CLASS_LEVEL"]}  
-**Background:** {data["BACKGROUND"]}  
-**Player Name:** {data["PLAYER_NAME"] or "_________________"}  
-**Race:** {data["RACE"]}  
-**Alignment:** {data["ALIGNMENT"]}  
+**Name:** {data["NAME"]}
+**Class & Level:** {data["CLASS_LEVEL"]}
+**Background:** {data["BACKGROUND"]}
+**Player Name:** {data["PLAYER_NAME"] or "_________________"}
+**Race:** {data["RACE"]}
+**Alignment:** {data["ALIGNMENT"]}
 **Experience Points:** {data["XP"]}
 
 ---
@@ -1166,8 +1166,8 @@ def convert_to_markdown(data: dict[str, Any]) -> str:
 
 ## Combat
 
-**Armor Class (AC):** {data["AC"]}  
-**Initiative:** {data["INITIATIVE"]}  
+**Armor Class (AC):** {data["AC"]}
+**Initiative:** {data["INITIATIVE"]}
 **Speed:** {data["SPEED"]} ft.
 
 **Hit Points**
@@ -1225,9 +1225,9 @@ def convert_to_markdown(data: dict[str, Any]) -> str:
 
 ## Proficiencies & Languages
 
-**Armor Proficiencies:** {data["ARMOR_PROF"]}  
-**Weapon Proficiencies:** {data["WEAPON_PROF"]}  
-**Tool Proficiencies:** {data["TOOL_PROF"]}  
+**Armor Proficiencies:** {data["ARMOR_PROF"]}
+**Weapon Proficiencies:** {data["WEAPON_PROF"]}
+**Tool Proficiencies:** {data["TOOL_PROF"]}
 **Languages:** {data["LANGUAGES"]}
 
 ---
@@ -1260,8 +1260,8 @@ def convert_to_markdown(data: dict[str, Any]) -> str:
 
 ---
 
-*Generated: {data["GENERATED_DATE"]}*  
-*Being ID: {data["BEING_ID"]}*  
+*Generated: {data["GENERATED_DATE"]}*
+*Being ID: {data["BEING_ID"]}*
 *Reality: {data["REALITY_ID"]}*
 """
     return content

@@ -177,7 +177,7 @@ def render_being_details(being_system: BeingSystem, being_id: str):
         # Skills
         st.subheader("Skills")
         if being.skills:
-            skills_df = st.dataframe(
+            st.dataframe(
                 {skill: [level] for skill, level in being.skills.items()}, use_container_width=True
             )
         else:

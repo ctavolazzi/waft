@@ -63,7 +63,7 @@ def read_plan_file(plan_path: Path) -> dict[str, Any]:
     # Extract overview
     if "overview" not in plan_data or not plan_data["overview"]:
         lines = content.split("\n")
-        for i, line in enumerate(lines):
+        for _i, line in enumerate(lines):
             if line.strip() and not line.startswith("#"):
                 plan_data["overview"] = line.strip()[:200]
                 break

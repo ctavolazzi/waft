@@ -11,35 +11,42 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "src" / "waft"))
 
-from foundation import Score, Evaluation, Step, Session, Guide, execute_step, solve
+from foundation import Evaluation, Guide, Score, Session, Step, execute_step, solve
 from patterns import (
-    LengthBasedStrategy, StrictStrategy, LenientStrategy,
-    MinimumScoreHandler, LoggingHandler,
-    QualityLogger, ThresholdAlerter,
-    ValidationDecorator, CachingDecorator, TimingDecorator,
-    GuideFactory, GuideType,
-    EvaluateCommand, SolveCommand, CommandQueue,
-    SessionBuilder
+    CachingDecorator,
+    CommandQueue,
+    GuideFactory,
+    GuideType,
+    LenientStrategy,
+    MinimumScoreHandler,
+    QualityLogger,
+    SessionBuilder,
+    SolveCommand,
+    StrictStrategy,
+    ThresholdAlerter,
+    TimingDecorator,
+    ValidationDecorator,
 )
 
 # ============================================================================
 # TEST SUITE 1: FOUNDATION TESTS
 # ============================================================================
 
+
 def test_foundation():
     """Test every level of the foundation."""
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("TESTING FOUNDATION")
-    print("="*80)
+    print("=" * 80)
 
     results = {
-        'level_0': False,
-        'level_1': False,
-        'level_2': False,
-        'level_3': False,
-        'level_4': False,
-        'level_5': False,
+        "level_0": False,
+        "level_1": False,
+        "level_2": False,
+        "level_3": False,
+        "level_4": False,
+        "level_5": False,
     }
 
     # Level 0: Score
@@ -47,18 +54,18 @@ def test_foundation():
     try:
         score = Score(0.75)
         assert 0.0 <= score.value <= 1.0
-        assert score.is_good(0.7) == True
-        assert score.is_good(0.8) == False
+        assert score.is_good(0.7)
+        assert not score.is_good(0.8)
         assert float(score) == 0.75
 
         # Test validation
         try:
-            bad_score = Score(1.5)
-            assert False, "Should have raised ValueError"
+            Score(1.5)
+            raise AssertionError("Should have raised ValueError")
         except ValueError:
             pass
 
-        results['level_0'] = True
+        results["level_0"] = True
         print("  ✅ Score: immutable, validated, works correctly")
     except Exception as e:
         print(f"  ❌ Score failed: {e}")
@@ -67,18 +74,19 @@ def test_foundation():
     print("\n[Level 1: evaluate_text()]")
     try:
         from foundation import evaluate_text
+
         score = evaluate_text("This is test text")
         assert isinstance(score, Score)
         assert 0.0 <= score.value <= 1.0
 
         # Longer text should score higher
-        short = evaluate_text("hi")
+        evaluate_text("hi")
         long_text = "This is a much longer text " * 10
         long = evaluate_text(long_text)
         # Should cap at 1.0
         assert long.value <= 1.0
 
-        results['level_1'] = True
+        results["level_1"] = True
         print("  ✅ evaluate_text: transforms text → score")
     except Exception as e:
         print(f"  ❌ evaluate_text failed: {e}")
@@ -91,7 +99,7 @@ def test_foundation():
             validity=Score(0.8),
             coherence=Score(0.85),
             utility=Score(0.9),
-            faithfulness=Score(0.88)
+            faithfulness=Score(0.88),
         )
 
         # Test overall calculation
@@ -99,10 +107,10 @@ def test_foundation():
         assert abs(eval.overall.value - expected_overall) < 0.01
 
         # Test is_good
-        assert eval.is_good(0.8) == True
-        assert eval.is_good(0.9) == False
+        assert eval.is_good(0.8)
+        assert not eval.is_good(0.9)
 
-        results['level_2'] = True
+        results["level_2"] = True
         print("  ✅ Evaluation: multi-dimensional, aggregates correctly")
     except Exception as e:
         print(f"  ❌ Evaluation failed: {e}")
@@ -123,12 +131,12 @@ def test_foundation():
             validity=Score(0.9),
             coherence=Score(0.9),
             utility=Score(0.9),
-            faithfulness=Score(0.9)
+            faithfulness=Score(0.9),
         )
         good_step = Step("p", "a", good_eval, 1)
-        assert good_step.should_continue(0.8) == False
+        assert not good_step.should_continue(0.8)
 
-        results['level_3'] = True
+        results["level_3"] = True
         print("  ✅ Step: executes one cycle correctly")
     except Exception as e:
         print(f"  ❌ Step failed: {e}")
@@ -144,7 +152,7 @@ def test_foundation():
         assert len(session.final_answer) > 0
         assert isinstance(session.final_evaluation, Evaluation)
 
-        results['level_4'] = True
+        results["level_4"] = True
         print(f"  ✅ Session: executed {len(session.steps)} steps, stopped correctly")
     except Exception as e:
         print(f"  ❌ Session failed: {e}")
@@ -157,7 +165,7 @@ def test_foundation():
         assert isinstance(session, Session)
         assert len(session.steps) <= 2
 
-        results['level_5'] = True
+        results["level_5"] = True
         print("  ✅ Guide: OOP wrapper works correctly")
     except Exception as e:
         print(f"  ❌ Guide class failed: {e}")
@@ -165,37 +173,38 @@ def test_foundation():
     # Summary
     passed = sum(results.values())
     total = len(results)
-    print(f"\n{'='*80}")
+    print(f"\n{'=' * 80}")
     print(f"FOUNDATION TESTS: {passed}/{total} passed")
-    print(f"{'='*80}")
+    print(f"{'=' * 80}")
 
     return results
+
 
 # ============================================================================
 # TEST SUITE 2: PATTERN TESTS
 # ============================================================================
 
+
 def test_patterns():
     """Test every design pattern."""
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("TESTING DESIGN PATTERNS")
-    print("="*80)
+    print("=" * 80)
 
     results = {
-        'strategy': False,
-        'chain': False,
-        'observer': False,
-        'decorator': False,
-        'factory': False,
-        'command': False,
-        'builder': False,
+        "strategy": False,
+        "chain": False,
+        "observer": False,
+        "decorator": False,
+        "factory": False,
+        "command": False,
+        "builder": False,
     }
 
     # Pattern 1: Strategy
     print("\n[Pattern 1: Strategy]")
     try:
-        from patterns import StrategyGuide
 
         strict = StrictStrategy()
         lenient = LenientStrategy()
@@ -207,7 +216,7 @@ def test_patterns():
         # Lenient should score higher than strict
         assert lenient_eval.overall.value > strict_eval.overall.value
 
-        results['strategy'] = True
+        results["strategy"] = True
         print("  ✅ Strategy: different strategies produce different results")
     except Exception as e:
         print(f"  ❌ Strategy failed: {e}")
@@ -221,7 +230,7 @@ def test_patterns():
             validity=Score(0.05),
             coherence=Score(0.05),
             utility=Score(0.05),
-            faithfulness=Score(0.05)
+            faithfulness=Score(0.05),
         )
 
         # Apply minimum score handler
@@ -232,7 +241,7 @@ def test_patterns():
         assert result.factuality.value >= 0.2
         assert result.validity.value >= 0.2
 
-        results['chain'] = True
+        results["chain"] = True
         print("  ✅ Chain: handlers modify evaluations in pipeline")
     except Exception as e:
         print(f"  ❌ Chain failed: {e}")
@@ -252,7 +261,7 @@ def test_patterns():
         # Observers should be attached
         assert len(observable._observers) == 2
 
-        results['observer'] = True
+        results["observer"] = True
         print("  ✅ Observer: observers can be attached and notified")
     except Exception as e:
         print(f"  ❌ Observer failed: {e}")
@@ -266,7 +275,7 @@ def test_patterns():
         validated = ValidationDecorator(base)
         try:
             validated.solve("hi")  # Too short
-            assert False, "Should have raised ValueError"
+            raise AssertionError("Should have raised ValueError")
         except ValueError:
             pass
 
@@ -276,7 +285,7 @@ def test_patterns():
         session2 = cached.solve("Test problem for caching")  # Should hit cache
         assert session1 is session2  # Same object from cache
 
-        results['decorator'] = True
+        results["decorator"] = True
         print("  ✅ Decorator: validation and caching work correctly")
     except Exception as e:
         print(f"  ❌ Decorator failed: {e}")
@@ -291,7 +300,7 @@ def test_patterns():
         assert isinstance(basic, Guide)
         assert isinstance(cached, CachingDecorator)
 
-        results['factory'] = True
+        results["factory"] = True
         print("  ✅ Factory: creates different guide types correctly")
     except Exception as e:
         print(f"  ❌ Factory failed: {e}")
@@ -312,7 +321,7 @@ def test_patterns():
         assert len(results_list) == 2
         assert all(isinstance(r, Session) for r in results_list)
 
-        results['command'] = True
+        results["command"] = True
         print("  ✅ Command: queues and executes commands")
     except Exception as e:
         print(f"  ❌ Command failed: {e}")
@@ -321,17 +330,18 @@ def test_patterns():
     print("\n[Pattern 7: Builder]")
     try:
         builder = SessionBuilder()
-        session = (builder
-                   .with_problem("Built problem")
-                   .with_max_iterations(5)
-                   .with_quality_threshold(0.85)
-                   .build())
+        session = (
+            builder.with_problem("Built problem")
+            .with_max_iterations(5)
+            .with_quality_threshold(0.85)
+            .build()
+        )
 
         assert session.problem == "Built problem"
         assert session.max_iterations == 5
         assert session.quality_threshold == 0.85
 
-        results['builder'] = True
+        results["builder"] = True
         print("  ✅ Builder: fluent interface constructs correctly")
     except Exception as e:
         print(f"  ❌ Builder failed: {e}")
@@ -339,39 +349,37 @@ def test_patterns():
     # Summary
     passed = sum(results.values())
     total = len(results)
-    print(f"\n{'='*80}")
+    print(f"\n{'=' * 80}")
     print(f"PATTERN TESTS: {passed}/{total} passed")
-    print(f"{'='*80}")
+    print(f"{'=' * 80}")
 
     return results
+
 
 # ============================================================================
 # TEST SUITE 3: INTEGRATION TESTS
 # ============================================================================
 
+
 def test_integration():
     """Test patterns working together."""
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("INTEGRATION TESTS")
-    print("="*80)
+    print("=" * 80)
 
     print("\n[Test: Decorator Stacking]")
     try:
         # Stack multiple decorators
         base = Guide(max_iterations=2)
-        decorated = TimingDecorator(
-            CachingDecorator(
-                ValidationDecorator(base)
-            )
-        )
+        decorated = TimingDecorator(CachingDecorator(ValidationDecorator(base)))
 
         # Should validate, cache, and time
         session = decorated.solve("Valid test problem here")
         assert len(session.steps) > 0
 
         # Second call should hit cache
-        session2 = decorated.solve("Valid test problem here")
+        decorated.solve("Valid test problem here")
 
         print("  ✅ Decorators stack correctly")
     except Exception as e:
@@ -421,16 +429,18 @@ def test_integration():
     except Exception as e:
         print(f"  ❌ Command queue failed: {e}")
 
+
 # ============================================================================
 # BUILD ON RESULTS: NEW CAPABILITY
 # ============================================================================
 
+
 def build_composite_pattern():
     """Based on test results, build Composite pattern for guide trees."""
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("BUILDING NEW: COMPOSITE PATTERN")
-    print("="*80)
+    print("=" * 80)
 
     print("\nBased on test results, we need a way to compose guides hierarchically.")
     print("Implementing Composite pattern...\n")
@@ -537,15 +547,16 @@ if __name__ == "__main__":
     print("  - CompositeGuide (manages children)")
     print("  - VotingGuide (majority voting)")
 
+
 # ============================================================================
 # MAIN
 # ============================================================================
 
 if __name__ == "__main__":
-    print("="*80)
+    print("=" * 80)
     print("COMPREHENSIVE TEST SUITE")
     print("Testing foundation, patterns, integration, and building new capabilities")
-    print("="*80)
+    print("=" * 80)
 
     # Run all tests
     foundation_results = test_foundation()
@@ -556,9 +567,9 @@ if __name__ == "__main__":
     build_composite_pattern()
 
     # Final summary
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("COMPLETE TEST SUMMARY")
-    print("="*80)
+    print("=" * 80)
 
     foundation_passed = sum(foundation_results.values())
     foundation_total = len(foundation_results)
@@ -567,8 +578,8 @@ if __name__ == "__main__":
 
     print(f"\nFoundation: {foundation_passed}/{foundation_total} levels working")
     print(f"Patterns:   {pattern_passed}/{pattern_total} patterns working")
-    print(f"Integration: All tested")
-    print(f"New Build:   Composite pattern created")
+    print("Integration: All tested")
+    print("New Build:   Composite pattern created")
 
     total_passed = foundation_passed + pattern_passed
     total_tests = foundation_total + pattern_total
@@ -581,4 +592,4 @@ if __name__ == "__main__":
     else:
         print(f"\n⚠️  {total_tests - total_passed} tests failed")
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)

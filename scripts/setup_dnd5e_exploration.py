@@ -177,12 +177,12 @@ Explore and document the installation process for {project_info["name"]}. Learn 
 
 ## Project Information
 
-**GitHub URL**: `{project_info["url"]}`  
-**Project Name**: `{project_info["name"]}`  
-**Repository Owner**: `{owner}`  
-**Repository Name**: `{repo}`  
-**Category**: {project_info["category"]}  
-**Priority**: {project_info["priority"]}  
+**GitHub URL**: `{project_info["url"]}`
+**Project Name**: `{project_info["name"]}`
+**Repository Owner**: `{owner}`
+**Repository Name**: `{repo}`
+**Category**: {project_info["category"]}
+**Priority**: {project_info["priority"]}
 **Language/Stack**: [To be determined]
 
 {f"**Note**: {project_info.get('note', '')}" if project_info.get("note") else ""}

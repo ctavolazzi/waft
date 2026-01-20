@@ -54,14 +54,13 @@ def run_tavern_scenario(character: DnD5eCharacter, being: Being) -> dict[str, An
 
     # Simulate game play with piped input
     # Character name, first choice, read note, final choice
-    input_sequence = "TestCharacter\n1\ny\n1\n"
 
     # Run the scenario
     try:
         import io
 
         # Capture output
-        output_buffer = io.StringIO()
+        io.StringIO()
 
         # We'll simulate the key events
         # Stand up slowly (choice 1) - Perception check
@@ -242,14 +241,14 @@ def generate_comprehensive_report(
 
     # Abstract
     abstract = f"""
-This report documents a comprehensive scientific experiment combining interactive game play 
-with systematic hypothesis testing. We tested the hypothesis that higher investigation and 
-perception skills improve decision quality and fitness outcomes in a D&D 5e tavern scenario. 
-The experiment captured initial state (A), collected data during game play (C), and captured 
-final state (B), demonstrating the complete scientific method cycle. Results show that 
-characters with investigation skill > 40 and perception skill > 25 gained {results.get("fitness_gained", 0):.1f} 
-fitness points, {"" if results.get("prediction_match") else "not "}verifying the hypothesis with 
-{analysis.confidence:.1%} confidence. This experiment proves that the scientific method tool 
+This report documents a comprehensive scientific experiment combining interactive game play
+with systematic hypothesis testing. We tested the hypothesis that higher investigation and
+perception skills improve decision quality and fitness outcomes in a D&D 5e tavern scenario.
+The experiment captured initial state (A), collected data during game play (C), and captured
+final state (B), demonstrating the complete scientific method cycle. Results show that
+characters with investigation skill > 40 and perception skill > 25 gained {results.get("fitness_gained", 0):.1f}
+fitness points, {"" if results.get("prediction_match") else "not "}verifying the hypothesis with
+{analysis.confidence:.1%} confidence. This experiment proves that the scientific method tool
 works end-to-end, from hypothesis formation through data collection to analysis and reporting.
     """.strip()
 
@@ -269,8 +268,8 @@ date: "{timestamp}"
 
 # 1. Introduction
 
-This experiment demonstrates the complete scientific method workflow by combining interactive 
-game play (the tavern scenario) with systematic hypothesis testing. We used the WAFT scientific 
+This experiment demonstrates the complete scientific method workflow by combining interactive
+game play (the tavern scenario) with systematic hypothesis testing. We used the WAFT scientific
 method tool to:
 
 1. Form a testable hypothesis about character skill performance
@@ -384,46 +383,46 @@ This experiment **PROVES** that the scientific method tool works end-to-end:
 
 ## 9.1 State Capture Works
 
-✅ **Initial State (A) Captured**: State hash `{initial_state.state_hash[:16]}...`  
-✅ **Final State (B) Captured**: State hash `{final_state.state_hash[:16]}...`  
+✅ **Initial State (A) Captured**: State hash `{initial_state.state_hash[:16]}...`
+✅ **Final State (B) Captured**: State hash `{final_state.state_hash[:16]}...`
 ✅ **State Comparison**: Successfully compared states A and B
 
 ## 9.2 Data Collection Works
 
-✅ **Data Series Collected**: {data_series_count} series  
-✅ **Data Points Recorded**: {total_data_points} total points  
+✅ **Data Series Collected**: {data_series_count} series
+✅ **Data Points Recorded**: {total_data_points} total points
 ✅ **Fitness Tracking**: Initial fitness recorded, final fitness recorded
 
 ## 9.3 Experiment Execution Works
 
-✅ **Experiment Created**: ID `{experiment.experiment_id}`  
-✅ **Game Play Executed**: Tavern scenario ran successfully  
+✅ **Experiment Created**: ID `{experiment.experiment_id}`
+✅ **Game Play Executed**: Tavern scenario ran successfully
 ✅ **Results Captured**: All results saved to experiment data
 
 ## 9.4 Analysis Works
 
-✅ **Hypothesis Tested**: Hypothesis verified/refuted with {analysis.confidence:.1%} confidence  
-✅ **Analysis Generated**: Complete analysis with conclusions  
+✅ **Hypothesis Tested**: Hypothesis verified/refuted with {analysis.confidence:.1%} confidence
+✅ **Analysis Generated**: Complete analysis with conclusions
 ✅ **Evidence-Based**: All conclusions supported by collected data
 
 ## 9.5 File Persistence Works
 
-✅ **Experiment Files**: Saved to `_science/experiments/`  
-✅ **State Files**: Saved to experiment directory  
-✅ **Data Files**: Saved to `_science/data/`  
+✅ **Experiment Files**: Saved to `_science/experiments/`
+✅ **State Files**: Saved to experiment directory
+✅ **Data Files**: Saved to `_science/data/`
 ✅ **All Data Recoverable**: Complete experiment can be reconstructed from files
 
 ## 9.6 Complete Scientific Method Cycle
 
-✅ **Observe**: System detected patterns in character performance  
-✅ **Hypothesize**: Formulated testable hypothesis  
-✅ **Design**: Created experiment with variables  
-✅ **Capture State A**: Initial state saved  
-✅ **Run Experiment**: Game play executed with data collection  
-✅ **Collect Data C**: Continuous measurements recorded  
-✅ **Capture State B**: Final state saved  
-✅ **Analyze**: Results analyzed and hypothesis verified/refuted  
-✅ **Report**: Comprehensive documentation generated  
+✅ **Observe**: System detected patterns in character performance
+✅ **Hypothesize**: Formulated testable hypothesis
+✅ **Design**: Created experiment with variables
+✅ **Capture State A**: Initial state saved
+✅ **Run Experiment**: Game play executed with data collection
+✅ **Collect Data C**: Continuous measurements recorded
+✅ **Capture State B**: Final state saved
+✅ **Analyze**: Results analyzed and hypothesis verified/refuted
+✅ **Report**: Comprehensive documentation generated
 ✅ **Print**: PDF printed to material world
 
 # 10. Conclusions
@@ -449,8 +448,8 @@ This experiment successfully demonstrates:
 
 ---
 
-**Generated**: {timestamp}  
-**Experiment ID**: `{experiment.experiment_id}`  
+**Generated**: {timestamp}
+**Experiment ID**: `{experiment.experiment_id}`
 **Report Type**: Comprehensive Scientific Experiment Report with Proof
 """
 

@@ -16,13 +16,13 @@ Run examples:
     python examples/guide_examples.py --all
 """
 
+import argparse
 import sys
 from pathlib import Path
-import argparse
-from typing import Optional
 
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+
 
 # Mock LLM for examples
 class ExampleLLM:
@@ -219,20 +219,23 @@ OAuth 2.0 is an authorization framework that allows applications to access resou
 
         return f"Example response #{self.call_count}"
 
+
 # ============================================================================
 # Example 1: Code Review Assistance
 # ============================================================================
 
+
 def example_code_review():
     """Demonstrate code review guidance."""
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("  Example 1: Code Review Assistance")
-    print("="*80 + "\n")
+    print("=" * 80 + "\n")
 
     try:
         from waft.pantheon import TheGuide
     except:
         import importlib.util
+
         guide_path = Path(__file__).parent.parent / "src" / "waft" / "pantheon" / "guide.py"
         spec = importlib.util.spec_from_file_location("guide", guide_path)
         guide_module = importlib.util.module_from_spec(spec)
@@ -242,9 +245,7 @@ def example_code_review():
     # Create guide with example LLM
     client_llm = ExampleLLM()
     guide = TheGuide(
-        project_path=Path.cwd(),
-        client_llm=client_llm,
-        guide_llm_config={"model": "example"}
+        project_path=Path.cwd(), client_llm=client_llm, guide_llm_config={"model": "example"}
     )
     guide.guide_llm = ExampleLLM()
 
@@ -264,7 +265,7 @@ def process_data(file_path):
 ```
 """,
         max_iterations=3,
-        quality_threshold=0.85
+        quality_threshold=0.85,
     )
 
     print("✅ Code Review Complete!\n")
@@ -274,20 +275,23 @@ def process_data(file_path):
 
     return protocol
 
+
 # ============================================================================
 # Example 2: Architecture Design
 # ============================================================================
 
+
 def example_architecture_design():
     """Demonstrate architecture design assistance."""
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("  Example 2: Architecture Design Assistance")
-    print("="*80 + "\n")
+    print("=" * 80 + "\n")
 
     try:
         from waft.pantheon import TheGuide
     except:
         import importlib.util
+
         guide_path = Path(__file__).parent.parent / "src" / "waft" / "pantheon" / "guide.py"
         spec = importlib.util.spec_from_file_location("guide", guide_path)
         guide_module = importlib.util.module_from_spec(spec)
@@ -296,9 +300,7 @@ def example_architecture_design():
 
     client_llm = ExampleLLM()
     guide = TheGuide(
-        project_path=Path.cwd(),
-        client_llm=client_llm,
-        guide_llm_config={"model": "example"}
+        project_path=Path.cwd(), client_llm=client_llm, guide_llm_config={"model": "example"}
     )
     guide.guide_llm = ExampleLLM()
 
@@ -311,7 +313,7 @@ def example_architecture_design():
 - Multi-device sync
 """,
         max_iterations=3,
-        quality_threshold=0.85
+        quality_threshold=0.85,
     )
 
     print("✅ Architecture Design Complete!\n")
@@ -321,20 +323,23 @@ def example_architecture_design():
 
     return protocol
 
+
 # ============================================================================
 # Example 3: Debugging Assistance
 # ============================================================================
 
+
 def example_debugging():
     """Demonstrate debugging assistance."""
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("  Example 3: Debugging Assistance")
-    print("="*80 + "\n")
+    print("=" * 80 + "\n")
 
     try:
         from waft.pantheon import TheGuide
     except:
         import importlib.util
+
         guide_path = Path(__file__).parent.parent / "src" / "waft" / "pantheon" / "guide.py"
         spec = importlib.util.spec_from_file_location("guide", guide_path)
         guide_module = importlib.util.module_from_spec(spec)
@@ -343,9 +348,7 @@ def example_debugging():
 
     client_llm = ExampleLLM()
     guide = TheGuide(
-        project_path=Path.cwd(),
-        client_llm=client_llm,
-        guide_llm_config={"model": "example"}
+        project_path=Path.cwd(), client_llm=client_llm, guide_llm_config={"model": "example"}
     )
     guide.guide_llm = ExampleLLM()
 
@@ -363,7 +366,7 @@ Code at line 42:
 Context: This started happening after recent database migration.
 """,
         max_iterations=2,
-        quality_threshold=0.90
+        quality_threshold=0.90,
     )
 
     print("✅ Debugging Complete!\n")
@@ -373,20 +376,23 @@ Context: This started happening after recent database migration.
 
     return protocol
 
+
 # ============================================================================
 # Example 4: Learning Assistance
 # ============================================================================
 
+
 def example_learning():
     """Demonstrate learning assistance."""
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("  Example 4: Learning Assistance")
-    print("="*80 + "\n")
+    print("=" * 80 + "\n")
 
     try:
         from waft.pantheon import TheGuide
     except:
         import importlib.util
+
         guide_path = Path(__file__).parent.parent / "src" / "waft" / "pantheon" / "guide.py"
         spec = importlib.util.spec_from_file_location("guide", guide_path)
         guide_module = importlib.util.module_from_spec(spec)
@@ -395,16 +401,14 @@ def example_learning():
 
     client_llm = ExampleLLM()
     guide = TheGuide(
-        project_path=Path.cwd(),
-        client_llm=client_llm,
-        guide_llm_config={"model": "example"}
+        project_path=Path.cwd(), client_llm=client_llm, guide_llm_config={"model": "example"}
     )
     guide.guide_llm = ExampleLLM()
 
     answer, protocol = guide.solve(
         problem_statement="Explain OAuth 2.0 in simple terms with a practical example.",
         max_iterations=2,
-        quality_threshold=0.90
+        quality_threshold=0.90,
     )
 
     print("✅ Learning Session Complete!\n")
@@ -414,20 +418,23 @@ def example_learning():
 
     return protocol
 
+
 # ============================================================================
 # Example 5: Integration with TheReasoner
 # ============================================================================
 
+
 def example_reasoner_integration():
     """Demonstrate integration with TheReasoner."""
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("  Example 5: TheReasoner Integration")
-    print("="*80 + "\n")
+    print("=" * 80 + "\n")
 
     try:
-        from waft.pantheon import TheGuide, TheReasoner
+        from waft.pantheon import TheGuide
     except:
         import importlib.util
+
         pantheon_path = Path(__file__).parent.parent / "src" / "waft" / "pantheon"
 
         # Import TheGuide
@@ -439,16 +446,13 @@ def example_reasoner_integration():
 
     client_llm = ExampleLLM()
     guide = TheGuide(
-        project_path=Path.cwd(),
-        client_llm=client_llm,
-        guide_llm_config={"model": "example"}
+        project_path=Path.cwd(), client_llm=client_llm, guide_llm_config={"model": "example"}
     )
     guide.guide_llm = ExampleLLM()
 
     # Run a session
     answer, protocol = guide.solve(
-        problem_statement="How do I implement a caching strategy?",
-        max_iterations=2
+        problem_statement="How do I implement a caching strategy?", max_iterations=2
     )
 
     print("✅ Session Complete!\n")
@@ -470,16 +474,21 @@ def example_reasoner_integration():
 
     return protocol
 
+
 # ============================================================================
 # Main
 # ============================================================================
 
+
 def main():
     """Run examples."""
     parser = argparse.ArgumentParser(description="TheGuide Examples")
-    parser.add_argument("--example", "-e", choices=[
-        "code_review", "architecture", "debug", "learning", "reasoner"
-    ], help="Run specific example")
+    parser.add_argument(
+        "--example",
+        "-e",
+        choices=["code_review", "architecture", "debug", "learning", "reasoner"],
+        help="Run specific example",
+    )
     parser.add_argument("--all", "-a", action="store_true", help="Run all examples")
 
     args = parser.parse_args()
@@ -489,7 +498,7 @@ def main():
         "architecture": example_architecture_design,
         "debug": example_debugging,
         "learning": example_learning,
-        "reasoner": example_reasoner_integration
+        "reasoner": example_reasoner_integration,
     }
 
     if args.all:
@@ -499,6 +508,7 @@ def main():
             except Exception as e:
                 print(f"❌ Example '{name}' failed: {e}")
                 import traceback
+
                 traceback.print_exc()
     elif args.example:
         examples[args.example]()
@@ -510,6 +520,7 @@ def main():
         print("\nUsage:")
         print("  python examples/guide_examples.py --example code_review")
         print("  python examples/guide_examples.py --all")
+
 
 if __name__ == "__main__":
     main()

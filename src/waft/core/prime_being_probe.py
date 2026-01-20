@@ -159,7 +159,7 @@ class PrimeBeingProbe:
 
         This is the Prime Being's way of sensing the world.
         """
-        start_time = time.time()
+        time.time()
 
         # Determine probe type if auto
         if probe_type == "auto":

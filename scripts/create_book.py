@@ -30,20 +30,20 @@ def create_sample_chapters() -> list[dict[str, Any]]:
         {
             "title": "Chapter 1: The Beginning",
             "content": """
-            In a world where magic flows through every stone and tree, 
-            a group of adventurers gathered at the ancient tavern known 
-            as The Wandering Star. The tavern keeper, a wise old dwarf 
+            In a world where magic flows through every stone and tree,
+            a group of adventurers gathered at the ancient tavern known
+            as The Wandering Star. The tavern keeper, a wise old dwarf
             named Thorgrim, had seen many heroes come and go.
-            
-            Tonight was different. The stars aligned in a way that hadn't 
-            been seen in a thousand years. The adventurers felt a pull, 
+
+            Tonight was different. The stars aligned in a way that hadn't
+            been seen in a thousand years. The adventurers felt a pull,
             a calling to something greater than themselves.
-            
-            As they sat around the fire, sharing stories and ale, a 
-            mysterious figure entered the tavern. Cloaked in shadows 
+
+            As they sat around the fire, sharing stories and ale, a
+            mysterious figure entered the tavern. Cloaked in shadows
             and carrying an ancient tome, the stranger approached their table.
-            
-            "I have been waiting for you," the figure said, placing the 
+
+            "I have been waiting for you," the figure said, placing the
             tome on the table. "Your destiny begins tonight."
             """,
             "read_aloud": [
@@ -57,21 +57,21 @@ def create_sample_chapters() -> list[dict[str, Any]]:
         {
             "title": "Chapter 2: The Quest",
             "content": """
-            The tome opened of its own accord, revealing a map of the 
-            realm marked with glowing runes. The adventurers leaned in, 
+            The tome opened of its own accord, revealing a map of the
+            realm marked with glowing runes. The adventurers leaned in,
             their eyes wide with wonder and anticipation.
-            
-            "The Dark Lord has awakened," the stranger explained. "Only 
-            you can stop him. But first, you must gather the three 
-            artifacts of power: the Sword of Light, the Shield of Truth, 
+
+            "The Dark Lord has awakened," the stranger explained. "Only
+            you can stop him. But first, you must gather the three
+            artifacts of power: the Sword of Light, the Shield of Truth,
             and the Crown of Wisdom."
-            
-            The quest was clear. The adventurers looked at each other, 
-            knowing that their lives would never be the same. They had 
+
+            The quest was clear. The adventurers looked at each other,
+            knowing that their lives would never be the same. They had
             trained for this moment, and now it was time to prove their worth.
-            
-            Thorgrim the tavern keeper approached, placing a small pouch 
-            on the table. "Take this," he said. "It contains provisions 
+
+            Thorgrim the tavern keeper approached, placing a small pouch
+            on the table. "Take this," he said. "It contains provisions
             for your journey. May the stars guide you."
             """,
             "read_aloud": [
@@ -83,24 +83,24 @@ def create_sample_chapters() -> list[dict[str, Any]]:
         {
             "title": "Chapter 3: The Journey Begins",
             "content": """
-            With the map in hand and provisions secured, the adventurers 
-            set out at dawn. The path led them through the Whispering Woods, 
+            With the map in hand and provisions secured, the adventurers
+            set out at dawn. The path led them through the Whispering Woods,
             where ancient trees seemed to watch their every move.
-            
-            As they traveled deeper into the forest, they encountered 
-            their first challenge: a bridge guarded by a riddle-speaking 
-            troll. The troll, named Grom, was not hostile but demanded 
+
+            As they traveled deeper into the forest, they encountered
+            their first challenge: a bridge guarded by a riddle-speaking
+            troll. The troll, named Grom, was not hostile but demanded
             they answer his riddle before crossing.
-            
-            "What has roots as nobody sees, is taller than trees, up, up 
-            it goes, and yet never grows?" Grom asked, his voice rumbling 
+
+            "What has roots as nobody sees, is taller than trees, up, up
+            it goes, and yet never grows?" Grom asked, his voice rumbling
             like thunder.
-            
-            After a moment of thought, one of the adventurers answered: 
-            "A mountain!" Grom smiled, a rare sight, and allowed them 
+
+            After a moment of thought, one of the adventurers answered:
+            "A mountain!" Grom smiled, a rare sight, and allowed them
             to pass.
-            
-            The journey had truly begun, and the adventurers knew that 
+
+            The journey had truly begun, and the adventurers knew that
             greater challenges lay ahead.
             """,
             "read_aloud": [
@@ -383,13 +383,13 @@ def main():
 Examples:
   # Create book with demo content
   python scripts/create_book.py "My Adventure Book" --demo
-  
+
   # Create book from text file
   python scripts/create_book.py "Campaign Book" --file story.txt
-  
+
   # Create book with inline content
   python scripts/create_book.py "My Story" --content "Chapter 1 content here..."
-  
+
   # Specify output location
   python scripts/create_book.py "My Book" --demo --output books/my_book.pdf
         """,

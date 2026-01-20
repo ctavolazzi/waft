@@ -77,10 +77,9 @@ def main():
 
     # Register with BureaucracyGod
     print("📋 Registering with BureaucracyGod...")
-    bureaucracy_record = None
     try:
         bureaucracy_god = BureaucracyGod(project_path=project_path)
-        bureaucracy_record = bureaucracy_god.register_personnel_file(
+        bureaucracy_god.register_personnel_file(
             being_id=fai_wei.being_id,
             personnel_file_path=personnel_dir,
             metadata={

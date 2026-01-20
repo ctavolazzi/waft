@@ -196,7 +196,7 @@ def merge_chronicles(
     base_achievements = set(base.get("achievements", []))
     our_achievements = set(ours.get("achievements", []))
     their_achievements = set(theirs.get("achievements", []))
-    merged["achievements"] = sorted(list(base_achievements | our_achievements | their_achievements))
+    merged["achievements"] = sorted(base_achievements | our_achievements | their_achievements)
 
     # Merge tavern_keeper_state (take latest)
     base_state = base.get("tavern_keeper_state", {})

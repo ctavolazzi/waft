@@ -28,8 +28,8 @@ def create_proof_book():
 
     content = f"""# Proof: Scientific Method Tool Works
 
-**Date**: {date_str}  
-**Status**: ✅ Verified and Documented  
+**Date**: {date_str}
+**Status**: ✅ Verified and Documented
 **Purpose**: Comprehensive proof that WAFT's scientific method tool is fully functional
 
 ---
@@ -718,8 +718,8 @@ PROOF: Scientific Method Tool with Real D&D Experiment
 
 ---
 
-**Document Generated**: {date_str}  
-**Proof Status**: ✅ Complete  
+**Document Generated**: {date_str}
+**Proof Status**: ✅ Complete
 **System Status**: ✅ Verified and Production-Ready
 
 ---

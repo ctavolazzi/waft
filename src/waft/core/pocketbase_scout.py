@@ -420,7 +420,7 @@ class PocketBaseScout(RealmScout):
             padding: 0;
             box-sizing: border-box;
         }}
-        
+
         body {{
             font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
             background: #0a0a0a;
@@ -428,85 +428,85 @@ class PocketBaseScout(RealmScout):
             padding: 20px;
             line-height: 1.6;
         }}
-        
+
         .header {{
             border-bottom: 2px solid #00ff00;
             padding-bottom: 20px;
             margin-bottom: 30px;
         }}
-        
+
         h1 {{
             color: #00ff00;
             font-size: 2em;
             margin-bottom: 10px;
         }}
-        
+
         .info {{
             color: #888;
             font-size: 0.9em;
         }}
-        
+
         .stats {{
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }}
-        
+
         .stat-card {{
             background: #1a1a1a;
             border: 1px solid #00ff00;
             padding: 15px;
             border-radius: 5px;
         }}
-        
+
         .stat-label {{
             color: #888;
             font-size: 0.8em;
             margin-bottom: 5px;
         }}
-        
+
         .stat-value {{
             color: #00ff00;
             font-size: 1.5em;
             font-weight: bold;
         }}
-        
+
         .items {{
             display: grid;
             gap: 15px;
         }}
-        
+
         .item {{
             background: #1a1a1a;
             border: 1px solid #333;
             padding: 15px;
             border-radius: 5px;
         }}
-        
+
         .item-header {{
             display: flex;
             gap: 10px;
             margin-bottom: 10px;
             align-items: center;
         }}
-        
+
         .status {{
             font-size: 1.2em;
         }}
-        
+
         .type {{
             background: #333;
             padding: 3px 8px;
             border-radius: 3px;
             font-size: 0.8em;
         }}
-        
+
         .target {{
             color: #00ff00;
             flex: 1;
         }}
-        
+
         .item-data {{
             background: #0a0a0a;
             padding: 10px;
@@ -514,20 +514,20 @@ class PocketBaseScout(RealmScout):
             max-height: 200px;
             overflow-y: auto;
         }}
-        
+
         .item-data pre {{
             color: #888;
             font-size: 0.85em;
             white-space: pre-wrap;
             word-wrap: break-word;
         }}
-        
+
         .network-section {{
             margin-top: 40px;
             padding-top: 30px;
             border-top: 2px solid #00ff00;
         }}
-        
+
         .network-graph {{
             margin-top: 20px;
             background: #1a1a1a;
@@ -536,14 +536,14 @@ class PocketBaseScout(RealmScout):
             border-radius: 5px;
             min-height: 400px;
         }}
-        
+
         .node-list {{
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 10px;
             margin-top: 20px;
         }}
-        
+
         .network-node {{
             background: #0a0a0a;
             border: 1px solid #333;
@@ -552,55 +552,55 @@ class PocketBaseScout(RealmScout):
             cursor: pointer;
             transition: all 0.2s;
         }}
-        
+
         .network-node:hover {{
             border-color: #00ff00;
             background: #1a1a1a;
         }}
-        
+
         .network-node.selected {{
             border-color: #00ff00;
             background: #0f3f0f;
         }}
-        
+
         .node-type {{
             color: #888;
             font-size: 0.8em;
         }}
-        
+
         .node-connections {{
             color: #00ff00;
             font-size: 0.9em;
             margin-top: 5px;
         }}
-        
+
         svg {{
             width: 100%;
             height: 400px;
             background: #0a0a0a;
         }}
-        
+
         .link {{
             stroke: #333;
             stroke-width: 2px;
         }}
-        
+
         .link.active {{
             stroke: #00ff00;
             stroke-width: 3px;
         }}
-        
+
         .node-circle {{
             fill: #00ff00;
             stroke: #0a0a0a;
             stroke-width: 2px;
             cursor: pointer;
         }}
-        
+
         .node-circle:hover {{
             fill: #00ff88;
         }}
-        
+
         .node-label {{
             fill: #00ff00;
             font-size: 10px;
@@ -617,7 +617,7 @@ class PocketBaseScout(RealmScout):
             Realm Path: {self.realm_path}
         </div>
     </div>
-    
+
     <div class="stats">
         <div class="stat-card">
             <div class="stat-label">Items Probed</div>
@@ -632,24 +632,24 @@ class PocketBaseScout(RealmScout):
             <div class="stat-value">{sum(1 for r in probe_results if not r.get("success"))}</div>
         </div>
     </div>
-    
+
     <div class="items">
         {items_html}
     </div>
-    
+
     {network_html}
-    
+
     <script>
         // Tendril Network Visualization
         const networkData = {{
             nodes: {json.dumps(nodes_data)},
             tendrils: {json.dumps(tendrils_data)}
         }};
-        
+
         // Simple network visualization
         if (networkData.nodes.length > 0) {{
             const nodeList = document.getElementById('node-list');
-            
+
             networkData.nodes.forEach(node => {{
                 const nodeEl = document.createElement('div');
                 nodeEl.className = 'network-node';
@@ -659,37 +659,37 @@ class PocketBaseScout(RealmScout):
                     <div>${{node.path.split('/').pop()}}</div>
                     <div class="node-connections">${{node.connections}} connections</div>
                 `;
-                
+
                 nodeEl.addEventListener('click', () => {{
                     // Highlight node
                     document.querySelectorAll('.network-node').forEach(n => n.classList.remove('selected'));
                     nodeEl.classList.add('selected');
-                    
+
                     // Show connections
-                    const connectedTendrils = networkData.tendrils.filter(t => 
+                    const connectedTendrils = networkData.tendrils.filter(t =>
                         t.from === node.id || t.to === node.id
                     );
                     console.log(`Node ${{node.id}} has ${{connectedTendrils.length}} tendrils`);
                 }});
-                
+
                 nodeList.appendChild(nodeEl);
             }});
         }}
-        
+
         // Network traversal function
         function traverseNetwork(startNodeId, maxDepth = 3) {{
             const visited = new Set();
             const queue = [[startNodeId, 0]];
             const path = [];
-            
+
             while (queue.length > 0) {{
                 const [nodeId, depth] = queue.shift();
-                
+
                 if (visited.has(nodeId) || depth > maxDepth) continue;
-                
+
                 visited.add(nodeId);
                 path.push(nodeId);
-                
+
                 // Find connected nodes
                 networkData.tendrils.forEach(tendril => {{
                     if (tendril.from === nodeId && !visited.has(tendril.to)) {{
@@ -700,14 +700,14 @@ class PocketBaseScout(RealmScout):
                     }}
                 }});
             }}
-            
+
             return path;
         }}
-        
+
         // Make traversal available globally
         window.traverseNetwork = traverseNetwork;
         window.networkData = networkData;
-        
+
         console.log('🌐 Tendril Network loaded:', networkData.nodes.length, 'nodes,', networkData.tendrils.length, 'tendrils');
         console.log('💡 Try: traverseNetwork(networkData.nodes[0].id) to traverse from first node');
     </script>
@@ -1065,7 +1065,7 @@ class PocketBaseScout(RealmScout):
                 # Find a representative node to send from
                 if self.tendril_network.nodes:
                     first_node_id = list(self.tendril_network.nodes.keys())[0]
-                    string = self.tendril_network.send_string(
+                    self.tendril_network.send_string(
                         from_node_id=first_node_id,
                         to_node_id=root_node.node_id,
                         message_type="network_stats",
@@ -1082,7 +1082,7 @@ class PocketBaseScout(RealmScout):
                 vision_summary = mission_data["vision"].get("vision_summary", {})
                 if self.tendril_network.nodes:
                     first_node_id = list(self.tendril_network.nodes.keys())[0]
-                    string = self.tendril_network.send_string(
+                    self.tendril_network.send_string(
                         from_node_id=first_node_id,
                         to_node_id=root_node.node_id,
                         message_type="vision_report",
@@ -1102,7 +1102,7 @@ class PocketBaseScout(RealmScout):
                 }
                 if self.tendril_network.nodes:
                     first_node_id = list(self.tendril_network.nodes.keys())[0]
-                    string = self.tendril_network.send_string(
+                    self.tendril_network.send_string(
                         from_node_id=first_node_id,
                         to_node_id=root_node.node_id,
                         message_type="probe_report",

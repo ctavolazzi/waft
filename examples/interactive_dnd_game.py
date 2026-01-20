@@ -278,7 +278,6 @@ class CombatEncounter:
             console.print(f"[yellow]+[/yellow] Found {gold_gain} gp")
 
             # Check for level up (simple: every 100 XP = level up)
-            old_level = game_state.character.level
             # For simplicity, we'll just increment level after encounters
             if game_state.encounters_completed > 0 and game_state.encounters_completed % 3 == 0:
                 game_state.character.level += 1

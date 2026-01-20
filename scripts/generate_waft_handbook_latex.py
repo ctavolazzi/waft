@@ -188,12 +188,12 @@ LATEX_FIELD_GUIDE_TEMPLATE = r"""
 \begin{titlepage}
     \centering
     \vspace*{0.5in}
-    
+
     % Series and number
     {\Large\bfseries\textsc{${series} ${number}}}
-    
+
     \vspace{0.3in}
-    
+
     % Title
     \begin{tcolorbox}[
         colback=white,
@@ -213,9 +213,9 @@ LATEX_FIELD_GUIDE_TEMPLATE = r"""
     {\Large ${subtitle}}
     {% endif %}
     \end{tcolorbox}
-    
+
     \vfill
-    
+
     {% if classification %}
     \begin{tcolorbox}[
         colback=fieldguideyellow,
@@ -227,16 +227,16 @@ LATEX_FIELD_GUIDE_TEMPLATE = r"""
     {\Large\bfseries ${classification}}
     \end{tcolorbox}
     {% endif %}
-    
+
     \vspace{0.3in}
-    
+
     {% if issued_by %}
     \textbf{Issued by:} ${issued_by}\\
     {% endif %}
     {% if date %}
     \textbf{Date:} ${date}
     {% endif %}
-    
+
     \vspace{0.5in}
 \end{titlepage}
 
@@ -355,7 +355,7 @@ def convert_markdown_to_latex(markdown: str) -> str:
     lines = latex.split("\n")
     result = []
     in_list = False
-    for i, line in enumerate(lines):
+    for _i, line in enumerate(lines):
         if line.strip().startswith("\\item"):
             if not in_list:
                 result.append("\\begin{itemize}")

@@ -92,13 +92,13 @@ class CelebrationCardGenerator:
             margin: 0;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }}
-        
+
         * {{
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }}
-        
+
         body {{
             width: 100%;
             height: 100vh;
@@ -112,7 +112,7 @@ class CelebrationCardGenerator:
             position: relative;
             overflow: hidden;
         }}
-        
+
         /* Decorative corner elements */
         body::before,
         body::after {{
@@ -122,18 +122,18 @@ class CelebrationCardGenerator:
             opacity: 0.15;
             z-index: 0;
         }}
-        
+
         body::before {{
             top: 20px;
             left: 20px;
         }}
-        
+
         body::after {{
             bottom: 20px;
             right: 20px;
             transform: rotate(180deg);
         }}
-        
+
         /* Main card container */
         .celebration-card {{
             background: #ffffff;
@@ -147,7 +147,7 @@ class CelebrationCardGenerator:
             border: 8px solid #ffd700;
             border-style: double;
         }}
-        
+
         /* Decorative border pattern */
         .celebration-card::before {{
             content: '';
@@ -161,7 +161,7 @@ class CelebrationCardGenerator:
             z-index: -1;
             opacity: 0.3;
         }}
-        
+
         /* Celebration emoji header */
         .celebration-emoji {{
             text-align: center;
@@ -170,12 +170,12 @@ class CelebrationCardGenerator:
             margin-bottom: 20px;
             animation: bounce 2s infinite;
         }}
-        
+
         @keyframes bounce {{
             0%, 100% {{ transform: translateY(0); }}
             50% {{ transform: translateY(-10px); }}
         }}
-        
+
         /* Main title */
         .celebration-title {{
             text-align: center;
@@ -186,7 +186,7 @@ class CelebrationCardGenerator:
             line-height: 1.2;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
         }}
-        
+
         /* Achievement text */
         .achievement-text {{
             text-align: center;
@@ -200,7 +200,7 @@ class CelebrationCardGenerator:
             border-radius: 15px;
             border-left: 6px solid #667eea;
         }}
-        
+
         /* Message section */
         .celebration-message {{
             font-size: 18px;
@@ -209,15 +209,15 @@ class CelebrationCardGenerator:
             text-align: center;
             margin-bottom: 40px;
         }}
-        
+
         .celebration-message p {{
             margin-bottom: 15px;
         }}
-        
+
         .celebration-message p:last-child {{
             margin-bottom: 0;
         }}
-        
+
         /* Decorative divider */
         .divider {{
             text-align: center;
@@ -226,7 +226,7 @@ class CelebrationCardGenerator:
             margin: 30px 0;
             line-height: 1;
         }}
-        
+
         /* Timestamp */
         .timestamp {{
             text-align: center;
@@ -237,7 +237,7 @@ class CelebrationCardGenerator:
             padding-top: 20px;
             border-top: 2px dashed #bdc3c7;
         }}
-        
+
         /* Signature line */
         .signature {{
             text-align: center;
@@ -245,13 +245,13 @@ class CelebrationCardGenerator:
             padding-top: 20px;
             border-top: 2px solid #ecf0f1;
         }}
-        
+
         .signature-text {{
             font-size: 16px;
             color: #95a5a6;
             font-style: italic;
         }}
-        
+
         /* Decorative stars */
         .stars {{
             text-align: center;
@@ -260,13 +260,13 @@ class CelebrationCardGenerator:
             margin: 20px 0;
             letter-spacing: 10px;
         }}
-        
+
         /* Responsive adjustments for PDF */
         @media print {{
             body {{
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             }}
-            
+
             .celebration-card {{
                 page-break-inside: avoid;
                 break-inside: avoid;
@@ -277,30 +277,30 @@ class CelebrationCardGenerator:
 <body>
     <div class="corner-emoji top-left">🎉</div>
     <div class="corner-emoji bottom-right">🎉</div>
-    
+
     <div class="celebration-card">
         <div class="celebration-emoji">🎉</div>
-        
+
         <div class="celebration-title">CELEBRATION</div>
-        
+
         <div class="stars">✦ ✦ ✦</div>
-        
+
         <div class="achievement-text">{achievement_escaped}</div>
-        
+
         <div class="divider">━━━━━━━━━━━━━━━━━━━━</div>
-        
+
         <div class="celebration-message">
             {"".join(f"<p>{paragraph}</p>" for paragraph in message_paragraphs)}
         </div>
-        
+
         <div class="divider">━━━━━━━━━━━━━━━━━━━━</div>
-        
+
         <div class="stars">✦ ✦ ✦</div>
-        
+
         <div class="signature">
             <div class="signature-text">Generated with WAFT Celebration System</div>
         </div>
-        
+
         <div class="timestamp">
             {timestamp}
         </div>

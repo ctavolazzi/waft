@@ -212,7 +212,7 @@ class Visualizer:
                 index_file = item / "index.md"
                 if index_file.exists():
                     try:
-                        content = index_file.read_text()
+                        index_file.read_text()
                         # Extract basic info
                         work_efforts.append(
                             {
@@ -335,7 +335,7 @@ class Visualizer:
             padding: 0;
             box-sizing: border-box;
         }}
-        
+
         :root {{
             --primary: #7c9eff;
             --primary-dark: #6b8eff;
@@ -357,27 +357,27 @@ class Visualizer:
             --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             --gradient-bg: linear-gradient(135deg, #0a0e1a 0%, #1a1e29 50%, #0f1419 100%);
         }}
-        
+
         @keyframes fadeIn {{
             from {{ opacity: 0; transform: translateY(20px); }}
             to {{ opacity: 1; transform: translateY(0); }}
         }}
-        
+
         @keyframes slideIn {{
             from {{ opacity: 0; transform: translateX(-20px); }}
             to {{ opacity: 1; transform: translateX(0); }}
         }}
-        
+
         @keyframes pulse {{
             0%, 100% {{ opacity: 1; }}
             50% {{ opacity: 0.7; }}
         }}
-        
+
         @keyframes shimmer {{
             0% {{ background-position: -1000px 0; }}
             100% {{ background-position: 1000px 0; }}
         }}
-        
+
         body {{
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', 'SF Pro Display', Oxygen, Ubuntu, Cantarell, sans-serif;
             background: var(--gradient-bg);
@@ -389,13 +389,13 @@ class Visualizer:
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }}
-        
+
         .container {{
             max-width: 1600px;
             margin: 0 auto;
             animation: fadeIn 0.6s ease-out;
         }}
-        
+
         .header {{
             background: linear-gradient(135deg, rgba(124, 158, 255, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
             backdrop-filter: blur(10px);
@@ -408,7 +408,7 @@ class Visualizer:
             overflow: hidden;
             animation: slideIn 0.5s ease-out;
         }}
-        
+
         .header::before {{
             content: '';
             position: absolute;
@@ -418,7 +418,7 @@ class Visualizer:
             height: 4px;
             background: var(--gradient-primary);
         }}
-        
+
         .header h1 {{
             color: var(--primary-light);
             font-size: clamp(2rem, 5vw, 3.5rem);
@@ -427,7 +427,7 @@ class Visualizer:
             letter-spacing: -0.02em;
             text-shadow: 0 2px 20px rgba(124, 158, 255, 0.3);
         }}
-        
+
         .header .subtitle {{
             color: var(--text-secondary);
             font-size: clamp(0.9rem, 2vw, 1.2rem);
@@ -436,19 +436,19 @@ class Visualizer:
             gap: 12px;
             flex-wrap: wrap;
         }}
-        
+
         .header .subtitle::before {{
             content: '⚡';
             font-size: 1.2em;
         }}
-        
+
         .grid {{
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
             gap: 24px;
             margin-bottom: 24px;
         }}
-        
+
         .card {{
             background: var(--bg-card);
             border-radius: 16px;
@@ -460,21 +460,21 @@ class Visualizer:
             overflow: hidden;
             animation: fadeIn 0.6s ease-out backwards;
         }}
-        
+
         .card:nth-child(1) {{ animation-delay: 0.1s; }}
         .card:nth-child(2) {{ animation-delay: 0.2s; }}
         .card:nth-child(3) {{ animation-delay: 0.3s; }}
         .card:nth-child(4) {{ animation-delay: 0.4s; }}
         .card:nth-child(5) {{ animation-delay: 0.5s; }}
         .card:nth-child(6) {{ animation-delay: 0.6s; }}
-        
+
         .card:hover {{
             transform: translateY(-4px);
             box-shadow: var(--shadow-lg);
             border-color: rgba(124, 158, 255, 0.4);
             background: var(--bg-card-hover);
         }}
-        
+
         .card::before {{
             content: '';
             position: absolute;
@@ -486,11 +486,11 @@ class Visualizer:
             opacity: 0;
             transition: opacity 0.3s ease;
         }}
-        
+
         .card:hover::before {{
             opacity: 1;
         }}
-        
+
         .card h2 {{
             color: var(--text-primary);
             margin-bottom: 20px;
@@ -505,7 +505,7 @@ class Visualizer:
             gap: 10px;
             transition: all 0.2s ease;
         }}
-        
+
         .card h2::before {{
             content: '';
             width: 4px;
@@ -513,23 +513,23 @@ class Visualizer:
             background: var(--gradient-primary);
             border-radius: 2px;
         }}
-        
+
         .card h2:hover {{
             color: var(--primary-light);
             border-color: var(--primary);
         }}
-        
+
         .card.collapsed .card-content {{
             display: none;
         }}
-        
+
         .card.collapsed h2::after {{
             content: ' ▶';
             margin-left: auto;
             font-size: 0.8em;
             opacity: 0.6;
         }}
-        
+
         .info-item {{
             margin: 12px 0;
             padding: 14px;
@@ -538,13 +538,13 @@ class Visualizer:
             border: 1px solid var(--border);
             transition: all 0.2s ease;
         }}
-        
+
         .info-item:hover {{
             background: rgba(35, 40, 52, 0.8);
             border-color: rgba(124, 158, 255, 0.3);
             transform: translateX(4px);
         }}
-        
+
         .info-label {{
             font-weight: 600;
             color: var(--text-secondary);
@@ -553,13 +553,13 @@ class Visualizer:
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }}
-        
+
         .info-value {{
             color: var(--text-primary);
             font-size: 1.05em;
             word-break: break-word;
         }}
-        
+
         .status {{
             display: inline-flex;
             align-items: center;
@@ -572,25 +572,25 @@ class Visualizer:
             letter-spacing: 0.05em;
             box-shadow: var(--shadow-sm);
         }}
-        
+
         .status.valid {{
             background: linear-gradient(135deg, rgba(74, 222, 128, 0.2), rgba(74, 222, 128, 0.1));
             color: var(--success);
             border: 1px solid rgba(74, 222, 128, 0.3);
         }}
-        
+
         .status.invalid {{
             background: linear-gradient(135deg, rgba(248, 113, 113, 0.2), rgba(248, 113, 113, 0.1));
             color: var(--error);
             border: 1px solid rgba(248, 113, 113, 0.3);
         }}
-        
+
         .status.missing {{
             background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(251, 191, 36, 0.1));
             color: var(--warning);
             border: 1px solid rgba(251, 191, 36, 0.3);
         }}
-        
+
         .file-list {{
             list-style: none;
             margin-top: 12px;
@@ -598,25 +598,25 @@ class Visualizer:
             overflow-y: auto;
             padding-right: 8px;
         }}
-        
+
         .file-list::-webkit-scrollbar {{
             width: 6px;
         }}
-        
+
         .file-list::-webkit-scrollbar-track {{
             background: rgba(26, 30, 41, 0.5);
             border-radius: 3px;
         }}
-        
+
         .file-list::-webkit-scrollbar-thumb {{
             background: var(--gradient-primary);
             border-radius: 3px;
         }}
-        
+
         .file-list::-webkit-scrollbar-thumb:hover {{
             background: var(--primary);
         }}
-        
+
         .file-list li {{
             padding: 10px 12px;
             margin: 6px 0;
@@ -627,21 +627,21 @@ class Visualizer:
             transition: all 0.2s ease;
             cursor: pointer;
         }}
-        
+
         .file-list li:hover {{
             background: rgba(35, 40, 52, 0.9);
             transform: translateX(6px);
             border-left-color: var(--primary-light);
             box-shadow: var(--shadow-sm);
         }}
-        
+
         .empty {{
             color: var(--text-muted);
             font-style: italic;
             padding: 20px;
             text-align: center;
         }}
-        
+
         .badge {{
             display: inline-flex;
             align-items: center;
@@ -654,30 +654,30 @@ class Visualizer:
             box-shadow: var(--shadow-sm);
             transition: all 0.2s ease;
         }}
-        
+
         .badge:hover {{
             transform: scale(1.05);
             box-shadow: var(--shadow-md);
         }}
-        
+
         .badge.success {{
             background: linear-gradient(135deg, rgba(74, 222, 128, 0.2), rgba(74, 222, 128, 0.1));
             color: var(--success);
             border: 1px solid rgba(74, 222, 128, 0.3);
         }}
-        
+
         .badge.warning {{
             background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(251, 191, 36, 0.1));
             color: var(--warning);
             border: 1px solid rgba(251, 191, 36, 0.3);
         }}
-        
+
         .badge.info {{
             background: linear-gradient(135deg, rgba(96, 165, 250, 0.2), rgba(96, 165, 250, 0.1));
             color: var(--info);
             border: 1px solid rgba(96, 165, 250, 0.3);
         }}
-        
+
         .progress-bar {{
             width: 100%;
             height: 24px;
@@ -688,7 +688,7 @@ class Visualizer:
             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
             border: 1px solid var(--border);
         }}
-        
+
         .progress-fill {{
             height: 100%;
             background: var(--gradient-primary);
@@ -696,7 +696,7 @@ class Visualizer:
             position: relative;
             overflow: hidden;
         }}
-        
+
         .progress-fill::after {{
             content: '';
             position: absolute;
@@ -707,7 +707,7 @@ class Visualizer:
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
             animation: shimmer 2s infinite;
         }}
-        
+
         .commit-item {{
             padding: 14px;
             margin: 8px 0;
@@ -716,26 +716,26 @@ class Visualizer:
             border-left: 3px solid var(--primary);
             transition: all 0.2s ease;
         }}
-        
+
         .commit-item:hover {{
             background: rgba(35, 40, 52, 0.9);
             transform: translateX(4px);
             border-left-color: var(--primary-light);
         }}
-        
+
         .commit-hash {{
             font-family: 'SF Mono', 'Monaco', 'Cascadia Code', 'Roboto Mono', monospace;
             color: var(--primary-light);
             font-size: 0.9em;
             font-weight: 600;
         }}
-        
+
         .commit-message {{
             color: var(--text-primary);
             margin: 6px 0;
             font-weight: 500;
         }}
-        
+
         .commit-meta {{
             color: var(--text-secondary);
             font-size: 0.85em;
@@ -743,7 +743,7 @@ class Visualizer:
             align-items: center;
             gap: 8px;
         }}
-        
+
         .footer {{
             text-align: center;
             color: var(--text-secondary);
@@ -753,82 +753,82 @@ class Visualizer:
             border-radius: 16px;
             border: 1px solid var(--border);
         }}
-        
+
         .footer p {{
             margin: 8px 0;
         }}
-        
+
         /* Responsive Design */
         @media (max-width: 768px) {{
             body {{
                 padding: 12px;
             }}
-            
+
             .header {{
                 padding: 24px;
                 border-radius: 16px;
             }}
-            
+
             .header h1 {{
                 font-size: 2rem;
             }}
-            
+
             .grid {{
                 grid-template-columns: 1fr;
                 gap: 16px;
             }}
-            
+
             .card {{
                 padding: 20px;
                 border-radius: 12px;
             }}
-            
+
             .card h2 {{
                 font-size: 1.2rem;
             }}
         }}
-        
+
         @media (max-width: 480px) {{
             .header {{
                 padding: 20px;
             }}
-            
+
             .header h1 {{
                 font-size: 1.75rem;
             }}
-            
+
             .card {{
                 padding: 16px;
             }}
-            
+
             .info-item {{
                 padding: 12px;
             }}
-            
+
             .file-list {{
                 max-height: 250px;
             }}
         }}
-        
+
         @media (min-width: 1200px) {{
             .grid {{
                 grid-template-columns: repeat(3, 1fr);
             }}
         }}
-        
+
         @media (min-width: 1600px) {{
             .grid {{
                 grid-template-columns: repeat(3, 1fr);
             }}
         }}
-        
+
         /* Print styles */
         @media print {{
             body {{
                 background: white;
                 color: black;
             }}
-            
+
             .card {{
                 break-inside: avoid;
                 box-shadow: none;
@@ -889,14 +889,14 @@ class Visualizer:
     <script>
         // Smooth scroll behavior
         document.documentElement.style.scrollBehavior = 'smooth';
-        
+
         // Make cards collapsible with animation
         document.querySelectorAll('.card h2').forEach((header, index) => {{
             header.style.cursor = 'pointer';
             header.addEventListener('click', function() {{
                 const card = this.parentElement;
                 const content = card.querySelector('.card-content');
-                
+
                 if (card.classList.contains('collapsed')) {{
                     card.classList.remove('collapsed');
                     content.style.animation = 'fadeIn 0.3s ease-out';
@@ -904,19 +904,19 @@ class Visualizer:
                     card.classList.add('collapsed');
                 }}
             }});
-            
+
             // Add hover effect
             header.addEventListener('mouseenter', function() {{
                 if (!this.parentElement.classList.contains('collapsed')) {{
                     this.style.transform = 'translateX(4px)';
                 }}
             }});
-            
+
             header.addEventListener('mouseleave', function() {{
                 this.style.transform = 'translateX(0)';
             }});
         }});
-        
+
         // Animate progress bars on load
         document.addEventListener('DOMContentLoaded', function() {{
             const progressBars = document.querySelectorAll('.progress-fill');
@@ -928,7 +928,7 @@ class Visualizer:
                 }}, 100);
             }});
         }});
-        
+
         // Add smooth hover effects to file list items
         document.querySelectorAll('.file-list li').forEach(item => {{
             item.addEventListener('mouseenter', function() {{
@@ -938,7 +938,7 @@ class Visualizer:
                 this.style.transform = 'translateX(0) scale(1)';
             }});
         }});
-        
+
         // Add ripple effect to badges
         document.querySelectorAll('.badge').forEach(badge => {{
             badge.addEventListener('click', function(e) {{
@@ -947,7 +947,7 @@ class Visualizer:
                 const size = Math.max(rect.width, rect.height);
                 const x = e.clientX - rect.left - size / 2;
                 const y = e.clientY - rect.top - size / 2;
-                
+
                 ripple.style.width = ripple.style.height = size + 'px';
                 ripple.style.left = x + 'px';
                 ripple.style.top = y + 'px';
@@ -957,15 +957,15 @@ class Visualizer:
                 ripple.style.transform = 'scale(0)';
                 ripple.style.animation = 'ripple 0.6s ease-out';
                 ripple.style.pointerEvents = 'none';
-                
+
                 this.style.position = 'relative';
                 this.style.overflow = 'hidden';
                 this.appendChild(ripple);
-                
+
                 setTimeout(() => ripple.remove(), 600);
             }});
         }});
-        
+
         // Add CSS for ripple animation
         const style = document.createElement('style');
         style.textContent = `
@@ -977,12 +977,12 @@ class Visualizer:
             }}
         `;
         document.head.appendChild(style);
-        
+
         // State data available in console
         const state = {state_json};
         console.log('🌊 Waft Dashboard State:', state);
         console.log('💡 Tip: All data is available in the state object');
-        
+
         // Performance monitoring
         window.addEventListener('load', function() {{
             const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
@@ -1391,7 +1391,7 @@ class Visualizer:
                     </div>
                     <div class="info-item">
                         <div class="info-label">
-                            Active Files 
+                            Active Files
                             <span class="badge info" style="font-size: 0.8em; margin-left: 8px;">{len(pyrite["active_files"])}</span>
                         </div>
                         {active_list}
@@ -1951,7 +1951,7 @@ class Visualizer:
                 print("  ⚠️  No Phase 1 data found, running Phase 1 first...")
             else:
                 print("⚠️")
-            phase1_path = self.phase1(verbose=verbose)
+            self.phase1(verbose=verbose)
             # Reload the data
             json_files = sorted(phase1_dir.glob("phase1-*.json"), reverse=True)
             if json_files:

@@ -1195,7 +1195,7 @@ def main():
     campfire_available = False
     if CAMPFIRE_AVAILABLE:
         try:
-            campfire = TheCampfire(project_path=project_path)
+            TheCampfire(project_path=project_path)
             campfire_available = True
             auto_logger.log(" ✅\n", flush=True)
         except Exception as e:

@@ -61,10 +61,10 @@ The story begins when **{self.character.name}** awakens in a dimly lit tavern, w
 
 ### Character Profile
 
-**Name:** {self.character.name}  
-**Level:** {self.character.level}  
-**Class:** Fighter  
-**Hit Points:** {self.character.hp}/{self.character.max_hp}  
+**Name:** {self.character.name}
+**Level:** {self.character.level}
+**Class:** Fighter
+**Hit Points:** {self.character.hp}/{self.character.max_hp}
 **Armor Class:** {self.character.ac}
 
 **Ability Scores:**
@@ -228,7 +228,6 @@ def tavern_scenario(character: DnD5eCharacter, session: GameSession):
         print_action(action_text)
         roll, _ = DnDRoller.attack_roll()
         wis_mod = character.wis_modifier
-        prof = character.proficiency_bonus
         # Assume not proficient in Perception for level 1
         total = roll + wis_mod
 
@@ -241,21 +240,18 @@ def tavern_scenario(character: DnD5eCharacter, session: GameSession):
                 "sticking out of your boot."
             )
             print_result(outcome)
-            found_note = True
         elif total >= 10:
             outcome = (
                 "You see the tavern is mostly empty except for a few sleeping drunks. "
                 "The bartender is cleaning glasses behind the bar, watching you warily."
             )
             print_result(outcome)
-            found_note = False
         else:
             outcome = (
                 "Your head is still spinning. You can't make out much in the dim light. "
                 "The bartender glances at you but says nothing."
             )
             print_result(outcome)
-            found_note = False
 
         session.add_event(
             "choice",
@@ -283,13 +279,11 @@ def tavern_scenario(character: DnD5eCharacter, session: GameSession):
                 "You find a crumpled note in your pocket. It reads: 'Meet at the old mill. "
                 "Midnight. Come alone. - The Shadow'"
             )
-            found_note = True
         else:
             print_result(
                 "You find some loose coins and a few trinkets, but nothing that explains "
                 "how you got here. Your memory is still foggy."
             )
-            found_note = False
 
     elif choice == "3":
         # Persuasion check (CHA)
@@ -308,18 +302,15 @@ def tavern_scenario(character: DnD5eCharacter, session: GameSession):
                 "extra to keep an eye on you. Strange folk, those ones.'"
             )
             print_result(outcome)
-            found_note = False
         elif total >= 10:
             outcome = "The bartender grunts: 'You owe me 5 gold for the room. Pay up or get out.'"
             print_result(outcome)
-            found_note = False
         else:
             outcome = (
                 "The bartender glares at you: 'I don't know nothing. Now get out before "
                 "I call the guards.'"
             )
             print_result(outcome)
-            found_note = False
 
         session.add_event(
             "choice",
@@ -348,19 +339,16 @@ def tavern_scenario(character: DnD5eCharacter, session: GameSession):
                 "Something about retrieving an artifact. The meeting was supposed to be secret. "
                 "Then... nothing. You must have been drugged."
             )
-            found_note = False
         elif total >= 10:
             print_result(
                 "You remember bits and pieces: A tavern, a meeting, voices. But the details "
                 "are lost in the fog of whatever happened to you."
             )
-            found_note = False
         else:
             print_result(
                 "Your mind is a complete blank. Whatever happened last night, it's gone. "
                 "You'll need to find another way to figure this out."
             )
-            found_note = False
 
     # Next scene: A stranger approaches
     stranger_scene = (

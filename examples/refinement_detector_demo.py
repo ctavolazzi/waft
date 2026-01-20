@@ -47,7 +47,7 @@ def processData(input_data):
 class MyClass:
     def __init__(self):
         self.value = 0
-    
+
     def _helper_method(self):
         print("Helper")
         return True

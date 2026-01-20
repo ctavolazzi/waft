@@ -171,7 +171,7 @@ def create_epistemic_dashboard(context: dict[str, Any]) -> Panel:
     Returns:
         Rich Panel with comprehensive dashboard
     """
-    console = Console()
+    Console()
 
     # Extract data
     epistemic_state = context.get("epistemic_state", {})

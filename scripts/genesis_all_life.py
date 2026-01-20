@@ -589,7 +589,7 @@ def collect_observational_data(
     # Reality Data
     console.print("[dim]→[/dim] Collecting Reality data...")
     try:
-        reality_system = RealitySystem(project_path=all_life_path)
+        RealitySystem(project_path=all_life_path)
         reality_path = all_life_path / "_hidden" / ".truth" / "realities"
         if reality_path.exists():
             reality_files = list(reality_path.glob("*.json"))
@@ -735,7 +735,7 @@ def generate_markdown_report(data: dict[str, Any]) -> str:
 
     report = f"""# Genesis: All Life Realm Creation
 
-**Timestamp**: {data["timestamp"]}  
+**Timestamp**: {data["timestamp"]}
 **Event**: First Being Spawned into All Life Realm - The Realm that tethers All Beings to The One
 
 ---
@@ -916,8 +916,8 @@ of the unified consciousness.
 
 ---
 
-**Generated**: {data["timestamp"]}  
-**Script**: `genesis_all_life.py`  
+**Generated**: {data["timestamp"]}
+**Script**: `genesis_all_life.py`
 **Status**: ✅ Complete
 """
 

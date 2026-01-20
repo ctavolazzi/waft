@@ -156,17 +156,15 @@ class OnePager:
         html_parts = []
         lines = markdown.split("\n")
         in_code_block = False
-        code_lang = ""
         code_lines = []
         in_list = False
         list_type = "ul"
         in_section = False
         section_count = 0  # Track sections for style rotation
         header_count = 0  # Track headers for style rotation
-        list_count = 0  # Track lists for style rotation
         para_count = 0  # Track paragraphs for style rotation
 
-        for i, line in enumerate(lines):
+        for _i, line in enumerate(lines):
             # Code blocks
             if line.strip().startswith("```"):
                 if in_list:
@@ -184,7 +182,7 @@ class OnePager:
                     section_count += 1
                 else:
                     # Start code block
-                    code_lang = line.strip()[3:].strip()
+                    line.strip()[3:].strip()
                     in_code_block = True
                 continue
 
@@ -888,7 +886,7 @@ class OnePager:
             if margin_values:
                 adjusted_values = [f"{float(v) * margin_scale:.3f}in" for v in margin_values]
                 result = margin_declaration
-                for i, (orig, adj) in enumerate(zip(margin_values, adjusted_values)):
+                for _i, (orig, adj) in enumerate(zip(margin_values, adjusted_values, strict=False)):
                     result = result.replace(f"{orig}in", adj, 1)
                 return result
             return margin_declaration
@@ -955,7 +953,7 @@ class OnePager:
         # HYPOTHESIZE: Form hypothesis about what caused the page count
         if page_diff > 0:
             # Too many pages
-            hypothesis = gym.form_hypothesis(
+            gym.form_hypothesis(
                 statement=f"Content is too long, causing {page_diff} extra pages",
                 reasoning=f"Word count: {word_count}, Character count: {char_count}. Content length likely exceeds what can fit in {target_pages} pages.",
                 assumptions=[
@@ -968,7 +966,7 @@ class OnePager:
             )
         elif page_diff < 0:
             # Too few pages
-            hypothesis = gym.form_hypothesis(
+            gym.form_hypothesis(
                 statement=f"Content is too short, resulting in {abs(page_diff)} fewer pages",
                 reasoning=f"Word count: {word_count}, Character count: {char_count}. Content length is insufficient for {target_pages} pages.",
                 assumptions=[
@@ -980,7 +978,7 @@ class OnePager:
             )
         else:
             # Perfect!
-            hypothesis = gym.form_hypothesis(
+            gym.form_hypothesis(
                 statement="Content length is appropriate for target page count",
                 reasoning=f"Word count: {word_count} resulted in exactly {target_pages} pages.",
                 assumptions=[

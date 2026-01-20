@@ -64,7 +64,7 @@ waft-one-pager-chat
 
 > "Physical constellation of crystallized knowledge inside spacetime through the refraction of light"
 
-**Output:** `_work_efforts/one_pagers/[title]_[date].pdf`  
+**Output:** `_work_efforts/one_pagers/[title]_[date].pdf`
 **Format:** 2 pages, printer-friendly, binder-ready
 """
 

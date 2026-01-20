@@ -121,7 +121,7 @@ Documentation generated: Checkpoint document, test summary PDF, improvements sum
             size: letter;
             margin: 20mm 15mm 20mm 15mm;
         }}
-        
+
         body {{
             font-family: "Times New Roman", serif;
             font-size: 11pt;
@@ -129,7 +129,7 @@ Documentation generated: Checkpoint document, test summary PDF, improvements sum
             color: #000;
             background: #fff;
         }}
-        
+
         h1 {{
             font-size: 18pt;
             font-weight: bold;
@@ -138,7 +138,7 @@ Documentation generated: Checkpoint document, test summary PDF, improvements sum
             border-bottom: 2pt solid #333;
             padding-bottom: 6pt;
         }}
-        
+
         h2 {{
             font-size: 14pt;
             font-weight: bold;
@@ -147,32 +147,32 @@ Documentation generated: Checkpoint document, test summary PDF, improvements sum
             border-bottom: 1pt solid #666;
             padding-bottom: 4pt;
         }}
-        
+
         h3 {{
             font-size: 12pt;
             font-weight: bold;
             margin-top: 12pt;
             margin-bottom: 6pt;
         }}
-        
+
         p {{
             margin: 0 0 8pt 0;
             text-align: justify;
         }}
-        
+
         ul, ol {{
             margin: 8pt 0;
             padding-left: 20pt;
         }}
-        
+
         li {{
             margin-bottom: 4pt;
         }}
-        
+
         strong {{
             font-weight: bold;
         }}
-        
+
         .page-break {{
             page-break-after: always;
         }}

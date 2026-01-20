@@ -133,34 +133,34 @@ def main():
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
-        
+
         h1 {
             letter-spacing: -0.5px;
             font-weight: 700;
             margin-bottom: 20pt;
         }
-        
+
         h2 {
             letter-spacing: -0.3px;
             font-weight: 600;
             margin-top: 24pt;
             margin-bottom: 12pt;
         }
-        
+
         h3 {
             letter-spacing: -0.2px;
             font-weight: 600;
             margin-top: 18pt;
             margin-bottom: 8pt;
         }
-        
+
         p {
             text-align: justify;
             hyphens: auto;
             orphans: 3;
             widows: 3;
         }
-        
+
         /* Premium note boxes */
         .note-box {
             border-left: 5pt solid #1a5490;
@@ -170,7 +170,7 @@ def main():
             border-radius: 4pt;
             box-shadow: 0 1pt 3pt rgba(0,0,0,0.1);
         }
-        
+
         /* Premium highlight boxes */
         .highlight-box {
             border: 2pt solid #1a5490;
@@ -180,7 +180,7 @@ def main():
             border-radius: 4pt;
             box-shadow: 0 2pt 6pt rgba(0,0,0,0.1);
         }
-        
+
         /* Premium code blocks */
         pre {
             border-left: 4pt solid #1a5490;
@@ -189,21 +189,21 @@ def main():
             border-radius: 4pt;
             box-shadow: 0 1pt 3pt rgba(0,0,0,0.05);
         }
-        
+
         /* Premium tables */
         table {
             border-collapse: separate;
             border-spacing: 0;
             box-shadow: 0 1pt 3pt rgba(0,0,0,0.1);
         }
-        
+
         th {
             background: #1a5490;
             color: #ffffff;
             font-weight: 600;
             letter-spacing: 0.5px;
         }
-        
+
         /* Premium idea cards */
         .idea-card {
             background: #ffffff;
@@ -214,11 +214,11 @@ def main():
             box-shadow: 0 1pt 3pt rgba(0,0,0,0.05);
             transition: box-shadow 0.2s;
         }
-        
+
         .idea-card:hover {
             box-shadow: 0 2pt 6pt rgba(0,0,0,0.1);
         }
-        
+
         /* Premium section dividers */
         hr {
             border: none;
@@ -226,7 +226,7 @@ def main():
             margin: 24pt 0;
             opacity: 0.3;
         }
-        
+
         /* Premium blockquotes */
         blockquote {
             border-left: 5pt solid #1a5490;

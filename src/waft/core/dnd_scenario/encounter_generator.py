@@ -110,8 +110,8 @@ class EncounterGenerator:
         # Generate description
         if not description:
             description = f"""
-The party encounters {encounter_name} in a fierce battle. The combat is intense, with spells flying, 
-swords clashing, and the party working together to overcome their foe. After {rounds} rounds of 
+The party encounters {encounter_name} in a fierce battle. The combat is intense, with spells flying,
+swords clashing, and the party working together to overcome their foe. After {rounds} rounds of
 determined fighting, the party emerges victorious.
             """
 
@@ -131,7 +131,7 @@ determined fighting, the party emerges victorious.
 - **Current Party HP**: {sum([m.hp for m in party])}/{sum([m.max_hp for m in party])}
             """,
             "read_aloud": f"""
-The battle is intense. Steel clashes, spells fly, and the party fights as one. 
+The battle is intense. Steel clashes, spells fly, and the party fights as one.
 After {rounds} rounds of combat, {encounter_name} falls, defeated by the heroes' resolve.
             """,
             "difficulty": difficulty,

@@ -5,9 +5,9 @@ Generate Empirica TUI Dashboard User Manual
 Creates a professional PDF manual using WAFT's field guide template.
 """
 
-from pathlib import Path
 import sys
 from datetime import datetime
+from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 

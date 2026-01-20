@@ -58,7 +58,7 @@ def main():
         import uvicorn
 
         # Files to watch for changes
-        watch_files = [
+        [
             str(project_root / "scripts" / "research_simulation_server.py"),
             str(project_root / "src" / "waft" / "evolution"),
         ]

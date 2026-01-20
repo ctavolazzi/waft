@@ -277,7 +277,7 @@ class HelpManager:
         # Show related examples
         self.console.print("[bold]Usage Examples:[/bold]\n")
         example_found = False
-        for scenario, examples in self.USAGE_EXAMPLES.items():
+        for _scenario, examples in self.USAGE_EXAMPLES.items():
             for example in examples:
                 if f"/{command}" in example or command in example:
                     self.console.print(f"  • {example}")

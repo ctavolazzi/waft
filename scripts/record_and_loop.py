@@ -186,7 +186,7 @@ def main():
     prep_file = proof_cases_dir / "iteration2_preparation.md"
 
     # Read observations to extract next iteration plan
-    obs_content = observations_file.read_text(encoding="utf-8")
+    observations_file.read_text(encoding="utf-8")
 
     # Extract next iteration plan section
     prep_content = f"""# PDF Generation Improvements - Iteration 2 Preparation

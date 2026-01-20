@@ -174,7 +174,7 @@ async def main():
 
     try:
         # Test adapter
-        enhanced_content = await test_gemini_adapter()
+        await test_gemini_adapter()
 
         # Test PDF generation
         pdf_path = await test_pdf_generation_with_gemini()

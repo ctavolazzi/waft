@@ -181,23 +181,6 @@ def example_conditional_probability():
     """Generate conditional probability lesson."""
     print("Generating conditional probability lesson...")
 
-    examples = [
-        {
-            "name": "Starting Hand: Two Aces",
-            "description": "You're dealt two aces. What are your odds now?",
-            "cards": ["AS", "AD"],
-        },
-        {
-            "name": "After Flop: Still Two Aces",
-            "description": "The flop doesn't help. You still have two aces, but now there are fewer cards left.",
-            "cards": ["AS", "AD", "KH", "QC", "JD"],
-        },
-        {
-            "name": "Probability Changes",
-            "description": "With 47 cards remaining and 2 aces left, probability of getting another ace: 2/47 = 4.26%",
-            "cards": ["AS", "AD", "KH", "QC", "JD", "AC"],
-        },
-    ]
 
     content = """
 # Conditional Probability: How Cards Change Odds
@@ -281,8 +264,8 @@ EV = (Probability of Win × Value if Win) + (Probability of Loss × Value if Los
 
 ## Example 1: Simple Bet
 
-**Bet**: $10  
-**Win**: 20% chance to win $50  
+**Bet**: $10
+**Win**: 20% chance to win $50
 **Lose**: 80% chance to lose $10
 
 **Calculation**:
@@ -296,7 +279,7 @@ EV = (Probability of Win × Value if Win) + (Probability of Loss × Value if Los
 
 **Situation**: Final table, 3 players left
 - 1st place: $10,000 (33% chance)
-- 2nd place: $5,000 (33% chance)  
+- 2nd place: $5,000 (33% chance)
 - 3rd place: $2,500 (33% chance)
 
 **Your Expected Value**:

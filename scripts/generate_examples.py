@@ -125,7 +125,7 @@ def generate_html_dashboard():
             padding: 0;
             box-sizing: border-box;
         }}
-        
+
         body {{
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -133,12 +133,12 @@ def generate_html_dashboard():
             padding: 20px;
             color: #333;
         }}
-        
+
         .container {{
             max-width: 1400px;
             margin: 0 auto;
         }}
-        
+
         .header {{
             background: white;
             border-radius: 12px;
@@ -146,32 +146,32 @@ def generate_html_dashboard():
             margin-bottom: 30px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }}
-        
+
         .header h1 {{
             color: #667eea;
             font-size: 2.5em;
             margin-bottom: 10px;
         }}
-        
+
         .header .subtitle {{
             color: #666;
             font-size: 1.1em;
         }}
-        
+
         .grid {{
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 20px;
             margin-bottom: 20px;
         }}
-        
+
         .card {{
             background: white;
             border-radius: 12px;
             padding: 25px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }}
-        
+
         .card h2 {{
             color: #667eea;
             margin-bottom: 20px;
@@ -179,7 +179,7 @@ def generate_html_dashboard():
             border-bottom: 2px solid #667eea;
             padding-bottom: 10px;
         }}
-        
+
         .template-item, .work-effort-item {{
             padding: 12px;
             margin: 8px 0;
@@ -187,60 +187,60 @@ def generate_html_dashboard():
             border-radius: 6px;
             border-left: 4px solid #667eea;
         }}
-        
+
         .template-item strong {{
             color: #667eea;
         }}
-        
+
         .work-effort-item {{
             display: flex;
             justify-content: space-between;
             align-items: center;
         }}
-        
+
         .status {{
             padding: 4px 12px;
             border-radius: 12px;
             font-size: 0.85em;
             font-weight: bold;
         }}
-        
+
         .status.completed {{
             background: #d4edda;
             color: #155724;
         }}
-        
+
         .status.active {{
             background: #d1ecf1;
             color: #0c5460;
         }}
-        
+
         .stats {{
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 15px;
             margin-top: 20px;
         }}
-        
+
         .stat {{
             text-align: center;
             padding: 15px;
             background: #f8f9fa;
             border-radius: 8px;
         }}
-        
+
         .stat-value {{
             font-size: 2em;
             font-weight: bold;
             color: #667eea;
         }}
-        
+
         .stat-label {{
             color: #666;
             font-size: 0.9em;
             margin-top: 5px;
         }}
-        
+
         .footer {{
             text-align: center;
             margin-top: 40px;
@@ -256,7 +256,7 @@ def generate_html_dashboard():
             <h1>🚀 WAFT Session Dashboard</h1>
             <div class="subtitle">Generated: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}</div>
         </div>
-        
+
         <div class="grid">
             <!-- Templates Card -->
             <div class="card">
@@ -267,7 +267,7 @@ def generate_html_dashboard():
                         <div class="stat-label">Templates</div>
                     </div>
                     <div class="stat">
-                        <div class="stat-value">{len(set(t.category for t in templates))}</div>
+                        <div class="stat-value">{len({t.category for t in templates})}</div>
                         <div class="stat-label">Categories</div>
                     </div>
                 </div>
@@ -285,7 +285,7 @@ def generate_html_dashboard():
         }
                 </div>
             </div>
-            
+
             <!-- Work Efforts Card -->
             <div class="card">
                 <h2>📋 Work Efforts (Today)</h2>
@@ -320,7 +320,7 @@ def generate_html_dashboard():
         }
                 </div>
             </div>
-            
+
             <!-- Catalog Card -->
             <div class="card">
                 <h2>📚 Librarian Catalog</h2>
@@ -345,7 +345,7 @@ def generate_html_dashboard():
                 </div>
             </div>
         </div>
-        
+
         <div class="footer">
             <p>WAFT Framework - Session Dashboard</p>
             <p>Generated automatically from current system state</p>

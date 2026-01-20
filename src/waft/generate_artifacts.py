@@ -486,7 +486,7 @@ def generate_asset_labels(output_path: Path | None = None) -> Path:
     engine.add(TextBlock(""))  # Spacing
 
     # Generate labels - use WarningBlock for boxed appearance
-    for i, label_text in enumerate(labels, 1):
+    for _i, label_text in enumerate(labels, 1):
         # Use WarningBlock for boxed labels (creates border)
         if "ANOMALY CONFIRMED" in label_text:
             # Use CRITICAL severity for red text effect (will be bold black in PDF)

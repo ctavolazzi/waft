@@ -340,7 +340,7 @@ class BlackWhiteWAFTGenerator:
         @page {
             size: letter;
             margin: {{ margin.top }}mm {{ margin.right }}mm {{ margin.bottom }}mm {{ margin.left }}mm;
-            
+
             @top-right {
                 content: "Page " counter(page);
                 font-family: "Helvetica Neue", "Arial", sans-serif;
@@ -348,7 +348,7 @@ class BlackWhiteWAFTGenerator:
                 color: {{ color.text }};
                 opacity: 0.6;
             }
-            
+
             @bottom-center {
                 content: "WAFT Research Document | " counter(page);
                 font-family: "Helvetica Neue", "Arial", sans-serif;
@@ -357,7 +357,7 @@ class BlackWhiteWAFTGenerator:
                 opacity: 0.5;
             }
         }
-        
+
         @page :first {
             @top-right { content: none; }
             @bottom-center { content: none; }
@@ -409,17 +409,17 @@ class BlackWhiteWAFTGenerator:
             page-break-after: avoid;
             letter-spacing: 0;
         }
-        p { 
-            margin: 0 0 {{ margin.paragraph_spacing }}pt 0; 
+        p {
+            margin: 0 0 {{ margin.paragraph_spacing }}pt 0;
             text-align: justify;
             hyphens: auto;
         }
-        ul, ol { 
-            margin: 0 0 {{ margin.paragraph_spacing }}pt 0; 
-            padding-left: 18pt; 
+        ul, ol {
+            margin: 0 0 {{ margin.paragraph_spacing }}pt 0;
+            padding-left: 18pt;
         }
-        li { 
-            margin-bottom: {{ margin.paragraph_spacing / 3 }}pt; 
+        li {
+            margin-bottom: {{ margin.paragraph_spacing / 3 }}pt;
         }
         .summary-box {
             background: {{ color.code_bg }};
@@ -658,43 +658,43 @@ class BlackWhiteWAFTGenerator:
 <body>
     <div class="page-1">
         <h1 style="text-align: center; margin-bottom: {{ margin.paragraph_spacing }}pt;">{{ title }}</h1>
-        
+
         <div class="author-info">
             <p style="margin: 0;">WAFT Research Team</p>
             <p style="margin: 2pt 0 0 0; font-size: {{ font.size_body - 1.5 }}pt;">{{ generated_at }}</p>
         </div>
-        
+
         <div class="abstract">
             <div class="abstract-title">Abstract</div>
             <p style="margin: 0; font-size: {{ font.size_body }}pt; line-height: 1.6; text-align: justify;">{{ summary }}</p>
         </div>
-        
+
         <h2 class="section-number">Introduction</h2>
         {% if page_1_ideas|length > 0 %}
         <p>{{ page_1_ideas[0].content }}</p>
         {% endif %}
-        
+
         <h2 class="section-number">Architecture</h2>
-        
+
         <div class="diagram no-break">
             <img src="{{ three_pillars_image }}" alt="The Three Pillars: Substrate, Physics, Flight Recorder" />
             <div class="figure-caption">Figure 1: The Three Pillars of WAFT Architecture</div>
         </div>
-        
+
         {% if page_1_ideas|length > 1 %}
         <div class="pillar no-break">
             <div class="pillar-title">The Substrate</div>
             <p>{{ page_1_ideas[1].content }}</p>
         </div>
         {% endif %}
-        
+
         {% if page_1_ideas|length > 2 %}
         <div class="pillar no-break">
             <div class="pillar-title">The Physics</div>
             <p>{{ page_1_ideas[2].content }}</p>
         </div>
         {% endif %}
-        
+
         {% if page_1_ideas|length > 3 %}
         <div class="pillar no-break">
             <div class="pillar-title">The Flight Recorder</div>
@@ -708,17 +708,17 @@ class BlackWhiteWAFTGenerator:
         {% if page_2_ideas|length > 0 %}
         <p>{{ page_2_ideas[0].content }}</p>
         {% endif %}
-        
+
         {% if page_2_ideas|length > 1 %}
         <h3>Implementation</h3>
         <p>{{ page_2_ideas[1].content }}</p>
         {% endif %}
-        
+
         {% if page_2_ideas|length > 2 %}
         <h3>Key Characteristics</h3>
         <p>{{ page_2_ideas[2].content }}</p>
         {% endif %}
-        
+
         <h2 class="section-number">Conclusion</h2>
         {% if page_2_ideas|length > 3 %}
         <p>{{ page_2_ideas[3].content }}</p>

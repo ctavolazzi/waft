@@ -227,7 +227,7 @@ def collect_observational_data(being: Any, earth_path: Path, timestamp: str) -> 
     # Reality Data
     console.print("[dim]→[/dim] Collecting Reality data...")
     try:
-        reality_system = RealitySystem(project_path=earth_path)
+        RealitySystem(project_path=earth_path)
         # Try to load the reality
         reality_path = earth_path / "_hidden" / ".truth" / "realities"
         if reality_path.exists():
@@ -390,7 +390,7 @@ def generate_markdown_report(data: dict[str, Any]) -> str:
 
     report = f"""# Genesis: Earth Realm Creation
 
-**Timestamp**: {data["timestamp"]}  
+**Timestamp**: {data["timestamp"]}
 **Event**: First Being Spawned into Earth Realm
 
 ---
@@ -512,8 +512,8 @@ The Being is a blank canvas with no initial skills, ready to learn and evolve.
 
 ---
 
-**Generated**: {data["timestamp"]}  
-**Script**: `genesis_earth.py`  
+**Generated**: {data["timestamp"]}
+**Script**: `genesis_earth.py`
 **Status**: ✅ Complete
 """
 

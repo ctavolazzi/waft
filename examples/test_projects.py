@@ -57,7 +57,7 @@ def test_list_projects():
 
         # Create multiple projects
         project1 = manager.create_project("Project 1", status=ProjectStatus.ACTIVE)
-        project2 = manager.create_project("Project 2", status=ProjectStatus.PAUSED)
+        manager.create_project("Project 2", status=ProjectStatus.PAUSED)
         project3 = manager.create_project("Project 3", tags=["test"])
 
         # List all
@@ -138,7 +138,7 @@ def test_input_validation():
         # Test invalid title (too long)
         try:
             manager.create_project("x" * 300)  # Exceeds MAX_TITLE_LENGTH
-            assert False, "Should have raised ValueError"
+            raise AssertionError("Should have raised ValueError")
         except ValueError:
             pass
 
@@ -147,7 +147,7 @@ def test_input_validation():
         try:
             project.progress_percent = -10.0
             manager.update_project(project)
-            assert False, "Should have raised ValueError"
+            raise AssertionError("Should have raised ValueError")
         except ValueError:
             pass
 
@@ -155,7 +155,7 @@ def test_input_validation():
         try:
             project.progress_percent = 150.0
             manager.update_project(project)
-            assert False, "Should have raised ValueError"
+            raise AssertionError("Should have raised ValueError")
         except ValueError:
             pass
 
@@ -170,14 +170,14 @@ def test_security_validation():
         # Test path traversal in project_id
         try:
             manager.get_project("../../../etc/passwd")
-            assert False, "Should have raised ValueError"
+            raise AssertionError("Should have raised ValueError")
         except ValueError:
             pass
 
         # Test invalid project_id characters
         try:
             manager.get_project("proj/with/slashes")
-            assert False, "Should have raised ValueError"
+            raise AssertionError("Should have raised ValueError")
         except ValueError:
             pass
 

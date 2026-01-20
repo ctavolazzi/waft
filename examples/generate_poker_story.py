@@ -32,29 +32,29 @@ def dramatic_showdown():
     game.add_content("""
 == The Final Showdown
 
-The smoke-filled room fell silent as the final cards were dealt. 
-The Count smiled confidently, knowing he held the best starting hand 
-in poker - pocket aces. But The Hero remained stoic, calculating 
+The smoke-filled room fell silent as the final cards were dealt.
+The Count smiled confidently, knowing he held the best starting hand
+in poker - pocket aces. But The Hero remained stoic, calculating
 the odds, reading the tells.
 
-*Pre-Flop*: The Count raised aggressively. The Hero called, sensing 
+*Pre-Flop*: The Count raised aggressively. The Hero called, sensing
 something in the Count's demeanor.
 
-*The Flop*: AC, KH, QC - The Count's smile widened. He had top set. 
-But The Hero saw opportunity - a straight draw, and the king gave 
+*The Flop*: AC, KH, QC - The Count's smile widened. He had top set.
+But The Hero saw opportunity - a straight draw, and the king gave
 him a pair.
 
-*The Turn*: 10S - The Hero's heart raced. He now had a straight! 
+*The Turn*: 10S - The Hero's heart raced. He now had a straight!
 But the Count still had the best hand with three aces.
 
-*The River*: 9H - The Hero's straight was complete, but the Count 
+*The River*: 9H - The Hero's straight was complete, but the Count
 still had the winning hand with four aces!
 
-The Count pushed all his chips forward with a triumphant laugh. 
-The Hero, knowing the odds were against him, made the call anyway. 
+The Count pushed all his chips forward with a triumphant laugh.
+The Hero, knowing the odds were against him, made the call anyway.
 Sometimes, poker is about more than just the cards.
 
-*Outcome*: The Count wins with four aces - the second-best possible 
+*Outcome*: The Count wins with four aces - the second-best possible
 hand in poker. The Hero's straight was strong, but not strong enough.
     """)
 
@@ -82,23 +82,23 @@ def historical_recreation():
     game.add_content("""
 == The Hand That Changed Poker
 
-This is the hand that launched the poker boom. Chris Moneymaker, 
-an amateur accountant from Tennessee, faced off against professional 
+This is the hand that launched the poker boom. Chris Moneymaker,
+an amateur accountant from Tennessee, faced off against professional
 Sam Farha in the 2003 WSOP Main Event final table.
 
-*The Situation*: Moneymaker was the underdog, but he played with 
-fearless aggression. Farha, the experienced pro, tried to outplay 
+*The Situation*: Moneymaker was the underdog, but he played with
+fearless aggression. Farha, the experienced pro, tried to outplay
 the amateur.
 
-*The Bluff*: With 5S-4D, Moneymaker made a massive all-in bluff on 
-the river. Farha, holding JS-10H with a pair of jacks, had to make 
+*The Bluff*: With 5S-4D, Moneymaker made a massive all-in bluff on
+the river. Farha, holding JS-10H with a pair of jacks, had to make
 a decision for his tournament life.
 
-*The Call*: Farha folded, and Moneymaker won the pot. This hand 
+*The Call*: Farha folded, and Moneymaker won the pot. This hand
 became legendary, showing that amateurs could compete with pros.
 
-*The Impact*: Moneymaker went on to win the Main Event, and the 
-poker boom began. Online poker exploded, and millions of new players 
+*The Impact*: Moneymaker went on to win the Main Event, and the
+poker boom began. Online poker exploded, and millions of new players
 entered the game.
     """)
 
@@ -121,8 +121,8 @@ def hand_quiz():
 
 Compare these three hands. Which one wins?
 
-*Answer*: Hand A wins with a Royal Flush - the best possible hand 
-in poker. Even though Hand B has four aces (the second-best hand), 
+*Answer*: Hand A wins with a Royal Flush - the best possible hand
+in poker. Even though Hand B has four aces (the second-best hand),
 a Royal Flush always beats four of a kind.
     """)
     game1.generate(Path("_temp_pdf_examples/poker_quiz_1.pdf"))
@@ -138,13 +138,13 @@ a Royal Flush always beats four of a kind.
 
 You have AS-KH. The board is AC-AD-AH-KS-QS.
 
-You have four aces - the second-best possible hand! The only hand 
+You have four aces - the second-best possible hand! The only hand
 that beats you is a Royal Flush (10S-JS-QS-KS-AS).
 
 Villain goes all-in. What should you do?
 
-*Answer*: You should call! You have an extremely strong hand. 
-The only way you lose is if villain has the one specific hand 
+*Answer*: You should call! You have an extremely strong hand.
+The only way you lose is if villain has the one specific hand
 that beats you. This is an easy call.
     """)
     game2.generate(Path("_temp_pdf_examples/poker_quiz_2.pdf"))
@@ -178,13 +178,13 @@ def tournament_final_table():
 *Middle Stack*: Balanced approach, picking spots carefully
 *Aggressive Player*: Pushing the action, building pots
 
-*The Hand*: Chip Leader raises with AS-KH. Short Stack shoves 
-all-in with QD-JD. Middle Stack folds. Aggressive Player folds. 
+*The Hand*: Chip Leader raises with AS-KH. Short Stack shoves
+all-in with QD-JD. Middle Stack folds. Aggressive Player folds.
 Chip Leader calls.
 
 *The Board*: AC-AD-AH-KS-QS
 
-*Result*: Chip Leader wins with four aces, eliminating Short Stack. 
+*Result*: Chip Leader wins with four aces, eliminating Short Stack.
 The final table continues with three players remaining.
     """)
 

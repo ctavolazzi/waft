@@ -129,10 +129,10 @@ def main():
         /* ========================================
            PEAK STYLING - Maximum Excellence
            ======================================== */
-        
+
         /* Premium Typography */
         @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
-        
+
         body {
             font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "onum" 1, "pnum" 1;
             text-rendering: optimizeLegibility;
@@ -141,7 +141,7 @@ def main():
             font-variant-numeric: oldstyle-nums;
             letter-spacing: 0.01em;
         }
-        
+
         /* Dramatic Headings */
         h1 {
             letter-spacing: -0.8px;
@@ -152,7 +152,7 @@ def main():
             padding-bottom: 8pt;
             position: relative;
         }
-        
+
         h1::after {
             content: '';
             position: absolute;
@@ -163,7 +163,7 @@ def main():
             background: #0d47a1;
             opacity: 0.3;
         }
-        
+
         h2 {
             letter-spacing: -0.5px;
             font-weight: 600;
@@ -173,7 +173,7 @@ def main():
             padding-bottom: 6pt;
             position: relative;
         }
-        
+
         h2::before {
             content: '◆';
             color: #0d47a1;
@@ -181,7 +181,7 @@ def main():
             font-size: 0.7em;
             opacity: 0.6;
         }
-        
+
         h3 {
             letter-spacing: -0.3px;
             font-weight: 600;
@@ -189,7 +189,7 @@ def main():
             margin-bottom: 12pt;
             color: #1e3a5f;
         }
-        
+
         /* Premium Paragraphs */
         p {
             text-align: justify;
@@ -199,12 +199,12 @@ def main():
             text-indent: 0;
             margin-bottom: 12pt;
         }
-        
+
         /* First paragraph after heading - no indent */
         h1 + p, h2 + p, h3 + p {
             text-indent: 0;
         }
-        
+
         /* Premium Note Boxes - Elegant Design */
         .note-box {
             border-left: 6pt solid #0d47a1;
@@ -216,7 +216,7 @@ def main():
             position: relative;
             overflow: hidden;
         }
-        
+
         .note-box::before {
             content: '';
             position: absolute;
@@ -226,7 +226,7 @@ def main():
             height: 100%;
             background: linear-gradient(to bottom, #0d47a1, #1976d2);
         }
-        
+
         .note-title {
             font-weight: 700;
             color: #0d47a1;
@@ -236,7 +236,7 @@ def main():
             text-transform: uppercase;
             font-size: 0.85em;
         }
-        
+
         /* Premium Highlight Boxes */
         .highlight-box {
             border: 3pt solid #0d47a1;
@@ -247,7 +247,7 @@ def main():
             box-shadow: 0 4pt 12pt rgba(13, 71, 161, 0.2);
             position: relative;
         }
-        
+
         .highlight-box::before {
             content: '★';
             position: absolute;
@@ -257,7 +257,7 @@ def main():
             font-size: 18pt;
             opacity: 0.2;
         }
-        
+
         /* Premium Code Blocks */
         pre {
             border-left: 5pt solid #0d47a1;
@@ -268,7 +268,7 @@ def main():
             margin: 16pt 0;
             overflow-x: auto;
         }
-        
+
         code {
             font-family: 'Courier New', 'Monaco', monospace;
             font-size: 11pt;
@@ -278,7 +278,7 @@ def main():
             color: #1e3a5f;
             border: 1pt solid #e0e7ef;
         }
-        
+
         /* Premium Tables */
         table {
             border-collapse: separate;
@@ -289,7 +289,7 @@ def main():
             border-radius: 6pt;
             overflow: hidden;
         }
-        
+
         th {
             background: linear-gradient(to bottom, #0d47a1, #1565c0);
             color: #ffffff;
@@ -300,20 +300,20 @@ def main():
             padding: 14pt;
             text-align: left;
         }
-        
+
         td {
             padding: 12pt 14pt;
             border-bottom: 1pt solid #e0e7ef;
         }
-        
+
         tr:last-child td {
             border-bottom: none;
         }
-        
+
         tr:nth-child(even) {
             background: #f8f9fa;
         }
-        
+
         /* Premium Idea Cards */
         .idea-card {
             background: #ffffff;
@@ -325,7 +325,7 @@ def main():
             transition: all 0.3s ease;
             position: relative;
         }
-        
+
         .idea-card::before {
             content: '';
             position: absolute;
@@ -336,13 +336,13 @@ def main():
             background: linear-gradient(to bottom, #0d47a1, #42a5f5);
             border-radius: 8pt 0 0 8pt;
         }
-        
+
         .idea-card:hover {
             box-shadow: 0 4pt 12pt rgba(13, 71, 161, 0.15);
             border-color: #0d47a1;
             transform: translateY(-1pt);
         }
-        
+
         /* Premium Section Dividers */
         hr {
             border: none;
@@ -351,7 +351,7 @@ def main():
             opacity: 0.4;
             position: relative;
         }
-        
+
         hr::after {
             content: '◆';
             position: absolute;
@@ -363,7 +363,7 @@ def main():
             color: #0d47a1;
             font-size: 12pt;
         }
-        
+
         /* Premium Blockquotes */
         blockquote {
             border-left: 6pt solid #0d47a1;
@@ -377,7 +377,7 @@ def main():
             font-size: 1.05em;
             line-height: 1.8;
         }
-        
+
         blockquote::before {
             content: '"';
             position: absolute;
@@ -388,7 +388,7 @@ def main():
             opacity: 0.2;
             font-family: serif;
         }
-        
+
         blockquote::after {
             content: '"';
             position: absolute;
@@ -399,23 +399,23 @@ def main():
             opacity: 0.2;
             font-family: serif;
         }
-        
+
         /* Premium Lists */
         ul, ol {
             margin: 16pt 0;
             padding-left: 28pt;
         }
-        
+
         li {
             margin: 8pt 0;
             line-height: 1.8;
         }
-        
+
         ul li::marker {
             color: #0d47a1;
             font-weight: bold;
         }
-        
+
         /* Premium Page Numbers */
         @page {
             @bottom-center {
@@ -426,7 +426,7 @@ def main():
                 margin-top: 20pt;
             }
         }
-        
+
         /* Premium Headers/Footers */
         .header, .footer {
             color: #666;
@@ -435,7 +435,7 @@ def main():
             padding-top: 8pt;
             margin-top: 16pt;
         }
-        
+
         /* Premium Links */
         a {
             color: #0d47a1;
@@ -443,11 +443,11 @@ def main():
             border-bottom: 1pt solid transparent;
             transition: border-color 0.2s;
         }
-        
+
         a:hover {
             border-bottom-color: #0d47a1;
         }
-        
+
         /* Premium Category Tags */
         .category-tag {
             display: inline-block;
@@ -462,7 +462,7 @@ def main():
             margin-right: 6pt;
             box-shadow: 0 2pt 4pt rgba(13, 71, 161, 0.3);
         }
-        
+
         /* Premium Importance Badge */
         .importance-badge {
             display: inline-block;
@@ -472,16 +472,16 @@ def main():
             margin-right: 6pt;
             vertical-align: middle;
         }
-        
+
         .importance-high {
             background: #0d47a1;
             box-shadow: 0 0 4pt rgba(13, 71, 161, 0.5);
         }
-        
+
         .importance-medium {
             background: #42a5f5;
         }
-        
+
         .importance-low {
             background: #90caf9;
         }

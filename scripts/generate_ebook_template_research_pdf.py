@@ -40,7 +40,7 @@ def generate_research_pdf():
     <div class="research-content">
     {html_content}
     </div>
-    
+
     <style>
     .research-content {{
         font-family: 'Georgia', 'Times New Roman', serif;
@@ -149,12 +149,12 @@ def generate_research_pdf():
         title="eBook-Template Repository Analysis: A Comparative Study of Multi-Format Document Generation Systems",
         content=html_content,
         output_path=pdf_path,
-        abstract="""This research document provides a comprehensive analysis of the eBook-Template repository, 
-        comparing its Asciidoctor-based multi-format eBook generation approach with WAFT's Python-native PDF 
-        template system. The analysis examines architectural differences, feature comparisons, integration 
-        opportunities, and provides actionable recommendations for both systems. Key findings reveal that while 
-        eBook-Template excels at multi-format output (PDF, ePub, Kindle), WAFT provides superior template 
-        diversity and Python integration. The research identifies complementary strengths and proposes 
+        abstract="""This research document provides a comprehensive analysis of the eBook-Template repository,
+        comparing its Asciidoctor-based multi-format eBook generation approach with WAFT's Python-native PDF
+        template system. The analysis examines architectural differences, feature comparisons, integration
+        opportunities, and provides actionable recommendations for both systems. Key findings reveal that while
+        eBook-Template excels at multi-format output (PDF, ePub, Kindle), WAFT provides superior template
+        diversity and Python integration. The research identifies complementary strengths and proposes
         integration strategies for enhanced document generation capabilities.""",
         authors=[{"name": "WAFT Research Team"}, {"name": "AI Assistant (Claude)"}],
         conference="WAFT Research",

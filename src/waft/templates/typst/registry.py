@@ -200,7 +200,7 @@ class TypstTemplateRegistry:
             tags.extend([t.strip().strip("\"'") for t in tags_str.split(",")])
 
         # Add inferred tags from module name
-        module_lower = module_name.lower()
+        module_name.lower()
         if "typst" not in tags:
             tags.append("typst")
         if "pdf" not in tags:
@@ -299,7 +299,7 @@ class TypstTemplateRegistry:
 
     def get_categories(self) -> list[str]:
         """Get all unique categories."""
-        return sorted(set(t.category for t in self._templates.values()))
+        return sorted({t.category for t in self._templates.values()})
 
     def get_tags(self) -> list[str]:
         """Get all unique tags."""

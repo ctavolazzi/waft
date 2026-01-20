@@ -988,7 +988,7 @@ def main():
             print("=" * 60)
             print(f"📄 Output: {output_path}")
             print(f"📊 Plans analyzed: {len(all_plans)}")
-            print(f"🏙️  Categories: {len(set([p['title'].lower() for p in all_plans]))}")
+            print(f"🏙️  Categories: {len({p['title'].lower() for p in all_plans})}")
             print()
             print("Ready for review!")
 

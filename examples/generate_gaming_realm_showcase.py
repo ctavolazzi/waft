@@ -28,9 +28,9 @@ def generate_realm_showcase():
 # Realm of Gaming and Gambling
 ## Complete Showcase
 
-**Created**: {datetime.now().strftime("%Y-%m-%d")}  
-**Demi-God**: The River King  
-**Parent God**: The Magistrate  
+**Created**: {datetime.now().strftime("%Y-%m-%d")}
+**Demi-God**: The River King
+**Parent God**: The Magistrate
 **Status**: Active
 
 ---
@@ -79,8 +79,8 @@ Documents new card game mechanics with visual examples.
 
 This is an example game documented using The Deck of Fates:
 
-**Players**: Alice, Bob, Carol, Dave  
-**Game Type**: Texas Hold'em  
+**Players**: Alice, Bob, Carol, Dave
+**Game Type**: Texas Hold'em
 **Date**: {datetime.now().strftime("%Y-%m-%d")}
 
 The River King witnessed this game and documented it using his sacred tool.

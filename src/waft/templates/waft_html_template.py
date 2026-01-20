@@ -30,13 +30,13 @@ WAFT_HTML_TEMPLATE = """
            WAFT Multipurpose Template
            Clean, functional, information-first design
            ============================================ */
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
             line-height: 1.6;
@@ -45,20 +45,20 @@ WAFT_HTML_TEMPLATE = """
             padding: 0;
             font-size: 15px;
         }
-        
+
         /* Container */
         .container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 0;
         }
-        
+
         /* Content Wrapper - supports sidebar layout */
         .content-wrapper {
             display: flex;
             min-height: calc(100vh - 200px);
         }
-        
+
         /* Sidebar Navigation */
         .sidebar {
             width: 250px;
@@ -72,35 +72,35 @@ WAFT_HTML_TEMPLATE = """
             overflow-y: auto;
             flex-shrink: 0;
         }
-        
+
         .sidebar h3 {
             margin-top: 0;
             font-size: 1.1rem;
             color: #000;
             margin-bottom: 1rem;
         }
-        
+
         .sidebar nav ul {
             list-style: none;
             padding: 0;
             margin: 0;
         }
-        
+
         .sidebar nav li {
             margin-bottom: 0.5rem;
         }
-        
+
         .sidebar nav a {
             color: #0066cc;
             text-decoration: none;
             display: block;
             padding: 4px 0;
         }
-        
+
         .sidebar nav a:hover {
             text-decoration: underline;
         }
-        
+
         /* Main Content */
         .main-content {
             margin-left: 250px;
@@ -108,7 +108,7 @@ WAFT_HTML_TEMPLATE = """
             flex: 1;
             max-width: calc(100% - 250px);
         }
-        
+
         @media (max-width: 768px) {
             .sidebar {
                 position: relative;
@@ -120,14 +120,14 @@ WAFT_HTML_TEMPLATE = """
                 max-width: 100%;
             }
         }
-        
+
         /* Header - Minimal and functional */
         .header {
             border-bottom: 2px solid #e5e5e5;
             padding-bottom: 1rem;
             margin-bottom: 2rem;
         }
-        
+
         .header h1 {
             font-size: 1.75rem;
             font-weight: 600;
@@ -135,23 +135,23 @@ WAFT_HTML_TEMPLATE = """
             margin-bottom: 0.25rem;
             letter-spacing: -0.02em;
         }
-        
+
         .header .meta {
             font-size: 0.875rem;
             color: #666;
             margin-top: 0.5rem;
         }
-        
+
         .header .meta-item {
             display: inline-block;
             margin-right: 1rem;
         }
-        
+
         /* Content Sections */
         .section {
             margin-bottom: 2.5rem;
         }
-        
+
         .section-title {
             font-size: 1.25rem;
             font-weight: 600;
@@ -160,7 +160,7 @@ WAFT_HTML_TEMPLATE = """
             padding-bottom: 0.5rem;
             border-bottom: 1px solid #e5e5e5;
         }
-        
+
         /* Typography */
         h1 {
             font-size: 1.5rem;
@@ -169,7 +169,7 @@ WAFT_HTML_TEMPLATE = """
             margin-top: 2rem;
             margin-bottom: 1rem;
         }
-        
+
         h2 {
             font-size: 1.25rem;
             font-weight: 600;
@@ -177,7 +177,7 @@ WAFT_HTML_TEMPLATE = """
             margin-top: 1.5rem;
             margin-bottom: 0.75rem;
         }
-        
+
         h3 {
             font-size: 1.1rem;
             font-weight: 500;
@@ -185,43 +185,43 @@ WAFT_HTML_TEMPLATE = """
             margin-top: 1.25rem;
             margin-bottom: 0.5rem;
         }
-        
+
         p {
             margin-bottom: 1rem;
             color: #333;
         }
-        
+
         ul, ol {
             margin-left: 1.5rem;
             margin-bottom: 1rem;
         }
-        
+
         li {
             margin-bottom: 0.5rem;
             color: #333;
         }
-        
+
         /* Lists - Clean and scannable */
         .list-item {
             padding: 0.75rem 0;
             border-bottom: 1px solid #f0f0f0;
         }
-        
+
         .list-item:last-child {
             border-bottom: none;
         }
-        
+
         .list-item-title {
             font-weight: 500;
             color: #000;
             margin-bottom: 0.25rem;
         }
-        
+
         .list-item-meta {
             font-size: 0.875rem;
             color: #666;
         }
-        
+
         /* Tables - Clean and readable */
         table {
             width: 100%;
@@ -229,7 +229,7 @@ WAFT_HTML_TEMPLATE = """
             margin: 1rem 0;
             font-size: 0.9375rem;
         }
-        
+
         th {
             text-align: left;
             font-weight: 600;
@@ -238,17 +238,17 @@ WAFT_HTML_TEMPLATE = """
             border-bottom: 2px solid #e5e5e5;
             background: #fafafa;
         }
-        
+
         td {
             padding: 0.75rem;
             border-bottom: 1px solid #f0f0f0;
             color: #333;
         }
-        
+
         tr:hover {
             background: #fafafa;
         }
-        
+
         /* Code */
         code {
             font-family: 'SF Mono', 'Monaco', 'Menlo', 'Consolas', monospace;
@@ -258,7 +258,7 @@ WAFT_HTML_TEMPLATE = """
             border-radius: 3px;
             color: #d73a49;
         }
-        
+
         pre {
             background: #f5f5f5;
             padding: 1rem;
@@ -267,13 +267,13 @@ WAFT_HTML_TEMPLATE = """
             margin: 1rem 0;
             border: 1px solid #e5e5e5;
         }
-        
+
         pre code {
             background: transparent;
             padding: 0;
             color: #333;
         }
-        
+
         /* Badges/Tags - Subtle and functional */
         .badge {
             display: inline-block;
@@ -285,7 +285,7 @@ WAFT_HTML_TEMPLATE = """
             color: #666;
             border: 1px solid #e0e0e0;
         }
-        
+
         .badge-proven { background: #d4edda; color: #155724; border-color: #c3e6cb; }
         .badge-disproven { background: #f8d7da; color: #721c24; border-color: #f5c6cb; }
         .badge-inconclusive { background: #fff3cd; color: #856404; border-color: #ffeaa7; }
@@ -293,17 +293,17 @@ WAFT_HTML_TEMPLATE = """
         .badge-active { background: #cce5ff; color: #004085; border-color: #b3d9ff; }
         .badge-paused { background: #fff3cd; color: #856404; border-color: #ffeaa7; }
         .badge-open { background: #e9ecef; color: #495057; border-color: #dee2e6; }
-        
+
         /* Links */
         a {
             color: #0066cc;
             text-decoration: none;
         }
-        
+
         a:hover {
             text-decoration: underline;
         }
-        
+
         /* Footer - Minimal */
         .footer {
             margin-top: 3rem;
@@ -313,7 +313,7 @@ WAFT_HTML_TEMPLATE = """
             color: #666;
             text-align: center;
         }
-        
+
         /* Grid/Stats - For data visualization */
         .grid {
             display: grid;
@@ -321,78 +321,78 @@ WAFT_HTML_TEMPLATE = """
             gap: 1rem;
             margin: 1rem 0;
         }
-        
+
         .stat-card {
             padding: 1rem;
             background: #fafafa;
             border: 1px solid #e5e5e5;
             border-radius: 4px;
         }
-        
+
         .stat-value {
             font-size: 1.5rem;
             font-weight: 600;
             color: #000;
         }
-        
+
         .stat-label {
             font-size: 0.875rem;
             color: #666;
             margin-top: 0.25rem;
         }
-        
+
         /* Print optimizations */
         @media print {
             body {
                 background: white;
             }
-            
+
             .container {
                 padding: 0;
             }
-            
+
             .section {
                 page-break-inside: avoid;
             }
-            
+
             h1, h2 {
                 page-break-after: avoid;
             }
         }
-        
+
         /* PDF-specific page rules */
         @page {
             size: letter;
             margin: 0.75in;
-            
+
             @top-right {
                 content: "{{ title }}";
                 font-size: 9pt;
                 color: #666;
             }
-            
+
             @bottom-center {
                 content: "Page " counter(page);
                 font-size: 9pt;
                 color: #666;
             }
         }
-        
+
         @page :first {
             @top-right { content: none; }
             @bottom-center { content: none; }
         }
-        
+
         /* Responsive */
         @media (max-width: 768px) {
             .container {
                 padding: 1rem;
             }
-            
+
             table {
                 font-size: 0.875rem;
             }
-            
+
             th, td {
                 padding: 0.5rem;
             }
@@ -408,11 +408,11 @@ WAFT_HTML_TEMPLATE = """
                 <span class="meta-item">WAFT</span>
             </div>
         </div>
-        
+
         <div class="content-wrapper">
             {{ content }}
         </div>
-        
+
         <div class="footer">
             <p>Generated by WAFT (Wave Agent Framework & Tools)</p>
         </div>

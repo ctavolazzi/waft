@@ -105,15 +105,15 @@ def main():
             "body": """
 # Corporate Mission
 
-Teleport Massive Corporation is dedicated to revolutionizing transportation 
-through the development and deployment of instant teleportation technology. 
-We believe that distance should never be a barrier to human connection, 
+Teleport Massive Corporation is dedicated to revolutionizing transportation
+through the development and deployment of instant teleportation technology.
+We believe that distance should never be a barrier to human connection,
 commerce, or exploration.
 
 ## Our Vision
 
-A world where anyone can be anywhere, instantly. Where the boundaries of 
-space and time dissolve, enabling unprecedented freedom of movement and 
+A world where anyone can be anywhere, instantly. Where the boundaries of
+space and time dissolve, enabling unprecedented freedom of movement and
 opportunity.
 
 ## Core Values
@@ -172,12 +172,12 @@ opportunity.
 
 ## Founding
 
-Teleport Massive was founded on {datetime.now().strftime("%B %d, %Y")} with a 
+Teleport Massive was founded on {datetime.now().strftime("%B %d, %Y")} with a
 vision to revolutionize transportation through instant teleportation technology.
 
 ## Early Days
 
-The corporation began in the Bureaucracy Realm, where meticulous documentation 
+The corporation began in the Bureaucracy Realm, where meticulous documentation
 and structured processes enabled rapid growth and innovation.
 
 ## Key Milestones
@@ -188,8 +188,8 @@ and structured processes enabled rapid growth and innovation.
 
 ## Technology
 
-Teleport Massive's core technology enables instant transportation of matter 
-across any distance. The technology is still in development, with safety and 
+Teleport Massive's core technology enables instant transportation of matter
+across any distance. The technology is still in development, with safety and
 reliability being the top priorities.
 
 ## Future Plans

@@ -40,7 +40,7 @@ def render_tavern_page(tavern_keeper: TavernKeeper | None):
     st.subheader("Dice Roll Simulator")
 
     with st.form("dice_roll_form"):
-        ability = st.selectbox("Ability", ["STR", "DEX", "CON", "INT", "WIS", "CHA"])
+        st.selectbox("Ability", ["STR", "DEX", "CON", "INT", "WIS", "CHA"])
         modifier = st.number_input("Modifier", value=0, step=1)
         dc = st.number_input("Difficulty Class (DC)", value=10, step=1)
 

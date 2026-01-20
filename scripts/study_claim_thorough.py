@@ -237,7 +237,7 @@ class ThoroughStudyBuilder:
         study_areas = self.self_study.get_study_areas()
         results = {}
 
-        for area_name, area_info in study_areas.items():
+        for area_name, _area_info in study_areas.items():
             print(f"  📊 Analyzing: {area_name}...")
 
             # Create proof builder for this area
@@ -333,7 +333,7 @@ class ThoroughStudyBuilder:
         import os
 
         recent = []
-        for root, dirs, files in os.walk(self.project_path / "src"):
+        for root, _dirs, files in os.walk(self.project_path / "src"):
             for file in files[:10]:
                 file_path = Path(root) / file
                 try:

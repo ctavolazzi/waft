@@ -81,14 +81,14 @@ class BannedWordsSystem:
         for line_num, line in enumerate(lines, 1):
             for ban in self.banned_words:
                 if ban.case_sensitive:
-                    pattern = re.escape(ban.word)
+                    re.escape(ban.word)
                 else:
-                    pattern = re.escape(ban.word)
+                    re.escape(ban.word)
                     line_lower = line.lower()
                     if ban.word.lower() in line_lower:
                         # Find all occurrences
                         matches = list(re.finditer(re.escape(ban.word), line_lower, re.IGNORECASE))
-                        for match in matches:
+                        for _match in matches:
                             violations.append(
                                 {
                                     "line": line_num,

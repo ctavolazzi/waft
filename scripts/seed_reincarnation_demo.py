@@ -619,32 +619,32 @@ The demo includes {len(catalog.get("lifetimes", []))} available lifetimes:
 
 ### Scenario 1: Soul Purchases Lifetime → Becomes ALIVE
 
-**Initial State**: DEAD_AWAKE  
-**Action**: Purchase lifetime from KarmaMarket  
+**Initial State**: DEAD_AWAKE
+**Action**: Purchase lifetime from KarmaMarket
 **Expected Result**: Soul transitions to ALIVE_AWAKE, can use spacetime tools
 
 ### Scenario 2: Soul Runs Out of Karma → Gets Basic Survival Lifetime
 
-**Initial State**: DEAD_AWAKE, 0 karma  
-**Action**: Attempt to purchase lifetime  
+**Initial State**: DEAD_AWAKE, 0 karma
+**Action**: Attempt to purchase lifetime
 **Expected Result**: System grants basic survival lifetime (free)
 
 ### Scenario 3: Lifetime Ends → Soul Becomes DEAD, Can Edit Goals
 
-**Initial State**: ALIVE_AWAKE (with active lifetime)  
-**Action**: Lifetime expires or ends  
+**Initial State**: ALIVE_AWAKE (with active lifetime)
+**Action**: Lifetime expires or ends
 **Expected Result**: Soul transitions to DEAD_AWAKE, can edit goals
 
 ### Scenario 4: Dead Soul Purchases Treasure → Upgrades Personality
 
-**Initial State**: DEAD_AWAKE  
-**Action**: Purchase treasure from AfterlifeKarmaMarket  
+**Initial State**: DEAD_AWAKE
+**Action**: Purchase treasure from AfterlifeKarmaMarket
 **Expected Result**: Personality upgraded, karma deducted
 
 ### Scenario 5: State Transitions (Awake ↔ Sleeping)
 
-**Initial State**: ALIVE_AWAKE or DEAD_AWAKE  
-**Action**: Transition between awake/sleeping  
+**Initial State**: ALIVE_AWAKE or DEAD_AWAKE
+**Action**: Transition between awake/sleeping
 **Expected Result**: Sub-state changes, primary state unchanged
 
 ---
@@ -797,17 +797,17 @@ def generate_demo_html(
 <body>
     <div class="container">
         <h1>🌱 Reincarnation System Demo</h1>
-        
+
         <div class="info">
             <p class="status">✅ Demo environment seeded successfully!</p>
             <p>Your demo is ready to use. Click the button below to view the complete overview PDF.</p>
             {"<p><strong>Batched Mode:</strong> This PDF contains multiple permutations of the demo.</p>" if batched else ""}
         </div>
-        
+
         <a href="{pdf_filename}" target="_blank" class="pdf-link">
             📄 Open Demo Overview PDF
         </a>
-        
+
         <h2>Quick Start</h2>
         <p>Your demo includes:</p>
         <ul>
@@ -816,10 +816,10 @@ def generate_demo_html(
             <li><strong>Test Scenarios</strong> documentation</li>
             <li><strong>Complete Overview PDF</strong> (click button above)</li>
         </ul>
-        
+
         <h2>Demo Location</h2>
         <p><code>{demo_path}</code></p>
-        
+
         <h2>Next Steps</h2>
         <ol>
             <li>Review the <a href="{pdf_filename}" target="_blank">PDF overview</a></li>
@@ -827,12 +827,12 @@ def generate_demo_html(
             <li>Review <code>TEST_SCENARIOS.md</code> for test scenarios</li>
             <li>Start implementing the reincarnation system!</li>
         </ol>
-        
+
         <div class="info" style="margin-top: 30px;">
             <p><strong>Note:</strong> The PDF will open in a new tab/window. If it doesn't open automatically, click the button above.</p>
         </div>
     </div>
-    
+
     <script>
         // Auto-open PDF in new tab after a short delay
         setTimeout(function() {{

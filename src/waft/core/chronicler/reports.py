@@ -203,7 +203,7 @@ class ReportGenerator:
         brief.add_text(
             f"This report summarizes all system activity from {start.strftime('%B %d, %Y')} "
             f"00:00:00 to 23:59:59. The system observed {len(observations)} total events "
-            f"across {len(set(o.get('observer', 'unknown') for o in observations))} observation sources."
+            f"across {len({o.get('observer', 'unknown') for o in observations})} observation sources."
         )
 
         brief.add_table(

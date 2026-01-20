@@ -270,14 +270,14 @@ def create_advanced_demo_booklet(
         @page {
             size: letter;
             margin: 0.75in;
-            
+
             @top-center {
                 content: "WAFT Advanced Demonstration";
                 font-family: 'Times New Roman', serif;
                 font-size: 9pt;
                 color: #666;
             }
-            
+
             @bottom-center {
                 content: "Page " counter(page);
                 font-family: 'Times New Roman', serif;
@@ -285,36 +285,36 @@ def create_advanced_demo_booklet(
                 color: #666;
             }
         }
-        
+
         @page :first {
             @top-center { content: none; }
         }
-        
+
         body {
             font-family: 'Times New Roman', serif;
             font-size: 11pt;
             line-height: 1.6;
             color: #000;
         }
-        
+
         .cover {
             text-align: center;
             padding-top: 2in;
         }
-        
+
         .cover h1 {
             font-size: 32pt;
             font-weight: bold;
             margin-bottom: 0.3in;
             letter-spacing: 3px;
         }
-        
+
         .cover .subtitle {
             font-size: 18pt;
             color: #333;
             margin-bottom: 0.5in;
         }
-        
+
         h1 {
             font-size: 20pt;
             font-weight: bold;
@@ -323,7 +323,7 @@ def create_advanced_demo_booklet(
             border-bottom: 3px solid #000;
             padding-bottom: 0.1in;
         }
-        
+
         h2 {
             font-size: 16pt;
             font-weight: bold;
@@ -331,14 +331,14 @@ def create_advanced_demo_booklet(
             margin-bottom: 0.2in;
             color: #2c3e50;
         }
-        
+
         .highlight-box {
             background: #f8f9fa;
             border-left: 4px solid #3498db;
             padding: 0.2in;
             margin: 0.2in 0;
         }
-        
+
         .tool-card {
             background: #ffffff;
             border: 1px solid #ddd;
@@ -346,14 +346,14 @@ def create_advanced_demo_booklet(
             margin: 0.2in 0;
             border-radius: 4px;
         }
-        
+
         .tool-title {
             font-weight: bold;
             font-size: 13pt;
             color: #2c3e50;
             margin-bottom: 0.1in;
         }
-        
+
         code {
             font-family: 'Courier New', monospace;
             font-size: 10pt;
@@ -374,16 +374,16 @@ def create_advanced_demo_booklet(
             {{ date }}
         </div>
     </div>
-    
+
     <h1>Introduction</h1>
     <p>
         This booklet documents WAFT's advanced capabilities, including self-documentation
         and intelligent PDF organization. These tools demonstrate WAFT's recursive
         self-improvement through documentation.
     </p>
-    
+
     <h1>Demonstration 1: Framework Self-Documentation</h1>
-    
+
     <div class="tool-card">
         <div class="tool-title">Framework Documentation Generator</div>
         <p>
@@ -402,9 +402,9 @@ def create_advanced_demo_booklet(
         <p><strong>Generated:</strong> Framework documentation PDF created</p>
         {% endif %}
     </div>
-    
+
     <h1>Demonstration 2: PDF Binder Organization</h1>
-    
+
     <div class="tool-card">
         <div class="tool-title">PDF Binder Organizer</div>
         <p>
@@ -423,9 +423,9 @@ def create_advanced_demo_booklet(
         <p><strong>Generated:</strong> PDF binder with organized booklets</p>
         {% endif %}
     </div>
-    
+
     <h1>Demonstration 3: Meta-Cognitive Integration</h1>
-    
+
     <div class="highlight-box">
         <h2>The Recursive Loop</h2>
         <ol>
@@ -437,7 +437,7 @@ def create_advanced_demo_booklet(
             <li><strong>Cycle repeats</strong> → Continuous enhancement</li>
         </ol>
     </div>
-    
+
     <h2>Key Insight</h2>
     <p>
         These tools demonstrate WAFT's ability to:
@@ -448,14 +448,14 @@ def create_advanced_demo_booklet(
         <li><strong>Track its work</strong> (_pyrite system)</li>
         <li><strong>Improve recursively</strong> (feedback loops)</li>
     </ul>
-    
+
     <h1>Conclusion</h1>
     <p>
         This advanced demonstration showcases WAFT's recursive self-improvement
         capabilities. The system can observe itself, organize its knowledge, and
         continuously improve through documentation and feedback loops.
     </p>
-    
+
     <div class="highlight-box">
         <p style="text-align: center; font-style: italic; margin-top: 0.5in;">
             <strong>WAFT documenting WAFT using WAFT.</strong><br>

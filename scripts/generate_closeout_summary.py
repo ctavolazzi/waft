@@ -113,7 +113,7 @@ def generate_closeout_summary():
 
 <div class="warning">
     <div class="warning-title">Session Scope</div>
-    This session focused on creating a comprehensive document generation system with printer-friendly 
+    This session focused on creating a comprehensive document generation system with printer-friendly
     capabilities, PDF redaction tools, and global Cursor commands for workflow automation.
 </div>
 
@@ -603,24 +603,24 @@ def generate_closeout_summary():
 <div class="highlight-box">
     <h3>Session Summary</h3>
     <p>
-        This session successfully created a comprehensive document generation system with printer-friendly 
-        capabilities, PDF redaction tools, and global Cursor commands. While not everything was completed 
-        (particularly the full DocumentBuilder framework implementation), the foundation is solid and 
+        This session successfully created a comprehensive document generation system with printer-friendly
+        capabilities, PDF redaction tools, and global Cursor commands. While not everything was completed
+        (particularly the full DocumentBuilder framework implementation), the foundation is solid and
         ready for continued development.
     </p>
     <p>
-        <strong>Key Achievement:</strong> Created a unified workflow for document generation that can be 
+        <strong>Key Achievement:</strong> Created a unified workflow for document generation that can be
         accessed via global Cursor commands, making the system much more accessible and usable.
     </p>
     <p>
-        <strong>Key Learning:</strong> Incremental implementation and testing are critical. Designing 
+        <strong>Key Learning:</strong> Incremental implementation and testing are critical. Designing
         without implementing can lead to gaps in understanding.
     </p>
 </div>
 
 <div class="warning">
     <div class="warning-title">Critical Follow-Up</div>
-    The printer_friendly_helper.py bug needs to be fixed before it can be used in production. 
+    The printer_friendly_helper.py bug needs to be fixed before it can be used in production.
     Consider rewriting the regex patterns or using a different approach for CSS conversion.
 </div>
 

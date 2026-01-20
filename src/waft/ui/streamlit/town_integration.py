@@ -173,7 +173,7 @@ def render_town_creation_page():
     st.subheader("About AI Town")
     st.markdown("""
     AI Town is a virtual world where AI agents (Beings) live, chat, and socialize.
-    
+
     **Features:**
     - 👥 Multiple agents with unique personalities
     - 💬 Agent-to-agent conversations
@@ -290,20 +290,20 @@ def render_town_map():
         fig = go.Figure()
 
         # Plot agents
-        for i, (pos, name, color, in_conv) in enumerate(
-            zip(agent_positions, agent_names, agent_colors, in_conversation)
+        for _i, (pos, name, color, in_conv) in enumerate(
+            zip(agent_positions, agent_names, agent_colors, in_conversation, strict=False)
         ):
             fig.add_trace(
                 go.Scatter(
                     x=[pos[0]],
                     y=[pos[1]],
                     mode="markers+text",
-                    marker=dict(
-                        size=20,
-                        color=color,
-                        line=dict(width=2, color="white"),
-                        symbol="circle" if not in_conv else "star",
-                    ),
+                    marker={
+                        "size": 20,
+                        "color": color,
+                        "line": {"width": 2, "color": "white"},
+                        "symbol": "circle" if not in_conv else "star",
+                    },
                     text=name,
                     textposition="top center",
                     name=name,
@@ -326,11 +326,11 @@ def render_town_map():
                             x=[agent1.position["x"], agent2.position["x"]],
                             y=[agent1.position["y"], agent2.position["y"]],
                             mode="lines",
-                            line=dict(
-                                color=conversation_colors.get(conv_id, "#888888"),
-                                width=2,
-                                dash="dash",
-                            ),
+                            line={
+                                "color": conversation_colors.get(conv_id, "#888888"),
+                                "width": 2,
+                                "dash": "dash",
+                            },
                             showlegend=False,
                             hoverinfo="skip",
                         )
@@ -341,8 +341,8 @@ def render_town_map():
             title="🗺️ AI Town Map",
             xaxis_title="X Position",
             yaxis_title="Y Position",
-            xaxis=dict(range=[0, 100]),
-            yaxis=dict(range=[0, 100]),
+            xaxis={"range": [0, 100]},
+            yaxis={"range": [0, 100]},
             height=600,
             showlegend=False,
             hovermode="closest",
@@ -512,7 +512,6 @@ def render_voting_interface():
     if "voting_system" not in st.session_state:
         st.session_state.voting_system = TownVotingSystem(project_path=Path.cwd())
 
-    voting_system = st.session_state.voting_system
     town = st.session_state.town_world
 
     st.subheader("🗳️ Town Voting System")
@@ -536,15 +535,14 @@ def render_voting_interface():
 
     with st.form("create_decision"):
         decision_title = st.text_input("Decision Title")
-        decision_description = st.text_area("Description")
+        st.text_area("Description")
         decision_type = st.selectbox("Vote Type", ["binary", "multiple_choice", "ranked"])
 
-        options = []
         if decision_type == "binary":
-            options = ["Yes", "No"]
+            pass
         elif decision_type == "multiple_choice":
             option_text = st.text_input("Options (comma-separated)", "Option A, Option B, Option C")
-            options = [opt.strip() for opt in option_text.split(",")]
+            [opt.strip() for opt in option_text.split(",")]
 
         submitted = st.form_submit_button("Create Decision")
 

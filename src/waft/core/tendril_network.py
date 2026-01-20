@@ -489,11 +489,11 @@ class TendrilNetwork:
             "total_strings": len(self.strings),
             "nodes_by_type": {
                 node_type: sum(1 for n in self.nodes.values() if n.node_type == node_type)
-                for node_type in set(n.node_type for n in self.nodes.values())
+                for node_type in {n.node_type for n in self.nodes.values()}
             },
             "connection_types": {
                 conn_type: sum(1 for t in self.tendrils.values() if t.connection_type == conn_type)
-                for conn_type in set(t.connection_type for t in self.tendrils.values())
+                for conn_type in {t.connection_type for t in self.tendrils.values()}
             },
             "average_connections_per_node": (
                 sum(len(n.connections) for n in self.nodes.values()) / len(self.nodes)

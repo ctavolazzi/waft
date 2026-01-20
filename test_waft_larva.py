@@ -29,7 +29,7 @@ def test_database_initialization():
         os.remove(DB_NAME)
 
     # Create entity (should initialize database)
-    entity = WaftEntity()
+    WaftEntity()
 
     # Verify tables exist
     conn = sqlite3.connect(DB_NAME)
@@ -104,7 +104,7 @@ def test_safe_breath_error_handling():
     result = entity.safe_breath(failing_function)
 
     # Verify error was caught
-    assert result["success"] == False, "safe_breath should return success=False on error"
+    assert not result["success"], "safe_breath should return success=False on error"
     assert "error" in result, "Result should contain error field"
 
     # Verify TRAUMA was logged
@@ -169,7 +169,7 @@ def test_database_persistence():
     conn.close()
 
     # Create new entity instance
-    entity2 = WaftEntity()
+    WaftEntity()
 
     # Count entries again
     conn = sqlite3.connect(DB_NAME)

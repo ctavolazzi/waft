@@ -459,8 +459,8 @@ class ScientificPDFGenerator(PDFGenerator):
 
                     all_ideas = self.distilled_chat.get_top_ideas(n=1000, min_importance=0.0)
                     mid_point = len(all_ideas) // 2
-                    page_1_ideas = all_ideas[:mid_point]
-                    page_2_ideas = all_ideas[mid_point:]
+                    all_ideas[:mid_point]
+                    all_ideas[mid_point:]
 
                     result = generator.generate(
                         distilled_chat=self.distilled_chat,
@@ -560,7 +560,7 @@ class ScientificPDFGenerator(PDFGenerator):
             ScientificPDFGenerator instance
         """
         # Use parent to create base generator
-        base_generator = super(ScientificPDFGenerator, cls).from_content(
+        base_generator = super().from_content(
             content=content, title=title, style=style, **kwargs
         )
 

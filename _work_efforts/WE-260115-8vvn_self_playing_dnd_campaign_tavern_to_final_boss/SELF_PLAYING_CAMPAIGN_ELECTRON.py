@@ -156,7 +156,7 @@ class ElectronCampaignDisplay:
             padding: 0;
             box-sizing: border-box;
         }}
-        
+
         body {{
             font-family: 'Georgia', serif;
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
@@ -164,19 +164,19 @@ class ElectronCampaignDisplay:
             padding: 20px;
             min-height: 100vh;
         }}
-        
+
         .container {{
             max-width: 1200px;
             margin: 0 auto;
         }}
-        
+
         h1 {{
             text-align: center;
             font-size: 2.5em;
             margin-bottom: 10px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }}
-        
+
         .status {{
             text-align: center;
             font-size: 1.5em;
@@ -185,31 +185,31 @@ class ElectronCampaignDisplay:
             background: rgba(255,255,255,0.1);
             border-radius: 10px;
         }}
-        
+
         .party {{
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }}
-        
+
         .party-member {{
             background: rgba(255,255,255,0.15);
             padding: 20px;
             border-radius: 10px;
             border: 2px solid rgba(255,255,255,0.3);
         }}
-        
+
         .party-member h3 {{
             color: #ffd700;
             margin-bottom: 10px;
         }}
-        
+
         .class-race {{
             font-style: italic;
             margin-bottom: 15px;
         }}
-        
+
         .hp-bar {{
             background: rgba(0,0,0,0.3);
             height: 30px;
@@ -218,14 +218,14 @@ class ElectronCampaignDisplay:
             margin-bottom: 10px;
             overflow: hidden;
         }}
-        
+
         .hp-fill {{
             background: linear-gradient(90deg, #4caf50, #8bc34a);
             height: 100%;
             transition: width 0.5s ease;
             border-radius: 15px;
         }}
-        
+
         .hp-text {{
             position: absolute;
             top: 50%;
@@ -235,7 +235,7 @@ class ElectronCampaignDisplay:
             color: white;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
         }}
-        
+
         .current-scene {{
             background: rgba(255,255,255,0.1);
             padding: 25px;
@@ -243,16 +243,16 @@ class ElectronCampaignDisplay:
             margin-bottom: 30px;
             border-left: 5px solid #ffd700;
         }}
-        
+
         .current-scene h2 {{
             color: #ffd700;
             margin-bottom: 15px;
         }}
-        
+
         .encounters {{
             margin-bottom: 30px;
         }}
-        
+
         .encounter {{
             background: rgba(255,255,255,0.1);
             padding: 15px;
@@ -260,18 +260,18 @@ class ElectronCampaignDisplay:
             border-radius: 8px;
             border-left: 4px solid #ff6b6b;
         }}
-        
+
         .encounter h4 {{
             color: #ffd700;
             margin-bottom: 10px;
         }}
-        
+
         .encounter-meta {{
             font-size: 0.9em;
             color: #ccc;
             margin-top: 10px;
         }}
-        
+
         .log {{
             background: rgba(0,0,0,0.3);
             padding: 15px;
@@ -281,13 +281,13 @@ class ElectronCampaignDisplay:
             font-family: 'Courier New', monospace;
             font-size: 0.9em;
         }}
-        
+
         .log-entry {{
             padding: 5px;
             margin-bottom: 5px;
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }}
-        
+
         .victory {{
             text-align: center;
             padding: 40px;
@@ -295,19 +295,19 @@ class ElectronCampaignDisplay:
             border-radius: 15px;
             margin-top: 30px;
         }}
-        
+
         .victory h2 {{
             font-size: 3em;
             color: #ffd700;
             margin-bottom: 20px;
             text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
         }}
-        
+
         @keyframes fadeIn {{
             from {{ opacity: 0; transform: translateY(20px); }}
             to {{ opacity: 1; transform: translateY(0); }}
         }}
-        
+
         .party-member, .encounter, .log-entry {{
             animation: fadeIn 0.5s ease;
         }}
@@ -317,34 +317,34 @@ class ElectronCampaignDisplay:
     <div class="container">
         <h1>🎲 Self-Playing DnD Campaign 🎲</h1>
         <div class="status" id="status">{campaign_state.get("message", "Running...")}</div>
-        
+
         <div class="party" id="party">
             {party_html}
         </div>
-        
+
         <div class="current-scene" id="current-scene">
             <h2>Current Scene</h2>
             <p>{campaign_state.get("current_scene", "Starting adventure...")}</p>
         </div>
-        
+
         <div class="encounters" id="encounters">
             <h2 style="margin-bottom: 15px; color: #ffd700;">⚔️ Encounters</h2>
             {encounters_html}
         </div>
-        
+
         <div class="log" id="log">
             <h3 style="margin-bottom: 10px; color: #ffd700;">📜 Campaign Log</h3>
             {log_html}
         </div>
-        
+
         {'<div class="victory"><h2>🎉 VICTORY! 🎉</h2><p>The Shadow Lord Malachar has been defeated!<br>The realm is saved!</p></div>' if campaign_state.get("victory") else ""}
     </div>
-    
+
     <script>
         // Auto-refresh every 2 seconds to show updates
         let refreshCount = 0;
         const maxRefreshes = 300; // 10 minutes max
-        
+
         function autoRefresh() {{
             refreshCount++;
             if (refreshCount < maxRefreshes) {{
@@ -355,7 +355,7 @@ class ElectronCampaignDisplay:
                 document.getElementById('status').textContent = '🎉 Campaign Complete! Window will stay open.';
             }}
         }}
-        
+
         autoRefresh();
     </script>
 </body>
@@ -663,8 +663,8 @@ class SelfPlayingCampaignElectron:
 
         markdown_content = f"""# The Tavern Heroes: A Self-Playing Adventure
 
-**Generated by**: WAFT Self-Playing Campaign System  
-**Date**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}  
+**Generated by**: WAFT Self-Playing Campaign System
+**Date**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 **Party**: {", ".join([m.name for m in self.party])}
 
 ---

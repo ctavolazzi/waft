@@ -808,9 +808,7 @@ def empirica_monitor_cmd(
     session_id: str | None = typer.Option(
         None, "--session-id", "-s", help="Session ID to monitor (snapshot only)"
     ),
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Launch Empirica TUI dashboard for monitoring epistemic state.
 
@@ -972,7 +970,7 @@ def finding_log(
         insight_result = gamification.award_insight(10.0, reason="Logged finding")
 
         # Check for Knowledge Architect achievement (50 findings)
-        stats = gamification.get_stats()
+        gamification.get_stats()
         # Count findings from history
         findings_count = sum(
             1
@@ -1403,7 +1401,7 @@ def decide(
     # Default: Show usage
     from .core.decision_cli import DecisionCLI
 
-    cli = DecisionCLI(project_path)
+    DecisionCLI(project_path)
 
     console.print("[bold cyan]🎯 Decision Matrix Analysis[/bold cyan]\n")
     console.print("[dim]The /decide command uses DecisionCLI for standardized calculations.")

@@ -151,7 +151,7 @@ async def run_experiment():
 
     observer = TheObserver(project_path=project_root)
     slicer = TheSlicer(biome=biome, observer=observer)
-    reaper = TheReaper(biome=biome, observer=observer)
+    TheReaper(biome=biome, observer=observer)
     obsidian = ObsidianGenerator(project_path=project_root, observer=observer)
 
     print("✓ TheObserver Initialized")
@@ -196,7 +196,7 @@ async def run_experiment():
             await asyncio.sleep(0.1)
 
         # Grant time slices to all organisms
-        results = await slicer.pulse()
+        await slicer.pulse()
 
         # Inject memory into Specimen-D (multiple techniques)
         injection_types = ["random", "coherence", "realization_proximity"]

@@ -711,18 +711,18 @@ def generate_master_comparison(output_dir: Path):
             margin-top: 0;
             color: #0d47a1;
         }}
-    
-            This document provides a comprehensive comparison of all major PDF generation 
-            libraries available for Python. Each library has its own self-documenting PDF 
+
+            This document provides a comprehensive comparison of all major PDF generation
+            libraries available for Python. Each library has its own self-documenting PDF
             that explains how it works, why you'd use it, and includes code examples.
         </p>
         <p>
             <strong>Generated:</strong> {gen_time}
         </p>
     </div>
-    
+
     <h2>Available Libraries</h2>
-    
+
     <table>
         <thead>
             <tr>
@@ -807,19 +807,19 @@ def generate_master_comparison(output_dir: Path):
             </tr>
         </tbody>
     </table>
-    
+
     <h2>Quick Decision Guide</h2>
-    
+
     <div class="library-section">
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
         Individual self-documenting PDFs have been generated for each library. Each PDF explains:
-    
-    
+
+
             or <strong>ReportLab</strong> if you need programmatic control and smaller file sizes.
             separation of content and presentation.
 """

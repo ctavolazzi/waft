@@ -244,10 +244,10 @@ def create_founder_lore(project_path: Path, fai_wei: Being):
 
     lore = f"""# Fai Wei - The Founder
 
-**Being ID**: `{fai_wei.being_id}`  
-**Name**: Fai Wei  
-**Role**: Founder & CEO  
-**Founded**: July 1, 2025  
+**Being ID**: `{fai_wei.being_id}`
+**Name**: Fai Wei
+**Role**: Founder & CEO
+**Founded**: July 1, 2025
 
 ## The Story
 
@@ -308,7 +308,7 @@ This is their story. This is their truth. This is their reality.
 
 ---
 
-*Created: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}*  
+*Created: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}*
 *Being ID: {fai_wei.being_id}*
 """
 

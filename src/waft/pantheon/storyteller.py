@@ -195,7 +195,7 @@ class Storyteller:
         settings = []
         for chapter in chapters:
             # Extract from content (simple heuristic)
-            content = chapter.get("content", "")
+            chapter.get("content", "")
             # Could use NLP here, but for now just track what's provided
             if "characters" in chapter:
                 characters.extend(chapter["characters"])
@@ -381,13 +381,13 @@ class Storyteller:
             "total_stories": len(self.story_catalog),
             "by_type": {
                 story_type: len([s for s in self.story_catalog if s.story_type == story_type])
-                for story_type in set(s.story_type for s in self.story_catalog)
+                for story_type in {s.story_type for s in self.story_catalog}
             },
             "total_characters": len(
-                set(char for story in self.story_catalog for char in story.characters)
+                {char for story in self.story_catalog for char in story.characters}
             ),
             "total_settings": len(
-                set(setting for story in self.story_catalog for setting in story.settings)
+                {setting for story in self.story_catalog for setting in story.settings}
             ),
             "recent_stories": [
                 s.to_dict()

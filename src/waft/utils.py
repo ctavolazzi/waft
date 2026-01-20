@@ -1913,7 +1913,7 @@ class StorageRegistry:
             "last_operation": entry.get("last_operation"),
             "created_at": entry.get("timestamp"),
             "history": entry.get("history", []),
-            "all_locations": sorted(list(all_locations)),
+            "all_locations": sorted(all_locations),
             "move_count": sum(1 for h in entry.get("history", []) if h.get("operation") == "moved"),
         }
 

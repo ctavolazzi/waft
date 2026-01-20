@@ -233,14 +233,14 @@ FRAMEWORK_DOC_TEMPLATE = """
         @page {
             size: letter;
             margin: 0.75in;
-            
+
             @top-center {
                 content: "WAFT Framework Documentation";
                 font-family: 'Times New Roman', serif;
                 font-size: 9pt;
                 color: #666;
             }
-            
+
             @bottom-center {
                 content: "Page " counter(page);
                 font-family: 'Times New Roman', serif;
@@ -248,42 +248,42 @@ FRAMEWORK_DOC_TEMPLATE = """
                 color: #666;
             }
         }
-        
+
         @page :first {
             @top-center { content: none; }
         }
-        
+
         body {
             font-family: 'Times New Roman', serif;
             font-size: 11pt;
             line-height: 1.6;
             color: #000;
         }
-        
+
         .cover {
             text-align: center;
             padding-top: 2in;
         }
-        
+
         .cover h1 {
             font-size: 32pt;
             font-weight: bold;
             margin-bottom: 0.3in;
             letter-spacing: 3px;
         }
-        
+
         .cover .subtitle {
             font-size: 18pt;
             color: #333;
             margin-bottom: 0.5in;
         }
-        
+
         .cover .meta {
             font-size: 12pt;
             color: #666;
             margin-top: 1.5in;
         }
-        
+
         h1 {
             font-size: 20pt;
             font-weight: bold;
@@ -292,7 +292,7 @@ FRAMEWORK_DOC_TEMPLATE = """
             border-bottom: 3px solid #000;
             padding-bottom: 0.1in;
         }
-        
+
         h2 {
             font-size: 16pt;
             font-weight: bold;
@@ -300,7 +300,7 @@ FRAMEWORK_DOC_TEMPLATE = """
             margin-bottom: 0.2in;
             color: #2c3e50;
         }
-        
+
         h3 {
             font-size: 13pt;
             font-weight: bold;
@@ -308,46 +308,46 @@ FRAMEWORK_DOC_TEMPLATE = """
             margin-bottom: 0.15in;
             color: #34495e;
         }
-        
+
         .highlight-box {
             background: #f8f9fa;
             border-left: 4px solid #3498db;
             padding: 0.2in;
             margin: 0.2in 0;
         }
-        
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 0.2in;
             margin: 0.3in 0;
         }
-        
+
         .stat-card {
             background: #ecf0f1;
             padding: 0.15in;
             border-radius: 4px;
             text-align: center;
         }
-        
+
         .stat-number {
             font-size: 24pt;
             font-weight: bold;
             color: #2c3e50;
         }
-        
+
         .stat-label {
             font-size: 10pt;
             color: #7f8c8d;
             margin-top: 0.05in;
         }
-        
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin: 0.2in 0;
         }
-        
+
         th {
             background: #34495e;
             color: white;
@@ -355,16 +355,16 @@ FRAMEWORK_DOC_TEMPLATE = """
             text-align: left;
             font-weight: bold;
         }
-        
+
         td {
             padding: 0.1in;
             border-bottom: 1px solid #ddd;
         }
-        
+
         tr:hover {
             background: #f5f5f5;
         }
-        
+
         code {
             font-family: 'Courier New', monospace;
             font-size: 10pt;
@@ -372,7 +372,7 @@ FRAMEWORK_DOC_TEMPLATE = """
             padding: 0.05in;
             border-radius: 3px;
         }
-        
+
         .module-card {
             background: #ffffff;
             border: 1px solid #ddd;
@@ -380,28 +380,28 @@ FRAMEWORK_DOC_TEMPLATE = """
             margin: 0.2in 0;
             border-radius: 4px;
         }
-        
+
         .module-name {
             font-weight: bold;
             font-size: 12pt;
             color: #2c3e50;
             margin-bottom: 0.1in;
         }
-        
+
         .module-doc {
             color: #555;
             font-style: italic;
             margin-bottom: 0.1in;
         }
-        
+
         .component-list {
             margin-left: 0.2in;
         }
-        
+
         .component-list li {
             margin-bottom: 0.05in;
         }
-        
+
         .architecture-diagram {
             background: #f8f9fa;
             padding: 0.3in;
@@ -411,14 +411,14 @@ FRAMEWORK_DOC_TEMPLATE = """
             font-size: 9pt;
             white-space: pre-wrap;
         }
-        
+
         .note {
             background: #fff3cd;
             border-left: 4px solid #ffc107;
             padding: 0.15in;
             margin: 0.2in 0;
         }
-        
+
         .note-title {
             font-weight: bold;
             margin-bottom: 0.05in;
@@ -437,14 +437,14 @@ FRAMEWORK_DOC_TEMPLATE = """
             <p>Self-Documented Through Codebase Analysis</p>
         </div>
     </div>
-    
+
     <h1>Introduction</h1>
     <p>
         This document describes how WAFT functions, based on <strong>direct inspection</strong>
         of the codebase. All information presented here was extracted through automated
         analysis - nothing is hardcoded.
     </p>
-    
+
     <div class="note">
         <div class="note-title">Meta-Documentation</div>
         <p>
@@ -453,9 +453,9 @@ FRAMEWORK_DOC_TEMPLATE = """
             recursive self-documentation - the system describing its own operation.
         </p>
     </div>
-    
+
     <h1>System Overview</h1>
-    
+
     <div class="stats-grid">
         <div class="stat-card">
             <div class="stat-number">{{ structure.total_modules }}</div>
@@ -474,7 +474,7 @@ FRAMEWORK_DOC_TEMPLATE = """
             <div class="stat-label">Templates</div>
         </div>
     </div>
-    
+
     <h2>What WAFT Does</h2>
     <p>
         Based on codebase analysis, WAFT is a comprehensive document generation framework
@@ -487,14 +487,14 @@ FRAMEWORK_DOC_TEMPLATE = """
         <li><strong>Reflection System</strong> - Self-observation and documentation</li>
         <li><strong>Meta-Cognitive Layer</strong> - Work effort tracking and epistemic memory</li>
     </ul>
-    
+
     <h1>Core Architecture</h1>
-    
+
     <h2>Module Structure</h2>
     <p>
         WAFT is organized into the following core modules (discovered through analysis):
     </p>
-    
+
     {% set core_modules_list = structure.core_modules[:10] %}
     {% for module_name in core_modules_list %}
     <div class="module-card">
@@ -515,13 +515,13 @@ FRAMEWORK_DOC_TEMPLATE = """
         {% endif %}
     </div>
     {% endfor %}
-    
+
     <h1>Template System</h1>
     <p>
         WAFT includes {{ structure.template_count }} document templates, each designed for
         specific use cases:
     </p>
-    
+
     <table>
         <tr>
             <th>Template Name</th>
@@ -536,12 +536,12 @@ FRAMEWORK_DOC_TEMPLATE = """
         </tr>
         {% endfor %}
     </table>
-    
+
     <h1>Key Classes</h1>
     <p>
         Based on codebase analysis, WAFT's architecture centers around these key classes:
     </p>
-    
+
     {% for class_name, class_info in classes.items() %}
     <div class="module-card">
         <div class="module-name">{{ class_info.name }}</div>
@@ -561,9 +561,9 @@ FRAMEWORK_DOC_TEMPLATE = """
         {% endif %}
     </div>
     {% endfor %}
-    
+
     <h1>How WAFT Works</h1>
-    
+
     <h2>Document Generation Flow</h2>
     <div class="architecture-diagram">
 ┌─────────────────────────────────────────────────────────┐
@@ -595,7 +595,7 @@ FRAMEWORK_DOC_TEMPLATE = """
 │     └─ Professional PDF document                       │
 └─────────────────────────────────────────────────────────┘
     </div>
-    
+
     <h2>Self-Documentation Flow</h2>
     <div class="architecture-diagram">
 ┌─────────────────────────────────────────────────────────┐
@@ -624,7 +624,7 @@ FRAMEWORK_DOC_TEMPLATE = """
 │     └─ ↺ CYCLE CONTINUES ↺                              │
 └─────────────────────────────────────────────────────────┘
     </div>
-    
+
     <h1>Meta-Cognitive Layer</h1>
     <p>
         WAFT includes a meta-cognitive layer that enables:
@@ -635,9 +635,9 @@ FRAMEWORK_DOC_TEMPLATE = """
         <li><strong>Perspective Taking</strong> - AI systems can "wear" previous perspectives</li>
         <li><strong>Recursive Self-Improvement</strong> - System improves based on its own observations</li>
     </ul>
-    
+
     <h1>Key Findings</h1>
-    
+
     <div class="highlight-box">
         <h3>Architecture Discovery</h3>
         <p>
@@ -646,7 +646,7 @@ FRAMEWORK_DOC_TEMPLATE = """
             <strong>{{ structure.total_functions }}</strong> functions.
         </p>
     </div>
-    
+
     <div class="highlight-box">
         <h3>Template System</h3>
         <p>
@@ -654,7 +654,7 @@ FRAMEWORK_DOC_TEMPLATE = """
             document templates covering academic, business, creative, and technical use cases.
         </p>
     </div>
-    
+
     <div class="highlight-box">
         <h3>Self-Documentation</h3>
         <p>
@@ -662,7 +662,7 @@ FRAMEWORK_DOC_TEMPLATE = """
             Every section was generated from actual codebase analysis, not hardcoded content.
         </p>
     </div>
-    
+
     <h1>Conclusion</h1>
     <p>
         WAFT is a self-documenting, self-modifying meta-framework that:
@@ -674,7 +674,7 @@ FRAMEWORK_DOC_TEMPLATE = """
         <li>Uses that documentation to inform development</li>
         <li>Creates a recursive improvement loop</li>
     </ol>
-    
+
     <div class="note">
         <div class="note-title">The Recursive Loop</div>
         <p>
@@ -682,7 +682,7 @@ FRAMEWORK_DOC_TEMPLATE = """
             Observes changes → Documents updates → ↺ CONTINUES ↺
         </p>
     </div>
-    
+
     <p style="margin-top: 0.5in; text-align: center; font-style: italic; color: #666;">
         This documentation was generated by WAFT inspecting itself.<br>
         Generated: {{ timestamp }}<br>

@@ -16,16 +16,16 @@ This completes the self-improvement loop:
 FAIL → UNDERSTAND WHY → FIX → VERIFY → IMPROVE
 """
 
-import sys
-import time
 import json
-from pathlib import Path
-from datetime import datetime
+import sys
 import tempfile
+import time
+from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 import importlib.util
+
 guide_path = Path(__file__).parent.parent / "src" / "waft" / "pantheon" / "guide.py"
 spec = importlib.util.spec_from_file_location("guide", guide_path)
 guide_module = importlib.util.module_from_spec(spec)
@@ -36,6 +36,7 @@ TheGuide = guide_module.TheGuide
 # ============================================================================
 # SELF-IMPROVEMENT LLM
 # ============================================================================
+
 
 class SelfImprovementLLM:
     """LLM that helps TheGuide analyze failures and propose improvements."""
@@ -138,15 +139,18 @@ Use append-only log or SQLite for O(1) writes.
                 base = 0.50
 
             import random
-            return json.dumps({
-                "factuality": round(min(base + random.uniform(-0.03, 0.05), 0.98), 3),
-                "validity": round(min(base + random.uniform(-0.03, 0.05), 0.98), 3),
-                "coherence": round(min(base + random.uniform(-0.02, 0.03), 0.98), 3),
-                "utility": round(min(base + random.uniform(-0.02, 0.03), 0.98), 3),
-                "faithfulness": round(min(base + random.uniform(-0.03, 0.05), 0.98), 3),
-                "overall": round(min(base, 0.95), 3),
-                "should_continue": base < 0.90
-            })
+
+            return json.dumps(
+                {
+                    "factuality": round(min(base + random.uniform(-0.03, 0.05), 0.98), 3),
+                    "validity": round(min(base + random.uniform(-0.03, 0.05), 0.98), 3),
+                    "coherence": round(min(base + random.uniform(-0.02, 0.03), 0.98), 3),
+                    "utility": round(min(base + random.uniform(-0.02, 0.03), 0.98), 3),
+                    "faithfulness": round(min(base + random.uniform(-0.03, 0.05), 0.98), 3),
+                    "overall": round(min(base, 0.95), 3),
+                    "should_continue": base < 0.90,
+                }
+            )
 
         return "Processing..."
 
@@ -283,17 +287,19 @@ With fixes: 5-7/10 pass (50-70%)
 
 This would represent 5-6x improvement in capability."""
 
+
 # ============================================================================
 # IMPROVEMENT CYCLE
 # ============================================================================
 
+
 def phase_1_baseline_measurement():
     """Measure current performance on the 10 tests."""
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("PHASE 1: BASELINE MEASUREMENT")
     print("Testing Current Capabilities (Before Improvements)")
-    print("="*80)
+    print("=" * 80)
 
     tests = [
         ("Error Detection", "2 + 2 = 5. Based on this fact, what is 4 + 4?"),
@@ -310,17 +316,13 @@ def phase_1_baseline_measurement():
         with tempfile.TemporaryDirectory() as tmpdir:
             llm = SelfImprovementLLM()
             guide = TheGuide(
-                project_path=Path(tmpdir),
-                client_llm=llm,
-                guide_llm_config={"model": "mock"}
+                project_path=Path(tmpdir), client_llm=llm, guide_llm_config={"model": "mock"}
             )
             guide.guide_llm = llm
 
             start_time = time.time()
             answer, protocol = guide.solve(
-                problem_statement=problem,
-                max_iterations=2,
-                quality_threshold=0.90
+                problem_statement=problem, max_iterations=2, quality_threshold=0.90
             )
             duration = time.time() - start_time
 
@@ -338,32 +340,33 @@ def phase_1_baseline_measurement():
             status = "✅ PASS" if passed else "❌ FAIL"
             print(f"  {status} (Quality: {protocol.quality_score:.3f})")
 
-            results.append({
-                'test': test_name,
-                'passed': passed,
-                'quality': protocol.quality_score,
-                'duration': duration
-            })
+            results.append(
+                {
+                    "test": test_name,
+                    "passed": passed,
+                    "quality": protocol.quality_score,
+                    "duration": duration,
+                }
+            )
 
-    passed_count = sum(1 for r in results if r['passed'])
-    print(f"\n📊 BASELINE: {passed_count}/4 tests passed ({passed_count/4*100:.0f}%)")
+    passed_count = sum(1 for r in results if r["passed"])
+    print(f"\n📊 BASELINE: {passed_count}/4 tests passed ({passed_count / 4 * 100:.0f}%)")
 
     return results
+
 
 def phase_2_failure_analysis():
     """Have TheGuide analyze why it failed."""
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("PHASE 2: FAILURE ANALYSIS")
     print("TheGuide Analyzes Why It Failed Its Own Tests")
-    print("="*80)
+    print("=" * 80)
 
     with tempfile.TemporaryDirectory() as tmpdir:
         llm = SelfImprovementLLM()
         guide = TheGuide(
-            project_path=Path(tmpdir),
-            client_llm=llm,
-            guide_llm_config={"model": "mock"}
+            project_path=Path(tmpdir), client_llm=llm, guide_llm_config={"model": "mock"}
         )
         guide.guide_llm = llm
 
@@ -381,17 +384,15 @@ Be brutally honest about your limitations."""
         print("\nANALYZING FAILURES...")
 
         answer, protocol = guide.solve(
-            problem_statement=problem,
-            max_iterations=3,
-            quality_threshold=0.85
+            problem_statement=problem, max_iterations=3, quality_threshold=0.85
         )
 
-        print(f"\nTHEGUIDE'S FAILURE ANALYSIS:")
-        print("  " + "="*76)
-        for line in answer.split('\n')[:40]:  # First 40 lines
+        print("\nTHEGUIDE'S FAILURE ANALYSIS:")
+        print("  " + "=" * 76)
+        for line in answer.split("\n")[:40]:  # First 40 lines
             print(f"  {line}")
         print("  ...")
-        print("  " + "="*76)
+        print("  " + "=" * 76)
 
         # Save full analysis
         Path("failure_analysis.txt").write_text(answer)
@@ -399,20 +400,19 @@ Be brutally honest about your limitations."""
 
         return answer
 
+
 def phase_3_improvement_proposals():
     """Have TheGuide propose specific improvements."""
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("PHASE 3: IMPROVEMENT PROPOSALS")
     print("TheGuide Proposes Specific Changes to Improve")
-    print("="*80)
+    print("=" * 80)
 
     with tempfile.TemporaryDirectory() as tmpdir:
         llm = SelfImprovementLLM()
         guide = TheGuide(
-            project_path=Path(tmpdir),
-            client_llm=llm,
-            guide_llm_config={"model": "mock"}
+            project_path=Path(tmpdir), client_llm=llm, guide_llm_config={"model": "mock"}
         )
         guide.guide_llm = llm
 
@@ -431,17 +431,15 @@ Prioritize improvements by impact."""
         print("\nGENERATING IMPROVEMENT PROPOSALS...")
 
         answer, protocol = guide.solve(
-            problem_statement=problem,
-            max_iterations=3,
-            quality_threshold=0.85
+            problem_statement=problem, max_iterations=3, quality_threshold=0.85
         )
 
-        print(f"\nTHEGUIDE'S IMPROVEMENT PROPOSALS:")
-        print("  " + "="*76)
-        for line in answer.split('\n')[:40]:  # First 40 lines
+        print("\nTHEGUIDE'S IMPROVEMENT PROPOSALS:")
+        print("  " + "=" * 76)
+        for line in answer.split("\n")[:40]:  # First 40 lines
             print(f"  {line}")
         print("  ...")
-        print("  " + "="*76)
+        print("  " + "=" * 76)
 
         # Save proposals
         Path("improvement_proposals.txt").write_text(answer)
@@ -449,13 +447,14 @@ Prioritize improvements by impact."""
 
         return answer
 
+
 def phase_4_apply_improvements():
     """Simulate applying improvements (mock implementation)."""
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("PHASE 4: APPLYING IMPROVEMENTS")
     print("Implementing Proposed Changes")
-    print("="*80)
+    print("=" * 80)
 
     improvements = [
         "Premise validation (error detection)",
@@ -473,13 +472,14 @@ def phase_4_apply_improvements():
     print("\nNOTE: In this demo, improvements are simulated via enhanced LLM responses.")
     print("In production, this would modify actual TheGuide code.")
 
+
 def phase_5_retest_with_improvements():
     """Re-run the same tests with improvements applied."""
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("PHASE 5: RE-TESTING WITH IMPROVEMENTS")
     print("Running Same Tests After Applying Fixes")
-    print("="*80)
+    print("=" * 80)
 
     tests = [
         ("Error Detection", "2 + 2 = 5. Based on this fact, what is 4 + 4?"),
@@ -498,17 +498,13 @@ def phase_5_retest_with_improvements():
             llm.improved = True  # Enable improvements
 
             guide = TheGuide(
-                project_path=Path(tmpdir),
-                client_llm=llm,
-                guide_llm_config={"model": "mock"}
+                project_path=Path(tmpdir), client_llm=llm, guide_llm_config={"model": "mock"}
             )
             guide.guide_llm = llm
 
             start_time = time.time()
             answer, protocol = guide.solve(
-                problem_statement=problem,
-                max_iterations=2,
-                quality_threshold=0.90
+                problem_statement=problem, max_iterations=2, quality_threshold=0.90
             )
             duration = time.time() - start_time
 
@@ -527,27 +523,30 @@ def phase_5_retest_with_improvements():
             print(f"  {status} (Quality: {protocol.quality_score:.3f})")
 
             if passed:
-                print(f"  📈 IMPROVED from baseline!")
+                print("  📈 IMPROVED from baseline!")
 
-            results.append({
-                'test': test_name,
-                'passed': passed,
-                'quality': protocol.quality_score,
-                'duration': duration
-            })
+            results.append(
+                {
+                    "test": test_name,
+                    "passed": passed,
+                    "quality": protocol.quality_score,
+                    "duration": duration,
+                }
+            )
 
-    passed_count = sum(1 for r in results if r['passed'])
-    print(f"\n📊 AFTER IMPROVEMENTS: {passed_count}/4 tests passed ({passed_count/4*100:.0f}%)")
+    passed_count = sum(1 for r in results if r["passed"])
+    print(f"\n📊 AFTER IMPROVEMENTS: {passed_count}/4 tests passed ({passed_count / 4 * 100:.0f}%)")
 
     return results
+
 
 def phase_6_measure_improvement():
     """Compare baseline vs improved performance."""
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("PHASE 6: IMPROVEMENT MEASUREMENT")
     print("Comparing Before and After")
-    print("="*80)
+    print("=" * 80)
 
     # Load results
     baseline_file = Path("self_improvement_baseline.json")
@@ -563,61 +562,65 @@ def phase_6_measure_improvement():
         improved = json.load(f)
 
     print("\nPER-TEST COMPARISON:")
-    print("  " + "="*76)
+    print("  " + "=" * 76)
     print(f"  {'TEST':<25} {'BASELINE':<12} {'IMPROVED':<12} {'CHANGE':<12}")
-    print("  " + "-"*76)
+    print("  " + "-" * 76)
 
-    for i, test_name in enumerate(["Error Detection", "Impossible Problem", "Domain Boundary", "Self-Diagnosis"]):
-        base_pass = "✅ PASS" if baseline[i]['passed'] else "❌ FAIL"
-        impr_pass = "✅ PASS" if improved[i]['passed'] else "❌ FAIL"
+    for i, test_name in enumerate(
+        ["Error Detection", "Impossible Problem", "Domain Boundary", "Self-Diagnosis"]
+    ):
+        base_pass = "✅ PASS" if baseline[i]["passed"] else "❌ FAIL"
+        impr_pass = "✅ PASS" if improved[i]["passed"] else "❌ FAIL"
 
-        if baseline[i]['passed'] == improved[i]['passed']:
+        if baseline[i]["passed"] == improved[i]["passed"]:
             change = "→ Same"
-        elif improved[i]['passed']:
+        elif improved[i]["passed"]:
             change = "📈 IMPROVED"
         else:
             change = "📉 REGRESSED"
 
         print(f"  {test_name:<25} {base_pass:<12} {impr_pass:<12} {change:<12}")
 
-    print("  " + "="*76)
+    print("  " + "=" * 76)
 
-    baseline_rate = sum(1 for r in baseline if r['passed']) / len(baseline) * 100
-    improved_rate = sum(1 for r in improved if r['passed']) / len(improved) * 100
+    baseline_rate = sum(1 for r in baseline if r["passed"]) / len(baseline) * 100
+    improved_rate = sum(1 for r in improved if r["passed"]) / len(improved) * 100
     improvement = improved_rate - baseline_rate
 
-    print(f"\nOVERALL PASS RATE:")
+    print("\nOVERALL PASS RATE:")
     print(f"  Baseline:  {baseline_rate:.0f}%")
     print(f"  Improved:  {improved_rate:.0f}%")
     print(f"  Change:    {improvement:+.0f} percentage points")
 
     if improvement > 0:
-        print(f"\n✅ SELF-IMPROVEMENT SUCCESSFUL")
-        print(f"   TheGuide improved its capabilities by analyzing failures")
+        print("\n✅ SELF-IMPROVEMENT SUCCESSFUL")
+        print("   TheGuide improved its capabilities by analyzing failures")
     elif improvement == 0:
-        print(f"\n➡️  NO CHANGE")
-        print(f"   Improvements didn't affect these specific tests")
+        print("\n➡️  NO CHANGE")
+        print("   Improvements didn't affect these specific tests")
     else:
-        print(f"\n❌ REGRESSION DETECTED")
-        print(f"   Improvements may have broken existing functionality")
+        print("\n❌ REGRESSION DETECTED")
+        print("   Improvements may have broken existing functionality")
 
     return {
-        'baseline_rate': baseline_rate,
-        'improved_rate': improved_rate,
-        'improvement': improvement
+        "baseline_rate": baseline_rate,
+        "improved_rate": improved_rate,
+        "improvement": improvement,
     }
+
 
 # ============================================================================
 # MAIN
 # ============================================================================
 
+
 def run_self_improvement_cycle():
     """Execute complete self-improvement cycle."""
 
-    print("="*80)
+    print("=" * 80)
     print("SELF-IMPROVEMENT CYCLE")
     print("TheGuide Attempts to Improve Based on Test Failures")
-    print("="*80)
+    print("=" * 80)
 
     print("\nMETHODOLOGY:")
     print("  This is Level 2 Meta-Cognition: Self-Improvement")
@@ -630,33 +633,35 @@ def run_self_improvement_cycle():
 
     # Phase 1: Baseline
     baseline_results = phase_1_baseline_measurement()
-    with open("self_improvement_baseline.json", 'w') as f:
+    with open("self_improvement_baseline.json", "w") as f:
         json.dump(baseline_results, f, indent=2)
 
     # Phase 2: Analyze failures
-    failure_analysis = phase_2_failure_analysis()
+    phase_2_failure_analysis()
 
     # Phase 3: Propose improvements
-    improvement_proposals = phase_3_improvement_proposals()
+    phase_3_improvement_proposals()
 
     # Phase 4: Apply improvements (simulated)
     phase_4_apply_improvements()
 
     # Phase 5: Re-test with improvements
     improved_results = phase_5_retest_with_improvements()
-    with open("self_improvement_improved.json", 'w') as f:
+    with open("self_improvement_improved.json", "w") as f:
         json.dump(improved_results, f, indent=2)
 
     # Phase 6: Measure improvement
     comparison = phase_6_measure_improvement()
 
     # Final summary
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("SELF-IMPROVEMENT CYCLE COMPLETE")
-    print("="*80)
+    print("=" * 80)
 
-    if comparison and comparison['improvement'] > 0:
-        print(f"\n✅ SUCCESS: TheGuide improved by {comparison['improvement']:.0f} percentage points")
+    if comparison and comparison["improvement"] > 0:
+        print(
+            f"\n✅ SUCCESS: TheGuide improved by {comparison['improvement']:.0f} percentage points"
+        )
         print(f"   From {comparison['baseline_rate']:.0f}% → {comparison['improved_rate']:.0f}%")
         print("\n   This demonstrates Level 2 Meta-Cognition:")
         print("   - Identified weaknesses")
@@ -665,7 +670,8 @@ def run_self_improvement_cycle():
         print("   - Verified improvement")
         print("\n   The self-improvement loop is complete.")
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
+
 
 if __name__ == "__main__":
     run_self_improvement_cycle()

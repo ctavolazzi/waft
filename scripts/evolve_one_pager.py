@@ -214,7 +214,7 @@ def main():
 
     print("📊 Test 3: Dictionary Content")
     print("-" * 60)
-    output3 = test_dict_content()
+    test_dict_content()
     print()
 
     print("📊 Test 4: Long Content Condensation")

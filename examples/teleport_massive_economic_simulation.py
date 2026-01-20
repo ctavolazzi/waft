@@ -31,7 +31,7 @@ async def main():
     # Initialize systems
     print("📊 Initializing systems...")
     being_system = BeingSystem(project_path=project_path)
-    corps_system = CorporationsSystem(project_path=project_path)
+    CorporationsSystem(project_path=project_path)
 
     # Create Teleport Massive
     print("\n🏢 Creating Teleport Massive Corporation...")

@@ -100,7 +100,7 @@ class CritiqueResponseManager:
 
             valid_criticisms = [
                 (cr, vr)
-                for cr, vr in zip(all_criticisms, validation_results)
+                for cr, vr in zip(all_criticisms, validation_results, strict=False)
                 if vr.status in [ValidationStatus.VALID, ValidationStatus.PARTIALLY_VALID]
             ]
 
@@ -219,7 +219,7 @@ class CritiqueResponseManager:
         # Group by severity and status
         by_severity = {"CRITICAL": [], "HIGH": [], "MEDIUM": [], "LOW": []}
 
-        for criticism, validation in zip(critique_data.get_all_criticisms(), validation_results):
+        for criticism, validation in zip(critique_data.get_all_criticisms(), validation_results, strict=False):
             if criticism.severity in by_severity:
                 by_severity[criticism.severity].append((criticism, validation))
 
@@ -382,7 +382,7 @@ class CritiqueResponseManager:
         # Invalid Criticisms
         invalid_results = [
             (cr, vr)
-            for cr, vr in zip(critique_data.get_all_criticisms(), validation_results)
+            for cr, vr in zip(critique_data.get_all_criticisms(), validation_results, strict=False)
             if vr.status == ValidationStatus.INVALID
         ]
 
@@ -418,7 +418,7 @@ class CritiqueResponseManager:
         # Cannot Verify
         cannot_verify_results = [
             (cr, vr)
-            for cr, vr in zip(critique_data.get_all_criticisms(), validation_results)
+            for cr, vr in zip(critique_data.get_all_criticisms(), validation_results, strict=False)
             if vr.status == ValidationStatus.CANNOT_VERIFY
         ]
 

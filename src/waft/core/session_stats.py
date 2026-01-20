@@ -288,7 +288,7 @@ class SessionStats:
         from rich.table import Table
         from rich.text import Text
 
-        console = Console()
+        Console()
 
         # Create summary table
         summary_table = Table(show_header=False, box=None, padding=(0, 2))

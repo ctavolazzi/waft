@@ -87,7 +87,7 @@ See [README.md](https://github.com/ctavolazzi/waft/blob/main/README.md) for full
     # Try using gh CLI first (simpler)
     try:
         print("→ Creating release using GitHub CLI...")
-        result = subprocess.run(
+        subprocess.run(
             [
                 "gh",
                 "release",

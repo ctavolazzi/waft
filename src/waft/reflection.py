@@ -500,8 +500,8 @@ WAFT documenting itself. Recursive self-improvement through documentation.
         from src.waft.templates.code_documentation import generate_code_documentation
 
         # Scan WAFT directory structure
-        templates = list((self.waft_root / "templates").glob("*.py"))
-        core_files = [f for f in self.waft_root.glob("*.py") if not f.name.startswith("__")]
+        list((self.waft_root / "templates").glob("*.py"))
+        [f for f in self.waft_root.glob("*.py") if not f.name.startswith("__")]
 
         content = """
 <h1>WAFT System Architecture</h1>

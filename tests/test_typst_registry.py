@@ -44,7 +44,7 @@ Source: testrepo
 def generate_test_template(title: str, content: str, output_path: Path, author: str = "Test Author"):
     """
     Generate a test template.
-    
+
     Args:
         title: Document title
         content: Document content
@@ -76,7 +76,6 @@ class TestRegistryDiscovery:
     def test_auto_discovery_of_wrapper_modules(self, temp_wrappers_dir, sample_wrapper_module):
         """Test that wrapper modules are auto-discovered."""
         # Add the module to sys.path temporarily so it can be imported
-        parent_dir = temp_wrappers_dir.parent
 
         # Create __init__.py
         init_file = temp_wrappers_dir / "__init__.py"
@@ -87,7 +86,7 @@ class TestRegistryDiscovery:
             mock_module = MagicMock()
             mock_module.__doc__ = """
             Test Template Wrapper
-            
+
             This is a test template for unit testing.
             """
             mock_module.generate_test_template = MagicMock()
@@ -99,7 +98,7 @@ class TestRegistryDiscovery:
                     ("generate_test_template", mock_module.generate_test_template)
                 ]
 
-                registry = TypstTemplateRegistry(wrappers_dir=temp_wrappers_dir)
+                TypstTemplateRegistry(wrappers_dir=temp_wrappers_dir)
                 # Should discover the template (if import works)
                 # Note: This is a simplified test due to import complexity
 
@@ -129,7 +128,7 @@ class TestMetadataExtraction:
 
         docstring = """
         Test Template
-        
+
         This is a test template description.
         """
         description = registry._extract_description(docstring)
@@ -353,7 +352,7 @@ This is invalid Python syntax {{
         )
 
         # Registry should continue loading despite invalid module
-        registry = TypstTemplateRegistry(wrappers_dir=temp_wrappers_dir)
+        TypstTemplateRegistry(wrappers_dir=temp_wrappers_dir)
         # Should not crash, may or may not load templates depending on import behavior
 
     def test_handles_missing_generate_function(self, temp_wrappers_dir):

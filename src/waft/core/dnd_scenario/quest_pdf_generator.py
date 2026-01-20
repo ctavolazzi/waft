@@ -123,7 +123,7 @@ class QuestPDFGenerator:
 
 #align(center)[
   #text(size: 24pt, weight: "bold")[{self._escape_typst(quest_title)}]
-  
+
   #text(size: 10pt, style: "italic")[Generated: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}]
 ]
 
@@ -138,7 +138,7 @@ class QuestPDFGenerator:
 
 #align(center)[
   #text(size: 24pt, weight: "bold")[{quest_title}]
-  
+
   #text(size: 10pt, style: "italic")[Generated: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}]
 ]
 

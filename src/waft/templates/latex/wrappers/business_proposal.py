@@ -82,7 +82,7 @@ def generate_business_proposal(
         members.append({"name": "", "position": "", "email": ""})
 
     # Build LaTeX content from markdown/HTML
-    latex_content = build_report_content(title=title, content=content, **kwargs)
+    build_report_content(title=title, content=content, **kwargs)
 
     # Replace placeholders in template (templates use hardcoded placeholders, not Jinja2)
     filled_latex = template_content

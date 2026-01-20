@@ -325,7 +325,7 @@ def create_constellation_index(plans_by_category: dict[str, list[tuple[Path, dic
         # Sort by confidence (highest first)
         sorted_plans = sorted(plans, key=lambda x: x[3], reverse=True)
 
-        for plan_path, metadata, cat, confidence in sorted_plans:
+        for _plan_path, metadata, _cat, confidence in sorted_plans:
             name = metadata.get("name", metadata.get("file_stem", "Unknown"))
             file_name = metadata["file_name"]
             new_file = f"{category}_{file_name}"
@@ -365,7 +365,7 @@ def create_category_readme(category: str, config: dict, plans: list[tuple[Path, 
     # Sort by confidence
     sorted_plans = sorted(plans, key=lambda x: x[3], reverse=True)
 
-    for plan_path, metadata, cat, confidence in sorted_plans:
+    for _plan_path, metadata, _cat, confidence in sorted_plans:
         name = metadata.get("name", metadata.get("file_stem", "Unknown"))
         file_name = metadata["file_name"]
         new_file = f"{category}_{file_name}"

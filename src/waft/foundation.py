@@ -425,7 +425,6 @@ class AutoRedactor:
             "·": "*",  # middle dot
             """: '"',  # left double quote
             """: '"',  # right double quote
-            "'": "'",  # left single quote
             "'": "'",  # right single quote
             "…": "...",  # ellipsis
             "°": "deg",  # degree symbol

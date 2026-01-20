@@ -756,7 +756,7 @@ class GoldenTriangle:
                 th { background: #0d47a1; color: white; padding: 6pt 8pt; text-align: left; }
                 td { border: 1pt solid #b0bec5; padding: 6pt 8pt; }
                 /* Ensure inline styles take precedence - critical for preserving HTML blocks with styles */
-                [style] { 
+                [style] {
                     /* Inline styles have highest specificity - WeasyPrint will respect them */
                 }
                 div[style], span[style], p[style], h1[style], h2[style], h3[style] {
@@ -788,7 +788,7 @@ class GoldenTriangle:
                 pre { background: #f5f5f5; padding: 4pt; border-left: 3pt solid #000000; margin: 8pt 0; }
                 blockquote { border-left: 4pt solid #000000; background: #f5f5f520; padding: 4pt 8pt; margin: 8pt 0; }
                 /* Ensure inline styles take precedence */
-                [style] { 
+                [style] {
                     /* Inline styles have highest specificity - no override needed */
                 }
                 div[style], span[style], p[style] {
@@ -816,7 +816,7 @@ class GoldenTriangle:
                 pre { background: #f8f9fa; padding: 4pt; border-left: 3pt solid #2c3e50; margin: 8pt 0; }
                 blockquote { border-left: 4pt solid #2c3e50; background: #f8f9fa20; padding: 4pt 8pt; margin: 8pt 0; }
                 /* Ensure inline styles take precedence - critical for preserving HTML blocks with styles */
-                [style] { 
+                [style] {
                     /* Inline styles have highest specificity - WeasyPrint will respect them */
                 }
                 div[style], span[style], p[style], h1[style], h2[style], h3[style] {

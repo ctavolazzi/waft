@@ -132,7 +132,7 @@ NARRATIVE_TEMPLATE = """
 <body>
     <div class="container">
         <h1>The Point</h1>
-        
+
         <h2>A Narrative</h2>
 
         <p class="no-indent">I haven't seen Loki.</p>

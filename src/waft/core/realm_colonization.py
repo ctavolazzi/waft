@@ -241,9 +241,9 @@ class RealmScout(Being):
         """
         md_content = f"""# Realm Exploration Report: {self.realm_name}
 
-**Scout ID**: {self.being_id}  
-**Realm Name**: {self.realm_name}  
-**Realm Path**: {self.realm_path}  
+**Scout ID**: {self.being_id}
+**Realm Name**: {self.realm_name}
+**Realm Path**: {self.realm_path}
 **Exploration Date**: {datetime.now().isoformat()}
 
 ## Findings

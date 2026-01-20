@@ -159,7 +159,7 @@ class CelebrateManager:
         self, achievement: str | None = None, message: str | None = None
     ) -> str:
         """Create celebration markdown content for card."""
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         # Default achievement if not provided
         if not achievement:
@@ -399,9 +399,7 @@ Take time to acknowledge what was accomplished, feel the satisfaction of success
         processed_lines = []
 
         # Skip YAML frontmatter
-        skip_frontmatter = False
         if lines and lines[0].strip() == "---":
-            skip_frontmatter = True
             i = 1
             while i < len(lines) and lines[i].strip() != "---":
                 i += 1

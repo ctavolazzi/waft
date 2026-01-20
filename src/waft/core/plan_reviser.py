@@ -83,7 +83,7 @@ class PlanReviser:
 
         # Generate revisions for valid criticisms
         revisions = []
-        for criticism, validation in zip(all_criticisms, validation_results):
+        for criticism, validation in zip(all_criticisms, validation_results, strict=False):
             if validation.status in (ValidationStatus.VALID, ValidationStatus.PARTIALLY_VALID):
                 plan_revisions = self._generate_revisions(criticism, validation, plan_data)
                 revisions.extend(plan_revisions)

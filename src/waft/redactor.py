@@ -166,7 +166,7 @@ class PDFRedactor:
             Self for fluent API
         """
         # Copy all pages
-        for page_num, page in enumerate(self.reader.pages):
+        for _page_num, page in enumerate(self.reader.pages):
             self.writer.add_page(page)
 
             # Extract text to find what needs redacting
@@ -184,7 +184,7 @@ class PDFRedactor:
                 for rule in self.redaction_rules:
                     flags = 0 if rule.case_sensitive else re.IGNORECASE
                     matches = re.finditer(rule.pattern, page_text, flags)
-                    for match in matches:
+                    for _match in matches:
                         # Would calculate position and add redaction annotation
                         pass
 
@@ -284,7 +284,7 @@ class SimplePDFRedactor:
         overlay_path = output_path.parent / f"{output_path.stem}_overlay.pdf"
         c = canvas.Canvas(str(overlay_path), pagesize=(page_width, page_height))
 
-        for page_num in range(num_pages):
+        for _page_num in range(num_pages):
             # Draw black rectangles for redactions
             for area in self.redaction_areas:
                 c.setFillColor(black)

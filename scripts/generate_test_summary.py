@@ -22,7 +22,7 @@ def generate_test_summary():
 
     content = f"""# WAFT Self-Testing Summary
 
-**Generated**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}  
+**Generated**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 **Purpose**: Test WAFT using WAFT's own tools
 
 ---

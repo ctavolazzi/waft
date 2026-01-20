@@ -29,7 +29,7 @@ def main():
     # Sample chat content
     chat_content = """
     # Example Chat Session
-    
+
     We discussed implementing a new feature for user authentication.
     The decision was made to use OAuth2 for security and flexibility.
     We learned that token refresh is critical for long sessions.

@@ -246,14 +246,14 @@ def test_migration_from_gamification(tavern_keeper, temp_project):
     new_tavern = TavernKeeper(temp_project)
 
     # Check that stats were migrated
-    character = new_tavern.get_character()
+    new_tavern.get_character()
     # Migration should have updated insight and integrity
     # (Note: Migration only happens if character is at defaults)
 
 
 def test_hp_calculation(tavern_keeper):
     """Test HP calculation from Constitution."""
-    character = tavern_keeper.get_character()
+    tavern_keeper.get_character()
 
     # Default CON is 8, modifier is -1
     # Max HP = 8 + (-1) + (Level-1) * (4 + (-1)) = 7 + 0 = 7

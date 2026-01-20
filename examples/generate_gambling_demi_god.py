@@ -28,9 +28,9 @@ def create_river_king_profile():
 # The River King
 ## Demi-God of Gambling, Luck, and the Mississippi
 
-**Domain**: Gambling, Luck, Probability, Risk  
-**Realm**: New Orleans, The River, All Places of Chance  
-**Parent God**: The Magistrate (God of Precedent and Body of Proof)  
+**Domain**: Gambling, Luck, Probability, Risk
+**Realm**: New Orleans, The River, All Places of Chance
+**Parent God**: The Magistrate (God of Precedent and Body of Proof)
 **Sacred Tool**: The Deck of Fates (Card Visualization System)
 
 ---
@@ -168,9 +168,9 @@ It's not just a tool—it's a *sacred artifact* that makes the invisible visible
 
 To call upon The River King:
 
-> "River King, read the cards true.  
-> Show me what the odds already know.  
-> Let the deck speak, let fate flow.  
+> "River King, read the cards true.
+> Show me what the odds already know.
+> Let the deck speak, let fate flow.
 > Witness this moment, make it so."
 
 But remember: He shows you the truth. He doesn't change it.

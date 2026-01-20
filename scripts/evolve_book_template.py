@@ -178,12 +178,12 @@ def _build_field_guide_latex(title: str, chapters: list[dict[str, Any]], author:
 \\begin{{titlepage}}
     \\centering
     \\vspace*{{0.5in}}
-    
+
     % Series header
     {{\\Large\\bfseries\\textsc{{FIELD GUIDE}}}}
-    
+
     \\vspace{{0.3in}}
-    
+
     % Title box
     \\begin{{tcolorbox}}[
         colback=white,
@@ -199,9 +199,9 @@ def _build_field_guide_latex(title: str, chapters: list[dict[str, Any]], author:
     \\centering
     {{\\Huge\\bfseries {escape_latex(title)}}}
     \\end{{tcolorbox}}
-    
+
     \\vfill
-    
+
     % Classification box
     \\begin{{tcolorbox}}[
         colback=fgyellow,
@@ -212,12 +212,12 @@ def _build_field_guide_latex(title: str, chapters: list[dict[str, Any]], author:
     \\centering
     {{\\Large\\bfseries FOR OPERATIONAL USE}}
     \\end{{tcolorbox}}
-    
+
     \\vspace{{0.3in}}
-    
+
     \\textbf{{Author:}} {escape_latex(author)}\\\\
     \\textbf{{Date:}} \\today
-    
+
     \\vspace{{0.5in}}
 \\end{{titlepage}}
 
@@ -376,7 +376,7 @@ def _build_academic_latex(title: str, chapters: list[dict[str, Any]], author: st
 \\twocolumn[
 \\maketitle
 \\begin{{abstract}}
-This document presents a comprehensive narrative in academic paper format, 
+This document presents a comprehensive narrative in academic paper format,
 combining scholarly presentation with adventure storytelling.
 \\end{{abstract}}
 ]

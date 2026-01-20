@@ -475,7 +475,7 @@ def build_midday_content(status: dict[str, Any], afternoon_focus: str | None = N
         <div class="note-title">{NOTE_TITLES["next_steps"]}</div>
         <ol>
     """)
-    for i, step in enumerate(next_steps, 1):
+    for _i, step in enumerate(next_steps, 1):
         content_parts.append(f"<li>{html_module.escape(step)}</li>")
     content_parts.append("</ol></div>")
 

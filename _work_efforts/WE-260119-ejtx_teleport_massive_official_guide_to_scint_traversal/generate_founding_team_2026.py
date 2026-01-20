@@ -71,7 +71,7 @@ def generate_founding_team() -> dict[str, Any]:
     users = fetch_random_users(count=8, seed="teleport_massive_2026")
 
     team_members = []
-    for i, (user, role_info) in enumerate(zip(users, FOUNDING_ROLES), 1):
+    for i, (user, role_info) in enumerate(zip(users, FOUNDING_ROLES, strict=False), 1):
         # Calculate age at founding (January 18, 2026)
         birth_year = int(user["dob"]["date"][:4])
         age_at_founding = 2026 - birth_year

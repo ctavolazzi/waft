@@ -27,8 +27,8 @@ def generate_closeout():
 
 <div class="warning">
     <div class="warning-title">Session Scope</div>
-    This session focused on refining the /show-me HTML report design, specifically addressing button aesthetics, 
-    creating a unified "above the fold" section, fixing content visibility issues, and ensuring Reasoning Trace 
+    This session focused on refining the /show-me HTML report design, specifically addressing button aesthetics,
+    creating a unified "above the fold" section, fixing content visibility issues, and ensuring Reasoning Trace
     and Chat Context sections are properly included.
 </div>
 
@@ -222,16 +222,16 @@ def generate_closeout():
 <div class="highlight-box">
     <h3>Session Summary</h3>
     <p>
-        This session successfully refined the show-me HTML report design, creating a unified "above the fold" 
-        section that guides user attention while making navigation buttons more discreet. The bottom edge 
+        This session successfully refined the show-me HTML report design, creating a unified "above the fold"
+        section that guides user attention while making navigation buttons more discreet. The bottom edge
         visual break was fixed, and all content sections are now properly visible and styled.
     </p>
     <p>
-        <strong>Key Achievement:</strong> Created a cohesive, visually balanced top section that doesn't distract 
+        <strong>Key Achievement:</strong> Created a cohesive, visually balanced top section that doesn't distract
         from the important content (Abstract, Quick Stats) while maintaining full functionality.
     </p>
     <p>
-        <strong>Key Learning:</strong> Visual edge cases (like bottom borders) need explicit definition, and 
+        <strong>Key Learning:</strong> Visual edge cases (like bottom borders) need explicit definition, and
         code duplication in template strings can cause silent failures that are hard to debug.
     </p>
 </div>
@@ -266,20 +266,20 @@ def generate_email_summaries():
     technical = """
 === TECHNICAL SUMMARY ===
 
-Refined the WAFT show-me HTML report generation system (scripts/show_me.py, show_me_bulletproof.py) 
-by implementing a unified "above-the-fold" section architecture. Created CSS-based component 
-grouping using section#above-the-fold with integrated navigation bar and header-section-wrapper. 
+Refined the WAFT show-me HTML report generation system (scripts/show_me.py, show_me_bulletproof.py)
+by implementing a unified "above-the-fold" section architecture. Created CSS-based component
+grouping using section#above-the-fold with integrated navigation bar and header-section-wrapper.
 Fixed visual hierarchy issues by:
 
 - Implementing ::before pseudo-elements for button bottom edge definition (2px border, z-index layering)
-- Resolving duplicate HTML splitting logic in template string interpolation that caused content 
+- Resolving duplicate HTML splitting logic in template string interpolation that caused content
   disappearance (removed duplicate split() calls inside f-string)
 - Adding scroll-margin-top and specific styling for Reasoning Trace and Chat Context sections
-- Refactoring .nav-dropdown-toggle CSS to reduce visual prominence while maintaining tactile 
+- Refactoring .nav-dropdown-toggle CSS to reduce visual prominence while maintaining tactile
   feedback (gradient reduction, border simplification, shadow optimization)
 
-Technical changes: ~15 CSS rule modifications, 2 file edits, template string structure refactoring. 
-Fixed 2 bugs: content visibility (duplicate code), button bottom edge visual break (insufficient 
+Technical changes: ~15 CSS rule modifications, 2 file edits, template string structure refactoring.
+Fixed 2 bugs: content visibility (duplicate code), button bottom edge visual break (insufficient
 border definition).
 """
 
@@ -287,19 +287,19 @@ border definition).
     peer = """
 === PEER SUMMARY ===
 
-Worked on refining the WAFT session overview HTML report. The main focus was creating a better 
-visual hierarchy by grouping the top navigation and header into a single unified section, and 
+Worked on refining the WAFT session overview HTML report. The main focus was creating a better
+visual hierarchy by grouping the top navigation and header into a single unified section, and
 making the navigation buttons less distracting while keeping them functional.
 
 Key improvements:
 - Created a unified "above the fold" section that groups navigation and header together
 - Fixed a bug where page content disappeared (duplicate code in the template)
-- Refined button styling to be more subtle - they still look tactile but don't draw attention 
+- Refined button styling to be more subtle - they still look tactile but don't draw attention
   away from the important content
 - Fixed a visual issue where button bottom edges looked incomplete
 - Ensured all sections (Reasoning Trace, Chat Context) are properly included and styled
 
-The result is a cleaner, more focused design where users' attention is guided to the important 
+The result is a cleaner, more focused design where users' attention is guided to the important
 information (abstract, stats) rather than being distracted by navigation elements.
 """
 
@@ -307,7 +307,7 @@ information (abstract, stats) rather than being distracted by navigation element
     boss = """
 === EXECUTIVE SUMMARY ===
 
-Completed design refinements for the WAFT session overview report to improve usability and 
+Completed design refinements for the WAFT session overview report to improve usability and
 visual clarity.
 
 Objectives Achieved:
@@ -316,7 +316,7 @@ Objectives Achieved:
 ✓ Fixed content visibility issues
 ✓ Improved overall user experience
 
-Impact: The report now better guides users to key information and provides a cleaner, more 
+Impact: The report now better guides users to key information and provides a cleaner, more
 professional appearance. All functionality maintained while improving visual design.
 
 Status: Complete and ready for use.
@@ -326,7 +326,7 @@ Status: Complete and ready for use.
     tldr = """
 === TLDR ===
 
-Refined the session overview report design - made it cleaner and easier to scan. Fixed some 
+Refined the session overview report design - made it cleaner and easier to scan. Fixed some
 visual bugs and improved how information is organized. Everything works better now.
 """
 

@@ -381,7 +381,7 @@ class DocumentBuilder:
                 major_sections["1"].append(section)
 
         # Process each major section
-        for major_num, sections in sorted(
+        for _major_num, sections in sorted(
             major_sections.items(), key=lambda x: int(x[0]) if x[0].isdigit() else 999
         ):
             for section in sections:

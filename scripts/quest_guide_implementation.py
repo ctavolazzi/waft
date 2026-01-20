@@ -191,7 +191,7 @@ def test_storage_structure(project_path: Path) -> tuple[bool, str]:
     guide_path = project_path / "_pantheon" / "guide"
     sessions_path = guide_path / "sessions"
     protocols_path = guide_path / "protocols"
-    index_file = guide_path / "index.json"
+    guide_path / "index.json"
 
     checks = [
         (guide_path.exists() and guide_path.is_dir(), "guide directory"),

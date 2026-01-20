@@ -78,8 +78,8 @@ def main():
     conversation = Conversation(agent=agent, workspace=str(project_root))
 
     # Read plan and critique for context
-    plan_path = project_root / ".cursor" / "plans" / "electron_tavern_game_display_2508cb95.plan.md"
-    critique_path = (
+    project_root / ".cursor" / "plans" / "electron_tavern_game_display_2508cb95.plan.md"
+    (
         project_root
         / "_work_efforts"
         / "CRITIQUE_2026-01-14_202222_electron_tavern_game_display.md"
@@ -88,45 +88,45 @@ def main():
     # Build task description
     task = """
     Create examples/tavern_game_server.py - a FastAPI server for the Electron Tavern Game Display.
-    
+
     Requirements (from implementation plan and security critique):
-    
+
     1. FastAPI Application:
        - Bind to 127.0.0.1:8765 (local only, no external access)
        - Use asyncio.Lock() for game state management (prevents race conditions)
        - Add CORS middleware allowing only localhost origins
-    
+
     2. Endpoints:
        - GET /api/state - Returns current game state JSON
        - POST /api/choice - Accepts player choice, validates with Pydantic, updates state atomically
        - GET /api/health - Health check endpoint
-    
+
     3. Game State Structure:
        - character: Full DnD5eCharacter serialized (use to_dict() method + add computed properties)
        - current_scene: string
-       - narrative: string  
+       - narrative: string
        - choices: list of {id, text, type} objects
        - last_roll: dict with dice, result, modifier, total, dc, success
        - events: list of event history (limit to last 100 events)
-    
+
     4. Security Requirements (CRITICAL):
        - Use asyncio.Lock() for all state updates (prevents race conditions)
        - Input validation with Pydantic models (reject invalid choice IDs)
        - CORS only allows localhost origins
        - Error handling with try/except blocks
        - Port availability checking before binding
-    
+
     5. Code Patterns (follow existing codebase):
        - FastAPI patterns from src/waft/api/main.py
        - asyncio.Lock() pattern from src/waft/core/now_cycle.py
        - DnD5eCharacter serialization from src/waft/core/dnd5e/character.py
        - Add computed properties (modifiers, AC, proficiency_bonus) to serialization
-    
+
     6. Dependencies:
        - Use FastAPI, uvicorn (already in pyproject.toml)
        - Use Pydantic for validation
        - Import from existing codebase: waft.core.dnd5e
-    
+
     The server should be production-ready with:
     - Proper error handling
     - Logging
@@ -134,7 +134,7 @@ def main():
     - Clean code structure
     - Type hints
     - Docstrings
-    
+
     Create the file at examples/tavern_game_server.py
     """
 

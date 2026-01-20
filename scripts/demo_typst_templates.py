@@ -670,7 +670,7 @@ Stay tuned for more updates!
 
 #align(center)[
   *A Complete Reference for Document Generation*
-  
+
   #v(0.5em)
   January 2026
 ]

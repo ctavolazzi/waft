@@ -94,7 +94,7 @@ class TownMemory:
     def _simple_similarity(self, hash1: str, hash2: str) -> float:
         """Simple similarity based on hash (placeholder for real embeddings)."""
         # Count matching characters (very simplified)
-        matches = sum(c1 == c2 for c1, c2 in zip(hash1, hash2))
+        matches = sum(c1 == c2 for c1, c2 in zip(hash1, hash2, strict=False))
         return matches / max(len(hash1), len(hash2))
 
     def get_agent_memories(self, agent_id: str) -> list[dict[str, Any]]:

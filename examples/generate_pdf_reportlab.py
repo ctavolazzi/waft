@@ -17,7 +17,7 @@ def markdown_to_reportlab_elements(md_text: str, styles):
     elements = []
 
     # Convert markdown to HTML first
-    html = markdown.markdown(md_text, extensions=["fenced_code", "tables", "nl2br", "extra"])
+    markdown.markdown(md_text, extensions=["fenced_code", "tables", "nl2br", "extra"])
 
     # Parse HTML and convert to ReportLab elements
     lines = md_text.split("\n")

@@ -822,7 +822,7 @@ class BaseAgent(ABC):
                 # Find parent organisms
                 parent_a = None
                 parent_b = None
-                for org_id, org in dish.organisms.items():
+                for _org_id, org in dish.organisms.items():
                     if org.genome_id == parent_a_genome:
                         parent_a = org
                     elif org.genome_id == parent_b_genome:

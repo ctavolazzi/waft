@@ -328,9 +328,8 @@ class QuestEvolution:
         )
 
         # Read base template if available
-        base_template = ""
         if science_template_path.exists():
-            base_template = science_template_path.read_text()
+            science_template_path.read_text()
 
         # Build operations content
         operations_content = f"""

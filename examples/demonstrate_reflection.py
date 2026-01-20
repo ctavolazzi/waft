@@ -52,7 +52,7 @@ def main():
     # Step 1: Run reflection
     print("STEP 1: OBSERVATION")
     print("-" * 80)
-    report = run_reflection_example()
+    run_reflection_example()
 
     print()
     input("Press Enter to continue to Step 2...")
@@ -61,7 +61,7 @@ def main():
     # Step 2: Generate architecture docs
     print("STEP 2: ARCHITECTURE DOCUMENTATION")
     print("-" * 80)
-    arch_doc = generate_architecture_doc_example()
+    generate_architecture_doc_example()
 
     print()
     print("=" * 80)
