@@ -35,6 +35,8 @@ dependencies = [
     "uvicorn[standard]>=0.24.0",
     "fpdf2>=2.7.0",
     "beautifulsoup4>=4.14.0",
+    "jinja2>=3.0.0",
+    "pypdf>=4.0.0",
 ]
 
 [project.optional-dependencies]
@@ -126,6 +128,13 @@ ignore = []
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
+
+[tool.pytest.ini_options]
+# Exclude standalone test scripts that use sys.exit()
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+# Ignore standalone comprehensive test that has sys.exit()
+addopts = "--ignore=tests/test_the_absolute_begeesus.py"
 
 [tool.uv.workspace]
 members = ["_experiments/test_project_001", "_experiments/existing_project", "_experiments/test_project_002", "_experiments/test_project_001/nested_project"]
