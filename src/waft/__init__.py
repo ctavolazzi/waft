@@ -10,7 +10,26 @@ The "Operating System" for projects, orchestrating:
 __version__ = "0.9.4"
 __author__ = "Waft Team"
 
-# Unified PDF class - single entry point for all PDF generation
-from .pdf import PDF
+# Core orchestration
+from waft.core.orchestrator import SystemOrchestrator
 
-__all__ = ["PDF"]
+# Core systems
+from waft.being import Being, BeingSystem
+from waft.karma import KarmaMerchant
+from waft.source_consciousness import SourceConsciousness
+from waft.reality import Reality, RealitySystem
+
+# Convenience exports
+__all__ = [
+    # Orchestration
+    "SystemOrchestrator",
+
+    # Core systems
+    "Being",
+    "BeingSystem",
+    "KarmaMerchant",
+    "SourceConsciousness",
+    "Reality",
+    "RealitySystem",
+]
+
