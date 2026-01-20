@@ -1,0 +1,60 @@
+{
+  "products": [
+    {
+      "title": "How To Cast Jewelry - Succulent Jewelry Guide",
+      "description": "A helpful guide about succulent jewelry. This comprehensive guide provides step-by-step instructions and tips for How To Cast Jewelry. Perfect for beginners and experienced crafters alike.",
+      "tags": [
+        "jewelry",
+        "succulents",
+        "how-to",
+        "crafting",
+        "diy"
+      ],
+      "file": "how_to_cast_jewelry.pdf",
+      "file_size_mb": 0.22,
+      "pricing": {
+        "basic": 5.0,
+        "premium": 10.0
+      },
+      "created": "2026-01-19T15:09:18.124942"
+    },
+    {
+      "title": "Succulent Care Visual Guide - Succulent Jewelry Guide",
+      "description": "A helpful guide about succulent jewelry. This comprehensive guide provides step-by-step instructions and tips for Succulent Care Visual Guide. Perfect for beginners and experienced crafters alike.",
+      "tags": [
+        "jewelry",
+        "succulents",
+        "how-to",
+        "crafting",
+        "diy"
+      ],
+      "file": "succulent_care_visual_guide.pdf",
+      "file_size_mb": 0.2,
+      "pricing": {
+        "basic": 5.0,
+        "premium": 10.0
+      },
+      "created": "2026-01-19T15:09:18.125794"
+    },
+    {
+      "title": "Test Guide - Succulent Jewelry Guide",
+      "description": "A helpful guide about succulent jewelry. This comprehensive guide provides step-by-step instructions and tips for Test Guide. Perfect for beginners and experienced crafters alike.",
+      "tags": [
+        "jewelry",
+        "succulents",
+        "how-to",
+        "crafting",
+        "diy"
+      ],
+      "file": "test_guide.pdf",
+      "file_size_mb": 0.19,
+      "pricing": {
+        "basic": 5.0,
+        "premium": 10.0
+      },
+      "created": "2026-01-19T15:09:18.127214"
+    }
+  ],
+  "total": 3,
+  "generated": "2026-01-19T15:09:18.127243"
+}

@@ -1,0 +1,180 @@
+{
+  "base_query": "succulent",
+  "variations": {
+    "pixabay": {
+      "succulent": {
+        "total": 500,
+        "first_result_tags": "cactus, nature, plant, thorns, nature, nature, nat"
+      },
+      "SUCCULENT": {
+        "total": 500,
+        "first_result_tags": "cactus, nature, plant, thorns, nature, nature, nat"
+      },
+      "Succulent": {
+        "total": 500,
+        "first_result_tags": "cactus, nature, plant, thorns, nature, nature, nat"
+      },
+      "succulent plant": {
+        "total": 500,
+        "first_result_tags": "thick-leaved plant, sedum, fatty plant, succulent,"
+      },
+      "succulent care": {
+        "total": 500,
+        "first_result_tags": "succulents, hands, pot, potted plants, indoor plan"
+      },
+      "how to succulent": {
+        "total": 500,
+        "first_result_tags": "cactus, nature, plant, thorns, nature, nature, nat"
+      },
+      "succulent guide": {
+        "total": 500,
+        "first_result_tags": "cactus, nature, plant, thorns, nature, nature, nat"
+      }
+    },
+    "pexels": {
+      "succulent": {
+        "total": 0
+      },
+      "SUCCULENT": {
+        "total": 0
+      },
+      "Succulent": {
+        "total": 0
+      },
+      "succulent plant": {
+        "total": 0
+      },
+      "succulent care": {
+        "total": 0
+      },
+      "how to succulent": {
+        "total": 0
+      },
+      "succulent guide": {
+        "total": 0
+      }
+    }
+  },
+  "queries": {
+    "succulent": {
+      "pixabay": {
+        "total": 500,
+        "returned": 3,
+        "sample_tags": [
+          "cactus, nature, plant, thorns,",
+          "succulent, nature, plant, red ",
+          "cactus, succulent, desert, dro"
+        ]
+      },
+      "pexels": {}
+    },
+    "echeveria": {
+      "pixabay": {
+        "total": 91,
+        "returned": 3,
+        "sample_tags": [
+          "cacti, flora, flowers, pot, be",
+          "houseplant, echeveria, succule",
+          "houseplant, echeveria, succule"
+        ]
+      },
+      "pexels": {}
+    },
+    "jewelry making": {
+      "pixabay": {
+        "total": 500,
+        "returned": 3,
+        "sample_tags": [
+          "coral, red, ocean, beads, ston",
+          "coffee capsule, nespresso, rec",
+          "jewelry, coral, pink, ocean, b"
+        ]
+      },
+      "pexels": {}
+    },
+    "vacuum casting": {
+      "pixabay": {
+        "total": 480,
+        "returned": 3,
+        "sample_tags": [
+          "vacuum cleaner, vacuuming, cle",
+          "vacuum cleaner, vacuuming, cle",
+          "sea, ocean, vietnam, people, n"
+        ]
+      },
+      "pexels": {}
+    },
+    "plant care": {
+      "pixabay": {
+        "total": 500,
+        "returned": 3,
+        "sample_tags": [
+          "succulents, hands, pot, potted",
+          "planting, transplanting, cherr",
+          "hands, macro, nature, plant, s"
+        ]
+      },
+      "pexels": {}
+    },
+    "botanical": {
+      "pixabay": {
+        "total": 500,
+        "returned": 3,
+        "sample_tags": [
+          "flowers, daisies, field, color",
+          "butterfly, insect, nature, com",
+          "rapeseed, cultivated field, ye"
+        ]
+      },
+      "pexels": {}
+    },
+    "cactus": {
+      "pixabay": {
+        "total": 500,
+        "returned": 3,
+        "sample_tags": [
+          "queen of the night, dutchman's",
+          "cactus, flora, plant, nature, ",
+          "cactus, pink flower, plant, bl"
+        ]
+      },
+      "pexels": {}
+    },
+    "handmade": {
+      "pixabay": {
+        "total": 500,
+        "returned": 3,
+        "sample_tags": [
+          "women, vietnam, asia, hung yen",
+          "soap, handmade, france, cubes,",
+          "pottery, handmade, hands, cup,"
+        ]
+      },
+      "pexels": {}
+    },
+    "silver jewelry": {
+      "pixabay": {
+        "total": 500,
+        "returned": 3,
+        "sample_tags": [
+          "crown, tiara, crystals, diamon",
+          "woman, necklace, jewelry, silv",
+          "pocket watch, locket, watch, t"
+        ]
+      },
+      "pexels": {}
+    },
+    "nature photography": {
+      "pixabay": {
+        "total": 500,
+        "returned": 3,
+        "sample_tags": [
+          "sea, nature, black and white, ",
+          "book, photography, vacation, p",
+          "snow egret, bird, sea, ocean, "
+        ]
+      },
+      "pexels": {}
+    }
+  }
+}

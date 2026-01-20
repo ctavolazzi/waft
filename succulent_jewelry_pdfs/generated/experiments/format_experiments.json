@@ -1,0 +1,101 @@
+{
+  "sizes": {
+    "pixabay": {
+      "api": "pixabay",
+      "query": "succulent",
+      "sizes": {
+        "preview": {
+          "url": "https://cdn.pixabay.com/photo/2023/11/13/00/47/cactus-8384331_150.jpg",
+          "dimensions": "150x100"
+        },
+        "webformat": {
+          "url": "https://pixabay.com/get/g32d2e43e54f2f78b4e2762e6d2bf3584c5676e817885e347f91bf115dadf2655040ea3fa4f862259da9ce3e2dda0c8fefcb3c251a94ed99e2388f6c0b65f78e7_640.jpg",
+          "dimensions": "640x427"
+        },
+        "large": {
+          "url": "https://pixabay.com/get/g114ec2f482b0afbc81a9b431f515e5ef5806497cdbfe97639f0591afe6eb3a135837a3f61fdf660e0d8c21af721445a6ecdb75e8e5175cf412d6a0d03fd90e77_1280.jpg",
+          "dimensions": "1280px max"
+        },
+        "fullHD": {
+          "url": "",
+          "dimensions": "1920px max"
+        },
+        "original": {
+          "url": "",
+          "dimensions": "6240x4160"
+        }
+      }
+    },
+    "pexels": {
+      "api": "pexels",
+      "query": "succulent",
+      "sizes": {}
+    }
+  },
+  "orientations": {
+    "pixabay": {
+      "api": "pixabay",
+      "query": "succulent",
+      "orientations": {
+        "all": {
+          "url": "https://pixabay.com/get/g75c7a16001fe0314080dbccc6a256314fdb48266c6497eafdcd7ded356c0e594bb3b6dddc141a79094a19fe46ae25b56fbdaca346618a7db79fd75f9073e52c8_1280.jpg",
+          "dimensions": "3000x4542",
+          "is_horizontal": false
+        },
+        "horizontal": {
+          "url": "https://pixabay.com/get/g0dc75544bea4f2783f4301b413ae166d1dcf11b5316c86320c5cd8472b4bf662a2385a7abc185938bd1361d08d8f6c1962464352b653430be76f4f423b28e707_1280.jpg",
+          "dimensions": "6240x4160",
+          "is_horizontal": true
+        },
+        "vertical": {
+          "url": "https://pixabay.com/get/g7ad655ffe131d3c9d640c2c79fde8dddaaa35e132e51b559a171602eac07c2ebef3882903ee48524e3792dcca20cf484d8ee9cdd5eff038c50fbf0b42c8c926c_1280.jpg",
+          "dimensions": "3000x4542",
+          "is_horizontal": false
+        }
+      }
+    },
+    "pexels": {
+      "api": "pexels",
+      "query": "succulent",
+      "orientations": {}
+    }
+  },
+  "categories": {
+    "pixabay": {
+      "api": "pixabay",
+      "categories": {
+        "nature": {
+          "total": 500,
+          "sample_url": "https://pixabay.com/get/g4dd038a1d38d5b23371a2288e7836291bfbb5cdedffa3d6bc2c4719374b9aa20ab0393f935355a4ccdf1b2b551afa1501a5419a65bc2d434c212ba6156b9cb69_1280.jpg",
+          "tags": "poppies, flower wallpaper, field, sunset, desktop "
+        },
+        "animals": {
+          "total": 500,
+          "sample_url": "https://pixabay.com/get/gdcbb883412980581256c49e38ae136e7e3673eec40ad42c810d2e612ba6482e1eb3da30d78c593271909df303c4dda6c85d84ca4c812e661eae47a9b6e0e1d0d_1280.jpg",
+          "tags": "butterfly, animal, wildlife, insect, nature, plant"
+        },
+        "backgrounds": {
+          "total": 500,
+          "sample_url": "https://pixabay.com/get/g18f975bbb719e7e96d026e6bbc4a226ccd53d3084ceb40084100c73b029fef6029c33c2f7877bafde470b3afcfe780158551935855a63ad8633c6f1afc5f153b_1280.jpg",
+          "tags": "poppies, flower wallpaper, field, sunset, desktop "
+        },
+        "fashion": {
+          "total": 500,
+          "sample_url": "https://pixabay.com/get/g545280c1b6311d88388425cff77deff172fc8bf49977fb929771e64255aeb15a3e91e8f0e80c83db2eb56bb27110e82aaeb5e8f89743799dffc8731c8697fff8_1280.jpg",
+          "tags": "ecology, environment, garden, gardening, green, ho"
+        },
+        "food": {
+          "total": 500,
+          "sample_url": "https://pixabay.com/get/g328ca0514a2b1e6807ba6b08e61fa90ac9bd19bb59f9326867ad12dfbce903c0fb588846dd52a6e3fba598e30ea721e96f90162aaad9c5e600b4393f680db8f1_1280.jpg",
+          "tags": "plant, bush, branch, grain, nature, maturation, co"
+        }
+      }
+    }
+  },
+  "colors": {
+    "pexels": {
+      "api": "pexels",
+      "colors": {}
+    }
+  }
+}
