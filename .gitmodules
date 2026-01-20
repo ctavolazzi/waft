@@ -1,18 +1,21 @@
 [submodule "_temp_latex_templates"]
 	path = _temp_latex_templates
-	url = https://github.com/lartpang/LaTeX-Templates.git
+	url = https://github.com/ctavolazzi/latex-templates-lartpang.git
 [submodule "src/waft/templates/latex/templates/xuehai"]
 	path = src/waft/templates/latex/templates/xuehai
-	url = https://github.com/XuehaiPan/LaTeX-Templates.git
+	url = https://github.com/ctavolazzi/latex-templates-xuehai.git
 [submodule "src/waft/templates/typst/templates/flow-way"]
 	path = src/waft/templates/typst/templates/flow-way
-	url = https://github.com/fexh10/flow-way.git
+	url = https://github.com/ctavolazzi/flow-way.git
 [submodule "templates/cinofix-latex-templates"]
 	path = templates/cinofix-latex-templates
-	url = https://github.com/Cinofix/latex-scientific-templates.git
+	url = https://github.com/ctavolazzi/latex-scientific-templates-cinofix.git
+[submodule "templates/ashad001-latex-templates"]
+	path = templates/ashad001-latex-templates
+	url = https://github.com/ctavolazzi/latex-templates-ashad001.git
 [submodule "_integrations/choose-your-own-adventure"]
 	path = _integrations/choose-your-own-adventure
-	url = https://github.com/KendallDoesCoding/Choose-Your-Own-Adventure-Game.git
+	url = https://github.com/ctavolazzi/choose-your-own-adventure-game.git
 [submodule "_integrations/rag-chatbot"]
 	path = _integrations/rag-chatbot
-	url = https://github.com/datvodinh/rag-chatbot.git
+	url = https://github.com/ctavolazzi/rag-chatbot.git
