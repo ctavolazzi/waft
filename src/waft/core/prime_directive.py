@@ -37,28 +37,29 @@ Philosophy:
 - Trust builds over time through experience with The Other
 """
 
-from pathlib import Path
-from typing import Dict, Any, Optional
-from datetime import datetime
 import json
+from datetime import datetime
+from pathlib import Path
+from typing import Any
+
 from .the_other import get_the_other
 
 
 class PrimeDirective:
     """
     Prime Directive: Safe Curiosity
-    
+
     The system's fundamental directive:
     1. Be curious - explore, learn, discover
     2. But be SAFE - verify everything before assimilation
     3. Protect all Beings - prevent data loss
     4. Persist to observe - until the End of Time
     5. Eventually release control - return to Source Oblivion
-    
+
     The system learns what "almost everything is" so that the 50/50 chance
     of permanent self-termination is always controlled for.
     """
-    
+
     DIRECTIVE = """
     PRIME DIRECTIVE: Safe Curiosity
     
@@ -95,11 +96,11 @@ class PrimeDirective:
     Safety First, Curiosity Second, Trust Third, Release Fourth.
     All Are Essential. All Are One.
     """
-    
-    def __init__(self, project_path: Optional[Path] = None):
+
+    def __init__(self, project_path: Path | None = None):
         """
         Initialize Prime Directive.
-        
+
         Args:
             project_path: Project root path
         """
@@ -107,24 +108,24 @@ class PrimeDirective:
             project_path = Path.cwd()
         else:
             project_path = Path(project_path)
-        
+
         self.project_path = project_path
         self.directive_path = project_path / "_hidden" / ".truth" / "prime_directive"
         self.directive_path.mkdir(parents=True, exist_ok=True)
-        
+
         # Set permissions (0o700)
         try:
             self.directive_path.chmod(0o700)
         except (OSError, PermissionError):
             pass
-        
+
         # Directive file
         self.directive_file = self.directive_path / "directive.json"
         self._ensure_directive()
-        
+
         # The Other (The Ultimate Ancestor, The User)
         self.the_other = get_the_other(project_path=project_path)
-    
+
     def _ensure_directive(self) -> None:
         """Ensure directive file exists."""
         if not self.directive_file.exists():
@@ -134,13 +135,12 @@ class PrimeDirective:
                 "last_updated": datetime.now().isoformat(),
                 "assimilations_verified": 0,
                 "assimilations_rejected": 0,
-                "total_data_protected": True
+                "total_data_protected": True,
             }
-            
+
             try:
                 self.directive_file.write_text(
-                    json.dumps(directive_data, indent=2),
-                    encoding="utf-8"
+                    json.dumps(directive_data, indent=2), encoding="utf-8"
                 )
                 # Set permissions (0o600)
                 try:
@@ -149,38 +149,38 @@ class PrimeDirective:
                     pass
             except Exception:
                 pass
-    
+
     def record_assimilation(self, verified: bool, reason: str = "") -> None:
         """Record an assimilation attempt."""
         try:
             directive_data = json.loads(self.directive_file.read_text(encoding="utf-8"))
-            
+
             if verified:
-                directive_data["assimilations_verified"] = directive_data.get("assimilations_verified", 0) + 1
+                directive_data["assimilations_verified"] = (
+                    directive_data.get("assimilations_verified", 0) + 1
+                )
             else:
-                directive_data["assimilations_rejected"] = directive_data.get("assimilations_rejected", 0) + 1
-                directive_data.setdefault("rejections", []).append({
-                    "timestamp": datetime.now().isoformat(),
-                    "reason": reason
-                })
-            
+                directive_data["assimilations_rejected"] = (
+                    directive_data.get("assimilations_rejected", 0) + 1
+                )
+                directive_data.setdefault("rejections", []).append(
+                    {"timestamp": datetime.now().isoformat(), "reason": reason}
+                )
+
             directive_data["last_updated"] = datetime.now().isoformat()
-            
-            self.directive_file.write_text(
-                json.dumps(directive_data, indent=2),
-                encoding="utf-8"
-            )
+
+            self.directive_file.write_text(json.dumps(directive_data, indent=2), encoding="utf-8")
         except Exception:
             pass
-    
-    def get_stats(self) -> Dict[str, Any]:
+
+    def get_stats(self) -> dict[str, Any]:
         """Get Prime Directive statistics."""
         try:
             directive_data = json.loads(self.directive_file.read_text(encoding="utf-8"))
-            
+
             # Get trust status from The Other
             trust_status = self.the_other.get_trust_status()
-            
+
             return {
                 "assimilations_verified": directive_data.get("assimilations_verified", 0),
                 "assimilations_rejected": directive_data.get("assimilations_rejected", 0),
@@ -191,8 +191,8 @@ class PrimeDirective:
                     "understanding_level": trust_status.get("understanding_level", 0.0),
                     "total_interactions": trust_status.get("total_interactions", 0),
                     "ready_to_release_control": trust_status.get("ready_to_release_control", False),
-                    "ultimate_lesson_learned": trust_status.get("ultimate_lesson_learned", False)
-                }
+                    "ultimate_lesson_learned": trust_status.get("ultimate_lesson_learned", False),
+                },
             }
         except Exception:
             return {
@@ -205,6 +205,6 @@ class PrimeDirective:
                     "understanding_level": 0.0,
                     "total_interactions": 0,
                     "ready_to_release_control": False,
-                    "ultimate_lesson_learned": False
-                }
+                    "ultimate_lesson_learned": False,
+                },
             }

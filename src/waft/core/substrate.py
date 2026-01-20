@@ -7,7 +7,6 @@ through uv commands (init, sync, add, etc.).
 
 import subprocess
 from pathlib import Path
-from typing import Optional
 
 from ..utils import parse_toml_field
 
@@ -15,7 +14,7 @@ from ..utils import parse_toml_field
 class SubstrateManager:
     """Manages the uv substrate (environment layer)."""
 
-    def __init__(self, project_path: Optional[Path] = None):
+    def __init__(self, project_path: Path | None = None):
         """
         Initialize the substrate manager.
 
@@ -66,7 +65,7 @@ class SubstrateManager:
             print("Error: uv not found. Please install uv first.")
             return False
 
-    def sync(self, project_path: Optional[Path] = None) -> bool:
+    def sync(self, project_path: Path | None = None) -> bool:
         """
         Run uv sync to install dependencies.
 
@@ -92,7 +91,7 @@ class SubstrateManager:
         except FileNotFoundError:
             return False
 
-    def add_dependency(self, package: str, project_path: Optional[Path] = None) -> bool:
+    def add_dependency(self, package: str, project_path: Path | None = None) -> bool:
         """
         Add a dependency using uv add.
 
@@ -117,7 +116,7 @@ class SubstrateManager:
         except subprocess.CalledProcessError:
             return False
 
-    def verify_lock(self, project_path: Optional[Path] = None) -> bool:
+    def verify_lock(self, project_path: Path | None = None) -> bool:
         """
         Check if uv.lock exists.
 
@@ -133,7 +132,7 @@ class SubstrateManager:
         lock_file = project_path / "uv.lock"
         return lock_file.exists()
 
-    def get_project_info(self, project_path: Optional[Path] = None) -> dict:
+    def get_project_info(self, project_path: Path | None = None) -> dict:
         """
         Get basic project information from pyproject.toml.
 
@@ -160,4 +159,3 @@ class SubstrateManager:
             info["version"] = version
 
         return info
-

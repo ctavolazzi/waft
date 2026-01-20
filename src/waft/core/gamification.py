@@ -7,9 +7,9 @@ Moon Phase (epistemic clock), and Leveling system.
 
 import json
 import math
+from datetime import datetime
 from pathlib import Path
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timedelta
+from typing import Any
 
 
 class GamificationManager:
@@ -27,13 +27,13 @@ class GamificationManager:
         self.data_path.parent.mkdir(parents=True, exist_ok=True)
         self._data = self._load_data()
 
-    def _load_data(self) -> Dict[str, Any]:
+    def _load_data(self) -> dict[str, Any]:
         """Load gamification data from file."""
         if self.data_path.exists():
             try:
-                with open(self.data_path, "r") as f:
+                with open(self.data_path) as f:
                     return json.load(f)
-            except (json.JSONDecodeError, IOError):
+            except (OSError, json.JSONDecodeError):
                 pass
 
         # Default data
@@ -73,7 +73,7 @@ class GamificationManager:
         return max(1, level)
 
     @property
-    def achievements(self) -> List[str]:
+    def achievements(self) -> list[str]:
         """Get list of unlocked achievements."""
         return self._data.get("achievements", [])
 
@@ -93,14 +93,16 @@ class GamificationManager:
         self._data["integrity"] = new_integrity
 
         # Log to history
-        self._data.setdefault("history", []).append({
-            "timestamp": datetime.now().isoformat(),
-            "type": "integrity_damage",
-            "amount": -amount,
-            "reason": reason,
-            "integrity_before": current,
-            "integrity_after": new_integrity,
-        })
+        self._data.setdefault("history", []).append(
+            {
+                "timestamp": datetime.now().isoformat(),
+                "type": "integrity_damage",
+                "amount": -amount,
+                "reason": reason,
+                "integrity_before": current,
+                "integrity_after": new_integrity,
+            }
+        )
 
         self._save_data()
         return new_integrity
@@ -121,19 +123,21 @@ class GamificationManager:
         self._data["integrity"] = new_integrity
 
         # Log to history
-        self._data.setdefault("history", []).append({
-            "timestamp": datetime.now().isoformat(),
-            "type": "integrity_restore",
-            "amount": amount,
-            "reason": reason,
-            "integrity_before": current,
-            "integrity_after": new_integrity,
-        })
+        self._data.setdefault("history", []).append(
+            {
+                "timestamp": datetime.now().isoformat(),
+                "type": "integrity_restore",
+                "amount": amount,
+                "reason": reason,
+                "integrity_before": current,
+                "integrity_after": new_integrity,
+            }
+        )
 
         self._save_data()
         return new_integrity
 
-    def award_insight(self, amount: float, reason: str = "") -> Dict[str, Any]:
+    def award_insight(self, amount: float, reason: str = "") -> dict[str, Any]:
         """
         Award insight (verified knowledge).
 
@@ -154,17 +158,19 @@ class GamificationManager:
         level_up = new_level > old_level
 
         # Log to history
-        self._data.setdefault("history", []).append({
-            "timestamp": datetime.now().isoformat(),
-            "type": "insight_award",
-            "amount": amount,
-            "reason": reason,
-            "insight_before": old_insight,
-            "insight_after": new_insight,
-            "level_before": old_level,
-            "level_after": new_level,
-            "level_up": level_up,
-        })
+        self._data.setdefault("history", []).append(
+            {
+                "timestamp": datetime.now().isoformat(),
+                "type": "insight_award",
+                "amount": amount,
+                "reason": reason,
+                "insight_before": old_insight,
+                "insight_after": new_insight,
+                "level_before": old_level,
+                "level_after": new_level,
+                "level_up": level_up,
+            }
+        )
 
         self._save_data()
 
@@ -195,17 +201,19 @@ class GamificationManager:
         self._data["achievements"] = achievements
 
         # Log to history
-        self._data.setdefault("history", []).append({
-            "timestamp": datetime.now().isoformat(),
-            "type": "achievement_unlocked",
-            "achievement_id": achievement_id,
-            "achievement_name": achievement_name,
-        })
+        self._data.setdefault("history", []).append(
+            {
+                "timestamp": datetime.now().isoformat(),
+                "type": "achievement_unlocked",
+                "achievement_id": achievement_id,
+                "achievement_name": achievement_name,
+            }
+        )
 
         self._save_data()
         return True
 
-    def get_achievement_status(self) -> Dict[str, bool]:
+    def get_achievement_status(self) -> dict[str, bool]:
         """
         Get status of all achievements (locked/unlocked).
 
@@ -227,11 +235,10 @@ class GamificationManager:
         }
 
         return {
-            achievement_id: achievement_id in unlocked
-            for achievement_id in all_achievements.keys()
+            achievement_id: achievement_id in unlocked for achievement_id in all_achievements.keys()
         }
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """
         Get current stats.
 
@@ -262,7 +269,7 @@ class GamificationManager:
 
         return max(0.0, insight_needed)
 
-    def check_achievements(self, stats: Optional[Dict[str, Any]] = None) -> List[str]:
+    def check_achievements(self, stats: dict[str, Any] | None = None) -> list[str]:
         """
         Check and unlock achievements based on current stats.
 
@@ -298,5 +305,3 @@ class GamificationManager:
                 newly_unlocked.append("level_10")
 
         return newly_unlocked
-
-

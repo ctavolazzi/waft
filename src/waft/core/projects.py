@@ -8,21 +8,22 @@ Provides foundation for managing complex, multi-session work.
 import json
 import re
 import shutil
+from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
 from threading import Lock
-from typing import Dict, List, Optional, Any
-from dataclasses import dataclass, field, asdict
+from typing import Any
 
-from ..utils import _validate_path_in_storage
 from ..logging import get_logger
+from ..utils import _validate_path_in_storage
 
 logger = get_logger(__name__)
 
 
 class ProjectStatus(Enum):
     """Project status."""
+
     PLANNING = "planning"
     ACTIVE = "active"
     PAUSED = "paused"
@@ -33,19 +34,20 @@ class ProjectStatus(Enum):
 @dataclass
 class Milestone:
     """Project milestone."""
+
     milestone_id: str
     title: str
     description: str = ""
-    target_date: Optional[str] = None
+    target_date: str | None = None
     completed: bool = False
-    completed_at: Optional[str] = None
+    completed_at: str | None = None
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for JSON serialization."""
         return asdict(self)
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "Milestone":
+    def from_dict(cls, data: dict[str, Any]) -> "Milestone":
         """Create from dictionary."""
         return cls(**data)
 
@@ -53,19 +55,20 @@ class Milestone:
 @dataclass
 class ProgressEntry:
     """Progress entry for a work session."""
+
     entry_id: str
     timestamp: str
     progress_delta: float  # Change in progress percentage
     notes: str = ""
-    work_effort_id: Optional[str] = None
-    session_duration: Optional[float] = None  # Minutes spent
+    work_effort_id: str | None = None
+    session_duration: float | None = None  # Minutes spent
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for JSON serialization."""
         return asdict(self)
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "ProgressEntry":
+    def from_dict(cls, data: dict[str, Any]) -> "ProgressEntry":
         """Create from dictionary."""
         return cls(**data)
 
@@ -73,6 +76,7 @@ class ProgressEntry:
 @dataclass
 class Project:
     """Project data model."""
+
     project_id: str
     title: str
     description: str = ""
@@ -80,35 +84,37 @@ class Project:
     created_at: str = ""
     updated_at: str = ""
     progress_percent: float = 0.0
-    tags: List[str] = field(default_factory=list)
-    milestones: List[Milestone] = field(default_factory=list)
-    progress_entries: List[ProgressEntry] = field(default_factory=list)
-    related_work_efforts: List[str] = field(default_factory=list)
+    tags: list[str] = field(default_factory=list)
+    milestones: list[Milestone] = field(default_factory=list)
+    progress_entries: list[ProgressEntry] = field(default_factory=list)
+    related_work_efforts: list[str] = field(default_factory=list)
     notes: str = ""
     version: int = 1  # Schema version for migrations
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for JSON serialization."""
         data = asdict(self)
-        data['status'] = self.status.value
-        data['milestones'] = [m.to_dict() for m in self.milestones]
-        data['progress_entries'] = [e.to_dict() for e in self.progress_entries]
+        data["status"] = self.status.value
+        data["milestones"] = [m.to_dict() for m in self.milestones]
+        data["progress_entries"] = [e.to_dict() for e in self.progress_entries]
         return data
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "Project":
+    def from_dict(cls, data: dict[str, Any]) -> "Project":
         """Create from dictionary."""
         # Convert status string to enum
-        if isinstance(data.get('status'), str):
-            data['status'] = ProjectStatus(data['status'])
+        if isinstance(data.get("status"), str):
+            data["status"] = ProjectStatus(data["status"])
 
         # Convert milestones
-        if 'milestones' in data:
-            data['milestones'] = [Milestone.from_dict(m) for m in data['milestones']]
+        if "milestones" in data:
+            data["milestones"] = [Milestone.from_dict(m) for m in data["milestones"]]
 
         # Convert progress entries
-        if 'progress_entries' in data:
-            data['progress_entries'] = [ProgressEntry.from_dict(e) for e in data['progress_entries']]
+        if "progress_entries" in data:
+            data["progress_entries"] = [
+                ProgressEntry.from_dict(e) for e in data["progress_entries"]
+            ]
 
         return cls(**data)
 
@@ -166,19 +172,19 @@ class ProjectManager:
             return False
 
         # Reject path traversal
-        if '..' in project_id or '/' in project_id or '\\' in project_id:
+        if ".." in project_id or "/" in project_id or "\\" in project_id:
             return False
 
         # Reject null bytes
-        if '\x00' in project_id:
+        if "\x00" in project_id:
             return False
 
         # Reject control characters
-        if any(ord(c) < 32 and c not in '\t\n\r' for c in project_id):
+        if any(ord(c) < 32 and c not in "\t\n\r" for c in project_id):
             return False
 
         # Only allow safe filename characters
-        if not re.match(r'^[a-zA-Z0-9_-]+$', project_id):
+        if not re.match(r"^[a-zA-Z0-9_-]+$", project_id):
             return False
 
         return True
@@ -195,9 +201,13 @@ class ProjectManager:
         Returns:
             True if valid, False otherwise
         """
-        return _validate_path_in_storage(file_path.relative_to(self.project_path), self.project_path)
+        return _validate_path_in_storage(
+            file_path.relative_to(self.project_path), self.project_path
+        )
 
-    def _validate_input(self, title: str, description: str, tags: List[str], progress_percent: float) -> None:
+    def _validate_input(
+        self, title: str, description: str, tags: list[str], progress_percent: float
+    ) -> None:
         """
         Validate user inputs.
 
@@ -217,12 +227,14 @@ class ProjectManager:
             raise ValueError("Title cannot be empty")
         if len(title) > self.MAX_TITLE_LENGTH:
             raise ValueError(f"Title exceeds maximum length of {self.MAX_TITLE_LENGTH} characters")
-        if any(ord(c) < 32 and c not in '\t\n\r' for c in title):
+        if any(ord(c) < 32 and c not in "\t\n\r" for c in title):
             raise ValueError("Title contains invalid control characters")
 
         # Validate description
         if len(description) > self.MAX_DESCRIPTION_LENGTH:
-            raise ValueError(f"Description exceeds maximum length of {self.MAX_DESCRIPTION_LENGTH} characters")
+            raise ValueError(
+                f"Description exceeds maximum length of {self.MAX_DESCRIPTION_LENGTH} characters"
+            )
 
         # Validate tags
         if len(tags) > self.MAX_TAGS:
@@ -230,7 +242,7 @@ class ProjectManager:
         for tag in tags:
             if len(tag) > self.MAX_TAG_LENGTH:
                 raise ValueError(f"Tag exceeds maximum length of {self.MAX_TAG_LENGTH} characters")
-            if any(ord(c) < 32 and c not in '\t\n\r' for c in tag):
+            if any(ord(c) < 32 and c not in "\t\n\r" for c in tag):
                 raise ValueError(f"Tag contains invalid control characters: {tag}")
 
         # Validate progress percentage
@@ -240,7 +252,7 @@ class ProjectManager:
             raise ValueError("Progress percentage must be between 0.0 and 100.0")
         if progress_percent != progress_percent:  # Check for NaN
             raise ValueError("Progress percentage cannot be NaN")
-        if progress_percent == float('inf') or progress_percent == float('-inf'):
+        if progress_percent == float("inf") or progress_percent == float("-inf"):
             raise ValueError("Progress percentage cannot be infinity")
 
     def _check_disk_space(self) -> bool:
@@ -261,8 +273,8 @@ class ProjectManager:
         self,
         title: str,
         description: str = "",
-        tags: Optional[List[str]] = None,
-        status: ProjectStatus = ProjectStatus.PLANNING
+        tags: list[str] | None = None,
+        status: ProjectStatus = ProjectStatus.PLANNING,
     ) -> Project:
         """
         Create a new project.
@@ -291,7 +303,7 @@ class ProjectManager:
             raise OSError("Insufficient disk space")
 
         # Generate project ID
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         project_id = f"proj_{timestamp}"
 
         # Ensure unique ID
@@ -309,7 +321,7 @@ class ProjectManager:
             created_at=datetime.now().isoformat(),
             updated_at=datetime.now().isoformat(),
             tags=tags,
-            progress_percent=0.0
+            progress_percent=0.0,
         )
 
         # Save project
@@ -318,7 +330,7 @@ class ProjectManager:
         logger.info(f"Created project: {project_id} - {title}")
         return project
 
-    def get_project(self, project_id: str) -> Optional[Project]:
+    def get_project(self, project_id: str) -> Project | None:
         """
         Get project by ID.
 
@@ -335,7 +347,9 @@ class ProjectManager:
         """
         # Validate project_id
         if not self._validate_project_id(project_id):
-            raise ValueError(f"Invalid project_id: {project_id} (contains path traversal or invalid characters)")
+            raise ValueError(
+                f"Invalid project_id: {project_id} (contains path traversal or invalid characters)"
+            )
 
         project_file = self.projects_dir / f"{project_id}.json"
 
@@ -366,7 +380,9 @@ class ProjectManager:
             raise ValueError(f"Invalid project_id: {project.project_id}")
 
         # Validate inputs
-        self._validate_input(project.title, project.description, project.tags, project.progress_percent)
+        self._validate_input(
+            project.title, project.description, project.tags, project.progress_percent
+        )
 
         # Validate milestones count
         if len(project.milestones) > self.MAX_MILESTONES:
@@ -374,7 +390,7 @@ class ProjectManager:
 
         # Validate progress entries count (keep last N)
         if len(project.progress_entries) > self.MAX_PROGRESS_ENTRIES:
-            project.progress_entries = project.progress_entries[-self.MAX_PROGRESS_ENTRIES:]
+            project.progress_entries = project.progress_entries[-self.MAX_PROGRESS_ENTRIES :]
 
         # Validate notes length
         if len(project.notes) > self.MAX_NOTES_LENGTH:
@@ -390,10 +406,10 @@ class ProjectManager:
         # Create backup before update
         project_file = self.projects_dir / f"{project.project_id}.json"
         if project_file.exists():
-            backup_file = project_file.with_suffix('.json.bak')
+            backup_file = project_file.with_suffix(".json.bak")
             try:
                 shutil.copy2(project_file, backup_file)
-            except (IOError, OSError):
+            except OSError:
                 logger.warning(f"Could not create backup for {project.project_id}")
 
         # Save project
@@ -433,15 +449,13 @@ class ProjectManager:
             project_file.unlink()
             logger.info(f"Deleted project: {project_id}")
             return True
-        except (IOError, OSError) as e:
+        except OSError as e:
             logger.error(f"Failed to delete project {project_id}: {e}")
             raise OSError(f"Failed to delete project {project_id}: {e}")
 
     def list_projects(
-        self,
-        status: Optional[ProjectStatus] = None,
-        tags: Optional[List[str]] = None
-    ) -> List[Project]:
+        self, status: ProjectStatus | None = None, tags: list[str] | None = None
+    ) -> list[Project]:
         """
         List all projects, optionally filtered.
 
@@ -459,7 +473,7 @@ class ProjectManager:
 
         for project_file in self.projects_dir.glob("*.json"):
             # Skip backup files
-            if project_file.name.endswith('.bak'):
+            if project_file.name.endswith(".bak"):
                 continue
 
             try:
@@ -504,8 +518,8 @@ class ProjectManager:
         with self._lock:
             try:
                 # Write to temp file first (atomic write)
-                temp_file = project_file.with_suffix('.tmp')
-                with open(temp_file, 'w', encoding='utf-8') as f:
+                temp_file = project_file.with_suffix(".tmp")
+                with open(temp_file, "w", encoding="utf-8") as f:
                     json.dump(project.to_dict(), f, indent=2, ensure_ascii=False)
 
                 # CRITICAL: Set file permissions (0o600)
@@ -523,7 +537,7 @@ class ProjectManager:
                 except (OSError, PermissionError):
                     pass  # Ignore on Windows
 
-            except (IOError, OSError, PermissionError) as e:
+            except (OSError, PermissionError) as e:
                 # Clean up temp file on error
                 if temp_file.exists():
                     try:
@@ -553,7 +567,7 @@ class ProjectManager:
             raise FileNotFoundError(f"Project file not found: {project_file}")
 
         try:
-            with open(project_file, 'r', encoding='utf-8') as f:
+            with open(project_file, encoding="utf-8") as f:
                 data = json.load(f)
 
             # Validate JSON structure
@@ -561,7 +575,7 @@ class ProjectManager:
                 raise json.JSONDecodeError("Project data must be a dictionary", project_file, 0)
 
             # Validate required fields
-            required_fields = ['project_id', 'title', 'status', 'created_at', 'updated_at']
+            required_fields = ["project_id", "title", "status", "created_at", "updated_at"]
             for field in required_fields:
                 if field not in data:
                     raise json.JSONDecodeError(f"Missing required field: {field}", project_file, 0)
@@ -571,6 +585,6 @@ class ProjectManager:
         except json.JSONDecodeError as e:
             logger.error(f"Corrupted project file {project_file}: {e}")
             raise
-        except (IOError, OSError, PermissionError) as e:
+        except (OSError, PermissionError) as e:
             logger.error(f"Failed to load project from {project_file}: {e}")
             raise OSError(f"Failed to load project: {e}")

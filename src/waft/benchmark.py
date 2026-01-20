@@ -9,17 +9,17 @@ This benchmark suite provides concrete proof that the system:
 4. Provides real benefits (measurably better than naive approaches)
 """
 
-import time
 import statistics
-from typing import List, Dict, Tuple
+import time
 from dataclasses import dataclass
 
-from demo_api import MetaCognitiveAPI, ProblemInput, GuideMode, SolutionOutput
+from demo_api import GuideMode, MetaCognitiveAPI, ProblemInput
 
 
 @dataclass
 class BenchmarkResult:
     """Result from a benchmark test."""
+
     name: str
     passed: bool
     metric: float
@@ -31,14 +31,14 @@ class BenchmarkSuite:
 
     def __init__(self):
         self.api = MetaCognitiveAPI()
-        self.results: List[BenchmarkResult] = []
+        self.results: list[BenchmarkResult] = []
 
     def run_all(self):
         """Run all benchmarks and report results."""
-        print("="*80)
+        print("=" * 80)
         print("COMPREHENSIVE BENCHMARK SUITE")
         print("Proving: Consistency, Measurability, Reliability")
-        print("="*80)
+        print("=" * 80)
 
         # Run each benchmark
         self.benchmark_consistency()
@@ -63,14 +63,10 @@ class BenchmarkSuite:
         qualities = []
 
         for i in range(5):
-            input_data = ProblemInput(
-                problem=problem,
-                mode=GuideMode.BASIC,
-                max_iterations=3
-            )
+            input_data = ProblemInput(problem=problem, mode=GuideMode.BASIC, max_iterations=3)
             output = self.api.solve(input_data)
             qualities.append(output.quality_report.final_quality)
-            print(f"  Run {i+1}: quality={qualities[i]:.3f}")
+            print(f"  Run {i + 1}: quality={qualities[i]:.3f}")
 
         # Check consistency
         variance = statistics.variance(qualities) if len(qualities) > 1 else 0
@@ -81,48 +77,56 @@ class BenchmarkSuite:
 
         # Pass if variance is low (consistent evaluation)
         passed = variance < 0.01  # Very consistent
-        self.results.append(BenchmarkResult(
-            name="Consistency",
-            passed=passed,
-            metric=variance,
-            details=f"variance={variance:.6f}, std_dev={std_dev:.3f}"
-        ))
-        print(f"  {'✅ PASS' if passed else '❌ FAIL'}: Variance={variance:.6f} {'<' if passed else '>='} 0.01")
+        self.results.append(
+            BenchmarkResult(
+                name="Consistency",
+                passed=passed,
+                metric=variance,
+                details=f"variance={variance:.6f}, std_dev={std_dev:.3f}",
+            )
+        )
+        print(
+            f"  {'✅ PASS' if passed else '❌ FAIL'}: Variance={variance:.6f} {'<' if passed else '>='} 0.01"
+        )
 
     def benchmark_determinism(self):
         """Benchmark: Identical inputs produce identical outputs."""
         print("\n[BENCHMARK 2: DETERMINISM]")
         print("Testing: Identical input → identical output")
 
-        input1 = ProblemInput(
-            problem="Explain recursion",
-            mode=GuideMode.BASIC,
-            max_iterations=3
-        )
+        input1 = ProblemInput(problem="Explain recursion", mode=GuideMode.BASIC, max_iterations=3)
 
         output1 = self.api.solve(input1)
         output2 = self.api.solve(input1)
 
         # Compare outputs
         same_quality = output1.quality_report.final_quality == output2.quality_report.final_quality
-        same_iterations = output1.quality_report.iterations_used == output2.quality_report.iterations_used
+        same_iterations = (
+            output1.quality_report.iterations_used == output2.quality_report.iterations_used
+        )
         same_grade = output1.quality_report.grade == output2.quality_report.grade
 
-        print(f"  Output 1: quality={output1.quality_report.final_quality:.3f}, " +
-              f"iterations={output1.quality_report.iterations_used}, " +
-              f"grade={output1.quality_report.grade}")
-        print(f"  Output 2: quality={output2.quality_report.final_quality:.3f}, " +
-              f"iterations={output2.quality_report.iterations_used}, " +
-              f"grade={output2.quality_report.grade}")
+        print(
+            f"  Output 1: quality={output1.quality_report.final_quality:.3f}, "
+            + f"iterations={output1.quality_report.iterations_used}, "
+            + f"grade={output1.quality_report.grade}"
+        )
+        print(
+            f"  Output 2: quality={output2.quality_report.final_quality:.3f}, "
+            + f"iterations={output2.quality_report.iterations_used}, "
+            + f"grade={output2.quality_report.grade}"
+        )
 
         passed = same_quality and same_iterations and same_grade
 
-        self.results.append(BenchmarkResult(
-            name="Determinism",
-            passed=passed,
-            metric=1.0 if passed else 0.0,
-            details=f"quality_match={same_quality}, iter_match={same_iterations}, grade_match={same_grade}"
-        ))
+        self.results.append(
+            BenchmarkResult(
+                name="Determinism",
+                passed=passed,
+                metric=1.0 if passed else 0.0,
+                details=f"quality_match={same_quality}, iter_match={same_iterations}, grade_match={same_grade}",
+            )
+        )
         print(f"  {'✅ PASS' if passed else '❌ FAIL'}: All outputs match")
 
     def benchmark_mode_differences(self):
@@ -138,22 +142,28 @@ class BenchmarkSuite:
             input_data = ProblemInput(problem=problem, mode=mode, max_iterations=3)
             output = self.api.solve(input_data)
             outputs.append(output)
-            print(f"  {mode.value:10s}: quality={output.quality_report.final_quality:.3f}, " +
-                  f"efficiency={output.quality_report.efficiency:.3f}")
+            print(
+                f"  {mode.value:10s}: quality={output.quality_report.final_quality:.3f}, "
+                + f"efficiency={output.quality_report.efficiency:.3f}"
+            )
 
         # Check that we get measurable differences
         qualities = [o.quality_report.final_quality for o in outputs]
         unique_qualities = len(set(f"{q:.3f}" for q in qualities))
 
         # Modes should produce results (not necessarily different in this simple eval)
-        passed = len(outputs) == len(modes) and all(o.quality_report.iterations_used > 0 for o in outputs)
+        passed = len(outputs) == len(modes) and all(
+            o.quality_report.iterations_used > 0 for o in outputs
+        )
 
-        self.results.append(BenchmarkResult(
-            name="Mode Differentiation",
-            passed=passed,
-            metric=unique_qualities,
-            details=f"modes_tested={len(modes)}, all_executed={passed}"
-        ))
+        self.results.append(
+            BenchmarkResult(
+                name="Mode Differentiation",
+                passed=passed,
+                metric=unique_qualities,
+                details=f"modes_tested={len(modes)}, all_executed={passed}",
+            )
+        )
         print(f"  {'✅ PASS' if passed else '❌ FAIL'}: All modes executed successfully")
 
     def benchmark_iteration_convergence(self):
@@ -167,14 +177,14 @@ class BenchmarkSuite:
 
         for max_iter in iteration_counts:
             input_data = ProblemInput(
-                problem=problem,
-                mode=GuideMode.BASIC,
-                max_iterations=max_iter
+                problem=problem, mode=GuideMode.BASIC, max_iterations=max_iter
             )
             output = self.api.solve(input_data)
             results_by_iter.append(output)
-            print(f"  max_iter={max_iter:2d}: used={output.quality_report.iterations_used}, " +
-                  f"quality={output.quality_report.final_quality:.3f}")
+            print(
+                f"  max_iter={max_iter:2d}: used={output.quality_report.iterations_used}, "
+                + f"quality={output.quality_report.final_quality:.3f}"
+            )
 
         # Verify system respects iteration limits
         respects_limits = all(
@@ -184,12 +194,14 @@ class BenchmarkSuite:
 
         passed = respects_limits
 
-        self.results.append(BenchmarkResult(
-            name="Iteration Behavior",
-            passed=passed,
-            metric=1.0 if passed else 0.0,
-            details=f"respects_limits={respects_limits}"
-        ))
+        self.results.append(
+            BenchmarkResult(
+                name="Iteration Behavior",
+                passed=passed,
+                metric=1.0 if passed else 0.0,
+                details=f"respects_limits={respects_limits}",
+            )
+        )
         print(f"  {'✅ PASS' if passed else '❌ FAIL'}: System respects iteration limits")
 
     def benchmark_voting_improves_quality(self):
@@ -213,12 +225,14 @@ class BenchmarkSuite:
         # Voting should execute successfully
         passed = voting_output.quality_report.iterations_used > 0
 
-        self.results.append(BenchmarkResult(
-            name="Voting Consensus",
-            passed=passed,
-            metric=voting_output.quality_report.final_quality,
-            details=f"voting_quality={voting_output.quality_report.final_quality:.3f}"
-        ))
+        self.results.append(
+            BenchmarkResult(
+                name="Voting Consensus",
+                passed=passed,
+                metric=voting_output.quality_report.final_quality,
+                details=f"voting_quality={voting_output.quality_report.final_quality:.3f}",
+            )
+        )
         print(f"  {'✅ PASS' if passed else '❌ FAIL'}: Voting mode executed successfully")
 
     def benchmark_ensemble_picks_best(self):
@@ -246,12 +260,14 @@ class BenchmarkSuite:
         # Ensemble should execute
         passed = ensemble_output.quality_report.iterations_used > 0
 
-        self.results.append(BenchmarkResult(
-            name="Ensemble Execution",
-            passed=passed,
-            metric=ensemble_output.quality_report.final_quality,
-            details=f"ensemble_quality={ensemble_output.quality_report.final_quality:.3f}"
-        ))
+        self.results.append(
+            BenchmarkResult(
+                name="Ensemble Execution",
+                passed=passed,
+                metric=ensemble_output.quality_report.final_quality,
+                details=f"ensemble_quality={ensemble_output.quality_report.final_quality:.3f}",
+            )
+        )
         print(f"  {'✅ PASS' if passed else '❌ FAIL'}: Ensemble executed successfully")
 
     def benchmark_quality_metrics_accuracy(self):
@@ -260,9 +276,7 @@ class BenchmarkSuite:
         print("Testing: Metrics calculations are accurate")
 
         input_data = ProblemInput(
-            problem="Test problem for metrics",
-            mode=GuideMode.BASIC,
-            max_iterations=5
+            problem="Test problem for metrics", mode=GuideMode.BASIC, max_iterations=5
         )
         output = self.api.solve(input_data)
 
@@ -272,23 +286,33 @@ class BenchmarkSuite:
         consistency_valid = 0.0 <= output.quality_report.consistency <= 1.0
         convergence_valid = 0.0 <= output.quality_report.convergence_speed <= 1.0
 
-        print(f"  Quality: {output.quality_report.final_quality:.3f} " +
-              f"{'✓' if quality_valid else '✗'} [0.0, 1.0]")
-        print(f"  Efficiency: {output.quality_report.efficiency:.3f} " +
-              f"{'✓' if efficiency_valid else '✗'} [0.0, 1.0]")
-        print(f"  Consistency: {output.quality_report.consistency:.3f} " +
-              f"{'✓' if consistency_valid else '✗'} [0.0, 1.0]")
-        print(f"  Convergence: {output.quality_report.convergence_speed:.3f} " +
-              f"{'✓' if convergence_valid else '✗'} [0.0, 1.0]")
+        print(
+            f"  Quality: {output.quality_report.final_quality:.3f} "
+            + f"{'✓' if quality_valid else '✗'} [0.0, 1.0]"
+        )
+        print(
+            f"  Efficiency: {output.quality_report.efficiency:.3f} "
+            + f"{'✓' if efficiency_valid else '✗'} [0.0, 1.0]"
+        )
+        print(
+            f"  Consistency: {output.quality_report.consistency:.3f} "
+            + f"{'✓' if consistency_valid else '✗'} [0.0, 1.0]"
+        )
+        print(
+            f"  Convergence: {output.quality_report.convergence_speed:.3f} "
+            + f"{'✓' if convergence_valid else '✗'} [0.0, 1.0]"
+        )
 
         passed = quality_valid and efficiency_valid and consistency_valid and convergence_valid
 
-        self.results.append(BenchmarkResult(
-            name="Metrics Accuracy",
-            passed=passed,
-            metric=1.0 if passed else 0.0,
-            details="all_metrics_in_valid_ranges"
-        ))
+        self.results.append(
+            BenchmarkResult(
+                name="Metrics Accuracy",
+                passed=passed,
+                metric=1.0 if passed else 0.0,
+                details="all_metrics_in_valid_ranges",
+            )
+        )
         print(f"  {'✅ PASS' if passed else '❌ FAIL'}: All metrics in valid ranges")
 
     def benchmark_json_api_integration(self):
@@ -297,21 +321,20 @@ class BenchmarkSuite:
         print("Testing: JSON export/import for system integration")
 
         input_data = ProblemInput(
-            problem="API integration test",
-            mode=GuideMode.BASIC,
-            max_iterations=3
+            problem="API integration test", mode=GuideMode.BASIC, max_iterations=3
         )
         output = self.api.solve(input_data)
         json_str = self.api.to_json(output)
 
         # Verify JSON is valid and complete
         import json
+
         parsed = json.loads(json_str)
 
-        has_problem = 'problem' in parsed
-        has_quality = 'quality' in parsed
-        has_history = 'step_history' in parsed
-        has_session_id = 'session_id' in parsed
+        has_problem = "problem" in parsed
+        has_quality = "quality" in parsed
+        has_history = "step_history" in parsed
+        has_session_id = "session_id" in parsed
 
         print(f"  JSON length: {len(json_str)} chars")
         print(f"  Has problem: {'✓' if has_problem else '✗'}")
@@ -321,12 +344,14 @@ class BenchmarkSuite:
 
         passed = has_problem and has_quality and has_history and has_session_id
 
-        self.results.append(BenchmarkResult(
-            name="JSON API",
-            passed=passed,
-            metric=len(json_str),
-            details=f"json_size={len(json_str)}, complete={passed}"
-        ))
+        self.results.append(
+            BenchmarkResult(
+                name="JSON API",
+                passed=passed,
+                metric=len(json_str),
+                details=f"json_size={len(json_str)}, complete={passed}",
+            )
+        )
         print(f"  {'✅ PASS' if passed else '❌ FAIL'}: JSON complete and valid")
 
     def benchmark_performance(self):
@@ -340,9 +365,7 @@ class BenchmarkSuite:
         start = time.time()
         for i in range(iterations):
             input_data = ProblemInput(
-                problem=f"{problem} {i}",
-                mode=GuideMode.BASIC,
-                max_iterations=3
+                problem=f"{problem} {i}", mode=GuideMode.BASIC, max_iterations=3
             )
             self.api.solve(input_data)
         end = time.time()
@@ -353,24 +376,26 @@ class BenchmarkSuite:
         print(f"  Iterations: {iterations}")
         print(f"  Total time: {total_time:.3f}s")
         print(f"  Avg per solve: {avg_time:.3f}s")
-        print(f"  Throughput: {iterations/total_time:.1f} solves/sec")
+        print(f"  Throughput: {iterations / total_time:.1f} solves/sec")
 
         # Pass if average time is reasonable (< 1 second per solve)
         passed = avg_time < 1.0
 
-        self.results.append(BenchmarkResult(
-            name="Performance",
-            passed=passed,
-            metric=avg_time,
-            details=f"avg_time={avg_time:.3f}s, throughput={iterations/total_time:.1f}/s"
-        ))
+        self.results.append(
+            BenchmarkResult(
+                name="Performance",
+                passed=passed,
+                metric=avg_time,
+                details=f"avg_time={avg_time:.3f}s, throughput={iterations / total_time:.1f}/s",
+            )
+        )
         print(f"  {'✅ PASS' if passed else '❌ FAIL'}: Average time {avg_time:.3f}s < 1.0s")
 
     def report_summary(self):
         """Report benchmark summary."""
-        print("\n" + "="*80)
+        print("\n" + "=" * 80)
         print("BENCHMARK SUMMARY")
-        print("="*80)
+        print("=" * 80)
 
         passed_count = sum(1 for r in self.results if r.passed)
         total_count = len(self.results)
@@ -382,12 +407,12 @@ class BenchmarkSuite:
             status = "✅ PASS" if result.passed else "❌ FAIL"
             print(f"  {status}  {result.name:30s} - {result.details}")
 
-        print("\n" + "="*80)
+        print("\n" + "=" * 80)
         if passed_count == total_count:
             print("🎯 ALL BENCHMARKS PASSED - SYSTEM IS RELIABLE")
         else:
             print(f"⚠️  {total_count - passed_count} BENCHMARK(S) FAILED")
-        print("="*80)
+        print("=" * 80)
 
         print("\nProven properties:")
         print("  ✅ Consistency - Same inputs produce consistent results")

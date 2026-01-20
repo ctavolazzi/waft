@@ -3,9 +3,8 @@ GitHub Integration - Commands for GitHub repository management.
 """
 
 import subprocess
-import json
 from pathlib import Path
-from typing import Optional, Dict, Any
+from typing import Any
 
 
 class GitHubManager:
@@ -24,7 +23,7 @@ class GitHubManager:
         """Check if git repository is initialized."""
         return (self.project_path / ".git").exists()
 
-    def get_remote_url(self) -> Optional[str]:
+    def get_remote_url(self) -> str | None:
         """Get GitHub remote URL if configured."""
         try:
             result = subprocess.run(
@@ -54,7 +53,7 @@ class GitHubManager:
         except (subprocess.CalledProcessError, FileNotFoundError):
             return False
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get repository status."""
         status = {
             "initialized": self.is_initialized(),
@@ -86,5 +85,3 @@ class GitHubManager:
                 pass
 
         return status
-
-

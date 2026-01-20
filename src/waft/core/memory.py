@@ -8,7 +8,6 @@ The "memory" is the persistent structure that organizes project knowledge:
 """
 
 from pathlib import Path
-from typing import Dict
 
 
 class MemoryManager:
@@ -48,7 +47,7 @@ class MemoryManager:
             if not gitkeep.exists():
                 gitkeep.write_text("# This file ensures the folder is tracked by git\n")
 
-    def verify_structure(self) -> Dict:
+    def verify_structure(self) -> dict:
         """
         Verify the _pyrite structure is valid.
 
@@ -129,17 +128,10 @@ class MemoryManager:
 
         if recursive:
             # Recursive: use rglob to find all files
-            return [
-                f for f in self.pyrite_path.rglob("*")
-                if f.is_file() and f.name != ".gitkeep"
-            ]
+            return [f for f in self.pyrite_path.rglob("*") if f.is_file() and f.name != ".gitkeep"]
         else:
             # Non-recursive: combine all category files
-            return (
-                self.get_active_files() +
-                self.get_backlog_files() +
-                self.get_standards_files()
-            )
+            return self.get_active_files() + self.get_backlog_files() + self.get_standards_files()
 
     def get_files_by_extension(self, extension: str, recursive: bool = False) -> list[Path]:
         """
@@ -156,4 +148,3 @@ class MemoryManager:
         # Ensure extension starts with dot
         ext = extension if extension.startswith(".") else f".{extension}"
         return [f for f in all_files if f.suffix == ext]
-

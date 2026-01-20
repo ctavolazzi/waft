@@ -12,7 +12,7 @@ import sys
 
 sys.path.insert(0, ".")
 
-from demo_api import MetaCognitiveAPI, ProblemInput, GuideMode
+from demo_api import GuideMode, MetaCognitiveAPI, ProblemInput
 
 print("=" * 80)
 print("CONFIDENCE FACTOR - META-COGNITIVE SELF-AWARENESS")
@@ -112,11 +112,11 @@ for problem, mode in test_cases:
     print(f"  Confidence: {conf:.3f}")
 
     if conf < 0.3:
-        print(f"  → ⚠️  LOW CONFIDENCE: Be cautious with this evaluation")
+        print("  → ⚠️  LOW CONFIDENCE: Be cautious with this evaluation")
     elif conf < 0.7:
-        print(f"  → ⚙️  MEDIUM CONFIDENCE: Reasonable evaluation")
+        print("  → ⚙️  MEDIUM CONFIDENCE: Reasonable evaluation")
     else:
-        print(f"  → ✅ HIGH CONFIDENCE: Trust this evaluation")
+        print("  → ✅ HIGH CONFIDENCE: Trust this evaluation")
 
 print("\n" + "=" * 80)
 print("SUMMARY")

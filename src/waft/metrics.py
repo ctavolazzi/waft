@@ -26,57 +26,62 @@ Example:
     True
 """
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import List, Optional, Dict, Any, Callable
 from enum import Enum
 from functools import wraps
-import json
-
+from typing import Any
 
 # ============================================================================
 # Enums
 # ============================================================================
 
+
 class KarmaAlignment(Enum):
     """Karma alignment categories."""
-    DEEP_CHAOS = "deep_chaos"      # -100 to -50
-    MILD_CHAOS = "mild_chaos"      # -49 to -10
-    NEUTRAL = "neutral"            # -9 to +9
-    MILD_ORDER = "mild_order"      # +10 to +49
+
+    DEEP_CHAOS = "deep_chaos"  # -100 to -50
+    MILD_CHAOS = "mild_chaos"  # -49 to -10
+    NEUTRAL = "neutral"  # -9 to +9
+    MILD_ORDER = "mild_order"  # +10 to +49
     STRONG_ORDER = "strong_order"  # +50 to +100
     MASTER_ORDER = "master_order"  # 100+
 
 
 class RiskLevel(Enum):
     """Integrity risk categories."""
-    SAFE = "safe"              # 0-10
-    CAREFUL = "careful"        # 11-30
-    RISKY = "risky"           # 31-60
-    DANGEROUS = "dangerous"   # 61-100
-    CRITICAL = "critical"     # 100+
+
+    SAFE = "safe"  # 0-10
+    CAREFUL = "careful"  # 11-30
+    RISKY = "risky"  # 31-60
+    DANGEROUS = "dangerous"  # 61-100
+    CRITICAL = "critical"  # 100+
 
 
 class ComplexityLevel(Enum):
     """Cognitive load categories."""
-    TRIVIAL = "trivial"      # 1
-    SIMPLE = "simple"        # 2-3
-    MODERATE = "moderate"    # 4-6
-    COMPLEX = "complex"      # 7-9
-    INTENSE = "intense"      # 10+
+
+    TRIVIAL = "trivial"  # 1
+    SIMPLE = "simple"  # 2-3
+    MODERATE = "moderate"  # 4-6
+    COMPLEX = "complex"  # 7-9
+    INTENSE = "intense"  # 10+
 
 
 class EvolutionPath(Enum):
     """Evolution paths based on karma."""
-    THE_GLITCH = "the_glitch"          # Chaos path
-    THE_BALANCED = "the_balanced"       # Neutral
-    THE_ARCHITECT = "the_architect"     # Order path
-    MASTER_BUILDER = "master_builder"   # Advanced order
-    GRAND_ARCHITECT = "grand_architect" # Final form
+
+    THE_GLITCH = "the_glitch"  # Chaos path
+    THE_BALANCED = "the_balanced"  # Neutral
+    THE_ARCHITECT = "the_architect"  # Order path
+    MASTER_BUILDER = "master_builder"  # Advanced order
+    GRAND_ARCHITECT = "grand_architect"  # Final form
 
 
 # ============================================================================
 # Core Metric Classes
 # ============================================================================
+
 
 @dataclass
 class Scint:
@@ -90,6 +95,7 @@ class Scint:
         cost: Scint spent to do work
         earned: Scint earned back (from future value created)
     """
+
     cost: int = 0
     earned: int = 0
 
@@ -102,7 +108,7 @@ class Scint:
     def roi(self) -> float:
         """Return on investment ratio."""
         if self.cost == 0:
-            return float('inf') if self.earned > 0 else 0.0
+            return float("inf") if self.earned > 0 else 0.0
         return self.earned / self.cost
 
     def is_profitable(self) -> bool:
@@ -125,6 +131,7 @@ class Karma:
             Negative = chaos/disorder
             Positive = order/structure
     """
+
     impact: int = 0
 
     @property
@@ -178,6 +185,7 @@ class Integrity:
         current: Current integrity level (default 100)
         max_integrity: Maximum integrity (can increase)
     """
+
     risk: int = 0
     current: int = 100
     max_integrity: int = 100
@@ -234,6 +242,7 @@ class CognitiveLoad:
     Attributes:
         complexity: Cognitive complexity (1-10+)
     """
+
     complexity: int = 1
 
     @property
@@ -272,6 +281,7 @@ class CognitiveLoad:
 # Phase & Quest System
 # ============================================================================
 
+
 @dataclass
 class Phase:
     """
@@ -289,6 +299,7 @@ class Phase:
         completed: Whether phase is done
         actual_scint: Actual scint spent (if different from estimate)
     """
+
     name: str
     scint_cost: int = 0
     scint_earned: int = 0
@@ -296,7 +307,7 @@ class Phase:
     integrity_risk: int = 0
     cognitive_load: int = 1
     completed: bool = False
-    actual_scint: Optional[int] = None
+    actual_scint: int | None = None
 
     @property
     def scint(self) -> Scint:
@@ -331,13 +342,13 @@ class Phase:
         """Net Scint gain/loss."""
         return self.scint.net
 
-    def complete(self, actual_scint: Optional[int] = None):
+    def complete(self, actual_scint: int | None = None):
         """Mark phase as completed."""
         self.completed = True
         if actual_scint is not None:
             self.actual_scint = actual_scint
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
         return {
             "name": self.name,
@@ -349,7 +360,7 @@ class Phase:
             "completed": self.completed,
             "actual_scint": self.actual_scint,
             "roi": self.roi(),
-            "net_scint": self.net_scint()
+            "net_scint": self.net_scint(),
         }
 
     def __str__(self) -> str:
@@ -377,10 +388,11 @@ class Quest:
         achievements: Achievements unlocked
         evolution_threshold: Karma needed for evolution
     """
+
     name: str
     description: str = ""
-    phases: List[Phase] = field(default_factory=list)
-    achievements: List[str] = field(default_factory=list)
+    phases: list[Phase] = field(default_factory=list)
+    achievements: list[str] = field(default_factory=list)
     evolution_threshold: int = 100
 
     @property
@@ -413,7 +425,7 @@ class Quest:
     def roi(self) -> float:
         """Overall return on investment."""
         if self.total_scint_cost == 0:
-            return float('inf') if self.total_scint_earned > 0 else 0.0
+            return float("inf") if self.total_scint_earned > 0 else 0.0
         return self.total_scint_earned / self.total_scint_cost
 
     def net_scint(self) -> int:
@@ -424,7 +436,7 @@ class Quest:
         """Whether quest is profitable overall."""
         return self.net_scint() > 0
 
-    def break_even_phase(self) -> Optional[int]:
+    def break_even_phase(self) -> int | None:
         """Find which phase we break even (cumulative net >= 0)."""
         cumulative = 0
         for i, phase in enumerate(self.phases):
@@ -433,7 +445,7 @@ class Quest:
                 return i
         return None
 
-    def evolution_trigger_phase(self) -> Optional[int]:
+    def evolution_trigger_phase(self) -> int | None:
         """Find which phase triggers evolution."""
         cumulative_karma = 0
         for i, phase in enumerate(self.phases):
@@ -457,7 +469,8 @@ class Quest:
         """Cumulative Scint spent on completed phases."""
         return sum(
             p.actual_scint if p.actual_scint is not None else p.scint_cost
-            for p in self.phases if p.completed
+            for p in self.phases
+            if p.completed
         )
 
     def current_scint_earned(self) -> int:
@@ -473,7 +486,7 @@ class Quest:
         if achievement not in self.achievements:
             self.achievements.append(achievement)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
         return {
             "name": self.name,
@@ -489,7 +502,7 @@ class Quest:
             "evolution_trigger_phase": self.evolution_trigger_phase(),
             "completion_percentage": self.completion_percentage(),
             "phases": [p.to_dict() for p in self.phases],
-            "achievements": self.achievements
+            "achievements": self.achievements,
         }
 
     def __str__(self) -> str:
@@ -510,6 +523,7 @@ class Quest:
 # Player Stats
 # ============================================================================
 
+
 @dataclass
 class PlayerStats:
     """
@@ -526,6 +540,7 @@ class PlayerStats:
         level: Player level
         evolution: Current evolution path
     """
+
     scint_balance: int = 0
     karma: int = 0
     integrity_current: int = 100
@@ -552,10 +567,16 @@ class PlayerStats:
             return False, f"Need {phase.scint_cost - self.scint_balance} more Scint"
 
         if not self.can_handle_risk(phase):
-            return False, f"Integrity too low (need {phase.integrity_risk}, have {self.integrity_current})"
+            return (
+                False,
+                f"Integrity too low (need {phase.integrity_risk}, have {self.integrity_current})",
+            )
 
         if not self.can_handle_complexity(phase):
-            return False, f"Too complex (need {phase.cognitive_load} 🧠, have {self.cognitive_capacity})"
+            return (
+                False,
+                f"Too complex (need {phase.cognitive_load} 🧠, have {self.cognitive_capacity})",
+            )
 
         return True, "Ready to proceed"
 
@@ -576,8 +597,7 @@ class PlayerStats:
             # Successful completion heals some damage
             recovery = 20
             self.integrity_current = min(
-                self.integrity_max,
-                self.integrity_current - phase.integrity_risk + recovery
+                self.integrity_max, self.integrity_current - phase.integrity_risk + recovery
             )
         else:
             self.integrity_current -= phase.integrity_risk
@@ -606,7 +626,7 @@ class PlayerStats:
         self.integrity_current = self.integrity_max
         self.scint_balance += 50
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
         return {
             "scint_balance": self.scint_balance,
@@ -615,7 +635,7 @@ class PlayerStats:
             "integrity_max": self.integrity_max,
             "cognitive_capacity": self.cognitive_capacity,
             "level": self.level,
-            "evolution": self.evolution.value
+            "evolution": self.evolution.value,
         }
 
 
@@ -623,12 +643,13 @@ class PlayerStats:
 # Decorators
 # ============================================================================
 
+
 def track_metrics(
     scint_cost: int = 0,
     scint_earned: int = 0,
     karma_impact: int = 0,
     integrity_risk: int = 0,
-    cognitive_load: int = 1
+    cognitive_load: int = 1,
 ):
     """
     Decorator to track metrics for a function.
@@ -643,6 +664,7 @@ def track_metrics(
         ... def write_documentation():
         ...     pass
     """
+
     def decorator(func: Callable) -> Callable:
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -656,14 +678,16 @@ def track_metrics(
                 scint_earned=scint_earned,
                 karma_impact=karma_impact,
                 integrity_risk=integrity_risk,
-                cognitive_load=cognitive_load
+                cognitive_load=cognitive_load,
             )
 
             # Could log here
             print(f"[METRICS] {phase}")
 
             return result
+
         return wrapper
+
     return decorator
 
 
@@ -671,10 +695,11 @@ def track_metrics(
 # Utility Functions
 # ============================================================================
 
+
 def calculate_roi(cost: int, earned: int) -> float:
     """Calculate return on investment."""
     if cost == 0:
-        return float('inf') if earned > 0 else 0.0
+        return float("inf") if earned > 0 else 0.0
     return earned / cost
 
 
@@ -685,11 +710,11 @@ def estimate_time_from_scint(scint: int) -> float:
     This is approximate and varies by individual and task type.
     """
     conversion = {
-        (0, 30): 1.0,      # 0-30 Scint ≈ 1 hour
-        (31, 60): 2.0,     # 31-60 ≈ 2 hours
-        (61, 90): 3.0,     # 61-90 ≈ 3 hours
-        (91, 120): 4.0,    # 91-120 ≈ 4 hours
-        (121, 200): 8.0,   # 121-200 ≈ 8 hours
+        (0, 30): 1.0,  # 0-30 Scint ≈ 1 hour
+        (31, 60): 2.0,  # 31-60 ≈ 2 hours
+        (61, 90): 3.0,  # 61-90 ≈ 3 hours
+        (91, 120): 4.0,  # 91-120 ≈ 4 hours
+        (121, 200): 8.0,  # 121-200 ≈ 8 hours
     }
 
     for (low, high), hours in conversion.items():
@@ -700,7 +725,7 @@ def estimate_time_from_scint(scint: int) -> float:
     return scint / 25  # Rough estimate
 
 
-def prioritize_phases(phases: List[Phase]) -> List[Phase]:
+def prioritize_phases(phases: list[Phase]) -> list[Phase]:
     """
     Prioritize phases by ROI and karma.
 
@@ -719,37 +744,42 @@ def prioritize_phases(phases: List[Phase]) -> List[Phase]:
 if __name__ == "__main__":
     # Create a quest
     quest = Quest(
-        name="Project Reorganization",
-        description="Clean up and organize the project structure"
+        name="Project Reorganization", description="Clean up and organize the project structure"
     )
 
     # Add phases
-    quest.add_phase(Phase(
-        name="Setup automation",
-        scint_cost=80,
-        scint_earned=100,
-        karma_impact=30,
-        integrity_risk=5,
-        cognitive_load=7
-    ))
+    quest.add_phase(
+        Phase(
+            name="Setup automation",
+            scint_cost=80,
+            scint_earned=100,
+            karma_impact=30,
+            integrity_risk=5,
+            cognitive_load=7,
+        )
+    )
 
-    quest.add_phase(Phase(
-        name="Move PDFs",
-        scint_cost=30,
-        scint_earned=50,
-        karma_impact=15,
-        integrity_risk=10,
-        cognitive_load=2
-    ))
+    quest.add_phase(
+        Phase(
+            name="Move PDFs",
+            scint_cost=30,
+            scint_earned=50,
+            karma_impact=15,
+            integrity_risk=10,
+            cognitive_load=2,
+        )
+    )
 
-    quest.add_phase(Phase(
-        name="Consolidate docs",
-        scint_cost=70,
-        scint_earned=90,
-        karma_impact=35,
-        integrity_risk=25,
-        cognitive_load=6
-    ))
+    quest.add_phase(
+        Phase(
+            name="Consolidate docs",
+            scint_cost=70,
+            scint_earned=90,
+            karma_impact=35,
+            integrity_risk=25,
+            cognitive_load=6,
+        )
+    )
 
     # Print quest summary
     print(quest)

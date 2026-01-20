@@ -5,27 +5,24 @@ Implements the "Red October" aesthetic with high contrast, block geometry,
 and industrial design inspired by Russian Constructivism.
 """
 
-import time
-import sys
 import os
-import threading
-import termios
-import tty
-import fcntl
 import select
-from typing import Optional
-from pathlib import Path
+import sys
+import termios
+import threading
+import time
+import tty
 
+from rich.align import Align
 from rich.console import Console
 from rich.layout import Layout
+from rich.live import Live
 from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
-from rich.live import Live
-from rich.align import Align
 
-from ..logging import get_logger
 from ..core.tavern_keeper import TavernKeeper
+from ..logging import get_logger
 
 logger = get_logger(__name__)
 
@@ -121,8 +118,12 @@ class RedOctoberDashboard:
         # Create 3-column grid
         header_table = Table.grid(expand=True, padding=(0, 1))
         header_table.add_column("left", justify="left", style=f"bold {PAPER_CREAM} on {CRISIS_RED}")
-        header_table.add_column("center", justify="center", style=f"bold {PAPER_CREAM} on {CRISIS_RED}")
-        header_table.add_column("right", justify="right", style=f"bold {PAPER_CREAM} on {CRISIS_RED}")
+        header_table.add_column(
+            "center", justify="center", style=f"bold {PAPER_CREAM} on {CRISIS_RED}"
+        )
+        header_table.add_column(
+            "right", justify="right", style=f"bold {PAPER_CREAM} on {CRISIS_RED}"
+        )
 
         header_table.add_row(
             "TAVERNKEEPER OS [bold]v2.1[/]",
@@ -174,7 +175,14 @@ class RedOctoberDashboard:
         }
 
         attributes_text = Text()
-        for ability in ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]:
+        for ability in [
+            "strength",
+            "dexterity",
+            "constitution",
+            "intelligence",
+            "wisdom",
+            "charisma",
+        ]:
             score = ability_scores.get(ability, 8)
             modifier = ability_modifiers.get(ability, -1)
             modifier_str = f"+{modifier}" if modifier >= 0 else str(modifier)
@@ -221,7 +229,9 @@ class RedOctoberDashboard:
                     color = CRISIS_RED
                     bg_color = f"on {CRISIS_RED}"
 
-                duration_str = f" [{CONCRETE_GREY}]{duration}s[/]" if duration else f" [{PURPLE_MAGIC}]Perm[/]"
+                duration_str = (
+                    f" [{CONCRETE_GREY}]{duration}s[/]" if duration else f" [{PURPLE_MAGIC}]Perm[/]"
+                )
                 status_text.append(f"{symbol} [{color}]{effect_name}[/]{duration_str}\n")
         else:
             status_text.append(f"[{CONCRETE_GREY}]No active effects[/]\n", style=CONCRETE_GREY)
@@ -229,9 +239,13 @@ class RedOctoberDashboard:
         # Combine all content
         content = Align.left(
             Text.assemble(
-                level_text, "\n\n",
-                "[bold]ATTRIBUTES[/]\n", attributes_text, "\n",
-                "[bold]STATUS EFFECTS[/]\n", status_text,
+                level_text,
+                "\n\n",
+                "[bold]ATTRIBUTES[/]\n",
+                attributes_text,
+                "\n",
+                "[bold]STATUS EFFECTS[/]\n",
+                status_text,
             ),
             vertical="top",
         )
@@ -276,7 +290,9 @@ class RedOctoberDashboard:
 
                 # Format timestamp (extract time part)
                 try:
-                    time_part = timestamp.split("T")[1].split(".")[0] if "T" in timestamp else timestamp[:8]
+                    time_part = (
+                        timestamp.split("T")[1].split(".")[0] if "T" in timestamp else timestamp[:8]
+                    )
                 except (IndexError, AttributeError) as e:
                     logger.debug(f"Could not parse timestamp '{timestamp}': {e}")
                     time_part = timestamp[:8] if len(timestamp) >= 8 else timestamp
@@ -323,7 +339,9 @@ class RedOctoberDashboard:
                 log_text = f"[{CONCRETE_GREY}]{time_part}[/] │ {icon}{source_indicator}{narrative}"
                 log_table.add_row(Text(log_text, style=row_style))
         else:
-            log_table.add_row(Text("[dim]No entries in the chronicle yet...[/]", style=CONCRETE_GREY))
+            log_table.add_row(
+                Text("[dim]No entries in the chronicle yet...[/]", style=CONCRETE_GREY)
+            )
 
         return Panel(
             log_table,
@@ -344,6 +362,7 @@ class RedOctoberDashboard:
 
         # Get current git branch
         import subprocess
+
         git_branch = "unknown"
         try:
             result = subprocess.run(
@@ -361,12 +380,16 @@ class RedOctoberDashboard:
         # Active Operation with color
         op_text = Text()
         op_text.append(f"[{CYAN_ENERGY}]⚡[/] OP: ", style=PAPER_CREAM)
-        branch_color = GREEN_SUCCESS if "main" in git_branch or "master" in git_branch else GLORY_GOLD
+        branch_color = (
+            GREEN_SUCCESS if "main" in git_branch or "master" in git_branch else GLORY_GOLD
+        )
         op_text.append(git_branch, style=f"bold {branch_color}")
 
         # Resource Fund with enhanced display
         credits_text = Text()
-        credits_color = GLORY_GOLD if credits >= 100 else CYAN_ENERGY if credits >= 50 else CONCRETE_GREY
+        credits_color = (
+            GLORY_GOLD if credits >= 100 else CYAN_ENERGY if credits >= 50 else CONCRETE_GREY
+        )
         credits_text.append(f"[{GLORY_GOLD}]¤[/] CREDITS: ", style=PAPER_CREAM)
         credits_text.append(f"{credits}", style=f"bold {credits_color}")
 
@@ -383,12 +406,16 @@ class RedOctoberDashboard:
         content = Align.left(
             Text.assemble(
                 f"[bold {CYAN_ENERGY}]ACTIVE OPERATION[/]\n",
-                op_text, "\n\n",
+                op_text,
+                "\n\n",
                 f"[bold {GLORY_GOLD}]RESOURCE FUND[/]\n",
-                credits_text, "\n",
-                insight_text, "\n\n",
+                credits_text,
+                "\n",
+                insight_text,
+                "\n\n",
                 f"[bold {CONCRETE_GREY}]INVENTORY[/]\n",
-                inventory_text, "\n",
+                inventory_text,
+                "\n",
             ),
             vertical="top",
         )
@@ -442,29 +469,25 @@ class RedOctoberDashboard:
             # Initialize tty_fd if not already open
             if self._tty_fd is None:
                 try:
-
-                    self._tty_fd = os.open('/dev/tty', os.O_RDONLY | os.O_NONBLOCK)
+                    self._tty_fd = os.open("/dev/tty", os.O_RDONLY | os.O_NONBLOCK)
                     self._tty_settings = termios.tcgetattr(self._tty_fd)
                     tty.setraw(self._tty_fd)
 
-                except (OSError, IOError, termios.error) as e:
+                except (OSError, termios.error):
                     return None
 
             # Use select to check if input is available (non-blocking with 0.1s timeout)
             try:
                 ready, _, _ = select.select([self._tty_fd], [], [], 0.1)
 
-
                 if ready:
                     key_bytes = os.read(self._tty_fd, 1)
 
-
                     if key_bytes:
-                        key = key_bytes.decode('utf-8', errors='ignore')
-
+                        key = key_bytes.decode("utf-8", errors="ignore")
 
                         return key.lower()
-            except (OSError, IOError) as e:
+            except OSError:
                 pass
 
             return None
@@ -474,19 +497,16 @@ class RedOctoberDashboard:
 
             while self.running:
                 try:
-
                     # Use termios to get key (works with alternate screen mode)
                     key = get_key()
 
                     if key:
-
-                        if key == 'q':
-
+                        if key == "q":
                             self.running = False
                             break
                     else:
                         time.sleep(0.1)  # Small delay when no key
-                except Exception as e:
+                except Exception:
                     time.sleep(0.1)
 
         with Live(
@@ -499,16 +519,12 @@ class RedOctoberDashboard:
             keyboard_thread = threading.Thread(target=check_keyboard, daemon=True)
             keyboard_thread.start()
 
-
             try:
-
                 while self.running:
-
                     live.update(self.render())
                     time.sleep(0.25)  # 4Hz = 0.25s interval
 
             except KeyboardInterrupt:
-
                 self.running = False
             finally:
                 # Restore terminal settings and close tty_fd
@@ -526,7 +542,8 @@ class RedOctoberDashboard:
                 # Ensure terminal is restored
                 if self._original_terminal_settings and sys.stdin.isatty():
                     try:
-                        termios.tcsetattr(sys.stdin.fileno(), termios.TCSADRAIN, self._original_terminal_settings)
+                        termios.tcsetattr(
+                            sys.stdin.fileno(), termios.TCSADRAIN, self._original_terminal_settings
+                        )
                     except (termios.error, OSError):
                         pass
-

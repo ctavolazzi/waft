@@ -5,9 +5,10 @@ After testing all patterns, we found that complex problems
 need hierarchical delegation. Build Composite pattern for guide trees.
 """
 
-from foundation import Session, Guide
 from abc import ABC, abstractmethod
-from typing import List
+
+from foundation import Guide, Session
+
 
 class GuideComponent(ABC):
     """Component interface for Composite pattern."""
@@ -34,7 +35,7 @@ class CompositeGuide(GuideComponent):
 
     def __init__(self, name: str):
         self.name = name
-        self._children: List[GuideComponent] = []
+        self._children: list[GuideComponent] = []
 
     def add(self, guide: GuideComponent) -> None:
         """Add a child guide."""
@@ -75,6 +76,7 @@ if __name__ == "__main__":
 
     # Create leaf guides
     from patterns import GuideFactory, GuideType
+
     strict_leaf = LeafGuide(GuideFactory.create(GuideType.STRICT, max_iterations=1))
     lenient_leaf = LeafGuide(GuideFactory.create(GuideType.LENIENT, max_iterations=1))
 

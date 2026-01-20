@@ -16,7 +16,7 @@ import sys
 
 sys.path.insert(0, ".")
 
-from demo_api import MetaCognitiveAPI, ProblemInput, GuideMode
+from demo_api import GuideMode, MetaCognitiveAPI, ProblemInput
 from foundation import evaluate_answer
 
 print("=" * 80)
@@ -66,9 +66,9 @@ eval2 = evaluate_answer(
     "Complex problem requiring detailed analysis",
 )
 
-print(f"\nShort answer:")
+print("\nShort answer:")
 print(f"  Aesthetic: {eval1.aesthetic.value:.3f} (fate component is low)")
-print(f"\nLong answer:")
+print("\nLong answer:")
 print(f"  Aesthetic: {eval2.aesthetic.value:.3f} (fate component is higher)")
 print("\n✅ Fate provides deterministic pull, luck adds variance")
 

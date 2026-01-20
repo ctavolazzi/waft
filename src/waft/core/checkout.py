@@ -9,14 +9,15 @@ import json
 import subprocess
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Any, Optional, List
+from typing import Any
+
 from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
 
-from .session_stats import SessionStats
-from .session_analytics import SessionAnalytics, SessionRecord
 from .github import GitHubManager
+from .session_analytics import SessionAnalytics, SessionRecord
+from .session_stats import SessionStats
 from .visualizer import Visualizer
 
 
@@ -37,7 +38,7 @@ class CheckoutManager:
         self.github = GitHubManager(project_path)
         self.visualizer = Visualizer(project_path)
 
-    def run_checkout(self, quick: bool = False, silent: bool = False) -> Dict[str, Any]:
+    def run_checkout(self, quick: bool = False, silent: bool = False) -> dict[str, Any]:
         """
         Run complete checkout workflow.
 
@@ -93,26 +94,36 @@ class CheckoutManager:
 
         return results
 
-    def _phase_statistics(self, silent: bool) -> Dict[str, Any]:
+    def _phase_statistics(self, silent: bool) -> dict[str, Any]:
         """Phase 1: Capture session statistics."""
         if not silent:
             self.console.print("\n[bold]Phase 1: Session Statistics[/bold]")
 
         try:
             stats = self.stats_tracker.calculate_session_stats()
-            
+
             # Save statistics
             stats_dir = self.project_path / "_pyrite" / "phase1"
             stats_dir.mkdir(parents=True, exist_ok=True)
-            stats_file = stats_dir / f"session-stats-{datetime.now().strftime('%Y-%m-%d-%H%M%S')}.json"
+            stats_file = (
+                stats_dir / f"session-stats-{datetime.now().strftime('%Y-%m-%d-%H%M%S')}.json"
+            )
             stats_file.write_text(json.dumps(stats, indent=2), encoding="utf-8")
 
             if not silent:
                 self.console.print(f"  [green]✓[/green] Files created: {stats['files']['created']}")
-                self.console.print(f"  [green]✓[/green] Files modified: {stats['files']['modified']}")
-                self.console.print(f"  [green]✓[/green] Lines written: {stats['code']['lines_written']:,}")
-                self.console.print(f"  [green]✓[/green] Net change: {stats['code']['net_change']:+,} lines")
-                self.console.print(f"  [green]✓[/green] Statistics saved: {stats_file.relative_to(self.project_path)}")
+                self.console.print(
+                    f"  [green]✓[/green] Files modified: {stats['files']['modified']}"
+                )
+                self.console.print(
+                    f"  [green]✓[/green] Lines written: {stats['code']['lines_written']:,}"
+                )
+                self.console.print(
+                    f"  [green]✓[/green] Net change: {stats['code']['net_change']:+,} lines"
+                )
+                self.console.print(
+                    f"  [green]✓[/green] Statistics saved: {stats_file.relative_to(self.project_path)}"
+                )
 
             return {
                 "success": True,
@@ -124,7 +135,7 @@ class CheckoutManager:
                 self.console.print(f"  [red]✗[/red] Error: {e}")
             return {"success": False, "error": str(e)}
 
-    def _phase_git_review(self, silent: bool) -> Dict[str, Any]:
+    def _phase_git_review(self, silent: bool) -> dict[str, Any]:
         """Phase 2: Review git status."""
         if not silent:
             self.console.print("\n[bold]Phase 2: Git Status Review[/bold]")
@@ -159,10 +170,12 @@ class CheckoutManager:
 
             if not silent:
                 if uncommitted_count > 0:
-                    self.console.print(f"  [yellow]⚠[/yellow]  {uncommitted_count} uncommitted files")
+                    self.console.print(
+                        f"  [yellow]⚠[/yellow]  {uncommitted_count} uncommitted files"
+                    )
                     self.console.print("  [dim]💡[/dim] Suggestion: Consider committing changes")
                     self.console.print("     [dim]git add .[/dim]")
-                    self.console.print(f"     [dim]git commit -m \"Session: [description]\"[/dim]")
+                    self.console.print('     [dim]git commit -m "Session: [description]"[/dim]')
                 else:
                     self.console.print("  [green]✓[/green] No uncommitted changes")
 
@@ -178,7 +191,7 @@ class CheckoutManager:
                 self.console.print(f"  [red]✗[/red] Error: {e}")
             return {"success": False, "error": str(e)}
 
-    def _phase_summary(self, results: Dict[str, Any], silent: bool) -> Dict[str, Any]:
+    def _phase_summary(self, results: dict[str, Any], silent: bool) -> dict[str, Any]:
         """Phase 3: Create session summary."""
         if not silent:
             self.console.print("\n[bold]Phase 3: Session Summary[/bold]")
@@ -202,7 +215,9 @@ class CheckoutManager:
             summary_file.write_text(summary_content, encoding="utf-8")
 
             if not silent:
-                self.console.print(f"  [green]✓[/green] Summary created: {summary_file.relative_to(self.project_path)}")
+                self.console.print(
+                    f"  [green]✓[/green] Summary created: {summary_file.relative_to(self.project_path)}"
+                )
 
             return {
                 "success": True,
@@ -213,7 +228,7 @@ class CheckoutManager:
                 self.console.print(f"  [red]✗[/red] Error: {e}")
             return {"success": False, "error": str(e)}
 
-    def _generate_summary_content(self, stats: Dict[str, Any], git_info: Dict[str, Any]) -> str:
+    def _generate_summary_content(self, stats: dict[str, Any], git_info: dict[str, Any]) -> str:
         """Generate session summary markdown content."""
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         date_str = datetime.now().strftime("%Y-%m-%d")
@@ -246,9 +261,13 @@ class CheckoutManager:
         # Files by Type
         if stats.get("by_type"):
             content.append("## Files by Type\n\n")
-            for ext, data in sorted(stats["by_type"].items(), key=lambda x: x[1]["lines"], reverse=True):
+            for ext, data in sorted(
+                stats["by_type"].items(), key=lambda x: x[1]["lines"], reverse=True
+            ):
                 ext_display = ext if ext != "no-ext" else "(no ext)"
-                content.append(f"- **{ext_display}**: {data['created']} created, {data['modified']} modified, {data['lines']:+,} lines\n")
+                content.append(
+                    f"- **{ext_display}**: {data['created']} created, {data['modified']} modified, {data['lines']:+,} lines\n"
+                )
             content.append("\n---\n\n")
 
         # Git Status
@@ -272,7 +291,7 @@ class CheckoutManager:
 
         return "".join(content)
 
-    def _phase_analytics(self, results: Dict[str, Any], silent: bool) -> Dict[str, Any]:
+    def _phase_analytics(self, results: dict[str, Any], silent: bool) -> dict[str, Any]:
         """Phase 4: Save session analytics for historical tracking."""
         if not silent:
             self.console.print("\n[bold]Phase 4: Analytics & Tracking[/bold]")
@@ -320,7 +339,7 @@ class CheckoutManager:
                 metadata={
                     "top_files": [f["file"] for f in stats.get("top_files", [])[:10]],
                     "file_types": stats.get("by_type", {}),
-                }
+                },
             )
 
             # Save to analytics
@@ -330,7 +349,7 @@ class CheckoutManager:
                 if success:
                     self.console.print(f"  [green]✓[/green] Session saved: {session_id}")
                     self.console.print(f"  [green]✓[/green] Category: {category}")
-                    self.console.print(f"  [green]✓[/green] Analytics database updated")
+                    self.console.print("  [green]✓[/green] Analytics database updated")
                 else:
                     self.console.print("  [yellow]⚠[/yellow]  Failed to save analytics")
 
@@ -344,47 +363,47 @@ class CheckoutManager:
                 self.console.print(f"  [red]✗[/red] Error: {e}")
             return {"success": False, "error": str(e)}
 
-    def _infer_category(self, stats: Dict[str, Any], git_info: Dict[str, Any]) -> str:
+    def _infer_category(self, stats: dict[str, Any], git_info: dict[str, Any]) -> str:
         """Infer approach category from session data."""
         # Analyze file patterns to infer category
         top_files = [f["file"] for f in stats.get("top_files", [])[:5]]
-        
+
         # Check for command files
         if any(".cursor/commands/" in f for f in top_files):
             return "command_creation"
-        
+
         # Check for tests
         if any("test" in f.lower() for f in top_files):
             return "testing"
-        
+
         # Check for core modules
         if any("core/" in f for f in top_files):
             return "core_development"
-        
+
         # Check for documentation
         if any(f.endswith(".md") and "_work_efforts" in f for f in top_files):
             return "documentation"
-        
+
         # Default
         return "general_development"
 
-    def _phase_dashboard(self, silent: bool) -> Dict[str, Any]:
+    def _phase_dashboard(self, silent: bool) -> dict[str, Any]:
         """Phase 5: Generate and open visual dashboard."""
         if not silent:
             self.console.print("\n[bold]Phase 5: Visual Dashboard[/bold]")
-        
+
         try:
             dashboard_path = self.visualizer.generate_and_open()
-            
+
             result = {
                 "success": True,
                 "dashboard_path": str(dashboard_path),
                 "opened": True,
             }
-            
+
             if not silent:
                 self.console.print(f"  [green]✓[/green] Dashboard opened: {dashboard_path.name}")
-            
+
             return result
         except Exception as e:
             result = {
@@ -392,13 +411,13 @@ class CheckoutManager:
                 "error": str(e),
                 "opened": False,
             }
-            
+
             if not silent:
                 self.console.print(f"  [yellow]⚠[/yellow] Could not open dashboard: {e}")
-            
+
             return result
 
-    def _display_final_summary(self, results: Dict[str, Any]):
+    def _display_final_summary(self, results: dict[str, Any]):
         """Display final checkout summary."""
         self.console.print("\n[bold]Phase 6: Completion[/bold]")
         self.console.print("  [green]✓[/green] Checkout complete!\n")
@@ -411,7 +430,9 @@ class CheckoutManager:
             summary_text = Text()
             summary_text.append("📊 Session Summary:\n", style="bold")
             summary_text.append(f"  • Files: {stats['files']['total_operations']} operations ")
-            summary_text.append(f"({stats['files']['created']} created, {stats['files']['modified']} modified)\n")
+            summary_text.append(
+                f"({stats['files']['created']} created, {stats['files']['modified']} modified)\n"
+            )
             summary_text.append(f"  • Code: {stats['code']['net_change']:+,} lines net change\n")
 
             # Top files
@@ -421,7 +442,9 @@ class CheckoutManager:
                     status_icon = "✨" if file_info.get("status") == "created" else "📝"
                     net = file_info.get("net", 0)
                     net_str = f"+{net}" if net > 0 else str(net)
-                    summary_text.append(f"  • {status_icon} {file_info['file']} ({net_str} lines)\n", style="dim")
+                    summary_text.append(
+                        f"  • {status_icon} {file_info['file']} ({net_str} lines)\n", style="dim"
+                    )
 
             # Files created
             if stats.get("top_files"):
@@ -434,9 +457,14 @@ class CheckoutManager:
             # Documentation
             summary_text.append("\n📚 Documentation:\n", style="bold")
             if results["phases"].get("statistics", {}).get("stats_file"):
-                summary_text.append(f"  • Statistics: {results['phases']['statistics']['stats_file']}\n", style="dim")
+                summary_text.append(
+                    f"  • Statistics: {results['phases']['statistics']['stats_file']}\n",
+                    style="dim",
+                )
             if results["phases"].get("summary", {}).get("summary_file"):
-                summary_text.append(f"  • Summary: {results['phases']['summary']['summary_file']}\n", style="dim")
+                summary_text.append(
+                    f"  • Summary: {results['phases']['summary']['summary_file']}\n", style="dim"
+                )
 
             # Next steps
             summary_text.append("\n💡 Next Steps:\n", style="bold")
@@ -444,9 +472,15 @@ class CheckoutManager:
             git_info = results["phases"].get("git", {})
             if git_info.get("uncommitted_count", 0) > 0:
                 summary_text.append("  2. Commit changes if ready\n", style="dim")
-            summary_text.append("  3. Start next session with `/spin-up` or `/phase1`\n", style="dim")
+            summary_text.append(
+                "  3. Start next session with `/spin-up` or `/phase1`\n", style="dim"
+            )
 
-            self.console.print(Panel(summary_text, title="✅ Session Checkout Complete", border_style="green"))
+            self.console.print(
+                Panel(summary_text, title="✅ Session Checkout Complete", border_style="green")
+            )
 
         self.console.print("\n━" * 80)
-        self.console.print("\n[green]✅ Session checkout complete. Ready for next session![/green]\n")
+        self.console.print(
+            "\n[green]✅ Session checkout complete. Ready for next session![/green]\n"
+        )

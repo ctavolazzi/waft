@@ -4,10 +4,8 @@ THE CORE - Building TheGuide from first principles
 Start with the atomic data type and build up brick by brick.
 """
 
-from dataclasses import dataclass
-from typing import Protocol as TypingProtocol
-from enum import Enum
 import random
+from dataclasses import dataclass
 
 # ============================================================================
 # LEVEL 0: THE ATOMIC DATA TYPE

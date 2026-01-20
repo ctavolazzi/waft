@@ -6,16 +6,17 @@ Integrates Google Gemini API for intelligent D&D storytelling and decision suppo
 Adapted from AI-DnD project for WAFT integration.
 """
 
-import os
+import asyncio
 import json
 import logging
-import asyncio
-from typing import Dict, List, Optional, Any
+import os
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Any
 
 try:
     from dotenv import load_dotenv
+
     load_dotenv()  # Load environment variables from .env file
 except ImportError:
     pass  # dotenv is optional
@@ -23,6 +24,7 @@ except ImportError:
 try:
     from google import genai
     from google.genai import types
+
     GEMINI_AVAILABLE = True
 except ImportError:
     GEMINI_AVAILABLE = False
@@ -33,87 +35,98 @@ except ImportError:
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 @dataclass
 class NarrativeContext:
     """Context for narrative generation"""
+
     campaign_id: str
     session_id: str
     current_scene: str
-    player_actions: List[str]
-    npc_states: Dict[str, Any]
-    world_state: Dict[str, Any]
+    player_actions: list[str]
+    npc_states: dict[str, Any]
+    world_state: dict[str, Any]
     campaign_tone: str = "epic"
     difficulty_level: str = "medium"
+
 
 @dataclass
 class DecisionOption:
     """Represents a decision option with AI reasoning"""
+
     option: str
     reasoning: str
-    consequences: List[str]
+    consequences: list[str]
     probability_success: float
     risk_level: str
     alignment: str  # good, neutral, evil
 
+
 @dataclass
 class StoryBranch:
     """Represents a story branch with predicted outcomes"""
+
     branch_name: str
     description: str
-    immediate_consequences: List[str]
-    long_term_effects: List[str]
-    character_impact: Dict[str, str]
-    world_changes: List[str]
+    immediate_consequences: list[str]
+    long_term_effects: list[str]
+    character_impact: dict[str, str]
+    world_changes: list[str]
+
 
 @dataclass
 class NPCBehavior:
     """Represents AI-generated NPC behavior"""
+
     npc_name: str
-    personality_traits: List[str]
+    personality_traits: list[str]
     current_mood: str
     reaction: str
-    dialogue_suggestions: List[str]
-    action_recommendations: List[str]
+    dialogue_suggestions: list[str]
+    action_recommendations: list[str]
+
 
 class GeminiNarrativeEngine:
     """Main engine for Gemini-powered narrative decision making"""
 
-    def __init__(self, api_key: Optional[str] = None):
+    def __init__(self, api_key: str | None = None):
         """Initialize the Gemini narrative engine"""
         if not GEMINI_AVAILABLE:
             logger.warning("⚠️ Gemini SDK not available. Install with: pip install google-genai")
             self.client = None
             self.api_key = None
             return
-            
-        self.api_key = api_key or os.getenv('GEMINI_API_KEY')
+
+        self.api_key = api_key or os.getenv("GEMINI_API_KEY")
 
         # Log API key status for debugging
         if self.api_key:
             logger.info(f"✅ Gemini API key loaded: {self.api_key[:10]}...")
         else:
             logger.warning("⚠️ No Gemini API key found - will use fallback mode")
-        self.model_name = os.getenv('GEMINI_MODEL', 'gemini-3-pro-preview')
-        self.thinking_level = self._validate_thinking_level(os.getenv('GEMINI_THINKING_LEVEL', 'high'))
+        self.model_name = os.getenv("GEMINI_MODEL", "gemini-3-pro-preview")
+        self.thinking_level = self._validate_thinking_level(
+            os.getenv("GEMINI_THINKING_LEVEL", "high")
+        )
         self.client = None
-        
+
         if GEMINI_AVAILABLE:
             self.safety_settings = [
                 types.SafetySetting(
                     category=types.HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-                    threshold=types.HarmBlockThreshold.BLOCK_NONE
+                    threshold=types.HarmBlockThreshold.BLOCK_NONE,
                 ),
                 types.SafetySetting(
                     category=types.HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-                    threshold=types.HarmBlockThreshold.BLOCK_NONE
+                    threshold=types.HarmBlockThreshold.BLOCK_NONE,
                 ),
                 types.SafetySetting(
                     category=types.HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-                    threshold=types.HarmBlockThreshold.BLOCK_NONE
+                    threshold=types.HarmBlockThreshold.BLOCK_NONE,
                 ),
                 types.SafetySetting(
                     category=types.HarmCategory.HARM_CATEGORY_HARASSMENT,
-                    threshold=types.HarmBlockThreshold.BLOCK_NONE
+                    threshold=types.HarmBlockThreshold.BLOCK_NONE,
                 ),
             ]
         else:
@@ -122,8 +135,7 @@ class GeminiNarrativeEngine:
         if self.api_key and GEMINI_AVAILABLE:
             try:
                 self.client = genai.Client(
-                    api_key=self.api_key,
-                    http_options={"api_version": "v1alpha"}
+                    api_key=self.api_key, http_options={"api_version": "v1alpha"}
                 )
                 logger.info("✅ Gemini Narrative Engine initialized successfully")
             except Exception as e:
@@ -144,7 +156,7 @@ class GeminiNarrativeEngine:
         context: NarrativeContext,
         prompt: str,
         max_tokens: int = 1000,
-        thinking_level: Optional[str] = None
+        thinking_level: str | None = None,
     ) -> str:
         """Generate narrative response using Gemini"""
         if not self.is_available():
@@ -162,7 +174,7 @@ class GeminiNarrativeEngine:
                 temperature=0.8,
                 top_p=0.9,
                 top_k=40,
-                thinking_level=thinking_level
+                thinking_level=thinking_level,
             )
 
             return response_text.strip()
@@ -175,9 +187,9 @@ class GeminiNarrativeEngine:
         self,
         context: NarrativeContext,
         decision_scenario: str,
-        options: List[str],
-        thinking_level: Optional[str] = None
-    ) -> List[DecisionOption]:
+        options: list[str],
+        thinking_level: str | None = None,
+    ) -> list[DecisionOption]:
         """Generate AI-powered decision matrix with reasoning"""
         if not self.is_available():
             raise RuntimeError("Gemini engine not available")
@@ -191,7 +203,7 @@ class GeminiNarrativeEngine:
             Difficulty: {context.difficulty_level}
 
             Available Options:
-            {chr(10).join(f"{i+1}. {option}" for i, option in enumerate(options))}
+            {chr(10).join(f"{i + 1}. {option}" for i, option in enumerate(options))}
 
             For each option, provide:
             1. Reasoning (why this choice makes sense)
@@ -204,21 +216,18 @@ class GeminiNarrativeEngine:
             """
 
             response_text = self._generate_text(
-                prompt,
-                max_output_tokens=800,
-                temperature=0.7,
-                thinking_level=thinking_level
+                prompt, max_output_tokens=800, temperature=0.7, thinking_level=thinking_level
             )
             decision_data = json.loads(response_text)
 
             return [
                 DecisionOption(
-                    option=item['option'],
-                    reasoning=item['reasoning'],
-                    consequences=item['consequences'],
-                    probability_success=float(item['probability_success']),
-                    risk_level=item['risk_level'],
-                    alignment=item['alignment']
+                    option=item["option"],
+                    reasoning=item["reasoning"],
+                    consequences=item["consequences"],
+                    probability_success=float(item["probability_success"]),
+                    risk_level=item["risk_level"],
+                    alignment=item["alignment"],
                 )
                 for item in decision_data
             ]
@@ -233,16 +242,13 @@ class GeminiNarrativeEngine:
                     consequences=["Unknown consequences"],
                     probability_success=0.5,
                     risk_level="medium",
-                    alignment="neutral"
+                    alignment="neutral",
                 )
                 for option in options
             ]
 
     def generate_adaptive_story(
-        self,
-        context: NarrativeContext,
-        story_element: str,
-        thinking_level: Optional[str] = None
+        self, context: NarrativeContext, story_element: str, thinking_level: str | None = None
     ) -> str:
         """Generate adaptive story content based on campaign progression"""
         if not self.is_available():
@@ -255,7 +261,7 @@ class GeminiNarrativeEngine:
             Story Element: {story_element}
             Campaign Tone: {context.campaign_tone}
             Difficulty: {context.difficulty_level}
-            Player Actions: {', '.join(context.player_actions[-5:])}  # Last 5 actions
+            Player Actions: {", ".join(context.player_actions[-5:])}  # Last 5 actions
             World State: {json.dumps(context.world_state, indent=2)}
 
             Create engaging, adaptive content that:
@@ -268,10 +274,7 @@ class GeminiNarrativeEngine:
             """
 
             response_text = self._generate_text(
-                prompt,
-                max_output_tokens=600,
-                temperature=0.85,
-                thinking_level=thinking_level
+                prompt, max_output_tokens=600, temperature=0.85, thinking_level=thinking_level
             )
             return response_text.strip()
 
@@ -280,9 +283,7 @@ class GeminiNarrativeEngine:
             return f"Story content for {story_element} is being prepared..."
 
     def generate_campaign_narrative(
-        self,
-        campaign_data: Dict[str, Any],
-        thinking_level: Optional[str] = None
+        self, campaign_data: dict[str, Any], thinking_level: str | None = None
     ) -> str:
         """Generate narrative content for campaign PDF"""
         if not self.is_available():
@@ -292,11 +293,11 @@ class GeminiNarrativeEngine:
             prompt = f"""
             As an expert D&D storyteller, create engaging narrative content for a campaign PDF.
 
-            Campaign Name: {campaign_data.get('name', 'Unknown Campaign')}
-            Campaign Type: {campaign_data.get('type', 'Adventure')}
-            Level Range: {campaign_data.get('level_range', '1-5')}
-            Tone: {campaign_data.get('tone', 'epic')}
-            Setting: {campaign_data.get('setting', 'Fantasy world')}
+            Campaign Name: {campaign_data.get("name", "Unknown Campaign")}
+            Campaign Type: {campaign_data.get("type", "Adventure")}
+            Level Range: {campaign_data.get("level_range", "1-5")}
+            Tone: {campaign_data.get("tone", "epic")}
+            Setting: {campaign_data.get("setting", "Fantasy world")}
 
             Create 2-3 paragraphs of engaging narrative that:
             1. Sets the scene and atmosphere
@@ -308,10 +309,7 @@ class GeminiNarrativeEngine:
             """
 
             response_text = self._generate_text(
-                prompt,
-                max_output_tokens=500,
-                temperature=0.8,
-                thinking_level=thinking_level
+                prompt, max_output_tokens=500, temperature=0.8, thinking_level=thinking_level
             )
             return response_text.strip()
 
@@ -320,9 +318,7 @@ class GeminiNarrativeEngine:
             return self._fallback_campaign_narrative(campaign_data)
 
     def generate_character_description(
-        self,
-        character: Dict[str, Any],
-        thinking_level: Optional[str] = None
+        self, character: dict[str, Any], thinking_level: str | None = None
     ) -> str:
         """Generate enhanced character description for PDF"""
         if not self.is_available():
@@ -332,11 +328,11 @@ class GeminiNarrativeEngine:
             prompt = f"""
             As an expert D&D character creator, write an engaging character description for a campaign PDF.
 
-            Character Name: {character.get('name', 'Unknown')}
-            Class: {character.get('class', 'Adventurer')}
-            Race: {character.get('race', 'Human')}
-            Level: {character.get('level', 1)}
-            Background: {character.get('background', 'Unknown')}
+            Character Name: {character.get("name", "Unknown")}
+            Class: {character.get("class", "Adventurer")}
+            Race: {character.get("race", "Human")}
+            Level: {character.get("level", 1)}
+            Background: {character.get("background", "Unknown")}
 
             Create a vivid 2-3 sentence description that:
             1. Captures their appearance and personality
@@ -348,10 +344,7 @@ class GeminiNarrativeEngine:
             """
 
             response_text = self._generate_text(
-                prompt,
-                max_output_tokens=200,
-                temperature=0.8,
-                thinking_level=thinking_level
+                prompt, max_output_tokens=200, temperature=0.8, thinking_level=thinking_level
             )
             return response_text.strip()
 
@@ -359,21 +352,21 @@ class GeminiNarrativeEngine:
             logger.error(f"❌ Error generating character description: {e}")
             return self._fallback_character_description(character)
 
-    def _fallback_campaign_narrative(self, campaign_data: Dict[str, Any]) -> str:
+    def _fallback_campaign_narrative(self, campaign_data: dict[str, Any]) -> str:
         """Fallback narrative when Gemini unavailable"""
-        name = campaign_data.get('name', 'this campaign')
-        tone = campaign_data.get('tone', 'epic')
+        name = campaign_data.get("name", "this campaign")
+        tone = campaign_data.get("tone", "epic")
         return f"""
         Welcome to {name}, a {tone} adventure that will test your skills and resolve.
         The world is full of danger and opportunity, and your choices will shape the story.
         Prepare yourself for an unforgettable journey.
         """
 
-    def _fallback_character_description(self, character: Dict[str, Any]) -> str:
+    def _fallback_character_description(self, character: dict[str, Any]) -> str:
         """Fallback character description when Gemini unavailable"""
-        name = character.get('name', 'The character')
-        char_class = character.get('class', 'adventurer')
-        race = character.get('race', 'human')
+        name = character.get("name", "The character")
+        char_class = character.get("class", "adventurer")
+        race = character.get("race", "human")
         return f"{name} is a {race} {char_class} with a mysterious past and a bright future."
 
     def _build_narrative_prompt(self, context: NarrativeContext, prompt: str) -> str:
@@ -418,19 +411,21 @@ class GeminiNarrativeEngine:
         temperature: float = 0.8,
         top_p: float = 0.9,
         top_k: int = 40,
-        thinking_level: Optional[str] = None
+        thinking_level: str | None = None,
     ) -> str:
         """Call Gemini and return concatenated text output."""
         if not self.is_available():
             raise RuntimeError("Gemini engine not available")
 
-        level = self._validate_thinking_level(thinking_level) if thinking_level else self.thinking_level
+        level = (
+            self._validate_thinking_level(thinking_level) if thinking_level else self.thinking_level
+        )
         config_kwargs = {
             "temperature": temperature,
             "top_p": top_p,
             "top_k": top_k,
             "max_output_tokens": max_output_tokens,
-            "safety_settings": self.safety_settings
+            "safety_settings": self.safety_settings,
         }
         if level:
             config_kwargs["thinking_level"] = level
@@ -447,9 +442,7 @@ class GeminiNarrativeEngine:
                 raise e
 
         response = self.client.models.generate_content(
-            model=self.model_name,
-            contents=[prompt],
-            config=config
+            model=self.model_name, contents=[prompt], config=config
         )
 
         return self._extract_text(response)
@@ -459,7 +452,7 @@ class GeminiNarrativeEngine:
         if not response or not getattr(response, "candidates", None):
             raise ValueError("No candidates in Gemini response")
 
-        text_parts: List[str] = []
+        text_parts: list[str] = []
         for candidate in response.candidates:
             content = getattr(candidate, "content", None)
             if not content or not getattr(content, "parts", None):
@@ -473,7 +466,7 @@ class GeminiNarrativeEngine:
 
         return "\n".join(text_parts).strip()
 
-    def _validate_thinking_level(self, level: Optional[str]) -> Optional[str]:
+    def _validate_thinking_level(self, level: str | None) -> str | None:
         """Normalize and validate requested thinking level."""
         if level is None:
             return "high"
@@ -490,7 +483,7 @@ class GeminiNarrativeEngine:
         self.thinking_level = self._validate_thinking_level(level)
         return self.thinking_level
 
-    def get_engine_status(self) -> Dict[str, Any]:
+    def get_engine_status(self) -> dict[str, Any]:
         """Get current engine status and capabilities"""
         return {
             "engine_name": "Gemini Narrative Engine",
@@ -506,13 +499,15 @@ class GeminiNarrativeEngine:
                 "npc_behavior_generation",
                 "adaptive_storytelling",
                 "campaign_narrative",
-                "character_description"
+                "character_description",
             ],
-            "timestamp": datetime.now().isoformat()
+            "timestamp": datetime.now().isoformat(),
         }
+
 
 # Global engine instance
 narrative_engine = GeminiNarrativeEngine()
+
 
 def get_narrative_engine() -> GeminiNarrativeEngine:
     """Get the global narrative engine instance"""

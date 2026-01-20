@@ -11,9 +11,10 @@ Two attractor states:
 "Gravity might be karma" - luck accumulates based on choices.
 """
 
-from dataclasses import dataclass
-from foundation import Score
 import random
+from dataclasses import dataclass
+
+from foundation import Score
 
 
 @dataclass

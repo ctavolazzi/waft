@@ -7,12 +7,11 @@ implement every relevant design pattern.
 RULE: Don't modify core.py. Only compose/extend it.
 """
 
-from foundation import Score, Evaluation, Step, Session, Guide, evaluate_text, evaluate_answer
-from abc import ABC, abstractmethod
-from typing import Callable, List, Optional
-from dataclasses import dataclass, field
-from enum import Enum
 import random
+from abc import ABC, abstractmethod
+from enum import Enum
+
+from foundation import Evaluation, Guide, Score, Session, Step, evaluate_answer, evaluate_text
 
 # ============================================================================
 # PATTERN 1: STRATEGY - Different evaluation strategies
@@ -129,7 +128,7 @@ class EvaluationHandler(ABC):
     """Handler in the evaluation chain."""
 
     def __init__(self):
-        self._next: Optional[EvaluationHandler] = None
+        self._next: EvaluationHandler | None = None
 
     def set_next(self, handler: "EvaluationHandler") -> "EvaluationHandler":
         """Set the next handler in the chain."""
@@ -233,7 +232,7 @@ class ObservableGuide(Guide):
 
     def __init__(self, max_iterations: int = 10, quality_threshold: float = 0.8):
         super().__init__(max_iterations, quality_threshold)
-        self._observers: List[QualityObserver] = []
+        self._observers: list[QualityObserver] = []
 
     def attach(self, observer: QualityObserver) -> None:
         """Attach an observer."""
@@ -377,7 +376,7 @@ class EvaluateCommand(Command):
     def __init__(self, answer: str, problem: str):
         self.answer = answer
         self.problem = problem
-        self._result: Optional[Evaluation] = None
+        self._result: Evaluation | None = None
 
     def execute(self) -> Evaluation:
         """Execute evaluation."""
@@ -385,7 +384,7 @@ class EvaluateCommand(Command):
         return self._result
 
     @property
-    def result(self) -> Optional[Evaluation]:
+    def result(self) -> Evaluation | None:
         """Get result if executed."""
         return self._result
 
@@ -396,7 +395,7 @@ class SolveCommand(Command):
     def __init__(self, guide: Guide, problem: str):
         self.guide = guide
         self.problem = problem
-        self._result: Optional[Session] = None
+        self._result: Session | None = None
 
     def execute(self) -> Session:
         """Execute solve."""
@@ -404,7 +403,7 @@ class SolveCommand(Command):
         return self._result
 
     @property
-    def result(self) -> Optional[Session]:
+    def result(self) -> Session | None:
         """Get result if executed."""
         return self._result
 
@@ -413,13 +412,13 @@ class CommandQueue:
     """Queue of commands to execute."""
 
     def __init__(self):
-        self._commands: List[Command] = []
+        self._commands: list[Command] = []
 
     def add(self, command: Command) -> None:
         """Add command to queue."""
         self._commands.append(command)
 
-    def execute_all(self) -> List[any]:
+    def execute_all(self) -> list[any]:
         """Execute all commands."""
         results = []
         for cmd in self._commands:
@@ -436,8 +435,8 @@ class SessionBuilder:
     """Builder for constructing sessions step by step."""
 
     def __init__(self):
-        self._problem: Optional[str] = None
-        self._steps: List[Step] = []
+        self._problem: str | None = None
+        self._steps: list[Step] = []
         self._max_iterations: int = 10
         self._quality_threshold: float = 0.8
 

@@ -6,14 +6,14 @@ Uses ChatDistiller, StylingGenome, and TwoPageGenerator under the hood.
 
 Example:
     from src.waft.evolution.pdf_generator import PDFGenerator
-    
+
     # Simple usage
     PDFGenerator.from_content(
         content="# My Document\n\nContent here...",
         title="My Document",
         style="clinical_standard"
     ).save("output.pdf")
-    
+
     # With custom styling
     PDFGenerator.from_content(
         content="# My Document\n\nContent here...",
@@ -22,7 +22,7 @@ Example:
         margins=(30, 30, 30, 30),
         font_size=12
     ).save("output.pdf")
-    
+
     # From file
     PDFGenerator.from_file(
         "content.md",
@@ -30,35 +30,35 @@ Example:
     ).save("output.pdf")
 """
 
-from pathlib import Path
-from typing import Optional, Dict, Any, Tuple, Union, List
 from datetime import datetime
+from pathlib import Path
+from typing import Any
 
 from .chat_distiller import ChatDistiller
-from .two_page_generator import TwoPageGenerator
 from .golden_triangle import GoldenTriangle
 from .styling_genome import (
+    ColorGene,
+    FontGene,
+    LayoutGene,
+    MarginGene,
+    StylingGene,
     StylingGenome,
     StylingGenomeRegistry,
-    StylingGene,
-    FontGene,
-    MarginGene,
-    ColorGene,
-    LayoutGene
 )
+from .two_page_generator import TwoPageGenerator
 
 
 class PDFGenerator:
     """
     Composable PDF generator with presets and simple API.
-    
+
     Reduces boilerplate by providing:
     - Preset styling configurations
     - Simple content-to-PDF pipeline
     - Automatic idea extraction
     - Flexible customization
     """
-    
+
     # Preset configurations
     PRESETS = {
         "clinical_standard": {
@@ -69,7 +69,7 @@ class PDFGenerator:
                 "size_h2": 14,
                 "size_h3": 12,
                 "size_code": 9,
-                "line_height": 1.4
+                "line_height": 1.4,
             },
             "margin": {
                 "top": 25.4,  # 1 inch
@@ -77,7 +77,7 @@ class PDFGenerator:
                 "left": 25.4,
                 "right": 25.4,
                 "section_spacing": 12,
-                "paragraph_spacing": 8
+                "paragraph_spacing": 8,
             },
             "color": {
                 "text": "#000000",
@@ -86,9 +86,9 @@ class PDFGenerator:
                 "accent": "#000000",
                 "code_bg": "#f5f5f5",
                 "code_text": "#000000",
-                "border": "#cccccc"
+                "border": "#cccccc",
             },
-            "header_font": "'Helvetica', 'Arial', sans-serif"
+            "header_font": "'Helvetica', 'Arial', sans-serif",
         },
         "premium": {
             "font": {
@@ -98,7 +98,7 @@ class PDFGenerator:
                 "size_h2": 22,
                 "size_h3": 17,
                 "size_code": 11,
-                "line_height": 1.75
+                "line_height": 1.75,
             },
             "margin": {
                 "top": 40,
@@ -106,7 +106,7 @@ class PDFGenerator:
                 "left": 40,
                 "right": 40,
                 "section_spacing": 24,
-                "paragraph_spacing": 12
+                "paragraph_spacing": 12,
             },
             "color": {
                 "text": "#1a1a1a",
@@ -115,9 +115,9 @@ class PDFGenerator:
                 "accent": "#0d47a1",
                 "code_bg": "#f5f7fa",
                 "code_text": "#1e3a5f",
-                "border": "#b0bec5"
+                "border": "#b0bec5",
             },
-            "header_font": None  # Use same as body
+            "header_font": None,  # Use same as body
         },
         "professional": {
             "font": {
@@ -127,7 +127,7 @@ class PDFGenerator:
                 "size_h2": 16,
                 "size_h3": 13,
                 "size_code": 9,
-                "line_height": 1.6
+                "line_height": 1.6,
             },
             "margin": {
                 "top": 25,
@@ -135,7 +135,7 @@ class PDFGenerator:
                 "left": 25,
                 "right": 25,
                 "section_spacing": 14,
-                "paragraph_spacing": 8
+                "paragraph_spacing": 8,
             },
             "color": {
                 "text": "#1a1a1a",
@@ -144,23 +144,23 @@ class PDFGenerator:
                 "accent": "#2c3e50",
                 "code_bg": "#f8f9fa",
                 "code_text": "#333333",
-                "border": "#dee2e6"
+                "border": "#dee2e6",
             },
-            "header_font": None
-        }
+            "header_font": None,
+        },
     }
-    
+
     def __init__(
         self,
         content: str,
         title: str,
         styling_genome: StylingGenome,
         distilled_chat=None,
-        custom_css: Optional[str] = None
+        custom_css: str | None = None,
     ):
         """
         Initialize PDF generator.
-        
+
         Args:
             content: Raw content (markdown/text)
             title: Document title
@@ -173,27 +173,27 @@ class PDFGenerator:
         self.styling_genome = styling_genome
         self.distilled_chat = distilled_chat
         self.custom_css = custom_css
-        self._generated_path: Optional[Path] = None
-        self._style: Optional[str] = None  # Store style for golden triangle
-        self._metadata: Dict[str, Any] = {}  # Store metadata for component generation
-    
+        self._generated_path: Path | None = None
+        self._style: str | None = None  # Store style for golden triangle
+        self._metadata: dict[str, Any] = {}  # Store metadata for component generation
+
     @classmethod
     def from_content(
         cls,
         content: str,
         title: str,
         style: str = "clinical_standard",
-        output_path: Optional[Path] = None,
-        registry_dir: Optional[Path] = None,
-        custom_css: Optional[str] = None,
-        author: Optional[Union[str, List[str]]] = None,
-        subject: Optional[str] = None,
-        keywords: Optional[Union[str, List[str]]] = None,
-        **overrides
+        output_path: Path | None = None,
+        registry_dir: Path | None = None,
+        custom_css: str | None = None,
+        author: str | list[str] | None = None,
+        subject: str | None = None,
+        keywords: str | list[str] | None = None,
+        **overrides,
     ) -> "PDFGenerator":
         """
         Create PDF generator from content string.
-        
+
         Args:
             content: Content (markdown/text)
             title: Document title
@@ -205,16 +205,16 @@ class PDFGenerator:
             subject: Optional document subject/topic
             keywords: Optional keywords - string or list of strings
             **overrides: Override preset values (e.g., font_size=12, margins=(30,30,30,30))
-        
+
         Returns:
             PDFGenerator instance
         """
         # Get preset
         if style not in cls.PRESETS:
             raise ValueError(f"Unknown style: {style}. Available: {list(cls.PRESETS.keys())}")
-        
+
         preset = cls.PRESETS[style].copy()
-        
+
         # Apply overrides
         if "font_size" in overrides:
             preset["font"]["size_body"] = overrides.pop("font_size")
@@ -222,15 +222,24 @@ class PDFGenerator:
             margins = overrides.pop("margins")
             if margins is not None:
                 if isinstance(margins, (int, float)):
-                    preset["margin"]["top"] = preset["margin"]["bottom"] = preset["margin"]["left"] = preset["margin"]["right"] = margins
+                    preset["margin"]["top"] = preset["margin"]["bottom"] = preset["margin"][
+                        "left"
+                    ] = preset["margin"]["right"] = margins
                 elif isinstance(margins, (list, tuple)) and len(margins) == 4:
-                    preset["margin"]["top"], preset["margin"]["right"], preset["margin"]["bottom"], preset["margin"]["left"] = margins
+                    (
+                        preset["margin"]["top"],
+                        preset["margin"]["right"],
+                        preset["margin"]["bottom"],
+                        preset["margin"]["left"],
+                    ) = margins
         if "line_height" in overrides:
             preset["font"]["line_height"] = overrides.pop("line_height")
-        
+
         # Create styling genome
-        registry = StylingGenomeRegistry(registry_dir=registry_dir or Path("_genetics/pdf_generator"))
-        
+        registry = StylingGenomeRegistry(
+            registry_dir=registry_dir or Path("_genetics/pdf_generator")
+        )
+
         styling_genes = StylingGene(
             font=FontGene(**preset["font"]),
             margin=MarginGene(**preset["margin"]),
@@ -241,83 +250,79 @@ class PDFGenerator:
                 toc_enabled=False,
                 page_numbers=True,
                 header_enabled=True,
-                footer_enabled=True
+                footer_enabled=True,
             ),
-            name=f"{style.title()} - {title[:30]}"
+            name=f"{style.title()} - {title[:30]}",
         )
-        
+
         genome = StylingGenome.from_genes(styling_genes)
         registry.register(genome)
-        
+
         # Distill content
         distiller = ChatDistiller()
         distilled = distiller.distill_text(content, title=title)
-        
+
         instance = cls(
             content=content,
             title=title,
             styling_genome=genome,
             distilled_chat=distilled,
-            custom_css=custom_css
+            custom_css=custom_css,
         )
         # Store metadata for later use in component generation
         instance._metadata = {
-            'author': author,
-            'subject': subject,
-            'keywords': keywords,
-            'style': style
+            "author": author,
+            "subject": subject,
+            "keywords": keywords,
+            "style": style,
         }
         return instance
-    
+
     @classmethod
     def from_file(
         cls,
-        file_path: Union[str, Path],
-        title: Optional[str] = None,
+        file_path: str | Path,
+        title: str | None = None,
         style: str = "clinical_standard",
-        output_path: Optional[Path] = None,
-        **kwargs
+        output_path: Path | None = None,
+        **kwargs,
     ) -> "PDFGenerator":
         """
         Create PDF generator from file.
-        
+
         Args:
             file_path: Path to content file
             title: Optional title (defaults to filename)
             style: Preset style name
             output_path: Optional output path
             **kwargs: Additional arguments passed to from_content
-        
+
         Returns:
             PDFGenerator instance
         """
         file_path = Path(file_path)
         if not file_path.exists():
             raise FileNotFoundError(f"File not found: {file_path}")
-        
+
         content = file_path.read_text()
         title = title or file_path.stem.replace("_", " ").title()
-        
+
         return cls.from_content(
-            content=content,
-            title=title,
-            style=style,
-            output_path=output_path,
-            **kwargs
+            content=content, title=title, style=style, output_path=output_path, **kwargs
         )
-    
+
     def save(
         self,
-        output_path: Optional[Path] = None,
+        output_path: Path | None = None,
         open_pdf: bool = False,
         include_all_ideas: bool = True,
-        target_pages: Optional[int] = None,
+        target_pages: int | None = None,
         convert_to_png: bool = True,
-        png_dpi: int = 300
+        png_dpi: int = 300,
     ) -> Path:
         """
         Generate and save PDF.
-        
+
         Args:
             output_path: Output path (auto-generated if None)
             open_pdf: Open PDF after generation
@@ -325,75 +330,77 @@ class PDFGenerator:
             target_pages: Target page count (None = no limit)
             convert_to_png: Convert PDF to PNG images after generation (default: True for evolutionary iteration)
             png_dpi: DPI for PNG conversion (default: 300)
-        
+
         Returns:
             Path to generated PDF
         """
         if output_path is None:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            safe_title = "".join(c if c.isalnum() or c in (' ', '-', '_') else '' for c in self.title)
-            safe_title = safe_title.replace(' ', '_')[:50]
+            safe_title = "".join(
+                c if c.isalnum() or c in (" ", "-", "_") else "" for c in self.title
+            )
+            safe_title = safe_title.replace(" ", "_")[:50]
             output_path = Path(f"_work_efforts/session_recaps/{safe_title}_{timestamp}.pdf")
-        
+
         # Use storage path resolver to route to external drive if available
-        from ..utils import resolve_output_path, StorageRegistry
+        from ..utils import StorageRegistry, resolve_output_path
+
         output_path = resolve_output_path(Path(output_path))
-        
+
         # If using golden triangle (simpler path for direct markdown→PDF)
         if self.distilled_chat is None and self.styling_genome is None:
             # Direct markdown to PDF using golden triangle
             golden_triangle = GoldenTriangle()
-            
+
             # Get style from stored value
-            style = getattr(self, '_style', 'premium')
-            
+            style = getattr(self, "_style", "premium")
+
             # Convert markdown to PDF
             pdf_path = golden_triangle.markdown_to_pdf(
-                self.content,
-                output_path,
-                css=self.custom_css,
-                style=style
+                self.content, output_path, css=self.custom_css, style=style
             )
-            
+
             self._generated_path = pdf_path
-            
+
             # Post-process to add blank page markers
             try:
                 from ..utils import process_pdf_for_blank_pages
+
                 process_pdf_for_blank_pages(pdf_path)
             except Exception as e:
                 # If blank page handling fails, continue anyway (non-critical)
                 print(f"⚠️  Blank page marker processing failed: {e}")
-            
+
             # Convert to PNG if requested
             if convert_to_png:
                 try:
                     from .pdf_image_converter import pdf_to_pngs
+
                     png_paths = pdf_to_pngs(
-                        pdf_path,
-                        output_dir=pdf_path.parent,
-                        dpi=png_dpi,
-                        format='png'
+                        pdf_path, output_dir=pdf_path.parent, dpi=png_dpi, format="png"
                     )
                     if png_paths:
                         import shutil
-                        img_path = pdf_path.with_suffix('.png')
+
+                        img_path = pdf_path.with_suffix(".png")
                         shutil.copy(png_paths[0], img_path)
                         print(f"📸 PNG screenshot saved: {img_path}")
                 except Exception as e:
                     print(f"⚠️  PNG conversion failed: {e}")
-            
+
             # Post-process to add blank page markers
             try:
                 from ..utils import process_pdf_for_blank_pages
+
                 process_pdf_for_blank_pages(pdf_path)
             except Exception as e:
                 # If blank page handling fails, continue anyway (non-critical)
                 print(f"⚠️  Blank page marker processing failed: {e}")
-            
+
             # Register in storage registry
             try:
-                from ..utils import StorageRegistry, is_inside_waft_project, classify_content_type
+                from ..utils import StorageRegistry, classify_content_type, is_inside_waft_project
+
                 project_path = None
                 # Try to find project path
                 if pdf_path.is_absolute():
@@ -402,31 +409,28 @@ class PDFGenerator:
                         project_path = proj_path
                 if project_path is None:
                     project_path = Path.cwd()
-                
+
                 registry = StorageRegistry(project_path)
                 # Get relative path for registry
                 try:
                     rel_path = pdf_path.relative_to(project_path)
                 except ValueError:
                     rel_path = Path(pdf_path.name)
-                
+
                 content_type = classify_content_type(rel_path)
-                registry.register(
-                    str(rel_path),
-                    str(pdf_path),
-                    content_type
-                )
+                registry.register(str(rel_path), str(pdf_path), content_type)
             except Exception as e:
                 # Non-critical, just log
                 print(f"⚠️  Storage registry update failed: {e}")
-            
+
             # Open if requested
             if open_pdf:
                 import subprocess
+
                 subprocess.run(["open", str(pdf_path)])
-            
+
             return pdf_path
-        
+
         # Original implementation (for backward compatibility with ChatDistiller/TwoPageGenerator)
         # Get all ideas if requested
         if include_all_ideas:
@@ -438,10 +442,10 @@ class PDFGenerator:
             # Use generator's adaptive selection
             page_1_ideas = None
             page_2_ideas = None
-        
+
         # Generate PDF
         generator = TwoPageGenerator(weasyprint_available=True, allowed_pages=target_pages or 50)
-        
+
         if page_1_ideas is not None:
             # Direct render with all ideas
             html_content = generator._render_html(
@@ -450,22 +454,18 @@ class PDFGenerator:
                 page_1_ideas=page_1_ideas,
                 page_2_ideas=page_2_ideas,
             )
-            
+
             # Inject custom CSS if provided
             if self.custom_css:
-                html_content = html_content.replace('</head>', self.custom_css + '</head>')
-            
+                html_content = html_content.replace("</head>", self.custom_css + "</head>")
+
             # Save HTML
-            html_path = output_path.with_suffix('.html')
+            html_path = output_path.with_suffix(".html")
             html_path.write_text(html_content)
-            
+
             # Generate PDF using golden triangle (clean HTML → PDF)
             golden_triangle = GoldenTriangle()
-            golden_triangle.html_to_pdf(
-                html_content,
-                output_path,
-                base_url=str(output_path.parent)
-            )
+            golden_triangle.html_to_pdf(html_content, output_path, base_url=str(output_path.parent))
         else:
             # Use generator's adaptive system
             result = generator.generate(
@@ -473,54 +473,56 @@ class PDFGenerator:
                 styling_genome=self.styling_genome,
                 output_path=output_path,
                 target_pages=target_pages,
-                use_component_system=False
+                use_component_system=False,
             )
-            output_path = Path(result['pdf_path'])
-        
+            output_path = Path(result["pdf_path"])
+
         self._generated_path = output_path
-        
+
         # Post-process to add blank page markers
         try:
             from ..utils import process_pdf_for_blank_pages
+
             process_pdf_for_blank_pages(output_path)
         except Exception as e:
             # If blank page handling fails, continue anyway (non-critical)
             print(f"⚠️  Blank page marker processing failed: {e}")
-        
+
         # Convert to PNG if requested (evolutionary iteration process)
         if convert_to_png:
             try:
                 from .pdf_image_converter import pdf_to_pngs
+
                 png_paths = pdf_to_pngs(
-                    output_path,
-                    output_dir=output_path.parent,
-                    dpi=png_dpi,
-                    format='png'
+                    output_path, output_dir=output_path.parent, dpi=png_dpi, format="png"
                 )
                 if png_paths:
                     # Copy first page to main PNG file for easy access
                     import shutil
-                    img_path = output_path.with_suffix('.png')
+
+                    img_path = output_path.with_suffix(".png")
                     shutil.copy(png_paths[0], img_path)
                     print(f"📸 PNG screenshot saved: {img_path}")
             except Exception as e:
                 # Fallback: try PyMuPDF direct conversion
                 try:
                     import fitz  # PyMuPDF
+
                     doc = fitz.open(str(output_path))
                     if len(doc) > 0:
                         page = doc[0]
-                        pix = page.get_pixmap(matrix=fitz.Matrix(png_dpi/72, png_dpi/72))
-                        img_path = output_path.with_suffix('.png')
+                        pix = page.get_pixmap(matrix=fitz.Matrix(png_dpi / 72, png_dpi / 72))
+                        img_path = output_path.with_suffix(".png")
                         pix.save(str(img_path))
                         doc.close()
                         print(f"📸 PNG screenshot saved: {img_path}")
                 except Exception:
                     print(f"⚠️  PNG conversion failed: {e}")
-        
+
         # Register in storage registry
         try:
-            from ..utils import StorageRegistry, is_inside_waft_project, classify_content_type
+            from ..utils import StorageRegistry, classify_content_type, is_inside_waft_project
+
             project_path = None
             # Try to find project path
             if output_path.is_absolute():
@@ -529,36 +531,33 @@ class PDFGenerator:
                     project_path = proj_path
             if project_path is None:
                 project_path = Path.cwd()
-            
+
             registry = StorageRegistry(project_path)
             # Get relative path for registry
             try:
                 rel_path = output_path.relative_to(project_path)
             except ValueError:
                 rel_path = Path(output_path.name)
-            
+
             content_type = classify_content_type(rel_path)
-            registry.register(
-                str(rel_path),
-                str(output_path),
-                content_type
-            )
+            registry.register(str(rel_path), str(output_path), content_type)
         except Exception as e:
             # Non-critical, just log
             print(f"⚠️  Storage registry update failed: {e}")
-        
+
         # Open if requested
         if open_pdf:
             import subprocess
+
             subprocess.run(["open", str(output_path)])
-        
+
         return output_path
-    
+
     def with_custom_css(self, css: str) -> "PDFGenerator":
         """Add custom CSS to the generator."""
         self.custom_css = css
         return self
-    
+
     def with_style(self, style: str, **overrides) -> "PDFGenerator":
         """Change style preset."""
         # Recreate with new style
@@ -567,7 +566,7 @@ class PDFGenerator:
             title=self.title,
             style=style,
             custom_css=self.custom_css,
-            **overrides
+            **overrides,
         )
 
 
@@ -575,16 +574,16 @@ class PDFGenerator:
 def generate_pdf(
     content: str,
     title: str,
-    output_path: Optional[Path] = None,
+    output_path: Path | None = None,
     style: str = "clinical_standard",
     convert_to_png: bool = True,
     png_dpi: int = 300,
     open_pdf: bool = False,
-    **kwargs
+    **kwargs,
 ) -> Path:
     """
     Quick function to generate a PDF.
-    
+
     Example:
         generate_pdf(
             content="# My Doc\n\nContent...",
@@ -593,32 +592,24 @@ def generate_pdf(
             open_pdf=True
         )
     """
-    generator = PDFGenerator.from_content(
-        content=content,
-        title=title,
-        style=style,
-        **kwargs
-    )
+    generator = PDFGenerator.from_content(content=content, title=title, style=style, **kwargs)
     return generator.save(
-        output_path=output_path,
-        open_pdf=open_pdf,
-        convert_to_png=convert_to_png,
-        png_dpi=png_dpi
+        output_path=output_path, open_pdf=open_pdf, convert_to_png=convert_to_png, png_dpi=png_dpi
     )
 
 
 def generate_pdf_from_file(
-    file_path: Union[str, Path],
-    output_path: Optional[Path] = None,
+    file_path: str | Path,
+    output_path: Path | None = None,
     style: str = "clinical_standard",
     open_pdf: bool = False,
     convert_to_png: bool = True,
     png_dpi: int = 300,
-    **kwargs
+    **kwargs,
 ) -> Path:
     """
     Quick function to generate PDF from file.
-    
+
     Example:
         generate_pdf_from_file(
             "content.md",
@@ -626,14 +617,7 @@ def generate_pdf_from_file(
             open_pdf=True
         )
     """
-    generator = PDFGenerator.from_file(
-        file_path=file_path,
-        style=style,
-        **kwargs
-    )
+    generator = PDFGenerator.from_file(file_path=file_path, style=style, **kwargs)
     return generator.save(
-        output_path=output_path,
-        open_pdf=open_pdf,
-        convert_to_png=convert_to_png,
-        png_dpi=png_dpi
+        output_path=output_path, open_pdf=open_pdf, convert_to_png=convert_to_png, png_dpi=png_dpi
     )

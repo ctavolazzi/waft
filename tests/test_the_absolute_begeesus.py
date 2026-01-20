@@ -16,16 +16,19 @@ Comprehensive test suite covering:
 """
 
 import sys
+from pathlib import Path
 
-sys.path.insert(0, "../src/waft")
+# Add waft module to path
+waft_path = Path(__file__).parent.parent / "src" / "waft"
+sys.path.insert(0, str(waft_path))
 
-from foundation import Score, Evaluation, evaluate_answer, evaluate_text
-from patterns import StrictStrategy, LenientStrategy, LengthBasedStrategy
-from demo_api import MetaCognitiveAPI, ProblemInput, GuideMode
-from karma_system import KarmaState, simulate_choices
-import random
-import time
 import statistics
+import time
+
+from demo_api import GuideMode, MetaCognitiveAPI, ProblemInput
+from foundation import evaluate_answer
+from karma_system import KarmaState, simulate_choices
+from patterns import LengthBasedStrategy, LenientStrategy, StrictStrategy
 
 
 class TestResults:
@@ -177,7 +180,7 @@ eval_simple = evaluate_answer(
     "What are the fundamental principles of quantum mechanics and their implications for causality?",
 )
 
-print(f"  Simple answer to complex problem:")
+print("  Simple answer to complex problem:")
 print(f"    Confidence: {eval_simple.confidence.value:.3f}")
 print(f"    Doubt:      {eval_simple.doubt.value:.3f}")
 print(f"    Curiosity:  {eval_simple.curiosity.value:.3f}")
@@ -205,7 +208,7 @@ detailed_answer = "Quantum mechanics is governed by several fundamental principl
 
 eval_detailed = evaluate_answer(detailed_answer, "Explain quantum mechanics")
 
-print(f"  Detailed answer:")
+print("  Detailed answer:")
 print(f"    Confidence: {eval_detailed.confidence.value:.3f}")
 print(f"    Doubt:      {eval_detailed.doubt.value:.3f}")
 
@@ -234,7 +237,7 @@ virtuous_history = simulate_choices(starting_luck=0.5, num_choices=15, choice_pa
 virtuous_start = virtuous_history[0]
 virtuous_end = virtuous_history[-1]
 
-print(f"  Virtuous spiral (always choose others):")
+print("  Virtuous spiral (always choose others):")
 print(
     f"    Start: luck={virtuous_start.luck:.3f}, karma={virtuous_start.karma:.3f}, connection={virtuous_start.connection:.3f}"
 )
@@ -268,7 +271,7 @@ vicious_history = simulate_choices(starting_luck=0.5, num_choices=15, choice_pat
 vicious_start = vicious_history[0]
 vicious_end = vicious_history[-1]
 
-print(f"  Vicious spiral (always choose self):")
+print("  Vicious spiral (always choose self):")
 print(
     f"    Start: luck={vicious_start.luck:.3f}, karma={vicious_start.karma:.3f}, connection={vicious_start.connection:.3f}"
 )
@@ -309,7 +312,7 @@ transcendent_history = simulate_choices(starting_luck=0.2, num_choices=20, choic
 transcendent_start = transcendent_history[0]
 transcendent_end = transcendent_history[-1]
 
-print(f"  Starting unlucky but choosing kindness:")
+print("  Starting unlucky but choosing kindness:")
 print(f"    Start: luck={transcendent_start.luck:.3f}, karma={transcendent_start.karma:.3f}")
 print(f"    End:   luck={transcendent_end.luck:.3f}, karma={transcendent_end.karma:.3f}")
 
@@ -339,7 +342,7 @@ print("=" * 80)
 
 # Test 6a: Confidence ↔ Doubt
 test_eval = evaluate_answer("Test", "Test")
-print(f"  Confidence ↔ Doubt:")
+print("  Confidence ↔ Doubt:")
 print(f"    Confidence: {test_eval.confidence.value:.3f}")
 print(f"    Doubt:      {test_eval.doubt.value:.3f}")
 
@@ -352,7 +355,7 @@ else:
     results.add_fail("Confidence and doubt both valid", "out of range")
 
 # Test 6b: Logic ↔ Aesthetic
-print(f"  Logic ↔ Aesthetic:")
+print("  Logic ↔ Aesthetic:")
 print(f"    Factuality: {test_eval.factuality.value:.3f} (logic)")
 print(f"    Aesthetic:  {test_eval.aesthetic.value:.3f} (affective)")
 

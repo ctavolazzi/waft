@@ -5,22 +5,21 @@ Integrates with BeingSystem to create party members as Beings.
 """
 
 import random
-import json
-from pathlib import Path
-from typing import Dict, Any, List, Optional
 from datetime import datetime
+from typing import Any
+
 from rich.console import Console
 
-from ...being import BeingSystem, Being
-from .scenario_realm import ScenarioRealm
+from ...being import Being, BeingSystem
 from .party_state_manager import PartyStateManager
+from .scenario_realm import ScenarioRealm
 
 console = Console()
 
 
 class PartyMember:
     """Represents a party member (Being)."""
-    
+
     def __init__(self, being: Being, name: str, class_type: str, race: str):
         self.being = being
         self.name = name
@@ -36,18 +35,18 @@ class PartyMember:
             "constitution": random.randint(12, 18),
             "intelligence": random.randint(12, 18),
             "wisdom": random.randint(12, 18),
-            "charisma": random.randint(12, 18)
+            "charisma": random.randint(12, 18),
         }
-    
+
     def take_damage(self, damage: int) -> bool:
         """Take damage, return True if alive."""
         self.hp -= damage
         return self.hp > 0
-    
+
     def heal(self, amount: int):
         """Heal the character."""
         self.hp = min(self.hp + amount, self.max_hp)
-    
+
     def gain_experience(self, xp: int):
         """Gain experience and level up if needed."""
         self.experience += xp
@@ -57,8 +56,8 @@ class PartyMember:
             self.hp = self.max_hp
             return True
         return False
-    
-    def to_dict(self) -> Dict[str, Any]:
+
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for serialization."""
         return {
             "being_id": self.being.being_id,
@@ -69,17 +68,17 @@ class PartyMember:
             "max_hp": self.max_hp,
             "level": self.level,
             "experience": self.experience,
-            "stats": self.stats
+            "stats": self.stats,
         }
-    
+
     @classmethod
-    def from_dict(cls, data: Dict[str, Any], being_system: BeingSystem) -> 'PartyMember':
+    def from_dict(cls, data: dict[str, Any], being_system: BeingSystem) -> "PartyMember":
         """Create from dictionary."""
         try:
             being = being_system._load_being(data["being_id"])
         except (FileNotFoundError, ValueError) as e:
             raise ValueError(f"Being not found: {data['being_id']}: {e}")
-        
+
         member = cls(being, data["name"], data["class_type"], data["race"])
         member.hp = data.get("hp", 100)
         member.max_hp = data.get("max_hp", 100)
@@ -92,32 +91,32 @@ class PartyMember:
 class PartyManager:
     """
     Manages party creation and state.
-    
+
     Features:
     - Spawn party members as Beings
     - Load/save party state
     - Party state persistence
     """
-    
+
     def __init__(self, scenario_realm: ScenarioRealm):
         """
         Initialize Party Manager.
-        
+
         Args:
             scenario_realm: ScenarioRealm instance
         """
         self.realm = scenario_realm
         self.party_state_manager = PartyStateManager(scenario_realm)
         self.being_system = BeingSystem(project_path=scenario_realm.project_path)
-        self.party: List[PartyMember] = []
-    
-    def spawn_party(self, force_new: bool = False) -> List[PartyMember]:
+        self.party: list[PartyMember] = []
+
+    def spawn_party(self, force_new: bool = False) -> list[PartyMember]:
         """
         Spawn party members as Beings.
-        
+
         Args:
             force_new: Force new party creation even if state exists
-            
+
         Returns:
             List of PartyMember instances
         """
@@ -132,65 +131,87 @@ class PartyManager:
                 ]
                 console.print(f"[green]✅ Loaded party of {len(self.party)} members[/green]")
                 return self.party
-        
+
         # Create new party
         console.print("\n[bold cyan]🎲 SPAWNING THE PARTY 🎲[/bold cyan]\n")
-        
+
         party_configs = [
-            {"name": "Thorin Ironforge", "class": "Fighter", "race": "Dwarf", "skills": {"combat": 30.0, "strength": 25.0}},
-            {"name": "Lyra Moonwhisper", "class": "Wizard", "race": "Elf", "skills": {"magic": 28.0, "investigation": 22.0}},
-            {"name": "Rogar Swiftfoot", "class": "Rogue", "race": "Halfling", "skills": {"stealth": 32.0, "dexterity": 27.0}},
-            {"name": "Aria Brightshield", "class": "Cleric", "race": "Human", "skills": {"healing": 30.0, "wisdom": 24.0}},
+            {
+                "name": "Thorin Ironforge",
+                "class": "Fighter",
+                "race": "Dwarf",
+                "skills": {"combat": 30.0, "strength": 25.0},
+            },
+            {
+                "name": "Lyra Moonwhisper",
+                "class": "Wizard",
+                "race": "Elf",
+                "skills": {"magic": 28.0, "investigation": 22.0},
+            },
+            {
+                "name": "Rogar Swiftfoot",
+                "class": "Rogue",
+                "race": "Halfling",
+                "skills": {"stealth": 32.0, "dexterity": 27.0},
+            },
+            {
+                "name": "Aria Brightshield",
+                "class": "Cleric",
+                "race": "Human",
+                "skills": {"healing": 30.0, "wisdom": 24.0},
+            },
         ]
-        
+
         party = []
         reality_id = "dnd_scenario_realm_reality"
-        
+
         for config in party_configs:
             console.print(f"[yellow]→[/yellow] Spawning {config['name']}...")
-            
+
             being = self.being_system.spawn_being(
-                reality_id=reality_id,
-                parent_being_id=None,
-                initial_skills=config["skills"]
+                reality_id=reality_id, parent_being_id=None, initial_skills=config["skills"]
             )
-            
+
             member = PartyMember(being, config["name"], config["class"], config["race"])
             party.append(member)
-            
+
             being.record_memory(
                 f"Joined adventuring party as {config['class']}",
                 "experience",
                 {
                     "party_name": "The Eternal Guardians",
                     "class": config["class"],
-                    "race": config["race"]
-                }
+                    "race": config["race"],
+                },
             )
-            
-            console.print(f"   [green]✓[/green] {config['name']} ({config['race']} {config['class']}) spawned: {being.being_id}")
-        
+
+            console.print(
+                f"   [green]✓[/green] {config['name']} ({config['race']} {config['class']}) spawned: {being.being_id}"
+            )
+
         self.party = party
         console.print(f"\n[bold green]✅ Party of {len(party)} members ready![/bold green]\n")
-        
+
         # Save party state
         self.save_party_state()
-        
+
         return party
-    
+
     def save_party_state(self) -> None:
         """Save current party state."""
         party_state = {
             "party_members": [member.to_dict() for member in self.party],
             "total_hp": sum([m.hp for m in self.party]),
             "total_max_hp": sum([m.max_hp for m in self.party]),
-            "average_level": sum([m.level for m in self.party]) / len(self.party) if self.party else 0,
-            "saved_at": datetime.now().isoformat()
+            "average_level": sum([m.level for m in self.party]) / len(self.party)
+            if self.party
+            else 0,
+            "saved_at": datetime.now().isoformat(),
         }
-        
+
         self.party_state_manager.save_party_state(party_state)
-    
-    def get_party(self) -> List[PartyMember]:
+
+    def get_party(self) -> list[PartyMember]:
         """Get current party."""
         if not self.party:
             return self.spawn_party()

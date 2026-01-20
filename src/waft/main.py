@@ -8,40 +8,38 @@ The "Operating System" for projects, orchestrating:
 - Epistemic Tracking (Empirica)
 """
 
-from pathlib import Path
-from typing import Optional, Dict
-from datetime import datetime
-import time
 import json
+import time
+from datetime import datetime
+from pathlib import Path
 
 import typer
 from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
 
-from .logging import get_logger
-from .core.memory import MemoryManager
-from .core.substrate import SubstrateManager
-from .core.empirica import EmpiricaManager
-from .core.gamification import GamificationManager
-from .core.github import GitHubManager
-from .core.tavern_keeper import TavernKeeper, Narrator
-from .utils import (
-    resolve_project_path,
-    validate_waft_project,
-    is_inside_waft_project,
-    validate_project_name,
-    validate_package_name,
-)
 from .cli.epistemic_display import (
-    get_moon_phase,
-    format_epistemic_summary,
     create_epistemic_dashboard,
+    format_epistemic_summary,
+    get_moon_phase,
 )
 from .cli.hud import render_hud
-from .core.analytics_cli import app as analytics_app
-from .cli.pyrite_cli import app as pyrite_app
 from .cli.project_commands import app as project_app
+from .cli.pyrite_cli import app as pyrite_app
+from .core.analytics_cli import app as analytics_app
+from .core.empirica import EmpiricaManager
+from .core.gamification import GamificationManager
+from .core.memory import MemoryManager
+from .core.substrate import SubstrateManager
+from .core.tavern_keeper import Narrator, TavernKeeper
+from .logging import get_logger
+from .utils import (
+    is_inside_waft_project,
+    resolve_project_path,
+    validate_package_name,
+    validate_project_name,
+    validate_waft_project,
+)
 
 app = typer.Typer(
     name="waft",
@@ -53,7 +51,9 @@ console = Console()
 logger = get_logger(__name__)
 
 
-def _process_tavern_hook(project_path: Path, command: str, success: bool, context: Optional[Dict] = None) -> None:
+def _process_tavern_hook(
+    project_path: Path, command: str, success: bool, context: dict | None = None
+) -> None:
     """
     Helper function to process TavernKeeper command hooks.
 
@@ -92,21 +92,34 @@ def _process_tavern_hook(project_path: Path, command: str, success: bool, contex
                 color = "dim"
 
             ability_map = {
-                "new": "CHA", "verify": "CON", "init": "WIS", "info": "WIS",
-                "sync": "INT", "add": "CHA", "finding_log": "INT", "assess": "WIS",
-                "check": "WIS", "goal_create": "CHA",
+                "new": "CHA",
+                "verify": "CON",
+                "init": "WIS",
+                "info": "WIS",
+                "sync": "INT",
+                "add": "CHA",
+                "finding_log": "INT",
+                "assess": "WIS",
+                "check": "WIS",
+                "goal_create": "CHA",
             }
             ability = ability_map.get(command, "WIS")
-            console.print(f"[{color}]🎲 {ability} Check: {roll} + {dice_result.get('modifier', 0)} = {total} (DC {dc}) - {classification}[/{color}]")
+            console.print(
+                f"[{color}]🎲 {ability} Check: {roll} + {dice_result.get('modifier', 0)} = {total} (DC {dc}) - {classification}[/{color}]"
+            )
 
         # Show rewards
         rewards = hook_result.get("rewards", {})
         if rewards.get("level_up"):
-            console.print(f"[bold gold1]🎉 LEVEL UP! Level {rewards.get('old_level', 1)} → {rewards.get('new_level', 1)}[/bold gold1]")
+            console.print(
+                f"[bold gold1]🎉 LEVEL UP! Level {rewards.get('old_level', 1)} → {rewards.get('new_level', 1)}[/bold gold1]"
+            )
         if hook_result.get("xp_gained", 0) > 0:
             credits = hook_result.get("rewards", {}).get("new_credits", 0)
             if credits > 0:
-                console.print(f"[dim]✨ +{hook_result['xp_gained']} Insight, +{credits} Credits[/dim]")
+                console.print(
+                    f"[dim]✨ +{hook_result['xp_gained']} Insight, +{credits} Credits[/dim]"
+                )
             else:
                 console.print(f"[dim]✨ +{hook_result['xp_gained']} Insight[/dim]")
     except (ImportError, AttributeError, FileNotFoundError) as e:
@@ -116,7 +129,9 @@ def _process_tavern_hook(project_path: Path, command: str, success: bool, contex
 @app.command()
 def new(
     name: str = typer.Argument(..., help="Project name"),
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Target directory (default: current)"),
+    path: str | None = typer.Option(
+        None, "--path", "-p", help="Target directory (default: current)"
+    ),
 ):
     """
     Create a new project with full Waft structure.
@@ -152,9 +167,9 @@ def new(
     # Check for nested project creation
     is_inside, waft_project = is_inside_waft_project(target_path)
     if is_inside and waft_project:
-        console.print(f"[bold red]❌ Cannot create project inside existing Waft project[/bold red]")
+        console.print("[bold red]❌ Cannot create project inside existing Waft project[/bold red]")
         console.print(f"[dim]Target directory is inside: {waft_project}[/dim]")
-        console.print(f"[dim]→[/dim] Create the project outside the Waft project directory")
+        console.print("[dim]→[/dim] Create the project outside the Waft project directory")
         raise typer.Exit(1)
 
     project_path = target_path / name
@@ -227,7 +242,9 @@ def new(
 
     # Show level up notification
     if insight_result["level_up"]:
-        console.print(f"[bold cyan]🎉 Level Up! Level {insight_result['old_level']} → {insight_result['new_level']}[/bold cyan]")
+        console.print(
+            f"[bold cyan]🎉 Level Up! Level {insight_result['old_level']} → {insight_result['new_level']}[/bold cyan]"
+        )
 
     # Success message with epistemic indicator
     empirica = EmpiricaManager(project_path)
@@ -266,7 +283,7 @@ def new(
 
 @app.command()
 def verify(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """
     Verify the Waft project structure.
@@ -278,7 +295,7 @@ def verify(
     """
     project_path = resolve_project_path(path)
 
-    console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Verifying project structure\n")
+    console.print("\n[bold cyan]🌊 Waft[/bold cyan] - Verifying project structure\n")
 
     memory = MemoryManager(project_path)
     substrate = SubstrateManager()
@@ -330,7 +347,12 @@ def verify(
         gamification.damage_integrity(10.0, reason="Project verification failed")
 
     # TavernKeeper: Process command hook (Constitution Save)
-    _process_tavern_hook(project_path, "verify", all_valid, {"pyrite_valid": pyrite_status["valid"], "lock_exists": lock_exists})
+    _process_tavern_hook(
+        project_path,
+        "verify",
+        all_valid,
+        {"pyrite_valid": pyrite_status["valid"], "lock_exists": lock_exists},
+    )
 
     if all_valid:
         # Show moon phase in summary
@@ -358,7 +380,7 @@ def verify(
 
 @app.command()
 def sync(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """
     Sync project dependencies using uv sync.
@@ -370,7 +392,7 @@ def sync(
         console.print(f"[bold red]❌ {e}[/bold red]")
         raise typer.Exit(1)
 
-    console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Syncing dependencies\n")
+    console.print("\n[bold cyan]🌊 Waft[/bold cyan] - Syncing dependencies\n")
 
     substrate = SubstrateManager()
     console.print("[dim]→[/dim] Running uv sync...")
@@ -389,7 +411,7 @@ def sync(
 @app.command()
 def add(
     package: str = typer.Argument(..., help="Package name (e.g., 'pytest>=7.0.0')"),
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     dev: bool = typer.Option(False, "--dev", "-d", help="Add as development dependency"),
 ):
     """
@@ -416,7 +438,9 @@ def add(
         console.print("[dim]→[/dim] Adding development dependency...")
         # For dev dependencies, we'd need to use uv add --dev
         # For now, just add normally
-        console.print("[yellow]⚠️[/yellow]  Dev flag not yet fully supported, adding as regular dependency")
+        console.print(
+            "[yellow]⚠️[/yellow]  Dev flag not yet fully supported, adding as regular dependency"
+        )
 
     console.print(f"[dim]→[/dim] Running uv add {package}...")
 
@@ -433,7 +457,7 @@ def add(
 
 @app.command()
 def init(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """
     Initialize Waft structure in an existing project.
@@ -450,17 +474,23 @@ def init(
         console.print(f"[bold red]❌ {e}[/bold red]")
         raise typer.Exit(1)
 
-    console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Initializing Waft in existing project\n")
+    console.print("\n[bold cyan]🌊 Waft[/bold cyan] - Initializing Waft in existing project\n")
 
     # Check if already initialized
     if is_inside_waft_project(project_path)[0]:
-        console.print("[yellow]⚠️[/yellow]  This project already has Waft initialized (_pyrite directory exists).")
-        console.print("[dim]→[/dim] Re-initializing will update templates but preserve existing _pyrite content.")
+        console.print(
+            "[yellow]⚠️[/yellow]  This project already has Waft initialized (_pyrite directory exists)."
+        )
+        console.print(
+            "[dim]→[/dim] Re-initializing will update templates but preserve existing _pyrite content."
+        )
         # Continue - allow re-initialization
 
     # Check if pyproject.toml exists
     if not (project_path / "pyproject.toml").exists():
-        console.print("[bold red]❌ No pyproject.toml found. This command is for existing Python projects.[/bold red]")
+        console.print(
+            "[bold red]❌ No pyproject.toml found. This command is for existing Python projects.[/bold red]"
+        )
         console.print("[dim]→[/dim] Use 'waft new <name>' to create a new project instead.")
         raise typer.Exit(1)
 
@@ -525,14 +555,14 @@ def init(
 
 @app.command()
 def info(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """
     Show information about the Waft project.
     """
     project_path = resolve_project_path(path)
 
-    console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Project Information\n")
+    console.print("\n[bold cyan]🌊 Waft[/bold cyan] - Project Information\n")
 
     from rich.table import Table
 
@@ -566,7 +596,10 @@ def info(
     # Check _pyrite
     memory = MemoryManager(project_path)
     pyrite_status = memory.verify_structure()
-    table.add_row("_pyrite Structure", "[green]Valid[/green]" if pyrite_status["valid"] else "[red]Invalid[/red]")
+    table.add_row(
+        "_pyrite Structure",
+        "[green]Valid[/green]" if pyrite_status["valid"] else "[red]Invalid[/red]",
+    )
 
     # Check uv.lock
     substrate = SubstrateManager()
@@ -586,11 +619,17 @@ def info(
     if agents_exists:
         templates_status.append("[green]agents.py[/green]")
 
-    table.add_row("Templates", ", ".join(templates_status) if templates_status else "[yellow]None[/yellow]")
+    table.add_row(
+        "Templates", ", ".join(templates_status) if templates_status else "[yellow]None[/yellow]"
+    )
 
     # Check Empirica
     empirica = EmpiricaManager(project_path)
-    empirica_status = "[green]Initialized[/green]" if empirica.is_initialized() else "[yellow]Not initialized[/yellow]"
+    empirica_status = (
+        "[green]Initialized[/green]"
+        if empirica.is_initialized()
+        else "[yellow]Not initialized[/yellow]"
+    )
     table.add_row("Empirica", empirica_status)
 
     # Add Epistemic State section if Empirica is initialized
@@ -605,7 +644,9 @@ def info(
             coverage = know * (1.0 - uncertainty) if know > 0 else 0.0
             moon_phase = get_moon_phase(coverage)
 
-            table.add_row("Epistemic State", f"{moon_phase} K:{know:.0%} U:{uncertainty:.0%} C:{coverage:.0%}")
+            table.add_row(
+                "Epistemic State", f"{moon_phase} K:{know:.0%} U:{uncertainty:.0%} C:{coverage:.0%}"
+            )
             table.add_row("", "[dim]Run 'waft assess' for detailed view[/dim]")
 
     console.print(table)
@@ -616,7 +657,7 @@ def info(
 
 @app.command()
 def serve(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     port: int = typer.Option(8000, "--port", help="Port to serve on"),
     host: str = typer.Option("localhost", "--host", help="Host to bind to"),
     dev: bool = typer.Option(False, "--dev", help="Enable development mode with live reloading"),
@@ -640,8 +681,9 @@ def serve(
 
     # Use new FastAPI + SvelteKit visualizer
     try:
-        from .api.main import create_app
         import uvicorn
+
+        from .api.main import create_app
 
         # Create FastAPI app
         static_dir = None
@@ -651,14 +693,18 @@ def serve(
                 static_dir = build_path
                 console.print("[dim]→[/dim] Serving SvelteKit build from visualizer/build")
             else:
-                console.print("[yellow]⚠️[/yellow]  SvelteKit build not found. Run 'cd visualizer && npm run build' first")
+                console.print(
+                    "[yellow]⚠️[/yellow]  SvelteKit build not found. Run 'cd visualizer && npm run build' first"
+                )
                 console.print("[dim]→[/dim] API-only mode (use --dev for development)")
 
         app = create_app(project_path, static_dir=static_dir)
 
-        console.print(f"\n[bold cyan]🌊 Waft Visualizer[/bold cyan]")
+        console.print("\n[bold cyan]🌊 Waft Visualizer[/bold cyan]")
         if dev:
-            console.print("[dim]→[/dim] Development mode - Start SvelteKit dev server: cd visualizer && npm run dev")
+            console.print(
+                "[dim]→[/dim] Development mode - Start SvelteKit dev server: cd visualizer && npm run dev"
+            )
             console.print("[dim]→[/dim] SvelteKit will proxy API requests to this server")
         console.print(f"[dim]→[/dim] API server: http://{host}:{port}")
         if static_dir:
@@ -667,7 +713,7 @@ def serve(
             console.print(f"[dim]→[/dim] API docs: http://{host}:{port}/docs")
         console.print(f"[dim]→[/dim] API docs: http://{host}:{port}/docs")
         console.print(f"[dim]→[/dim] Project: {project_path.resolve()}")
-        console.print(f"\nPress Ctrl+C to stop\n")
+        console.print("\nPress Ctrl+C to stop\n")
 
         uvicorn.run(app, host=host, port=port, log_level="info")
 
@@ -678,10 +724,11 @@ def serve(
     except Exception as e:
         if "Address already in use" in str(e) or "already in use" in str(e):
             console.print(f"[bold red]❌ Port {port} is already in use[/bold red]")
-            console.print(f"[dim]Try a different port with --port[/dim]")
+            console.print("[dim]Try a different port with --port[/dim]")
         else:
             console.print(f"[bold red]❌ Error starting server: {e}[/bold red]")
             import traceback
+
             if dev:
                 console.print(f"[dim]{traceback.format_exc()}[/dim]")
         raise typer.Exit(1)
@@ -689,8 +736,8 @@ def serve(
 
 @app.command()
 def evolve(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
-    agent: Optional[str] = typer.Option(None, "--agent", "-a", help="Agent identifier to evolve"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    agent: str | None = typer.Option(None, "--agent", "-a", help="Agent identifier to evolve"),
     generations: int = typer.Option(1, "--generations", "-g", help="Number of generations to run"),
 ):
     """
@@ -751,12 +798,12 @@ app.add_typer(project_app, name="project")
 def session_create(
     ai_id: str = typer.Option("waft", "--ai-id", help="AI agent identifier"),
     session_type: str = typer.Option("development", "--type", help="Session type"),
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Create a new Empirica session."""
     project_path = resolve_project_path(path)
 
-    console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Creating Empirica session\n")
+    console.print("\n[bold cyan]🌊 Waft[/bold cyan] - Creating Empirica session\n")
 
     empirica = EmpiricaManager(project_path)
     if not empirica.is_initialized():
@@ -774,12 +821,12 @@ def session_create(
 
 @session_app.command("bootstrap")
 def session_bootstrap(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Load project context and display epistemic dashboard."""
     project_path = resolve_project_path(path)
 
-    console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Loading project context\n")
+    console.print("\n[bold cyan]🌊 Waft[/bold cyan] - Loading project context\n")
 
     empirica = EmpiricaManager(project_path)
     if not empirica.is_initialized():
@@ -796,13 +843,13 @@ def session_bootstrap(
 
 @session_app.command("status")
 def session_status(
-    session_id: Optional[str] = typer.Option(None, "--session-id", help="Session ID"),
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    session_id: str | None = typer.Option(None, "--session-id", help="Session ID"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Show current session state."""
     project_path = resolve_project_path(path)
 
-    console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Session Status\n")
+    console.print("\n[bold cyan]🌊 Waft[/bold cyan] - Session Status\n")
 
     empirica = EmpiricaManager(project_path)
     if not empirica.is_initialized():
@@ -816,6 +863,7 @@ def session_status(
 
     if state:
         from rich.table import Table
+
         table = Table(show_header=True, header_style="bold cyan")
         table.add_column("Property", style="dim")
         table.add_column("Value")
@@ -839,12 +887,12 @@ def session_status(
 def finding_log(
     finding: str = typer.Argument(..., help="Finding description"),
     impact: float = typer.Option(0.5, "--impact", help="Impact score (0.0-1.0)"),
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Log a finding with impact score."""
     project_path = resolve_project_path(path)
 
-    console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Logging Finding\n")
+    console.print("\n[bold cyan]🌊 Waft[/bold cyan] - Logging Finding\n")
 
     empirica = EmpiricaManager(project_path)
     if not empirica.is_initialized():
@@ -860,17 +908,27 @@ def finding_log(
         # Check for Knowledge Architect achievement (50 findings)
         stats = gamification.get_stats()
         # Count findings from history
-        findings_count = sum(1 for h in gamification._data.get("history", []) if h.get("type") == "insight_award" and "finding" in h.get("reason", "").lower())
+        findings_count = sum(
+            1
+            for h in gamification._data.get("history", [])
+            if h.get("type") == "insight_award" and "finding" in h.get("reason", "").lower()
+        )
         if findings_count >= 50:
             if gamification.unlock_achievement("knowledge_architect", "🧠 Knowledge Architect"):
-                console.print("[bold green]🏆 Achievement Unlocked: 🧠 Knowledge Architect[/bold green]")
+                console.print(
+                    "[bold green]🏆 Achievement Unlocked: 🧠 Knowledge Architect[/bold green]"
+                )
 
         if insight_result["level_up"]:
-            console.print(f"[bold cyan]🎉 Level Up! Level {insight_result['old_level']} → {insight_result['new_level']}[/bold cyan]")
+            console.print(
+                f"[bold cyan]🎉 Level Up! Level {insight_result['old_level']} → {insight_result['new_level']}[/bold cyan]"
+            )
 
         console.print(f"[green]✅[/green] Finding logged: [bold]{finding}[/bold]")
         console.print(f"[dim]Impact: {impact:.0%} | 🧠 +10 Insight[/dim]")
-        _process_tavern_hook(project_path, "finding_log", True, {"finding": finding, "impact": impact})
+        _process_tavern_hook(
+            project_path, "finding_log", True, {"finding": finding, "impact": impact}
+        )
     else:
         console.print("[bold red]❌ Failed to log finding[/bold red]")
         _process_tavern_hook(project_path, "finding_log", False)
@@ -880,12 +938,12 @@ def finding_log(
 @unknown_app.command("log")
 def unknown_log(
     unknown: str = typer.Argument(..., help="Unknown description"),
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Log a knowledge gap."""
     project_path = resolve_project_path(path)
 
-    console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Logging Unknown\n")
+    console.print("\n[bold cyan]🌊 Waft[/bold cyan] - Logging Unknown\n")
 
     empirica = EmpiricaManager(project_path)
     if not empirica.is_initialized():
@@ -902,13 +960,13 @@ def unknown_log(
 
 @app.command()
 def check(
-    operation: Optional[str] = typer.Option(None, "--operation", help="Operation JSON description"),
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    operation: str | None = typer.Option(None, "--operation", help="Operation JSON description"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Run safety gate and display result."""
     project_path = resolve_project_path(path)
 
-    console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Safety Gate Check\n")
+    console.print("\n[bold cyan]🌊 Waft[/bold cyan] - Safety Gate Check\n")
 
     empirica = EmpiricaManager(project_path)
     if not empirica.is_initialized():
@@ -918,6 +976,7 @@ def check(
     operation_dict = None
     if operation:
         import json
+
         try:
             operation_dict = json.loads(operation)
         except json.JSONDecodeError:
@@ -927,6 +986,7 @@ def check(
     gate_result = empirica.check_submit(operation=operation_dict)
     if gate_result:
         from .cli.epistemic_display import format_gate_result
+
         gate_text = format_gate_result(gate_result)
         console.print(f"Gate Result: {gate_text}")
 
@@ -949,13 +1009,14 @@ def check(
 
 @app.command(name="dashboard")
 def dashboard_cmd(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Show the Red October Dashboard - TavernKeeper TUI."""
     project_path = resolve_project_path(path)
 
     try:
         from .ui.dashboard import RedOctoberDashboard
+
         tavern = TavernKeeper(project_path)
         dashboard = RedOctoberDashboard(tavern)
         dashboard.run()
@@ -968,7 +1029,7 @@ def dashboard_cmd(
 
 @app.command(name="hud")
 def hud_cmd(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     integrity: float = typer.Option(100.0, "--integrity", help="Integrity value (0.0-100.0)"),
 ):
     """Show the Epistemic HUD with split-screen layout (legacy)."""
@@ -978,14 +1039,14 @@ def hud_cmd(
 
 @app.command()
 def assess(
-    session_id: Optional[str] = typer.Option(None, "--session-id", help="Session ID"),
+    session_id: str | None = typer.Option(None, "--session-id", help="Session ID"),
     history: bool = typer.Option(False, "--history", help="Include historical data"),
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Show detailed epistemic assessment."""
     project_path = resolve_project_path(path)
 
-    console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Epistemic Assessment\n")
+    console.print("\n[bold cyan]🌊 Waft[/bold cyan] - Epistemic Assessment\n")
 
     empirica = EmpiricaManager(project_path)
     if not empirica.is_initialized():
@@ -1007,15 +1068,20 @@ def assess(
             gamification.restore_integrity(2.0, reason="Low epistemic uncertainty")
 
         if insight_result["level_up"]:
-            console.print(f"[bold cyan]🎉 Level Up! Level {insight_result['old_level']} → {insight_result['new_level']}[/bold cyan]")
+            console.print(
+                f"[bold cyan]🎉 Level Up! Level {insight_result['old_level']} → {insight_result['new_level']}[/bold cyan]"
+            )
 
         from .cli.epistemic_display import format_epistemic_state
+
         panel = format_epistemic_state(state)
         console.print(panel)
 
         integrity = gamification.integrity
         insight = gamification.insight
-        console.print(f"\n[dim]💎 Integrity: {integrity:.0f}% | 🧠 Insight: {insight:.0f} | 🧠 +25 Insight[/dim]")
+        console.print(
+            f"\n[dim]💎 Integrity: {integrity:.0f}% | 🧠 Insight: {insight:.0f} | 🧠 +25 Insight[/dim]"
+        )
 
         # TavernKeeper: Wisdom save
         _process_tavern_hook(project_path, "assess", True, {"uncertainty": uncertainty})
@@ -1026,15 +1092,19 @@ def assess(
 @goal_app.command("create")
 def goal_create(
     objective: str = typer.Argument(..., help="Goal objective"),
-    session_id: Optional[str] = typer.Option(None, "--session-id", help="Session ID"),
-    scope: Optional[str] = typer.Option(None, "--scope", help="Scope JSON (breadth, duration, coordination)"),
-    criteria: Optional[str] = typer.Option(None, "--criteria", help="Success criteria (comma-separated)"),
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    session_id: str | None = typer.Option(None, "--session-id", help="Session ID"),
+    scope: str | None = typer.Option(
+        None, "--scope", help="Scope JSON (breadth, duration, coordination)"
+    ),
+    criteria: str | None = typer.Option(
+        None, "--criteria", help="Success criteria (comma-separated)"
+    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Create a goal with epistemic scope."""
     project_path = resolve_project_path(path)
 
-    console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Creating Goal\n")
+    console.print("\n[bold cyan]🌊 Waft[/bold cyan] - Creating Goal\n")
 
     empirica = EmpiricaManager(project_path)
     if not empirica.is_initialized():
@@ -1052,6 +1122,7 @@ def goal_create(
     scope_dict = None
     if scope:
         import json
+
         try:
             scope_dict = json.loads(scope)
         except json.JSONDecodeError:
@@ -1104,12 +1175,12 @@ def goal_create(
 
 @goal_app.command("list")
 def goal_list(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """List active goals."""
     project_path = resolve_project_path(path)
 
-    console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Active Goals\n")
+    console.print("\n[bold cyan]🌊 Waft[/bold cyan] - Active Goals\n")
 
     empirica = EmpiricaManager(project_path)
     if not empirica.is_initialized():
@@ -1121,6 +1192,7 @@ def goal_list(
         goals = context.get("goals", [])
         if goals:
             from rich.table import Table
+
             table = Table(show_header=True, header_style="bold cyan")
             table.add_column("Objective", width=50)
             table.add_column("Status", width=15)
@@ -1139,8 +1211,10 @@ def goal_list(
 
 @app.command()
 def stats(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
-    session: bool = typer.Option(False, "--session", "-s", help="Show session statistics instead of gamification stats"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    session: bool = typer.Option(
+        False, "--session", "-s", help="Show session statistics instead of gamification stats"
+    ),
     detailed: bool = typer.Option(False, "--detailed", "-d", help="Show detailed breakdown"),
 ):
     """
@@ -1155,7 +1229,7 @@ def stats(
         # Session statistics
         from .core.session_stats import SessionStats
 
-        console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Session Statistics\n")
+        console.print("\n[bold cyan]🌊 Waft[/bold cyan] - Session Statistics\n")
 
         stats_tracker = SessionStats(project_path)
         stats_data = stats_tracker.calculate_session_stats()
@@ -1165,27 +1239,36 @@ def stats(
 
         if detailed:
             # Save to file
-            stats_file = project_path / "_pyrite" / "phase1" / f"session-stats-{datetime.now().strftime('%Y-%m-%d-%H%M%S')}.json"
+            stats_file = (
+                project_path
+                / "_pyrite"
+                / "phase1"
+                / f"session-stats-{datetime.now().strftime('%Y-%m-%d-%H%M%S')}.json"
+            )
             stats_file.parent.mkdir(parents=True, exist_ok=True)
             import json
+
             stats_file.write_text(json.dumps(stats_data, indent=2), encoding="utf-8")
-            console.print(f"\n[dim]💾 Statistics saved: {stats_file.relative_to(project_path)}[/dim]")
+            console.print(
+                f"\n[dim]💾 Statistics saved: {stats_file.relative_to(project_path)}[/dim]"
+            )
     else:
         # Gamification stats (original behavior)
-        console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Stats\n")
+        console.print("\n[bold cyan]🌊 Waft[/bold cyan] - Stats\n")
 
         gamification = GamificationManager(project_path)
         stats = gamification.get_stats()
 
         from rich.table import Table
+
         table = Table(show_header=True, header_style="bold cyan")
         table.add_column("Stat", style="dim", width=20)
         table.add_column("Value", width=20)
 
         table.add_row("💎 Integrity", f"{stats['integrity']:.0f}%")
         table.add_row("🧠 Insight", f"{stats['insight']:.0f}")
-        table.add_row("⭐ Level", str(stats['level']))
-        table.add_row("🏆 Achievements", str(stats['achievements_count']))
+        table.add_row("⭐ Level", str(stats["level"]))
+        table.add_row("🏆 Achievements", str(stats["achievements_count"]))
 
         console.print(table)
 
@@ -1197,8 +1280,10 @@ def stats(
 
 @app.command()
 def checkout(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
-    quick: bool = typer.Option(False, "--quick", "-q", help="Quick checkout (skip detailed statistics)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    quick: bool = typer.Option(
+        False, "--quick", "-q", help="Quick checkout (skip detailed statistics)"
+    ),
     silent: bool = typer.Option(False, "--silent", "-s", help="Silent mode (minimal output)"),
 ):
     """
@@ -1219,10 +1304,13 @@ def checkout(
 app.add_typer(analytics_app, name="analytics")
 app.add_typer(pyrite_app, name="pyrite", help="The Steward - The God of Work Efforts")
 
+
 @app.command()
 def decide(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
-    topic: Optional[str] = typer.Option(None, "--topic", "-t", help="Specific decision topic (e.g., 'workflow')"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    topic: str | None = typer.Option(
+        None, "--topic", "-t", help="Specific decision topic (e.g., 'workflow')"
+    ),
 ):
     """
     Run decision matrix analysis using standardized methodology.
@@ -1262,18 +1350,20 @@ def decide(
     console.print("\n[bold]Available Topics:[/bold]")
     console.print("  • workflow - Analyze workflow implementation options")
     console.print("\n[dim]See .cursor/commands/decide.md for full documentation.[/dim]")
-    console.print("[dim]Use /consider first to identify options, then /decide for quantitative analysis.[/dim]")
+    console.print(
+        "[dim]Use /consider first to identify options, then /decide for quantitative analysis.[/dim]"
+    )
     console.print("[dim]Example: waft decide --topic workflow[/dim]")
 
 
 @app.command()
 def level(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Show level details and progress to next level."""
     project_path = resolve_project_path(path)
 
-    console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Level Details\n")
+    console.print("\n[bold cyan]🌊 Waft[/bold cyan] - Level Details\n")
 
     gamification = GamificationManager(project_path)
     current_level = gamification.level
@@ -1284,10 +1374,13 @@ def level(
     insight_for_current = (current_level - 1) ** 2 * 100 if current_level > 1 else 0
     insight_for_next = (next_level - 1) ** 2 * 100
     insight_needed = insight_for_next - current_insight
-    progress = (current_insight - insight_for_current) / (insight_for_next - insight_for_current) if insight_for_next > insight_for_current else 1.0
+    progress = (
+        (current_insight - insight_for_current) / (insight_for_next - insight_for_current)
+        if insight_for_next > insight_for_current
+        else 1.0
+    )
 
-    from rich.progress import Progress, BarColumn, TextColumn
-    from rich.console import Group
+    from rich.progress import BarColumn, Progress, TextColumn
 
     progress_bar = Progress(
         TextColumn("[progress.description]{task.description}"),
@@ -1308,12 +1401,12 @@ def level(
 
 @app.command()
 def character(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Display full D&D 5e character sheet."""
     project_path = resolve_project_path(path)
 
-    console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Character Sheet\n")
+    console.print("\n[bold cyan]🌊 Waft[/bold cyan] - Character Sheet\n")
 
     try:
         tavern = TavernKeeper(project_path)
@@ -1324,8 +1417,8 @@ def character(
         hp = sheet["hp"]
         status_effects = sheet["status_effects"]
 
-        from rich.table import Table
         from rich.panel import Panel
+        from rich.table import Table
 
         # Character Info with colors
         info_table = Table(show_header=False, box=None)
@@ -1372,7 +1465,14 @@ def character(
             "charisma": "bright_magenta",
         }
 
-        for ability in ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]:
+        for ability in [
+            "strength",
+            "dexterity",
+            "constitution",
+            "intelligence",
+            "wisdom",
+            "charisma",
+        ]:
             score = ability_scores.get(ability, 8)
             modifier = ability_modifiers.get(ability, -1)
             modifier_str = f"+{modifier}" if modifier >= 0 else str(modifier)
@@ -1391,11 +1491,13 @@ def character(
             ability_table.add_row(
                 f"[{ability_color}]{ability.title()}[/]",
                 f"[{score_color}]{score}[/]",
-                f"[dim]{modifier_str}[/]"
+                f"[dim]{modifier_str}[/]",
             )
 
         console.print("\n")
-        console.print(Panel(ability_table, title="[bold]Ability Scores[/bold]", border_style="cyan"))
+        console.print(
+            Panel(ability_table, title="[bold]Ability Scores[/bold]", border_style="cyan")
+        )
 
         # Status Effects
         if status_effects:
@@ -1420,7 +1522,9 @@ def character(
                 )
 
             console.print("\n")
-            console.print(Panel(effects_table, title="[bold]Status Effects[/bold]", border_style="cyan"))
+            console.print(
+                Panel(effects_table, title="[bold]Status Effects[/bold]", border_style="cyan")
+            )
 
     except Exception as e:
         console.print(f"[bold red]❌ Error loading character sheet: {e}[/bold red]")
@@ -1429,12 +1533,12 @@ def character(
 
 @app.command()
 def achievements(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """List all achievements (locked/unlocked)."""
     project_path = resolve_project_path(path)
 
-    console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Achievements\n")
+    console.print("\n[bold cyan]🌊 Waft[/bold cyan] - Achievements\n")
 
     gamification = GamificationManager(project_path)
     achievement_status = gamification.get_achievement_status()
@@ -1451,6 +1555,7 @@ def achievements(
     }
 
     from rich.table import Table
+
     table = Table(show_header=True, header_style="bold cyan")
     table.add_column("Achievement", width=30)
     table.add_column("Status", width=15)
@@ -1465,7 +1570,7 @@ def achievements(
 
 @app.command(name="chronicle")
 def chronicle(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     limit: int = typer.Option(20, "--limit", "-n", help="Number of entries to show"),
 ):
     """View the Adventure Chronicle - Your journey's story."""
@@ -1481,13 +1586,17 @@ def chronicle(
             journal_entries = tavern._data.get("adventure_journal", [])
 
         # Get last N entries
-        recent_entries = journal_entries[-limit:] if len(journal_entries) > limit else journal_entries
+        recent_entries = (
+            journal_entries[-limit:] if len(journal_entries) > limit else journal_entries
+        )
         recent_entries.reverse()  # Show newest first
 
-        console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Adventure Journal\n")
+        console.print("\n[bold cyan]🌊 Waft[/bold cyan] - Adventure Journal\n")
 
         if not recent_entries:
-            console.print("[dim]No entries in the chronicle yet. Run some commands to generate adventures![/dim]")
+            console.print(
+                "[dim]No entries in the chronicle yet. Run some commands to generate adventures![/dim]"
+            )
             return
 
         from rich.table import Table
@@ -1510,7 +1619,9 @@ def chronicle(
 
             # Format timestamp
             try:
-                time_part = timestamp.split("T")[1].split(".")[0] if "T" in timestamp else timestamp[:8]
+                time_part = (
+                    timestamp.split("T")[1].split(".")[0] if "T" in timestamp else timestamp[:8]
+                )
             except (IndexError, AttributeError) as e:
                 logger.debug(f"Could not parse timestamp '{timestamp}': {e}")
                 time_part = timestamp[:8] if len(timestamp) >= 8 else timestamp
@@ -1545,7 +1656,9 @@ def chronicle(
             )
 
         console.print(journal_table)
-        console.print(f"\n[dim]Showing {len(recent_entries)} of {len(journal_entries)} entries[/dim]")
+        console.print(
+            f"\n[dim]Showing {len(recent_entries)} of {len(journal_entries)} entries[/dim]"
+        )
 
     except Exception as e:
         console.print(f"[bold red]❌ Error loading journal: {e}[/bold red]")
@@ -1558,7 +1671,7 @@ def roll(
     dc: int = typer.Option(10, "--dc", help="Difficulty Class (target number)"),
     advantage: bool = typer.Option(False, "--advantage", "-a", help="Roll with advantage"),
     disadvantage: bool = typer.Option(False, "--disadvantage", "-d", help="Roll with disadvantage"),
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Roll a d20 check manually - Test your luck!"""
     project_path = resolve_project_path(path)
@@ -1566,7 +1679,7 @@ def roll(
     try:
         tavern = TavernKeeper(project_path)
 
-        console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Dice Roll\n")
+        console.print("\n[bold cyan]🌊 Waft[/bold cyan] - Dice Roll\n")
 
         result = tavern.roll_check(ability, dc, advantage=advantage, disadvantage=disadvantage)
 
@@ -1580,25 +1693,25 @@ def roll(
         console.print(f"[bold]Ability:[/bold] {ability.title()}")
         console.print(f"[bold]DC:[/bold] {dc}")
         if advantage:
-            console.print(f"[dim]Rolling with advantage[/dim]")
+            console.print("[dim]Rolling with advantage[/dim]")
         elif disadvantage:
-            console.print(f"[dim]Rolling with disadvantage[/dim]")
+            console.print("[dim]Rolling with disadvantage[/dim]")
 
         console.print()
 
         # Show dice result with color
         if classification == "critical_success":
             console.print(f"[bold gold1]🎲 Roll: {roll} + {modifier} = {total}[/bold gold1]")
-            console.print(f"[bold gold1]⭐ CRITICAL SUCCESS![/bold gold1]")
+            console.print("[bold gold1]⭐ CRITICAL SUCCESS![/bold gold1]")
         elif classification == "critical_failure":
             console.print(f"[bold red]🎲 Roll: {roll} + {modifier} = {total}[/bold red]")
-            console.print(f"[bold red]💥 CRITICAL FAILURE![/bold red]")
+            console.print("[bold red]💥 CRITICAL FAILURE![/bold red]")
         elif classification == "superior":
             console.print(f"[gold1]🎲 Roll: {roll} + {modifier} = {total}[/gold1]")
-            console.print(f"[gold1]▲ Superior Result[/gold1]")
+            console.print("[gold1]▲ Superior Result[/gold1]")
         elif classification == "optimal":
             console.print(f"[green]🎲 Roll: {roll} + {modifier} = {total}[/green]")
-            console.print(f"[green]✓ Optimal Result[/green]")
+            console.print("[green]✓ Optimal Result[/green]")
         else:
             console.print(f"🎲 Roll: {roll} + {modifier} = {total}")
 
@@ -1616,7 +1729,7 @@ def roll(
 
 @app.command()
 def quests(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """View active and completed quests."""
     project_path = resolve_project_path(path)
@@ -1630,10 +1743,12 @@ def quests(
         else:
             quests = tavern._data.get("quests", [])
 
-        console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Quests\n")
+        console.print("\n[bold cyan]🌊 Waft[/bold cyan] - Quests\n")
 
         if not quests:
-            console.print("[dim]No quests available. Create goals with 'waft goal create' to generate quests![/dim]")
+            console.print(
+                "[dim]No quests available. Create goals with 'waft goal create' to generate quests![/dim]"
+            )
             return
 
         from rich.table import Table
@@ -1650,7 +1765,9 @@ def quests(
             reward = quest.get("reward", "N/A")
             progress = quest.get("progress", "0%")
 
-            status_color = "green" if status == "completed" else "yellow" if status == "active" else "dim"
+            status_color = (
+                "green" if status == "completed" else "yellow" if status == "active" else "dim"
+            )
             quest_table.add_row(
                 name,
                 f"[{status_color}]{status.title()}[/{status_color}]",
@@ -1668,9 +1785,11 @@ def quests(
 @app.command()
 def note(
     text: str = typer.Argument(..., help="Note to add to the chronicle"),
-    category: str = typer.Option("general", "--category", "-c", help="Category (bug, feature, refactor, insight, etc.)"),
+    category: str = typer.Option(
+        "general", "--category", "-c", help="Category (bug, feature, refactor, insight, etc.)"
+    ),
     source: str = typer.Option("human", "--source", "-s", help="Source (human, ai, system)"),
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Add a narrative note to the chronicle - Share your thoughts!"""
     project_path = resolve_project_path(path)
@@ -1681,7 +1800,7 @@ def note(
 
         narrator.note(text, category=category, tags=[source])
 
-        console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Note Added\n")
+        console.print("\n[bold cyan]🌊 Waft[/bold cyan] - Note Added\n")
         console.print(f"[green]✅[/green] Note logged: [bold]{text}[/bold]")
         console.print(f"[dim]Category: {category} | Source: {source}[/dim]")
 
@@ -1693,8 +1812,10 @@ def note(
 @app.command()
 def observe(
     observation: str = typer.Argument(..., help="Observation to log"),
-    mood: str = typer.Option("neutral", "--mood", "-m", help="Mood (neutral, surprised, delighted, concerned, amazed)"),
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    mood: str = typer.Option(
+        "neutral", "--mood", "-m", help="Mood (neutral, surprised, delighted, concerned, amazed)"
+    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Log an observation - "woah that's kinda sick" or "weird that's not right"."""
     project_path = resolve_project_path(path)
@@ -1705,7 +1826,7 @@ def observe(
 
         narrator.observe(observation, mood=mood, source="human")
 
-        console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Observation Logged\n")
+        console.print("\n[bold cyan]🌊 Waft[/bold cyan] - Observation Logged\n")
         console.print(f"[green]✅[/green] Observation: [bold]{observation}[/bold]")
         console.print(f"[dim]Mood: {mood}[/dim]")
 
@@ -1716,7 +1837,7 @@ def observe(
 
 @app.command()
 def phase1(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed progress"),
 ):
     """Run Phase 1: Comprehensive data gathering and visualization."""
@@ -1730,7 +1851,7 @@ def phase1(
 
 @app.command()
 def analyze(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed progress"),
 ):
     """Run Analyze: Analysis, insights, and action planning."""
@@ -1744,9 +1865,13 @@ def analyze(
 
 @app.command()
 def resume(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
-    session: Optional[str] = typer.Option(None, "--session", "-s", help="Specific session file to load"),
-    compare: bool = typer.Option(True, "--compare/--no-compare", help="Compare current state with last session"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    session: str | None = typer.Option(
+        None, "--session", "-s", help="Specific session file to load"
+    ),
+    compare: bool = typer.Option(
+        True, "--compare/--no-compare", help="Compare current state with last session"
+    ),
     full: bool = typer.Option(False, "--full", "-f", help="Load full context (not just summary)"),
 ):
     """
@@ -1760,18 +1885,16 @@ def resume(
     from .core.resume import ResumeManager
 
     resume_manager = ResumeManager(project_path)
-    resume_manager.run_resume(
-        session_file=session,
-        compare=compare,
-        full_context=full
-    )
+    resume_manager.run_resume(session_file=session, compare=compare, full_context=full)
 
 
 @app.command(name="continue")
 def continue_work(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     deep: bool = typer.Option(False, "--deep", "-d", help="Perform deep reflection"),
-    focus: Optional[str] = typer.Option(None, "--focus", "-f", help="Focus area: approach, patterns, quality"),
+    focus: str | None = typer.Option(
+        None, "--focus", "-f", help="Focus area: approach, patterns, quality"
+    ),
     save: bool = typer.Option(False, "--save", "-s", help="Save reflection to file"),
 ):
     """
@@ -1785,18 +1908,14 @@ def continue_work(
     from .core.continue_work import ContinueManager
 
     continue_manager = ContinueManager(project_path)
-    continue_manager.run_continue(
-        deep=deep,
-        focus=focus,
-        save=save
-    )
+    continue_manager.run_continue(deep=deep, focus=focus, save=save)
 
 
 @app.command()
 def reflect(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
-    prompt: Optional[str] = typer.Option(None, "--prompt", help="Custom reflection prompt"),
-    topic: Optional[str] = typer.Option(None, "--topic", "-t", help="Topic to focus reflection on"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    prompt: str | None = typer.Option(None, "--prompt", help="Custom reflection prompt"),
+    topic: str | None = typer.Option(None, "--topic", "-t", help="Topic to focus reflection on"),
     save: bool = typer.Option(True, "--save/--no-save", help="Save entry to journal"),
 ):
     """
@@ -1810,20 +1929,16 @@ def reflect(
     from .core.reflect import ReflectManager
 
     reflect_manager = ReflectManager(project_path)
-    reflect_manager.run_reflect(
-        prompt=prompt,
-        topic=topic,
-        save_entry=save
-    )
+    reflect_manager.run_reflect(prompt=prompt, topic=topic, save_entry=save)
 
 
 @app.command(name="journal-search")
 def journal_search(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
-    query: Optional[str] = typer.Option(None, "--query", "-q", help="Text search query"),
-    topic: Optional[str] = typer.Option(None, "--topic", "-t", help="Filter by topic"),
-    date_from: Optional[str] = typer.Option(None, "--from", help="Start date (YYYY-MM-DD)"),
-    date_to: Optional[str] = typer.Option(None, "--to", help="End date (YYYY-MM-DD)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    query: str | None = typer.Option(None, "--query", "-q", help="Text search query"),
+    topic: str | None = typer.Option(None, "--topic", "-t", help="Filter by topic"),
+    date_from: str | None = typer.Option(None, "--from", help="Start date (YYYY-MM-DD)"),
+    date_to: str | None = typer.Option(None, "--to", help="End date (YYYY-MM-DD)"),
     limit: int = typer.Option(10, "--limit", "-l", help="Maximum results"),
 ):
     """
@@ -1831,16 +1946,13 @@ def journal_search(
     """
     project_path = resolve_project_path(path)
 
-    from .core.reflect import ReflectManager
     from rich.table import Table
+
+    from .core.reflect import ReflectManager
 
     reflect_manager = ReflectManager(project_path)
     results = reflect_manager.search_entries(
-        query=query,
-        topic=topic,
-        date_from=date_from,
-        date_to=date_to,
-        limit=limit
+        query=query, topic=topic, date_from=date_from, date_to=date_to, limit=limit
     )
 
     if not results:
@@ -1857,7 +1969,7 @@ def journal_search(
         table.add_row(
             entry.get("date", "Unknown"),
             entry.get("time", "Unknown"),
-            preview + "..." if len(preview) >= 100 else preview
+            preview + "..." if len(preview) >= 100 else preview,
         )
 
     reflect_manager.console.print("\n")
@@ -1867,7 +1979,7 @@ def journal_search(
 
 @app.command(name="journal-stats")
 def journal_stats(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     cleanup: bool = typer.Option(False, "--cleanup", help="Clean up old archives"),
 ):
     """
@@ -1887,10 +1999,10 @@ def journal_stats(
 
 @app.command()
 def help_cmd(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
-    category: Optional[str] = typer.Option(None, "--category", "-c", help="Filter by category"),
-    search: Optional[str] = typer.Option(None, "--search", "-s", help="Search commands by keyword"),
-    command: Optional[str] = typer.Option(None, "--command", help="Show details for specific command"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    category: str | None = typer.Option(None, "--category", "-c", help="Filter by category"),
+    search: str | None = typer.Option(None, "--search", "-s", help="Search commands by keyword"),
+    command: str | None = typer.Option(None, "--command", help="Show details for specific command"),
     count: bool = typer.Option(False, "--count", help="Just show command count"),
 ):
     """
@@ -1904,19 +2016,21 @@ def help_cmd(
     from .core.help import HelpManager
 
     help_manager = HelpManager(project_path)
-    help_manager.run_help(
-        category=category,
-        search=search,
-        command=command,
-        count=count
-    )
+    help_manager.run_help(category=category, search=search, command=command, count=count)
 
 
 @app.command(name="encapsulated-environments-pdf")
 def encapsulated_environments_pdf(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
-    output: Optional[str] = typer.Option(None, "--output", "-o", help="Output PDF path (default: auto-generated)"),
-    style: str = typer.Option("clinical_standard", "--style", "-s", help="PDF style (clinical_standard/premium/professional)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    output: str | None = typer.Option(
+        None, "--output", "-o", help="Output PDF path (default: auto-generated)"
+    ),
+    style: str = typer.Option(
+        "clinical_standard",
+        "--style",
+        "-s",
+        help="PDF style (clinical_standard/premium/professional)",
+    ),
     open_pdf: bool = typer.Option(True, "--open/--no-open", help="Open PDF after generation"),
 ):
     """
@@ -1926,7 +2040,9 @@ def encapsulated_environments_pdf(
     explaining the framework for Being storytelling and information exchange.
     """
     project_path = resolve_project_path(path)
-    console.print(f"\n[bold cyan]📄 Waft[/bold cyan] - Generating Encapsulated Environments Research PDF\n")
+    console.print(
+        "\n[bold cyan]📄 Waft[/bold cyan] - Generating Encapsulated Environments Research PDF\n"
+    )
 
     from pathlib import Path
 
@@ -1938,8 +2054,8 @@ def encapsulated_environments_pdf(
         raise typer.Exit(1)
 
     # Use the working example script with uv run to ensure dependencies
-    import subprocess
     import shutil
+    import subprocess
 
     example_script = project_path / "examples" / "generate_encapsulated_environments_pdf.py"
 
@@ -1953,7 +2069,7 @@ def encapsulated_environments_pdf(
     else:
         output_path = project_path / "encapsulated_environments_research.pdf"
 
-    console.print(f"[yellow]→[/yellow] Generating PDF...")
+    console.print("[yellow]→[/yellow] Generating PDF...")
 
     # Check if uv is available, use it if so
     uv_available = shutil.which("uv") is not None
@@ -1961,21 +2077,18 @@ def encapsulated_environments_pdf(
     try:
         if uv_available:
             # Use uv run to ensure dependencies are available
-            console.print(f"[dim]Using uv run to ensure dependencies...[/dim]")
+            console.print("[dim]Using uv run to ensure dependencies...[/dim]")
             result = subprocess.run(
                 ["uv", "run", "python3", str(example_script)],
                 cwd=project_path,
                 capture_output=True,
-                text=True
+                text=True,
             )
         else:
             # Fallback to python3 directly
-            console.print(f"[dim]Running with python3 (uv not found)...[/dim]")
+            console.print("[dim]Running with python3 (uv not found)...[/dim]")
             result = subprocess.run(
-                ["python3", str(example_script)],
-                cwd=project_path,
-                capture_output=True,
-                text=True
+                ["python3", str(example_script)], cwd=project_path, capture_output=True, text=True
             )
 
         if result.returncode == 0:
@@ -1991,27 +2104,28 @@ def encapsulated_environments_pdf(
 
                 if open_pdf:
                     import subprocess as sp
+
                     sp.run(["open", str(output_path)], check=False)
 
                 return output_path
             else:
-                console.print(f"[yellow]⚠️[/yellow]  Script completed but PDF not found")
+                console.print("[yellow]⚠️[/yellow]  Script completed but PDF not found")
                 if result.stdout:
                     console.print(f"[dim]Output: {result.stdout}[/dim]")
                 raise typer.Exit(1)
         else:
             error_msg = result.stderr or result.stdout or "Unknown error"
-            console.print(f"[red]❌ Error generating PDF[/red]")
+            console.print("[red]❌ Error generating PDF[/red]")
             if "jinja2" in error_msg or "ModuleNotFoundError" in error_msg:
-                console.print(f"[yellow]💡 Missing dependencies. Try:[/yellow]")
-                console.print(f"   uv pip install jinja2 weasyprint markdown")
+                console.print("[yellow]💡 Missing dependencies. Try:[/yellow]")
+                console.print("   uv pip install jinja2 weasyprint markdown")
                 console.print(f"   Or: uv run python3 {example_script}")
             else:
                 console.print(f"[dim]{error_msg}[/dim]")
             raise typer.Exit(1)
 
     except FileNotFoundError:
-        console.print(f"[red]❌ Python not found. Please ensure Python 3 is installed.[/red]")
+        console.print("[red]❌ Python not found. Please ensure Python 3 is installed.[/red]")
         raise typer.Exit(1)
     except Exception as e:
         console.print(f"[red]❌ Error:[/red] {e}")
@@ -2027,7 +2141,7 @@ app.add_typer(goal_app, name="goal")
 def create(
     name: str = typer.Argument(..., help="Goal name (slug)"),
     objective: str = typer.Argument(..., help="Goal objective/description"),
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Create a new goal with objective."""
     project_path = resolve_project_path(path)
@@ -2040,14 +2154,17 @@ def create(
 
 @goal_app.command("list")
 def goal_list(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
-    status: Optional[str] = typer.Option(None, "--status", "-s", help="Filter by status (active, completed, paused)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    status: str | None = typer.Option(
+        None, "--status", "-s", help="Filter by status (active, completed, paused)"
+    ),
 ):
     """List all goals."""
     project_path = resolve_project_path(path)
 
-    from .core.goal import GoalManager
     from rich.table import Table
+
+    from .core.goal import GoalManager
 
     goal_manager = GoalManager(project_path)
     goals = goal_manager.list_goals(status=status)
@@ -2071,8 +2188,10 @@ def goal_list(
         table.add_row(
             goal.get("name", ""),
             goal.get("status", ""),
-            goal.get("objective", "")[:60] + "..." if len(goal.get("objective", "")) > 60 else goal.get("objective", ""),
-            progress
+            goal.get("objective", "")[:60] + "..."
+            if len(goal.get("objective", "")) > 60
+            else goal.get("objective", ""),
+            progress,
         )
 
     console.print("\n[bold cyan]🎯 Goals[/bold cyan]\n")
@@ -2083,7 +2202,7 @@ def goal_list(
 @goal_app.command()
 def show(
     name: str = typer.Argument(..., help="Goal name"),
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Show goal details."""
     project_path = resolve_project_path(path)
@@ -2096,8 +2215,8 @@ def show(
 
 @app.command()
 def next_cmd(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
-    goal: Optional[str] = typer.Option(None, "--goal", "-g", help="Specific goal name"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    goal: str | None = typer.Option(None, "--goal", "-g", help="Specific goal name"),
     count: int = typer.Option(1, "--count", "-c", help="Number of next steps to show"),
 ):
     """
@@ -2114,7 +2233,9 @@ def next_cmd(
     next_steps = goal_manager.get_next_step(goal_name=goal, count=count)
 
     if not next_steps:
-        console.print("[dim]No next steps found. Create a goal first with: waft goal create <name> <objective>[/dim]")
+        console.print(
+            "[dim]No next steps found. Create a goal first with: waft goal create <name> <objective>[/dim]"
+        )
         return
 
     console.print("\n[bold cyan]🎯 Next Steps[/bold cyan]\n")
@@ -2123,15 +2244,15 @@ def next_cmd(
         console.print(f"[bold]{i}. {step.get('step', '')}[/bold]")
         console.print(f"   [dim]From Goal:[/dim] {step.get('goal', '')}")
         console.print(f"   [dim]Priority:[/dim] {step.get('priority', 0)}")
-        if step.get('objective'):
+        if step.get("objective"):
             console.print(f"   [dim]Objective:[/dim] {step.get('objective', '')[:80]}...")
         console.print()
 
 
 @app.command()
 def recap(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
-    output: Optional[str] = typer.Option(None, "--output", "-o", help="Custom output path"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    output: str | None = typer.Option(None, "--output", "-o", help="Custom output path"),
 ):
     """
     Create conversation recap and session summary.
@@ -2149,8 +2270,8 @@ def recap(
 
 @app.command(name="recap-and-review")
 def recap_and_review(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
-    output: Optional[str] = typer.Option(None, "--output", "-o", help="Custom output path"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    output: str | None = typer.Option(None, "--output", "-o", help="Custom output path"),
 ):
     """
     Capture mindspace and generate review PDF.
@@ -2169,8 +2290,8 @@ def recap_and_review(
 
 @app.command(name="science-bitch")
 def science_bitch(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
-    hypothesis: Optional[str] = typer.Option(None, "--hypothesis", "-h", help="Hypothesis statement"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    hypothesis: str | None = typer.Option(None, "--hypothesis", "-h", help="Hypothesis statement"),
     run: bool = typer.Option(False, "--run", "-r", help="Run experiment"),
     report: bool = typer.Option(False, "--report", help="Generate report"),
     field_guide: bool = typer.Option(False, "--field-guide", help="Generate field guide PDF"),
@@ -2230,29 +2351,36 @@ def science_bitch(
 
 @app.command(name="work-efforts")
 def work_efforts(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
-    output: Optional[str] = typer.Option(None, "--output", "-o", help="Output HTML file path (default: _work_efforts/work_dashboard.html)"),
-    limit: Optional[int] = typer.Option(None, "--limit", "-l", help="Maximum work efforts to process (default: 100)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    output: str | None = typer.Option(
+        None,
+        "--output",
+        "-o",
+        help="Output HTML file path (default: _work_efforts/work_dashboard.html)",
+    ),
+    limit: int | None = typer.Option(
+        None, "--limit", "-l", help="Maximum work efforts to process (default: 100)"
+    ),
     no_open: bool = typer.Option(False, "--no-open", help="Don't open browser automatically"),
 ):
     """
     Generate interactive HTML dashboard with polymorphic action buttons for work efforts.
-    
+
     Creates a beautiful neumorphic-styled dashboard that intelligently analyzes
     work efforts and projects, then generates context-aware action buttons.
     Click buttons to copy commands to clipboard for execution in Cursor.
     """
     project_path = resolve_project_path(path)
-    
+
     import subprocess
     import sys
-    
+
     script_path = project_path / "scripts" / "work_dashboard.py"
-    
+
     if not script_path.exists():
         console.print(f"[red]❌ Script not found: {script_path}[/red]")
         raise typer.Exit(1)
-    
+
     # Build command
     cmd = [sys.executable, str(script_path)]
     if output:
@@ -2261,80 +2389,95 @@ def work_efforts(
         cmd.extend(["--limit", str(limit)])
     if no_open:
         cmd.append("--no-open")
-    
+
     # Run script
     console.print("\n[bold cyan]📊 Generating Work Dashboard...[/bold cyan]\n")
     result = subprocess.run(cmd, cwd=str(project_path))
-    
+
     if result.returncode != 0:
         raise typer.Exit(result.returncode)
 
 
 @app.command(name="auto-work")
 def auto_work(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
-    dry_run: bool = typer.Option(False, "--dry-run", help="Show what would be done without executing"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    dry_run: bool = typer.Option(
+        False, "--dry-run", help="Show what would be done without executing"
+    ),
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Verbose output"),
 ):
     """
     Think about work efforts, pick the best one, and execute it autonomously.
-    
+
     Analyzes all work efforts, calculates priorities, selects the best one,
     determines the best action, and executes it. The AI will then execute
     the selected work effort action directly.
     """
     project_path = resolve_project_path(path)
-    
-    import subprocess
-    import sys
+
     import json
     import re
-    
+    import subprocess
+    import sys
+
     script_path = project_path / "scripts" / "auto_work.py"
-    
+
     if not script_path.exists():
         console.print(f"[red]❌ Script not found: {script_path}[/red]")
         raise typer.Exit(1)
-    
+
     # Build command
     cmd = [sys.executable, str(script_path), "--path", str(project_path)]
     if dry_run:
         cmd.append("--dry-run")
     if verbose:
         cmd.append("--verbose")
-    
+
     # Run script and capture output
     result = subprocess.run(cmd, cwd=str(project_path), capture_output=True, text=True)
-    
+
     # Print output
     console.print(result.stdout)
     if result.stderr:
         console.print(f"[yellow]{result.stderr}[/yellow]")
-    
+
     # If not dry-run, try to extract execution instruction for AI
     if not dry_run and result.returncode == 0:
         # Extract JSON from output
-        json_match = re.search(r'AUTO-WORK RESULT \(JSON\):.*?=+\s*\n(.*?)\n=+', result.stdout, re.DOTALL)
+        json_match = re.search(
+            r"AUTO-WORK RESULT \(JSON\):.*?=+\s*\n(.*?)\n=+", result.stdout, re.DOTALL
+        )
         if json_match:
             try:
                 output_data = json.loads(json_match.group(1))
-                execution_cmd = output_data.get('execution_instruction', '')
+                execution_cmd = output_data.get("execution_instruction", "")
                 if execution_cmd:
-                    console.print(f"\n[bold cyan]🤖 AI: I will now execute:[/bold cyan] {execution_cmd}\n")
+                    console.print(
+                        f"\n[bold cyan]🤖 AI: I will now execute:[/bold cyan] {execution_cmd}\n"
+                    )
             except json.JSONDecodeError:
                 pass
-    
+
     if result.returncode != 0:
         raise typer.Exit(result.returncode)
 
 
 @app.command()
 def improve(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
-    focus: Optional[str] = typer.Option(None, "--focus", "-f", help="Focus area (file path, work effort, or 'all')"),
-    category: Optional[str] = typer.Option(None, "--category", "-c", help="Filter by category (code, documentation, architecture, testing, performance, usability)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    focus: str | None = typer.Option(
+        None, "--focus", "-f", help="Focus area (file path, work effort, or 'all')"
+    ),
+    category: str | None = typer.Option(
+        None,
+        "--category",
+        "-c",
+        help="Filter by category (code, documentation, architecture, testing, performance, usability)",
+    ),
     recent_only: bool = typer.Option(False, "--recent", "-r", help="Only analyze recent changes"),
-    output: Optional[str] = typer.Option(None, "--output", "-o", help="Save improvement report to file"),
+    output: str | None = typer.Option(
+        None, "--output", "-o", help="Save improvement report to file"
+    ),
 ):
     """
     Analyze work and suggest improvements.
@@ -2353,15 +2496,14 @@ def improve(
         output_path = Path(output)
 
     result = improve_manager.run_improve(
-        focus=focus,
-        category=category,
-        recent_only=recent_only,
-        output_path=output_path
+        focus=focus, category=category, recent_only=recent_only, output_path=output_path
     )
 
     if result["success"]:
         summary = result["summary"]
-        console.print(f"\n[green]✅[/green] Analysis complete: {summary['total']} improvements identified")
+        console.print(
+            f"\n[green]✅[/green] Analysis complete: {summary['total']} improvements identified"
+        )
         if summary["top_3"]:
             console.print(f"[dim]Top priority: {summary['top_3'][0]['title']}[/dim]")
     else:
@@ -2371,9 +2513,11 @@ def improve(
 
 @app.command()
 def celebrate(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
-    achievement: Optional[str] = typer.Option(None, "--achievement", "-a", help="What was accomplished"),
-    message: Optional[str] = typer.Option(None, "--message", "-m", help="Custom celebration message"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    achievement: str | None = typer.Option(
+        None, "--achievement", "-a", help="What was accomplished"
+    ),
+    message: str | None = typer.Option(None, "--message", "-m", help="Custom celebration message"),
     no_print: bool = typer.Option(False, "--no-print", help="Don't print PDF, just generate it"),
 ):
     """
@@ -2388,13 +2532,11 @@ def celebrate(
 
     celebrate_manager = CelebrateManager(project_path)
     pdf_path = celebrate_manager.celebrate(
-        achievement=achievement,
-        message=message,
-        print_pdf=not no_print
+        achievement=achievement, message=message, print_pdf=not no_print
     )
 
     if pdf_path:
-        console.print(f"\n[green]✅ Celebration PDF ready![/green]")
+        console.print("\n[green]✅ Celebration PDF ready![/green]")
         console.print(f"[dim]Location: {pdf_path.relative_to(project_path)}[/dim]")
     else:
         console.print("[red]❌ Failed to generate celebration PDF[/red]")
@@ -2403,8 +2545,8 @@ def celebrate(
 
 @app.command()
 def audit(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
-    output: Optional[str] = typer.Option(None, "--output", "-o", help="Custom output path"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    output: str | None = typer.Option(None, "--output", "-o", help="Custom output path"),
 ):
     """
     Audit the conversation - analyze quality, completeness, issues, and improvements.
@@ -2422,8 +2564,10 @@ def audit(
 
 @app.command()
 def proceed(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
-    focus: Optional[str] = typer.Option(None, "--focus", "-f", help="Focus area: assumptions, ambiguity, context"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    focus: str | None = typer.Option(
+        None, "--focus", "-f", help="Focus area: assumptions, ambiguity, context"
+    ),
     strict: bool = typer.Option(False, "--strict", "-s", help="Ask questions before proceeding"),
     relaxed: bool = typer.Option(False, "--relaxed", "-r", help="Proceed with best understanding"),
 ):
@@ -2448,10 +2592,16 @@ def proceed(
 
 @app.command()
 def check_assumptions(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
-    focus: Optional[str] = typer.Option(None, "--focus", "-f", help="Focus area: code, dependencies, data, system, behavioral"),
-    critical_only: bool = typer.Option(False, "--critical", "-c", help="Only check critical assumptions"),
-    test: bool = typer.Option(False, "--test", "-t", help="Run experiments for assumptions needing testing"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    focus: str | None = typer.Option(
+        None, "--focus", "-f", help="Focus area: code, dependencies, data, system, behavioral"
+    ),
+    critical_only: bool = typer.Option(
+        False, "--critical", "-c", help="Only check critical assumptions"
+    ),
+    test: bool = typer.Option(
+        False, "--test", "-t", help="Run experiments for assumptions needing testing"
+    ),
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed evidence traces"),
 ):
     """
@@ -2477,9 +2627,11 @@ def check_assumptions(
 @app.command()
 def final_report(
     title: str = typer.Option("Final Report", "--title", "-t", help="Report title"),
-    subtitle: Optional[str] = typer.Option(None, "--subtitle", "-s", help="Report subtitle"),
-    output_name: Optional[str] = typer.Option(None, "--output", "-o", help="Output filename (without extension)"),
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    subtitle: str | None = typer.Option(None, "--subtitle", "-s", help="Report subtitle"),
+    output_name: str | None = typer.Option(
+        None, "--output", "-o", help="Output filename (without extension)"
+    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """
     Generate a comprehensive final report PDF using the Science Textbook LaTeX template.
@@ -2488,35 +2640,35 @@ def final_report(
     """
     project_path = resolve_project_path(path)
 
-    console.print(f"\n[bold cyan]📚 Waft[/bold cyan] - Generating Final Report\n")
+    console.print("\n[bold cyan]📚 Waft[/bold cyan] - Generating Final Report\n")
 
     from .core.final_report import FinalReportGenerator
 
     try:
         generator = FinalReportGenerator(project_path)
 
-        console.print(f"[yellow]→[/yellow] Gathering session data...")
+        console.print("[yellow]→[/yellow] Gathering session data...")
         pdf_path = generator.generate_report(
-            title=title,
-            subtitle=subtitle,
-            output_name=output_name
+            title=title, subtitle=subtitle, output_name=output_name
         )
 
-        console.print(f"\n[green]✅[/green] Final report generated successfully!")
+        console.print("\n[green]✅[/green] Final report generated successfully!")
         console.print(f"   Location: {pdf_path}")
-        console.print(f"   PDF opened in default viewer")
+        console.print("   PDF opened in default viewer")
 
         _process_tavern_hook(project_path, "final_report", True)
 
     except FileNotFoundError as e:
         console.print(f"[red]❌[/red] Error: {e}")
-        console.print(f"[dim]Science Textbook template not found. Expected at: {project_path / '_science_textbook' / 'stb-template.tex'}[/dim]")
+        console.print(
+            f"[dim]Science Textbook template not found. Expected at: {project_path / '_science_textbook' / 'stb-template.tex'}[/dim]"
+        )
         _process_tavern_hook(project_path, "final_report", False)
     except RuntimeError as e:
         console.print(f"[red]❌[/red] LaTeX compilation failed: {e}")
-        console.print(f"[dim]Make sure pdflatex is installed:[/dim]")
-        console.print(f"[dim]  macOS: brew install --cask mactex[/dim]")
-        console.print(f"[dim]  Linux: sudo apt-get install texlive-full[/dim]")
+        console.print("[dim]Make sure pdflatex is installed:[/dim]")
+        console.print("[dim]  macOS: brew install --cask mactex[/dim]")
+        console.print("[dim]  Linux: sudo apt-get install texlive-full[/dim]")
         _process_tavern_hook(project_path, "final_report", False)
     except Exception as e:
         console.print(f"[red]❌[/red] Error generating report: {e}")
@@ -2525,12 +2677,12 @@ def final_report(
 
 @app.command()
 def validate_empirica(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     fix: bool = typer.Option(False, "--fix", "-f", help="Attempt to fix issues automatically"),
 ):
     """
     Run preflight validation checks on Empirica setup.
-    
+
     Validates:
     - Git repository initialization
     - Empirica initialization
@@ -2539,61 +2691,75 @@ def validate_empirica(
     - Session creation capability
     """
     project_path = resolve_project_path(path)
-    
-    console.print(f"\n[bold cyan]🔍 Waft[/bold cyan] - Empirica Validation\n")
-    
-    from .core.empirica import EmpiricaManager
+
+    console.print("\n[bold cyan]🔍 Waft[/bold cyan] - Empirica Validation\n")
+
     from rich.table import Table
-    from rich.panel import Panel
-    
+
+    from .core.empirica import EmpiricaManager
+
     empirica = EmpiricaManager(project_path)
-    
+
     console.print("[yellow]→[/yellow] Running validation checks...")
     validation = empirica.validate_setup()
-    
+
     # Create validation table
-    table = Table(title="Empirica Validation Results", show_header=True, header_style="bold magenta")
+    table = Table(
+        title="Empirica Validation Results", show_header=True, header_style="bold magenta"
+    )
     table.add_column("Check", style="cyan")
     table.add_column("Status", style="yellow")
     table.add_column("Details", style="dim")
-    
+
     # Git check
     git_status = "✅" if validation["git_initialized"] else "❌"
-    table.add_row("Git Initialized", git_status, "Required for Empirica" if validation["git_initialized"] else "Not initialized")
-    
+    table.add_row(
+        "Git Initialized",
+        git_status,
+        "Required for Empirica" if validation["git_initialized"] else "Not initialized",
+    )
+
     # Empirica check
     empirica_status = "✅" if validation["empirica_initialized"] else "⚠️"
-    table.add_row("Empirica Initialized", empirica_status, "Ready" if validation["empirica_initialized"] else "Will auto-initialize")
-    
+    table.add_row(
+        "Empirica Initialized",
+        empirica_status,
+        "Ready" if validation["empirica_initialized"] else "Will auto-initialize",
+    )
+
     # CLI check
     cli_status = "✅" if validation["cli_available"] else "❌"
     cli_details = validation["cli_version"] or "Not available"
     table.add_row("CLI Available", cli_status, cli_details)
-    
+
     # Project check
     project_status = "✅" if validation["project_exists"] else "⚠️"
     project_details = validation["project_id"] or "Will auto-create"
     table.add_row("Project Exists", project_status, project_details)
-    
+
     # Session check
     session_status = "✅" if validation["session_creatable"] else "⚠️"
-    table.add_row("Session Creation", session_status, "Working" if validation["session_creatable"] else "May fail")
-    
+    table.add_row(
+        "Session Creation",
+        session_status,
+        "Working" if validation["session_creatable"] else "May fail",
+    )
+
     console.print("\n")
     console.print(table)
-    
+
     # Show errors
     if validation["errors"]:
         console.print("\n[bold red]❌ Errors:[/bold red]")
         for error in validation["errors"]:
             console.print(f"  • {error}")
-    
+
     # Show warnings
     if validation["warnings"]:
         console.print("\n[bold yellow]⚠️  Warnings:[/bold yellow]")
         for warning in validation["warnings"]:
             console.print(f"  • {warning}")
-    
+
     # Overall status
     if validation["ready"]:
         console.print("\n[bold green]✅ Empirica is ready![/bold green]")
@@ -2607,7 +2773,9 @@ def validate_empirica(
                 if result.get("ready"):
                     console.print("[green]✅ Fixed! Empirica is now ready.[/green]")
                 else:
-                    console.print(f"[red]❌ Could not fix: {result.get('message', 'Unknown error')}[/red]")
+                    console.print(
+                        f"[red]❌ Could not fix: {result.get('message', 'Unknown error')}[/red]"
+                    )
             except RuntimeError as e:
                 console.print(f"[red]❌ Fix failed: {e}[/red]")
         else:
@@ -2617,9 +2785,11 @@ def validate_empirica(
 
 @app.command()
 def oracle(
-    question: Optional[str] = typer.Argument(None, help="Question or context for guidance"),
-    assess: Optional[str] = typer.Option(None, "--assess", "-a", help="Assess a decision (provide description)"),
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    question: str | None = typer.Argument(None, help="Question or context for guidance"),
+    assess: str | None = typer.Option(
+        None, "--assess", "-a", help="Assess a decision (provide description)"
+    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """
     Consult TheOracle for epistemic insights and guidance.
@@ -2629,21 +2799,23 @@ def oracle(
     """
     project_path = resolve_project_path(path)
 
-    console.print(f"\n[bold cyan]🔮 Waft[/bold cyan] - Consulting TheOracle\n")
+    console.print("\n[bold cyan]🔮 Waft[/bold cyan] - Consulting TheOracle\n")
+
+    from rich.table import Table
 
     from .core.science import TheOracle
-    from rich.table import Table
 
     try:
         # TheOracle will FORCE Empirica to be ready - no degraded mode
         # It will raise RuntimeError if Empirica cannot be initialized
         console.print("[yellow]→[/yellow] Ensuring Empirica is ready...")
-        
+
         # Load personality if available
         from .core.science.oracle_personality_tools import PersonalityManager
+
         personality_manager = PersonalityManager(project_path)
         personality = personality_manager.load_personality()
-        
+
         oracle = TheOracle(project_path, ai_id="claude-code", personality=personality)
 
         # Get epistemic state (Empirica is guaranteed to be ready)
@@ -2672,8 +2844,16 @@ def oracle(
         table.add_column("Interpretation", style="dim")
 
         table.add_row("Knowledge", f"{know:.0%}", "What we know" if know > 0.5 else "Low knowledge")
-        table.add_row("Uncertainty", f"{uncertainty:.0%}", "High uncertainty" if uncertainty > 0.5 else "Low uncertainty")
-        table.add_row("Engagement", f"{engagement:.0%}", "Active engagement" if engagement > 0.5 else "Low engagement")
+        table.add_row(
+            "Uncertainty",
+            f"{uncertainty:.0%}",
+            "High uncertainty" if uncertainty > 0.5 else "Low uncertainty",
+        )
+        table.add_row(
+            "Engagement",
+            f"{engagement:.0%}",
+            "Active engagement" if engagement > 0.5 else "Low engagement",
+        )
 
         console.print("\n")
         console.print(table)
@@ -2712,11 +2892,9 @@ def oracle(
         if assess:
             # Decision assessment
             console.print(f"\n[yellow]→[/yellow] Assessing decision: {assess}")
-            assessment = oracle.assess_decision({
-                "description": assess,
-                "scope": "medium",
-                "type": "implementation"
-            })
+            assessment = oracle.assess_decision(
+                {"description": assess, "scope": "medium", "type": "implementation"}
+            )
 
             gate_result = assessment.get("gate_result", "UNKNOWN")
             if gate_result == "PROCEED":
@@ -2727,21 +2905,23 @@ def oracle(
                 gate_color = "red"
 
             # Apply personality to recommendation display
-            recommendation = assessment.get('recommendation', 'No recommendation')
+            recommendation = assessment.get("recommendation", "No recommendation")
             personality_info = oracle.get_personality_info()
             transition = oracle.personality.get_transition()
-            
-            console.print(f"\n[bold]Decision Assessment:[/bold]")
+
+            console.print("\n[bold]Decision Assessment:[/bold]")
             console.print(f"  Gate Result: [{gate_color}]{gate_result}[/{gate_color}]")
-            
+
             if transition and transition != "Consider this...":
                 console.print(f"  [dim]{transition}[/dim]")
-            
-            console.print(Panel(
-                recommendation,
-                title=f"Recommendation from {personality_info['name']}",
-                border_style="cyan"
-            ))
+
+            console.print(
+                Panel(
+                    recommendation,
+                    title=f"Recommendation from {personality_info['name']}",
+                    border_style="cyan",
+                )
+            )
 
         elif question:
             # Specific question
@@ -2749,24 +2929,28 @@ def oracle(
             greeting = oracle.personality.get_greeting()
             if greeting and greeting != "I see...":
                 console.print(f"\n[dim italic]{greeting}[/dim italic]")
-            
+
             console.print(f"\n[yellow]→[/yellow] Seeking guidance: {question}")
             guidance = oracle.provide_guidance(question)
 
             console.print("\n[bold cyan]🔮 Oracle Guidance:[/bold cyan]")
-            
+
             recommendation = guidance.get("recommendation", "No recommendation available")
             transition = oracle.personality.get_transition()
             if transition and transition != "Consider this...":
                 console.print(f"[dim]{transition}[/dim]")
-            
-            console.print(Panel(
-                recommendation,
-                title=f"Guidance from {personality_info['name']}",
-                border_style="cyan"
-            ))
 
-            console.print(f"\n[dim]Knowledge Coverage: {guidance.get('knowledge_coverage', 0):.0%}[/dim]")
+            console.print(
+                Panel(
+                    recommendation,
+                    title=f"Guidance from {personality_info['name']}",
+                    border_style="cyan",
+                )
+            )
+
+            console.print(
+                f"\n[dim]Knowledge Coverage: {guidance.get('knowledge_coverage', 0):.0%}[/dim]"
+            )
             console.print(f"[dim]Phase: {guidance.get('epistemic_phase', 'UNKNOWN')}[/dim]")
         else:
             # General guidance
@@ -2774,24 +2958,31 @@ def oracle(
             greeting = oracle.personality.get_greeting()
             if greeting and greeting != "I see...":
                 console.print(f"\n[dim italic]{greeting}[/dim italic]")
-            
+
             console.print("\n[yellow]→[/yellow] Seeking general guidance...")
-            
+
             # Show thinking process
-            from .core.science.oracle_thinking import display_oracle_thinking, display_thinking_step_by_step
-            
+            from .core.science.oracle_thinking import (
+                display_oracle_thinking,
+                display_thinking_step_by_step,
+            )
+
             console.print("\n[bold cyan]🧠 TheOracle is thinking...[/bold cyan]\n")
-            
+
             # Step-by-step thinking display
             thinking_data = {}
-            
-            def thinking_callback(step: str, data: Dict[str, Any]) -> None:
+
+            def thinking_callback(step: str, data: dict[str, Any]) -> None:
                 """Callback to capture thinking steps."""
                 thinking_data[step] = data
                 display_thinking_step_by_step(console, step, data, delay=0.3)
-            
-            guidance = oracle.provide_guidance("What should we focus on next?", show_thinking=True, thinking_callback=thinking_callback)
-            
+
+            guidance = oracle.provide_guidance(
+                "What should we focus on next?",
+                show_thinking=True,
+                thinking_callback=thinking_callback,
+            )
+
             # Display full thinking dashboard
             console.print("\n")
             display_oracle_thinking(
@@ -2804,61 +2995,73 @@ def oracle(
                 guidance.get("check", {}),
                 guidance.get("epistemic_state", {}),
                 guidance.get("postflight"),
-                guidance.get("storage_info")
+                guidance.get("storage_info"),
             )
             console.print("\n")
 
             console.print("\n[bold cyan]🔮 Oracle Guidance:[/bold cyan]")
-            
+
             # Display Empirica workflow results
             preflight = guidance.get("preflight", {})
             if preflight:
                 know = preflight.get("know", 0.0)
                 uncertainty = preflight.get("uncertainty", 1.0)
-                console.print(f"\n[dim]📊 Preflight: KNOW={know:.0%} ({preflight.get('know_level', 'Unknown')}), UNCERTAINTY={uncertainty:.0%} ({preflight.get('uncertainty_level', 'Unknown')})[/dim]")
+                console.print(
+                    f"\n[dim]📊 Preflight: KNOW={know:.0%} ({preflight.get('know_level', 'Unknown')}), UNCERTAINTY={uncertainty:.0%} ({preflight.get('uncertainty_level', 'Unknown')})[/dim]"
+                )
                 if preflight.get("investigate_required"):
-                    console.print(f"[dim]   → INVESTIGATE REQUIRED[/dim]")
-            
+                    console.print("[dim]   → INVESTIGATE REQUIRED[/dim]")
+
             check = guidance.get("check", {})
             if check:
                 confidence = check.get("confidence", 0.0)
                 decision = check.get("decision", "UNKNOWN")
-                console.print(f"[dim]✅ Check: CONFIDENCE={confidence:.0%}, DECISION={decision}[/dim]")
-            
+                console.print(
+                    f"[dim]✅ Check: CONFIDENCE={confidence:.0%}, DECISION={decision}[/dim]"
+                )
+
             # Display reflection if available
             reflection = guidance.get("reflection")
             if reflection and reflection.get("reflection_summary"):
                 console.print(f"\n[dim]💭 Reflection: {reflection['reflection_summary']}[/dim]")
                 if reflection.get("relevant_experiences"):
                     exp_count = len(reflection["relevant_experiences"])
-                    console.print(f"[dim]   ({exp_count} relevant past experiences considered)[/dim]")
-            
+                    console.print(
+                        f"[dim]   ({exp_count} relevant past experiences considered)[/dim]"
+                    )
+
             postflight = guidance.get("postflight", {})
             if postflight and postflight.get("guidance_provided"):
-                console.print(f"[dim]📈 Postflight: Guidance provided, learning tracked[/dim]")
-            
+                console.print("[dim]📈 Postflight: Guidance provided, learning tracked[/dim]")
+
             recommendation = guidance.get("recommendation", "No recommendation available")
             transition = oracle.personality.get_transition()
             if transition and transition != "Consider this...":
                 console.print(f"[dim]{transition}[/dim]")
-            
-            console.print(Panel(
-                recommendation,
-                title=f"Guidance from {personality_info['name']}",
-                border_style="cyan"
-            ))
 
-            console.print(f"\n[dim]Knowledge Coverage: {guidance.get('knowledge_coverage', 0):.0%}[/dim]")
+            console.print(
+                Panel(
+                    recommendation,
+                    title=f"Guidance from {personality_info['name']}",
+                    border_style="cyan",
+                )
+            )
+
+            console.print(
+                f"\n[dim]Knowledge Coverage: {guidance.get('knowledge_coverage', 0):.0%}[/dim]"
+            )
             console.print(f"[dim]Phase: {guidance.get('epistemic_phase', 'UNKNOWN')}[/dim]")
-        
+
         # Show personality conclusion
         conclusion = oracle.personality.get_conclusion()
         if conclusion and conclusion != "The path forward is clear.":
             console.print(f"\n[dim italic]{conclusion}[/dim italic]")
-        
+
         # Display personality info
         personality_info = oracle.get_personality_info()
-        console.print(f"\n[dim]Oracle: {personality_info['name']} ({personality_info['type']})[/dim]")
+        console.print(
+            f"\n[dim]Oracle: {personality_info['name']} ({personality_info['type']})[/dim]"
+        )
 
         _process_tavern_hook(project_path, "oracle", True)
 
@@ -2866,7 +3069,7 @@ def oracle(
         error_msg = str(e)
         console.print(f"[red]❌ Empirica Error: {error_msg}[/red]")
         console.print("\n[dim]The Oracle requires Empirica to be fully functional.[/dim]")
-        
+
         # Provide specific guidance based on error
         if "Git not available" in error_msg:
             console.print("\n[bold yellow]Fix:[/bold yellow]")
@@ -2888,7 +3091,7 @@ def oracle(
             console.print("[dim]  1. Run: waft init (to initialize Empirica)[/dim]")
             console.print("[dim]  2. Verify: empirica --version[/dim]")
             console.print("[dim]  3. Try again: waft oracle[/dim]")
-        
+
         _process_tavern_hook(project_path, "oracle", False)
         raise typer.Exit(1)
     except Exception as e:
@@ -2899,84 +3102,88 @@ def oracle(
 
 @app.command()
 def oracle_journal(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     show: bool = typer.Option(False, "--show", "-s", help="Show recent journal entries"),
-    search: Optional[str] = typer.Option(None, "--search", help="Search journal and memory"),
+    search: str | None = typer.Option(None, "--search", help="Search journal and memory"),
     memory: bool = typer.Option(False, "--memory", "-m", help="Show memory summary"),
     patterns: bool = typer.Option(False, "--patterns", help="Show learned patterns"),
     limit: int = typer.Option(10, "--limit", "-l", help="Number of entries to show"),
 ):
     """
     View Oracle journal and memory.
-    
+
     The Oracle maintains its own journal of consultations, assessments, and learnings.
     """
     project_path = resolve_project_path(path)
-    
-    from .core.science.oracle_journal import OracleJournal
+
     from rich.table import Table
-    from rich.panel import Panel
-    
-    console.print(f"\n[bold cyan]📖 Waft[/bold cyan] - Oracle Journal & Memory\n")
-    
+
+    from .core.science.oracle_journal import OracleJournal
+
+    console.print("\n[bold cyan]📖 Waft[/bold cyan] - Oracle Journal & Memory\n")
+
     journal = OracleJournal(project_path)
-    
+
     # Show memory summary
     if memory or (not show and not search and not patterns):
         summary = journal.get_memory_summary()
-        
+
         console.print("[bold]Memory Summary[/bold]\n")
-        
+
         table = Table(show_header=True, header_style="bold magenta")
         table.add_column("Metric", style="cyan")
         table.add_column("Value", style="yellow")
-        
+
         table.add_row("Total Consultations", str(summary["total_consultations"]))
         table.add_row("Insights Remembered", str(summary["insights_count"]))
-        table.add_row("Successful Recommendations", str(summary["successful_recommendations_count"]))
+        table.add_row(
+            "Successful Recommendations", str(summary["successful_recommendations_count"])
+        )
         table.add_row("Epistemic History Points", str(summary["epistemic_history_length"]))
-        
+
         if summary["first_consultation"]:
             table.add_row("First Consultation", summary["first_consultation"][:10])
         if summary["last_consultation"]:
             table.add_row("Last Consultation", summary["last_consultation"][:10])
-        
+
         console.print(table)
-        
+
         # Learned patterns summary
         patterns_info = summary["learned_patterns"]
-        console.print(f"\n[bold]Learned Patterns[/bold]")
+        console.print("\n[bold]Learned Patterns[/bold]")
         console.print(f"  Question Keywords: {patterns_info['question_keywords']}")
         console.print(f"  Phase Recommendations: {patterns_info['phase_recommendations']}")
         console.print(f"  Gate Outcomes Tracked: {patterns_info['gate_outcomes']}")
-    
+
     # Show recent consultations
     if show:
         console.print(f"\n[bold]Recent Consultations[/bold] (last {limit})\n")
-        
+
         consultations = journal.get_recent_consultations(limit=limit)
-        
+
         if consultations:
             for i, consultation in enumerate(consultations, 1):
-                console.print(f"[bold]{i}. {consultation.get('question', 'No question')[:60]}[/bold]")
+                console.print(
+                    f"[bold]{i}. {consultation.get('question', 'No question')[:60]}[/bold]"
+                )
                 console.print(f"   Phase: {consultation.get('epistemic_phase', 'UNKNOWN')}")
                 console.print(f"   Coverage: {consultation.get('knowledge_coverage', 0):.0%}")
                 console.print(f"   Time: {consultation.get('timestamp', '')[:19]}")
                 console.print("")
         else:
             console.print("[dim]No consultations recorded yet.[/dim]")
-    
+
     # Search memory
     if search:
         console.print(f"\n[bold]Search Results for: '{search}'[/bold]\n")
-        
+
         results = journal.search_memory(search, limit=limit)
-        
+
         if results:
             for i, result in enumerate(results, 1):
                 result_type = result.get("type", "unknown")
                 content = result.get("content", "")
-                
+
                 console.print(f"[bold]{i}. [{result_type.upper()}] {content[:80]}[/bold]")
                 if result.get("impact"):
                     console.print(f"   Impact: {result.get('impact'):.2f}")
@@ -2986,72 +3193,73 @@ def oracle_journal(
                 console.print("")
         else:
             console.print("[dim]No results found.[/dim]")
-    
+
     # Show patterns
     if patterns:
-        console.print(f"\n[bold]Learned Patterns[/bold]\n")
-        
+        console.print("\n[bold]Learned Patterns[/bold]\n")
+
         # Top keywords
         top_keywords = journal.get_top_keywords(limit=10)
         if top_keywords:
             console.print("[bold]Top Question Keywords:[/bold]")
             for keyword, count in top_keywords:
                 console.print(f"  • {keyword}: {count} occurrences")
-        
+
         # Phase recommendations
         phase_recs = journal.patterns.get("phase_recommendations", {})
         if phase_recs:
-            console.print(f"\n[bold]Recommendations by Phase:[/bold]")
+            console.print("\n[bold]Recommendations by Phase:[/bold]")
             for phase, recs in phase_recs.items():
                 console.print(f"  {phase}: {len(recs)} recommendations")
                 if recs:
                     console.print(f"    Example: {recs[-1][:60]}...")
-        
+
         # Gate outcomes
         gate_outcomes = journal.patterns.get("gate_outcomes", {})
         if gate_outcomes:
-            console.print(f"\n[bold]Gate Outcomes:[/bold]")
+            console.print("\n[bold]Gate Outcomes:[/bold]")
             for gate, count in sorted(gate_outcomes.items(), key=lambda x: x[1], reverse=True):
                 console.print(f"  {gate}: {count} occurrences")
-    
+
     _process_tavern_hook(project_path, "oracle_journal", True)
 
 
 @app.command()
 def pantheon(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """
     Summon the ENTIRE PANTHEON to weigh in and pass judgment.
-    
+
     The Pantheon gathers to review evidence, discuss, and collectively determine
     what should be done next based on current state and context.
     """
     project_path = resolve_project_path(path)
-    
-    console.print(f"\n[bold gold1]⚡ Waft[/bold gold1] - Summoning The Pantheon\n")
-    
+
+    console.print("\n[bold gold1]⚡ Waft[/bold gold1] - Summoning The Pantheon\n")
+
     try:
         from .cli.pantheon_command import pantheon_command
+
         judgment = pantheon_command(project_path)
-        
+
         # Log to Empirica if available
         try:
             from .core.empirica import EmpiricaManager
+
             empirica = EmpiricaManager(project_path)
             if empirica.is_initialized():
                 primary = judgment.get("primary_focus", {})
                 entity = primary.get("entity", "Unknown")
                 recommendation = primary.get("recommendation", "")
                 empirica.log_finding(
-                    f"Pantheon judgment: {entity} recommends {recommendation[:100]}",
-                    impact=0.7
+                    f"Pantheon judgment: {entity} recommends {recommendation[:100]}", impact=0.7
                 )
         except Exception:
             pass
-        
+
         _process_tavern_hook(project_path, "pantheon", True, {"judgment": judgment})
-        
+
     except Exception as e:
         console.print(f"[red]❌ Error summoning Pantheon: {e}[/red]")
         _process_tavern_hook(project_path, "pantheon", False)
@@ -3061,13 +3269,23 @@ def pantheon(
 @app.command()
 def tell_story(
     story: str = typer.Argument(..., help="Story input (text, can be multi-line)"),
-    title: Optional[str] = typer.Option(None, "--title", "-t", help="PDF title (default: auto-generated)"),
-    style: str = typer.Option("premium", "--style", "-s", help="PDF style (premium/clinical_standard/professional)"),
-    narrative_style: str = typer.Option("medium", "--narrative", "-n", help="Narrative style (simple/medium)"),
-    structure: str = typer.Option("linear", "--structure", help="Story structure (linear/three_act)"),
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    title: str | None = typer.Option(
+        None, "--title", "-t", help="PDF title (default: auto-generated)"
+    ),
+    style: str = typer.Option(
+        "premium", "--style", "-s", help="PDF style (premium/clinical_standard/professional)"
+    ),
+    narrative_style: str = typer.Option(
+        "medium", "--narrative", "-n", help="Narrative style (simple/medium)"
+    ),
+    structure: str = typer.Option(
+        "linear", "--structure", help="Story structure (linear/three_act)"
+    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     no_oracle: bool = typer.Option(False, "--no-oracle", help="Skip Oracle insights"),
-    output: Optional[str] = typer.Option(None, "--output", "-o", help="Output PDF path (default: auto-generated)"),
+    output: str | None = typer.Option(
+        None, "--output", "-o", help="Output PDF path (default: auto-generated)"
+    ),
 ):
     """
     Tell a story using TheOracle, Storyteller, and TavernKeeper.
@@ -3077,11 +3295,12 @@ def tell_story(
     """
     project_path = resolve_project_path(path)
 
-    console.print(f"\n[bold cyan]📖 Waft[/bold cyan] - Telling Your Story\n")
+    console.print("\n[bold cyan]📖 Waft[/bold cyan] - Telling Your Story\n")
+
+    import subprocess
+    from pathlib import Path
 
     from .core.campfire import TheCampfire
-    from pathlib import Path
-    import subprocess
 
     try:
         # Use TheCampfire to gather around the campfire
@@ -3098,7 +3317,7 @@ def tell_story(
             narrative_style=narrative_style,
             structure=structure,
             include_oracle=not no_oracle,
-            save_story=True
+            save_story=True,
         )
 
         pdf_path = Path(result["pdf_path"])
@@ -3108,7 +3327,9 @@ def tell_story(
         console.print(f"[green]✓[/green] PDF generated: {pdf_path}")
 
         if result.get("oracle_insights"):
-            console.print(f"[green]✓[/green] Oracle insights included (Phase: {result['oracle_insights']['phase']})")
+            console.print(
+                f"[green]✓[/green] Oracle insights included (Phase: {result['oracle_insights']['phase']})"
+            )
 
         # Open PDF
         console.print("[yellow]→[/yellow] Opening PDF...")
@@ -3116,7 +3337,7 @@ def tell_story(
             subprocess.run(["open", str(pdf_path)], check=True)
             console.print("[green]✓[/green] PDF opened")
         except subprocess.CalledProcessError:
-            console.print(f"[yellow]⚠️[/yellow]  Could not open PDF automatically")
+            console.print("[yellow]⚠️[/yellow]  Could not open PDF automatically")
             console.print(f"[dim]PDF saved at: {pdf_path}[/dim]")
         except FileNotFoundError:
             # Try alternative on Linux
@@ -3124,20 +3345,25 @@ def tell_story(
                 subprocess.run(["xdg-open", str(pdf_path)], check=True)
                 console.print("[green]✓[/green] PDF opened")
             except (subprocess.CalledProcessError, FileNotFoundError):
-                console.print(f"[yellow]⚠️[/yellow]  Could not open PDF automatically")
+                console.print("[yellow]⚠️[/yellow]  Could not open PDF automatically")
                 console.print(f"[dim]PDF saved at: {pdf_path}[/dim]")
 
         # Process TavernKeeper hook
-        _process_tavern_hook(project_path, "tell_story", True, {
-            "pdf_path": str(pdf_path),
-            "story_id": story_metadata["id"],
-            "title": story_metadata["title"],
-            "style": style
-        })
+        _process_tavern_hook(
+            project_path,
+            "tell_story",
+            True,
+            {
+                "pdf_path": str(pdf_path),
+                "story_id": story_metadata["id"],
+                "title": story_metadata["title"],
+                "style": style,
+            },
+        )
 
-        console.print(f"\n[bold green]✅ Story complete![/bold green]")
+        console.print("\n[bold green]✅ Story complete![/bold green]")
         console.print(f"[dim]PDF: {pdf_path}[/dim]")
-        console.print(f"[dim]Story saved to campfire. Start with: waft campfire[/dim]")
+        console.print("[dim]Story saved to campfire. Start with: waft campfire[/dim]")
 
     except Exception as e:
         console.print(f"\n[bold red]❌ Error:[/bold red] {e}")
@@ -3148,10 +3374,19 @@ def tell_story(
 
 @app.command(name="print-pdf")
 def print_pdf(
-    force_create: bool = typer.Option(False, "--force-create", help="Force creation of new PDF even if relevant one exists"),
-    no_print: bool = typer.Option(False, "--no-print", help="Generate but don't print (preview only)"),
-    style: str = typer.Option("clinical_standard", "--style", "-s", help="PDF style (clinical_standard/premium/professional)"),
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    force_create: bool = typer.Option(
+        False, "--force-create", help="Force creation of new PDF even if relevant one exists"
+    ),
+    no_print: bool = typer.Option(
+        False, "--no-print", help="Generate but don't print (preview only)"
+    ),
+    style: str = typer.Option(
+        "clinical_standard",
+        "--style",
+        "-s",
+        help="PDF style (clinical_standard/premium/professional)",
+    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """
     Print most relevant PDF or create evolved PDF using WAFT.
@@ -3162,13 +3397,14 @@ def print_pdf(
     """
     project_path = resolve_project_path(path)
 
-    console.print(f"\n[bold cyan]🖨️  Waft[/bold cyan] - Print PDF\n")
+    console.print("\n[bold cyan]🖨️  Waft[/bold cyan] - Print PDF\n")
+
+    import platform
+    import subprocess
 
     from .core.pdf_discovery import PDFDiscovery
     from .core.pdf_evolution import PDFEvolution
     from .core.science import TheOracle
-    import subprocess
-    import platform
 
     try:
         # Gather context
@@ -3210,10 +3446,14 @@ def print_pdf(
             score = discovery.score_pdf(pdf_path, context)
 
             if score >= 0.5:  # Threshold for relevance
-                console.print(f"[green]✓[/green] Found relevant PDF: {pdf_path.name} (relevance: {score:.0%})")
+                console.print(
+                    f"[green]✓[/green] Found relevant PDF: {pdf_path.name} (relevance: {score:.0%})"
+                )
                 console.print(f"[dim]   Path: {pdf_path}[/dim]")
             else:
-                console.print(f"[yellow]⚠️[/yellow]  Found PDF but low relevance ({score:.0%}), creating new one...")
+                console.print(
+                    f"[yellow]⚠️[/yellow]  Found PDF but low relevance ({score:.0%}), creating new one..."
+                )
                 pdf_path = None
 
         # If no relevant PDF found, create evolved PDF
@@ -3230,7 +3470,6 @@ def print_pdf(
             console.print("[yellow]→[/yellow] Printing PDF...")
 
             # Use PDF class print method
-            from .pdf import PDF, PDFConfig
 
             # Create PDF instance to use print method
             # Note: We need to load the existing PDF or recreate it
@@ -3239,10 +3478,7 @@ def print_pdf(
             try:
                 if system == "Darwin":  # macOS
                     result = subprocess.run(
-                        ["lpr", str(pdf_path)],
-                        capture_output=True,
-                        text=True,
-                        check=False
+                        ["lpr", str(pdf_path)], capture_output=True, text=True, check=False
                     )
                 elif system == "Windows":
                     result = subprocess.run(
@@ -3250,23 +3486,20 @@ def print_pdf(
                         shell=True,
                         capture_output=True,
                         text=True,
-                        check=False
+                        check=False,
                     )
                 else:  # Linux
                     result = subprocess.run(
-                        ["lpr", str(pdf_path)],
-                        capture_output=True,
-                        text=True,
-                        check=False
+                        ["lpr", str(pdf_path)], capture_output=True, text=True, check=False
                     )
 
                 if result.returncode == 0:
-                    console.print(f"[green]✓[/green] PDF sent to printer!")
+                    console.print("[green]✓[/green] PDF sent to printer!")
                 else:
                     console.print(f"[yellow]⚠️[/yellow]  Print command returned: {result.stderr}")
                     console.print(f"[dim]PDF saved at: {pdf_path}[/dim]")
             except FileNotFoundError:
-                console.print(f"[yellow]⚠️[/yellow]  Print command not found. Please print manually:")
+                console.print("[yellow]⚠️[/yellow]  Print command not found. Please print manually:")
                 console.print(f"[dim]lpr {pdf_path}[/dim]")
             except Exception as e:
                 console.print(f"[yellow]⚠️[/yellow]  Print error: {e}")
@@ -3277,21 +3510,23 @@ def print_pdf(
         # Log to Oracle if available
         if oracle:
             try:
-                oracle.log_insight(
-                    f"Printed PDF: {pdf_path.name}",
-                    impact=0.3
-                )
+                oracle.log_insight(f"Printed PDF: {pdf_path.name}", impact=0.3)
             except Exception:
                 pass
 
         # Process TavernKeeper hook
-        _process_tavern_hook(project_path, "print_pdf", True, {
-            "pdf_path": str(pdf_path),
-            "created": not force_create and pdf_path and pdf_path.exists(),
-            "style": style
-        })
+        _process_tavern_hook(
+            project_path,
+            "print_pdf",
+            True,
+            {
+                "pdf_path": str(pdf_path),
+                "created": not force_create and pdf_path and pdf_path.exists(),
+                "style": style,
+            },
+        )
 
-        console.print(f"\n[bold green]✅ Complete![/bold green]")
+        console.print("\n[bold green]✅ Complete![/bold green]")
         console.print(f"[dim]PDF: {pdf_path}[/dim]")
 
     except Exception as e:
@@ -3303,8 +3538,10 @@ def print_pdf(
 
 @app.command(name="evolve-another-template")
 def evolve_another_template(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
-    template: Optional[str] = typer.Option(None, "--template", "-t", help="Template name (academic, field-guide, etc.)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    template: str | None = typer.Option(
+        None, "--template", "-t", help="Template name (academic, field-guide, etc.)"
+    ),
     list_templates: bool = typer.Option(False, "--list", "-l", help="List available templates"),
     all_templates: bool = typer.Option(False, "--all", "-a", help="Generate all templates"),
 ):
@@ -3346,8 +3583,10 @@ def evolve_another_template(
 
 @app.command(name="chronicler")
 def chronicler_start(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
-    reset_hour: int = typer.Option(5, "--reset-hour", help="Hour to reset daily cycle (default: 5 AM)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    reset_hour: int = typer.Option(
+        5, "--reset-hour", help="Hour to reset daily cycle (default: 5 AM)"
+    ),
 ):
     """
     Start TheChronicler - Self-monitoring system.
@@ -3366,8 +3605,10 @@ def chronicler_start(
     """
     project_path = resolve_project_path(path)
 
-    console.print(f"\n[bold cyan]📜[/bold cyan] [bold]TheChronicler[/bold]")
-    console.print(f"[dim]The Chronicler of All System Activity - Observing Genesis and Exodus[/dim]\n")
+    console.print("\n[bold cyan]📜[/bold cyan] [bold]TheChronicler[/bold]")
+    console.print(
+        "[dim]The Chronicler of All System Activity - Observing Genesis and Exodus[/dim]\n"
+    )
 
     from .core.chronicler import TheChronicler
 
@@ -3375,8 +3616,8 @@ def chronicler_start(
         chronicler = TheChronicler(project_path, reset_hour=reset_hour)
         chronicler.start()
 
-        console.print(f"[green]✅[/green] TheChronicler monitoring active")
-        console.print(f"[dim]Press Ctrl+C to stop[/dim]\n")
+        console.print("[green]✅[/green] TheChronicler monitoring active")
+        console.print("[dim]Press Ctrl+C to stop[/dim]\n")
 
         # Keep running until interrupted
         try:
@@ -3394,7 +3635,7 @@ def chronicler_start(
 
 @app.command(name="chronicler-stats")
 def chronicler_stats(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Show TheChronicler statistics."""
     project_path = resolve_project_path(path)
@@ -3405,7 +3646,7 @@ def chronicler_stats(
         chronicler = TheChronicler(project_path)
         stats = chronicler.get_stats()
 
-        console.print(f"\n[bold cyan]📊 TheChronicler Statistics[/bold cyan]\n")
+        console.print("\n[bold cyan]📊 TheChronicler Statistics[/bold cyan]\n")
         console.print(f"Date: {stats['date']}")
         console.print(f"Genesis (Created): {stats['genesis_count']}")
         console.print(f"Exodus (Deleted): {stats['exodus_count']}")
@@ -3420,7 +3661,7 @@ def chronicler_stats(
 
 @app.command(name="chronicler-report")
 def chronicler_report(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     hourly: bool = typer.Option(False, "--hourly", help="Generate hourly report for current hour"),
     daily: bool = typer.Option(False, "--daily", help="Generate daily report for today"),
 ):
@@ -3453,7 +3694,7 @@ def chronicler_report(
 
 @app.command()
 def campfire(
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     port: int = typer.Option(5000, "--port", help="Port to serve on (default: 5000)"),
     host: str = typer.Option("localhost", "--host", help="Host to bind to (default: localhost)"),
 ):
@@ -3467,8 +3708,8 @@ def campfire(
     """
     project_path = resolve_project_path(path)
 
-    console.print(f"\n[bold yellow]🔥[/bold yellow] [bold]TheCampfire[/bold]")
-    console.print(f"[dim]The Essence of Sitting Around a Campfire to Tell Stories[/dim]\n")
+    console.print("\n[bold yellow]🔥[/bold yellow] [bold]TheCampfire[/bold]")
+    console.print("[dim]The Essence of Sitting Around a Campfire to Tell Stories[/dim]\n")
 
     from .core.campfire import TheCampfire
 
@@ -3486,11 +3727,12 @@ def campfire(
 # RAG Chatbot Commands
 rag_app = typer.Typer(name="rag", help="RAG Chatbot - Query PDFs with AI")
 
+
 @rag_app.command("query")
 def rag_query(
     question: str = typer.Argument(..., help="Question to ask"),
-    pdfs: Optional[str] = typer.Option(None, "--pdfs", "-p", help="Comma-separated list of PDF paths"),
-    path: Optional[str] = typer.Option(None, "--path", help="Project path (default: current)"),
+    pdfs: str | None = typer.Option(None, "--pdfs", "-p", help="Comma-separated list of PDF paths"),
+    path: str | None = typer.Option(None, "--path", help="Project path (default: current)"),
 ):
     """
     Query RAG chatbot with a question.
@@ -3504,7 +3746,7 @@ def rag_query(
     try:
         from .rag import RAGChatbot
 
-        console.print(f"\n[bold cyan]🤖[/bold cyan] [bold]RAG Chatbot[/bold]\n")
+        console.print("\n[bold cyan]🤖[/bold cyan] [bold]RAG Chatbot[/bold]\n")
 
         chatbot = RAGChatbot(project_path=project_path)
 
@@ -3532,7 +3774,7 @@ def rag_query(
 @rag_app.command("index")
 def rag_index(
     pdfs: str = typer.Argument(..., help="Comma-separated list of PDF paths or directories"),
-    path: Optional[str] = typer.Option(None, "--path", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", help="Project path (default: current)"),
 ):
     """
     Index PDFs into the vector store.
@@ -3544,10 +3786,11 @@ def rag_index(
     project_path = resolve_project_path(path)
 
     try:
-        from .rag import RAGChatbot
         from pathlib import Path
 
-        console.print(f"\n[bold cyan]📚[/bold cyan] [bold]RAG Indexing[/bold]\n")
+        from .rag import RAGChatbot
+
+        console.print("\n[bold cyan]📚[/bold cyan] [bold]RAG Indexing[/bold]\n")
 
         chatbot = RAGChatbot(project_path=project_path)
 
@@ -3582,7 +3825,7 @@ def rag_index(
 
 @rag_app.command("ui")
 def rag_ui(
-    path: Optional[str] = typer.Option(None, "--path", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", help="Project path (default: current)"),
     port: int = typer.Option(7860, "--port", help="Port to serve on (default: 7860)"),
     host: str = typer.Option("0.0.0.0", "--host", help="Host to bind to (default: 0.0.0.0)"),
 ):
@@ -3595,7 +3838,6 @@ def rag_ui(
 
     try:
         import sys
-        from pathlib import Path
 
         # Add rag-chatbot to path
         rag_chatbot_path = project_path / "_integrations" / "rag-chatbot"
@@ -3603,10 +3845,10 @@ def rag_ui(
             sys.path.insert(0, str(rag_chatbot_path))
 
         from rag_chatbot import LocalRAGPipeline
-        from rag_chatbot.ui.ui import LocalChatbotUI
         from rag_chatbot.logger import Logger
+        from rag_chatbot.ui.ui import LocalChatbotUI
 
-        console.print(f"\n[bold cyan]🎨[/bold cyan] [bold]RAG Chatbot UI[/bold]\n")
+        console.print("\n[bold cyan]🎨[/bold cyan] [bold]RAG Chatbot UI[/bold]\n")
         console.print(f"[dim]Starting Gradio interface on http://{host}:{port}[/dim]\n")
 
         pipeline = LocalRAGPipeline(host="localhost")
@@ -3630,7 +3872,7 @@ def rag_ui(
 
 @rag_app.command("serve")
 def rag_serve(
-    path: Optional[str] = typer.Option(None, "--path", help="Project path (default: current)"),
+    path: str | None = typer.Option(None, "--path", help="Project path (default: current)"),
     port: int = typer.Option(7860, "--port", help="Port to serve on (default: 7860)"),
     host: str = typer.Option("0.0.0.0", "--host", help="Host to bind to (default: 0.0.0.0)"),
 ):
@@ -3653,85 +3895,94 @@ def dnd_scenario(
     lore: bool = typer.Option(False, "--lore", help="Focus on lore building"),
     resume: bool = typer.Option(False, "--resume", help="Resume from last scenario state"),
     party_state: bool = typer.Option(False, "--party-state", help="Show current party state"),
-    crystallize: bool = typer.Option(False, "--crystallize", help="Freeze current state as new initial state"),
-    restore_initial: bool = typer.Option(False, "--restore-initial", help="Restore crystallized initial state"),
-    experiment: Optional[str] = typer.Option(None, "--experiment", help="Experiment ID"),
-    iteration: Optional[int] = typer.Option(None, "--iteration", help="Iteration number"),
+    crystallize: bool = typer.Option(
+        False, "--crystallize", help="Freeze current state as new initial state"
+    ),
+    restore_initial: bool = typer.Option(
+        False, "--restore-initial", help="Restore crystallized initial state"
+    ),
+    experiment: str | None = typer.Option(None, "--experiment", help="Experiment ID"),
+    iteration: int | None = typer.Option(None, "--iteration", help="Iteration number"),
     science: bool = typer.Option(False, "--science", help="Run with /science-bitch integration"),
-    hypothesis: Optional[str] = typer.Option(None, "--hypothesis", help="Hypothesis statement for science mode"),
+    hypothesis: str | None = typer.Option(
+        None, "--hypothesis", help="Hypothesis statement for science mode"
+    ),
     iterations: int = typer.Option(5, "--iterations", help="Number of iterations for science mode"),
 ):
     """
     Run interactive DnD scenarios with experimental iteration support.
-    
+
     Creates an Original Realm for scenario management and supports:
     - Encounters, exploration, and lore building
     - Party state persistence
     - Experimental iteration with state crystallization
     """
     from pathlib import Path
-    from .core.dnd_scenario.scenario_realm import ScenarioRealm
-    from .core.dnd_scenario.scenario_orchestrator import ScenarioOrchestrator
+
     from .core.dnd_scenario.realm_state_preserver import RealmStatePreserver
+    from .core.dnd_scenario.scenario_orchestrator import ScenarioOrchestrator
+    from .core.dnd_scenario.scenario_realm import ScenarioRealm
     from .core.dnd_scenario.security import validate_experiment_id, validate_iteration
-    
+
     project_path = Path.cwd()
-    
+
     try:
         # Initialize realm
         realm = ScenarioRealm(project_path=project_path)
-        
+
         # Create realm if it doesn't exist
         if not (realm.realm_path / "realm_manifest.json").exists():
             console.print("[yellow]Creating DnD Scenario Realm...[/yellow]")
             realm.create_realm()
             console.print("[green]✅ Realm created![/green]")
-        
+
         # Initialize orchestrator
         orchestrator = ScenarioOrchestrator(realm)
-        
+
         # Handle special commands first
         if party_state:
             state = orchestrator.get_party_state()
             if state:
-                console.print(Panel.fit(
-                    f"[bold]Current Party State[/bold]\n\n{json.dumps(state, indent=2)}",
-                    style="cyan"
-                ))
+                console.print(
+                    Panel.fit(
+                        f"[bold]Current Party State[/bold]\n\n{json.dumps(state, indent=2)}",
+                        style="cyan",
+                    )
+                )
             else:
                 console.print("[yellow]No party state found.[/yellow]")
             return
-        
+
         if crystallize:
             console.print("[yellow]Crystallizing current state...[/yellow]")
             preserver = RealmStatePreserver(realm.realm_path, project_path)
-            
+
             # Gather current state
             party_state = orchestrator.get_party_state() or {}
             state_data = {
                 "party_state": party_state,
                 "realm_state": realm.get_realm_manifest(),
-                "timestamp": datetime.now().isoformat()
+                "timestamp": datetime.now().isoformat(),
             }
-            
+
             manifest = preserver.crystallize_state(state_data)
-            console.print(f"[green]✅ State crystallized![/green]")
+            console.print("[green]✅ State crystallized![/green]")
             console.print(f"   Version: {manifest['version']}")
             console.print(f"   Hash: {manifest['hash'][:16]}...")
             return
-        
+
         if restore_initial:
             console.print("[yellow]Restoring initial state...[/yellow]")
             preserver = RealmStatePreserver(realm.realm_path, project_path)
             state_data = preserver.restore_state()
-            
+
             # Restore party state
             if "party_state" in state_data:
                 orchestrator.party_state_manager.save_party_state(state_data["party_state"])
-            
+
             console.print("[green]✅ Initial state restored![/green]")
             return
-        
+
         # Determine mode
         mode = None
         if encounter:
@@ -3744,115 +3995,119 @@ def dnd_scenario(
             mode = "resume"
         else:
             # Default to interactive selection
-            console.print("[yellow]No mode specified. Use --encounter, --explore, --lore, or --resume[/yellow]")
+            console.print(
+                "[yellow]No mode specified. Use --encounter, --explore, --lore, or --resume[/yellow]"
+            )
             return
-        
+
         # Validate experiment/iteration if provided
         if experiment:
             is_valid, error = validate_experiment_id(experiment)
             if not is_valid:
                 console.print(f"[red]❌ Invalid experiment ID: {error}[/red]")
                 raise typer.Exit(1)
-        
+
         if iteration is not None:
             is_valid, error = validate_iteration(iteration)
             if not is_valid:
                 console.print(f"[red]❌ Invalid iteration: {error}[/red]")
                 raise typer.Exit(1)
-        
+
         # Science-bitch integration
         if science:
             try:
-                from .core.dnd_scenario.science_integration import DnDScenarioScienceIntegration
                 from scientific_method_tool import Hypothesis, Variable, VariableType
-                
-                console.print(Panel.fit(
-                    "[bold cyan]🔬 SCIENCE-BITCH INTEGRATION[/bold cyan]",
-                    style="cyan"
-                ))
-                
+
+                from .core.dnd_scenario.science_integration import DnDScenarioScienceIntegration
+
+                console.print(
+                    Panel.fit("[bold cyan]🔬 SCIENCE-BITCH INTEGRATION[/bold cyan]", style="cyan")
+                )
+
                 # Create hypothesis
                 if hypothesis:
                     # Split hypothesis into statement and prediction if format allows
                     if "|" in hypothesis:
                         parts = hypothesis.split("|", 1)
                         hypothesis_obj = Hypothesis(
-                            statement=parts[0].strip(),
-                            prediction=parts[1].strip()
+                            statement=parts[0].strip(), prediction=parts[1].strip()
                         )
                     else:
                         # Use statement as both, add default prediction
                         hypothesis_obj = Hypothesis(
-                            statement=hypothesis,
-                            prediction=f"Testing: {hypothesis}"
+                            statement=hypothesis, prediction=f"Testing: {hypothesis}"
                         )
                 else:
                     # Default hypothesis
                     hypothesis_obj = Hypothesis(
                         statement="Different scenario modes produce different party outcomes",
-                        prediction="Encounter mode will result in higher XP gain than exploration mode"
+                        prediction="Encounter mode will result in higher XP gain than exploration mode",
                     )
-                    hypothesis_obj.add_variable(Variable(
-                        name="scenario_mode",
-                        type=VariableType.INDEPENDENT,
-                        value=mode,
-                        description="Type of scenario to run"
-                    ))
-                    hypothesis_obj.add_variable(Variable(
-                        name="party_xp_gain",
-                        type=VariableType.DEPENDENT,
-                        value=0.0,
-                        description="Total XP gained by party"
-                    ))
-                
+                    hypothesis_obj.add_variable(
+                        Variable(
+                            name="scenario_mode",
+                            type=VariableType.INDEPENDENT,
+                            value=mode,
+                            description="Type of scenario to run",
+                        )
+                    )
+                    hypothesis_obj.add_variable(
+                        Variable(
+                            name="party_xp_gain",
+                            type=VariableType.DEPENDENT,
+                            value=0.0,
+                            description="Total XP gained by party",
+                        )
+                    )
+
                 # Initialize science integration
                 science_integration = DnDScenarioScienceIntegration(realm)
-                
+
                 # Run iterative experiment
-                console.print(f"[yellow]Running {iterations} iterations with state restoration...[/yellow]")
+                console.print(
+                    f"[yellow]Running {iterations} iterations with state restoration...[/yellow]"
+                )
                 experiment_results = science_integration.run_iterative_experiment(
                     hypothesis=hypothesis_obj,
                     mode=mode,
                     max_iterations=iterations,
-                    restore_initial_state=True
+                    restore_initial_state=True,
                 )
-                
-                console.print(f"[green]✅ Experiment complete![/green]")
+
+                console.print("[green]✅ Experiment complete![/green]")
                 console.print(f"   Experiment ID: {experiment_results['experiment_id']}")
                 console.print(f"   Iterations: {len(experiment_results['iterations'])}")
                 console.print(f"   Hypothesis: {experiment_results['hypothesis']}")
-                
+
                 # Show analysis if available
                 if "analysis" in experiment_results:
                     analysis = experiment_results["analysis"]
-                    console.print(f"\n[bold]Analysis:[/bold]")
+                    console.print("\n[bold]Analysis:[/bold]")
                     if "conclusion" in analysis:
                         console.print(f"   Conclusion: {analysis['conclusion']}")
                     if "confidence" in analysis:
                         console.print(f"   Confidence: {analysis['confidence']}")
-                
+
                 return
-                
+
             except ImportError as e:
                 console.print(f"[red]❌ Science integration unavailable: {e}[/red]")
-                console.print("[yellow]Install scientific_method_tool to use --science mode[/yellow]")
+                console.print(
+                    "[yellow]Install scientific_method_tool to use --science mode[/yellow]"
+                )
                 raise typer.Exit(1)
             except Exception as e:
                 console.print(f"[red]❌ Science integration error: {e}[/red]")
                 logger.exception("Error in science integration")
                 raise typer.Exit(1)
-        
+
         # Run scenario
-        result = orchestrator.run_scenario(
-            mode=mode,
-            experiment_id=experiment,
-            iteration=iteration
-        )
-        
-        console.print(f"[green]✅ Scenario complete![/green]")
+        result = orchestrator.run_scenario(mode=mode, experiment_id=experiment, iteration=iteration)
+
+        console.print("[green]✅ Scenario complete![/green]")
         console.print(f"   Mode: {result.get('mode')}")
         console.print(f"   Status: {result.get('status')}")
-        
+
     except Exception as e:
         console.print(f"[red]❌ Error:[/red] {e}")
         logger.exception("Error running DnD scenario")
@@ -3866,4 +4121,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

@@ -6,23 +6,20 @@ This demonstrates the real-world API for the meta-cognitive system.
 Clear contracts, predictable behavior, measurable results.
 """
 
-from dataclasses import dataclass
-from typing import List, Dict, Optional, Literal
-from enum import Enum
 import json
+from dataclasses import dataclass
+from enum import Enum
 
-from foundation import Score, Evaluation, Session, Guide
-from patterns import GuideFactory, GuideType
-from composite import LeafGuide, VotingGuide
 from advanced import (
     AdaptiveGuide,
-    SmartGuide,
     EnsembleGuide,
     QualityAnalyzer,
-    QualityMetrics,
     SessionRecorder,
+    SmartGuide,
 )
-
+from composite import LeafGuide, VotingGuide
+from foundation import Guide
+from patterns import GuideFactory, GuideType
 
 # ============================================================================
 # CLEAN API TYPES - Predictable, composable units
@@ -72,8 +69,8 @@ class SolutionOutput:
     mode: str
     final_answer: str
     quality_report: QualityReport
-    step_history: List[Dict]
-    session_id: Optional[str] = None
+    step_history: list[dict]
+    session_id: str | None = None
 
 
 # ============================================================================
@@ -221,7 +218,7 @@ class MetaCognitiveAPI:
         else:
             return Guide(input.max_iterations, input.quality_threshold)
 
-    def get_analytics(self) -> Dict:
+    def get_analytics(self) -> dict:
         """
         Get analytics across all sessions.
 
@@ -367,7 +364,7 @@ def run_demo():
     print("\n[TEST 8: STEP HISTORY - ITERATION TRANSPARENCY]")
     print(f"  Session: {output1.session_id}")
     print(f"  Problem: '{output1.problem[:50]}...'")
-    print(f"  Step-by-step quality progression:")
+    print("  Step-by-step quality progression:")
     for step in output1.step_history:
         print(f"    Iteration {step['iteration']}: quality={step['quality']:.3f}")
 

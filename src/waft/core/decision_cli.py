@@ -5,22 +5,19 @@ Provides a reusable, standardized way to run decision matrix analysis
 using the DecisionMatrixCalculator module.
 """
 
-from pathlib import Path
-from typing import Dict, List, Optional, Any
 from datetime import datetime
-from rich.console import Console
-from rich.table import Table
-from rich.panel import Panel
-from rich.text import Text
-from rich import box
+from pathlib import Path
+from typing import Any
 
-from .decision_matrix import (
-    DecisionMatrix, DecisionMatrixCalculator,
-    Alternative, Criterion, Score
-)
+from rich import box
+from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
+
+from ..being import BeingSystem
+from .decision_matrix import Criterion, DecisionMatrix, DecisionMatrixCalculator
 from .input_transformer import InputTransformer
 from .persistence import DecisionPersistence
-from ..being import BeingSystem
 
 
 class DecisionCLI:
@@ -40,14 +37,14 @@ class DecisionCLI:
     def run_decision_matrix(
         self,
         problem: str,
-        alternatives: List[str],
-        criteria: Dict[str, float],
-        scores: Dict[str, Dict[str, float]],
+        alternatives: list[str],
+        criteria: dict[str, float],
+        scores: dict[str, dict[str, float]],
         methodology: str = "WSM",
-        criterion_descriptions: Optional[Dict[str, str]] = None,
+        criterion_descriptions: dict[str, str] | None = None,
         show_details: bool = True,
-        show_sensitivity: bool = True
-    ) -> Dict[str, Any]:
+        show_sensitivity: bool = True,
+    ) -> dict[str, Any]:
         """
         Run a standardized decision matrix calculation.
 
@@ -70,17 +67,17 @@ class DecisionCLI:
         for name, weight in criteria.items():
             if criterion_descriptions and name in criterion_descriptions:
                 criteria_with_descriptions[name] = {
-                    'weight': weight,
-                    'description': criterion_descriptions[name]
+                    "weight": weight,
+                    "description": criterion_descriptions[name],
                 }
             else:
                 criteria_with_descriptions[name] = weight
 
         raw_data = {
-            'alternatives': alternatives,
-            'criteria': criteria_with_descriptions,
-            'scores': scores,
-            'methodology': methodology
+            "alternatives": alternatives,
+            "criteria": criteria_with_descriptions,
+            "scores": scores,
+            "methodology": methodology,
         }
 
         # Transform input using InputTransformer (The Gateway/Airlock)
@@ -96,13 +93,15 @@ class DecisionCLI:
 
         # Apply feedback adjustments to scores if any feedback exists
         if feedback_adjustments:
-            scores, adjusted_criteria = self._apply_feedback_adjustments(scores, feedback_adjustments, criteria)
+            scores, adjusted_criteria = self._apply_feedback_adjustments(
+                scores, feedback_adjustments, criteria
+            )
             # Update criteria if user_satisfaction was added
             if adjusted_criteria != criteria:
                 criteria = adjusted_criteria
-                raw_data['criteria'] = adjusted_criteria
+                raw_data["criteria"] = adjusted_criteria
             # Rebuild matrix with adjusted scores
-            raw_data['scores'] = scores
+            raw_data["scores"] = scores
             matrix = InputTransformer.transform_input(raw_data)
 
         # Calculate
@@ -121,8 +120,14 @@ class DecisionCLI:
 
         # Display results
         self._display_results(
-            problem, alternatives, criteria, results, rankings,
-            calculator, show_details, show_sensitivity
+            problem,
+            alternatives,
+            criteria,
+            results,
+            rankings,
+            calculator,
+            show_details,
+            show_sensitivity,
         )
 
         # Offer to save the decision
@@ -141,22 +146,24 @@ class DecisionCLI:
     def _display_results(
         self,
         problem: str,
-        alternatives: List[str],
-        criteria: Dict[str, float],
-        results: Dict[str, float],
-        rankings: List[tuple],
+        alternatives: list[str],
+        criteria: dict[str, float],
+        results: dict[str, float],
+        rankings: list[tuple],
         calculator: DecisionMatrixCalculator,
         show_details: bool,
-        show_sensitivity: bool
+        show_sensitivity: bool,
     ):
         """Display decision matrix results with Rich formatting."""
         # Header
         self.console.print()
-        self.console.print(Panel(
-            f"[bold cyan]{problem}[/bold cyan]",
-            title="[bold]Decision Matrix Analysis[/bold]",
-            border_style="cyan"
-        ))
+        self.console.print(
+            Panel(
+                f"[bold cyan]{problem}[/bold cyan]",
+                title="[bold]Decision Matrix Analysis[/bold]",
+                border_style="cyan",
+            )
+        )
         self.console.print()
 
         # Feature A: The Summary Table (The Leaderboard)
@@ -170,14 +177,14 @@ class DecisionCLI:
         if show_sensitivity and len(criteria) > 1:
             self._display_sensitivity_analysis(criteria, rankings, calculator)
 
-    def _display_leaderboard(self, rankings: List[tuple]):
+    def _display_leaderboard(self, rankings: list[tuple]):
         """Feature A: Display summary table with winner highlighted."""
         table = Table(
             title="[bold]🏆 Leaderboard[/bold]",
             show_header=True,
             header_style="bold cyan",
             box=box.ROUNDED,
-            border_style="cyan"
+            border_style="cyan",
         )
         table.add_column("Rank", justify="center", style="dim", width=6)
         table.add_column("Alternative", style="cyan", width=40)
@@ -209,10 +216,10 @@ class DecisionCLI:
 
     def _display_analysis_matrix(
         self,
-        alternatives: List[str],
-        criteria: Dict[str, float],
-        results: Dict[str, float],
-        calculator: DecisionMatrixCalculator
+        alternatives: list[str],
+        criteria: dict[str, float],
+        results: dict[str, float],
+        calculator: DecisionMatrixCalculator,
     ):
         """Feature B: Display detailed matrix showing why each option scored as it did."""
         table = Table(
@@ -220,7 +227,7 @@ class DecisionCLI:
             show_header=True,
             header_style="bold cyan",
             box=box.ROUNDED,
-            border_style="cyan"
+            border_style="cyan",
         )
 
         # Add Alternative column
@@ -263,9 +270,9 @@ class DecisionCLI:
 
     def _display_sensitivity_analysis(
         self,
-        criteria: Dict[str, float],
-        rankings: List[tuple],
-        calculator: DecisionMatrixCalculator
+        criteria: dict[str, float],
+        rankings: list[tuple],
+        calculator: DecisionMatrixCalculator,
     ):
         """Feature C: Sensitivity analysis - check if winner changes when highest weight criterion is reduced."""
         # Find criterion with highest weight
@@ -293,20 +300,15 @@ class DecisionCLI:
             crit_objects = []
             for name, weight in adjusted_criteria.items():
                 # Find original criterion to preserve description
-                original = next(
-                    c for c in calculator.matrix.criteria
-                    if c.name == name
-                )
-                crit_objects.append(
-                    Criterion(name, weight, original.description)
-                )
+                original = next(c for c in calculator.matrix.criteria if c.name == name)
+                crit_objects.append(Criterion(name, weight, original.description))
 
             # Create adjusted matrix and calculate
             adjusted_matrix = DecisionMatrix(
                 calculator.matrix.alternatives,
                 crit_objects,
                 calculator.matrix.scores,
-                methodology="WSM"
+                methodology="WSM",
             )
             adjusted_calc = DecisionMatrixCalculator(adjusted_matrix)
             adjusted_results = adjusted_calc.calculate_wsm()
@@ -314,14 +316,13 @@ class DecisionCLI:
             new_winner = adjusted_rankings[0][0]
 
             # Display sensitivity analysis
-            self.console.print(Panel(
-                "[bold]🔍 Sensitivity Analysis[/bold]",
-                border_style="yellow"
-            ))
+            self.console.print(Panel("[bold]🔍 Sensitivity Analysis[/bold]", border_style="yellow"))
             self.console.print()
 
-            self.console.print(f"[dim]Scenario:[/dim] If '{crit_name}' weight reduced by 20% "
-                             f"({crit_weight:.0%} → {reduced_weight:.0%})")
+            self.console.print(
+                f"[dim]Scenario:[/dim] If '{crit_name}' weight reduced by 20% "
+                f"({crit_weight:.0%} → {reduced_weight:.0%})"
+            )
             self.console.print()
 
             # Show new rankings
@@ -333,9 +334,7 @@ class DecisionCLI:
             for alt_name, score, rank in adjusted_rankings:
                 if rank == 1:
                     sens_table.add_row(
-                        "[bold]1[/bold]",
-                        f"[bold]{alt_name}[/bold]",
-                        f"[bold]{score:.2f}[/bold]"
+                        "[bold]1[/bold]", f"[bold]{alt_name}[/bold]", f"[bold]{score:.2f}[/bold]"
                     )
                 else:
                     sens_table.add_row(str(rank), alt_name, f"{score:.2f}")
@@ -350,7 +349,7 @@ class DecisionCLI:
                         f"⚠️  [bold yellow]Warning:[/bold yellow] If '{crit_name}' becomes less important, "
                         f"[bold]{new_winner}[/bold] would win instead of [bold]{original_winner}[/bold].",
                         border_style="yellow",
-                        title="[bold yellow]Winner Changed[/bold yellow]"
+                        title="[bold yellow]Winner Changed[/bold yellow]",
                     )
                 )
             else:
@@ -361,7 +360,7 @@ class DecisionCLI:
 
             self.console.print()
 
-    def save_decision_dialog(self, matrix: DecisionMatrix) -> Optional[Path]:
+    def save_decision_dialog(self, matrix: DecisionMatrix) -> Path | None:
         """
         Prompt user to save the decision matrix.
 
@@ -374,11 +373,12 @@ class DecisionCLI:
         try:
             # Try to use rich.prompt if available
             from rich.prompt import Confirm, Prompt
+
             save_it = Confirm.ask("\n💾 Save this analysis?", default=False)
         except ImportError:
             # Fallback to standard input
             response = input("\n💾 Save this analysis? [y/N]: ").strip().lower()
-            save_it = response in ('y', 'yes')
+            save_it = response in ("y", "yes")
 
         if not save_it:
             return None
@@ -393,18 +393,16 @@ class DecisionCLI:
 
         try:
             from rich.prompt import Prompt
-            filename = Prompt.ask(
-                "📝 Filename",
-                default=default_filename
-            )
+
+            filename = Prompt.ask("📝 Filename", default=default_filename)
         except ImportError:
             filename = input(f"📝 Filename [{default_filename}]: ").strip()
             if not filename:
                 filename = default_filename
 
         # Ensure .json extension
-        if not filename.endswith('.json'):
-            filename += '.json'
+        if not filename.endswith(".json"):
+            filename += ".json"
 
         filepath = saved_dir / filename
 
@@ -416,7 +414,7 @@ class DecisionCLI:
             self.console.print(f"[bold red]Error saving file:[/bold red] {str(e)}")
             return None
 
-    def load_decision_dialog(self) -> Optional[DecisionMatrix]:
+    def load_decision_dialog(self) -> DecisionMatrix | None:
         """
         Prompt user to load a saved decision matrix.
 
@@ -445,22 +443,15 @@ class DecisionCLI:
 
         for i, filepath in enumerate(json_files, 1):
             mtime = datetime.fromtimestamp(filepath.stat().st_mtime)
-            table.add_row(
-                str(i),
-                filepath.name,
-                mtime.strftime("%Y-%m-%d %H:%M")
-            )
+            table.add_row(str(i), filepath.name, mtime.strftime("%Y-%m-%d %H:%M"))
 
         self.console.print(table)
         self.console.print()
 
         try:
             from rich.prompt import IntPrompt
-            choice = IntPrompt.ask(
-                "Select decision to load",
-                default=1,
-                show_default=True
-            )
+
+            choice = IntPrompt.ask("Select decision to load", default=1, show_default=True)
         except ImportError:
             choice_str = input(f"Select decision to load [1-{len(json_files)}]: ").strip()
             try:
@@ -483,10 +474,7 @@ class DecisionCLI:
             self.console.print(f"[bold red]Error loading file:[/bold red] {str(e)}")
             return None
 
-    def _get_feedback_adjustments(
-        self,
-        alternatives: List[str]
-    ) -> Dict[str, float]:
+    def _get_feedback_adjustments(self, alternatives: list[str]) -> dict[str, float]:
         """
         Get feedback-based adjustments for alternatives.
 
@@ -504,7 +492,7 @@ class DecisionCLI:
             love_feedback = self.being_system.get_user_feedback(sentiment="love", limit=10)
             hate_feedback = self.being_system.get_user_feedback(sentiment="hate", limit=10)
 
-            adjustments = {alt: 0.0 for alt in alternatives}
+            adjustments = dict.fromkeys(alternatives, 0.0)
 
             # Analyze feedback for patterns that match alternatives
             for feedback in love_feedback:
@@ -549,10 +537,10 @@ class DecisionCLI:
 
     def _apply_feedback_adjustments(
         self,
-        scores: Dict[str, Dict[str, float]],
-        adjustments: Dict[str, float],
-        criteria: Dict[str, float]
-    ) -> tuple[Dict[str, Dict[str, float]], Dict[str, float]]:
+        scores: dict[str, dict[str, float]],
+        adjustments: dict[str, float],
+        criteria: dict[str, float],
+    ) -> tuple[dict[str, dict[str, float]], dict[str, float]]:
         """
         Apply feedback adjustments to scores.
 
@@ -603,26 +591,31 @@ class DecisionCLI:
 
         return adjusted_scores, adjusted_criteria
 
-    def _display_feedback_influence(self, adjustments: Dict[str, float]):
+    def _display_feedback_influence(self, adjustments: dict[str, float]):
         """Display how user feedback influenced the decision."""
         if not adjustments:
             return
 
         self.console.print()
-        self.console.print(Panel(
-            "[bold]💚 Emotional Feedback Influence[/bold]",
-            border_style="cyan"
-        ))
+        self.console.print(
+            Panel("[bold]💚 Emotional Feedback Influence[/bold]", border_style="cyan")
+        )
         self.console.print()
-        self.console.print("[dim]Your emotional feedback (via /love-you and /hate-this) has been considered:[/dim]")
+        self.console.print(
+            "[dim]Your emotional feedback (via /love-you and /hate-this) has been considered:[/dim]"
+        )
         self.console.print()
 
         for alt, adj in sorted(adjustments.items(), key=lambda x: x[1], reverse=True):
             if adj > 0:
-                self.console.print(f"  [green]+[/green] {alt}: [green]+{adj:.2f}[/green] (loved patterns)")
+                self.console.print(
+                    f"  [green]+[/green] {alt}: [green]+{adj:.2f}[/green] (loved patterns)"
+                )
             elif adj < 0:
                 self.console.print(f"  [red]-[/red] {alt}: [red]{adj:.2f}[/red] (hated patterns)")
 
         self.console.print()
-        self.console.print("[dim]Scores have been adjusted proportionally based on your emotional feedback.[/dim]")
+        self.console.print(
+            "[dim]Scores have been adjusted proportionally based on your emotional feedback.[/dim]"
+        )
         self.console.print()

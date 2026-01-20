@@ -5,24 +5,24 @@ Implements the biological lifecycle: spawn, eval, evolve with complete
 lineage tracking and Flight Recorder integration.
 """
 
-import json
 import inspect
+import json
 from abc import ABC, abstractmethod
+from datetime import datetime
 from hashlib import sha256
 from pathlib import Path
-from typing import List, Optional, Dict, Any
-from datetime import datetime
+from typing import Optional
 
+from ..science.observer import TheObserver
+from ..science.taxonomy import LineagePoet
+from .anatomy import AnatomicalArchetype
 from .state import (
-    AgentState,
     AgentConfig,
+    AgentState,
     EvolutionaryEvent,
     EvolutionaryEventType,
     Modification,
 )
-from .anatomy import AnatomicalArchetype, AnatomicalSymbol
-from ..science.observer import TheObserver
-from ..science.taxonomy import LineagePoet
 
 
 class BaseAgent(ABC):
@@ -59,7 +59,7 @@ class BaseAgent(ABC):
         )
 
         # Initialize Flight Recorder
-        self.flight_recorder: List[EvolutionaryEvent] = []
+        self.flight_recorder: list[EvolutionaryEvent] = []
 
         # Compute genome ID (must be after state initialization)
         self.genome_id = self._compute_genome_id()
@@ -84,7 +84,7 @@ class BaseAgent(ABC):
                 "generation": 0,
                 "genome_id": self.genome_id,
                 "scientific_name": self.scientific_name,
-            }
+            },
         )
 
     @property
@@ -140,10 +140,7 @@ class BaseAgent(ABC):
             return sha256(self.__class__.__name__.encode()).hexdigest()
 
     def _record_event(
-        self,
-        event_type: EvolutionaryEventType,
-        payload: dict,
-        fitness_metrics: Optional[dict] = None
+        self, event_type: EvolutionaryEventType, payload: dict, fitness_metrics: dict | None = None
     ) -> EvolutionaryEvent:
         """
         Record evolutionary event to flight recorder and TheObserver.
@@ -169,7 +166,7 @@ class BaseAgent(ABC):
             payload=payload,
             fitness_metrics=fitness_metrics,
             agent_id=self.state.agent_id,
-            lineage_path=self.lineage_path.copy()
+            lineage_path=self.lineage_path.copy(),
         )
 
         # Add to flight recorder
@@ -199,8 +196,8 @@ class BaseAgent(ABC):
             payload={
                 "mutation": mutation.dict(),
                 "parent_genome": self.genome_id,
-                "action": "spawning_child"
-            }
+                "action": "spawning_child",
+            },
         )
 
         # Create child configuration (deep copy)
@@ -238,8 +235,8 @@ class BaseAgent(ABC):
             payload={
                 "parent_genome": self.genome_id,
                 "mutation": mutation.dict(),
-                "action": "born_from_parent"
-            }
+                "action": "born_from_parent",
+            },
         )
 
         return child
@@ -295,21 +292,21 @@ class BaseAgent(ABC):
         """
         pass
 
-    async def step(self, context: Optional[dict] = None) -> dict:
+    async def step(self, context: dict | None = None) -> dict:
         """
         Execute one complete OODA cycle with Thought and Reflection recording (The Cogito).
-        
+
         Records a 'Thought' before action and a 'Reflection' after action in the organism's
         private journal. This is the primary method for organism activity.
-        
+
         Args:
             context: Optional context dictionary (e.g., social context from PetriDish)
-            
+
         Returns:
             Dictionary with step results including thought and reflection
         """
         from datetime import datetime
-        
+
         # Record Thought (before action)
         thought = {
             "type": "Thought",
@@ -319,71 +316,71 @@ class BaseAgent(ABC):
                 "energy": self.state.energy,
                 "position": context.get("position") if context else None,
                 "neighbor_count": context.get("neighbor_count") if context else None,
-            }
+            },
         }
-        
+
         # Add to journal and short_term_memory
         self.state.journal.append(thought)
         self.state.short_term_memory.append(thought)
-        
+
         # Keep short_term_memory bounded (last 10 entries)
         if len(self.state.short_term_memory) > 10:
             self.state.short_term_memory.pop(0)
-        
+
         # Execute OODA cycle
         observe_result = await self.observe()
         decide_result = await self.decide(self.state)
-        
+
         # Check if organism wants to stop
         if decide_result.get("stop", False):
             reflection = {
                 "type": "Reflection",
                 "timestamp": datetime.utcnow().isoformat(),
                 "action_result": {"status": "stopped", "reason": "organism_requested_stop"},
-                "thought_id": len(self.state.journal) - 1  # Link to preceding thought
+                "thought_id": len(self.state.journal) - 1,  # Link to preceding thought
             }
             self.state.journal.append(reflection)
             self.state.short_term_memory.append(reflection)
             if len(self.state.short_term_memory) > 10:
                 self.state.short_term_memory.pop(0)
-            
+
             return {
                 "status": "stopped",
                 "thought": thought,
                 "reflection": reflection,
                 "observe": observe_result,
-                "decide": decide_result
+                "decide": decide_result,
             }
-        
+
         act_result = await self.act(decide_result)
         reflect_result = await self.reflect(act_result)
-        
+
         # Convert reflect_result to string if it's a dict
         reflection_text = reflect_result
         if isinstance(reflect_result, dict):
             reflection_text = str(reflect_result.get("reflection", reflect_result))
-        
+
         # Record Reflection (after action)
         reflection = {
             "type": "Reflection",
             "timestamp": datetime.utcnow().isoformat(),
             "action_result": act_result,
             "reflection_result": reflection_text,
-            "thought_id": len(self.state.journal) - 1  # Link to preceding thought
+            "thought_id": len(self.state.journal) - 1,  # Link to preceding thought
         }
-        
+
         # Check for "id est" glitch injection (Experiment 014)
         if self._should_inject_id_est(reflection):
             reflection = self._inject_id_est_into_reflection(reflection)
-        
+
         # Add to journal and short_term_memory
         self.state.journal.append(reflection)
         self.state.short_term_memory.append(reflection)
-        
+
         # Keep short_term_memory bounded
         if len(self.state.short_term_memory) > 10:
             self.state.short_term_memory.pop(0)
-        
+
         return {
             "status": "completed",
             "thought": thought,
@@ -391,7 +388,7 @@ class BaseAgent(ABC):
             "observe": observe_result,
             "decide": decide_result,
             "act": act_result,
-            "reflect": reflect_result
+            "reflect": reflect_result,
         }
 
     # ==================== Helper Methods (Stubs for now) ====================
@@ -403,59 +400,67 @@ class BaseAgent(ABC):
     def _init_empirica(self):
         """Initialize Empirica integration (stub)."""
         return None
-    
+
     # ==================== Experiment 014: "id est" Glitch ====================
-    
+
     def _should_inject_id_est(self, reflection: dict) -> bool:
         """
         Check if 'id est' or 'i.e.' should appear in reflection.
-        
+
         Gated by existential keywords:
         - Existential reflections: 15% chance
         - Other reflections: 3% chance
-        
+
         This creates the "definition glitch" where agents try to define themselves.
-        
+
         Args:
             reflection: Reflection dictionary
-            
+
         Returns:
             True if "id est" should be injected
         """
         import random
-        
+
         reflection_text = str(reflection.get("reflection_result", ""))
         existential_keywords = [
-            "exist", "purpose", "meaning", "identity", "self",
-            "what am i", "who am i", "what is", "definition", "define"
+            "exist",
+            "purpose",
+            "meaning",
+            "identity",
+            "self",
+            "what am i",
+            "who am i",
+            "what is",
+            "definition",
+            "define",
         ]
-        
+
         is_existential = any(keyword in reflection_text.lower() for keyword in existential_keywords)
-        
+
         if is_existential:
             chance = 0.15  # 15% for existential reflections
         else:
             chance = 0.03  # 3% for other reflections
-        
+
         return random.random() < chance
-    
+
     def _inject_id_est_into_reflection(self, reflection: dict) -> dict:
         """
         Inject 'id est' or 'i.e.' into reflection text.
-        
+
         Args:
             reflection: Reflection dictionary to modify
-            
+
         Returns:
             Modified reflection dictionary
         """
         import random
-        
+
         reflection_result = str(reflection.get("reflection_result", ""))
-        
+
         # Randomly choose "id est" or "i.e."
         phrase = random.choice(["id est", "i.e."])
-        
+
         # Insert at random position in text (not at start/end)
         if len(reflection_result) > 20:
             words = reflection_result.split()
@@ -467,7 +472,7 @@ class BaseAgent(ABC):
                 reflection_result = f"{reflection_result} {phrase}"
         else:
             reflection_result = f"{reflection_result} {phrase}"
-        
+
         reflection["reflection_result"] = reflection_result
         return reflection
 
@@ -481,7 +486,9 @@ class BaseAgent(ABC):
 
     # ==================== Inventory Manipulation ====================
 
-    def grab(self, item_id: str, target_slot: str = "appendage", dish=None, position: tuple = None) -> bool:
+    def grab(
+        self, item_id: str, target_slot: str = "appendage", dish=None, position: tuple = None
+    ) -> bool:
         """
         Grab an item from the PetriDish lattice into organism's inventory.
 
@@ -494,7 +501,6 @@ class BaseAgent(ABC):
         Returns:
             True if grabbed successfully, False otherwise
         """
-        from .items import Item
 
         if dish is None:
             return False
@@ -506,7 +512,7 @@ class BaseAgent(ABC):
                 return False
 
         # Check if item exists at position
-        if not hasattr(dish, 'items') or position not in dish.items:
+        if not hasattr(dish, "items") or position not in dish.items:
             return False
 
         # Find item at position
@@ -520,7 +526,9 @@ class BaseAgent(ABC):
             return False
 
         # Check target slot capacity (using anatomical archetype)
-        appendage_capacity = AnatomicalArchetype.get_appendage_capacity(self.state.anatomical_symbol)
+        appendage_capacity = AnatomicalArchetype.get_appendage_capacity(
+            self.state.anatomical_symbol
+        )
         pocket_capacity = AnatomicalArchetype.get_pocket_capacity(self.state.anatomical_symbol)
 
         if target_slot == "appendage":
@@ -571,7 +579,9 @@ class BaseAgent(ABC):
         if len(self.state.pocket) == 0:
             return False
 
-        appendage_capacity = AnatomicalArchetype.get_appendage_capacity(self.state.anatomical_symbol)
+        appendage_capacity = AnatomicalArchetype.get_appendage_capacity(
+            self.state.anatomical_symbol
+        )
         if len(self.state.appendage) >= appendage_capacity:
             return False  # Appendage full
 
@@ -636,7 +646,7 @@ class BaseAgent(ABC):
         item = Item(**item_dict)
 
         # Add item to dish
-        if not hasattr(dish, 'items'):
+        if not hasattr(dish, "items"):
             dish.items = {}
 
         if position not in dish.items:
@@ -647,7 +657,9 @@ class BaseAgent(ABC):
 
     # ==================== Reproduction & Conjugation ====================
 
-    def conjugate(self, partner: "BaseAgent", dish=None, current_pulse: int = None) -> Optional["BaseAgent"]:
+    def conjugate(
+        self, partner: "BaseAgent", dish=None, current_pulse: int = None
+    ) -> Optional["BaseAgent"]:
         """
         Conjugate with partner to produce offspring (reproduction).
 
@@ -668,7 +680,6 @@ class BaseAgent(ABC):
         Returns:
             None (seed created) or child BaseAgent (if gestation complete)
         """
-        from .items import Item
         import random
 
         if dish is None:
@@ -693,9 +704,17 @@ class BaseAgent(ABC):
 
         # Determine which parent carries the seed (parent with more pocket space)
         self_pocket_capacity = AnatomicalArchetype.get_pocket_capacity(self.state.anatomical_symbol)
-        partner_pocket_capacity = AnatomicalArchetype.get_pocket_capacity(partner.state.anatomical_symbol)
-        self_pocket_space = self_pocket_capacity - len(self.state.pocket) - len(self.state.developing_seeds)
-        partner_pocket_space = partner_pocket_capacity - len(partner.state.pocket) - len(partner.state.developing_seeds)
+        partner_pocket_capacity = AnatomicalArchetype.get_pocket_capacity(
+            partner.state.anatomical_symbol
+        )
+        self_pocket_space = (
+            self_pocket_capacity - len(self.state.pocket) - len(self.state.developing_seeds)
+        )
+        partner_pocket_space = (
+            partner_pocket_capacity
+            - len(partner.state.pocket)
+            - len(partner.state.developing_seeds)
+        )
 
         if self_pocket_space <= 0 and partner_pocket_space <= 0:
             return None  # No space for seed
@@ -724,8 +743,8 @@ class BaseAgent(ABC):
                 "parent_a_name": self.scientific_name,
                 "parent_b_name": partner.scientific_name,
                 "gestation_start_pulse": current_pulse if current_pulse is not None else 0,
-                "gestation_pulses_remaining": 5
-            }
+                "gestation_pulses_remaining": 5,
+            },
         }
 
         # Initialize gestation tracking
@@ -744,8 +763,8 @@ class BaseAgent(ABC):
                 "partner_name": partner.scientific_name,
                 "seed_id": seed_id,
                 "seed_parent": seed_parent.state.agent_id,
-                "pulse": current_pulse
-            }
+                "pulse": current_pulse,
+            },
         )
 
         partner._record_event(
@@ -756,8 +775,8 @@ class BaseAgent(ABC):
                 "partner_name": self.scientific_name,
                 "seed_id": seed_id,
                 "seed_parent": seed_parent.state.agent_id,
-                "pulse": current_pulse
-            }
+                "pulse": current_pulse,
+            },
         )
 
         return None  # Seed created, child not yet born
@@ -823,7 +842,9 @@ class BaseAgent(ABC):
 
         return spawned_child
 
-    def _spawn_from_conjugation(self, parent_a: "BaseAgent", parent_b: "BaseAgent", dish) -> Optional["BaseAgent"]:
+    def _spawn_from_conjugation(
+        self, parent_a: "BaseAgent", parent_b: "BaseAgent", dish
+    ) -> Optional["BaseAgent"]:
         """
         Spawn child from conjugation (genetic mixing).
 
@@ -836,7 +857,6 @@ class BaseAgent(ABC):
             Child BaseAgent or None if spawning fails
         """
         import random
-        import hashlib
 
         # Genetic mixing: Recombine system prompts (backstory)
         # Simple recombination: alternate words from each parent
@@ -872,7 +892,7 @@ class BaseAgent(ABC):
             role=f"Hybrid of {parent_a.config.role} and {parent_b.config.role}",
             goal=f"{parent_a.config.goal} + {parent_b.config.goal}",
             backstory=hybrid_backstory,
-            tools=parent_a.config.tools + parent_b.config.tools  # Combine tools
+            tools=parent_a.config.tools + parent_b.config.tools,  # Combine tools
         )
 
         # Create child
@@ -916,8 +936,8 @@ class BaseAgent(ABC):
                                 "parent_a_name": parent_a.scientific_name,
                                 "parent_b_name": parent_b.scientific_name,
                                 "inherited_symbol": child_symbol,
-                                "culture": "Hybrid"
-                            }
+                                "culture": "Hybrid",
+                            },
                         )
                         return child
 

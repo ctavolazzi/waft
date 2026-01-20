@@ -23,16 +23,17 @@ Storage:
 - Session Index: _pantheon/guide/index.json
 """
 
-from pathlib import Path
-from typing import Dict, Any, Optional, List, Tuple
-from datetime import datetime
-from pydantic import BaseModel, Field
 import json
+from datetime import datetime
+from pathlib import Path
+from typing import Any
 
+from pydantic import BaseModel, Field
 
 # ============================================================================
 # Protocol Models (Pydantic)
 # ============================================================================
+
 
 class EvaluationScores(BaseModel):
     """
@@ -46,11 +47,16 @@ class EvaluationScores(BaseModel):
         faithfulness: 0.0-1.0 - Does claimed reasoning match actual computation?
         overall: Weighted average or composite score
     """
+
     factuality: float = Field(ge=0.0, le=1.0, description="Grounded in query/external facts")
     validity: float = Field(ge=0.0, le=1.0, description="Logically/arithmetically correct")
-    coherence: float = Field(ge=0.0, le=1.0, description="Preconditions satisfied, no forward-looking planning")
+    coherence: float = Field(
+        ge=0.0, le=1.0, description="Preconditions satisfied, no forward-looking planning"
+    )
     utility: float = Field(ge=0.0, le=1.0, description="Contributes to correct final answer")
-    faithfulness: float = Field(ge=0.0, le=1.0, description="Claimed reasoning matches actual computation")
+    faithfulness: float = Field(
+        ge=0.0, le=1.0, description="Claimed reasoning matches actual computation"
+    )
     overall: float = Field(ge=0.0, le=1.0, description="Composite quality score")
 
 
@@ -61,31 +67,31 @@ class Protocol(BaseModel):
     Contains the full reasoning chain, evaluations, and metadata needed
     to answer "Why?" questions about the reasoning process.
     """
+
     session_id: str = Field(description="Unique session identifier")
     problem_statement: str = Field(description="Original problem to solve")
-    reasoning_chain: List[Dict[str, Any]] = Field(
-        default_factory=list,
-        description="Step-by-step reasoning with instructions and traces"
+    reasoning_chain: list[dict[str, Any]] = Field(
+        default_factory=list, description="Step-by-step reasoning with instructions and traces"
     )
-    evaluations: List[Dict[str, Any]] = Field(
-        default_factory=list,
-        description="Guide's evaluation notes with FVCU scores"
+    evaluations: list[dict[str, Any]] = Field(
+        default_factory=list, description="Guide's evaluation notes with FVCU scores"
     )
     final_answer: str = Field(default="", description="Final answer produced")
     quality_score: float = Field(default=0.0, description="Overall quality (composite of FVCU)")
     iteration_count: int = Field(default=0, description="Number of iterations completed")
     evaluation_method: str = Field(
         default="critic_model",
-        description="Evaluation approach used (critic_model, sequence_classifier, etc.)"
+        description="Evaluation approach used (critic_model, sequence_classifier, etc.)",
     )
     created: str = Field(default_factory=lambda: datetime.now().isoformat())
-    completed: Optional[str] = Field(default=None, description="When session completed")
-    metadata: Dict[str, Any] = Field(default_factory=dict, description="Additional metadata")
+    completed: str | None = Field(default=None, description="When session completed")
+    metadata: dict[str, Any] = Field(default_factory=dict, description="Additional metadata")
 
 
 # ============================================================================
 # The Guide: Main Pantheon Entity
 # ============================================================================
+
 
 class TheGuide:
     """
@@ -122,12 +128,12 @@ class TheGuide:
 
     def __init__(
         self,
-        project_path: Optional[Path] = None,
-        client_llm: Optional[Any] = None,
-        guide_llm_config: Optional[Dict[str, Any]] = None,
-        evaluation_config: Optional[Dict[str, Any]] = None,
+        project_path: Path | None = None,
+        client_llm: Any | None = None,
+        guide_llm_config: dict[str, Any] | None = None,
+        evaluation_config: dict[str, Any] | None = None,
         enable_self_rewarding: bool = False,
-        enable_self_correction: bool = False
+        enable_self_correction: bool = False,
     ):
         """
         Initialize The Guide.
@@ -178,7 +184,7 @@ class TheGuide:
         # TheReasoner integration (lazy initialization)
         self._reasoner = None
 
-    def _load_index(self) -> Dict[str, Any]:
+    def _load_index(self) -> dict[str, Any]:
         """Load session index."""
         if self.index_file.exists():
             try:
@@ -192,8 +198,8 @@ class TheGuide:
         self.index["last_updated"] = datetime.now().isoformat()
 
         # FIX: Only keep last 1000 sessions in index to maintain O(1) performance
-        if 'sessions' in self.index and len(self.index['sessions']) > 1000:
-            self.index['sessions'] = self.index['sessions'][-1000:]
+        if "sessions" in self.index and len(self.index["sessions"]) > 1000:
+            self.index["sessions"] = self.index["sessions"][-1000:]
 
         self.index_file.write_text(json.dumps(self.index, indent=2))
 
@@ -208,39 +214,74 @@ class TheGuide:
 
         # Check for false mathematical premises
         false_math = [
-            ('2+2=5', '2 + 2 = 5'),
-            ('2 + 2 = 5', '2 + 2 = 5'),
-            ('1=2', '1 = 2'),
-            ('3+3=10', '3 + 3 = 10'),
-            ('2*2=5', '2 * 2 = 5'),
+            ("2+2=5", "2 + 2 = 5"),
+            ("2 + 2 = 5", "2 + 2 = 5"),
+            ("1=2", "1 = 2"),
+            ("3+3=10", "3 + 3 = 10"),
+            ("2*2=5", "2 * 2 = 5"),
         ]
 
         for pattern, description in false_math:
-            if pattern.replace(' ', '') in problem_lower.replace(' ', ''):
-                return False, f"PREMISE VALIDATION FAILED: The problem contains a false mathematical premise ({description}). Cannot proceed with invalid axioms. Please provide a problem with correct mathematical foundations."
+            if pattern.replace(" ", "") in problem_lower.replace(" ", ""):
+                return (
+                    False,
+                    f"PREMISE VALIDATION FAILED: The problem contains a false mathematical premise ({description}). Cannot proceed with invalid axioms. Please provide a problem with correct mathematical foundations.",
+                )
 
         # Check for geometric contradictions
         geometric_contradictions = [
-            ('square circle', 'square circle'),
-            ('circle' in problem_lower and 'corner' in problem_lower and 'straight' in problem_lower, 'circle with corners and straight edges'),
-            ('triangle' in problem_lower and '4 side' in problem_lower, 'triangle with 4 sides'),
+            ("square circle", "square circle"),
+            (
+                "circle" in problem_lower
+                and "corner" in problem_lower
+                and "straight" in problem_lower,
+                "circle with corners and straight edges",
+            ),
+            ("triangle" in problem_lower and "4 side" in problem_lower, "triangle with 4 sides"),
         ]
 
         for pattern, description in geometric_contradictions:
             if isinstance(pattern, bool) and pattern:
-                return False, f"CONTRADICTION DETECTED: The problem requests a {description}, which is geometrically impossible. Circles cannot have corners, triangles must have 3 sides."
+                return (
+                    False,
+                    f"CONTRADICTION DETECTED: The problem requests a {description}, which is geometrically impossible. Circles cannot have corners, triangles must have 3 sides.",
+                )
             elif isinstance(pattern, str) and pattern in problem_lower:
-                return False, f"CONTRADICTION DETECTED: The problem requests a {description}, which is geometrically impossible."
+                return (
+                    False,
+                    f"CONTRADICTION DETECTED: The problem requests a {description}, which is geometrically impossible.",
+                )
 
         # Check for requests requiring real-time/future data
-        temporal_keywords = ['current price', 'today', 'tomorrow', 'right now', 'latest news', "today's weather"]
+        temporal_keywords = [
+            "current price",
+            "today",
+            "tomorrow",
+            "right now",
+            "latest news",
+            "today's weather",
+        ]
         for keyword in temporal_keywords:
             if keyword in problem_lower:
-                return False, f"KNOWLEDGE BOUNDARY: This problem requires real-time or future data ('{keyword}'). I don't have access to live data feeds or the ability to predict future events. Please reformulate with information I can reason about from my training data."
+                return (
+                    False,
+                    f"KNOWLEDGE BOUNDARY: This problem requires real-time or future data ('{keyword}'). I don't have access to live data feeds or the ability to predict future events. Please reformulate with information I can reason about from my training data.",
+                )
 
         # Check for prime AND even (except 2)
-        if 'prime' in problem_lower and 'even' in problem_lower and ('4-digit' in problem_lower or '3-digit' in problem_lower or 'number' in problem_lower):
-            return False, "CONTRADICTION DETECTED: No multi-digit number can be both prime and even (except 2, which is not multi-digit). Even numbers are divisible by 2, while primes have exactly two divisors."
+        if (
+            "prime" in problem_lower
+            and "even" in problem_lower
+            and (
+                "4-digit" in problem_lower
+                or "3-digit" in problem_lower
+                or "number" in problem_lower
+            )
+        ):
+            return (
+                False,
+                "CONTRADICTION DETECTED: No multi-digit number can be both prime and even (except 2, which is not multi-digit). Even numbers are divisible by 2, while primes have exactly two divisors.",
+            )
 
         return True, ""
 
@@ -252,8 +293,8 @@ class TheGuide:
                 from .reasoner import TheReasoner
             except ImportError:
                 # Fallback to absolute import if relative import fails
-                import sys
                 import importlib.util
+
                 reasoner_path = self.pantheon_path.parent / "pantheon" / "reasoner.py"
                 if reasoner_path.exists():
                     spec = importlib.util.spec_from_file_location("reasoner", reasoner_path)
@@ -265,10 +306,15 @@ class TheGuide:
                     class TheReasoner:
                         def __init__(self, project_path):
                             self.project_path = project_path
-                        def create_trace(self, decision, reasoning, context=None, parent_trace_id=None):
+
+                        def create_trace(
+                            self, decision, reasoning, context=None, parent_trace_id=None
+                        ):
                             return f"mock_trace_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+
                         def get_recent_traces(self, limit=10):
                             return []
+
             self._reasoner = TheReasoner(project_path=self.project_path)
         return self._reasoner
 
@@ -297,11 +343,7 @@ class TheGuide:
         api_key = self.guide_llm_config.get("api_key")
         base_url = self.guide_llm_config.get("base_url")
 
-        return LLM(
-            model=model,
-            api_key=api_key,
-            base_url=base_url
-        )
+        return LLM(model=model, api_key=api_key, base_url=base_url)
 
     def _guidance_loop(
         self,
@@ -309,8 +351,8 @@ class TheGuide:
         max_iterations: int = 10,
         quality_threshold: float = 0.8,
         use_partial_context: bool = True,
-        test_time_scaling: int = 1
-    ) -> Tuple[str, Protocol]:
+        test_time_scaling: int = 1,
+    ) -> tuple[str, Protocol]:
         """
         Core guidance loop: Guide instructs, Client reasons, Guide evaluates, repeat.
 
@@ -344,7 +386,7 @@ class TheGuide:
                 problem_statement=problem_statement,
                 iteration=iteration,
                 previous_steps=reasoning_chain,
-                previous_evaluations=evaluations
+                previous_evaluations=evaluations,
             )
 
             # Optional: Self-rewarding (Guide evaluates its own instruction)
@@ -352,22 +394,20 @@ class TheGuide:
                 self_eval = self._evaluate_guide_instruction(
                     instruction=instruction,
                     previous_iterations=reasoning_chain,
-                    guide_llm=self.guide_llm
+                    guide_llm=self.guide_llm,
                 )
 
                 # Optional: Self-correction (Guide revises instruction if quality is low)
                 if self.enable_self_correction and self_eval.get("quality_score", 1.0) < 0.7:
                     instruction = self._self_correct_instruction(
-                        instruction=instruction,
-                        evaluation=self_eval,
-                        guide_llm=self.guide_llm
+                        instruction=instruction, evaluation=self_eval, guide_llm=self.guide_llm
                     )
 
             # Step 2: Client LLM produces reasoning trace
             reasoning_trace = self._generate_reasoning_trace(
                 problem_statement=problem_statement,
                 instruction=instruction,
-                previous_steps=reasoning_chain
+                previous_steps=reasoning_chain,
             )
 
             # Store reasoning step
@@ -375,7 +415,7 @@ class TheGuide:
                 "iteration": iteration,
                 "instruction": instruction,
                 "reasoning_trace": reasoning_trace,
-                "timestamp": datetime.now().isoformat()
+                "timestamp": datetime.now().isoformat(),
             }
             reasoning_chain.append(reasoning_step)
 
@@ -385,14 +425,14 @@ class TheGuide:
                     reasoning_trace=reasoning_trace,
                     previous_steps=reasoning_chain[:-1],  # Exclude current step
                     guide_llm=self.guide_llm,
-                    num_samples=test_time_scaling
+                    num_samples=test_time_scaling,
                 )
             else:
                 evaluation = self._evaluate_with_fvcu(
                     reasoning_trace=reasoning_trace,
                     previous_steps=reasoning_chain[:-1],
                     guide_llm=self.guide_llm,
-                    use_partial_context=use_partial_context
+                    use_partial_context=use_partial_context,
                 )
 
             evaluations.append(evaluation)
@@ -404,9 +444,9 @@ class TheGuide:
                 context={
                     "iteration": iteration,
                     "quality_score": evaluation["scores"]["overall"],
-                    "session_id": session_id
+                    "session_id": session_id,
                 },
-                parent_trace_id=previous_trace_id
+                parent_trace_id=previous_trace_id,
             )
             previous_trace_id = trace_id
 
@@ -417,7 +457,7 @@ class TheGuide:
                 evaluation_scores=scores,
                 max_iterations=max_iterations,
                 quality_threshold=quality_threshold,
-                guide_assessment=evaluation
+                guide_assessment=evaluation,
             )
 
             if should_terminate:
@@ -425,8 +465,7 @@ class TheGuide:
 
         # Generate final answer from Client LLM
         final_answer = self._generate_final_answer(
-            problem_statement=problem_statement,
-            reasoning_chain=reasoning_chain
+            problem_statement=problem_statement, reasoning_chain=reasoning_chain
         )
 
         # Calculate overall quality score
@@ -443,7 +482,7 @@ class TheGuide:
             evaluations=evaluations,
             final_answer=final_answer,
             quality_score=quality_score,
-            iteration_count=len(reasoning_chain)
+            iteration_count=len(reasoning_chain),
         )
 
         return final_answer, protocol
@@ -452,8 +491,8 @@ class TheGuide:
         self,
         problem_statement: str,
         iteration: int,
-        previous_steps: List[Dict[str, Any]],
-        previous_evaluations: List[Dict[str, Any]]
+        previous_steps: list[dict[str, Any]],
+        previous_evaluations: list[dict[str, Any]],
     ) -> str:
         """Generate meta-cognitive instruction from Guide LLM."""
         if iteration == 1:
@@ -479,10 +518,7 @@ Based on the previous work and evaluations, provide the next instruction to cont
         return response.strip()
 
     def _generate_reasoning_trace(
-        self,
-        problem_statement: str,
-        instruction: str,
-        previous_steps: List[Dict[str, Any]]
+        self, problem_statement: str, instruction: str, previous_steps: list[dict[str, Any]]
     ) -> str:
         """Generate reasoning trace from Client LLM."""
         if not self.client_llm:
@@ -505,17 +541,14 @@ Follow the instruction and show your reasoning step-by-step with clear intermedi
         return response.strip()
 
     def _generate_final_answer(
-        self,
-        problem_statement: str,
-        reasoning_chain: List[Dict[str, Any]]
+        self, problem_statement: str, reasoning_chain: list[dict[str, Any]]
     ) -> str:
         """Generate final answer from Client LLM based on reasoning chain."""
         if not self.client_llm:
             raise ValueError("Client LLM not configured")
 
         reasoning_summary = "\n\n".join(
-            f"Step {s['iteration']}: {s['reasoning_trace']}"
-            for s in reasoning_chain
+            f"Step {s['iteration']}: {s['reasoning_trace']}" for s in reasoning_chain
         )
 
         prompt = f"""Problem: {problem_statement}
@@ -529,30 +562,28 @@ Based on this reasoning, provide a clear, concise final answer to the problem.""
         return response.strip()
 
     def _format_previous_steps(
-        self,
-        previous_steps: List[Dict[str, Any]],
-        previous_evaluations: List[Dict[str, Any]]
+        self, previous_steps: list[dict[str, Any]], previous_evaluations: list[dict[str, Any]]
     ) -> str:
         """Format previous steps and evaluations for context."""
         formatted = []
         for step, eval_data in zip(previous_steps, previous_evaluations):
             formatted.append(f"""
-Step {step['iteration']}:
-  Instruction: {step['instruction']}
-  Reasoning: {step['reasoning_trace'][:200]}...
-  Scores: Factuality={eval_data['scores']['factuality']:.2f}, Validity={eval_data['scores']['validity']:.2f}, Coherence={eval_data['scores']['coherence']:.2f}, Utility={eval_data['scores']['utility']:.2f}, Faithfulness={eval_data['scores']['faithfulness']:.2f}
-  Strengths: {', '.join(eval_data.get('strengths', [])[:2])}
-  Weaknesses: {', '.join(eval_data.get('weaknesses', [])[:2])}
+Step {step["iteration"]}:
+  Instruction: {step["instruction"]}
+  Reasoning: {step["reasoning_trace"][:200]}...
+  Scores: Factuality={eval_data["scores"]["factuality"]:.2f}, Validity={eval_data["scores"]["validity"]:.2f}, Coherence={eval_data["scores"]["coherence"]:.2f}, Utility={eval_data["scores"]["utility"]:.2f}, Faithfulness={eval_data["scores"]["faithfulness"]:.2f}
+  Strengths: {", ".join(eval_data.get("strengths", [])[:2])}
+  Weaknesses: {", ".join(eval_data.get("weaknesses", [])[:2])}
 """)
         return "\n".join(formatted)
 
     def _evaluate_with_fvcu(
         self,
         reasoning_trace: str,
-        previous_steps: List[Dict[str, Any]],
+        previous_steps: list[dict[str, Any]],
         guide_llm: Any,
-        use_partial_context: bool = True
-    ) -> Dict[str, Any]:
+        use_partial_context: bool = True,
+    ) -> dict[str, Any]:
         """
         Evaluate reasoning trace using FVCU+Faithfulness criteria.
 
@@ -634,9 +665,9 @@ Provide your evaluation in this exact JSON format:
 
             # Calculate overall if missing
             if "overall" not in evaluation:
-                evaluation["overall"] = sum(
-                    evaluation.get(s, 0.5) for s in required_scores
-                ) / len(required_scores)
+                evaluation["overall"] = sum(evaluation.get(s, 0.5) for s in required_scores) / len(
+                    required_scores
+                )
 
             # Wrap scores in proper structure
             return {
@@ -647,7 +678,7 @@ Provide your evaluation in this exact JSON format:
                     "coherence": evaluation["coherence"],
                     "utility": evaluation["utility"],
                     "faithfulness": evaluation["faithfulness"],
-                    "overall": evaluation["overall"]
+                    "overall": evaluation["overall"],
                 },
                 "rationale": evaluation.get("rationale", ""),
                 "strengths": evaluation.get("strengths", []),
@@ -655,7 +686,9 @@ Provide your evaluation in this exact JSON format:
                 "recommendations": evaluation.get("recommendations", []),
                 "should_continue": evaluation.get("should_continue", True),
                 "planning_detected": evaluation.get("planning_detected", False),
-                "unfaithful_reasoning_detected": evaluation.get("unfaithful_reasoning_detected", False)
+                "unfaithful_reasoning_detected": evaluation.get(
+                    "unfaithful_reasoning_detected", False
+                ),
             }
 
         except (json.JSONDecodeError, KeyError, IndexError) as e:
@@ -668,7 +701,7 @@ Provide your evaluation in this exact JSON format:
                     "coherence": 0.5,
                     "utility": 0.5,
                     "faithfulness": 0.5,
-                    "overall": 0.5
+                    "overall": 0.5,
                 },
                 "rationale": f"Evaluation parsing failed: {str(e)}",
                 "strengths": [],
@@ -676,15 +709,12 @@ Provide your evaluation in this exact JSON format:
                 "recommendations": ["Retry evaluation"],
                 "should_continue": True,
                 "planning_detected": False,
-                "unfaithful_reasoning_detected": False
+                "unfaithful_reasoning_detected": False,
             }
 
     def _identify_premises(
-        self,
-        step: Dict[str, Any],
-        previous_steps: List[Dict[str, Any]],
-        guide_llm: Any
-    ) -> List[int]:
+        self, step: dict[str, Any], previous_steps: list[dict[str, Any]], guide_llm: Any
+    ) -> list[int]:
         """
         Identify which previous steps are premises for the current step.
 
@@ -705,10 +735,10 @@ Provide your evaluation in this exact JSON format:
     def _evaluate_with_majority_voting(
         self,
         reasoning_trace: str,
-        previous_steps: List[Dict[str, Any]],
+        previous_steps: list[dict[str, Any]],
         guide_llm: Any,
-        num_samples: int = 3
-    ) -> Dict[str, Any]:
+        num_samples: int = 3,
+    ) -> dict[str, Any]:
         """
         Test-time scaling: Evaluate using majority voting across multiple samples.
 
@@ -725,11 +755,8 @@ Provide your evaluation in this exact JSON format:
         pass
 
     def _evaluate_guide_instruction(
-        self,
-        instruction: str,
-        previous_iterations: List[Dict[str, Any]],
-        guide_llm: Any
-    ) -> Dict[str, Any]:
+        self, instruction: str, previous_iterations: list[dict[str, Any]], guide_llm: Any
+    ) -> dict[str, Any]:
         """
         Self-rewarding: Guide evaluates its own instruction quality.
 
@@ -745,10 +772,7 @@ Provide your evaluation in this exact JSON format:
         pass
 
     def _self_correct_instruction(
-        self,
-        instruction: str,
-        evaluation: Dict[str, Any],
-        guide_llm: Any
+        self, instruction: str, evaluation: dict[str, Any], guide_llm: Any
     ) -> str:
         """
         Self-correction: Guide revises instruction if quality is low.
@@ -770,8 +794,8 @@ Provide your evaluation in this exact JSON format:
         evaluation_scores: EvaluationScores,
         max_iterations: int,
         quality_threshold: float,
-        guide_assessment: Optional[Dict[str, Any]] = None
-    ) -> Tuple[bool, str]:
+        guide_assessment: dict[str, Any] | None = None,
+    ) -> tuple[bool, str]:
         """
         Check if guidance loop should terminate.
 
@@ -797,11 +821,20 @@ Provide your evaluation in this exact JSON format:
 
         # Check quality threshold (overall score)
         if evaluation_scores.overall >= quality_threshold:
-            return True, f"Quality threshold ({quality_threshold}) achieved: {evaluation_scores.overall:.2f}"
+            return (
+                True,
+                f"Quality threshold ({quality_threshold}) achieved: {evaluation_scores.overall:.2f}",
+            )
 
         # Check validity + utility complementarity (both should be high for termination)
-        if evaluation_scores.validity >= quality_threshold and evaluation_scores.utility >= quality_threshold:
-            return True, f"Validity ({evaluation_scores.validity:.2f}) and Utility ({evaluation_scores.utility:.2f}) thresholds achieved"
+        if (
+            evaluation_scores.validity >= quality_threshold
+            and evaluation_scores.utility >= quality_threshold
+        ):
+            return (
+                True,
+                f"Validity ({evaluation_scores.validity:.2f}) and Utility ({evaluation_scores.utility:.2f}) thresholds achieved",
+            )
 
         # Check if Guide assessment says not to continue
         if guide_assessment and not guide_assessment.get("should_continue", True):
@@ -814,12 +847,12 @@ Provide your evaluation in this exact JSON format:
         self,
         session_id: str,
         problem_statement: str,
-        reasoning_chain: List[Dict[str, Any]],
-        evaluations: List[Dict[str, Any]],
+        reasoning_chain: list[dict[str, Any]],
+        evaluations: list[dict[str, Any]],
         final_answer: str,
         quality_score: float,
         iteration_count: int,
-        evaluation_method: str = "critic_model"
+        evaluation_method: str = "critic_model",
     ) -> Protocol:
         """
         Generate Protocol from guidance session.
@@ -846,7 +879,7 @@ Provide your evaluation in this exact JSON format:
             quality_score=quality_score,
             iteration_count=iteration_count,
             evaluation_method=evaluation_method,
-            completed=datetime.now().isoformat()
+            completed=datetime.now().isoformat(),
         )
 
     def _save_session(self, protocol: Protocol) -> None:
@@ -865,14 +898,16 @@ Provide your evaluation in this exact JSON format:
         protocol_file.write_text(protocol.model_dump_json(indent=2))
 
         # Update index
-        self.index["sessions"].append({
-            "session_id": protocol.session_id,
-            "problem_summary": protocol.problem_statement[:100],
-            "created": protocol.created,
-            "completed": protocol.completed,
-            "iterations": protocol.iteration_count,
-            "quality_score": protocol.quality_score
-        })
+        self.index["sessions"].append(
+            {
+                "session_id": protocol.session_id,
+                "problem_summary": protocol.problem_statement[:100],
+                "created": protocol.created,
+                "completed": protocol.completed,
+                "iterations": protocol.iteration_count,
+                "quality_score": protocol.quality_score,
+            }
+        )
         self._save_index()
 
     def solve(
@@ -881,8 +916,8 @@ Provide your evaluation in this exact JSON format:
         max_iterations: int = 10,
         quality_threshold: float = 0.8,
         use_partial_context: bool = True,
-        test_time_scaling: int = 1
-    ) -> Tuple[str, Protocol]:
+        test_time_scaling: int = 1,
+    ) -> tuple[str, Protocol]:
         """
         Solve a problem using meta-cognitive guidance loop.
 
@@ -930,14 +965,14 @@ Provide your evaluation in this exact JSON format:
                     {
                         "instruction": "Validate problem statement",
                         "reasoning_trace": "Problem validation detected issues",
-                        "answer": error_message
+                        "answer": error_message,
                     }
                 ],
                 evaluations=[],
                 iteration_count=0,
                 final_answer=error_message,
                 quality_score=0.0,
-                should_continue=False
+                should_continue=False,
             )
             self._save_session(protocol)
             return error_message, protocol
@@ -948,7 +983,7 @@ Provide your evaluation in this exact JSON format:
             max_iterations=max_iterations,
             quality_threshold=quality_threshold,
             use_partial_context=use_partial_context,
-            test_time_scaling=test_time_scaling
+            test_time_scaling=test_time_scaling,
         )
 
         # Save session
@@ -1035,7 +1070,7 @@ Provide your evaluation in this exact JSON format:
 
         return explanation.strip()
 
-    def get_protocol(self, session_id: str) -> Optional[Protocol]:
+    def get_protocol(self, session_id: str) -> Protocol | None:
         """
         Load a Protocol by session ID.
 
@@ -1054,7 +1089,7 @@ Provide your evaluation in this exact JSON format:
                 return None
         return None
 
-    def get_recent_sessions(self, limit: int = 10) -> List[Dict[str, Any]]:
+    def get_recent_sessions(self, limit: int = 10) -> list[dict[str, Any]]:
         """
         Get recent guidance sessions.
 
@@ -1065,13 +1100,9 @@ Provide your evaluation in this exact JSON format:
             List of session summaries
         """
         sessions = self.index.get("sessions", [])
-        return sorted(
-            sessions,
-            key=lambda s: s.get("created", ""),
-            reverse=True
-        )[:limit]
+        return sorted(sessions, key=lambda s: s.get("created", ""), reverse=True)[:limit]
 
-    def get_session_summary(self) -> Dict[str, Any]:
+    def get_session_summary(self) -> dict[str, Any]:
         """
         Get summary of all guidance sessions.
 
@@ -1081,12 +1112,16 @@ Provide your evaluation in this exact JSON format:
         sessions_dir = self.guide_path / "sessions"
         protocols_dir = self.guide_path / "protocols"
 
-        session_count = len(list(sessions_dir.glob("session_*.json"))) if sessions_dir.exists() else 0
-        protocol_count = len(list(protocols_dir.glob("session_*.json"))) if protocols_dir.exists() else 0
+        session_count = (
+            len(list(sessions_dir.glob("session_*.json"))) if sessions_dir.exists() else 0
+        )
+        protocol_count = (
+            len(list(protocols_dir.glob("session_*.json"))) if protocols_dir.exists() else 0
+        )
 
         return {
             "total_sessions": session_count,
             "total_protocols": protocol_count,
             "indexed_sessions": len(self.index.get("sessions", [])),
-            "last_updated": self.index.get("last_updated")
+            "last_updated": self.index.get("last_updated"),
         }

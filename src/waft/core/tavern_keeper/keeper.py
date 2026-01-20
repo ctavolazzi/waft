@@ -8,24 +8,27 @@ Integrates with Empirica for epistemic tracking of character development and lea
 
 import json
 import math
-from pathlib import Path
-from typing import Dict, Any, Optional, List
 from datetime import datetime
+from pathlib import Path
+from typing import Any
 
 try:
-    from tinydb import TinyDB, Query
+    from tinydb import Query, TinyDB
+
     TINYDB_AVAILABLE = True
 except ImportError:
     TINYDB_AVAILABLE = False
 
 try:
     import d20
+
     D20_AVAILABLE = True
 except ImportError:
     D20_AVAILABLE = False
 
 try:
     import tracery
+
     TRACERY_AVAILABLE = True
 except ImportError:
     TRACERY_AVAILABLE = False
@@ -46,7 +49,7 @@ class TavernKeeper:
     def __init__(self, project_path: Path, empirica_manager=None):
         """
         Initialize the TavernKeeper.
-        
+
         Args:
             project_path: Path to project root
             empirica_manager: Optional EmpiricaManager for epistemic tracking
@@ -69,6 +72,7 @@ class TavernKeeper:
         # Initialize Empirica (for epistemic tracking)
         if empirica_manager is None:
             from ..empirica import EmpiricaManager
+
             self.empirica = EmpiricaManager(self.project_path)
         else:
             self.empirica = empirica_manager
@@ -79,44 +83,45 @@ class TavernKeeper:
 
         # Migrate from gamification.json if it exists
         self._migrate_from_gamification()
-        
+
         # Log character initialization to Empirica if available
         if self.empirica.is_initialized():
             self._log_character_init_to_empirica()
-        
+
         # Initialize Heart (Prime Directive at center of TreasureTavern)
         self._heart = None
         self._celestial_body = None
         self._karma_museum = None
         try:
             from ...prime_directive import CelestialBody, KarmaMuseum
+
             self._celestial_body = CelestialBody(project_path=self.project_path)
             self._heart = self._celestial_body.heart
             self._karma_museum = KarmaMuseum(project_path=self.project_path)
-            
+
             # Add reference to Prime Directive
             self._heart.add_reference(
                 reference_type="system",
                 reference_id="tavern_keeper",
-                description="TavernKeeper - Heart at center of TreasureTavern"
+                description="TavernKeeper - Heart at center of TreasureTavern",
             )
         except ImportError:
             # Prime Directive module not available
             pass
-    
+
     def _log_character_init_to_empirica(self) -> None:
         """Log character initialization to Empirica."""
         character = self.get_character()
         finding = f"TavernKeeper character initialized: {character.get('name')} (Level {character.get('level', 1)})"
         self.empirica.log_finding(finding, impact=0.3)
 
-    def _load_json_data(self) -> Dict[str, Any]:
+    def _load_json_data(self) -> dict[str, Any]:
         """Load data from JSON file (fallback if TinyDB not available)."""
         if self.chronicles_path.exists():
             try:
-                with open(self.chronicles_path, "r") as f:
+                with open(self.chronicles_path) as f:
                     return json.load(f)
-            except (json.JSONDecodeError, IOError):
+            except (OSError, json.JSONDecodeError):
                 pass
 
         return {
@@ -132,7 +137,7 @@ class TavernKeeper:
             },
         }
 
-    def _default_character(self) -> Dict[str, Any]:
+    def _default_character(self) -> dict[str, Any]:
         """Create default character stats."""
         return {
             "name": self.project_path.name,
@@ -179,7 +184,7 @@ class TavernKeeper:
             return
 
         try:
-            with open(gamification_path, "r") as f:
+            with open(gamification_path) as f:
                 gam_data = json.load(f)
 
             character = self.get_character()
@@ -205,18 +210,24 @@ class TavernKeeper:
                 if history:
                     journal_entries = []
                     for entry in history[-50:]:  # Keep last 50 entries
-                        journal_entries.append({
-                            "timestamp": entry.get("timestamp", datetime.now().isoformat()),
-                            "event": entry.get("type", "unknown"),
-                            "narrative": entry.get("reason", ""),
-                            "outcome": "success" if entry.get("type") == "insight_award" else "info",
-                        })
+                        journal_entries.append(
+                            {
+                                "timestamp": entry.get("timestamp", datetime.now().isoformat()),
+                                "event": entry.get("type", "unknown"),
+                                "narrative": entry.get("reason", ""),
+                                "outcome": "success"
+                                if entry.get("type") == "insight_award"
+                                else "info",
+                            }
+                        )
 
                     if self.db:
                         for entry in journal_entries:
                             self.db.table("adventure_journal").insert(entry)
                     else:
-                        self._data["adventure_journal"] = journal_entries + self._data.get("adventure_journal", [])
+                        self._data["adventure_journal"] = journal_entries + self._data.get(
+                            "adventure_journal", []
+                        )
 
                 # Save updated character
                 if self.db:
@@ -224,7 +235,7 @@ class TavernKeeper:
                 else:
                     self._data["character"] = character
                     self._save_json_data()
-        except (json.JSONDecodeError, IOError, KeyError):
+        except (OSError, json.JSONDecodeError, KeyError):
             # Migration failed, continue with defaults
             pass
 
@@ -249,7 +260,7 @@ class TavernKeeper:
         with open(self.chronicles_path, "w") as f:
             json.dump(self._data, f, indent=2)
 
-    def get_character(self) -> Dict[str, Any]:
+    def get_character(self) -> dict[str, Any]:
         """Get current character stats."""
         if self.db:
             chars = self.db.table("character").all()
@@ -333,7 +344,9 @@ class TavernKeeper:
         max_hp = self.get_max_hp()
         return int(max_hp * (integrity / 100.0))
 
-    def roll_check(self, ability: str, dc: int, advantage: bool = False, disadvantage: bool = False) -> Dict[str, Any]:
+    def roll_check(
+        self, ability: str, dc: int, advantage: bool = False, disadvantage: bool = False
+    ) -> dict[str, Any]:
         """
         Roll a d20 check against a difficulty class (DC).
 
@@ -349,6 +362,7 @@ class TavernKeeper:
         if not D20_AVAILABLE:
             # Fallback: simple random roll
             import random
+
             roll = random.randint(1, 20)
             if advantage:
                 roll2 = random.randint(1, 20)
@@ -396,7 +410,7 @@ class TavernKeeper:
             "classification": classification,
         }
 
-    def narrate(self, event: str, outcome: str, context: Optional[Dict[str, Any]] = None) -> str:
+    def narrate(self, event: str, outcome: str, context: dict[str, Any] | None = None) -> str:
         """
         Generate narrative text using Tracery (or fallback).
 
@@ -456,6 +470,7 @@ class TavernKeeper:
         # Fallback: Simple random selection from grammar
         import random
         import re
+
         if "origin" in grammar:
             narrative = random.choice(grammar["origin"])
             # Simple placeholder replacement - replace all #key# patterns
@@ -501,7 +516,7 @@ class TavernKeeper:
         # Ultimate fallback
         return f"The TavernKeeper observes {char_name}."
 
-    def apply_status_effect(self, effect: Dict[str, Any]) -> None:
+    def apply_status_effect(self, effect: dict[str, Any]) -> None:
         """
         Apply a status effect (buff or debuff).
 
@@ -539,7 +554,7 @@ class TavernKeeper:
             self._data["status_effects"] = [e for e in effects if e.get("id") != effect_id]
             self._save_json_data()
 
-    def get_active_status_effects(self) -> List[Dict[str, Any]]:
+    def get_active_status_effects(self) -> list[dict[str, Any]]:
         """
         Get all active status effects.
 
@@ -559,25 +574,29 @@ class TavernKeeper:
             classification: One of critical_failure, failure, success, etc.
         """
         if classification == "critical_failure":
-            self.apply_status_effect({
-                "id": "entropy_spike",
-                "name": "Entropy Spike",
-                "type": "debuff",
-                "effect": {"constitution": -2},
-                "duration": None,  # Permanent until removed
-                "description": "Critical failure causes structural instability",
-            })
+            self.apply_status_effect(
+                {
+                    "id": "entropy_spike",
+                    "name": "Entropy Spike",
+                    "type": "debuff",
+                    "effect": {"constitution": -2},
+                    "duration": None,  # Permanent until removed
+                    "description": "Critical failure causes structural instability",
+                }
+            )
         elif classification == "critical_success":
-            self.apply_status_effect({
-                "id": "harmonic_resonance",
-                "name": "Harmonic Resonance",
-                "type": "buff",
-                "effect": {"intelligence": +2, "wisdom": +2},
-                "duration": 3600,  # 1 hour in seconds
-                "description": "Critical success creates perfect alignment",
-            })
+            self.apply_status_effect(
+                {
+                    "id": "harmonic_resonance",
+                    "name": "Harmonic Resonance",
+                    "type": "buff",
+                    "effect": {"intelligence": +2, "wisdom": +2},
+                    "duration": 3600,  # 1 hour in seconds
+                    "description": "Critical success creates perfect alignment",
+                }
+            )
 
-    def award_rewards(self, rewards: Dict[str, Any]) -> Dict[str, Any]:
+    def award_rewards(self, rewards: dict[str, Any]) -> dict[str, Any]:
         """
         Award rewards (XP, Credits, etc.).
 
@@ -620,10 +639,12 @@ class TavernKeeper:
         else:
             self._data["character"] = character
             self._save_json_data()
-        
+
         # Log to Empirica if available
         if self.empirica.is_initialized():
-            self._log_rewards_to_empirica(rewards, level_up, old_level, new_level, old_insight, new_insight)
+            self._log_rewards_to_empirica(
+                rewards, level_up, old_level, new_level, old_insight, new_insight
+            )
 
         return {
             "level_up": level_up,
@@ -634,33 +655,35 @@ class TavernKeeper:
             "new_credits": new_credits,
             "new_integrity": new_integrity,
         }
-    
+
     def _log_rewards_to_empirica(
-        self, 
-        rewards: Dict[str, Any], 
-        level_up: bool, 
-        old_level: int, 
+        self,
+        rewards: dict[str, Any],
+        level_up: bool,
+        old_level: int,
         new_level: int,
         old_insight: float,
-        new_insight: float
+        new_insight: float,
     ) -> None:
         """Log character progression to Empirica."""
         character = self.get_character()
         char_name = character.get("name", "Character")
-        
+
         # Log level up as finding
         if level_up:
-            finding = f"TavernKeeper level up: {char_name} reached level {new_level} (from {old_level})"
+            finding = (
+                f"TavernKeeper level up: {char_name} reached level {new_level} (from {old_level})"
+            )
             impact = min(0.9, 0.5 + (new_level * 0.05))  # Higher level = higher impact
             self.empirica.log_finding(finding, impact=impact)
-        
+
         # Log insight gain
         insight_gain = new_insight - old_insight
         if insight_gain > 0:
             finding = f"TavernKeeper insight gained: {char_name} +{insight_gain:.1f} insight (total: {new_insight:.1f})"
             impact = min(0.7, 0.3 + (insight_gain / 100.0))  # Impact based on insight gain
             self.empirica.log_finding(finding, impact=impact)
-        
+
         # Log integrity changes
         integrity_delta = rewards.get("integrity", 0.0)
         if integrity_delta != 0:
@@ -672,7 +695,7 @@ class TavernKeeper:
                 finding = f"TavernKeeper integrity gain: {char_name} +{integrity_delta:.1f} integrity (current: {current_integrity:.1f}%)"
                 self.empirica.log_finding(finding, impact=0.3)
 
-    def log_adventure(self, event: Dict[str, Any]) -> None:
+    def log_adventure(self, event: dict[str, Any]) -> None:
         """
         Log an event to the adventure journal.
 
@@ -691,7 +714,7 @@ class TavernKeeper:
                 self._data["adventure_journal"] = self._data["adventure_journal"][-100:]
             self._save_json_data()
 
-    def get_character_sheet(self) -> Dict[str, Any]:
+    def get_character_sheet(self) -> dict[str, Any]:
         """
         Get full character sheet with all stats.
 
@@ -705,22 +728,34 @@ class TavernKeeper:
             "ability_scores": character.get("ability_scores", {}),
             "ability_modifiers": {
                 ability: self.get_ability_modifier(ability)
-                for ability in ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
+                for ability in [
+                    "strength",
+                    "dexterity",
+                    "constitution",
+                    "intelligence",
+                    "wisdom",
+                    "charisma",
+                ]
             },
             "proficiency_bonus": self.get_proficiency_bonus(),
             "hp": {
                 "current": self.get_current_hp(),
                 "max": self.get_max_hp(),
             },
-            "status_effects": self._data.get("status_effects", []) if not self.db else self.db.table("status_effects").all(),
+            "status_effects": self._data.get("status_effects", [])
+            if not self.db
+            else self.db.table("status_effects").all(),
         }
 
     def get_narrator(self):
         """Get a Narrator instance for this TavernKeeper."""
         from .narrator import Narrator
+
         return Narrator(self)
 
-    def process_command_hook(self, command: str, success: bool, context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def process_command_hook(
+        self, command: str, success: bool, context: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
         """
         Process a command hook - roll dice, generate narrative, award rewards.
 
@@ -746,7 +781,9 @@ class TavernKeeper:
             "goal_create": {"ability": "charisma", "dc": 10, "base_xp": 5, "base_credits": 0},
         }
 
-        cmd_config = command_map.get(command, {"ability": "wisdom", "dc": 10, "base_xp": 5, "base_credits": 0})
+        cmd_config = command_map.get(
+            command, {"ability": "wisdom", "dc": 10, "base_xp": 5, "base_credits": 0}
+        )
 
         # Roll dice
         dice_result = self.roll_check(cmd_config["ability"], cmd_config["dc"])
@@ -788,15 +825,17 @@ class TavernKeeper:
         narrative = self.narrate(f"{command}_{outcome}", outcome, context)
 
         # Log adventure
-        self.log_adventure({
-            "event": command,
-            "narrative": narrative,
-            "dice_roll": f"1d20+{dice_result['modifier']}",
-            "result": dice_result["total"],
-            "outcome": outcome,
-            "rewards": rewards,
-            "classification": dice_result["classification"],
-        })
+        self.log_adventure(
+            {
+                "event": command,
+                "narrative": narrative,
+                "dice_roll": f"1d20+{dice_result['modifier']}",
+                "result": dice_result["total"],
+                "outcome": outcome,
+                "rewards": rewards,
+                "classification": dice_result["classification"],
+            }
+        )
 
         return {
             "narrative": narrative,
@@ -804,42 +843,41 @@ class TavernKeeper:
             "rewards": reward_result,
             "xp_gained": xp_gained,
         }
-    
+
     def get_heart(self):
         """
         Get the Heart (Prime Directive) at the center of TreasureTavern.
-        
+
         Returns:
             PrimeDirective instance or None if not available
         """
         return self._heart
-    
+
     def get_celestial_body(self):
         """
         Get the CelestialBody structure.
-        
+
         Returns:
             CelestialBody instance or None if not available
         """
         return self._celestial_body
-    
+
     def get_karma_museum(self):
         """
         Get the Karma Museum for exploring evolution history.
-        
+
         Returns:
             KarmaMuseum instance or None if not available
         """
         return self._karma_museum
-    
-    def get_prime_directive_principles(self) -> List[str]:
+
+    def get_prime_directive_principles(self) -> list[str]:
         """
         Get Prime Directive principles.
-        
+
         Returns:
             List of principles or empty list if not available
         """
         if self._heart:
             return self._heart.get_principles()
         return []
-
