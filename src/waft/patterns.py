@@ -18,6 +18,7 @@ import random
 # PATTERN 1: STRATEGY - Different evaluation strategies
 # ============================================================================
 
+
 class EvaluationStrategy(ABC):
     """Strategy for evaluating text quality."""
 
@@ -47,7 +48,7 @@ class LengthBasedStrategy(EvaluationStrategy):
             confidence=confidence,
             doubt=doubt,
             curiosity=curiosity,
-            aesthetic=aesthetic
+            aesthetic=aesthetic,
         )
 
 
@@ -74,7 +75,7 @@ class StrictStrategy(EvaluationStrategy):
             confidence=confidence,
             doubt=doubt,
             curiosity=curiosity,
-            aesthetic=aesthetic
+            aesthetic=aesthetic,
         )
 
 
@@ -101,14 +102,16 @@ class LenientStrategy(EvaluationStrategy):
             confidence=confidence,
             doubt=doubt,
             curiosity=curiosity,
-            aesthetic=aesthetic
+            aesthetic=aesthetic,
         )
 
 
 class StrategyGuide(Guide):
     """Guide with pluggable evaluation strategy."""
 
-    def __init__(self, strategy: EvaluationStrategy, max_iterations: int = 10, quality_threshold: float = 0.8):
+    def __init__(
+        self, strategy: EvaluationStrategy, max_iterations: int = 10, quality_threshold: float = 0.8
+    ):
         super().__init__(max_iterations, quality_threshold)
         self.strategy = strategy
 
@@ -121,13 +124,14 @@ class StrategyGuide(Guide):
 # PATTERN 2: CHAIN OF RESPONSIBILITY - Evaluation pipeline
 # ============================================================================
 
+
 class EvaluationHandler(ABC):
     """Handler in the evaluation chain."""
 
     def __init__(self):
         self._next: Optional[EvaluationHandler] = None
 
-    def set_next(self, handler: 'EvaluationHandler') -> 'EvaluationHandler':
+    def set_next(self, handler: "EvaluationHandler") -> "EvaluationHandler":
         """Set the next handler in the chain."""
         self._next = handler
         return handler
@@ -153,6 +157,7 @@ class MinimumScoreHandler(EvaluationHandler):
 
     def handle(self, evaluation: Evaluation) -> Evaluation:
         """Ensure no score falls below minimum."""
+
         def clamp(score: Score) -> Score:
             return Score(max(score.value, self.minimum))
 
@@ -165,7 +170,7 @@ class MinimumScoreHandler(EvaluationHandler):
             confidence=clamp(evaluation.confidence),
             doubt=clamp(evaluation.doubt),
             curiosity=clamp(evaluation.curiosity),
-            aesthetic=clamp(evaluation.aesthetic)
+            aesthetic=clamp(evaluation.aesthetic),
         )
         return self._pass_to_next(modified)
 
@@ -191,6 +196,7 @@ class LoggingHandler(EvaluationHandler):
 # PATTERN 3: OBSERVER - Watch quality changes
 # ============================================================================
 
+
 class QualityObserver(ABC):
     """Observer for quality changes."""
 
@@ -204,7 +210,9 @@ class QualityLogger(QualityObserver):
     """Log quality scores."""
 
     def update(self, step: Step) -> None:
-        print(f"[Observer] Iteration {step.iteration_number}: Quality={step.evaluation.overall.value:.3f}")
+        print(
+            f"[Observer] Iteration {step.iteration_number}: Quality={step.evaluation.overall.value:.3f}"
+        )
 
 
 class ThresholdAlerter(QualityObserver):
@@ -244,6 +252,7 @@ class ObservableGuide(Guide):
 # ============================================================================
 # PATTERN 4: DECORATOR - Add capabilities without modifying
 # ============================================================================
+
 
 class GuideDecorator(ABC):
     """Base decorator for Guide."""
@@ -296,6 +305,7 @@ class TimingDecorator(GuideDecorator):
     def solve(self, problem: str) -> Session:
         """Time the solve operation."""
         import time
+
         start = time.time()
         session = super().solve(problem)
         elapsed = time.time() - start
@@ -307,8 +317,10 @@ class TimingDecorator(GuideDecorator):
 # PATTERN 5: FACTORY - Create different guide types
 # ============================================================================
 
+
 class GuideType(Enum):
     """Types of guides."""
+
     BASIC = "basic"
     STRICT = "strict"
     LENIENT = "lenient"
@@ -326,16 +338,10 @@ class GuideFactory:
             return Guide(**kwargs)
 
         elif guide_type == GuideType.STRICT:
-            return StrategyGuide(
-                strategy=StrictStrategy(),
-                **kwargs
-            )
+            return StrategyGuide(strategy=StrictStrategy(), **kwargs)
 
         elif guide_type == GuideType.LENIENT:
-            return StrategyGuide(
-                strategy=LenientStrategy(),
-                **kwargs
-            )
+            return StrategyGuide(strategy=LenientStrategy(), **kwargs)
 
         elif guide_type == GuideType.OBSERVABLE:
             observable = ObservableGuide(**kwargs)
@@ -354,6 +360,7 @@ class GuideFactory:
 # ============================================================================
 # PATTERN 6: COMMAND - Each evaluation is a command
 # ============================================================================
+
 
 class Command(ABC):
     """Command interface."""
@@ -424,6 +431,7 @@ class CommandQueue:
 # PATTERN 7: BUILDER - Build complex sessions
 # ============================================================================
 
+
 class SessionBuilder:
     """Builder for constructing sessions step by step."""
 
@@ -433,22 +441,22 @@ class SessionBuilder:
         self._max_iterations: int = 10
         self._quality_threshold: float = 0.8
 
-    def with_problem(self, problem: str) -> 'SessionBuilder':
+    def with_problem(self, problem: str) -> "SessionBuilder":
         """Set the problem."""
         self._problem = problem
         return self
 
-    def with_max_iterations(self, max_iterations: int) -> 'SessionBuilder':
+    def with_max_iterations(self, max_iterations: int) -> "SessionBuilder":
         """Set max iterations."""
         self._max_iterations = max_iterations
         return self
 
-    def with_quality_threshold(self, threshold: float) -> 'SessionBuilder':
+    def with_quality_threshold(self, threshold: float) -> "SessionBuilder":
         """Set quality threshold."""
         self._quality_threshold = threshold
         return self
 
-    def add_step(self, step: Step) -> 'SessionBuilder':
+    def add_step(self, step: Step) -> "SessionBuilder":
         """Add a step."""
         self._steps.append(step)
         return self
@@ -462,7 +470,7 @@ class SessionBuilder:
             problem=self._problem,
             steps=self._steps,
             max_iterations=self._max_iterations,
-            quality_threshold=self._quality_threshold
+            quality_threshold=self._quality_threshold,
         )
 
 
@@ -471,9 +479,9 @@ class SessionBuilder:
 # ============================================================================
 
 if __name__ == "__main__":
-    print("="*80)
+    print("=" * 80)
     print("TESTING DESIGN PATTERNS")
-    print("="*80)
+    print("=" * 80)
 
     # Pattern 1: Strategy
     print("\n[PATTERN 1: STRATEGY]")
@@ -517,14 +525,12 @@ if __name__ == "__main__":
     # Pattern 7: Builder
     print("\n[PATTERN 7: BUILDER]")
     builder = SessionBuilder()
-    builder.with_problem("Built problem") \
-           .with_max_iterations(3) \
-           .with_quality_threshold(0.75)
+    builder.with_problem("Built problem").with_max_iterations(3).with_quality_threshold(0.75)
     print("  Built session with fluent interface")
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("ALL PATTERNS IMPLEMENTED")
-    print("="*80)
+    print("=" * 80)
     print("\n✅ Strategy - Pluggable evaluation algorithms")
     print("✅ Chain of Responsibility - Evaluation pipeline")
     print("✅ Observer - Watch quality changes")

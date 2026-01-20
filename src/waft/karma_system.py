@@ -27,9 +27,10 @@ class KarmaState:
     - Connection level (unity vs isolation)
     - Memory/focus (remember many vs cling to one)
     """
-    luck: float          # Current luck (0.0-1.0)
-    karma: float         # Accumulated karma (can exceed 1.0)
-    connection: float    # Feeling of connection (0.0-1.0)
+
+    luck: float  # Current luck (0.0-1.0)
+    karma: float  # Accumulated karma (can exceed 1.0)
+    connection: float  # Feeling of connection (0.0-1.0)
     memory_breadth: float  # 1.0 = remember many, 0.0 = cling to one thing
 
     def __post_init__(self):
@@ -75,7 +76,7 @@ class KarmaState:
         modified_roll = base_roll + karma_modifier
         return max(0.0, min(1.0, modified_roll))
 
-    def choose_others_over_self(self, magnitude: float = 0.1) -> 'KarmaState':
+    def choose_others_over_self(self, magnitude: float = 0.1) -> "KarmaState":
         """
         Make a choice to help others.
 
@@ -88,21 +89,15 @@ class KarmaState:
 
         # Roll for new luck with increased karma
         temp_state = KarmaState(
-            luck=self.luck,
-            karma=new_karma,
-            connection=new_connection,
-            memory_breadth=new_memory
+            luck=self.luck, karma=new_karma, connection=new_connection, memory_breadth=new_memory
         )
         new_luck = temp_state.roll_with_karma()
 
         return KarmaState(
-            luck=new_luck,
-            karma=new_karma,
-            connection=new_connection,
-            memory_breadth=new_memory
+            luck=new_luck, karma=new_karma, connection=new_connection, memory_breadth=new_memory
         )
 
-    def choose_self_over_others(self, magnitude: float = 0.1) -> 'KarmaState':
+    def choose_self_over_others(self, magnitude: float = 0.1) -> "KarmaState":
         """
         Make a choice prioritizing self.
 
@@ -115,18 +110,12 @@ class KarmaState:
 
         # Roll for new luck with decreased karma
         temp_state = KarmaState(
-            luck=self.luck,
-            karma=new_karma,
-            connection=new_connection,
-            memory_breadth=new_memory
+            luck=self.luck, karma=new_karma, connection=new_connection, memory_breadth=new_memory
         )
         new_luck = temp_state.roll_with_karma()
 
         return KarmaState(
-            luck=new_luck,
-            karma=new_karma,
-            connection=new_connection,
-            memory_breadth=new_memory
+            luck=new_luck, karma=new_karma, connection=new_connection, memory_breadth=new_memory
         )
 
     def to_aesthetic_score(self) -> Score:
@@ -134,8 +123,9 @@ class KarmaState:
         return Score(self.luck)
 
 
-def simulate_choices(starting_luck: float = 0.5, num_choices: int = 10,
-                    choice_pattern: str = "random") -> list[KarmaState]:
+def simulate_choices(
+    starting_luck: float = 0.5, num_choices: int = 10, choice_pattern: str = "random"
+) -> list[KarmaState]:
     """
     Simulate a sequence of choices to show feedback loops.
 
@@ -151,7 +141,7 @@ def simulate_choices(starting_luck: float = 0.5, num_choices: int = 10,
         luck=starting_luck,
         karma=starting_luck,  # Start with karma matching luck
         connection=starting_luck,
-        memory_breadth=starting_luck
+        memory_breadth=starting_luck,
     )
 
     history = [state]
@@ -189,47 +179,51 @@ def simulate_choices(starting_luck: float = 0.5, num_choices: int = 10,
 # ============================================================================
 
 if __name__ == "__main__":
-    print("="*80)
+    print("=" * 80)
     print("KARMA SYSTEM: Luck → Behavior → Karma → Future Luck")
-    print("="*80)
+    print("=" * 80)
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("SCENARIO 1: The Virtuous Spiral (Always Choose Others)")
-    print("="*80)
+    print("=" * 80)
 
     history = simulate_choices(starting_luck=0.5, num_choices=10, choice_pattern="kind")
 
     print("\nStarting state: luck=0.500, karma=0.500, connection=0.500")
     print("\nMaking 10 choices to help others:")
     for i, state in enumerate(history[1:], 1):
-        print(f"  Choice {i:2d}: luck={state.luck:.3f}, karma={state.karma:.3f}, " +
-              f"connection={state.connection:.3f}, memory={state.memory_breadth:.3f}")
+        print(
+            f"  Choice {i:2d}: luck={state.luck:.3f}, karma={state.karma:.3f}, "
+            + f"connection={state.connection:.3f}, memory={state.memory_breadth:.3f}"
+        )
 
     final = history[-1]
     print(f"\n✅ Final state: {final.tendency}")
     if final.karma > history[0].karma + 0.5:
         print("   Karma increased significantly → More favorable rolls → Virtuous spiral")
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("SCENARIO 2: The Vicious Spiral (Always Choose Self)")
-    print("="*80)
+    print("=" * 80)
 
     history = simulate_choices(starting_luck=0.5, num_choices=10, choice_pattern="selfish")
 
     print("\nStarting state: luck=0.500, karma=0.500, connection=0.500")
     print("\nMaking 10 choices prioritizing self:")
     for i, state in enumerate(history[1:], 1):
-        print(f"  Choice {i:2d}: luck={state.luck:.3f}, karma={state.karma:.3f}, " +
-              f"connection={state.connection:.3f}, memory={state.memory_breadth:.3f}")
+        print(
+            f"  Choice {i:2d}: luck={state.luck:.3f}, karma={state.karma:.3f}, "
+            + f"connection={state.connection:.3f}, memory={state.memory_breadth:.3f}"
+        )
 
     final = history[-1]
     print(f"\n⚠️  Final state: {final.tendency}")
     if final.karma < history[0].karma - 0.2:
         print("   Karma decreased → Worse rolls → Vicious spiral")
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("SCENARIO 3: Positive Feedback Loop (Lucky → Kind → More Lucky)")
-    print("="*80)
+    print("=" * 80)
 
     history = simulate_choices(starting_luck=0.7, num_choices=10, choice_pattern="lucky_kind")
 
@@ -245,9 +239,9 @@ if __name__ == "__main__":
     print(f"   Connection: {final.connection:.3f}")
     print(f"   Tendency: {final.tendency}")
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("SCENARIO 4: Negative Feedback Loop (Unlucky → Selfish → More Unlucky)")
-    print("="*80)
+    print("=" * 80)
 
     history = simulate_choices(starting_luck=0.3, num_choices=10, choice_pattern="unlucky_selfish")
 
@@ -263,9 +257,9 @@ if __name__ == "__main__":
     print(f"   Connection: {final.connection:.3f}")
     print(f"   Tendency: {final.tendency}")
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("SCENARIO 5: Breaking the Cycle (Start Unlucky, But Choose Kindness)")
-    print("="*80)
+    print("=" * 80)
 
     history = simulate_choices(starting_luck=0.2, num_choices=15, choice_pattern="kind")
 
@@ -285,9 +279,9 @@ if __name__ == "__main__":
     print(f"\n✅ Luck improved by {improvement:.3f} through persistent kindness")
     print(f"   Started unlucky and isolated, ended as: {final.tendency}")
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("SUMMARY: The Two Spirals")
-    print("="*80)
+    print("=" * 80)
 
     print("\n✅ VIRTUOUS SPIRAL:")
     print("   Lucky → Grateful/Merciful → Kind → Accumulate Karma →")
@@ -311,9 +305,9 @@ if __name__ == "__main__":
     print("   - Narrow memory (cling to ONE thing)")
     print("   - Choose self over others")
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("💡 'Gravity might be karma'")
-    print("="*80)
+    print("=" * 80)
     print()
     print("Luck is not purely random - it accumulates based on behavior.")
     print("Kind choices → More karma → Better rolls → More luck")
@@ -325,4 +319,4 @@ if __name__ == "__main__":
     print("  Luck influences future behavior")
     print()
     print("Perfect unity ☯️")
-    print("="*80)
+    print("=" * 80)

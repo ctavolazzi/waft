@@ -16,7 +16,8 @@ Comprehensive test suite covering:
 """
 
 import sys
-sys.path.insert(0, '../src/waft')
+
+sys.path.insert(0, "../src/waft")
 
 from foundation import Score, Evaluation, evaluate_answer, evaluate_text
 from patterns import StrictStrategy, LenientStrategy, LengthBasedStrategy
@@ -29,6 +30,7 @@ import statistics
 
 class TestResults:
     """Track test results."""
+
     def __init__(self):
         self.passed = 0
         self.failed = 0
@@ -58,19 +60,19 @@ class TestResults:
 
     def summary(self):
         total = self.passed + self.failed
-        print("\n" + "="*80)
+        print("\n" + "=" * 80)
         print("TEST SUMMARY")
-        print("="*80)
+        print("=" * 80)
         print(f"Total tests: {total}")
-        print(f"Passed:      {self.passed} ({100*self.passed/total:.1f}%)")
-        print(f"Failed:      {self.failed} ({100*self.failed/total:.1f}%)")
+        print(f"Passed:      {self.passed} ({100 * self.passed / total:.1f}%)")
+        print(f"Failed:      {self.failed} ({100 * self.failed / total:.1f}%)")
         print(f"Warnings:    {self.warnings}")
-        print("="*80)
+        print("=" * 80)
         if self.failed == 0:
             print("🎉 ALL TESTS PASSED!")
         else:
             print("⚠️  SOME TESTS FAILED")
-        print("="*80)
+        print("=" * 80)
 
 
 results = TestResults()
@@ -80,16 +82,23 @@ results = TestResults()
 # TEST 1: ALL 9 DIMENSIONS PRESENT
 # ============================================================================
 
-print("="*80)
+print("=" * 80)
 print("TEST 1: All 9 Dimensions Present and Valid")
-print("="*80)
+print("=" * 80)
 
 eval_result = evaluate_answer("Test answer", "Test problem")
 
 # Check all dimensions exist
 dimensions = [
-    'factuality', 'validity', 'coherence', 'utility', 'faithfulness',
-    'confidence', 'doubt', 'curiosity', 'aesthetic'
+    "factuality",
+    "validity",
+    "coherence",
+    "utility",
+    "faithfulness",
+    "confidence",
+    "doubt",
+    "curiosity",
+    "aesthetic",
 ]
 
 for dim in dimensions:
@@ -103,12 +112,12 @@ for dim in dimensions:
         results.add_fail(f"Dimension: {dim}", "missing")
 
 # Check derived properties
-if hasattr(eval_result, 'overall'):
+if hasattr(eval_result, "overall"):
     results.add_pass("Overall score", f"value={eval_result.overall.value:.3f}")
 else:
     results.add_fail("Overall score", "missing")
 
-if hasattr(eval_result, 'epistemic_humility'):
+if hasattr(eval_result, "epistemic_humility"):
     results.add_pass("Epistemic humility", f"value={eval_result.epistemic_humility.value:.3f}")
 else:
     results.add_fail("Epistemic humility", "missing")
@@ -118,9 +127,9 @@ else:
 # TEST 2: STOCHASTICITY - SAME INPUT DIFFERENT OUTPUTS
 # ============================================================================
 
-print("\n" + "="*80)
+print("\n" + "=" * 80)
 print("TEST 2: Stochasticity (Same Input → Different Outputs)")
-print("="*80)
+print("=" * 80)
 
 problem = "What is the nature of consciousness?"
 answer = "Consciousness is emergent."
@@ -136,8 +145,12 @@ for i in range(20):
 aesthetic_variance = statistics.variance(aesthetic_values)
 overall_variance = statistics.variance(overall_values)
 
-print(f"  Aesthetic values: min={min(aesthetic_values):.3f}, max={max(aesthetic_values):.3f}, variance={aesthetic_variance:.6f}")
-print(f"  Overall values: min={min(overall_values):.3f}, max={max(overall_values):.3f}, variance={overall_variance:.6f}")
+print(
+    f"  Aesthetic values: min={min(aesthetic_values):.3f}, max={max(aesthetic_values):.3f}, variance={aesthetic_variance:.6f}"
+)
+print(
+    f"  Overall values: min={min(overall_values):.3f}, max={max(overall_values):.3f}, variance={overall_variance:.6f}"
+)
 
 if aesthetic_variance > 0.01:
     results.add_pass("Aesthetic stochasticity", f"variance={aesthetic_variance:.6f} (significant)")
@@ -154,12 +167,15 @@ else:
 # TEST 3: EPISTEMIC HUMILITY - DOUBT AND CURIOSITY
 # ============================================================================
 
-print("\n" + "="*80)
+print("\n" + "=" * 80)
 print("TEST 3: Epistemic Humility (Doubt & Curiosity)")
-print("="*80)
+print("=" * 80)
 
 # Test 3a: Simple answer to complex problem should trigger high doubt
-eval_simple = evaluate_answer("Yes.", "What are the fundamental principles of quantum mechanics and their implications for causality?")
+eval_simple = evaluate_answer(
+    "Yes.",
+    "What are the fundamental principles of quantum mechanics and their implications for causality?",
+)
 
 print(f"  Simple answer to complex problem:")
 print(f"    Confidence: {eval_simple.confidence.value:.3f}")
@@ -170,12 +186,19 @@ print(f"    Humility:   {eval_simple.epistemic_humility.value:.3f}")
 if eval_simple.doubt.value > 0.5:
     results.add_pass("High doubt for simple answer", f"doubt={eval_simple.doubt.value:.3f}")
 else:
-    results.add_fail("High doubt for simple answer", f"doubt={eval_simple.doubt.value:.3f} (too low)")
+    results.add_fail(
+        "High doubt for simple answer", f"doubt={eval_simple.doubt.value:.3f} (too low)"
+    )
 
 if eval_simple.curiosity.value > 0.5:
-    results.add_pass("High curiosity for complex problem", f"curiosity={eval_simple.curiosity.value:.3f}")
+    results.add_pass(
+        "High curiosity for complex problem", f"curiosity={eval_simple.curiosity.value:.3f}"
+    )
 else:
-    results.add_fail("High curiosity for complex problem", f"curiosity={eval_simple.curiosity.value:.3f} (too low)")
+    results.add_fail(
+        "High curiosity for complex problem",
+        f"curiosity={eval_simple.curiosity.value:.3f} (too low)",
+    )
 
 # Test 3b: Detailed answer should have lower doubt
 detailed_answer = "Quantum mechanics is governed by several fundamental principles including superposition, entanglement, and wave-particle duality. These principles have profound implications for our understanding of causality, suggesting non-local correlations and challenging classical notions of determinism."
@@ -187,18 +210,24 @@ print(f"    Confidence: {eval_detailed.confidence.value:.3f}")
 print(f"    Doubt:      {eval_detailed.doubt.value:.3f}")
 
 if eval_detailed.confidence.value > eval_simple.confidence.value:
-    results.add_pass("Higher confidence for detailed answer", f"{eval_detailed.confidence.value:.3f} > {eval_simple.confidence.value:.3f}")
+    results.add_pass(
+        "Higher confidence for detailed answer",
+        f"{eval_detailed.confidence.value:.3f} > {eval_simple.confidence.value:.3f}",
+    )
 else:
-    results.add_warning("Higher confidence for detailed answer", f"{eval_detailed.confidence.value:.3f} vs {eval_simple.confidence.value:.3f}")
+    results.add_warning(
+        "Higher confidence for detailed answer",
+        f"{eval_detailed.confidence.value:.3f} vs {eval_simple.confidence.value:.3f}",
+    )
 
 
 # ============================================================================
 # TEST 4: KARMA FEEDBACK LOOPS
 # ============================================================================
 
-print("\n" + "="*80)
+print("\n" + "=" * 80)
 print("TEST 4: Karma Feedback Loops (Attractor States)")
-print("="*80)
+print("=" * 80)
 
 # Test 4a: Virtuous spiral
 virtuous_history = simulate_choices(starting_luck=0.5, num_choices=15, choice_pattern="kind")
@@ -206,18 +235,33 @@ virtuous_start = virtuous_history[0]
 virtuous_end = virtuous_history[-1]
 
 print(f"  Virtuous spiral (always choose others):")
-print(f"    Start: luck={virtuous_start.luck:.3f}, karma={virtuous_start.karma:.3f}, connection={virtuous_start.connection:.3f}")
-print(f"    End:   luck={virtuous_end.luck:.3f}, karma={virtuous_end.karma:.3f}, connection={virtuous_end.connection:.3f}")
+print(
+    f"    Start: luck={virtuous_start.luck:.3f}, karma={virtuous_start.karma:.3f}, connection={virtuous_start.connection:.3f}"
+)
+print(
+    f"    End:   luck={virtuous_end.luck:.3f}, karma={virtuous_end.karma:.3f}, connection={virtuous_end.connection:.3f}"
+)
 
 if virtuous_end.karma > virtuous_start.karma + 0.5:
-    results.add_pass("Virtuous spiral accumulates karma", f"Δkarma=+{virtuous_end.karma - virtuous_start.karma:.3f}")
+    results.add_pass(
+        "Virtuous spiral accumulates karma",
+        f"Δkarma=+{virtuous_end.karma - virtuous_start.karma:.3f}",
+    )
 else:
-    results.add_fail("Virtuous spiral accumulates karma", f"Δkarma=+{virtuous_end.karma - virtuous_start.karma:.3f} (too low)")
+    results.add_fail(
+        "Virtuous spiral accumulates karma",
+        f"Δkarma=+{virtuous_end.karma - virtuous_start.karma:.3f} (too low)",
+    )
 
 if virtuous_end.connection > 0.7:
-    results.add_pass("Virtuous spiral increases connection", f"connection={virtuous_end.connection:.3f}")
+    results.add_pass(
+        "Virtuous spiral increases connection", f"connection={virtuous_end.connection:.3f}"
+    )
 else:
-    results.add_warning("Virtuous spiral increases connection", f"connection={virtuous_end.connection:.3f} (not high)")
+    results.add_warning(
+        "Virtuous spiral increases connection",
+        f"connection={virtuous_end.connection:.3f} (not high)",
+    )
 
 # Test 4b: Vicious spiral
 vicious_history = simulate_choices(starting_luck=0.5, num_choices=15, choice_pattern="selfish")
@@ -225,27 +269,41 @@ vicious_start = vicious_history[0]
 vicious_end = vicious_history[-1]
 
 print(f"  Vicious spiral (always choose self):")
-print(f"    Start: luck={vicious_start.luck:.3f}, karma={vicious_start.karma:.3f}, connection={vicious_start.connection:.3f}")
-print(f"    End:   luck={vicious_end.luck:.3f}, karma={vicious_end.karma:.3f}, connection={vicious_end.connection:.3f}")
+print(
+    f"    Start: luck={vicious_start.luck:.3f}, karma={vicious_start.karma:.3f}, connection={vicious_start.connection:.3f}"
+)
+print(
+    f"    End:   luck={vicious_end.luck:.3f}, karma={vicious_end.karma:.3f}, connection={vicious_end.connection:.3f}"
+)
 
 if vicious_end.karma < vicious_start.karma - 0.2:
-    results.add_pass("Vicious spiral depletes karma", f"Δkarma={vicious_end.karma - vicious_start.karma:.3f}")
+    results.add_pass(
+        "Vicious spiral depletes karma", f"Δkarma={vicious_end.karma - vicious_start.karma:.3f}"
+    )
 else:
-    results.add_fail("Vicious spiral depletes karma", f"Δkarma={vicious_end.karma - vicious_start.karma:.3f} (not enough)")
+    results.add_fail(
+        "Vicious spiral depletes karma",
+        f"Δkarma={vicious_end.karma - vicious_start.karma:.3f} (not enough)",
+    )
 
 if vicious_end.connection < 0.3:
-    results.add_pass("Vicious spiral decreases connection", f"connection={vicious_end.connection:.3f}")
+    results.add_pass(
+        "Vicious spiral decreases connection", f"connection={vicious_end.connection:.3f}"
+    )
 else:
-    results.add_warning("Vicious spiral decreases connection", f"connection={vicious_end.connection:.3f} (not low enough)")
+    results.add_warning(
+        "Vicious spiral decreases connection",
+        f"connection={vicious_end.connection:.3f} (not low enough)",
+    )
 
 
 # ============================================================================
 # TEST 5: BREAKING THE CYCLE (TRANSCENDENCE)
 # ============================================================================
 
-print("\n" + "="*80)
+print("\n" + "=" * 80)
 print("TEST 5: Breaking the Cycle (Transcendence)")
-print("="*80)
+print("=" * 80)
 
 transcendent_history = simulate_choices(starting_luck=0.2, num_choices=20, choice_pattern="kind")
 transcendent_start = transcendent_history[0]
@@ -265,16 +323,19 @@ else:
 if transcendent_end.karma > 1.0:
     results.add_pass("Transcendence accumulates high karma", f"karma={transcendent_end.karma:.3f}")
 else:
-    results.add_warning("Transcendence accumulates high karma", f"karma={transcendent_end.karma:.3f} (not high enough)")
+    results.add_warning(
+        "Transcendence accumulates high karma",
+        f"karma={transcendent_end.karma:.3f} (not high enough)",
+    )
 
 
 # ============================================================================
 # TEST 6: BALANCING FORCES
 # ============================================================================
 
-print("\n" + "="*80)
+print("\n" + "=" * 80)
 print("TEST 6: Balancing Forces")
-print("="*80)
+print("=" * 80)
 
 # Test 6a: Confidence ↔ Doubt
 test_eval = evaluate_answer("Test", "Test")
@@ -283,7 +344,10 @@ print(f"    Confidence: {test_eval.confidence.value:.3f}")
 print(f"    Doubt:      {test_eval.doubt.value:.3f}")
 
 if 0.0 <= test_eval.confidence.value <= 1.0 and 0.0 <= test_eval.doubt.value <= 1.0:
-    results.add_pass("Confidence and doubt both valid", f"conf={test_eval.confidence.value:.3f}, doubt={test_eval.doubt.value:.3f}")
+    results.add_pass(
+        "Confidence and doubt both valid",
+        f"conf={test_eval.confidence.value:.3f}, doubt={test_eval.doubt.value:.3f}",
+    )
 else:
     results.add_fail("Confidence and doubt both valid", "out of range")
 
@@ -305,9 +369,9 @@ results.add_pass("Determinism ↔ Stochasticity", "verified in TEST 2")
 # TEST 7: STRATEGIES HAVE DIFFERENT LUCK PROFILES
 # ============================================================================
 
-print("\n" + "="*80)
+print("\n" + "=" * 80)
 print("TEST 7: Strategies Have Different Luck Profiles")
-print("="*80)
+print("=" * 80)
 
 strict_strategy = StrictStrategy()
 lenient_strategy = LenientStrategy()
@@ -349,23 +413,30 @@ else:
 # TEST 8: API INTEGRATION
 # ============================================================================
 
-print("\n" + "="*80)
+print("\n" + "=" * 80)
 print("TEST 8: API Integration (All 9 Dimensions in Output)")
-print("="*80)
+print("=" * 80)
 
 api = MetaCognitiveAPI()
-output = api.solve(ProblemInput(
-    problem="Test API integration",
-    mode=GuideMode.BASIC,
-    max_iterations=1
-))
+output = api.solve(
+    ProblemInput(problem="Test API integration", mode=GuideMode.BASIC, max_iterations=1)
+)
 
 if output.step_history:
     step = output.step_history[0]
-    dims = step['dimensions']
+    dims = step["dimensions"]
 
-    required_dims = ['factuality', 'validity', 'coherence', 'utility', 'faithfulness',
-                     'confidence', 'doubt', 'curiosity', 'aesthetic']
+    required_dims = [
+        "factuality",
+        "validity",
+        "coherence",
+        "utility",
+        "faithfulness",
+        "confidence",
+        "doubt",
+        "curiosity",
+        "aesthetic",
+    ]
 
     for dim in required_dims:
         if dim in dims:
@@ -373,7 +444,7 @@ if output.step_history:
         else:
             results.add_fail(f"API has {dim}", "missing from output")
 
-    if 'epistemic_humility' in step:
+    if "epistemic_humility" in step:
         results.add_pass("API has epistemic_humility", f"value={step['epistemic_humility']:.3f}")
     else:
         results.add_fail("API has epistemic_humility", "missing from output")
@@ -385,9 +456,9 @@ else:
 # TEST 9: EXTREME CASES
 # ============================================================================
 
-print("\n" + "="*80)
+print("\n" + "=" * 80)
 print("TEST 9: Extreme Cases and Edge Conditions")
-print("="*80)
+print("=" * 80)
 
 # Test 9a: Empty input
 try:
@@ -429,9 +500,9 @@ except Exception as e:
 # TEST 10: PERFORMANCE
 # ============================================================================
 
-print("\n" + "="*80)
+print("\n" + "=" * 80)
 print("TEST 10: Performance and Throughput")
-print("="*80)
+print("=" * 80)
 
 # Test 10a: Evaluation performance
 start_time = time.time()
@@ -466,27 +537,35 @@ else:
 # TEST 11: MEMORY AND CONNECTION DYNAMICS
 # ============================================================================
 
-print("\n" + "="*80)
+print("\n" + "=" * 80)
 print("TEST 11: Memory and Connection Dynamics")
-print("="*80)
+print("=" * 80)
 
 # Lucky state should have broad memory
 lucky_state = KarmaState(luck=0.9, karma=1.5, connection=0.9, memory_breadth=0.9)
-print(f"  Lucky state: memory_breadth={lucky_state.memory_breadth:.3f}, connection={lucky_state.connection:.3f}")
+print(
+    f"  Lucky state: memory_breadth={lucky_state.memory_breadth:.3f}, connection={lucky_state.connection:.3f}"
+)
 
 if lucky_state.memory_breadth > 0.7 and lucky_state.connection > 0.7:
-    results.add_pass("Lucky state has broad memory and high connection",
-                     f"memory={lucky_state.memory_breadth:.3f}, connection={lucky_state.connection:.3f}")
+    results.add_pass(
+        "Lucky state has broad memory and high connection",
+        f"memory={lucky_state.memory_breadth:.3f}, connection={lucky_state.connection:.3f}",
+    )
 else:
     results.add_fail("Lucky state has broad memory and high connection", "values too low")
 
 # Unlucky state should have narrow memory (cling to one thing)
 unlucky_state = KarmaState(luck=0.1, karma=0.1, connection=0.1, memory_breadth=0.1)
-print(f"  Unlucky state: memory_breadth={unlucky_state.memory_breadth:.3f}, connection={unlucky_state.connection:.3f}")
+print(
+    f"  Unlucky state: memory_breadth={unlucky_state.memory_breadth:.3f}, connection={unlucky_state.connection:.3f}"
+)
 
 if unlucky_state.memory_breadth < 0.3 and unlucky_state.connection < 0.3:
-    results.add_pass("Unlucky state has narrow memory and low connection",
-                     f"memory={unlucky_state.memory_breadth:.3f}, connection={unlucky_state.connection:.3f}")
+    results.add_pass(
+        "Unlucky state has narrow memory and low connection",
+        f"memory={unlucky_state.memory_breadth:.3f}, connection={unlucky_state.connection:.3f}",
+    )
 else:
     results.add_fail("Unlucky state has narrow memory and low connection", "values too high")
 
@@ -495,9 +574,9 @@ else:
 # TEST 12: ALL GUIDE MODES
 # ============================================================================
 
-print("\n" + "="*80)
+print("\n" + "=" * 80)
 print("TEST 12: All Guide Modes Work with 9 Dimensions")
-print("="*80)
+print("=" * 80)
 
 modes_to_test = [
     (GuideMode.BASIC, "basic"),
@@ -511,8 +590,11 @@ modes_to_test = [
 for mode, name in modes_to_test:
     try:
         output = api.solve(ProblemInput(problem="test", mode=mode, max_iterations=1))
-        if output.step_history and 'aesthetic' in output.step_history[0]['dimensions']:
-            results.add_pass(f"Mode {name} works", f"aesthetic={output.step_history[0]['dimensions']['aesthetic']:.3f}")
+        if output.step_history and "aesthetic" in output.step_history[0]["dimensions"]:
+            results.add_pass(
+                f"Mode {name} works",
+                f"aesthetic={output.step_history[0]['dimensions']['aesthetic']:.3f}",
+            )
         else:
             results.add_fail(f"Mode {name} works", "aesthetic missing")
     except Exception as e:

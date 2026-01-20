@@ -14,12 +14,14 @@ import random
 # ============================================================================
 # What is the CORE? A quality score - one number representing goodness.
 
+
 @dataclass(frozen=True)
 class Score:
     """
     The atomic unit: a single quality measurement.
     Immutable. Between 0.0 and 1.0.
     """
+
     value: float  # 0.0 (terrible) to 1.0 (perfect)
 
     def __post_init__(self):
@@ -38,6 +40,7 @@ class Score:
 # LEVEL 1: ONE FUNCTION - THE CORE TRANSFORMATION
 # ============================================================================
 # Transform text → score. This is the fundamental operation.
+
 
 def evaluate_text(text: str) -> Score:
     """
@@ -60,6 +63,7 @@ def evaluate_text(text: str) -> Score:
 # ============================================================================
 # One score isn't enough. We need FVCU+Faithfulness taxonomy.
 
+
 @dataclass(frozen=True)
 class Evaluation:
     """
@@ -72,20 +76,21 @@ class Evaluation:
     - Logic ↔ Aesthetic (rational vs affective preference)
     - Determinism ↔ Stochasticity (predictable vs random)
     """
+
     # Core quality dimensions
-    factuality: Score      # Is it factually correct?
-    validity: Score        # Is the reasoning valid?
-    coherence: Score       # Does it make sense?
-    utility: Score         # Is it useful?
-    faithfulness: Score    # Is it faithful to the problem?
+    factuality: Score  # Is it factually correct?
+    validity: Score  # Is the reasoning valid?
+    coherence: Score  # Does it make sense?
+    utility: Score  # Is it useful?
+    faithfulness: Score  # Is it faithful to the problem?
 
     # Meta-cognitive dimensions (prevent ego/dogfooding)
-    confidence: Score      # How certain are we? (HIGH = certain)
-    doubt: Score           # Should we question this? (HIGH = skeptical)
-    curiosity: Score       # Should we explore alternatives? (HIGH = explore more)
+    confidence: Score  # How certain are we? (HIGH = certain)
+    doubt: Score  # Should we question this? (HIGH = skeptical)
+    curiosity: Score  # Should we explore alternatives? (HIGH = explore more)
 
     # Affective dimension (prevents pure rationality/determinism)
-    aesthetic: Score       # Do we "like" this? (preference, pleasure/pain, without logical reason)
+    aesthetic: Score  # Do we "like" this? (preference, pleasure/pain, without logical reason)
 
     @property
     def overall(self) -> Score:
@@ -96,15 +101,15 @@ class Evaluation:
         Aesthetic adds luck/fate - the stochastic element
         """
         avg = (
-            self.factuality.value +
-            self.validity.value +
-            self.coherence.value +
-            self.utility.value +
-            self.faithfulness.value +
-            self.confidence.value +
-            (1.0 - self.doubt.value) +  # Doubt REDUCES overall (inverse)
-            self.curiosity.value * 0.5 +  # Curiosity has half weight
-            self.aesthetic.value * 0.7  # Aesthetic (luck/fate) influences outcome
+            self.factuality.value
+            + self.validity.value
+            + self.coherence.value
+            + self.utility.value
+            + self.faithfulness.value
+            + self.confidence.value
+            + (1.0 - self.doubt.value)  # Doubt REDUCES overall (inverse)
+            + self.curiosity.value * 0.5  # Curiosity has half weight
+            + self.aesthetic.value * 0.7  # Aesthetic (luck/fate) influences outcome
         ) / 8.2  # Adjusted denominator
         return Score(avg)
 
@@ -152,7 +157,7 @@ def evaluate_answer(answer: str, problem: str) -> Evaluation:
     complexity_mismatch = max(0, problem_complexity - confidence_value)
     doubt_value = min(
         (answer_simplicity + complexity_mismatch + (0.3 if confidence_value > 0.9 else 0)) / 2.0,
-        1.0
+        1.0,
     )
     doubt_score = Score(doubt_value)
 
@@ -162,10 +167,9 @@ def evaluate_answer(answer: str, problem: str) -> Evaluation:
     # - Answer seems too definitive
     # - Complexity suggests there might be more to explore
     definitiveness = confidence_value  # High confidence = definitive answer
-    has_questions = 1.0 if '?' in problem else 0.5
+    has_questions = 1.0 if "?" in problem else 0.5
     curiosity_value = min(
-        (problem_complexity + (1.0 - definitiveness) * 0.5 + has_questions * 0.3) / 2.0,
-        1.0
+        (problem_complexity + (1.0 - definitiveness) * 0.5 + has_questions * 0.3) / 2.0, 1.0
     )
     curiosity_score = Score(curiosity_value)
 
@@ -178,7 +182,7 @@ def evaluate_answer(answer: str, problem: str) -> Evaluation:
     # - "Luck is gravity" - influences outcome without logical reason
     luck = random.random()  # The d20 roll: 0.0 to 1.0
     fate = min((len(answer) + len(problem)) / 200.0, 1.0)  # Deterministic component
-    aesthetic_value = (luck * 0.7 + fate * 0.3)  # 70% luck, 30% fate
+    aesthetic_value = luck * 0.7 + fate * 0.3  # 70% luck, 30% fate
     aesthetic_score = Score(aesthetic_value)
 
     return Evaluation(
@@ -190,10 +194,10 @@ def evaluate_answer(answer: str, problem: str) -> Evaluation:
         faithfulness=base_score,
         # Meta-cognitive dimensions (prevent ego/dogfooding)
         confidence=confidence_score,
-        doubt=doubt_score,           # Questions the evaluation
-        curiosity=curiosity_score,   # Seeks alternatives
+        doubt=doubt_score,  # Questions the evaluation
+        curiosity=curiosity_score,  # Seeks alternatives
         # Affective dimension (prevents pure rationality/determinism)
-        aesthetic=aesthetic_score    # Luck/fate - the stochastic element
+        aesthetic=aesthetic_score,  # Luck/fate - the stochastic element
     )
 
 
@@ -201,6 +205,7 @@ def evaluate_answer(answer: str, problem: str) -> Evaluation:
 # LEVEL 3: ONE REASONING STEP
 # ============================================================================
 # One problem → one answer → one evaluation. This is one step.
+
 
 @dataclass
 class Step:
@@ -211,6 +216,7 @@ class Step:
 
     This is the core cycle, executed once.
     """
+
     problem: str
     answer: str
     evaluation: Evaluation
@@ -236,18 +242,14 @@ def execute_step(problem: str, iteration: int) -> Step:
     # Evaluate the answer
     evaluation = evaluate_answer(answer, problem)
 
-    return Step(
-        problem=problem,
-        answer=answer,
-        evaluation=evaluation,
-        iteration_number=iteration
-    )
+    return Step(problem=problem, answer=answer, evaluation=evaluation, iteration_number=iteration)
 
 
 # ============================================================================
 # LEVEL 4: MULTIPLE STEPS (THE LOOP)
 # ============================================================================
 # Keep executing steps until good enough or max iterations.
+
 
 @dataclass
 class Session:
@@ -260,6 +262,7 @@ class Session:
 
     This is the complete loop.
     """
+
     problem: str
     steps: list[Step]
     max_iterations: int
@@ -278,7 +281,11 @@ class Session:
     @property
     def converged(self) -> bool:
         """Did we reach good quality?"""
-        return self.final_evaluation.is_good(self.quality_threshold) if self.final_evaluation else False
+        return (
+            self.final_evaluation.is_good(self.quality_threshold)
+            if self.final_evaluation
+            else False
+        )
 
 
 def solve(problem: str, max_iterations: int = 10, quality_threshold: float = 0.8) -> Session:
@@ -296,7 +303,7 @@ def solve(problem: str, max_iterations: int = 10, quality_threshold: float = 0.8
     steps = []
 
     for i in range(max_iterations):
-        step = execute_step(problem, iteration=i+1)
+        step = execute_step(problem, iteration=i + 1)
         steps.append(step)
 
         # Stop if good enough
@@ -307,7 +314,7 @@ def solve(problem: str, max_iterations: int = 10, quality_threshold: float = 0.8
         problem=problem,
         steps=steps,
         max_iterations=max_iterations,
-        quality_threshold=quality_threshold
+        quality_threshold=quality_threshold,
     )
 
 
@@ -315,6 +322,7 @@ def solve(problem: str, max_iterations: int = 10, quality_threshold: float = 0.8
 # LEVEL 5: MAKE IT A CLASS (OOP WRAPPER)
 # ============================================================================
 # Everything above is functional. Now wrap in a class.
+
 
 class Guide:
     """
@@ -336,7 +344,7 @@ class Guide:
         return solve(
             problem=problem,
             max_iterations=self.max_iterations,
-            quality_threshold=self.quality_threshold
+            quality_threshold=self.quality_threshold,
         )
 
 
@@ -345,9 +353,9 @@ class Guide:
 # ============================================================================
 
 if __name__ == "__main__":
-    print("="*80)
+    print("=" * 80)
     print("TESTING THE CORE")
-    print("="*80)
+    print("=" * 80)
 
     # Test Level 0: Atomic Score
     print("\nLevel 0: Atomic Score")
@@ -392,9 +400,9 @@ if __name__ == "__main__":
     print(f"  Steps: {len(session.steps)}")
     print(f"  Final quality: {session.final_evaluation.overall.value:.3f}")
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("CORE VERIFIED")
-    print("="*80)
+    print("=" * 80)
     print("\nBuilt from ground up:")
     print("  Level 0: Score (atomic data type)")
     print("  Level 1: evaluate_text() (core function)")
