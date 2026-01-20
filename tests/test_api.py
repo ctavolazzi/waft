@@ -85,7 +85,7 @@ def test_analyze_endpoint_invalid_data(client):
 
     assert response.status_code == 400
     # Error message comes from Iron Core validation
-    assert "sum to 1.0" in response.json()["detail"]
+    assert "sum to 1.0" in response.json()["message"]
 
 
 def test_analyze_endpoint_missing_scores(client):
@@ -103,7 +103,7 @@ def test_analyze_endpoint_missing_scores(client):
     response = client.post("/api/decision/analyze", json=request_data)
 
     assert response.status_code == 400
-    assert "Missing score" in response.json()["detail"]
+    assert "Missing score" in response.json()["message"]
 
 
 def test_analyze_endpoint_sensitivity_analysis(client):

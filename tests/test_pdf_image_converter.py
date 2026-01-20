@@ -19,6 +19,47 @@ from src.waft.evolution.pdf_image_converter import (
 )
 
 
+# Check if PDF conversion libraries are available
+def has_pdf_converter():
+    """Check if any PDF conversion library is available."""
+    try:
+        import pdf2image
+
+        return True
+    except ImportError:
+        pass
+
+    try:
+        import fitz  # PyMuPDF
+
+        return True
+    except ImportError:
+        pass
+
+    # Check for ImageMagick
+    try:
+        import subprocess
+
+        subprocess.run(
+            ["convert", "-version"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=True,
+        )
+        return True
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        pass
+
+    return False
+
+
+PDF_CONVERTER_AVAILABLE = has_pdf_converter()
+skip_no_pdf_converter = pytest.mark.skipif(
+    not PDF_CONVERTER_AVAILABLE,
+    reason="No PDF conversion library available (pdf2image, PyMuPDF, or ImageMagick)",
+)
+
+
 @pytest.fixture
 def temp_dir():
     """Create a temporary directory for test files."""
@@ -83,6 +124,7 @@ def multi_page_pdf(temp_dir):
 # ============================================================================
 
 
+@skip_no_pdf_converter
 def test_pdf_to_pngs_single_page(temp_dir, sample_pdf):
     """Test converting a single-page PDF to PNG."""
     if not sample_pdf.exists():
@@ -101,6 +143,7 @@ def test_pdf_to_pngs_single_page(temp_dir, sample_pdf):
     assert img.size[1] > 0
 
 
+@skip_no_pdf_converter
 def test_pdf_to_pngs_multi_page(temp_dir, multi_page_pdf):
     """Test converting a multi-page PDF to PNGs."""
     if not multi_page_pdf.exists():
@@ -120,6 +163,7 @@ def test_pdf_to_pngs_multi_page(temp_dir, multi_page_pdf):
         assert img.size[1] > 0
 
 
+@skip_no_pdf_converter
 def test_pdf_to_pngs_default_output_dir(temp_dir, sample_pdf):
     """Test that default output directory is created correctly."""
     if not sample_pdf.exists():
@@ -138,6 +182,7 @@ def test_pdf_to_pngs_default_output_dir(temp_dir, sample_pdf):
     assert all(p.parent == expected_dir for p in png_paths)
 
 
+@skip_no_pdf_converter
 def test_pdf_to_pngs_custom_dpi(temp_dir, sample_pdf):
     """Test converting PDF with custom DPI."""
     if not sample_pdf.exists():
@@ -281,6 +326,7 @@ def test_pngs_to_pdf_rgb_conversion(temp_dir):
 # ============================================================================
 
 
+@skip_no_pdf_converter
 def test_round_trip_pdf_png_pdf(temp_dir, sample_pdf):
     """Test PDF → PNG → PDF round-trip conversion."""
     if not sample_pdf.exists():
@@ -305,6 +351,7 @@ def test_round_trip_pdf_png_pdf(temp_dir, sample_pdf):
 # ============================================================================
 
 
+@skip_no_pdf_converter
 def test_convert_pdf_to_images(temp_dir, sample_pdf):
     """Test convenience function convert_pdf_to_images."""
     if not sample_pdf.exists():
