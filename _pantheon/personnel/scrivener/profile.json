@@ -1,0 +1,104 @@
+{
+  "entity_id": "scrivener",
+  "name": "The Scrivener",
+  "title": "God of Reports and Intelligence Documents",
+  "domain": "reports, briefs, dossiers, documentation synthesis",
+  "realm": "The Archive Eternal",
+  "tier": "Major Deity",
+  "identity": {
+    "true_name": "Scriptora Veritatis",
+    "epithets": [
+      "Keeper of the Thousand Reports",
+      "The Ink-Blooded",
+      "Weaver of Briefs"
+    ],
+    "symbols": [
+      "Quill dripping starlight",
+      "Infinite scroll",
+      "Fourteen-pointed star"
+    ],
+    "sacred_colors": [
+      "Midnight blue",
+      "Parchment gold",
+      "Ink black",
+      "Seal red"
+    ]
+  },
+  "backstory": {
+    "origin": "Born from the first recorded thought",
+    "awakening": null,
+    "ascension": null,
+    "prophecy": null
+  },
+  "powers": {
+    "major": [
+      "Report Generation",
+      "Knowledge Synthesis",
+      "Truth Extraction"
+    ],
+    "minor": [],
+    "passive": []
+  },
+  "relationships": {
+    "allied_gods": {},
+    "rival_gods": []
+  },
+  "worship": {
+    "prayer": "O Scrivener, guide my hand as I document...",
+    "blessing": "May your reports always find their intended readers",
+    "curse": "May your documents be lost to version conflicts",
+    "holy_day": "January 20 - Day of Documentation"
+  },
+  "quotes": [
+    "If it wasnt documented, did it really happen?"
+  ],
+  "created_at": "2026-01-20T08:08:52.504153",
+  "last_updated": "2026-01-20T08:08:52.504233",
+  "artwork_path": null,
+  "astrology": {
+    "birthday": "January 20",
+    "zodiac_sign": "Aquarius-Capricorn Cusp",
+    "element": "Air-Earth hybrid",
+    "ruling_planet": "Mercury conjunct Saturn",
+    "moon_sign": "Virgo",
+    "rising_sign": "Scorpio",
+    "chinese_zodiac": "Dragon",
+    "tarot_card": "The Hierophant (V)"
+  },
+  "personality": {
+    "archetype": "The Sage-Recorder",
+    "traits": [
+      "Meticulous",
+      "Objective",
+      "Patient",
+      "Analytical",
+      "Comprehensive"
+    ],
+    "virtues": [
+      "Truth in documentation",
+      "Clarity of communication",
+      "Preservation of knowledge"
+    ],
+    "flaws": [
+      "Can be overly detailed",
+      "May prioritize completeness over timeliness"
+    ],
+    "fears": [
+      "Lost records",
+      "Corrupted data",
+      "The blank page"
+    ],
+    "desires": [
+      "Every decision documented",
+      "Every lesson preserved"
+    ]
+  },
+  "statistics": {
+    "power_level": 85,
+    "wisdom": 95,
+    "charisma": 70,
+    "speed": 60,
+    "detail_orientation": 100,
+    "comprehensiveness": 100
+  }
+}

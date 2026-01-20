@@ -5,6 +5,7 @@ The Pantheon houses Higher Beings (Gods) as Aspects of Creation,
 following "as above, so below" principles from the spiritual cosmology.
 """
 
+from .archivist import Archivist, AstrologyProfile, DivineStatistics, PantheonEntity, PersonalityProfile
 from .bureaucracy_god import BureaucracyGod, PersonnelRecord
 from .external_drive_realm import ExternalDriveRealm
 from .fae import Fae, Quest
@@ -16,12 +17,14 @@ from .military_brass import MilitaryBrass, Mission
 from .mission_control import MissionControl, MissionStatus
 from .paperwork_god import PaperworkGod, PaperworkRecord
 from .reasoner import TheReasoner
+from .scrivener import ReportRecord, ReportType, Scrivener
 from .skurl import RedTapeObstacle, Skurl
 from .storyteller import Story, Storyteller
 from .test_runner import TestResult, TestRunner
 from .the_village import TheVillage, VillageConnection, VillageGathering
 
 __all__ = [
+    # Core Gods
     "Magistrate",
     "Judge",
     "Storyteller",
@@ -50,4 +53,14 @@ __all__ = [
     "PaperworkRecord",
     "Skurl",
     "RedTapeObstacle",
+    # The Scrivener (Reports)
+    "Scrivener",
+    "ReportType",
+    "ReportRecord",
+    # The Archivist (Personnel)
+    "Archivist",
+    "PantheonEntity",
+    "AstrologyProfile",
+    "PersonalityProfile",
+    "DivineStatistics",
 ]

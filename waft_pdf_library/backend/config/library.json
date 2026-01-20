@@ -1,0 +1,24 @@
+{
+  "roots": ["/Users/ctavolazzi/Code/active/waft"],
+  "ignore_dirs": [
+    ".git",
+    ".venv",
+    ".cursor",
+    ".empirica",
+    ".obsidian",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".mypy_cache",
+    "node_modules",
+    "dist",
+    "build",
+    "_archive",
+    "_hidden",
+    "_genetics",
+    "_realms",
+    "_science_textbook",
+    "_temp",
+    "_temp_pdf_samples",
+    "_temp_pdf_examples"
+  ]
+}

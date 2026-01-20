@@ -1,0 +1,15 @@
+{
+  "entities": {
+    "scrivener": {
+      "name": "The Scrivener",
+      "title": "God of Reports and Intelligence Documents",
+      "domain": "reports, briefs, dossiers, documentation synthesis",
+      "tier": "Major Deity",
+      "holy_day": "January 20 - Day of Documentation",
+      "profile_path": "/Users/ctavolazzi/Code/active/waft/_pantheon/personnel/scrivener/profile.json",
+      "registered_at": "2026-01-20T08:08:52.505733"
+    }
+  },
+  "total_entities": 1,
+  "last_updated": "2026-01-20T08:08:52.505757"
+}

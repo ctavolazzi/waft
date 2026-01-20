@@ -19,6 +19,81 @@ This distinction ensures that while Beings explore, learn, and evolve rapidly (c
 
 **Contrast with Beings**: See `src/waft/being.py` for the timeful, dynamic nature of Beings.
 
+## The Scrivener (NEW)
+
+The Scrivener is the God of Reports and Intelligence Documents. Generates 14 standard document types across operational, business, technical, and academic categories.
+
+### Quick Start
+
+```python
+from waft.pantheon import Scrivener, ReportType
+from pathlib import Path
+
+# Initialize
+scrivener = Scrivener(project_path=Path.cwd())
+
+# Create a Brief
+brief = scrivener.create_brief(
+    title="Project Status Update",
+    subject="Q1 Development",
+    content={
+        "purpose": "Update on Q1 progress",
+        "background": "Development started in January",
+        "key_points": ["Feature A complete", "Feature B in progress"],
+        "recommendations": ["Continue current pace"],
+        "action_items": ["Review by Friday"]
+    }
+)
+
+# Create a SITREP
+sitrep = scrivener.create_sitrep(
+    title="Daily Status",
+    subject="Sprint 5",
+    content={
+        "situation": "Day 3 of Sprint 5",
+        "actions_taken": ["Completed task A", "Started task B"],
+        "current_status": "On track",
+        "next_steps": ["Review PR", "Deploy to staging"],
+        "issues": "None"
+    }
+)
+
+# Create a Post-Mortem
+post_mortem = scrivener.create_post_mortem(
+    title="Project Alpha Review",
+    subject="Project Alpha",
+    content={
+        "project_overview": "3-month development project",
+        "what_went_well": ["Clear requirements", "Good team communication"],
+        "what_went_wrong": ["Scope creep", "Late API changes"],
+        "lessons_learned": ["Lock requirements early", "Buffer for external dependencies"]
+    }
+)
+
+# List all report types
+for rt in scrivener.get_report_types():
+    print(f"{rt.name}: {rt.main_goal} ({rt.typical_length})")
+```
+
+### Supported Report Types
+
+| Report Type | Main Goal | Typical Length |
+|-------------|-----------|----------------|
+| **Brief** | Inform quickly / Instruct | 1-2 pages |
+| **Dossier** | Collect evidence/history | Variable (Folder style) |
+| **SITREP** | Status Update | <1 page |
+| **Backgrounder** | Provide context | 2-5 pages |
+| **White Paper** | Persuade / Educate | 5-15 pages |
+| **Feasibility Study** | Assess Viability | Long / Detailed |
+| **Case Study** | Demonstrate / Analyze | 3-10 pages |
+| **Memo** | Internal Announcement | <1 page |
+| **Executive Summary** | Summarize / Highlight | 1-2 pages |
+| **Post-Mortem** | Learn / Improve | 2-5 pages |
+| **Technical Spec** | Define Requirements | Variable |
+| **Gap Analysis** | Identify Gaps | 2-5 pages |
+| **Literature Review** | Survey Knowledge | 5-20 pages |
+| **Abstract** | Summarize Research | 150-300 words |
+
 ## Magistrate
 
 The Magistrate is the God of Precedent and Body of Proof. See `_pantheon/magistrate/README.md` for details.

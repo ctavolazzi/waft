@@ -4,6 +4,85 @@ This log tracks development activities, decisions, and progress for the waft pro
 
 ---
 
+## 2026-01-19 - WAFT PDF Library (Complete)
+
+**Time**: 23:54:56 PST  
+**Status**: ✅ **COMPLETE** - WE-260119-50hp
+
+### Summary
+
+Delivered a full-stack WAFT PDF Library app with FastAPI + SvelteKit, Typst templates, compiled demo PDFs, and a working UI on `localhost:4433` connected to the API on `localhost:4434`.
+
+### Key Accomplishments
+
+- ✅ FastAPI backend with scan/search/versioning + Typst compile endpoints
+- ✅ SvelteKit UI with search, live preview, version history, and template actions
+- ✅ Added Typst templates for s6t5-page-bordering and drafting
+- ✅ Compiled demo PDFs for immediate preview
+
+### Verification
+
+- ✅ `http://localhost:4433` shows the new UI with a PDF open
+- ✅ `http://localhost:4434/api/health` responds OK
+
+### Files Created/Modified
+
+- `waft_pdf_library/backend/app.py`
+- `waft_pdf_library/backend/config/library.json`
+- `waft_pdf_library/backend/requirements.txt`
+- `waft_pdf_library/backend/typst/templates/s6t5-page-bordering.typ`
+- `waft_pdf_library/backend/typst/templates/drafting.typ`
+- `waft_pdf_library/backend/data/generated/*.pdf`
+- `waft_pdf_library/frontend/src/routes/+page.svelte`
+- `waft_pdf_library/frontend/vite.config.ts`
+- `waft_pdf_library/README.md`
+
+---
+
+## 2026-01-19 - WAFT PDF Library (Plan)
+
+**Time**: 23:51:14 PST  
+**Status**: 🎯 **PLAN** - WE-260119-50hp
+
+### Plan
+
+- Create `waft_pdf_library` project with FastAPI + SvelteKit
+- Add Typst templates (s6t5-page-bordering, drafting) and compile demos
+- Build scanning/versioning API plus search/preview UI
+- Run servers on `localhost:4433` and `localhost:4434` for verification
+
+### Files Targeted
+
+- `waft_pdf_library/backend/app.py`
+- `waft_pdf_library/backend/config/library.json`
+- `waft_pdf_library/backend/typst/templates/*.typ`
+- `waft_pdf_library/frontend/src/routes/+page.svelte`
+- `waft_pdf_library/frontend/vite.config.ts`
+- `waft_pdf_library/README.md`
+
+---
+
+## 2026-01-19 - Security: Subprocess Input Validation (Plan)
+
+**Time**: 23:26:50 PST  
+**Status**: 🎯 **PLAN** - Work queued for WE-260109-sec1 (TKT-sec1-002)
+
+### Plan
+
+- Add centralized subprocess input validation helpers for project names, package names, and free-text fields.
+- Apply validation to high-risk call sites in `src/waft/core/substrate.py` and `src/waft/core/empirica.py`.
+- Keep scope limited to user-controlled inputs; defer broader audit to TKT-sec1-005.
+- Update work effort/ticket notes with progress and next steps.
+
+### Files Targeted
+
+- `src/waft/core/subprocess_validator.py` (new)
+- `src/waft/core/substrate.py`
+- `src/waft/core/empirica.py`
+- `_work_efforts/WE-260109-sec1_critical_security_portability/...`
+
+---
+
 ## 2026-01-19 - Poker Visualization Creative Extensions
 
 **Time**: 15:54:00 PST  

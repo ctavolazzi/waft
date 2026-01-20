@@ -8,6 +8,7 @@ through uv commands (init, sync, add, etc.).
 import subprocess
 from pathlib import Path
 
+from .subprocess_validator import validate_package_name_arg, validate_project_name_arg
 from ..utils import parse_toml_field
 
 
@@ -36,7 +37,8 @@ class SubstrateManager:
             True if successful, False otherwise
         """
         try:
-            project_path = target_path / name
+            validated_name = validate_project_name_arg(name)
+            project_path = target_path / validated_name
 
             # Create project directory if it doesn't exist
             project_path.mkdir(parents=True, exist_ok=True)
@@ -48,7 +50,7 @@ class SubstrateManager:
 
             # Run uv init inside the project directory
             result = subprocess.run(
-                ["uv", "init", "--name", name, "--no-readme"],
+                ["uv", "init", "--name", validated_name, "--no-readme"],
                 cwd=project_path,
                 capture_output=True,
                 text=True,
@@ -106,8 +108,9 @@ class SubstrateManager:
         if project_path is None:
             raise ValueError("project_path must be provided either in __init__ or as parameter")
         try:
+            validated_package = validate_package_name_arg(package)
             subprocess.run(
-                ["uv", "add", package],
+                ["uv", "add", validated_package],
                 cwd=project_path,
                 check=True,
                 capture_output=True,

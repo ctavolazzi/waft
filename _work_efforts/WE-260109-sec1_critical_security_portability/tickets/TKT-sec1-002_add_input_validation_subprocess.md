@@ -2,7 +2,7 @@
 id: TKT-sec1-002
 parent: WE-260109-sec1
 title: "Add comprehensive input validation to subprocess calls"
-status: open
+status: in_progress
 priority: CRITICAL
 created: 2026-01-09T00:00:00.000Z
 created_by: claude_audit
@@ -191,6 +191,10 @@ def test_command_injection_attempts():
 - Audit Finding: "Command Injection Risks (CRITICAL)"
 - Files affected: 21 files with subprocess.run()
 - Existing security test: big_bad_wolf.py (decision engine attacks)
+
+## Progress
+
+- 2026-01-19: Added centralized subprocess validation helper and applied to user-input call sites in substrate + empirica.
 
 ## Commits
 

@@ -1331,10 +1331,7 @@ class Being:
         Make a decision (decrements fatigue, consumes stamina, returns experience).
 
         When stamina is depleted, actions become sluggish, shitty, and make mistakes.
-<<<<<<< HEAD
         For the first Being, uses Empirica for epistemic thinking.
-=======
->>>>>>> claude/adversarial-testing-gP4of
 
         Args:
             decision_type: Type of decision (learn_skill, record_memory, pursue_goal, rest, explore)
@@ -1486,20 +1483,9 @@ class Being:
         # Keep recent_experiences bounded (last 10)
         if len(self.recent_experiences) > 10:
             self.recent_experiences.pop(0)
-<<<<<<< HEAD
 
     def to_dict(self) -> dict[str, Any]:
         """Convert being to dictionary."""
-=======
-    
-    def to_dict(self) -> Dict[str, Any]:
-        """
-        Convert being to dictionary for serialization.
-
-        Returns:
-            Dictionary representation of the Being with all attributes
-        """
->>>>>>> claude/adversarial-testing-gP4of
         return {
             "being_id": self.being_id,
             "reality_id": self.reality_id,
@@ -1548,21 +1534,8 @@ class Being:
         }
 
     @classmethod
-<<<<<<< HEAD
     def from_dict(cls, data: dict[str, Any]) -> "Being":
         """Create being from dictionary (with backward compatibility for missing attributes)."""
-=======
-    def from_dict(cls, data: Dict[str, Any]) -> "Being":
-        """
-        Create being from dictionary (with backward compatibility for missing attributes).
-
-        Args:
-            data: Dictionary containing being data (from to_dict or storage)
-
-        Returns:
-            Being instance reconstructed from the dictionary data
-        """
->>>>>>> claude/adversarial-testing-gP4of
         being = cls(
             being_id=data["being_id"],
             reality_id=data["reality_id"],

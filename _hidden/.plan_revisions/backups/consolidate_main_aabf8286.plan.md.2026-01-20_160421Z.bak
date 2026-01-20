@@ -1,0 +1,76 @@
+---
+name: consolidate_main
+overview: Safely consolidate local changes and remote branches into main with secret scanning, protection checks, and updated tracking (work effort + devlog).
+todos:
+  - id: init-tracking
+    content: Create work effort + Empirica preflight + devlog plan
+    status: pending
+  - id: preflight-checks
+    content: Run secret scan, gitignore, branch protection, backup
+    status: pending
+  - id: local-consolidation
+    content: Stage safe files and create consolidation commit
+    status: pending
+  - id: branch-integration
+    content: Review remote branches and merge decisions
+    status: pending
+  - id: wrap-up
+    content: Push/PR and update work effort + devlog
+    status: pending
+---
+
+# Consolidate Code to Main
+
+## References
+
+- [Consolidation draft](/Users/ctavolazzi/Code/active/waft/.cursor/plans/consolidate_all_code_to_origin_main_19a90ef1.plan.md)
+- [.gitignore](/Users/ctavolazzi/Code/active/waft/.gitignore)
+- [Devlog](/Users/ctavolazzi/Code/active/waft/_work_efforts/devlog.md)
+
+## Plan
+
+1. Initialize tracking and documentation
+
+- Start Empirica session and preflight to capture baseline.
+- Create a new work effort under `/Users/ctavolazzi/Code/active/waft/_work_efforts/` for this consolidation.
+- Add the plan entry to [Devlog](/Users/ctavolazzi/Code/active/waft/_work_efforts/devlog.md).
+
+2. Run preflight safety checks (no commits yet)
+
+- Secret scan modified and untracked files; note any exclusions.
+- Review [.gitignore](/Users/ctavolazzi/Code/active/waft/.gitignore) for secrets and temp artifacts; update if needed.
+- Check branch protection and remote connectivity to `origin`.
+- Create and push a backup branch.
+- Check submodule or nested repo status and verify disk space.
+
+3. Consolidate local working tree into main
+
+- Review untracked files and confirm which should be included.
+- Stage safe files only (exclude `.env`, sessions, secrets).
+- Create a single consolidation commit with a clear message.
+- Verify `git status` clean and review commit diff.
+
+4. Review and integrate remote branches
+
+- For each remote branch, capture log and diff stats.
+- Categorize: merge, review, skip; get user decision when unclear.
+- Merge selected branches into `main`, resolve conflicts, run targeted tests (no `npm dev` or `npm build`).
+
+5. Push or PR
+
+- If `main` is protected, open a PR; otherwise push directly to `origin/main`.
+- Verify `origin/main` reflects all merged changes.
+
+6. Close out tracking
+
+- Update the new work effort and [Devlog](/Users/ctavolazzi/Code/active/waft/_work_efforts/devlog.md) with outcomes, merges, tests, and any skipped items.
+- Run Empirica postflight to capture learning.
+
+## Verification commands
+
+- `git status`
+- `git diff --cached --stat`
+- `git log origin/main..main --oneline`
+- `git submodule status`
+- `git ls-remote origin`
+- `df -h .`

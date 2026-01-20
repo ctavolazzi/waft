@@ -21,6 +21,8 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
+from .subprocess_validator import validate_free_text
+
 # Try to import Empirica API
 try:
     from .empirica_api import EMPIRICA_API_AVAILABLE, EmpiricaAPIManager
@@ -753,15 +755,17 @@ class EmpiricaManager:
             True if successful, False otherwise
         """
         try:
+            validated_finding = validate_free_text(finding, field_name="finding")
             subprocess.run(
-                self._empirica_cmd + ["finding-log", "--finding", finding, "--impact", str(impact)],
+                self._empirica_cmd
+                + ["finding-log", "--finding", validated_finding, "--impact", str(impact)],
                 cwd=self.project_path,
                 capture_output=True,
                 text=True,
                 check=True,
             )
             return True
-        except (subprocess.CalledProcessError, FileNotFoundError):
+        except (ValueError, subprocess.CalledProcessError, FileNotFoundError):
             return False
 
     def log_unknown(self, unknown: str) -> bool:
@@ -775,8 +779,9 @@ class EmpiricaManager:
             True if successful, False otherwise
         """
         try:
+            validated_unknown = validate_free_text(unknown, field_name="unknown")
             subprocess.run(
-                self._empirica_cmd + ["unknown-log", "--unknown", unknown],
+                self._empirica_cmd + ["unknown-log", "--unknown", validated_unknown],
                 cwd=self.project_path,
                 capture_output=True,
                 text=True,
@@ -784,7 +789,7 @@ class EmpiricaManager:
                 timeout=3,  # 3 second timeout for logging
             )
             return True
-        except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
+        except (ValueError, subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
             return False
 
     def check_submit(self, operation: dict[str, Any] | None = None) -> str | None:

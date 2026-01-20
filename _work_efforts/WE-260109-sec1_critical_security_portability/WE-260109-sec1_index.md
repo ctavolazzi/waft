@@ -5,7 +5,7 @@ status: in_progress
 priority: CRITICAL
 created: 2026-01-09T00:00:00.000Z
 created_by: claude_audit
-last_updated: 2026-01-11T00:00:00.000Z
+last_updated: 2026-01-19T23:26:50.000Z
 branch: claude/close-work-effort-Q4XFe
 repository: waft
 ---
@@ -36,7 +36,7 @@ Comprehensive audit of all 49 Python files (12,731 LOC) revealed:
 | ID | Title | Status | Priority |
 |----|-------|--------|----------|
 | TKT-sec1-001 | Fix hardcoded absolute path in .empirica/config.yaml | **completed** | CRITICAL |
-| TKT-sec1-002 | Add comprehensive input validation to subprocess calls | open | CRITICAL |
+| TKT-sec1-002 | Add comprehensive input validation to subprocess calls | in_progress | CRITICAL |
 | TKT-sec1-003 | Delete legacy web.py (546 lines dead code) | **completed** | HIGH |
 | TKT-sec1-004 | Add security tests for input validation | open | HIGH |
 | TKT-sec1-005 | Audit and fix all subprocess.run() calls (21 files) | open | HIGH |
@@ -68,6 +68,11 @@ Comprehensive audit of all 49 Python files (12,731 LOC) revealed:
 - Architecture: Subprocess usage across 21 files
 
 ## Progress
+
+### 2026-01-19
+- 🟡 **TKT-sec1-002 STARTED**: Added centralized subprocess input validation helper and applied to substrate + empirica logging inputs.
+  - New module: `src/waft/core/subprocess_validator.py`
+  - Validates project/package names and free-text fields (null/control characters, length)
 
 ### 2026-01-11
 - ✅ **TKT-sec1-001 COMPLETED**: Fixed hardcoded absolute path in .empirica/config.yaml
