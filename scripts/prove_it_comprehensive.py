@@ -321,104 +321,500 @@ class ProofCaseBuilder:
         print()
         return results
     
+    def analyze_claim(self) -> Dict[str, Any]:
+        """
+        Analyze the claim to determine what to test.
+        
+        Returns:
+            Dict with:
+            - target_files: List of file paths to examine
+            - features_to_check: List of specific features mentioned
+            - verification_type: Type of verification (html, javascript, css, python, template, etc.)
+        """
+        import re
+        
+        claim_lower = self.claim.lower()
+        analysis = {
+            "target_files": [],
+            "features_to_check": [],
+            "verification_type": "unknown"
+        }
+        
+        # Extract file names from claim (common patterns)
+        # Pattern: "show_me_bulletproof.py", "show-me HTML report", "file.py", etc.
+        file_patterns = [
+            r'([a-zA-Z0-9_\-]+\.(py|html|js|css|ts|tsx|jsx))',  # filename.ext
+            r'([a-zA-Z0-9_\-]+\.py)',  # Python files
+            r'([a-zA-Z0-9_\-]+\.html)',  # HTML files
+            r'([a-zA-Z0-9_\-]+\.js)',  # JavaScript files
+        ]
+        
+        for pattern in file_patterns:
+            matches = re.findall(pattern, self.claim, re.IGNORECASE)
+            for match in matches:
+                filename = match[0] if isinstance(match, tuple) else match
+                # Try to find the file in common locations
+                possible_paths = [
+                    self.project_path / "scripts" / filename,
+                    self.project_path / "src" / "waft" / filename,
+                    self.project_path / filename,
+                ]
+                for path in possible_paths:
+                    if path.exists():
+                        analysis["target_files"].append(str(path.relative_to(self.project_path)))
+                        break
+        
+        # Determine verification type based on keywords
+        if any(keyword in claim_lower for keyword in ['html', 'html report', 'above-the-fold', 'responsive', 'mobile breakpoint']):
+            analysis["verification_type"] = "html"
+            # Extract HTML-specific features
+            if 'above-the-fold' in claim_lower or 'above the fold' in claim_lower:
+                analysis["features_to_check"].append("above-the-fold")
+            if 'responsive' in claim_lower or 'breakpoint' in claim_lower or 'mobile' in claim_lower:
+                analysis["features_to_check"].append("responsive_design")
+            if 'copy button' in claim_lower or 'abstract.*copy' in claim_lower:
+                analysis["features_to_check"].append("abstract_copy_button")
+            if 'clipboard' in claim_lower:
+                analysis["features_to_check"].append("clipboard_api")
+        elif any(keyword in claim_lower for keyword in ['javascript', 'js', 'clipboard', 'api', 'navigator']):
+            analysis["verification_type"] = "javascript"
+            if 'clipboard' in claim_lower:
+                analysis["features_to_check"].append("clipboard_api")
+        elif any(keyword in claim_lower for keyword in ['css', 'style', 'media query', 'breakpoint']):
+            analysis["verification_type"] = "css"
+            if 'responsive' in claim_lower or 'breakpoint' in claim_lower:
+                analysis["features_to_check"].append("responsive_design")
+        elif any(keyword in claim_lower for keyword in ['template', 'pdf.*template', 'black.*bar', 'header']):
+            analysis["verification_type"] = "template"
+            if 'black bar' in claim_lower or 'black.*bar' in claim_lower:
+                analysis["features_to_check"].append("no_black_bars")
+        elif any(keyword in claim_lower for keyword in ['python', 'function', 'def ', 'class ']):
+            analysis["verification_type"] = "python"
+        else:
+            # Default: try to infer from target files
+            if analysis["target_files"]:
+                for target_file in analysis["target_files"]:
+                    if target_file.endswith('.html'):
+                        analysis["verification_type"] = "html"
+                    elif target_file.endswith(('.js', '.jsx', '.ts', '.tsx')):
+                        analysis["verification_type"] = "javascript"
+                    elif target_file.endswith('.css'):
+                        analysis["verification_type"] = "css"
+                    elif target_file.endswith('.py'):
+                        # Could be template or regular Python
+                        if 'template' in target_file.lower():
+                            analysis["verification_type"] = "template"
+                        else:
+                            analysis["verification_type"] = "python"
+                    break
+        
+        return analysis
+    
+    def verify_html_features(self, claim_analysis: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """Verify HTML features from claim."""
+        assumptions = []
+        
+        # Find target file(s)
+        target_files = claim_analysis.get("target_files", [])
+        if not target_files:
+            # Try to infer from claim
+            import re
+            filename_match = re.search(r'([a-zA-Z0-9_\-]+\.(py|html))', self.claim, re.IGNORECASE)
+            if filename_match:
+                filename = filename_match.group(1)
+                possible_paths = [
+                    self.project_path / "scripts" / filename,
+                    self.project_path / "src" / "waft" / filename,
+                    self.project_path / filename,
+                ]
+                for path in possible_paths:
+                    if path.exists():
+                        target_files = [str(path.relative_to(self.project_path))]
+                        break
+        
+        if not target_files:
+            assumptions.append({
+                "statement": "Target file(s) can be located for HTML feature verification",
+                "category": "code",
+                "risk": "medium",
+                "status": "INCONCLUSIVE",
+                "confidence": 0.0,
+                "evidence": [{
+                    "type": "error",
+                    "description": "Could not locate target file(s) mentioned in claim",
+                    "result": f"Claim: {self.claim}"
+                }]
+            })
+            return assumptions
+        
+        features_to_check = claim_analysis.get("features_to_check", [])
+        
+        for target_file_str in target_files:
+            target_file = self.project_path / target_file_str
+            if not target_file.exists():
+                assumptions.append({
+                    "statement": f"Target file {target_file_str} exists",
+                    "category": "code",
+                    "risk": "high",
+                    "status": "DISPROVEN",
+                    "confidence": 1.0,
+                    "evidence": [{
+                        "type": "file_check",
+                        "description": f"File {target_file_str} not found",
+                        "result": "File does not exist"
+                    }]
+                })
+                continue
+            
+            try:
+                content = target_file.read_text()
+                import re
+                
+                # Check for above-the-fold section
+                if "above-the-fold" in features_to_check or "above-the-fold" in self.claim.lower():
+                    has_above_fold = (
+                        'id="above-the-fold"' in content or 
+                        'id=\'above-the-fold\'' in content or
+                        'class="above-the-fold"' in content or
+                        'class=\'above-the-fold\'' in content or
+                        '<section id="above-the-fold"' in content
+                    )
+                    line_num = None
+                    if has_above_fold:
+                        # Find line number
+                        lines = content.split('\n')
+                        for i, line in enumerate(lines, 1):
+                            if 'above-the-fold' in line:
+                                line_num = i
+                                break
+                    
+                    assumptions.append({
+                        "statement": f"HTML report has above-the-fold section with ID 'above-the-fold'",
+                        "category": "code",
+                        "risk": "medium",
+                        "status": "PROVEN" if has_above_fold else "DISPROVEN",
+                        "confidence": 1.0 if has_above_fold else 0.9,
+                        "evidence": [{
+                            "type": "code_analysis",
+                            "description": f"Checked for above-the-fold section in {target_file_str}",
+                            "result": "Found" if has_above_fold else "Not found",
+                            "source_file": target_file_str,
+                            "source_lines": [line_num] if line_num else [],
+                            "verification_method": "Pattern search: id=\"above-the-fold\" or class=\"above-the-fold\""
+                        }]
+                    })
+                
+                # Check for responsive design (media queries)
+                if "responsive_design" in features_to_check or "responsive" in self.claim.lower():
+                    media_queries = re.findall(r'@media\s*\([^)]+\)', content)
+                    has_breakpoints = any(
+                        'max-width' in mq or 'min-width' in mq or 'max-device-width' in mq or 'min-device-width' in mq
+                        for mq in media_queries
+                    )
+                    
+                    line_numbers = []
+                    if has_breakpoints:
+                        lines = content.split('\n')
+                        for i, line in enumerate(lines, 1):
+                            if '@media' in line and ('max-width' in line or 'min-width' in line):
+                                line_numbers.append(i)
+                    
+                    assumptions.append({
+                        "statement": f"HTML report has responsive design with mobile breakpoints",
+                        "category": "code",
+                        "risk": "medium",
+                        "status": "PROVEN" if has_breakpoints else "DISPROVEN",
+                        "confidence": 1.0 if has_breakpoints else 0.8,
+                        "evidence": [{
+                            "type": "code_analysis",
+                            "description": f"Checked for responsive media queries in {target_file_str}",
+                            "result": f"Found {len(media_queries)} media queries" if has_breakpoints else "No responsive breakpoints found",
+                            "source_file": target_file_str,
+                            "source_lines": line_numbers[:5],  # First 5 matches
+                            "verification_method": "Regex pattern: @media with width breakpoints"
+                        }]
+                    })
+                
+                # Check for abstract copy button
+                if "abstract_copy_button" in features_to_check or "copy button" in self.claim.lower():
+                    has_copy_btn = (
+                        '.abstract-copy-btn' in content or
+                        'abstract-copy-btn' in content or
+                        'abstract.*copy' in content.lower()
+                    )
+                    
+                    line_num = None
+                    if has_copy_btn:
+                        lines = content.split('\n')
+                        for i, line in enumerate(lines, 1):
+                            if 'abstract-copy-btn' in line or 'abstract.*copy' in line.lower():
+                                line_num = i
+                                break
+                    
+                    assumptions.append({
+                        "statement": f"HTML report has abstract copy button",
+                        "category": "code",
+                        "risk": "low",
+                        "status": "PROVEN" if has_copy_btn else "DISPROVEN",
+                        "confidence": 1.0 if has_copy_btn else 0.9,
+                        "evidence": [{
+                            "type": "code_analysis",
+                            "description": f"Checked for abstract copy button in {target_file_str}",
+                            "result": "Found" if has_copy_btn else "Not found",
+                            "source_file": target_file_str,
+                            "source_lines": [line_num] if line_num else [],
+                            "verification_method": "Pattern search: .abstract-copy-btn or abstract copy button"
+                        }]
+                    })
+                
+                # Check for clipboard API
+                if "clipboard_api" in features_to_check or "clipboard" in self.claim.lower():
+                    has_clipboard = (
+                        'navigator.clipboard' in content or
+                        'clipboard.writeText' in content or
+                        'clipboard.readText' in content
+                    )
+                    
+                    line_numbers = []
+                    if has_clipboard:
+                        lines = content.split('\n')
+                        for i, line in enumerate(lines, 1):
+                            if 'clipboard' in line.lower():
+                                line_numbers.append(i)
+                    
+                    assumptions.append({
+                        "statement": f"HTML report uses clipboard API",
+                        "category": "code",
+                        "risk": "low",
+                        "status": "PROVEN" if has_clipboard else "DISPROVEN",
+                        "confidence": 1.0 if has_clipboard else 0.9,
+                        "evidence": [{
+                            "type": "code_analysis",
+                            "description": f"Checked for clipboard API usage in {target_file_str}",
+                            "result": "Found" if has_clipboard else "Not found",
+                            "source_file": target_file_str,
+                            "source_lines": line_numbers[:5],  # First 5 matches
+                            "verification_method": "Pattern search: navigator.clipboard or clipboard.writeText"
+                        }]
+                    })
+                
+            except Exception as e:
+                assumptions.append({
+                    "statement": f"Target file {target_file_str} can be analyzed",
+                    "category": "code",
+                    "risk": "medium",
+                    "status": "INCONCLUSIVE",
+                    "confidence": 0.0,
+                    "evidence": [{
+                        "type": "error",
+                        "description": f"Error analyzing {target_file_str}",
+                        "result": str(e)
+                    }]
+                })
+        
+        return assumptions
+    
+    def verify_template_features(self, claim_analysis: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """Verify template features (existing black bar checking logic)."""
+        assumptions = []
+        template_dir = self.project_path / "src" / "waft" / "templates"
+        
+        if not template_dir.exists():
+            assumptions.append({
+                "statement": "Template directory exists",
+                "category": "code",
+                "risk": "high",
+                "status": "DISPROVEN",
+                "confidence": 1.0,
+                "evidence": [{
+                    "type": "file_check",
+                    "description": "Template directory not found",
+                    "result": "Directory does not exist"
+                }]
+            })
+            return assumptions
+        
+        import re
+        template_files = list(template_dir.glob("*.py"))
+        black_bar_pattern = re.compile(r'h[1-6]\s*\{[^}]*background:\s*#000', re.MULTILINE | re.DOTALL)
+        
+        for template_file in template_files:
+            try:
+                content = template_file.read_text()
+                matches = list(black_bar_pattern.finditer(content))
+                
+                if matches:
+                    line_numbers = [content[:m.start()].count('\n') + 1 for m in matches]
+                    code_snippets = [content[max(0, m.start()-50):m.end()+50] for m in matches[:3]]
+                    assumption = {
+                        "statement": f"Template {template_file.name} has no black bar headers",
+                        "category": "code",
+                        "risk": "high",
+                        "status": "DISPROVEN",
+                        "confidence": 1.0,
+                        "evidence": [{
+                            "type": "code_analysis",
+                            "description": f"Found {len(matches)} black bar violations in {template_file.name}",
+                            "result": f"Lines: {line_numbers}",
+                            "source_file": str(template_file.relative_to(self.project_path)),
+                            "source_lines": line_numbers,
+                            "code_snippets": code_snippets
+                        }]
+                    }
+                    assumptions.append(assumption)
+                    print(f"  ❌ {template_file.name}: BLACK BARS FOUND")
+                else:
+                    h2_pattern = re.compile(r'h2\s*\{[^}]*\}', re.MULTILINE | re.DOTALL)
+                    h2_matches = list(h2_pattern.finditer(content))
+                    h2_snippets = []
+                    if h2_matches:
+                        for m in h2_matches[:2]:
+                            snippet = content[m.start():m.end()]
+                            line_num = content[:m.start()].count('\n') + 1
+                            h2_snippets.append({
+                                "line": line_num,
+                                "code": snippet[:200]
+                            })
+                    
+                    assumption = {
+                        "statement": f"Template {template_file.name} has no black bar headers",
+                        "category": "code",
+                        "risk": "high",
+                        "status": "PROVEN",
+                        "confidence": 1.0,
+                        "evidence": [{
+                            "type": "code_analysis",
+                            "description": f"No black bar patterns found in {template_file.name}",
+                            "result": "Verified clean",
+                            "source_file": str(template_file.relative_to(self.project_path)),
+                            "verification_method": "Regex pattern search: h[1-6]\\s*\\{[^}]*background:\\s*#000",
+                            "h2_headers_found": len(h2_matches),
+                            "sample_h2_styles": h2_snippets
+                        }]
+                    }
+                    assumptions.append(assumption)
+                    print(f"  ✅ {template_file.name}: No black bars")
+            except Exception as e:
+                assumption = {
+                    "statement": f"Template {template_file.name} can be checked",
+                    "category": "code",
+                    "risk": "medium",
+                    "status": "INCONCLUSIVE",
+                    "confidence": 0.0,
+                    "evidence": [{
+                        "type": "error",
+                        "description": f"Error checking {template_file.name}",
+                        "result": str(e)
+                    }]
+                }
+                assumptions.append(assumption)
+                print(f"  ⚠️ {template_file.name}: Error - {e}")
+        
+        return assumptions
+    
     def run_assumption_check(self) -> Dict[str, Any]:
         """Run /check-assumptions validation."""
         print("🔍 Running Assumption Validation...")
         print()
         
-        # Direct template verification
-        template_dir = self.project_path / "src" / "waft" / "templates"
+        # Analyze claim to determine what to test
+        claim_analysis = self.analyze_claim()
+        verification_type = claim_analysis.get("verification_type", "unknown")
+        target_files = claim_analysis.get("target_files", [])
+        features_to_check = claim_analysis.get("features_to_check", [])
+        
+        print(f"  📋 Claim Analysis:")
+        print(f"     Verification Type: {verification_type}")
+        if target_files:
+            print(f"     Target Files: {', '.join(target_files)}")
+        if features_to_check:
+            print(f"     Features to Check: {', '.join(features_to_check)}")
+        print()
+        
         assumptions = []
         
-        if template_dir.exists():
-            import re
-            template_files = list(template_dir.glob("*.py"))
-            black_bar_pattern = re.compile(r'h[1-6]\s*\{[^}]*background:\s*#000', re.MULTILINE | re.DOTALL)
-            
-            for template_file in template_files:
-                try:
-                    content = template_file.read_text()
-                    matches = list(black_bar_pattern.finditer(content))
-                    
-                    if matches:
-                        line_numbers = [content[:m.start()].count('\n') + 1 for m in matches]
-                        code_snippets = [content[max(0, m.start()-50):m.end()+50] for m in matches[:3]]  # First 3 matches
-                        assumption = {
-                            "statement": f"Template {template_file.name} has no black bar headers",
-                            "category": "code",
-                            "risk": "high",
-                            "status": "DISPROVEN",
-                            "confidence": 1.0,
-                            "evidence": [{
-                                "type": "code_analysis",
-                                "description": f"Found {len(matches)} black bar violations in {template_file.name}",
-                                "result": f"Lines: {line_numbers}",
-                                "source_file": str(template_file.relative_to(self.project_path)),
-                                "source_lines": line_numbers,
-                                "code_snippets": code_snippets
-                            }]
-                        }
-                        assumptions.append(assumption)
-                        print(f"  ❌ {template_file.name}: BLACK BARS FOUND")
-                    else:
-                        # Check for h2 headers to show what we verified
-                        h2_pattern = re.compile(r'h2\s*\{[^}]*\}', re.MULTILINE | re.DOTALL)
-                        h2_matches = list(h2_pattern.finditer(content))
-                        h2_snippets = []
-                        if h2_matches:
-                            for m in h2_matches[:2]:  # Show first 2 h2 styles
-                                snippet = content[m.start():m.end()]
-                                line_num = content[:m.start()].count('\n') + 1
-                                h2_snippets.append({
-                                    "line": line_num,
-                                    "code": snippet[:200]  # First 200 chars
-                                })
-                        
-                        assumption = {
-                            "statement": f"Template {template_file.name} has no black bar headers",
-                            "category": "code",
-                            "risk": "high",
-                            "status": "PROVEN",
-                            "confidence": 1.0,
-                            "evidence": [{
-                                "type": "code_analysis",
-                                "description": f"No black bar patterns found in {template_file.name}",
-                                "result": "Verified clean",
-                                "source_file": str(template_file.relative_to(self.project_path)),
-                                "verification_method": "Regex pattern search: h[1-6]\\s*\\{[^}]*background:\\s*#000",
-                                "h2_headers_found": len(h2_matches),
-                                "sample_h2_styles": h2_snippets
-                            }]
-                        }
-                        assumptions.append(assumption)
-                        print(f"  ✅ {template_file.name}: No black bars")
-                except Exception as e:
-                    assumption = {
-                        "statement": f"Template {template_file.name} can be checked",
-                        "category": "code",
-                        "risk": "medium",
-                        "status": "INCONCLUSIVE",
-                        "confidence": 0.0,
-                        "evidence": [{
-                            "type": "error",
-                            "description": f"Error checking {template_file.name}",
-                            "result": str(e)
-                        }]
-                    }
-                    assumptions.append(assumption)
-                    print(f"  ⚠️ {template_file.name}: Error - {e}")
+        # Route to appropriate verification based on claim type
+        if verification_type == "html":
+            assumptions = self.verify_html_features(claim_analysis)
+            print(f"  ✅ HTML Features Checked: {len(assumptions)}")
+        elif verification_type == "javascript":
+            # TODO: Implement JavaScript verification
+            assumptions.append({
+                "statement": "JavaScript features can be verified",
+                "category": "code",
+                "risk": "medium",
+                "status": "INCONCLUSIVE",
+                "confidence": 0.0,
+                "evidence": [{
+                    "type": "info",
+                    "description": "JavaScript verification not yet implemented",
+                    "result": "Feature coming soon"
+                }]
+            })
+            print(f"  ⚠️ JavaScript verification not yet implemented")
+        elif verification_type == "css":
+            # TODO: Implement CSS verification
+            assumptions.append({
+                "statement": "CSS features can be verified",
+                "category": "code",
+                "risk": "medium",
+                "status": "INCONCLUSIVE",
+                "confidence": 0.0,
+                "evidence": [{
+                    "type": "info",
+                    "description": "CSS verification not yet implemented",
+                    "result": "Feature coming soon"
+                }]
+            })
+            print(f"  ⚠️ CSS verification not yet implemented")
+        elif verification_type == "template":
+            assumptions = self.verify_template_features(claim_analysis)
+            print(f"  ✅ Templates Checked: {len(assumptions)}")
+        elif verification_type == "python":
+            # TODO: Implement Python verification
+            assumptions.append({
+                "statement": "Python features can be verified",
+                "category": "code",
+                "risk": "medium",
+                "status": "INCONCLUSIVE",
+                "confidence": 0.0,
+                "evidence": [{
+                    "type": "info",
+                    "description": "Python verification not yet implemented",
+                    "result": "Feature coming soon"
+                }]
+            })
+            print(f"  ⚠️ Python verification not yet implemented")
+        else:
+            # Unknown verification type - try to infer or return inconclusive
+            assumptions.append({
+                "statement": "Claim can be analyzed and verified",
+                "category": "code",
+                "risk": "medium",
+                "status": "INCONCLUSIVE",
+                "confidence": 0.0,
+                "evidence": [{
+                    "type": "info",
+                    "description": f"Could not determine verification type for claim: {self.claim}",
+                    "result": f"Verification type: {verification_type}"
+                }]
+            })
+            print(f"  ⚠️ Unknown verification type: {verification_type}")
         
         print()
-        print(f"  ✅ Templates Checked: {len(assumptions)}")
+        print(f"  ✅ Total Assumptions: {len(assumptions)}")
         print(f"  ✅ Proven: {sum(1 for a in assumptions if a.get('status') == 'PROVEN')}")
         print(f"  ❌ Disproven: {sum(1 for a in assumptions if a.get('status') == 'DISPROVEN')}")
+        print(f"  ⚠️ Inconclusive: {sum(1 for a in assumptions if a.get('status') == 'INCONCLUSIVE')}")
         print()
         
         return {
             "assumptions": assumptions,
             "total": len(assumptions),
-            "proven": sum(1 for a in assumptions if a.get('status') == 'PROVEN'),
-            "disproven": sum(1 for a in assumptions if a.get('status') == 'DISPROVEN')
+            "proven": sum(1 for a in assumptions if a.get('status') == "PROVEN"),
+            "disproven": sum(1 for a in assumptions if a.get('status') == "DISPROVEN"),
+            "verification_type": verification_type,
+            "claim_analysis": claim_analysis
         }
     
     def build_case_file(self) -> str:
@@ -822,7 +1218,10 @@ class ProofCaseBuilder:
             if isinstance(result, dict)
         )
         
-        # Template verification is critical
+        # Get verification type from assumption results
+        verification_type = self.assumption_results.get("verification_type", "unknown")
+        
+        # Template verification is only critical for template claims
         template_verified = self.verification_results.get("template_verification", {}).get("verified", False)
         
         # Check assumptions
@@ -838,42 +1237,65 @@ class ProofCaseBuilder:
             total_count = len(assumptions)
             assumption_confidence = proven_count / total_count if total_count > 0 else 0.0
             
-            # If any template has black bars, claim is disproven
+            # If any assumption is disproven, claim is disproven
             if disproven_count > 0:
                 self.verdict = "DISPROVEN"
                 self.confidence = 0.95
                 return
             
-            # If all templates proven clean and verification passed, claim is PROVEN
-            # Prioritize this check - if all templates are clean, it's proven
+            # If all assumptions proven, claim is PROVEN (with high confidence)
             if proven_count == total_count and total_count > 0:
-                if template_verified:
+                # For template claims, also check template verification
+                if verification_type == "template":
+                    if template_verified:
+                        self.verdict = "PROVEN"
+                        self.confidence = 0.95
+                        return
+                    elif all_verified:
+                        self.verdict = "PROVEN"
+                        self.confidence = 0.90
+                        return
+                else:
+                    # For non-template claims, if all assumptions proven, it's proven
                     self.verdict = "PROVEN"
                     self.confidence = 0.95
-                    return
-                elif all_verified:  # Even if template verification script failed, if all templates checked are clean
-                    self.verdict = "PROVEN"
-                    self.confidence = 0.90
                     return
         else:
             assumption_confidence = 0.5  # Neutral if no assumptions
         
-        # Determine verdict
-        if template_verified and all_verified and assumption_confidence >= 0.95:
-            self.verdict = "PROVEN"
-            self.confidence = 0.95
-        elif template_verified and all_verified and assumption_confidence >= 0.8:
-            self.verdict = "PROVEN"
-            self.confidence = min(0.90, 0.75 + (assumption_confidence * 0.15))
-        elif not template_verified:
-            self.verdict = "DISPROVEN"
-            self.confidence = 0.9
-        elif assumption_confidence < 0.5:
-            self.verdict = "DISPROVEN"
-            self.confidence = 0.7
+        # Determine verdict based on verification type
+        if verification_type == "template":
+            # Template-specific logic (original behavior)
+            if template_verified and all_verified and assumption_confidence >= 0.95:
+                self.verdict = "PROVEN"
+                self.confidence = 0.95
+            elif template_verified and all_verified and assumption_confidence >= 0.8:
+                self.verdict = "PROVEN"
+                self.confidence = min(0.90, 0.75 + (assumption_confidence * 0.15))
+            elif not template_verified and verification_type == "template":
+                # Only fail on template verification if claim is about templates
+                self.verdict = "DISPROVEN"
+                self.confidence = 0.9
+            elif assumption_confidence < 0.5:
+                self.verdict = "DISPROVEN"
+                self.confidence = 0.7
+            else:
+                self.verdict = "INCONCLUSIVE"
+                self.confidence = assumption_confidence
         else:
-            self.verdict = "INCONCLUSIVE"
-            self.confidence = assumption_confidence
+            # Non-template claims: base verdict on assumptions
+            if assumption_confidence >= 0.95 and proven_count > 0:
+                self.verdict = "PROVEN"
+                self.confidence = 0.95
+            elif assumption_confidence >= 0.8 and proven_count > 0:
+                self.verdict = "PROVEN"
+                self.confidence = min(0.90, 0.75 + (assumption_confidence * 0.15))
+            elif assumption_confidence < 0.5 or disproven_count > 0:
+                self.verdict = "DISPROVEN"
+                self.confidence = max(0.7, assumption_confidence)
+            else:
+                self.verdict = "INCONCLUSIVE"
+                self.confidence = assumption_confidence
     
     def generate_pdf(self) -> Path:
         """Generate PDF binder with case brief."""

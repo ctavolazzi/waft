@@ -1,0 +1,12 @@
+{
+  "timestamp": "20260117_141916",
+  "version": 6,
+  "hash": "371197132ebe665d0c15463933396e3443b47a4150856c233cb1b5e3b5e285b2",
+  "hmac": "eb5fd0d1dff161b1bf4874e0e327657ab9224e0a10e33305792a0931af683a11",
+  "realm_state_file": "initial_realm_state_20260117_141916.json.encrypted",
+  "hash_file": "state_hash_20260117_141916.txt",
+  "hmac_file": "state_hmac_20260117_141916.txt",
+  "version_file": "state_version_20260117_141916.txt",
+  "encryption_source": "direct",
+  "created_at": "2026-01-17T14:19:16.965408"
+}

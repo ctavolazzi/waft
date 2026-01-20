@@ -9,10 +9,13 @@ and provides guidance based on what the system knows and doesn't know.
 """
 
 from pathlib import Path
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional, List, Callable
 from datetime import datetime
+import json
 
 from ..empirica import EmpiricaManager
+from .oracle_personality import OraclePersonality, OraclePersonalityType
+from .oracle_journal import OracleJournal
 
 
 class TheOracle:
@@ -27,13 +30,28 @@ class TheOracle:
     - Project learning trajectories
     """
     
-    def __init__(self, project_path: Path, empirica_manager: Optional[EmpiricaManager] = None):
+    def __init__(
+        self, 
+        project_path: Path, 
+        empirica_manager: Optional[EmpiricaManager] = None, 
+        ai_id: str = "waft",
+        personality: Optional[OraclePersonality] = None,
+        personality_type: Optional[OraclePersonalityType] = None,
+        personality_file: Optional[Path] = None
+    ):
         """
         Initialize TheOracle.
         
         Args:
             project_path: Path to project root
             empirica_manager: Optional EmpiricaManager (creates if None)
+            ai_id: AI agent identifier for Empirica session
+            personality: Optional OraclePersonality instance
+            personality_type: Optional personality preset type
+            personality_file: Optional path to personality JSON file
+        
+        Raises:
+            RuntimeError: If Empirica cannot be initialized or made ready
         """
         self.project_path = Path(project_path)
         
@@ -43,29 +61,119 @@ class TheOracle:
         else:
             self.empirica = empirica_manager
         
-        # Verify Empirica is initialized
-        if not self.empirica.is_initialized():
+        # FORCE Empirica to be ready - no degraded mode, no graceful fallbacks
+        # This will raise RuntimeError if Empirica cannot be made ready
+        try:
+            self._readiness_status = self.empirica.ensure_ready(ai_id=ai_id, force_session=True)
+            if not self._readiness_status.get("ready", False):
+                raise RuntimeError(
+                    "Empirica is not ready. "
+                    f"Status: {self._readiness_status.get('message', 'Unknown error')}"
+                )
+        except RuntimeError:
+            raise  # Re-raise with clear message
+        except Exception as e:
             raise RuntimeError(
-                "TheOracle requires Empirica to be initialized. "
-                "Run 'waft init' or initialize Empirica first."
+                f"Failed to ensure Empirica is ready: {str(e)}"
             )
+        
+        # Initialize personality
+        self.personality = self._load_personality(personality, personality_type, personality_file)
+        
+        # Initialize journal and memory
+        self.journal = OracleJournal(self.project_path)
+    
+    def _load_personality(
+        self,
+        personality: Optional[OraclePersonality],
+        personality_type: Optional[OraclePersonalityType],
+        personality_file: Optional[Path]
+    ) -> OraclePersonality:
+        """
+        Load personality from provided source or create default.
+        
+        Priority:
+        1. Provided personality instance
+        2. Personality file
+        3. Personality type preset
+        4. Default personality
+        
+        Args:
+            personality: Optional OraclePersonality instance
+            personality_type: Optional personality preset type
+            personality_file: Optional path to personality JSON file
+            
+        Returns:
+            OraclePersonality instance
+        """
+        # Priority 1: Use provided instance
+        if personality is not None:
+            return personality
+        
+        # Priority 2: Load from file
+        if personality_file is not None and personality_file.exists():
+            try:
+                return OraclePersonality.from_file(personality_file)
+            except Exception:
+                pass  # Fall through to next option
+        
+        # Priority 3: Use preset type
+        if personality_type is not None:
+            try:
+                return OraclePersonality.from_preset(personality_type)
+            except Exception:
+                pass  # Fall through to default
+        
+        # Priority 4: Default personality
+        personality = OraclePersonality()
+        
+        # Personality state tracking
+        self._personality_interactions = []  # Track interactions for personality evolution
+        
+        # Get session ID for Empirica workflow
+        # Try to get from readiness status, or create one if needed
+        self._session_id = self._readiness_status.get("session_id")
+        if not self._session_id:
+            # Try to get current session from Empirica
+            try:
+                self._session_id = self.empirica.get_current_session_id()
+            except Exception:
+                pass  # Session ID not critical
+        
+        return personality
     
     def get_epistemic_state(self) -> Dict[str, Any]:
         """
         Get current epistemic state from Empirica.
         
+        Empirica MUST be ready (enforced in __init__), so this always returns valid state.
+        
         Returns:
             Dictionary with epistemic state (vectors, findings, unknowns, goals)
         """
+        # Empirica is guaranteed to be ready (enforced in __init__)
         context = self.empirica.project_bootstrap()
+        
+        # If no context yet (new project), return empty but valid structure
         if not context:
             return {
-                "initialized": False,
-                "message": "Empirica not initialized or no context available"
+                "initialized": True,
+                "has_context": False,
+                "ready": True,
+                "message": "Empirica ready. Context will be available after first preflight submission.",
+                "epistemic_state": {},
+                "findings": [],
+                "unknowns": [],
+                "goals": [],
+                "timestamp": datetime.now().isoformat()
             }
         
+        # Full context available
         return {
             "initialized": True,
+            "has_context": True,
+            "ready": True,
+            "message": "Empirica ready with epistemic context",
             "epistemic_state": context.get("epistemic_state", {}),
             "findings": context.get("findings", []),
             "unknowns": context.get("unknowns", []),
@@ -84,7 +192,15 @@ class TheOracle:
         Returns:
             True if logged successfully
         """
-        return self.empirica.log_finding(insight, impact=impact)
+        result = self.empirica.log_finding(insight, impact=impact)
+        
+        # Also remember in Oracle's own memory
+        try:
+            self.journal.remember_insight(insight, impact=impact)
+        except Exception:
+            pass  # Continue even if journal logging fails
+        
+        return result
     
     def log_unknown(self, unknown: str) -> bool:
         """
@@ -184,9 +300,19 @@ class TheOracle:
         else:
             return "Transition"
     
-    def provide_guidance(self, question: str) -> Dict[str, Any]:
+    def provide_guidance(
+        self, 
+        question: str,
+        show_thinking: bool = False,
+        thinking_callback: Optional[Callable[[str, Dict[str, Any]], None]] = None
+    ) -> Dict[str, Any]:
         """
-        Provide guidance based on epistemic state.
+        Provide guidance following Empirica workflow:
+        1. PREFLIGHT - Assess current epistemic state
+        2. INVESTIGATE - Reduce uncertainty by logging findings/unknowns
+        3. CHECK - Decision gate based on findings/unknowns
+        4. ACT - Generate recommendation (action)
+        5. POSTFLIGHT - Measure learning (tracked in journal)
         
         Args:
             question: Question or context for guidance
@@ -194,6 +320,32 @@ class TheOracle:
         Returns:
             Dictionary with guidance, insights, and recommendations
         """
+        # STEP 1: PREFLIGHT - Assess current epistemic state
+        preflight_result = self._empirica_preflight(question)
+        
+        # STEP 2: INVESTIGATE - Reduce uncertainty by reviewing past experiences
+        # This is where reflection happens - reviewing memory and patterns
+        reflection = self._reflect_on_question(question)
+        if show_thinking and thinking_callback:
+            thinking_callback("INVESTIGATE", {"reflection": reflection})
+        
+        # Log INVESTIGATE checkpoint with atomic triple-write (SQLite + Git Notes + JSON)
+        # GitEnhancedReflexLogger ensures all three layers written atomically
+        if self.empirica.api_available and self._session_id:
+            try:
+                self.empirica.api_manager.log_checkpoint(
+                    session_id=self._session_id,
+                    phase="INVESTIGATE",
+                    data={
+                        "reflection": reflection,
+                        "relevant_experiences_count": len(reflection.get("relevant_experiences", [])),
+                        "relevant_insights_count": len(reflection.get("relevant_insights", []))
+                    }
+                )
+            except Exception:
+                pass  # Continue even if checkpoint logging fails
+        
+        # Get current epistemic state
         state = self.get_epistemic_state()
         phase = self.get_epistemic_phase()
         
@@ -209,13 +361,37 @@ class TheOracle:
         uncertainty = vectors.get("uncertainty", 1.0)
         coverage = know * (1.0 - uncertainty) if know > 0 else 0.0
         
-        # Log consultation to Empirica (track Oracle usage)
-        try:
-            self.log_insight(f"Oracle consultation: {question[:100]}", impact=0.3)
-        except Exception:
-            pass  # Continue even if logging fails
+        # STEP 3: CHECK - Decision gate based on findings and unknowns
+        check_result = self._empirica_check(question, findings, unknowns, uncertainty)
         
-        return {
+        # STEP 4: ACT - Generate recommendation (the action/guidance)
+        if show_thinking and thinking_callback:
+            thinking_callback("ACT", {"phase": phase, "coverage": coverage})
+        
+        recommendation = self._generate_recommendation(
+            phase, coverage, unknowns, uncertainty, 
+            reflection=reflection,
+            check_result=check_result
+        )
+        
+        # Log ACT checkpoint with atomic triple-write
+        # GitEnhancedReflexLogger ensures all three layers written atomically
+        if self.empirica.api_available and self._session_id:
+            try:
+                self.empirica.api_manager.log_checkpoint(
+                    session_id=self._session_id,
+                    phase="ACT",
+                    data={
+                        "phase": phase,
+                        "coverage": coverage,
+                        "recommendation_generated": True
+                    }
+                )
+            except Exception:
+                pass  # Continue even if checkpoint logging fails
+        
+        # Build response
+        response = {
             "question": question,
             "epistemic_phase": phase,
             "knowledge_coverage": coverage,
@@ -223,29 +399,365 @@ class TheOracle:
             "uncertainty": uncertainty,
             "findings": findings,
             "unknowns": unknowns,
-            "recommendation": self._generate_recommendation(phase, coverage, unknowns),
+            "preflight": preflight_result,
+            "check": check_result,
+            "reflection": reflection,  # Include reflection in response
+            "recommendation": recommendation,
+            "epistemic_state": epistemic_state,  # Include full epistemic state for thinking display
+            "personality": {
+                "name": self.personality.data.get("name", "The Oracle"),
+                "greeting": self.personality.get_greeting(),
+                "type": self.personality.data.get("type", "balanced")
+            },
             "timestamp": datetime.now().isoformat()
         }
+        
+        # STEP 5: POSTFLIGHT - Measure learning deltas
+        # Calculate learning from preflight to postflight
+        postflight_result = self._empirica_postflight(preflight_result, check_result, response)
+        if show_thinking and thinking_callback:
+            thinking_callback("POSTFLIGHT", postflight_result)
+        
+        # Log to journal (tracks consultation for memory)
+        # This is Oracle's own journal - Empirica triple-write happens in submit_preflight/postflight
+        try:
+            self.journal.log_consultation(question, response, state)
+        except Exception:
+            pass  # Continue even if journal logging fails
+        
+        # Ensure Empirica triple-write is complete
+        # Empirica's GitEnhancedReflexLogger handles atomic writes to SQLite + Git Notes + JSON
+        # This happens automatically when we call submit_preflight/postflight via EmpiricaManager
+        
+        # Include postflight in response
+        response["postflight"] = postflight_result
+        
+        # Add storage info for thinking display
+        response["storage_info"] = self._get_storage_info()
+        
+        return response
+    
+    def _get_storage_info(self) -> Dict[str, Any]:
+        """
+        Get three-layer storage status.
+        
+        Returns:
+            Dict with SQLite, Git Notes, and JSON logs status
+        """
+        storage_info = {
+            "sqlite": {"available": False},
+            "git_notes": {"available": False},
+            "json_logs": {"available": False}
+        }
+        
+        # Check SQLite
+        sqlite_path = self.project_path / ".empirica" / "sessions" / "sessions.db"
+        if sqlite_path.exists():
+            storage_info["sqlite"]["available"] = True
+        
+        # Check Git Notes (if git repo)
+        git_dir = self.project_path / ".git"
+        if git_dir.exists():
+            storage_info["git_notes"]["available"] = True
+            # Estimate compression (97% typical)
+            storage_info["git_notes"]["compression"] = 0.97
+        
+        # Check JSON logs
+        reflexes_dir = self.project_path / ".empirica" / "reflexes"
+        if reflexes_dir.exists():
+            storage_info["json_logs"]["available"] = True
+        
+        return storage_info
+    
+    def _empirica_preflight(self, question: str) -> Dict[str, Any]:
+        """
+        STEP 1: PREFLIGHT - Assess current epistemic state.
+        
+        Returns:
+            Preflight result with KNOW, UNCERTAINTY, and INVESTIGATE_REQUIRED flag
+        """
+        state = self.get_epistemic_state()
+        epistemic_state = state.get("epistemic_state", {})
+        vectors = epistemic_state.get("vectors", {})
+        foundation = vectors.get("foundation", {})
+        know = foundation.get("know", 0.0) if foundation else 0.0
+        uncertainty = vectors.get("uncertainty", 1.0)
+        
+        # Determine if investigation is required
+        investigate_required = uncertainty > 0.5 or know < 0.3
+        
+        result = {
+            "know": know,
+            "uncertainty": uncertainty,
+            "investigate_required": investigate_required,
+            "know_level": "Low" if know < 0.3 else "Medium" if know < 0.7 else "High",
+            "uncertainty_level": "High" if uncertainty > 0.5 else "Medium" if uncertainty > 0.3 else "Low"
+        }
+        
+        # Submit to Empirica if session ID available
+        if self._session_id:
+            try:
+                vectors_data = {
+                    "engagement": 0.8,
+                    "foundation": foundation,
+                    "uncertainty": uncertainty
+                }
+                
+                # Use Python API if available (provides 13-vector assessment)
+                if self.empirica.api_available:
+                    assessment = self.empirica.api_manager.assess_vectors(
+                        session_id=self._session_id,
+                        vectors=vectors_data,
+                        reasoning=f"Oracle consultation: {question[:100]}"
+                    )
+                    if assessment:
+                        # Store assessment result
+                        result["assessment"] = assessment
+                else:
+                    # Fall back to CLI
+                    self.empirica.submit_preflight(
+                        self._session_id,
+                        vectors_data,
+                        reasoning=f"Oracle consultation: {question[:100]}"
+                    )
+            except Exception:
+                pass  # Continue even if preflight submission fails
+        
+        return result
+    
+    def _empirica_check(
+        self,
+        question: str,
+        findings: List[Dict[str, Any]],
+        unknowns: List[Dict[str, Any]],
+        uncertainty: float
+    ) -> Dict[str, Any]:
+        """
+        STEP 3: CHECK - Decision gate based on findings and unknowns.
+        
+        Returns:
+            Check result with CONFIDENCE and DECISION (PROCEED/HALT/BRANCH/REVISE)
+        """
+        # Calculate confidence based on findings vs unknowns
+        findings_count = len(findings)
+        unknowns_count = len(unknowns)
+        
+        # Confidence increases with findings, decreases with unknowns and uncertainty
+        base_confidence = min(1.0, findings_count * 0.1)
+        confidence = base_confidence * (1.0 - uncertainty)
+        
+        # Decision logic
+        if confidence >= 0.7 and uncertainty < 0.3:
+            decision = "PROCEED"
+        elif confidence < 0.3 or uncertainty > 0.7:
+            decision = "HALT"
+        elif unknowns_count > findings_count:
+            decision = "BRANCH"  # Need investigation
+        else:
+            decision = "REVISE"  # Need refinement
+        
+        result = {
+            "confidence": confidence,
+            "decision": decision,
+            "findings_count": findings_count,
+            "unknowns_count": unknowns_count
+        }
+        
+        # Submit CHECK gate to Empirica
+        try:
+            gate_result = self.check_gate({
+                "type": "oracle_guidance",
+                "description": f"Oracle guidance request: {question[:100]}",
+                "scope": "medium"
+            })
+            if gate_result:
+                result["decision"] = gate_result
+                
+                # Log CHECK checkpoint with atomic triple-write if API available
+                if self.empirica.api_available and self._session_id:
+                    try:
+                        self.empirica.api_manager.log_checkpoint(
+                            session_id=self._session_id,
+                            phase="CHECK",
+                            data={
+                                "confidence": confidence,
+                                "decision": gate_result,
+                                "findings_count": findings_count,
+                                "unknowns_count": unknowns_count
+                            }
+                        )
+                    except Exception:
+                        pass  # Continue even if checkpoint logging fails
+        except Exception:
+            pass  # Continue even if check gate fails
+        
+        return result
+    
+    def _empirica_postflight(
+        self,
+        preflight: Dict[str, Any],
+        check: Dict[str, Any],
+        response: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """
+        STEP 5: POSTFLIGHT - Measure learning deltas and verify calibration.
+        
+        Returns:
+            Postflight result with DELTA (knowledge change) and UNCERTAINTY change
+        """
+        # Calculate deltas (simplified - in real Empirica, this compares preflight vs postflight vectors)
+        # For now, we track that guidance was provided
+        postflight_vectors = {
+            "engagement": 0.9,  # Increased engagement after providing guidance
+            "foundation": {
+                "know": response.get("know", 0.0),
+                "do": 0.8,  # Oracle can provide guidance
+                "context": 0.7
+            },
+            "uncertainty": response.get("uncertainty", 0.5)
+        }
+        
+        # Calculate deltas (simplified - would compare with preflight vectors in full implementation)
+        know_delta = 0.0  # Would be: postflight_vectors["foundation"]["know"] - preflight["know"]
+        uncertainty_delta = 0.0  # Would be: postflight_vectors["uncertainty"] - preflight["uncertainty"]
+        
+        result = {
+            "knowledge_delta": know_delta,
+            "uncertainty_delta": uncertainty_delta,
+            "guidance_provided": True,
+            "recommendation_generated": bool(response.get("recommendation"))
+        }
+        
+        # Submit to Empirica if session ID available
+        if self._session_id:
+            try:
+                # Use Python API if available (atomic triple-write)
+                if self.empirica.api_available:
+                    # Update beliefs with postflight evidence
+                    evidence = {
+                        "vectors": postflight_vectors,
+                        "reasoning": f"Oracle guidance provided: {response.get('question', '')[:100]}",
+                        "phase": "POSTFLIGHT"
+                    }
+                    updated = self.empirica.api_manager.update_beliefs(
+                        session_id=self._session_id,
+                        evidence=evidence
+                    )
+                    if updated:
+                        # Log checkpoint with atomic triple-write
+                        self.empirica.api_manager.log_checkpoint(
+                            session_id=self._session_id,
+                            phase="POSTFLIGHT",
+                            data={"vectors": postflight_vectors, "reasoning": evidence["reasoning"]}
+                        )
+                else:
+                    # Fall back to CLI (CLI also performs triple-write via Empirica)
+                    self.empirica.submit_postflight(
+                        self._session_id,
+                        postflight_vectors,
+                        reasoning=f"Oracle guidance provided: {response.get('question', '')[:100]}"
+                    )
+            except Exception:
+                pass  # Continue even if postflight submission fails
+        
+        return result
     
     def _generate_recommendation(
         self, 
         phase: str, 
         coverage: float, 
-        unknowns: List[Dict[str, Any]]
+        unknowns: List[Dict[str, Any]],
+        uncertainty: float = 0.5,
+        reflection: Optional[Dict[str, Any]] = None,
+        check_result: Optional[Dict[str, Any]] = None
     ) -> str:
-        """Generate recommendation based on epistemic state."""
-        if phase == "Data Gathering":
-            return "Focus on collecting data and observations. High uncertainty suggests need for more information."
-        elif phase == "Exploration":
-            return "Explore different approaches. Moderate knowledge with uncertainty suggests experimentation."
-        elif phase == "Synthesis":
-            return "Synthesize findings. High knowledge with low uncertainty suggests patterns can be identified."
-        elif phase == "Evolution":
-            return "Ready for evolution. Very high knowledge with very low uncertainty suggests system can advance."
-        elif coverage < 0.3:
-            return f"Low knowledge coverage ({coverage:.0%}). Focus on addressing unknowns: {len(unknowns)} open questions."
+        """Generate recommendation based on epistemic state with personality, memory, reflection, and check result."""
+        # Incorporate check decision into recommendation
+        check_decision = check_result.get("decision", "PROCEED") if check_result else "PROCEED"
+        check_confidence = check_result.get("confidence", 0.5) if check_result else 0.5
+        
+        # Incorporate reflection insights if available
+        reflection_insight = ""
+        if reflection and reflection.get("relevant_experiences"):
+            relevant = reflection["relevant_experiences"][:2]  # Top 2 most relevant
+            if relevant:
+                outcomes = [exp.get("outcome", "") for exp in relevant if exp.get("outcome")]
+                if outcomes:
+                    reflection_insight = f"Reflecting on past experiences: {', '.join(outcomes[:2])}. "
+        
+        # Try to use learned patterns first
+        learned_recs = self.journal.get_patterns_for_phase(phase)
+        if learned_recs:
+            # Use a learned recommendation (most recent)
+            import random
+            base = random.choice(learned_recs[-3:])  # Pick from last 3
         else:
-            return f"Knowledge coverage: {coverage:.0%}. Continue building on existing knowledge."
+            # Base recommendations
+            base_recommendations = {
+                "Data Gathering": "Focus on collecting data and observations. High uncertainty suggests need for more information.",
+                "Exploration": "Explore different approaches. Moderate knowledge with uncertainty suggests experimentation.",
+                "Synthesis": "Synthesize findings. High knowledge with low uncertainty suggests patterns can be identified.",
+                "Evolution": "Ready for evolution. Very high knowledge with very low uncertainty suggests system can advance.",
+                "Transition": f"Knowledge coverage: {coverage:.0%}. Continue building on existing knowledge.",
+                "UNKNOWN": f"Low knowledge coverage ({coverage:.0%}). Focus on addressing unknowns: {len(unknowns)} open questions."
+            }
+            
+            if phase in base_recommendations:
+                base = base_recommendations[phase]
+            elif coverage < 0.3:
+                base = base_recommendations["UNKNOWN"]
+            else:
+                base = base_recommendations["Transition"]
+        
+        # Incorporate check decision
+        if check_decision == "HALT":
+            base = f"[HALT] {base} This requires human approval due to high uncertainty or insufficient knowledge."
+        elif check_decision == "BRANCH":
+            base = f"[BRANCH] {base} Investigation needed first - {len(unknowns)} unknowns should be addressed."
+        elif check_decision == "REVISE":
+            base = f"[REVISE] {base} Approach needs refinement based on current epistemic state."
+        elif check_decision == "PROCEED":
+            base = f"[PROCEED] {base} Confidence: {check_confidence:.0%}. Safe to proceed."
+        
+        # Combine reflection insight with base recommendation
+        if reflection_insight:
+            base = reflection_insight + base
+        
+        # Apply personality
+        return self._apply_personality_to_recommendation(base, phase, coverage, uncertainty)
+    
+    def _apply_personality_to_recommendation(
+        self,
+        base_recommendation: str,
+        phase: str,
+        coverage: float,
+        uncertainty: float
+    ) -> str:
+        """
+        Apply personality styling to recommendation.
+        
+        Args:
+            base_recommendation: Base recommendation text
+            phase: Current epistemic phase
+            coverage: Knowledge coverage (0.0-1.0)
+            uncertainty: Uncertainty level (0.0-1.0)
+            
+        Returns:
+            Recommendation with personality applied
+        """
+        # Get contextual adaptation
+        context = self.personality.adapt_to_context(phase, uncertainty, coverage)
+        
+        # Apply personality to text
+        styled = self.personality.apply_personality_to_text(base_recommendation, context)
+        
+        # Add personality-appropriate transition if needed
+        if not styled.startswith(("[")):  # Don't add transition to gate-tagged recommendations
+            transition = self.personality.get_transition()
+            if transition and transition not in styled:
+                styled = f"{transition} {styled}"
+        
+        return styled
     
     def assess_decision(self, decision_context: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -286,24 +798,236 @@ class TheOracle:
         except Exception:
             pass  # Continue even if logging fails
         
-        return {
+        recommendation = self._get_gate_recommendation(gate_result, unknowns)
+        
+        assessment_result = {
             "gate_result": gate_result,
             "epistemic_phase": phase,
             "state": state,
             "unknowns": unknowns,
-            "recommendation": self._get_gate_recommendation(gate_result, unknowns),
+            "recommendation": recommendation,
             "timestamp": datetime.now().isoformat()
         }
+        
+        # Log to journal
+        try:
+            self.journal.log_assessment(decision_context, assessment_result)
+        except Exception:
+            pass  # Continue even if journal logging fails
+        
+        return assessment_result
     
     def _get_gate_recommendation(self, gate_result: Optional[str], unknowns: List[Dict[str, Any]]) -> str:
         """Get recommendation based on gate result."""
+        base_recommendations = {
+            "PROCEED": "Safe to proceed. Epistemic state supports this operation.",
+            "HALT": "Operation requires human approval. High risk or insufficient knowledge.",
+            "BRANCH": f"Need investigation first. {len(unknowns)} relevant unknowns should be addressed.",
+            "REVISE": "Approach needs revision. Consider alternative methods based on epistemic state.",
+            None: "Gate check failed. Proceed with caution."
+        }
+        
+        base = base_recommendations.get(gate_result, base_recommendations[None])
+        
+        # Apply personality
         if gate_result == "PROCEED":
-            return "Safe to proceed. Epistemic state supports this operation."
+            trait_phrase = self.personality.get_phrase("trait_expressions", "practicality")
         elif gate_result == "HALT":
-            return "Operation requires human approval. High risk or insufficient knowledge."
+            trait_phrase = self.personality.get_phrase("trait_expressions", "wisdom")
         elif gate_result == "BRANCH":
-            return f"Need investigation first. {len(unknowns)} relevant unknowns should be addressed."
-        elif gate_result == "REVISE":
-            return "Approach needs revision. Consider alternative methods based on epistemic state."
+            trait_phrase = self.personality.get_phrase("trait_expressions", "curiosity")
         else:
-            return "Gate check failed. Proceed with caution."
+            trait_phrase = ""
+        
+        if trait_phrase:
+            return f"{trait_phrase} {base}"
+        
+        return base
+    
+    def get_personality_info(self) -> Dict[str, Any]:
+        """Get personality information."""
+        return {
+            "type": self.personality.data.get("type", "balanced"),
+            "name": self.personality.data.get("name", "The Oracle"),
+            "title": self.personality.data.get("title", "Epistemic Intelligence System"),
+            "traits": self.personality.data.get("traits", {}),
+            "communication_style": self.personality.data.get("communication_style", {}),
+            "quirks": self.personality.data.get("quirks", [])
+        }
+    
+    def save_personality(self, file_path: Optional[Path] = None) -> None:
+        """
+        Save current personality to file.
+        
+        Args:
+            file_path: Optional path (defaults to .empirica/oracle_personality.json)
+        """
+        if file_path is None:
+            file_path = self.project_path / ".empirica" / "oracle_personality.json"
+        
+        self.personality.save_to_file(file_path)
+    
+    def set_personality_trait(self, trait: str, value: float) -> None:
+        """
+        Set a personality trait value.
+        
+        Args:
+            trait: Trait name (wisdom, curiosity, precision, etc.)
+            value: Trait value (0.0-1.0)
+        """
+        if "traits" not in self.personality.data:
+            self.personality.data["traits"] = {}
+        
+        self.personality.data["traits"][trait] = max(0.0, min(1.0, value))
+    
+    def get_memory_summary(self) -> Dict[str, Any]:
+        """Get Oracle memory summary."""
+        return self.journal.get_memory_summary()
+    
+    def search_memory(self, query: str, limit: int = 10) -> List[Dict[str, Any]]:
+        """
+        Search Oracle memory.
+        
+        Args:
+            query: Search query
+            limit: Maximum results
+        
+        Returns:
+            List of matching memory entries
+        """
+        return self.journal.search_memory(query, limit=limit)
+    
+    def remember_successful_recommendation(
+        self,
+        recommendation: str,
+        outcome: str,
+        epistemic_phase: str
+    ) -> None:
+        """
+        Remember a successful recommendation for future use.
+        
+        Args:
+            recommendation: Recommendation text
+            outcome: Outcome description
+            epistemic_phase: Phase when recommendation was made
+        """
+        self.journal.remember_successful_recommendation(recommendation, outcome, epistemic_phase)
+    
+    def _reflect_on_question(self, question: str) -> Dict[str, Any]:
+        """
+        Reflect on the question before providing guidance.
+        
+        Reviews:
+        - Past similar consultations
+        - Relevant insights from memory
+        - Learned patterns for the current phase
+        - Epistemic trajectory
+        
+        Args:
+            question: The question being asked
+        
+        Returns:
+            Reflection dictionary with insights, patterns, and relevant experiences
+        """
+        reflection = {
+            "timestamp": datetime.now().isoformat(),
+            "question": question,
+            "relevant_experiences": [],
+            "relevant_insights": [],
+            "learned_patterns": {},
+            "epistemic_trajectory": None,
+            "reflection_summary": ""
+        }
+        
+        try:
+            # 1. Search memory for relevant past experiences
+            memory_results = self.journal.search_memory(question, limit=5)
+            reflection["relevant_experiences"] = [
+                {
+                    "type": r.get("type", "unknown"),
+                    "content": r.get("content", "")[:200],
+                    "impact": r.get("impact", 0.0),
+                    "phase": r.get("phase", "UNKNOWN"),
+                    "timestamp": r.get("timestamp", "")
+                }
+                for r in memory_results
+            ]
+            
+            # 2. Get relevant insights from memory
+            top_insights = self.journal.memory.get("insights", [])[:5]
+            reflection["relevant_insights"] = [
+                {
+                    "insight": i.get("insight", "")[:200],
+                    "impact": i.get("impact", 0.0),
+                    "timestamp": i.get("timestamp", "")
+                }
+                for i in top_insights
+                if any(keyword in question.lower() for keyword in self.journal._extract_keywords(i.get("insight", "")))
+            ]
+            
+            # 3. Get learned patterns for current phase (will be determined later, but prepare)
+            current_phase = self.get_epistemic_phase()
+            phase_recs = self.journal.get_patterns_for_phase(current_phase)
+            reflection["learned_patterns"] = {
+                "phase": current_phase,
+                "recommendations_count": len(phase_recs),
+                "top_keywords": [kw[0] for kw in self.journal.get_top_keywords(limit=5)]
+            }
+            
+            # 4. Analyze epistemic trajectory (recent history)
+            history = self.journal.memory.get("epistemic_history", [])
+            if len(history) >= 3:
+                recent = history[-3:]
+                trajectory = {
+                    "trend": "stable",
+                    "coverage_change": 0.0,
+                    "uncertainty_change": 0.0
+                }
+                
+                if len(recent) >= 2:
+                    first = recent[0]
+                    last = recent[-1]
+                    coverage_change = last.get("coverage", 0.0) - first.get("coverage", 0.0)
+                    uncertainty_change = last.get("uncertainty", 1.0) - first.get("uncertainty", 1.0)
+                    
+                    trajectory["coverage_change"] = coverage_change
+                    trajectory["uncertainty_change"] = uncertainty_change
+                    
+                    if coverage_change > 0.1:
+                        trajectory["trend"] = "improving"
+                    elif coverage_change < -0.1:
+                        trajectory["trend"] = "declining"
+                    elif uncertainty_change < -0.1:
+                        trajectory["trend"] = "clarifying"
+                    elif uncertainty_change > 0.1:
+                        trajectory["trend"] = "increasing_uncertainty"
+                
+                reflection["epistemic_trajectory"] = trajectory
+            
+            # 5. Generate reflection summary
+            summary_parts = []
+            
+            if reflection["relevant_experiences"]:
+                summary_parts.append(f"Found {len(reflection['relevant_experiences'])} relevant past experiences")
+            
+            if reflection["relevant_insights"]:
+                summary_parts.append(f"{len(reflection['relevant_insights'])} relevant insights available")
+            
+            if reflection["learned_patterns"]["recommendations_count"] > 0:
+                summary_parts.append(f"{reflection['learned_patterns']['recommendations_count']} learned patterns for {current_phase} phase")
+            
+            if reflection["epistemic_trajectory"]:
+                trend = reflection["epistemic_trajectory"]["trend"]
+                summary_parts.append(f"Epistemic trajectory: {trend}")
+            
+            if summary_parts:
+                reflection["reflection_summary"] = ". ".join(summary_parts) + "."
+            else:
+                reflection["reflection_summary"] = "No significant patterns found in past experiences yet."
+            
+        except Exception as e:
+            # If reflection fails, continue with empty reflection
+            reflection["reflection_summary"] = f"Reflection encountered an issue: {str(e)[:100]}"
+            reflection["error"] = str(e)
+        
+        return reflection

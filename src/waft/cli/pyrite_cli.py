@@ -2,7 +2,7 @@
 Pyrite CLI Interface
 ====================
 
-Command-line interface for interacting with Pyrite, the God of Work Efforts.
+Command-line interface for interacting with The Steward, the God of Work Efforts.
 """
 
 import asyncio
@@ -24,7 +24,7 @@ app = typer.Typer()
 @click.option("--pyrite-path", default="_pyrite", type=click.Path(exists=False))
 @click.pass_context
 def pyrite_cli(ctx, work_efforts_path, pyrite_path):
-    """Pyrite - The God of Work Efforts."""
+    """The Steward - The God of Work Efforts."""
     ctx.ensure_object(dict)
     ctx.obj["pyrite"] = get_pyrite(Path(work_efforts_path), Path(pyrite_path))
 

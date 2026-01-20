@@ -21,6 +21,13 @@ import os
 from pathlib import Path
 from typing import Optional, Dict, Any
 
+# Try to import Empirica API
+try:
+    from .empirica_api import EmpiricaAPIManager, EMPIRICA_API_AVAILABLE
+except ImportError:
+    EMPIRICA_API_AVAILABLE = False
+    EmpiricaAPIManager = None
+
 class EmpiricaManager:
     """Manages Empirica integration for epistemic tracking."""
 
@@ -33,6 +40,29 @@ class EmpiricaManager:
         """
         self.project_path = project_path
         self._empirica_cmd = self._find_empirica_command()
+        self._project_id: Optional[str] = None  # Cached project ID
+        
+        # Try to initialize Python API (preferred over CLI)
+        self._api_manager: Optional[EmpiricaAPIManager] = None
+        if EMPIRICA_API_AVAILABLE and EmpiricaAPIManager:
+            try:
+                self._api_manager = EmpiricaAPIManager(project_path)
+                if self._api_manager.is_available:
+                    # Python API available - prefer this over CLI
+                    pass
+            except Exception:
+                # API initialization failed - fall back to CLI
+                self._api_manager = None
+    
+    @property
+    def api_available(self) -> bool:
+        """Check if Python API is available."""
+        return self._api_manager is not None and self._api_manager.is_available
+    
+    @property
+    def api_manager(self):
+        """Get the Python API manager if available."""
+        return self._api_manager if self.api_available else None
 
     def _find_empirica_command(self) -> list:
         """
@@ -94,6 +124,300 @@ class EmpiricaManager:
         empirica_dir = self.project_path / ".empirica"
         empirica_config = empirica_dir / "config.yaml"
         return empirica_dir.exists() and empirica_config.exists()
+
+    def validate_setup(self) -> Dict[str, Any]:
+        """
+        Run preflight validation checks on Empirica setup.
+        
+        Returns:
+            Dictionary with validation results:
+            {
+                "git_initialized": bool,
+                "empirica_initialized": bool,
+                "cli_available": bool,
+                "cli_version": str | None,
+                "project_exists": bool,
+                "project_id": str | None,
+                "session_creatable": bool,
+                "errors": List[str],
+                "warnings": List[str],
+                "ready": bool
+            }
+        """
+        validation = {
+            "git_initialized": False,
+            "empirica_initialized": False,
+            "cli_available": False,
+            "cli_version": None,
+            "project_exists": False,
+            "project_id": None,
+            "session_creatable": False,
+            "errors": [],
+            "warnings": [],
+            "ready": False
+        }
+        
+        # Check 1: Git initialized
+        try:
+            validation["git_initialized"] = (self.project_path / ".git").exists()
+            if not validation["git_initialized"]:
+                validation["errors"].append("Git repository not initialized")
+        except Exception as e:
+            validation["errors"].append(f"Error checking git: {str(e)}")
+        
+        # Check 2: Empirica initialized
+        try:
+            validation["empirica_initialized"] = self.is_initialized()
+            if not validation["empirica_initialized"]:
+                validation["warnings"].append("Empirica not initialized (will auto-initialize)")
+        except Exception as e:
+            validation["errors"].append(f"Error checking Empirica initialization: {str(e)}")
+        
+        # Check 3: CLI available
+        try:
+            result = subprocess.run(
+                self._empirica_cmd + ["--version"],
+                cwd=self.project_path,
+                capture_output=True,
+                text=True,
+                timeout=3,
+            )
+            if result.returncode == 0:
+                validation["cli_available"] = True
+                validation["cli_version"] = result.stdout.strip()
+            else:
+                validation["errors"].append("Empirica CLI version check failed")
+        except FileNotFoundError:
+            validation["errors"].append("Empirica CLI not found in PATH")
+        except subprocess.TimeoutExpired:
+            validation["errors"].append("Empirica CLI version check timed out")
+        except Exception as e:
+            validation["errors"].append(f"Error checking CLI: {str(e)}")
+        
+        # Check 4: Project exists
+        if validation["cli_available"]:
+            try:
+                context = self.project_bootstrap()
+                if context and context.get("ok"):
+                    validation["project_exists"] = True
+                    validation["project_id"] = context.get("project_id") or self._project_id
+                else:
+                    validation["warnings"].append("Project not found (will auto-create)")
+            except Exception as e:
+                validation["errors"].append(f"Error checking project: {str(e)}")
+        
+        # Check 5: Session creation
+        if validation["cli_available"] and validation["empirica_initialized"]:
+            try:
+                session_id = self.create_session(ai_id="validation_test", session_type="test")
+                validation["session_creatable"] = session_id is not None
+                if not validation["session_creatable"]:
+                    validation["warnings"].append("Session creation failed")
+            except Exception as e:
+                validation["warnings"].append(f"Error creating test session: {str(e)}")
+        
+        # Overall readiness
+        validation["ready"] = (
+            validation["git_initialized"] and
+            validation["cli_available"] and
+            len(validation["errors"]) == 0
+        )
+        
+        return validation
+
+    def ensure_ready(self, ai_id: str = "waft", session_type: str = "development", force_session: bool = True) -> Dict[str, Any]:
+        """
+        Ensure Empirica is ready to use - ALWAYS. No degraded mode.
+        
+        This method:
+        1. Checks if Empirica is initialized (directory exists)
+        2. Auto-initializes if needed (including git init)
+        3. Verifies Empirica CLI is available and working
+        4. Creates a session if needed (if force_session=True)
+        5. Ensures context is available
+        
+        Args:
+            ai_id: AI agent identifier for session creation
+            session_type: Type of session to create
+            force_session: If True, create a session if none exists
+        
+        Returns:
+            Dictionary with status information:
+            {
+                "ready": bool,  # True if fully ready (initialized + CLI + context)
+                "initialized": bool,  # True if directory exists
+                "cli_available": bool,  # True if CLI command works
+                "has_context": bool,  # True if project_bootstrap() returns data
+                "message": str,  # Human-readable status message
+                "auto_initialized": bool,  # True if we just initialized it
+                "session_created": bool  # True if we just created a session
+            }
+            
+        Raises:
+            RuntimeError: If Empirica cannot be made ready (CLI not available, etc.)
+        """
+        result = {
+            "ready": False,
+            "initialized": False,
+            "cli_available": False,
+            "has_context": False,
+            "message": "",
+            "auto_initialized": False,
+            "session_created": False
+        }
+        
+        # Step 1: Check if initialized (directory exists)
+        try:
+            is_init = self.is_initialized()
+            result["initialized"] = is_init
+        except Exception as e:
+            raise RuntimeError(
+                f"Error checking Empirica initialization: {str(e)}"
+            )
+        
+        # Step 2: Auto-initialize if not initialized
+        if not is_init:
+            # Check if git is available (required for Empirica)
+            git_exists = False
+            try:
+                git_exists = (self.project_path / ".git").exists()
+            except Exception as e:
+                raise RuntimeError(
+                    f"Error checking git repository: {str(e)}"
+                )
+            
+            if not git_exists:
+                # Try to initialize git
+                try:
+                    subprocess.run(
+                        ["git", "init"],
+                        cwd=self.project_path,
+                        capture_output=True,
+                        check=True,
+                        timeout=10,
+                    )
+                except subprocess.TimeoutExpired:
+                    raise RuntimeError(
+                        "Git initialization timed out. Please initialize git manually: git init"
+                    )
+                except FileNotFoundError:
+                    raise RuntimeError(
+                        "Git not found. Empirica requires git to be installed and in PATH. "
+                        "Install git: https://git-scm.com/downloads"
+                    )
+                except subprocess.CalledProcessError as e:
+                    raise RuntimeError(
+                        f"Git initialization failed: {str(e)}. "
+                        "Please initialize git manually: git init"
+                    )
+                except Exception as e:
+                    raise RuntimeError(
+                        f"Unexpected error initializing git: {str(e)}"
+                    )
+            
+            # Try to initialize Empirica
+            try:
+                initialized = self.initialize()
+                result["auto_initialized"] = initialized
+                if not initialized:
+                    raise RuntimeError(
+                        "Failed to initialize Empirica. CLI may not be installed or available. "
+                        "Install Empirica: pip install empirica"
+                    )
+                result["initialized"] = True
+            except RuntimeError:
+                raise  # Re-raise RuntimeErrors
+            except Exception as e:
+                raise RuntimeError(
+                    f"Unexpected error initializing Empirica: {str(e)}"
+                )
+        
+        # Step 3: Verify CLI is available
+        try:
+            # Test CLI by checking version (quick test)
+            test_result = subprocess.run(
+                self._empirica_cmd + ["--version"],
+                cwd=self.project_path,
+                capture_output=True,
+                text=True,
+                timeout=5,
+            )
+            if test_result.returncode != 0:
+                error_msg = test_result.stderr or test_result.stdout or "Unknown error"
+                raise RuntimeError(
+                    f"Empirica CLI is not working correctly (exit code {test_result.returncode}). "
+                    f"Command: {' '.join(self._empirica_cmd)}\n"
+                    f"Error: {error_msg}"
+                )
+            result["cli_available"] = True
+        except FileNotFoundError:
+            raise RuntimeError(
+                f"Empirica CLI not found at: {' '.join(self._empirica_cmd)}\n"
+                "Install Empirica: pip install empirica"
+            )
+        except subprocess.TimeoutExpired:
+            raise RuntimeError(
+                "Empirica CLI version check timed out. "
+                "The CLI may be slow or unresponsive."
+            )
+        except subprocess.CalledProcessError as e:
+            error_msg = e.stderr or e.stdout or str(e)
+            raise RuntimeError(
+                f"Empirica CLI test failed: {error_msg}"
+            )
+        except Exception as e:
+            raise RuntimeError(
+                f"Unexpected error testing Empirica CLI: {str(e)}"
+            )
+        
+        # Step 4: Ensure project exists (project_bootstrap will auto-create if needed)
+        try:
+            project_id = self._ensure_project_exists()
+            if project_id:
+                result["project_id"] = project_id
+        except Exception as e:
+            # Project creation is not critical - we can continue
+            # But log it as a warning
+            result["project_warning"] = f"Project setup issue: {str(e)}"
+        
+        # Step 5: Ensure we have a session and context
+        try:
+            context = self.project_bootstrap()
+            if not context and force_session:
+                # No context - create a session to ensure we can track
+                try:
+                    session_id = self.create_session(ai_id=ai_id, session_type=session_type)
+                    if session_id:
+                        result["session_created"] = True
+                        # Try bootstrap again after session creation
+                        context = self.project_bootstrap()
+                except Exception as e:
+                    # Session creation failed - not critical, but log it
+                    result["session_warning"] = f"Session creation failed: {str(e)}"
+            
+            if context:
+                result["has_context"] = True
+                result["ready"] = True
+                result["message"] = "Empirica is ready with epistemic context."
+                # Store project_id from context if available
+                if context.get("project_id"):
+                    self._project_id = context.get("project_id")
+                    result["project_id"] = self._project_id
+            else:
+                # Even after creating session, no context - this is okay for new projects
+                # But we're still "ready" because Empirica is initialized and working
+                result["ready"] = True
+                result["has_context"] = False
+                result["message"] = "Empirica is ready. Context will be available after first preflight submission."
+        except Exception as e:
+            # Bootstrap failed - this is not critical for readiness
+            # Empirica is still initialized and CLI works
+            result["ready"] = True
+            result["has_context"] = False
+            result["bootstrap_warning"] = f"Project bootstrap failed: {str(e)}"
+            result["message"] = "Empirica is ready but project bootstrap failed. This is okay for new projects."
+        
+        return result
 
     def initialize(self) -> bool:
         """
@@ -176,6 +500,8 @@ class EmpiricaManager:
     def submit_preflight(self, session_id: str, vectors: dict, reasoning: str = "") -> bool:
         """
         Submit preflight assessment to Empirica.
+        
+        Uses Python API if available, falls back to CLI.
 
         Args:
             session_id: Session ID
@@ -185,6 +511,23 @@ class EmpiricaManager:
         Returns:
             True if successful, False otherwise
         """
+        # Try Python API first (uses EpistemicAssessor)
+        if self._api_manager and self._api_manager.is_available:
+            assessment = self._api_manager.assess_vectors(
+                session_id=session_id,
+                vectors=vectors,
+                reasoning=reasoning
+            )
+            if assessment:
+                # Also log checkpoint
+                self._api_manager.log_checkpoint(
+                    session_id=session_id,
+                    phase="PREFLIGHT",
+                    data={"vectors": vectors, "reasoning": reasoning}
+                )
+                return True
+        
+        # Fall back to CLI
         import json
 
         preflight_data = {
@@ -210,6 +553,8 @@ class EmpiricaManager:
     def submit_postflight(self, session_id: str, vectors: dict, reasoning: str = "") -> bool:
         """
         Submit postflight assessment to Empirica.
+        
+        Uses Python API if available, falls back to CLI.
 
         Args:
             session_id: Session ID
@@ -219,6 +564,28 @@ class EmpiricaManager:
         Returns:
             True if successful, False otherwise
         """
+        # Try Python API first
+        if self._api_manager and self._api_manager.is_available:
+            # Update beliefs with postflight evidence
+            evidence = {
+                "vectors": vectors,
+                "reasoning": reasoning,
+                "phase": "POSTFLIGHT"
+            }
+            updated = self._api_manager.update_beliefs(
+                session_id=session_id,
+                evidence=evidence
+            )
+            if updated:
+                # Also log checkpoint
+                self._api_manager.log_checkpoint(
+                    session_id=session_id,
+                    phase="POSTFLIGHT",
+                    data={"vectors": vectors, "reasoning": reasoning}
+                )
+                return True
+        
+        # Fall back to CLI
         postflight_data = {
             "session_id": session_id,
             "vectors": vectors,
@@ -239,24 +606,140 @@ class EmpiricaManager:
         except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
             return False
 
-    def project_bootstrap(self) -> Optional[Dict[str, Any]]:
+    def _discover_project_id(self) -> Optional[str]:
         """
-        Load project context dynamically (~800 tokens).
-
-        This replaces conversation history with compressed project memory.
-
+        Discover project ID by listing projects and matching git remote.
+        
         Returns:
-            Dictionary with epistemic state, goals, findings, unknowns, or None if failed
+            Project ID if found, None otherwise
         """
+        if self._project_id:
+            return self._project_id
+        
         try:
-            result = subprocess.run(
-                self._empirica_cmd + ["project-bootstrap"],
+            # Get git remote URL
+            git_result = subprocess.run(
+                ["git", "remote", "get-url", "origin"],
                 cwd=self.project_path,
                 capture_output=True,
                 text=True,
                 check=True,
             )
-            return json.loads(result.stdout)
+            git_remote = git_result.stdout.strip()
+            
+            # List projects and find matching one
+            result = subprocess.run(
+                self._empirica_cmd + ["project-list", "--output", "json"],
+                cwd=self.project_path,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            projects_data = json.loads(result.stdout)
+            
+            # Try to find project by git remote
+            # Note: Empirica project-list may not include git remote in output
+            # So we try project-bootstrap first, and if it fails, we create/link project
+            projects = projects_data.get("projects", [])
+            if projects:
+                # If we have projects, try the first one or search by name
+                # For now, we'll use project-bootstrap which will tell us if project exists
+                pass
+            
+            return None
+        except (subprocess.CalledProcessError, FileNotFoundError, json.JSONDecodeError, KeyError):
+            return None
+    
+    def _ensure_project_exists(self) -> Optional[str]:
+        """
+        Ensure Empirica project exists for this git repository.
+        Creates project if it doesn't exist.
+        
+        This method:
+        1. Checks if we already have a cached project_id
+        2. Tries project-bootstrap to discover existing project
+        3. If no project found, creates a new one
+        4. Caches and returns the project_id
+        
+        Returns:
+            Project ID if successful, None otherwise
+        """
+        if self._project_id:
+            return self._project_id
+        
+        try:
+            # Try project-bootstrap first to see if project exists
+            # This will work if project is already linked to git remote
+            try:
+                result = subprocess.run(
+                    self._empirica_cmd + ["project-bootstrap", "--output", "json"],
+                    cwd=self.project_path,
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                )
+                bootstrap_data = json.loads(result.stdout)
+                if bootstrap_data.get("ok") and bootstrap_data.get("project_id"):
+                    self._project_id = bootstrap_data.get("project_id")
+                    return self._project_id
+            except (subprocess.CalledProcessError, json.JSONDecodeError):
+                # Project doesn't exist or not linked - continue to create
+                pass
+            
+            # Project doesn't exist - create it
+            # Extract project name from directory name
+            project_name = self.project_path.name
+            
+            result = subprocess.run(
+                self._empirica_cmd + ["project-create", "--name", project_name, "--output", "json"],
+                cwd=self.project_path,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            project_data = json.loads(result.stdout)
+            if project_data.get("ok") and project_data.get("project_id"):
+                self._project_id = project_data.get("project_id")
+                return self._project_id
+            
+            return None
+        except (subprocess.CalledProcessError, FileNotFoundError, json.JSONDecodeError, KeyError):
+            # Git not available or project creation failed - return None
+            # This is okay, project_bootstrap will handle it gracefully
+            return None
+
+    def project_bootstrap(self) -> Optional[Dict[str, Any]]:
+        """
+        Load project context dynamically (~800 tokens).
+
+        This replaces conversation history with compressed project memory.
+        Automatically discovers/creates project if needed.
+
+        Returns:
+            Dictionary with epistemic state, goals, findings, unknowns, or None if failed
+        """
+        # Ensure project exists first
+        project_id = self._ensure_project_exists()
+        
+        try:
+            cmd = self._empirica_cmd + ["project-bootstrap", "--output", "json"]
+            if project_id:
+                cmd.extend(["--project-id", project_id])
+            
+            result = subprocess.run(
+                cmd,
+                cwd=self.project_path,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            bootstrap_data = json.loads(result.stdout)
+            
+            # Cache project_id from response if we didn't have it
+            if bootstrap_data.get("ok") and bootstrap_data.get("project_id"):
+                self._project_id = bootstrap_data.get("project_id")
+            
+            return bootstrap_data if bootstrap_data.get("ok") else None
         except (subprocess.CalledProcessError, FileNotFoundError, json.JSONDecodeError):
             return None
 

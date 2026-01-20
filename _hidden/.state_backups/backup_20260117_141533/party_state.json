@@ -1,0 +1,84 @@
+{
+  "party_state": {
+    "party_members": [
+      {
+        "being_id": "being_20260117_140240_6cc97ea0",
+        "name": "Thorin Ironforge",
+        "class_type": "Fighter",
+        "race": "Dwarf",
+        "hp": 104,
+        "max_hp": 110,
+        "level": 2,
+        "experience": 150,
+        "stats": {
+          "strength": 12,
+          "dexterity": 16,
+          "constitution": 18,
+          "intelligence": 14,
+          "wisdom": 12,
+          "charisma": 16
+        }
+      },
+      {
+        "being_id": "being_20260117_140240_6cc97ea0",
+        "name": "Lyra Moonwhisper",
+        "class_type": "Wizard",
+        "race": "Elf",
+        "hp": 102,
+        "max_hp": 110,
+        "level": 2,
+        "experience": 150,
+        "stats": {
+          "strength": 13,
+          "dexterity": 12,
+          "constitution": 13,
+          "intelligence": 16,
+          "wisdom": 16,
+          "charisma": 14
+        }
+      },
+      {
+        "being_id": "being_20260117_140240_6cc97ea0",
+        "name": "Rogar Swiftfoot",
+        "class_type": "Rogue",
+        "race": "Halfling",
+        "hp": 105,
+        "max_hp": 110,
+        "level": 2,
+        "experience": 150,
+        "stats": {
+          "strength": 17,
+          "dexterity": 18,
+          "constitution": 15,
+          "intelligence": 12,
+          "wisdom": 18,
+          "charisma": 16
+        }
+      },
+      {
+        "being_id": "being_20260117_140240_6cc97ea0",
+        "name": "Aria Brightshield",
+        "class_type": "Cleric",
+        "race": "Human",
+        "hp": 99,
+        "max_hp": 110,
+        "level": 2,
+        "experience": 150,
+        "stats": {
+          "strength": 12,
+          "dexterity": 13,
+          "constitution": 15,
+          "intelligence": 16,
+          "wisdom": 18,
+          "charisma": 12
+        }
+      }
+    ],
+    "total_hp": 410,
+    "total_max_hp": 440,
+    "average_level": 2.0,
+    "saved_at": "2026-01-17T14:15:33.658900"
+  },
+  "saved_at": "2026-01-17T14:15:33.658911",
+  "version": "1.0.0"
+}

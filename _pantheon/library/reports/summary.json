@@ -1,0 +1,14 @@
+{
+  "total_records": 1,
+  "by_type": {
+    "template": 1
+  },
+  "by_source": {
+    "waft_templates": 1
+  },
+  "by_category": {
+    "latex_template": 1
+  },
+  "total_tags": 8,
+  "generated_at": "2026-01-19T01:50:44.998469"
+}

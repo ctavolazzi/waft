@@ -126,6 +126,50 @@ history = judge.get_judgment_history(verdict="PROVEN", min_confidence=0.8)
 summary = judge.get_judgment_summary()
 ```
 
+## The Paperwork God
+
+The Paperwork God is the God of Paperwork and Documentation. Maintains paperwork registry, forms, and documentation. Served by Skurl, the gremlin demi-god of red tape.
+
+### Quick Start
+
+```python
+from waft.pantheon import PaperworkGod
+from pathlib import Path
+
+# Initialize
+paperwork_god = PaperworkGod(project_path=Path.cwd())
+
+# Register paperwork
+record = paperwork_god.register_paperwork(
+    document_id="form_001",
+    document_path=Path("forms/application.pdf"),
+    document_type="form"
+)
+
+# Access Skurl (demi-god of red tape)
+skurl = paperwork_god.skurl
+
+# Create red tape obstacle
+obstacle = skurl.create_red_tape_obstacle(
+    obstacle_id="obstacle_001",
+    description="Requires 3 forms and 2 approvals",
+    required_forms=["form_001", "form_002", "form_003"],
+    required_approvals=["manager", "director"],
+    complexity_level=5
+)
+
+# Get summary
+summary = paperwork_god.get_registry_summary()
+```
+
+### Realm of Bureaucracy
+
+The Paperwork God oversees the **Realm of Bureaucracy**, which is populated with:
+- **Goblins**: Form filers, record keepers, and bureaucratic assistants
+- **Ghouls**: Record guardians and archive keepers
+
+See `_pantheon/paperwork_god/README.md` for details.
+
 ## Integration
 
 The Pantheon integrates with:

@@ -1,0 +1,17 @@
+{
+  "encounter_id": "encounter_20260117_141533",
+  "title": "Dark Cultists",
+  "content": "\n## Dark Cultists\n\n\nThe party encounters Dark Cultists in a fierce battle. The combat is intense, with spells flying, \nswords clashing, and the party working together to overcome their foe. After 1 rounds of \ndetermined fighting, the party emerges victorious.\n            \n\n### Combat Details\n\n- **Rounds of Combat**: 1\n- **Party Damage Taken**: 30 total\n- **Experience Gained**: 50 XP per party member\n- **Current Party HP**: 410/440\n            ",
+  "read_aloud": "\nThe battle is intense. Steel clashes, spells fly, and the party fights as one. \nAfter 1 rounds of combat, Dark Cultists falls, defeated by the heroes' resolve.\n            ",
+  "difficulty": "medium",
+  "rounds": 1,
+  "xp_gained": 50,
+  "damage_taken": {
+    "Thorin Ironforge": 6,
+    "Lyra Moonwhisper": 8,
+    "Rogar Swiftfoot": 5,
+    "Aria Brightshield": 11
+  },
+  "level_ups": [],
+  "generated_at": "2026-01-17T14:15:33.656429"
+}

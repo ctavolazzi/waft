@@ -10,7 +10,18 @@
         "by_category": "_work_efforts/devlog/by_category/feature/2026-01-12_202115_workflow_feature.md",
         "by_date": "_work_efforts/devlog/by_date/2026-01-12/2026-01-12_202115_workflow_feature.md"
       }
+    },
+    {
+      "timestamp": "2026-01-19T02:25:21.000000",
+      "source": "manual",
+      "category": "documentation",
+      "title": "WAFT Command Discovery Book Work Effort Created",
+      "paths": {
+        "by_source": "_work_efforts/devlog/by_source/manual/2026-01-19_022521_documentation.md",
+        "by_category": "_work_efforts/devlog/by_category/documentation/2026-01-19_022521_documentation.md",
+        "by_date": "_work_efforts/devlog/by_date/2026-01-19/2026-01-19_022521_documentation.md"
+      }
     }
   ],
-  "last_updated": "2026-01-12T20:21:16.240071"
+  "last_updated": "2026-01-19T02:25:21.000000"
 }

@@ -1,0 +1,10 @@
+{
+  "goblin_id": "test_goblin_001",
+  "name": "TestGoblin",
+  "role": "test_assistant",
+  "type": "goblin",
+  "created_at": "2026-01-19T02:54:55.260667",
+  "metadata": {
+    "test": true
+  }
+}

@@ -2,8 +2,8 @@
   "character": {
     "name": "waft",
     "level": 1,
-    "integrity": 100.0,
-    "insight": 5.0,
+    "integrity": 90.0,
+    "insight": 0.0,
     "credits": 0,
     "ability_scores": {
       "strength": 8,
@@ -16,11 +16,11 @@
     "proficiency_bonus": 2,
     "hit_dice": "d8",
     "max_hp": 7,
-    "current_hp": 7,
-    "created_at": "2026-01-16T21:43:46.349806",
-    "updated_at": "2026-01-16T21:43:47.318289"
+    "current_hp": 6,
+    "created_at": "2026-01-19T02:59:31.520220",
+    "updated_at": "2026-01-19T02:59:35.163880"
   },
-  "updated_at": "2026-01-16T21:43:48.871374",
+  "updated_at": "2026-01-19T02:59:37.153503",
   "adventure_journal": [
     {
       "timestamp": "2026-01-06T00:13:34.681830",
@@ -228,17 +228,17 @@
     },
     {
       "event": "oracle",
-      "narrative": "The TavernKeeper nods approvingly: 'Structural integrity confirmed.'",
+      "narrative": "The TavernKeeper notes the instability with concern.",
       "dice_roll": "1d20+-1",
-      "result": 8,
-      "outcome": "success",
+      "result": 1,
+      "outcome": "failure",
       "rewards": {
-        "insight": 5,
+        "insight": 0,
         "credits": 0,
-        "integrity": 2.0
+        "integrity": -10.0
       },
       "classification": "failure",
-      "timestamp": "2026-01-16T21:43:48.871211"
+      "timestamp": "2026-01-19T02:59:37.153216"
     }
   ]
 }

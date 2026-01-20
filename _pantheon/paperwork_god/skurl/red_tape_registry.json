@@ -1,0 +1,43 @@
+{
+  "obstacles": [
+    {
+      "obstacle_id": "test_obstacle_001",
+      "description": "Test obstacle requiring multiple forms",
+      "required_forms": [
+        "form_A",
+        "form_B",
+        "form_C"
+      ],
+      "required_approvals": [
+        "manager",
+        "director"
+      ],
+      "complexity_level": 7,
+      "created_at": "2026-01-19T02:40:52.782778",
+      "resolved_at": "2026-01-19T02:54:55.259351",
+      "metadata": {
+        "test": true
+      }
+    },
+    {
+      "obstacle_id": "integration_obstacle_001",
+      "description": "Integration test obstacle",
+      "required_forms": [
+        "integration_test_001"
+      ],
+      "required_approvals": [
+        "manager"
+      ],
+      "complexity_level": 3,
+      "created_at": "2026-01-19T02:54:55.280468",
+      "resolved_at": "2026-01-19T02:54:55.280943",
+      "metadata": {}
+    }
+  ],
+  "created_at": "2026-01-19T02:39:37.354539",
+  "last_updated": "2026-01-19T02:54:55.280953",
+  "demi_god": "Skurl",
+  "type": "gremlin",
+  "domain": "red_tape",
+  "parent_god": "PaperworkGod"
+}

@@ -1,0 +1,30 @@
+{
+  "records": [
+    {
+      "document_id": "test_doc_001",
+      "document_path": "test_forms/test_form.pdf",
+      "document_type": "form",
+      "status": "pending",
+      "created_at": "2026-01-19T02:54:55.256605",
+      "last_updated": "2026-01-19T02:54:55.256615",
+      "metadata": {
+        "test": true
+      }
+    },
+    {
+      "document_id": "integration_test_001",
+      "document_path": "test/integration_form.pdf",
+      "document_type": "form",
+      "status": "pending",
+      "created_at": "2026-01-19T02:54:55.279960",
+      "last_updated": "2026-01-19T02:54:55.279969",
+      "metadata": {}
+    }
+  ],
+  "created_at": "2026-01-19T02:39:37.355093",
+  "last_updated": "2026-01-19T02:54:55.279997",
+  "god": "PaperworkGod",
+  "demi_gods": [
+    "Skurl"
+  ]
+}

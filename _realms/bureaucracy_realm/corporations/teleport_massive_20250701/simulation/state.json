@@ -1,0 +1,29 @@
+{
+  "corp_id": "teleport_massive_20250701",
+  "time_manager": {
+    "start_date": "2025-07-01T00:00:00",
+    "current_date": "2025-07-31T00:00:00",
+    "time_unit": "daily",
+    "tick_count": 30,
+    "days_since_start": 30,
+    "months_since_start": 1
+  },
+  "event_queue": [],
+  "monthly_expenses": [],
+  "accounting": {
+    "corp_id": "teleport_massive_20250701",
+    "transaction_count": 16,
+    "accounts": {
+      "cash": -240000.0,
+      "revenue": 0.0,
+      "expenses": 0.0,
+      "equity": 0.0,
+      "salary_expense": 240000.0
+    },
+    "cash_balance": -240000.0,
+    "total_revenue": 0.0,
+    "total_expenses": 0.0,
+    "net_income": 0.0
+  },
+  "last_updated": "2026-01-19T11:00:49.093312"
+}

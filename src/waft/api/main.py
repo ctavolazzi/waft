@@ -11,7 +11,7 @@ from pathlib import Path
 from datetime import datetime
 import logging
 
-from .routes import state, git, work_efforts, empirica, decision, gym, being, campfire, protocel, cartographer, projects, health, auth
+from .routes import state, git, work_efforts, empirica, decision, gym, being, campfire, protocel, cartographer, projects, health, auth, quests, oracle, evolve_ui_monitor
 from .responses import ErrorResponse, ErrorCodes
 
 logger = logging.getLogger(__name__)
@@ -78,6 +78,10 @@ def create_app(project_path: Path, static_dir: Path | None = None) -> FastAPI:
             {
                 "name": "health",
                 "description": "Health check and system status endpoints.",
+            },
+            {
+                "name": "quests",
+                "description": "Quest Guide Implementation system. Gamified quest-based development orchestrator.",
             },
         ]
     )
@@ -202,6 +206,9 @@ def create_app(project_path: Path, static_dir: Path | None = None) -> FastAPI:
     app.include_router(projects.router, prefix="/api", tags=["projects"])
     app.include_router(health.router, prefix="/api", tags=["health"])
     app.include_router(auth.router, prefix="/api", tags=["auth"])
+    app.include_router(quests.router, tags=["quests"])
+    app.include_router(oracle.router, prefix="/api", tags=["oracle"])
+    app.include_router(evolve_ui_monitor.router, prefix="/api", tags=["evolve-ui"])
 
     # Serve static files if provided (must be last route)
     if static_dir and static_dir.exists():

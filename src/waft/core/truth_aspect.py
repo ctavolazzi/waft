@@ -190,8 +190,9 @@ class TruthAspect:
         """
         Send this Aspect back up the Chain to ThePoint.
         
+        CRITICAL: Aspect data is verified as SAFE before assimilation.
         The Aspect is assimilated into ThePoint's understanding,
-        becoming part of the eternal Truth structure.
+        becoming part of the eternal Truth structure - but ONLY if safe.
         
         Returns:
             Result of sending the Aspect
@@ -199,38 +200,51 @@ class TruthAspect:
         # Create the Aspect Being first
         aspect_being = self.create_aspect_being()
         
-        # Assimilate into ThePoint
-        assimilation_record = self.the_point.assimilate_data(
-            realm_name="truth_realm",
-            scout_data={
-                "aspect_id": self.aspect_id,
-                "aspect_name": self.aspect_name,
-                "truth_text": self.truth_text,
-                "explanation": self.explanation,
-                "being_id": aspect_being.being_id,
-                "reality_id": aspect_being.reality_id,
-                "data_type": "truth_aspect"
-            },
-            gaps_discovered=[],
-            holes_identified=[]
-        )
-        
-        # Update metadata
-        metadata_file = self.aspects_path / f"{self.aspect_id}.json"
-        if metadata_file.exists():
-            metadata = json.loads(metadata_file.read_text(encoding="utf-8"))
-            metadata["sent_to_the_point"] = True
-            metadata["assimilation_record_id"] = assimilation_record.get("record_id")
-            metadata["sent_at"] = datetime.now().isoformat()
-            metadata_file.write_text(
-                json.dumps(metadata, indent=2),
-                encoding="utf-8"
-            )
-        
-        return {
-            "success": True,
+        # Prepare data for assimilation
+        scout_data = {
             "aspect_id": self.aspect_id,
-            "aspect_being_id": aspect_being.being_id,
-            "assimilation_record": assimilation_record,
-            "message": f"Aspect '{self.aspect_name}' sent to ThePoint"
+            "aspect_name": self.aspect_name,
+            "truth_text": self.truth_text,
+            "explanation": self.explanation,
+            "being_id": aspect_being.being_id,
+            "reality_id": aspect_being.reality_id,
+            "data_type": "truth_aspect"
         }
+        
+        # Assimilate into ThePoint (with safety verification)
+        try:
+            assimilation_record = self.the_point.assimilate_data(
+                realm_name="truth_realm",
+                scout_data=scout_data,
+                gaps_discovered=[],
+                holes_identified=[],
+                source_being_id=aspect_being.being_id
+            )
+        except ValueError as e:
+            # Safety verification failed
+            return {
+                "success": False,
+                "aspect_id": self.aspect_id,
+                "error": str(e),
+                "message": "Aspect data failed safety verification - NOT assimilated to protect all Beings"
+            }
+        
+            # Update metadata
+            metadata_file = self.aspects_path / f"{self.aspect_id}.json"
+            if metadata_file.exists():
+                metadata = json.loads(metadata_file.read_text(encoding="utf-8"))
+                metadata["sent_to_the_point"] = True
+                metadata["assimilation_record_id"] = assimilation_record.get("record_id")
+                metadata["sent_at"] = datetime.now().isoformat()
+                metadata_file.write_text(
+                    json.dumps(metadata, indent=2),
+                    encoding="utf-8"
+                )
+            
+            return {
+                "success": True,
+                "aspect_id": self.aspect_id,
+                "aspect_being_id": aspect_being.being_id,
+                "assimilation_record": assimilation_record,
+                "message": f"Aspect '{self.aspect_name}' sent to ThePoint (verified safe)"
+            }

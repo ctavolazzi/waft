@@ -1,0 +1,21 @@
+{
+  "realm_id": "dnd_scenario_realm",
+  "realm_name": "DnD Scenario Realm",
+  "realm_type": "original",
+  "created_at": "2026-01-17T13:50:00",
+  "version": "1.0.0",
+  "description": "Original Realm for DnD scenario management with experimental iteration support",
+  "features": [
+    "scenario_execution",
+    "party_state_management",
+    "lore_accumulation",
+    "experimental_iteration",
+    "state_crystallization"
+  ],
+  "security": {
+    "encryption": "Fernet (Pyrite)",
+    "path_validation": "enabled",
+    "input_validation": "enabled",
+    "state_integrity": "SHA-256 + HMAC"
+  }
+}

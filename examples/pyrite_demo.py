@@ -300,7 +300,7 @@ def demo_status():
 def main():
     """Run all demos."""
     print("\n" + "="*60)
-    print("  PYRITE DEMO - The God of Work Efforts")
+    print("  THE STEWARD DEMO - The God of Work Efforts")
     print("="*60)
     
     try:

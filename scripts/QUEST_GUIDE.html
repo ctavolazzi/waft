@@ -1,0 +1,1627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quest Guide - Meta-Cognitive Guide LLM System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #3498db;
+            --secondary: #667eea;
+            --success: #27ae60;
+            --warning: #e67e22;
+            --danger: #e74c3c;
+            --dark: #2c3e50;
+            --light: #f5f5f5;
+            --white: #ffffff;
+            --gray: #7f8c8d;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: var(--light);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: var(--white);
+            border-radius: 8px;
+            padding: 20px;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .sidebar h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: var(--dark);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 8px;
+        }
+
+        .search-box {
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .sidebar nav ul {
+            list-style: none;
+        }
+
+        .sidebar nav ul li {
+            margin-bottom: 8px;
+        }
+
+        .sidebar nav a {
+            color: #555;
+            text-decoration: none;
+            display: block;
+            padding: 6px 10px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .sidebar nav a:hover,
+        .sidebar nav a.active {
+            background: #e8f4f8;
+            color: var(--primary);
+        }
+
+        .main {
+            flex: 1;
+            background: var(--white);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        h1 {
+            color: var(--dark);
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            color: var(--gray);
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--gray);
+        }
+
+        .quick-commands {
+            background: #ecf0f1;
+            border-left: 4px solid var(--primary);
+            padding: 15px 20px;
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+
+        .quick-commands h3 {
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .command-box {
+            background: var(--dark);
+            color: #ecf0f1;
+            padding: 12px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 13px;
+            margin: 10px 0;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .command-box:hover {
+            background: #34495e;
+        }
+
+        .command-box::after {
+            content: '📋';
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.6;
+        }
+
+        .command-box.copied::after {
+            content: '✅';
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--secondary) 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 32px;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #ecf0f1;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success) 0%, #2ecc71 100%);
+            transition: width 0.3s;
+        }
+
+        .phase {
+            margin-bottom: 40px;
+        }
+
+        .phase-header {
+            background: linear-gradient(135deg, var(--secondary) 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .phase-header h2 {
+            color: white;
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .phase-header::after {
+            content: '▼';
+            float: right;
+            transition: transform 0.3s;
+        }
+
+        .phase-header.collapsed::after {
+            transform: rotate(-90deg);
+        }
+
+        .phase-content {
+            transition: max-height 0.3s, opacity 0.3s;
+            overflow: hidden;
+        }
+
+        .phase-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+            margin-bottom: 0;
+        }
+
+        .quest-card {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .quest-card:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .quest-card.hidden {
+            display: none;
+        }
+
+        .quest-status {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-locked {
+            background: #ecf0f1;
+            color: #7f8c8d;
+        }
+
+        .status-available {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-in-progress {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-completed {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .quest-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .quest-title {
+            font-size: 20px;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .quest-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 14px;
+            color: var(--gray);
+            flex-wrap: wrap;
+        }
+
+        .quest-id {
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .difficulty {
+            color: var(--warning);
+        }
+
+        .xp {
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .quest-description {
+            margin-bottom: 15px;
+            color: #555;
+            line-height: 1.8;
+            white-space: pre-line;
+        }
+
+        .quest-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .detail-section {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 4px;
+        }
+
+        .detail-section h4 {
+            font-size: 14px;
+            color: var(--dark);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-section ul {
+            list-style: none;
+            font-size: 13px;
+        }
+
+        .detail-section li {
+            padding: 4px 0;
+            color: #555;
+        }
+
+        .detail-section a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .detail-section a:hover {
+            text-decoration: underline;
+        }
+
+        .checkpoint, .test {
+            display: inline-block;
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            margin: 2px;
+        }
+
+        .test {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .achievement {
+            display: inline-block;
+            background: #fff3e0;
+            color: #e65100;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            margin: 2px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--dark);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                position: static;
+            }
+
+            .quest-details {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .filter-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .filter-tag {
+            padding: 6px 12px;
+            background: #ecf0f1;
+            border: 1px solid #ddd;
+            border-radius: 16px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-tag:hover {
+            background: #d5dbdb;
+        }
+
+        .filter-tag.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <h2>📋 Navigation</h2>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search quests..." />
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#overview" class="nav-link">Overview</a></li>
+                    <li><a href="#quick-start" class="nav-link">Quick Start</a></li>
+                    <li><a href="#phase-1" class="nav-link">Phase 1: Foundation</a></li>
+                    <li><a href="#phase-2" class="nav-link">Phase 2: LLM Integration</a></li>
+                    <li><a href="#phase-3" class="nav-link">Phase 3: Evaluation</a></li>
+                    <li><a href="#phase-4" class="nav-link">Phase 4: Advanced Features</a></li>
+                    <li><a href="#phase-5" class="nav-link">Phase 5: Integration & Polish</a></li>
+                    <li><a href="#phase-6" class="nav-link">Phase 6: Documentation</a></li>
+                    <li><a href="#checkpoints" class="nav-link">All Checkpoints</a></li>
+                    <li><a href="#tests" class="nav-link">All Tests</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main">
+            <div class="header-controls">
+                <div>
+                    <h1>🎮 Quest Guide</h1>
+                    <p class="subtitle">Meta-Cognitive Guide LLM System - Quest Implementation Guide</p>
+                </div>
+                <button class="btn btn-secondary" onclick="loadProgress()">🔄 Refresh Progress</button>
+            </div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <h3 id="stat-quests">17</h3>
+                    <p>Quests</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="stat-completed">0</h3>
+                    <p>Completed</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3 id="stat-xp">0</h3>
+                    <p>Total XP</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="stat-checkpoints">10</h3>
+                    <p>Checkpoints</p>
+                </div>
+            </div>
+
+            <div class="filter-tags">
+                <span class="filter-tag active" data-filter="all">All</span>
+                <span class="filter-tag" data-filter="available">Available</span>
+                <span class="filter-tag" data-filter="in-progress">In Progress</span>
+                <span class="filter-tag" data-filter="completed">Completed</span>
+                <span class="filter-tag" data-filter="locked">Locked</span>
+            </div>
+
+            <section id="overview">
+                <h2>Overview</h2>
+                <p>A fun, gamified quest-based development orchestrator that breaks down the implementation of the Meta-Cognitive Guide LLM System into manageable quests with checkpoints, tests, and achievements!</p>
+            </section>
+
+            <section id="quick-start" style="margin-top: 30px;">
+                <h2>Quick Start</h2>
+                <div class="quick-commands">
+                    <h3>Essential Commands</h3>
+                    <div class="command-box" onclick="copyCommand(this)">python scripts/quest_guide_implementation.py --status</div>
+                    <div class="command-box" onclick="copyCommand(this)">python scripts/quest_guide_implementation.py --list</div>
+                    <div class="command-box" onclick="copyCommand(this)">python scripts/quest_guide_implementation.py --quest quest_1</div>
+                    <div class="command-box" onclick="copyCommand(this)">python scripts/quest_guide_implementation.py --start quest_1</div>
+                    <div class="command-box" onclick="copyCommand(this)">python scripts/quest_guide_implementation.py --checkpoint cp_guide_file</div>
+                    <div class="command-box" onclick="copyCommand(this)">python scripts/quest_guide_implementation.py --test test_init</div>
+                    <div class="command-box" onclick="copyCommand(this)">python scripts/quest_guide_implementation.py --complete quest_1</div>
+                </div>
+            </section>
+
+            <!-- Phase 1: Foundation -->
+            <section id="phase-1" class="phase">
+                <div class="phase-header" onclick="togglePhase(this)">
+                    <h2>Phase 1: Foundation (Quests 1-4)</h2>
+                </div>
+                <div class="phase-content">
+                    <div class="quest-card" id="quest_1" data-status="available">
+                        <span class="quest-status status-available">Available</span>
+                        <div class="quest-header">
+                            <div>
+                                <h3 class="quest-title">🏗️ Foundation: Create TheGuide Skeleton</h3>
+                                <div class="quest-meta">
+                                    <span class="quest-id">quest_1</span>
+                                    <span class="difficulty">⭐ ⭐</span>
+                                    <span class="xp">+50 XP</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="quest-description">Create the basic structure for TheGuide class in src/waft/pantheon/guide.py.
+Include __init__ method, storage paths, and basic class structure following TheReasoner pattern.</div>
+                        <div class="quest-details">
+                            <div class="detail-section">
+                                <h4>Checkpoints</h4>
+                                <ul>
+                                    <li><a href="#cp_guide_file">cp_guide_file</a> - Guide File Created</li>
+                                    <li><a href="#cp_guide_class">cp_guide_class</a> - TheGuide Class Defined</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Tests</h4>
+                                <ul>
+                                    <li><a href="#test_init">test_init</a> - TheGuide Initialization Test</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Achievements</h4>
+                                <ul>
+                                    <li>🏗️ Foundation Builder</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Prerequisites</h4>
+                                <ul>
+                                    <li>None - Start here!</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quest-card" id="quest_2" data-status="locked">
+                        <span class="quest-status status-locked">Locked</span>
+                        <div class="quest-header">
+                            <div>
+                                <h3 class="quest-title">📁 Storage System Implementation</h3>
+                                <div class="quest-meta">
+                                    <span class="quest-id">quest_2</span>
+                                    <span class="difficulty">⭐ ⭐ ⭐</span>
+                                    <span class="xp">+75 XP</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="quest-description">Implement the storage system for sessions, protocols, and index.
+Create directories: _pantheon/guide/sessions/, _pantheon/guide/protocols/
+Implement _load_index() and _save_index() methods.</div>
+                        <div class="quest-details">
+                            <div class="detail-section">
+                                <h4>Checkpoints</h4>
+                                <ul>
+                                    <li><a href="#cp_storage_dirs">cp_storage_dirs</a> - Storage Directories Created</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Tests</h4>
+                                <ul>
+                                    <li><a href="#test_storage">test_storage</a> - Storage Structure Test</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Achievements</h4>
+                                <ul>
+                                    <li>📁 Storage Master</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Prerequisites</h4>
+                                <ul>
+                                    <li><a href="#quest_1">quest_1</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quest-card" id="quest_3" data-status="locked">
+                        <span class="quest-status status-locked">Locked</span>
+                        <div class="quest-header">
+                            <div>
+                                <h3 class="quest-title">📋 Protocol Models (Pydantic)</h3>
+                                <div class="quest-meta">
+                                    <span class="quest-id">quest_3</span>
+                                    <span class="difficulty">⭐ ⭐ ⭐ ⭐</span>
+                                    <span class="xp">+100 XP</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="quest-description">Create Pydantic models for Protocol system:
+- EvaluationScores (FVCU+Faithfulness: factuality, validity, coherence, utility, faithfulness, overall)
+- Protocol (reasoning_chain, evaluations, final_answer, quality_score, etc.)
+- Reasoning chain entry structure
+- Evaluation entry structure</div>
+                        <div class="quest-details">
+                            <div class="detail-section">
+                                <h4>Checkpoints</h4>
+                                <ul>
+                                    <li><a href="#cp_protocol_models">cp_protocol_models</a> - Protocol Models Defined</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Tests</h4>
+                                <ul>
+                                    <li><a href="#test_models">test_models</a> - Protocol Models Test</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Achievements</h4>
+                                <ul>
+                                    <li>📋 Model Architect</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Prerequisites</h4>
+                                <ul>
+                                    <li><a href="#quest_1">quest_1</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quest-card" id="quest_4" data-status="locked">
+                        <span class="quest-status status-locked">Locked</span>
+                        <div class="quest-header">
+                            <div>
+                                <h3 class="quest-title">🔄 Guidance Loop Structure</h3>
+                                <div class="quest-meta">
+                                    <span class="quest-id">quest_4</span>
+                                    <span class="difficulty">⭐ ⭐ ⭐</span>
+                                    <span class="xp">+75 XP</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="quest-description">Implement the basic guidance loop structure (_guidance_loop method).
+Include iteration counter, termination check, and placeholder for LLM calls.
+This is the skeleton that will be filled in later.</div>
+                        <div class="quest-details">
+                            <div class="detail-section">
+                                <h4>Checkpoints</h4>
+                                <ul>
+                                    <li><a href="#cp_guidance_loop">cp_guidance_loop</a> - Guidance Loop Method</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Tests</h4>
+                                <ul>
+                                    <li>None</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Achievements</h4>
+                                <ul>
+                                    <li>🔄 Loop Master</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Prerequisites</h4>
+                                <ul>
+                                    <li><a href="#quest_1">quest_1</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Phase 2: LLM Integration -->
+            <section id="phase-2" class="phase">
+                <div class="phase-header" onclick="togglePhase(this)">
+                    <h2>Phase 2: LLM Integration (Quests 5-6)</h2>
+                </div>
+                <div class="phase-content">
+                    <div class="quest-card" id="quest_5" data-status="locked">
+                        <span class="quest-status status-locked">Locked</span>
+                        <div class="quest-header">
+                            <div>
+                                <h3 class="quest-title">🤖 OpenHands LLM Integration</h3>
+                                <div class="quest-meta">
+                                    <span class="quest-id">quest_5</span>
+                                    <span class="difficulty">⭐ ⭐ ⭐ ⭐ ⭐</span>
+                                    <span class="xp">+125 XP</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="quest-description">Add OpenHands LLM integration:
+- Implement _create_guide_llm() method
+- Add LLM initialization in __init__()
+- Create prompt templates for Guide and Client
+- Implement solve() method entry point</div>
+                        <div class="quest-details">
+                            <div class="detail-section">
+                                <h4>Checkpoints</h4>
+                                <ul>
+                                    <li><a href="#cp_llm_integration">cp_llm_integration</a> - OpenHands LLM Integration</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Tests</h4>
+                                <ul>
+                                    <li>None</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Achievements</h4>
+                                <ul>
+                                    <li>🤖 LLM Integrator</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Prerequisites</h4>
+                                <ul>
+                                    <li><a href="#quest_1">quest_1</a></li>
+                                    <li><a href="#quest_4">quest_4</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quest-card" id="quest_6" data-status="locked">
+                        <span class="quest-status status-locked">Locked</span>
+                        <div class="quest-header">
+                            <div>
+                                <h3 class="quest-title">💬 Basic LLM Calls</h3>
+                                <div class="quest-meta">
+                                    <span class="quest-id">quest_6</span>
+                                    <span class="difficulty">⭐ ⭐ ⭐ ⭐ ⭐</span>
+                                    <span class="xp">+125 XP</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="quest-description">Implement basic LLM interaction:
+- Guide instruction generation
+- Client reasoning trace generation
+- Basic evaluation call (without FVCU yet)</div>
+                        <div class="quest-details">
+                            <div class="detail-section">
+                                <h4>Checkpoints</h4>
+                                <ul>
+                                    <li>None</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Tests</h4>
+                                <ul>
+                                    <li>None</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Achievements</h4>
+                                <ul>
+                                    <li>💬 Conversation Starter</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Prerequisites</h4>
+                                <ul>
+                                    <li><a href="#quest_5">quest_5</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Phase 3: Evaluation System -->
+            <section id="phase-3" class="phase">
+                <div class="phase-header" onclick="togglePhase(this)">
+                    <h2>Phase 3: Evaluation System (Quests 7-9)</h2>
+                </div>
+                <div class="phase-content">
+                    <div class="quest-card" id="quest_7" data-status="locked">
+                        <span class="quest-status status-locked">Locked</span>
+                        <div class="quest-header">
+                            <div>
+                                <h3 class="quest-title">🎯 FVCU+Faithfulness Evaluation</h3>
+                                <div class="quest-meta">
+                                    <span class="quest-id">quest_7</span>
+                                    <span class="difficulty">⭐ ⭐ ⭐ ⭐ ⭐ ⭐ ⭐</span>
+                                    <span class="xp">+200 XP</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="quest-description">Implement FVCU+Faithfulness evaluation system:
+- Create _evaluate_with_fvcu() method
+- Implement critic model approach (LLM-as-a-judge)
+- Generate FVCU scores with rationale
+- Add faithfulness detection (claimed vs actual computation)</div>
+                        <div class="quest-details">
+                            <div class="detail-section">
+                                <h4>Checkpoints</h4>
+                                <ul>
+                                    <li><a href="#cp_fvcu_evaluation">cp_fvcu_evaluation</a> - FVCU Evaluation Method</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Tests</h4>
+                                <ul>
+                                    <li><a href="#test_fvcu">test_fvcu</a> - FVCU Evaluation Test</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Achievements</h4>
+                                <ul>
+                                    <li>🎯 Evaluation Master</li>
+                                    <li>🔍 Faithfulness Detective</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Prerequisites</h4>
+                                <ul>
+                                    <li><a href="#quest_6">quest_6</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quest-card" id="quest_8" data-status="locked">
+                        <span class="quest-status status-locked">Locked</span>
+                        <div class="quest-header">
+                            <div>
+                                <h3 class="quest-title">🧩 Partial Context Identification</h3>
+                                <div class="quest-meta">
+                                    <span class="quest-id">quest_8</span>
+                                    <span class="difficulty">⭐ ⭐ ⭐ ⭐ ⭐ ⭐</span>
+                                    <span class="xp">+150 XP</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="quest-description">Implement partial context identification:
+- Create _identify_premises() method
+- Determine which previous steps are premises
+- Implement partial context extraction for efficiency</div>
+                        <div class="quest-details">
+                            <div class="detail-section">
+                                <h4>Checkpoints</h4>
+                                <ul>
+                                    <li>None</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Tests</h4>
+                                <ul>
+                                    <li>None</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Achievements</h4>
+                                <ul>
+                                    <li>🧩 Context Master</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Prerequisites</h4>
+                                <ul>
+                                    <li><a href="#quest_7">quest_7</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quest-card" id="quest_9" data-status="locked">
+                        <span class="quest-status status-locked">Locked</span>
+                        <div class="quest-header">
+                            <div>
+                                <h3 class="quest-title">📊 Test-Time Scaling (Majority Voting)</h3>
+                                <div class="quest-meta">
+                                    <span class="quest-id">quest_9</span>
+                                    <span class="difficulty">⭐ ⭐ ⭐ ⭐ ⭐ ⭐</span>
+                                    <span class="xp">+150 XP</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="quest-description">Implement test-time scaling:
+- Create _evaluate_with_majority_voting() method
+- Support multiple evaluation samples
+- Aggregate scores via majority voting</div>
+                        <div class="quest-details">
+                            <div class="detail-section">
+                                <h4>Checkpoints</h4>
+                                <ul>
+                                    <li>None</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Tests</h4>
+                                <ul>
+                                    <li>None</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Achievements</h4>
+                                <ul>
+                                    <li>📊 Scaling Expert</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Prerequisites</h4>
+                                <ul>
+                                    <li><a href="#quest_7">quest_7</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Phase 4: Advanced Features -->
+            <section id="phase-4" class="phase">
+                <div class="phase-header" onclick="togglePhase(this)">
+                    <h2>Phase 4: Advanced Features (Quests 10-11) - Optional</h2>
+                </div>
+                <div class="phase-content">
+                    <div class="quest-card" id="quest_10" data-status="locked">
+                        <span class="quest-status status-locked">Locked</span>
+                        <div class="quest-header">
+                            <div>
+                                <h3 class="quest-title">✨ Self-Rewarding (Optional)</h3>
+                                <div class="quest-meta">
+                                    <span class="quest-id">quest_10</span>
+                                    <span class="difficulty">⭐ ⭐ ⭐ ⭐ ⭐ ⭐ ⭐</span>
+                                    <span class="xp">+175 XP</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="quest-description">Implement self-rewarding capabilities:
+- Create _evaluate_guide_instruction() method
+- Guide evaluates its own instruction quality
+- Add enable_self_rewarding flag to __init__()</div>
+                        <div class="quest-details">
+                            <div class="detail-section">
+                                <h4>Checkpoints</h4>
+                                <ul>
+                                    <li>None</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Tests</h4>
+                                <ul>
+                                    <li>None</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Achievements</h4>
+                                <ul>
+                                    <li>✨ Self-Aware Guide</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Prerequisites</h4>
+                                <ul>
+                                    <li><a href="#quest_6">quest_6</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quest-card" id="quest_11" data-status="locked">
+                        <span class="quest-status status-locked">Locked</span>
+                        <div class="quest-header">
+                            <div>
+                                <h3 class="quest-title">🔧 Self-Correction (Optional)</h3>
+                                <div class="quest-meta">
+                                    <span class="quest-id">quest_11</span>
+                                    <span class="difficulty">⭐ ⭐ ⭐ ⭐ ⭐ ⭐ ⭐ ⭐</span>
+                                    <span class="xp">+200 XP</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="quest-description">Implement self-correction capabilities:
+- Create _self_correct_instruction() method
+- Guide revises instructions if quality is low
+- Add enable_self_correction flag to __init__()</div>
+                        <div class="quest-details">
+                            <div class="detail-section">
+                                <h4>Checkpoints</h4>
+                                <ul>
+                                    <li>None</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Tests</h4>
+                                <ul>
+                                    <li>None</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Achievements</h4>
+                                <ul>
+                                    <li>🔧 Self-Improving Guide</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Prerequisites</h4>
+                                <ul>
+                                    <li><a href="#quest_10">quest_10</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Phase 5: Integration & Polish -->
+            <section id="phase-5" class="phase">
+                <div class="phase-header" onclick="togglePhase(this)">
+                    <h2>Phase 5: Integration & Polish (Quests 12-15)</h2>
+                </div>
+                <div class="phase-content">
+                    <div class="quest-card" id="quest_12" data-status="locked">
+                        <span class="quest-status status-locked">Locked</span>
+                        <div class="quest-header">
+                            <div>
+                                <h3 class="quest-title">🔗 Reasoner Integration</h3>
+                                <div class="quest-meta">
+                                    <span class="quest-id">quest_12</span>
+                                    <span class="difficulty">⭐ ⭐ ⭐ ⭐ ⭐</span>
+                                    <span class="xp">+125 XP</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="quest-description">Add integration with TheReasoner:
+- Import TheReasoner in guide.py
+- Create trace after each iteration
+- Link traces with parent_trace_id
+- Store session-to-trace mapping</div>
+                        <div class="quest-details">
+                            <div class="detail-section">
+                                <h4>Checkpoints</h4>
+                                <ul>
+                                    <li><a href="#cp_reasoner_integration">cp_reasoner_integration</a> - Reasoner Integration</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Tests</h4>
+                                <ul>
+                                    <li><a href="#test_reasoner">test_reasoner</a> - Reasoner Integration Test</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Achievements</h4>
+                                <ul>
+                                    <li>🔗 Integration Master</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Prerequisites</h4>
+                                <ul>
+                                    <li><a href="#quest_6">quest_6</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quest-card" id="quest_13" data-status="locked">
+                        <span class="quest-status status-locked">Locked</span>
+                        <div class="quest-header">
+                            <div>
+                                <h3 class="quest-title">🚪 Termination Logic</h3>
+                                <div class="quest-meta">
+                                    <span class="quest-id">quest_13</span>
+                                    <span class="difficulty">⭐ ⭐ ⭐ ⭐ ⭐</span>
+                                    <span class="xp">+125 XP</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="quest-description">Implement termination logic:
+- Create _check_termination() method
+- Consider FVCU scores (validity+utility complementarity)
+- Check Guide's self-assessment
+- Handle max iterations and quality threshold</div>
+                        <div class="quest-details">
+                            <div class="detail-section">
+                                <h4>Checkpoints</h4>
+                                <ul>
+                                    <li>None</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Tests</h4>
+                                <ul>
+                                    <li>None</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Achievements</h4>
+                                <ul>
+                                    <li>🚪 Termination Expert</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Prerequisites</h4>
+                                <ul>
+                                    <li><a href="#quest_7">quest_7</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quest-card" id="quest_14" data-status="locked">
+                        <span class="quest-status status-locked">Locked</span>
+                        <div class="quest-header">
+                            <div>
+                                <h3 class="quest-title">❓ 'Why?' Explanation System</h3>
+                                <div class="quest-meta">
+                                    <span class="quest-id">quest_14</span>
+                                    <span class="difficulty">⭐ ⭐ ⭐ ⭐</span>
+                                    <span class="xp">+100 XP</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="quest-description">Implement 'Why?' explanation:
+- Create explain() method
+- Load Protocol from storage
+- Format reasoning chain as narrative
+- Include evaluation notes and FVCU scores</div>
+                        <div class="quest-details">
+                            <div class="detail-section">
+                                <h4>Checkpoints</h4>
+                                <ul>
+                                    <li>None</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Tests</h4>
+                                <ul>
+                                    <li>None</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Achievements</h4>
+                                <ul>
+                                    <li>❓ Explanation Master</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Prerequisites</h4>
+                                <ul>
+                                    <li><a href="#quest_3">quest_3</a></li>
+                                    <li><a href="#quest_7">quest_7</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quest-card" id="quest_15" data-status="locked">
+                        <span class="quest-status status-locked">Locked</span>
+                        <div class="quest-header">
+                            <div>
+                                <h3 class="quest-title">📦 Pantheon Export</h3>
+                                <div class="quest-meta">
+                                    <span class="quest-id">quest_15</span>
+                                    <span class="difficulty">⭐ ⭐</span>
+                                    <span class="xp">+50 XP</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="quest-description">Add TheGuide to Pantheon exports:
+- Update src/waft/pantheon/__init__.py
+- Add TheGuide to __all__ list
+- Verify imports work correctly</div>
+                        <div class="quest-details">
+                            <div class="detail-section">
+                                <h4>Checkpoints</h4>
+                                <ul>
+                                    <li><a href="#cp_pantheon_export">cp_pantheon_export</a> - Pantheon Export</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Tests</h4>
+                                <ul>
+                                    <li>None</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Achievements</h4>
+                                <ul>
+                                    <li>📦 Export Master</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Prerequisites</h4>
+                                <ul>
+                                    <li><a href="#quest_1">quest_1</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Phase 6: Documentation & Testing -->
+            <section id="phase-6" class="phase">
+                <div class="phase-header" onclick="togglePhase(this)">
+                    <h2>Phase 6: Documentation & Testing (Quests 16-17)</h2>
+                </div>
+                <div class="phase-content">
+                    <div class="quest-card" id="quest_16" data-status="locked">
+                        <span class="quest-status status-locked">Locked</span>
+                        <div class="quest-header">
+                            <div>
+                                <h3 class="quest-title">📚 README Documentation</h3>
+                                <div class="quest-meta">
+                                    <span class="quest-id">quest_16</span>
+                                    <span class="difficulty">⭐ ⭐ ⭐</span>
+                                    <span class="xp">+75 XP</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="quest-description">Create comprehensive README:
+- Document FVCU+Faithfulness taxonomy
+- Explain self-rewarding/correction capabilities
+- Provide usage examples
+- Document integration with TheReasoner</div>
+                        <div class="quest-details">
+                            <div class="detail-section">
+                                <h4>Checkpoints</h4>
+                                <ul>
+                                    <li><a href="#cp_readme">cp_readme</a> - README Documentation</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Tests</h4>
+                                <ul>
+                                    <li>None</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Achievements</h4>
+                                <ul>
+                                    <li>📚 Documentation Master</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Prerequisites</h4>
+                                <ul>
+                                    <li><a href="#quest_7">quest_7</a></li>
+                                    <li><a href="#quest_10">quest_10</a></li>
+                                    <li><a href="#quest_12">quest_12</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quest-card" id="quest_17" data-status="locked">
+                        <span class="quest-status status-locked">Locked</span>
+                        <div class="quest-header">
+                            <div>
+                                <h3 class="quest-title">🧪 Final Testing & Validation</h3>
+                                <div class="quest-meta">
+                                    <span class="quest-id">quest_17</span>
+                                    <span class="difficulty">⭐ ⭐ ⭐ ⭐ ⭐ ⭐</span>
+                                    <span class="xp">+200 XP</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="quest-description">Run comprehensive tests:
+- Test with simple problem (verify FVCU scoring)
+- Test faithfulness detection (unfaithful reasoning cases)
+- Test planning detection (forward-looking reasoning)
+- Test self-correction loop
+- Verify Reasoner integration</div>
+                        <div class="quest-details">
+                            <div class="detail-section">
+                                <h4>Checkpoints</h4>
+                                <ul>
+                                    <li>None</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Tests</h4>
+                                <ul>
+                                    <li>Comprehensive manual testing</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Achievements</h4>
+                                <ul>
+                                    <li>🧪 Testing Master</li>
+                                    <li>🏆 Quest Complete!</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <h4>Prerequisites</h4>
+                                <ul>
+                                    <li><a href="#quest_7">quest_7</a></li>
+                                    <li><a href="#quest_12">quest_12</a></li>
+                                    <li><a href="#quest_14">quest_14</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Checkpoints Reference -->
+            <section id="checkpoints" style="margin-top: 50px;">
+                <h2>All Checkpoints</h2>
+                <div class="quest-card" id="cp_guide_file">
+                    <h3>cp_guide_file - Guide File Created</h3>
+                    <p>Check that src/waft/pantheon/guide.py exists</p>
+                    <div class="command-box" onclick="copyCommand(this)">python scripts/quest_guide_implementation.py --checkpoint cp_guide_file</div>
+                </div>
+                <div class="quest-card" id="cp_guide_class">
+                    <h3>cp_guide_class - TheGuide Class Defined</h3>
+                    <p>Check that TheGuide class exists in guide.py</p>
+                    <div class="command-box" onclick="copyCommand(this)">python scripts/quest_guide_implementation.py --checkpoint cp_guide_class</div>
+                </div>
+                <div class="quest-card" id="cp_storage_dirs">
+                    <h3>cp_storage_dirs - Storage Directories Created</h3>
+                    <p>Check that _pantheon/guide/sessions and protocols directories exist</p>
+                    <div class="command-box" onclick="copyCommand(this)">python scripts/quest_guide_implementation.py --checkpoint cp_storage_dirs</div>
+                </div>
+                <div class="quest-card" id="cp_protocol_models">
+                    <h3>cp_protocol_models - Protocol Models Defined</h3>
+                    <p>Check that EvaluationScores and Protocol models exist</p>
+                    <div class="command-box" onclick="copyCommand(this)">python scripts/quest_guide_implementation.py --checkpoint cp_protocol_models</div>
+                </div>
+                <div class="quest-card" id="cp_guidance_loop">
+                    <h3>cp_guidance_loop - Guidance Loop Method</h3>
+                    <p>Check that _guidance_loop method exists</p>
+                    <div class="command-box" onclick="copyCommand(this)">python scripts/quest_guide_implementation.py --checkpoint cp_guidance_loop</div>
+                </div>
+                <div class="quest-card" id="cp_llm_integration">
+                    <h3>cp_llm_integration - OpenHands LLM Integration</h3>
+                    <p>Check that OpenHands LLM is imported and used</p>
+                    <div class="command-box" onclick="copyCommand(this)">python scripts/quest_guide_implementation.py --checkpoint cp_llm_integration</div>
+                </div>
+                <div class="quest-card" id="cp_fvcu_evaluation">
+                    <h3>cp_fvcu_evaluation - FVCU Evaluation Method</h3>
+                    <p>Check that _evaluate_with_fvcu method exists</p>
+                    <div class="command-box" onclick="copyCommand(this)">python scripts/quest_guide_implementation.py --checkpoint cp_fvcu_evaluation</div>
+                </div>
+                <div class="quest-card" id="cp_reasoner_integration">
+                    <h3>cp_reasoner_integration - Reasoner Integration</h3>
+                    <p>Check that TheReasoner is imported and used</p>
+                    <div class="command-box" onclick="copyCommand(this)">python scripts/quest_guide_implementation.py --checkpoint cp_reasoner_integration</div>
+                </div>
+                <div class="quest-card" id="cp_pantheon_export">
+                    <h3>cp_pantheon_export - Pantheon Export</h3>
+                    <p>Check that TheGuide is exported in pantheon __init__.py</p>
+                    <div class="command-box" onclick="copyCommand(this)">python scripts/quest_guide_implementation.py --checkpoint cp_pantheon_export</div>
+                </div>
+                <div class="quest-card" id="cp_readme">
+                    <h3>cp_readme - README Documentation</h3>
+                    <p>Check that _pantheon/guide/README.md exists</p>
+                    <div class="command-box" onclick="copyCommand(this)">python scripts/quest_guide_implementation.py --checkpoint cp_readme</div>
+                </div>
+            </section>
+
+            <!-- Tests Reference -->
+            <section id="tests" style="margin-top: 50px;">
+                <h2>All Tests</h2>
+                <div class="quest-card" id="test_init">
+                    <h3>test_init - TheGuide Initialization Test</h3>
+                    <p>Test that TheGuide can be imported and initialized</p>
+                    <div class="command-box" onclick="copyCommand(this)">python scripts/quest_guide_implementation.py --test test_init</div>
+                </div>
+                <div class="quest-card" id="test_storage">
+                    <h3>test_storage - Storage Structure Test</h3>
+                    <p>Test that storage directories are created correctly</p>
+                    <div class="command-box" onclick="copyCommand(this)">python scripts/quest_guide_implementation.py --test test_storage</div>
+                </div>
+                <div class="quest-card" id="test_models">
+                    <h3>test_models - Protocol Models Test</h3>
+                    <p>Test that Protocol Pydantic models are defined</p>
+                    <div class="command-box" onclick="copyCommand(this)">python scripts/quest_guide_implementation.py --test test_models</div>
+                </div>
+                <div class="quest-card" id="test_fvcu">
+                    <h3>test_fvcu - FVCU Evaluation Test</h3>
+                    <p>Test that FVCU evaluation method exists</p>
+                    <div class="command-box" onclick="copyCommand(this)">python scripts/quest_guide_implementation.py --test test_fvcu</div>
+                </div>
+                <div class="quest-card" id="test_reasoner">
+                    <h3>test_reasoner - Reasoner Integration Test</h3>
+                    <p>Test that Reasoner integration is implemented</p>
+                    <div class="command-box" onclick="copyCommand(this)">python scripts/quest_guide_implementation.py --test test_reasoner</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Copy command to clipboard
+        function copyCommand(element) {
+            const text = element.textContent.trim();
+            navigator.clipboard.writeText(text).then(() => {
+                element.classList.add('copied');
+                showToast('Command copied to clipboard!');
+                setTimeout(() => {
+                    element.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        // Toggle phase collapse
+        function togglePhase(header) {
+            const phase = header.closest('.phase');
+            const content = phase.querySelector('.phase-content');
+            header.classList.toggle('collapsed');
+            content.classList.toggle('collapsed');
+        }
+
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            const questCards = document.querySelectorAll('.quest-card');
+
+            questCards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (text.includes(query)) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        });
+
+        // Filter tags
+        const filterTags = document.querySelectorAll('.filter-tag');
+        filterTags.forEach(tag => {
+            tag.addEventListener('click', () => {
+                filterTags.forEach(t => t.classList.remove('active'));
+                tag.classList.add('active');
+
+                const filter = tag.dataset.filter;
+                const questCards = document.querySelectorAll('.quest-card[data-status]');
+
+                questCards.forEach(card => {
+                    if (filter === 'all') {
+                        card.classList.remove('hidden');
+                    } else {
+                        const status = card.dataset.status;
+                        const statusMap = {
+                            'available': 'available',
+                            'in-progress': 'in_progress',
+                            'completed': 'completed',
+                            'locked': 'locked'
+                        };
+
+                        if (status === statusMap[filter]) {
+                            card.classList.remove('hidden');
+                        } else {
+                            card.classList.add('hidden');
+                        }
+                    }
+                });
+            });
+        });
+
+        // Load progress from JSON file (if exists)
+        async function loadProgress() {
+            try {
+                const response = await fetch('_pantheon/guide/quest_progress.json');
+                if (!response.ok) throw new Error('Progress file not found');
+
+                const progress = await response.json();
+                updateProgress(progress);
+                showToast('Progress loaded!');
+            } catch (error) {
+                showToast('No progress file found. Run the quest script to create one.');
+            }
+        }
+
+        function updateProgress(progress) {
+            let completed = 0;
+            let totalXP = 0;
+
+            Object.keys(progress).forEach(questId => {
+                const quest = progress[questId];
+                const card = document.getElementById(questId);
+                if (!card) return;
+
+                // Update status based on checkpoints and tests
+                const allCheckpoints = card.querySelectorAll('.detail-section:first-of-type a').length;
+                const allTests = card.querySelectorAll('.detail-section:nth-of-type(2) a').length;
+
+                const checkpointsPassed = quest.checkpoints_passed?.length || 0;
+                const testsPassed = quest.tests_passed?.length || 0;
+
+                if (checkpointsPassed === allCheckpoints && testsPassed === allTests && allCheckpoints > 0) {
+                    card.dataset.status = 'completed';
+                    card.querySelector('.quest-status').textContent = 'Completed';
+                    card.querySelector('.quest-status').className = 'quest-status status-completed';
+                    completed++;
+                    totalXP += parseInt(card.querySelector('.xp').textContent.match(/\d+/)[0]);
+                } else if (checkpointsPassed > 0 || testsPassed > 0) {
+                    card.dataset.status = 'in_progress';
+                    card.querySelector('.quest-status').textContent = 'In Progress';
+                    card.querySelector('.quest-status').className = 'quest-status status-in-progress';
+                }
+            });
+
+            // Update stats
+            document.getElementById('stat-completed').textContent = completed;
+            document.getElementById('stat-xp').textContent = totalXP;
+            document.getElementById('progress-bar').style.width = `${(completed / 17) * 100}%`;
+        }
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    // Update active nav link
+                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                if (e.key === 'f') {
+                    e.preventDefault();
+                    searchInput.focus();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

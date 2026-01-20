@@ -1,0 +1,10 @@
+{
+  "ghoul_id": "test_ghoul_001",
+  "name": "TestGhoul",
+  "role": "test_guardian",
+  "type": "ghoul",
+  "created_at": "2026-01-19T02:54:55.261155",
+  "metadata": {
+    "test": true
+  }
+}

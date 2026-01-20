@@ -690,25 +690,42 @@ class RealmColonizationSystem:
             tribe_inspection=tribe_inspection
         )
         
-        # Assimilate data back to TheOneCoreBeing
-        self.the_one_core.assimilate_data(
-            realm_name=realm_name,
-            scout_data={
-                "exploration_result": exploration_result,
-                "military_inspection": military_inspection,
-                "tribe_inspection": tribe_inspection,
-                "scout_id": scout_id
-            },
-            gaps_discovered=scout.scout_data.get("gaps_discovered", []),
-            holes_identified=scout.scout_data.get("holes_identified", [])
-        )
+        # Assimilate data back to TheOneCoreBeing (with safety verification)
+        # CRITICAL: Data is verified as SAFE before assimilation
+        try:
+            self.the_one_core.assimilate_data(
+                realm_name=realm_name,
+                scout_data={
+                    "exploration_result": exploration_result,
+                    "military_inspection": military_inspection,
+                    "tribe_inspection": tribe_inspection,
+                    "scout_id": scout_id
+                },
+                gaps_discovered=scout.scout_data.get("gaps_discovered", []),
+                holes_identified=scout.scout_data.get("holes_identified", []),
+                source_being_id=scout_id
+            )
+        except ValueError as e:
+            # Safety verification failed - log but don't crash
+            # The scouting mission still succeeded, but data wasn't assimilated
+            return {
+                "scout_id": scout_id,
+                "findings": exploration_result.get("findings", []),
+                "gaps_discovered": scout.scout_data.get("gaps_discovered", []),
+                "holes_identified": scout.scout_data.get("holes_identified", []),
+                "findings_path": str(findings_path) if findings_path else None,
+                "assimilation_failed": True,
+                "assimilation_error": str(e),
+                "message": "Scouting completed, but data failed safety verification - NOT assimilated to protect all Beings"
+            }
         
         return {
             "scout_id": scout_id,
             "findings": exploration_result.get("findings", []),
             "gaps_discovered": scout.scout_data.get("gaps_discovered", []),
             "holes_identified": scout.scout_data.get("holes_identified", []),
-            "findings_path": str(findings_path) if findings_path else None
+            "findings_path": str(findings_path) if findings_path else None,
+            "assimilated": True
         }
     
     def _cleanup_partial_colonization(self, created_resources: Dict[str, Any]) -> None:

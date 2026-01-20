@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Pantheon - Field Guide</title>
+    <style>
+        @page {
+            size: letter;
+            margin: 0.75in 0.5in;
+        }
+        
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            font-size: 10pt;
+            line-height: 1.4;
+            color: #000;
+        }
+        
+        .cover {
+            border: 4px double #000;
+            padding: 0.5in;
+            margin-bottom: 0.3in;
+            background: #f5f5f5;
+            text-align: center;
+        }
+        
+        .series-number {
+            font-family: 'Courier New', monospace;
+            font-size: 14pt;
+            font-weight: bold;
+            margin-bottom: 0.2in;
+        }
+        
+        .title {
+            font-family: 'Arial Black', sans-serif;
+            font-size: 24pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 0.2in;
+        }
+        
+        .god-entry {
+            border: 2px solid #000;
+            padding: 0.2in;
+            margin-bottom: 0.2in;
+            page-break-inside: avoid;
+        }
+        
+        .god-name {
+            font-size: 14pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-bottom: 2px solid #000;
+            padding-bottom: 0.1in;
+            margin-bottom: 0.1in;
+        }
+        
+        .god-title {
+            font-size: 11pt;
+            font-weight: bold;
+            margin-bottom: 0.1in;
+        }
+        
+        .god-description {
+            font-size: 9pt;
+            margin-bottom: 0.1in;
+        }
+        
+        .stat-block {
+            background: #f0f0f0;
+            border: 1px solid #000;
+            padding: 0.1in;
+            margin: 0.1in 0;
+            font-family: 'Courier New', monospace;
+            font-size: 8pt;
+        }
+        
+        .abilities {
+            margin-top: 0.1in;
+            padding-top: 0.1in;
+            border-top: 1px solid #000;
+        }
+        
+        .ability-tag {
+            display: inline-block;
+            background: #000;
+            color: #fff;
+            padding: 2pt 6pt;
+            margin: 2pt;
+            font-size: 8pt;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="cover">
+        <div class="series-number">FIELD GUIDE FG-PANTHEON-001</div>
+        <div class="title">The Pantheon</div>
+        <div style="font-size: 12pt; margin-top: 0.2in;">Higher Beings System • WAFT Gods</div>
+    </div>
+    
+    <div id="pantheon-content">
+        <!-- Gods populated by JavaScript -->
+    </div>
+    
+    <script>
+        const pantheonGods = [{"name": "Magistrate", "icon": "\u2696\ufe0f", "title": "God of Precedent and Body of Proof", "description": "Organizes proof cases from _work_efforts/proof_cases/ into Precedent categories, building a Body of Proof over time.", "abilities": ["organize_all_cases", "search_precedents", "get_body_of_proof_summary"], "status": "active", "stats": {"Precedents": "2", "Cases": "2"}}, {"name": "Judge", "icon": "\ud83d\udc68\u200d\u2696\ufe0f", "title": "God of Judgment and Evaluation", "description": "Evaluates organization claims and references the Magistrate's Body of Proof.", "abilities": ["evaluate_claim", "get_judgment_history", "get_judgment_summary"], "status": "active", "stats": {"Judgments": "2"}}, {"name": "The Reasoner", "icon": "\ud83e\udde0", "title": "God of Reasoning Traces", "description": "Maintains traceable reasoning chains showing the 'why' behind decisions.", "abilities": ["create_trace", "get_recent_traces", "build_chain", "search_traces"], "status": "active", "stats": {"Traces": "1"}}, {"name": "The GitHub God", "icon": "\ud83d\udc19", "title": "God of Repository Management", "description": "Maintains repository state, generates rollups, and tracks GitHub operations.", "abilities": ["generate_rollup", "get_repository_state", "get_branch_summary"], "status": "active", "stats": {"Rollups": "7", "Operations": "1"}}, {"name": "The Steward", "icon": "\ud83d\udc8e", "title": "God of Work Efforts", "description": "The divine intelligence that locks, monitors, organizes, and initiates evolutionary cycles.", "abilities": ["/think", "/evolve", "/monitor", "/organize", "/lock", "/unlock", "/status", "/secrets"], "status": "active", "stats": {"System": "pyrite"}}, {"name": "Librarian", "icon": "\ud83d\udcda", "title": "God of Knowledge and Cataloging", "description": "Maintains catalogs and reports. Organizes knowledge and documentation.", "abilities": ["catalog", "organize_reports"], "status": "active", "stats": {"Catalog Items": "1", "Reports": "1"}}, {"name": "Military Brass", "icon": "\ud83c\udf96\ufe0f", "title": "God of Missions and Operations", "description": "Manages missions and briefings. Coordinates military-style operations.", "abilities": ["create_mission", "get_briefings", "missions_registry"], "status": "active", "stats": {"Missions": "2"}}, {"name": "Mission Control", "icon": "\ud83d\ude80", "title": "God of Realm Exploration", "description": "Controls realm scouting and colonization operations.", "abilities": ["realm_scout", "get_realm_status", "control_registry"], "status": "active", "stats": {"Realm Scouts": "3"}}, {"name": "Fae", "icon": "\ud83e\uddda", "title": "God of Quests", "description": "Manages quests and quest registry. Coordinates quest-based activities.", "abilities": ["create_quest", "get_quests", "quests_registry"], "status": "active", "stats": {"Quests": "Active"}}, {"name": "The Village", "icon": "\ud83c\udfd8\ufe0f", "title": "God of Community", "description": "Manages village registry and community activities.", "abilities": ["village_registry"], "status": "active", "stats": {}}, {"name": "Test Runner", "icon": "\ud83e\uddea", "title": "God of Testing", "description": "Manages test execution and test metadata.", "abilities": ["run_tests", "test_metadata"], "status": "active", "stats": {}}, {"name": "External Drive Realm", "icon": "\ud83d\udcbe", "title": "God of External Storage", "description": "Manages external drive realm content and storage routing.", "abilities": ["content_manifest", "realm_registry", "realm_status"], "status": "active", "stats": {"Content Items": "1"}}];
+        
+        function renderPantheon() {
+            const content = document.getElementById('pantheon-content');
+            content.innerHTML = pantheonGods.map(god => `
+                <div class="god-entry">
+                    <div class="god-name">${god.icon} ${god.name}</div>
+                    <div class="god-title">${god.title}</div>
+                    <div class="god-description">${god.description}</div>
+                    ${Object.keys(god.stats).length > 0 ? `
+                        <div class="stat-block">
+                            ${Object.entries(god.stats).map(([k, v]) => `${k}: ${v}`).join(' | ')}
+                        </div>
+                    ` : ''}
+                    ${god.abilities ? `
+                        <div class="abilities">
+                            <strong>ABILITIES:</strong>
+                            ${god.abilities.map(a => `<span class="ability-tag">${a}</span>`).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+        
+        renderPantheon();
+    </script>
+</body>
+</html>
+    
