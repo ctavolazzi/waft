@@ -9,6 +9,7 @@ dist/
 build/
 .venv/
 venv/
+.env*
 
 # IDE
 .vscode/
@@ -40,3 +41,6 @@ visualizer/.env.*
 visualizer/vite.config.js.timestamp-*
 visualizer/vite.config.ts.timestamp-*
 .empirica_reflex_logs/
+
+# Temporary PDF examples (generated outputs)
+_temp_pdf_examples/*.pdf

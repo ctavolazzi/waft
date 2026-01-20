@@ -14,9 +14,21 @@
       "phase": "UNKNOWN",
       "coverage": 0.0,
       "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-01-19T03:02:22.007336",
+      "phase": "UNKNOWN",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-01-19T03:04:06.649609",
+      "phase": "UNKNOWN",
+      "coverage": 0.0,
+      "uncertainty": 1.0
     }
   ],
-  "consultation_count": 2,
+  "consultation_count": 4,
   "first_consultation": "2026-01-19T03:00:23.640968",
-  "last_consultation": "2026-01-19T03:01:17.165001"
+  "last_consultation": "2026-01-19T03:04:06.649609"
 }

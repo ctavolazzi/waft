@@ -1,0 +1,52 @@
+Launch a D&D 5e campaign session using the WAFT D&D infrastructure. 
+
+I want to start a D&D campaign with the following preferences:
+
+**Campaign Mode**: [Choose one]
+- Interactive: Full CLI-based campaign with party management, combat, exploration, and quests
+- Web: Launch the web-based D&D game UI with modern interface (FastAPI + HTML)
+- Scenario: Run AI-driven scenario generation with quest PDF creation
+
+**Campaign Options**:
+- Create a new party of adventurers (or load existing party if available)
+- Start at a specific location (Town, Forest, Cave, Ruins) if in web mode
+- Begin with a specific quest active (Goblin Hunt, Merchant's Delivery, Explore Ancient Ruins) if in web mode
+
+**What I want to do**:
+1. Launch the campaign in my preferred mode
+2. Create or load my party of adventurers
+3. Start playing immediately with all systems available:
+   - Character creation with stat rolling (4d6 drop lowest)
+   - Turn-based combat with D&D 5e rules
+   - Shop system for equipment (weapons, armor, consumables)
+   - Quest system with objectives and rewards
+   - Multiple locations to explore
+   - Spellcasting system (Firebolt, Healing Word, Magic Missile, Cure Wounds)
+   - Save/load functionality
+   - Inventory management
+
+**Expected Features**:
+- Real-time dice rolling using d20 library
+- Full D&D 5e character sheets with ability scores, modifiers, AC, HP
+- Combat system with attack rolls, damage, critical hits
+- Equipment that affects combat stats
+- Quest progression tracking
+- Location-based encounters and events
+- Persistent game state (save/load)
+
+**If using Scenario Mode**:
+- Generate encounter, exploration, or lore scenarios
+- Create quest PDFs using Typst templates (wenyuan-campaign template)
+- Save scenario results and party state
+
+**Technical Requirements**:
+- Use existing WAFT D&D systems: DnD5eCharacter, DnDRoller, DnD5eCombat
+- For web mode: Start FastAPI server on port 8003 and open browser
+- For interactive mode: Use examples/interactive_dnd_game.py
+- For scenario mode: Use ScenarioRealm, ScenarioOrchestrator, QuestPDFGenerator
+- Integrate with party management system if available
+
+**Launch Command**:
+Use the `/dnd-campaign` command with appropriate options, or run `scripts/launch_dnd_campaign.py` directly.
+
+Please launch the campaign now and get me started playing!

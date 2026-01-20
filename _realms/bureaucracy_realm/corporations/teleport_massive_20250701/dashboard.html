@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teleport Massive Corporation - Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #ffffff;
+            padding: 20px;
+            color: #000000;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            border: 2px solid #000000;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: #f0f0f0;
+        }
+        
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .grid {
+            display: table;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        .card {
+            border: 1px solid #000000;
+            padding: 15px;
+            margin-bottom: 20px;
+            background: #ffffff;
+        }
+        
+        .card h2 {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #000000;
+            padding-bottom: 5px;
+        }
+        
+        .stat {
+            padding: 8px 0;
+            border-bottom: 1px solid #cccccc;
+        }
+        
+        .stat:last-child {
+            border-bottom: none;
+        }
+        
+        .stat-label {
+            display: inline-block;
+            width: 200px;
+        }
+        
+        .stat-value {
+            font-weight: bold;
+        }
+        
+        .full-width {
+            width: 100%;
+        }
+        
+        .employee-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .employee-item {
+            padding: 10px;
+            border: 1px solid #cccccc;
+            margin-bottom: 5px;
+        }
+        
+        .employee-name {
+            font-weight: bold;
+        }
+        
+        .transaction-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .transaction-item {
+            padding: 10px;
+            border: 1px solid #cccccc;
+            margin-bottom: 5px;
+        }
+        
+        .transaction-header {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .invoice-grid {
+            display: table;
+            width: 100%;
+        }
+        
+        .invoice-item {
+            display: inline-block;
+            padding: 10px;
+            border: 1px solid #cccccc;
+            margin: 5px;
+            width: 200px;
+        }
+        
+        .badge {
+            padding: 2px 8px;
+            border: 1px solid #000000;
+            font-size: 0.9em;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            border: 1px solid #000000;
+            background: #ffffff;
+            margin-top: 8px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #000000;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 10px;
+            border-top: 1px solid #000000;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        th, td {
+            border: 1px solid #000000;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        th {
+            background: #f0f0f0;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Teleport Massive Corporation</h1>
+            <div>Quantum Teleportation Technology | Founded July 1, 2025</div>
+        </div>
+        
+        <div>
+            <!-- Financial Overview -->
+            <div class="card">
+                <h2>💰 Financial Overview</h2>
+                <div class="stat">
+                    <span class="stat-label">Cash Balance</span>
+                    <span class="stat-value money" id="cash-balance">Loading...</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Total Assets</span>
+                    <span class="stat-value money" id="total-assets">Loading...</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Equity</span>
+                    <span class="stat-value money" id="equity">Loading...</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Revenue</span>
+                    <span class="stat-value money positive" id="revenue">Loading...</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Expenses</span>
+                    <span class="stat-value money negative" id="expenses">Loading...</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Net Income</span>
+                    <span class="stat-value money" id="net-income">Loading...</span>
+                </div>
+            </div>
+            
+            <!-- Financial Health -->
+            <div class="card">
+                <h2>Financial Health</h2>
+                <div class="stat">
+                    <span class="stat-label">Monthly Burn Rate</span>
+                    <span class="stat-value money" id="burn-rate">Loading...</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Runway</span>
+                    <span class="stat-value" id="runway">Loading...</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Status</span>
+                    <span class="badge success" id="status-badge">Operational</span>
+                </div>
+                <div id="runway-progress" style="margin-top: 16px;">
+                    <div class="stat-label">Runway Progress</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="runway-progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Organization -->
+            <div class="card">
+                <h2>👥 Organization</h2>
+                <div class="stat">
+                    <span class="stat-label">Total Employees</span>
+                    <span class="stat-value" id="employee-count">Loading...</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Departments</span>
+                    <span class="stat-value" id="department-count">Loading...</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Monthly Payroll</span>
+                    <span class="stat-value money" id="monthly-payroll">Loading...</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Employees -->
+        <div class="card full-width">
+            <h2>Employees</h2>
+            <ul class="employee-list" id="employee-list">
+                <li>Loading employees...</li>
+            </ul>
+        </div>
+        
+        <!-- Transactions -->
+        <div class="card full-width">
+            <h2>📋 Recent Transactions</h2>
+            <div class="transaction-list" id="transaction-list">
+                <div>Loading transactions...</div>
+            </div>
+        </div>
+        
+        <!-- Invoices -->
+        <div class="card full-width">
+            <h2>Generated Invoices</h2>
+            <div class="invoice-grid" id="invoice-grid">
+                <div>Loading invoices...</div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Teleport Massive Corporation Dashboard | Generated: <span id="generated-time"></span></p>
+        </div>
+    </div>
+    
+    <script>
+        // Load data from JSON files
+        async function loadData() {
+            try {
+                // Load corporate manifest
+                const manifestResponse = await fetch('corporate_manifest.json');
+                const manifest = await manifestResponse.json();
+                
+                // Load financial ledger
+                const ledgerResponse = await fetch('financials/ledger.json');
+                const ledger = await ledgerResponse.json();
+                
+                // Load founders
+                const foundersResponse = await fetch('founders.json');
+                const founders = await foundersResponse.json();
+                
+                // Update UI
+                updateFinancials(manifest.financial_state, ledger);
+                updateOrganization(manifest);
+                updateEmployees(manifest.employees);
+                updateTransactions(ledger.transactions || []);
+                updateInvoices();
+                
+                document.getElementById('generated-time').textContent = new Date().toLocaleString();
+            } catch (error) {
+                console.error('Error loading data:', error);
+                document.body.innerHTML = '<div style="padding: 40px; text-align: center; color: white;"><h1>Error Loading Data</h1><p>Please ensure you are viewing this file from the correct directory.</p></div>';
+            }
+        }
+        
+        function formatMoney(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(amount);
+        }
+        
+        function updateFinancials(financial, ledger) {
+            const cash = financial?.cash || 0;
+            const revenue = financial?.revenue || 0;
+            const expenses = financial?.expenses || 0;
+            const equity = financial?.equity || 0;
+            const totalAssets = (financial?.cash || 0) + (financial?.assets ? Object.values(financial.assets).reduce((a, b) => a + b, 0) : 0);
+            const netIncome = revenue - expenses;
+            const burnRate = financial?.expenses || 0;
+            const runway = cash > 0 && burnRate > 0 ? (cash / burnRate).toFixed(1) : 'N/A';
+            
+            document.getElementById('cash-balance').textContent = formatMoney(cash);
+            document.getElementById('total-assets').textContent = formatMoney(totalAssets);
+            document.getElementById('equity').textContent = formatMoney(equity);
+            document.getElementById('revenue').textContent = formatMoney(revenue);
+            document.getElementById('expenses').textContent = formatMoney(expenses);
+            document.getElementById('net-income').textContent = formatMoney(netIncome);
+            document.getElementById('burn-rate').textContent = formatMoney(burnRate);
+            
+            if (runway !== 'N/A') {
+                document.getElementById('runway').textContent = `${runway} months`;
+                const progress = Math.min(100, (cash / (burnRate * 12)) * 100);
+                document.getElementById('runway-progress-fill').style.width = `${progress}%`;
+            } else {
+                document.getElementById('runway').textContent = 'Profitability';
+                document.getElementById('runway-progress-fill').style.width = '100%';
+            }
+        }
+        
+        function updateOrganization(manifest) {
+            document.getElementById('employee-count').textContent = manifest.employees?.length || 0;
+            document.getElementById('department-count').textContent = manifest.departments?.length || 0;
+            
+            // Calculate monthly payroll
+            const monthlyPayroll = (manifest.employees || []).reduce((sum, emp) => {
+                const salary = emp.salary || 0;
+                return sum + (salary / 12);
+            }, 0);
+            document.getElementById('monthly-payroll').textContent = formatMoney(monthlyPayroll);
+        }
+        
+        function updateEmployees(employees) {
+            const list = document.getElementById('employee-list');
+            if (!employees || employees.length === 0) {
+                list.innerHTML = '<li>No employees found</li>';
+                return;
+            }
+            
+            list.innerHTML = employees.map(emp => `
+                <li class="employee-item">
+                    <div class="employee-info">
+                        <div class="employee-name">${emp.title || 'Employee'}</div>
+                        <div class="employee-role">${emp.department || 'N/A'} • Level ${emp.level || 1}</div>
+                    </div>
+                    <div class="employee-salary">${emp.salary ? formatMoney(emp.salary / 12) + '/mo' : 'TBD'}</div>
+                </li>
+            `).join('');
+        }
+        
+        function updateTransactions(transactions) {
+            const list = document.getElementById('transaction-list');
+            if (!transactions || transactions.length === 0) {
+                list.innerHTML = '<div>No transactions found</div>';
+                return;
+            }
+            
+            // Show last 20 transactions
+            const recent = transactions.slice(-20).reverse();
+            
+            list.innerHTML = recent.map(txn => {
+                const type = (txn.transaction_type || '').replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                const amount = txn.amount || 0;
+                const date = txn.timestamp ? new Date(txn.timestamp).toLocaleDateString() : 'N/A';
+                
+                return `
+                    <div class="transaction-item">
+                        <div class="transaction-header">
+                            <span class="transaction-type">${type}</span>
+                            <span class="transaction-amount">${formatMoney(amount)}</span>
+                        </div>
+                        <div class="transaction-details">
+                            ${txn.description || 'No description'} • ${date}
+                            ${txn.to_party ? `<br>To: ${txn.to_party}` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function updateInvoices() {
+            const grid = document.getElementById('invoice-grid');
+            // This would need to scan the invoices directory
+            // For now, show a message
+            grid.innerHTML = '<div class="invoice-item"><div class="invoice-name">Check invoices/ directory for generated invoice files</div></div>';
+        }
+        
+        // Load data on page load
+        loadData();
+    </script>
+</body>
+</html>

@@ -22,6 +22,7 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 from src.waft.pantheon import PaperworkGod, Skurl
+from src.waft.pantheon.financial_documents import FinancialDocumentsManager
 
 
 class PaperworkGodUIHandler(BaseHTTPRequestHandler):
@@ -29,6 +30,7 @@ class PaperworkGodUIHandler(BaseHTTPRequestHandler):
     
     def __init__(self, *args, **kwargs):
         self.paperwork_god = PaperworkGod()
+        self.financial_manager = FinancialDocumentsManager()
         super().__init__(*args, **kwargs)
     
     def do_GET(self):
@@ -129,6 +131,36 @@ class PaperworkGodUIHandler(BaseHTTPRequestHandler):
             "goblins": goblins,
             "ghouls": ghouls
         })
+    
+    def serve_api_budgets(self, query):
+        """Serve budgets API."""
+        if 'id' in query:
+            # Get specific budget
+            budget_id = query['id'][0]
+            budget = self.financial_manager.load_budget(budget_id)
+            if budget:
+                self.send_json_response(budget.to_dict())
+            else:
+                self.send_error(404, "Budget not found")
+        else:
+            # List all budgets
+            budgets = self.financial_manager.list_budgets()
+            self.send_json_response([b.to_dict() for b in budgets])
+    
+    def serve_api_balance_sheets(self, query):
+        """Serve balance sheets API."""
+        if 'id' in query:
+            # Get specific balance sheet
+            bs_id = query['id'][0]
+            bs = self.financial_manager.load_balance_sheet(bs_id)
+            if bs:
+                self.send_json_response(bs.to_dict())
+            else:
+                self.send_error(404, "Balance sheet not found")
+        else:
+            # List all balance sheets
+            balance_sheets = self.financial_manager.list_balance_sheets()
+            self.send_json_response([bs.to_dict() for bs in balance_sheets])
     
     def handle_register_paperwork(self):
         """Handle paperwork registration."""
@@ -436,6 +468,16 @@ class PaperworkGodUIHandler(BaseHTTPRequestHandler):
         
         <div class="content-grid">
             <div class="section">
+                <h2>💰 Budgets</h2>
+                <div id="budgets-list" class="loading">Loading...</div>
+            </div>
+            
+            <div class="section">
+                <h2>📊 Balance Sheets</h2>
+                <div id="balance-sheets-list" class="loading">Loading...</div>
+            </div>
+            
+            <div class="section">
                 <h2>📄 Paperwork Registry</h2>
                 <div id="paperwork-list" class="loading">Loading...</div>
             </div>
@@ -564,9 +606,78 @@ class PaperworkGodUIHandler(BaseHTTPRequestHandler):
             }
         }
         
+        async function loadBudgets() {
+            try {
+                const budgets = await fetchJSON('/api/budgets');
+                const list = document.getElementById('budgets-list');
+                
+                if (budgets.length === 0) {
+                    list.innerHTML = '<p style="color: #666; text-align: center;">No budgets available</p>';
+                    return;
+                }
+                
+                list.innerHTML = budgets.map(budget => {
+                    const variance = parseFloat(budget.totals.variance);
+                    const variancePercent = budget.totals.variance_percent;
+                    const varianceColor = variance < 0 ? '#28a745' : variance > 0 ? '#dc3545' : '#666';
+                    
+                    return `
+                        <div class="list-item">
+                            <h4>${budget.name}</h4>
+                            <p><strong>Period:</strong> ${new Date(budget.period_start).toLocaleDateString()} - ${new Date(budget.period_end).toLocaleDateString()}</p>
+                            <p><strong>Budgeted:</strong> $${parseFloat(budget.totals.budgeted).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+                            <p><strong>Actual:</strong> $${parseFloat(budget.totals.actual).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+                            <p style="color: ${varianceColor};"><strong>Variance:</strong> $${Math.abs(variance).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} (${Math.abs(variancePercent).toFixed(1)}%)</p>
+                            <p><strong>Items:</strong> ${budget.items.length} line items</p>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                document.getElementById('budgets-list').innerHTML = 
+                    `<div class="error">Failed to load budgets: ${error.message}</div>`;
+            }
+        }
+        
+        async function loadBalanceSheets() {
+            try {
+                const balanceSheets = await fetchJSON('/api/balance_sheets');
+                const list = document.getElementById('balance-sheets-list');
+                
+                if (balanceSheets.length === 0) {
+                    list.innerHTML = '<p style="color: #666; text-align: center;">No balance sheets available</p>';
+                    return;
+                }
+                
+                list.innerHTML = balanceSheets.map(bs => {
+                    const isBalanced = bs.totals.is_balanced;
+                    const balanceColor = isBalanced ? '#28a745' : '#dc3545';
+                    
+                    return `
+                        <div class="list-item">
+                            <h4>${bs.name}</h4>
+                            <p><strong>As of:</strong> ${new Date(bs.as_of_date).toLocaleDateString()}</p>
+                            <p><strong>Total Assets:</strong> $${parseFloat(bs.totals.assets).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+                            <p><strong>Total Liabilities:</strong> $${parseFloat(bs.totals.liabilities).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+                            <p><strong>Total Equity:</strong> $${parseFloat(bs.totals.equity).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+                            <p><strong>Liabilities + Equity:</strong> $${parseFloat(bs.totals.liabilities_plus_equity).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+                            <p style="color: ${balanceColor}; font-weight: bold;">
+                                ${isBalanced ? '✅ Balanced' : '❌ Not Balanced'}
+                            </p>
+                            <p><strong>Items:</strong> ${bs.items.length} accounts</p>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                document.getElementById('balance-sheets-list').innerHTML = 
+                    `<div class="error">Failed to load balance sheets: ${error.message}</div>`;
+            }
+        }
+        
         async function loadAll() {
             await Promise.all([
                 loadSummary(),
+                loadBudgets(),
+                loadBalanceSheets(),
                 loadPaperwork(),
                 loadObstacles(),
                 loadCreatures()

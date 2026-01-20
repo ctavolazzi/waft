@@ -718,10 +718,11 @@ Every session contributes to WAFT's evolutionary record. This report serves as a
     def _open_pdf(self, pdf_path: Path):
         """Open PDF in default viewer."""
         try:
+            import os
             if platform.system() == "Darwin":  # macOS
                 subprocess.run(["open", str(pdf_path)], check=True)
             elif platform.system() == "Windows":
-                subprocess.run(["start", str(pdf_path)], shell=True, check=True)
+                os.startfile(str(pdf_path))
             else:  # Linux
                 subprocess.run(["xdg-open", str(pdf_path)], check=True)
         except subprocess.CalledProcessError:

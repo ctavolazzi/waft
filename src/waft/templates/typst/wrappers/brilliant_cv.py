@@ -80,7 +80,7 @@ location = "{personal['location']}"
 {_format_optional_field('linkedin', personal.get('linkedin'))}
 
 [layout]
-main-color = "#0044cc"
+main-color = "0044cc"
 font = "Roboto"
 {_format_optional_field('font-alt', None)}
 
@@ -97,7 +97,7 @@ def _format_optional_field(key: str, value: Optional[str]) -> str:
     """Format optional TOML field."""
     if value:
         return f'{key} = "{value}"'
-    return f'# {key} = ""  # Optional'
+    return ''  # Don't include commented fields - Typst doesn't like them
 
 
 def _create_cv_typ(language: str, cv_data: Dict[str, Any]) -> str:
@@ -105,30 +105,28 @@ def _create_cv_typ(language: str, cv_data: Dict[str, Any]) -> str:
     personal = cv_data["personal"]
     return f"""#import "@preview/brilliant-cv:3.1.1": *
 
-#let metadata = (
-  personal: (
-    firstname: "{personal['firstname']}",
-    lastname: "{personal['lastname']}",
-    email: "{personal['email']}",
-    location: "{personal['location']}",
-  ),
-  layout: (
-    main-color: "#0044cc",
-  ),
-)
-
-#show: cv.with(
-  author: metadata.personal,
-  main-color: rgb(metadata.layout.main-color),
-)
-
 #import "modules_{language}/experience.typ": *
 #import "modules_{language}/skills.typ": *
 #import "modules_{language}/education.typ": *
 
-#experience
-#skills
-#education
+#let doc = [
+  #experience
+  #skills
+  #education
+]
+
+#show: doc => cv(
+  doc,
+  metadata: (
+    personal: (
+      firstname: "{personal['firstname']}",
+      lastname: "{personal['lastname']}",
+      email: "{personal['email']}",
+      location: "{personal['location']}",
+    ),
+  ),
+  main-color: rgb("#0044cc"),
+)
 """
 
 

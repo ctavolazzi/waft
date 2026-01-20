@@ -8,19 +8,19 @@
     {
       "name": "Executive",
       "department_id": "dept_executive",
-      "created_at": "2026-01-19T11:00:49.050862",
+      "created_at": "2026-01-19T11:02:10.747601",
       "employees": []
     },
     {
       "name": "Research & Development",
       "department_id": "dept_research_&_development",
-      "created_at": "2026-01-19T11:00:49.051602",
+      "created_at": "2026-01-19T11:02:10.749028",
       "employees": []
     },
     {
       "name": "Operations",
       "department_id": "dept_operations",
-      "created_at": "2026-01-19T11:00:49.052337",
+      "created_at": "2026-01-19T11:02:10.751924",
       "employees": []
     }
   ],
@@ -84,21 +84,41 @@
       "salary": 180000.0,
       "hired_at": "2026-01-19T11:00:49.049126",
       "status": "active"
+    },
+    {
+      "being_id": "being_20260119_030145_f8e06283",
+      "role": "CTO",
+      "department": "Executive",
+      "title": "Chief Technology Officer & Co-Founder",
+      "level": 10,
+      "salary": 180000.0,
+      "hired_at": "2026-01-19T11:01:45.098049",
+      "status": "active"
+    },
+    {
+      "being_id": "being_20260119_030210_f8e06283",
+      "role": "CTO",
+      "department": "Executive",
+      "title": "Chief Technology Officer & Co-Founder",
+      "level": 10,
+      "salary": 180000.0,
+      "hired_at": "2026-01-19T11:02:10.741066",
+      "status": "active"
     }
   ],
   "financial_state": {
-    "cash": 3520000.0,
+    "cash": 3070000.0,
     "assets": {},
     "liabilities": {},
-    "equity": 3520000.0,
+    "equity": 3070000.0,
     "revenue": 2000000.0,
-    "expenses": 240000.0,
-    "net_income": 1760000.0,
-    "total_assets": 3520000.0,
+    "expenses": 465000.0,
+    "net_income": 1535000.0,
+    "total_assets": 3070000.0,
     "total_liabilities": 0.0,
-    "burn_rate": 90000.0,
-    "runway_months": 39.111111111111114,
-    "last_updated": "2026-01-19T11:00:49.092401",
-    "transaction_count": 12
+    "burn_rate": 120000.0,
+    "runway_months": 25.583333333333332,
+    "last_updated": "2026-01-19T11:02:10.851036",
+    "transaction_count": 16
   }
 }

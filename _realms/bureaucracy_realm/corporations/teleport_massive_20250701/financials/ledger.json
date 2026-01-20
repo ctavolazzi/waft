@@ -240,14 +240,239 @@
       },
       "invoice_id": null,
       "invoice_path": null
+    },
+    {
+      "transaction_id": "txn_e0a7c1b3_20250731",
+      "transaction_type": "salary",
+      "amount": 15000.0,
+      "description": "Payroll payment for being_20260119_025316_f8e06283",
+      "from_party": "corporation",
+      "to_party": "being_20260119_025316_f8e06283",
+      "timestamp": "2026-01-19T11:01:45.135630",
+      "metadata": {
+        "period": "monthly",
+        "employee_id": "being_20260119_025316_f8e06283"
+      },
+      "invoice_id": null,
+      "invoice_path": null
+    },
+    {
+      "transaction_id": "txn_b0b96517_20250731",
+      "transaction_type": "salary",
+      "amount": 15000.0,
+      "description": "Payroll payment for being_20260119_025355_f8e06283",
+      "from_party": "corporation",
+      "to_party": "being_20260119_025355_f8e06283",
+      "timestamp": "2026-01-19T11:01:45.138441",
+      "metadata": {
+        "period": "monthly",
+        "employee_id": "being_20260119_025355_f8e06283"
+      },
+      "invoice_id": null,
+      "invoice_path": null
+    },
+    {
+      "transaction_id": "txn_b7aae442_20250731",
+      "transaction_type": "salary",
+      "amount": 15000.0,
+      "description": "Payroll payment for being_20260119_025414_f8e06283",
+      "from_party": "corporation",
+      "to_party": "being_20260119_025414_f8e06283",
+      "timestamp": "2026-01-19T11:01:45.140850",
+      "metadata": {
+        "period": "monthly",
+        "employee_id": "being_20260119_025414_f8e06283"
+      },
+      "invoice_id": null,
+      "invoice_path": null
+    },
+    {
+      "transaction_id": "txn_8b1ccd50_20250731",
+      "transaction_type": "salary",
+      "amount": 15000.0,
+      "description": "Payroll payment for being_20260119_025923_f8e06283",
+      "from_party": "corporation",
+      "to_party": "being_20260119_025923_f8e06283",
+      "timestamp": "2026-01-19T11:01:45.142942",
+      "metadata": {
+        "period": "monthly",
+        "employee_id": "being_20260119_025923_f8e06283"
+      },
+      "invoice_id": null,
+      "invoice_path": null
+    },
+    {
+      "transaction_id": "txn_3cbcdd21_20250731",
+      "transaction_type": "salary",
+      "amount": 15000.0,
+      "description": "Payroll payment for being_20260119_030048_f8e06283",
+      "from_party": "corporation",
+      "to_party": "being_20260119_030048_f8e06283",
+      "timestamp": "2026-01-19T11:01:45.145317",
+      "metadata": {
+        "period": "monthly",
+        "employee_id": "being_20260119_030048_f8e06283"
+      },
+      "invoice_id": null,
+      "invoice_path": null
+    },
+    {
+      "transaction_id": "txn_2006c8dc_20250731",
+      "transaction_type": "salary",
+      "amount": 15000.0,
+      "description": "Payroll payment for being_20260119_030049_f8e06283",
+      "from_party": "corporation",
+      "to_party": "being_20260119_030049_f8e06283",
+      "timestamp": "2026-01-19T11:01:45.147956",
+      "metadata": {
+        "period": "monthly",
+        "employee_id": "being_20260119_030049_f8e06283"
+      },
+      "invoice_id": null,
+      "invoice_path": null
+    },
+    {
+      "transaction_id": "txn_cc624eb7_20250731",
+      "transaction_type": "salary",
+      "amount": 15000.0,
+      "description": "Payroll payment for being_20260119_030145_f8e06283",
+      "from_party": "corporation",
+      "to_party": "being_20260119_030145_f8e06283",
+      "timestamp": "2026-01-19T11:01:45.150373",
+      "metadata": {
+        "period": "monthly",
+        "employee_id": "being_20260119_030145_f8e06283"
+      },
+      "invoice_id": null,
+      "invoice_path": null
+    },
+    {
+      "transaction_id": "txn_dde2d039_20250731",
+      "transaction_type": "salary",
+      "amount": 15000.0,
+      "description": "Payroll payment for being_20260119_025316_f8e06283",
+      "from_party": "corporation",
+      "to_party": "being_20260119_025316_f8e06283",
+      "timestamp": "2026-01-19T11:02:10.795876",
+      "metadata": {
+        "period": "monthly",
+        "employee_id": "being_20260119_025316_f8e06283"
+      },
+      "invoice_id": null,
+      "invoice_path": null
+    },
+    {
+      "transaction_id": "txn_60434b09_20250731",
+      "transaction_type": "salary",
+      "amount": 15000.0,
+      "description": "Payroll payment for being_20260119_025355_f8e06283",
+      "from_party": "corporation",
+      "to_party": "being_20260119_025355_f8e06283",
+      "timestamp": "2026-01-19T11:02:10.800119",
+      "metadata": {
+        "period": "monthly",
+        "employee_id": "being_20260119_025355_f8e06283"
+      },
+      "invoice_id": null,
+      "invoice_path": null
+    },
+    {
+      "transaction_id": "txn_874263d6_20250731",
+      "transaction_type": "salary",
+      "amount": 15000.0,
+      "description": "Payroll payment for being_20260119_025414_f8e06283",
+      "from_party": "corporation",
+      "to_party": "being_20260119_025414_f8e06283",
+      "timestamp": "2026-01-19T11:02:10.803106",
+      "metadata": {
+        "period": "monthly",
+        "employee_id": "being_20260119_025414_f8e06283"
+      },
+      "invoice_id": null,
+      "invoice_path": null
+    },
+    {
+      "transaction_id": "txn_3dba9dca_20250731",
+      "transaction_type": "salary",
+      "amount": 15000.0,
+      "description": "Payroll payment for being_20260119_025923_f8e06283",
+      "from_party": "corporation",
+      "to_party": "being_20260119_025923_f8e06283",
+      "timestamp": "2026-01-19T11:02:10.806725",
+      "metadata": {
+        "period": "monthly",
+        "employee_id": "being_20260119_025923_f8e06283"
+      },
+      "invoice_id": null,
+      "invoice_path": null
+    },
+    {
+      "transaction_id": "txn_8e202445_20250731",
+      "transaction_type": "salary",
+      "amount": 15000.0,
+      "description": "Payroll payment for being_20260119_030048_f8e06283",
+      "from_party": "corporation",
+      "to_party": "being_20260119_030048_f8e06283",
+      "timestamp": "2026-01-19T11:02:10.817007",
+      "metadata": {
+        "period": "monthly",
+        "employee_id": "being_20260119_030048_f8e06283"
+      },
+      "invoice_id": null,
+      "invoice_path": null
+    },
+    {
+      "transaction_id": "txn_1e1cdbe1_20250731",
+      "transaction_type": "salary",
+      "amount": 15000.0,
+      "description": "Payroll payment for being_20260119_030049_f8e06283",
+      "from_party": "corporation",
+      "to_party": "being_20260119_030049_f8e06283",
+      "timestamp": "2026-01-19T11:02:10.819225",
+      "metadata": {
+        "period": "monthly",
+        "employee_id": "being_20260119_030049_f8e06283"
+      },
+      "invoice_id": null,
+      "invoice_path": null
+    },
+    {
+      "transaction_id": "txn_ce926571_20250731",
+      "transaction_type": "salary",
+      "amount": 15000.0,
+      "description": "Payroll payment for being_20260119_030145_f8e06283",
+      "from_party": "corporation",
+      "to_party": "being_20260119_030145_f8e06283",
+      "timestamp": "2026-01-19T11:02:10.822188",
+      "metadata": {
+        "period": "monthly",
+        "employee_id": "being_20260119_030145_f8e06283"
+      },
+      "invoice_id": null,
+      "invoice_path": null
+    },
+    {
+      "transaction_id": "txn_88446b39_20250731",
+      "transaction_type": "salary",
+      "amount": 15000.0,
+      "description": "Payroll payment for being_20260119_030210_f8e06283",
+      "from_party": "corporation",
+      "to_party": "being_20260119_030210_f8e06283",
+      "timestamp": "2026-01-19T11:02:10.849759",
+      "metadata": {
+        "period": "monthly",
+        "employee_id": "being_20260119_030210_f8e06283"
+      },
+      "invoice_id": null,
+      "invoice_path": null
     }
   ],
   "accounts": {
-    "cash": -240000.0,
+    "cash": -465000.0,
     "revenue": 0.0,
     "expenses": 0.0,
     "equity": 0.0,
-    "salary_expense": 240000.0
+    "salary_expense": 465000.0
   },
-  "last_updated": "2026-01-19T11:00:49.091081"
+  "last_updated": "2026-01-19T11:02:10.849874"
 }

@@ -10,21 +10,21 @@
   myfont: "IBM Plex Sans"
 )
 
-= Executive Summary
+= "Executive" "Summary"
 
 #dropcappara(firstline: "WAFT represents a paradigm shift in artificial intelligence research.")[
-  We are building the first comprehensive framework for directed evolution of self-modifying "AI" agents—a scientific instrument designed to unlock the physics of artificial cognition. Unlike traditional "AI" development, WAFT enables agents to evolve their own code, adapt through genetic mutations, and be tested in rigorous fitness environments. Our goal is to observe emergent intelligence through thousands of generations of directed evolution, producing groundbreaking "research" data and potentially revolutionary "AI" capabilities.
+  "We"  are building the first comprehensive framework for directed evolution of self-modifying "AI" agents—a scientific instrument designed to unlock the physics of artificial cognition. Unlike traditional "AI" development, WAFT enables agents to evolve their own code, adapt through genetic mutations, and be tested in rigorous fitness environments. Our goal is to observe emergent intelligence through thousands of generations of directed evolution, producing groundbreaking "research" data and potentially revolutionary "AI" capabilities.
 ]
 
 #authorwrap(
   authorimage: image("author.png", height: 3cm),
   authorcaption: "WAFT Development Team, Research & Innovation")[
-  We are seeking funding to accelerate development of this revolutionary framework, expand our "research" capabilities, and produce publication-ready scientific data on artificial cognition. With support from forward-thinking funders, we can advance the frontier of "AI" "research" and contribute to humanity's understanding of intelligence itself.
+  "We"  are seeking funding to accelerate development of this revolutionary framework, expand our "research" capabilities, and produce publication-ready scientific data on artificial cognition. With support from forward-thinking funders, we can advance the frontier of "AI" "research" and contribute to humanity's understanding of intelligence itself.
 ]
 
-This proposal outlines our vision, scientific approach, "market" "opportunity", and funding requirements. We invite you to join us in this groundbreaking journey toward understanding and creating truly adaptive artificial intelligence.
+"This"  proposal outlines our vision, scientific approach, "market" "opportunity", and funding requirements. We invite you to join us in this groundbreaking journey toward understanding and creating truly adaptive artificial intelligence.
 
-=== Document Control
+=== "Document" "Control"
 
 #align(center)[
   #table(
@@ -39,11 +39,11 @@ This proposal outlines our vision, scientific approach, "market" "opportunity", 
   )
 ]
 
-= The Problem: Limitations of Current "AI"
+= "The" "Problem": "Limitations" of "Current" "AI"
 
 Current artificial intelligence systems face fundamental limitations that prevent true adaptation and evolution. These limitations represent both a scientific challenge and a "market" "opportunity".
 
-== Static Intelligence
+== "Static" "Intelligence"
 
 Traditional "AI" systems are fundamentally static:
 
@@ -58,20 +58,20 @@ Traditional "AI" systems are fundamentally static:
   Current "AI" systems cannot evolve. They are frozen in time, unable to adapt to new challenges or improve themselves. This represents a fundamental limitation in our quest for truly intelligent systems.
 ]
 
-== The Training Bottleneck
+== "The" "Training" "Bottleneck"
 
-The current paradigm requires massive resources:
+"The"  current paradigm requires massive resources:
 
 - "Billions" of dollars in compute costs
 - "Months" or years of training time
 - "Massive" datasets
 - "Continuous" human intervention
 
-This approach is unsustainable and limits innovation to organizations with massive resources.
+"This"  approach is unsustainable and limits innovation to organizations with massive resources.
 
-== Lack of "Scientific" Understanding
+== "Lack" of "Scientific" Understanding
 
-We lack fundamental understanding of:
+"We"  lack fundamental understanding of:
 
 - "How" intelligence emerges
 - "What" makes "AI" systems robust
@@ -80,11 +80,11 @@ We lack fundamental understanding of:
 
 Without this understanding, we're building in the dark.
 
-= The Solution: WAFT Framework
+= "The" "Solution": WAFT "Framework"
 
 "WAFT" (Wave Agent Framework & "Tools") solves these problems through a revolutionary approach: #strong[directed evolution of self-modifying "AI" agents].
 
-== Core Innovation
+== "Core" "Innovation"
 
 "WAFT" enables "AI" agents to:
 
@@ -93,13 +93,13 @@ Without this understanding, we're building in the dark.
 - #strong[Adapt in real-time] (hot-swapping genomes)
 - #strong[Reproduce and branch] (creating evolutionary lineages)
 
-This is not incremental improvement—it's a fundamental shift in how we approach "AI" development.
+"This"  is not incremental improvement—it's a fundamental shift in how we approach "AI" development.
 
-== The Three Pillars
+== "The" "Three" "Pillars"
 
 "WAFT" is built on three revolutionary pillars:
 
-=== Pillar 1: The Substrate (Code as DNA)
+=== "Pillar" 1: "The" "Substrate" ("Code" as DNA)
 
 Agents write their own Python source code. Every agent has a unique genome (SHA-256 hash), and mutations are modifications to this genome. This enables:
 
@@ -108,9 +108,9 @@ Agents write their own Python source code. Every agent has a unique genome (SHA-
 - "Evolutionary" branching
 - "Complete" lineage tracking
 
-=== Pillar 2: The Physics (Reality Fracture Detection)
+=== "Pillar" 2: "The" "Physics" ("Reality" "Fracture" "Detection")
 
-The Scint System acts as natural selection, testing agents on their ability to handle:
+"The"  Scint System acts as natural selection, testing agents on their ability to handle:
 
 - #strong[SYNTAX_TEAR]: "Formatting" errors
 - #strong[LOGIC_FRACTURE]: "Math" errors, contradictions
@@ -119,7 +119,7 @@ The Scint System acts as natural selection, testing agents on their ability to h
 
 Agents must stabilize these "reality fractures" to survive, creating a rigorous fitness function.
 
-=== Pillar 3: The Flight Recorder
+=== "Pillar" 3: "The" "Flight" "Recorder"
 
 Complete telemetry system for generating phylogenetic trees:
 
@@ -145,9 +145,9 @@ The "market" for adaptive "AI" systems is massive and growing rapidly.
 - #emph[Scientific "Computing"]: $"50+ billion market"
 - #emph[Enterprise AI]: $"200+ billion opportunity"
 
-== Target Markets
+== "Target" "Markets"
 
-=== Academic "Research"
+=== "Academic" "Research"
 
 - "Universities" and "research" institutions
 - "Government" "research" "labs"
@@ -182,134 +182,134 @@ The "market" for adaptive "AI" systems is massive and growing rapidly.
 
 = "Scientific" "Value" and "Research" "Impact"
 
-#text[WAFT] is designed to produce groundbreaking scientific research on artificial cognition.
+"The WAFT framework is designed to produce groundbreaking scientific research on artificial cognition."
 
-== "Research" Goals
+== "Research" "Goals"
 
-Our primary "research" objectives:
+"Our primary research objectives:"
 
-1. #strong[Understand Intelligence Emergence]: How does intelligence emerge through evolution?
-2. #strong[Map Fitness Landscapes]: What makes "AI" systems robust and capable?
-3. #strong[Study Adaptation Mechanisms]: How do systems adapt to novel challenges?
-4. #strong[Observe Emergent Behaviors]: Can we observe "God-Head" agents emerge?
+1. #strong[Understand Intelligence Emergence]: "How does intelligence emerge through evolution?"
+2. #strong[Map Fitness Landscapes]: "What makes AI systems robust and capable?"
+3. #strong[Study Adaptation Mechanisms]: "How do systems adapt to novel challenges?"
+4. #strong[Observe Emergent Behaviors]: "Can we observe God-Head agents emerge?"
 
-== Publication Potential
+== "Publication" "Potential"
 
-"WAFT" enables publication-ready "research":
+"WAFT enables publication-ready research:"
 
-- "Phylogenetic" analysis of agent lineages
-- "Fitness" landscape mapping
-- "Mutation" impact studies
-- "Convergence" analysis
-- "Dead" end detection
+- "Phylogenetic" "analysis" "of" "agent" "lineages"
+- "Fitness" "landscape" "mapping"
+- "Mutation" "impact" "studies"
+- "Convergence" "analysis"
+- "Dead" "end" "detection"
 
-#strong[Target Publications]: Nature, Science, NeurIPS, ICML, AAAI
+#strong[Target Publications]: "Nature", "Science", "NeurIPS", "ICML", "AAAI"
 
-== Long-Term Vision
+== "Long"-"Term" "Vision"
 
-#strong[The Ultimate Goal]: Observe a "God-Head" agent emerge from thousands of generations of directed evolution—an agent that demonstrates truly emergent intelligence.
+#strong[The Ultimate Goal]: "Observe a God-Head agent emerge from thousands of generations of directed evolution—an agent that demonstrates truly emergent intelligence."
 
-This would represent a paradigm shift in "AI" "research" and potentially revolutionize our understanding of intelligence itself.
+"This"  "would" "represent" a "paradigm" "shift" in "AI" "research" and "potentially" "revolutionize" "our" "understanding" "of" "intelligence" "itself".
 
-= Competitive Advantage
+= "Competitive" "Advantage"
 
-"WAFT" has several unique advantages that position us for success.
+"WAFT" "has" "several" "unique" "advantages" "that" "position" "us" "for" "success".
 
-== Technical Advantages
+== "Technical" "Advantages"
 
-- #strong[First "Comprehensive" "Framework"]: "No" other system provides complete evolutionary "AI" capabilities
-- #strong[Scientific "Instrument" "Design"]: "Built" for "research", not just "development"
-- #strong[Complete "Lineage" "Tracking"]: "Unique" capability for phylogenetic analysis
-- #strong[Open "Architecture"]: "Extensible" and adaptable
+- #strong[First "Comprehensive" "Framework"]: "No" "other" "system" "provides" "complete" "evolutionary" "AI" "capabilities"
+- #strong[Scientific "Instrument" "Design"]: "Built" "for" "research", not "just" "development"
+- #strong[Complete "Lineage" "Tracking"]: "Unique" "capability" "for" "phylogenetic" "analysis"
+- #strong[Open "Architecture"]: "Extensible" and "adaptable"
 
-== "Scientific" Advantages
+== "Scientific" "Advantages"
 
-- #strong[Publication-"Ready" "Data"]: "Every" experiment generates scientific data
-- #strong[Rigorous "Methodology"]: "Built"-in fitness functions and evaluation
-- #strong[Reproducible "Research"]: "Complete" context preservation
-- #strong[Interdisciplinary "Appeal"]: "Combines" "AI", biology, and physics
+- #strong[Publication-"Ready" "Data"]: "Every" "experiment" "generates" "scientific" "data"
+- #strong[Rigorous "Methodology"]: "Built"-in "fitness" "functions" and "evaluation"
+- #strong[Reproducible "Research"]: "Complete" "context" "preservation"
+- #strong[Interdisciplinary "Appeal"]: "Combines" "AI", "biology", and "physics"
 
-== "Market" Advantages
+== "Market" "Advantages"
 
-- #strong[First-"Mover" "Position"]: "Early" entry into evolutionary "AI" "market"
+- #strong[First-"Mover" "Position"]: "Early" "entry" "into" "evolutionary" "AI" "market"
 - #strong[Multiple "Revenue" "Streams"]: "Research", "enterprise", "tools"
-- #strong[Network "Effects"]: "More" users = more data = better "research"
-- #strong[Community "Building"]: Open-source components enable ecosystem growth
+- #strong[Network "Effects"]: "More users = more data = better research"
+- #strong[Community "Building"]: "Open"-"source" "components" "enable" "ecosystem" "growth"
 
 #infobox(icon: "shield-virus")[
   #emph[Defensible Moat:]
 
-  Our combination of scientific rigor, technical innovation, and first-mover advantage creates a defensible position in the "market". The complexity of the system and the scientific data we generate create significant barriers to entry.
+  "Our"  combination of scientific rigor, technical innovation, and first-mover advantage creates a defensible position in the "market". The complexity of the system and the scientific data we generate create significant barriers to entry.
 ]
 
-= Current Progress and Traction
+= "Current" "Progress" and "Traction"
 
-"WAFT" is not just a concept—it's a working system with demonstrated capabilities.
+"WAFT" "is" not "just" a "concept"—"it"'s a "working" "system" "with" "demonstrated" "capabilities".
 
-== "Development" Status
+== "Development" "Status"
 
-- ✅ #strong[Core "Framework"]: "Functional" evolutionary agent system
-- ✅ #strong[Scint "System"]: "Reality" fracture detection implemented
-- ✅ #strong[Flight "Recorder"]: "Complete" telemetry system operational
-- ✅ #strong[Document "Generation"]: "Multiple" template systems integrated
-- ✅ #strong[Work "Management"]: "Structured" "development" workflow
-- ✅ #strong[MCP Integration]: 11 integrated MCP servers
+- ✅ #strong[Core "Framework"]: "Functional" "evolutionary" "agent" "system"
+- ✅ #strong[Scint "System"]: "Reality" "fracture" "detection" "implemented"
+- ✅ #strong[Flight "Recorder"]: "Complete" "telemetry" "system" "operational"
+- ✅ #strong[Document "Generation"]: "Multiple" "template" "systems" "integrated"
+- ✅ #strong[Work "Management"]: "Structured" "development" "workflow"
+- ✅ #strong["MCP" Integration]: 11 "integrated" "MCP" "servers"
 
-== Recent Achievements
+== "Recent" "Achievements"
 
 #strong[January 2026]:
-- "Typst" template integration completed
-- D&D campaign system integrated
-- "Comprehensive" documentation created
-- "System" architecture validated
+- "Typst" "template" "integration" "completed"
+- D&D "campaign" "system" "integrated"
+- "Comprehensive" "documentation" "created"
+- "System" "architecture" "validated"
 
-== Community and Adoption
+== "Community" and "Adoption"
 
-- "Active" "development" community
-- "Open"-source components
-- "Growing" documentation
-- "Scientific" interest from researchers
+- "Active" "development" "community"
+- "Open"-"source" "components"
+- "Growing" "documentation"
+- "Scientific" "interest" "from" "researchers"
 
-= Funding Request
+= "Funding" "Request"
 
-We are seeking funding to accelerate development, expand "research" capabilities, and scale operations.
+"We"  "are" "seeking" "funding" "to" "accelerate" "development", "expand" "research" "capabilities", and "scale" "operations".
 
-== Funding Tiers
+== "Funding" "Tiers"
 
-=== Tier 1: Seed Funding ($250K - $500K)
-
-#strong[Use of Funds]:
-- "Core" team expansion (2-3 developers)
-- "Research" infrastructure
-- "Scientific" "computing" resources
-- "Documentation" and community "building"
-
-#strong[Timeline]: 12-18 months
-#strong[Milestones]: Enhanced framework, initial "research" publications, community growth
-
-=== Tier 2: Series A ($1M - $2M)
+=== "Tier" 1: "Seed" "Funding" ($250K - $500K)
 
 #strong[Use of Funds]:
-- "Full" team build-out (5-8 developers)
-- "Advanced" "research" capabilities
-- "Enterprise" features
-- "Marketing" and outreach
+- "Core" "team" "expansion" (2-3 "developers")
+- "Research" "infrastructure"
+- "Scientific" "computing" "resources"
+- "Documentation" and "community" "building"
 
-#strong[Timeline]: 24-36 months
-#strong[Milestones]: Major "research" publications, "enterprise" customers, revenue generation
+#strong[Timeline]: 12-18 "months"
+#strong[Milestones]: "Enhanced" "framework", "initial" "research" "publications", "community" "growth"
 
-=== Tier 3: "Research" Grant ($500K - $1M)
+=== "Tier" 2: "Series" A ($1M - $2M)
 
 #strong[Use of Funds]:
-- "Dedicated" "research" team
-- "Scientific" "computing" infrastructure
-- "Publication" and conference costs
-- "Open"-source "development"
+- "Full" "team" "build"-"out" (5-8 "developers")
+- "Advanced" "research" "capabilities"
+- "Enterprise" "features"
+- "Marketing" and "outreach"
 
-#strong[Timeline]: 18-24 months
-#strong[Milestones]: High-impact publications, scientific validation, open-source release
+#strong[Timeline]: 24-36 "months"
+#strong[Milestones]: "Major" "research" "publications", "enterprise" "customers", "revenue" "generation"
 
-== Use of Funds Breakdown
+=== "Tier" 3: "Research" "Grant" ($500K - $1M)
+
+#strong[Use of Funds]:
+- "Dedicated" "research" "team"
+- "Scientific" "computing" "infrastructure"
+- "Publication" and "conference" "costs"
+- "Open"-"source" "development"
+
+#strong[Timeline]: 18-24 "months"
+#strong[Milestones]: "High-impact publications, scientific validation, open-source release"
+
+== "Use" "of" "Funds" "Breakdown"
 
 #align(center)[
   #table(
@@ -330,29 +330,29 @@ We are seeking funding to accelerate development, expand "research" capabilities
   )
 ]
 
-= Expected Outcomes and "Impact"
+= "Expected" "Outcomes" and "Impact"
 
-With proper funding, WAFT will deliver significant outcomes across multiple dimensions.
+"With proper funding, WAFT will deliver significant outcomes across multiple dimensions."
 
 == "Scientific" "Impact"
 
-- #strong[High-"Impact" "Publications"]: 5-10 publications in top-tier venues
-- #strong[Research "Data"]: "Comprehensive" datasets on artificial cognition
-- #strong[Scientific "Understanding"]: "Advances" in understanding intelligence emergence
-- #strong[Open "Science"]: "Open"-source contributions to "research" community
+- #strong[High-"Impact" "Publications"]: 5-10 "publications" in top-"tier" "venues"
+- #strong[Research "Data"]: "Comprehensive" "datasets" "on" "artificial" "cognition"
+- #strong[Scientific "Understanding"]: "Advances" in "understanding" "intelligence" "emergence"
+- #strong[Open "Science"]: "Open"-"source" "contributions" "to" "research" "community"
 
 == "Market" "Impact"
 
-- #strong[Product "Launch"]: "Production"-ready framework
-- #strong[Enterprise "Adoption"]: 10-20 "enterprise" customers
-- #strong[Community "Growth"]: 1,000+ active users
-- #strong[Revenue "Generation"]: $500K-$2M ARR potential
+- #strong[Product "Launch"]: "Production"-"ready" "framework"
+- #strong[Enterprise "Adoption"]: 10-20 "enterprise" "customers"
+- #strong[Community "Growth"]: 1,000+ "active" "users"
+- #strong[Revenue "Generation"]: $500K-$2M "ARR" "potential"
 
-== Long-Term Vision
+== "Long"-"Term" "Vision"
 
 #strong[5-Year Goals]:
-- "Observe" emergent "God-Head" agent
-- "Establish" WAFT as standard for evolutionary "AI" "research"
+- "Observe" "emergent" "God-Head" "agent"
+- "Establish" "WAFT" "as" "standard" "for" "evolutionary" "AI" "research"
 - "Generate" $10M+ in "research" value (10 "million")
 - "Enable" breakthrough "AI" capabilities
 
@@ -366,11 +366,11 @@ With proper funding, WAFT will deliver significant outcomes across multiple dime
   - "Breakthrough" "research" outcomes
 ]
 
-= Risk Mitigation
+= "Risk" "Mitigation"
 
-We recognize and have plans to mitigate key risks.
+"We"  recognize and have plans to mitigate key risks.
 
-== Technical Risks
+== "Technical" "Risks"
 
 #strong[Risk]: Complexity of evolutionary systems
 #strong[Mitigation]: Phased development, rigorous testing, scientific validation
@@ -394,18 +394,18 @@ We recognize and have plans to mitigate key risks.
 #strong[Risk]: Scientific validation
 #strong[Mitigation]: Peer review, reproducibility, open science approach
 
-= Team and Execution
+= "Team" and "Execution"
 
-Our team combines technical excellence with scientific rigor.
+"Our"  team combines technical excellence with scientific rigor.
 
-== Core Team
+== "Core" "Team"
 
 - #strong[Technical "Leadership"]: "Experienced" in "AI", systems design, and "research"
 - #strong[Scientific "Expertise"]: "Background" in "AI" "research", evolutionary systems, and data science
 - #strong["Development" Capability]: "Proven" track record in complex system "development"
 - #strong[Community "Building"]: Experience in open-source and scientific communities
 
-== Execution Plan
+== "Execution" "Plan"
 
 #strong[Phase 1 (Months 1-6)]: Framework Enhancement
 - "Core" system improvements
@@ -422,9 +422,9 @@ Our team combines technical excellence with scientific rigor.
 - "Customer" acquisition
 - "Revenue" generation
 
-= Why Now?
+= "Why" "Now"?
 
-The timing is perfect for WAFT's approach to "AI" "research".
+"The"  timing is perfect for WAFT's approach to "AI" "research".
 
 == "Market" Timing
 
@@ -433,23 +433,23 @@ The timing is perfect for WAFT's approach to "AI" "research".
 - #strong[Research "Interest"]: "Growing" interest in adaptive and evolutionary "AI"
 - #strong["Market" Demand]: "Enterprises" seeking next-generation "AI" capabilities
 
-== Technology Readiness
+== "Technology" "Readiness"
 
 - #strong[Foundation "Technologies"]: "Python", cloud "computing", "AI" frameworks are mature
 - #strong[Scientific "Methods"]: "Evolutionary" algorithms and fitness functions are well-understood
 - #strong[Infrastructure]: "Development" and deployment infrastructure is ready
 
-== Competitive Window
+== "Competitive" "Window"
 
 - #strong[Early "Market"]: Evolutionary "AI" is still emerging
 - #strong[First-"Mover" "Advantage"]: "Opportunity" to establish "market" leadership
 - #strong[Scientific "Opportunity"]: "Chance" to make foundational contributions
 
-= Call to Action
+= "Call" to "Action"
 
-We invite you to join us in this groundbreaking journey.
+"We"  invite you to join us in this groundbreaking journey.
 
-== For Grant Funders
+== "For" "Grant" "Funders"
 
 "WAFT" represents a unique "opportunity" to fund cutting-edge "research" that will:
 
@@ -460,7 +460,7 @@ We invite you to join us in this groundbreaking journey.
 
 #strong[Next Steps]: Schedule a "research" presentation and technical demonstration.
 
-== For Angel Investors
+== "For" "Angel" "Investors"
 
 "WAFT" offers:
 
@@ -471,7 +471,7 @@ We invite you to join us in this groundbreaking journey.
 
 #strong[Next Steps]: Review detailed financial projections and schedule investor meeting.
 
-== For Strategic Partners
+== "For" "Strategic" "Partners"
 
 Partnership opportunities include:
 
@@ -482,38 +482,38 @@ Partnership opportunities include:
 
 #strong[Next Steps]: Discuss partnership structure and mutual benefits.
 
-= Conclusion
+= "Conclusion"
 
 "WAFT" represents a paradigm shift in artificial intelligence "research" and development. "By" enabling directed evolution of self-modifying "AI" agents, we're not just building better "AI"—we're unlocking the physics of artificial cognition.
 
-With proper funding, WAFT will:
+"With proper funding, WAFT will:"
 
 - "Produce" groundbreaking scientific "research"
 - "Enable" breakthrough "AI" capabilities
 - "Create" significant "market" value
 - "Advance" humanity's understanding of intelligence
 
-We are at an inflection point. The technology is ready, the "market" is receptive, and the scientific "opportunity" is unprecedented. Join us in building the future of artificial intelligence.
+"We"  are at an inflection point. The technology is ready, the "market" is receptive, and the scientific "opportunity" is unprecedented. Join us in building the future of artificial intelligence.
 
 #strong[The question is not whether evolutionary "AI" will transform the field—it's who will lead this transformation.]
 
-= Appendix
+= "Appendix"
 
-== Contact Information
+== "Contact" "Information"
 
 #strong[WAFT Development Team]
 - "Email": [contact information]
 - "Website": [website]
 - "Repository": https://github.com/ctavolazzi/waft
 
-== Additional Resources
+== "Additional" "Resources"
 
 - "Technical" "Documentation": "Comprehensive" system documentation available
 - "Research" Papers: [links to publications]
 - "Demo" "Videos": [links to demonstrations]
 - "Code" "Repository": "Open"-source components available
 
-== Financial Projections
+== "Financial" "Projections"
 
 Detailed financial projections available upon request, including:
 - "Revenue" models
@@ -521,11 +521,11 @@ Detailed financial projections available upon request, including:
 - "Growth" projections
 - "Return" on investment analysis
 
-== "Scientific" Advisory Board
+== "Scientific" Advisory "Board"
 
 [To be populated with advisors]
 
-== References
+== "References"
 
 - "Grand" "View" "Research": "AI" "Market" "Size" Report
 - "Industry" analysis and "market" "research"

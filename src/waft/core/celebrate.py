@@ -100,11 +100,12 @@ class CelebrateManager:
 
                 # Open PDF
                 self.console.print("[yellow]→[/yellow] Opening celebration card...")
+                import os
                 system = platform.system()
                 if system == "Darwin":  # macOS
                     subprocess.run(["open", str(generated_path)], check=False)
                 elif system == "Windows":
-                    subprocess.run(["start", str(generated_path)], shell=True, check=False)
+                    os.startfile(str(generated_path))
                 else:  # Linux
                     subprocess.run(["xdg-open", str(generated_path)], check=False)
 

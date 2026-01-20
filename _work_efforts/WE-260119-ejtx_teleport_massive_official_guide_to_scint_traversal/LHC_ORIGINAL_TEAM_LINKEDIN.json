@@ -1,0 +1,710 @@
+{
+  "team_name": "LHC Original Team - First Beam (2008)",
+  "achievement_date": "2008-09-10",
+  "achievement": "First Circulating Beam in Large Hadron Collider",
+  "data_collection_date": "2026-01-19",
+  "note": "Many senior scientists from this era do not have public LinkedIn profiles. Alternative sources (CERN biographies, university pages, Wikipedia) have been included where available.",
+  "team_members": [
+    {
+      "id": "LHC-2008-001",
+      "name": {
+        "title": "Dr.",
+        "first": "Lyn",
+        "last": "Evans",
+        "full": "Dr. Lyndon Rees Evans",
+        "also_known_as": "Lyn Evans"
+      },
+      "role_2008": "LHC Project Leader (1994-2008)",
+      "linkedin": {
+        "url": null,
+        "status": "not_found",
+        "note": "No public LinkedIn profile found. Common for senior CERN scientists."
+      },
+      "current_status": {
+        "status": "active",
+        "current_title": "Director of Linear Collider Collaboration (2012-present)",
+        "current_organization": "Linear Collider Collaboration",
+        "location": "Geneva, Switzerland / United Kingdom"
+      },
+      "background": {
+        "nationality": "Welsh (United Kingdom)",
+        "born": "1945, Aberdare, Wales",
+        "education": [
+          {
+            "degree": "First-class physics degree",
+            "institution": "Swansea University"
+          },
+          {
+            "degree": "PhD in Physics",
+            "institution": "Swansea University",
+            "year": "1970"
+          }
+        ]
+      },
+      "career_highlights": [
+        "Joined CERN in 1970 as research fellow, permanent staff in 1971",
+        "Worked on SPS accelerator and collider, contributed to W/Z boson discovery",
+        "Associate Director for Future Accelerators (1994)",
+        "LHC Project Leader (1994-2008)",
+        "Director of Linear Collider Collaboration (2012-present)"
+      ],
+      "awards": [
+        "Commander of the Order of the British Empire (CBE, 2001)",
+        "Fellow of the American Physical Society (1991)",
+        "Fellow of the Royal Society (2010)",
+        "Fellow of the Learned Society of Wales (2011)",
+        "Special Fundamental Physics Prize (2012)",
+        "Breakthrough Prize (2013)",
+        "Glazebrook Medal"
+      ],
+      "photo_sources": {
+        "cern_archive": "https://cds.cern.ch/images/CERN-GE-0705011-01",
+        "cern_gallery": "https://home.cern/resources/image/cern/cern-people-images-gallery",
+        "photo_local_path": "lhc_team_photos/evans_lyn.jpg",
+        "note": "Portrait by Maximilien Brice, May 2007"
+      },
+      "alternative_sources": [
+        "https://en.wikipedia.org/wiki/Lyn_Evans",
+        "https://home.cern/news/press-release/cern/university-geneva-honours-lhc-project-leader-450th-anniversary-ceremony",
+        "https://home.cern/news/news/cern/lyn-evans-new-linear-collider-director"
+      ]
+    },
+    {
+      "id": "LHC-2008-002",
+      "name": {
+        "title": "Dr.",
+        "first": "Robert",
+        "last": "Aymar",
+        "full": "Dr. Robert Aymar"
+      },
+      "role_2008": "Director-General of CERN (2004-2008)",
+      "linkedin": {
+        "url": null,
+        "status": "not_found",
+        "note": "No public LinkedIn profile found. Deceased September 2024."
+      },
+      "current_status": {
+        "status": "deceased",
+        "date_of_death": "2024-09-23",
+        "age_at_death": 88,
+        "last_title": "Former Director-General of CERN"
+      },
+      "background": {
+        "nationality": "French",
+        "born": "1936",
+        "education": []
+      },
+      "career_highlights": [
+        "Led Tore Supra tokamak project (1977-1988)",
+        "Headed material sciences at French Atomic Energy Commission (CEA)",
+        "Directed ITER engineering design teams (1994-2003)",
+        "Director-General of CERN (2004-2008)",
+        "Oversaw LHC completion and first commissioning"
+      ],
+      "photo_sources": {
+        "cern_obituary": "https://home.cern/news/obituary/cern/robert-aymar-1936-2024",
+        "photo_local_path": "lhc_team_photos/aymar_robert.png",
+        "note": "Photo in front of LHC dipole magnet in CERN obituary (may be logo, needs verification)"
+      },
+      "alternative_sources": [
+        "https://en.wikipedia.org/wiki/Robert_Aymar",
+        "https://home.cern/about/who-we-are/our-people/biographies/robert-aymar"
+      ]
+    },
+    {
+      "id": "LHC-2008-003",
+      "name": {
+        "title": "Dr.",
+        "first": "Rolf-Dieter",
+        "last": "Heuer",
+        "full": "Dr. Rolf-Dieter Heuer"
+      },
+      "role_2008": "Incoming Director-General (appointed December 2007, took office January 2009)",
+      "linkedin": {
+        "url": null,
+        "status": "not_found",
+        "note": "No public LinkedIn profile found."
+      },
+      "current_status": {
+        "status": "active",
+        "current_title": "Former Director-General of CERN",
+        "current_organization": "Various (retired from CERN)",
+        "location": "Germany"
+      },
+      "background": {
+        "nationality": "German",
+        "born": "1948, Bad Boll, Germany",
+        "education": [
+          {
+            "degree": "Physics",
+            "institution": "University of Stuttgart"
+          },
+          {
+            "degree": "PhD",
+            "institution": "University of Heidelberg"
+          }
+        ]
+      },
+      "career_highlights": [
+        "Worked on JADE collaboration at DESY on PETRA",
+        "Joined CERN's OPAL collaboration (LEP) in 1984",
+        "OPAL spokesperson (1994-1998)",
+        "Professor at University of Hamburg",
+        "Research Director at DESY (2004)",
+        "Director-General of CERN (2009-2015)",
+        "Oversaw LHC operations and Higgs boson discovery (2012)"
+      ],
+      "photo_sources": {
+        "cern_archive_2009": "https://cds.cern.ch/images/CERN-HI-0901002-07",
+        "cern_archive_2015": "https://cds.cern.ch/record/2126067",
+        "wikimedia": "https://commons.wikimedia.org/wiki/File:Portrait_de_Rolf-Dieter_Heuer_2.jpg",
+        "photo_local_path": "lhc_team_photos/heuer_rolf_dieter.jpg",
+        "note": "Portrait from January 2009 interview"
+      },
+      "alternative_sources": [
+        "https://en.wikipedia.org/wiki/Rolf-Dieter_Heuer",
+        "https://home.cern/about/who-we-are/our-people/biographies/rolf-dieter-heuer",
+        "https://sis.web.cern.ch/archives/history_CERN/DG/Heuer"
+      ]
+    },
+    {
+      "id": "LHC-2008-004",
+      "name": {
+        "title": "Dr.",
+        "first": "Jos",
+        "last": "Engelen",
+        "full": "Dr. Joseph Johannus Engelen"
+      },
+      "role_2008": "Chief Scientific Officer (2004-2008)",
+      "linkedin": {
+        "url": null,
+        "status": "not_found",
+        "note": "No public LinkedIn profile found."
+      },
+      "current_status": {
+        "status": "active",
+        "current_title": "Professor Emeritus",
+        "current_organization": "University of Amsterdam / NIKHEF",
+        "location": "Netherlands"
+      },
+      "background": {
+        "nationality": "Dutch",
+        "born": "1950-07-06",
+        "education": [
+          {
+            "degree": "MSc in Physics",
+            "institution": "Radboud University Nijmegen",
+            "year": "1973"
+          },
+          {
+            "degree": "PhD",
+            "institution": "Radboud University Nijmegen",
+            "year": "1979"
+          }
+        ]
+      },
+      "career_highlights": [
+        "CERN fellow and staff (1979-1985)",
+        "Joined NIKHEF (1985)",
+        "Professor of Experimental Physics, University of Amsterdam (1987)",
+        "Chief Scientific Officer of CERN (2004-2008)",
+        "Oversaw LHC construction and commissioning",
+        "Chairman of Netherlands Organisation for Scientific Research (NWO, 2009-2016)",
+        "Professor Emeritus, University of Amsterdam"
+      ],
+      "photo_sources": {
+        "status": "not_found",
+        "note": "Photo sources not found in search results"
+      },
+      "alternative_sources": [
+        "https://en.wikipedia.org/wiki/Jos_Engelen",
+        "https://scientific-info.cern/archives/CERN_archive/guide/management/directorate/isaengelen",
+        "https://www.nikhef.nl/~h02/"
+      ]
+    },
+    {
+      "id": "LHC-2008-005",
+      "name": {
+        "title": "Dr.",
+        "first": "Stephen",
+        "last": "Myers",
+        "full": "Dr. Stephen Myers",
+        "also_known_as": "Steve Myers"
+      },
+      "role_2008": "Head of Accelerators and Beams Department (2003-2008)",
+      "linkedin": {
+        "url": null,
+        "status": "not_found",
+        "note": "No public LinkedIn profile found."
+      },
+      "current_status": {
+        "status": "active",
+        "current_title": "Head of Office of Medical Applications",
+        "current_organization": "CERN",
+        "location": "Geneva, Switzerland"
+      },
+      "background": {
+        "nationality": "British",
+        "education": [
+          {
+            "degree": "BSc in Electrical and Electronic Engineering",
+            "institution": "Queen's University Belfast",
+            "year": "1968"
+          },
+          {
+            "degree": "PhD in Electrical and Electronic Engineering",
+            "institution": "Queen's University Belfast",
+            "year": "1972"
+          }
+        ]
+      },
+      "career_highlights": [
+        "Joined CERN",
+        "Helped commission Large Electron-Positron Collider (LEP)",
+        "Led LEP-2 energy upgrade",
+        "Head of Accelerators and Beams Department (2003-2008)",
+        "Director of Accelerators and Technology (2009-2014)",
+        "Led post-accident repair of LHC",
+        "Head of Office of Medical Applications (current)"
+      ],
+      "photo_sources": {
+        "status": "not_found",
+        "note": "Photo sources not found in search results"
+      },
+      "alternative_sources": [
+        "https://en.wikipedia.org/wiki/Stephen_Myers_(engineer)",
+        "https://cern-courier.web.cern.ch/a/steve-myers-and-the-lhc-an-unexpected-journey/",
+        "https://sis.web.cern.ch/archives/history_CERN/internal_organisation/AB"
+      ]
+    },
+    {
+      "id": "LHC-2008-006",
+      "name": {
+        "title": "Dr.",
+        "first": "Philippe",
+        "last": "Lebrun",
+        "full": "Dr. Philippe Lebrun"
+      },
+      "role_2008": "Head of Accelerator Technology Department",
+      "linkedin": {
+        "url": null,
+        "status": "not_found",
+        "note": "No public LinkedIn profile found."
+      },
+      "current_status": {
+        "status": "active",
+        "current_title": "CERN (continuing work on cryogenics)",
+        "current_organization": "CERN",
+        "location": "Geneva, Switzerland"
+      },
+      "background": {
+        "nationality": "French",
+        "education": [
+          {
+            "degree": "Engineering degree",
+            "institution": "École des Mines (Paris)"
+          },
+          {
+            "degree": "Master of Science",
+            "institution": "California Institute of Technology (Caltech)"
+          },
+          {
+            "degree": "Alumnus",
+            "institution": "Institut des hautes études pour la science et la technologie (Paris)"
+          }
+        ]
+      },
+      "career_highlights": [
+        "Joined CERN in 1974 (Magnets and Beam Optics group, ISR Division)",
+        "Worked on ISR, LEP, and LHC projects",
+        "Leader of LHC Division (1999-2001)",
+        "Head of Accelerator Technology Department (2004)",
+        "Led design and construction of LHC cryogenics system",
+        "Expert in superconducting magnets (NbTi), cryogenic refrigeration, low-temperature physics"
+      ],
+      "awards": [
+        "Honorary doctorate from Wrocław University of Technology (2007)",
+        "Engineer of the Year (2010) by Usine Nouvelle in Science category"
+      ],
+      "photo_sources": {
+        "status": "not_found",
+        "note": "Photo sources not found in search results"
+      },
+      "alternative_sources": [
+        "https://cds.cern.ch/journal/CERNBulletin/2007/43/News%20Articles/1063635",
+        "https://iifiir.org/en/news/briefs-philippe-lebrun-is-engineer-of-the-year",
+        "https://e-publishing.cern.ch/index.php/CYRSP/article/view/1623"
+      ]
+    },
+    {
+      "id": "LHC-2008-007",
+      "name": {
+        "title": "Dr.",
+        "first": "Giorgio",
+        "last": "Brianti",
+        "full": "Dr. Giorgio Brianti",
+        "note": "Note: Name was 'Georgi Brianti' in original report, but correct spelling is 'Giorgio Brianti'"
+      },
+      "role_2008": "Father of LHC Magnet Design",
+      "linkedin": {
+        "url": null,
+        "status": "not_found",
+        "note": "No public LinkedIn profile found. Deceased 2023."
+      },
+      "current_status": {
+        "status": "deceased",
+        "date_of_death": "2023",
+        "last_title": "Former Technical Director, Associate Director for Future Accelerators"
+      },
+      "background": {
+        "nationality": "Italian",
+        "born": "1930"
+      },
+      "career_highlights": [
+        "Joined CERN in 1954",
+        "Major contributions to accelerator development",
+        "Bending magnet design for Proton Synchrotron",
+        "Upgrades to Synchrocyclotron",
+        "Design leadership for Booster and Super Proton Synchrotron",
+        "CERN Technical Director",
+        "Associate Director for Future Accelerators",
+        "Helped lay foundations for LHC, especially superconducting magnet technology"
+      ],
+      "photo_sources": {
+        "status": "not_found",
+        "note": "Photo sources not found in search results"
+      },
+      "alternative_sources": [
+        "https://home.cern/news/obituary/accelerators/giorgio-brianti-1930-2023"
+      ]
+    },
+    {
+      "id": "LHC-2008-008",
+      "name": {
+        "title": "Dr.",
+        "first": "Lucio",
+        "last": "Rossi",
+        "full": "Dr. Lucio Rossi"
+      },
+      "role_2008": "Director, Magnets & Superconductors Group",
+      "linkedin": {
+        "url": null,
+        "status": "not_found",
+        "note": "No public LinkedIn profile found."
+      },
+      "current_status": {
+        "status": "active",
+        "current_title": "Professor of Experimental Physics",
+        "current_organization": "University of Milan / INFN",
+        "location": "Milan, Italy"
+      },
+      "background": {
+        "nationality": "Italian",
+        "born": "1955-09-24, Podenzano, Italy",
+        "education": []
+      },
+      "career_highlights": [
+        "Joined CERN in May 2001",
+        "Led Superconducting Magnets and Cryostats group for LHC",
+        "Developed large Nb-Ti superconducting magnet system (~1,232 main dipole magnets)",
+        "Proposed and coordinated High-Luminosity LHC (HL-LHC) upgrade project (2010-2020)",
+        "Moved toward Nb₃Sn superconductors for stronger magnetic fields",
+        "Professor at University of Milan and INFN (post-CERN retirement 2020)",
+        "Coordinates research grants: HITRIplus, I-FAST, IRIS"
+      ],
+      "awards": [
+        "IEEE Council of Superconductivity Award (2007)",
+        "European Physical Society (EPS-AG) Rolf Widerøe Prize (2020)"
+      ],
+      "publications": "Over 200 peer-reviewed papers on superconductivity and magnet design",
+      "photo_sources": {
+        "status": "not_found",
+        "note": "Photo sources not found in search results"
+      },
+      "alternative_sources": [
+        "https://en.wikipedia.org/wiki/Lucio_Rossi",
+        "https://home.web.cern.ch/news/series/cern70/cern70-superconductors-accelerate-progress",
+        "https://phd.uniroma1.it/web/LUCIO-ROSSI_nC4296_EN.aspx"
+      ]
+    },
+    {
+      "id": "LHC-2008-009",
+      "name": {
+        "title": "Dr.",
+        "first": "Vinod",
+        "last": "Chohan",
+        "full": "Dr. Vinod Chandrasinh Chohan",
+        "also_known_as": "Vinod 'Nick' Chohan"
+      },
+      "role_2008": "Accelerator Engineer, Superconducting Magnets Specialist",
+      "linkedin": {
+        "url": null,
+        "status": "not_found",
+        "note": "No public LinkedIn profile found. Deceased 2017."
+      },
+      "current_status": {
+        "status": "deceased",
+        "date_of_death": "2017-06-12",
+        "age_at_death": 68,
+        "last_title": "Senior Staff Member, CERN"
+      },
+      "background": {
+        "nationality": "British (born in Tanganyika)",
+        "born": "1949-05-01, Dar es Salaam, Tanganyika"
+      },
+      "career_highlights": [
+        "Senior staff member at CERN for nearly 40 years",
+        "Worked on Antiproton Accumulator (AA)",
+        "Responsibilities in beam diagnostics, controls, instrumentation",
+        "Led team that tested, measured, and trained for over 1,000 superconducting magnets for LHC",
+        "Total of ~1,700 magnets tested",
+        "Worked in safety systems"
+      ],
+      "photo_sources": {
+        "status": "not_found",
+        "note": "Photo sources not found in search results"
+      },
+      "alternative_sources": [
+        "https://en.wikipedia.org/wiki/Vinod_Chohan",
+        "https://home.web.cern.ch/news/obituary/cern/vinod-nick-chohan-1949-2017"
+      ]
+    },
+    {
+      "id": "LHC-2008-010",
+      "name": {
+        "title": "Dr.",
+        "first": "Amalia",
+        "last": "Ballarino",
+        "full": "Dr. Amalia Ballarino"
+      },
+      "role_2008": "Superconductor Systems Designer",
+      "linkedin": {
+        "url": null,
+        "status": "not_found",
+        "note": "No public LinkedIn profile found."
+      },
+      "current_status": {
+        "status": "active",
+        "current_title": "Deputy Group Leader, Magnets, Superconductors and Cryostats (MSC) group",
+        "current_organization": "CERN",
+        "location": "Geneva, Switzerland"
+      },
+      "background": {
+        "nationality": "Italian",
+        "education": [
+          {
+            "degree": "Master's degree in Nuclear Engineering",
+            "institution": "Polytechnic University of Turin"
+          },
+          {
+            "degree": "PhD in Nuclear Engineering",
+            "institution": "Polytechnic University of Turin",
+            "note": "Doctoral work carried out at CERN"
+          }
+        ]
+      },
+      "career_highlights": [
+        "Joined CERN around 1995",
+        "Led superconductors development, characterization, and procurement team (2010-2023)",
+        "Deputy Group Leader of Magnets, Superconductors and Cryostats (MSC) group",
+        "Led development of high-temperature superconducting (HTS) current leads for LHC",
+        "Initiated 'cold-powering' system for High-Luminosity LHC using MgB₂ superconductors",
+        "Built 60-metre superconducting line transmitting 54,000 A (2020, world record)",
+        "Achieved world-record current of 20 kA at 24 K in 20-metre MgB₂ line (2014)"
+      ],
+      "awards": [
+        "Superconductor Industry Person of the Year 2006 (Superconductor Week)",
+        "IEEE James Wong Award (2021)"
+      ],
+      "photo_sources": {
+        "status": "not_found",
+        "note": "Photo sources not found in search results"
+      },
+      "alternative_sources": [
+        "https://en.wikipedia.org/wiki/Amalia_Ballarino",
+        "https://indico.cern.ch/event/1399202/page/33236-discover-the-speakers-decouvrez-les-intervenants",
+        "https://cern-courier.web.cern.ch/a/leadership-in-superconductors-recognised/"
+      ]
+    },
+    {
+      "id": "LHC-2008-011",
+      "name": {
+        "title": "Dr.",
+        "first": "Peter",
+        "last": "Jenni",
+        "full": "Dr. Peter Jenni"
+      },
+      "role_2008": "ATLAS Spokesperson (1995-2009)",
+      "linkedin": {
+        "url": null,
+        "status": "not_found",
+        "note": "No public LinkedIn profile found."
+      },
+      "current_status": {
+        "status": "retired",
+        "current_title": "CERN Guest Scientist, Honorary Professor",
+        "current_organization": "CERN / Freiburg University",
+        "location": "Geneva, Switzerland / Freiburg, Germany"
+      },
+      "career_highlights": [
+        "ATLAS Co-Spokesperson (1992-1995)",
+        "ATLAS Spokesperson (1995-2009)",
+        "Led ATLAS structure, physics reach, and detector design",
+        "Detector ready for first beam passes in September 2008",
+        "CERN Guest Scientist",
+        "Honorary Professor at Freiburg University"
+      ],
+      "photo_sources": {
+        "status": "not_found",
+        "note": "Photo sources not found in search results"
+      },
+      "alternative_sources": [
+        "https://atlas.cern/Discover/Collaboration/Management/PeterJenni"
+      ]
+    },
+    {
+      "id": "LHC-2008-012",
+      "name": {
+        "title": "Prof.",
+        "first": "Michel",
+        "last": "Della Negra",
+        "full": "Prof. Michel Della Negra"
+      },
+      "role_2008": "CMS Founding Visionary, Former Spokesperson (1992-2006)",
+      "linkedin": {
+        "url": null,
+        "status": "not_found",
+        "note": "No public LinkedIn profile found."
+      },
+      "current_status": {
+        "status": "active",
+        "current_title": "Professor (retired from spokesperson role)",
+        "current_organization": "CERN / Imperial College",
+        "location": "Geneva, Switzerland / London, UK"
+      },
+      "background": {
+        "nationality": "French",
+        "born": "1942"
+      },
+      "career_highlights": [
+        "Early 1990s: Proposed hermetic detector for LHC with strong solenoidal magnetic field",
+        "This idea evolved into CMS (Compact Muon Solenoid) experiment",
+        "CMS Spokesperson (1992-2006)",
+        "Contributions to Higgs boson discovery (2012)"
+      ],
+      "photo_sources": {
+        "status": "not_found",
+        "note": "Photo sources not found in search results"
+      },
+      "alternative_sources": [
+        "https://en.wikipedia.org/wiki/Michel_Della_Negra"
+      ]
+    },
+    {
+      "id": "LHC-2008-013",
+      "name": {
+        "title": "Prof. Sir",
+        "first": "Tejinder",
+        "last": "Virdee",
+        "full": "Prof. Sir Tejinder Singh Virdee",
+        "also_known_as": "Jim Virdee"
+      },
+      "role_2008": "CMS Spokesperson (2007-2010), Founding Member",
+      "linkedin": {
+        "url": null,
+        "status": "not_found",
+        "note": "No public LinkedIn profile found."
+      },
+      "current_status": {
+        "status": "active",
+        "current_title": "Professor of Physics",
+        "current_organization": "Imperial College London",
+        "location": "London, United Kingdom"
+      },
+      "background": {
+        "nationality": "British (born in Kenya)",
+        "born": "1952-10-13, Nyeri, Kenya"
+      },
+      "career_highlights": [
+        "Originated the CMS experiment at CERN's LHC",
+        "One of CMS founders",
+        "CMS Deputy Spokesperson (~1993-2006)",
+        "CMS Spokesperson (January 2007-January 2010)",
+        "Professor of Physics at Imperial College London"
+      ],
+      "awards": [
+        "Knighted in 2014 for services to science",
+        "Elected Fellow of the Royal Society (2012)",
+        "Royal Medal (2024)"
+      ],
+      "photo_sources": {
+        "status": "not_found",
+        "note": "Photo sources not found in search results"
+      },
+      "alternative_sources": [
+        "https://kids.kiddle.co/Tejinder_Virdee",
+        "https://www.theasianawards.com/sir-tejinder-virdee.html",
+        "https://www.iop.org/about/awards/honorary-fellowship/our-honorary-fellows/professor-sir-tejinder-singh-virdee",
+        "https://cmsexperiment.web.cern.ch/news/queen-elizabeth-ii-bestows-knighthood-cms-physicist"
+      ]
+    },
+    {
+      "id": "LHC-2008-014",
+      "name": {
+        "title": "Prof.",
+        "first": "Themis",
+        "last": "Bowcock",
+        "full": "Prof. Themis Bowcock"
+      },
+      "role_2008": "Project Leader for VELO (Vertex Locator) Subdetector, LHCb",
+      "linkedin": {
+        "url": null,
+        "status": "not_found",
+        "note": "No public LinkedIn profile found."
+      },
+      "current_status": {
+        "status": "active",
+        "current_title": "Professor of Particle Physics",
+        "current_organization": "University of Liverpool",
+        "location": "Liverpool, United Kingdom"
+      },
+      "career_highlights": [
+        "Led design, construction, and commissioning of multiple generations of LHCb VELO detector",
+        "Head of Particle Physics group at Liverpool (2011-2019)",
+        "VELO is one of LHCb's critical sub-detectors",
+        "Part of first particle tracking seen in August 2008 during synchronization tests"
+      ],
+      "photo_sources": {
+        "status": "not_found",
+        "note": "Photo sources not found in search results"
+      },
+      "alternative_sources": [
+        "https://www.liverpool.ac.uk/people/themis-bowcock",
+        "https://www.iop.org/about/awards/2023-james-chadwick-medal-and-prize"
+      ]
+    }
+  ],
+  "former_directors_present": [
+    {
+      "name": "Herwig Schopper",
+      "role": "Former Director-General of CERN",
+      "note": "Present in Control Centre to witness first beam"
+    },
+    {
+      "name": "Carlo Rubbia",
+      "role": "Former Director-General of CERN",
+      "note": "Present in Control Centre to witness first beam"
+    },
+    {
+      "name": "Christopher Llewellyn Smith",
+      "role": "Former Director-General of CERN",
+      "note": "Present in Control Centre to witness first beam"
+    },
+    {
+      "name": "Luciano Maiani",
+      "role": "Former Director-General of CERN",
+      "note": "Present in Control Centre to witness first beam"
+    }
+  ],
+  "notes": "Most team members do not have public LinkedIn profiles, which is common for senior scientists from this era. Information has been compiled from CERN official biographies, Wikipedia, university pages, and scientific publications. Photos are available from CERN archives for some members (Lyn Evans, Rolf-Dieter Heuer, Robert Aymar)."
+}
