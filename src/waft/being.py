@@ -43,6 +43,10 @@ except ImportError:
 
         pass
 
+# Security limits to prevent DoS attacks
+MAX_SKILLS = 1000  # Maximum number of skills a Being can have
+MAX_MEMORIES = 1000  # Maximum number of memories a Being can store
+
 
 class BeingState(Enum):
     """State of a being."""
@@ -151,6 +155,9 @@ class Being:
         self.source_id = source_id
 
         # Skills (learned abilities)
+        # Security: Limit skills dict size to prevent DoS
+        if skills and len(skills) > MAX_SKILLS:
+            raise ValueError(f"Too many skills: {len(skills)} (max: {MAX_SKILLS})")
         self.skills = skills or {}
 
         # Memories and lessons
@@ -190,6 +197,9 @@ class Being:
         # If None and has parent: will be set by spawn_being() (parent + 1)
         # If loading from storage: will be set by from_dict()
         if lifetimes is not None:
+            # Validate lifetimes >= 0 (security: prevent underflow)
+            if lifetimes < 0:
+                raise ValueError(f"lifetimes must be >= 0, got {lifetimes}")
             self.lifetimes = lifetimes
         elif parent_being_id is None:
             # Direct instantiation without parent = new birth (lifetime 1)
@@ -281,7 +291,12 @@ class Being:
         self.purpose: dict[str, Any] | None = None  # Purpose object (direct)
 
     def _calculate_personality_modifier(self) -> float:
-        """Calculate decision quota modifier based on personality type."""
+        """
+        Calculate decision quota modifier based on personality type.
+
+        Returns:
+            Modifier value for decision quota based on personality type
+        """
         modifiers = {
             "analytical": 5.0,
             "systematic": 5.0,
@@ -674,6 +689,8 @@ class Being:
         Record a memory.
 
         Enhanced to include Harm/Help events and alignment information.
+        Memories are bounded to MAX_MEMORIES to prevent resource exhaustion.
+        When limit is reached, oldest memories are dropped (FIFO).
 
         Args:
             memory_content: Content of memory
@@ -702,8 +719,13 @@ class Being:
         memory["metadata"]["alignment_score"] = self.current_alignment_score
         memory["metadata"]["pleasure"] = self.pleasure
         memory["metadata"]["pain"] = self.pain
-
         self.memories.append(memory)
+
+        # Security: Bound memories to prevent DoS
+        if len(self.memories) > MAX_MEMORIES:
+            # Remove oldest memory (FIFO)
+            self.memories.pop(0)
+
         return memory
 
     def learn_lesson(
@@ -713,6 +735,8 @@ class Being:
         Learn a lesson (what worked/didn't work).
 
         Enhanced to include alignment patterns and Harm/Help learning.
+        Lessons are bounded to MAX_MEMORIES to prevent resource exhaustion.
+        When limit is reached, oldest lessons are dropped (FIFO).
 
         Args:
             lesson: The lesson learned
@@ -738,6 +762,10 @@ class Being:
 
         # Learn from alignment patterns
         self._learn_from_alignment_patterns()
+        # Security: Bound lessons to prevent DoS (same limit as memories)
+        if len(self.lessons_learned) > MAX_MEMORIES:
+            # Remove oldest lesson (FIFO)
+            self.lessons_learned.pop(0)
 
         return lesson_record
 
@@ -1303,7 +1331,10 @@ class Being:
         Make a decision (decrements fatigue, consumes stamina, returns experience).
 
         When stamina is depleted, actions become sluggish, shitty, and make mistakes.
+<<<<<<< HEAD
         For the first Being, uses Empirica for epistemic thinking.
+=======
+>>>>>>> claude/adversarial-testing-gP4of
 
         Args:
             decision_type: Type of decision (learn_skill, record_memory, pursue_goal, rest, explore)
@@ -1311,6 +1342,9 @@ class Being:
 
         Returns:
             Decision result with experience data, including mistakes if stamina depleted
+
+        Raises:
+            ValueError: If being is sleeping or decision fatigue is depleted
         """
         if self.is_sleeping:
             raise ValueError("Being is sleeping and cannot make decisions")
@@ -1452,9 +1486,20 @@ class Being:
         # Keep recent_experiences bounded (last 10)
         if len(self.recent_experiences) > 10:
             self.recent_experiences.pop(0)
+<<<<<<< HEAD
 
     def to_dict(self) -> dict[str, Any]:
         """Convert being to dictionary."""
+=======
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """
+        Convert being to dictionary for serialization.
+
+        Returns:
+            Dictionary representation of the Being with all attributes
+        """
+>>>>>>> claude/adversarial-testing-gP4of
         return {
             "being_id": self.being_id,
             "reality_id": self.reality_id,
@@ -1503,8 +1548,21 @@ class Being:
         }
 
     @classmethod
+<<<<<<< HEAD
     def from_dict(cls, data: dict[str, Any]) -> "Being":
         """Create being from dictionary (with backward compatibility for missing attributes)."""
+=======
+    def from_dict(cls, data: Dict[str, Any]) -> "Being":
+        """
+        Create being from dictionary (with backward compatibility for missing attributes).
+
+        Args:
+            data: Dictionary containing being data (from to_dict or storage)
+
+        Returns:
+            Being instance reconstructed from the dictionary data
+        """
+>>>>>>> claude/adversarial-testing-gP4of
         being = cls(
             being_id=data["being_id"],
             reality_id=data["reality_id"],
