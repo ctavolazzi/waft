@@ -109,16 +109,16 @@ def main():
 
     try:
         # Test 1: Creation
-        typed_state = test_typed_state_creation()
+        test_typed_state_creation()
 
         # Test 2: Computed properties
         epistemic, gamification = test_computed_properties()
 
         # Test 3: Backward compatibility
-        status_dict = test_backward_compatibility()
+        test_backward_compatibility()
 
         # Test 4: Integration
-        components = test_integration_with_components()
+        test_integration_with_components()
 
         print()
         print("=" * 60)

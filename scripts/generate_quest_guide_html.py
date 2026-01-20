@@ -118,7 +118,7 @@ def main():
     }
 
     # Read the base HTML template (the improved version I created)
-    html_file = project_path / "scripts" / "QUEST_GUIDE.html"
+    project_path / "scripts" / "QUEST_GUIDE.html"
 
     # For now, just print that we'd generate it
     # In practice, we'd read the template and inject the quest cards

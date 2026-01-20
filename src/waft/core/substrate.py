@@ -49,8 +49,8 @@ class SubstrateManager:
                 return True
 
             # Run uv init inside the project directory
-            result = subprocess.run(
-                ["uv", "init", "--name", validated_name, "--no-readme"],
+            subprocess.run(
+                ["uv", "init", "--name", name, "--no-readme"],
                 cwd=project_path,
                 capture_output=True,
                 text=True,

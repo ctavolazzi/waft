@@ -45,7 +45,7 @@ output_pdf = work_effort_dir / "TELEPORT_MASSIVE_CASE_FILE_2026.pdf"
 def compile_typst(typ_path: Path, pdf_path: Path) -> bool:
     """Compile a Typst file to PDF."""
     try:
-        result = subprocess.run(
+        subprocess.run(
             ["typst", "compile", str(typ_path), str(pdf_path)],
             capture_output=True,
             text=True,

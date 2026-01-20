@@ -71,7 +71,7 @@ def create_dnd_template():
             margin: 0.5in;
             background: #f4e8d0;
         }
-        
+
         body {
             font-family: 'Times New Roman', 'Times', 'Georgia', serif;
             font-size: 11pt;
@@ -81,14 +81,14 @@ def create_dnd_template():
             margin: 0;
             padding: 0.5in;
         }
-        
+
         .container {
             background: #faf5eb;
             border: 3px double #8b4513;
             padding: 0.5in;
             box-shadow: 0 0 15px rgba(139, 69, 19, 0.3);
         }
-        
+
         h1 {
             font-size: 32pt;
             font-weight: bold;
@@ -101,7 +101,7 @@ def create_dnd_template():
             padding-bottom: 0.2in;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
         }
-        
+
         .subtitle {
             text-align: center;
             font-size: 14pt;
@@ -109,34 +109,34 @@ def create_dnd_template():
             margin-bottom: 0.4in;
             font-style: italic;
         }
-        
+
         .pantheon-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 0.3in;
             margin-bottom: 0.3in;
         }
-        
+
         .god-card {
             background: #fff;
             border: 2px solid #8b4513;
             padding: 0.3in;
             page-break-inside: avoid;
         }
-        
+
         .god-header {
             border-bottom: 2px solid #8b4513;
             padding-bottom: 0.1in;
             margin-bottom: 0.15in;
         }
-        
+
         .god-name {
             font-size: 16pt;
             font-weight: bold;
             color: #8b0000;
             text-transform: uppercase;
         }
-        
+
         .god-title {
             font-size: 10pt;
             color: #654321;
@@ -144,27 +144,27 @@ def create_dnd_template():
             margin: 0.1in 0;
             text-transform: uppercase;
         }
-        
+
         .god-description {
             font-size: 9pt;
             line-height: 1.5;
             color: #3d2817;
             margin: 0.1in 0;
         }
-        
+
         .god-stats {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 0.1in;
             margin: 0.15in 0;
         }
-        
+
         .stat-item {
             border: 1px solid #8b4513;
             padding: 0.1in;
             background: #f0e6d2;
         }
-        
+
         .stat-label {
             font-size: 8pt;
             font-weight: bold;
@@ -174,20 +174,20 @@ def create_dnd_template():
             padding-bottom: 2pt;
             margin-bottom: 4pt;
         }
-        
+
         .stat-value {
             font-size: 14pt;
             font-weight: bold;
             text-align: center;
             color: #8b0000;
         }
-        
+
         .god-abilities {
             margin-top: 0.15in;
             padding-top: 0.15in;
             border-top: 1px solid #8b4513;
         }
-        
+
         .abilities-title {
             font-size: 9pt;
             font-weight: bold;
@@ -195,13 +195,13 @@ def create_dnd_template():
             color: #654321;
             margin-bottom: 0.1in;
         }
-        
+
         .abilities-list {
             display: flex;
             flex-wrap: wrap;
             gap: 0.05in;
         }
-        
+
         .ability-badge {
             background: #8b4513;
             color: #faf5eb;
@@ -210,7 +210,7 @@ def create_dnd_template():
             font-size: 8pt;
             font-weight: bold;
         }
-        
+
         .footer {
             text-align: center;
             margin-top: 0.4in;
@@ -226,17 +226,17 @@ def create_dnd_template():
     <div class="container">
         <h1>🏛️ The Pantheon</h1>
         <div class="subtitle">Higher Beings System • WAFT Gods</div>
-        
+
         <div class="pantheon-grid" id="pantheon-grid">
             <!-- Gods populated by JavaScript -->
         </div>
-        
+
         <div class="footer">
             <p>WAFT Pantheon • Timeless Forces that Bind Reality Together</p>
             <p>"As above, so below"</p>
         </div>
     </div>
-    
+
     <script>
         const pantheonGods = """
         + json.dumps(
@@ -370,7 +370,7 @@ def create_dnd_template():
             ]
         )
         + """;
-        
+
         function renderPantheon() {
             const grid = document.getElementById('pantheon-grid');
             grid.innerHTML = pantheonGods.map(god => `
@@ -401,7 +401,7 @@ def create_dnd_template():
                 </div>
             `).join('');
         }
-        
+
         renderPantheon();
     </script>
 </body>
@@ -424,14 +424,14 @@ def create_field_guide_template():
             size: letter;
             margin: 0.75in 0.5in;
         }
-        
+
         body {
             font-family: 'Arial', 'Helvetica', sans-serif;
             font-size: 10pt;
             line-height: 1.4;
             color: #000;
         }
-        
+
         .cover {
             border: 4px double #000;
             padding: 0.5in;
@@ -439,14 +439,14 @@ def create_field_guide_template():
             background: #f5f5f5;
             text-align: center;
         }
-        
+
         .series-number {
             font-family: 'Courier New', monospace;
             font-size: 14pt;
             font-weight: bold;
             margin-bottom: 0.2in;
         }
-        
+
         .title {
             font-family: 'Arial Black', sans-serif;
             font-size: 24pt;
@@ -454,14 +454,14 @@ def create_field_guide_template():
             text-transform: uppercase;
             margin-bottom: 0.2in;
         }
-        
+
         .god-entry {
             border: 2px solid #000;
             padding: 0.2in;
             margin-bottom: 0.2in;
             page-break-inside: avoid;
         }
-        
+
         .god-name {
             font-size: 14pt;
             font-weight: bold;
@@ -470,18 +470,18 @@ def create_field_guide_template():
             padding-bottom: 0.1in;
             margin-bottom: 0.1in;
         }
-        
+
         .god-title {
             font-size: 11pt;
             font-weight: bold;
             margin-bottom: 0.1in;
         }
-        
+
         .god-description {
             font-size: 9pt;
             margin-bottom: 0.1in;
         }
-        
+
         .stat-block {
             background: #f0f0f0;
             border: 1px solid #000;
@@ -490,13 +490,13 @@ def create_field_guide_template():
             font-family: 'Courier New', monospace;
             font-size: 8pt;
         }
-        
+
         .abilities {
             margin-top: 0.1in;
             padding-top: 0.1in;
             border-top: 1px solid #000;
         }
-        
+
         .ability-tag {
             display: inline-block;
             background: #000;
@@ -514,11 +514,11 @@ def create_field_guide_template():
         <div class="title">The Pantheon</div>
         <div style="font-size: 12pt; margin-top: 0.2in;">Higher Beings System • WAFT Gods</div>
     </div>
-    
+
     <div id="pantheon-content">
         <!-- Gods populated by JavaScript -->
     </div>
-    
+
     <script>
         const pantheonGods = """
         + json.dumps(
@@ -652,7 +652,7 @@ def create_field_guide_template():
             ]
         )
         + """;
-        
+
         function renderPantheon() {
             const content = document.getElementById('pantheon-content');
             content.innerHTML = pantheonGods.map(god => `
@@ -674,7 +674,7 @@ def create_field_guide_template():
                 </div>
             `).join('');
         }
-        
+
         renderPantheon();
     </script>
 </body>
@@ -697,7 +697,7 @@ def create_academic_template():
             size: letter;
             margin: 1in;
         }
-        
+
         body {
             font-family: 'Times New Roman', 'Times', serif;
             font-size: 11pt;
@@ -705,37 +705,37 @@ def create_academic_template():
             color: #000;
             max-width: 100%;
         }
-        
+
         .title {
             font-size: 18pt;
             font-weight: bold;
             text-align: center;
             margin-bottom: 0.2in;
         }
-        
+
         .authors {
             text-align: center;
             font-size: 10pt;
             margin-bottom: 0.3in;
             font-style: italic;
         }
-        
+
         .abstract {
             margin: 0.3in 0;
             padding: 0.2in;
             border: 1px solid #000;
             background: #f9f9f9;
         }
-        
+
         .abstract-title {
             font-weight: bold;
             margin-bottom: 0.1in;
         }
-        
+
         .section {
             margin: 0.4in 0;
         }
-        
+
         .section-title {
             font-size: 14pt;
             font-weight: bold;
@@ -743,41 +743,41 @@ def create_academic_template():
             border-bottom: 1px solid #000;
             padding-bottom: 0.05in;
         }
-        
+
         .god-entry {
             margin: 0.2in 0;
             padding: 0.15in;
             border-left: 3px solid #000;
             background: #f9f9f9;
         }
-        
+
         .god-name {
             font-weight: bold;
             font-size: 12pt;
             margin-bottom: 0.05in;
         }
-        
+
         .god-title {
             font-style: italic;
             margin-bottom: 0.1in;
         }
-        
+
         .god-description {
             font-size: 10pt;
             margin-bottom: 0.1in;
         }
-        
+
         .god-stats {
             font-family: 'Courier New', monospace;
             font-size: 9pt;
             margin: 0.1in 0;
         }
-        
+
         .abilities {
             margin-top: 0.1in;
             font-size: 9pt;
         }
-        
+
         .ability {
             display: inline-block;
             background: #e0e0e0;
@@ -790,24 +790,24 @@ def create_academic_template():
 <body>
     <div class="title">The Pantheon: Higher Beings System</div>
     <div class="authors">WAFT Gods • Timeless Forces that Bind Reality Together</div>
-    
+
     <div class="abstract">
         <div class="abstract-title">Abstract</div>
         <div>The Pantheon houses Higher Beings (Gods) as Aspects of Creation, following "as above, so below" principles from the spiritual cosmology. This document catalogs all Pantheon entities, their responsibilities, abilities, and current operational status.</div>
     </div>
-    
+
     <div class="section">
         <div class="section-title">1. Introduction</div>
         <div>Pantheon Entities are Timeless Forces that Bind Reality Together. Unlike Beings (which are timeful, dynamic agents), Entities in the Pantheon are stable, maintaining fundamental structure until evidence collected by Beings proves change is needed.</div>
     </div>
-    
+
     <div class="section">
         <div class="section-title">2. Pantheon Entities</div>
         <div id="pantheon-content">
             <!-- Gods populated by JavaScript -->
         </div>
     </div>
-    
+
     <script>
         const pantheonGods = """
         + json.dumps(
@@ -941,7 +941,7 @@ def create_academic_template():
             ]
         )
         + """;
-        
+
         function renderPantheon() {
             const content = document.getElementById('pantheon-content');
             content.innerHTML = pantheonGods.map((god, idx) => `
@@ -963,7 +963,7 @@ def create_academic_template():
                 </div>
             `).join('');
         }
-        
+
         renderPantheon();
     </script>
 </body>
@@ -990,32 +990,32 @@ def create_lab_notes_template():
                 linear-gradient(90deg, #e0e0e0 1px, transparent 1px);
             background-size: 0.2in 0.2in;
         }
-        
+
         body {
             font-family: 'Courier New', 'Consolas', monospace;
             font-size: 11pt;
             line-height: 1.6;
             color: #000;
         }
-        
+
         .lab-cover {
             border: 3px solid #000;
             padding: 0.4in;
             background: white;
             margin-bottom: 0.3in;
         }
-        
+
         .lab-id {
             font-weight: bold;
             margin-bottom: 0.15in;
         }
-        
+
         .lab-title {
             font-size: 18pt;
             font-weight: bold;
             margin-bottom: 0.15in;
         }
-        
+
         .entry {
             margin: 0.3in 0;
             padding: 0.2in;
@@ -1023,31 +1023,31 @@ def create_lab_notes_template():
             background: white;
             page-break-inside: avoid;
         }
-        
+
         .entry-header {
             border-bottom: 2px solid #000;
             padding-bottom: 0.1in;
             margin-bottom: 0.1in;
         }
-        
+
         .entry-title {
             font-weight: bold;
             font-size: 12pt;
             text-transform: uppercase;
         }
-        
+
         .entry-meta {
             font-size: 9pt;
             color: #666;
             margin-top: 0.05in;
         }
-        
+
         .observation {
             margin: 0.1in 0;
             padding-left: 0.2in;
             border-left: 2px solid #000;
         }
-        
+
         .data-table {
             margin: 0.1in 0;
             border: 1px solid #000;
@@ -1055,12 +1055,12 @@ def create_lab_notes_template():
             width: 100%;
             font-size: 9pt;
         }
-        
+
         .data-table td {
             border: 1px solid #000;
             padding: 0.05in;
         }
-        
+
         .data-table .label {
             font-weight: bold;
             background: #f0f0f0;
@@ -1075,11 +1075,11 @@ def create_lab_notes_template():
         + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         + """</div>
     </div>
-    
+
     <div id="pantheon-content">
         <!-- Gods populated by JavaScript -->
     </div>
-    
+
     <script>
         const pantheonGods = """
         + json.dumps(
@@ -1213,7 +1213,7 @@ def create_lab_notes_template():
             ]
         )
         + """;
-        
+
         function renderPantheon() {
             const content = document.getElementById('pantheon-content');
             content.innerHTML = pantheonGods.map((god, idx) => {
@@ -1249,7 +1249,7 @@ def create_lab_notes_template():
                 `;
             }).join('');
         }
-        
+
         renderPantheon();
     </script>
 </body>

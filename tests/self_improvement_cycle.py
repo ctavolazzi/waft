@@ -637,10 +637,10 @@ def run_self_improvement_cycle():
         json.dump(baseline_results, f, indent=2)
 
     # Phase 2: Analyze failures
-    failure_analysis = phase_2_failure_analysis()
+    phase_2_failure_analysis()
 
     # Phase 3: Propose improvements
-    improvement_proposals = phase_3_improvement_proposals()
+    phase_3_improvement_proposals()
 
     # Phase 4: Apply improvements (simulated)
     phase_4_apply_improvements()

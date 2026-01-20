@@ -138,7 +138,7 @@ class PantheonCouncil:
             return {"available": False}
 
         try:
-            state = self.oracle.get_epistemic_state()
+            self.oracle.get_epistemic_state()
             phase = self.oracle.get_epistemic_phase()
             findings = self.oracle.get_insights(limit=5)
             unknowns = self.oracle.get_unknowns(limit=5)

@@ -263,7 +263,7 @@ def test_protocol_models():
         print(f"   Quality Score: {protocol.quality_score}")
 
         # Test JSON serialization
-        protocol_json = protocol.model_dump_json(indent=2)
+        protocol.model_dump_json(indent=2)
         print("✅ Protocol can be serialized to JSON")
 
         return True

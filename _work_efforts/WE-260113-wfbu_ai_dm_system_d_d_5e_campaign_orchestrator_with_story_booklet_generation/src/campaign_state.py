@@ -248,11 +248,9 @@ class CampaignStateManager:
 
         # Find session
         session = None
-        session_index = None
-        for i, s in enumerate(campaign.sessions):
+        for _i, s in enumerate(campaign.sessions):
             if s.session_id == session_id:
                 session = s
-                session_index = i
                 break
 
         if not session:

@@ -299,7 +299,7 @@ class NowCycleManager:
                             being.energy_capacity - being.energy
                         ) * 0.1  # Estimate
                         if energy_spent_estimate > 0:
-                            karma_generated = being.generate_karma_from_energy(
+                            being.generate_karma_from_energy(
                                 energy_spent_estimate
                             )
                             # Store karma to be collected by KarmaCollector

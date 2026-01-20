@@ -334,8 +334,8 @@ class DevlogManager:
         entry = f"""
 ## {timestamp.strftime("%Y-%m-%d")} - {title}
 
-**Time**: {timestamp.strftime("%H:%M:%S")}  
-**Source**: {source}  
+**Time**: {timestamp.strftime("%H:%M:%S")}
+**Source**: {source}
 **Category**: {category}
 
 {content}

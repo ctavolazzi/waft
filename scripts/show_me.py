@@ -56,7 +56,6 @@ def get_work_efforts(
             # Check if it's within our date range (or show all if days_back=0)
             if threshold_pattern:
                 # Extract date from directory name
-                date_match = None
                 if len(item.name) >= 8 and item.name[3:9].isdigit():
                     we_date_str = item.name[3:9]  # e.g., "260116" from "WE-260116-xxxx"
                     if we_date_str < threshold_pattern:
@@ -366,7 +365,7 @@ def _get_work_effort_details(
                     "next:",
                 ]
 
-                for i, line in enumerate(lines):
+                for _i, line in enumerate(lines):
                     line_lower = line.lower()
                     # Check if this line starts a relevant section
                     if line.strip().startswith("#") or line.strip().startswith("##"):
@@ -1077,9 +1076,9 @@ def generate_markdown_report(
     # Project statistics with safe defaults
     project_total = len(projects)
     project_active = len([p for p in projects if p.get("status") == "active"])
-    project_completed = len([p for p in projects if p.get("status") == "completed"])
-    project_planning = len([p for p in projects if p.get("status") == "planning"])
-    project_paused = len([p for p in projects if p.get("status") == "paused"])
+    len([p for p in projects if p.get("status") == "completed"])
+    len([p for p in projects if p.get("status") == "planning"])
+    len([p for p in projects if p.get("status") == "paused"])
 
     # Other statistics with safe defaults
     templates_count = len(templates)
@@ -1636,19 +1635,19 @@ def _generate_waft_html_template(
            Pure HTML5 + CSS - ZERO JavaScript
            Works on ANY machine with a display
            ============================================ */
-        
+
         /* Reset & Base */
         * {{
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }}
-        
+
         html {{
             font-size: 16px;
             scroll-behavior: smooth;
         }}
-        
+
         body {{
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
             background: #1a1a1a;
@@ -1657,14 +1656,14 @@ def _generate_waft_html_template(
             letter-spacing: 0.2px;
             min-height: 100vh;
         }}
-        
+
         /* Typography - Clear Hierarchy */
         h1, h2, h3, h4, h5, h6 {{
             font-weight: 600;
             line-height: 1.4;
             margin-bottom: 1rem;
         }}
-        
+
         /* Responsive Typography - Fluid scaling with fallbacks for older browsers */
         h1 {{
             font-size: 1.5rem; /* Fallback for browsers without clamp() support */
@@ -1673,7 +1672,7 @@ def _generate_waft_html_template(
             letter-spacing: -0.01em;
             margin-top: 0;
         }}
-        
+
         h2 {{
             font-size: 1.25rem; /* Fallback */
             font-size: clamp(1.25rem, 3vw, 1.5rem);
@@ -1682,41 +1681,41 @@ def _generate_waft_html_template(
             padding-bottom: 0.5rem;
             margin-top: 2.5rem;
         }}
-        
+
         h3 {{
             font-size: 1.1rem; /* Fallback */
             font-size: clamp(1.1rem, 2.5vw, 1.25rem);
             color: #d8d8d8;
         }}
-        
+
         h4 {{
             font-size: 1rem; /* Fallback */
             font-size: clamp(1rem, 2vw, 1.1rem);
             color: #d0d0d0;
         }}
-        
+
         p, li {{
             color: #d5d5d5;
             line-height: 1.7;
             letter-spacing: 0.2px;
         }}
-        
+
         /* Links */
         a {{
             color: #8a9eff;
             text-decoration: none;
         }}
-        
+
         a:hover {{
             color: #a0b0ff;
             text-decoration: underline;
         }}
-        
+
         a:focus {{
             outline: 2px solid #8a9eff;
             outline-offset: 2px;
         }}
-        
+
         /* Above the Fold - Unified Top Section */
         /* Removed distinct background and border to eliminate visual separation */
         .above-the-fold {{
@@ -1724,12 +1723,12 @@ def _generate_waft_html_template(
             border-bottom: none;
             margin-bottom: 0;
         }}
-        
+
         /* Alternative: if header-wrapper has minimal content, reduce spacing */
         .header-section-wrapper:empty {{
             display: none;
         }}
-        
+
         /* Navigation - Part of Above the Fold - Responsive padding */
         .nav-bar {{
             background: transparent;
@@ -1740,14 +1739,14 @@ def _generate_waft_html_template(
             z-index: 100;
             margin-bottom: 1rem; /* Add spacing below nav instead of on above-the-fold */
         }}
-        
+
         .nav-container {{
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             gap: 0.75rem;
             position: relative;
         }}
-        
+
         .nav-container::after {{
             content: '';
             position: absolute;
@@ -1757,7 +1756,7 @@ def _generate_waft_html_template(
             height: 1px;
             background: #2a2a2a;
         }}
-        
+
         /* Navigation Container - Responsive 3-column layout on all screen sizes */
         /* Mobile-first: Keep 3-column layout but optimize sizing for small screens */
         .nav-container {{
@@ -1769,7 +1768,7 @@ def _generate_waft_html_template(
             position: relative;
             padding-bottom: 0.25rem;
         }}
-        
+
         /* Visual separator line below buttons to prevent "drop off" */
         .nav-container::after {{
             content: '';
@@ -1780,17 +1779,17 @@ def _generate_waft_html_template(
             height: 1px;
             background: #2a2a2a;
         }}
-        
+
         .nav-section {{
             display: flex;
             width: 100%;
         }}
-        
+
         .nav-section .dropdown-group {{
             width: 100%;
             position: relative;
         }}
-        
+
         /* Navigation Button - Responsive sizing with 44px minimum touch target */
         .nav-dropdown-toggle {{
             background: #242424;
@@ -1811,12 +1810,12 @@ def _generate_waft_html_template(
             width: 100%;
             letter-spacing: 0.1px;
             min-height: 44px; /* WCAG 2.1 Level AAA: Minimum touch target size */
-            box-shadow: 
+            box-shadow:
                 0 1px 2px rgba(0,0,0,0.3),
                 inset 0 -1px 1px rgba(0,0,0,0.2);
             position: relative;
         }}
-        
+
         /* Ensure bottom edge is fully defined */
         .nav-dropdown-toggle::before {{
             content: '';
@@ -1829,37 +1828,37 @@ def _generate_waft_html_template(
             border-radius: 0 0 4px 4px;
             z-index: -1;
         }}
-        
+
         .nav-dropdown-toggle:hover {{
             background: #282828;
             border-color: #2d2d2d;
             border-bottom-color: #323232;
             color: #d5d5d5;
-            box-shadow: 
+            box-shadow:
                 0 2px 3px rgba(0,0,0,0.35),
                 inset 0 -1px 1px rgba(0,0,0,0.25);
         }}
-        
+
         .nav-dropdown-toggle:hover::before {{
             background: #323232;
         }}
-        
+
         .nav-dropdown-toggle:active {{
             background: #1f1f1f;
             border-color: #252525;
             border-bottom-color: #2a2a2a;
-            box-shadow: 
+            box-shadow:
                 0 1px 1px rgba(0,0,0,0.25),
                 inset 0 1px 2px rgba(0,0,0,0.3);
         }}
-        
+
         .nav-dropdown-toggle::after {{
             content: " ▼";
             font-size: 0.7em;
             opacity: 0.6;
             margin-left: 0.25rem;
         }}
-        
+
         /* Oracle Button - Repositioned on mobile instead of hidden */
         /* Floating Oracle Button - Responsive positioning */
         .btn-oracle {{
@@ -1881,7 +1880,7 @@ def _generate_waft_html_template(
             z-index: 999;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }}
-        
+
         /* Reposition Oracle button on mobile to top-right to avoid overlap */
         @media (max-width: 599px) {{
             .btn-oracle {{
@@ -1894,7 +1893,7 @@ def _generate_waft_html_template(
                 font-size: 0.85rem;
             }}
         }}
-        
+
         .btn-oracle:hover {{
             background: #333333;
             border-color: #667eea;
@@ -1902,7 +1901,7 @@ def _generate_waft_html_template(
             text-decoration: none;
             box-shadow: 0 6px 16px rgba(102, 126, 234, 0.2);
         }}
-        
+
         .toast-notification {{
             position: fixed;
             bottom: 2rem;
@@ -1920,12 +1919,12 @@ def _generate_waft_html_template(
             pointer-events: none;
             max-width: 300px;
         }}
-        
+
         .toast-notification.show {{
             opacity: 1;
             transform: translateY(0);
         }}
-        
+
         /* Abstract Section Header */
         .abstract-section-header {{
             display: flex;
@@ -1934,14 +1933,14 @@ def _generate_waft_html_template(
             margin-bottom: 0.5rem;
             margin-top: 2.5rem;
         }}
-        
+
         .abstract-section-header h2 {{
             margin: 0;
             flex: 1;
             border-bottom: none;
             padding-bottom: 0;
         }}
-        
+
         /* Abstract Copy Button - Subtle and Chill */
         .abstract-copy-btn {{
             background: transparent;
@@ -1958,25 +1957,25 @@ def _generate_waft_html_template(
             width: 32px;
             height: 32px;
         }}
-        
+
         .abstract-copy-btn:hover {{
             opacity: 1;
             color: #aaa;
             border-color: #666;
             background: rgba(255, 255, 255, 0.05);
         }}
-        
+
         .abstract-copy-btn:active {{
             transform: scale(0.95);
             background: rgba(255, 255, 255, 0.1);
         }}
-        
+
         .abstract-copy-btn svg {{
             width: 16px;
             height: 16px;
             stroke: currentColor;
         }}
-        
+
         /* Recommended Next Step - Big, Bold, Eye-Catching */
         .recommended-next-step {{
             background: linear-gradient(135deg, #2a3a4a 0%, #1a2a3a 100%);
@@ -1987,18 +1986,18 @@ def _generate_waft_html_template(
             padding: 2rem;
             margin: 2rem 0 2.5rem 0;
             border-radius: 8px;
-            box-shadow: 
+            box-shadow:
                 0 4px 12px rgba(0,0,0,0.4),
                 inset 0 1px 0 rgba(255,255,255,0.05);
         }}
-        
+
         .recommended-header {{
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 1rem;
         }}
-        
+
         .recommended-title {{
             font-size: 1.5rem;
             font-weight: 700;
@@ -2011,7 +2010,7 @@ def _generate_waft_html_template(
             font-size: 0.9rem;
             flex: 1;
         }}
-        
+
         .recommended-copy-btn {{
             background: rgba(138, 158, 255, 0.1);
             border: 1px solid rgba(138, 158, 255, 0.3);
@@ -2026,18 +2025,18 @@ def _generate_waft_html_template(
             min-width: 36px;
             min-height: 36px;
         }}
-        
+
         .recommended-copy-btn:hover {{
             background: rgba(138, 158, 255, 0.2);
             border-color: rgba(138, 158, 255, 0.5);
             color: #a0b0ff;
         }}
-        
+
         .recommended-copy-btn:active {{
             background: rgba(138, 158, 255, 0.3);
             transform: scale(0.95);
         }}
-        
+
         .recommended-action {{
             font-size: 1.75rem;
             font-weight: 700;
@@ -2046,7 +2045,7 @@ def _generate_waft_html_template(
             line-height: 1.3;
             letter-spacing: -0.01em;
         }}
-        
+
         .recommended-why {{
             font-size: 1.1rem;
             color: #d5d5d5;
@@ -2057,14 +2056,14 @@ def _generate_waft_html_template(
             border-radius: 4px;
             border-left: 3px solid #667eea;
         }}
-        
+
         .recommended-context {{
             font-size: 0.95rem;
             color: #999999;
             margin-top: 1rem;
             font-style: italic;
         }}
-        
+
         .recommended-context-primer {{
             margin-top: 1.5rem;
             border-top: 1px solid rgba(138, 158, 255, 0.2);
@@ -2073,18 +2072,18 @@ def _generate_waft_html_template(
             border: none;
             border-top: 1px solid rgba(138, 158, 255, 0.2);
         }}
-        
+
         .recommended-context-primer summary {{
             list-style: none;
             background: transparent;
             border: none;
             padding: 0;
         }}
-        
+
         .recommended-context-primer summary::-webkit-details-marker {{
             display: none;
         }}
-        
+
         .recommended-context-summary {{
             font-size: 0.95rem;
             color: #8a9eff;
@@ -2096,30 +2095,30 @@ def _generate_waft_html_template(
             transition: color 0.2s;
             display: inline-block;
         }}
-        
+
         .recommended-context-summary:hover {{
             color: #a0b0ff;
         }}
-        
+
         .recommended-context-content {{
             margin-top: 1rem;
             padding: 0;
             background: transparent;
             border: none;
         }}
-        
+
         .recommended-context-item {{
             margin: 0.75rem 0;
             font-size: 0.95rem;
             color: #d5d5d5;
             line-height: 1.6;
         }}
-        
+
         .recommended-context-item strong {{
             color: #8a9eff;
             margin-right: 0.5rem;
         }}
-        
+
         /* Abstract Box - Draws the Eye */
         .abstract-box {{
             background: #2a2a2a;
@@ -2132,18 +2131,18 @@ def _generate_waft_html_template(
             color: #e5e5e5;
             box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }}
-        
+
         /* Make header section title stand out */
         .header-section h1 {{
             margin-top: 0;
             margin-bottom: 1rem;
             color: #e8e8e8;
         }}
-        
+
         .header-meta {{
             opacity: 0.8;
         }}
-        
+
         /* Session History */
         .session-history {{
             background: #222222;
@@ -2152,35 +2151,35 @@ def _generate_waft_html_template(
             margin: 1.5rem 0;
             border-radius: 4px;
         }}
-        
+
         .history-list {{
             list-style: none;
             padding-left: 0;
         }}
-        
+
         .history-list li {{
             padding: 0.5rem 0;
             border-bottom: 1px solid #333333;
         }}
-        
+
         .history-list li:last-child {{
             border-bottom: none;
         }}
-        
+
         .history-list a {{
             color: #8a9eff;
             text-decoration: none;
         }}
-        
+
         .history-list a:hover {{
             text-decoration: underline;
         }}
-        
+
         /* Dropdown Groups - Now in Nav Bar */
         .dropdown-group {{
             position: relative;
         }}
-        
+
         .dropdown-toggle {{
             background: #2a2a2a;
             border: none;
@@ -2196,18 +2195,18 @@ def _generate_waft_html_template(
             transition: all 0.2s;
             text-decoration: none;
         }}
-        
+
         .dropdown-toggle:hover {{
             background: #333333;
             color: #e5e5e5;
         }}
-        
+
         .dropdown-toggle::after {{
             content: " ▼";
             font-size: 0.8em;
             opacity: 0.7;
         }}
-        
+
         /* Nav Dropdown Menu - Subtle 80s Style - Responsive */
         .nav-dropdown-menu {{
             position: absolute;
@@ -2219,7 +2218,7 @@ def _generate_waft_html_template(
             border: 1px solid #333333;
             border-top: 1px solid #383838;
             border-radius: 6px;
-            box-shadow: 
+            box-shadow:
                 0 3px 8px rgba(0,0,0,0.4),
                 inset 0 1px 0 rgba(255,255,255,0.03);
             opacity: 0;
@@ -2233,7 +2232,7 @@ def _generate_waft_html_template(
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
         }}
-        
+
         .nav-dropdown-menu::before {{
             content: "";
             position: absolute;
@@ -2246,7 +2245,7 @@ def _generate_waft_html_template(
             border-right: 8px solid transparent;
             border-bottom: 8px solid #2a2a2a;
         }}
-        
+
         /* Regular Dropdown Menu (for Copy/Save) */
         .dropdown-menu {{
             position: absolute;
@@ -2265,7 +2264,7 @@ def _generate_waft_html_template(
             pointer-events: none;
             z-index: 1001;
         }}
-        
+
         .dropdown-menu::before {{
             content: "";
             position: absolute;
@@ -2277,7 +2276,7 @@ def _generate_waft_html_template(
             border-right: 8px solid transparent;
             border-bottom: 8px solid #2a2a2a;
         }}
-        
+
         /* Show dropdown when target is active */
         .dropdown-menu:target,
         .nav-dropdown-menu:target {{
@@ -2286,7 +2285,7 @@ def _generate_waft_html_template(
             transform: translateY(0);
             pointer-events: auto;
         }}
-        
+
         .nav-dropdown-item {{
             display: block;
             padding: 0.75rem 1rem;
@@ -2301,27 +2300,27 @@ def _generate_waft_html_template(
             font-weight: 400;
             letter-spacing: 0.1px;
         }}
-        
+
         .nav-dropdown-item:first-child {{
             border-radius: 6px 6px 0 0;
             border-top: none;
         }}
-        
+
         .nav-dropdown-item:last-child {{
             border-bottom: none;
             border-radius: 0 0 6px 6px;
         }}
-        
+
         .nav-dropdown-item:hover {{
             background: #2d2d2d;
             color: #e5e5e5;
             border-top-color: #333333;
         }}
-        
+
         .nav-dropdown-item:active {{
             background: #1f1f1f;
         }}
-        
+
         /* Dropdown backdrop for top nav */
         .dropdown-backdrop {{
             position: fixed;
@@ -2332,11 +2331,11 @@ def _generate_waft_html_template(
             z-index: 1000;
             display: none;
         }}
-        
+
         .dropdown-menu:target ~ .dropdown-backdrop {{
             display: block;
         }}
-        
+
         .dropdown-item {{
             display: block;
             padding: 0.75rem 1rem;
@@ -2346,21 +2345,21 @@ def _generate_waft_html_template(
             transition: all 0.2s;
             cursor: pointer;
         }}
-        
+
         .dropdown-item:first-child {{
             border-radius: 6px 6px 0 0;
         }}
-        
+
         .dropdown-item:last-child {{
             border-bottom: none;
             border-radius: 0 0 6px 6px;
         }}
-        
+
         .dropdown-item:hover {{
             background: #333333;
             color: #e5e5e5;
         }}
-        
+
         /* CSS-Only Modal using :target */
         .modal {{
             display: none;
@@ -2375,11 +2374,11 @@ def _generate_waft_html_template(
             justify-content: center;
             padding: 2rem;
         }}
-        
+
         .modal:target {{
             display: flex;
         }}
-        
+
         .modal-content {{
             background: #2a2a2a;
             border-radius: 10px;
@@ -2392,21 +2391,21 @@ def _generate_waft_html_template(
             border: 1px solid #333333;
             position: relative;
         }}
-        
+
         .modal-header {{
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1.5rem;
         }}
-        
+
         .modal-header h2 {{
             margin: 0;
             color: #e8e8e8;
             border: none;
             padding: 0;
         }}
-        
+
         .modal-close {{
             background: #333333;
             border: none;
@@ -2422,24 +2421,24 @@ def _generate_waft_html_template(
             justify-content: center;
             line-height: 1;
         }}
-        
+
         .modal-close:hover {{
             background: #3a3a3a;
             color: #e8e8e8;
         }}
-        
+
         /* Form Styles */
         .form-group {{
             margin-bottom: 1.5rem;
         }}
-        
+
         .form-label {{
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 600;
             color: #e5e5e5;
         }}
-        
+
         .form-textarea {{
             width: 100%;
             padding: 0.75rem;
@@ -2451,17 +2450,17 @@ def _generate_waft_html_template(
             background: #1a1a1a;
             color: #d5d5d5;
         }}
-        
+
         .form-textarea:focus {{
             outline: none;
             border-color: #8a9eff;
         }}
-        
+
         .form-actions {{
             display: flex;
             gap: 1rem;
         }}
-        
+
         .btn-primary {{
             flex: 1;
             padding: 0.75rem 1.5rem;
@@ -2473,7 +2472,7 @@ def _generate_waft_html_template(
             font-weight: 600;
             cursor: pointer;
         }}
-        
+
         .btn-secondary {{
             padding: 0.75rem 1.5rem;
             background: #333333;
@@ -2485,63 +2484,63 @@ def _generate_waft_html_template(
             text-decoration: none;
             display: inline-block;
         }}
-        
+
         .btn-primary:hover {{
             opacity: 0.9;
         }}
-        
+
         .btn-secondary:hover {{
             background: #3a3a3a;
         }}
-        
+
         /* Main Content - Responsive padding */
         .main-content {{
             max-width: 1600px;
             margin: 0 auto;
             padding: 1rem; /* Mobile: reduced padding */
         }}
-        
+
         /* Header Section Wrapper - Responsive padding */
         .header-section-wrapper {{
             padding: 1rem 1rem 1.5rem 1rem; /* Mobile: reduced padding */
         }}
-        
+
         .header-section-wrapper .header-section {{
             background: transparent;
             padding: 0;
             border: none;
             margin-bottom: 0;
         }}
-        
+
         .header-section-wrapper h1 {{
             margin-top: 0;
             margin-bottom: 1rem;
             color: #e8e8e8;
             font-size: 2rem;
         }}
-        
+
         .header-section-wrapper .header-meta {{
             opacity: 0.75;
             font-size: 0.9rem;
         }}
-        
+
         .header-meta {{
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
             margin-top: 0.75rem;
         }}
-        
+
         .meta-item {{
             color: #aaaaaa;
             font-size: 0.95rem;
         }}
-        
+
         .meta-label {{
             color: #e5e5e5;
             font-weight: 600;
         }}
-        
+
         /* Stats Grid - Responsive columns */
         .stats-grid {{
             display: grid;
@@ -2549,7 +2548,7 @@ def _generate_waft_html_template(
             gap: 1rem;
             margin: 1.5rem 0;
         }}
-        
+
         .stat-card {{
             background: #252525;
             padding: 1rem;
@@ -2557,7 +2556,7 @@ def _generate_waft_html_template(
             border: 1px solid #333333;
             text-align: center;
         }}
-        
+
         .stat-value {{
             font-size: 1.5rem;
             font-weight: 600;
@@ -2565,14 +2564,14 @@ def _generate_waft_html_template(
             display: block;
             letter-spacing: 0.3px;
         }}
-        
+
         .stat-label {{
             color: #999999;
             font-size: 0.85rem;
             letter-spacing: 0.2px;
             margin-top: 0.5rem;
         }}
-        
+
         /* Content Cards */
         .content-card {{
             background: #222222;
@@ -2581,22 +2580,22 @@ def _generate_waft_html_template(
             border: 1px solid #333333;
             margin: 1rem 0;
         }}
-        
+
         /* Reasoning Trace Section Styling */
         #reasoning-trace {{
             scroll-margin-top: 2rem;
         }}
-        
+
         #reasoning-trace + h2 {{
             margin-top: 3rem;
             border-bottom: 2px solid #333333;
             padding-bottom: 0.5rem;
         }}
-        
+
         #reasoning-trace + h2 ~ details {{
             margin-bottom: 1rem;
         }}
-        
+
         #reasoning-trace + h2 ~ details summary {{
             background: #242424;
             padding: 0.75rem 1rem;
@@ -2606,27 +2605,27 @@ def _generate_waft_html_template(
             font-weight: 500;
             display: block;
         }}
-        
+
         #reasoning-trace + h2 ~ details summary:hover {{
             background: #282828;
             border-color: #2d2d2d;
         }}
-        
+
         /* Chat Context Section Styling */
         #chat-context {{
             scroll-margin-top: 2rem;
         }}
-        
+
         #chat-context + h2 {{
             margin-top: 3rem;
             border-bottom: 2px solid #333333;
             padding-bottom: 0.5rem;
         }}
-        
+
         #chat-context + h2 ~ details {{
             margin-bottom: 1rem;
         }}
-        
+
         #chat-context + h2 ~ details summary {{
             background: #242424;
             padding: 0.75rem 1rem;
@@ -2636,19 +2635,19 @@ def _generate_waft_html_template(
             font-weight: 500;
             display: block;
         }}
-        
+
         #chat-context + h2 ~ details summary:hover {{
             background: #282828;
             border-color: #2d2d2d;
         }}
-        
+
         /* Table Wrapper - Horizontal scroll on mobile */
         .table-wrapper {{
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
             margin: 1rem 0;
         }}
-        
+
         /* Tables - Information Dense with Responsive Sizing */
         table {{
             width: 100%;
@@ -2658,7 +2657,7 @@ def _generate_waft_html_template(
             margin: 0;
             font-size: 0.9rem;
         }}
-        
+
         th {{
             background: #2a2a2a;
             color: #e5e5e5;
@@ -2669,7 +2668,7 @@ def _generate_waft_html_template(
             letter-spacing: 0.3px;
             font-weight: 600;
         }}
-        
+
         td {{
             color: #d5d5d5;
             padding: 0.75rem;
@@ -2679,15 +2678,15 @@ def _generate_waft_html_template(
             letter-spacing: 0.2px;
             line-height: 1.6;
         }}
-        
+
         tr:nth-child(even) td {{
             background: #252525;
         }}
-        
+
         tr:hover td {{
             background: #2d2d2d;
         }}
-        
+
         /* Code */
         code {{
             background: #252525;
@@ -2699,7 +2698,7 @@ def _generate_waft_html_template(
             font-family: 'SF Mono', 'Monaco', 'Menlo', 'Consolas', monospace;
             font-size: 0.9em;
         }}
-        
+
         pre {{
             background: #1f1f1f;
             color: #d5d5d5;
@@ -2711,23 +2710,23 @@ def _generate_waft_html_template(
             overflow-x: auto;
             margin: 1rem 0;
         }}
-        
+
         pre code {{
             background: transparent;
             border: none;
             padding: 0;
         }}
-        
+
         /* Lists */
         ul, ol {{
             margin-left: 1.5rem;
             margin-bottom: 1rem;
         }}
-        
+
         li {{
             margin-bottom: 0.5rem;
         }}
-        
+
         /* Badges */
         .badge {{
             display: inline-block;
@@ -2737,31 +2736,31 @@ def _generate_waft_html_template(
             font-weight: bold;
             border: 1px solid;
         }}
-        
+
         .badge-active {{
             background: #2a3a4a;
             color: #8a9eff;
             border-color: #3a4a5a;
         }}
-        
+
         .badge-completed {{
             background: #2a3a2a;
             color: #8aff8a;
             border-color: #3a4a3a;
         }}
-        
+
         .badge-open {{
             background: #2a2a2a;
             color: #b0b0b0;
             border-color: #3a3a3a;
         }}
-        
+
         .badge-paused {{
             background: #4a3a2a;
             color: #ffaa8a;
             border-color: #5a4a3a;
         }}
-        
+
         /* Footer */
         .footer {{
             margin-top: 3rem;
@@ -2771,7 +2770,7 @@ def _generate_waft_html_template(
             color: #999999;
             font-size: 0.875rem;
         }}
-        
+
         /* Information Dense Sections */
         .info-grid {{
             display: grid;
@@ -2779,53 +2778,53 @@ def _generate_waft_html_template(
             gap: 1rem;
             margin: 1.5rem 0;
         }}
-        
+
         .info-card {{
             background: #222222;
             padding: 1rem;
             border-radius: 4px;
             border: 1px solid #333333;
         }}
-        
+
         .info-card h4 {{
             margin-top: 0;
             margin-bottom: 0.75rem;
             color: #e0e0e0;
         }}
-        
+
         .info-card ul {{
             margin-left: 1.25rem;
         }}
-        
+
         .info-card li {{
             margin-bottom: 0.25rem;
             font-size: 0.9rem;
         }}
-        
+
         /* Print Styles */
         @media print {{
             .nav-bar {{
                 display: none;
             }}
-            
+
             body {{
                 background: white;
                 color: black;
             }}
-            
+
             .main-content {{
                 max-width: 100%;
                 padding: 0;
             }}
         }}
-        
+
         /* ============================================
            RESPONSIVE BREAKPOINTS
            Mobile-first approach: base styles for mobile,
            then enhance for larger screens
            Breakpoints: 600px (tablet), 1024px (desktop)
            ============================================ */
-        
+
         /* Mobile: < 600px - Compact sizing, optimized for small screens */
         @media (max-width: 599px) {{
             /* Navigation: Keep 3-column but with tighter spacing */
@@ -2833,90 +2832,90 @@ def _generate_waft_html_template(
                 gap: 0.25rem;
                 padding: 0.75rem 0.5rem;
             }}
-            
+
             .nav-dropdown-toggle {{
                 padding: 0.5rem 0.5rem;
                 font-size: 0.8rem;
                 min-height: 44px; /* Ensure touch target */
             }}
-            
+
             /* Tables: Smaller font and padding on mobile */
             table {{
                 font-size: 0.85rem;
             }}
-            
+
             th, td {{
                 padding: 0.5rem;
             }}
-            
+
             /* Stats grid: 2 columns on mobile */
             .stats-grid {{
                 grid-template-columns: repeat(2, 1fr);
                 gap: 0.75rem;
             }}
-            
+
             /* Header: Reduced padding */
             .header-section-wrapper {{
                 padding: 1rem 1rem 1.5rem 1rem;
             }}
         }}
-        
+
         /* Tablet: 600px - 1023px - Medium sizing */
         @media (min-width: 600px) and (max-width: 1023px) {{
             .nav-bar {{
                 padding: 0.875rem 1.5rem 1.125rem 1.5rem;
             }}
-            
+
             .nav-container {{
                 gap: 0.5rem;
             }}
-            
+
             .nav-dropdown-toggle {{
                 padding: 0.625rem 0.75rem;
                 font-size: 0.85rem;
             }}
-            
+
             .main-content {{
                 padding: 1.5rem;
             }}
-            
+
             .header-section-wrapper {{
                 padding: 1.25rem 1.5rem 1.75rem 1.5rem;
             }}
-            
+
             .stats-grid {{
                 grid-template-columns: repeat(3, 1fr);
             }}
         }}
-        
+
         /* Desktop: 1024px+ - Full sizing, all features visible */
         @media (min-width: 1024px) {{
             .nav-bar {{
                 padding: 1rem 2rem 1.25rem 2rem;
             }}
-            
+
             .nav-container {{
                 gap: 0.75rem;
             }}
-            
+
             .nav-dropdown-toggle {{
                 padding: 0.75rem 1rem;
                 font-size: 0.9rem;
             }}
-            
+
             .main-content {{
                 padding: 2rem;
             }}
-            
+
             .header-section-wrapper {{
                 padding: 1.5rem 2rem 2rem 2rem;
             }}
-            
+
             .stats-grid {{
                 grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
             }}
         }}
-        
+
         /* Very Small Screens: < 360px - Extra compact for smallest devices */
         @media (max-width: 359px) {{
             .nav-dropdown-toggle {{
@@ -2927,34 +2926,34 @@ def _generate_waft_html_template(
                 overflow: hidden;
                 text-overflow: ellipsis;
             }}
-            
+
             .stats-grid {{
                 grid-template-columns: 1fr; /* Single column on very small screens */
             }}
         }}
-        
+
         /* Accessibility: No italics for astigmatism */
         em, i {{
             font-style: normal;
             font-weight: 500;
         }}
-        
+
         /* Definition Lists for Key-Value Pairs */
         dl {{
             margin: 1rem 0;
         }}
-        
+
         dt {{
             font-weight: 600;
             color: #e5e5e5;
             margin-top: 0.75rem;
         }}
-        
+
         dd {{
             margin-left: 1.5rem;
             color: #d5d5d5;
         }}
-        
+
         /* HTML5 <details> and <summary> - Native Collapsible Sections */
         details {{
             background: #222222;
@@ -2963,7 +2962,7 @@ def _generate_waft_html_template(
             margin: 1rem 0;
             padding: 0;
         }}
-        
+
         summary {{
             padding: 1rem;
             cursor: pointer;
@@ -2972,11 +2971,11 @@ def _generate_waft_html_template(
             list-style: none;
             user-select: none;
         }}
-        
+
         summary::-webkit-details-marker {{
             display: none;
         }}
-        
+
         summary::before {{
             content: "▶ ";
             display: inline-block;
@@ -2984,32 +2983,32 @@ def _generate_waft_html_template(
             transition: transform 0.2s;
             color: #8a9eff;
         }}
-        
+
         details[open] summary::before {{
             transform: rotate(90deg);
         }}
-        
+
         details[open] summary {{
             border-bottom: 1px solid #333333;
         }}
-        
+
         details > *:not(summary) {{
             padding: 1rem;
             padding-top: 0.5rem;
         }}
-        
+
         /* CSS-Only Tabs using :target */
         .tabs {{
             border-bottom: 2px solid #333333;
             margin: 1.5rem 0;
         }}
-        
+
         .tab-nav {{
             display: flex;
             gap: 0.5rem;
             flex-wrap: wrap;
         }}
-        
+
         .tab-link {{
             padding: 0.5rem 1rem;
             background: #222222;
@@ -3020,12 +3019,12 @@ def _generate_waft_html_template(
             border-radius: 4px 4px 0 0;
             transition: all 0.2s;
         }}
-        
+
         .tab-link:hover {{
             background: #252525;
             color: #e5e5e5;
         }}
-        
+
         .tab-panel {{
             display: none;
             padding: 1rem;
@@ -3033,25 +3032,25 @@ def _generate_waft_html_template(
             border: 1px solid #333333;
             border-top: none;
         }}
-        
+
         .tab-panel:target {{
             display: block;
         }}
-        
+
         /* First tab visible by default */
         .tabs .tab-panel:first-of-type {{
             display: block;
         }}
-        
+
         .tabs .tab-panel:target ~ .tab-panel {{
             display: none;
         }}
-        
+
         /* CSS-Only Filter Toggle using :checked */
         .filter-toggle {{
             display: none;
         }}
-        
+
         .filter-label {{
             display: inline-block;
             padding: 0.5rem 1rem;
@@ -3062,44 +3061,44 @@ def _generate_waft_html_template(
             color: #b5b5b5;
             margin: 0.25rem;
         }}
-        
+
         .filter-label:hover {{
             background: #252525;
             color: #e5e5e5;
         }}
-        
+
         .filter-toggle:checked + .filter-label {{
             background: #2a3a4a;
             color: #8a9eff;
             border-color: #3a4a5a;
         }}
-        
+
         /* Show/hide filtered content */
         .filterable {{
             display: none;
         }}
-        
+
         #filter-all:checked ~ * .filterable {{
             display: block;
         }}
-        
+
         #filter-active:checked ~ * .filterable[data-status="active"] {{
             display: block;
         }}
-        
+
         #filter-completed:checked ~ * .filterable[data-status="completed"] {{
             display: block;
         }}
-        
+
         #filter-open:checked ~ * .filterable[data-status="open"] {{
             display: block;
         }}
-        
+
         /* CSS-Only Accordion using :checked */
         .accordion-toggle {{
             display: none;
         }}
-        
+
         .accordion-label {{
             display: block;
             padding: 1rem;
@@ -3111,17 +3110,17 @@ def _generate_waft_html_template(
             color: #e5e5e5;
             margin-bottom: 0.5rem;
         }}
-        
+
         .accordion-label::after {{
             content: " ▼";
             float: right;
             transition: transform 0.2s;
         }}
-        
+
         .accordion-toggle:checked + .accordion-label::after {{
             transform: rotate(180deg);
         }}
-        
+
         .accordion-content {{
             max-height: 0;
             overflow: hidden;
@@ -3131,12 +3130,12 @@ def _generate_waft_html_template(
             border-top: none;
             border-radius: 0 0 4px 4px;
         }}
-        
+
         .accordion-toggle:checked ~ .accordion-content {{
             max-height: 2000px;
             padding: 1rem;
         }}
-        
+
         /* Clickable Cards with :target */
         .clickable-card {{
             display: block;
@@ -3149,47 +3148,47 @@ def _generate_waft_html_template(
             color: inherit;
             transition: all 0.2s;
         }}
-        
+
         .clickable-card:hover {{
             background: #252525;
             border-color: #8a9eff;
             transform: translateX(4px);
         }}
-        
+
         .clickable-card:target {{
             background: #2a2a2a;
             border-color: #8a9eff;
             border-width: 2px;
         }}
-        
+
         /* Expandable Rows in Tables */
         .expandable-row {{
             cursor: pointer;
         }}
-        
+
         .expandable-row:hover {{
             background: #2d2d2d;
         }}
-        
+
         .row-details {{
             display: none;
         }}
-        
+
         .row-details:target {{
             display: table-row;
         }}
-        
+
         /* Sortable Table Headers (via URL params - server-side) */
         .sortable-header {{
             position: relative;
             padding-right: 1.5rem;
         }}
-        
+
         .sortable-header a {{
             color: inherit;
             text-decoration: none;
         }}
-        
+
         .sortable-header a::after {{
             content: " ↕";
             position: absolute;
@@ -3197,14 +3196,14 @@ def _generate_waft_html_template(
             color: #666;
             font-size: 0.8em;
         }}
-        
+
         /* CSS-Only Search Highlight (using :target) */
         .search-result:target {{
             background: #2a3a4a;
             border-left: 4px solid #8a9eff;
             padding-left: calc(1rem - 4px);
         }}
-    
+
     </style>
 </head>
 <body>
@@ -3226,7 +3225,7 @@ def _generate_waft_html_template(
                         <a href="#" class="dropdown-backdrop" onclick="window.location.hash=''; return false;"></a>
                     </div>
                 </div>
-                
+
                 <!-- Section 2: Secondary Navigation -->
                 <div class="nav-section">
                     <div class="dropdown-group">
@@ -3240,7 +3239,7 @@ def _generate_waft_html_template(
                         <a href="#" class="dropdown-backdrop" onclick="window.location.hash=''; return false;"></a>
                     </div>
                 </div>
-                
+
                 <!-- Section 3: Actions -->
                 <div class="nav-section">
                     <div class="dropdown-group">
@@ -3259,13 +3258,13 @@ def _generate_waft_html_template(
             </div>
         </nav>
 
-        
+
         <!-- Header Section - Inside Above the Fold -->
         <div class="header-section-wrapper">
             {header_html}
         </div>
     </section>
-    
+
     <main class="main-content">
         {main_html}
         {session_history_html}
@@ -3273,7 +3272,7 @@ def _generate_waft_html_template(
             <p>Generated by WAFT (Wave Agent Framework & Tools) v0.9.2 | {timestamp}</p>
         </footer>
     </main>
-    
+
     <!-- Floating Oracle Button - Bottom Center -->
     <a href="oracle.html" target="_blank" class="btn-oracle">🔮 Consult the Oracle</a>
     <!-- Oracle Modal - CSS-only using :target -->
@@ -3286,10 +3285,10 @@ def _generate_waft_html_template(
             <form action="http://localhost:8000/api/oracle/consult" method="POST" target="_blank">
                 <div class="form-group">
                     <label for="oracle-question" class="form-label">Your Question:</label>
-                    <textarea 
-                        id="oracle-question" 
-                        name="question" 
-                        rows="4" 
+                    <textarea
+                        id="oracle-question"
+                        name="question"
+                        rows="4"
                         class="form-textarea"
                         placeholder="Ask the Oracle anything about your project, code, or decisions..."
                         required
@@ -3307,7 +3306,7 @@ def _generate_waft_html_template(
         </div>
     <!-- Toast Notification -->
     <div id="toast" class="toast-notification"></div>
-    
+
     <!-- Minimal JavaScript for Copy/Save (graceful degradation) -->
     <script>
 
@@ -3322,7 +3321,7 @@ def _generate_waft_html_template(
                 }}
             }});
         }})();
-    
+
 
         // Show toast notification
         function showToast(message, duration = 2000) {{
@@ -3333,12 +3332,12 @@ def _generate_waft_html_template(
                 toast.classList.remove('show');
             }}, duration);
         }}
-        
+
         // Close dropdown after action
         function closeDropdowns() {{
             window.location.hash = '';
         }}
-        
+
         // Copy HTML to clipboard
         async function copyHTML() {{
             try {{
@@ -3363,7 +3362,7 @@ def _generate_waft_html_template(
                 document.body.removeChild(textarea);
             }}
         }}
-        
+
         // Copy text-only to clipboard
         async function copyText() {{
             try {{
@@ -3391,7 +3390,7 @@ def _generate_waft_html_template(
                 document.body.removeChild(textarea);
             }}
         }}
-        
+
         // Extract readable text content
         function extractTextContent(element) {{
             let text = '';
@@ -3401,7 +3400,7 @@ def _generate_waft_html_template(
                 null,
                 false
             );
-            
+
             let node;
             while (node = walker.nextNode()) {{
                 if (node.nodeType === Node.TEXT_NODE) {{
@@ -3421,11 +3420,11 @@ def _generate_waft_html_template(
                     }}
                 }}
             }}
-            
+
             // Clean up excessive newlines
             return text.replace(/\n{{3,}}/g, '\n\n').trim();
         }}
-        
+
         // Save HTML as file
         function saveHTML() {{
             const html = document.documentElement.outerHTML;
@@ -3441,7 +3440,7 @@ def _generate_waft_html_template(
             showToast('💾 HTML file saved!');
             closeDropdowns();
         }}
-        
+
         // Save text as file
         function saveText() {{
             const mainContent = document.querySelector('.main-content');
@@ -3458,7 +3457,7 @@ def _generate_waft_html_template(
             showToast('📝 Text file saved!');
             closeDropdowns();
         }}
-        
+
         // Keyboard shortcuts
         document.addEventListener('keydown', function(e) {{
             // Ctrl/Cmd + Shift + H = Copy HTML
@@ -3477,7 +3476,7 @@ def _generate_waft_html_template(
                 saveHTML();
             }}
         }});
-        
+
         /* Copy Abstract Function */
         function copyAbstract() {{
             const abstractBox = document.getElementById('abstract-content');
@@ -3485,13 +3484,13 @@ def _generate_waft_html_template(
                 console.error('Abstract content not found');
                 return;
             }}
-            
+
             // Get text content, stripping HTML but preserving line breaks
             let text = abstractBox.innerText || abstractBox.textContent || '';
-            
+
             // Clean up extra whitespace
             text = text.trim().replace(/\s+/g, ' ');
-            
+
             // Copy to clipboard
             if (navigator.clipboard && navigator.clipboard.writeText) {{
                 navigator.clipboard.writeText(text).then(() => {{
@@ -3535,31 +3534,31 @@ def _generate_waft_html_template(
                 document.body.removeChild(textArea);
             }}
         }}
-        
+
         function copyRecommendedStep() {{
             const actionEl = document.getElementById('recommended-action');
             const contextEl = document.getElementById('recommended-context');
-            
+
             if (!actionEl) {{
                 console.error('Recommended action not found');
                 return;
             }}
-            
+
             // Get action text
             let actionText = actionEl.innerText || actionEl.textContent || '';
-            
+
             // Get context text (if available)
             let contextText = '';
             if (contextEl) {{
                 contextText = contextEl.innerText || contextEl.textContent || '';
             }}
-            
+
             // Combine action and context
             let combinedText = actionText.trim();
             if (contextText.trim()) {{
                 combinedText += '\n\n--- Context Primer ---\n' + contextText.trim();
             }}
-            
+
             // Copy to clipboard
             if (navigator.clipboard && navigator.clipboard.writeText) {{
                 navigator.clipboard.writeText(combinedText).then(() => {{
@@ -3603,7 +3602,7 @@ def _generate_waft_html_template(
                 document.body.removeChild(textArea);
             }}
         }}
-    
+
     </script>
 </body>
 </html>"""
@@ -3676,9 +3675,8 @@ def generate_html_report(
     try:
         from weasyprint import HTML
 
-        pdf_available = True
     except ImportError:
-        pdf_available = False
+        pass
 
     # Add IDs to sections for navigation (before markdown conversion)
     md_content = md_content.replace("## Quick Stats", "## Quick Stats {#quick-stats}")

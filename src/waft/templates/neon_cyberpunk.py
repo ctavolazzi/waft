@@ -160,7 +160,7 @@ NEON_CYBERPUNK_TEMPLATE = """
         }
 
         .glitch {
-            text-shadow: 
+            text-shadow:
                 2px 0 #ff00ff,
                 -2px 0 #00ffff,
                 0 2px #ffff00;

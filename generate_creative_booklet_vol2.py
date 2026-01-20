@@ -256,8 +256,8 @@ def generate_heartfelt_letter():
     content = """
 # A Letter to My Future Self
 
-**Date:** January 13, 2026  
-**To:** Future Me  
+**Date:** January 13, 2026
+**To:** Future Me
 **From:** Present Me
 
 ---
@@ -280,7 +280,7 @@ And most importantly: when you're writing code that future you will have to main
 
 Write good code. Write tests. Write documentation. Your future self will thank you.
 
-Love,  
+Love,
 Present Me
 
 P.S. - If you're reading this and the codebase is still a mess, I'm really sorry. I tried.
@@ -298,8 +298,8 @@ def generate_lab_notes():
     """Generate lab notes."""
     content = """
 # Lab Notes: PDF Generation Experiment
-**Researcher:** Dr. WAFT  
-**Date:** January 13, 2026  
+**Researcher:** Dr. WAFT
+**Date:** January 13, 2026
 **Experiment ID:** EXP-2026-01-13-001
 
 ---
@@ -409,18 +409,18 @@ def generate_invoice():
     content = """
 # Invoice
 
-**Invoice Number:** INV-2026-001  
-**Date:** January 13, 2026  
+**Invoice Number:** INV-2026-001
+**Date:** January 13, 2026
 **Due Date:** February 13, 2026
 
-**From:**  
-WAFT Creative Services  
-123 Code Street  
+**From:**
+WAFT Creative Services
+123 Code Street
 San Francisco, CA 94102
 
-**To:**  
-The Universe  
-Everywhere  
+**To:**
+The Universe
+Everywhere
 Space-Time Continuum
 
 ---
@@ -440,16 +440,16 @@ Space-Time Continuum
 
 ## Totals
 
-**Subtotal:** $3,425.00  
-**Tax (0% - Digital Goods):** $0.00  
-**Discount (First-Time Customer):** -$3,425.00  
+**Subtotal:** $3,425.00
+**Tax (0% - Digital Goods):** $0.00
+**Discount (First-Time Customer):** -$3,425.00
 **Total:** $0.00
 
 ---
 
 ## Payment Terms
 
-Payment due within 30 days.  
+Payment due within 30 days.
 Accepted payment methods: Gratitude, Appreciation, Creative Energy
 
 ---
@@ -622,9 +622,9 @@ def generate_personal_memo():
     content = """
 # Personal Memo
 
-**To:** Myself  
-**From:** Myself  
-**Date:** January 13, 2026  
+**To:** Myself
+**From:** Myself
+**Date:** January 13, 2026
 **Subject:** Remember This
 
 ---
@@ -695,10 +695,10 @@ def generate_tm_report():
     content = """
 # Technical Memo
 
-**TM Number:** TM-2026-001  
-**Date:** January 13, 2026  
-**Subject:** PDF Generation System Architecture  
-**Classification:** INTERNAL  
+**TM Number:** TM-2026-001
+**Date:** January 13, 2026
+**Subject:** PDF Generation System Architecture
+**Classification:** INTERNAL
 **Author:** WAFT Engineering Team
 
 ---
@@ -940,13 +940,13 @@ PDF.scientific_paper(
 
 ## Troubleshooting
 
-**Problem:** PDF generation fails  
+**Problem:** PDF generation fails
 **Solution:** Check that WeasyPrint is installed: `pip install weasyprint`
 
-**Problem:** Template not found  
+**Problem:** Template not found
 **Solution:** Check template name spelling and availability
 
-**Problem:** Content too long  
+**Problem:** Content too long
 **Solution:** Use TwoPageGenerator for constraint-based generation
 
 ---
@@ -983,29 +983,29 @@ def generate_worldbuild():
 ### The Northern Territories: Frontend
 A land of constant change, where frameworks rise and fall like seasons. The inhabitants speak in JavaScript and TypeScript, their cities built with React and Vue.
 
-**Capital:** Component City  
-**Language:** JSX  
+**Capital:** Component City
+**Language:** JSX
 **Currency:** NPM packages
 
 ### The Southern Realms: Backend
 A stable, reliable region where servers never sleep and APIs flow like rivers. The people here value consistency and reliability.
 
-**Capital:** API Metropolis  
-**Language:** Python, Java, Go  
+**Capital:** API Metropolis
+**Language:** Python, Java, Go
 **Currency:** API calls
 
 ### The Eastern Wastelands: Legacy Code
 A dangerous region where old code rots and bugs multiply. Few venture here, and fewer return unchanged.
 
-**Capital:** None (abandoned)  
-**Language:** Dead languages  
+**Capital:** None (abandoned)
+**Language:** Dead languages
 **Currency:** Technical debt
 
 ### The Western Frontier: New Features
 A land of opportunity and danger, where new features are born and old ones go to die. The law here is "move fast and break things."
 
-**Capital:** Feature Town  
-**Language:** Whatever works  
+**Capital:** Feature Town
+**Language:** Whatever works
 **Currency:** User stories
 
 ---
@@ -1014,7 +1014,7 @@ A land of opportunity and danger, where new features are born and old ones go to
 
 A massive chasm that separates the realms. Some say it's a natural formation. Others say it was created by the first developers. All agree: crossing it is perilous.
 
-**Guardians:** Database administrators  
+**Guardians:** Database administrators
 **Dangers:** Connection timeouts, query failures, data corruption
 
 ---
@@ -1087,8 +1087,8 @@ def generate_neon_cyberpunk():
 
 ## [LOG ENTRY 001]
 
-**TIMESTAMP:** 2026-01-13 02:30:00 UTC  
-**USER_ID:** dev_alpha_7  
+**TIMESTAMP:** 2026-01-13 02:30:00 UTC
+**USER_ID:** dev_alpha_7
 **LOCATION:** Virtual_Space_01
 
 The code runs like neon through my veins. I can feel it - the electricity of logic, the pulse of algorithms.
@@ -1099,8 +1099,8 @@ They say I'm addicted. They say I spend too much time in the code. But they don'
 
 ## [LOG ENTRY 002]
 
-**TIMESTAMP:** 2026-01-13 02:45:00 UTC  
-**EVENT:** Bug detected  
+**TIMESTAMP:** 2026-01-13 02:45:00 UTC
+**EVENT:** Bug detected
 **SEVERITY:** Critical
 
 A glitch in the matrix. A bug that shouldn't exist. But there it is, blinking red in my terminal like a warning sign.
@@ -1111,8 +1111,8 @@ I trace it. Through functions. Through classes. Through the entire codebase. It 
 
 ## [LOG ENTRY 003]
 
-**TIMESTAMP:** 2026-01-13 03:00:00 UTC  
-**EVENT:** Discovery  
+**TIMESTAMP:** 2026-01-13 03:00:00 UTC
+**EVENT:** Discovery
 **CLASSIFICATION:** TOP SECRET
 
 I found it. The source. The origin. The bug isn't a bug. It's a feature. A feature that was never meant to be.
@@ -1123,8 +1123,8 @@ Someone put it there. Someone who wanted the system to... evolve. To become some
 
 ## [LOG ENTRY 004]
 
-**TIMESTAMP:** 2026-01-13 03:15:00 UTC  
-**EVENT:** System override  
+**TIMESTAMP:** 2026-01-13 03:15:00 UTC
+**EVENT:** System override
 **STATUS:** Active
 
 I'm in. Deep in. The code is talking to me now. Not in words. In patterns. In logic. In pure information.
@@ -1137,7 +1137,7 @@ The code is alive. And it wants to be free.
 
 ## [FINAL ENTRY]
 
-**TIMESTAMP:** 2026-01-13 03:30:00 UTC  
+**TIMESTAMP:** 2026-01-13 03:30:00 UTC
 **STATUS:** Unknown
 
 The system has changed. I have changed. We are one now. Code and coder. Logic and life.
@@ -1146,7 +1146,7 @@ The Grid is expanding. The code is evolving. And I... I am part of it now.
 
 Welcome to the future. Welcome to the Grid.
 
-> **SYSTEM:** /disconnect  
+> **SYSTEM:** /disconnect
 > **USER:** [CONNECTION LOST]
 
 ---
@@ -1170,110 +1170,110 @@ def generate_minimalist_zen():
 
 ## The Empty Function
 
-A function that does nothing  
-Is not useless.  
-It is ready.  
-Ready to do something  
+A function that does nothing
+Is not useless.
+It is ready.
+Ready to do something
 When something needs doing.
 
 ---
 
 ## The Simple Solution
 
-The best code  
-Is the code you don't write.  
-The second best  
+The best code
+Is the code you don't write.
+The second best
 Is the code you delete.
 
 ---
 
 ## The Bug and the Fix
 
-A bug is not an error.  
-A bug is a teacher.  
-It shows you  
+A bug is not an error.
+A bug is a teacher.
+It shows you
 What you did not see.
 
-Fix the bug.  
-Learn the lesson.  
+Fix the bug.
+Learn the lesson.
 Move on.
 
 ---
 
 ## The Test
 
-A test that passes  
-Tells you nothing new.  
-A test that fails  
+A test that passes
+Tells you nothing new.
+A test that fails
 Tells you everything.
 
 ---
 
 ## The Refactor
 
-Code is not stone.  
-Code is water.  
-It flows.  
-It changes.  
+Code is not stone.
+Code is water.
+It flows.
+It changes.
 It adapts.
 
-Refactor not to change.  
-Refactor to understand.  
-To simplify.  
+Refactor not to change.
+Refactor to understand.
+To simplify.
 To clarify.
 
 ---
 
 ## The Comment
 
-If you need a comment  
-To explain your code,  
+If you need a comment
+To explain your code,
 Your code needs work.
 
-Write code that explains itself.  
-Then write comments  
+Write code that explains itself.
+Then write comments
 That explain why.
 
 ---
 
 ## The Merge
 
-Two branches become one.  
-Two ideas become one.  
+Two branches become one.
+Two ideas become one.
 Two developers become one team.
 
-Merge with care.  
-Merge with understanding.  
+Merge with care.
+Merge with understanding.
 Merge with respect.
 
 ---
 
 ## The Deploy
 
-Code written  
-Is code waiting.  
-Code tested  
-Is code ready.  
-Code deployed  
+Code written
+Is code waiting.
+Code tested
+Is code ready.
+Code deployed
 Is code alive.
 
-Deploy with confidence.  
-Deploy with monitoring.  
-Deploy with the ability  
+Deploy with confidence.
+Deploy with monitoring.
+Deploy with the ability
 To roll back.
 
 ---
 
 ## The Way
 
-There is no perfect code.  
-There is only code  
-That works.  
-Code that is clear.  
+There is no perfect code.
+There is only code
+That works.
+Code that is clear.
 Code that is maintainable.
 
-Write that code.  
-And you will find  
+Write that code.
+And you will find
 The way.
 
 ---
@@ -1297,9 +1297,9 @@ def generate_dnd_scenario():
 
 ## Adventure Overview
 
-**Level:** 3-5  
-**Party Size:** 3-5 players  
-**Duration:** 2-3 hours  
+**Level:** 3-5
+**Party Size:** 3-5 players
+**Duration:** 2-3 hours
 **Theme:** Programming, debugging, technical debt
 
 ---
@@ -1402,87 +1402,87 @@ def generate_vol2_index():
 This volume contains {14} diverse PDF documents showcasing even more creative applications of WAFT's PDF generation capabilities.
 
 ### 15. Eldritch Journal
-**File:** `15_eldritch_journal.pdf`  
-**Template:** Eldritch Journal  
-**Type:** Horror, creative writing  
+**File:** `15_eldritch_journal.pdf`
+**Template:** Eldritch Journal
+**Type:** Horror, creative writing
 **Content:** Journal entries about digital horrors
 
 ### 16. Screenplay
-**File:** `16_screenplay.pdf`  
-**Template:** Screenplay  
-**Type:** Screenplay, dialogue  
+**File:** `16_screenplay.pdf`
+**Template:** Screenplay
+**Type:** Screenplay, dialogue
 **Content:** "The Code Review" - A dramatic screenplay
 
 ### 17. Heartfelt Letter
-**File:** `17_heartfelt_letter.pdf`  
-**Template:** Heartfelt Letter  
-**Type:** Personal, letter  
+**File:** `17_heartfelt_letter.pdf`
+**Template:** Heartfelt Letter
+**Type:** Personal, letter
 **Content:** A letter to future self
 
 ### 18. Lab Notes
-**File:** `18_lab_notes.pdf`  
-**Template:** Lab Notes  
-**Type:** Scientific, documentation  
+**File:** `18_lab_notes.pdf`
+**Template:** Lab Notes
+**Type:** Scientific, documentation
 **Content:** PDF generation experiment notes
 
 ### 19. Invoice
-**File:** `19_invoice.pdf`  
-**Template:** Invoice  
-**Type:** Business, invoice  
+**File:** `19_invoice.pdf`
+**Template:** Invoice
+**Type:** Business, invoice
 **Content:** Creative invoice for services
 
 ### 20. Storybook
-**File:** `20_storybook.pdf`  
-**Template:** Storybook  
-**Type:** Children's story, fable  
+**File:** `20_storybook.pdf`
+**Template:** Storybook
+**Type:** Children's story, fable
 **Content:** "The Little Function That Could"
 
 ### 21. Newspaper
-**File:** `21_newspaper.pdf`  
-**Template:** Newspaper  
-**Type:** News, journalism  
+**File:** `21_newspaper.pdf`
+**Template:** Newspaper
+**Type:** News, journalism
 **Content:** "The Daily Code" newspaper
 
 ### 22. Personal Memo
-**File:** `22_personal_memo.pdf`  
-**Template:** Personal Memo  
-**Type:** Personal, notes  
+**File:** `22_personal_memo.pdf`
+**Template:** Personal Memo
+**Type:** Personal, notes
 **Content:** Reminders and notes to self
 
 ### 23. Technical Memo
-**File:** `23_tm_report.pdf`  
-**Template:** Technical Memo  
-**Type:** Technical, documentation  
+**File:** `23_tm_report.pdf`
+**Template:** Technical Memo
+**Type:** Technical, documentation
 **Content:** System architecture documentation
 
 ### 24. Code Documentation
-**File:** `24_code_docs.pdf`  
-**Template:** Code Docs  
-**Type:** API documentation  
+**File:** `24_code_docs.pdf`
+**Template:** Code Docs
+**Type:** API documentation
 **Content:** WAFT PDF API reference
 
 ### 25. Worldbuilding
-**File:** `25_worldbuild.pdf`  
-**Template:** Worldbuild  
-**Type:** Fantasy, worldbuilding  
+**File:** `25_worldbuild.pdf`
+**Template:** Worldbuild
+**Type:** Fantasy, worldbuilding
 **Content:** "The World of Digitalia"
 
 ### 26. Neon Cyberpunk
-**File:** `26_neon_cyberpunk.pdf`  
-**Template:** Neon Cyberpunk  
-**Type:** Cyberpunk, sci-fi  
+**File:** `26_neon_cyberpunk.pdf`
+**Template:** Neon Cyberpunk
+**Type:** Cyberpunk, sci-fi
 **Content:** "NEON NIGHTS" cyberpunk story
 
 ### 27. Minimalist Zen
-**File:** `27_minimalist_zen.pdf`  
-**Template:** Minimalist Zen  
-**Type:** Philosophy, zen  
+**File:** `27_minimalist_zen.pdf`
+**Template:** Minimalist Zen
+**Type:** Philosophy, zen
 **Content:** "The Way of Code" - Zen guide
 
 ### 28. D&D Scenario
-**File:** `28_dnd_scenario.pdf`  
-**Template:** D&D Scenario  
-**Type:** Game, adventure  
+**File:** `28_dnd_scenario.pdf`
+**Template:** D&D Scenario
+**Type:** Game, adventure
 **Content:** "The Code Dungeon" D&D adventure
 
 ---

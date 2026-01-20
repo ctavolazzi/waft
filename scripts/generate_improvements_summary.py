@@ -22,7 +22,7 @@ def generate_improvements_summary():
 
     content = f"""# WAFT Self-Testing Improvements
 
-**Generated**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}  
+**Generated**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 **Purpose**: Document improvements made based on self-testing feedback
 
 ---
@@ -82,13 +82,13 @@ Based on the initial self-testing results, we identified areas for improvement a
 
 **Problem**: Multiple gaps identified in document structure
 
-**Solution**: 
+**Solution**:
 - Added comprehensive introduction
 - Added methodology section
 - Improved content organization
 - Enhanced section structure
 
-**Impact**: 
+**Impact**:
 - Gaps reduced from 4 to 1 (75% reduction)
 - Quality score improved from 0.62 to 1.00 (61% improvement)
 - All suggestions addressed

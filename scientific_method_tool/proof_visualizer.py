@@ -185,13 +185,13 @@ with tab3:
                         y=values,
                         mode="lines+markers",
                         name=f"Proof #{proof_id}",
-                        line=dict(width=2),
+                        line={"width": 2},
                     )
                 )
             else:
                 fig.add_trace(
                     go.Scatter(
-                        y=values, mode="markers", name=f"Proof #{proof_id}", marker=dict(size=10)
+                        y=values, mode="markers", name=f"Proof #{proof_id}", marker={"size": 10}
                     )
                 )
 

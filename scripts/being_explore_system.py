@@ -29,7 +29,7 @@ def main():
     # Initialize systems
     console.print("[yellow]→[/yellow] Initializing systems...")
     being_system = BeingSystem(project_path=project_root)
-    memory = MemoryManager(project_path=project_root)
+    MemoryManager(project_path=project_root)
 
     # Spawn Being from Source
     console.print("[yellow]→[/yellow] Spawning Being from Source...")
@@ -542,7 +542,7 @@ def create_genetic_lineage(being, observations: list) -> str:
 
 **Work Performed:** System exploration
 **Observations:** {len(observations)}
-**Categories Explored:** {len(set(o.get("category", "other") for o in observations))}
+**Categories Explored:** {len({o.get("category", "other") for o in observations})}
 
 ## Work → Evolution
 
@@ -608,7 +608,7 @@ def create_evolution_summary(being, observations: list) -> str:
 ## Achievements
 
 - ✅ Explored {len(observations)} system aspects
-- ✅ Documented findings across {len(set(o.get("category", "other") for o in observations))} categories
+- ✅ Documented findings across {len({o.get("category", "other") for o in observations})} categories
 - ✅ Created comprehensive reports
 - ✅ Evolved skills through experience
 

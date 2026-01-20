@@ -671,7 +671,7 @@ class TheCampfire:
         user_stories = sorted(self._stories, key=lambda x: x.get("created_at", ""), reverse=True)
 
         total_words = sum(s.get("word_count", 0) for s in user_stories)
-        styles_used = list(set(s.get("style", "premium") for s in user_stories))
+        styles_used = list({s.get("style", "premium") for s in user_stories})
 
         return {
             "stories": user_stories,
@@ -765,7 +765,7 @@ class TheCampfire:
             <h1>🔥 TheCampfire</h1>
             <p class="subtitle">Gather around to tell stories</p>
         </header>
-        
+
         <main class="campfire-main">
             <!-- User Profile Section -->
             <section class="profile-section" id="profileSection">
@@ -774,7 +774,7 @@ class TheCampfire:
                     <div class="loading">Loading profile...</div>
                 </div>
             </section>
-            
+
             <!-- User Data Section -->
             <section class="user-data-section" id="userDataSection">
                 <h2>Your Stories</h2>
@@ -785,7 +785,7 @@ class TheCampfire:
                     <div class="loading">Loading your stories...</div>
                 </div>
             </section>
-            
+
             <!-- App Data Section -->
             <section class="app-data-section" id="appDataSection">
                 <h2>Community Campfire</h2>
@@ -793,7 +793,7 @@ class TheCampfire:
                     <div class="loading">Loading app data...</div>
                 </div>
             </section>
-            
+
             <!-- Story Creation Form -->
             <div class="story-form-container" id="formContainer">
                 <button class="toggle-form-btn" onclick="toggleForm()">+ Tell a Story</button>
@@ -823,7 +823,7 @@ class TheCampfire:
                     <button type="submit" class="submit-btn">Tell Story Around the Fire</button>
                 </form>
             </div>
-            
+
             <!-- All Stories Display -->
             <section class="all-stories-section" id="allStoriesSection">
                 <h2>All Stories</h2>
@@ -1200,7 +1200,7 @@ async function loadProfile() {
 function renderProfile() {
     const container = document.getElementById('profileCard');
     if (!userProfile) return;
-    
+
     container.innerHTML = `
         <div class="profile-info">
             <h3>${escapeHtml(userProfile.name)}</h3>
@@ -1232,7 +1232,7 @@ function renderProfile() {
 async function loadUserData() {
     const statsContainer = document.getElementById('userStats');
     const storiesContainer = document.getElementById('userStoriesContainer');
-    
+
     try {
         const response = await fetch(`${API_BASE}/user-data`);
         userData = await response.json();
@@ -1247,7 +1247,7 @@ async function loadUserData() {
 function renderUserStats() {
     const container = document.getElementById('userStats');
     if (!userData) return;
-    
+
     container.innerHTML = `
         <div class="stats-grid">
             <div class="stat-card">
@@ -1274,12 +1274,12 @@ function renderUserStats() {
 function renderUserStories() {
     const container = document.getElementById('userStoriesContainer');
     if (!userData || !userData.stories) return;
-    
+
     if (userData.stories.length === 0) {
         container.innerHTML = '<div class="loading">No stories yet. Tell your first story!</div>';
         return;
     }
-    
+
     container.innerHTML = userData.stories.map(story => createStoryCard(story)).join('');
 }
 
@@ -1299,7 +1299,7 @@ async function loadAppData() {
 function renderAppStats() {
     const container = document.getElementById('appStats');
     if (!appData) return;
-    
+
     container.innerHTML = `
         <div class="stats-grid">
             <div class="stat-card">
@@ -1357,7 +1357,7 @@ function createStoryCard(story) {
 async function loadStories() {
     const container = document.getElementById('storiesContainer');
     container.innerHTML = '<div class="loading">Loading stories...</div>';
-    
+
     try {
         const response = await fetch(`${API_BASE}/stories`);
         const data = await response.json();
@@ -1371,19 +1371,19 @@ async function loadStories() {
 // Render stories
 function renderStories() {
     const container = document.getElementById('storiesContainer');
-    
+
     if (stories.length === 0) {
         container.innerHTML = '<div class="loading">No stories yet. Be the first to tell one!</div>';
         return;
     }
-    
+
     container.innerHTML = stories.map(story => createStoryCard(story)).join('');
 }
 
 // Submit story
 document.getElementById('storyForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    
+
     const formData = {
         story: document.getElementById('storyText').value,
         title: document.getElementById('storyTitle').value || null,
@@ -1392,30 +1392,30 @@ document.getElementById('storyForm').addEventListener('submit', async (e) => {
         structure: document.getElementById('storyStructure').value,
         include_oracle: document.getElementById('includeOracle').checked
     };
-    
+
     if (!formData.story.trim()) {
         alert('Please enter a story!');
         return;
     }
-    
+
     const submitBtn = document.querySelector('.submit-btn');
     submitBtn.textContent = 'Telling Story...';
     submitBtn.disabled = true;
-    
+
     try {
         const response = await fetch(`${API_BASE}/stories`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData)
         });
-        
+
         const result = await response.json();
-        
+
         if (result.success) {
             // Reset form
             document.getElementById('storyForm').reset();
             toggleForm();
-            
+
             // Reload all data
             await Promise.all([
                 loadStories(),
@@ -1423,7 +1423,7 @@ document.getElementById('storyForm').addEventListener('submit', async (e) => {
                 loadUserData(),
                 loadAppData()
             ]);
-            
+
             // Open PDF if available
             if (result.pdf_path) {
                 window.open(`/stories/${result.story.id}.pdf`, '_blank');

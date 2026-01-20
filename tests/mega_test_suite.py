@@ -70,7 +70,7 @@ class TestRunner:
 
         start = time.time()
         try:
-            result = test_func(*args, **kwargs)
+            test_func(*args, **kwargs)
             duration = time.time() - start
             test_result = TestResult(name, True, "✅ PASSED", duration)
             print(f"✅ PASSED in {duration:.2f}s")
@@ -263,7 +263,7 @@ def test_evaluation_scores(runner: TestRunner):
 
     # Test validation
     try:
-        bad_scores = EvaluationScores(
+        EvaluationScores(
             factuality=1.5,  # Invalid!
             validity=0.8,
             coherence=0.85,
@@ -494,7 +494,7 @@ def test_performance_concurrent_sessions(runner: TestRunner):
 
 def test_performance_large_protocol(runner: TestRunner):
     """Test handling of large protocols."""
-    with tempfile.TemporaryDirectory() as tmpdir:
+    with tempfile.TemporaryDirectory():
         # Create large reasoning chain
         large_chain = [
             {

@@ -36,7 +36,7 @@ async def main():
     # Initialize systems
     print("📊 Initializing systems...")
     being_system = BeingSystem(project_path=project_path)
-    corps_system = CorporationsSystem(project_path=project_path)
+    CorporationsSystem(project_path=project_path)
     print("   ✓ Systems ready")
     print()
 
@@ -89,7 +89,7 @@ async def main():
     print("=" * 80)
     print()
     print(f"   Departments: {len(corporation.departments)}")
-    for dept_name, dept in corporation.departments.items():
+    for _dept_name, dept in corporation.departments.items():
         print(f"     • {dept.name}: {len(dept.employees)} employees")
     print()
     print(f"   Total Employees: {len(corporation.employees)}")

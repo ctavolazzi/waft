@@ -322,7 +322,7 @@ class ProbeCollector:
             "failed": len(failed),
             "by_type": {
                 probe_type: len([r for r in all_results if r.probe_type == probe_type])
-                for probe_type in set(r.probe_type for r in all_results)
+                for probe_type in {r.probe_type for r in all_results}
             },
             "avg_duration_ms": sum(r.duration_ms for r in all_results) / len(all_results)
             if all_results

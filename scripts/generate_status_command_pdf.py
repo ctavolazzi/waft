@@ -28,8 +28,8 @@ def create_status_command_content() -> str:
 
 The `/status` command provides a fast, concise status check of the current project state. It focuses on essential information: git status, active work, recent changes, and quick health indicators. Designed for immediate awareness without comprehensive analysis.
 
-**Execution Time**: < 5 seconds  
-**Output**: Console display only (no files created)  
+**Execution Time**: < 5 seconds
+**Output**: Console display only (no files created)
 **Purpose**: Quick status awareness without interrupting workflow
 
 ---
@@ -139,7 +139,7 @@ Active Work:
 
 Recent Activity:
   Last Commit: 2 hours ago - "Created /deep-analyze command"
-  Recent Files: 
+  Recent Files:
     - .cursor/commands/deep-analyze.md (new)
     - .cursor/commands/status.md (new)
     - _work_efforts/devlog.md (modified)
@@ -324,9 +324,9 @@ For persistent status:
 
 ## Command Creation
 
-**Created**: 2026-01-11  
-**Status**: ✅ Active  
-**Location**: `.cursor/commands/status.md`  
+**Created**: 2026-01-11
+**Status**: ✅ Active
+**Location**: `.cursor/commands/status.md`
 **Global**: Available in all Cursor instances via `~/.cursor/commands/`
 
 ---
@@ -396,7 +396,7 @@ def main():
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / f"Status_Command_Documentation_{timestamp}.pdf"
 
-    pdf_path = PDFGenerator.from_content(
+    PDFGenerator.from_content(
         content=content,
         title="/status Command Documentation",
         style="clinical_standard",

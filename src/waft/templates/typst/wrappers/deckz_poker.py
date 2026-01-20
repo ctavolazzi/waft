@@ -245,7 +245,7 @@ def _build_typst_content(
         # Render each player's hand
         typst_lines.append("=== Player Hands")
         typst_lines.append("")
-        for i, player in enumerate(players, 1):
+        for _i, player in enumerate(players, 1):
             sanitized_name = _sanitize_typst_string(player.name)
             typst_lines.append(f"*{sanitized_name}*:")
             typst_lines.append("")

@@ -213,7 +213,7 @@ def being_to_character_data(
     }
 
     skills = {}
-    for skill_name, (ability, base_mod) in skill_map.items():
+    for skill_name, (_ability, base_mod) in skill_map.items():
         is_prof = skill_name in character.proficient_skills
         skills[skill_name] = {
             "modifier": base_mod + (prof_bonus if is_prof else 0),
@@ -488,12 +488,12 @@ def convert_to_markdown(data: dict[str, Any]) -> str:
 
 ## Character Information
 
-**Name:** {data["NAME"]}  
-**Class & Level:** {data["CLASS_LEVEL"]}  
-**Background:** {data["BACKGROUND"]}  
-**Player Name:** {data["PLAYER_NAME"] or "_________________"}  
-**Race:** {data["RACE"]}  
-**Alignment:** {data["ALIGNMENT"]}  
+**Name:** {data["NAME"]}
+**Class & Level:** {data["CLASS_LEVEL"]}
+**Background:** {data["BACKGROUND"]}
+**Player Name:** {data["PLAYER_NAME"] or "_________________"}
+**Race:** {data["RACE"]}
+**Alignment:** {data["ALIGNMENT"]}
 **Experience Points:** {data["XP"]}
 
 ---
@@ -540,8 +540,8 @@ def convert_to_markdown(data: dict[str, Any]) -> str:
 
 ## Combat
 
-**Armor Class (AC):** {data["AC"]}  
-**Initiative:** {data["INITIATIVE"]:+d}  
+**Armor Class (AC):** {data["AC"]}
+**Initiative:** {data["INITIATIVE"]:+d}
 **Speed:** {data["SPEED"]} ft.
 
 **Hit Points**
@@ -599,9 +599,9 @@ def convert_to_markdown(data: dict[str, Any]) -> str:
 
 ## Proficiencies & Languages
 
-**Armor Proficiencies:** {data["ARMOR_PROF"]}  
-**Weapon Proficiencies:** {data["WEAPON_PROF"]}  
-**Tool Proficiencies:** {data["TOOL_PROF"]}  
+**Armor Proficiencies:** {data["ARMOR_PROF"]}
+**Weapon Proficiencies:** {data["WEAPON_PROF"]}
+**Tool Proficiencies:** {data["TOOL_PROF"]}
 **Languages:** {data["LANGUAGES"]}
 
 ---
@@ -634,8 +634,8 @@ def convert_to_markdown(data: dict[str, Any]) -> str:
 
 ---
 
-*Generated: {data["GENERATED_DATE"]}*  
-*Being ID: {data["BEING_ID"]}*  
+*Generated: {data["GENERATED_DATE"]}*
+*Being ID: {data["BEING_ID"]}*
 *Reality: {data["REALITY_ID"]}*
 """
     return content

@@ -306,7 +306,7 @@ def generate_evolved_ui(
     console.print("\n[bold cyan]🎨 Generating Evolved UI...[/bold cyan]\n")
 
     # Read current UI
-    current_ui_path = (
+    (
         project_root / "_genetics" / "ui_evolution" / "mission_control_village_dashboard.html"
     )
 
@@ -955,14 +955,14 @@ def generate_improved_html() -> str:
     <script>
         // API endpoint - in production, this would be a real API server
         const API_BASE = '/api';  // Would be replaced with actual backend URL
-        
+
         // For now, we'll use a Python backend via fetch or direct file access
         // In a real implementation, this would call a FastAPI/Flask backend
-        
+
         async function loadMissionControlData() {
             try {
                 showLoading('mission-list');
-                
+
                 // In production: fetch(`${API_BASE}/mission-control/summary`)
                 // For now, we'll simulate with a Python backend call
                 const response = await fetch('/api/mission-control', {
@@ -972,7 +972,7 @@ def generate_improved_html() -> str:
                     // Fallback: Load from file system via Python script
                     return loadFromPythonBackend('mission_control');
                 });
-                
+
                 const data = await response.json();
                 updateMissionControl(data);
             } catch (error) {
@@ -984,14 +984,14 @@ def generate_improved_html() -> str:
         async function loadVillageData() {
             try {
                 showLoading('gathering-list');
-                
+
                 const response = await fetch('/api/village', {
                     method: 'GET',
                     headers: { 'Content-Type': 'application/json' }
                 }).catch(() => {
                     return loadFromPythonBackend('village');
                 });
-                
+
                 const data = await response.json();
                 updateVillage(data);
             } catch (error) {
@@ -1144,10 +1144,10 @@ def generate_improved_html() -> str:
                 // In production: fetch(`${API_BASE}/mission-control/command`, { method: 'POST', body: JSON.stringify({...}) })
                 // For now, simulate
                 await new Promise(resolve => setTimeout(resolve, 500));
-                
+
                 showSuccess('mission-alerts', `Command "${cmd}" issued to ${missionId}`);
                 input.value = '';
-                
+
                 // Reload data
                 setTimeout(loadMissionControlData, 1000);
             } catch (error) {
@@ -1170,10 +1170,10 @@ def generate_improved_html() -> str:
             try {
                 // In production: fetch(`${API_BASE}/village/gathering`, { method: 'POST', body: JSON.stringify({topic, description: ''}) })
                 await new Promise(resolve => setTimeout(resolve, 500));
-                
+
                 showSuccess('village-alerts', `Gathering "${topic}" created`);
                 input.value = '';
-                
+
                 // Reload data
                 setTimeout(loadVillageData, 1000);
             } catch (error) {

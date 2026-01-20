@@ -49,7 +49,7 @@ See [README.md](https://github.com/ctavolazzi/waft/blob/main/README.md) for full
         print("🌊 Creating v0.0.1 release on GitHub...\n")
 
         # Use gh CLI to create release
-        result = subprocess.run(
+        subprocess.run(
             [
                 "gh",
                 "release",

@@ -66,7 +66,7 @@ class TestRunner:
 
         start = time.time()
         try:
-            result = test_func(*args, **kwargs)
+            test_func(*args, **kwargs)
             duration = time.time() - start
             test_result = TestResult(name, True, "✅ SURVIVED", duration)
             print(f"✅ SURVIVED in {duration:.2f}s")
@@ -327,7 +327,7 @@ def test_filesystem_concurrent_delete(runner: TestRunner):
 
         # Start reading, delete mid-read
         def reader():
-            for i in range(10):
+            for _i in range(10):
                 try:
                     guide.get_protocol(session_id)
                     time.sleep(0.01)
@@ -459,7 +459,7 @@ def test_concurrency_read_write_chaos(runner: TestRunner):
         results = {"reads": 0, "writes": 0, "errors": 0}
 
         def reader():
-            for i in range(20):
+            for _i in range(20):
                 try:
                     guide.get_protocol(session_id)
                     results["reads"] += 1
@@ -478,7 +478,7 @@ def test_concurrency_read_write_chaos(runner: TestRunner):
                 time.sleep(0.001)
 
         threads = []
-        for i in range(5):
+        for _i in range(5):
             threads.append(threading.Thread(target=reader))
             threads.append(threading.Thread(target=writer))
 
@@ -672,7 +672,7 @@ def main():
     parser = argparse.ArgumentParser(description="Insane Test Suite for TheGuide")
     parser.add_argument("--all", action="store_true", help="Run all tests")
 
-    args = parser.parse_args()
+    parser.parse_args()
 
     results = run_all_tests()
 

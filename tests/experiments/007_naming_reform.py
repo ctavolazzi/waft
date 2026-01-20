@@ -256,7 +256,7 @@ async def run_experiment():
     print()
     print("The 10 New Species:")
     print("-" * 80)
-    for i, (organism, name) in enumerate(zip(organisms, scientific_names), 1):
+    for i, (organism, name) in enumerate(zip(organisms, scientific_names, strict=False), 1):
         first_byte = int(organism.genome_id[:2], 16)
         culture = LineagePoet._get_culture_name(first_byte)
         print(f"  {i:2d}. {name}")

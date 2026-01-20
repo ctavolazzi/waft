@@ -165,7 +165,7 @@ def main():
     )
 
     # Session summary command
-    summary_parser = subparsers.add_parser("session-summary", help="Generate session summary")
+    subparsers.add_parser("session-summary", help="Generate session summary")
 
     # Redact command
     redact_parser = subparsers.add_parser("redact", help="Redact PDF")

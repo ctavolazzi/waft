@@ -209,7 +209,7 @@ def main():
         print(f"PNG Images: {len(result['png_paths'])} files")
         png_dir = Path(result["png_paths"][0]).parent
         print(f"  Directory: {png_dir}")
-        for i, png_path in enumerate(result["png_paths"], 1):
+        for i, _png_path in enumerate(result["png_paths"], 1):
             print(f"  - page_{i:03d}.png")
 
     if result.get("metrics_file"):

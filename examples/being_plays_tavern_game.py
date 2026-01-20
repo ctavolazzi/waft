@@ -420,7 +420,7 @@ def generate_scientific_report(session: TavernGameSession, output_dir: Path) -> 
     console.print("\n[bold]Generating Scientific Report...[/bold]\n")
 
     # Build report content
-    session_data = session.to_dict()
+    session.to_dict()
 
     # Create markdown content for the report
     report_content = f"""# A Being's Journey Through the Tavern: An Empirical Study of Decision-Making in Simulated Reality

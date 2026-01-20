@@ -50,22 +50,22 @@ def create_app(project_path: Path, static_dir: Path | None = None) -> FastAPI:
         title="WAFT API",
         description="""
         WAFT (Wave Agent Framework & Tools) REST API.
-        
+
         Provides comprehensive project management, work effort tracking, and system visualization
         capabilities through a RESTful interface.
-        
+
         ## Features
-        
+
         - **Projects**: Long-term project management with milestones and progress tracking
         - **Work Efforts**: File-based work effort system with YAML frontmatter
         - **Authentication**: Token-based authentication for write operations
         - **Visualization**: Project state, git status, and analytics
-        
+
         ## Authentication
-        
+
         Write operations (POST, PUT, PATCH, DELETE) require authentication via Bearer token.
         Read operations (GET) are publicly accessible.
-        
+
         Get your token via `/api/auth/handshake` endpoint.
         """,
         version="0.1.0",

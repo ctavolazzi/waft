@@ -43,10 +43,10 @@ def example_custom_chapters():
             In the quiet village of Millbrook, life was simple and predictable.
             That all changed when the ancient bell in the town square began to ring
             on its own, a sound that hadn't been heard in generations.
-            
+
             The villagers gathered, their faces filled with fear and wonder.
             The old sage, Master Elara, stepped forward and spoke:
-            
+
             "The bell only rings when great danger approaches. The prophecy
             is coming true. We must prepare."
             """,
@@ -60,10 +60,10 @@ def example_custom_chapters():
             Three heroes answered the call: Aria the Ranger, Kael the Wizard,
             and Thorne the Paladin. Each came from different lands, but they
             shared a common purpose.
-            
+
             Master Elara explained the ancient prophecy: A dark force was
             awakening, and only those chosen by the bell could stop it.
-            
+
             "You must journey to the three sacred shrines," she said, "and
             gather the artifacts of power. Only then can you face the darkness."
             """,
@@ -95,7 +95,7 @@ def example_with_monsters():
             As the heroes entered the Whispering Woods, they encountered
             a massive treant blocking their path. The ancient tree-creature
             spoke in a voice like rustling leaves:
-            
+
             "None may pass without answering my riddle. Answer correctly,
             and the path is yours. Answer wrongly, and you must face my wrath."
             """,

@@ -68,7 +68,7 @@ def generate_worldbuild_iso(
     ],
     [
         *{label}*
-        
+
         {description}
     ]
 )
@@ -148,17 +148,17 @@ def generate_worldbuild_iso(
         stroke: 3pt,
         [
             #v(0.25in)
-            
+
             #set text(size: 10pt, weight: "bold")
             {doc_id}
-            
+
             #v(0.1in)
-            
+
             #set text(size: 18pt, weight: "bold")
             {title}
             {subtitle_section}
             {issued_by_section}
-            
+
             #v(0.25in)
         ]
     )

@@ -339,9 +339,9 @@ async def run_pdfme_realm_evolution(num_cycles: int = 12):
     # Create markdown content for PDF
     markdown_content = f"""# PDFme Realm Evolution Report
 
-**Generated**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}  
-**Reality ID**: {reality_id}  
-**Cycles Completed**: {num_cycles}  
+**Generated**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+**Reality ID**: {reality_id}
+**Cycles Completed**: {num_cycles}
 **Beings Participated**: {len(beings)}
 
 ## Executive Summary
@@ -441,8 +441,8 @@ This report documents the evolution of {len(beings)} Beings as they studied and 
 
 The {num_cycles}-cycle evolution experiment successfully demonstrated how Beings can study and learn from external code repositories. The Beings evolved their skills in code analysis, pattern recognition, and experimentation through their interaction with the pdfme Realm.
 
-**Total Observations**: {len(all_observations)}  
-**Total Cycles**: {num_cycles}  
+**Total Observations**: {len(all_observations)}
+**Total Cycles**: {num_cycles}
 **Beings Evolved**: {len(beings)}
 
 ---

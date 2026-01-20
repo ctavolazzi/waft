@@ -19,12 +19,12 @@ def main():
     content = """
     WAFT (Wide-Area Functional Taxonomy) is an evolutionary code laboratory.
     It allows AI agents to modify their own code and evolve through generations.
-    
+
     The system has three pillars:
     1. The Substrate: Code is DNA - agents can mutate their own source code
     2. The Physics: Scint Gym evaluates agents through error handling tests
     3. The Flight Recorder: Complete lineage tracking for scientific analysis
-    
+
     Agents evolve through generations, with successful mutations surviving
     and unsuccessful ones being discarded. The system produces phylogenetic
     trees showing the evolution of code over time.

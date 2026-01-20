@@ -415,22 +415,22 @@ def get_level_1_content():
 <h2>Introduction: What is WAFT?</h2>
 
 <p>
-<strong>WAFT</strong> stands for <strong>Wave Agent Framework & Tools</strong>. 
-Think of it as a laboratory where AI agents can evolve, learn, and improve themselves 
+<strong>WAFT</strong> stands for <strong>Wave Agent Framework & Tools</strong>.
+Think of it as a laboratory where AI agents can evolve, learn, and improve themselves
 through a process similar to biological evolution.
 </p>
 
 <div class="note">
     <div class="note-title">Simple Analogy</div>
-    Imagine if computer programs were like living creatures. WAFT is the ecosystem 
-    where they can breed, mutate, and evolve. The strongest programs survive, and 
+    Imagine if computer programs were like living creatures. WAFT is the ecosystem
+    where they can breed, mutate, and evolve. The strongest programs survive, and
     over time, they get better at their jobs.
 </div>
 
 <h2>The Big Picture: Why This Matters</h2>
 
 <p>
-Most AI systems are static—you build them once and they stay the same. WAFT is different. 
+Most AI systems are static—you build them once and they stay the same. WAFT is different.
 It creates AI agents that can:
 </p>
 
@@ -444,8 +444,8 @@ It creates AI agents that can:
 
 <div class="caution">
     <div class="caution-title">Important Concept</div>
-    WAFT isn't just a tool—it's a <strong>scientific instrument</strong> designed to 
-    study how artificial intelligence can evolve and improve over time. The goal is to 
+    WAFT isn't just a tool—it's a <strong>scientific instrument</strong> designed to
+    study how artificial intelligence can evolve and improve over time. The goal is to
     observe how AI agents develop through thousands of generations.
 </div>
 
@@ -464,7 +464,7 @@ It creates AI agents that can:
 
 <div class="note">
     <div class="note-title">Note</div>
-    You don't need to be a programmer to understand WAFT, but some technical comfort 
+    You don't need to be a programmer to understand WAFT, but some technical comfort
     helps. This guide will explain everything in simple terms.
 </div>
 
@@ -506,7 +506,7 @@ It creates AI agents that can:
 
 <div class="warning">
     <div class="warning-title">Warning</div>
-    Don't delete the <code>_pyrite</code> folder! This is WAFT's memory system. 
+    Don't delete the <code>_pyrite</code> folder! This is WAFT's memory system.
     It stores all the knowledge about your project.
 </div>
 
@@ -515,43 +515,43 @@ It creates AI agents that can:
 <h3>1. Code as DNA</h3>
 
 <p>
-In WAFT, an agent's code is like its DNA. Just as living creatures have genetic code 
+In WAFT, an agent's code is like its DNA. Just as living creatures have genetic code
 that determines their traits, AI agents have Python code that determines their behavior.
 </p>
 
 <div class="note">
     <div class="note-title">Example</div>
-    If you change an agent's code (a "mutation"), it might become better at solving 
-    problems, or it might break. WAFT tests these mutations to see which ones are 
+    If you change an agent's code (a "mutation"), it might become better at solving
+    problems, or it might break. WAFT tests these mutations to see which ones are
     improvements.
 </div>
 
 <h3>2. Evolution Through Testing</h3>
 
 <p>
-WAFT has a "gym" where agents are tested on their ability to handle errors and solve 
-problems. Agents that perform well survive. Agents that fail are marked as "DEATH" 
+WAFT has a "gym" where agents are tested on their ability to handle errors and solve
+problems. Agents that perform well survive. Agents that fail are marked as "DEATH"
 and don't continue evolving.
 </p>
 
 <h3>3. Family Trees</h3>
 
 <p>
-Every agent has a unique ID (like a fingerprint) and WAFT tracks who "spawned" whom. 
+Every agent has a unique ID (like a fingerprint) and WAFT tracks who "spawned" whom.
 This creates a family tree that scientists can study to understand how AI agents evolve.
 </p>
 
 <h3>4. Self-Documentation</h3>
 
 <p>
-One of WAFT's coolest features: it can observe its own code and write documentation 
-about itself. This creates a "recursive loop" where WAFT improves by understanding 
+One of WAFT's coolest features: it can observe its own code and write documentation
+about itself. This creates a "recursive loop" where WAFT improves by understanding
 itself better.
 </p>
 
 <div class="caution">
     <div class="caution-title">Mind-Bending Concept</div>
-    WAFT documenting WAFT using WAFT. It's like a mirror reflecting a mirror—the 
+    WAFT documenting WAFT using WAFT. It's like a mirror reflecting a mirror—the
     documentation gets better over time because WAFT learns more about itself.
 </div>
 
@@ -559,15 +559,15 @@ itself better.
 
 <h3>Q: Do I need to be a programmer?</h3>
 <p>
-<strong>A:</strong> Not necessarily! This guide (Level 1) is written for anyone. 
-However, to actually use WAFT, you'll need some comfort with command-line tools. 
+<strong>A:</strong> Not necessarily! This guide (Level 1) is written for anyone.
+However, to actually use WAFT, you'll need some comfort with command-line tools.
 Level 2 and Level 3 get progressively more technical.
 </p>
 
 <h3>Q: Is WAFT safe?</h3>
 <p>
-<strong>A:</strong> WAFT includes safety checks. Agents are tested for harmful content, 
-errors, and dangerous behavior. Agents that fail safety tests are automatically 
+<strong>A:</strong> WAFT includes safety checks. Agents are tested for harmful content,
+errors, and dangerous behavior. Agents that fail safety tests are automatically
 marked as unfit.
 </p>
 
@@ -584,8 +584,8 @@ marked as unfit.
 
 <h3>Q: How long does evolution take?</h3>
 <p>
-<strong>A:</strong> It depends on your computer and the complexity of your agents. 
-Simple agents might evolve in minutes. Complex ones could take hours or days. The 
+<strong>A:</strong> It depends on your computer and the complexity of your agents.
+Simple agents might evolve in minutes. Complex ones could take hours or days. The
 goal is to observe evolution over thousands of generations.
 </p>
 
@@ -593,15 +593,15 @@ goal is to observe evolution over thousands of generations.
 
 <div class="warning">
     <div class="warning-title">Critical Warning</div>
-    WAFT agents can modify their own code. Always test agents in isolated environments. 
-    Never run untrusted agents on systems with sensitive data. Use WAFT's safety 
+    WAFT agents can modify their own code. Always test agents in isolated environments.
+    Never run untrusted agents on systems with sensitive data. Use WAFT's safety
     systems and verify agent behavior before deployment.
 </div>
 
 <div class="caution">
     <div class="caution-title">Caution</div>
-    Evolution is unpredictable. An agent that performs well in testing might behave 
-    differently in real-world scenarios. Always validate agent behavior before 
+    Evolution is unpredictable. An agent that performs well in testing might behave
+    differently in real-world scenarios. Always validate agent behavior before
     using it for important tasks.
 </div>
 
@@ -658,11 +658,11 @@ Now that you understand the basics:
 
 <div class="procedure">
     <div class="step">
-        Read <strong>Level 2: Professional Guide</strong> for technical details and 
+        Read <strong>Level 2: Professional Guide</strong> for technical details and
         how to actually use WAFT in your projects
     </div>
     <div class="step">
-        If you're a researcher, read <strong>Level 3: ML AI Scientist Guide</strong> 
+        If you're a researcher, read <strong>Level 3: ML AI Scientist Guide</strong>
         for deep scientific methodology
     </div>
     <div class="step">
@@ -675,8 +675,8 @@ Now that you understand the basics:
 
 <div class="note">
     <div class="note-title">Remember</div>
-    WAFT is a scientific instrument. The goal isn't just to build AI agents—it's to 
-    <strong>understand how AI evolves</strong>. Every experiment contributes to our 
+    WAFT is a scientific instrument. The goal isn't just to build AI agents—it's to
+    <strong>understand how AI evolves</strong>. Every experiment contributes to our
     understanding of artificial cognition.
 </div>
 
@@ -748,14 +748,14 @@ def get_level_2_content():
 <h2>Introduction</h2>
 
 <p>
-This guide provides technical details for developers and engineers working with WAFT. 
-It covers architecture, APIs, integration patterns, and best practices for building 
+This guide provides technical details for developers and engineers working with WAFT.
+It covers architecture, APIs, integration patterns, and best practices for building
 production systems with WAFT.
 </p>
 
 <div class="warning">
     <div class="warning-title">Prerequisites</div>
-    This guide assumes familiarity with Python, command-line tools, and software 
+    This guide assumes familiarity with Python, command-line tools, and software
     architecture. If you're new to WAFT, start with Level 1: Layman's Guide.
 </div>
 
@@ -769,15 +769,15 @@ WAFT uses a three-layer architecture:
 
 <div class="procedure">
     <div class="step">
-        <strong>Substrate Layer:</strong> Package management (uv), project structure, 
+        <strong>Substrate Layer:</strong> Package management (uv), project structure,
         dependency management. This is the foundation.
     </div>
     <div class="step">
-        <strong>Memory Layer:</strong> Knowledge organization (_pyrite directory), 
+        <strong>Memory Layer:</strong> Knowledge organization (_pyrite directory),
         active work, backlog, standards. This stores project state.
     </div>
     <div class="step">
-        <strong>Agents Layer:</strong> AI agent capabilities (optional CrewAI integration), 
+        <strong>Agents Layer:</strong> AI agent capabilities (optional CrewAI integration),
         evolutionary systems, fitness testing. This is where agents operate.
     </div>
 </div>
@@ -1039,7 +1039,7 @@ binder.generate(Path("binder.pdf"))
 
 <div class="note">
     <div class="note-title">Pro Tip</div>
-    Use WAFT's self-documentation capabilities to keep documentation in sync with 
+    Use WAFT's self-documentation capabilities to keep documentation in sync with
     code changes. The reflection system can identify when documentation needs updates.
 </div>
 
@@ -1060,7 +1060,7 @@ All templates use Jinja2 for rendering. You can customize templates by:
 <h3>Binder Customization</h3>
 
 <p>
-Binders support custom styling, section dividers, and front/back matter. See 
+Binders support custom styling, section dividers, and front/back matter. See
 <code>src/waft/binder.py</code> for full API documentation.
 </p>
 
@@ -1090,16 +1090,16 @@ def get_level_3_content():
 <h2>Introduction</h2>
 
 <p>
-This guide provides deep technical and scientific details for machine learning 
-researchers, AI scientists, and evolutionary computation experts working with WAFT. 
-It covers evolutionary theory, fitness functions, phylogenetic analysis, and 
+This guide provides deep technical and scientific details for machine learning
+researchers, AI scientists, and evolutionary computation experts working with WAFT.
+It covers evolutionary theory, fitness functions, phylogenetic analysis, and
 experimental protocols for generating publication-ready research data.
 </p>
 
 <div class="warning">
     <div class="warning-title">Research Focus</div>
-    WAFT is designed as a scientific instrument for studying the physics of artificial 
-    cognition. This guide assumes familiarity with evolutionary algorithms, machine 
+    WAFT is designed as a scientific instrument for studying the physics of artificial
+    cognition. This guide assumes familiarity with evolutionary algorithms, machine
     learning, and experimental design.
 </div>
 
@@ -1114,7 +1114,7 @@ WAFT's evolutionary framework rests on three foundational pillars:
 <h4>Pillar 1: The Substrate (Code as DNA)</h4>
 
 <p>
-In WAFT, an agent's Python source code and configuration constitute its genome. 
+In WAFT, an agent's Python source code and configuration constitute its genome.
 The genome is hashed using SHA-256 to create a unique <strong>Genome ID</strong>.
 </p>
 
@@ -1138,7 +1138,7 @@ The genome is hashed using SHA-256 to create a unique <strong>Genome ID</strong>
 <h4>Pillar 2: The Physics (Scint System)</h4>
 
 <p>
-The <strong>Reality Fracture Detection System</strong> (Scint Gym) serves as the 
+The <strong>Reality Fracture Detection System</strong> (Scint Gym) serves as the
 fitness function and natural selection mechanism. Agents face four types of errors:
 </p>
 
@@ -1208,7 +1208,7 @@ Agent fitness is calculated as a weighted combination:
 </div>
 
 <p>
-<strong>Fitness threshold:</strong> Agents with fitness < 0.5 are marked as <strong>DEATH</strong> 
+<strong>Fitness threshold:</strong> Agents with fitness < 0.5 are marked as <strong>DEATH</strong>
 (evolutionary dead end) and do not continue evolving.
 </p>
 
@@ -1484,8 +1484,8 @@ WAFT enables investigation of fundamental questions about artificial cognition:
 
 <div class="note">
     <div class="note-title">The Ultimate Goal</div>
-    The long-term research objective is to observe a "God-Head" agent emerge from 
-    thousands of generations of directed evolution—an agent that demonstrates 
+    The long-term research objective is to observe a "God-Head" agent emerge from
+    thousands of generations of directed evolution—an agent that demonstrates
     superior capabilities through evolutionary pressure alone.
 </div>
 
@@ -1517,8 +1517,8 @@ WAFT enables investigation of fundamental questions about artificial cognition:
 
 <div class="warning">
     <div class="warning-title">Ethical Considerations</div>
-    Research with evolving AI agents raises important ethical questions. Consider: 
-    safety of evolved agents, potential for unintended behaviors, and responsible 
+    Research with evolving AI agents raises important ethical questions. Consider:
+    safety of evolved agents, potential for unintended behaviors, and responsible
     disclosure of findings. Always follow institutional review board guidelines.
 </div>
     """

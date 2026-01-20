@@ -89,7 +89,7 @@ class ScenarioDecisionTree:
         for container_value in sorted(self.all_container_values):
             # Check if value exists in any container
             found = False
-            for container_name, values in state.containers.items():
+            for _container_name, values in state.containers.items():
                 if container_value in values:
                     found = True
                     break
@@ -168,7 +168,7 @@ class ScenarioDecisionTree:
         self.all_sequence_ids = set()
 
         for state in states:
-            for container_name, values in state.containers.items():
+            for _container_name, values in state.containers.items():
                 self.all_container_values.update(values)
             self.all_sequence_ids.add(state.sequence_id)
             self.all_sequence_ids.update(state.visited_sequences)
@@ -262,7 +262,7 @@ class ScenarioDecisionTree:
             raise ValueError("Decision tree must be trained before getting feature importance")
 
         importances = self.tree.feature_importances_
-        return dict(zip(self.feature_names, importances))
+        return dict(zip(self.feature_names, importances, strict=False))
 
     def get_tree_depth(self) -> int:
         """Get the depth of the trained tree."""

@@ -162,7 +162,7 @@ def sanitize_content(content: str, max_size: int = 10 * 1024 * 1024) -> str:
         warnings.warn(
             "bleach not installed - HTML sanitization skipped. "
             "Install with: pip install bleach>=6.0.0",
-            UserWarning,
+            UserWarning, stacklevel=2,
         )
         return html
 

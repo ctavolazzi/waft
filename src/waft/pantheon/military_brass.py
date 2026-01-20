@@ -273,9 +273,9 @@ class MilitaryBrass:
         """
         briefing = f"""# Mission Briefing: {mission.name}
 
-**Mission ID**: {mission.mission_id}  
-**Classification**: {mission.classification}  
-**Date**: {mission.created_at}  
+**Mission ID**: {mission.mission_id}
+**Classification**: {mission.classification}
+**Date**: {mission.created_at}
 **Status**: {mission.status}
 
 ## Objective
@@ -291,7 +291,7 @@ class MilitaryBrass:
         briefing += f"""
 ## Mission Details
 
-**Difficulty**: {mission.difficulty}/10  
+**Difficulty**: {mission.difficulty}/10
 **Progress**: {mission.progress}
 
 ## Briefing

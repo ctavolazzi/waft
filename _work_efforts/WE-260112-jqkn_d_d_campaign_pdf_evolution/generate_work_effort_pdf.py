@@ -283,7 +283,7 @@ def main():
             scientific_mode=True,
         )
 
-        result = generator.save(output_path=output_path, convert_to_png=True, png_dpi=300)
+        generator.save(output_path=output_path, convert_to_png=True, png_dpi=300)
 
         # Analyze the generated PDF
         print("\n📊 Analyzing generated PDF...")

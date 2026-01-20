@@ -350,7 +350,7 @@ def generate_ui_html(
             padding: 0;
             box-sizing: border-box;
         }}
-        
+
         body {{
             font-family: {typography.get("font_family", "system-ui, sans-serif")};
             background: linear-gradient(135deg, {colors.get("primary", "#6366f1")} 0%, {colors.get("secondary", "#8b5cf6")} 100%);
@@ -358,7 +358,7 @@ def generate_ui_html(
             padding: 20px;
             color: {colors.get("text", "#1e293b")};
         }}
-        
+
         .container {{
             max-width: 1400px;
             margin: 0 auto;
@@ -367,24 +367,24 @@ def generate_ui_html(
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow: hidden;
         }}
-        
+
         .header {{
             background: linear-gradient(135deg, {colors.get("primary", "#6366f1")} 0%, {colors.get("secondary", "#8b5cf6")} 100%);
             color: white;
             padding: 40px;
             text-align: center;
         }}
-        
+
         .header h1 {{
             font-size: 32px;
             margin-bottom: 10px;
         }}
-        
+
         .header .subtitle {{
             font-size: 18px;
             opacity: 0.9;
         }}
-        
+
         .context-badge {{
             display: inline-block;
             background: rgba(255,255,255,0.2);
@@ -393,15 +393,15 @@ def generate_ui_html(
             font-size: 14px;
             margin-top: 10px;
         }}
-        
+
         .content {{
             padding: 40px;
         }}
-        
+
         .section {{
             margin-bottom: 40px;
         }}
-        
+
         .section-title {{
             font-size: 24px;
             margin-bottom: 20px;
@@ -409,13 +409,13 @@ def generate_ui_html(
             border-bottom: 2px solid {colors.get("primary", "#6366f1")};
             padding-bottom: 10px;
         }}
-        
+
         .work-efforts-grid {{
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
         }}
-        
+
         .work-effort-card {{
             background: #f8fafc;
             border: 2px solid #e2e8f0;
@@ -423,26 +423,26 @@ def generate_ui_html(
             padding: 20px;
             transition: all 0.3s ease;
         }}
-        
+
         .work-effort-card:hover {{
             transform: translateY(-4px);
             box-shadow: 0 8px 24px rgba(0,0,0,0.1);
             border-color: {colors.get("primary", "#6366f1")};
         }}
-        
+
         .we-header {{
             display: flex;
             justify-content: space-between;
             align-items: start;
             margin-bottom: 10px;
         }}
-        
+
         .we-header h3 {{
             font-size: 18px;
             color: {colors.get("text", "#1e293b")};
             flex: 1;
         }}
-        
+
         .status-badge {{
             padding: 4px 12px;
             border-radius: 12px;
@@ -450,55 +450,55 @@ def generate_ui_html(
             font-size: 12px;
             font-weight: 600;
         }}
-        
+
         .we-id {{
             font-size: 12px;
             color: #64748b;
             margin-bottom: 10px;
             font-family: monospace;
         }}
-        
+
         .we-description {{
             font-size: 14px;
             color: #475569;
             line-height: 1.6;
         }}
-        
+
         .activity-list {{
             background: #f8fafc;
             border-radius: 12px;
             padding: 20px;
         }}
-        
+
         .activity-item {{
             display: flex;
             align-items: center;
             padding: 12px;
             border-bottom: 1px solid #e2e8f0;
         }}
-        
+
         .activity-item:last-child {{
             border-bottom: none;
         }}
-        
+
         .activity-icon {{
             font-size: 20px;
             margin-right: 12px;
         }}
-        
+
         .activity-file {{
             font-family: monospace;
             font-size: 14px;
             color: {colors.get("text", "#1e293b")};
         }}
-        
+
         .info-grid {{
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             margin-top: 20px;
         }}
-        
+
         .info-card {{
             background: linear-gradient(135deg, {colors.get("primary", "#6366f1")} 0%, {colors.get("secondary", "#8b5cf6")} 100%);
             color: white;
@@ -506,23 +506,23 @@ def generate_ui_html(
             border-radius: 12px;
             text-align: center;
         }}
-        
+
         .info-card .value {{
             font-size: 32px;
             font-weight: bold;
             margin-bottom: 8px;
         }}
-        
+
         .info-card .label {{
             font-size: 14px;
             opacity: 0.9;
         }}
-        
+
         @media (max-width: 768px) {{
             .work-efforts-grid {{
                 grid-template-columns: 1fr;
             }}
-            
+
             .content {{
                 padding: 20px;
             }}
@@ -536,7 +536,7 @@ def generate_ui_html(
             <div class="subtitle">Context-Aware Interface</div>
             <div class="context-badge">{context.get("work_type", "general").replace("_", " ").title()}</div>
         </div>
-        
+
         <div class="content">
             <div class="section">
                 <h2 class="section-title">Active Work Efforts</h2>
@@ -544,14 +544,14 @@ def generate_ui_html(
                     {work_effort_cards if work_effort_cards else "<p>No active work efforts found.</p>"}
                 </div>
             </div>
-            
+
             <div class="section">
                 <h2 class="section-title">Recent Activity</h2>
                 <div class="activity-list">
                     {activity_items if activity_items else "<p>No recent activity found.</p>"}
                 </div>
             </div>
-            
+
             <div class="section">
                 <h2 class="section-title">Project Info</h2>
                 <div class="info-grid">

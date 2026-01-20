@@ -244,7 +244,7 @@ class ScintDetector:
             ScintType classification
         """
         # Check if divergence is isolated to one category
-        categories = set(k.split(".")[0] for k in differences.keys())
+        categories = {k.split(".")[0] for k in differences.keys()}
 
         if len(categories) == 1:
             category = list(categories)[0]

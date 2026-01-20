@@ -119,7 +119,7 @@ class ExtendedCampaign:
         ]
 
         party = []
-        for i, config in enumerate(party_configs):
+        for _i, config in enumerate(party_configs):
             console.print(f"[yellow]→[/yellow] Spawning {config['name']}...")
 
             being = self.being_system.spawn_being(
@@ -160,17 +160,17 @@ class ExtendedCampaign:
             "content": f"""
 # The Rusty Tankard Tavern
 
-The warm glow of the hearth casts dancing shadows across the worn wooden tables of The Rusty Tankard. 
+The warm glow of the hearth casts dancing shadows across the worn wooden tables of The Rusty Tankard.
 The air is thick with the smell of ale, roasted meat, and the murmur of travelers sharing tales.
 
-{party_names} sit together at a corner table, their gear stacked beside them. The tavern is alive with 
-activity - merchants discussing trade routes, guards off duty sharing war stories, and mysterious 
+{party_names} sit together at a corner table, their gear stacked beside them. The tavern is alive with
+activity - merchants discussing trade routes, guards off duty sharing war stories, and mysterious
 figures in dark corners watching everything.
 
-Suddenly, the tavern door bursts open. A figure stumbles in, covered in mud and breathing heavily. 
+Suddenly, the tavern door bursts open. A figure stumbles in, covered in mud and breathing heavily.
 It's a messenger, and he's clearly been through something terrible.
 
-"The road to Blackmoor Keep is no longer safe!" he gasps, collapsing at the bar. "Something... 
+"The road to Blackmoor Keep is no longer safe!" he gasps, collapsing at the bar. "Something...
 something dark has taken hold of the old fortress. The villagers are terrified. We need heroes!"
 
 The tavern falls silent. All eyes turn to your table.
@@ -181,14 +181,14 @@ This is where your story begins.
 
 ## The Quest
 
-The messenger explains that Blackmoor Keep, once a bastion of light and order, has fallen to darkness. 
-Strange creatures roam the surrounding lands, and the keep itself has become a place of nightmares. 
+The messenger explains that Blackmoor Keep, once a bastion of light and order, has fallen to darkness.
+Strange creatures roam the surrounding lands, and the keep itself has become a place of nightmares.
 The local villages are in danger, and only brave adventurers can restore the light.
 
 The party accepts the quest, knowing that this will be a long and dangerous journey.
             """,
             "read_aloud": """
-The messenger's eyes are wide with fear. "The Keep has been overrun by shadows. 
+The messenger's eyes are wide with fear. "The Keep has been overrun by shadows.
 Something ancient has awakened. We need brave souls to face whatever darkness lies within."
             """,
         }
@@ -243,8 +243,8 @@ Something ancient has awakened. We need brave souls to face whatever darkness li
         # Generate detailed encounter description
         if not description:
             description = f"""
-The party encounters {encounter_name} in a fierce battle. The combat is intense, with spells flying, 
-swords clashing, and the party working together to overcome their foe. After {rounds} rounds of 
+The party encounters {encounter_name} in a fierce battle. The combat is intense, with spells flying,
+swords clashing, and the party working together to overcome their foe. After {rounds} rounds of
 determined fighting, the party emerges victorious.
             """
 
@@ -263,7 +263,7 @@ determined fighting, the party emerges victorious.
 - **Current Party HP**: {sum([m.hp for m in self.party])}/{sum([m.max_hp for m in self.party])}
             """,
             "read_aloud": f"""
-The battle is intense. Steel clashes, spells fly, and the party fights as one. 
+The battle is intense. Steel clashes, spells fly, and the party fights as one.
 After {rounds} rounds of combat, {encounter_name} falls, defeated by the heroes' resolve.
             """,
             "difficulty": difficulty,
@@ -303,7 +303,7 @@ After {rounds} rounds of combat, {encounter_name} falls, defeated by the heroes'
         chapter_read_aloud = []
 
         # Add encounters
-        for i, encounter_data in enumerate(encounters):
+        for _i, encounter_data in enumerate(encounters):
             encounter_name = encounter_data.get("name", "Unknown Encounter")
             difficulty = encounter_data.get("difficulty", "medium")
             description = encounter_data.get("description")
@@ -354,26 +354,26 @@ After {rounds} rounds of combat, {encounter_name} falls, defeated by the heroes'
             "content": f"""
 # The Final Battle: {boss_name}
 
-The party has reached the heart of Blackmoor Keep. Before them stands {boss_name}, 
+The party has reached the heart of Blackmoor Keep. Before them stands {boss_name},
 a being of pure darkness that has corrupted the ancient fortress.
 
 ## The Confrontation
 
-The chamber is vast, with ancient runes carved into the walls that now pulse with dark energy. 
+The chamber is vast, with ancient runes carved into the walls that now pulse with dark energy.
 {boss_name} stands at the center, surrounded by swirling shadows. The very air feels heavy with malice.
 
-"The time has come," {boss_name} speaks, his voice echoing through the chamber. "You have proven 
+"The time has come," {boss_name} speaks, his voice echoing through the chamber. "You have proven
 yourselves worthy adversaries, but you cannot hope to defeat me. I am eternal. I am darkness itself."
 
 The party knows this is the moment of truth. All their journey has led to this.
 
 ## The Battle
 
-The battle is epic beyond measure. Spells of immense power clash with dark magic. Swords strike 
+The battle is epic beyond measure. Spells of immense power clash with dark magic. Swords strike
 against shadowy armor. The very foundations of the keep shake with the force of combat.
 
-After {rounds} grueling rounds, the party's determination and teamwork overcome the darkness. 
-{boss_name} lets out a final, terrible scream as the light of the heroes' resolve banishes 
+After {rounds} grueling rounds, the party's determination and teamwork overcome the darkness.
+{boss_name} lets out a final, terrible scream as the light of the heroes' resolve banishes
 the shadow forever.
 
 ## Victory!
@@ -392,7 +392,7 @@ The party stands victorious. They have:
 The adventure is complete, but new quests await...
             """,
             "read_aloud": f"""
-The final blow strikes true. {boss_name} shrieks as darkness is banished from the keep. 
+The final blow strikes true. {boss_name} shrieks as darkness is banished from the keep.
 Light floods the chamber. The corruption is gone. You have won.
             """,
             "boss_name": boss_name,
@@ -715,10 +715,10 @@ Light floods the chamber. The corruption is gone. You have won.
         # Build complete markdown content
         markdown_content = f"""# The Eternal Guardians: An Epic Adventure
 
-**Generated by**: WAFT Extended Campaign System  
-**Date**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}  
-**Party**: {", ".join([m.name for m in self.party])}  
-**Total Encounters**: {self.total_encounters}  
+**Generated by**: WAFT Extended Campaign System
+**Date**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+**Party**: {", ".join([m.name for m in self.party])}
+**Total Encounters**: {self.total_encounters}
 **Campaign Status**: {"✅ VICTORY - Final Boss Defeated" if self.final_boss_defeated else "In Progress"}
 
 ---
@@ -729,7 +729,7 @@ The heroes who answered the call:
 
 {party_summary}
 
-Together, they form a formidable team ready to face any challenge. Through their journey, 
+Together, they form a formidable team ready to face any challenge. Through their journey,
 they have grown stronger, wiser, and more united.
 
 ---
@@ -769,14 +769,14 @@ The party has completed their epic adventure:
 
 ### The Journey
 
-The party's journey took them from the humble Rusty Tankard tavern through dark forests, 
-across dangerous roads, and into the very heart of Blackmoor Keep itself. They faced 
-countless challenges, from goblin ambushes to shadow wraiths, from corrupted guards to 
+The party's journey took them from the humble Rusty Tankard tavern through dark forests,
+across dangerous roads, and into the very heart of Blackmoor Keep itself. They faced
+countless challenges, from goblin ambushes to shadow wraiths, from corrupted guards to
 ancient guardians. Through it all, they remained united and determined.
 
 ### The Victory
 
-{"The realm is saved. The darkness is banished. The heroes return to the tavern as legends, " if self.final_boss_defeated else "The adventure continues..."} 
+{"The realm is saved. The darkness is banished. The heroes return to the tavern as legends, " if self.final_boss_defeated else "The adventure continues..."}
 Their names will be remembered for generations to come.
 
 ---
@@ -797,7 +797,7 @@ Their names will be remembered for generations to come.
 - **Level**: {member.level}
 - **Experience**: {member.experience}
 - **Hit Points**: {member.hp}/{member.max_hp}
-- **Stats**: 
+- **Stats**:
   - Strength: {member.stats["strength"]}
   - Dexterity: {member.stats["dexterity"]}
   - Constitution: {member.stats["constitution"]}
@@ -820,9 +820,9 @@ Their names will be remembered for generations to come.
 
 ---
 
-*This campaign was generated automatically by the WAFT Extended Campaign System.*  
-*All encounters, story beats, and outcomes were determined by the system itself.*  
-*Total word count: ~{len(markdown_content.split())} words*  
+*This campaign was generated automatically by the WAFT Extended Campaign System.*
+*All encounters, story beats, and outcomes were determined by the system itself.*
+*Total word count: ~{len(markdown_content.split())} words*
 *Total pages (estimated): ~{len(markdown_content.split()) // 250} pages*
 """
 

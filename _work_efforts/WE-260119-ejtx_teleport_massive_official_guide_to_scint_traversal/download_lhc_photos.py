@@ -90,7 +90,7 @@ def extract_wikimedia_image_url(page_url: str) -> str | None:
         # URL encode the filename
         from urllib.parse import quote
 
-        encoded_filename = quote(filename, safe="")
+        quote(filename, safe="")
 
         # Use Wikimedia API to get image URL
         api_url = "https://commons.wikimedia.org/w/api.php"
@@ -107,7 +107,7 @@ def extract_wikimedia_image_url(page_url: str) -> str | None:
         data = response.json()
 
         pages = data.get("query", {}).get("pages", {})
-        for page_id, page_data in pages.items():
+        for _page_id, page_data in pages.items():
             imageinfo = page_data.get("imageinfo", [])
             if imageinfo:
                 return imageinfo[0].get("url")

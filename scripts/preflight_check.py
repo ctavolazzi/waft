@@ -295,7 +295,7 @@ class PreflightChecker:
             from src.waft.reflection import ReflectionSystem
 
             waft_root = PROJECT_ROOT / "src/waft"
-            reflector = ReflectionSystem(waft_root=waft_root)
+            ReflectionSystem(waft_root=waft_root)
             self.check("Reflection system initialization", True)
         except Exception as e:
             self.check("Reflection system initialization", False, str(e))

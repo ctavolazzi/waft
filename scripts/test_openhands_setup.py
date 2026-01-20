@@ -93,7 +93,7 @@ def main():
         1. Confirmation that OpenHands SDK is working
         2. Current project name (waft)
         3. A note that the setup is ready for game generation
-        
+
         Keep it brief - just 3-4 lines.
         """
 

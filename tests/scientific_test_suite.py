@@ -224,7 +224,7 @@ def experiment_performance_scaling():
         for iteration_count in iteration_counts:
             times = []
 
-            for trial in range(trials_per_count):
+            for _trial in range(trials_per_count):
                 start = time.time()
                 answer, protocol = guide.solve(
                     problem_statement="Scaling test",

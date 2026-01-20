@@ -484,7 +484,7 @@ Based on this reasoning, provide a clear, concise final answer to the problem.""
     ) -> str:
         """Format previous steps and evaluations for context."""
         formatted = []
-        for step, eval_data in zip(previous_steps, previous_evaluations):
+        for step, eval_data in zip(previous_steps, previous_evaluations, strict=False):
             formatted.append(f"""
 Step {step["iteration"]}:
   Instruction: {step["instruction"]}
@@ -870,7 +870,7 @@ Provide your evaluation in this exact JSON format:
         """
         # Create session ID (with microseconds for uniqueness in concurrent scenarios)
         now = datetime.now()
-        session_id = f"session_{now.strftime('%Y%m%d_%H%M%S')}_{now.microsecond:06d}"
+        f"session_{now.strftime('%Y%m%d_%H%M%S')}_{now.microsecond:06d}"
 
         # Run guidance loop
         final_answer, protocol = self._guidance_loop(
@@ -919,7 +919,7 @@ Provide your evaluation in this exact JSON format:
 """
 
         # Add each reasoning step with evaluation
-        for step, evaluation in zip(protocol.reasoning_chain, protocol.evaluations):
+        for step, evaluation in zip(protocol.reasoning_chain, protocol.evaluations, strict=False):
             iteration = step["iteration"]
             explanation += f"""
 ### Iteration {iteration}

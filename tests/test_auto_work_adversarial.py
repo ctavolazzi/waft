@@ -28,54 +28,54 @@ class TestWorkEffortIDValidation:
 
     def test_valid_id_format(self):
         """Valid IDs should pass."""
-        assert _validate_work_effort_id("WE-260112-wfga") == True
-        assert _validate_work_effort_id("WE-260119-abc1") == True
-        assert _validate_work_effort_id("WE-260119-1234") == True
+        assert _validate_work_effort_id("WE-260112-wfga")
+        assert _validate_work_effort_id("WE-260119-abc1")
+        assert _validate_work_effort_id("WE-260119-1234")
 
     def test_invalid_id_format_path_traversal(self):
         """CRITICAL: Path traversal attempts should be rejected."""
-        assert _validate_work_effort_id("../etc/passwd") == False
-        assert _validate_work_effort_id("WE-260112-../../") == False
-        assert _validate_work_effort_id("WE-260112-..//") == False
+        assert not _validate_work_effort_id("../etc/passwd")
+        assert not _validate_work_effort_id("WE-260112-../../")
+        assert not _validate_work_effort_id("WE-260112-..//")
 
     def test_invalid_id_format_command_injection(self):
         """CRITICAL: Command injection attempts should be rejected."""
-        assert _validate_work_effort_id("WE-260112-;rm") == False
-        assert _validate_work_effort_id("WE-260112-|cat") == False
-        assert _validate_work_effort_id("WE-260112-$(id)") == False
-        assert _validate_work_effort_id("WE-260112-`ls`") == False
+        assert not _validate_work_effort_id("WE-260112-;rm")
+        assert not _validate_work_effort_id("WE-260112-|cat")
+        assert not _validate_work_effort_id("WE-260112-$(id)")
+        assert not _validate_work_effort_id("WE-260112-`ls`")
 
     def test_invalid_id_format_sql_injection(self):
         """SQL injection attempts should be rejected."""
-        assert _validate_work_effort_id("WE-260112-'OR'1") == False
-        assert _validate_work_effort_id("WE-260112-DROP") == False
+        assert not _validate_work_effort_id("WE-260112-'OR'1")
+        assert not _validate_work_effort_id("WE-260112-DROP")
 
     def test_invalid_id_format_xss(self):
         """XSS attempts should be rejected."""
-        assert _validate_work_effort_id("WE-260112-<script>") == False
-        assert _validate_work_effort_id("WE-260112-<img>") == False
+        assert not _validate_work_effort_id("WE-260112-<script>")
+        assert not _validate_work_effort_id("WE-260112-<img>")
 
     def test_invalid_id_format_unicode(self):
         """Unicode injection attempts should be rejected."""
-        assert _validate_work_effort_id("WE-260112-测试") == False
-        assert _validate_work_effort_id("WE-260112-🚀") == False
+        assert not _validate_work_effort_id("WE-260112-测试")
+        assert not _validate_work_effort_id("WE-260112-🚀")
 
     def test_invalid_id_format_too_long(self):
         """Excessively long IDs should be rejected."""
-        assert _validate_work_effort_id("WE-260112-" + "a" * 100) == False
+        assert not _validate_work_effort_id("WE-260112-" + "a" * 100)
 
     def test_invalid_id_format_wrong_structure(self):
         """Wrong structure should be rejected."""
-        assert _validate_work_effort_id("WE-260112") == False  # Missing suffix
-        assert _validate_work_effort_id("WE-260112-wfga-extra") == False  # Too many parts
-        assert _validate_work_effort_id("260112-wfga") == False  # Missing WE- prefix
-        assert _validate_work_effort_id("WE-26011-wfga") == False  # Wrong date format
-        assert _validate_work_effort_id("WE-260112-WFGA") == False  # Uppercase suffix
+        assert not _validate_work_effort_id("WE-260112")  # Missing suffix
+        assert not _validate_work_effort_id("WE-260112-wfga-extra")  # Too many parts
+        assert not _validate_work_effort_id("260112-wfga")  # Missing WE- prefix
+        assert not _validate_work_effort_id("WE-26011-wfga")  # Wrong date format
+        assert not _validate_work_effort_id("WE-260112-WFGA")  # Uppercase suffix
 
     def test_empty_id(self):
         """Empty ID should be rejected."""
-        assert _validate_work_effort_id("") == False
-        assert _validate_work_effort_id(None) == False  # Type check
+        assert not _validate_work_effort_id("")
+        assert not _validate_work_effort_id(None)  # Type check
 
 
 class TestCommandInjectionPrevention:
@@ -109,7 +109,7 @@ class TestCommandInjectionPrevention:
         result = execute_work_effort_action(malicious_work_effort, malicious_action, tmp_path)
         # Long malicious commands should fail validation
         if len(malicious_action["command"]) > 500:
-            assert result.get("success") == False
+            assert not result.get("success")
             assert "validation" in result.get("error", "").lower()
 
     def test_action_type_whitelist_enforced(self, malicious_work_effort, tmp_path):
@@ -123,7 +123,7 @@ class TestCommandInjectionPrevention:
         }
 
         result = execute_work_effort_action(malicious_work_effort, malicious_action, tmp_path)
-        assert result.get("success") == False
+        assert not result.get("success")
         assert (
             "whitelist" in result.get("error", "").lower()
             or "invalid" in result.get("error", "").lower()
@@ -146,7 +146,7 @@ class TestCommandInjectionPrevention:
         }
 
         result = execute_work_effort_action(malicious_work_effort, action, tmp_path)
-        assert result.get("success") == False
+        assert not result.get("success")
         assert (
             "invalid" in result.get("error", "").lower()
             or "format" in result.get("error", "").lower()
@@ -222,7 +222,7 @@ class TestEmpiricaGateIntegration:
         with patch("src.waft.core.empirica.EmpiricaManager", mock_empirica_class):
             result = execute_work_effort_action(work_effort, action, tmp_path)
 
-        assert result.get("success") == False
+        assert not result.get("success")
         assert result.get("gate_result") == "HALT"
         assert (
             "approval" in result.get("error", "").lower()
@@ -240,7 +240,7 @@ class TestEmpiricaGateIntegration:
         with patch("src.waft.core.empirica.EmpiricaManager", mock_empirica_class):
             result = execute_work_effort_action(work_effort, action, tmp_path)
 
-        assert result.get("success") == False
+        assert not result.get("success")
         assert result.get("gate_result") == "BRANCH"
         assert (
             "investigation" in result.get("error", "").lower()
@@ -258,7 +258,7 @@ class TestEmpiricaGateIntegration:
         with patch("src.waft.core.empirica.EmpiricaManager", mock_empirica_class):
             result = execute_work_effort_action(work_effort, action, tmp_path)
 
-        assert result.get("success") == False
+        assert not result.get("success")
         assert result.get("gate_result") == "REVISE"
         assert (
             "revision" in result.get("error", "").lower()
@@ -275,7 +275,7 @@ class TestEmpiricaGateIntegration:
         with patch("src.waft.core.empirica.EmpiricaManager", mock_empirica_class):
             result = execute_work_effort_action(work_effort, action, tmp_path)
 
-        assert result.get("success") == True
+        assert result.get("success")
         assert result.get("gate_result") is None  # No gate result when proceeding
 
     def test_empirica_unavailable_continues(self, work_effort, action, tmp_path):
@@ -287,7 +287,7 @@ class TestEmpiricaGateIntegration:
             result = execute_work_effort_action(work_effort, action, tmp_path)
 
         # Should continue without gate (graceful degradation)
-        assert result.get("success") == True
+        assert result.get("success")
 
     def test_empirica_not_initialized_continues(self, work_effort, action, tmp_path):
         """If Empirica not initialized, should continue."""
@@ -299,7 +299,7 @@ class TestEmpiricaGateIntegration:
             result = execute_work_effort_action(work_effort, action, tmp_path)
 
         # Should continue without gate check
-        assert result.get("success") == True
+        assert result.get("success")
         mock_empirica.check_submit.assert_not_called()
 
 
@@ -650,8 +650,8 @@ class TestConcurrentExecution:
 
         # Currently both succeed (this is a known issue)
         # TODO: Add file locking to prevent concurrent execution
-        assert result1.get("success") == True
-        assert result2.get("success") == True
+        assert result1.get("success")
+        assert result2.get("success")
 
 
 class TestMalformedData:

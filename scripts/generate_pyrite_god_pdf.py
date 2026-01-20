@@ -59,7 +59,7 @@ def adapt_html_for_dnd_style(html_content: str) -> str:
             size: letter;
             margin: 0.5in;
         }
-        
+
         body {
             font-family: 'Arial', 'Helvetica', sans-serif;
             font-size: 10pt;
@@ -69,12 +69,12 @@ def adapt_html_for_dnd_style(html_content: str) -> str:
             margin: 0;
             padding: 0;
         }
-        
+
         .container {
             max-width: 100%;
             margin: 0;
         }
-        
+
         header {
             background: #fff;
             color: #000;
@@ -83,7 +83,7 @@ def adapt_html_for_dnd_style(html_content: str) -> str:
             border: 3px solid #000;
             margin-bottom: 0.2in;
         }
-        
+
         h1 {
             font-size: 24pt;
             font-weight: bold;
@@ -93,14 +93,14 @@ def adapt_html_for_dnd_style(html_content: str) -> str:
             border-bottom: 3px solid #000;
             padding-bottom: 0.1in;
         }
-        
+
         .subtitle {
             font-size: 14pt;
             font-weight: bold;
             margin-top: 0.1in;
             text-transform: uppercase;
         }
-        
+
         .god-badge {
             display: inline-block;
             background: #fff;
@@ -110,16 +110,16 @@ def adapt_html_for_dnd_style(html_content: str) -> str:
             font-size: 8pt;
             text-transform: uppercase;
         }
-        
+
         .content {
             padding: 0.2in;
         }
-        
+
         section {
             margin-bottom: 0.3in;
             page-break-inside: avoid;
         }
-        
+
         h2 {
             font-size: 16pt;
             font-weight: bold;
@@ -131,11 +131,11 @@ def adapt_html_for_dnd_style(html_content: str) -> str:
             text-transform: uppercase;
             page-break-after: avoid;
         }
-        
+
         h2::before {
             content: '';
         }
-        
+
         h3 {
             font-size: 12pt;
             font-weight: bold;
@@ -146,22 +146,22 @@ def adapt_html_for_dnd_style(html_content: str) -> str:
             text-transform: uppercase;
             page-break-after: avoid;
         }
-        
+
         h3::before {
             content: '';
         }
-        
+
         p {
             margin-bottom: 0.1in;
             text-align: justify;
             font-size: 10pt;
         }
-        
+
         .overview-grid, .abilities-grid, .personality-grid {
             display: block;
             margin: 0.15in 0;
         }
-        
+
         .feature-card, .ability-card, .attribute-card {
             border: 1px solid #000;
             padding: 0.15in;
@@ -169,7 +169,7 @@ def adapt_html_for_dnd_style(html_content: str) -> str:
             background: #fff;
             page-break-inside: avoid;
         }
-        
+
         .feature-card h4, .ability-card h4 {
             font-size: 11pt;
             font-weight: bold;
@@ -178,16 +178,16 @@ def adapt_html_for_dnd_style(html_content: str) -> str:
             border-bottom: 1px solid #000;
             padding-bottom: 0.05in;
         }
-        
+
         .feature-card h4::before, .ability-card h4::before {
             content: '';
         }
-        
+
         .attribute-card {
             text-align: center;
             border: 2px solid #000;
         }
-        
+
         .attribute-name {
             font-size: 10pt;
             font-weight: bold;
@@ -196,18 +196,18 @@ def adapt_html_for_dnd_style(html_content: str) -> str:
             padding-bottom: 0.05in;
             margin-bottom: 0.05in;
         }
-        
+
         .attribute-value {
             font-size: 18pt;
             font-weight: bold;
             margin: 0.05in 0;
         }
-        
+
         .attribute-growth {
             font-size: 8pt;
             color: #666;
         }
-        
+
         .code-block {
             background: #f5f5f5;
             border: 1px solid #000;
@@ -219,11 +219,11 @@ def adapt_html_for_dnd_style(html_content: str) -> str:
             overflow-x: auto;
             page-break-inside: avoid;
         }
-        
+
         .code-block code {
             color: #000;
         }
-        
+
         .highlight-box {
             background: #fff;
             border: 2px solid #000;
@@ -231,7 +231,7 @@ def adapt_html_for_dnd_style(html_content: str) -> str:
             margin: 0.2in 0;
             page-break-inside: avoid;
         }
-        
+
         .highlight-box h4 {
             margin-top: 0;
             font-size: 11pt;
@@ -241,20 +241,20 @@ def adapt_html_for_dnd_style(html_content: str) -> str:
             padding-bottom: 0.05in;
             margin-bottom: 0.1in;
         }
-        
+
         .workflow-steps {
             list-style: none;
             padding-left: 0;
             margin: 0.15in 0;
         }
-        
+
         .workflow-steps li {
             margin-bottom: 0.1in;
             padding-left: 0.3in;
             position: relative;
             font-size: 9pt;
         }
-        
+
         .workflow-steps li::before {
             content: counter(step-counter);
             counter-increment: step-counter;
@@ -272,7 +272,7 @@ def adapt_html_for_dnd_style(html_content: str) -> str:
             font-size: 10pt;
             border: 1px solid #000;
         }
-        
+
         .status-badge {
             display: inline-block;
             padding: 0.02in 0.08in;
@@ -282,13 +282,13 @@ def adapt_html_for_dnd_style(html_content: str) -> str:
             margin: 0.02in;
             text-transform: uppercase;
         }
-        
+
         .status-active { background: #fff; }
         .status-dormant { background: #e0e0e0; }
         .status-locked { background: #ffe0e0; }
         .status-evolving { background: #e0e0ff; }
         .status-completed { background: #e0ffe0; }
-        
+
         .empirica-badge {
             display: inline-block;
             background: #000;
@@ -300,17 +300,17 @@ def adapt_html_for_dnd_style(html_content: str) -> str:
             margin: 0.02in;
             text-transform: uppercase;
         }
-        
+
         ul, ol {
             margin: 0.1in 0;
             padding-left: 0.3in;
         }
-        
+
         li {
             margin-bottom: 0.05in;
             font-size: 10pt;
         }
-        
+
         .footer {
             background: #fff;
             color: #000;
@@ -320,38 +320,38 @@ def adapt_html_for_dnd_style(html_content: str) -> str:
             margin-top: 0.3in;
             font-size: 8pt;
         }
-        
+
         .footer p {
             margin: 0.05in 0;
         }
-        
+
         .footer code {
             font-family: 'Courier New', monospace;
             background: #f5f5f5;
             padding: 0.02in 0.05in;
             border: 1px solid #000;
         }
-        
+
         /* Remove animations and gradients for PDF */
         header::before {
             display: none;
         }
-        
+
         .feature-card:hover,
         .ability-card:hover {
             transform: none;
             box-shadow: none;
         }
-        
+
         /* Ensure proper page breaks */
         section {
             page-break-inside: avoid;
         }
-        
+
         h2, h3 {
             page-break-after: avoid;
         }
-        
+
         .code-block, .highlight-box {
             page-break-inside: avoid;
         }

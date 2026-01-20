@@ -201,7 +201,7 @@ def safety_checks(hub_path: Path, main_project_path: Path) -> tuple[bool, dict[s
     # Check 5: Reality
     console.print("[dim]→[/dim] Verifying Reality...")
     try:
-        reality_system = RealitySystem(project_path=hub_path)
+        RealitySystem(project_path=hub_path)
         realities_path = hub_path / "_hidden" / ".truth" / "realities"
         if realities_path.exists():
             reality_files = list(realities_path.glob("*.json"))
@@ -517,7 +517,7 @@ def main():
         cycle_state = initialize_evolution_cycles(hub_path, hub_config)
 
         # Step 3: Run first cycle
-        cycle_result = run_first_cycle(hub_path, being, hub_config)
+        run_first_cycle(hub_path, being, hub_config)
 
         # Step 4: Display launch message
         display_launch_message(being, hub_config, cycle_state, main_project_path)

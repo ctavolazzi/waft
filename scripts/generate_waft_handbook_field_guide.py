@@ -94,11 +94,11 @@ FIELD_GUIDE_TEMPLATE = """
     <style>
         /* LaTeX-Inspired Field Guide Styling */
         /* Inspired by LaTTe and LaTeX Cookbook typography */
-        
+
         @page {
             size: letter;
             margin: 0.75in 0.5in;
-            
+
             @top-left {
                 content: "{{ series }} {{ number }}";
                 font-family: 'Courier New', 'Courier', monospace;
@@ -107,13 +107,13 @@ FIELD_GUIDE_TEMPLATE = """
                 text-transform: uppercase;
                 letter-spacing: 0.05em;
             }
-            
+
             @top-right {
                 content: "Page " counter(page);
                 font-family: 'Courier New', 'Courier', monospace;
                 font-size: 9pt;
             }
-            
+
             @bottom-center {
                 content: "{{ classification }}";
                 font-family: 'Courier New', 'Courier', monospace;
@@ -122,13 +122,13 @@ FIELD_GUIDE_TEMPLATE = """
                 font-weight: bold;
             }
         }
-        
+
         @page :first {
             @top-left { content: none; }
             @top-right { content: none; }
             @bottom-center { content: none; }
         }
-        
+
         body {
             font-family: 'Times New Roman', 'Times', serif;
             font-size: 11pt;
@@ -138,7 +138,7 @@ FIELD_GUIDE_TEMPLATE = """
             text-align: justify;
             hyphens: auto;
         }
-        
+
         /* Cover Page */
         .cover-page {
             page-break-after: always;
@@ -147,7 +147,7 @@ FIELD_GUIDE_TEMPLATE = """
             border: 4pt double #000;
             margin: 0.5in;
         }
-        
+
         .series-number {
             font-family: 'Courier New', 'Courier', monospace;
             font-size: 14pt;
@@ -156,7 +156,7 @@ FIELD_GUIDE_TEMPLATE = """
             letter-spacing: 0.1em;
             margin-bottom: 0.3in;
         }
-        
+
         .cover-title {
             font-family: 'Times New Roman', 'Times', serif;
             font-size: 24pt;
@@ -166,14 +166,14 @@ FIELD_GUIDE_TEMPLATE = """
             text-transform: uppercase;
             letter-spacing: 0.02em;
         }
-        
+
         .cover-subtitle {
             font-size: 14pt;
             font-style: italic;
             color: #333;
             margin: 0.2in 0;
         }
-        
+
         .classification-box {
             display: inline-block;
             background: #ffff00;
@@ -183,7 +183,7 @@ FIELD_GUIDE_TEMPLATE = """
             font-weight: bold;
             font-size: 12pt;
         }
-        
+
         /* Abstract */
         .abstract {
             margin: 0.3in 0;
@@ -193,14 +193,14 @@ FIELD_GUIDE_TEMPLATE = """
             font-size: 10pt;
             text-align: justify;
         }
-        
+
         .abstract-title {
             font-weight: bold;
             font-size: 11pt;
             margin-bottom: 0.1in;
             text-align: center;
         }
-        
+
         /* Headers (LaTeX-style) */
         h1 {
             font-size: 16pt;
@@ -211,7 +211,7 @@ FIELD_GUIDE_TEMPLATE = """
             border-bottom: 0.4pt solid #000;
             padding-bottom: 0.05in;
         }
-        
+
         h2 {
             font-size: 14pt;
             font-weight: bold;
@@ -221,7 +221,7 @@ FIELD_GUIDE_TEMPLATE = """
             border-bottom: 0.4pt solid #000;
             padding-bottom: 0.05in;
         }
-        
+
         h3 {
             font-size: 12pt;
             font-weight: bold;
@@ -230,7 +230,7 @@ FIELD_GUIDE_TEMPLATE = """
             page-break-after: avoid;
             font-style: italic;
         }
-        
+
         h4 {
             font-size: 11pt;
             font-weight: bold;
@@ -238,7 +238,7 @@ FIELD_GUIDE_TEMPLATE = """
             margin-top: 0.15in;
             margin-bottom: 0.08in;
         }
-        
+
         /* Paragraphs */
         p {
             margin: 0.12in 0;
@@ -246,17 +246,17 @@ FIELD_GUIDE_TEMPLATE = """
             orphans: 3;
             widows: 3;
         }
-        
+
         /* Lists */
         ul, ol {
             margin: 0.15in 0;
             padding-left: 0.3in;
         }
-        
+
         li {
             margin-bottom: 0.05in;
         }
-        
+
         /* Code blocks */
         pre {
             font-family: 'Courier New', 'Courier', monospace;
@@ -269,7 +269,7 @@ FIELD_GUIDE_TEMPLATE = """
             overflow-x: auto;
             page-break-inside: avoid;
         }
-        
+
         code {
             font-family: 'Courier New', 'Courier', monospace;
             font-size: 10pt;
@@ -277,12 +277,12 @@ FIELD_GUIDE_TEMPLATE = """
             padding: 0.02in 0.05in;
             border-radius: 2pt;
         }
-        
+
         pre code {
             background: transparent;
             padding: 0;
         }
-        
+
         /* Tables (LaTeX booktabs style) */
         table {
             width: 100%;
@@ -291,7 +291,7 @@ FIELD_GUIDE_TEMPLATE = """
             font-size: 10pt;
             page-break-inside: avoid;
         }
-        
+
         th {
             background: #333;
             color: #fff;
@@ -300,16 +300,16 @@ FIELD_GUIDE_TEMPLATE = """
             text-align: left;
             font-weight: bold;
         }
-        
+
         td {
             border-bottom: 0.5pt solid #ddd;
             padding: 0.08in;
         }
-        
+
         tr:nth-child(even) {
             background: #f9f9f9;
         }
-        
+
         /* Warning/Note boxes (LaTeX tcolorbox style) */
         .warning, .caution, .note {
             margin: 0.2in 0;
@@ -317,53 +317,53 @@ FIELD_GUIDE_TEMPLATE = """
             page-break-inside: avoid;
             border-radius: 2pt;
         }
-        
+
         .warning {
             background: #ffffe0;
             border: 3pt solid #cc0000;
         }
-        
+
         .warning-title {
             font-weight: bold;
             color: #cc0000;
             text-transform: uppercase;
             margin-bottom: 0.08in;
         }
-        
+
         .caution {
             background: #fff9f0;
             border: 2pt solid #ff9900;
         }
-        
+
         .caution-title {
             font-weight: bold;
             color: #ff9900;
             text-transform: uppercase;
             margin-bottom: 0.08in;
         }
-        
+
         .note {
             background: #f0f8ff;
             border-left: 4pt solid #0066cc;
             padding-left: 0.2in;
         }
-        
+
         .note-title {
             font-weight: bold;
             color: #0066cc;
             text-transform: uppercase;
             margin-bottom: 0.08in;
         }
-        
+
         /* Emphasis */
         strong {
             font-weight: bold;
         }
-        
+
         em {
             font-style: italic;
         }
-        
+
         /* Horizontal rules */
         hr {
             border: none;
@@ -392,7 +392,7 @@ FIELD_GUIDE_TEMPLATE = """
             {% endif %}
         </div>
     </div>
-    
+
     <!-- Abstract -->
     {% if abstract %}
     <div class="abstract">
@@ -400,7 +400,7 @@ FIELD_GUIDE_TEMPLATE = """
         <div>{{ abstract }}</div>
     </div>
     {% endif %}
-    
+
     <!-- Main Content -->
     <div class="content">
         {{ content | safe }}

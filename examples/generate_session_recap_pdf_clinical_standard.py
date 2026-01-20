@@ -139,7 +139,7 @@ def main():
            CLINICAL STANDARD - Professional Scientific Documentation
            Based on Foundation V2's Clinical Standard preset
            ======================================== */
-        
+
         /* Headers: Helvetica Bold (Clinical Standard) */
         h1 {
             font-family: 'Helvetica', 'Arial', sans-serif;
@@ -152,7 +152,7 @@ def main():
             padding-bottom: 6pt;
             page-break-after: avoid;
         }
-        
+
         h2 {
             font-family: 'Helvetica', 'Arial', sans-serif;
             font-weight: 700;
@@ -164,7 +164,7 @@ def main():
             padding-bottom: 4pt;
             page-break-after: avoid;
         }
-        
+
         h3 {
             font-family: 'Helvetica', 'Arial', sans-serif;
             font-weight: 700;
@@ -174,7 +174,7 @@ def main():
             margin-bottom: 8pt;
             page-break-after: avoid;
         }
-        
+
         /* Body: Times New Roman (Clinical Standard) */
         body {
             font-family: 'Times New Roman', 'Times', serif;
@@ -184,14 +184,14 @@ def main():
             text-rendering: optimizeLegibility;
             -webkit-font-smoothing: antialiased;
         }
-        
+
         p {
             margin: 0 0 8pt 0;
             text-align: justify;
             orphans: 3;
             widows: 3;
         }
-        
+
         /* Professional Note Boxes */
         .note-box {
             border-left: 4pt solid #000;
@@ -200,7 +200,7 @@ def main():
             margin: 12pt 0;
             page-break-inside: avoid;
         }
-        
+
         .note-title {
             font-family: 'Helvetica', 'Arial', sans-serif;
             font-weight: 700;
@@ -210,7 +210,7 @@ def main():
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        
+
         /* Professional Highlight Boxes */
         .highlight-box {
             border: 2pt solid #000;
@@ -219,7 +219,7 @@ def main():
             margin: 12pt 0;
             page-break-inside: avoid;
         }
-        
+
         /* Professional Code Blocks */
         pre {
             font-family: 'Courier New', 'Courier', monospace;
@@ -231,7 +231,7 @@ def main():
             page-break-inside: avoid;
             overflow-x: auto;
         }
-        
+
         code {
             font-family: 'Courier New', 'Courier', monospace;
             font-size: 9pt;
@@ -239,7 +239,7 @@ def main():
             padding: 2pt 4pt;
             color: #000;
         }
-        
+
         /* Professional Tables */
         table {
             width: 100%;
@@ -248,7 +248,7 @@ def main():
             font-size: 10pt;
             page-break-inside: avoid;
         }
-        
+
         th {
             font-family: 'Helvetica', 'Arial', sans-serif;
             font-weight: 700;
@@ -258,27 +258,27 @@ def main():
             text-align: left;
             border: 1pt solid #000;
         }
-        
+
         td {
             padding: 6pt 8pt;
             border: 1pt solid #ccc;
         }
-        
+
         tr:nth-child(even) {
             background: #f9f9f9;
         }
-        
+
         /* Professional Lists */
         ul, ol {
             margin: 8pt 0;
             padding-left: 20pt;
         }
-        
+
         li {
             margin: 4pt 0;
             line-height: 1.4;
         }
-        
+
         /* Professional Blockquotes */
         blockquote {
             border-left: 4pt solid #000;
@@ -288,14 +288,14 @@ def main():
             font-style: italic;
             page-break-inside: avoid;
         }
-        
+
         /* Professional Section Dividers */
         hr {
             border: none;
             border-top: 2pt solid #000;
             margin: 18pt 0;
         }
-        
+
         /* Professional Idea Cards */
         .idea {
             margin: 10pt 0;
@@ -304,7 +304,7 @@ def main():
             background: #fafafa;
             page-break-inside: avoid;
         }
-        
+
         /* Page Numbers (Clinical Standard style) */
         @page {
             @bottom-center {
@@ -314,7 +314,7 @@ def main():
                 color: #666;
             }
         }
-        
+
         /* Headers/Footers */
         .header, .footer {
             font-family: 'Helvetica', 'Arial', sans-serif;

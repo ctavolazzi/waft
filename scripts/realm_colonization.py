@@ -100,7 +100,7 @@ def status():
         realms = []
 
     # Get tethers
-    tethers = the_one_core.get_tethers()
+    the_one_core.get_tethers()
 
     # Get summary
     summary = the_one_core.get_summary()

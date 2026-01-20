@@ -163,7 +163,7 @@ class ActionableCreator:
         Returns:
             Quest data (for JSON quest file)
         """
-        quest_id = f"quest_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        f"quest_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
 
         # Map severity to difficulty (1-10)
         difficulty_map = {"critical": 9, "high": 7, "medium": 5, "low": 3}

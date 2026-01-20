@@ -361,19 +361,19 @@ def generate_closeout():
 <div class="highlight-box">
     <h3>Session Summary</h3>
     <p>
-        This session successfully refined the show-me HTML report design, creating a unified "above the fold" 
-        section that guides user attention while making navigation buttons more discreet. The bottom edge 
-        visual break was fixed, responsive design was implemented, and new features (abstract copy, email summaries) 
+        This session successfully refined the show-me HTML report design, creating a unified "above the fold"
+        section that guides user attention while making navigation buttons more discreet. The bottom edge
+        visual break was fixed, responsive design was implemented, and new features (abstract copy, email summaries)
         were added. All content sections are now properly visible, styled, and accessible across all device sizes.
     </p>
     <p>
-        <strong>Key Achievement:</strong> Created a cohesive, visually balanced, fully responsive design that doesn't 
-        distract from important content while maintaining full functionality across all screen sizes. Enhanced the 
+        <strong>Key Achievement:</strong> Created a cohesive, visually balanced, fully responsive design that doesn't
+        distract from important content while maintaining full functionality across all screen sizes. Enhanced the
         closeout command with multi-level email summaries for effective communication with different audiences.
     </p>
     <p>
-        <strong>Key Learning:</strong> Visual edge cases (like bottom borders) need explicit definition, code duplication 
-        in template strings can cause silent failures, and mobile-first responsive design creates better user experiences 
+        <strong>Key Learning:</strong> Visual edge cases (like bottom borders) need explicit definition, code duplication
+        in template strings can cause silent failures, and mobile-first responsive design creates better user experiences
         across all devices. User-initiated improvements significantly enhanced the final product.
     </p>
 </div>

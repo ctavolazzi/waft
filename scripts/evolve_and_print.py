@@ -55,10 +55,10 @@ def main():
 
 ## Being Information
 
-**Being ID**: `{being.being_id}`  
-**Reality ID**: `{being.reality_id}`  
-**State**: `{being.state.value}`  
-**Lifetimes**: {being.lifetimes}  
+**Being ID**: `{being.being_id}`
+**Reality ID**: `{being.reality_id}`
+**State**: `{being.state.value}`
+**Lifetimes**: {being.lifetimes}
 **Created**: {being.created_at}
 
 ### Ancestral Chain
@@ -91,7 +91,7 @@ Being: {being.being_id}
 
 ### Personality
 
-**Type**: {being.personality_type}  
+**Type**: {being.personality_type}
 **Traits**: {format_personality(being.personality)}
 
 ---

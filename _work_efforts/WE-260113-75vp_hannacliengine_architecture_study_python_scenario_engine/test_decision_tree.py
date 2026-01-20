@@ -184,7 +184,7 @@ def test_recommendation_accuracy():
     all_choices = []
 
     # Simulate 5 different playthroughs
-    for i in range(5):
+    for _i in range(5):
         engine = run_demo_scenario(
             scenario_file, auto_play=True, use_decision_tree=True, use_recommendations=False
         )

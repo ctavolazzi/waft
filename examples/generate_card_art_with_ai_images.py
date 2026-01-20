@@ -51,11 +51,11 @@ Create a complete artwork of The River King using:
 
 ### Step 1: Generate Background Image
 
-**Tool**: Nano-Banana (Gemini API)  
-**Prompt**: 
+**Tool**: Nano-Banana (Gemini API)
+**Prompt**:
 ```
-New Orleans jazz club exterior at night, Mississippi River visible in background, 
-neon lights reflecting on wet streets, atmospheric moody lighting, 
+New Orleans jazz club exterior at night, Mississippi River visible in background,
+neon lights reflecting on wet streets, atmospheric moody lighting,
 mystical atmosphere, cinematic composition, professional photography style
 ```
 
@@ -63,7 +63,7 @@ mystical atmosphere, cinematic composition, professional photography style
 
 ### Step 2: Generate Character Art
 
-**Tool**: PixelLab  
+**Tool**: PixelLab
 **Action**: Create pixel art character
 
 **Character Description**:
@@ -77,7 +77,7 @@ mystical atmosphere, cinematic composition, professional photography style
 
 ### Step 3: Create Card Composition
 
-**Tool**: Deckz Poker Visualization  
+**Tool**: Deckz Poker Visualization
 **Purpose**: Generate card arrangements as visual elements
 
 The cards below represent The River King's power made visible.
@@ -97,7 +97,7 @@ The cards below represent The River King's power made visible.
 
 The cards represent The River King's essence:
 - **Spades**: The river, the flow, time
-- **Hearts**: The jazz, the passion, emotion  
+- **Hearts**: The jazz, the passion, emotion
 - **Diamonds**: The stakes, the wealth, material
 - **Clubs**: The rules, the structure, mathematics
 
@@ -135,13 +135,13 @@ AI Image Generation → Card Visualization → Composition → Final Artwork
 
 ### Background (Nano-Banana)
 ```
-New Orleans jazz club at night, Mississippi River, neon lights, 
+New Orleans jazz club at night, Mississippi River, neon lights,
 wet streets, atmospheric, mystical, cinematic, professional photography
 ```
 
 ### Character (PixelLab)
 ```
-Mysterious card dealer, velvet jacket, New Orleans style, 
+Mysterious card dealer, velvet jacket, New Orleans style,
 pixel art, 8 directions, mystical, gambling demi-god
 ```
 
@@ -209,9 +209,9 @@ def generate_image_prompts_guide():
 
 ### New Orleans Jazz Club
 ```
-New Orleans jazz club exterior at night, Mississippi River visible in background, 
-neon lights reflecting on wet streets, atmospheric moody lighting, 
-mystical atmosphere, cinematic composition, professional photography style, 
+New Orleans jazz club exterior at night, Mississippi River visible in background,
+neon lights reflecting on wet streets, atmospheric moody lighting,
+mystical atmosphere, cinematic composition, professional photography style,
 warm colors, depth of field, bokeh effects
 ```
 

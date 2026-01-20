@@ -54,14 +54,14 @@ def test_foundation():
     try:
         score = Score(0.75)
         assert 0.0 <= score.value <= 1.0
-        assert score.is_good(0.7) == True
-        assert score.is_good(0.8) == False
+        assert score.is_good(0.7)
+        assert not score.is_good(0.8)
         assert float(score) == 0.75
 
         # Test validation
         try:
-            bad_score = Score(1.5)
-            assert False, "Should have raised ValueError"
+            Score(1.5)
+            raise AssertionError("Should have raised ValueError")
         except ValueError:
             pass
 
@@ -80,7 +80,7 @@ def test_foundation():
         assert 0.0 <= score.value <= 1.0
 
         # Longer text should score higher
-        short = evaluate_text("hi")
+        evaluate_text("hi")
         long_text = "This is a much longer text " * 10
         long = evaluate_text(long_text)
         # Should cap at 1.0
@@ -107,8 +107,8 @@ def test_foundation():
         assert abs(eval.overall.value - expected_overall) < 0.01
 
         # Test is_good
-        assert eval.is_good(0.8) == True
-        assert eval.is_good(0.9) == False
+        assert eval.is_good(0.8)
+        assert not eval.is_good(0.9)
 
         results["level_2"] = True
         print("  ✅ Evaluation: multi-dimensional, aggregates correctly")
@@ -134,7 +134,7 @@ def test_foundation():
             faithfulness=Score(0.9),
         )
         good_step = Step("p", "a", good_eval, 1)
-        assert good_step.should_continue(0.8) == False
+        assert not good_step.should_continue(0.8)
 
         results["level_3"] = True
         print("  ✅ Step: executes one cycle correctly")
@@ -275,7 +275,7 @@ def test_patterns():
         validated = ValidationDecorator(base)
         try:
             validated.solve("hi")  # Too short
-            assert False, "Should have raised ValueError"
+            raise AssertionError("Should have raised ValueError")
         except ValueError:
             pass
 
@@ -379,7 +379,7 @@ def test_integration():
         assert len(session.steps) > 0
 
         # Second call should hit cache
-        session2 = decorated.solve("Valid test problem here")
+        decorated.solve("Valid test problem here")
 
         print("  ✅ Decorators stack correctly")
     except Exception as e:

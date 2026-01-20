@@ -375,8 +375,8 @@ Analysis of {len(analyses)} repositories for D&D 5e AI exploration initiative.
         content += f"""
 ### {analysis["owner"]}/{analysis["repo"]}
 
-**Work Effort**: WE-260111-{analysis["work_effort_id"]}  
-**Priority**: {analysis["priority"]}  
+**Work Effort**: WE-260111-{analysis["work_effort_id"]}
+**Priority**: {analysis["priority"]}
 **Category**: {analysis["category"]}
 
 **Repository Info**:

@@ -138,19 +138,19 @@ The following implementation demonstrates an efficient binary search algorithm:
     # Space Complexity: O(1)
     # Args: arr (sorted list), target (element to find)
     # Returns: Index of target if found, -1 otherwise
-    
+
     left, right = 0, len(arr) - 1
-    
+
     while left <= right:
         mid = (left + right) // 2
-        
+
         if arr[mid] == target:
             return mid
         elif arr[mid] < target:
             left = mid + 1
         else:
             right = mid - 1
-    
+
     return -1</code></pre>
 
 <h3>4.2 Example: Merge Sort</h3>
@@ -165,21 +165,21 @@ Merge sort provides guaranteed O(n log n) performance through divide-and-conquer
     # Space Complexity: O(n) - auxiliary array
     # Args: arr (list to sort)
     # Returns: Sorted list
-    
+
     if len(arr) <= 1:
         return arr
-    
+
     mid = len(arr) // 2
     left = merge_sort(arr[:mid])
     right = merge_sort(arr[mid:])
-    
+
     return merge(left, right)
 
 def merge(left, right):
     # Merge two sorted lists
     result = []
     i = j = 0
-    
+
     while i < len(left) and j < len(right):
         if left[i] <= right[j]:
             result.append(left[i])
@@ -187,7 +187,7 @@ def merge(left, right):
         else:
             result.append(right[j])
             j += 1
-    
+
     result.extend(left[i:])
     result.extend(right[j:])
     return result</code></pre>

@@ -440,7 +440,7 @@ class ScienceBitchManager:
 
         markdown = f"""# Science-Bitch Project Status
 
-**Generated**: {datetime.now().isoformat()}  
+**Generated**: {datetime.now().isoformat()}
 **Work Effort**: WE-260112-az3z
 
 ---

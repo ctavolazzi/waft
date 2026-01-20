@@ -469,7 +469,7 @@ Or click an example above.'></textarea>
         function displayResults(data) {{
             const outputDiv = document.getElementById('output');
             const outputContent = document.getElementById('output-content');
-            
+
             let html = '';
 
             // Summary
@@ -508,18 +508,18 @@ Or click an example above.'></textarea>
             // Assumptions
             if (data.assumptions && data.assumptions.length > 0) {{
                 html += `<h4 style="color: #4ec9b0; margin-top: 1.5rem; margin-bottom: 0.5rem;">📋 Assumption Validation</h4>`;
-                
+
                 data.assumptions.forEach((assumption, i) => {{
                     const status = assumption.status.toLowerCase();
                     const statusClass = status === 'proven' ? 'proven' : (status === 'disproven' ? 'disproven' : 'inconclusive');
-                    
+
                     html += `<div class="assumption ${{statusClass}}">
                         <div class="assumption-header">
                             <span class="status-badge ${{statusClass}}">${{assumption.status}}</span>
                             <strong>${{assumption.statement}}</strong>
                             <span style="color: #858585; margin-left: auto;">Confidence: ${{(assumption.confidence * 100).toFixed(0)}}%</span>
                         </div>`;
-                    
+
                     if (assumption.evidence && assumption.evidence.length > 0) {{
                         html += `<div class="evidence">`;
                         assumption.evidence.forEach(ev => {{
@@ -538,7 +538,7 @@ Or click an example above.'></textarea>
                         }});
                         html += `</div>`;
                     }}
-                    
+
                     html += `</div>`;
                 }});
             }}

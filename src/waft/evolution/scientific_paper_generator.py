@@ -330,7 +330,7 @@ class ScientificPaperGenerator:
         generator = TwoPageGenerator(weasyprint_available=True, allowed_pages=2)
         output_path = self.output_dir / f"{study_config['study_id']}_summary.pdf"
 
-        result = generator.generate(
+        generator.generate(
             distilled_chat=distilled, styling_genome=genome, output_path=output_path, target_pages=2
         )
 

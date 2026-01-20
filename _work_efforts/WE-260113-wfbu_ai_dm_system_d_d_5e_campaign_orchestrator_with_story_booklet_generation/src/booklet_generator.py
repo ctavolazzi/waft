@@ -367,7 +367,7 @@ class BookletGenerator:
         """Generate markdown content for booklet."""
         md = f"""# {self.config.title}
 
-**Generated**: {datetime.now().strftime("%B %d, %Y at %I:%M %p")}  
+**Generated**: {datetime.now().strftime("%B %d, %Y at %I:%M %p")}
 **Author**: {self.config.author}
 
 ---
@@ -378,7 +378,7 @@ class BookletGenerator:
 
 This booklet documents the structure, usage, and API information for the provided data.
 
-**Data Type**: {self.data_structure.data_type.value}  
+**Data Type**: {self.data_structure.data_type.value}
 **Structure Type**: {self.data_structure.structure.get("type", "unknown")}
 
 """
@@ -418,8 +418,8 @@ This booklet documents the structure, usage, and API information for the provide
         """Format structure information."""
         s = self.data_structure.structure
         md = f"""
-**Type**: `{s.get("type", "unknown")}`  
-**Is Container**: {s.get("is_container", False)}  
+**Type**: `{s.get("type", "unknown")}`
+**Is Container**: {s.get("is_container", False)}
 **Size**: {s.get("size", 0)}
 
 """
@@ -472,7 +472,7 @@ This booklet documents the structure, usage, and API information for the provide
         md = f"""
 ### API Endpoint
 
-**URL**: `{api.get("url", "unknown")}`  
+**URL**: `{api.get("url", "unknown")}`
 **Method**: {api.get("method", "GET")}
 
 """

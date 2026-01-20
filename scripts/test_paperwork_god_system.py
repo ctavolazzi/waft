@@ -275,7 +275,7 @@ def main():
         paperwork_god = test_paperwork_god()
 
         # Test Skurl
-        skurl = test_skurl(paperwork_god)
+        test_skurl(paperwork_god)
 
         # Test Realm Creatures
         realm = test_realm_creatures(paperwork_god)

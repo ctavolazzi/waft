@@ -325,7 +325,7 @@ def main():
 
     elif command == "export":
         output_path = work_effort_path / "tools" / "prior_efforts_report.md"
-        md = tracker.export_markdown(output_path)
+        tracker.export_markdown(output_path)
         print(f"\nExported to: {output_path}")
 
     else:

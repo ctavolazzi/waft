@@ -68,10 +68,10 @@ def generate_mission_content(mission: "Mission") -> str:
     """
     content = f"""# Mission Briefing: {mission.name}
 
-**Mission ID**: {mission.mission_id}  
-**Classification**: {mission.classification}  
-**Date**: {mission.created_at}  
-**Status**: {mission.status}  
+**Mission ID**: {mission.mission_id}
+**Classification**: {mission.classification}
+**Date**: {mission.created_at}
+**Status**: {mission.status}
 **Progress**: {mission.progress}
 
 ---
@@ -100,9 +100,9 @@ def generate_mission_content(mission: "Mission") -> str:
 
 ## Mission Details
 
-**Difficulty**: {mission.difficulty}/10  
-**Classification**: {mission.classification}  
-**Status**: {mission.status}  
+**Difficulty**: {mission.difficulty}/10
+**Classification**: {mission.classification}
+**Status**: {mission.status}
 **Progress**: {mission.progress}
 
 ---
@@ -131,8 +131,8 @@ def generate_mission_content(mission: "Mission") -> str:
 
 ## Timeline
 
-**Mission Start**: {mission.created_at}  
-**Current Status**: {mission.status}  
+**Mission Start**: {mission.created_at}
+**Current Status**: {mission.status}
 **Progress**: {mission.progress}
 
 ---
@@ -154,16 +154,16 @@ Mission risks and mitigations to be assessed during execution phase.
 
 ## Status Tracking
 
-**Current Status**: {mission.status}  
-**Progress**: {mission.progress}  
+**Current Status**: {mission.status}
+**Progress**: {mission.progress}
 **Last Updated**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 
 ---
 
 ## Notes
 
-Mission briefing prepared by Military Brass.  
-Objective defined and approved.  
+Mission briefing prepared by Military Brass.
+Objective defined and approved.
 Mission ready for execution.
 
 ---

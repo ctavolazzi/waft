@@ -448,7 +448,7 @@ class EmpiricaManager:
 
         # Run empirica project-init
         try:
-            result = subprocess.run(
+            subprocess.run(
                 self._empirica_cmd + ["project-init"],
                 cwd=self.project_path,
                 capture_output=True,
@@ -625,7 +625,7 @@ class EmpiricaManager:
                 text=True,
                 check=True,
             )
-            git_remote = git_result.stdout.strip()
+            git_result.stdout.strip()
 
             # List projects and find matching one
             result = subprocess.run(

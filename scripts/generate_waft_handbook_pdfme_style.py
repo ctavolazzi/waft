@@ -181,9 +181,9 @@ def render_pdfme_template_to_html(template_json: dict[str, Any], data: dict[str,
     html_parts.append(f"""
         @page {{
             size: letter;
-            margin: {base_style["margin"]["top"]} {base_style["margin"]["right"]} 
+            margin: {base_style["margin"]["top"]} {base_style["margin"]["right"]}
                     {base_style["margin"]["bottom"]} {base_style["margin"]["left"]};
-            
+
             @top-left {{
                 content: "{data.get("series", "FIELD GUIDE")} {data.get("number", "FG-001")}";
                 font-family: 'Courier New', 'Courier', monospace;
@@ -191,13 +191,13 @@ def render_pdfme_template_to_html(template_json: dict[str, Any], data: dict[str,
                 font-weight: bold;
                 text-transform: uppercase;
             }}
-            
+
             @top-right {{
                 content: "Page " counter(page);
                 font-family: 'Courier New', 'Courier', monospace;
                 font-size: 9pt;
             }}
-            
+
             @bottom-center {{
                 content: "{data.get("classification", "FOR OFFICIAL USE ONLY")}";
                 font-family: 'Courier New', 'Courier', monospace;
@@ -206,13 +206,13 @@ def render_pdfme_template_to_html(template_json: dict[str, Any], data: dict[str,
                 font-weight: bold;
             }}
         }}
-        
+
         @page :first {{
             @top-left {{ content: none; }}
             @top-right {{ content: none; }}
             @bottom-center {{ content: none; }}
         }}
-        
+
         body {{
             font-family: {base_style["fontFamily"]};
             font-size: {base_style["fontSize"]};
@@ -220,7 +220,7 @@ def render_pdfme_template_to_html(template_json: dict[str, Any], data: dict[str,
             color: {base_style["color"]};
             text-align: justify;
         }}
-        
+
         .cover-page {{
             page-break-after: always;
             text-align: center;
@@ -228,7 +228,7 @@ def render_pdfme_template_to_html(template_json: dict[str, Any], data: dict[str,
             border: 4pt double #000;
             margin: 0.5in;
         }}
-        
+
         .series-number {{
             font-family: 'Courier New', 'Courier', monospace;
             font-size: 14pt;
@@ -236,21 +236,21 @@ def render_pdfme_template_to_html(template_json: dict[str, Any], data: dict[str,
             text-transform: uppercase;
             margin-bottom: 0.3in;
         }}
-        
+
         .cover-title {{
             font-size: 24pt;
             font-weight: bold;
             text-transform: uppercase;
             margin: 0.3in 0;
         }}
-        
+
         .cover-subtitle {{
             font-size: 14pt;
             font-style: italic;
             color: #333;
             margin: 0.2in 0;
         }}
-        
+
         .classification-box {{
             display: inline-block;
             background: #ffff00;
@@ -260,7 +260,7 @@ def render_pdfme_template_to_html(template_json: dict[str, Any], data: dict[str,
             font-weight: bold;
             font-size: 12pt;
         }}
-        
+
         .abstract {{
             margin: 0.3in 0;
             padding: 0.2in;
@@ -268,13 +268,13 @@ def render_pdfme_template_to_html(template_json: dict[str, Any], data: dict[str,
             border: 1pt solid #ddd;
             font-size: 10pt;
         }}
-        
+
         .abstract-title {{
             font-weight: bold;
             text-align: center;
             margin-bottom: 0.1in;
         }}
-        
+
         h1 {{
             font-size: 16pt;
             font-weight: bold;
@@ -283,7 +283,7 @@ def render_pdfme_template_to_html(template_json: dict[str, Any], data: dict[str,
             border-bottom: 0.4pt solid #000;
             padding-bottom: 0.05in;
         }}
-        
+
         h2 {{
             font-size: 14pt;
             font-weight: bold;
@@ -292,7 +292,7 @@ def render_pdfme_template_to_html(template_json: dict[str, Any], data: dict[str,
             border-bottom: 0.4pt solid #000;
             padding-bottom: 0.05in;
         }}
-        
+
         h3 {{
             font-size: 12pt;
             font-weight: bold;
@@ -300,13 +300,13 @@ def render_pdfme_template_to_html(template_json: dict[str, Any], data: dict[str,
             margin-bottom: 0.1in;
             font-style: italic;
         }}
-        
+
         p {{
             margin: 0.12in 0;
             orphans: 3;
             widows: 3;
         }}
-        
+
         pre {{
             font-family: 'Courier New', monospace;
             font-size: 9pt;
@@ -317,21 +317,21 @@ def render_pdfme_template_to_html(template_json: dict[str, Any], data: dict[str,
             margin: 0.2in 0;
             overflow-x: auto;
         }}
-        
+
         code {{
             font-family: 'Courier New', monospace;
             font-size: 10pt;
             background: #f5f5f5;
             padding: 0.02in 0.05in;
         }}
-        
+
         table {{
             width: 100%;
             border-collapse: collapse;
             margin: 0.2in 0;
             font-size: 10pt;
         }}
-        
+
         th {{
             background: #333;
             color: #fff;
@@ -340,12 +340,12 @@ def render_pdfme_template_to_html(template_json: dict[str, Any], data: dict[str,
             text-align: left;
             font-weight: bold;
         }}
-        
+
         td {{
             border-bottom: 0.5pt solid #ddd;
             padding: 0.08in;
         }}
-        
+
         tr:nth-child(even) {{
             background: #f9f9f9;
         }}

@@ -33,10 +33,10 @@ def generate_tm_report_example() -> Path:
 
     content = """
     <h2>Quarterly Operations Review</h2>
-    
-    <p>This report summarizes Q4 2025 operations across all TELEPORT MASSIVE facilities. 
+
+    <p>This report summarizes Q4 2025 operations across all TELEPORT MASSIVE facilities.
     Key metrics, incidents, and strategic initiatives are documented below.</p>
-    
+
     <h3>Facility Status</h3>
     <table>
         <caption>Active Facilities</caption>
@@ -69,7 +69,7 @@ def generate_tm_report_example() -> Path:
             </tr>
         </tbody>
     </table>
-    
+
     <h3>Key Metrics</h3>
     <ul>
         <li>Total Transfers: 12,847 (↑ 15% from Q3)</li>
@@ -77,13 +77,13 @@ def generate_tm_report_example() -> Path:
         <li>Average Transfer Time: 3.2 seconds (↓ 0.4s)</li>
         <li>Incidents: 2 (both resolved within 24 hours)</li>
     </ul>
-    
+
     <div class="recommendation">
         <div class="recommendation-title">Recommendation</div>
-        <p>Increase capacity at Site-Delta-9 to meet growing demand. Consider 
+        <p>Increase capacity at Site-Delta-9 to meet growing demand. Consider
         expanding Site-Beta-7 capabilities during scheduled maintenance window.</p>
     </div>
-    
+
     <h3>Strategic Initiatives</h3>
     <p>Q4 saw the launch of three major initiatives:</p>
     <ol>
@@ -201,14 +201,14 @@ def generate_tm_invoice_example() -> Path:
 
     content = """
     <h2>Service Invoice</h2>
-    
+
     <div class="doc-meta" style="margin-bottom: 0.3in;">
         <strong>Invoice Number:</strong> TM-INV-2026-001<br>
         <strong>Date:</strong> January 13, 2026<br>
         <strong>Client:</strong> Acme Corporation<br>
         <strong>Account Manager:</strong> James Mitchell
     </div>
-    
+
     <h3>Services Rendered</h3>
     <table>
         <caption>Teleportation Services</caption>
@@ -259,17 +259,17 @@ def generate_tm_invoice_example() -> Path:
             </tr>
         </tbody>
     </table>
-    
+
     <div style="margin-top: 0.3in; text-align: right;">
         <p><strong>Subtotal:</strong> $268,800</p>
         <p><strong>Tax (8.5%):</strong> $22,848</p>
         <p style="font-size: 14pt; margin-top: 0.2in;"><strong>Total Due: $291,648</strong></p>
     </div>
-    
+
     <div class="recommendation" style="margin-top: 0.4in;">
         <div class="recommendation-title">Payment Terms</div>
-        <p>Payment due within 30 days. Late payments subject to 2% monthly interest. 
-        All services subject to TELEPORT MASSIVE standard terms and conditions. 
+        <p>Payment due within 30 days. Late payments subject to 2% monthly interest.
+        All services subject to TELEPORT MASSIVE standard terms and conditions.
         Not responsible for spontaneous duplication events.</p>
     </div>
     """
@@ -296,31 +296,31 @@ def generate_tm_memo_example() -> Path:
 
     content = """
     <h2>Internal Memo</h2>
-    
+
     <p><strong>To:</strong> All Site-Delta-9 Personnel<br>
     <strong>From:</strong> Dr. Elena Vasquez, Chief Science Officer<br>
     <strong>Date:</strong> January 13, 2026<br>
     <strong>Subject:</strong> Updated Safety Protocols</p>
-    
+
     <p>Effective immediately, all personnel must adhere to the following updated safety protocols:</p>
-    
+
     <h3>1. Quantum Field Monitoring</h3>
-    <p>All transfers must now include real-time quantum field stability monitoring. 
+    <p>All transfers must now include real-time quantum field stability monitoring.
     Any fluctuation above 0.5 standard deviations requires immediate protocol suspension.</p>
-    
+
     <h3>2. Personal Protective Equipment</h3>
-    <p>Enhanced quantum-resistant suits are now mandatory for all transfer operations. 
+    <p>Enhanced quantum-resistant suits are now mandatory for all transfer operations.
     Standard issue equipment has been upgraded and is available from Facilities.</p>
-    
+
     <h3>3. Incident Reporting</h3>
-    <p>All anomalies, no matter how minor, must be reported within 15 minutes via 
+    <p>All anomalies, no matter how minor, must be reported within 15 minutes via
     the new incident reporting system (IRIS).</p>
-    
-    <p>These protocols are in response to recent quantum fluctuation events and are 
+
+    <p>These protocols are in response to recent quantum fluctuation events and are
     designed to ensure the safety of all personnel and clients.</p>
-    
+
     <p>Questions or concerns should be directed to the Safety Office.</p>
-    
+
     <p style="margin-top: 0.4in;">— Dr. Elena Vasquez</p>
     """
 
@@ -344,14 +344,14 @@ def generate_tm_technical_spec_example() -> Path:
 
     content = """
     <h2>Technical Specification: Quantum Entanglement Array v3.2</h2>
-    
+
     <div class="summary">
         <div class="summary-title">Overview</div>
-        <p>The Quantum Entanglement Array (QEA) v3.2 represents a significant advancement 
-        in teleportation technology, featuring improved stability, reduced energy consumption, 
+        <p>The Quantum Entanglement Array (QEA) v3.2 represents a significant advancement
+        in teleportation technology, featuring improved stability, reduced energy consumption,
         and enhanced safety protocols.</p>
     </div>
-    
+
     <h3>Specifications</h3>
     <table>
         <caption>Technical Parameters</caption>
@@ -395,7 +395,7 @@ def generate_tm_technical_spec_example() -> Path:
             </tr>
         </tbody>
     </table>
-    
+
     <h3>Key Improvements</h3>
     <ul>
         <li><strong>Enhanced Stability:</strong> 40% reduction in quantum fluctuations</li>
@@ -403,7 +403,7 @@ def generate_tm_technical_spec_example() -> Path:
         <li><strong>Safety Protocols:</strong> Real-time monitoring and automatic shutdown</li>
         <li><strong>Reliability:</strong> 99.7% success rate in field testing</li>
     </ul>
-    
+
     <h3>Installation Requirements</h3>
     <p>QEA v3.2 requires:</p>
     <ol>
@@ -412,10 +412,10 @@ def generate_tm_technical_spec_example() -> Path:
         <li>Quantum field isolation chamber</li>
         <li>Certified installation team (TM-certified only)</li>
     </ol>
-    
+
     <div class="recommendation">
         <div class="recommendation-title">Deployment Schedule</div>
-        <p>Rollout scheduled for Q2 2026. All existing facilities will be upgraded 
+        <p>Rollout scheduled for Q2 2026. All existing facilities will be upgraded
         during scheduled maintenance windows. New installations can begin immediately.</p>
     </div>
     """
@@ -444,14 +444,14 @@ def generate_tm_incident_report_example() -> Path:
 
     content = """
     <h2>Incident Report: Transfer Anomaly TM-TX-8472</h2>
-    
+
     <div class="summary">
         <div class="summary-title">Executive Summary</div>
-        <p>On January 13, 2026 at 02:16 PST, transfer operation TM-TX-8472 experienced 
-        a quantum fluctuation anomaly. The transfer completed successfully with a 3.2 
+        <p>On January 13, 2026 at 02:16 PST, transfer operation TM-TX-8472 experienced
+        a quantum fluctuation anomaly. The transfer completed successfully with a 3.2
         second delay. No personnel injuries or property damage occurred.</p>
     </div>
-    
+
     <h3>Incident Details</h3>
     <div class="doc-meta">
         <strong>Incident ID:</strong> INC-2026-001<br>
@@ -461,7 +461,7 @@ def generate_tm_incident_report_example() -> Path:
         <strong>Severity:</strong> LOW<br>
         <strong>Status:</strong> RESOLVED
     </div>
-    
+
     <h3>Sequence of Events</h3>
     <ol>
         <li><strong>02:16:15</strong> - Transfer initiated, standard protocol</li>
@@ -470,18 +470,18 @@ def generate_tm_incident_report_example() -> Path:
         <li><strong>02:16:20</strong> - System compensation initiated</li>
         <li><strong>02:16:21</strong> - Transfer completed successfully</li>
     </ol>
-    
+
     <h3>Root Cause Analysis</h3>
-    <p>Preliminary investigation indicates localized quantum field interference from 
+    <p>Preliminary investigation indicates localized quantum field interference from
     an external source. Full diagnostic scan scheduled for January 15, 2026.</p>
-    
+
     <h3>Response Actions</h3>
     <ul>
         <li>Immediate: Safety protocols automatically engaged, transfer completed</li>
         <li>Short-term: Enhanced monitoring activated for Site-Delta-9</li>
         <li>Long-term: Full facility diagnostic scheduled</li>
     </ul>
-    
+
     <h3>Preventive Measures</h3>
     <div class="recommendation">
         <div class="recommendation-title">Recommendations</div>
@@ -492,7 +492,7 @@ def generate_tm_incident_report_example() -> Path:
             <li>Conduct staff training on new monitoring procedures</li>
         </ol>
     </div>
-    
+
     <h3>Personnel Involved</h3>
     <table>
         <caption>Response Team</caption>
@@ -553,16 +553,16 @@ def generate_booklet_index() -> Path:
 
     content = """
     <h2>TELEPORT MASSIVE Template Booklet</h2>
-    
+
     <div class="summary">
         <div class="summary-title">Overview</div>
-        <p>This booklet contains examples of all available TELEPORT MASSIVE document templates. 
-        Each template demonstrates different use cases, formatting options, and document types 
+        <p>This booklet contains examples of all available TELEPORT MASSIVE document templates.
+        Each template demonstrates different use cases, formatting options, and document types
         for corporate documentation, reports, invoices, and internal communications.</p>
     </div>
-    
+
     <h3>Template Catalog</h3>
-    
+
     <table>
         <caption>Available Templates</caption>
         <thead>
@@ -612,7 +612,7 @@ def generate_booklet_index() -> Path:
             </tr>
         </tbody>
     </table>
-    
+
     <h3>Template Features</h3>
     <ul>
         <li><strong>Professional Branding:</strong> Consistent TELEPORT MASSIVE visual identity</li>
@@ -621,7 +621,7 @@ def generate_booklet_index() -> Path:
         <li><strong>Signature Blocks:</strong> Multiple signature support for approvals</li>
         <li><strong>Metadata Support:</strong> Document IDs, dates, authors, departments</li>
     </ul>
-    
+
     <h3>Usage Guidelines</h3>
     <p>All templates follow TELEPORT MASSIVE corporate standards:</p>
     <ol>
@@ -630,17 +630,17 @@ def generate_booklet_index() -> Path:
         <li>Follow document structure guidelines for consistency</li>
         <li>Ensure all signatures are obtained before distribution</li>
     </ol>
-    
+
     <div class="recommendation">
         <div class="recommendation-title">Document Generation</div>
-        <p>All templates can be generated programmatically using the WAFT template system. 
+        <p>All templates can be generated programmatically using the WAFT template system.
         See source code examples in <code>src/waft/templates/</code> for implementation details.</p>
     </div>
-    
+
     <h3>Contact</h3>
-    <p>For questions about template usage or customization, contact the Documentation Office 
+    <p>For questions about template usage or customization, contact the Documentation Office
     or refer to the WAFT template documentation.</p>
-    
+
     <p style="margin-top: 0.4in; font-size: 9pt; color: #666;">
     <strong>Generated:</strong> {date}<br>
     <strong>Version:</strong> 1.0<br>

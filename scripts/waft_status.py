@@ -103,7 +103,7 @@ def calculate_moon_phase(epistemic_state: dict[str, Any]) -> tuple[str, str]:
 
     # Calculate average coverage from all vector values
     all_values = []
-    for key, value in vectors.items():
+    for _key, value in vectors.items():
         if isinstance(value, dict):
             # Nested dict (e.g., foundation: {know: 0.6, do: 0.7})
             all_values.extend([v for v in value.values() if isinstance(v, (int, float))])
@@ -944,8 +944,8 @@ Progress tracking is not currently available.
 <h2>WAFT Kernel Status</h2>
 
 <p>
-The WAFT Kernel is the central intelligence overseeing agent breeding in this 
-directed evolution laboratory. It's like the brain of the system, making sure 
+The WAFT Kernel is the central intelligence overseeing agent breeding in this
+directed evolution laboratory. It's like the brain of the system, making sure
 everything runs smoothly.
 </p>
 
@@ -958,7 +958,7 @@ everything runs smoothly.
 <h2>What's Happening Right Now</h2>
 
 <p>
-This report shows what the WAFT system is doing right now. Think of it like a 
+This report shows what the WAFT system is doing right now. Think of it like a
 health check for a computer program - we're checking to see how things are going.
 </p>
 {kernel_section}
@@ -974,14 +974,14 @@ Of these, <strong>{len(we["active"])}</strong> are actively being worked on righ
 
 <div class="note">
     <div class="note-title">Simple Explanation</div>
-    Think of work efforts like different tasks or projects. Some are being actively 
+    Think of work efforts like different tasks or projects. Some are being actively
     worked on, some are waiting, and some are finished.
 </div>
 
 <h2>Code Changes</h2>
 
 <p>
-The system has <strong>{len(git["uncommitted_files"])}</strong> files that have been 
+The system has <strong>{len(git["uncommitted_files"])}</strong> files that have been
 changed but not yet saved permanently. This is normal when work is in progress.
 </p>
 
@@ -1008,14 +1008,14 @@ changed but not yet saved permanently. This is normal when work is in progress.
 <h2>Recent Activity</h2>
 
 <p>
-The system has been active recently with <strong>{len(activity["devlog_entries"])}</strong> 
+The system has been active recently with <strong>{len(activity["devlog_entries"])}</strong>
 recent log entries documenting work progress.
 </p>
 
 <h2>Summary</h2>
 
 <p>
-Overall, the system is {"healthy and active" if health["structure_valid"] and len(git["uncommitted_files"]) < 20 else "needs some attention"}. 
+Overall, the system is {"healthy and active" if health["structure_valid"] and len(git["uncommitted_files"]) < 20 else "needs some attention"}.
 Work is progressing on multiple projects, and the system structure is {"in good shape" if health["structure_valid"] else "needing review"}.
 </p>
 """

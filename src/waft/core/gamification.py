@@ -285,7 +285,7 @@ class GamificationManager:
         newly_unlocked = []
 
         # Check achievements
-        insight = stats.get("insight", self.insight)
+        stats.get("insight", self.insight)
         level = stats.get("level", self.level)
         integrity = stats.get("integrity", self.integrity)
 

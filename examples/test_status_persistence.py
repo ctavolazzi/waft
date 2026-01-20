@@ -109,11 +109,11 @@ def test_compare_snapshots():
     # Save two snapshots with different data
     status1 = check_status(log_event=False)
     status1["test_metric"] = 100
-    snapshot1 = persistence.save_status_snapshot(status1, snapshot_id="compare_test_1")
+    persistence.save_status_snapshot(status1, snapshot_id="compare_test_1")
 
     status2 = check_status(log_event=False)
     status2["test_metric"] = 200
-    snapshot2 = persistence.save_status_snapshot(status2, snapshot_id="compare_test_2")
+    persistence.save_status_snapshot(status2, snapshot_id="compare_test_2")
 
     # Compare
     comparison = persistence.compare_snapshots("compare_test_1", "compare_test_2")

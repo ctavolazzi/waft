@@ -241,18 +241,6 @@ This composition is designed to be layered with AI-generated images:
 5. Final artwork: Mixed media card + AI art
 """
 
-    card_arrangements = [
-        {
-            "name": "Probability Flows",
-            "description": "Cards arranged to show how luck flows through the scene.",
-            "cards": ["AS", "KS", "QS", "JS", "10S"],
-        },
-        {
-            "name": "The Sacred Hand",
-            "description": "The River King's signature hand, floating above the scene.",
-            "cards": ["AH", "KH", "QH", "JH", "10H"],
-        },
-    ]
 
     content = f"""
 # {title}

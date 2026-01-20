@@ -26,9 +26,9 @@ scientific_content = f"""# Waft Larval Form: Complete Technical Specification v0
 
 **A Comprehensive Research Document on the Developmental Stage Architecture**
 
-**Version**: v0.6.0  
-**Date**: 2026-01-12  
-**Status**: Complete Implementation  
+**Version**: v0.6.0
+**Date**: 2026-01-12
+**Status**: Complete Implementation
 **Document Type**: Technical Specification & Research Documentation
 
 ---
@@ -453,7 +453,7 @@ streamlit run waft_larva.py
 ```sql
 sqlite3 waft_memory.db
 
-INSERT INTO artifacts (name, gcode, status) 
+INSERT INTO artifacts (name, gcode, status)
 VALUES ('New_Artifact_Name', 'G28\nG1 X10 Y10', 'VOID');
 ```
 
@@ -534,9 +534,9 @@ VALUES ('New_Artifact_Name', 'G28\nG1 X10 Y10', 'VOID');
 
 ---
 
-**Document Generated**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}  
-**Specification Version**: v0.6.0  
-**Status**: Complete Implementation  
+**Document Generated**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+**Specification Version**: v0.6.0
+**Status**: Complete Implementation
 **Document Type**: Scientific Research & Technical Specification
 """
 

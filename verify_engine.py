@@ -14,7 +14,7 @@ def run_test_scenario(name: str, matrix: DecisionMatrix):
     calc = DecisionMatrixCalculator(matrix)
     results = calc.calculate_wsm()
     rankings = calc.rank_alternatives(results)
-    detailed = calc.get_detailed_scores()
+    calc.get_detailed_scores()
 
     # 2. Display Results
     print(f"{'Rank':<5} | {'Alternative':<15} | {'Score':<10}")

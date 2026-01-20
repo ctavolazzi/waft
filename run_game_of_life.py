@@ -122,10 +122,10 @@ class GameOfLifeOrganism(BaseAgent):
 
     async def decide(self, state):
         """Decide what to do based on coherence and social pressure."""
-        coherence = state.get("coherence", 80.0)
+        state.get("coherence", 80.0)
         critical = state.get("critical", False)
         unstable = state.get("unstable", False)
-        neighbor_count = state.get("neighbor_count", 0)
+        state.get("neighbor_count", 0)
         social_state = state.get("social_state", "unknown")
         empty_spaces = state.get("empty_spaces", [])
 
@@ -320,7 +320,7 @@ async def run_continuous():
     # Step 3: Initialize systems
     observer = TheObserver(project_path=project_root)
     slicer = TheSlicer(biome=biome, observer=observer)
-    reaper = TheReaper(biome=biome, observer=observer)
+    TheReaper(biome=biome, observer=observer)
 
     # Step 4: Initialize Pygame Display
     print("Initializing Pygame window...")

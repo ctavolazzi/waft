@@ -312,14 +312,14 @@ ACADEMIC_PAPER_TEMPLATE = """
             font-family: 'Times New Roman', serif;
         }
         {% endif %}
-        
+
         @bottom-right {
             content: "{{ footer_text }}";
             font-size: 7pt;
             font-family: 'Times New Roman', serif;
             color: #666;
         }
-        
+
         @page :first {
             @bottom-right { content: none; }
         }
@@ -329,36 +329,36 @@ ACADEMIC_PAPER_TEMPLATE = """
             break-inside: avoid;
             page-break-inside: avoid;
         }
-        
+
         /* Prevent breaking inside paragraphs and lists */
         p, li {
             break-inside: avoid;
             page-break-inside: avoid;
         }
-        
+
         /* Ensure proper text flow */
         * {
             word-wrap: break-word;
             overflow-wrap: break-word;
         }
-        
+
         /* Hide frontmatter if it appears in content */
         .content pre:first-of-type,
         .content code:first-of-type {
             display: none;
         }
-        
+
         /* Remove duplicate abstract heading */
         .content h1:first-of-type,
         .content h2:first-of-type {
             /* Check if it's an abstract heading and hide it */
         }
-        
+
         /* Better handling of markdown frontmatter artifacts */
         .content > *:first-child {
             /* Ensure first element starts properly */
         }
-        
+
         /* Fix text fragmentation in columns */
         .content {
             text-align: justify;
@@ -366,26 +366,26 @@ ACADEMIC_PAPER_TEMPLATE = """
             -webkit-hyphens: auto;
             -moz-hyphens: auto;
         }
-        
+
         /* Ensure proper spacing between sections */
         .content h1 + p,
         .content h2 + p,
         .content h3 + p {
             margin-top: 0.05in;
         }
-        
+
         /* Prevent orphaned words */
         .content p:last-child {
             margin-bottom: 0;
         }
-        
+
         /* Better list handling in columns */
         .content ul,
         .content ol {
             break-inside: avoid;
             page-break-inside: avoid;
         }
-        
+
         /* Ensure code blocks don't break columns */
         .content pre {
             break-inside: avoid;
@@ -426,7 +426,7 @@ ACADEMIC_PAPER_TEMPLATE = """
     {% if spacetime_context %}
     <div class="artifact-metadata">
         <div class="artifact-metadata-title">Artifact Metadata: Spacetime Context</div>
-        
+
         <div class="artifact-metadata-section">
             <div class="artifact-metadata-section-title">Invocation Point</div>
             <div class="artifact-metadata-item">

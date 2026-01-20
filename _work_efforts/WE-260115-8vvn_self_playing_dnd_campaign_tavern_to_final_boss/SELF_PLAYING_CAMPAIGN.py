@@ -109,7 +109,7 @@ class SelfPlayingCampaign:
         ]
 
         party = []
-        for i, config in enumerate(party_configs):
+        for _i, config in enumerate(party_configs):
             console.print(f"[yellow]→[/yellow] Spawning {config['name']}...")
 
             being = self.being_system.spawn_being(
@@ -149,17 +149,17 @@ class SelfPlayingCampaign:
         scene = {
             "title": "The Rusty Tankard Tavern",
             "content": f"""
-The warm glow of the hearth casts dancing shadows across the worn wooden tables of The Rusty Tankard. 
+The warm glow of the hearth casts dancing shadows across the worn wooden tables of The Rusty Tankard.
 The air is thick with the smell of ale, roasted meat, and the murmur of travelers sharing tales.
 
-{party_names} sit together at a corner table, their gear stacked beside them. The tavern is alive with 
-activity - merchants discussing trade routes, guards off duty sharing war stories, and mysterious 
+{party_names} sit together at a corner table, their gear stacked beside them. The tavern is alive with
+activity - merchants discussing trade routes, guards off duty sharing war stories, and mysterious
 figures in dark corners watching everything.
 
-Suddenly, the tavern door bursts open. A figure stumbles in, covered in mud and breathing heavily. 
+Suddenly, the tavern door bursts open. A figure stumbles in, covered in mud and breathing heavily.
 It's a messenger, and he's clearly been through something terrible.
 
-"The road to Blackmoor Keep is no longer safe!" he gasps, collapsing at the bar. "Something... 
+"The road to Blackmoor Keep is no longer safe!" he gasps, collapsing at the bar. "Something...
 something dark has taken hold of the old fortress. The villagers are terrified. We need heroes!"
 
 The tavern falls silent. All eyes turn to your table.
@@ -169,7 +169,7 @@ The messenger looks directly at you. "Please... you look like capable adventurer
 This is where your story begins.
             """,
             "read_aloud": """
-The messenger's eyes are wide with fear. "The Keep has been overrun by shadows. 
+The messenger's eyes are wide with fear. "The Keep has been overrun by shadows.
 Something ancient has awakened. We need brave souls to face whatever darkness lies within."
             """,
             "sidebar": {
@@ -220,13 +220,13 @@ Something ancient has awakened. We need brave souls to face whatever darkness li
         encounter = {
             "title": encounter_name,
             "content": f"""
-The party faces {encounter_name} in a fierce battle that lasts {rounds} rounds. 
+The party faces {encounter_name} in a fierce battle that lasts {rounds} rounds.
 Through teamwork and determination, they emerge victorious, though not without taking some damage.
 
 Experience gained: {xp_gain} XP per party member.
             """,
             "read_aloud": f"""
-The battle is intense. Steel clashes, spells fly, and the party fights as one. 
+The battle is intense. Steel clashes, spells fly, and the party fights as one.
 After {rounds} rounds of combat, {encounter_name} falls, defeated by the heroes' resolve.
             """,
             "difficulty": difficulty,
@@ -308,14 +308,14 @@ After {rounds} rounds of combat, {encounter_name} falls, defeated by the heroes'
             "content": f"""
 # The Final Battle
 
-The party has reached the heart of Blackmoor Keep. Before them stands {boss_name}, 
+The party has reached the heart of Blackmoor Keep. Before them stands {boss_name},
 a being of pure darkness that has corrupted the ancient fortress.
 
-The battle is epic. Spells of immense power clash with dark magic. Swords strike 
+The battle is epic. Spells of immense power clash with dark magic. Swords strike
 against shadowy armor. The very foundations of the keep shake with the force of combat.
 
-After {rounds} grueling rounds, the party's determination and teamwork overcome the darkness. 
-{boss_name} lets out a final, terrible scream as the light of the heroes' resolve banishes 
+After {rounds} grueling rounds, the party's determination and teamwork overcome the darkness.
+{boss_name} lets out a final, terrible scream as the light of the heroes' resolve banishes
 the shadow forever.
 
 The keep is free. The darkness is defeated. The party has saved the realm.
@@ -332,7 +332,7 @@ The party stands victorious. They have:
 The adventure is complete, but new quests await...
             """,
             "read_aloud": f"""
-The final blow strikes true. {boss_name} shrieks as darkness is banished from the keep. 
+The final blow strikes true. {boss_name} shrieks as darkness is banished from the keep.
 Light floods the chamber. The corruption is gone. You have won.
             """,
             "boss_name": boss_name,
@@ -469,8 +469,8 @@ Together, they form a formidable team ready to face any challenge.
             # Build complete markdown content
             markdown_content = f"""# The Tavern Heroes: A Self-Playing Adventure
 
-**Generated by**: WAFT Self-Playing Campaign System  
-**Date**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}  
+**Generated by**: WAFT Self-Playing Campaign System
+**Date**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 **Party**: {", ".join([m.name for m in self.party])}
 
 ---

@@ -94,7 +94,7 @@ def create_decision(
     conn = get_db_connection()
     c = conn.cursor()
     c.execute(
-        """INSERT INTO decisions 
+        """INSERT INTO decisions
                  (decision_id, title, description, options, decision_type, created_at)
                  VALUES (?, ?, ?, ?, ?, ?)""",
         (
@@ -115,7 +115,7 @@ def cast_vote(vote_id: str, decision_id: str, voter_id: str, vote_choice: str, r
     conn = get_db_connection()
     c = conn.cursor()
     c.execute(
-        """INSERT INTO votes 
+        """INSERT INTO votes
                  (vote_id, decision_id, voter_id, vote_choice, reasoning, timestamp)
                  VALUES (?, ?, ?, ?, ?, ?)""",
         (vote_id, decision_id, voter_id, vote_choice, reasoning, datetime.now().isoformat()),
@@ -202,7 +202,7 @@ def add_council_member(member_id: str, name: str, role: str):
     conn = get_db_connection()
     c = conn.cursor()
     c.execute(
-        """INSERT OR REPLACE INTO council_members 
+        """INSERT OR REPLACE INTO council_members
                  (member_id, name, role, joined_at)
                  VALUES (?, ?, ?, ?)""",
         (member_id, name, role, datetime.now().isoformat()),
@@ -436,7 +436,7 @@ def create_court_proceeding(proceeding_id: str, case_id: str, title: str, descri
     conn = get_db_connection()
     c = conn.cursor()
     c.execute(
-        """INSERT INTO court_proceedings 
+        """INSERT INTO court_proceedings
                  (proceeding_id, case_id, title, description, timestamp, status)
                  VALUES (?, ?, ?, ?, ?, ?)""",
         (proceeding_id, case_id, title, description, datetime.now().isoformat(), "active"),

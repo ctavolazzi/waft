@@ -174,7 +174,7 @@ class TestEmpiricaErrorHandling:
 
     def test_initialize_handles_empirica_already_initialized(self, temp_project):
         """Test initialize handles already initialized case."""
-        manager = EmpiricaManager(temp_project)
+        EmpiricaManager(temp_project)
 
         # Mock subprocess to simulate "already initialized" response
         with patch("subprocess.run") as mock_run:

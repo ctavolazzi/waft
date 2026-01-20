@@ -25,8 +25,8 @@ def generate_feature_documentation():
 
     content = f"""# LaTeX & Research Tools with Live Reloading
 
-**Generated**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}  
-**Branch**: `feature/latex-research-tools-live-reload`  
+**Generated**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+**Branch**: `feature/latex-research-tools-live-reload`
 **Status**: ✅ Core Implementation Complete
 
 ---

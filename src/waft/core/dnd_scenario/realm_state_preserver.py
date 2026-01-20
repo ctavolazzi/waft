@@ -221,7 +221,7 @@ class RealmStatePreserver:
             raise ValueError(f"Failed to decrypt state: {e}")
 
         # Verify hash after decryption (additional check)
-        decrypted_hash = hashlib.sha256(decrypted_data).hexdigest()
+        hashlib.sha256(decrypted_data).hexdigest()
         # Note: This is a sanity check, not security (encrypted hash is the real check)
 
         return state_data

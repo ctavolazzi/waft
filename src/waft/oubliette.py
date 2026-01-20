@@ -136,14 +136,14 @@ class TheOubliette:
             psyche = agent_state.get("psyche", {})
             if isinstance(psyche, dict):
                 # Look for any text fields in psyche
-                for key, value in psyche.items():
+                for _key, value in psyche.items():
                     if isinstance(value, str) and len(value) > 20:  # Substantial text
                         nightmares.append(value)
 
             # From working_memory
             working = agent_state.get("working_memory", {})
             if isinstance(working, dict):
-                for key, value in working.items():
+                for _key, value in working.items():
                     if isinstance(value, str) and len(value) > 20:
                         nightmares.append(value)
 

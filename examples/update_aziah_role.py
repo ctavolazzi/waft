@@ -140,8 +140,8 @@ def main():
     hiring_round_path = corp.docs_path / "first_hiring_round_january_2026.md"
     hiring_round_content = f"""# First Hiring Round - January 2026
 
-**Date**: January 18, 2026  
-**Purpose**: Establish core Research & Development team  
+**Date**: January 18, 2026
+**Purpose**: Establish core Research & Development team
 **Positions Filled**: 3 Lead Scientists
 
 ## Overview
@@ -189,9 +189,9 @@ All three Lead Scientists were part of the "Founding Research Team" cohort, play
     )
     promotion_content = f"""# Promotion Announcement - Aziah Calderon
 
-**Date**: {promotion_date}  
-**Employee**: Aziah Calderon  
-**Previous Role**: Lead Scientist  
+**Date**: {promotion_date}
+**Employee**: Aziah Calderon
+**Previous Role**: Lead Scientist
 **New Role**: Head of Research & Development
 
 ## Promotion Details

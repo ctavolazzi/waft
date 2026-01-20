@@ -23,12 +23,12 @@ def create_blank_character_sheet_content() -> str:
 
 ## Character Information
 
-**Name:** _________________  
-**Class & Level:** _________________  
-**Background:** _________________  
-**Player Name:** _________________  
-**Race:** _________________  
-**Alignment:** _________________  
+**Name:** _________________
+**Class & Level:** _________________
+**Background:** _________________
+**Player Name:** _________________
+**Race:** _________________
+**Alignment:** _________________
 **Experience Points:** _________________
 
 ---
@@ -75,8 +75,8 @@ def create_blank_character_sheet_content() -> str:
 
 ## Combat
 
-**Armor Class (AC):** ___  
-**Initiative:** ___  
+**Armor Class (AC):** ___
+**Initiative:** ___
 **Speed:** ___ ft.
 
 **Hit Points**
@@ -279,12 +279,12 @@ def create_filled_character_sheet_content(character_data: dict[str, Any]) -> str
 
 ## Character Information
 
-**Name:** {name}  
-**Class & Level:** {char_class} {level}  
-**Background:** {background}  
-**Player Name:** _________________  
-**Race:** {race}  
-**Alignment:** {alignment}  
+**Name:** {name}
+**Class & Level:** {char_class} {level}
+**Background:** {background}
+**Player Name:** _________________
+**Race:** {race}
+**Alignment:** {alignment}
 **Experience Points:** {xp}
 
 ---
@@ -331,8 +331,8 @@ def create_filled_character_sheet_content(character_data: dict[str, Any]) -> str
 
 ## Combat
 
-**Armor Class (AC):** {ac}  
-**Initiative:** {initiative:+d}  
+**Armor Class (AC):** {ac}
+**Initiative:** {initiative:+d}
 **Speed:** {speed} ft.
 
 **Hit Points**

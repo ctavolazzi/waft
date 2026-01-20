@@ -18,7 +18,7 @@ def test_text_input():
     print("Testing Storyteller with text input...")
 
     text = """
-    Alice started working on the project. She encountered a bug. 
+    Alice started working on the project. She encountered a bug.
     Bob helped her debug the issue. Alice and Bob worked together.
     Charlie reviewed the code. Alice fixed the bug. Bob was happy.
     The project was complete.

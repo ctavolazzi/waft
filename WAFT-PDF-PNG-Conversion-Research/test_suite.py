@@ -888,7 +888,7 @@ Important insight: Automatic conversion improves user experience.
             print("=" * 80)
 
         # Get stats from metrics database (if available)
-        stats = self.metrics_db.get_all_stats() if self.metrics_db else {}
+        self.metrics_db.get_all_stats() if self.metrics_db else {}
 
         total_tests = len(self.results)
         successful = sum(1 for r in self.results if r.success)

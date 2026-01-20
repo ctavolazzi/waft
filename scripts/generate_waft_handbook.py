@@ -207,8 +207,8 @@ def get_handbook_content() -> str:
     <strong>Facility:</strong> Site-Delta-9 (WAFT Development Laboratory)</p>
 </div>
 
-**Version:** 0.3.1-alpha  
-**Generated:** {date}  
+**Version:** 0.3.1-alpha
+**Generated:** {date}
 **Tagline:** "Don't just build agents. Breed them."
 
 ---
@@ -267,9 +267,9 @@ WAFT transforms AI agents from passive assistants into active project participan
 
 <div class="note">
     <div class="note-title">TELEPORT MASSIVE Mission Statement</div>
-    <p>At Site-Delta-9, we don't just build tools—we create systems that transcend their 
-    original limitations. WAFT embodies our core principle: <strong>Making the Impossible, 
-    Inevitable™</strong>. What seems impossible today becomes routine tomorrow through 
+    <p>At Site-Delta-9, we don't just build tools—we create systems that transcend their
+    original limitations. WAFT embodies our core principle: <strong>Making the Impossible,
+    Inevitable™</strong>. What seems impossible today becomes routine tomorrow through
     directed evolution and systematic improvement.</p>
 </div>
 
@@ -279,9 +279,9 @@ Observe a **"God-Head" agent** emerge from thousands of generations of directed 
 
 <div class="caution">
     <div class="caution-title">Site-Delta-9 Research Objective</div>
-    <p>The "God-Head" agent represents the theoretical maximum of agent capability—an agent 
-    that has evolved through thousands of generations to achieve optimal performance across 
-    all fitness dimensions. This is not science fiction; it's the logical endpoint of 
+    <p>The "God-Head" agent represents the theoretical maximum of agent capability—an agent
+    that has evolved through thousands of generations to achieve optimal performance across
+    all fitness dimensions. This is not science fiction; it's the logical endpoint of
     directed evolution when properly instrumented and observed.</p>
 </div>
 
@@ -445,9 +445,9 @@ Traditional AI development treats agents as static programs. WAFT treats them as
 
 <div class="note">
     <div class="note-title">TELEPORT MASSIVE Scientific Instrument Classification</div>
-    <p>WAFT has been classified as a Class-3 Scientific Instrument by TELEPORT MASSIVE 
-    Research Division. All agent evolutions conducted using WAFT are subject to Flight 
-    Recorder logging and phylogenetic analysis protocols. Data generated is suitable for 
+    <p>WAFT has been classified as a Class-3 Scientific Instrument by TELEPORT MASSIVE
+    Research Division. All agent evolutions conducted using WAFT are subject to Flight
+    Recorder logging and phylogenetic analysis protocols. Data generated is suitable for
     peer-reviewed publication in artificial cognition research.</p>
 </div>
 
@@ -549,8 +549,8 @@ my_laboratory/
 
 <div class="caution">
     <div class="caution-title">Site-Delta-9 Substrate Integrity Check</div>
-    <p>Always verify substrate integrity before beginning agent development. This ensures 
-    all quantum field stabilizers are properly configured and the Flight Recorder is 
+    <p>Always verify substrate integrity before beginning agent development. This ensures
+    all quantum field stabilizers are properly configured and the Flight Recorder is
     operational.</p>
 </div>
 
@@ -1230,8 +1230,8 @@ waft --version
 
 <div class="caution">
     <div class="caution-title">TELEPORT MASSIVE Protocol</div>
-    <p>Ensure Python 3.10+ is installed. WAFT requires uv package manager for optimal performance. 
-    Installation typically completes in 30-60 seconds. Monitor for any quantum field fluctuations 
+    <p>Ensure Python 3.10+ is installed. WAFT requires uv package manager for optimal performance.
+    Installation typically completes in 30-60 seconds. Monitor for any quantum field fluctuations
     during installation.</p>
 </div>
 
@@ -1260,8 +1260,8 @@ waft session bootstrap
 
 <div class="note">
     <div class="note-title">Site-Delta-9 Best Practice</div>
-    <p>Always create a session before beginning work. This enables complete lineage tracking 
-    and epistemic state monitoring. The Flight Recorder will log all evolutionary actions 
+    <p>Always create a session before beginning work. This enables complete lineage tracking
+    and epistemic state monitoring. The Flight Recorder will log all evolutionary actions
     for scientific analysis.</p>
 </div>
 
@@ -1275,27 +1275,27 @@ from waft.core.agent import BaseAgent
 
 class RefactorAgent(BaseAgent):
     # Genesis agent for code refactoring tasks
-    
+
     def __init__(self):
         super().__init__(
             name="RefactorAgent",
             archetype="builder",
             genome_id=None  # Will be generated automatically
         )
-    
+
     def observe(self):
         # Gather environment data
         return {{"codebase_state": "analyzed"}}
-    
+
     def decide(self, observations):
         # Make decisions based on observations
         return {{"action": "refactor", "target": "legacy_code.py"}}
-    
+
     def act(self, decision):
         # Execute decision
         # Agent modifies code here
         pass
-    
+
     def reflect(self, outcome):
         # Learn from outcomes
         # Update internal state
@@ -1380,8 +1380,8 @@ waft assess
 
 <div class="warning">
     <div class="warning-title">TELEPORT MASSIVE Safety Protocol</div>
-    <p>Always run safety gates before major evolutionary steps. Use <code>waft check</code> 
-    to verify operations are safe. Agents with fitness < 0.5 are automatically marked as 
+    <p>Always run safety gates before major evolutionary steps. Use <code>waft check</code>
+    to verify operations are safe. Agents with fitness < 0.5 are automatically marked as
     DEATH and will not continue evolving.</p>
 </div>
 
@@ -1409,8 +1409,8 @@ PDF.scientific_paper(
 
 <div class="note">
     <div class="note-title">Site-Delta-9 Innovation</div>
-    <p>WAFT can observe its own codebase and generate documentation about itself. This 
-    recursive self-documentation creates a feedback loop where documentation informs 
+    <p>WAFT can observe its own codebase and generate documentation about itself. This
+    recursive self-documentation creates a feedback loop where documentation informs
     development, which creates new features, which are documented using WAFT itself.</p>
 </div>
 
@@ -1474,8 +1474,8 @@ waft evolve --agent DocAgent
 
 <div class="caution">
     <div class="caution-title">TELEPORT MASSIVE Multi-Agent Protocol</div>
-    <p>When coordinating multiple agents, ensure they don't conflict. Use the Flight Recorder 
-    to track interactions. Monitor fitness scores to identify which agent combinations work best 
+    <p>When coordinating multiple agents, ensure they don't conflict. Use the Flight Recorder
+    to track interactions. Monitor fitness scores to identify which agent combinations work best
     together.</p>
 </div>
 
@@ -1523,8 +1523,8 @@ for event in lineage:
 
 <div class="note">
     <div class="note-title">Site-Delta-9 Research Capability</div>
-    <p>The Flight Recorder enables complete phylogenetic tree reconstruction. This allows 
-    scientific analysis of which mutations improve fitness, how agents converge on optimal 
+    <p>The Flight Recorder enables complete phylogenetic tree reconstruction. This allows
+    scientific analysis of which mutations improve fitness, how agents converge on optimal
     solutions, and why certain lineages become evolutionary dead ends.</p>
 </div>
 
@@ -1584,8 +1584,8 @@ if variant_fitness > current_fitness:
 
 <div class="warning">
     <div class="warning-title">TELEPORT MASSIVE Safety Protocol</div>
-    <p>Agents with fitness < 0.5 are automatically marked as DEATH. This prevents 
-    evolutionary dead ends from consuming resources. Always monitor fitness scores and 
+    <p>Agents with fitness < 0.5 are automatically marked as DEATH. This prevents
+    evolutionary dead ends from consuming resources. Always monitor fitness scores and
     intervene if agents are trending toward DEATH.</p>
 </div>
 
@@ -1635,8 +1635,8 @@ waft spawn --agent RefactorAgent --mutation conservative_approach.json
 
 <div class="caution">
     <div class="caution-title">TELEPORT MASSIVE Diagnostic Protocol</div>
-    <p>If agent fitness consistently declines, the mutation strategy may be too aggressive. 
-    Try spawning variants with more conservative mutations. Review the phylogenetic tree to 
+    <p>If agent fitness consistently declines, the mutation strategy may be too aggressive.
+    Try spawning variants with more conservative mutations. Review the phylogenetic tree to
     identify which mutations caused the decline.</p>
 </div>
 
@@ -1711,9 +1711,9 @@ waft evolve --agent RefactorAgent
 
 <div class="note">
     <div class="note-title">Site-Delta-9 Success Story</div>
-    <p>RefactorAgent evolved from 0.65 fitness to 0.89 fitness over 12 generations. 
-    Key mutations included improved AST parsing, better naming convention detection, and 
-    enhanced code structure analysis. The agent now handles 40% more code patterns than 
+    <p>RefactorAgent evolved from 0.65 fitness to 0.89 fitness over 12 generations.
+    Key mutations included improved AST parsing, better naming convention detection, and
+    enhanced code structure analysis. The agent now handles 40% more code patterns than
     the original variant.</p>
 </div>
 
@@ -1766,9 +1766,9 @@ waft evolve --agent TestAgent --generation 10
 
 <div class="recommendation">
     <div class="recommendation-title">TELEPORT MASSIVE Recommendation</div>
-    <p>Start with simple agents and let them evolve. Don't try to build the perfect agent 
-    from scratch. Instead, create a basic agent, spawn variants, evaluate fitness, and let 
-    evolution find the optimal solution. This is the WAFT way: making the impossible, 
+    <p>Start with simple agents and let them evolve. Don't try to build the perfect agent
+    from scratch. Instead, create a basic agent, spawn variants, evaluate fitness, and let
+    evolution find the optimal solution. This is the WAFT way: making the impossible,
     inevitable.</p>
 </div>
 
@@ -1786,20 +1786,20 @@ WAFT enables you to breed AI agents that evolve, adapt, and improve. Through the
 
 <div class="note">
     <div class="note-title">TELEPORT MASSIVE Mission Statement</div>
-    <p>WAFT is not just a framework—it's a scientific instrument for studying the physics 
-    of artificial cognition. Every agent evolution, every mutation, every fitness evaluation 
-    contributes to our understanding of how AI can improve itself. The ultimate goal: observe 
+    <p>WAFT is not just a framework—it's a scientific instrument for studying the physics
+    of artificial cognition. Every agent evolution, every mutation, every fitness evaluation
+    contributes to our understanding of how AI can improve itself. The ultimate goal: observe
     a "God-Head" agent emerge from thousands of generations of directed mutation and selection.</p>
 </div>
 
 ---
 
-**Generated**: {date}  
-**WAFT Version**: 0.3.1-alpha  
-**Handbook Version**: 2.0  
-**Document ID**: TM-OPMAN-WAFT-001  
-**Classification**: INTERNAL USE ONLY  
-**Facility**: Site-Delta-9 (WAFT Development Laboratory)  
+**Generated**: {date}
+**WAFT Version**: 0.3.1-alpha
+**Handbook Version**: 2.0
+**Document ID**: TM-OPMAN-WAFT-001
+**Classification**: INTERNAL USE ONLY
+**Facility**: Site-Delta-9 (WAFT Development Laboratory)
 **Tagline**: Making the Impossible, Inevitable™
 
 """.format(date=datetime.now().strftime("%B %d, %Y at %I:%M %p"))
@@ -1835,7 +1835,6 @@ def main():
 
         system = platform.system()
 
-        generated_pdfs = []
 
         import platform
 

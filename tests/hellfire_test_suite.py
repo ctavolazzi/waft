@@ -70,7 +70,7 @@ class TestRunner:
 
         start = time.time()
         try:
-            result = test_func(*args, **kwargs)
+            test_func(*args, **kwargs)
             duration = time.time() - start
             test_result = TestResult(name, True, "✅ SURVIVED", duration)
             print(f"✅ SURVIVED in {duration:.2f}s")
@@ -148,7 +148,7 @@ def test_float_precision_evaluation_scores(runner: TestRunner):
 
     for score in edge_scores:
         try:
-            eval_scores = EvaluationScores(
+            EvaluationScores(
                 factuality=score,
                 validity=score,
                 coherence=score,
@@ -227,7 +227,7 @@ def test_time_clock_skew_microseconds(runner: TestRunner):
 
 def test_time_timestamp_string_format(runner: TestRunner):
     """Test timestamp parsing edge cases."""
-    with tempfile.TemporaryDirectory() as tmpdir:
+    with tempfile.TemporaryDirectory():
         # Create protocol with various timestamp formats
         timestamps = [
             datetime.now().isoformat(),
@@ -247,7 +247,7 @@ def test_time_timestamp_string_format(runner: TestRunner):
 
             # Should serialize/deserialize
             json_str = protocol.model_dump_json()
-            protocol2 = Protocol.model_validate_json(json_str)
+            Protocol.model_validate_json(json_str)
             print(f"  ✅ Handled timestamp: {ts[:30]}...")
 
 
@@ -313,7 +313,7 @@ def test_encoding_latin1_vs_utf8(runner: TestRunner):
 
 def test_pydantic_extra_fields(runner: TestRunner):
     """Test Protocol with extra unexpected fields."""
-    with tempfile.TemporaryDirectory() as tmpdir:
+    with tempfile.TemporaryDirectory():
         # Create JSON with extra fields
         protocol_dict = {
             "session_id": "extra_test",
@@ -346,7 +346,7 @@ def test_pydantic_type_coercion(runner: TestRunner):
 
     # Test with string numbers (should coerce to float)
     try:
-        scores = EvaluationScores(
+        EvaluationScores(
             factuality="0.85",  # String instead of float
             validity="0.85",
             coherence="0.85",
@@ -373,7 +373,7 @@ def test_pydantic_nan_inf(runner: TestRunner):
 
     for score in invalid_scores:
         try:
-            scores = EvaluationScores(
+            EvaluationScores(
                 factuality=score,
                 validity=0.85,
                 coherence=0.85,
@@ -444,7 +444,7 @@ def test_thread_safety_index_corruption(runner: TestRunner):
         # Check index is still valid JSON
         index_file = Path(tmpdir) / "_pantheon" / "guide" / "index.json"
         try:
-            index_data = json.loads(index_file.read_text())
+            json.loads(index_file.read_text())
             print(f"Index survived {len(session_ids)} concurrent writes")
         except json.JSONDecodeError:
             raise AssertionError("Index file corrupted by concurrent writes")
@@ -514,7 +514,7 @@ def test_resource_exhaustion_deep_recursion(runner: TestRunner):
     # Create deeply nested dict (not in reasoning, in metadata)
     deep_dict = {}
     current = deep_dict
-    for i in range(100):
+    for _i in range(100):
         current["nested"] = {}
         current = current["nested"]
     current["value"] = "bottom"
@@ -593,7 +593,7 @@ def run_all_tests():
 def main():
     parser = argparse.ArgumentParser(description="Hellfire Test Suite")
     parser.add_argument("--all", action="store_true", help="Run all tests")
-    args = parser.parse_args()
+    parser.parse_args()
 
     results = run_all_tests()
 

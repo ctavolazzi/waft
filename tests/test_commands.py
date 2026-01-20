@@ -24,7 +24,7 @@ def test_waft_new_creates_structure(temp_dir):
     project_name = "test_new_project"
     project_path = temp_dir / project_name
 
-    result = run_waft_command(["new", project_name], cwd=temp_dir)
+    run_waft_command(["new", project_name], cwd=temp_dir)
 
     # Command should succeed (or at least create structure)
     # Check that project directory was created
@@ -111,7 +111,7 @@ def test_waft_init_creates_structure(project_with_pyproject):
 
         shutil.rmtree(pyrite_path)
 
-    result = run_waft_command(["init"], cwd=project_with_pyproject)
+    run_waft_command(["init"], cwd=project_with_pyproject)
 
     # Should create _pyrite structure
     assert (project_with_pyproject / "_pyrite" / "active").exists()
@@ -166,7 +166,7 @@ def test_waft_new_with_path_flag(temp_dir):
     target_dir.mkdir()
     project_path = target_dir / project_name
 
-    result = run_waft_command(["new", project_name, "--path", str(target_dir)])
+    run_waft_command(["new", project_name, "--path", str(target_dir)])
 
     # Should create project in specified path
     if project_path.exists():

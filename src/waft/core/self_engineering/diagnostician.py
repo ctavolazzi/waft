@@ -135,7 +135,7 @@ class ProblemDiagnostician:
         problem_desc = problem.description.lower()
         exc_type = type(problem.exception).__name__ if problem.exception else ""
 
-        for pattern_name, pattern in self.PATTERNS.items():
+        for _pattern_name, pattern in self.PATTERNS.items():
             # Check exception types
             if "exception_types" in pattern:
                 if exc_type in pattern["exception_types"]:

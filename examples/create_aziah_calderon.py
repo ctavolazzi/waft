@@ -198,10 +198,10 @@ def main():
     application_path = personnel_dir / "job_application.md"
     application_content = f"""# Job Application - Aziah Calderon
 
-**Position Applied For**: Quantum Teleportation Research Engineer  
-**Date**: {join_date}  
-**Applicant**: Aziah Calderon  
-**Date of Birth**: {birth_date}  
+**Position Applied For**: Quantum Teleportation Research Engineer
+**Date**: {join_date}
+**Applicant**: Aziah Calderon
+**Date of Birth**: {birth_date}
 **Age**: {current_age}
 
 ## Cover Letter
@@ -218,7 +218,7 @@ I am eager to bring my expertise in quantum mechanics, research methodology, and
 
 Thank you for considering my application. I look forward to the opportunity to discuss how I can contribute to Teleport Massive's success.
 
-Sincerely,  
+Sincerely,
 Aziah Calderon
 
 ## Application Details
@@ -240,10 +240,10 @@ Available upon request.
     resume_path = personnel_dir / "resume.md"
     resume_content = f"""# Aziah Calderon - Resume
 
-**Email**: aziah.calderon@email.com  
-**Phone**: (555) 123-4567  
-**Location**: San Francisco, CA  
-**Date of Birth**: {birth_date}  
+**Email**: aziah.calderon@email.com
+**Phone**: (555) 123-4567
+**Location**: San Francisco, CA
+**Date of Birth**: {birth_date}
 **Age**: {current_age}
 
 ## Professional Summary
@@ -252,28 +252,28 @@ Quantum Physics researcher and engineer with {current_age - 22} years of experie
 
 ## Education
 
-**Master of Science in Quantum Physics**  
-Tech Institute | 2019-2021  
+**Master of Science in Quantum Physics**
+Tech Institute | 2019-2021
 - Focus: Quantum teleportation protocols
 - Published 2 research papers
 - Graduate research assistant
 
-**Bachelor of Science in Physics**  
-State University | 2015-2019  
+**Bachelor of Science in Physics**
+State University | 2015-2019
 - Specialization: Quantum Mechanics
 - Graduated Magna Cum Laude
 - Thesis on quantum entanglement
 
 ## Professional Experience
 
-**Junior Quantum Engineer**  
-QuantumTech Innovations | Jan 2024 - Dec 2025  
+**Junior Quantum Engineer**
+QuantumTech Innovations | Jan 2024 - Dec 2025
 - Developed quantum algorithms for state transfer
 - Built simulation tools for quantum systems
 - Collaborated on prototype development
 
-**Research Assistant**  
-Quantum Research Lab | Jul 2021 - Dec 2023  
+**Research Assistant**
+Quantum Research Lab | Jul 2021 - Dec 2023
 - Conducted quantum state manipulation experiments
 - Assisted in teleportation protocol development
 - Published findings in peer-reviewed journals
@@ -300,13 +300,13 @@ Quantum Research Lab | Jul 2021 - Dec 2023
     profile_path = personnel_dir / "employee_profile.md"
     profile_content = f"""# Employee Profile - Aziah Calderon
 
-**Employee ID**: {being.being_id}  
-**Full Name**: Aziah Calderon  
-**Date of Birth**: {birth_date}  
-**Age**: {current_age}  
-**Hire Date**: {join_date}  
-**Department**: Research & Development  
-**Position**: Quantum Teleportation Research Engineer  
+**Employee ID**: {being.being_id}
+**Full Name**: Aziah Calderon
+**Date of Birth**: {birth_date}
+**Age**: {current_age}
+**Hire Date**: {join_date}
+**Department**: Research & Development
+**Position**: Quantum Teleportation Research Engineer
 **Level**: 3 (Junior-Mid Level)
 
 ## Personal Information

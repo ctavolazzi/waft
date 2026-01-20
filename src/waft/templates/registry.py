@@ -301,7 +301,7 @@ class TemplateRegistry:
 
     def get_categories(self) -> list[str]:
         """Get all unique categories."""
-        return sorted(set(t.category for t in self._templates.values()))
+        return sorted({t.category for t in self._templates.values()})
 
     def get_tags(self) -> list[str]:
         """Get all unique tags."""

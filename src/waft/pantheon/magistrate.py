@@ -186,10 +186,10 @@ class Magistrate:
 
     """
     Magistrate: God of Precedent and Body of Proof
-    
+
     Organizes case files from _work_efforts/proof_cases/ into Precedent categories,
     building a Body of Proof that can be referenced repeatedly.
-    
+
     Storage:
     - Precedents: _pantheon/magistrate/precedents/ (JSON files)
     - Body of Proof: _pantheon/magistrate/body_of_proof.json

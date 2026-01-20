@@ -138,7 +138,7 @@ async def run_experiment():
 
     observer = TheObserver(project_path=project_root)
     slicer = TheSlicer(biome=biome, observer=observer)
-    reaper = TheReaper(biome=biome, observer=observer)
+    TheReaper(biome=biome, observer=observer)
 
     print("✓ TheSlicer Initialized")
     print()
@@ -148,7 +148,7 @@ async def run_experiment():
     print("-" * 80)
 
     # Manually trigger conjugation
-    result = parent_a.conjugate(parent_b, dish=dish, current_pulse=1)
+    parent_a.conjugate(parent_b, dish=dish, current_pulse=1)
 
     # Check seed was created
     seed_parent = parent_a if len(parent_a.state.developing_seeds) > 0 else parent_b
@@ -174,7 +174,7 @@ async def run_experiment():
         print(f"Pulse {pulse}:")
 
         # Grant time slice to seed parent (TheSlicer checks gestation internally)
-        slice_result = await slicer.grant_time_slice(seed_parent, dish)
+        await slicer.grant_time_slice(seed_parent, dish)
 
         # Check if child was spawned (TheSlicer already called check_gestation)
         # Look for new organism in dish

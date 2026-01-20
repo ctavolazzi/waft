@@ -155,7 +155,7 @@ async def run_experiment():
 
     observer = TheObserver(project_path=project_root)
     slicer = TheSlicer(biome=biome, observer=observer)
-    reaper = TheReaper(biome=biome, observer=observer)
+    TheReaper(biome=biome, observer=observer)
 
     print("✓ TheSlicer Initialized")
     print()
@@ -293,7 +293,7 @@ async def run_experiment():
     print("  ✓ Scientific names logged in TheObserver")
     print()
     print("TAXONOMY VERIFIED:")
-    for i, (organism, name) in enumerate(zip(organisms, scientific_names), 1):
+    for i, (organism, name) in enumerate(zip(organisms, scientific_names, strict=False), 1):
         print(f"  Species #{i}: {name}")
         print(f"    Genome: {organism.genome_id[:16]}...")
     print()
@@ -307,7 +307,7 @@ async def run_experiment():
         "taxonomy_verified": True,
         "birth_certificates": [
             {"scientific_name": name, "genome_id": org.genome_id, "agent_id": org.state.agent_id}
-            for org, name in zip(organisms, scientific_names)
+            for org, name in zip(organisms, scientific_names, strict=False)
         ],
     }
 

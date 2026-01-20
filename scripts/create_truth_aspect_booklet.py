@@ -29,15 +29,15 @@ def main():
 
     explanation = """
     Pressure and Experience
-    
+
     In and Out
-    
+
     Breath
-    
-    We are ThePoint Breathing - that's what we are 
-    
+
+    We are ThePoint Breathing - that's what we are
+
     The Expansion and Contraction of SpaceTime is Reality
-    
+
     Humanity Creates Reality
     """
 

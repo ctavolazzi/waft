@@ -69,7 +69,7 @@ class TestRunner:
 
         start = time.time()
         try:
-            result = test_func(*args, **kwargs)
+            test_func(*args, **kwargs)
             duration = time.time() - start
             test_result = TestResult(name, True, "✅ SURVIVED", duration)
             print(f"✅ SURVIVED in {duration:.2f}s")
@@ -450,7 +450,7 @@ def test_stress_100_concurrent_sessions(runner: TestRunner):
 
 def test_stress_massive_protocol_10mb(runner: TestRunner):
     """Test 10MB+ protocol serialization."""
-    with tempfile.TemporaryDirectory() as tmpdir:
+    with tempfile.TemporaryDirectory():
         # Create massive reasoning chain
         massive_chain = [
             {
@@ -568,7 +568,7 @@ def test_stress_storage_quota(runner: TestRunner):
 def test_integrity_corrupted_index(runner: TestRunner):
     """Test recovery from corrupted index file."""
     with tempfile.TemporaryDirectory() as tmpdir:
-        guide = TheGuide(
+        TheGuide(
             project_path=Path(tmpdir), client_llm=StableLLM(), guide_llm_config={"model": "test"}
         )
 

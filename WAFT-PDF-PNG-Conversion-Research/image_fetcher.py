@@ -93,9 +93,7 @@ class ImageFetcher:
             # Use Pexels Source API (no auth required, but limited)
             # Or use search API if we have a key
             if self.pexels_api_key:
-                url = "https://api.pexels.com/v1/search"
-                headers = {"Authorization": self.pexels_api_key}
-                params = {"query": query, "per_page": 1}
+                pass
             else:
                 # Use Pexels Source (direct image URLs, no search)
                 # For testing, we'll use a curated list of free images

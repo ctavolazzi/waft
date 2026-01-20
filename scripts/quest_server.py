@@ -34,9 +34,9 @@ def create_quest_app(project_path: Path) -> FastAPI:
         title="Quest Guide API",
         description="""
         🎮 Quest Guide Implementation API
-        
+
         A gamified quest system for implementing the Meta-Cognitive Guide LLM System.
-        
+
         Features:
         - 17 quests with checkpoints and tests
         - XP system and achievements

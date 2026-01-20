@@ -1267,7 +1267,7 @@ class TwoPageGenerator:
             color: {{ color.accent }};
             font-weight: bold;
         }
-        
+
         /* Progress Bar (inspired by AI-DnD quest progress) */
         .progress-container {
             margin: {{ margin.paragraph_spacing }}pt 0;
@@ -1298,7 +1298,7 @@ class TwoPageGenerator:
             margin-top: 2pt;
             text-align: right;
         }
-        
+
         /* Status Badges (inspired by AI-DnD status effects) */
         .status-badges {
             display: flex;
@@ -1334,7 +1334,7 @@ class TwoPageGenerator:
             color: {{ color.text }};
             border-color: {{ color.accent }};
         }
-        
+
         /* Grouped Metrics (inspired by AI-DnD inventory display) */
         .metrics-group {
             margin: {{ margin.paragraph_spacing }}pt 0;
@@ -1385,7 +1385,7 @@ class TwoPageGenerator:
             font-weight: normal;
             margin-left: 2pt;
         }
-        
+
         /* Git Summary & Work Efforts Summary */
         .git-summary, .work-efforts-summary {
             margin: {{ margin.paragraph_spacing }}pt 0;

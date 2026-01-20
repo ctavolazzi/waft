@@ -40,9 +40,9 @@ def generate_architecture_documentation():
     # Add header with investigation metadata
     full_content = f"""# WAFT Architecture Investigation
 
-**Generated**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}  
-**Work Effort**: WE-260111-2i9f  
-**Entry Point**: README.md  
+**Generated**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+**Work Effort**: WE-260111-2i9f
+**Entry Point**: README.md
 **Status**: 🔍 Investigation Complete
 
 ---

@@ -22,7 +22,7 @@ def calculate_weighted_score(scores: list[float], weights: list[float]) -> float
     if abs(sum(weights) - 1.0) > 0.01:
         raise ValueError(f"Weights must sum to 1.0 (got {sum(weights)})")
 
-    return sum(score * weight for score, weight in zip(scores, weights))
+    return sum(score * weight for score, weight in zip(scores, weights, strict=False))
 
 
 def evaluate_options(

@@ -149,7 +149,7 @@ class BenchmarkSuite:
 
         # Check that we get measurable differences
         qualities = [o.quality_report.final_quality for o in outputs]
-        unique_qualities = len(set(f"{q:.3f}" for q in qualities))
+        unique_qualities = len({f"{q:.3f}" for q in qualities})
 
         # Modes should produce results (not necessarily different in this simple eval)
         passed = len(outputs) == len(modes) and all(
@@ -189,7 +189,7 @@ class BenchmarkSuite:
         # Verify system respects iteration limits
         respects_limits = all(
             r.quality_report.iterations_used <= it
-            for r, it in zip(results_by_iter, iteration_counts)
+            for r, it in zip(results_by_iter, iteration_counts, strict=False)
         )
 
         passed = respects_limits

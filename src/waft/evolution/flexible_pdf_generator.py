@@ -237,7 +237,7 @@ FLEXIBLE_TEMPLATE = """
 </head>
 <body>
     <h1>{{ title }}</h1>
-    
+
     {% if metadata %}
     <div style="font-size: {{ font.size_body - 2 }}pt; color: {{ color.text }}88; margin-bottom: {{ margin.paragraph_spacing }}pt;">
         {% for key, value in metadata.items() %}

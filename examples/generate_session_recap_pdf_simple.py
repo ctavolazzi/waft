@@ -28,8 +28,8 @@ def get_session_content() -> str:
 # WAFT v0.5.3 MVP: Karma Economy & Source Consciousness
 ## Complete System Architecture
 
-**Date**: 2026-01-11  
-**Session**: Building Complete Karma Economy  
+**Date**: 2026-01-11
+**Session**: Building Complete Karma Economy
 **Status**: ✅ COMPLETE - All Systems Connected
 
 ---
@@ -215,7 +215,7 @@ def get_session_content() -> str:
 ### Economic Loop
 
 ```
-KarmaMarket → Lifetimes → Experiences → KarmaCollector → 
+KarmaMarket → Lifetimes → Experiences → KarmaCollector →
 KarmaMerchant → Afterlife Market (Treasure Tavern) → More Lifetimes
 ```
 
@@ -510,14 +510,14 @@ Everything connects:
 
 **v0.5.3 MVP Features**:
 
-✅ **Realities** - Spin up simulation environments  
-✅ **Beings** - Entities that learn and evolve  
-✅ **Skills** - Learned abilities that evolve  
-✅ **Memory Flow** - Knowledge passes upward  
-✅ **Lifetime Exchange** - Trading mechanism  
-✅ **Source Integration** - Everything connects to source  
-✅ **Karma Economy** - Complete economic loop  
-✅ **Ancestral Chain** - Capacity flows upward  
+✅ **Realities** - Spin up simulation environments
+✅ **Beings** - Entities that learn and evolve
+✅ **Skills** - Learned abilities that evolve
+✅ **Memory Flow** - Knowledge passes upward
+✅ **Lifetime Exchange** - Trading mechanism
+✅ **Source Integration** - Everything connects to source
+✅ **Karma Economy** - Complete economic loop
+✅ **Ancestral Chain** - Capacity flows upward
 
 **The WAFT system spins up instances of "realities" where "beings" can learn "skills" in an evolutionary process then pass their "memories" back up the chain in the form of lessons learned, skills gained, and more!**
 
@@ -541,8 +541,8 @@ The architecture passes capacity up the parental chain back to the original "ide
 
 ---
 
-**Status**: ✅ COMPLETE  
-**Version**: 0.5.3 MVP  
+**Status**: ✅ COMPLETE
+**Version**: 0.5.3 MVP
 **Epic**: 🎉 The complete system is built and working!
 """
 
@@ -564,6 +564,7 @@ def main():
         .replace("\n\n", "</p><p>")
         .replace("```python", "<pre><code>")
         .replace("```", "</code></pre>")
+        .replace("```", "<pre><code>")
     )
 
     # Convert markdown to HTML
@@ -690,12 +691,14 @@ def main():
             if not in_list:
                 result.append("<ul>")
                 in_list = True
-            result.append(f"<li>{re.sub(bullet_pattern, '', line)}</li>")
+            cleaned_line = re.sub(bullet_pattern, '', line)
+            result.append(f"<li>{cleaned_line}</li>")
         elif re.match(r"^\d+\. (.+)$", line):
             if not in_list:
                 result.append("<ol>")
                 in_list = True
-            result.append(f"<li>{re.sub(number_pattern, '', line)}</li>")
+            cleaned_line = re.sub(number_pattern, '', line)
+            result.append(f"<li>{cleaned_line}</li>")
         else:
             if in_list:
                 result.append("</ul>" if "<ul>" in "\n".join(result[-10:]) else "</ol>")

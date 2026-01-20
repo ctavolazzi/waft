@@ -458,7 +458,7 @@ def main():
     best_page_diff = float("inf")
     ideas_to_show = 5
 
-    for iteration in range(5):
+    for _iteration in range(5):
         split_point = min(4, ideas_to_show)
         page_1_ideas = all_ideas[:split_point]
         page_2_ideas = all_ideas[split_point:ideas_to_show]

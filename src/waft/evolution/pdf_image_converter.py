@@ -207,7 +207,7 @@ def pdf_to_pngs(
                 str(output_pattern),
             ]
 
-            result = subprocess.run(
+            subprocess.run(
                 cmd,
                 capture_output=True,
                 text=True,

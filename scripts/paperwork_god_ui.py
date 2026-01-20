@@ -228,7 +228,7 @@ class PaperworkGodUIHandler(BaseHTTPRequestHandler):
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -236,12 +236,12 @@ class PaperworkGodUIHandler(BaseHTTPRequestHandler):
             padding: 20px;
             color: #333;
         }
-        
+
         .container {
             max-width: 1400px;
             margin: 0 auto;
         }
-        
+
         header {
             background: white;
             border-radius: 12px;
@@ -249,7 +249,7 @@ class PaperworkGodUIHandler(BaseHTTPRequestHandler):
             margin-bottom: 30px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
-        
+
         h1 {
             font-size: 2.5em;
             margin-bottom: 10px;
@@ -257,19 +257,19 @@ class PaperworkGodUIHandler(BaseHTTPRequestHandler):
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        
+
         .subtitle {
             color: #666;
             font-size: 1.1em;
         }
-        
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
-        
+
         .stat-card {
             background: white;
             border-radius: 12px;
@@ -277,11 +277,11 @@ class PaperworkGodUIHandler(BaseHTTPRequestHandler):
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             transition: transform 0.2s;
         }
-        
+
         .stat-card:hover {
             transform: translateY(-5px);
         }
-        
+
         .stat-card h3 {
             color: #667eea;
             margin-bottom: 10px;
@@ -289,26 +289,26 @@ class PaperworkGodUIHandler(BaseHTTPRequestHandler):
             text-transform: uppercase;
             letter-spacing: 1px;
         }
-        
+
         .stat-value {
             font-size: 2.5em;
             font-weight: bold;
             color: #333;
         }
-        
+
         .content-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
             gap: 30px;
         }
-        
+
         .section {
             background: white;
             border-radius: 12px;
             padding: 30px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
-        
+
         .section h2 {
             color: #667eea;
             margin-bottom: 20px;
@@ -316,7 +316,7 @@ class PaperworkGodUIHandler(BaseHTTPRequestHandler):
             border-bottom: 2px solid #667eea;
             padding-bottom: 10px;
         }
-        
+
         .list-item {
             padding: 15px;
             margin-bottom: 10px;
@@ -324,17 +324,17 @@ class PaperworkGodUIHandler(BaseHTTPRequestHandler):
             border-radius: 8px;
             border-left: 4px solid #667eea;
         }
-        
+
         .list-item h4 {
             color: #333;
             margin-bottom: 5px;
         }
-        
+
         .list-item p {
             color: #666;
             font-size: 0.9em;
         }
-        
+
         .badge {
             display: inline-block;
             padding: 4px 12px;
@@ -343,22 +343,22 @@ class PaperworkGodUIHandler(BaseHTTPRequestHandler):
             font-weight: bold;
             margin-left: 10px;
         }
-        
+
         .badge-pending {
             background: #ffc107;
             color: #333;
         }
-        
+
         .badge-resolved {
             background: #28a745;
             color: white;
         }
-        
+
         .badge-complexity {
             background: #dc3545;
             color: white;
         }
-        
+
         .complexity-bar {
             height: 8px;
             background: #e9ecef;
@@ -366,13 +366,13 @@ class PaperworkGodUIHandler(BaseHTTPRequestHandler):
             margin-top: 5px;
             overflow: hidden;
         }
-        
+
         .complexity-fill {
             height: 100%;
             background: linear-gradient(90deg, #28a745, #ffc107, #dc3545);
             transition: width 0.3s;
         }
-        
+
         .creature-item {
             display: flex;
             align-items: center;
@@ -381,26 +381,26 @@ class PaperworkGodUIHandler(BaseHTTPRequestHandler):
             background: #f8f9fa;
             border-radius: 8px;
         }
-        
+
         .creature-icon {
             font-size: 2em;
             margin-right: 15px;
         }
-        
+
         .creature-info {
             flex: 1;
         }
-        
+
         .creature-name {
             font-weight: bold;
             color: #333;
         }
-        
+
         .creature-role {
             color: #666;
             font-size: 0.9em;
         }
-        
+
         button {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -412,21 +412,21 @@ class PaperworkGodUIHandler(BaseHTTPRequestHandler):
             font-weight: bold;
             transition: transform 0.2s;
         }
-        
+
         button:hover {
             transform: scale(1.05);
         }
-        
+
         button:active {
             transform: scale(0.95);
         }
-        
+
         .loading {
             text-align: center;
             padding: 20px;
             color: #666;
         }
-        
+
         .error {
             background: #f8d7da;
             color: #721c24;
@@ -442,7 +442,7 @@ class PaperworkGodUIHandler(BaseHTTPRequestHandler):
             <h1>🏛️ Paperwork God</h1>
             <p class="subtitle">Bureaucracy Management System • Realm of Bureaucracy</p>
         </header>
-        
+
         <div class="stats-grid" id="stats-grid">
             <div class="stat-card">
                 <h3>Documents</h3>
@@ -461,46 +461,46 @@ class PaperworkGodUIHandler(BaseHTTPRequestHandler):
                 <div class="stat-value" id="stat-creatures">-</div>
             </div>
         </div>
-        
+
         <div class="content-grid">
             <div class="section">
                 <h2>💰 Budgets</h2>
                 <div id="budgets-list" class="loading">Loading...</div>
             </div>
-            
+
             <div class="section">
                 <h2>📊 Balance Sheets</h2>
                 <div id="balance-sheets-list" class="loading">Loading...</div>
             </div>
-            
+
             <div class="section">
                 <h2>📄 Paperwork Registry</h2>
                 <div id="paperwork-list" class="loading">Loading...</div>
             </div>
-            
+
             <div class="section">
                 <h2>👹 Skurl's Red Tape</h2>
                 <div id="obstacles-list" class="loading">Loading...</div>
             </div>
-            
+
             <div class="section">
                 <h2>👹🧟 Realm Creatures</h2>
                 <div id="creatures-list" class="loading">Loading...</div>
             </div>
         </div>
     </div>
-    
+
     <script>
         async function fetchJSON(url) {
             const response = await fetch(url);
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
             return await response.json();
         }
-        
+
         async function loadSummary() {
             try {
                 const summary = await fetchJSON('/api/summary');
-                
+
                 document.getElementById('stat-documents').textContent = summary.paperwork.total_documents;
                 document.getElementById('stat-obstacles').textContent = summary.skurl.total_obstacles;
                 document.getElementById('stat-unresolved').textContent = summary.skurl.unresolved_obstacles;
@@ -509,17 +509,17 @@ class PaperworkGodUIHandler(BaseHTTPRequestHandler):
                 console.error('Failed to load summary:', error);
             }
         }
-        
+
         async function loadPaperwork() {
             try {
                 const paperwork = await fetchJSON('/api/paperwork');
                 const list = document.getElementById('paperwork-list');
-                
+
                 if (paperwork.length === 0) {
                     list.innerHTML = '<p style="color: #666; text-align: center;">No paperwork registered</p>';
                     return;
                 }
-                
+
                 list.innerHTML = paperwork.map(doc => `
                     <div class="list-item">
                         <h4>${doc.document_id} <span class="badge badge-pending">${doc.status}</span></h4>
@@ -529,28 +529,28 @@ class PaperworkGodUIHandler(BaseHTTPRequestHandler):
                     </div>
                 `).join('');
             } catch (error) {
-                document.getElementById('paperwork-list').innerHTML = 
+                document.getElementById('paperwork-list').innerHTML =
                     `<div class="error">Failed to load paperwork: ${error.message}</div>`;
             }
         }
-        
+
         async function loadObstacles() {
             try {
                 const obstacles = await fetchJSON('/api/obstacles?unresolved=false');
                 const list = document.getElementById('obstacles-list');
-                
+
                 if (obstacles.length === 0) {
                     list.innerHTML = '<p style="color: #666; text-align: center;">No red tape obstacles</p>';
                     return;
                 }
-                
+
                 list.innerHTML = obstacles.map(obs => {
                     const resolved = obs.resolved_at !== null;
                     const complexityPercent = (obs.complexity_level / 10) * 100;
-                    
+
                     return `
                         <div class="list-item">
-                            <h4>${obs.obstacle_id} 
+                            <h4>${obs.obstacle_id}
                                 <span class="badge ${resolved ? 'badge-resolved' : 'badge-pending'}">
                                     ${resolved ? 'Resolved' : 'Unresolved'}
                                 </span>
@@ -567,26 +567,26 @@ class PaperworkGodUIHandler(BaseHTTPRequestHandler):
                     `;
                 }).join('');
             } catch (error) {
-                document.getElementById('obstacles-list').innerHTML = 
+                document.getElementById('obstacles-list').innerHTML =
                     `<div class="error">Failed to load obstacles: ${error.message}</div>`;
             }
         }
-        
+
         async function loadCreatures() {
             try {
                 const creatures = await fetchJSON('/api/creatures');
                 const list = document.getElementById('creatures-list');
-                
+
                 const allCreatures = [
                     ...creatures.goblins.map(c => ({...c, type: 'goblin', icon: '👹'})),
                     ...creatures.ghouls.map(c => ({...c, type: 'ghoul', icon: '🧟'}))
                 ];
-                
+
                 if (allCreatures.length === 0) {
                     list.innerHTML = '<p style="color: #666; text-align: center;">No creatures in realm</p>';
                     return;
                 }
-                
+
                 list.innerHTML = allCreatures.map(creature => `
                     <div class="creature-item">
                         <div class="creature-icon">${creature.icon}</div>
@@ -597,26 +597,26 @@ class PaperworkGodUIHandler(BaseHTTPRequestHandler):
                     </div>
                 `).join('');
             } catch (error) {
-                document.getElementById('creatures-list').innerHTML = 
+                document.getElementById('creatures-list').innerHTML =
                     `<div class="error">Failed to load creatures: ${error.message}</div>`;
             }
         }
-        
+
         async function loadBudgets() {
             try {
                 const budgets = await fetchJSON('/api/budgets');
                 const list = document.getElementById('budgets-list');
-                
+
                 if (budgets.length === 0) {
                     list.innerHTML = '<p style="color: #666; text-align: center;">No budgets available</p>';
                     return;
                 }
-                
+
                 list.innerHTML = budgets.map(budget => {
                     const variance = parseFloat(budget.totals.variance);
                     const variancePercent = budget.totals.variance_percent;
                     const varianceColor = variance < 0 ? '#28a745' : variance > 0 ? '#dc3545' : '#666';
-                    
+
                     return `
                         <div class="list-item">
                             <h4>${budget.name}</h4>
@@ -629,25 +629,25 @@ class PaperworkGodUIHandler(BaseHTTPRequestHandler):
                     `;
                 }).join('');
             } catch (error) {
-                document.getElementById('budgets-list').innerHTML = 
+                document.getElementById('budgets-list').innerHTML =
                     `<div class="error">Failed to load budgets: ${error.message}</div>`;
             }
         }
-        
+
         async function loadBalanceSheets() {
             try {
                 const balanceSheets = await fetchJSON('/api/balance_sheets');
                 const list = document.getElementById('balance-sheets-list');
-                
+
                 if (balanceSheets.length === 0) {
                     list.innerHTML = '<p style="color: #666; text-align: center;">No balance sheets available</p>';
                     return;
                 }
-                
+
                 list.innerHTML = balanceSheets.map(bs => {
                     const isBalanced = bs.totals.is_balanced;
                     const balanceColor = isBalanced ? '#28a745' : '#dc3545';
-                    
+
                     return `
                         <div class="list-item">
                             <h4>${bs.name}</h4>
@@ -664,11 +664,11 @@ class PaperworkGodUIHandler(BaseHTTPRequestHandler):
                     `;
                 }).join('');
             } catch (error) {
-                document.getElementById('balance-sheets-list').innerHTML = 
+                document.getElementById('balance-sheets-list').innerHTML =
                     `<div class="error">Failed to load balance sheets: ${error.message}</div>`;
             }
         }
-        
+
         async function loadAll() {
             await Promise.all([
                 loadSummary(),
@@ -679,10 +679,10 @@ class PaperworkGodUIHandler(BaseHTTPRequestHandler):
                 loadCreatures()
             ]);
         }
-        
+
         // Load data on page load
         loadAll();
-        
+
         // Refresh every 30 seconds
         setInterval(loadAll, 30000);
     </script>

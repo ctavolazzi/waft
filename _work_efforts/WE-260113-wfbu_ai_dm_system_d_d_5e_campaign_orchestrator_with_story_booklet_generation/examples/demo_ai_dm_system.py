@@ -101,7 +101,7 @@ def demo_ai_dm_system():
 
         # DM decision (simulated)
         console.print("[bold]6. DM Decision (Simulated)...[/bold]")
-        decision = orchestrator.make_dm_decision(
+        orchestrator.make_dm_decision(
             campaign_id=campaign.campaign_id,
             problem="What encounter should happen next?",
             alternatives=["Combat", "Social", "Exploration"],

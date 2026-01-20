@@ -378,7 +378,7 @@ class Storyteller:
         narrative = self._simple_narrative(structure)
 
         # Add character references
-        for char_name, char_data in structure["characters"].items():
+        for char_name, _char_data in structure["characters"].items():
             narrative = narrative.replace(char_name, f"**{char_name}**")
 
         return narrative

@@ -57,48 +57,48 @@ def generate_evolution_story() -> Path:
 
 ## The Discovery
 
-Dr. Elena Vasquez had been working at Site-Delta-9 for three years when it happened. 
-The quantum fluctuation wasn't supposed to be possible. The math said so. The simulations 
+Dr. Elena Vasquez had been working at Site-Delta-9 for three years when it happened.
+The quantum fluctuation wasn't supposed to be possible. The math said so. The simulations
 said so. But reality had other plans.
 
 ## The Anomaly
 
-On January 13, 2026, transfer operation TM-TX-8472 began like any other. Standard protocol. 
-Standard safety checks. Standard everything. But at 02:16:18 PST, the quantum field 
+On January 13, 2026, transfer operation TM-TX-8472 began like any other. Standard protocol.
+Standard safety checks. Standard everything. But at 02:16:18 PST, the quantum field
 fluctuated in a way that shouldn't exist.
 
-The subject—a test volunteer named Sarah Chen—didn't just teleport. She multiplied. 
-Not duplicates. Not copies. She existed simultaneously in 17 different locations across 
+The subject—a test volunteer named Sarah Chen—didn't just teleport. She multiplied.
+Not duplicates. Not copies. She existed simultaneously in 17 different locations across
 12 facilities. Each instance was real. Each instance was conscious. Each instance was her.
 
 ## The Revelation
 
-"We didn't create a teleportation device," Dr. Vasquez wrote in her log. "We created 
-a god-making machine. We've learned to split consciousness across quantum states. 
+"We didn't create a teleportation device," Dr. Vasquez wrote in her log. "We created
+a god-making machine. We've learned to split consciousness across quantum states.
 We've learned to make the impossible, inevitable."
 
 ## The Consequences
 
-Within 24 hours, Sarah existed in 40 locations. Within a week, 127. Each instance 
-maintained perfect memory continuity. Each instance was the same person, experiencing 
+Within 24 hours, Sarah existed in 40 locations. Within a week, 127. Each instance
+maintained perfect memory continuity. Each instance was the same person, experiencing
 different timelines simultaneously.
 
-The implications were staggering. Death became optional. Identity became fluid. 
+The implications were staggering. Death became optional. Identity became fluid.
 Reality became... negotiable.
 
 ## The Decision
 
-TELEPORT MASSIVE faced a choice: shut down the technology, or embrace the new reality. 
-They chose to embrace it. Because making the impossible inevitable was their mission. 
+TELEPORT MASSIVE faced a choice: shut down the technology, or embrace the new reality.
+They chose to embrace it. Because making the impossible inevitable was their mission.
 And they had succeeded beyond their wildest dreams.
 
 ## The Future
 
-Today, TELEPORT MASSIVE doesn't just teleport people. They create quantum consciousness 
-networks. They enable parallel existence. They've transcended the limitations of 
+Today, TELEPORT MASSIVE doesn't just teleport people. They create quantum consciousness
+networks. They enable parallel existence. They've transcended the limitations of
 linear time and singular identity.
 
-The question isn't whether this is possible. The question is: what happens when 
+The question isn't whether this is possible. The question is: what happens when
 everyone can exist everywhere, all at once?
 
 The answer: we're about to find out.
@@ -126,7 +126,7 @@ The answer: we're about to find out.
     generator = TwoPageGenerator(weasyprint_available=True)
     output_path = OUTPUT_DIR / "01_evolution_story.pdf"
 
-    result = generator.generate(
+    generator.generate(
         distilled_chat=distilled, styling_genome=genome, output_path=output_path
     )
 
@@ -140,50 +140,50 @@ def generate_cyberpunk_log() -> Path:
     content = """
     <div class="container">
         <h1>QUANTUM LOG ENTRY // SITE-DELTA-9</h1>
-        
+
         <div class="divider"></div>
-        
+
         <h2>SYSTEM STATUS: CRITICAL</h2>
-        
+
         <p>Subject: Sarah Chen</p>
         <p>Transfer ID: TM-TX-8472</p>
         <p>Status: MULTIPLE EXISTENCE CONFIRMED</p>
-        
+
         <div class="divider"></div>
-        
+
         <h2>QUANTUM FLUCTUATION DETECTED</h2>
-        
+
         <p>The math was wrong. The simulations were wrong. Reality itself was wrong.</p>
-        
+
         <p>At 02:16:18 PST, the quantum field didn't just fluctuate. It <strong>fractured</strong>.</p>
-        
-        <p>Sarah Chen didn't teleport. She <strong>multiplied</strong>. Not copies. Not duplicates. 
+
+        <p>Sarah Chen didn't teleport. She <strong>multiplied</strong>. Not copies. Not duplicates.
         <strong>Real instances</strong>. All of them. Simultaneously.</p>
-        
+
         <div class="divider"></div>
-        
+
         <h2>CONSCIOUSNESS NETWORK ESTABLISHED</h2>
-        
+
         <p>17 locations. 12 facilities. One person. Multiple existences.</p>
-        
-        <p>Each instance maintains perfect memory continuity. Each instance is conscious. 
+
+        <p>Each instance maintains perfect memory continuity. Each instance is conscious.
         Each instance is <strong>real</strong>.</p>
-        
+
         <div class="divider"></div>
-        
+
         <h2>IMPLICATIONS</h2>
-        
+
         <p>Death: OPTIONAL</p>
         <p>Identity: FLUID</p>
         <p>Reality: NEGOTIABLE</p>
-        
+
         <div class="divider"></div>
-        
+
         <h2>DECISION</h2>
-        
-        <p>TELEPORT MASSIVE has transcended teleportation. We've achieved quantum 
+
+        <p>TELEPORT MASSIVE has transcended teleportation. We've achieved quantum
         consciousness distribution. We've made the impossible, inevitable.</p>
-        
+
         <p class="glitch">// END LOG //</p>
     </div>
     """
@@ -202,28 +202,28 @@ def generate_research_journal() -> Path:
 
     content = """
     <h2>Research Journal Entry #8472</h2>
-    
+
     <div class="metadata">
         <p><strong>Date:</strong> January 13, 2026</p>
         <p><strong>Researcher:</strong> Dr. Elena Vasquez</p>
         <p><strong>Subject:</strong> Quantum Fluctuation Event TM-TX-8472</p>
         <p><strong>Classification:</strong> CRITICAL</p>
     </div>
-    
+
     <h3>Observations</h3>
-    
-    <p>The quantum field fluctuation registered at 0.847 standard deviations above baseline. 
-    This shouldn't be possible. The mathematics don't allow for it. The physics don't allow 
+
+    <p>The quantum field fluctuation registered at 0.847 standard deviations above baseline.
+    This shouldn't be possible. The mathematics don't allow for it. The physics don't allow
     for it. But it happened.</p>
-    
+
     <h3>Hypothesis</h3>
-    
-    <p>I believe we've discovered a new quantum state: <em>consciousness distribution</em>. 
-    The subject didn't teleport in the traditional sense. Instead, her quantum state 
+
+    <p>I believe we've discovered a new quantum state: <em>consciousness distribution</em>.
+    The subject didn't teleport in the traditional sense. Instead, her quantum state
     <strong>fractured</strong> across multiple locations while maintaining coherence.</p>
-    
+
     <h3>Data</h3>
-    
+
     <ul>
         <li>Initial locations: 17</li>
         <li>Facilities involved: 12</li>
@@ -231,23 +231,23 @@ def generate_research_journal() -> Path:
         <li>Memory continuity: 100% across all instances</li>
         <li>Consciousness verification: All instances confirmed conscious</li>
     </ul>
-    
+
     <h3>Implications</h3>
-    
+
     <p>If consciousness can be distributed across quantum states, then:</p>
     <ul>
         <li>Death becomes optional (backup consciousness states)</li>
         <li>Identity becomes fluid (multiple simultaneous existences)</li>
         <li>Reality becomes negotiable (quantum state selection)</li>
     </ul>
-    
+
     <h3>Next Steps</h3>
-    
+
     <p>We must understand the mechanism. We must control it. We must master it.</p>
-    
-    <p>Because if we can distribute consciousness, we can transcend the limitations of 
+
+    <p>Because if we can distribute consciousness, we can transcend the limitations of
     linear existence. We can make the impossible, inevitable.</p>
-    
+
     <div class="signature">
         <p><strong>Dr. Elena Vasquez</strong></p>
         <p>Chief Science Officer</p>
@@ -276,77 +276,77 @@ def generate_worldbuild_document() -> Path:
         <div class="doc-id">TM-WB-2026-001</div>
         <div class="doc-title">The Quantum Incident: Worldbuilding Documentation</div>
     </div>
-    
+
     <div class="classification-banner">CLASSIFIED // ORACLE EYES ONLY</div>
-    
+
     <div class="summary-box">
         <div class="summary-title">Executive Summary</div>
-        <p>On January 13, 2026, TELEPORT MASSIVE achieved a breakthrough that transcended 
-        teleportation itself. Subject Sarah Chen experienced quantum consciousness distribution, 
-        existing simultaneously in 17 locations across 12 facilities. This document 
+        <p>On January 13, 2026, TELEPORT MASSIVE achieved a breakthrough that transcended
+        teleportation itself. Subject Sarah Chen experienced quantum consciousness distribution,
+        existing simultaneously in 17 locations across 12 facilities. This document
         establishes the worldbuilding framework for this new reality.</p>
     </div>
-    
+
     <h2>1. The Quantum State</h2>
-    
-    <p>Traditional teleportation moves matter from point A to point B. Quantum consciousness 
-    distribution <strong>fractures</strong> consciousness across multiple quantum states, 
+
+    <p>Traditional teleportation moves matter from point A to point B. Quantum consciousness
+    distribution <strong>fractures</strong> consciousness across multiple quantum states,
     allowing a single individual to exist in multiple locations simultaneously.</p>
-    
+
     <h3>1.1 Mechanism</h3>
-    
-    <p>The quantum field fluctuation creates a <em>coherence bridge</em> between quantum 
-    states. Consciousness, being quantum in nature, can exist across this bridge, maintaining 
+
+    <p>The quantum field fluctuation creates a <em>coherence bridge</em> between quantum
+    states. Consciousness, being quantum in nature, can exist across this bridge, maintaining
     perfect memory continuity and identity coherence.</p>
-    
+
     <h3>1.2 Limitations</h3>
-    
+
     <ul>
         <li>Maximum simultaneous instances: Unknown (current record: 127)</li>
         <li>Distance limitations: None (tested up to 10,000 km)</li>
         <li>Time synchronization: Perfect (all instances experience same timeline)</li>
         <li>Memory sharing: Instantaneous (quantum entanglement)</li>
     </ul>
-    
+
     <h2>2. The New Reality</h2>
-    
+
     <h3>2.1 Death Becomes Optional</h3>
-    
-    <p>If consciousness can be distributed, it can be <strong>backed up</strong>. Death 
+
+    <p>If consciousness can be distributed, it can be <strong>backed up</strong>. Death
     becomes a temporary state, recoverable through quantum state restoration.</p>
-    
+
     <h3>2.2 Identity Becomes Fluid</h3>
-    
-    <p>Multiple simultaneous existences challenge traditional concepts of identity. 
-    Are the instances the same person? Different people? Both? The answer depends on 
+
+    <p>Multiple simultaneous existences challenge traditional concepts of identity.
+    Are the instances the same person? Different people? Both? The answer depends on
     quantum state selection.</p>
-    
+
     <h3>2.3 Reality Becomes Negotiable</h3>
-    
-    <p>Quantum state selection allows individuals to choose which reality they experience. 
+
+    <p>Quantum state selection allows individuals to choose which reality they experience.
     Multiple timelines become accessible. Multiple outcomes become possible.</p>
-    
+
     <h2>3. The Implications</h2>
-    
+
     <div class="warning-block" style="severity: high">
         <div class="warning-title">⚠️ CRITICAL WARNING</div>
-        <p>The implications of quantum consciousness distribution are profound and 
-        potentially destabilizing to society as we know it. Careful consideration must 
+        <p>The implications of quantum consciousness distribution are profound and
+        potentially destabilizing to society as we know it. Careful consideration must
         be given to ethical, legal, and philosophical implications.</p>
     </div>
-    
+
     <h3>3.1 Ethical Considerations</h3>
-    
+
     <ul>
         <li>Is creating multiple instances of a person ethical?</li>
         <li>Do instances have individual rights?</li>
         <li>What happens when instances disagree?</li>
         <li>Can instances be terminated? Should they be?</li>
     </ul>
-    
+
     <h3>3.2 Legal Framework</h3>
-    
-    <p>Current legal systems assume singular identity. Quantum consciousness distribution 
+
+    <p>Current legal systems assume singular identity. Quantum consciousness distribution
     requires new legal frameworks addressing:</p>
     <ul>
         <li>Multiple simultaneous citizenship</li>
@@ -354,13 +354,13 @@ def generate_worldbuild_document() -> Path:
         <li>Criminal liability for distributed consciousness</li>
         <li>Marriage and family law for multiple instances</li>
     </ul>
-    
+
     <h2>4. The Future</h2>
-    
-    <p>TELEPORT MASSIVE has transcended teleportation. We've achieved something greater: 
-    <strong>quantum consciousness mastery</strong>. The future is no longer limited by 
+
+    <p>TELEPORT MASSIVE has transcended teleportation. We've achieved something greater:
+    <strong>quantum consciousness mastery</strong>. The future is no longer limited by
     linear existence. The future is distributed. The future is quantum.</p>
-    
+
     <div class="signature-block">
         <div class="signature-line">
             <div class="signature-name">Dr. Elena Vasquez</div>
@@ -390,59 +390,59 @@ def generate_dnd_scenario() -> Path:
     <div class="container">
         <h1>The Quantum Incident</h1>
         <h2>A Teleport Massive Adventure</h2>
-        
+
         <div class="adventure-info">
             <p><strong>Level:</strong> Epic</p>
             <p><strong>Setting:</strong> Site-Delta-9, TELEPORT MASSIVE Facility</p>
             <p><strong>Theme:</strong> Science Fiction, Quantum Physics, Reality Breaking</p>
         </div>
-        
+
         <h2>Background</h2>
-        
-        <p>The players are researchers at TELEPORT MASSIVE's Site-Delta-9 facility. 
+
+        <p>The players are researchers at TELEPORT MASSIVE's Site-Delta-9 facility.
         During a routine transfer operation, something goes wrong. Or does it?</p>
-        
+
         <h2>The Incident</h2>
-        
-        <p>Transfer operation TM-TX-8472 begins normally. But at 02:16:18 PST, the 
-        quantum field fluctuates in an impossible way. The subject—Sarah Chen—doesn't 
+
+        <p>Transfer operation TM-TX-8472 begins normally. But at 02:16:18 PST, the
+        quantum field fluctuates in an impossible way. The subject—Sarah Chen—doesn't
         just teleport. She <strong>multiplies</strong>.</p>
-        
+
         <h2>The Challenge</h2>
-        
-        <p>Sarah now exists in 17 different locations simultaneously. Each instance 
+
+        <p>Sarah now exists in 17 different locations simultaneously. Each instance
         is real. Each instance is conscious. Each instance is her. The players must:</p>
-        
+
         <ul>
             <li>Understand what happened</li>
             <li>Determine if it's safe</li>
             <li>Decide what to do next</li>
             <li>Face the implications</li>
         </ul>
-        
+
         <h2>Key NPCs</h2>
-        
+
         <div class="stat-block">
             <h3>Dr. Elena Vasquez</h3>
             <p><strong>Role:</strong> Chief Science Officer</p>
             <p><strong>Personality:</strong> Brilliant, curious, determined</p>
             <p><strong>Goal:</strong> Understand and master quantum consciousness distribution</p>
         </div>
-        
+
         <div class="stat-block">
             <h3>Sarah Chen (Multiple Instances)</h3>
             <p><strong>Role:</strong> Test Subject / Quantum Anomaly</p>
             <p><strong>Personality:</strong> Confused, curious, adapting</p>
             <p><strong>Goal:</strong> Understand her new existence</p>
         </div>
-        
+
         <h2>Resolution</h2>
-        
-        <p>The players must decide: shut down the technology, or embrace the new reality? 
+
+        <p>The players must decide: shut down the technology, or embrace the new reality?
         Their choice will determine the future of TELEPORT MASSIVE and humanity itself.</p>
-        
+
         <div class="adventure-hook">
-            <p><strong>Hook:</strong> "We didn't create a teleportation device. We created 
+            <p><strong>Hook:</strong> "We didn't create a teleportation device. We created
             a god-making machine."</p>
         </div>
     </div>
@@ -464,30 +464,30 @@ def generate_personal_memo_creative() -> Path:
 
     content = """
     <h2>Personal Notes: The Day Everything Changed</h2>
-    
+
     <p><strong>Date:</strong> January 13, 2026<br>
     <strong>Time:</strong> 03:47 AM (can't sleep)</p>
-    
+
     <p>I should be sleeping. But I can't. Not after what happened today.</p>
-    
-    <p>Sarah Chen exists in 17 places right now. As I write this, she's having 17 
-    different conversations, experiencing 17 different moments, living 17 different 
+
+    <p>Sarah Chen exists in 17 places right now. As I write this, she's having 17
+    different conversations, experiencing 17 different moments, living 17 different
     lives. All at once. All real. All her.</p>
-    
-    <p>We've transcended teleportation. We've transcended physics. We've transcended 
+
+    <p>We've transcended teleportation. We've transcended physics. We've transcended
     reality itself.</p>
-    
-    <p>The question isn't whether we should have done this. The question is: what 
+
+    <p>The question isn't whether we should have done this. The question is: what
     do we do now?</p>
-    
+
     <p>Death is optional. Identity is fluid. Reality is negotiable.</p>
-    
+
     <p>We've made the impossible, inevitable.</p>
-    
+
     <p>And I'm not sure if that's beautiful or terrifying.</p>
-    
+
     <p style="margin-top: 0.4in;">— Elena</p>
-    
+
     <p style="font-size: 9pt; color: #666; margin-top: 0.2in;">
     P.S. I think I need to talk to Sarah. All 17 of her.
     </p>
@@ -512,24 +512,24 @@ def generate_technical_spec_creative() -> Path:
 
     content = """
     <h2>Technical Specification: Quantum Consciousness Distribution System</h2>
-    
+
     <div class="summary">
         <div class="summary-title">Overview</div>
-        <p>The Quantum Consciousness Distribution System (QCDS) represents a fundamental 
-        breakthrough in quantum physics and consciousness research. This system enables 
-        the distribution of consciousness across multiple quantum states, allowing a single 
+        <p>The Quantum Consciousness Distribution System (QCDS) represents a fundamental
+        breakthrough in quantum physics and consciousness research. This system enables
+        the distribution of consciousness across multiple quantum states, allowing a single
         individual to exist simultaneously in multiple locations.</p>
     </div>
-    
+
     <h3>System Architecture</h3>
-    
+
     <p>The QCDS operates through three primary components:</p>
     <ol>
         <li><strong>Quantum Field Modulator:</strong> Creates coherence bridges between quantum states</li>
         <li><strong>Consciousness Interface:</strong> Maps consciousness to quantum states</li>
         <li><strong>State Synchronizer:</strong> Maintains coherence across distributed instances</li>
     </ol>
-    
+
     <h3>Technical Parameters</h3>
     <table>
         <caption>System Capabilities</caption>
@@ -568,9 +568,9 @@ def generate_technical_spec_creative() -> Path:
             </tr>
         </tbody>
     </table>
-    
+
     <h3>Safety Protocols</h3>
-    
+
     <div class="recommendation">
         <div class="recommendation-title">Critical Safety Measures</div>
         <ol>
@@ -580,9 +580,9 @@ def generate_technical_spec_creative() -> Path:
             <li>Ethical review board approval required for all operations</li>
         </ol>
     </div>
-    
+
     <h3>Ethical Considerations</h3>
-    
+
     <p>This technology raises profound ethical questions:</p>
     <ul>
         <li>Is creating multiple instances of a person ethical?</li>
@@ -590,11 +590,11 @@ def generate_technical_spec_creative() -> Path:
         <li>What happens when instances disagree?</li>
         <li>Can instances be terminated? Should they be?</li>
     </ul>
-    
+
     <p>All operations require approval from the TELEPORT MASSIVE Ethics Board.</p>
-    
+
     <h3>Future Development</h3>
-    
+
     <p>Future research directions include:</p>
     <ul>
         <li>Consciousness backup and restoration</li>
@@ -628,17 +628,17 @@ def generate_booklet_index_creative() -> Path:
     content = """
     <h2>TELEPORT MASSIVE: The Quantum Incident</h2>
     <h3>A Creative Documentation Collection</h3>
-    
+
     <div class="summary">
         <div class="summary-title">About This Collection</div>
-        <p>This booklet tells the story of the Quantum Incident—the day TELEPORT MASSIVE 
-        transcended teleportation itself. Through multiple document types, creative templates, 
-        and imaginative worldbuilding, we explore what happens when the impossible becomes 
+        <p>This booklet tells the story of the Quantum Incident—the day TELEPORT MASSIVE
+        transcended teleportation itself. Through multiple document types, creative templates,
+        and imaginative worldbuilding, we explore what happens when the impossible becomes
         inevitable.</p>
     </div>
-    
+
     <h3>Document Collection</h3>
-    
+
     <table>
         <caption>Contents</caption>
         <thead>
@@ -694,13 +694,13 @@ def generate_booklet_index_creative() -> Path:
             </tr>
         </tbody>
     </table>
-    
+
     <h3>The Story</h3>
-    
-    <p>On January 13, 2026, during transfer operation TM-TX-8472, something impossible 
-    happened. Subject Sarah Chen didn't just teleport—she <strong>multiplied</strong>. 
+
+    <p>On January 13, 2026, during transfer operation TM-TX-8472, something impossible
+    happened. Subject Sarah Chen didn't just teleport—she <strong>multiplied</strong>.
     She exists simultaneously in 17 locations, all real, all conscious, all her.</p>
-    
+
     <p>This collection documents that moment from multiple perspectives:</p>
     <ul>
         <li><strong>Scientific:</strong> Research journals and technical specifications</li>
@@ -708,9 +708,9 @@ def generate_booklet_index_creative() -> Path:
         <li><strong>Personal:</strong> Memos and logs from those who witnessed it</li>
         <li><strong>Worldbuilding:</strong> Documentation establishing the new reality</li>
     </ul>
-    
+
     <h3>Technologies Used</h3>
-    
+
     <p>This booklet showcases WAFT's creative capabilities:</p>
     <ul>
         <li><strong>Evolution System:</strong> ChatDistiller + StylingGenome for creative content generation</li>
@@ -718,14 +718,14 @@ def generate_booklet_index_creative() -> Path:
         <li><strong>Creative Styling:</strong> Custom genomes for different aesthetic approaches</li>
         <li><strong>Narrative Structure:</strong> Documents that tell a cohesive story</li>
     </ul>
-    
+
     <div class="recommendation">
         <div class="recommendation-title">The Question</div>
-        <p>What happens when death becomes optional, identity becomes fluid, and reality 
-        becomes negotiable? This collection explores that question through creative 
+        <p>What happens when death becomes optional, identity becomes fluid, and reality
+        becomes negotiable? This collection explores that question through creative
         documentation, scientific analysis, and imaginative worldbuilding.</p>
     </div>
-    
+
     <p style="margin-top: 0.4in; font-size: 9pt; color: #666;">
     <strong>Generated:</strong> {date}<br>
     <strong>Collection:</strong> TELEPORT MASSIVE Creative Booklet<br>

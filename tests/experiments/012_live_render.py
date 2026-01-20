@@ -135,7 +135,7 @@ async def run_experiment():
 
     observer = TheObserver(project_path=project_root)
     slicer = TheSlicer(biome=biome, observer=observer)
-    reaper = TheReaper(biome=biome, observer=observer)
+    TheReaper(biome=biome, observer=observer)
     viewer = PetriViewer(use_colors=True)
 
     print("✓ TheSlicer Initialized")

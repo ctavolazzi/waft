@@ -165,7 +165,7 @@ def build_late_night_content(status: dict[str, Any], insights: str | None = None
     content_parts = []
 
     # Header
-    time_label = "Late Night" if status["is_late_night"] else "Evening"
+    "Late Night" if status["is_late_night"] else "Evening"
     content_parts.append(f"<h2>Late Night Report - {status['day_of_week']}, {status['date']}</h2>")
     content_parts.append(f"""
     <div class="status-box">

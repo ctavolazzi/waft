@@ -970,7 +970,7 @@ def finding_log(
         insight_result = gamification.award_insight(10.0, reason="Logged finding")
 
         # Check for Knowledge Architect achievement (50 findings)
-        stats = gamification.get_stats()
+        gamification.get_stats()
         # Count findings from history
         findings_count = sum(
             1
@@ -1401,7 +1401,7 @@ def decide(
     # Default: Show usage
     from .core.decision_cli import DecisionCLI
 
-    cli = DecisionCLI(project_path)
+    DecisionCLI(project_path)
 
     console.print("[bold cyan]🎯 Decision Matrix Analysis[/bold cyan]\n")
     console.print("[dim]The /decide command uses DecisionCLI for standardized calculations.")

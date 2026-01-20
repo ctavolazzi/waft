@@ -34,7 +34,6 @@ def generate_icicle(
         Path to generated PDF
     """
     # Format levels if provided
-    levels_str = ""
     if levels:
         # Levels would need to be formatted as Typst array
         # For now, we'll just include them in content

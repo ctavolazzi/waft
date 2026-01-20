@@ -154,7 +154,7 @@ def _build_character_sheet_latex(character: Any, use_dndbook_class: bool) -> str
     if not use_dndbook_class:
         latex += r"\usepackage[layout=true]{dnd}" + "\n"
 
-    # Pre-compute proficiency checkmarks for Python 3.10 compatibility
+    # Extract backslash sequences for Python 3.10 compatibility
     checkmark = "\\checkmark"
     str_prof = checkmark if "STR" in character.proficient_saves else ""
     dex_prof = checkmark if "DEX" in character.proficient_saves else ""

@@ -149,21 +149,16 @@ def bootstrap_epistemic_state(
             output = json.loads(result.stdout)
             if output.get("ok"):
                 print("✓ Preflight submitted")
-                preflight_success = True
             else:
                 print(f"⚠️  Preflight returned: {output.get('message', 'unknown error')}")
-                preflight_success = False
         except json.JSONDecodeError:
             # Non-JSON output might still be success
             if result.returncode == 0:
                 print("✓ Preflight submitted (non-JSON response)")
-                preflight_success = True
             else:
                 print(f"⚠️  Preflight failed: {result.stderr}")
-                preflight_success = False
     except (subprocess.CalledProcessError, subprocess.TimeoutExpired, FileNotFoundError) as e:
         print(f"⚠️  Preflight submission failed: {e}")
-        preflight_success = False
 
     # Submit postflight (same vectors for initial state)
     print("→ Submitting postflight assessment...")
@@ -188,21 +183,16 @@ def bootstrap_epistemic_state(
             output = json.loads(result.stdout)
             if output.get("ok"):
                 print("✓ Postflight submitted")
-                postflight_success = True
             else:
                 print(f"⚠️  Postflight returned: {output.get('message', 'unknown error')}")
-                postflight_success = False
         except json.JSONDecodeError:
             # Non-JSON output might still be success
             if result.returncode == 0:
                 print("✓ Postflight submitted (non-JSON response)")
-                postflight_success = True
             else:
                 print(f"⚠️  Postflight failed: {result.stderr}")
-                postflight_success = False
     except (subprocess.CalledProcessError, subprocess.TimeoutExpired, FileNotFoundError) as e:
         print(f"⚠️  Postflight submission failed: {e}")
-        postflight_success = False
 
     # Verify state is now available
     print()

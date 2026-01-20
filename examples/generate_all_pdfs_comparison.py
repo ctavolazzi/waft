@@ -439,9 +439,7 @@ def process_markdown_content(md_content: str, metadata: dict) -> str:
     processed_lines = []
 
     # Skip YAML frontmatter
-    skip_frontmatter = False
     if lines and lines[0].strip() == "---":
-        skip_frontmatter = True
         i = 1
         while i < len(lines) and lines[i].strip() != "---":
             i += 1
@@ -453,7 +451,6 @@ def process_markdown_content(md_content: str, metadata: dict) -> str:
     skip_abstract = False
     skip_references = False
     skip_metadata_lines = False
-    skip_frontmatter_done = False
 
     for i, line in enumerate(lines):
         line_stripped = line.strip()

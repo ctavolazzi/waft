@@ -605,8 +605,8 @@ def generate_meeting_notes():
     """Generate meeting notes."""
     content = """
 # Team Standup Notes
-**Date:** January 13, 2026  
-**Time:** 10:00 AM - 10:15 AM  
+**Date:** January 13, 2026
+**Time:** 10:00 AM - 10:15 AM
 **Attendees:** Alice, Bob, Charlie, Diana
 
 ---
@@ -690,8 +690,8 @@ def generate_meeting_notes():
 
 ## Next Meeting
 
-**Date:** January 14, 2026  
-**Time:** 10:00 AM  
+**Date:** January 14, 2026
+**Time:** 10:00 AM
 **Focus:** Review blockers and prepare for release
 """
 
@@ -705,7 +705,7 @@ def generate_personal_journal():
     """Generate a personal journal entry."""
     content = """
 # Developer's Journal
-**Date:** January 13, 2026  
+**Date:** January 13, 2026
 **Time:** Late evening
 
 ---
@@ -1276,93 +1276,93 @@ def generate_booklet_index():
 This booklet contains {15} diverse PDF documents showcasing the full range of WAFT's PDF generation capabilities.
 
 ### 1. Poetry Collection
-**File:** `01_poetry_collection.pdf`  
-**Style:** Premium  
-**Type:** Creative writing, poetry  
+**File:** `01_poetry_collection.pdf`
+**Style:** Premium
+**Type:** Creative writing, poetry
 **Method:** Evolution-based generation
 
 ### 2. Technical Manifesto
-**File:** `02_technical_manifesto.pdf`  
-**Style:** Clinical Standard  
-**Type:** Technical documentation, principles  
+**File:** `02_technical_manifesto.pdf`
+**Style:** Clinical Standard
+**Type:** Technical documentation, principles
 **Method:** Evolution-based generation
 
 ### 3. Philosophical Reflection
-**File:** `03_philosophical_reflection.pdf`  
-**Style:** Premium  
-**Type:** Philosophy, reflection  
+**File:** `03_philosophical_reflection.pdf`
+**Style:** Premium
+**Type:** Philosophy, reflection
 **Method:** Evolution-based generation
 
 ### 4. Recipe Book
-**File:** `04_recipe_book.pdf`  
-**Style:** Professional  
-**Type:** Creative documentation, recipes  
+**File:** `04_recipe_book.pdf`
+**Style:** Professional
+**Type:** Creative documentation, recipes
 **Method:** Evolution-based generation
 
 ### 5. Travel Guide
-**File:** `05_travel_guide.pdf`  
-**Style:** Field Guide Template  
-**Type:** Guide, documentation  
+**File:** `05_travel_guide.pdf`
+**Style:** Field Guide Template
+**Type:** Guide, documentation
 **Method:** Template-based generation
 
 ### 6. Scientific Paper
-**File:** `06_scientific_paper.pdf`  
-**Style:** Scientific  
-**Type:** Academic paper, research  
+**File:** `06_scientific_paper.pdf`
+**Style:** Scientific
+**Type:** Academic paper, research
 **Method:** Scientific paper generation
 
 ### 7. Code Review Guide
-**File:** `07_code_review_guide.pdf`  
-**Style:** Clinical Standard  
-**Type:** Guide, best practices  
+**File:** `07_code_review_guide.pdf`
+**Style:** Clinical Standard
+**Type:** Guide, best practices
 **Method:** Evolution-based generation
 
 ### 8. Meeting Notes
-**File:** `08_meeting_notes.pdf`  
-**Style:** Professional  
-**Type:** Notes, documentation  
+**File:** `08_meeting_notes.pdf`
+**Style:** Professional
+**Type:** Notes, documentation
 **Method:** Evolution-based generation
 
 ### 9. Personal Journal
-**File:** `09_personal_journal.pdf`  
-**Style:** Premium  
-**Type:** Personal writing, journal  
+**File:** `09_personal_journal.pdf`
+**Style:** Premium
+**Type:** Personal writing, journal
 **Method:** Evolution-based generation
 
 ### 10. Mathematical Proof
-**File:** `10_mathematical_proof.pdf`  
-**Style:** Clinical Standard  
-**Type:** Mathematics, proof  
+**File:** `10_mathematical_proof.pdf`
+**Style:** Clinical Standard
+**Type:** Mathematics, proof
 **Method:** Evolution-based generation
 
 ### 11. Design System Guide
-**File:** `11_design_system.pdf`  
-**Style:** Field Guide Template  
-**Type:** Guide, design system  
+**File:** `11_design_system.pdf`
+**Style:** Field Guide Template
+**Type:** Guide, design system
 **Method:** Template-based generation
 
 ### 12. Creative Writing
-**File:** `12_creative_writing.pdf`  
-**Style:** Premium  
-**Type:** Fiction, creative writing  
+**File:** `12_creative_writing.pdf`
+**Style:** Premium
+**Type:** Fiction, creative writing
 **Method:** Evolution-based generation
 
 ### 13. Two-Page Manifesto
-**File:** `13_two_page_manifesto.pdf`  
-**Style:** Clinical Standard  
-**Type:** Manifesto, constraint  
+**File:** `13_two_page_manifesto.pdf`
+**Style:** Clinical Standard
+**Type:** Manifesto, constraint
 **Method:** Two-page constraint generation
 
 ### 14. LaTeX Document
-**File:** `14_latex_document.pdf`  
-**Style:** LaTeX  
-**Type:** Technical, LaTeX  
+**File:** `14_latex_document.pdf`
+**Style:** LaTeX
+**Type:** Technical, LaTeX
 **Method:** LaTeX generation
 
 ### 15. Booklet Index (This Document)
-**File:** `00_booklet_index.pdf`  
-**Style:** Clinical Standard  
-**Type:** Index, documentation  
+**File:** `00_booklet_index.pdf`
+**Style:** Clinical Standard
+**Type:** Index, documentation
 **Method:** Evolution-based generation
 
 ---

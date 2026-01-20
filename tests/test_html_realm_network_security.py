@@ -184,7 +184,7 @@ def test_parse_html_safely_malformed_html(temp_project):
     malformed_file.write_text("<html><body><p>Unclosed tag")
 
     # Should not crash, but may return None or partial result
-    result = parse_html_safely(malformed_file)
+    parse_html_safely(malformed_file)
     # BeautifulSoup is lenient, so it might still parse
     # The important thing is it doesn't crash
 

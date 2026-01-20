@@ -245,7 +245,7 @@ async def main():
 
     # Show agent memories
     print("\n🧠 Agent Memories:")
-    for agent_id, agent in list(town.agents.items())[:3]:
+    for _agent_id, agent in list(town.agents.items())[:3]:
         print(f"  {agent.name}: {len(agent.memories)} memories")
         if agent.memories:
             print(f"    Latest: {agent.memories[-1]['summary']}")

@@ -236,7 +236,7 @@ class OracleJournal:
 
     def _learn_from_consultation(self, entry: dict[str, Any]) -> None:
         """Learn patterns from a consultation."""
-        phase = entry.get("epistemic_phase", "UNKNOWN")
+        entry.get("epistemic_phase", "UNKNOWN")
         question = entry.get("question", "")
 
         # Track question patterns

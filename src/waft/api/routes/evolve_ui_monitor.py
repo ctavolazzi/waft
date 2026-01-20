@@ -287,7 +287,7 @@ def scan_ui_evolution_directory(project_path: Path) -> dict[str, dict[str, Any]]
             logger.warning(f"Error scanning proof_cases: {e}")
 
     # Determine phase for each run
-    for run_id, run_data in runs.items():
+    for _run_id, run_data in runs.items():
         artifacts = Artifacts(**run_data["artifacts"])
         run_data["phase"] = determine_phase(artifacts)
 
@@ -308,7 +308,7 @@ async def get_evolve_ui_runs(request: Request):
 
         # Convert to response models
         runs_list = []
-        for run_id, run_data in sorted(runs_dict.items(), reverse=True):
+        for _run_id, run_data in sorted(runs_dict.items(), reverse=True):
             artifacts = Artifacts(**run_data["artifacts"])
             run = EvolveUIRun(
                 run_id=run_data["run_id"],

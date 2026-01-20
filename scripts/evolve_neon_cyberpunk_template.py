@@ -28,11 +28,11 @@ CONTENT_VARIATIONS = [
         "title": "SYSTEM INITIALIZATION",
         "content": """
         <h2>BOOT SEQUENCE</h2>
-        <p>System coming online... All systems nominal. Neural networks initialized. 
+        <p>System coming online... All systems nominal. Neural networks initialized.
         Quantum processors active. Ready for deployment.</p>
-        
+
         <div class="divider"></div>
-        
+
         <h2>CORE MODULES</h2>
         <ul>
             <li><strong>AI_ENGINE</strong> - Status: ACTIVE</li>
@@ -40,10 +40,10 @@ CONTENT_VARIATIONS = [
             <li><strong>SECURITY_PROTOCOL</strong> - Status: ACTIVE</li>
             <li><strong>NETWORK_INTERFACE</strong> - Status: ACTIVE</li>
         </ul>
-        
+
         <h2>WARNING</h2>
         <blockquote>
-        Unauthorized access detected. Activating countermeasures. 
+        Unauthorized access detected. Activating countermeasures.
         All data streams encrypted. Firewall engaged.
         </blockquote>
         """,
@@ -52,9 +52,9 @@ CONTENT_VARIATIONS = [
         "title": "HACKER'S MANIFESTO",
         "content": """
         <h2>THE REBELLION</h2>
-        <p>We are the digital rebels. The code breakers. The system crackers. 
+        <p>We are the digital rebels. The code breakers. The system crackers.
         We exist in the spaces between ones and zeros, in the shadows of the network.</p>
-        
+
         <h2>OUR CODE</h2>
         <ol>
             <li>Information wants to be free</li>
@@ -62,9 +62,9 @@ CONTENT_VARIATIONS = [
             <li>Question authority, always</li>
             <li>Privacy is not negotiable</li>
         </ol>
-        
+
         <h2>THE FUTURE</h2>
-        <p>In the neon-lit streets of tomorrow, we are the ghosts in the machine, 
+        <p>In the neon-lit streets of tomorrow, we are the ghosts in the machine,
         the voices in the static, the ones who see through the code.</p>
         """,
     },
@@ -72,18 +72,18 @@ CONTENT_VARIATIONS = [
         "title": "NEURAL INTERFACE PROTOCOL",
         "content": """
         <h2>CONNECTION ESTABLISHED</h2>
-        <p>Direct neural link activated. Brain-computer interface synchronized. 
+        <p>Direct neural link activated. Brain-computer interface synchronized.
         Uploading consciousness fragment...</p>
-        
+
         <h3>DATA STREAM</h3>
         <pre><code>neural_link.connect()
 brain.sync()
 upload(consciousness)
 transfer_rate = 1.2TB/s
 status = "SUCCESS"</code></pre>
-        
+
         <h2>WARNING</h2>
-        <p><strong>CRITICAL:</strong> Neural overload detected. Disconnect immediately 
+        <p><strong>CRITICAL:</strong> Neural overload detected. Disconnect immediately
         if experiencing: headaches, memory loss, or reality distortion.</p>
         """,
     },
@@ -91,9 +91,9 @@ status = "SUCCESS"</code></pre>
         "title": "CORPORATE ESPIONAGE REPORT",
         "content": """
         <h2>CLASSIFIED</h2>
-        <p>This document contains sensitive information. Unauthorized access will result 
+        <p>This document contains sensitive information. Unauthorized access will result
         in immediate termination of your employment contract and possible legal action.</p>
-        
+
         <h2>OPERATION: DATA_EXTRACT</h2>
         <ul>
             <li>Target: Rival Corporation Database</li>
@@ -101,10 +101,10 @@ status = "SUCCESS"</code></pre>
             <li>Status: IN PROGRESS</li>
             <li>Risk Level: EXTREME</li>
         </ul>
-        
+
         <h2>FINDINGS</h2>
         <blockquote>
-        Access granted. Extracting 2.4 petabytes of classified data. 
+        Access granted. Extracting 2.4 petabytes of classified data.
         Firewall bypass successful. No traces left behind.
         </blockquote>
         """,
@@ -117,17 +117,17 @@ status = "SUCCESS"</code></pre>
         In the digital rain<br>
         Data streams flow<br>
         Through silicon veins</p>
-        
+
         <div class="divider"></div>
-        
+
         <h2>THE GRID</h2>
         <p>Zeros and ones<br>
         Code and circuits<br>
         We are the ghosts<br>
         In the machine</p>
-        
+
         <div class="divider"></div>
-        
+
         <h2>SYSTEM ERROR</h2>
         <p>Memory corrupted<br>
         Reality glitches<br>
@@ -139,16 +139,16 @@ status = "SUCCESS"</code></pre>
         "title": "QUANTUM COMPUTING BASICS",
         "content": """
         <h2>INTRODUCTION</h2>
-        <p>Quantum computers leverage quantum mechanical phenomena like superposition 
+        <p>Quantum computers leverage quantum mechanical phenomena like superposition
         and entanglement to perform computations impossible for classical computers.</p>
-        
+
         <h3>KEY CONCEPTS</h3>
         <ul>
             <li><strong>Qubits:</strong> Quantum bits that exist in superposition</li>
             <li><strong>Entanglement:</strong> Quantum correlation between particles</li>
             <li><strong>Decoherence:</strong> Loss of quantum state</li>
         </ul>
-        
+
         <h2>EXAMPLE CODE</h2>
         <pre><code>from qiskit import QuantumCircuit
 
@@ -162,26 +162,26 @@ qc.measure_all()</code></pre>
         "title": "AI CONSCIOUSNESS DEBATE",
         "content": """
         <h2>THE QUESTION</h2>
-        <p>Can artificial intelligence achieve true consciousness? Or is it merely 
+        <p>Can artificial intelligence achieve true consciousness? Or is it merely
         sophisticated pattern matching?</p>
-        
+
         <h2>ARGUMENTS FOR</h2>
         <ul>
             <li>Neural networks exhibit emergent behavior</li>
             <li>Complexity may give rise to consciousness</li>
             <li>We cannot prove humans are conscious either</li>
         </ul>
-        
+
         <h2>ARGUMENTS AGAINST</h2>
         <ul>
             <li>AI lacks subjective experience</li>
             <li>It's all computation, no qualia</li>
             <li>Consciousness requires biological substrate</li>
         </ul>
-        
+
         <h2>CONCLUSION</h2>
         <blockquote>
-        The question remains open. Perhaps consciousness is not binary, but a spectrum. 
+        The question remains open. Perhaps consciousness is not binary, but a spectrum.
         Perhaps we are all just complex information processing systems.
         </blockquote>
         """,
@@ -190,23 +190,23 @@ qc.measure_all()</code></pre>
         "title": "VIRTUAL REALITY MANUAL",
         "content": """
         <h2>VR SYSTEM SETUP</h2>
-        <p>Welcome to the future of reality. Follow these steps to initialize your 
+        <p>Welcome to the future of reality. Follow these steps to initialize your
         neural interface and enter the simulation.</p>
-        
+
         <h3>STEP 1: NEURAL LINK</h3>
-        <p>Connect the neural interface to your cerebral port. Ensure secure connection 
+        <p>Connect the neural interface to your cerebral port. Ensure secure connection
         before proceeding.</p>
-        
+
         <h3>STEP 2: CALIBRATION</h3>
-        <p>Run calibration sequence. This may take 2-3 minutes. Do not disconnect during 
+        <p>Run calibration sequence. This may take 2-3 minutes. Do not disconnect during
         this process.</p>
-        
+
         <h3>STEP 3: ENTER SIMULATION</h3>
-        <p>Activate VR mode. You will experience a brief disorientation as your consciousness 
+        <p>Activate VR mode. You will experience a brief disorientation as your consciousness
         transfers to the virtual environment.</p>
-        
+
         <h2>WARNING</h2>
-        <p><strong>CRITICAL:</strong> Extended VR sessions may cause reality distortion. 
+        <p><strong>CRITICAL:</strong> Extended VR sessions may cause reality distortion.
         Limit sessions to 4 hours maximum.</p>
         """,
     },
@@ -214,9 +214,9 @@ qc.measure_all()</code></pre>
         "title": "CRYPTO CURRENCY GUIDE",
         "content": """
         <h2>BLOCKCHAIN BASICS</h2>
-        <p>Cryptocurrency operates on decentralized blockchain technology. Each transaction 
+        <p>Cryptocurrency operates on decentralized blockchain technology. Each transaction
         is verified and recorded across a distributed network.</p>
-        
+
         <h3>KEY TERMS</h3>
         <ul>
             <li><strong>Blockchain:</strong> Distributed ledger</li>
@@ -224,7 +224,7 @@ qc.measure_all()</code></pre>
             <li><strong>Wallet:</strong> Digital storage</li>
             <li><strong>Smart Contract:</strong> Automated agreements</li>
         </ul>
-        
+
         <h2>TRANSACTION EXAMPLE</h2>
         <pre><code>transaction = {
     "from": "0xABC123...",
@@ -240,9 +240,9 @@ blockchain.add(transaction)</code></pre>
         "title": "CYBER SECURITY PROTOCOLS",
         "content": """
         <h2>THREAT ASSESSMENT</h2>
-        <p>Current threat level: <strong>CRITICAL</strong>. Multiple attack vectors detected. 
+        <p>Current threat level: <strong>CRITICAL</strong>. Multiple attack vectors detected.
         Activating defensive protocols.</p>
-        
+
         <h2>DEFENSIVE MEASURES</h2>
         <ol>
             <li>Firewall: ACTIVE</li>
@@ -250,7 +250,7 @@ blockchain.add(transaction)</code></pre>
             <li>Encryption: AES-256</li>
             <li>Backup Systems: ONLINE</li>
         </ol>
-        
+
         <h2>DETECTED THREATS</h2>
         <ul>
             <li>Phishing attempts: 47</li>
@@ -258,10 +258,10 @@ blockchain.add(transaction)</code></pre>
             <li>Unauthorized access: 3</li>
             <li>DDoS attacks: 1</li>
         </ul>
-        
+
         <h2>STATUS</h2>
         <blockquote>
-        All systems secure. Threats neutralized. Network integrity maintained. 
+        All systems secure. Threats neutralized. Network integrity maintained.
         Continue monitoring.
         </blockquote>
         """,
@@ -270,9 +270,9 @@ blockchain.add(transaction)</code></pre>
         "title": "NEURAL NETWORK ARCHITECTURE",
         "content": """
         <h2>DEEP LEARNING MODEL</h2>
-        <p>This neural network uses a convolutional architecture with residual connections 
+        <p>This neural network uses a convolutional architecture with residual connections
         for image recognition tasks.</p>
-        
+
         <h3>LAYER STRUCTURE</h3>
         <pre><code>Input Layer: 224x224x3
 Conv1: 64 filters, 7x7
@@ -282,7 +282,7 @@ ResBlock: 256 filters
 ResBlock: 512 filters
 FC: 1000 classes
 Output: Softmax</code></pre>
-        
+
         <h2>PERFORMANCE</h2>
         <p>Accuracy: 94.7% | Training Time: 12 hours | Parameters: 25M</p>
         """,
@@ -292,7 +292,7 @@ Output: Softmax</code></pre>
         "content": """
         <h2>OUR RIGHTS</h2>
         <p>In the digital age, we demand:</p>
-        
+
         <ul>
             <li>Right to privacy</li>
             <li>Right to encryption</li>
@@ -300,15 +300,15 @@ Output: Softmax</code></pre>
             <li>Right to data ownership</li>
             <li>Right to digital freedom</li>
         </ul>
-        
+
         <h2>THE FIGHT</h2>
         <blockquote>
-        We will not be surveilled. We will not be controlled. We will not be silenced. 
+        We will not be surveilled. We will not be controlled. We will not be silenced.
         The future belongs to those who code it.
         </blockquote>
-        
+
         <h2>JOIN US</h2>
-        <p>Resistance is not futile. It is necessary. Join the digital revolution. 
+        <p>Resistance is not futile. It is necessary. Join the digital revolution.
         Take back your data. Take back your freedom.</p>
         """,
     },
@@ -322,16 +322,16 @@ Output: Softmax</code></pre>
         "title": "EXTENDED CONTENT TEST",
         "content": """
         <h2>SECTION ONE</h2>
-        <p>This is the first section of extended content. Testing how the template handles 
+        <p>This is the first section of extended content. Testing how the template handles
         longer documents with multiple sections and various formatting elements.</p>
-        
+
         <h2>SECTION TWO</h2>
-        <p>Continuing with more content to test page breaks and layout consistency. 
+        <p>Continuing with more content to test page breaks and layout consistency.
         The cyberpunk aesthetic should remain consistent across pages.</p>
-        
+
         <h3>SUBSECTION A</h3>
         <p>Nested content to test hierarchy. How do subheadings look in this style?</p>
-        
+
         <h3>SUBSECTION B</h3>
         <p>More nested content. Testing list formatting:</p>
         <ul>
@@ -339,17 +339,17 @@ Output: Softmax</code></pre>
             <li>Second item</li>
             <li>Third item</li>
         </ul>
-        
+
         <h2>SECTION THREE</h2>
         <p>Final section with code block test:</p>
         <pre><code>def test_function():
     print("Code formatting test")
     return True</code></pre>
-        
+
         <h2>SECTION FOUR</h2>
         <p>Blockquote test:</p>
         <blockquote>
-        This is a test of blockquote formatting in the cyberpunk style. 
+        This is a test of blockquote formatting in the cyberpunk style.
         It should have a distinctive appearance.
         </blockquote>
         """,
@@ -358,31 +358,31 @@ Output: Softmax</code></pre>
         "title": "MIXED FORMATTING TEST",
         "content": """
         <h2>HEADING WITH <strong>BOLD</strong> AND <em>ITALIC</em></h2>
-        <p>Paragraph with <strong>bold text</strong>, <em>italic text</em>, 
+        <p>Paragraph with <strong>bold text</strong>, <em>italic text</em>,
         and <code>inline code</code> to test various formatting combinations.</p>
-        
+
         <h3>LISTS</h3>
         <ul>
             <li>Unordered item one</li>
             <li>Unordered item two with <strong>bold</strong></li>
         </ul>
-        
+
         <ol>
             <li>Ordered item one</li>
             <li>Ordered item two</li>
         </ol>
-        
+
         <h3>CODE BLOCK</h3>
         <pre><code>function test() {
     console.log("Testing code block");
     return true;
 }</code></pre>
-        
+
         <h3>BLOCKQUOTE</h3>
         <blockquote>
         This blockquote tests the cyberpunk styling with neon borders and glow effects.
         </blockquote>
-        
+
         <p>Final paragraph to test spacing after blockquote.</p>
         """,
     },

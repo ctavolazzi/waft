@@ -117,7 +117,7 @@ class DocumentEvolutionEngine(ComponentPDFGenerator):
             allowed_pages = self.default_allowed_pages
 
         # Distill content
-        distilled = self.distiller.distill_text(content, title=title)
+        self.distiller.distill_text(content, title=title)
 
         # Get or create styling genome
         if styling_genome is None:

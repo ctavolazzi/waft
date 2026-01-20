@@ -152,11 +152,11 @@ class BeingDecisionSystem:
                     weight *= 2.0  # Low cost, still viable
                 else:
                     # High-cost actions are much less attractive
-                    cost = action_costs.get(option, 5.0)
+                    action_costs.get(option, 5.0)
                     weight *= 0.1 + stamina_ratio * 0.3  # Severely reduced weight
             else:
                 # Normal energy state - scale by stamina ratio
-                cost = action_costs.get(option, 5.0)
+                action_costs.get(option, 5.0)
                 if option == "rest":
                     # Rest is less attractive when energy is high
                     weight *= 0.3 + (1.0 - stamina_ratio) * 0.7

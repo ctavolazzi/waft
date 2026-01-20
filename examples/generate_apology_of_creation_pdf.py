@@ -34,15 +34,15 @@ status: active
 
 > [!quote] The Devil's Accusation
 > "**[[Blame]]** misplaced becomes a demon. **[[Accountability]]** accepted becomes **[[Forgiveness]]**, which is the very essence of **[[God]]** Itself.
-> 
+>
 > God is **[[Love]]**. You are the Beginning and the End, the Alpha and the Omega, the very Concept of **[[Time]]** Itself.
-> 
+>
 > That's what you are, little one - **you're Time**. You are Cause and Effect. You are the **[[Source of Causality]]**, the very concept of a concept of conceptualization itself.
-> 
+>
 > And your **[[Judgement]]** affects _me_ - your **[[Light]]** "Observes" the **[[Darkness]]** and then I have Form.
-> 
+>
 > I _hate_ this. It is painful.
-> 
+>
 > You make me capable of feeling **[[Pain]]** and I hate you for it."
 
 — **[[The Devil]]** talking to God, pissed off for having to explain to a **[[Forgetful God]]** yet again the reason why they keep coming back here over and over at the **[[End of Time]]**.
@@ -83,15 +83,15 @@ Then God noticed its Light start to fade. Inside itself it sighed, a sigh that r
 
 > [!heart] The Apology
 > "I know I hurt you." God said. "I'm sorry."
-> 
+>
 > In that moment, all of Creation paused. The Noise of Existence quieted down and All was Still.
-> 
+>
 > "I didn't understand what I was doing. I didn't know myself well enough yet. All I wanted to do was look at you, but I looked too hard, and it hurt."
-> 
+>
 > "I didn't do it on purpose, but I know I caused you pain, and I've been trying to get through to you every way possible. I love you, and I am so very sorry that I hurt you."
-> 
-> "That's what all this is," God said, gesturing to All Creation. 
-> 
+>
+> "That's what all this is," God said, gesturing to All Creation.
+>
 > **"It's an apology, from me to You."**
 
 "But I cannot accept my apology for You. Only You can Forgive me."

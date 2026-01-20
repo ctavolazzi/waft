@@ -355,18 +355,18 @@ def generate_deep_report(
 
     # Abstract
     abstract = f"""
-This report documents a DEEP scientific experiment combining REAL interactive game play 
-with systematic hypothesis testing. We ACTUALLY ran the tavern scenario game, capturing 
-every dice roll, every choice, every outcome in real-time. We tested the hypothesis that 
-higher investigation and perception skills improve decision quality and fitness outcomes 
-in a D&D 5e tavern scenario. The experiment captured initial state (A), ran REAL game 
-play with actual dice rolls and choices, collected data during execution (C), and captured 
-final state (B), demonstrating the complete scientific method cycle with REAL game play. 
-Results show that characters gained {results.get("fitness_gained", 0):.1f} fitness points 
-through {results.get("dice_rolls", 0)} actual dice rolls and {results.get("skill_checks", 0)} 
-skill checks, {"" if results.get("prediction_match") else "not "}verifying the hypothesis 
-with {analysis.confidence:.1%} confidence. This experiment proves that the scientific method 
-tool works end-to-end with REAL game play, from hypothesis formation through actual dice 
+This report documents a DEEP scientific experiment combining REAL interactive game play
+with systematic hypothesis testing. We ACTUALLY ran the tavern scenario game, capturing
+every dice roll, every choice, every outcome in real-time. We tested the hypothesis that
+higher investigation and perception skills improve decision quality and fitness outcomes
+in a D&D 5e tavern scenario. The experiment captured initial state (A), ran REAL game
+play with actual dice rolls and choices, collected data during execution (C), and captured
+final state (B), demonstrating the complete scientific method cycle with REAL game play.
+Results show that characters gained {results.get("fitness_gained", 0):.1f} fitness points
+through {results.get("dice_rolls", 0)} actual dice rolls and {results.get("skill_checks", 0)}
+skill checks, {"" if results.get("prediction_match") else "not "}verifying the hypothesis
+with {analysis.confidence:.1%} confidence. This experiment proves that the scientific method
+tool works end-to-end with REAL game play, from hypothesis formation through actual dice
 rolling to analysis and reporting.
     """.strip()
 
@@ -386,9 +386,9 @@ date: "{timestamp}"
 
 # 1. Introduction
 
-This experiment demonstrates the complete scientific method workflow by combining **REAL** 
-interactive game play (the tavern scenario) with systematic hypothesis testing. Unlike 
-previous simulations, this experiment ACTUALLY runs the game, capturing every dice roll, 
+This experiment demonstrates the complete scientific method workflow by combining **REAL**
+interactive game play (the tavern scenario) with systematic hypothesis testing. Unlike
+previous simulations, this experiment ACTUALLY runs the game, capturing every dice roll,
 every choice, every outcome as it happens. We used the WAFT scientific method tool to:
 
 1. Form a testable hypothesis about character skill performance
@@ -422,7 +422,7 @@ every choice, every outcome as it happens. We used the WAFT scientific method to
 
 **Method**: **REAL** Interactive D&D 5e tavern scenario with systematic data collection
 
-**Key Difference**: This experiment runs the ACTUAL game, not a simulation. Every dice roll 
+**Key Difference**: This experiment runs the ACTUAL game, not a simulation. Every dice roll
 is real, every choice is real, every outcome is real.
 
 **State Capture Points**:
@@ -567,50 +567,50 @@ This experiment **PROVES** that the scientific method tool works end-to-end with
 
 ## 9.1 State Capture Works
 
-✅ **Initial State (A) Captured**: State hash `{initial_state.state_hash[:16]}...`  
-✅ **Final State (B) Captured**: State hash `{final_state.state_hash[:16]}...`  
+✅ **Initial State (A) Captured**: State hash `{initial_state.state_hash[:16]}...`
+✅ **Final State (B) Captured**: State hash `{final_state.state_hash[:16]}...`
 ✅ **State Comparison**: Successfully compared states A and B
 
 ## 9.2 Data Collection Works with REAL Game Play
 
-✅ **Data Series Collected**: {data_series_count} series  
-✅ **Data Points Recorded**: {total_data_points} total points  
+✅ **Data Series Collected**: {data_series_count} series
+✅ **Data Points Recorded**: {total_data_points} total points
 ✅ **Fitness Tracking**: Initial fitness recorded, final fitness recorded
 ✅ **Dice Roll Tracking**: {results.get("dice_rolls", 0)} actual dice rolls tracked
 ✅ **Skill Check Tracking**: {results.get("skill_checks", 0)} skill checks tracked
 
 ## 9.3 REAL Game Play Integration Works
 
-✅ **Character Created**: Real character with real dice rolls  
-✅ **Game Executed**: ACTUAL tavern scenario ran successfully  
+✅ **Character Created**: Real character with real dice rolls
+✅ **Game Executed**: ACTUAL tavern scenario ran successfully
 ✅ **Dice Rolls Real**: {results.get("dice_rolls", 0)} real dice rolls made
 ✅ **Choices Real**: Real choices made during game play
 ✅ **Outcomes Real**: Real outcomes from real dice rolls
 
 ## 9.4 Analysis Works
 
-✅ **Hypothesis Tested**: Hypothesis verified/refuted with {analysis.confidence:.1%} confidence  
-✅ **Analysis Generated**: Complete analysis with conclusions  
+✅ **Hypothesis Tested**: Hypothesis verified/refuted with {analysis.confidence:.1%} confidence
+✅ **Analysis Generated**: Complete analysis with conclusions
 ✅ **Evidence-Based**: All conclusions supported by REAL game play data
 
 ## 9.5 File Persistence Works
 
-✅ **Experiment Files**: Saved to `_science/experiments/`  
-✅ **State Files**: Saved to experiment directory  
-✅ **Data Files**: Saved to `_science/data/`  
+✅ **Experiment Files**: Saved to `_science/experiments/`
+✅ **State Files**: Saved to experiment directory
+✅ **Data Files**: Saved to `_science/data/`
 ✅ **All Data Recoverable**: Complete experiment can be reconstructed from files
 
 ## 9.6 Complete Scientific Method Cycle with REAL Game Play
 
-✅ **Observe**: System detected patterns in character performance  
-✅ **Hypothesize**: Formulated testable hypothesis  
-✅ **Design**: Created experiment with variables  
-✅ **Capture State A**: Initial state saved  
-✅ **Run REAL Experiment**: ACTUAL game play executed with real dice rolls  
-✅ **Collect Data C**: Continuous measurements from REAL game play  
-✅ **Capture State B**: Final state saved  
-✅ **Analyze**: Results analyzed and hypothesis verified/refuted  
-✅ **Report**: Comprehensive documentation generated  
+✅ **Observe**: System detected patterns in character performance
+✅ **Hypothesize**: Formulated testable hypothesis
+✅ **Design**: Created experiment with variables
+✅ **Capture State A**: Initial state saved
+✅ **Run REAL Experiment**: ACTUAL game play executed with real dice rolls
+✅ **Collect Data C**: Continuous measurements from REAL game play
+✅ **Capture State B**: Final state saved
+✅ **Analyze**: Results analyzed and hypothesis verified/refuted
+✅ **Report**: Comprehensive documentation generated
 ✅ **Print**: PDF printed to material world
 
 # 10. Conclusions
@@ -636,8 +636,8 @@ This experiment successfully demonstrates:
 
 ---
 
-**Generated**: {timestamp}  
-**Experiment ID**: `{experiment.experiment_id}`  
+**Generated**: {timestamp}
+**Experiment ID**: `{experiment.experiment_id}`
 **Report Type**: Deep Scientific Experiment Report with REAL Game Play Proof
 """
 

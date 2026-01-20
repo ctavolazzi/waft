@@ -60,7 +60,7 @@ def test_query(query: str, width: int = 800, height: int = 600, size: str = "lar
                 "images": [],
             }
 
-            for i, hit in enumerate(hits[:3], 1):
+            for _i, hit in enumerate(hits[:3], 1):
                 image_data = {
                     "id": hit.get("id"),
                     "tags": hit.get("tags", ""),
@@ -100,7 +100,7 @@ def test_query(query: str, width: int = 800, height: int = 600, size: str = "lar
                 "images": [],
             }
 
-            for i, photo in enumerate(photos[:3], 1):
+            for _i, photo in enumerate(photos[:3], 1):
                 src = photo.get("src", {})
                 image_data = {
                     "id": photo.get("id"),

@@ -363,7 +363,7 @@ def main():
         .stDataFrame { border: 1px solid #333; }
         h1, h2, h3 { border-bottom: 1px solid #333; padding-bottom: 10px; }
         .trauma-alert { border: 1px solid red; background-color: #300; color: red; padding: 10px; }
-        .auto-refresh-indicator { 
+        .auto-refresh-indicator {
             display: inline-block;
             width: 8px;
             height: 8px;
@@ -409,7 +409,7 @@ def main():
     with header_col1:
         st.title("🌑 Waft Larval Form")
         st.markdown("""
-        **What is this?** This is a 3D printing workflow manager that tracks G-code files and print jobs. 
+        **What is this?** This is a 3D printing workflow manager that tracks G-code files and print jobs.
         It stores everything in a SQLite database and provides a dashboard to monitor activity and manage print jobs.
         """)
 
@@ -556,7 +556,7 @@ def main():
             st.success("✅ All Artifacts Complete")
             st.info("""
             **Status**: All artifacts in the database have been marked as PHYSICAL.
-            
+
             **What this means**:
             - All G-code files have been processed/printed
             - No pending print jobs remaining
@@ -580,7 +580,7 @@ def main():
 sqlite3 waft_memory.db
 
 # Then insert new artifact:
-INSERT INTO artifacts (name, gcode, status) 
+INSERT INTO artifacts (name, gcode, status)
 VALUES ('New_Artifact_Name', 'G28\\nG1 X10 Y10', 'VOID');
 
 # Refresh the page to see the new artifact
@@ -691,15 +691,15 @@ VALUES ('New_Artifact_Name', 'G28\\nG1 X10 Y10', 'VOID');
     with st.expander("❓ Help & Information"):
         st.markdown("""
         ### What is Waft Larval Form?
-        
+
         This is a **3D printing workflow manager** that helps you:
         - Track G-code files (3D printer instructions)
         - Monitor print job status
         - Log all system activity
         - Export data for analysis
-        
+
         ### How It Works
-        
+
         1. **Artifacts**: G-code files stored in the database
            - Status: `VOID` (pending) → `PHYSICAL` (printed)
         2. **Activity Log**: All events are recorded
@@ -707,16 +707,16 @@ VALUES ('New_Artifact_Name', 'G28\\nG1 X10 Y10', 'VOID');
         3. **Database**: SQLite file (`waft_memory.db`) stores everything
            - Persists across restarts
            - Can be migrated to future Redbean version
-        
+
         ### Key Features
-        
+
         - **Error Resilience**: Errors are logged, not crashes
         - **Data Export**: Download in JSON, Markdown, TXT, or PDF
         - **Status Tracking**: See what's pending vs completed
         - **Activity History**: Complete log of all system events
-        
+
         ### Terminology
-        
+
         - **Artifact**: A G-code file (3D printer instructions)
         - **Chronicle**: The activity log (all events)
         - **Trauma**: An error that was caught and logged

@@ -584,7 +584,7 @@ def main():
         print(json.dumps(comparison, indent=2))
     else:
         # Run study
-        results = self_study.run_study(study_area=args.area, all_areas=args.all or not args.area)
+        self_study.run_study(study_area=args.area, all_areas=args.all or not args.area)
 
         print("✅ Self-study complete!")
         print(f"📁 Results saved to: {self_study.study_history_path}")

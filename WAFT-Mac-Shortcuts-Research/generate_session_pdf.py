@@ -93,14 +93,14 @@ html_template = """
         @page {
             size: letter;
             margin: 0.75in;
-            
+
             @top-center {
                 content: "WAFT Research Session Summary";
                 font-family: 'Helvetica', sans-serif;
                 font-size: 9pt;
                 color: #666;
             }
-            
+
             @bottom-center {
                 content: "Page " counter(page);
                 font-family: 'Helvetica', sans-serif;
@@ -108,18 +108,18 @@ html_template = """
                 color: #666;
             }
         }
-        
+
         @page :first {
             @top-center { content: none; }
         }
-        
+
         body {
             font-family: 'Times New Roman', serif;
             font-size: 11pt;
             line-height: 1.6;
             color: #000;
         }
-        
+
         h1 {
             font-family: 'Helvetica', sans-serif;
             font-size: 20pt;
@@ -129,7 +129,7 @@ html_template = """
             border-bottom: 3px solid #000;
             padding-bottom: 0.1in;
         }
-        
+
         h2 {
             font-family: 'Helvetica', sans-serif;
             font-size: 16pt;
@@ -138,7 +138,7 @@ html_template = """
             margin-bottom: 0.2in;
             color: #2c3e50;
         }
-        
+
         h3 {
             font-family: 'Helvetica', sans-serif;
             font-size: 14pt;
@@ -146,7 +146,7 @@ html_template = """
             margin-top: 0.3in;
             margin-bottom: 0.15in;
         }
-        
+
         code {
             font-family: 'Courier New', monospace;
             font-size: 10pt;
@@ -154,7 +154,7 @@ html_template = """
             padding: 0.05in;
             border-radius: 3px;
         }
-        
+
         pre {
             background: #f5f5f5;
             border-left: 4px solid #3498db;
@@ -162,22 +162,22 @@ html_template = """
             margin: 0.2in 0;
             overflow-x: auto;
         }
-        
+
         ul, ol {
             margin-left: 0.3in;
             margin-bottom: 0.2in;
         }
-        
+
         li {
             margin-bottom: 0.1in;
         }
-        
+
         hr {
             border: none;
             border-top: 2px solid #ccc;
             margin: 0.3in 0;
         }
-        
+
         .status-badge {
             display: inline-block;
             padding: 0.05in 0.15in;
@@ -195,9 +195,9 @@ html_template = """
         <h2 style="color: #666; font-size: 14pt; margin-top: 0.1in;">Session Summary</h2>
         <p style="color: #999; margin-top: 0.2in;">{{ date }}</p>
     </div>
-    
+
     {{ summary_html | safe }}
-    
+
     {% if continuation_html %}
     <div style="page-break-before: always; margin-top: 0.5in;">
         <h1>Continuation Prompt</h1>

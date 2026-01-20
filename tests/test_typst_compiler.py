@@ -247,7 +247,7 @@ class TestEdgeCases:
         output_path = temp_dir / "output.pdf"
 
         # Count files before
-        files_before = len(list(temp_dir.glob("*")))
+        len(list(temp_dir.glob("*")))
 
         try:
             typst_compiler.compile(invalid_content, output_path)

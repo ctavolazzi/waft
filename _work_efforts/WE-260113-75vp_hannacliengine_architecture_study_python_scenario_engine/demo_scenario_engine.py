@@ -345,8 +345,8 @@ class ScenarioEngine:
         """Convert execution events to markdown story."""
         md = f"""# {self.scenario_data.get("gameTitle", "Scenario")}
 
-**Author:** {self.scenario_data.get("gameAuthor", "Unknown")}  
-**Description:** {self.scenario_data.get("gameDesc", "")}  
+**Author:** {self.scenario_data.get("gameAuthor", "Unknown")}
+**Description:** {self.scenario_data.get("gameDesc", "")}
 **Generated:** {datetime.now().strftime("%B %d, %Y at %I:%M %p")}
 
 ---

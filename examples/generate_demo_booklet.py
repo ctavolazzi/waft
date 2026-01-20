@@ -27,14 +27,14 @@ DEMO_BOOKLET_TEMPLATE = """
         @page {
             size: letter;
             margin: 0.75in;
-            
+
             @top-center {
                 content: "WAFT Meta-Cognitive Demonstration";
                 font-family: 'Times New Roman', serif;
                 font-size: 9pt;
                 color: #666;
             }
-            
+
             @bottom-center {
                 content: "Page " counter(page);
                 font-family: 'Times New Roman', serif;
@@ -42,42 +42,42 @@ DEMO_BOOKLET_TEMPLATE = """
                 color: #666;
             }
         }
-        
+
         @page :first {
             @top-center { content: none; }
         }
-        
+
         body {
             font-family: 'Times New Roman', serif;
             font-size: 11pt;
             line-height: 1.6;
             color: #000;
         }
-        
+
         .cover {
             text-align: center;
             padding-top: 2in;
         }
-        
+
         .cover h1 {
             font-size: 28pt;
             font-weight: bold;
             margin-bottom: 0.5in;
             letter-spacing: 2px;
         }
-        
+
         .cover .subtitle {
             font-size: 16pt;
             color: #333;
             margin-bottom: 1in;
         }
-        
+
         .cover .date {
             font-size: 12pt;
             color: #666;
             margin-top: 1.5in;
         }
-        
+
         h1 {
             font-size: 18pt;
             font-weight: bold;
@@ -86,21 +86,21 @@ DEMO_BOOKLET_TEMPLATE = """
             border-bottom: 2px solid #000;
             padding-bottom: 0.1in;
         }
-        
+
         h2 {
             font-size: 14pt;
             font-weight: bold;
             margin-top: 0.4in;
             margin-bottom: 0.2in;
         }
-        
+
         h3 {
             font-size: 12pt;
             font-weight: bold;
             margin-top: 0.3in;
             margin-bottom: 0.15in;
         }
-        
+
         .demo-structure {
             background: #f5f5f5;
             padding: 0.2in;
@@ -110,35 +110,35 @@ DEMO_BOOKLET_TEMPLATE = """
             font-size: 9pt;
             white-space: pre-wrap;
         }
-        
+
         .highlight {
             background: #ffffcc;
             padding: 0.05in;
         }
-        
+
         .meta-cognition {
             background: #e8f4f8;
             padding: 0.2in;
             margin: 0.2in 0;
             border-left: 4px solid #0066cc;
         }
-        
+
         ul, ol {
             margin-left: 0.3in;
             margin-top: 0.1in;
         }
-        
+
         li {
             margin-bottom: 0.1in;
         }
-        
+
         code {
             font-family: 'Courier New', monospace;
             font-size: 10pt;
             background: #f0f0f0;
             padding: 0.05in;
         }
-        
+
         .footer-note {
             margin-top: 0.5in;
             padding-top: 0.2in;
@@ -160,14 +160,14 @@ DEMO_BOOKLET_TEMPLATE = """
             {{ date }}
         </div>
     </div>
-    
+
     <h1>Introduction</h1>
     <p>
         This booklet documents a demonstration of WAFT's meta-cognitive capabilities.
         WAFT is a self-documenting, self-modifying meta-framework that tracks its own
         work and enables continuity across AI sessions through epistemic memory.
     </p>
-    
+
     <h2>What You Witnessed</h2>
     <ul>
         <li><strong>Basic file organization</strong> - Simple folder cleanup (2022 ChatGPT level)</li>
@@ -176,13 +176,13 @@ DEMO_BOOKLET_TEMPLATE = """
         <li><strong>Meta-cognitive perspective-taking</strong> - How AI systems can "wear" previous perspectives</li>
         <li><strong>Recursive self-improvement foundation</strong> - The basis for continuous enhancement</li>
     </ul>
-    
+
     <h1>Demo Structure</h1>
     <p>The demonstration created the following folder structure:</p>
     <div class="demo-structure">{{ demo_structure }}</div>
-    
+
     <h1>Meta-Cognition: The Core Concept</h1>
-    
+
     <div class="meta-cognition">
         <h2>Why _pyrite?</h2>
         <p>
@@ -204,7 +204,7 @@ DEMO_BOOKLET_TEMPLATE = """
             on external and internal feedback.
         </p>
     </div>
-    
+
     <h2>How It Works</h2>
     <ol>
         <li><strong>Work Efforts</strong>: Track discrete units of intellectual labor</li>
@@ -212,7 +212,7 @@ DEMO_BOOKLET_TEMPLATE = """
         <li><strong>Perspective Taking</strong>: New AI instances can "put on" the previous AI's
             perspective by reading the work efforts and journals</li>
     </ol>
-    
+
     <h2>Why It Matters</h2>
     <p>This enables:</p>
     <ul>
@@ -221,7 +221,7 @@ DEMO_BOOKLET_TEMPLATE = """
         <li><strong>Recursive Improvement</strong>: System can improve based on its own observations</li>
         <li><strong>Meta-Cognition</strong>: Thinking about thinking</li>
     </ul>
-    
+
     <h2>The Recursive Loop</h2>
     <ol>
         <li>AI does work → Creates work effort</li>
@@ -231,14 +231,14 @@ DEMO_BOOKLET_TEMPLATE = """
         <li>Next AI continues → Builds on previous knowledge</li>
         <li>Cycle repeats → Continuous improvement</li>
     </ol>
-    
+
     <h1>Intellectual Labor Quanta</h1>
     <p>
         Each work effort, journal entry, or documentation piece represents a
         <span class="highlight"><strong>quantum of intellectual labor</strong></span> - a discrete unit of thought and work
         that can be tracked, measured, and built upon.
     </p>
-    
+
     <h1>Cross-Architecture Meta-Cognition</h1>
     <p>
         This system works across different AI architectures because it's based on
@@ -254,7 +254,7 @@ DEMO_BOOKLET_TEMPLATE = """
         This creates a form of <strong>perspective-taking</strong> where one AI can understand
         how another AI (or a previous version of itself) saw the world.
     </p>
-    
+
     <h1>Next Steps</h1>
     <p>
         The demo folder structure created during this demonstration can serve as a
@@ -267,7 +267,7 @@ DEMO_BOOKLET_TEMPLATE = """
         <li>Epistemic memory development</li>
         <li>Recursive self-improvement</li>
     </ul>
-    
+
     <div class="footer-note">
         <p>Generated by WAFT - World Architecture Framework & Templates</p>
         <p>This is WAFT tracking its own work, understanding its own state,</p>

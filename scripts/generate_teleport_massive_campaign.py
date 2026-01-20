@@ -60,7 +60,7 @@ def load_corporate_data(corp_path: Path) -> dict[str, Any]:
 def generate_typst_content(data: dict[str, Any], project_root: Path, output_dir: Path) -> str:
     """Generate Typst content from corporate data."""
     manifest = data.get("manifest", {})
-    founders = data.get("founders", {})
+    data.get("founders", {})
     founder_lore = data.get("founder_lore", "")
 
     sections = []
@@ -97,8 +97,8 @@ Teleport Massive was founded on {manifest.get("founded", "July 1, 2025")} with a
 
     departments = manifest.get("departments", [])
     for dept in departments:
-        dept_name = dept.get("name", "Unknown")
-        dept_id = dept.get("department_id", "")
+        dept.get("name", "Unknown")
+        dept.get("department_id", "")
         employees = dept.get("employees", [])
 
         dept_section += f"""
@@ -141,9 +141,9 @@ Teleport Massive was founded on {manifest.get("founded", "July 1, 2025")} with a
     # Add employees as NPCs
     employees = manifest.get("employees", [])
     for emp in employees[:10]:  # Limit to first 10
-        name = emp.get("title", "Employee")
-        role = emp.get("role", "Unknown")
-        level = emp.get("level", 1)
+        emp.get("title", "Employee")
+        emp.get("role", "Unknown")
+        emp.get("level", 1)
 
         npc_section += """
 #stat-block(
@@ -347,7 +347,7 @@ Teleport Massive was founded on {manifest.get("founded", "July 1, 2025")} with a
 """
 
         for exp in data["experiments"][:5]:  # Limit to 5
-            exp_id = exp.get("experiment_id", "Unknown")
+            exp.get("experiment_id", "Unknown")
             exp_section += """
 #block(fill: rgb("#2a2a3e"), padding: 10pt, radius: 4pt)[
   #text(weight: "bold")[Experiment: #exp_id]
