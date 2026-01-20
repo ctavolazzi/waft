@@ -1,0 +1,40 @@
+{
+  "pdfs": [
+    {
+      "name": "how_to_cast_jewelry.pdf",
+      "size": 169086,
+      "modified": "2026-01-19T14:53:28.363401",
+      "path": "generated/guides/how_to_cast_jewelry.pdf"
+    },
+    {
+      "name": "test_guide.pdf",
+      "size": 198887,
+      "modified": "2026-01-19T14:50:48.336997",
+      "path": "generated/guides/test_guide.pdf"
+    }
+  ],
+  "templates": [
+    "guide_template.py",
+    "poetry_template.py"
+  ],
+  "scripts": [
+    "add_images.py",
+    "security.py",
+    "resource_manager.py",
+    "generate_guide.py",
+    "image_api.py",
+    "gumroad_prep.py",
+    "batch_generate.py",
+    "validation.py"
+  ],
+  "configs": [
+    "gumroad_metadata.json",
+    "guide_config.json"
+  ],
+  "stats": {
+    "total_pdfs": 2,
+    "total_size": 367973,
+    "templates_count": 2,
+    "scripts_count": 8
+  }
+}

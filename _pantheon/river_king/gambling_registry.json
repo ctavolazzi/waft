@@ -1,0 +1,34 @@
+{
+  "demi_god": "The River King",
+  "domain": "Gambling, Luck, Probability, Risk",
+  "parent_god": "The Magistrate",
+  "sacred_tool": "The Deck of Fates (deckz_poker visualization)",
+  "realm": "gaming_gambling_realm",
+  "realm_path": "_realms/gaming_gambling_realm",
+  "created_at": "2026-01-19T23:05:00",
+  "last_updated": "2026-01-19T23:10:00",
+  "games_documented": [],
+  "readings_performed": [],
+  "sacred_hands": [
+    {
+      "name": "The Sacred Hand (Spades)",
+      "cards": ["AS", "KS", "QS", "JS", "10S"],
+      "meaning": "Perfect alignment with fate - all forces aligned, outcome certain, moment of transformation",
+      "type": "Royal Flush of Spades"
+    },
+    {
+      "name": "The Mirror Hand (Hearts)",
+      "cards": ["AH", "KD", "QC", "JH", "10H"],
+      "meaning": "The mirror - shows what could have been, the inverse of fate",
+      "type": "Royal Flush of Hearts"
+    }
+  ],
+  "precedents": [
+    {
+      "precedent_id": "precedent_001",
+      "title": "Card Visualization as Sacred Documentation",
+      "description": "The Deck of Fates establishes that card games can be documented visually, creating a precedent for all future game documentation.",
+      "established": "2026-01-19T23:05:00"
+    }
+  ]
+}

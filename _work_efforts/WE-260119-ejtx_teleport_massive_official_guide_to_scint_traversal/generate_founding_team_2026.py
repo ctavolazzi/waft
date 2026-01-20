@@ -37,7 +37,7 @@ FOUNDING_ROLES = [
     {
         "role": "Head of Research & Development",
         "specialization": "Experimental physics and reality mechanics",
-        "contribution": "Led early research into reality fracture detection"
+        "contribution": "Led early research into scaling quantum entanglement systems"
     },
     {
         "role": "Lead Quantum Engineer",
@@ -120,7 +120,7 @@ def generate_founding_team() -> Dict[str, Any]:
             "incorporation_date": "2026-01-18",
             "jurisdiction": "California, United States",
             "headquarters": "San Francisco, California",
-            "initial_focus": "Reality traversal technology, quantum systems, reality fracture detection"
+            "initial_focus": "Quantum teleportation scaling, quantum entanglement systems, experimental physics"
         },
         "notes": "Team generated using Random User API (https://randomuser.me/) with seed 'teleport_massive_2026' for consistency. This is the founding team that established Teleport Massive as a corporation on January 18, 2026, in San Francisco."
     }

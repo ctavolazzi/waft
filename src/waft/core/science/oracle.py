@@ -151,7 +151,7 @@ class TheOracle:
         """
         # Empirica is guaranteed to be ready (enforced in __init__)
         context = self.empirica.project_bootstrap()
-        
+
         # If no context yet (new project), return empty but valid structure
         if not context:
             return {
@@ -165,14 +165,26 @@ class TheOracle:
                 "goals": [],
                 "timestamp": datetime.now().isoformat()
             }
-        
-        # Full context available
+
+        # If bootstrap lacks epistemic_state, try assess_state using session_id
+        epistemic_state = context.get("epistemic_state", {})
+        if not epistemic_state and self._session_id:
+            try:
+                assessment = self.empirica.assess_state(session_id=self._session_id)
+                if assessment and isinstance(assessment, dict):
+                    vectors = assessment.get("vectors", {})
+                    if vectors:
+                        epistemic_state = {"vectors": vectors}
+            except Exception:
+                pass
+
+        # Full context available (with fallback assessment if needed)
         return {
             "initialized": True,
             "has_context": True,
             "ready": True,
             "message": "Empirica ready with epistemic context",
-            "epistemic_state": context.get("epistemic_state", {}),
+            "epistemic_state": epistemic_state,
             "findings": context.get("findings", []),
             "unknowns": context.get("unknowns", []),
             "goals": context.get("goals", []),
@@ -283,7 +295,10 @@ class TheOracle:
             return {"phase": "UNKNOWN", "reason": "No vectors in epistemic_state"} if show_calculation else "UNKNOWN"
         
         foundation = vectors.get("foundation", {})
-        know = foundation.get("know", 0.0) if foundation else 0.0
+        if foundation:
+            know = foundation.get("know", 0.0)
+        else:
+            know = vectors.get("know", 0.0)
         uncertainty = vectors.get("uncertainty", 1.0)
         
         # Validate ranges
@@ -391,7 +406,10 @@ class TheOracle:
         epistemic_state = state.get("epistemic_state", {})
         vectors = epistemic_state.get("vectors", {})
         foundation = vectors.get("foundation", {})
-        know = foundation.get("know", 0.0) if foundation else 0.0
+        if foundation:
+            know = foundation.get("know", 0.0)
+        else:
+            know = vectors.get("know", 0.0)
         uncertainty = vectors.get("uncertainty", 1.0)
         coverage = know * (1.0 - uncertainty) if know > 0 else 0.0
         

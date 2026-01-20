@@ -1,0 +1,9 @@
+{
+  "title_template": "{title} - Succulent Jewelry Guide",
+  "description_template": "A helpful guide about {topic}. This comprehensive guide provides step-by-step instructions and tips for {title}. Perfect for beginners and experienced crafters alike.",
+  "tags": ["jewelry", "succulents", "how-to", "crafting", "diy"],
+  "pricing_tiers": {
+    "basic": 5.00,
+    "premium": 10.00
+  }
+}

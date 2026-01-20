@@ -1,0 +1,3 @@
+Data C: Evidence log
+- Grep: no 2111 / Scint Traversal / eternal return terms in founding docs
+- Quotes updated to 2026-only perspective

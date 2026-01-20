@@ -1,0 +1,111 @@
+{
+  "budget_id": "budget_q1_2026",
+  "name": "Q1 2026 Operating Budget",
+  "period_start": "2026-01-01",
+  "period_end": "2026-03-31",
+  "items": [
+    {
+      "category": "Personnel",
+      "description": "Salaries and Benefits",
+      "budgeted_amount": "50000.00",
+      "actual_amount": "48000.00",
+      "variance": "-2000.00",
+      "variance_percent": -4.0,
+      "notes": null
+    },
+    {
+      "category": "Personnel",
+      "description": "Contractors",
+      "budgeted_amount": "15000.00",
+      "actual_amount": "12000.00",
+      "variance": "-3000.00",
+      "variance_percent": -20.0,
+      "notes": null
+    },
+    {
+      "category": "Operations",
+      "description": "Office Supplies",
+      "budgeted_amount": "5000.00",
+      "actual_amount": "3200.00",
+      "variance": "-1800.00",
+      "variance_percent": -36.0,
+      "notes": null
+    },
+    {
+      "category": "Operations",
+      "description": "Software Licenses",
+      "budgeted_amount": "8000.00",
+      "actual_amount": "8000.00",
+      "variance": "0.00",
+      "variance_percent": 0.0,
+      "notes": null
+    },
+    {
+      "category": "Infrastructure",
+      "description": "Server Costs",
+      "budgeted_amount": "3000.00",
+      "actual_amount": "2800.00",
+      "variance": "-200.00",
+      "variance_percent": -6.666666666666667,
+      "notes": null
+    },
+    {
+      "category": "Infrastructure",
+      "description": "Cloud Services",
+      "budgeted_amount": "5000.00",
+      "actual_amount": "4500.00",
+      "variance": "-500.00",
+      "variance_percent": -10.0,
+      "notes": null
+    },
+    {
+      "category": "Marketing",
+      "description": "Advertising",
+      "budgeted_amount": "10000.00",
+      "actual_amount": "7500.00",
+      "variance": "-2500.00",
+      "variance_percent": -25.0,
+      "notes": null
+    },
+    {
+      "category": "Marketing",
+      "description": "Events",
+      "budgeted_amount": "5000.00",
+      "actual_amount": "0.00",
+      "variance": "-5000.00",
+      "variance_percent": -100.0,
+      "notes": null
+    }
+  ],
+  "totals": {
+    "budgeted": "101000.00",
+    "actual": "86000.00",
+    "variance": "-15000.00",
+    "variance_percent": -14.851485148514852
+  },
+  "category_totals": {
+    "Personnel": {
+      "budgeted": "65000.00",
+      "actual": "60000.00",
+      "variance": "-5000.00"
+    },
+    "Operations": {
+      "budgeted": "13000.00",
+      "actual": "11200.00",
+      "variance": "-1800.00"
+    },
+    "Infrastructure": {
+      "budgeted": "8000.00",
+      "actual": "7300.00",
+      "variance": "-700.00"
+    },
+    "Marketing": {
+      "budgeted": "15000.00",
+      "actual": "7500.00",
+      "variance": "-7500.00"
+    }
+  },
+  "created_at": "2026-01-19T03:11:01.529949",
+  "last_updated": "2026-01-19T03:11:01.529987",
+  "metadata": {}
+}

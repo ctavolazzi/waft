@@ -1,0 +1,23 @@
+# Succulent Jewelry PDF Generation System Requirements
+
+# PDF Generation
+weasyprint>=60.0
+
+# Markdown Processing
+markdown>=3.4.0
+
+# HTML Sanitization (Security)
+bleach>=6.0.0
+
+# PDF Validation
+PyPDF2>=3.0.0
+
+# Image API Support
+requests>=2.31.0
+
+# Standard library (no install needed)
+# - pathlib
+# - json
+# - logging
+# - tempfile
+# - hashlib

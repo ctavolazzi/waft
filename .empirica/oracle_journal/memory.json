@@ -1,5 +1,24 @@
 {
-  "insights": [],
+  "insights": [
+    {
+      "insight": "Created DnD game visualization Typst wrapper system with character sheets, stat blocks, and encounter visualization support",
+      "impact": 0.8,
+      "timestamp": "2026-01-19T15:41:23.556083",
+      "context": {}
+    },
+    {
+      "insight": "DnD wrapper uses wenyuan-campaign and dragonling Typst packages for professional D&D 5e PDF generation",
+      "impact": 0.7,
+      "timestamp": "2026-01-19T15:41:25.180190",
+      "context": {}
+    },
+    {
+      "insight": "Fixed indentation errors in dnd_game_server.py - server now runs successfully on port 8003",
+      "impact": 0.6,
+      "timestamp": "2026-01-19T15:41:27.807822",
+      "context": {}
+    }
+  ],
   "successful_recommendations": [],
   "learned_patterns": [],
   "epistemic_history": [
@@ -26,9 +45,129 @@
       "phase": "UNKNOWN",
       "coverage": 0.0,
       "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-01-19T15:38:09.861356",
+      "phase": "UNKNOWN",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-01-19T15:40:48.064481",
+      "phase": "UNKNOWN",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-01-19T15:42:06.555402",
+      "phase": "UNKNOWN",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-01-19T15:43:12.357234",
+      "phase": "UNKNOWN",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-01-19T16:24:21.824161",
+      "phase": "UNKNOWN",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-01-19T16:52:56.708862",
+      "phase": "UNKNOWN",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-01-19T16:56:21.742521",
+      "phase": "UNKNOWN",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-01-19T17:01:44.328570",
+      "phase": "UNKNOWN",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-01-19T17:02:33.066803",
+      "phase": "UNKNOWN",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-01-19T17:11:06.651813",
+      "phase": "UNKNOWN",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-01-19T17:12:51.548994",
+      "phase": "UNKNOWN",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-01-19T17:14:09.603822",
+      "phase": "UNKNOWN",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-01-19T17:19:07.454641",
+      "phase": "UNKNOWN",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-01-19T18:42:35.488567",
+      "phase": "UNKNOWN",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-01-19T22:18:43.363992",
+      "phase": "UNKNOWN",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-01-19T22:26:37.254654",
+      "phase": "UNKNOWN",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-01-19T22:33:03.938382",
+      "phase": "UNKNOWN",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-01-19T22:36:36.404068",
+      "phase": "UNKNOWN",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-01-19T22:40:31.953201",
+      "phase": "UNKNOWN",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-01-19T22:45:06.033525",
+      "phase": "UNKNOWN",
+      "coverage": 0.0,
+      "uncertainty": 1.0
     }
   ],
-  "consultation_count": 4,
+  "consultation_count": 24,
   "first_consultation": "2026-01-19T03:00:23.640968",
-  "last_consultation": "2026-01-19T03:04:06.649609"
+  "last_consultation": "2026-01-19T22:45:06.033525"
 }

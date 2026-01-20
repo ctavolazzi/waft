@@ -30,7 +30,13 @@
 │   └── references.bib
 ├── NARRATIVE-WAFT
 │   ├── CORE-NARRATIVE.md
+│   ├── ISO_7010_SYMBOLS_GUIDE.pdf
+│   ├── ISO_7010_SYMBOLS_GUIDE.typ
+│   ├── LHC_REALITY_CREATION_LORE.pdf
+│   ├── LHC_REALITY_CREATION_LORE.typ
 │   ├── NOW_SWAB_SWAE_CONCEPT.md
+│   ├── THE_FIRST_MOMENT.pdf
+│   ├── THE_FIRST_MOMENT.typ
 │   ├── THE_VIBRATION_STORY.html
 │   ├── THE_VIBRATION_STORY.md
 │   └── THE_VIBRATION_STORY.pdf
@@ -189,7 +195,8 @@
 │   └── observations
 │       ├── 2026-01-13
 │       ├── 2026-01-14
-│       └── 2026-01-16
+│       ├── 2026-01-16
+│       └── 2026-01-19
 ├── _epic_run
 │   ├── cycles
 │   │   └── all_cycles.json
@@ -702,6 +709,7 @@
 │   │   ├── telemetry
 │   │   └── control_registry.json
 │   ├── paperwork_god
+│   │   ├── financial
 │   │   ├── forms
 │   │   ├── skurl
 │   │   ├── README.md
@@ -713,6 +721,9 @@
 │   │   ├── traces
 │   │   ├── README.md
 │   │   └── trace_index.json
+│   ├── river_king
+│   │   ├── README.md
+│   │   └── gambling_registry.json
 │   ├── storyteller
 │   │   ├── stories
 │   │   └── storybooks
@@ -841,7 +852,13 @@
 │   │   ├── 2026-01-19_022635_spin_up_summary.md
 │   │   ├── 2026-01-19_0230_continue_reflection.md
 │   │   ├── 2026-01-19_0230_next_steps.md
+│   │   ├── 2026-01-19_consideration_empirica_dashboard_manual.md
+│   │   ├── 2026-01-19_consideration_run-it.md
 │   │   ├── 2026-01-19_consideration_teleport_massive_system.md
+│   │   ├── 2026-01-19_deep-analyze_empirica_dashboard_manual.md
+│   │   ├── 2026-01-19_deep-analyze_run-it.md
+│   │   ├── 2026-01-19_next_run-it.md
+│   │   ├── 2026-01-19_proceed_run-it.md
 │   │   ├── BEING_SPAWN_being_20260112_211810_e5b41af4.md
 │   │   ├── BEING_SPAWN_being_20260112_212409_c99d8da7.md
 │   │   ├── BEING_SPAWN_being_20260112_234837_3b8afbf2.md
@@ -874,6 +891,7 @@
 │   │   ├── documentation_review_work.md
 │   │   └── empirica_python_version_issue.md
 │   ├── analysis
+│   │   ├── 2026-01-19_decide_run-it.md
 │   │   └── command-naming-analysis.md
 │   ├── analytics
 │   │   ├── sessions
@@ -926,6 +944,7 @@
 │   │   └── cycle-2026-01-18-234700.md
 │   ├── goals
 │   │   ├── 2026-01-13_run-it_workflow_goals.md
+│   │   ├── 2026-01-19_teleport-massive-founding-authenticity.md
 │   │   ├── command-ecosystem.md
 │   │   ├── index.json
 │   │   ├── reincarnation-system-alive-dead-states.md
@@ -947,6 +966,8 @@
 │   │   ├── 2026-01-14_electron_tavern_security_fixes.md
 │   │   ├── 2026-01-14_run-it_workflow_hypotheses.md
 │   │   ├── 2026-01-19_022635_another_cycle_hypotheses.md
+│   │   ├── 2026-01-19_empirica_dashboard_manual.md
+│   │   ├── 2026-01-19_run-it_authenticity.md
 │   │   └── hypothesis_2026-01-19_025344_typst_infrastructure.md
 │   ├── journal
 │   │   ├── archive
@@ -1009,21 +1030,44 @@
 │   │   ├── quests
 │   │   ├── party_state.json
 │   │   └── realm_manifest.json
-│   └── pdfme_realm
-│       ├── packages
-│       ├── playground
-│       ├── scripts
-│       ├── website
-│       ├── CLAUDE.md
-│       ├── CNAME
-│       ├── DEVELOPMENT.md
-│       ├── LICENSE.md
+│   ├── gaming_gambling_realm
+│   │   ├── games
+│   │   ├── precedents
+│   │   ├── readings
+│   │   ├── sessions
+│   │   ├── tools
+│   │   ├── INTEGRATION.md
+│   │   ├── README.md
+│   │   └── realm_manifest.json
+│   ├── pdfme_realm
+│   │   ├── packages
+│   │   ├── playground
+│   │   ├── scripts
+│   │   ├── website
+│   │   ├── CLAUDE.md
+│   │   ├── CNAME
+│   │   ├── DEVELOPMENT.md
+│   │   ├── LICENSE.md
+│   │   ├── README.md
+│   │   ├── RELEASE.md
+│   │   ├── eslint.config.mjs
+│   │   ├── package-lock.json
+│   │   ├── package.json
+│   │   └── tsconfig.base.json
+│   └── plan_monitor_realm
+│       ├── archive
+│       ├── certifications
+│       ├── handoffs
+│       ├── monitoring
+│       ├── reports
+│       ├── tickets
+│       ├── workers
 │       ├── README.md
-│       ├── RELEASE.md
-│       ├── eslint.config.mjs
-│       ├── package-lock.json
-│       ├── package.json
-│       └── tsconfig.base.json
+│       ├── prime_being_authority.md
+│       ├── prime_directive.json
+│       ├── realm_manifest.json
+│       ├── setup_prime_being.py
+│       └── spawn_worker_being.py
 ├── _science
 │   ├── data
 │   ├── experiments
@@ -1097,6 +1141,60 @@
 │   └── stb-template.tex
 ├── _sentinel
 │   └── reports
+├── _simulations
+│   ├── sim_20260119_113802
+│   ├── sim_20260119_113834
+│   ├── sim_20260119_114008
+│   ├── sim_20260119_114109
+│   │   ├── snapshot_000001.json
+│   │   ├── snapshot_000002.json
+│   │   ├── snapshot_000003.json
+│   │   ├── snapshot_000004.json
+│   │   ├── snapshot_000005.json
+│   │   ├── snapshot_000006.json
+│   │   ├── snapshot_000007.json
+│   │   ├── snapshot_000008.json
+│   │   ├── snapshot_000009.json
+│   │   ├── snapshot_000010.json
+│   │   ├── snapshot_000011.json
+│   │   ├── snapshot_000012.json
+│   │   ├── snapshot_000013.json
+│   │   ├── snapshot_000014.json
+│   │   ├── snapshot_000015.json
+│   │   ├── snapshot_000016.json
+│   │   ├── snapshot_000017.json
+│   │   ├── snapshot_000018.json
+│   │   ├── snapshot_000019.json
+│   │   ├── snapshot_000020.json
+│   │   ├── snapshot_000021.json
+│   │   ├── snapshot_000022.json
+│   │   ├── snapshot_000023.json
+│   │   ├── snapshot_000024.json
+│   │   ├── snapshot_000025.json
+│   │   ├── snapshot_000026.json
+│   │   ├── snapshot_000027.json
+│   │   ├── snapshot_000028.json
+│   │   ├── snapshot_000029.json
+│   │   ├── snapshot_000030.json
+│   │   ├── snapshot_000031.json
+│   │   ├── snapshot_000032.json
+│   │   ├── snapshot_000033.json
+│   │   ├── snapshot_000034.json
+│   │   ├── snapshot_000035.json
+│   │   ├── snapshot_000036.json
+│   │   ├── snapshot_000037.json
+│   │   ├── snapshot_000038.json
+│   │   ├── snapshot_000039.json
+│   │   ├── snapshot_000040.json
+│   │   ├── snapshot_000041.json
+│   │   ├── snapshot_000042.json
+│   │   ├── snapshot_000043.json
+│   │   ├── snapshot_000044.json
+│   │   ├── snapshot_000045.json
+│   │   ├── snapshot_000046.json
+│   │   ├── snapshot_000047.json
+│   │   └── snapshot_000048.json
+│   └── sim_20260119_114237
 ├── _standalone_tools
 │   └── probe
 │       ├── examples
@@ -1140,22 +1238,6 @@
 │   ├── latex_exam_template.pdf
 │   └── latex_exam_template.tex
 ├── _temp_pdf_examples
-│   ├── 00_showcase.pdf
-│   ├── 01_direct_compilation.pdf
-│   ├── 01_simple.pdf
-│   ├── 02_flow_way.pdf
-│   ├── 02_flow_way_report.pdf
-│   ├── 03_arkheion.pdf
-│   ├── 03_arkheion_paper.pdf
-│   ├── 04_ieee_paper.pdf
-│   ├── 04_letter.pdf
-│   ├── 05_book.pdf
-│   ├── 06_wonderous_book.pdf
-│   ├── 07_business_letter.pdf
-│   ├── 08_newsletter.pdf
-│   ├── SUMMARY.pdf
-│   ├── final_math_test.pdf
-│   └── test_math.pdf
 ├── _temp_pdf_samples
 │   ├── pdf_library_comparison
 │   │   ├── pdf_library_comparison_master.pdf
@@ -2048,8 +2130,50 @@
 │   │   ├── WE-260119-4nh6_index.md
 │   │   ├── system_documentation.typ
 │   │   └── waft-system-documentation.pdf
+│   ├── WE-260119-6en9_aero_check_typst_template_initialization
+│   │   ├── tickets
+│   │   └── WE-260119-6en9_index.md
 │   ├── WE-260119-bk01_waft_command_discovery_book
 │   │   └── WE-260119-bk01_index.md
+│   ├── WE-260119-ejtx_teleport_massive_official_guide_to_scint_traversal
+│   │   ├── founding_team_business_cards
+│   │   ├── founding_team_photos_2026
+│   │   ├── lhc_team_photos
+│   │   ├── tickets
+│   │   ├── BOOKLET_COVER_2026.pdf
+│   │   ├── BOOKLET_COVER_2026.typ
+│   │   ├── CONTINUATION_PROMPT.md
+│   │   ├── FOUNDING_TEAM_REVIEW_AND_IMPROVEMENTS.md
+│   │   ├── LHC_ORIGINAL_TEAM_LINKEDIN.json
+│   │   ├── LHC_ORIGINAL_TEAM_REPORT.pdf
+│   │   ├── LHC_ORIGINAL_TEAM_REPORT.typ
+│   │   ├── ONE_SHOT_PROMPT.md
+│   │   ├── QUANTUM_TELEPORTATION_RESEARCH_FOUNDATION_2026.pdf
+│   │   ├── QUANTUM_TELEPORTATION_RESEARCH_FOUNDATION_COMPLETE_2026.pdf
+│   │   ├── RESEARCH_ABSTRACT_2026.pdf
+│   │   ├── RESEARCH_ABSTRACT_2026.typ
+│   │   ├── TELEPORT_MASSIVE_CASE_FILE_2026.pdf
+│   │   ├── TELEPORT_MASSIVE_FOUNDING_LETTER_2026.pdf
+│   │   ├── TELEPORT_MASSIVE_FOUNDING_LETTER_2026.typ
+│   │   ├── TELEPORT_MASSIVE_FOUNDING_TEAM_2026.json
+│   │   ├── TELEPORT_MASSIVE_FOUNDING_TEAM_2026.pdf
+│   │   ├── TELEPORT_MASSIVE_FOUNDING_TEAM_2026.typ
+│   │   ├── TELEPORT_MASSIVE_INVOICE_2026-001.pdf
+│   │   ├── TELEPORT_MASSIVE_INVOICE_2026-001.typ
+│   │   ├── TELEPORT_MASSIVE_INVOICE_2026-002.pdf
+│   │   ├── TELEPORT_MASSIVE_INVOICE_2026-002.typ
+│   │   ├── TELEPORT_MASSIVE_MISSION_STATEMENT_2026.pdf
+│   │   ├── TELEPORT_MASSIVE_MISSION_STATEMENT_2026.typ
+│   │   ├── TELEPORT_MASSIVE_RESEARCH_TEAM_2111.json
+│   │   ├── WAFT_CAPABILITY_EXAMPLE.md
+│   │   ├── WE-260119-ejtx_index.md
+│   │   ├── compile_business_cards.py
+│   │   ├── create_complete_research_booklet.py
+│   │   ├── create_founding_team_business_cards.py
+│   │   ├── create_quantum_teleportation_research_booklet.py
+│   │   ├── create_teleport_massive_case_file.py
+│   │   ├── download_lhc_photos.py
+│   │   └── generate_founding_team_2026.py
 │   ├── WE-260119-ek8v_biz_report_typst_template_initialization
 │   │   ├── tickets
 │   │   ├── TEMPLATE_DOCUMENTATION.md
@@ -2057,6 +2181,7 @@
 │   │   ├── author.png
 │   │   ├── mylogo.svg
 │   │   ├── techimage.svg
+│   │   ├── waft-funding-pitch.pdf
 │   │   └── waft-funding-pitch.typ
 │   ├── active
 │   │   ├── 002_design_agent_interface.md
@@ -2565,6 +2690,8 @@
 │   │   ├── case_20260119_014400_dnd_campaign_integration.md
 │   │   ├── case_20260119_014400_dnd_campaign_integration.pdf
 │   │   ├── case_20260119_023000_another_cycle_streamlined_approach.md
+│   │   ├── case_20260119_125207_security_functions.md
+│   │   ├── case_20260119_125207_security_functions.pdf
 │   │   ├── cycle1_analysis_insights.md
 │   │   ├── cycle1_gap_analysis_report.md
 │   │   ├── cycle1_recommendations_matrix.md
@@ -2934,6 +3061,8 @@
 │   ├── CHECKPOINT_2026-01-19_another_cycle_complete.md
 │   ├── CHECKPOINT_2026-01-19_another_cycle_completion.md
 │   ├── CHECKPOINT_2026-01-19_dnd_campaign_integration.md
+│   ├── CHECKPOINT_2026-01-19_empirica_manual.md
+│   ├── CHECKPOINT_2026-01-19_run-it.md
 │   ├── CHOICE_2026-01-17_100400_theancestors_reborn.md
 │   ├── CHOICE_SYSTEM_2026-01-17_100400_gravity_is_choice.md
 │   ├── COGNITIVE_TOOLS_CONTENT_PLAN_2026-01-18.md
@@ -3011,6 +3140,13 @@
 │   ├── CRITIQUE_2026-01-19_022700_teleport_massive_economic_simulation.md
 │   ├── CRITIQUE_2026-01-19_025344_typst_infrastructure_implementation.md
 │   ├── CRITIQUE_2026-01-19_025547_paperwork_god_system.md
+│   ├── CRITIQUE_2026-01-19_112116_thoth_tool_system.md
+│   ├── CRITIQUE_2026-01-19_121009_thoth_realm_simulator_complete_implementation.md
+│   ├── CRITIQUE_2026-01-19_121346_phase_1_core_functionality.md
+│   ├── CRITIQUE_2026-01-19_140310_succulent_jewelry_pdf_system.md
+│   ├── CRITIQUE_2026-01-19_141214_deckz_poker_wrapper.md
+│   ├── CRITIQUE_2026-01-19_222544_empirica_manual.md
+│   ├── CRITIQUE_2026-01-19_2234.md
 │   ├── CRITIQUE_AND_REFLECTION_2026-01-11.md
 │   ├── CRITIQUE_DAVEYJONES_2026-01-12.md
 │   ├── CRITIQUE_STORYTELLER_ASSUMPTIONS_ANALYSIS.md
@@ -3110,6 +3246,8 @@
 │   ├── MINDSPACE_REVIEW_2026-01-16_1158.md
 │   ├── MINDSPACE_REVIEW_2026-01-17_1346.md
 │   ├── MINDSPACE_REVIEW_2026-01-17_1346.pdf
+│   ├── MINDSPACE_REVIEW_2026-01-19_2227.md
+│   ├── MINDSPACE_REVIEW_2026-01-19_2227.pdf
 │   ├── MINDSPACE_REVIEW_20260119_014331.md
 │   ├── MINDSPACE_REVIEW_20260119_014331.pdf
 │   ├── NAVBAR_ANALYSIS_2026-01-18.md
@@ -3149,6 +3287,8 @@
 │   ├── PDF_GENERATOR_MODULARIZATION_COMPLETE.md
 │   ├── PDF_SCIENTIFIC_EVOLUTION_COMPLETE.md
 │   ├── PDF_SCIENTIFIC_EVOLUTION_PLAN.md
+│   ├── PHASE_1_IMPLEMENTATION_PROGRESS.md
+│   ├── PHASE_1_STATUS.md
 │   ├── PHASE_1_TESTING_COMPLETE.md
 │   ├── PHASE_MINUS_ONE_2026-01-17_100400_the_void_fundamental_forces.md
 │   ├── PLAN_BOOKLET_CREATOR_INTEGRATION.html
@@ -3157,6 +3297,13 @@
 │   ├── PLAN_EVOLVE_Deep_Game_Science.md
 │   ├── PLAN_GOD_OF_SCIENCE_2026-01-14.md
 │   ├── PLAN_REVISION_2026-01-11_210531_WAFT_KERNEL.md
+│   ├── PLAN_REVISION_2026-01-19_112222.md
+│   ├── PLAN_REVISION_2026-01-19_121009.md
+│   ├── PLAN_REVISION_2026-01-19_121346.md
+│   ├── PLAN_REVISION_2026-01-19_140541.md
+│   ├── PLAN_REVISION_2026-01-19_144154.md
+│   ├── PLAN_REVISION_20260119_175403.md
+│   ├── PLAN_REVISION_20260119_223500_consolidate_all_code_to_origin_main.md
 │   ├── PLAN_UPDATE_2026-01-17_100400_expanded_cosmology.md
 │   ├── PRINTER_FRIENDLY_WHITE_BACKGROUND_UPDATE.md
 │   ├── PRINTING_FIX_2026-01-12.md
@@ -3228,6 +3375,7 @@
 │   ├── SESSION_RECAP_2026-01-12.md
 │   ├── SESSION_RECAP_2026-01-14_deep-think-implementation.md
 │   ├── SESSION_RECAP_2026-01-15.md
+│   ├── SESSION_RECAP_2026-01-19.md
 │   ├── SESSION_STATS_2026-01-11.md
 │   ├── SESSION_SUMMARY_2026-01-11_COMPLETE.md
 │   ├── SOURCE_CONSCIOUSNESS_COMPLETE.md
@@ -3346,12 +3494,67 @@
 │   ├── organized_pdfs
 │   ├── WAFT_Advanced_Demo_Booklet_PrinterFriendly.pdf
 │   └── WAFT_Framework_Documentation.pdf
+├── aero-check
+│   ├── examples
+│   │   ├── 00_umbra_integration_showcase.pdf
+│   │   ├── 00_umbra_integration_showcase.typ
+│   │   ├── 01_aircraft_preflight.pdf
+│   │   ├── 01_aircraft_preflight.typ
+│   │   ├── 02_software_deployment.pdf
+│   │   ├── 02_software_deployment.typ
+│   │   ├── 03_event_planning.pdf
+│   │   ├── 03_event_planning.typ
+│   │   ├── 04_home_maintenance.pdf
+│   │   ├── 04_home_maintenance.typ
+│   │   ├── 05_recipe_cooking.pdf
+│   │   ├── 05_recipe_cooking.typ
+│   │   ├── 06_travel_packing.pdf
+│   │   ├── 06_travel_packing.typ
+│   │   ├── 07_project_launch.pdf
+│   │   ├── 07_project_launch.typ
+│   │   ├── 08_emergency_response.pdf
+│   │   ├── 08_emergency_response.typ
+│   │   ├── 09_code_review.pdf
+│   │   ├── 09_code_review.typ
+│   │   ├── 10_meeting_preparation.pdf
+│   │   ├── 10_meeting_preparation.typ
+│   │   ├── 11_health_checkup.pdf
+│   │   ├── 11_health_checkup.typ
+│   │   ├── 12_learning_study.pdf
+│   │   ├── 12_learning_study.typ
+│   │   ├── 13_umbra_enhanced.pdf
+│   │   ├── 13_umbra_enhanced.typ
+│   │   ├── 14_umbra_neumorphic.pdf
+│   │   ├── 14_umbra_neumorphic.typ
+│   │   ├── 15_umbra_torn_paper.pdf
+│   │   ├── 15_umbra_torn_paper.typ
+│   │   ├── 16_hybrid_shadow_checklist.pdf
+│   │   ├── 16_hybrid_shadow_checklist.typ
+│   │   ├── 17_neumorphic_checklist.pdf
+│   │   ├── 17_neumorphic_checklist.typ
+│   │   ├── 18_premium_shadow_checklist.pdf
+│   │   └── 18_premium_shadow_checklist.typ
+│   ├── main.pdf
+│   └── main.typ
 ├── biz-report
 │   ├── author.png
 │   ├── biz-report.pdf
 │   ├── example.typ
 │   ├── mylogo.svg
 │   └── techimage.svg
+├── book-auto-work-guide
+│   ├── assets
+│   │   └── images
+│   ├── src
+│   │   ├── chapters
+│   │   ├── book-complete-pdf.typ
+│   │   ├── book-pdf.typ
+│   │   └── book.typ
+│   ├── BUILD.md
+│   ├── README.md
+│   ├── SCREENSHOT_GUIDE.md
+│   ├── book.typ -> src/book.typ
+│   └── output.pdf
 ├── book-waft-command-discovery
 │   ├── assets
 │   │   ├── diagrams
@@ -3395,7 +3598,10 @@
 │   │   ├── _pyrite
 │   │   └── meta_cognition_explanation.md
 │   ├── README.md
-│   └── WAFT_Demo_Booklet.pdf
+│   ├── WAFT_Demo_Booklet.pdf
+│   ├── aero_checklist_basic.pdf
+│   ├── aero_checklist_neumorphic.pdf
+│   └── aero_checklist_shadow.pdf
 ├── demo_template
 │   ├── _hidden
 │   ├── BATCHING_EXAMPLES.md
@@ -3420,6 +3626,11 @@
 ├── docs
 │   ├── designs
 │   │   └── 002_agent_interface.md
+│   ├── examples
+│   │   └── TELEPORT_MASSIVE_CASE_FILE_EXAMPLE.md
+│   ├── manuals
+│   │   ├── Empirica_Dashboard_Manual.md
+│   │   └── Empirica_Dashboard_Manual.pdf
 │   ├── releases
 │   │   └── v0.8.1-INFINITY.md
 │   ├── research
@@ -3435,6 +3646,7 @@
 │   │   └── v0.8.1-INFINITY-COMPLETE.md
 │   ├── AI_DND_INTEGRATION_COMPLETE.md
 │   ├── AI_DND_INTEGRATION_OPPORTUNITIES.md
+│   ├── AI_PROMPTS_EMPIRICA_DASHBOARD.md
 │   ├── AI_SDK_VISION.md
 │   ├── BRANCH_STRATEGY.md
 │   ├── CAMPFIRE_ESSENCE.md
@@ -3447,6 +3659,9 @@
 │   ├── DECISION_ENGINE_MERMAID.md
 │   ├── DECISION_ENGINE_PHASE3.md
 │   ├── DOCUMENT_BUILDER_EXPLAINED.md
+│   ├── EMPIRICA_DASHBOARD_INTEGRATION_COMPLETE.md
+│   ├── EMPIRICA_DASHBOARD_QUICK_REFERENCE.md
+│   ├── EMPIRICA_DASHBOARD_USAGE.md
 │   ├── EMPIRICA_PYTHON_API.md
 │   ├── ENTITY_BEING_TIMELESS_TIMEFUL.md
 │   ├── EVOLUTIONARY_ITERATION_PROCESS.md
@@ -3472,6 +3687,7 @@
 │   ├── ORACLE_EMPIRICA_WORKFLOW.md
 │   ├── ORACLE_JOURNAL_MEMORY.md
 │   ├── ORACLE_PERSONALITY.md
+│   ├── ORACLE_REFERENCE_DATA.md
 │   ├── PDF_GENERATOR_API.md
 │   ├── PDF_LIBRARY_COMPARISON.md
 │   ├── PDF_METRICS_COLLECTION.md
@@ -3505,9 +3721,13 @@
 │   ├── SYSTEM_OVERVIEW.md
 │   ├── SYSTEM_OVERVIEW.pdf
 │   ├── THE_ULTIMATE_LESSON.md
+│   ├── TYPST_TEMPLATES_BROWSER_REPORT.md
 │   ├── UNIFIED_GENESIS_PROTOCOL.md
 │   ├── UNIFIED_PDF_CLASS.md
 │   ├── VERIFICATION_REPORT.pdf
+│   ├── WAFT_ISO_7010_USAGE_GUIDE.md
+│   ├── WAFT_ISO_7010_USAGE_GUIDE.pdf
+│   ├── WAFT_ISO_7010_USAGE_GUIDE.typ
 │   ├── WAFT_METRICS_SYSTEM.md
 │   ├── pyrite.md
 │   ├── pyrite_god.html
@@ -3517,6 +3737,7 @@
 │   ├── advanced_demo
 │   │   ├── README.md
 │   │   └── advanced_demo.py
+│   ├── 908530342-Building-AI-Agents-With-LLMs-RAG-And-Knowledge-Graphs-1.pdf
 │   ├── PROJECTS_DASHBOARD_SETUP.md
 │   ├── README_INTERACTIVE_DND_GAME.md
 │   ├── README_PROJECTS_DASHBOARD.md
@@ -3547,23 +3768,36 @@
 │   ├── enable_pdf_metrics.py
 │   ├── evolve_constraint.py
 │   ├── evolving_story_demo.py
+│   ├── generate_aero_checklist_example.py
 │   ├── generate_all_pdfs_comparison.py
 │   ├── generate_apology_of_creation_pdf.py
 │   ├── generate_attention_paper.py
 │   ├── generate_campaign_binder.py
+│   ├── generate_card_art_composition.py
+│   ├── generate_card_art_with_ai_images.py
+│   ├── generate_card_game_prototype.py
+│   ├── generate_card_story_prompts.py
+│   ├── generate_decision_cards.py
 │   ├── generate_demo_booklet.py
 │   ├── generate_demo_printer_friendly.py
 │   ├── generate_demo_walkthrough.py
 │   ├── generate_dnd_campaign_pdfs.py
 │   ├── generate_dnd_evolution_report.py
+│   ├── generate_dnd_visualization.py
 │   ├── generate_document_builder_explained.py
 │   ├── generate_documentbuilder_evolution_pdf.py
 │   ├── generate_encapsulated_environments_pdf.py
 │   ├── generate_flight_moment.py
+│   ├── generate_gambling_demi_god.py
+│   ├── generate_gaming_realm_showcase.py
 │   ├── generate_god_devil_dialogue_pdf.py
 │   ├── generate_pdf_jinja.py
 │   ├── generate_pdf_reportlab.py
 │   ├── generate_pdf_weasyprint.py
+│   ├── generate_poker_session_recap.py
+│   ├── generate_poker_story.py
+│   ├── generate_poker_visualization.py
+│   ├── generate_probability_education.py
 │   ├── generate_scientific_session_recap.py
 │   ├── generate_session_recap_final.py
 │   ├── generate_session_recap_pdf.py
@@ -3765,7 +3999,9 @@
 │   ├── experiments
 │   │   ├── data
 │   │   ├── experiments
-│   │   └── states
+│   │   ├── run-it-2026-01-19-2234
+│   │   ├── states
+│   │   └── 2026-01-19_prove-it_empirica_manual.json
 │   ├── proof_experiments
 │   │   ├── data
 │   │   ├── experiments
@@ -3812,6 +4048,8 @@
 │   ├── ascend_test_runner.py
 │   ├── auto_work.py
 │   ├── being_explore_system.py
+│   ├── bootstrap_epistemic_state.py
+│   ├── browse_typst_templates.py
 │   ├── check-editable.sh
 │   ├── consolidate_plans.py
 │   ├── create_book.py
@@ -3820,6 +4058,8 @@
 │   ├── create_comprehensive_summary.py
 │   ├── create_dossier.py
 │   ├── create_evening_report.py
+│   ├── create_fai_wei_cv.py
+│   ├── create_fai_wei_founder.py
 │   ├── create_late_night_report.py
 │   ├── create_midday_dossier.py
 │   ├── create_mission.py
@@ -3831,6 +4071,7 @@
 │   ├── create_town_and_monitor.py
 │   ├── create_truth_aspect_booklet.py
 │   ├── create_worldbuild.py
+│   ├── critique_and_revise_plan.py
 │   ├── demo_typst_templates.py
 │   ├── dev-reinstall.sh
 │   ├── dev_research_server.py
@@ -3860,8 +4101,10 @@
 │   ├── generate_comprehensive_pdf_library_comparison.py
 │   ├── generate_documentation_pdfs.py
 │   ├── generate_ebook_template_research_pdf.py
+│   ├── generate_empirica_dashboard_manual.py
 │   ├── generate_enhanced_research_report.py
 │   ├── generate_examples.py
+│   ├── generate_fai_wei_profile_picture.py
 │   ├── generate_feature_showcase.py
 │   ├── generate_foundation_demo.py
 │   ├── generate_improvements_summary.py
@@ -3869,6 +4112,7 @@
 │   ├── generate_latex_feature_latex.py
 │   ├── generate_pantheon_templates.py
 │   ├── generate_pdf_supercut_binder.py
+│   ├── generate_poker_pdf.py
 │   ├── generate_pyrite_god_pdf.py
 │   ├── generate_quest_guide_html.py
 │   ├── generate_research_simulation_waft.py
@@ -3883,6 +4127,7 @@
 │   ├── generate_tavern_game_with_skills.py
 │   ├── generate_tavern_server_openhands.py
 │   ├── generate_teleport_massive_booklet.py
+│   ├── generate_teleport_massive_campaign.py
 │   ├── generate_teleport_massive_creative_booklet.py
 │   ├── generate_test_summary.py
 │   ├── generate_the_point_narrative.py
@@ -3900,6 +4145,7 @@
 │   ├── improve_and_evolve_ui.py
 │   ├── init_demo.py
 │   ├── json_merge_driver.py
+│   ├── launch_dnd_campaign.py
 │   ├── long_dnd_campaign.py
 │   ├── massive_epic_run.py
 │   ├── migrate_beings_lifecycle.py
@@ -3934,6 +4180,7 @@
 │   ├── run_research_simulation.py
 │   ├── run_study.py
 │   ├── seed_reincarnation_demo.py
+│   ├── serve_fai_wei_ui.py
 │   ├── session-recap.py
 │   ├── setup_dnd5e_exploration.py
 │   ├── setup_work_effort_tools.py
@@ -3948,6 +4195,7 @@
 │   ├── study_claim_thorough.py
 │   ├── study_gym.py
 │   ├── sync-cursor-commands.sh
+│   ├── template_metadata_extractor.py
 │   ├── test_ashad001_templates.py
 │   ├── test_batch_with_wager.py
 │   ├── test_demos.py
@@ -3974,6 +4222,16 @@
 │   ├── waft_self_study.py
 │   ├── waft_status.py
 │   └── work_dashboard.py
+├── simulation
+│   ├── IMPLEMENTATION_CRITIQUE.md
+│   ├── QUICK_START.md
+│   ├── README.md
+│   ├── __init__.py
+│   ├── requirements.txt
+│   ├── run_simulation.sh
+│   ├── simulation_server.py
+│   ├── simulation_viewer.html
+│   └── thoth_realm_simulator.py
 ├── src
 │   ├── gym
 │   │   ├── rpg
@@ -4031,6 +4289,43 @@
 │       ├── verify_foundation.py
 │       ├── web.py
 │       └── worldbuild.py
+├── succulent_jewelry_pdfs
+│   ├── _work_efforts
+│   │   └── WE-260119-7och_succulent_jewelry_pdf_system_project_setup_ui_evolution
+│   ├── config
+│   │   ├── guide_config.json
+│   │   └── gumroad_metadata.json
+│   ├── content
+│   │   ├── guides
+│   │   └── poetry
+│   ├── scripts
+│   │   ├── __init__.py
+│   │   ├── add_images.py
+│   │   ├── batch_generate.py
+│   │   ├── compare_image_apis.py
+│   │   ├── create_visual_comparison.py
+│   │   ├── experiment_formats.py
+│   │   ├── experiment_queries.py
+│   │   ├── generate_guide.py
+│   │   ├── gumroad_prep.py
+│   │   ├── image_api.py
+│   │   ├── resource_manager.py
+│   │   ├── security.py
+│   │   └── validation.py
+│   ├── templates
+│   │   ├── __init__.py
+│   │   ├── guide_template.py
+│   │   └── poetry_template.py
+│   ├── COMPLETE_SYSTEM_GUIDE.md
+│   ├── CONTINUATION_PROMPT.md
+│   ├── IMAGE_API_GUIDE.md
+│   ├── IMPLEMENTATION_COMPLETE.md
+│   ├── PIXABAY_API_GUIDE.md
+│   ├── README.md
+│   ├── TEMPLATE_GUIDE.md
+│   ├── index.html
+│   ├── requirements.txt
+│   └── verify_setup.py
 ├── templates
 │   ├── ashad001-latex-templates
 │   │   ├── Business Proposal Template
@@ -4062,7 +4357,8 @@
 │   │   ├── acp.cls
 │   │   └── cookbook.tex
 │   ├── typst
-│   │   └── dnd
+│   │   ├── dnd
+│   │   └── case_brief.typ
 │   ├── unicamp-physics-report
 │   │   └── main.tex
 │   ├── 1306_en_wintergood_fieldguide_v2 (1).pdf
@@ -4181,23 +4477,36 @@
 │   ├── QUICK_START.md
 │   ├── README.md
 │   └── START_DEV.sh
+├── yagenda
+│   ├── agenda.yaml
+│   └── main.typ
+├── 0302114v1.pdf
 ├── 18029100.json
+├── 2302.08756v1.pdf
+├── 2404.10738v4.pdf
+├── 2406.05182v1.pdf
+├── 2502.10253v2.pdf
+├── 2503.10761v1.pdf
+├── 2508.14691v2.pdf
 ├── AI_NARRATIVE_GUIDE.md
 ├── Batch-Test-Document.tex
 ├── CHANGELOG.md
 ├── COMPREHENSIVE_ORCHESTRATION_PROMPT.md
+├── CONTINUATION_PROMPT.md
 ├── CONTRIBUTING.md
 ├── CREDITS.md
 ├── Claude Code WAFT Genesis Moment.md
 ├── Code Generation Competition 16 Proprietary vs. Open-Source LLMs Iterative Learning Based on FDA Adverse Event Reporting System.pdf
 ├── DEMO_CHECKLIST.md
 ├── DEMO_TEMPLATE_README.md
+├── DND_CAMPAIGN_LAUNCH_PROMPT.txt
 ├── DocumentBuilder_Evolution_Report.pdf
 ├── GPT-4-Techincal-Report.pdf
 ├── GPT-4-Techincal-Report_RECREATED.pdf
 ├── Gamification-Research.md
 ├── GenerativeAgents-Simulacra2304.03442v2.pdf
 ├── IRREFUTABLE_PROOF.md
+├── ISO_7010.pdf
 ├── LICENSE
 ├── LOCAL_TESTING_GUIDE.md
 ├── LaTeX-Generator-Test.tex
@@ -4205,6 +4514,7 @@
 ├── MAIN_GOAL.md
 ├── Mint Genesis.md
 ├── ONE_PAGER_EVOLUTION_SYSTEM.md
+├── ORACLE_FIX_SUMMARY.md
 ├── PDF_FORMATTING_IMPROVEMENTS_COMPLETE.md
 ├── PDF_GENERATOR_FILES_INVENTORY.md
 ├── PDF_IMPROVEMENTS_SUMMARY.md
@@ -4227,11 +4537,15 @@
 ├── RELEASE_NOTES_v0.8.1.md
 ├── RELEASE_NOTES_v0.9.0.md
 ├── RELEASE_NOTES_v0.9.3.md
+├── RELEASE_NOTES_v0.9.4.md
 ├── RELEASE_SUMMARY_v0.5.2.md
 ├── REVIEWER_GUIDE.md
+├── SESSION_SUMMARY_20260119.md
 ├── SPEC-TAVERNKEEPER.md
 ├── START_EVOLVE_UI.sh
 ├── SVELTEKIT_DEVELOPMENT_PROMPT.md
+├── TELEPORT_MASSIVE_CASE_FILE_2026 (1).pdf
+├── TELEPORT_MASSIVE_MISSION_STATEMENT_2026.pdf
 ├── THE MOMENT.md
 ├── Untitled.md
 ├── V0.6.0_VERSION_UPDATE_SUMMARY.md
@@ -4239,6 +4553,7 @@
 ├── V0.9.0_RELEASE_SUMMARY.md
 ├── V0.9.1_VERSION_UPDATE_SUMMARY.md
 ├── V0.9.3_VERSION_UPDATE_SUMMARY.md
+├── V0.9.4_VERSION_UPDATE_SUMMARY.md
 ├── V2_EVOLUTION_SUMMARY.md
 ├── V2_INTEGRATION_COMPLETE.md
 ├── VERIFICATION_REPORT.md
@@ -4267,6 +4582,8 @@
 ├── WAFT_GAME_RULES_NO_BLACK_BARS.pdf
 ├── WAFT_GAME_RULES_SUPER_EVOLVED.pdf
 ├── WAFT_LARVA_IMPLEMENTATION_SUMMARY.md
+├── WAFT_MENU.pdf
+├── WAFT_MENU.typ
 ├── WAFT_Project_Booklet.pdf
 ├── WAFT_SYSTEM_INTEGRATION.md
 ├── WAFT_WELCOME_PACKET.md
@@ -4289,6 +4606,7 @@
 ├── demo.py
 ├── demo_claude.py
 ├── demo_karma.py
+├── ee08e566-7fb5-408e-b101-e5a722bca01a.pdf
 ├── encapsulated_environments_research.html
 ├── encapsulated_environments_research.pdf
 ├── evolved_test.pdf
@@ -4300,6 +4618,7 @@
 ├── hello_world.py
 ├── index.html
 ├── install_latex.sh
+├── mediawiki-1.45.1.zip
 ├── open_small_iterm.sh
 ├── pdf_supercut_binder.pdf
 ├── pdf_viewer.html
@@ -4397,4 +4716,4 @@
 ├── waft_memory.db
 └── world_models.pdf
 
-654 directories, 3744 files
+705 directories, 4012 files

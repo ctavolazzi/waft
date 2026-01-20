@@ -40,7 +40,8 @@ class EmpiricaManager:
         """
         self.project_path = project_path
         self._empirica_cmd = self._find_empirica_command()
-        self._project_id: Optional[str] = None  # Cached project ID
+        self._project_id: Optional[str] = self._load_project_id()  # Cached project ID
+        self._session_id: Optional[str] = self._load_session_id()
         
         # Try to initialize Python API (preferred over CLI)
         self._api_manager: Optional[EmpiricaAPIManager] = None
@@ -53,6 +54,56 @@ class EmpiricaManager:
             except Exception:
                 # API initialization failed - fall back to CLI
                 self._api_manager = None
+
+    def _project_id_path(self) -> Path:
+        """Get path for storing Empirica project ID."""
+        return self.project_path / ".empirica" / "project_id.json"
+
+    def _session_id_path(self) -> Path:
+        """Get path for storing Empirica session ID."""
+        return self.project_path / ".empirica" / "session_id.json"
+
+    def _load_project_id(self) -> Optional[str]:
+        """Load cached Empirica project ID if available."""
+        project_id_file = self._project_id_path()
+        if not project_id_file.exists():
+            return None
+        try:
+            data = json.loads(project_id_file.read_text())
+            project_id = data.get("project_id")
+            return project_id if project_id else None
+        except Exception:
+            return None
+
+    def _save_project_id(self, project_id: str) -> None:
+        """Persist Empirica project ID to disk."""
+        project_id_file = self._project_id_path()
+        try:
+            project_id_file.parent.mkdir(parents=True, exist_ok=True)
+            project_id_file.write_text(json.dumps({"project_id": project_id}))
+        except Exception:
+            pass
+
+    def _load_session_id(self) -> Optional[str]:
+        """Load cached Empirica session ID if available."""
+        session_id_file = self._session_id_path()
+        if not session_id_file.exists():
+            return None
+        try:
+            data = json.loads(session_id_file.read_text())
+            session_id = data.get("session_id")
+            return session_id if session_id else None
+        except Exception:
+            return None
+
+    def _save_session_id(self, session_id: str) -> None:
+        """Persist Empirica session ID to disk."""
+        session_id_file = self._session_id_path()
+        try:
+            session_id_file.parent.mkdir(parents=True, exist_ok=True)
+            session_id_file.write_text(json.dumps({"session_id": session_id}))
+        except Exception:
+            pass
     
     @property
     def api_available(self) -> bool:
@@ -263,7 +314,8 @@ class EmpiricaManager:
             "has_context": False,
             "message": "",
             "auto_initialized": False,
-            "session_created": False
+            "session_created": False,
+            "session_id": None
         }
         
         # Step 1: Check if initialized (directory exists)
@@ -389,6 +441,9 @@ class EmpiricaManager:
                     session_id = self.create_session(ai_id=ai_id, session_type=session_type)
                     if session_id:
                         result["session_created"] = True
+                        result["session_id"] = session_id
+                        self._session_id = session_id
+                        self._save_session_id(session_id)
                         # Try bootstrap again after session creation
                         context = self.project_bootstrap()
                 except Exception as e:
@@ -472,14 +527,36 @@ class EmpiricaManager:
         Returns:
             Session ID if successful, None otherwise
         """
-        import json
-
-        session_data = {
-            "ai_id": ai_id,
-            "session_type": session_type,
-        }
-
         try:
+            cmd = self._empirica_cmd + ["session-create", "--ai-id", ai_id, "--output", "json"]
+            if self._project_id:
+                cmd.extend(["--project-id", self._project_id])
+            if session_type:
+                cmd.extend(["--subject", session_type])
+
+            result = subprocess.run(
+                cmd,
+                cwd=self.project_path,
+                capture_output=True,
+                text=True,
+                check=True,
+                timeout=60,  # Empirica can be slow; allow more time
+            )
+            output = json.loads(result.stdout)
+            session_id = output.get("session_id")
+            if session_id:
+                self._session_id = session_id
+                self._save_session_id(session_id)
+            return session_id
+        except (subprocess.CalledProcessError, FileNotFoundError, json.JSONDecodeError, subprocess.TimeoutExpired):
+            pass
+
+        # Fallback: try AI-first JSON mode via stdin
+        try:
+            session_data = {
+                "ai_id": ai_id,
+                "session_type": session_type,
+            }
             result = subprocess.run(
                 self._empirica_cmd + ["session-create", "-"],
                 cwd=self.project_path,
@@ -487,15 +564,20 @@ class EmpiricaManager:
                 capture_output=True,
                 text=True,
                 check=True,
-                timeout=5,  # 5 second timeout to prevent hanging
+                timeout=5,
             )
-            # Parse session ID from output (format: {"session_id": "..."})
-            import json as json_module
-
-            output = json_module.loads(result.stdout)
-            return output.get("session_id")
+            output = json.loads(result.stdout)
+            session_id = output.get("session_id")
+            if session_id:
+                self._session_id = session_id
+                self._save_session_id(session_id)
+            return session_id
         except (subprocess.CalledProcessError, FileNotFoundError, json.JSONDecodeError, subprocess.TimeoutExpired):
             return None
+
+    def get_current_session_id(self) -> Optional[str]:
+        """Return cached session ID if available."""
+        return self._session_id or self._load_session_id()
 
     def submit_preflight(self, session_id: str, vectors: dict, reasoning: str = "") -> bool:
         """
@@ -511,6 +593,9 @@ class EmpiricaManager:
         Returns:
             True if successful, False otherwise
         """
+        # Normalize vectors to Empirica's expected flat schema
+        vectors = self._normalize_vectors(vectors)
+
         # Try Python API first (uses EpistemicAssessor)
         if self._api_manager and self._api_manager.is_available:
             assessment = self._api_manager.assess_vectors(
@@ -530,21 +615,20 @@ class EmpiricaManager:
         # Fall back to CLI
         import json
 
-        preflight_data = {
-            "session_id": session_id,
-            "vectors": vectors,
-            "reasoning": reasoning,
-        }
-
         try:
             subprocess.run(
-                self._empirica_cmd + ["preflight-submit", "-"],
+                self._empirica_cmd + [
+                    "preflight-submit",
+                    "--session-id", session_id,
+                    "--vectors", json.dumps(vectors),
+                    "--reasoning", reasoning,
+                    "--output", "json",
+                ],
                 cwd=self.project_path,
-                input=json.dumps(preflight_data),
                 capture_output=True,
                 text=True,
                 check=True,
-                timeout=5,  # 5 second timeout to prevent hanging
+                timeout=60,  # Empirica can be slow; allow more time
             )
             return True
         except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
@@ -564,6 +648,9 @@ class EmpiricaManager:
         Returns:
             True if successful, False otherwise
         """
+        # Normalize vectors to Empirica's expected flat schema
+        vectors = self._normalize_vectors(vectors)
+
         # Try Python API first
         if self._api_manager and self._api_manager.is_available:
             # Update beliefs with postflight evidence
@@ -586,17 +673,16 @@ class EmpiricaManager:
                 return True
         
         # Fall back to CLI
-        postflight_data = {
-            "session_id": session_id,
-            "vectors": vectors,
-            "reasoning": reasoning,
-        }
-
         try:
             subprocess.run(
-                self._empirica_cmd + ["postflight-submit", "-"],
+                self._empirica_cmd + [
+                    "postflight-submit",
+                    "--session-id", session_id,
+                    "--vectors", json.dumps(vectors),
+                    "--reasoning", reasoning,
+                    "--output", "json",
+                ],
                 cwd=self.project_path,
-                input=json.dumps(postflight_data),
                 capture_output=True,
                 text=True,
                 check=True,
@@ -605,6 +691,47 @@ class EmpiricaManager:
             return True
         except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
             return False
+
+    def _normalize_vectors(self, vectors: dict) -> dict:
+        """
+        Normalize vectors to Empirica's flat schema.
+
+        Accepts nested vectors (foundation/comprehension/execution) and flattens.
+        Ensures required keys 'know' and 'uncertainty' exist.
+        """
+        normalized = dict(vectors or {})
+
+        foundation = normalized.get("foundation") if isinstance(normalized.get("foundation"), dict) else {}
+        comprehension = normalized.get("comprehension") if isinstance(normalized.get("comprehension"), dict) else {}
+        execution = normalized.get("execution") if isinstance(normalized.get("execution"), dict) else {}
+
+        # Flatten foundation vectors
+        for key in ("know", "do", "context"):
+            if key not in normalized and key in foundation:
+                normalized[key] = foundation[key]
+
+        # Flatten comprehension vectors
+        for key in ("clarity", "coherence", "signal", "density"):
+            if key not in normalized and key in comprehension:
+                normalized[key] = comprehension[key]
+
+        # Flatten execution vectors
+        for key in ("state", "change", "completion", "impact"):
+            if key not in normalized and key in execution:
+                normalized[key] = execution[key]
+
+        # Required fields
+        if "know" not in normalized:
+            normalized["know"] = 0.0
+        if "uncertainty" not in normalized:
+            normalized["uncertainty"] = 1.0
+
+        # Remove nested dicts to avoid schema conflicts
+        normalized.pop("foundation", None)
+        normalized.pop("comprehension", None)
+        normalized.pop("execution", None)
+
+        return normalized
 
     def _discover_project_id(self) -> Optional[str]:
         """
@@ -666,7 +793,7 @@ class EmpiricaManager:
         """
         if self._project_id:
             return self._project_id
-        
+
         try:
             # Try project-bootstrap first to see if project exists
             # This will work if project is already linked to git remote
@@ -681,15 +808,16 @@ class EmpiricaManager:
                 bootstrap_data = json.loads(result.stdout)
                 if bootstrap_data.get("ok") and bootstrap_data.get("project_id"):
                     self._project_id = bootstrap_data.get("project_id")
+                    self._save_project_id(self._project_id)
                     return self._project_id
             except (subprocess.CalledProcessError, json.JSONDecodeError):
                 # Project doesn't exist or not linked - continue to create
                 pass
-            
+
             # Project doesn't exist - create it
             # Extract project name from directory name
             project_name = self.project_path.name
-            
+
             result = subprocess.run(
                 self._empirica_cmd + ["project-create", "--name", project_name, "--output", "json"],
                 cwd=self.project_path,
@@ -700,8 +828,9 @@ class EmpiricaManager:
             project_data = json.loads(result.stdout)
             if project_data.get("ok") and project_data.get("project_id"):
                 self._project_id = project_data.get("project_id")
+                self._save_project_id(self._project_id)
                 return self._project_id
-            
+
             return None
         except (subprocess.CalledProcessError, FileNotFoundError, json.JSONDecodeError, KeyError):
             # Git not available or project creation failed - return None
@@ -738,6 +867,7 @@ class EmpiricaManager:
             # Cache project_id from response if we didn't have it
             if bootstrap_data.get("ok") and bootstrap_data.get("project_id"):
                 self._project_id = bootstrap_data.get("project_id")
+                self._save_project_id(self._project_id)
             
             return bootstrap_data if bootstrap_data.get("ok") else None
         except (subprocess.CalledProcessError, FileNotFoundError, json.JSONDecodeError):

@@ -1,0 +1,22 @@
+{
+  "precedent_id": "precedent_001",
+  "title": "Card Visualization as Sacred Documentation",
+  "established": "2026-01-19T23:10:00",
+  "established_by": "The River King",
+  "realm": "gaming_gambling_realm",
+  "description": "The Deck of Fates establishes that card games can be documented visually, creating a precedent for all future game documentation.",
+  "rule": "All games of chance may be documented using card visualization systems. The visual representation of cards, hands, and game states is considered sacred documentation under The River King's domain.",
+  "applicability": [
+    "Poker games",
+    "Card game sessions",
+    "Gambling outcomes",
+    "Probability visualizations",
+    "Game state documentation"
+  ],
+  "tools": [
+    "deckz_poker visualization system",
+    "Session recap generator",
+    "Game prototype documentation"
+  ],
+  "status": "active"
+}

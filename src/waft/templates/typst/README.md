@@ -1600,11 +1600,94 @@ When adding new templates:
 
 This infrastructure is part of WAFT and follows the project's license.
 
+## Browsing Official Templates
+
+WAFT includes a tool to browse and explore the official Typst templates repository, compare them with existing wrappers, and generate comprehensive reports.
+
+### Using the Template Browser
+
+```bash
+# Generate a report comparing official templates with WAFT wrappers
+python3 scripts/browse_typst_templates.py
+```
+
+This will:
+- Fetch the list of official templates from GitHub
+- Extract metadata from each template's README
+- Compare with existing WAFT wrappers
+- Generate a detailed report at `docs/TYPST_TEMPLATES_BROWSER_REPORT.md`
+
+### Browser Report Contents
+
+The generated report includes:
+- **Template Status Summary**: Quick overview table showing which templates have wrappers
+- **Detailed Template Information**: For each template:
+  - GitHub URL and description
+  - Wrapper status and location
+  - Parameters and configuration options
+  - Usage examples
+- **Additional WAFT Wrappers**: Custom templates not in the official repository
+- **Summary Statistics**: Coverage metrics and counts
+
+### Adding New Templates
+
+To add a wrapper for a new official template:
+
+1. **Browse the template**: Check the [official templates repository](https://github.com/typst/templates) or run the browser tool
+2. **Create wrapper**: Create a new file in `src/waft/templates/typst/wrappers/` following the naming convention: `template-name.py` (with underscores)
+3. **Implement generate function**: Create a `generate_*` function that:
+   - Accepts content and output_path parameters
+   - Builds Typst content using the template
+   - Uses `TypstCompiler` to generate PDF
+4. **Add metadata**: Include docstring with category, tags, and source information
+5. **Test**: Verify the wrapper works with sample data
+6. **Regenerate report**: Run the browser tool to update the report
+
+Example wrapper structure:
+```python
+"""
+Template Name Typst Template Wrapper
+===================================
+
+Python wrapper for Template Name Typst template.
+Brief description of what the template does.
+
+Category: category_name
+Tags: [typst, official, category]
+Source: typst-templates
+"""
+
+from pathlib import Path
+from typing import Optional
+from ..compiler import TypstCompiler
+
+def generate_template_name(
+    content: str,
+    output_path: Path,
+    param1: Optional[str] = None,
+    **kwargs
+) -> Path:
+    """Generate PDF using Template Name Typst template."""
+    # Build Typst content
+    typst_content = f'''#import "@preview/template-name:version": template
+    
+#show: template.with(
+  param1: {param1 or "none"},
+)
+
+{content}
+'''
+    # Compile to PDF
+    compiler = TypstCompiler()
+    return compiler.compile(typst_content, output_path)
+```
+
 ## References
 
 - [Typst Documentation](https://typst.app/docs/)
 - [Typst Templates Repository](https://github.com/typst/templates)
 - [Typst Universe](https://typst.app/universe/)
+- [WAFT Template Browser Report](docs/TYPST_TEMPLATES_BROWSER_REPORT.md)
 
 ## Migration from LaTeX
 

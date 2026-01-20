@@ -479,6 +479,76 @@ waft assess --session-id abc-123 --history
 
 ---
 
+#### `waft empirica monitor`
+**Purpose:** Launch Empirica's terminal-based dashboard for monitoring epistemic state
+
+**Options:**
+- `--type, -t`: Dashboard type - `snapshot`, `cascade`, or `tui` (default: `snapshot`)
+- `--session-id, -s`: Session ID to monitor (optional)
+- `--path, -p`: Project path (default: current directory)
+
+**Dashboard Types:**
+- **snapshot**: Monitors snapshot memory quality with compression ratios and reliability scores (curses-based)
+- **cascade**: Monitors PREFLIGHT → POSTFLIGHT workflow with epistemic vector deltas (curses-based, minimalist for tmux)
+- **tui**: Full Textual-based terminal UI dashboard with project context, activity, and vectors (auto-refreshes)
+
+**Dependencies:**
+- **snapshot/cascade**: Requires `curses` (Unix, standard library) or `windows-curses` (Windows: `pip install windows-curses`)
+- **tui**: Requires `textual` package (`pip install textual`)
+
+**Prerequisites:** Empirica must be initialized (`waft init`)
+
+**What it does:**
+- Validates Empirica setup and project context
+- Checks for required dependencies
+- Launches the appropriate dashboard in the project directory
+- Provides interactive monitoring of epistemic state
+
+**Error Handling:**
+- Shows helpful error if Empirica not installed
+- Prompts to run `waft init` if Empirica not initialized
+- Provides installation instructions for missing dependencies
+- Validates session ID if provided
+
+**Example:**
+```bash
+waft empirica monitor                    # Launch snapshot monitor (default)
+waft empirica monitor --type cascade     # Launch CASCADE monitor
+waft empirica monitor --type tui         # Launch full TUI dashboard
+waft empirica monitor --session-id abc-123  # Monitor specific session
+waft empirica monitor --path /path/to/project
+```
+
+**Populating Dashboard Data:**
+
+The dashboard displays data from Empirica's CASCADE workflow. To populate it:
+
+1. **Use TheOracle** (automatic CASCADE):
+   ```bash
+   waft oracle "your question"  # Triggers PREFLIGHT → POSTFLIGHT
+   ```
+
+2. **Use /think command** (CURSOR):
+   ```
+   /think  # Creates PREFLIGHT checkpoint
+   ```
+
+3. **Use /run-it command** (CURSOR):
+   ```
+   /run-it  # Runs comprehensive workflow with CASCADE
+   ```
+
+4. **Manual logging**:
+   ```bash
+   waft finding log "discovery" --impact 0.7
+   waft unknown log "knowledge gap"
+   waft check  # Creates CHECK checkpoint
+   ```
+
+**See:** [EMPIRICA_DASHBOARD_USAGE.md](docs/EMPIRICA_DASHBOARD_USAGE.md) for complete usage guide.
+
+---
+
 #### `waft goal create <objective>`
 **Purpose:** Create a goal with epistemic scope
 

@@ -737,6 +737,7 @@ unknown_app = typer.Typer(help="Unknown logging commands")
 goal_app = typer.Typer(help="Goal management commands")
 github_app = typer.Typer(help="GitHub integration commands")
 journal_app = typer.Typer(help="Development journal commands")
+empirica_app = typer.Typer(help="Empirica monitoring and dashboard commands")
 
 app.add_typer(session_app, name="session")
 app.add_typer(finding_app, name="finding")
@@ -744,6 +745,7 @@ app.add_typer(unknown_app, name="unknown")
 app.add_typer(goal_app, name="goal")
 app.add_typer(github_app, name="github")
 app.add_typer(journal_app, name="journal")
+app.add_typer(empirica_app, name="empirica")
 app.add_typer(project_app, name="project")
 
 
@@ -1135,6 +1137,62 @@ def goal_list(
             console.print("[dim]No active goals[/dim]")
     else:
         console.print("[yellow]⚠️  No project context available[/yellow]")
+
+
+@empirica_app.command("monitor")
+def empirica_monitor(
+    dashboard_type: str = typer.Option(
+        "snapshot",
+        "--type",
+        "-t",
+        help="Dashboard type: snapshot, cascade, or tui"
+    ),
+    session_id: Optional[str] = typer.Option(
+        None,
+        "--session-id",
+        "-s",
+        help="Session ID to monitor"
+    ),
+    path: Optional[str] = typer.Option(
+        None,
+        "--path",
+        "-p",
+        help="Project path (default: current)"
+    ),
+):
+    """Launch Empirica TUI dashboard for monitoring epistemic state."""
+    from .core.empirica_dashboard import launch_empirica_dashboard
+
+    project_path = resolve_project_path(path)
+
+    try:
+        launch_empirica_dashboard(
+            project_path=project_path,
+            dashboard_type=dashboard_type,
+            session_id=session_id
+        )
+    except ImportError as e:
+        console.print(f"[red]❌ Empirica not installed: {e}[/red]")
+        console.print("\n[dim]Install with: pip install empirica[/dim]")
+        # Check if it's a missing dependency issue
+        if "auto_tracker" in str(e):
+            console.print("\n[yellow]Note:[/yellow] This may be an Empirica version issue.")
+            console.print("[dim]Try: pip install --upgrade empirica[/dim]")
+        raise typer.Exit(1)
+    except FileNotFoundError as e:
+        console.print(f"[red]❌ Dashboard not found: {e}[/red]")
+        console.print("\n[dim]Try: empirica monitor[/dim]")
+        raise typer.Exit(1)
+    except PermissionError as e:
+        console.print(f"[red]❌ Permission error: {e}[/red]")
+        console.print("\n[dim]Check file permissions and try again[/dim]")
+        raise typer.Exit(1)
+    except ValueError as e:
+        console.print(f"[red]❌ Validation error: {e}[/red]")
+        raise typer.Exit(1)
+    except Exception as e:
+        console.print(f"[red]❌ Failed to launch dashboard: {e}[/red]")
+        raise typer.Exit(1)
 
 
 @app.command()
@@ -2655,14 +2713,56 @@ def oracle(
             state = oracle.get_epistemic_state()
         console.print("[green]✓[/green] Epistemic state retrieved")
 
+        # If epistemic state is empty, bootstrap a preflight to populate vectors
+        epistemic_state = state.get("epistemic_state", {})
+        vectors = epistemic_state.get("vectors", {})
+        if not vectors:
+            with console.status("[yellow]→[/yellow] Bootstrapping epistemic vectors...", spinner="dots"):
+                try:
+                    session_id = oracle.empirica.get_current_session_id()
+                    if not session_id:
+                        session_id = oracle.empirica.create_session(ai_id="claude-code", session_type="oracle")
+                    if session_id:
+                        default_vectors = {
+                            "engagement": 0.6,
+                            "foundation": {"know": 0.3, "do": 0.3, "context": 0.3},
+                            "uncertainty": 0.7,
+                        }
+                        preflight_ok = oracle.empirica.submit_preflight(
+                            session_id,
+                            default_vectors,
+                            reasoning="Oracle bootstrap: initialize vectors for guidance",
+                        )
+                        if preflight_ok:
+                            # Prefer direct assessment to ensure vectors are available
+                            assessment = oracle.empirica.assess_state(session_id=session_id)
+                            if assessment and isinstance(assessment, dict) and assessment.get("vectors"):
+                                state = {
+                                    **state,
+                                    "epistemic_state": {"vectors": assessment["vectors"]},
+                                }
+                            else:
+                                state = oracle.get_epistemic_state()
+                        else:
+                            state = oracle.get_epistemic_state()
+                except Exception:
+                    pass
+            console.print("[green]✓[/green] Epistemic vector bootstrap complete")
+            if not state.get("epistemic_state", {}).get("vectors"):
+                console.print("[yellow]⚠️[/yellow] Epistemic vectors still unavailable after bootstrap")
+
         # Full context available - display epistemic state
         epistemic_state = state.get("epistemic_state", {})
         vectors = epistemic_state.get("vectors", {})
         foundation = vectors.get("foundation", {})
 
-        know = foundation.get("know", 0.0) if foundation else 0.0
+        if foundation:
+            know = foundation.get("know", 0.0)
+            engagement = vectors.get("engagement", 0.0)
+        else:
+            know = vectors.get("know", 0.0)
+            engagement = vectors.get("engagement", 0.0)
         uncertainty = vectors.get("uncertainty", 1.0)
-        engagement = vectors.get("engagement", 0.0)
 
         # Get phase
         phase = oracle.get_epistemic_phase()

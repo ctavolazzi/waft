@@ -1,0 +1,1 @@
+State A: Before verification. Hypothesis is untested; future references may remain.

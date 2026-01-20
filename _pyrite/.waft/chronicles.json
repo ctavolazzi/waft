@@ -17,10 +17,10 @@
     "hit_dice": "d8",
     "max_hp": 7,
     "current_hp": 7,
-    "created_at": "2026-01-19T03:04:07.324243",
-    "updated_at": "2026-01-19T03:04:08.123952"
+    "created_at": "2026-01-19T22:45:08.510321",
+    "updated_at": "2026-01-19T22:45:10.156363"
   },
-  "updated_at": "2026-01-19T03:04:09.535160",
+  "updated_at": "2026-01-19T22:45:14.273392",
   "adventure_journal": [
     {
       "timestamp": "2026-01-06T00:13:34.681830",
@@ -228,9 +228,9 @@
     },
     {
       "event": "oracle",
-      "narrative": "The TavernKeeper nods approvingly: 'Wisdom accumulates.'",
+      "narrative": "Sector Alpha-9 optimized. Code-Matrix integrity at 115%%.",
       "dice_roll": "1d20+-1",
-      "result": 17,
+      "result": 12,
       "outcome": "success",
       "rewards": {
         "insight": 5,
@@ -238,7 +238,7 @@
         "integrity": 2.0
       },
       "classification": "optimal",
-      "timestamp": "2026-01-19T03:04:09.535025"
+      "timestamp": "2026-01-19T22:45:14.273113"
     }
   ]
 }

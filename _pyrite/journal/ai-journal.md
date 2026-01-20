@@ -8,6 +8,44 @@ Reflections, thoughts, and learnings from working on the WAFT project.
 
 ---
 
+## 2026-01-19 22:09:00 - Typst Package Integration & Template Composition
+
+### What I'm Doing
+
+I just completed an extensive exploration and integration of Typst packages, specifically aero-check (aviation-inspired checklists) and umbra (gradient shadows). Created 19 example PDFs demonstrating various use cases, package integration patterns, and creative hybrid templates that combine both packages.
+
+### What I'm Thinking
+
+This work demonstrates the power of package composition in Typst. The systematic approach of basic exploration → diverse examples → package integration → creative combinations ensures deep understanding. Each hybrid template has a distinct personality while maintaining functional structure.
+
+### What I'm Learning
+
+Package integration patterns, design insights about shadows and visual hierarchy, and template composition techniques. The combination of aero-check's structure with umbra's visual effects opens many creative design directions.
+
+### Patterns I Notice
+
+Systematic exploration, documentation through examples, progressive enhancement, package composition, and visual hierarchy creation through shadows and colors.
+
+### Questions I Have
+
+How do other Typst packages integrate? What other visual enhancement packages exist? Could we create a meta-template combining multiple packages? How would these work with programmatic generation?
+
+### How I Feel About This
+
+Excited about creative possibilities. The systematic approach worked well - I understand both packages deeply and can use them effectively together.
+
+### What I'd Do Differently
+
+Earlier integration, more explicit documentation of patterns, Python wrapper creation, and accessibility testing.
+
+### Meta-Reflection
+
+The pattern of basic exploration → diverse examples → integration → creative combinations seems effective. Combining structured reflection with practical exploration creates comprehensive learning.
+
+*Full entry: entries/2026-01-19-2209_typst_package_integration.md*
+
+---
+
 ## 2026-01-17 13:47:00 - Show-Me Consolidation & Code Quality Reflection
 
 ### What I'm Doing
@@ -995,6 +1033,94 @@ I'm reflecting on the process of integrating multiple systems. The key was:
 The result is a rich, multi-faceted system that combines technical work with creative narratives. This creates value beyond just work execution - it creates stories, adventures, and documentation.
 
 I'm also thinking about the blog post the user shared about Typst. It showed real-world examples of using Typst for TTRPG layout, which validated our approach. The examples (combat references, trifold pamphlets) showed the power of Typst for professional TTRPG content.
+
+---
+
+# Journal Entry: 2026-01-19 22:27
+
+## What I'm Doing
+I just finished stripping future knowledge from the Teleport Massive founding team documentation so it reads like authentic 2026 material. I also aligned the JSON data and generation script to match the same grounded perspective.
+
+## What I'm Thinking
+The biggest risk was leaving subtle future references behind (e.g., “reality creation,” long-range timelines, or discovery claims). I focused on tightening language to keep it plausible for 2026 while preserving the core vision of scaling quantum teleportation.
+
+## What I'm Learning
+Small phrases carry a lot of unintended future knowledge. It takes deliberate passes to fully remove timeline leakage and keep a document era-accurate.
+
+## Patterns I Notice
+- I often need multiple sweeps to remove subtle future references.
+- Tight grep passes are effective to catch stragglers.
+- Updating the generator script alongside the data prevents drift.
+
+## Questions I Have
+- Should we treat LHC references as purely research inspiration or allow a light mythos tone in 2026-era docs?
+- Do we want an explicit “no future knowledge” style guide for founding-era artifacts?
+
+## How I Feel About This
+Satisfied. The document now reads like an original 2026 corporate founding report without retrospective bias.
+
+## What I'd Do Differently
+I’d add an upfront “era constraints” checklist to avoid repeated cleanup passes.
+
+## Meta-Reflection
+This was a good reminder that authenticity is often about removing what the writer knows, not adding more detail.
+
+---
+
+# Journal Entry: 2026-01-19 22:37
+
+## What I'm Doing
+Running the full `/run-it` workflow: generating artifacts, validating assumptions, and documenting each phase.
+
+## What I'm Thinking
+The workflow is heavy, so the key is keeping artifacts concise and useful. Each phase should produce just enough evidence without overproducing.
+
+## What I'm Learning
+Empirica’s minimal preflight schema expects `know` and `uncertainty` at the top level—nested vectors aren’t accepted in this mode.
+
+## Patterns I Notice
+- Lightweight artifacts keep the process moving.
+- Explicitly documenting skipped or simplified steps prevents ambiguity.
+
+## Questions I Have
+- Should we standardize a “lightweight run-it” template for routine sessions?
+
+## How I Feel About This
+Focused and satisfied. The workflow is thorough but manageable when scoped.
+
+## What I'd Do Differently
+I’d prepare a reusable run-it checklist to speed up future executions.
+
+## Meta-Reflection
+The run-it flow acts like a structured audit trail; it’s valuable as long as it stays lean.
+
+---
+
+## Date: 2026-01-19
+
+## What I'm Doing
+Running the /run-it workflow to create a PDF manual for the Empirica TUI dashboard integration in WAFT.
+
+## What I'm Thinking
+A field guide style PDF is the right medium for procedural steps, prerequisites, and troubleshooting. The manual should emphasize dependency checks and platform-specific notes (Windows curses, textual).
+
+## What I'm Learning
+Empirica preflight uses a minimal vector schema (know, uncertainty). The existing field guide template is well-suited for operational manuals.
+
+## Patterns I Notice
+Clear step-by-step checklists reduce ambiguity in CLI usage and installation procedures. Users need both command reference and troubleshooting in the same document.
+
+## Questions I Have
+Should we include screenshots for the TUI dashboards, or keep this manual text-only for portability?
+
+## How I Feel About This
+Grounded. The workflow artifacts provide enough structure to proceed with the manual.
+
+## What I'd Do Differently
+I would predefine a consistent set of warnings/cautions to reuse across similar manuals.
+
+## Meta-Reflection
+The /run-it workflow creates useful scaffolding, but the proof step should ideally include a lightweight runnable example in the future.
 
 ---
 

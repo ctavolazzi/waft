@@ -1,0 +1,96 @@
+{
+  "realm_name": "plan_monitor_realm",
+  "prime_being_id": "being_20260119_104841_1e4d2b56",
+  "reality_id": "reality_20260119_105018_d69c1c32",
+  "created_at": "2026-01-19T11:07:28.064355",
+  "directive": {
+    "purpose": "Execute the Teleport Massive Illustrated Handbook plan",
+    "order": "Maintain order and ensure all spawned Beings follow this directive",
+    "spawning": {
+      "authority": "Only the Prime Being may spawn worker Beings",
+      "pattern": "Worker Beings are reincarnations that forget their origin",
+      "parent": "All worker Beings spawn from the Prime Being",
+      "inheritance": "Worker Beings inherit skills from Prime Being with mutation",
+      "forgetting": "Worker Beings do not know they are copies/reincarnations"
+    },
+    "governance": {
+      "monitoring": "Prime Being monitors all worker Being activities",
+      "certification": "Prime Being certifies completion of all tickets",
+      "enforcement": "Prime Being ensures Prime Directive is followed",
+      "order": "Prime Being maintains order in the Realm"
+    },
+    "plan_execution": {
+      "tickets": "15 tickets (TKT-tmih-001 through TKT-tmih-015)",
+      "phases": "5 phases of execution",
+      "coordination": "Worker Beings coordinate via handoff documents",
+      "tracking": "Prime Being tracks all progress and certifies completion"
+    }
+  },
+  "worker_beings": {
+    "template_agent": {
+      "role": "Typst template development",
+      "tickets": [
+        "TKT-tmih-001",
+        "TKT-tmih-002",
+        "TKT-tmih-009",
+        "TKT-tmih-010",
+        "TKT-tmih-011"
+      ],
+      "skills_required": [
+        "typst",
+        "template_design",
+        "layout",
+        "typography"
+      ]
+    },
+    "illustration_agent": {
+      "role": "Image generation via nano-banana MCP",
+      "tickets": [
+        "TKT-tmih-003",
+        "TKT-tmih-004",
+        "TKT-tmih-005"
+      ],
+      "skills_required": [
+        "image_generation",
+        "prompt_engineering",
+        "mcp_integration"
+      ]
+    },
+    "integration_agent": {
+      "role": "Content assembly and PDF compilation",
+      "tickets": [
+        "TKT-tmih-006",
+        "TKT-tmih-007",
+        "TKT-tmih-008",
+        "TKT-tmih-012"
+      ],
+      "skills_required": [
+        "data_integration",
+        "pdf_compilation",
+        "workflow_orchestration"
+      ]
+    },
+    "qa_agent": {
+      "role": "Testing and validation",
+      "tickets": [
+        "TKT-tmih-013",
+        "TKT-tmih-014"
+      ],
+      "skills_required": [
+        "quality_assurance",
+        "testing",
+        "validation"
+      ]
+    },
+    "documentation_agent": {
+      "role": "Documentation creation",
+      "tickets": [
+        "TKT-tmih-015"
+      ],
+      "skills_required": [
+        "documentation",
+        "technical_writing"
+      ]
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "series": "SUCCULENT JEWELRY GUIDE",
+  "default_style": "field_guide",
+  "printer_friendly": false,
+  "include_gumroad_link": true,
+  "author": "Your Name",
+  "default_topics": ["jewelry", "succulents", "music", "casting"],
+  "max_content_size_mb": 10,
+  "project_root": "."
+}

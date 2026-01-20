@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Succulent Jewelry PDF System - Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #2d5016 0%, #4a7c2a 100%);
+            color: white;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        /* Navigation */
+        nav {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+
+        nav a {
+            color: #4a7c2a;
+            text-decoration: none;
+            margin-right: 2rem;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-left: 4px solid #4a7c2a;
+        }
+
+        .stat-card h3 {
+            color: #666;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2d5016;
+        }
+
+        /* PDF Gallery */
+        .section {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .section h2 {
+            color: #2d5016;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .pdf-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .pdf-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .pdf-card:hover {
+            border-color: #4a7c2a;
+            box-shadow: 0 4px 10px rgba(74, 124, 42, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .pdf-card h3 {
+            color: #2d5016;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .pdf-card .meta {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .pdf-card .actions {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #4a7c2a;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2d5016;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+
+        /* Two Column Layout */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .list-item {
+            padding: 0.75rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Footer */
+        footer {
+            background: #2d5016;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        footer a {
+            color: #a8d5a8;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Format helpers */
+        .format-size {
+            color: #666;
+        }
+
+        .format-date {
+            color: #999;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🌿 Succulent Jewelry PDF System</h1>
+            <p>Generate professional PDF guides for your jewelry casting videos</p>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <a href="#dashboard">Dashboard</a>
+            <a href="#pdfs">PDFs</a>
+            <a href="#templates">Templates</a>
+            <a href="#work-efforts">Work Efforts</a>
+            <a href="README.md">Documentation</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Stats -->
+        <div class="stats-grid" id="stats">
+            <div class="stat-card">
+                <h3>Total PDFs</h3>
+                <div class="value" id="total-pdfs">-</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Size</h3>
+                <div class="value" id="total-size">-</div>
+            </div>
+            <div class="stat-card">
+                <h3>Templates</h3>
+                <div class="value" id="templates-count">-</div>
+            </div>
+            <div class="stat-card">
+                <h3>Scripts</h3>
+                <div class="value" id="scripts-count">-</div>
+            </div>
+        </div>
+
+        <!-- PDF Gallery -->
+        <div class="section" id="pdfs">
+            <h2>Generated PDFs</h2>
+            <div class="pdf-grid" id="pdf-grid">
+                <p>Loading PDFs...</p>
+            </div>
+        </div>
+
+        <!-- Quick Actions & System Status -->
+        <div class="two-col">
+            <div class="section">
+                <h2>Quick Actions</h2>
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <a href="scripts/generate_guide.py" class="btn btn-primary">Generate New Guide</a>
+                    <a href="scripts/batch_generate.py" class="btn btn-primary">Batch Generate</a>
+                    <a href="scripts/gumroad_prep.py" class="btn btn-primary">Prepare for Gumroad</a>
+                    <a href="README.md" class="btn btn-secondary">View Documentation</a>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>System Status</h2>
+                <div id="templates-list">
+                    <p>Loading...</p>
+                </div>
+                <div id="scripts-list" style="margin-top: 1rem;">
+                    <p>Loading...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Work Efforts -->
+        <div class="section" id="work-efforts">
+            <h2>Work Efforts</h2>
+            <div class="list-item">
+                <strong>WE-260119-7och</strong> - Project Setup & UI Evolution
+                <br>
+                <a href="_work_efforts/WE-260119-7och_succulent_jewelry_pdf_system_project_setup_ui_evolution/index.md">View Work Effort</a> |
+                <a href="_work_efforts/WE-260119-7och_succulent_jewelry_pdf_system_project_setup_ui_evolution/improvement_analysis.md">Improvement Analysis</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>Succulent Jewelry PDF System | Part of the WAFT Project</p>
+            <p>
+                <a href="README.md">Documentation</a> |
+                <a href="IMAGE_API_GUIDE.md">Image API Guide</a> |
+                <a href="IMPLEMENTATION_COMPLETE.md">Implementation Status</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Embedded system data (no CORS issues)
+        const systemData = {
+        "pdfs": [
+                {
+                        "name": "how_to_cast_jewelry.pdf",
+                        "size": 169086,
+                        "modified": "2026-01-19T14:53:28.363401",
+                        "path": "generated/guides/how_to_cast_jewelry.pdf"
+                },
+                {
+                        "name": "test_guide.pdf",
+                        "size": 198887,
+                        "modified": "2026-01-19T14:50:48.336997",
+                        "path": "generated/guides/test_guide.pdf"
+                }
+        ],
+        "templates": [
+                "guide_template.py",
+                "poetry_template.py"
+        ],
+        "scripts": [
+                "add_images.py",
+                "security.py",
+                "resource_manager.py",
+                "generate_guide.py",
+                "image_api.py",
+                "gumroad_prep.py",
+                "batch_generate.py",
+                "validation.py"
+        ],
+        "configs": [
+                "gumroad_metadata.json",
+                "guide_config.json"
+        ],
+        "stats": {
+                "total_pdfs": 2,
+                "total_size": 367973,
+                "templates_count": 2,
+                "scripts_count": 8
+        }
+};
+
+        // Load system data (now synchronous since data is embedded)
+        function loadSystemData() {
+            try {
+                const data = systemData;
+
+                // Update stats
+                document.getElementById('total-pdfs').textContent = data.stats.total_pdfs;
+                document.getElementById('total-size').textContent = formatBytes(data.stats.total_size);
+                document.getElementById('templates-count').textContent = data.stats.templates_count;
+                document.getElementById('scripts-count').textContent = data.stats.scripts_count;
+
+                // Render PDFs
+                const pdfGrid = document.getElementById('pdf-grid');
+                if (data.pdfs.length === 0) {
+                    pdfGrid.innerHTML = '<p>No PDFs generated yet. Use the scripts to generate your first guide!</p>';
+                } else {
+                    pdfGrid.innerHTML = data.pdfs.map(pdf => `
+                        <div class="pdf-card" onclick="window.open('${pdf.path}', '_blank')">
+                            <h3>${pdf.name.replace('.pdf', '').replace(/_/g, ' ')}</h3>
+                            <div class="meta">
+                                <div class="format-size">${formatBytes(pdf.size)}</div>
+                                <div class="format-date">${formatDate(pdf.modified)}</div>
+                            </div>
+                            <div class="actions">
+                                <a href="${pdf.path}" class="btn btn-primary" target="_blank">View</a>
+                                <a href="${pdf.path}" class="btn btn-secondary" download>Download</a>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+
+                // Render templates
+                const templatesList = document.getElementById('templates-list');
+                templatesList.innerHTML = '<strong>Templates Available:</strong><br>' + 
+                    data.templates.map(t => `<div class="list-item">${t}</div>`).join('');
+
+                // Render scripts
+                const scriptsList = document.getElementById('scripts-list');
+                scriptsList.innerHTML = '<strong>Scripts Available:</strong><br>' + 
+                    data.scripts.map(s => `<div class="list-item">${s}</div>`).join('');
+
+            } catch (error) {
+                console.error('Error loading system data:', error);
+                document.getElementById('pdf-grid').innerHTML = '<p>Error loading data.</p>';
+            }
+        }
+
+        function formatBytes(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        function formatDate(isoString) {
+            const date = new Date(isoString);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+
+        // Load on page load
+        loadSystemData();
+    </script>
+</body>
+</html>

@@ -47,8 +47,20 @@
         "generated_at": "2026-01-19T02:11:14.219733",
         "reality_id": "bureaucracy_realm"
       }
+    },
+    {
+      "being_id": "being_20260119_101033_f8e06283",
+      "personnel_file_path": "/Users/ctavolazzi/Code/active/waft/_hidden/.truth/beings/being_20260119_101033_f8e06283/personnel",
+      "cv_version": 1.9000000000000008,
+      "registered_at": "2026-01-19T10:30:47.039418",
+      "last_updated": "2026-01-19T10:41:44.255448",
+      "metadata": {
+        "cv_version": 1.0,
+        "generated_at": "2026-01-19T10:41:44.254819",
+        "reality_id": "teleport_massive_20250701"
+      }
     }
   ],
   "created_at": "2026-01-19T02:06:27.247729",
-  "last_updated": "2026-01-19T02:11:14.220544"
+  "last_updated": "2026-01-19T10:41:44.255488"
 }

@@ -1,0 +1,87 @@
+{
+  "balance_sheet_id": "balance_sheet_q1_2026",
+  "name": "Balance Sheet - End of Q1 2026",
+  "as_of_date": "2026-03-31",
+  "items": [
+    {
+      "account": "Cash",
+      "description": "Cash and Cash Equivalents",
+      "amount": "125000.00",
+      "account_type": "asset",
+      "notes": null
+    },
+    {
+      "account": "Accounts Receivable",
+      "description": "Outstanding Invoices",
+      "amount": "35000.00",
+      "account_type": "asset",
+      "notes": null
+    },
+    {
+      "account": "Equipment",
+      "description": "Office Equipment",
+      "amount": "25000.00",
+      "account_type": "asset",
+      "notes": null
+    },
+    {
+      "account": "Software",
+      "description": "Software Assets",
+      "amount": "15000.00",
+      "account_type": "asset",
+      "notes": null
+    },
+    {
+      "account": "Accounts Payable",
+      "description": "Outstanding Bills",
+      "amount": "18000.00",
+      "account_type": "liability",
+      "notes": null
+    },
+    {
+      "account": "Accrued Expenses",
+      "description": "Accrued Liabilities",
+      "amount": "5000.00",
+      "account_type": "liability",
+      "notes": null
+    },
+    {
+      "account": "Short-term Debt",
+      "description": "Line of Credit",
+      "amount": "10000.00",
+      "account_type": "liability",
+      "notes": null
+    },
+    {
+      "account": "Retained Earnings",
+      "description": "Accumulated Earnings",
+      "amount": "120000.00",
+      "account_type": "equity",
+      "notes": null
+    },
+    {
+      "account": "Capital",
+      "description": "Owner's Capital",
+      "amount": "40000.00",
+      "account_type": "equity",
+      "notes": null
+    },
+    {
+      "account": "Additional Paid-in Capital",
+      "description": "Capital Contributions",
+      "amount": "7000.00",
+      "account_type": "equity",
+      "notes": null
+    }
+  ],
+  "totals": {
+    "assets": "200000.00",
+    "liabilities": "33000.00",
+    "equity": "167000.00",
+    "liabilities_plus_equity": "200000.00",
+    "is_balanced": true
+  },
+  "created_at": "2026-01-19T03:11:01.530739",
+  "last_updated": "2026-01-19T03:11:16.214078",
+  "metadata": {}
+}

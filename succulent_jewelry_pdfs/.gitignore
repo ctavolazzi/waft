@@ -1,0 +1,37 @@
+# Generated PDFs
+generated/
+*.pdf
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Gumroad preparation files (optional - uncomment if you want to ignore)
+# gumroad_products.json
+# gumroad_descriptions/
+# gumroad_upload_checklist.md

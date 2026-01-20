@@ -1,0 +1,1 @@
+State B: After verification. Grep checks show no future references in founding docs.

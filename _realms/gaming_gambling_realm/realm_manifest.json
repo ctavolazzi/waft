@@ -1,0 +1,70 @@
+{
+  "realm_name": "gaming_gambling_realm",
+  "realm_path": "/Users/ctavolazzi/Code/active/waft/_realms/gaming_gambling_realm",
+  "created_at": "2026-01-19T23:10:00",
+  "purpose": "Gaming, gambling, probability, and chance documentation",
+  "god": "The Magistrate",
+  "demi_god": "The River King",
+  "sacred_tool": "The Deck of Fates (deckz_poker visualization system)",
+  "domains": [
+    "Poker",
+    "Card Games",
+    "Gambling",
+    "Probability",
+    "Risk",
+    "Luck",
+    "Game Documentation",
+    "Session Recaps",
+    "Story Generation",
+    "Decision Visualization"
+  ],
+  "tools": {
+    "deckz_poker": {
+      "path": "src/waft/templates/typst/wrappers/deckz_poker.py",
+      "purpose": "Card visualization and game documentation",
+      "status": "active"
+    },
+    "session_recap": {
+      "path": "examples/generate_poker_session_recap.py",
+      "purpose": "Poker session documentation",
+      "status": "active"
+    },
+    "story_prompts": {
+      "path": "examples/generate_card_story_prompts.py",
+      "purpose": "Card-based creative writing prompts",
+      "status": "active"
+    },
+    "decision_visualization": {
+      "path": "examples/generate_decision_cards.py",
+      "purpose": "Visualize decisions as cards",
+      "status": "active"
+    },
+    "game_prototyping": {
+      "path": "examples/generate_card_game_prototype.py",
+      "purpose": "Document card game mechanics",
+      "status": "active"
+    }
+  },
+  "structure": {
+    "games": "Documented poker games and card game sessions",
+    "sessions": "Poker session recaps and game logs",
+    "tools": "Gambling tools and utilities",
+    "readings": "Sacred readings by The River King",
+    "precedents": "Game rules and precedents established"
+  },
+  "creatures": {
+    "card_spirits": "Entities that inhabit the cards, revealing truth",
+    "luck_currents": "Flowing forces of probability and chance",
+    "house_edges": "Mathematical guardians of fair play"
+  },
+  "locations": [
+    "New Orleans",
+    "Mississippi River",
+    "Riverboats",
+    "Jazz Clubs",
+    "Back Alley Games",
+    "All Places of Chance"
+  ],
+  "philosophy": "Probability is sacred. Luck is real but it's statistics, not magic. Every bet matters. The house edge is honest. Fate is written, but you still play your hand.",
+  "status": "active"
+}

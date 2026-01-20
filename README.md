@@ -243,6 +243,34 @@ waft assess
 waft assess --session-id ID --history
 ```
 
+#### `waft empirica monitor`
+
+Launch Empirica's terminal-based dashboard for monitoring epistemic state:
+
+```bash
+waft empirica monitor                    # Launch snapshot monitor (default)
+waft empirica monitor --type cascade     # Launch CASCADE monitor
+waft empirica monitor --type tui         # Launch full TUI dashboard
+waft empirica monitor --session-id ID    # Monitor specific session
+waft empirica monitor --path /path/to/project
+```
+
+Dashboard types:
+- **snapshot**: Monitors snapshot memory quality (curses-based)
+- **cascade**: Monitors PREFLIGHT → POSTFLIGHT workflow (curses-based)
+- **tui**: Full Textual-based terminal UI dashboard
+
+**Populating Dashboard Data:**
+
+The dashboard shows data from Empirica's CASCADE workflow. To populate it:
+
+- **Use TheOracle**: `waft oracle "question"` - Triggers full CASCADE (PREFLIGHT → POSTFLIGHT)
+- **Use /think**: Creates PREFLIGHT checkpoint
+- **Use /run-it**: Runs comprehensive workflow with CASCADE
+- **Manual logging**: `waft finding log`, `waft unknown log`, `waft check`
+
+See [EMPIRICA_DASHBOARD_USAGE.md](docs/EMPIRICA_DASHBOARD_USAGE.md) for complete guide.
+
 ### Gamification Commands
 
 #### `waft dashboard`

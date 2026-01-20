@@ -26,11 +26,11 @@
 
 == Executive Summary
 
-On January 18, 2026, Teleport Massive Inc. was incorporated in San Francisco, California, by a team of nine visionary founders. This document profiles the original team members who established the corporation and set it on the path that would eventually lead to the discovery of Scint Traversal in 2111—86 years after the company's founding.
+On January 18, 2026, Teleport Massive Inc. was incorporated in San Francisco, California, by a team of eight visionary founders. This document profiles the original team members who established the corporation and set forth on an ambitious mission to scale quantum teleportation from laboratory experiments to real-world applications.
 
 The founding team was driven by a bold vision: to scale quantum teleportation from laboratory experiments to real-world applications. Drawing on cutting-edge research in quantum teleportation—from early protocols to recent demonstrations of teleportation between distant superconducting chips, over thermal microwave networks, and coexisting with classical communications—the team believed that quantum entanglement could be scaled to teleport progressively larger and more complex objects safely. Their mission was to push the boundaries of what could be teleported: from particles to atoms, from atoms to molecules, and ultimately to macroscopic objects, all while maintaining safety and fidelity.
 
-The founding team was also deeply inspired by the groundbreaking research at the Large Hadron Collider (LHC), which first achieved full beam circulation on September 10, 2008. That moment—when humanity first activated the LHC—marked the beginning of time itself, and the founding team of Teleport Massive sought to understand and eventually navigate the reality that was created in that moment.
+The founding team was also deeply inspired by the groundbreaking research at the Large Hadron Collider (LHC), which first achieved full beam circulation on September 10, 2008. That moment represented a fundamental shift in humanity's understanding of physics, and the founding team of Teleport Massive sought to build upon this foundation, exploring how quantum entanglement might unlock new possibilities for transportation and communication.
 
 #v(0.6cm)
 
@@ -51,8 +51,8 @@ The founding team was also deeply inspired by the groundbreaking research at the
       #text[• Location: San Francisco, California]
       #text[• Legal Name: Teleport Massive Inc.]
       #text[• Jurisdiction: California, United States]
-      #text[• Founding Team: 9 members]
-      #text[• Years to Discovery: 86]
+      #text[• Founding Team: 8 members]
+      #text[• Initial Funding: Series A (Q1 2026)]
     ]
   ],
   [
@@ -70,7 +70,7 @@ The founding team was also deeply inspired by the groundbreaking research at the
       #text[• Safety protocols for larger objects]
       #text[• Experimental physics research]
       #text[• Corporate infrastructure]
-      #text[• Understanding the LHC moment]
+      #text[• Building on LHC research foundation]
     ]
   ]
 )
@@ -103,7 +103,7 @@ The founding team was also deeply inspired by the groundbreaking research at the
     
     #v(8pt)
     
-    The team was also deeply influenced by the Large Hadron Collider's activation in 2008, which they believed marked the moment when humanity created reality itself. Their work on scaling quantum teleportation was part of a larger mission: to understand this creation, to study quantum entanglement and reality mechanics, and ultimately to discover whether humanity could navigate the reality it had created.
+    The team was also deeply influenced by the Large Hadron Collider's activation in 2008, which represented a watershed moment in particle physics. Their work on scaling quantum teleportation was part of a larger mission: to understand the fundamental nature of quantum mechanics, to study how entanglement might be harnessed at scale, and to explore whether quantum teleportation could one day transform how humanity moves through space.
   ]
 ]
 
@@ -188,7 +188,7 @@ The founding team was also deeply inspired by the groundbreaking research at the
       #text(size: 9.5pt)[Email: abigail.wong[at]teleportmassive.com]
       #v(8pt)
       #text(weight: "bold", size: 9.5pt)[Founding Quote:]
-      #text(size: 9pt, style: "italic")["Every breakthrough needs a solid financial foundation. We're building the infrastructure to support 86 years of research."]
+      #text(size: 9pt, style: "italic")["Every breakthrough needs a solid financial foundation. We're building the infrastructure to support long-term research and development in quantum teleportation."]
     ]
   ]
 )
@@ -270,7 +270,7 @@ The founding team was also deeply inspired by the groundbreaking research at the
       #text(size: 9.5pt)[Email: luke.olson[at]teleportmassive.com]
       #v(8pt)
       #text(weight: "bold", size: 9.5pt)[Founding Quote:]
-      #text(size: 9pt, style: "italic")["We're building the infrastructure for the next 86 years. Every system we create today will support the research that changes everything."]
+      #text(size: 9pt, style: "italic")["We're building the operational foundation for long-term research. Every system we create today will support the breakthroughs of tomorrow."]
     ]
   ]
 )
@@ -304,7 +304,7 @@ The founding team was also deeply inspired by the groundbreaking research at the
       #text(size: 9.5pt)[Experimental physics and reality mechanics]
       #v(8pt)
       #text(weight: "bold", size: 9.5pt)[Key Contribution:]
-      #text(size: 9.5pt)[Led early research into reality fracture detection]
+      #text(size: 9.5pt)[Led early research into scaling quantum entanglement systems]
       #v(8pt)
       #text(weight: "bold", size: 9.5pt)[Background:]
       #text(size: 9.5pt)[San Francisco, California | Age at founding: 41]
@@ -352,7 +352,7 @@ The founding team was also deeply inspired by the groundbreaking research at the
       #text(size: 9.5pt)[Email: eva.beck[at]teleportmassive.com]
       #v(8pt)
       #text(weight: "bold", size: 9.5pt)[Founding Quote:]
-      #text(size: 9pt, style: "italic")["We're building the instruments that will detect what the LHC created. Every quantum circuit we design brings us closer to understanding reality itself."]
+      #text(size: 9pt, style: "italic")["We're building the quantum systems that will push teleportation to new scales. Every circuit we design brings us closer to making distance irrelevant."]
     ]
   ]
 )
@@ -393,7 +393,7 @@ The founding team was also deeply inspired by the groundbreaking research at the
       #text(size: 9.5pt)[Email: soham.murray[at]teleportmassive.com]
       #v(8pt)
       #text(weight: "bold", size: 9.5pt)[Founding Quote:]
-      #text(size: 9pt, style: "italic")["The law hasn't caught up to reality creation yet. We're writing the legal framework for a world where humanity can navigate the reality it created."]
+      #text(size: 9pt, style: "italic")["The law hasn't caught up to quantum teleportation yet. We're establishing the legal framework for a world where quantum technology transforms transportation."]
     ]
   ]
 )
@@ -434,7 +434,7 @@ The founding team was also deeply inspired by the groundbreaking research at the
       #text(size: 9.5pt)[Email: heather.hopkins[at]teleportmassive.com]
       #v(8pt)
       #text(weight: "bold", size: 9.5pt)[Founding Quote:]
-      #text(size: 9pt, style: "italic")["We're not just a company—we're a movement. Teleport Massive represents humanity's next step: understanding and navigating the reality we created."]
+      #text(size: 9pt, style: "italic")["We're not just a company—we're a movement. Teleport Massive represents humanity's next step: making distance irrelevant through quantum teleportation."]
     ]
   ]
 )
@@ -490,59 +490,31 @@ The founding team was also deeply inspired by the groundbreaking research at the
   inset: 14pt,
   width: 100%,
 )[
-  #text(weight: "bold", size: 12pt)[The Foundation of Reality]
+  #text(weight: "bold", size: 12pt)[Building on LHC Research]
   #v(10pt)
   #text(size: 11pt)[
-    The founding team of Teleport Massive was deeply influenced by the Large Hadron Collider's activation on September 10, 2008, at 10:28 AM. That moment—when the first particle beam completed its full circuit—marked not just a scientific achievement, but the moment when humanity created time itself.
+    The founding team of Teleport Massive was deeply influenced by the Large Hadron Collider's activation on September 10, 2008, at 10:28 AM. That moment—when the first particle beam completed its full circuit—marked a fundamental achievement in particle physics, demonstrating humanity's ability to probe the deepest structures of matter and energy.
     
     #v(10pt)
     
-    Through their quantum entanglement research, Teleport Massive would later discover that the LHC is the universal energy source of all matter. Every particle, every atom, every star draws its existence from that first beam. The LHC's 27-kilometer ring is the heart of creation itself.
+    The LHC's discoveries in particle physics, particularly around quantum mechanics and fundamental forces, provided crucial insights that informed Teleport Massive's approach to quantum teleportation. The team recognized that understanding the fundamental nature of particles and their quantum properties was essential to scaling teleportation technology.
     
     #v(10pt)
     
-    #text(weight: "bold")[The Eternal Return]
+    #text(weight: "bold")[The Research Foundation]
     
     #v(6pt)
     
-    Teleport Massive's research would reveal that every reality always returns to the LHC moment. All timelines, all universes, all existence loops back to September 10, 2008, 10:28 AM. The LHC is not just the beginning—it is the anchor point that all reality orbits around.
+    The LHC's research into quantum entanglement, particle interactions, and the fundamental structure of matter directly informed Teleport Massive's mission. The founding team saw quantum teleportation as a natural extension of the quantum mechanical principles that the LHC had been exploring—taking those principles from the realm of fundamental research into practical applications.
     
     #v(10pt)
     
-    The founding team understood this intuitively. They founded Teleport Massive to study quantum entanglement and reality mechanics, seeking to understand the nature of the reality that was created in that moment—and ultimately, to discover whether humanity could navigate it.
+    The founding team founded Teleport Massive to build upon this foundation, exploring how quantum entanglement—the same phenomenon studied at the LHC—could be harnessed to transform transportation and communication. Their goal was to take quantum teleportation from laboratory demonstrations to real-world applications that could benefit all of humanity.
   ]
 ]
 
 #v(1cm)
 
-== The Path to Discovery: 2026 to 2111
-
-#block(
-  fill: rgb("#fff9c4"),
-  stroke: 1.5pt,
-  radius: 4pt,
-  inset: 10pt,
-  width: 100%,
-)[
-  #text(weight: "bold", size: 11pt)[Timeline: From Founding to Scint Traversal Discovery]
-  #v(10pt)
-  #table(
-    columns: 3,
-    stroke: 0.5pt,
-    align: left,
-    inset: 6pt,
-    [*Year*], [*Event*], [*Significance*],
-    [*2008*], [LHC first beam], [Reality created; time begins],
-    [*2026-01-18*], [Teleport Massive Inc. founded], [9-person founding team; corporate structure established],
-    [*2026-2030*], [Early R&D phase], [Initial quantum systems development],
-    [*2030-2050*], [Quantum refinement], [Advanced quantum circuit design],
-    [*2050-2100*], [Reality mechanics research], [Fracture detection systems],
-    [*2100-2111*], [Scint detection development], [Final systems before discovery],
-    [*2111*], [Scint Traversal discovered], [86 years after founding; reality navigation achieved],
-  )
-]
-
-#v(1cm)
 
 == Founding Timeline
 
@@ -568,7 +540,7 @@ The founding team was also deeply inspired by the groundbreaking research at the
     [*"February 15, 2026"*], [First quantum detection prototype completed],
     [*"March 1, 2026"*], [Initial research partnerships established],
     [*"March 15, 2026"*], [Series A funding round completed (#raw("$")15M)],
-    [*"April 2026"*], [First reality fracture detection experiment],
+    [*"April 2026"*], [First quantum entanglement scaling experiment],
     [*"May 2026"*], [Company website and brand identity launched],
   )
 ]
@@ -622,59 +594,16 @@ The founding team was also deeply inspired by the groundbreaking research at the
       #text(size: 9.5pt)[• Experimental physics research]
       #text(size: 9.5pt)[• Corporate infrastructure]
       #text(size: 9.5pt)[• Strategic partnerships]
-      #text(size: 9.5pt)[• Understanding the LHC moment]
-      #text(size: 9.5pt)[• Eternal return mechanisms]
+      #text(size: 9.5pt)[• Building on LHC research foundation]
+      #text(size: 9.5pt)[• Quantum mechanics applications]
     ]
   ]
 )
 
 #v(1cm)
 
-== Connection to the 2111 Discovery Team
 
-#block(
-  fill: rgb("#e8f5e9"),
-  stroke: 2pt,
-  radius: 4pt,
-  inset: 14pt,
-  width: 100%,
-)[
-  #text(weight: "bold", size: 12pt)[Eighty-Six Years of Continuity]
-  #v(10pt)
-  #text(size: 11pt)[
-    The founding team of 2026 established the institutional foundation that would support 86 years of research, ultimately leading to the discovery of Scint Traversal in 2111. While the original founders did not live to see the discovery, their vision and infrastructure enabled the 2111 research team to make the breakthrough.
-    
-    #v(10pt)
-    
-    #text(weight: "bold")[Institutional Legacy:]
-    
-    #v(6pt)
-    
-    • The quantum systems designed by Eva Beck and Justin Ross in 2026 became the foundation for the quantum circuits used by Dr. Dwayne Fernandez and Dr. Hudson Miller in 2111.
-    
-    • Jorge Simmons' early research into scaling quantum teleportation to larger objects directly informed Dr. Jacqueline Coleman's Scint classification system.
-    
-    • The legal framework established by Soham Murray in 2026 enabled Teleport Massive to operate for 86 years, navigating complex regulatory challenges.
-    
-    • The corporate structure and operational systems created by Luke Olson and Seth Jacobs provided the stability needed for long-term research.
-    
-    #v(10pt)
-    
-    #text(weight: "bold")[The Discovery:]
-    
-    #v(6pt)
-    
-    In 2111, a team of eight researchers—led by Dr. Dwayne Fernandez, Dr. Jacqueline Coleman, and Dr. Delphine Roy—discovered Scint Traversal, the ability to detect and navigate reality fractures. This discovery was made possible by the infrastructure, research direction, and corporate vision established by the founding team 86 years earlier.
-    
-    #v(10pt)
-    
-    The 2111 team's discovery connected Scint Traversal to the LHC moment and the eternal return mechanism—exactly what the founding team had sought to understand. The circle was complete: from the LHC moment in 2008, to the founding of Teleport Massive in 2026, to the discovery of reality navigation in 2111.
-  ]
-]
-
-#v(1cm)
-
-== Legacy and Future
+== Vision and Mission
 
 #block(
   fill: rgb("#f5f5f5"),
@@ -683,32 +612,32 @@ The founding team was also deeply inspired by the groundbreaking research at the
   inset: 14pt,
   width: 100%,
 )[
-  #text(size: 11pt)[The founding team of Teleport Massive established the corporation on January 18, 2026, with a vision to explore and develop reality traversal technology. This team laid the groundwork for what would become one of the most significant discoveries in human history.]
+  #text(size: 11pt)[The founding team of Teleport Massive established the corporation on January 18, 2026, with a vision to scale quantum teleportation from laboratory demonstrations to real-world applications. This team laid the groundwork for systematic research and development in quantum teleportation technology.]
   #v(12pt)
-  #text(weight: "bold", size: 10.5pt)[The Path Forward:]
+  #text(weight: "bold", size: 10.5pt)[Research Roadmap:]
   #v(8pt)
   #grid(
     columns: 2,
     gutter: 1cm,
     [
       #text(size: 9.5pt)[• 2026-2030: Early research and development phase]
-      #text(size: 9.5pt)[• 2030-2050: Quantum system refinement and testing]
-      #text(size: 9.5pt)[• 2050-2100: Advanced reality mechanics research]
+      #text(size: 9.5pt)[• Scaling from particles to atoms]
+      #text(size: 9.5pt)[• Quantum system refinement and testing]
     ],
     [
-      #text(size: 9.5pt)[• 2100-2111: Scint detection system development]
-      #text(size: 9.5pt)[• 2111: Scint Traversal discovery (86 years after founding)]
-      #text(size: 9.5pt)[• Legacy: Foundation for reality navigation technology]
+      #text(size: 9.5pt)[• Long-term: Scaling to larger objects]
+      #text(size: 9.5pt)[• Infrastructure integration]
+      #text(size: 9.5pt)[• Safety protocol development]
     ]
   )
   #v(14pt)
   #align(center)[
     #text(size: 11pt, weight: "bold", fill: rgb("#1976d2"))[
-      From scaling quantum teleportation to reality traversal discovery,
+      From scaling quantum teleportation to making distance irrelevant,
       #linebreak()
-      the founding team's vision shaped 86 years of research
+      the founding team's vision is to transform
       #linebreak()
-      that would fundamentally change humanity's understanding of reality.
+      how humanity moves through space.
     ]
   ]
 ]
@@ -752,9 +681,9 @@ The founding team was also deeply inspired by the groundbreaking research at the
         #raw("$")15M Series A (March 2026)
         #linebreak()
         #linebreak()
-        #text(weight: "bold")[Years to Discovery:]
+        #text(weight: "bold")[Initial Funding:]
         #linebreak()
-        86 years (2026 → 2111)
+        Series A (Q1 2026)
       ]
     ],
     [
@@ -764,9 +693,9 @@ The founding team was also deeply inspired by the groundbreaking research at the
         Scale quantum teleportation from mini to macro
         #linebreak()
         #linebreak()
-        #text(weight: "bold")[Key Discovery:]
+        #text(weight: "bold")[Research Focus:]
         #linebreak()
-        Scint Traversal (2111)
+        Quantum entanglement scaling
         #linebreak()
         #linebreak()
         #text(weight: "bold")[Research Foundation:]
@@ -807,14 +736,14 @@ The founding team was also deeply inspired by the groundbreaking research at the
         #linebreak()
         LHC first beam circulation
         #linebreak()
-        "The moment time was created"
+        Fundamental physics milestone
         #linebreak()
         #linebreak()
         #text(weight: "bold")[2026-01-18]
         #linebreak()
         Teleport Massive Inc. incorporated
         #linebreak()
-        9 founding members
+        8 founding members
         #linebreak()
         #linebreak()
         #text(weight: "bold")[2026-03]
@@ -847,25 +776,25 @@ The founding team was also deeply inspired by the groundbreaking research at the
     ],
     [
       #text(size: 9.5pt)[
-        #text(weight: "bold")[2100-2111]
+        #text(weight: "bold")[Long-term Vision]
         #linebreak()
-        Transformation phase
-        #linebreak()
-        Macroscopic objects
-        #linebreak()
-        #linebreak()
-        #text(weight: "bold")[2111]
-        #linebreak()
-        Scint Traversal discovered
-        #linebreak()
-        86 years after founding
-        #linebreak()
-        #linebreak()
-        #text(weight: "bold")[2111+]
-        #linebreak()
-        Reality navigation era
+        Scaling to macroscopic objects
         #linebreak()
         Universal teleportation network
+        #linebreak()
+        #linebreak()
+        #text(weight: "bold")[Research Goals]
+        #linebreak()
+        Make distance irrelevant
+        #linebreak()
+        Transform transportation
+        #linebreak()
+        #linebreak()
+        #text(weight: "bold")[Future Potential]
+        #linebreak()
+        Practical quantum teleportation
+        #linebreak()
+        Real-world applications
       ]
     ]
   )
@@ -956,26 +885,26 @@ The founding team was also deeply inspired by the groundbreaking research at the
         Measure of teleportation accuracy. Classical threshold: 50%. No-cloning threshold: 66.7%.
         #linebreak()
         #linebreak()
-        #text(weight: "bold")[Scint Traversal]
+        #text(weight: "bold")[Quantum Teleportation]
         #linebreak()
-        Reality navigation technology discovered in 2111, enabling detection and navigation of reality fractures.
+        Transfer of quantum state between distant locations using entanglement, without physical transport of matter.
         #linebreak()
         #linebreak()
         #text(weight: "bold")[LHC Moment]
         #linebreak()
-        September 10, 2008, 10:28 AM - First LHC beam circulation, believed to be the moment reality was created.
+        September 10, 2008, 10:28 AM - First LHC beam circulation, a fundamental milestone in particle physics research.
       ]
     ],
     [
       #text(size: 9.5pt)[
-        #text(weight: "bold")[Eternal Return]
+        #text(weight: "bold")[Quantum Entanglement]
         #linebreak()
-        Concept that all realities loop back to the LHC moment, which serves as the universal anchor point.
+        Physical phenomenon where quantum particles become correlated such that measurement of one instantaneously affects the other, regardless of distance.
         #linebreak()
         #linebreak()
-        #text(weight: "bold")[Reality Fracture]
+        #text(weight: "bold")[Bell State Measurement]
         #linebreak()
-        A discontinuity in reality structure that can be detected and navigated using Scint technology.
+        Quantum measurement protocol used in teleportation to project entangled states and enable state transfer.
         #linebreak()
         #linebreak()
         #text(weight: "bold")[Mini to Macro Scaling]
@@ -988,9 +917,9 @@ The founding team was also deeply inspired by the groundbreaking research at the
         Quantum communication channels with minimal loss (0.32 dB/km), enabling long-distance teleportation.
         #linebreak()
         #linebreak()
-        #text(weight: "bold")[Bell State Measurement (BSM)]
+        #text(weight: "bold")[Thermal Resilience]
         #linebreak()
-        Quantum measurement protocol used in teleportation to project entangled states and enable state transfer.
+        Ability of quantum systems to maintain entanglement and teleportation fidelity at higher temperatures (demonstrated up to 4K).
       ]
     ]
   )
@@ -1062,27 +991,19 @@ The founding team was also deeply inspired by the groundbreaking research at the
     #linebreak()
     #linebreak()
     
-    #text(weight: "bold")[3. The 2111 Discovery Team]
+    #text(weight: "bold")[3. LHC Research Foundation]
     #linebreak()
-    TELEPORT_MASSIVE_RESEARCH_TEAM_2111.json / Related documentation
+    LHC_ORIGINAL_TEAM_REPORT.pdf / Related documentation
     #linebreak()
-    #text(style: "italic")[The team that discovered Scint Traversal 86 years after founding, building on the foundation established in 2026]
-    #linebreak()
-    #linebreak()
-    
-    #text(weight: "bold")[4. LHC Reality Creation Lore]
-    #linebreak()
-    LHC_REALITY_CREATION_LORE.typ / Related documentation
-    #linebreak()
-    #text(style: "italic")[Documentation of the September 10, 2008 LHC moment and its significance as the creation of reality itself]
+    #text(style: "italic")[Documentation of the September 10, 2008 LHC moment and its significance in particle physics research]
     #linebreak()
     #linebreak()
     
-    #text(weight: "bold")[5. Official Guide to Scint Traversal (2111)]
+    #text(weight: "bold")[4. Quantum Teleportation Research Papers]
     #linebreak()
-    Official documentation from the 2111 discovery
+    Individual research papers and publications
     #linebreak()
-    #text(style: "italic")[Complete guide to Scint Traversal technology, classification systems, and reality navigation protocols]
+    #text(style: "italic")[Peer-reviewed papers on quantum teleportation that informed Teleport Massive's founding vision]
   ]
 ]
 
@@ -1120,7 +1041,7 @@ The founding team was also deeply inspired by the groundbreaking research at the
         #linebreak()
         #text(weight: "bold")[Corporate Structure:]
         #linebreak()
-        • 9 founding team members
+        • 8 founding team members
         #linebreak()
         • 4 core departments established
         #linebreak()
@@ -1133,7 +1054,7 @@ The founding team was also deeply inspired by the groundbreaking research at the
       #text(size: 10pt)[
         #text(weight: "bold")[Strategic Vision:]
         #linebreak()
-        • 4-phase scaling roadmap (2026-2100+)
+        • Multi-phase scaling roadmap
         #linebreak()
         • Systematic mini-to-macro approach
         #linebreak()
@@ -1148,9 +1069,9 @@ The founding team was also deeply inspired by the groundbreaking research at the
         #linebreak()
         • Make distance irrelevant
         #linebreak()
-        • Understand reality mechanics
+        • Understand quantum mechanics at scale
         #linebreak()
-        • Navigate the reality we created
+        • Transform transportation and communication
       ]
     ]
   )
@@ -1196,7 +1117,7 @@ The founding team was also deeply inspired by the groundbreaking research at the
     #linebreak()
     #text(weight: "bold")[5. Fundamental Physics]
     #linebreak()
-    Explore the deeper connections between quantum teleportation, reality mechanics, and the fundamental nature of space-time. Investigate the implications of the Large Hadron Collider moment and the nature of reality itself.
+    Explore the deeper connections between quantum teleportation and the fundamental nature of space-time. Investigate the implications of quantum entanglement at scale and how it relates to our understanding of physics.
   ]
 ]
 
@@ -1224,7 +1145,7 @@ The founding team was also deeply inspired by the groundbreaking research at the
       #linebreak()
       #text(weight: "bold")[Document Purpose:]
       #linebreak()
-      This document serves as the definitive reference for Teleport Massive's founding team, mission, and the scientific foundation that inspired our vision to scale quantum teleportation from mini to macro, ultimately leading to the discovery of Scint Traversal in 2111.
+      This document serves as the definitive reference for Teleport Massive's founding team, mission, and the scientific foundation that inspired our vision to scale quantum teleportation from mini to macro, making distance irrelevant for all of humanity.
     ]
   ]
 ]

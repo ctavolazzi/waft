@@ -1,0 +1,25 @@
+{
+  "experiment": "prove-it",
+  "date": "2026-01-19",
+  "objective": "Demonstrate scientific-method workflow checkpoint for Empirica manual task",
+  "state_a": {
+    "description": "Before manual generation",
+    "session_id": "207d5a64-bd63-4336-bb7a-f3bf6972959f"
+  },
+  "state_b": {
+    "description": "After manual planning and verification artifacts",
+    "artifacts": [
+      "_pyrite/active/2026-01-19_consideration_empirica_dashboard_manual.md",
+      "_pyrite/active/2026-01-19_deep-analyze_empirica_dashboard_manual.md",
+      "_pyrite/standards/verification/traces/2026-01-19_check-assumptions_empirica_dashboard_manual.md"
+    ]
+  },
+  "data": {
+    "method": "documented artifact creation",
+    "status": "completed"
+  },
+  "analysis": {
+    "result": "Workflow artifacts created and recorded",
+    "evidence": "See artifact files referenced"
+  }
+}
