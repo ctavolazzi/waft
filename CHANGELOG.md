@@ -11,6 +11,70 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Work in progress features
 
+## [0.9.4] - 2026-01-19
+
+### Added
+
+#### TheOracle Calculation Display ⭐ NEW
+- **Step-by-Step Thinking**: TheOracle now shows its calculation process in real-time
+- **Mathematical Formulas**: Displays actual formulas being used (coverage, confidence, phase determination)
+- **Decision Logic**: Shows which conditions trigger each decision (PROCEED/HALT/BRANCH/REVISE)
+- **Calculation Steps**: Added CALCULATE step to CASCADE workflow showing:
+  - Vector extraction: `foundation.know`, `vectors.uncertainty`
+  - Coverage formula: `coverage = know × (1 - uncertainty)`
+  - Confidence calculation: `base_confidence = min(1.0, findings × 0.1)`, then `confidence = base_confidence × (1 - uncertainty)`
+  - Phase determination with threshold logic
+  - Decision tree evaluation
+
+#### TheOracle Fallback Method ⭐ NEW
+- **Empty State Handling**: TheOracle now provides helpful guidance even when epistemic state is empty
+- **Question Analysis**: Analyzes question type (version/release, architecture, implementation) and provides contextual guidance
+- **Fallback Answers**: Uses reflection/journal data or provides general guidance based on question context
+- **Result**: TheOracle no longer returns unhelpful HALT messages - it actually answers questions
+
+#### Epistemic State Bootstrap Script ⭐ NEW
+- **Automatic Initialization**: `scripts/bootstrap_epistemic_state.py` automatically creates initial epistemic state
+- **Codebase Analysis**: Analyzes project structure (src/, docs/, tests/, work_efforts/) to estimate vectors
+- **Session Creation**: Creates Empirica session and submits preflight/postflight assessments
+- **Usage**: Run `python3 scripts/bootstrap_epistemic_state.py` to initialize epistemic state
+
+#### Auto-Work Logging System ⭐ NEW
+- **Dual Logging**: Console output + persistent log files to `_work_efforts/auto_work_logs/`
+- **Devlog Integration**: Automatic summary entries after each execution
+- **Real-Time Progress**: Immediate output with flush for visibility during RAM-intensive operations
+- **Progress Indicators**: Shows progress for Empirica init, Pantheon entities, work effort scanning
+
+#### Poker Visualization Creative Extensions ⭐ NEW
+- **6 Creative Categories**: Storytelling, tournaments, education, design, analysis, gamification
+- **4 Working Examples**: Narrative scenes, historical recreations, quizzes, tournament visualizations
+- **Enhanced Features**: Card back support, narrative content integration, educational quiz format
+- **Documentation**: `CREATIVE_IDEAS_POKER.md` with integration suggestions
+
+#### D&D Campaign Tools ⭐ NEW
+- **Game Visualization Wrapper System**: Complete D&D campaign visualization
+- **Campaign Generation Scripts**: Automated campaign creation and management
+- **Integration Ready**: Prepared for tavern poker nights and narrative integration
+
+### Changed
+
+- **TheOracle**: Enhanced to show step-by-step calculations and provide fallback guidance
+- **Show Me Script**: Added progress indicators for large work effort scans (100+ directories)
+- **Version**: Bumped from 0.9.3 to 0.9.4
+
+### Fixed
+
+- **TheOracle Empty State**: Fixed issue where TheOracle would return HALT with no guidance when epistemic state was empty
+- **Show Me Performance**: Optimized for handling large numbers of work effort directories
+- **Auto-Work Visibility**: Resolved lack of feedback during RAM-intensive operations
+
+### Documentation
+
+- **New Guides**: 
+  - `ORACLE_FIX_SUMMARY.md` - Oracle fix documentation
+  - `V0.9.4_VERSION_UPDATE_SUMMARY.md` - Version update summary
+  - `SESSION_SUMMARY_20260119.md` - Session summary
+  - `.cursor/continuation_prompts/oracle_calculation_display_20260119.md` - Continuation prompt
+
 ### In Development: v1.0.0 Electron Desktop Application
 
 **The Vision**: A full-featured Electron desktop application that anyone can use to WAFT their Agents around and do some fucking Science Bitch.
