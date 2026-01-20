@@ -12,19 +12,18 @@ This test:
 No mocks. No simulation. Just actual code fixes and real measurements.
 """
 
-import sys
-import time
 import json
 import statistics
-from pathlib import Path
-from datetime import datetime
+import sys
 import tempfile
-import shutil
+import time
+from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 # Import the REAL TheGuide directly to avoid package import issues
 import importlib.util
+
 guide_path = Path(__file__).parent.parent / "src" / "waft" / "pantheon" / "guide.py"
 spec = importlib.util.spec_from_file_location("guide", guide_path)
 guide_module = importlib.util.module_from_spec(spec)
@@ -35,6 +34,7 @@ TheGuide = guide_module.TheGuide
 # SIMPLE TEST LLM (Just for basic functionality)
 # ============================================================================
 
+
 class SimpleTestLLM:
     """Minimal LLM for testing - just returns simple responses."""
 
@@ -44,20 +44,24 @@ class SimpleTestLLM:
     def complete(self, prompt: str) -> str:
         self.call_count += 1
         if "evaluate the quality" in prompt.lower():
-            return json.dumps({
-                "factuality": 0.85,
-                "validity": 0.85,
-                "coherence": 0.85,
-                "utility": 0.85,
-                "faithfulness": 0.85,
-                "overall": 0.85,
-                "should_continue": False
-            })
+            return json.dumps(
+                {
+                    "factuality": 0.85,
+                    "validity": 0.85,
+                    "coherence": 0.85,
+                    "utility": 0.85,
+                    "faithfulness": 0.85,
+                    "overall": 0.85,
+                    "should_continue": False,
+                }
+            )
         return "Test answer"
+
 
 # ============================================================================
 # REAL PERFORMANCE TEST
 # ============================================================================
+
 
 def measure_real_performance(num_sessions: int, guide_instance: TheGuide) -> float:
     """Measure REAL performance of ACTUAL TheGuide code."""
@@ -74,9 +78,7 @@ def measure_real_performance(num_sessions: int, guide_instance: TheGuide) -> flo
 
         # This uses the ACTUAL solve() method with REAL file operations
         answer, protocol = guide_instance.solve(
-            problem_statement=f"Test problem {i}",
-            max_iterations=1,
-            quality_threshold=0.90
+            problem_statement=f"Test problem {i}", max_iterations=1, quality_threshold=0.90
         )
 
         elapsed = time.time() - start
@@ -92,12 +94,13 @@ def measure_real_performance(num_sessions: int, guide_instance: TheGuide) -> flo
 
     return mean_time, median_time, times
 
+
 def test_real_performance_before_fix():
     """Test ACTUAL performance with CURRENT code (with bug)."""
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("REAL TEST 1: CURRENT CODE PERFORMANCE (WITH BUG)")
-    print("="*80)
+    print("=" * 80)
 
     print("\nThis uses the ACTUAL TheGuide code with the O(n) index bug.")
     print("The _save_index() method rewrites the entire index file every time.")
@@ -106,7 +109,7 @@ def test_real_performance_before_fix():
         guide = TheGuide(
             project_path=Path(tmpdir),
             client_llm=SimpleTestLLM(),
-            guide_llm_config={"model": "test"}
+            guide_llm_config={"model": "test"},
         )
 
         # Test with increasing session counts
@@ -120,33 +123,32 @@ def test_real_performance_before_fix():
             # Get last 10 times for this batch
             last_10_mean = statistics.mean(times[-10:])
 
-            print(f"  Mean time: {mean*1000:.2f}ms")
-            print(f"  Last 10 mean: {last_10_mean*1000:.2f}ms")
+            print(f"  Mean time: {mean * 1000:.2f}ms")
+            print(f"  Last 10 mean: {last_10_mean * 1000:.2f}ms")
 
-            results.append({
-                'total_sessions': num_sessions,
-                'mean_time': mean,
-                'last_10_mean': last_10_mean
-            })
+            results.append(
+                {"total_sessions": num_sessions, "mean_time": mean, "last_10_mean": last_10_mean}
+            )
 
         # Calculate degradation
-        first_time = results[0]['last_10_mean']
-        last_time = results[-1]['last_10_mean']
+        first_time = results[0]["last_10_mean"]
+        last_time = results[-1]["last_10_mean"]
         degradation = ((last_time - first_time) / first_time) * 100
 
-        print(f"\n📊 PERFORMANCE DEGRADATION:")
-        print(f"  First batch (100 sessions): {first_time*1000:.2f}ms")
-        print(f"  Last batch (500 sessions): {last_time*1000:.2f}ms")
+        print("\n📊 PERFORMANCE DEGRADATION:")
+        print(f"  First batch (100 sessions): {first_time * 1000:.2f}ms")
+        print(f"  Last batch (500 sessions): {last_time * 1000:.2f}ms")
         print(f"  Degradation: {degradation:.1f}%")
 
         return results, degradation
 
+
 def create_fixed_guide_file():
     """Create a fixed version of guide.py with the performance bug fixed."""
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("APPLYING REAL FIX TO ACTUAL CODE")
-    print("="*80)
+    print("=" * 80)
 
     guide_file = Path(__file__).parent.parent / "src" / "waft" / "pantheon" / "guide.py"
 
@@ -193,7 +195,7 @@ def create_fixed_guide_file():
         if 'sessions' in self.index and len(self.index['sessions']) > 1000:
             self.index['sessions'] = self.index['sessions'][-1000:]
 
-        self.index_file.write_text(json.dumps(self.index, indent=2))'''
+        self.index_file.write_text(json.dumps(self.index, indent=2))''',
     )
 
     # Save to temporary location for testing
@@ -201,21 +203,21 @@ def create_fixed_guide_file():
     fixed_file.write_text(fixed_code)
 
     print(f"\n💾 Fixed version saved to: {fixed_file}")
-    print(f"✅ Fix applied: Index size capped at 1000 entries")
+    print("✅ Fix applied: Index size capped at 1000 entries")
 
     return fixed_file
+
 
 def test_real_performance_after_fix(fixed_file: Path):
     """Test ACTUAL performance with FIXED code."""
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("REAL TEST 2: FIXED CODE PERFORMANCE")
-    print("="*80)
+    print("=" * 80)
 
     print("\nThis uses the FIXED code with index size capping.")
 
     # Temporarily replace the module
-    import sys
     import importlib.util
 
     spec = importlib.util.spec_from_file_location("guide_fixed", fixed_file)
@@ -228,7 +230,7 @@ def test_real_performance_after_fix(fixed_file: Path):
         guide = TheGuideFixed(
             project_path=Path(tmpdir),
             client_llm=SimpleTestLLM(),
-            guide_llm_config={"model": "test"}
+            guide_llm_config={"model": "test"},
         )
 
         # Test with same session counts
@@ -241,37 +243,37 @@ def test_real_performance_after_fix(fixed_file: Path):
 
             last_10_mean = statistics.mean(times[-10:])
 
-            print(f"  Mean time: {mean*1000:.2f}ms")
-            print(f"  Last 10 mean: {last_10_mean*1000:.2f}ms")
+            print(f"  Mean time: {mean * 1000:.2f}ms")
+            print(f"  Last 10 mean: {last_10_mean * 1000:.2f}ms")
 
-            results.append({
-                'total_sessions': num_sessions,
-                'mean_time': mean,
-                'last_10_mean': last_10_mean
-            })
+            results.append(
+                {"total_sessions": num_sessions, "mean_time": mean, "last_10_mean": last_10_mean}
+            )
 
         # Calculate degradation
-        first_time = results[0]['last_10_mean']
-        last_time = results[-1]['last_10_mean']
+        first_time = results[0]["last_10_mean"]
+        last_time = results[-1]["last_10_mean"]
         degradation = ((last_time - first_time) / first_time) * 100
 
-        print(f"\n📊 PERFORMANCE WITH FIX:")
-        print(f"  First batch (100 sessions): {first_time*1000:.2f}ms")
-        print(f"  Last batch (500 sessions): {last_time*1000:.2f}ms")
+        print("\n📊 PERFORMANCE WITH FIX:")
+        print(f"  First batch (100 sessions): {first_time * 1000:.2f}ms")
+        print(f"  Last batch (500 sessions): {last_time * 1000:.2f}ms")
         print(f"  Degradation: {degradation:.1f}%")
 
         return results, degradation
+
 
 # ============================================================================
 # MAIN
 # ============================================================================
 
+
 def run_real_proof_test():
     """Run the complete real proof test."""
 
-    print("="*80)
+    print("=" * 80)
     print("REAL PROOF TEST - ACTUAL CODE, ACTUAL FIX, ACTUAL MEASUREMENTS")
-    print("="*80)
+    print("=" * 80)
 
     print("\nThis test proves:")
     print("  1. The performance bug exists in the ACTUAL code")
@@ -289,46 +291,44 @@ def run_real_proof_test():
     results_after, degradation_after = test_real_performance_after_fix(fixed_file)
 
     # Compare
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("REAL PROOF: BEFORE vs AFTER")
-    print("="*80)
+    print("=" * 80)
 
-    print(f"\n🐛 BEFORE FIX (Original code):")
+    print("\n🐛 BEFORE FIX (Original code):")
     print(f"   Performance degradation: {degradation_before:.1f}%")
 
-    print(f"\n✅ AFTER FIX (Optimized code):")
+    print("\n✅ AFTER FIX (Optimized code):")
     print(f"   Performance degradation: {degradation_after:.1f}%")
 
     improvement = degradation_before - degradation_after
-    print(f"\n📈 IMPROVEMENT:")
+    print("\n📈 IMPROVEMENT:")
     print(f"   Reduction in degradation: {improvement:.1f} percentage points")
 
     if improvement > 0:
-        print(f"\n✅ ✅ ✅ FIX WORKS!")
+        print("\n✅ ✅ ✅ FIX WORKS!")
         print(f"   The real code fix reduces performance degradation by {improvement:.1f}%")
     else:
-        print(f"\n⚠️  Unexpected result")
+        print("\n⚠️  Unexpected result")
 
     # Save results
     results_file = Path("real_proof_results.json")
-    with open(results_file, 'w') as f:
-        json.dump({
-            'before': {
-                'results': results_before,
-                'degradation': degradation_before
+    with open(results_file, "w") as f:
+        json.dump(
+            {
+                "before": {"results": results_before, "degradation": degradation_before},
+                "after": {"results": results_after, "degradation": degradation_after},
+                "improvement": improvement,
             },
-            'after': {
-                'results': results_after,
-                'degradation': degradation_after
-            },
-            'improvement': improvement
-        }, f, indent=2)
+            f,
+            indent=2,
+        )
 
     print(f"\n📊 Real results saved to: {results_file}")
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("THIS IS REAL PROOF")
-    print("="*80)
+    print("=" * 80)
     print("\n✅ Used actual TheGuide code")
     print("✅ Measured actual performance")
     print("✅ Applied actual fix")
@@ -336,10 +336,11 @@ def run_real_proof_test():
     print("\nNo mocks. No theater. Just real engineering.")
 
     return {
-        'before_degradation': degradation_before,
-        'after_degradation': degradation_after,
-        'improvement': improvement
+        "before_degradation": degradation_before,
+        "after_degradation": degradation_after,
+        "improvement": improvement,
     }
+
 
 if __name__ == "__main__":
     results = run_real_proof_test()

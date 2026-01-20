@@ -8,15 +8,16 @@ that simulate what a real meta-cognitive analysis would produce.
 This shows the ARCHITECTURE and DATA FLOW of self-examination.
 """
 
+import json
 import sys
 import time
-import json
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 import importlib.util
+
 guide_path = Path(__file__).parent.parent / "src" / "waft" / "pantheon" / "guide.py"
 spec = importlib.util.spec_from_file_location("guide", guide_path)
 guide_module = importlib.util.module_from_spec(spec)
@@ -28,6 +29,7 @@ import tempfile
 # ============================================================================
 # MOCK LLM WITH REALISTIC SELF-ANALYSIS RESPONSES
 # ============================================================================
+
 
 class SelfAnalysisLLM:
     """Mock LLM that provides realistic self-analysis responses."""
@@ -174,27 +176,32 @@ through empirical performance rather than circular reasoning."""
     def _evaluation_response(self) -> str:
         """Simulate evaluation scores for the meta-analysis."""
         import random
+
         base_quality = 0.88 + random.random() * 0.10  # 0.88 to 0.98
-        return json.dumps({
-            "factuality": round(base_quality + random.uniform(-0.05, 0.05), 3),
-            "validity": round(base_quality + random.uniform(-0.05, 0.05), 3),
-            "coherence": round(base_quality + random.uniform(-0.03, 0.03), 3),
-            "utility": round(base_quality + random.uniform(-0.03, 0.03), 3),
-            "faithfulness": round(base_quality + random.uniform(-0.05, 0.05), 3),
-            "overall": round(base_quality, 3),
-            "should_continue": False
-        })
+        return json.dumps(
+            {
+                "factuality": round(base_quality + random.uniform(-0.05, 0.05), 3),
+                "validity": round(base_quality + random.uniform(-0.05, 0.05), 3),
+                "coherence": round(base_quality + random.uniform(-0.03, 0.03), 3),
+                "utility": round(base_quality + random.uniform(-0.03, 0.03), 3),
+                "faithfulness": round(base_quality + random.uniform(-0.05, 0.05), 3),
+                "overall": round(base_quality, 3),
+                "should_continue": False,
+            }
+        )
+
 
 # ============================================================================
 # SELF-DIAGNOSTIC EXPERIMENTS WITH MOCK LLM
 # ============================================================================
 
+
 def self_diagnostic_1_code_analysis():
     """TheGuide analyzes its own source code."""
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("SELF-DIAGNOSTIC 1: TheGuide Analyzes Its Own Source Code")
-    print("="*80)
+    print("=" * 80)
 
     source_code = guide_path.read_text()
 
@@ -205,9 +212,7 @@ def self_diagnostic_1_code_analysis():
         guide_llm = SelfAnalysisLLM("code_analysis")
 
         guide = TheGuide(
-            project_path=Path(tmpdir),
-            client_llm=client_llm,
-            guide_llm_config={"model": "mock"}
+            project_path=Path(tmpdir), client_llm=client_llm, guide_llm_config={"model": "mock"}
         )
         guide.guide_llm = guide_llm
 
@@ -224,33 +229,31 @@ ANALYSIS TASK:
 
 Focus especially on the _save_session and indexing operations."""
 
-        print(f"\nINPUT:")
+        print("\nINPUT:")
         print(f"  Code length: {len(source_code)} characters")
-        print(f"  Analyzing first: 5000 characters")
-        print(f"  Focus: _save_session and indexing operations")
+        print("  Analyzing first: 5000 characters")
+        print("  Focus: _save_session and indexing operations")
 
         start_time = time.time()
 
         answer, protocol = guide.solve(
-            problem_statement=problem,
-            max_iterations=3,
-            quality_threshold=0.85
+            problem_statement=problem, max_iterations=3, quality_threshold=0.85
         )
 
         duration = time.time() - start_time
 
-        print(f"\nMETRICS:")
+        print("\nMETRICS:")
         print(f"  Execution time: {duration:.2f}s")
         print(f"  Iterations: {protocol.iteration_count}")
         print(f"  Quality score: {protocol.quality_score:.3f}")
         print(f"  Client LLM calls: {client_llm.call_count}")
         print(f"  Guide LLM calls: {guide_llm.call_count}")
 
-        print(f"\nTHEGUIDE'S SELF-ANALYSIS:")
-        print("  " + "="*76)
-        for line in answer.split('\n'):
+        print("\nTHEGUIDE'S SELF-ANALYSIS:")
+        print("  " + "=" * 76)
+        for line in answer.split("\n"):
             print(f"  {line}")
-        print("  " + "="*76)
+        print("  " + "=" * 76)
 
         # Save analysis
         analysis_file = Path("self_analysis_code.txt")
@@ -272,40 +275,39 @@ Evaluations: {len(protocol.evaluations)}
         print(f"\n📄 Full analysis saved to: {analysis_file}")
 
         # Check if it found the bug
-        found_index_issue = 'index' in answer.lower()
-        found_performance = 'performance' in answer.lower() or 'degradation' in answer.lower()
-        found_o_n = 'o(n)' in answer.lower() or 'linear' in answer.lower()
+        found_index_issue = "index" in answer.lower()
+        found_performance = "performance" in answer.lower() or "degradation" in answer.lower()
+        found_o_n = "o(n)" in answer.lower() or "linear" in answer.lower()
 
-        print(f"\nKEY FINDINGS:")
+        print("\nKEY FINDINGS:")
         print(f"  ✅ Identified index operations: {found_index_issue}")
         print(f"  ✅ Identified performance issue: {found_performance}")
         print(f"  ✅ Identified O(n) complexity: {found_o_n}")
 
         return {
-            'success': True,
-            'duration': duration,
-            'quality': protocol.quality_score,
-            'found_index_issue': found_index_issue,
-            'found_performance': found_performance,
-            'found_o_n': found_o_n,
-            'answer_length': len(answer)
+            "success": True,
+            "duration": duration,
+            "quality": protocol.quality_score,
+            "found_index_issue": found_index_issue,
+            "found_performance": found_performance,
+            "found_o_n": found_o_n,
+            "answer_length": len(answer),
         }
+
 
 def self_diagnostic_2_performance_introspection():
     """TheGuide diagnoses its own performance bug."""
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("SELF-DIAGNOSTIC 2: TheGuide Diagnoses Its Own Performance Bug")
-    print("="*80)
+    print("=" * 80)
 
     with tempfile.TemporaryDirectory() as tmpdir:
         client_llm = SelfAnalysisLLM("performance_diagnosis")
         guide_llm = SelfAnalysisLLM("performance_diagnosis")
 
         guide = TheGuide(
-            project_path=Path(tmpdir),
-            client_llm=client_llm,
-            guide_llm_config={"model": "mock"}
+            project_path=Path(tmpdir), client_llm=client_llm, guide_llm_config={"model": "mock"}
         )
         guide.guide_llm = guide_llm
 
@@ -343,23 +345,21 @@ Think step-by-step about what happens as more sessions accumulate."""
         start_time = time.time()
 
         answer, protocol = guide.solve(
-            problem_statement=problem,
-            max_iterations=5,
-            quality_threshold=0.90
+            problem_statement=problem, max_iterations=5, quality_threshold=0.90
         )
 
         duration = time.time() - start_time
 
-        print(f"\nMETRICS:")
+        print("\nMETRICS:")
         print(f"  Execution time: {duration:.2f}s")
         print(f"  Iterations: {protocol.iteration_count}")
         print(f"  Quality score: {protocol.quality_score:.3f}")
 
-        print(f"\nTHEGUIDE'S SELF-DIAGNOSIS:")
-        print("  " + "="*76)
-        for line in answer.split('\n'):
+        print("\nTHEGUIDE'S SELF-DIAGNOSIS:")
+        print("  " + "=" * 76)
+        for line in answer.split("\n"):
             print(f"  {line}")
-        print("  " + "="*76)
+        print("  " + "=" * 76)
 
         # Save diagnosis
         diagnosis_file = Path("self_diagnosis_performance.txt")
@@ -375,41 +375,40 @@ Quality: {protocol.quality_score:.3f}
         print(f"\n📄 Full diagnosis saved to: {diagnosis_file}")
 
         # Check findings
-        identified_index = 'index' in answer.lower()
-        identified_rewrite = 'rewrite' in answer.lower() or 'entire' in answer.lower()
-        identified_linear = 'linear' in answer.lower() or 'o(n)' in answer.lower()
-        identified_slope = '0.000598' in answer or '0.0005984' in answer
+        identified_index = "index" in answer.lower()
+        identified_rewrite = "rewrite" in answer.lower() or "entire" in answer.lower()
+        identified_linear = "linear" in answer.lower() or "o(n)" in answer.lower()
+        identified_slope = "0.000598" in answer or "0.0005984" in answer
 
-        print(f"\nKEY FINDINGS:")
+        print("\nKEY FINDINGS:")
         print(f"  ✅ Identified index operations: {identified_index}")
         print(f"  ✅ Identified full rewrite issue: {identified_rewrite}")
         print(f"  ✅ Identified linear complexity: {identified_linear}")
         print(f"  ✅ Calculated slope correctly: {identified_slope}")
 
         return {
-            'success': True,
-            'duration': duration,
-            'quality': protocol.quality_score,
-            'identified_index': identified_index,
-            'identified_rewrite': identified_rewrite,
-            'identified_linear': identified_linear
+            "success": True,
+            "duration": duration,
+            "quality": protocol.quality_score,
+            "identified_index": identified_index,
+            "identified_rewrite": identified_rewrite,
+            "identified_linear": identified_linear,
         }
+
 
 def self_diagnostic_3_meta_cognitive_loop():
     """TheGuide reasons about its own reasoning."""
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("SELF-DIAGNOSTIC 3: TheGuide Reasons About Its Own Reasoning")
-    print("="*80)
+    print("=" * 80)
 
     with tempfile.TemporaryDirectory() as tmpdir:
         client_llm = SelfAnalysisLLM("meta_reasoning")
         guide_llm = SelfAnalysisLLM("meta_reasoning")
 
         guide = TheGuide(
-            project_path=Path(tmpdir),
-            client_llm=client_llm,
-            guide_llm_config={"model": "mock"}
+            project_path=Path(tmpdir), client_llm=client_llm, guide_llm_config={"model": "mock"}
         )
         guide.guide_llm = guide_llm
 
@@ -440,23 +439,21 @@ How should a meta-cognitive system evaluate itself?"""
         start_time = time.time()
 
         answer, protocol = guide.solve(
-            problem_statement=problem,
-            max_iterations=4,
-            quality_threshold=0.88
+            problem_statement=problem, max_iterations=4, quality_threshold=0.88
         )
 
         duration = time.time() - start_time
 
-        print(f"\nMETRICS:")
+        print("\nMETRICS:")
         print(f"  Execution time: {duration:.2f}s")
         print(f"  Iterations: {protocol.iteration_count}")
         print(f"  Quality score: {protocol.quality_score:.3f}")
 
-        print(f"\nTHEGUIDE'S META-REASONING:")
-        print("  " + "="*76)
-        for line in answer.split('\n'):
+        print("\nTHEGUIDE'S META-REASONING:")
+        print("  " + "=" * 76)
+        for line in answer.split("\n"):
             print(f"  {line}")
-        print("  " + "="*76)
+        print("  " + "=" * 76)
 
         # Save meta-reasoning
         meta_file = Path("self_meta_reasoning.txt")
@@ -471,22 +468,20 @@ Quality: {protocol.quality_score:.3f}
 
         print(f"\n📄 Meta-reasoning saved to: {meta_file}")
 
-        return {
-            'success': True,
-            'duration': duration,
-            'quality': protocol.quality_score
-        }
+        return {"success": True, "duration": duration, "quality": protocol.quality_score}
+
 
 # ============================================================================
 # MAIN
 # ============================================================================
 
+
 def run_self_analysis_demo():
     """Run all self-analysis experiments with mock LLM."""
 
-    print("="*80)
+    print("=" * 80)
     print("SELF-ANALYSIS SUITE - META-COGNITIVE INTROSPECTION DEMO")
-    print("="*80)
+    print("=" * 80)
 
     print("\nFRAMEWORK:")
     print("  This demonstrates TheGuide's self-examination architecture")
@@ -499,45 +494,46 @@ def run_self_analysis_demo():
     results = {}
 
     # Experiment 1
-    results['code_analysis'] = self_diagnostic_1_code_analysis()
+    results["code_analysis"] = self_diagnostic_1_code_analysis()
 
     # Experiment 2
-    results['performance_diagnosis'] = self_diagnostic_2_performance_introspection()
+    results["performance_diagnosis"] = self_diagnostic_2_performance_introspection()
 
     # Experiment 3
-    results['meta_reasoning'] = self_diagnostic_3_meta_cognitive_loop()
+    results["meta_reasoning"] = self_diagnostic_3_meta_cognitive_loop()
 
     # Summary
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("SELF-ANALYSIS SUMMARY")
-    print("="*80)
+    print("=" * 80)
 
-    successful = sum(1 for r in results.values() if r.get('success'))
+    successful = sum(1 for r in results.values() if r.get("success"))
     total = len(results)
 
     print(f"\n✅ Diagnostics completed: {successful}/{total}")
 
     for name, result in results.items():
-        if result.get('success'):
+        if result.get("success"):
             print(f"\n{name.upper()}:")
             print(f"  Duration: {result['duration']:.2f}s")
             print(f"  Quality: {result['quality']:.3f}")
-            if 'found_index_issue' in result:
+            if "found_index_issue" in result:
                 print(f"  Found index issue: {result['found_index_issue']}")
                 print(f"  Found performance: {result['found_performance']}")
                 print(f"  Found O(n): {result['found_o_n']}")
 
     # Save results
     results_file = Path("self_analysis_demo_results.json")
-    with open(results_file, 'w') as f:
+    with open(results_file, "w") as f:
         json.dump(results, f, indent=2)
 
     print(f"\n📊 Results saved to: {results_file}")
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("META-COGNITIVE SELF-EXAMINATION COMPLETE")
-    print("="*80)
+    print("=" * 80)
 
     return results
+
 
 if __name__ == "__main__":
     results = run_self_analysis_demo()

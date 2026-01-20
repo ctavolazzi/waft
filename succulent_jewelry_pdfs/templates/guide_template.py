@@ -12,10 +12,9 @@ Based on field_guide template but adapted for commercial guides.
 """
 
 from pathlib import Path
+
 from jinja2 import Template
 from weasyprint import HTML
-from typing import Optional
-
 
 GUIDE_TEMPLATE = """
 <!DOCTYPE html>
@@ -453,12 +452,12 @@ def generate_guide(
     output_path: Path,
     series: str = "SUCCULENT JEWELRY GUIDE",
     number: str = "GUIDE-001",
-    subtitle: Optional[str] = None,
-    author: Optional[str] = None,
-    introduction: Optional[str] = None,
-    resources: Optional[str] = None,
-    cover_image: Optional[str] = None,
-    include_gumroad_link: bool = True
+    subtitle: str | None = None,
+    author: str | None = None,
+    introduction: str | None = None,
+    resources: str | None = None,
+    cover_image: str | None = None,
+    include_gumroad_link: bool = True,
 ) -> Path:
     """
     Generate a guide PDF document.
@@ -492,7 +491,7 @@ def generate_guide(
         introduction=introduction,
         resources=resources,
         cover_image=cover_image,
-        include_gumroad_link=include_gumroad_link
+        include_gumroad_link=include_gumroad_link,
     )
 
     HTML(string=html_output).write_pdf(output_path)

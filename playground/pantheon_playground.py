@@ -15,12 +15,9 @@ Usage:
     python playground/pantheon_playground.py --interactive
 """
 
-import sys
-import os
-from pathlib import Path
 import argparse
-from datetime import datetime
-from typing import Optional, Dict, Any
+import sys
+from pathlib import Path
 
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
@@ -28,12 +25,14 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 # Import directly to avoid dependencies
 import importlib.util
 
+
 def load_module(name: str, path: Path):
     """Load a module dynamically."""
     spec = importlib.util.spec_from_file_location(name, path)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
 
 # Load TheGuide
 pantheon_path = Path(__file__).parent.parent / "src" / "waft" / "pantheon"
@@ -62,6 +61,7 @@ except Exception as e:
 # Demo LLM
 # ============================================================================
 
+
 class PlaygroundLLM:
     """Enhanced demo LLM for playground."""
 
@@ -74,7 +74,9 @@ class PlaygroundLLM:
         self.call_count += 1
 
         # Evaluation - check FIRST (most specific)
-        if "fvcu" in prompt.lower() or ("evaluate" in prompt.lower() and "reasoning" in prompt.lower()):
+        if "fvcu" in prompt.lower() or (
+            "evaluate" in prompt.lower() and "reasoning" in prompt.lower()
+        ):
             base_score = 0.85 + (self.call_count % 3) * 0.05  # Vary between 0.85-0.95
             return f"""```json
 {{
@@ -184,15 +186,17 @@ This approach balances simplicity with scalability while maintaining code qualit
         # Default
         return f"🎮 Playground response #{self.call_count}: Exploring the problem space systematically..."
 
+
 # ============================================================================
 # Demo 1: TheGuide + TheReasoner Integration
 # ============================================================================
 
+
 def demo_guide_reasoner():
     """Demonstrate TheGuide + TheReasoner working together."""
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("  🎮 Demo 1: TheGuide + TheReasoner Integration")
-    print("="*80 + "\n")
+    print("=" * 80 + "\n")
 
     print("This demo shows how TheGuide creates reasoning traces in TheReasoner")
     print("for transparent, traceable meta-cognitive guidance.\n")
@@ -200,9 +204,7 @@ def demo_guide_reasoner():
     # Create TheGuide
     client_llm = PlaygroundLLM(personality="client")
     guide = TheGuide(
-        project_path=Path.cwd(),
-        client_llm=client_llm,
-        guide_llm_config={"model": "demo"}
+        project_path=Path.cwd(), client_llm=client_llm, guide_llm_config={"model": "demo"}
     )
     guide.guide_llm = PlaygroundLLM(personality="guide")
 
@@ -212,10 +214,10 @@ def demo_guide_reasoner():
     answer, protocol = guide.solve(
         problem_statement="Design a caching strategy for a high-traffic API",
         max_iterations=2,
-        quality_threshold=0.85
+        quality_threshold=0.85,
     )
 
-    print(f"✅ Session Complete!")
+    print("✅ Session Complete!")
     print(f"   Session ID: {protocol.session_id}")
     print(f"   Iterations: {protocol.iteration_count}")
     print(f"   Quality Score: {protocol.quality_score:.2f}\n")
@@ -241,35 +243,35 @@ def demo_guide_reasoner():
     else:
         print("⚠️  TheReasoner not available (using mock)")
 
-    print(f"\n💡 Key Feature: Each iteration creates a linked trace in TheReasoner,")
-    print(f"   building a complete reasoning chain you can explore!")
+    print("\n💡 Key Feature: Each iteration creates a linked trace in TheReasoner,")
+    print("   building a complete reasoning chain you can explore!")
 
     return protocol
+
 
 # ============================================================================
 # Demo 2: Multi-Stage Problem Solving
 # ============================================================================
 
+
 def demo_multi_stage():
     """Demonstrate multi-stage problem solving."""
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("  🎮 Demo 2: Multi-Stage Problem Solving")
-    print("="*80 + "\n")
+    print("=" * 80 + "\n")
 
     print("This demo shows TheGuide tackling complex problems in stages.\n")
 
     client_llm = PlaygroundLLM()
     guide = TheGuide(
-        project_path=Path.cwd(),
-        client_llm=client_llm,
-        guide_llm_config={"model": "demo"}
+        project_path=Path.cwd(), client_llm=client_llm, guide_llm_config={"model": "demo"}
     )
     guide.guide_llm = PlaygroundLLM()
 
     stages = [
         ("Analysis", "Analyze the requirements for a real-time chat system"),
         ("Design", "Design the architecture based on the analysis"),
-        ("Implementation", "Outline implementation steps")
+        ("Implementation", "Outline implementation steps"),
     ]
 
     results = []
@@ -279,80 +281,82 @@ def demo_multi_stage():
         print(f"   Problem: {problem}\n")
 
         answer, protocol = guide.solve(
-            problem_statement=problem,
-            max_iterations=1,
-            quality_threshold=0.85
+            problem_statement=problem, max_iterations=1, quality_threshold=0.85
         )
 
-        results.append({
-            "stage": stage_name,
-            "answer": answer,
-            "protocol": protocol
-        })
+        results.append({"stage": stage_name, "answer": answer, "protocol": protocol})
 
         print(f"   ✅ Quality: {protocol.quality_score:.2f}")
         print(f"   📝 Answer: {answer[:100]}...\n")
 
-    print("="*80)
+    print("=" * 80)
     print("🎉 All stages complete!")
     print(f"   Total sessions: {len(results)}")
-    print(f"   Average quality: {sum(r['protocol'].quality_score for r in results) / len(results):.2f}")
+    print(
+        f"   Average quality: {sum(r['protocol'].quality_score for r in results) / len(results):.2f}"
+    )
 
     return results
+
 
 # ============================================================================
 # Demo 3: FVCU Score Evolution
 # ============================================================================
 
+
 def demo_score_evolution():
     """Show how FVCU scores evolve over iterations."""
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("  🎮 Demo 3: FVCU Score Evolution")
-    print("="*80 + "\n")
+    print("=" * 80 + "\n")
 
     print("This demo tracks how reasoning quality improves with iterations.\n")
 
     client_llm = PlaygroundLLM()
     guide = TheGuide(
-        project_path=Path.cwd(),
-        client_llm=client_llm,
-        guide_llm_config={"model": "demo"}
+        project_path=Path.cwd(), client_llm=client_llm, guide_llm_config={"model": "demo"}
     )
     guide.guide_llm = PlaygroundLLM()
 
     answer, protocol = guide.solve(
         problem_statement="Explain the CAP theorem and its implications",
         max_iterations=3,
-        quality_threshold=0.95
+        quality_threshold=0.95,
     )
 
     print("📊 Score Evolution Across Iterations:\n")
-    print(f"{'Iter':<6} {'Fact':<6} {'Valid':<6} {'Coher':<6} {'Util':<6} {'Faith':<6} {'Overall':<8}")
+    print(
+        f"{'Iter':<6} {'Fact':<6} {'Valid':<6} {'Coher':<6} {'Util':<6} {'Faith':<6} {'Overall':<8}"
+    )
     print("-" * 60)
 
     for eval_data in protocol.evaluations:
-        scores = eval_data['scores']
-        print(f"{eval_data['iteration']:<6} "
-              f"{scores['factuality']:<6.2f} "
-              f"{scores['validity']:<6.2f} "
-              f"{scores['coherence']:<6.2f} "
-              f"{scores['utility']:<6.2f} "
-              f"{scores['faithfulness']:<6.2f} "
-              f"{scores['overall']:<8.2f}")
+        scores = eval_data["scores"]
+        print(
+            f"{eval_data['iteration']:<6} "
+            f"{scores['factuality']:<6.2f} "
+            f"{scores['validity']:<6.2f} "
+            f"{scores['coherence']:<6.2f} "
+            f"{scores['utility']:<6.2f} "
+            f"{scores['faithfulness']:<6.2f} "
+            f"{scores['overall']:<8.2f}"
+        )
 
     print("\n💡 Notice how scores can guide the iterative refinement process!")
 
     return protocol
 
+
 # ============================================================================
 # Demo 4: Comparative Analysis
 # ============================================================================
 
+
 def demo_comparative():
     """Compare different solution approaches."""
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("  🎮 Demo 4: Comparative Solution Analysis")
-    print("="*80 + "\n")
+    print("=" * 80 + "\n")
 
     print("This demo uses TheGuide to compare different approaches.\n")
 
@@ -361,7 +365,7 @@ def demo_comparative():
     approaches = [
         "Monolithic architecture",
         "Microservices architecture",
-        "Serverless architecture"
+        "Serverless architecture",
     ]
 
     results = []
@@ -370,44 +374,40 @@ def demo_comparative():
         print(f"🔍 Analyzing: {approach}")
 
         guide = TheGuide(
-            project_path=Path.cwd(),
-            client_llm=client_llm,
-            guide_llm_config={"model": "demo"}
+            project_path=Path.cwd(), client_llm=client_llm, guide_llm_config={"model": "demo"}
         )
         guide.guide_llm = PlaygroundLLM()
 
         answer, protocol = guide.solve(
             problem_statement=f"Evaluate the {approach} approach for an e-commerce platform. Consider scalability, complexity, and cost.",
             max_iterations=1,
-            quality_threshold=0.8
+            quality_threshold=0.8,
         )
 
-        results.append({
-            "approach": approach,
-            "score": protocol.quality_score,
-            "answer": answer
-        })
+        results.append({"approach": approach, "score": protocol.quality_score, "answer": answer})
 
         print(f"   Quality Score: {protocol.quality_score:.2f}\n")
 
-    print("="*80)
+    print("=" * 80)
     print("📊 Comparative Results:\n")
 
-    for result in sorted(results, key=lambda x: x['score'], reverse=True):
+    for result in sorted(results, key=lambda x: x["score"], reverse=True):
         print(f"🏆 {result['approach']}: {result['score']:.2f}")
         print(f"   {result['answer'][:80]}...\n")
 
     return results
 
+
 # ============================================================================
 # Interactive Playground
 # ============================================================================
 
+
 def interactive_playground():
     """Run interactive playground mode."""
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("  🎮 Pantheon Playground - Interactive Mode")
-    print("="*80 + "\n")
+    print("=" * 80 + "\n")
 
     print("Available demos:")
     print("  1. TheGuide + TheReasoner Integration")
@@ -439,17 +439,15 @@ def interactive_playground():
                     guide = TheGuide(
                         project_path=Path.cwd(),
                         client_llm=client_llm,
-                        guide_llm_config={"model": "demo"}
+                        guide_llm_config={"model": "demo"},
                     )
                     guide.guide_llm = PlaygroundLLM()
 
                     answer, protocol = guide.solve(
-                        problem_statement=problem,
-                        max_iterations=3,
-                        quality_threshold=0.85
+                        problem_statement=problem, max_iterations=3, quality_threshold=0.85
                     )
 
-                    print(f"\n✅ Session Complete!")
+                    print("\n✅ Session Complete!")
                     print(f"   Quality: {protocol.quality_score:.2f}")
                     print(f"\n📊 Answer:\n{answer}\n")
             else:
@@ -459,26 +457,23 @@ def interactive_playground():
             print("\n\n👋 Thanks for playing!\n")
             break
 
+
 # ============================================================================
 # Main
 # ============================================================================
 
+
 def main():
     """Main entry point."""
-    parser = argparse.ArgumentParser(
-        description="Pantheon Playground - Interactive Demo System"
-    )
+    parser = argparse.ArgumentParser(description="Pantheon Playground - Interactive Demo System")
 
     parser.add_argument(
-        "--demo", "-d",
+        "--demo",
+        "-d",
         choices=["guide_reasoner", "multi_stage", "score_evolution", "comparative", "all"],
-        help="Run specific demo"
+        help="Run specific demo",
     )
-    parser.add_argument(
-        "--interactive", "-i",
-        action="store_true",
-        help="Run in interactive mode"
-    )
+    parser.add_argument("--interactive", "-i", action="store_true", help="Run in interactive mode")
 
     args = parser.parse_args()
 
@@ -512,6 +507,7 @@ def main():
         print("\nExample:")
         print("  python playground/pantheon_playground.py --demo all")
         print("  python playground/pantheon_playground.py --interactive")
+
 
 if __name__ == "__main__":
     main()

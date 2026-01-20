@@ -17,12 +17,12 @@ Usage:
     python scripts/test_guide_implementation.py --all
 """
 
-import os
-import sys
-from pathlib import Path
 import argparse
 import json
+import os
+import sys
 from datetime import datetime
+from pathlib import Path
 
 # Add pantheon directory to path (bypass waft package __init__)
 pantheon_path = Path(__file__).parent.parent / "src" / "waft" / "pantheon"
@@ -31,6 +31,7 @@ sys.path.insert(0, str(pantheon_path))
 try:
     # Import directly from guide module (bypassing package __init__)
     import importlib.util
+
     guide_module_path = pantheon_path / "guide.py"
     spec = importlib.util.spec_from_file_location("guide", guide_module_path)
     guide_module = importlib.util.module_from_spec(spec)
@@ -44,6 +45,7 @@ try:
 except ImportError as e:
     print(f"❌ Failed to import from guide module: {e}")
     import traceback
+
     traceback.print_exc()
     sys.exit(1)
 
@@ -145,10 +147,12 @@ def test_imports():
         print("✅ EvaluationScores model imported successfully")
 
         # Check that they're the right types
-        assert hasattr(TheGuide, 'solve'), "TheGuide should have solve method"
-        assert hasattr(TheGuide, 'explain'), "TheGuide should have explain method"
-        assert hasattr(Protocol, 'model_fields'), "Protocol should be a Pydantic model"
-        assert hasattr(EvaluationScores, 'model_fields'), "EvaluationScores should be a Pydantic model"
+        assert hasattr(TheGuide, "solve"), "TheGuide should have solve method"
+        assert hasattr(TheGuide, "explain"), "TheGuide should have explain method"
+        assert hasattr(Protocol, "model_fields"), "Protocol should be a Pydantic model"
+        assert hasattr(EvaluationScores, "model_fields"), (
+            "EvaluationScores should be a Pydantic model"
+        )
 
         print("✅ All classes have expected attributes")
         return True
@@ -171,13 +175,10 @@ def test_initialization():
         guide = TheGuide(
             project_path=project_path,
             client_llm=mock_client,
-            guide_llm_config={
-                "model": "mock-guide",
-                "api_key": "mock-key"
-            }
+            guide_llm_config={"model": "mock-guide", "api_key": "mock-key"},
         )
 
-        print(f"✅ TheGuide initialized successfully")
+        print("✅ TheGuide initialized successfully")
         print(f"   Project path: {guide.project_path}")
         print(f"   Guide path: {guide.guide_path}")
         print(f"   Client LLM: {guide.client_llm.model}")
@@ -187,7 +188,7 @@ def test_initialization():
         assert (guide.guide_path / "sessions").exists(), "Sessions directory should exist"
         assert (guide.guide_path / "protocols").exists(), "Protocols directory should exist"
 
-        print(f"✅ Storage directories created:")
+        print("✅ Storage directories created:")
         print(f"   - {guide.guide_path / 'sessions'}")
         print(f"   - {guide.guide_path / 'protocols'}")
 
@@ -195,6 +196,7 @@ def test_initialization():
     except Exception as e:
         print(f"❌ Initialization test failed: {e}")
         import traceback
+
         traceback.print_exc()
         return None
 
@@ -211,7 +213,7 @@ def test_protocol_models():
             coherence=0.85,
             utility=0.90,
             faithfulness=0.95,
-            overall=0.91
+            overall=0.91,
         )
         print("✅ EvaluationScores model created:")
         print(f"   Factuality: {scores.factuality}")
@@ -230,7 +232,7 @@ def test_protocol_models():
                     "iteration": 1,
                     "instruction": "Test instruction",
                     "reasoning_trace": "Test reasoning",
-                    "timestamp": datetime.now().isoformat()
+                    "timestamp": datetime.now().isoformat(),
                 }
             ],
             evaluations=[
@@ -242,17 +244,17 @@ def test_protocol_models():
                         "coherence": 0.85,
                         "utility": 0.90,
                         "faithfulness": 0.95,
-                        "overall": 0.91
+                        "overall": 0.91,
                     },
                     "rationale": "Test rationale",
                     "strengths": ["Strength 1"],
                     "weaknesses": ["Weakness 1"],
-                    "recommendations": ["Recommendation 1"]
+                    "recommendations": ["Recommendation 1"],
                 }
             ],
             final_answer="Test answer",
             quality_score=0.91,
-            iteration_count=1
+            iteration_count=1,
         )
         print("✅ Protocol model created:")
         print(f"   Session ID: {protocol.session_id}")
@@ -268,6 +270,7 @@ def test_protocol_models():
     except Exception as e:
         print(f"❌ Protocol models test failed: {e}")
         import traceback
+
         traceback.print_exc()
         return False
 
@@ -291,10 +294,10 @@ def test_mock_guidance_loop(guide: TheGuide):
             max_iterations=3,
             quality_threshold=0.8,
             use_partial_context=True,
-            test_time_scaling=1
+            test_time_scaling=1,
         )
 
-        print(f"\n✅ Guidance loop completed!")
+        print("\n✅ Guidance loop completed!")
         print(f"   Session ID: {protocol.session_id}")
         print(f"   Iterations: {protocol.iteration_count}")
         print(f"   Quality Score: {protocol.quality_score:.2f}")
@@ -311,7 +314,7 @@ def test_mock_guidance_loop(guide: TheGuide):
         print_section("FVCU+Faithfulness Evaluations")
         for eval_data in protocol.evaluations:
             print(f"\nIteration {eval_data['iteration']}:")
-            scores = eval_data['scores']
+            scores = eval_data["scores"]
             print(f"  Factuality:   {scores['factuality']:.2f}")
             print(f"  Validity:     {scores['validity']:.2f}")
             print(f"  Coherence:    {scores['coherence']:.2f}")
@@ -325,6 +328,7 @@ def test_mock_guidance_loop(guide: TheGuide):
     except Exception as e:
         print(f"❌ Mock guidance loop test failed: {e}")
         import traceback
+
         traceback.print_exc()
         return None
 
@@ -360,6 +364,7 @@ def test_why_explanation(guide: TheGuide, protocol: Protocol):
     except Exception as e:
         print(f"❌ Why explanation test failed: {e}")
         import traceback
+
         traceback.print_exc()
         return False
 
@@ -382,14 +387,14 @@ def test_storage_system(guide: TheGuide, protocol: Protocol):
         # Check index updated
         assert guide.index_file.exists(), "Index file should exist"
         index_data = json.loads(guide.index_file.read_text())
-        assert len(index_data['sessions']) > 0, "Index should have sessions"
+        assert len(index_data["sessions"]) > 0, "Index should have sessions"
         print(f"✅ Index updated: {len(index_data['sessions'])} session(s)")
 
         # Test protocol retrieval
         retrieved_protocol = guide.get_protocol(protocol.session_id)
         assert retrieved_protocol is not None, "Should be able to retrieve protocol"
         assert retrieved_protocol.session_id == protocol.session_id
-        print(f"✅ Protocol retrieved successfully")
+        print("✅ Protocol retrieved successfully")
 
         # Test recent sessions
         recent = guide.get_recent_sessions(limit=5)
@@ -398,7 +403,7 @@ def test_storage_system(guide: TheGuide, protocol: Protocol):
 
         # Test session summary
         summary = guide.get_session_summary()
-        print(f"✅ Session summary:")
+        print("✅ Session summary:")
         print(f"   Total sessions: {summary['total_sessions']}")
         print(f"   Total protocols: {summary['total_protocols']}")
         print(f"   Indexed sessions: {summary['indexed_sessions']}")
@@ -407,6 +412,7 @@ def test_storage_system(guide: TheGuide, protocol: Protocol):
     except Exception as e:
         print(f"❌ Storage system test failed: {e}")
         import traceback
+
         traceback.print_exc()
         return False
 
@@ -418,7 +424,7 @@ def test_reasoner_integration(guide: TheGuide):
     try:
         # Get reasoner
         reasoner = guide.reasoner
-        print(f"✅ TheReasoner instance obtained")
+        print("✅ TheReasoner instance obtained")
 
         # Check that traces were created
         recent_traces = reasoner.get_recent_traces(limit=10)
@@ -427,7 +433,7 @@ def test_reasoner_integration(guide: TheGuide):
         if recent_traces:
             # Show first trace
             first_trace = recent_traces[0]
-            print(f"\n   Latest trace:")
+            print("\n   Latest trace:")
             print(f"   - Trace ID: {first_trace.get('trace_id', 'N/A')}")
             print(f"   - Decision: {first_trace.get('decision', 'N/A')[:60]}...")
             print(f"   - Context: {first_trace.get('context', {})}")
@@ -436,6 +442,7 @@ def test_reasoner_integration(guide: TheGuide):
     except Exception as e:
         print(f"❌ Reasoner integration test failed: {e}")
         import traceback
+
         traceback.print_exc()
         return False
 
@@ -449,35 +456,35 @@ def run_all_tests(use_mock=True):
     results = {}
 
     # Test 1: Imports
-    results['imports'] = test_imports()
+    results["imports"] = test_imports()
 
     # Test 2: Initialization
     guide = test_initialization()
-    results['initialization'] = guide is not None
+    results["initialization"] = guide is not None
 
     if not guide:
         print("\n❌ Cannot continue tests without successful initialization")
         return results
 
     # Test 3: Protocol Models
-    results['models'] = test_protocol_models()
+    results["models"] = test_protocol_models()
 
     # Test 4: Mock Guidance Loop
     protocol = test_mock_guidance_loop(guide)
-    results['guidance_loop'] = protocol is not None
+    results["guidance_loop"] = protocol is not None
 
     if not protocol:
         print("\n❌ Cannot continue tests without successful guidance loop")
         return results
 
     # Test 5: Why Explanation
-    results['explanation'] = test_why_explanation(guide, protocol)
+    results["explanation"] = test_why_explanation(guide, protocol)
 
     # Test 6: Storage System
-    results['storage'] = test_storage_system(guide, protocol)
+    results["storage"] = test_storage_system(guide, protocol)
 
     # Test 7: Reasoner Integration
-    results['reasoner'] = test_reasoner_integration(guide)
+    results["reasoner"] = test_reasoner_integration(guide)
 
     # Summary
     print_header("📊 Test Results Summary")
@@ -492,7 +499,7 @@ def run_all_tests(use_mock=True):
 
     print(f"\n{'─' * 80}")
     print(f"Total: {total} | Passed: {passed} | Failed: {failed}")
-    print(f"Success Rate: {(passed/total)*100:.1f}%")
+    print(f"Success Rate: {(passed / total) * 100:.1f}%")
 
     if failed == 0:
         print("\n🎉 All tests passed! TheGuide is ready to use!")
