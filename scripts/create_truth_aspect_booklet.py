@@ -148,6 +148,10 @@ def create_latex_booklet(
         print("   ⚠️  DND template files not found")
         return None
 
+    # Process explanation for Python 3.10 compatibility (no backslashes in f-strings)
+    par_separator = "\\par "
+    processed_explanation = explanation.strip().replace(chr(10), par_separator)
+
     # Create LaTeX document
     latex_content = f"""\\documentclass[10pt,twoside,twocolumn,openany,nodeprecatedcode]{{dndbook}}
 
@@ -214,7 +218,7 @@ This Aspect of TheTruth has been sent back up the Chain to ThePoint, where it no
 
 \\section*{{The Explanation}}
 
-{explanation.strip().replace(chr(10), "\\par ")}
+{processed_explanation}
 
 \\vfill
 
