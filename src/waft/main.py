@@ -808,9 +808,7 @@ def empirica_monitor_cmd(
     session_id: str | None = typer.Option(
         None, "--session-id", "-s", help="Session ID to monitor (snapshot only)"
     ),
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Launch Empirica TUI dashboard for monitoring epistemic state.
 

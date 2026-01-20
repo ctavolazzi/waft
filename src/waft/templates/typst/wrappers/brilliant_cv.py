@@ -145,8 +145,9 @@ def _create_experience_module(experience: list[dict[str, Any]]) -> str:
 )"""
         entries.append(entry)
 
+    separator = ",\n"
     return f"""#let experience = [
-{",\n".join(entries)}
+{separator.join(entries)}
 ]
 """
 
@@ -185,8 +186,9 @@ def _create_education_module(education: list[dict[str, Any]]) -> str:
 )"""
         entries.append(entry)
 
+    separator = ",\n"
     return f"""#let education = [
-{",\n".join(entries)}
+{separator.join(entries)}
 ]
 """
 

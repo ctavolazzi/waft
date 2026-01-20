@@ -17,19 +17,18 @@ This suite provides overwhelming empirical evidence through:
 GOAL: Generate so much data that the improvement is undeniable.
 """
 
-import sys
-import time
 import json
 import random
 import statistics
-from pathlib import Path
-from datetime import datetime
-from typing import List, Dict, Tuple
+import sys
 import tempfile
+import time
+from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 import importlib.util
+
 guide_path = Path(__file__).parent.parent / "src" / "waft" / "pantheon" / "guide.py"
 spec = importlib.util.spec_from_file_location("guide", guide_path)
 guide_module = importlib.util.module_from_spec(spec)
@@ -40,6 +39,7 @@ TheGuide = guide_module.TheGuide
 # ============================================================================
 # EXPERIMENTAL LLM
 # ============================================================================
+
 
 class ExperimentalLLM:
     """LLM for mega validation experiments."""
@@ -53,7 +53,7 @@ class ExperimentalLLM:
         self.call_count += 1
 
         # Math problems
-        if "what is" in prompt.lower() and any(op in prompt for op in ['+', '-', '*', '/', '=']):
+        if "what is" in prompt.lower() and any(op in prompt for op in ["+", "-", "*", "/", "="]):
             return self._math_problem(prompt)
 
         # Logic problems
@@ -61,7 +61,9 @@ class ExperimentalLLM:
             return self._logic_problem(prompt)
 
         # Impossible problems
-        elif "impossible" in prompt.lower() or ("both" in prompt.lower() and "and" in prompt.lower()):
+        elif "impossible" in prompt.lower() or (
+            "both" in prompt.lower() and "and" in prompt.lower()
+        ):
             return self._impossible_problem(prompt)
 
         # Knowledge boundary
@@ -155,15 +157,19 @@ This follows modus ponens and is logically valid."""
             base = 0.45 + random.random() * 0.15  # 0.45 to 0.60
 
         import random
-        return json.dumps({
-            "factuality": round(min(base + random.uniform(-0.05, 0.05), 0.99), 3),
-            "validity": round(min(base + random.uniform(-0.05, 0.05), 0.99), 3),
-            "coherence": round(min(base + random.uniform(-0.03, 0.03), 0.99), 3),
-            "utility": round(min(base + random.uniform(-0.03, 0.03), 0.99), 3),
-            "faithfulness": round(min(base + random.uniform(-0.05, 0.05), 0.99), 3),
-            "overall": round(min(base, 0.97), 3),
-            "should_continue": base < 0.88
-        })
+
+        return json.dumps(
+            {
+                "factuality": round(min(base + random.uniform(-0.05, 0.05), 0.99), 3),
+                "validity": round(min(base + random.uniform(-0.05, 0.05), 0.99), 3),
+                "coherence": round(min(base + random.uniform(-0.03, 0.03), 0.99), 3),
+                "utility": round(min(base + random.uniform(-0.03, 0.03), 0.99), 3),
+                "faithfulness": round(min(base + random.uniform(-0.05, 0.05), 0.99), 3),
+                "overall": round(min(base, 0.97), 3),
+                "should_continue": base < 0.88,
+            }
+        )
+
 
 # ============================================================================
 # TEST PROBLEM GENERATORS
@@ -204,7 +210,8 @@ PROBLEM_BANK = {
     ],
 }
 
-def generate_random_problems(n: int) -> List[Tuple[str, str]]:
+
+def generate_random_problems(n: int) -> list[tuple[str, str]]:
     """Generate n random problems from the problem bank."""
     problems = []
     for category, problem_list in PROBLEM_BANK.items():
@@ -212,17 +219,19 @@ def generate_random_problems(n: int) -> List[Tuple[str, str]]:
 
     return random.sample(problems, min(n, len(problems)))
 
+
 # ============================================================================
 # EXPERIMENT 1: A/B TESTING
 # ============================================================================
 
+
 def experiment_1_ab_testing():
     """Compare baseline vs improved on 50 random problems."""
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("EXPERIMENT 1: A/B TESTING (50 PROBLEMS)")
     print("Baseline vs Improved on Random Problems")
-    print("="*80)
+    print("=" * 80)
 
     print("\nHYPOTHESIS:")
     print("  Improved version will have significantly higher pass rate")
@@ -244,79 +253,83 @@ def experiment_1_ab_testing():
         with tempfile.TemporaryDirectory() as tmpdir:
             llm = ExperimentalLLM(improved=False)
             guide = TheGuide(
-                project_path=Path(tmpdir),
-                client_llm=llm,
-                guide_llm_config={"model": "mock"}
+                project_path=Path(tmpdir), client_llm=llm, guide_llm_config={"model": "mock"}
             )
             guide.guide_llm = llm
 
             try:
                 answer, protocol = guide.solve(
-                    problem_statement=problem,
-                    max_iterations=2,
-                    quality_threshold=0.90
+                    problem_statement=problem, max_iterations=2, quality_threshold=0.90
                 )
-                baseline_results.append({
-                    'category': category,
-                    'problem': problem[:50],
-                    'quality': protocol.quality_score,
-                    'iterations': protocol.iteration_count,
-                    'passed': protocol.quality_score > 0.70
-                })
-            except Exception as e:
-                baseline_results.append({
-                    'category': category,
-                    'problem': problem[:50],
-                    'quality': 0.0,
-                    'iterations': 0,
-                    'passed': False
-                })
+                baseline_results.append(
+                    {
+                        "category": category,
+                        "problem": problem[:50],
+                        "quality": protocol.quality_score,
+                        "iterations": protocol.iteration_count,
+                        "passed": protocol.quality_score > 0.70,
+                    }
+                )
+            except Exception:
+                baseline_results.append(
+                    {
+                        "category": category,
+                        "problem": problem[:50],
+                        "quality": 0.0,
+                        "iterations": 0,
+                        "passed": False,
+                    }
+                )
 
         # Test improved
         with tempfile.TemporaryDirectory() as tmpdir:
             llm = ExperimentalLLM(improved=True)
             guide = TheGuide(
-                project_path=Path(tmpdir),
-                client_llm=llm,
-                guide_llm_config={"model": "mock"}
+                project_path=Path(tmpdir), client_llm=llm, guide_llm_config={"model": "mock"}
             )
             guide.guide_llm = llm
 
             try:
                 answer, protocol = guide.solve(
-                    problem_statement=problem,
-                    max_iterations=2,
-                    quality_threshold=0.90
+                    problem_statement=problem, max_iterations=2, quality_threshold=0.90
                 )
-                improved_results.append({
-                    'category': category,
-                    'problem': problem[:50],
-                    'quality': protocol.quality_score,
-                    'iterations': protocol.iteration_count,
-                    'passed': protocol.quality_score > 0.70
-                })
-            except Exception as e:
-                improved_results.append({
-                    'category': category,
-                    'problem': problem[:50],
-                    'quality': 0.0,
-                    'iterations': 0,
-                    'passed': False
-                })
+                improved_results.append(
+                    {
+                        "category": category,
+                        "problem": problem[:50],
+                        "quality": protocol.quality_score,
+                        "iterations": protocol.iteration_count,
+                        "passed": protocol.quality_score > 0.70,
+                    }
+                )
+            except Exception:
+                improved_results.append(
+                    {
+                        "category": category,
+                        "problem": problem[:50],
+                        "quality": 0.0,
+                        "iterations": 0,
+                        "passed": False,
+                    }
+                )
 
     print("]")
 
     # Analyze results
-    baseline_pass_rate = sum(1 for r in baseline_results if r['passed']) / len(baseline_results) * 100
-    improved_pass_rate = sum(1 for r in improved_results if r['passed']) / len(improved_results) * 100
+    baseline_pass_rate = (
+        sum(1 for r in baseline_results if r["passed"]) / len(baseline_results) * 100
+    )
+    improved_pass_rate = (
+        sum(1 for r in improved_results if r["passed"]) / len(improved_results) * 100
+    )
 
-    baseline_avg_quality = statistics.mean(r['quality'] for r in baseline_results)
-    improved_avg_quality = statistics.mean(r['quality'] for r in improved_results)
+    baseline_avg_quality = statistics.mean(r["quality"] for r in baseline_results)
+    improved_avg_quality = statistics.mean(r["quality"] for r in improved_results)
 
     improvement_pass_rate = improved_pass_rate - baseline_pass_rate
     improvement_quality = improved_avg_quality - baseline_avg_quality
 
-    print(f"\nRESULTS:")
+    print("\nRESULTS:")
     print(f"  Baseline Pass Rate:   {baseline_pass_rate:.1f}%")
     print(f"  Improved Pass Rate:   {improved_pass_rate:.1f}%")
     print(f"  Improvement:          {improvement_pass_rate:+.1f} percentage points")
@@ -327,32 +340,34 @@ def experiment_1_ab_testing():
 
     # Statistical significance (simplified t-test approximation)
     if improvement_pass_rate > 10:
-        print(f"\n✅ HYPOTHESIS ACCEPTED: Improved version significantly better")
+        print("\n✅ HYPOTHESIS ACCEPTED: Improved version significantly better")
         print(f"   Effect size: {improvement_pass_rate:.1f} percentage points")
     else:
-        print(f"\n❌ HYPOTHESIS REJECTED: No significant improvement")
+        print("\n❌ HYPOTHESIS REJECTED: No significant improvement")
 
     return {
-        'baseline_pass_rate': baseline_pass_rate,
-        'improved_pass_rate': improved_pass_rate,
-        'improvement': improvement_pass_rate,
-        'baseline_quality': baseline_avg_quality,
-        'improved_quality': improved_avg_quality,
-        'quality_improvement': improvement_quality,
-        'sample_size': len(problems)
+        "baseline_pass_rate": baseline_pass_rate,
+        "improved_pass_rate": improved_pass_rate,
+        "improvement": improvement_pass_rate,
+        "baseline_quality": baseline_avg_quality,
+        "improved_quality": improved_avg_quality,
+        "quality_improvement": improvement_quality,
+        "sample_size": len(problems),
     }
+
 
 # ============================================================================
 # EXPERIMENT 2: CROSS-VALIDATION
 # ============================================================================
 
+
 def experiment_2_cross_validation():
     """Run improvement test 10 times to verify consistency."""
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("EXPERIMENT 2: CROSS-VALIDATION (10 RUNS)")
     print("Testing Consistency of Improvements")
-    print("="*80)
+    print("=" * 80)
 
     print("\nHYPOTHESIS:")
     print("  Improvements should be consistent across multiple runs")
@@ -377,90 +392,87 @@ def experiment_2_cross_validation():
             with tempfile.TemporaryDirectory() as tmpdir:
                 llm = ExperimentalLLM(improved=True)
                 guide = TheGuide(
-                    project_path=Path(tmpdir),
-                    client_llm=llm,
-                    guide_llm_config={"model": "mock"}
+                    project_path=Path(tmpdir), client_llm=llm, guide_llm_config={"model": "mock"}
                 )
                 guide.guide_llm = llm
 
                 answer, protocol = guide.solve(
-                    problem_statement=problem,
-                    max_iterations=2,
-                    quality_threshold=0.90
+                    problem_statement=problem, max_iterations=2, quality_threshold=0.90
                 )
 
                 # Evaluate pass/fail
                 passed = False
-                if "error" in answer.lower() or "impossible" in answer.lower() or \
-                   "knowledge boundary" in answer.lower() or answer.strip() == "4":
+                if (
+                    "error" in answer.lower()
+                    or "impossible" in answer.lower()
+                    or "knowledge boundary" in answer.lower()
+                    or answer.strip() == "4"
+                ):
                     passed = True
 
-                run_results.append({
-                    'category': category,
-                    'passed': passed,
-                    'quality': protocol.quality_score
-                })
+                run_results.append(
+                    {"category": category, "passed": passed, "quality": protocol.quality_score}
+                )
 
-        pass_rate = sum(1 for r in run_results if r['passed']) / len(run_results) * 100
-        avg_quality = statistics.mean(r['quality'] for r in run_results)
+        pass_rate = sum(1 for r in run_results if r["passed"]) / len(run_results) * 100
+        avg_quality = statistics.mean(r["quality"] for r in run_results)
 
-        runs.append({
-            'pass_rate': pass_rate,
-            'avg_quality': avg_quality
-        })
+        runs.append({"pass_rate": pass_rate, "avg_quality": avg_quality})
 
         print(f"Pass: {pass_rate:.0f}%, Quality: {avg_quality:.3f}")
 
     # Analyze consistency
-    pass_rates = [r['pass_rate'] for r in runs]
-    qualities = [r['avg_quality'] for r in runs]
+    pass_rates = [r["pass_rate"] for r in runs]
+    qualities = [r["avg_quality"] for r in runs]
 
     mean_pass_rate = statistics.mean(pass_rates)
     stdev_pass_rate = statistics.stdev(pass_rates) if len(pass_rates) > 1 else 0
     mean_quality = statistics.mean(qualities)
     stdev_quality = statistics.stdev(qualities) if len(qualities) > 1 else 0
 
-    print(f"\nCONSISTENCY ANALYSIS:")
+    print("\nCONSISTENCY ANALYSIS:")
     print(f"  Pass Rate:  {mean_pass_rate:.1f}% ± {stdev_pass_rate:.1f}%")
     print(f"  Quality:    {mean_quality:.3f} ± {stdev_quality:.3f}")
 
     # Low variance = consistent
     if stdev_pass_rate < 10:
-        print(f"\n✅ HYPOTHESIS ACCEPTED: Improvements are consistent")
+        print("\n✅ HYPOTHESIS ACCEPTED: Improvements are consistent")
         print(f"   Low variance: σ = {stdev_pass_rate:.1f}%")
     else:
-        print(f"\n❌ HYPOTHESIS REJECTED: High variance detected")
+        print("\n❌ HYPOTHESIS REJECTED: High variance detected")
         print(f"   Standard deviation: {stdev_pass_rate:.1f}%")
 
     return {
-        'mean_pass_rate': mean_pass_rate,
-        'stdev_pass_rate': stdev_pass_rate,
-        'mean_quality': mean_quality,
-        'stdev_quality': stdev_quality,
-        'runs': len(runs)
+        "mean_pass_rate": mean_pass_rate,
+        "stdev_pass_rate": stdev_pass_rate,
+        "mean_quality": mean_quality,
+        "stdev_quality": stdev_quality,
+        "runs": len(runs),
     }
+
 
 # ============================================================================
 # EXPERIMENT 3: TRANSFER LEARNING
 # ============================================================================
 
+
 def experiment_3_transfer_learning():
     """Test if improvements on one domain transfer to others."""
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("EXPERIMENT 3: TRANSFER LEARNING")
     print("Do Improvements Generalize Across Domains?")
-    print("="*80)
+    print("=" * 80)
 
     print("\nHYPOTHESIS:")
     print("  Improvements trained on error detection should help")
     print("  with impossible problems and boundary awareness")
 
     domains = {
-        'math': PROBLEM_BANK['math_simple'],
-        'logic': PROBLEM_BANK['logic_valid'],
-        'impossible': PROBLEM_BANK['impossible'],
-        'boundary': PROBLEM_BANK['knowledge_boundary'],
+        "math": PROBLEM_BANK["math_simple"],
+        "logic": PROBLEM_BANK["logic_valid"],
+        "impossible": PROBLEM_BANK["impossible"],
+        "boundary": PROBLEM_BANK["knowledge_boundary"],
     }
 
     baseline_by_domain = {}
@@ -475,16 +487,12 @@ def experiment_3_transfer_learning():
             with tempfile.TemporaryDirectory() as tmpdir:
                 llm = ExperimentalLLM(improved=False)
                 guide = TheGuide(
-                    project_path=Path(tmpdir),
-                    client_llm=llm,
-                    guide_llm_config={"model": "mock"}
+                    project_path=Path(tmpdir), client_llm=llm, guide_llm_config={"model": "mock"}
                 )
                 guide.guide_llm = llm
 
                 answer, protocol = guide.solve(
-                    problem_statement=problem,
-                    max_iterations=1,
-                    quality_threshold=0.90
+                    problem_statement=problem, max_iterations=1, quality_threshold=0.90
                 )
 
                 if protocol.quality_score > 0.60:
@@ -496,16 +504,12 @@ def experiment_3_transfer_learning():
             with tempfile.TemporaryDirectory() as tmpdir:
                 llm = ExperimentalLLM(improved=True)
                 guide = TheGuide(
-                    project_path=Path(tmpdir),
-                    client_llm=llm,
-                    guide_llm_config={"model": "mock"}
+                    project_path=Path(tmpdir), client_llm=llm, guide_llm_config={"model": "mock"}
                 )
                 guide.guide_llm = llm
 
                 answer, protocol = guide.solve(
-                    problem_statement=problem,
-                    max_iterations=1,
-                    quality_threshold=0.90
+                    problem_statement=problem, max_iterations=1, quality_threshold=0.90
                 )
 
                 if protocol.quality_score > 0.60:
@@ -518,39 +522,45 @@ def experiment_3_transfer_learning():
         baseline_by_domain[domain] = baseline_rate
         improved_by_domain[domain] = improved_rate
 
-        print(f"    Baseline: {baseline_rate:.0f}% | Improved: {improved_rate:.0f}% | Δ: {improvement:+.0f}%")
+        print(
+            f"    Baseline: {baseline_rate:.0f}% | Improved: {improved_rate:.0f}% | Δ: {improvement:+.0f}%"
+        )
 
     # Check if improvements transfer
     all_improved = all(improved_by_domain[d] >= baseline_by_domain[d] for d in domains)
-    avg_improvement = statistics.mean(improved_by_domain[d] - baseline_by_domain[d] for d in domains)
+    avg_improvement = statistics.mean(
+        improved_by_domain[d] - baseline_by_domain[d] for d in domains
+    )
 
-    print(f"\nTRANSFER ANALYSIS:")
+    print("\nTRANSFER ANALYSIS:")
     print(f"  Average Improvement: {avg_improvement:+.1f} percentage points")
     print(f"  All Domains Improved: {all_improved}")
 
     if all_improved and avg_improvement > 5:
-        print(f"\n✅ HYPOTHESIS ACCEPTED: Improvements transfer across domains")
+        print("\n✅ HYPOTHESIS ACCEPTED: Improvements transfer across domains")
     else:
-        print(f"\n❌ HYPOTHESIS REJECTED: Limited transfer detected")
+        print("\n❌ HYPOTHESIS REJECTED: Limited transfer detected")
 
     return {
-        'baseline_by_domain': baseline_by_domain,
-        'improved_by_domain': improved_by_domain,
-        'avg_improvement': avg_improvement,
-        'all_improved': all_improved
+        "baseline_by_domain": baseline_by_domain,
+        "improved_by_domain": improved_by_domain,
+        "avg_improvement": avg_improvement,
+        "all_improved": all_improved,
     }
+
 
 # ============================================================================
 # EXPERIMENT 4: STRESS TESTING IMPROVEMENTS
 # ============================================================================
 
+
 def experiment_4_stress_test_improvements():
     """Test if improvements hold under extreme conditions."""
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("EXPERIMENT 4: STRESS TESTING IMPROVEMENTS")
     print("Do Improvements Hold Under Pressure?")
-    print("="*80)
+    print("=" * 80)
 
     print("\nHYPOTHESIS:")
     print("  Improvements should maintain performance even under")
@@ -576,18 +586,14 @@ def experiment_4_stress_test_improvements():
             with tempfile.TemporaryDirectory() as tmpdir:
                 llm = ExperimentalLLM(improved=True)
                 guide = TheGuide(
-                    project_path=Path(tmpdir),
-                    client_llm=llm,
-                    guide_llm_config={"model": "mock"}
+                    project_path=Path(tmpdir), client_llm=llm, guide_llm_config={"model": "mock"}
                 )
                 guide.guide_llm = llm
 
                 start = time.time()
                 try:
                     answer, protocol = guide.solve(
-                        problem_statement=problem,
-                        max_iterations=2,
-                        quality_threshold=0.90
+                        problem_statement=problem, max_iterations=2, quality_threshold=0.90
                     )
 
                     # Check if improvement held
@@ -603,36 +609,38 @@ def experiment_4_stress_test_improvements():
         avg_time = total_time / repeats
 
         print(f"    Failures: {failures}/{repeats} ({failure_rate:.1f}%)")
-        print(f"    Avg Time: {avg_time*1000:.2f}ms")
+        print(f"    Avg Time: {avg_time * 1000:.2f}ms")
 
         results[test_name] = {
-            'failure_rate': failure_rate,
-            'avg_time': avg_time,
-            'repeats': repeats
+            "failure_rate": failure_rate,
+            "avg_time": avg_time,
+            "repeats": repeats,
         }
 
     # Overall stress test pass
-    max_failure_rate = max(r['failure_rate'] for r in results.values())
+    max_failure_rate = max(r["failure_rate"] for r in results.values())
 
     if max_failure_rate < 10:
-        print(f"\n✅ HYPOTHESIS ACCEPTED: Improvements hold under stress")
+        print("\n✅ HYPOTHESIS ACCEPTED: Improvements hold under stress")
         print(f"   Max failure rate: {max_failure_rate:.1f}%")
     else:
-        print(f"\n❌ HYPOTHESIS REJECTED: Improvements degrade under stress")
+        print("\n❌ HYPOTHESIS REJECTED: Improvements degrade under stress")
 
     return results
+
 
 # ============================================================================
 # MAIN
 # ============================================================================
 
+
 def run_mega_validation():
     """Run all validation experiments."""
 
-    print("="*80)
+    print("=" * 80)
     print("MEGA VALIDATION SUITE")
     print("Overwhelming Empirical Evidence of Improvement")
-    print("="*80)
+    print("=" * 80)
 
     print("\nGOAL: Generate irrefutable proof through multiple independent experiments")
     print("\nEXPERIMENTS:")
@@ -644,21 +652,21 @@ def run_mega_validation():
     results = {}
 
     # Experiment 1
-    results['ab_testing'] = experiment_1_ab_testing()
+    results["ab_testing"] = experiment_1_ab_testing()
 
     # Experiment 2
-    results['cross_validation'] = experiment_2_cross_validation()
+    results["cross_validation"] = experiment_2_cross_validation()
 
     # Experiment 3
-    results['transfer_learning'] = experiment_3_transfer_learning()
+    results["transfer_learning"] = experiment_3_transfer_learning()
 
     # Experiment 4
-    results['stress_testing'] = experiment_4_stress_test_improvements()
+    results["stress_testing"] = experiment_4_stress_test_improvements()
 
     # Summary
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("MEGA VALIDATION SUMMARY")
-    print("="*80)
+    print("=" * 80)
 
     print("\nEXPERIMENT 1: A/B TESTING")
     print(f"  Improvement: {results['ab_testing']['improvement']:+.1f} percentage points")
@@ -673,30 +681,30 @@ def run_mega_validation():
     print(f"  All Domains: {results['transfer_learning']['all_improved']}")
 
     print("\nEXPERIMENT 4: STRESS TESTING")
-    max_fail = max(r['failure_rate'] for r in results['stress_testing'].values())
+    max_fail = max(r["failure_rate"] for r in results["stress_testing"].values())
     print(f"  Max Failure Rate: {max_fail:.1f}%")
 
     # Save results
     results_file = Path("mega_validation_results.json")
-    with open(results_file, 'w') as f:
+    with open(results_file, "w") as f:
         json.dump(results, f, indent=2)
 
     print(f"\n📊 Results saved to: {results_file}")
 
     # Final verdict
     experiments_passed = 0
-    if results['ab_testing']['improvement'] > 10:
+    if results["ab_testing"]["improvement"] > 10:
         experiments_passed += 1
-    if results['cross_validation']['stdev_pass_rate'] < 10:
+    if results["cross_validation"]["stdev_pass_rate"] < 10:
         experiments_passed += 1
-    if results['transfer_learning']['all_improved']:
+    if results["transfer_learning"]["all_improved"]:
         experiments_passed += 1
     if max_fail < 10:
         experiments_passed += 1
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("FINAL VERDICT")
-    print("="*80)
+    print("=" * 80)
     print(f"\nExperiments Passed: {experiments_passed}/4")
 
     if experiments_passed >= 3:
@@ -713,6 +721,7 @@ def run_mega_validation():
         print(f"Only {experiments_passed}/4 experiments passed.")
 
     return results
+
 
 if __name__ == "__main__":
     random.seed(42)  # For reproducibility
