@@ -41,3 +41,7 @@ visualizer/vite.config.ts.timestamp-*
 
 # Temporary PDF examples (generated outputs)
 _temp_pdf_examples/*.pdf
+
+# Runtime data files
+.empirica/sessions/*.db
+_pyrite/.waft/*.json
