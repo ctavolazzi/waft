@@ -13,3 +13,6 @@
 [submodule "_integrations/choose-your-own-adventure"]
 	path = _integrations/choose-your-own-adventure
 	url = https://github.com/KendallDoesCoding/Choose-Your-Own-Adventure-Game.git
+[submodule "_integrations/rag-chatbot"]
+	path = _integrations/rag-chatbot
+	url = https://github.com/datvodinh/rag-chatbot.git
