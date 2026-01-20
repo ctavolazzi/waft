@@ -785,6 +785,7 @@ unknown_app = typer.Typer(help="Unknown logging commands")
 goal_app = typer.Typer(help="Goal management commands")
 github_app = typer.Typer(help="GitHub integration commands")
 journal_app = typer.Typer(help="Development journal commands")
+empirica_monitor_app = typer.Typer(help="Empirica monitoring and dashboard commands")
 
 app.add_typer(session_app, name="session")
 app.add_typer(finding_app, name="finding")
@@ -793,6 +794,70 @@ app.add_typer(goal_app, name="goal")
 app.add_typer(github_app, name="github")
 app.add_typer(journal_app, name="journal")
 app.add_typer(project_app, name="project")
+app.add_typer(empirica_monitor_app, name="empirica")
+
+
+@empirica_monitor_app.command("monitor")
+def empirica_monitor_cmd(
+    dashboard_type: str = typer.Option(
+        "snapshot",
+        "--type",
+        "-t",
+        help="Dashboard type: snapshot, cascade, or tui",
+    ),
+    session_id: str | None = typer.Option(
+        None, "--session-id", "-s", help="Session ID to monitor (snapshot only)"
+    ),
+    path: str | None = typer.Option(
+        None, "--path", "-p", help="Project path (default: current)"
+    ),
+):
+    """Launch Empirica TUI dashboard for monitoring epistemic state.
+
+    Dashboard types:
+    - snapshot: Monitor epistemic snapshot memory quality (default)
+    - cascade: Monitor PREFLIGHT → POSTFLIGHT workflow
+    - tui: Full terminal UI dashboard with Textual
+    """
+    from .core.empirica_dashboard import (
+        check_dashboard_dependencies,
+        launch_dashboard,
+    )
+
+    project_path = resolve_project_path(path)
+
+    console.print(f"\n[bold cyan]🌊 Waft[/bold cyan] - Empirica {dashboard_type.title()} Monitor\n")
+
+    # Check if Empirica is initialized
+    empirica = EmpiricaManager(project_path)
+    if not empirica.is_initialized():
+        console.print("[yellow]⚠️[/yellow]  Empirica not initialized. Run 'waft init' first.")
+        raise typer.Exit(1)
+
+    # Check dependencies
+    deps = check_dashboard_dependencies(dashboard_type)
+    if not deps["available"]:
+        console.print(f"[bold red]❌ {deps['message']}[/bold red]")
+        if deps.get("missing"):
+            console.print(f"[dim]Missing: {', '.join(deps['missing'])}[/dim]")
+        raise typer.Exit(1)
+
+    console.print(f"[dim]Launching {dashboard_type} dashboard...[/dim]")
+    console.print("[dim]Press 'q' to quit the dashboard[/dim]\n")
+
+    # Launch the dashboard
+    success = launch_dashboard(
+        dashboard_type=dashboard_type,
+        project_path=project_path,
+        session_id=session_id,
+    )
+
+    if not success:
+        console.print(f"\n[bold red]❌ Failed to launch {dashboard_type} dashboard[/bold red]")
+        console.print("[dim]Make sure Empirica is installed: pip install empirica[/dim]")
+        raise typer.Exit(1)
+
+    console.print("\n[dim]Dashboard closed[/dim]")
 
 
 @session_app.command("create")
