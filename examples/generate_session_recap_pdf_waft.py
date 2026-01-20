@@ -7,22 +7,22 @@ a beautiful, professionally styled PDF recap.
 """
 
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.waft.evolution.chat_distiller import ChatDistiller
-from src.waft.evolution.two_page_generator import TwoPageGenerator
 from src.waft.evolution.styling_genome import (
+    ColorGene,
+    FontGene,
+    LayoutGene,
+    MarginGene,
+    StylingGene,
     StylingGenome,
     StylingGenomeRegistry,
-    StylingGene,
-    FontGene,
-    MarginGene,
-    ColorGene,
-    LayoutGene
 )
+from src.waft.evolution.two_page_generator import TwoPageGenerator
 
 
 def get_session_content() -> str:
@@ -482,29 +482,28 @@ def main():
     print("=" * 80)
     print("📄 Generating Session Recap PDF using WAFT Evolution Tools")
     print("=" * 80)
-    
+
     # Get content
     content = get_session_content()
-    
+
     # Distill content using ChatDistiller
     print("\n📝 Distilling content into structured ideas...")
     distiller = ChatDistiller()
     distilled = distiller.distill_text(
-        content,
-        title="WAFT v0.5.3 MVP: Karma Economy & Source Consciousness"
+        content, title="WAFT v0.5.3 MVP: Karma Economy & Source Consciousness"
     )
-    
+
     print(f"✅ Extracted {distilled.total_ideas} ideas")
     print(f"   - Concepts: {distilled.concepts_count}")
     print(f"   - Actions: {distilled.actions_count}")
     print(f"   - Decisions: {distilled.decisions_count}")
     print(f"   - Insights: {distilled.insights_count}")
     print(f"   - Questions: {distilled.questions_count}")
-    
+
     # Get or create styling genome
     print("\n🎨 Creating professional styling genome...")
     registry = StylingGenomeRegistry(registry_dir=Path("_genetics/session_recaps"))
-    
+
     # Create a beautiful styling genome for session recaps
     styling_genes = StylingGene(
         font=FontGene(
@@ -514,15 +513,10 @@ def main():
             size_h2=16,
             size_h3=13,
             size_code=9,
-            line_height=1.6
+            line_height=1.6,
         ),
         margin=MarginGene(
-            top=25,
-            bottom=25,
-            left=25,
-            right=25,
-            section_spacing=14,
-            paragraph_spacing=8
+            top=25, bottom=25, left=25, right=25, section_spacing=14, paragraph_spacing=8
         ),
         color=ColorGene(
             text="#1a1a1a",
@@ -531,7 +525,7 @@ def main():
             accent="#2c3e50",
             code_bg="#f8f9fa",
             code_text="#333333",
-            border="#dee2e6"
+            border="#dee2e6",
         ),
         layout=LayoutGene(
             columns=1,
@@ -539,25 +533,25 @@ def main():
             toc_enabled=False,
             page_numbers=True,
             header_enabled=True,
-            footer_enabled=True
+            footer_enabled=True,
         ),
-        name="Session Recap Professional"
+        name="Session Recap Professional",
     )
-    
+
     genome = StylingGenome.from_genes(styling_genes)
     registry.register(genome)
     print(f"✅ Using: {genome.scientific_name} ({genome.genome_id[:8]}...)")
-    
+
     # Generate PDF with adaptive constraint (allow multiple pages)
     print("\n📄 Generating PDF with adaptive layout...")
     generator = TwoPageGenerator(weasyprint_available=True, allowed_pages=8)  # Allow up to 8 pages
-    
+
     output_dir = Path("_work_efforts/session_recaps")
     output_dir.mkdir(parents=True, exist_ok=True)
-    
+
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_path = output_dir / f"KARMA_ECONOMY_COMPLETE_WAFT_{timestamp}.pdf"
-    
+
     # Generate with all ideas - let it be as long as needed
     # We'll manually render all ideas to ensure nothing is cut off
     result = generator.generate(
@@ -565,33 +559,34 @@ def main():
         styling_genome=genome,
         output_path=output_path,
         target_pages=20,  # High target to allow all content
-        use_component_system=False  # Use legacy generator
+        use_component_system=False,  # Use legacy generator
     )
-    
+
     # If we didn't get all ideas, generate a custom version with all content
-    ideas_shown = result.get('ideas_shown', 0)
+    ideas_shown = result.get("ideas_shown", 0)
     total_ideas = distilled.total_ideas
-    
+
     if ideas_shown < total_ideas:
         print(f"\n⚠️  Only {ideas_shown}/{total_ideas} ideas shown. Generating full version...")
-        
+
         # Generate a version with all ideas by using a very high target
         result = generator.generate(
             distilled_chat=distilled,
             styling_genome=genome,
             output_path=output_path,
             target_pages=50,  # Very high to ensure all content fits
-            use_component_system=False
+            use_component_system=False,
         )
-    
+
     print(f"\n✅ PDF generated: {output_path}")
     print(f"📄 Pages: {result.get('page_count', 'N/A')}")
     print(f"🎯 Fitness: {result.get('fitness_metrics', {}).get('overall', 'N/A')}")
-    
+
     # Open PDF
     import subprocess
+
     subprocess.run(["open", str(output_path)])
-    
+
     print("\n✅ PDF opened!")
     return 0
 

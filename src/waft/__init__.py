@@ -14,4 +14,3 @@ __author__ = "Waft Team"
 from .pdf import PDF
 
 __all__ = ["PDF"]
-

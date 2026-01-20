@@ -9,7 +9,6 @@ Generates example PDFs showcasing each template with realistic content.
 
 import sys
 from pathlib import Path
-from datetime import datetime
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
@@ -20,22 +19,22 @@ from src.waft.templates.typst import TypstCompiler, get_typst_registry
 
 def create_demo_outputs():
     """Create demo PDFs for all available Typst templates."""
-    
+
     output_dir = Path("_temp_pdf_examples")
     output_dir.mkdir(exist_ok=True)
-    
+
     registry = get_typst_registry()
     compiler = TypstCompiler()
-    
+
     print("🎨 Typst Templates Comprehensive Demo")
     print("=" * 60)
     print()
-    
+
     templates = registry.list_templates()
     print(f"Found {len(templates)} templates to demonstrate\n")
-    
+
     results = []
-    
+
     # 1. Simple Compiler Demo
     print("📄 1. Direct Typst Compilation")
     print("-" * 60)
@@ -90,7 +89,7 @@ The Typst infrastructure is production-ready and provides a modern alternative t
         results.append(("❌", "Direct Compilation", str(e)))
         print(f"   ❌ Failed: {e}")
     print()
-    
+
     # 2. Flow Way - Modern Report
     print("📊 2. Flow Way - Modern Report Template")
     print("-" * 60)
@@ -146,7 +145,7 @@ The Typst infrastructure successfully provides a modern alternative to LaTeX wit
             year=2026,
             toc=True,
             toc_depth=3,
-            main_color="0066CC"
+            main_color="0066CC",
         )
         results.append(("✅", "Flow Way", pdf2))
         print(f"   ✅ Created: {pdf2.name}")
@@ -154,7 +153,7 @@ The Typst infrastructure successfully provides a modern alternative to LaTeX wit
         results.append(("❌", "Flow Way", str(e)))
         print(f"   ❌ Failed: {e}")
     print()
-    
+
     # 3. Arkheion - Academic Paper
     print("📚 3. Arkheion - Academic Paper (arXiv-style)")
     print("-" * 60)
@@ -291,19 +290,26 @@ Future work includes integration of additional templates, enhanced data pipeline
                     "name": "WAFT Development Team",
                     "email": "dev@waft.example",
                     "affiliation": "WAFT Project",
-                    "orcid": "0000-0000-0000-0000"
+                    "orcid": "0000-0000-0000-0000",
                 },
                 {
                     "name": "Documentation Team",
                     "email": "docs@waft.example",
-                    "affiliation": "WAFT Project"
-                }
+                    "affiliation": "WAFT Project",
+                },
             ],
             abstract="This paper presents the Typst template infrastructure integrated into WAFT, providing secure and unified access to multiple Typst templates. The system includes comprehensive security hardening, auto-discovery capabilities, and a unified API for document generation. We evaluate the system's performance, security features, and use cases across academic, business, and creative domains.",
-            keywords=["typst", "document generation", "pdf", "templates", "security", "typesetting"],
+            keywords=[
+                "typst",
+                "document generation",
+                "pdf",
+                "templates",
+                "security",
+                "typesetting",
+            ],
             date="January 19, 2026",
             bibliography=None,
-            include_appendices=True
+            include_appendices=True,
         )
         results.append(("✅", "Arkheion", pdf3))
         print(f"   ✅ Created: {pdf3.name}")
@@ -311,7 +317,7 @@ Future work includes integration of additional templates, enhanced data pipeline
         results.append(("❌", "Arkheion", str(e)))
         print(f"   ❌ Failed: {e}")
     print()
-    
+
     # 4. Charged IEEE - Conference Paper
     print("🔬 4. Charged IEEE - Conference Paper")
     print("-" * 60)
@@ -389,14 +395,14 @@ The Typst-based document generation system successfully provides a secure, effic
                     "department": "Computer Science",
                     "organization": "WAFT Research Lab",
                     "location": "San Francisco, CA",
-                    "email": "research@waft.example"
+                    "email": "research@waft.example",
                 }
             ],
             abstract="This paper presents a secure Typst-based document generation system with comprehensive security hardening, efficient compilation, and unified template API. The system addresses limitations of traditional LaTeX-based approaches through modern design principles and security-first architecture.",
             index_terms=["Document Generation", "Typst", "Security", "PDF", "Templates"],
             paper_size="us-letter",
             bibliography=None,
-            figure_supplement="Figure"
+            figure_supplement="Figure",
         )
         results.append(("✅", "Charged IEEE", pdf4))
         print(f"   ✅ Created: {pdf4.name}")
@@ -404,7 +410,7 @@ The Typst-based document generation system successfully provides a secure, effic
         results.append(("❌", "Charged IEEE", str(e)))
         print(f"   ❌ Failed: {e}")
     print()
-    
+
     # 5. Unequivocal AMS - Math Paper
     print("🔢 5. Unequivocal AMS - Mathematical Paper")
     print("-" * 60)
@@ -463,12 +469,12 @@ The mathematical foundations provide a rigorous basis for secure and efficient d
                     "organization": "WAFT University",
                     "location": "Cambridge, MA",
                     "email": "math@waft.example",
-                    "url": "www.waft.example/~math"
+                    "url": "www.waft.example/~math",
                 }
             ],
             abstract="We establish mathematical foundations for document generation systems, analyzing compilation complexity and security properties. Our results show that Typst's single-pass model provides optimal complexity while maintaining security guarantees.",
             paper_size="us-letter",
-            bibliography=None
+            bibliography=None,
         )
         results.append(("✅", "Unequivocal AMS", pdf5))
         print(f"   ✅ Created: {pdf5.name}")
@@ -476,7 +482,7 @@ The mathematical foundations provide a rigorous basis for secure and efficient d
         results.append(("❌", "Unequivocal AMS", str(e)))
         print(f"   ❌ Failed: {e}")
     print()
-    
+
     # 6. Wonderous Book - Fiction
     print("📖 6. Wonderous Book - Fiction Book")
     print("-" * 60)
@@ -521,7 +527,7 @@ And it's just getting started.
             author="WAFT Storyteller",
             paper_size="iso-b5",
             dedication="For all who seek better ways to create",
-            publishing_info="WAFT Publishing House\n123 Story Lane\nNarrative City, NC 12345\n\nISBN: 978-0-000000-00-0"
+            publishing_info="WAFT Publishing House\n123 Story Lane\nNarrative City, NC 12345\n\nISBN: 978-0-000000-00-0",
         )
         results.append(("✅", "Wonderous Book", pdf6))
         print(f"   ✅ Created: {pdf6.name}")
@@ -529,7 +535,7 @@ And it's just getting started.
         results.append(("❌", "Wonderous Book", str(e)))
         print(f"   ❌ Failed: {e}")
     print()
-    
+
     # 7. Appreciated Letter - Business Letter
     print("✉️  7. Appreciated Letter - Business Letter")
     print("-" * 60)
@@ -561,7 +567,7 @@ Best regards,
             recipient="Typst Community\nOpen Source Foundation\n456 Collaboration Ave\nCommunity Town, CT 67890",
             date="January 19, 2026",
             subject="Introduction of WAFT Typst Infrastructure",
-            name="WAFT Development Team\nProject Lead"
+            name="WAFT Development Team\nProject Lead",
         )
         results.append(("✅", "Appreciated Letter", pdf7))
         print(f"   ✅ Created: {pdf7.name}")
@@ -569,7 +575,7 @@ Best regards,
         results.append(("❌", "Appreciated Letter", str(e)))
         print(f"   ❌ Failed: {e}")
     print()
-    
+
     # 8. Dashing Dept News - Newsletter
     print("📰 8. Dashing Dept News - Newsletter")
     print("-" * 60)
@@ -627,7 +633,7 @@ Stay tuned for more updates!
             output_path=output_dir / "08_newsletter.pdf",
             edition="January 2026\nVolume 1, Issue 1",
             hero_image=None,
-            publication_info="WAFT Department of Documentation\n123 Documentation Drive\nInfo City, IC 12345\n\nFor inquiries: newsletter at waft.example"
+            publication_info="WAFT Department of Documentation\n123 Documentation Drive\nInfo City, IC 12345\n\nFor inquiries: newsletter at waft.example",
         )
         results.append(("✅", "Dashing Dept News", pdf8))
         print(f"   ✅ Created: {pdf8.name}")
@@ -635,7 +641,7 @@ Stay tuned for more updates!
         results.append(("❌", "Dashing Dept News", str(e)))
         print(f"   ❌ Failed: {e}")
     print()
-    
+
     # 9. Advanced Example - Complex Document
     print("🎯 9. Advanced Example - Complex Multi-Section Document")
     print("-" * 60)
@@ -775,20 +781,20 @@ The Typst infrastructure provides a powerful, secure, and efficient system for d
         results.append(("❌", "Advanced Document", str(e)))
         print(f"   ❌ Failed: {e}")
     print()
-    
+
     # Summary
     print("=" * 60)
     print("📊 DEMO SUMMARY")
     print("=" * 60)
     print()
-    
+
     successful = [r for r in results if r[0] == "✅"]
     failed = [r for r in results if r[0] == "❌"]
-    
+
     print(f"✅ Successful: {len(successful)}/{len(results)}")
     print(f"❌ Failed: {len(failed)}/{len(results)}")
     print()
-    
+
     if successful:
         print("Generated PDFs:")
         total_size = 0
@@ -801,26 +807,28 @@ The Typst infrastructure provides a powerful, secure, and efficient system for d
         print(f"Total size: {total_size:,} bytes ({total_size / 1024 / 1024:.2f} MB)")
         print()
         print(f"📁 All PDFs saved to: {output_dir.absolute()}")
-    
+
     if failed:
         print("\nFailed generations:")
         for status, name, error in failed:
             print(f"  {status} {name}: {error}")
-    
+
     print()
     print("🎉 Demo complete! Check the PDFs to see all templates in action.")
-    
+
     return output_dir
 
 
 if __name__ == "__main__":
     output_dir = create_demo_outputs()
-    
+
     # Open all PDFs
     print("\n📂 Opening all generated PDFs...")
     import subprocess
+
     for pdf_file in sorted(output_dir.glob("*.pdf")):
         print(f"   Opening {pdf_file.name}...")
         subprocess.run(["open", str(pdf_file)], check=False)
         import time
+
         time.sleep(0.5)

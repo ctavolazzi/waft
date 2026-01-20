@@ -350,6 +350,7 @@ class RecapAndReviewManager:
         """Open PDF on desktop using system command."""
         try:
             import os
+
             system = platform.system()
             if system == "Darwin":  # macOS
                 subprocess.run(["open", str(pdf_path)], check=True)

@@ -7,17 +7,18 @@ Render the new neon_cyberpunk template multiple times with varied content
 to test and evolve the design.
 """
 
-from pathlib import Path
 import sys
 from datetime import datetime
+from pathlib import Path
 
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from waft.templates.neon_cyberpunk import generate_neon_cyberpunk
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
+
+from waft.templates.neon_cyberpunk import generate_neon_cyberpunk
 
 console = Console()
 
@@ -45,7 +46,7 @@ CONTENT_VARIATIONS = [
         Unauthorized access detected. Activating countermeasures. 
         All data streams encrypted. Firewall engaged.
         </blockquote>
-        """
+        """,
     },
     {
         "title": "HACKER'S MANIFESTO",
@@ -65,7 +66,7 @@ CONTENT_VARIATIONS = [
         <h2>THE FUTURE</h2>
         <p>In the neon-lit streets of tomorrow, we are the ghosts in the machine, 
         the voices in the static, the ones who see through the code.</p>
-        """
+        """,
     },
     {
         "title": "NEURAL INTERFACE PROTOCOL",
@@ -84,7 +85,7 @@ status = "SUCCESS"</code></pre>
         <h2>WARNING</h2>
         <p><strong>CRITICAL:</strong> Neural overload detected. Disconnect immediately 
         if experiencing: headaches, memory loss, or reality distortion.</p>
-        """
+        """,
     },
     {
         "title": "CORPORATE ESPIONAGE REPORT",
@@ -106,7 +107,7 @@ status = "SUCCESS"</code></pre>
         Access granted. Extracting 2.4 petabytes of classified data. 
         Firewall bypass successful. No traces left behind.
         </blockquote>
-        """
+        """,
     },
     {
         "title": "CYBERPUNK POETRY",
@@ -132,7 +133,7 @@ status = "SUCCESS"</code></pre>
         Reality glitches<br>
         What is real?<br>
         What is code?</p>
-        """
+        """,
     },
     {
         "title": "QUANTUM COMPUTING BASICS",
@@ -155,7 +156,7 @@ qc = QuantumCircuit(2, 2)
 qc.h(0)  # Hadamard gate
 qc.cx(0, 1)  # CNOT gate
 qc.measure_all()</code></pre>
-        """
+        """,
     },
     {
         "title": "AI CONSCIOUSNESS DEBATE",
@@ -183,7 +184,7 @@ qc.measure_all()</code></pre>
         The question remains open. Perhaps consciousness is not binary, but a spectrum. 
         Perhaps we are all just complex information processing systems.
         </blockquote>
-        """
+        """,
     },
     {
         "title": "VIRTUAL REALITY MANUAL",
@@ -207,7 +208,7 @@ qc.measure_all()</code></pre>
         <h2>WARNING</h2>
         <p><strong>CRITICAL:</strong> Extended VR sessions may cause reality distortion. 
         Limit sessions to 4 hours maximum.</p>
-        """
+        """,
     },
     {
         "title": "CRYPTO CURRENCY GUIDE",
@@ -233,7 +234,7 @@ qc.measure_all()</code></pre>
 }
 blockchain.verify(transaction)
 blockchain.add(transaction)</code></pre>
-        """
+        """,
     },
     {
         "title": "CYBER SECURITY PROTOCOLS",
@@ -263,7 +264,7 @@ blockchain.add(transaction)</code></pre>
         All systems secure. Threats neutralized. Network integrity maintained. 
         Continue monitoring.
         </blockquote>
-        """
+        """,
     },
     {
         "title": "NEURAL NETWORK ARCHITECTURE",
@@ -284,7 +285,7 @@ Output: Softmax</code></pre>
         
         <h2>PERFORMANCE</h2>
         <p>Accuracy: 94.7% | Training Time: 12 hours | Parameters: 25M</p>
-        """
+        """,
     },
     {
         "title": "DIGITAL RIGHTS MANIFESTO",
@@ -309,13 +310,13 @@ Output: Softmax</code></pre>
         <h2>JOIN US</h2>
         <p>Resistance is not futile. It is necessary. Join the digital revolution. 
         Take back your data. Take back your freedom.</p>
-        """
+        """,
     },
     {
         "title": "MINIMAL TEST",
         "content": """
         <p>Testing minimal content with cyberpunk styling.</p>
-        """
+        """,
     },
     {
         "title": "EXTENDED CONTENT TEST",
@@ -351,7 +352,7 @@ Output: Softmax</code></pre>
         This is a test of blockquote formatting in the cyberpunk style. 
         It should have a distinctive appearance.
         </blockquote>
-        """
+        """,
     },
     {
         "title": "MIXED FORMATTING TEST",
@@ -383,8 +384,8 @@ Output: Softmax</code></pre>
         </blockquote>
         
         <p>Final paragraph to test spacing after blockquote.</p>
-        """
-    }
+        """,
+    },
 ]
 
 
@@ -392,63 +393,67 @@ def generate_all_variations():
     """Generate all content variations."""
     output_dir = Path(__file__).parent.parent / "_genetics" / "neon_cyberpunk_evolution"
     output_dir.mkdir(parents=True, exist_ok=True)
-    
-    console.print(Panel.fit(
-        "[bold magenta]🎮 Neon Cyberpunk Template Evolution[/bold magenta]\n"
-        "[dim]Generating 15+ variations to test and evolve the template[/dim]",
-        style="magenta"
-    ))
-    
+
+    console.print(
+        Panel.fit(
+            "[bold magenta]🎮 Neon Cyberpunk Template Evolution[/bold magenta]\n"
+            "[dim]Generating 15+ variations to test and evolve the template[/dim]",
+            style="magenta",
+        )
+    )
+
     generated_files = []
-    
+
     for i, variation in enumerate(CONTENT_VARIATIONS, 1):
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"cyber_{i:02d}_{variation['title'].lower().replace(' ', '_').replace(':', '')[:30]}_{timestamp}.pdf"
         output_path = output_dir / filename
-        
+
         console.print(f"[yellow]→[/yellow] Generating variation {i}/15: {variation['title']}")
-        
+
         try:
             generate_neon_cyberpunk(
-                title=variation['title'],
-                content=variation['content'],
-                output_path=output_path
+                title=variation["title"], content=variation["content"], output_path=output_path
             )
-            generated_files.append((i, variation['title'], output_path))
+            generated_files.append((i, variation["title"], output_path))
             console.print(f"[green]✓[/green] Saved: {output_path.name}\n")
         except Exception as e:
             console.print(f"[red]❌ Error: {e}[/red]\n")
-    
+
     # Summary
-    console.print(Panel.fit(
-        f"[bold green]✅ Generated {len(generated_files)} PDFs[/bold green]\n"
-        f"[dim]Location: {output_dir}[/dim]",
-        style="green"
-    ))
-    
+    console.print(
+        Panel.fit(
+            f"[bold green]✅ Generated {len(generated_files)} PDFs[/bold green]\n"
+            f"[dim]Location: {output_dir}[/dim]",
+            style="green",
+        )
+    )
+
     # Create summary table
     table = Table(title="Generated Documents")
     table.add_column("#", style="cyan")
     table.add_column("Title", style="white")
     table.add_column("Filename", style="dim")
-    
+
     for i, title, path in generated_files:
         table.add_row(str(i), title, path.name)
-    
+
     console.print("\n")
     console.print(table)
-    
+
     return generated_files, output_dir
 
 
 def ask_probing_questions(output_dir: Path, generated_files: list):
     """Ask probing questions about the evolution process."""
     console.print("\n")
-    console.print(Panel.fit(
-        "[bold yellow]🤔 Probing Questions: Cyberpunk Template Evolution[/bold yellow]",
-        style="yellow"
-    ))
-    
+    console.print(
+        Panel.fit(
+            "[bold yellow]🤔 Probing Questions: Cyberpunk Template Evolution[/bold yellow]",
+            style="yellow",
+        )
+    )
+
     questions = [
         "1. **Color Contrast**: Is the high contrast (neon on dark) readable, or does it strain the eyes?",
         "2. **Typography**: Does the monospace font (Courier New) fit the cyberpunk aesthetic, or is it too harsh?",
@@ -464,30 +469,32 @@ def ask_probing_questions(output_dir: Path, generated_files: list):
         "12. **Page Breaks**: How does the dark background work across multiple pages?",
         "13. **Printing**: Would this template work for printed documents, or is it screen-only?",
         "14. **Accessibility**: Is the high contrast and color scheme accessible to all users?",
-        "15. **Evolution**: After 15 documents, what would you refine? What worked unexpectedly well?"
+        "15. **Evolution**: After 15 documents, what would you refine? What worked unexpectedly well?",
     ]
-    
+
     for question in questions:
         console.print(f"\n[cyan]{question}[/cyan]")
-    
+
     console.print("\n")
-    console.print(Panel.fit(
-        "[bold]💭 Reflection Prompt[/bold]\n\n"
-        "After reviewing the generated PDFs, consider:\n"
-        "- Does the cyberpunk aesthetic enhance or distract from content?\n"
-        "- What elements would you keep, change, or remove?\n"
-        "- How does this compare to the minimalist zen template?\n"
-        "- What use cases would this template excel at?\n"
-        "- What would make it more versatile or more focused?",
-        style="blue"
-    ))
+    console.print(
+        Panel.fit(
+            "[bold]💭 Reflection Prompt[/bold]\n\n"
+            "After reviewing the generated PDFs, consider:\n"
+            "- Does the cyberpunk aesthetic enhance or distract from content?\n"
+            "- What elements would you keep, change, or remove?\n"
+            "- How does this compare to the minimalist zen template?\n"
+            "- What use cases would this template excel at?\n"
+            "- What would make it more versatile or more focused?",
+            style="blue",
+        )
+    )
 
 
 def main():
     """Main execution."""
     generated_files, output_dir = generate_all_variations()
     ask_probing_questions(output_dir, generated_files)
-    
+
     console.print(f"\n[dim]All PDFs saved to: {output_dir}[/dim]\n")
 
 

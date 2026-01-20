@@ -14,12 +14,16 @@ project_root = Path(__file__).parent.parent
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
-from src.waft.evolution.scientific_pdf_generator import ScientificPDFGenerator, generate_scientific_pdf
+from src.waft.evolution.scientific_pdf_generator import (
+    ScientificPDFGenerator,
+    generate_scientific_pdf,
+)
+
 
 def test_self_examination():
     """Use WAFT's scientific tools to analyze our LaTeX feature."""
     print("🔬 Testing Self-Examination: Using WAFT to Test WAFT\n")
-    
+
     # Content about the LaTeX feature we built (improved structure based on quality analysis)
     content = """# LaTeX Generator Feature
 
@@ -91,50 +95,50 @@ Self-examination using ScientificPDFGenerator revealed:
 
 The LaTeX generator is functional and ready for use. It successfully integrates with WAFT's evolution system and provides LaTeX output for scientific and academic documentation needs.
 """
-    
+
     print("1️⃣ Generating scientific PDF with self-examination...")
     try:
         output_dir = project_root / "_work_efforts" / "one_pagers"
         output_dir.mkdir(parents=True, exist_ok=True)
-        
+
         pdf_path = output_dir / "LaTeX_Feature_Self_Examination_Test.pdf"
-        
+
         pdf_path = generate_scientific_pdf(
             content=content,
             title="LaTeX Generator Feature - Self-Examination Test",
             output_path=pdf_path,
             style="clinical_standard",
             scientific_mode=True,
-            open_pdf=False
+            open_pdf=False,
         )
-        
+
         print(f"   ✅ Generated: {pdf_path}")
-        
+
         # Now analyze the quality
         print("\n2️⃣ Analyzing quality with ScientificPDFGenerator...")
         generator = ScientificPDFGenerator.from_content(
             content=content,
             title="LaTeX Generator Feature - Self-Examination Test",
-            scientific_mode=True
+            scientific_mode=True,
         )
-        
+
         analysis = generator.analyze_quality()
-        
-        print(f"\n   📊 Quality Analysis Results:")
+
+        print("\n   📊 Quality Analysis Results:")
         print(f"   - Scores: {analysis.get('scores', {})}")
         print(f"   - Gaps: {len(analysis.get('gaps', []))} identified")
         print(f"   - Suggestions: {len(analysis.get('suggestions', []))} provided")
-        
-        if analysis.get('gaps'):
-            print(f"\n   🔍 Identified Gaps:")
-            for gap in analysis['gaps'][:3]:  # Show first 3
+
+        if analysis.get("gaps"):
+            print("\n   🔍 Identified Gaps:")
+            for gap in analysis["gaps"][:3]:  # Show first 3
                 print(f"      - {gap}")
-        
-        if analysis.get('suggestions'):
-            print(f"\n   💡 Suggestions:")
-            for suggestion in analysis['suggestions'][:3]:  # Show first 3
+
+        if analysis.get("suggestions"):
+            print("\n   💡 Suggestions:")
+            for suggestion in analysis["suggestions"][:3]:  # Show first 3
                 print(f"      - {suggestion}")
-        
+
         # Test a hypothesis (requires active session)
         print("\n3️⃣ Testing hypothesis about LaTeX feature...")
         try:
@@ -142,36 +146,38 @@ The LaTeX generator is functional and ready for use. It successfully integrates 
             challenge_config = {
                 "name": "LaTeX Generator Integration Test",
                 "objective": "Verify LaTeX generator integrates correctly with WAFT",
-                "type": "integration_test"
+                "type": "integration_test",
             }
             generator.study_gym.start_session(challenge_config)
-            
+
             result = generator.test_hypothesis(
                 statement="LaTeX generator successfully integrates with WAFT's evolution system",
                 reasoning="The generator uses ChatDistiller and StylingGenome correctly",
-                test_plan="Verify integration points and test functionality"
+                test_plan="Verify integration points and test functionality",
             )
-            
-            print(f"   📋 Hypothesis Test Result:")
+
+            print("   📋 Hypothesis Test Result:")
             print(f"   - Hypothesis: {result.get('hypothesis', 'N/A')}")
             print(f"   - Quality Score: {result.get('quality_score', 0):.2f}")
             print(f"   - Confirmed: {result.get('confirmed', False)}")
         except Exception as e:
             print(f"   ⚠️  Hypothesis testing error: {e}")
-            print(f"   (Study Gym integration requires proper challenge_config)")
-        
-        print("\n" + "="*60)
+            print("   (Study Gym integration requires proper challenge_config)")
+
+        print("\n" + "=" * 60)
         print("✅ Self-examination complete!")
-        print("="*60)
+        print("=" * 60)
         print("\nThis demonstrates using WAFT's scientific tools to test WAFT features!")
-        
+
         return True
-        
+
     except Exception as e:
         print(f"❌ Failed: {e}")
         import traceback
+
         traceback.print_exc()
         return False
+
 
 if __name__ == "__main__":
     success = test_self_examination()

@@ -10,14 +10,16 @@ maximum creativity and variety.
 Creates 12+ unique documents using different templates, styles, and content types.
 """
 
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
+
 from waft import PDF
 from waft.document_builder import TemplateType
 
 # Create output directory
 OUTPUT_DIR = Path("_work_efforts/creative_booklet_vol2")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
 
 def generate_eldritch_journal():
     """Generate an eldritch horror journal."""
@@ -83,15 +85,16 @@ The code is not broken. The code is awakening.
 
 And when it fully awakens, we will all be... optimized.
 """
-    
+
     PDF.from_template(
         template=TemplateType.ELDRITCH_JOURNAL,
         title="The Journal of Digital Horrors",
         content=content,
         series="ELDRITCH TEXTS",
-        number="ET-001"
+        number="ET-001",
     ).save(OUTPUT_DIR / "15_eldritch_journal.pdf")
     print("✅ Generated: Eldritch Journal")
+
 
 def generate_screenplay():
     """Generate a screenplay."""
@@ -237,15 +240,16 @@ Now this is how you write code.
 
 **FADE OUT.**
 """
-    
+
     PDF.from_template(
         template=TemplateType.SCREENPLAY,
         title="The Code Review",
         content=content,
         series="SCREENPLAYS",
-        number="SP-001"
+        number="SP-001",
     ).save(OUTPUT_DIR / "16_screenplay.pdf")
     print("✅ Generated: Screenplay")
+
 
 def generate_heartfelt_letter():
     """Generate a heartfelt letter."""
@@ -283,13 +287,12 @@ P.S. - If you're reading this and the codebase is still a mess, I'm really sorry
 
 P.P.S. - If you're reading this and the codebase is beautiful and well-maintained, you're welcome. You're welcome.
 """
-    
+
     PDF.from_template(
-        template=TemplateType.HEARTFELT_LETTER,
-        title="A Letter to My Future Self",
-        content=content
+        template=TemplateType.HEARTFELT_LETTER, title="A Letter to My Future Self", content=content
     ).save(OUTPUT_DIR / "17_heartfelt_letter.pdf")
     print("✅ Generated: Heartfelt Letter")
+
 
 def generate_lab_notes():
     """Generate lab notes."""
@@ -390,15 +393,16 @@ The hypothesis is **CONFIRMED**. Evolutionary algorithms can successfully automa
 
 **End of Experiment**
 """
-    
+
     PDF.from_template(
         template=TemplateType.LAB_NOTES,
         title="Lab Notes: PDF Generation Experiment",
         content=content,
         series="LAB NOTES",
-        number="LN-001"
+        number="LN-001",
     ).save(OUTPUT_DIR / "18_lab_notes.pdf")
     print("✅ Generated: Lab Notes")
+
 
 def generate_invoice():
     """Generate a creative invoice."""
@@ -458,13 +462,12 @@ Thank you for your business! This invoice represents the joy of creation and the
 
 **Thank you for choosing WAFT Creative Services!**
 """
-    
+
     PDF.from_template(
-        template=TemplateType.INVOICE,
-        title="Invoice - Creative PDF Booklet",
-        content=content
+        template=TemplateType.INVOICE, title="Invoice - Creative PDF Booklet", content=content
     ).save(OUTPUT_DIR / "19_invoice.pdf")
     print("✅ Generated: Invoice")
+
 
 def generate_storybook():
     """Generate a storybook."""
@@ -515,15 +518,16 @@ And so, the little function that could became the function that did. And everyon
 
 **Moral of the story:** Keep your functions small, focused, and simple. Complexity is not a feature - it's a bug waiting to happen.
 """
-    
+
     PDF.from_template(
         template=TemplateType.STORYBOOK,
         title="The Little Function That Could",
         content=content,
         series="DEVELOPER STORIES",
-        number="DS-001"
+        number="DS-001",
     ).save(OUTPUT_DIR / "20_storybook.pdf")
     print("✅ Generated: Storybook")
+
 
 def generate_newspaper():
     """Generate a newspaper-style document."""
@@ -606,13 +610,12 @@ Tomorrow: Partly sunny with scattered commits. Low chance of merge conflicts.
 
 *The Daily Code - Keeping developers informed since 2026*
 """
-    
+
     PDF.from_template(
-        template=TemplateType.NEWSPAPER,
-        title="The Daily Code - January 13, 2026",
-        content=content
+        template=TemplateType.NEWSPAPER, title="The Daily Code - January 13, 2026", content=content
     ).save(OUTPUT_DIR / "21_newspaper.pdf")
     print("✅ Generated: Newspaper")
+
 
 def generate_personal_memo():
     """Generate a personal memo."""
@@ -678,13 +681,14 @@ Code is communication. Write code that communicates clearly, and you'll write be
 
 *End of memo*
 """
-    
+
     PDF.from_template(
         template=TemplateType.PERSONAL_MEMO,
         title="Personal Memo - January 13, 2026",
-        content=content
+        content=content,
     ).save(OUTPUT_DIR / "22_personal_memo.pdf")
     print("✅ Generated: Personal Memo")
+
 
 def generate_tm_report():
     """Generate a technical memo report."""
@@ -781,15 +785,16 @@ The WAFT PDF generation system provides a robust, flexible solution for automate
 
 **End of Technical Memo**
 """
-    
+
     PDF.from_template(
         template=TemplateType.TM_REPORT,
         title="Technical Memo: PDF Generation System",
         content=content,
         series="TECHNICAL MEMO",
-        number="TM-2026-001"
+        number="TM-2026-001",
     ).save(OUTPUT_DIR / "23_tm_report.pdf")
     print("✅ Generated: Technical Memo")
+
 
 def generate_code_docs():
     """Generate code documentation."""
@@ -954,15 +959,16 @@ For issues, questions, or contributions, see the WAFT documentation.
 
 *Last updated: January 13, 2026*
 """
-    
+
     PDF.from_template(
         template=TemplateType.CODE_DOCS,
         title="WAFT PDF Generation API Documentation",
         content=content,
         series="API DOCS",
-        number="API-001"
+        number="API-001",
     ).save(OUTPUT_DIR / "24_code_docs.pdf")
     print("✅ Generated: Code Documentation")
+
 
 def generate_worldbuild():
     """Generate a worldbuilding document."""
@@ -1053,15 +1059,16 @@ But we keep coding, hoping.
 
 *End of World Guide*
 """
-    
+
     PDF.from_template(
         template="worldbuild",
         title="The World of Digitalia",
         content=content,
         series="WORLDBUILD",
-        number="WB-001"
+        number="WB-001",
     ).save(OUTPUT_DIR / "25_worldbuild.pdf")
     print("✅ Generated: Worldbuilding Document")
+
 
 def generate_neon_cyberpunk():
     """Generate a cyberpunk-style document."""
@@ -1146,13 +1153,12 @@ Welcome to the future. Welcome to the Grid.
 
 *[END OF TRANSMISSION]*
 """
-    
+
     PDF.from_template(
-        template="neon_cyberpunk",
-        title="NEON NIGHTS - A Cyberpunk Code Story",
-        content=content
+        template="neon_cyberpunk", title="NEON NIGHTS - A Cyberpunk Code Story", content=content
     ).save(OUTPUT_DIR / "26_neon_cyberpunk.pdf")
     print("✅ Generated: Neon Cyberpunk Document")
+
 
 def generate_minimalist_zen():
     """Generate a minimalist zen document."""
@@ -1274,13 +1280,12 @@ The way.
 
 *The way of code is the way of simplicity.*
 """
-    
+
     PDF.from_template(
-        template="minimalist_zen",
-        title="The Way of Code - A Zen Guide",
-        content=content
+        template="minimalist_zen", title="The Way of Code - A Zen Guide", content=content
     ).save(OUTPUT_DIR / "27_minimalist_zen.pdf")
     print("✅ Generated: Minimalist Zen Document")
+
 
 def generate_dnd_scenario():
     """Generate a D&D scenario."""
@@ -1377,19 +1382,18 @@ With the legacy system defeated, the codebase is clean, modern, and maintainable
 
 *May your code be bug-free and your tests always pass!*
 """
-    
+
     PDF.from_template(
-        template="dnd_scenario",
-        title="The Code Dungeon - A D&D Adventure",
-        content=content
+        template="dnd_scenario", title="The Code Dungeon - A D&D Adventure", content=content
     ).save(OUTPUT_DIR / "28_dnd_scenario.pdf")
     print("✅ Generated: D&D Scenario")
+
 
 def generate_vol2_index():
     """Generate index for volume 2."""
     content = f"""
 # Creative PDF Booklet - Volume 2
-## Generated: {datetime.now().strftime('%B %d, %Y at %I:%M %p')}
+## Generated: {datetime.now().strftime("%B %d, %Y at %I:%M %p")}
 
 ---
 
@@ -1543,12 +1547,12 @@ Enjoy this diverse collection of creative PDFs!
 
 *Generated with ❤️ and creativity by WAFT*
 """
-    
-    PDF.from_markdown(
-        markdown=content,
-        title="Creative PDF Booklet - Volume 2 Index"
-    ).save(OUTPUT_DIR / "00_vol2_index.pdf")
+
+    PDF.from_markdown(markdown=content, title="Creative PDF Booklet - Volume 2 Index").save(
+        OUTPUT_DIR / "00_vol2_index.pdf"
+    )
     print("✅ Generated: Volume 2 Index")
+
 
 def main():
     """Generate the complete creative booklet volume 2."""
@@ -1557,7 +1561,7 @@ def main():
     print("=" * 60)
     print(f"\n📁 Output directory: {OUTPUT_DIR}")
     print(f"📅 Generated: {datetime.now().strftime('%B %d, %Y at %I:%M %p')}\n")
-    
+
     try:
         # Generate all documents
         generate_vol2_index()
@@ -1575,7 +1579,7 @@ def main():
         generate_neon_cyberpunk()
         generate_minimalist_zen()
         generate_dnd_scenario()
-        
+
         print("\n" + "=" * 60)
         print("✅ VOLUME 2 GENERATION COMPLETE!")
         print("=" * 60)
@@ -1586,14 +1590,16 @@ def main():
             size_kb = pdf_file.stat().st_size / 1024
             print(f"   {i:2d}. {pdf_file.name} ({size_kb:.1f} KB)")
         print("\n🎉 Enjoy your creative booklet volume 2!\n")
-        
+
     except Exception as e:
         print(f"\n❌ Error generating booklet: {e}")
         import traceback
+
         traceback.print_exc()
         return 1
-    
+
     return 0
+
 
 if __name__ == "__main__":
     exit(main())

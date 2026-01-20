@@ -7,13 +7,14 @@ Uses WeasyPrint directly for multi-page output.
 """
 
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 try:
-    from weasyprint import HTML, CSS
+    from weasyprint import CSS, HTML
+
     WEASYPRINT_AVAILABLE = True
 except ImportError:
     WEASYPRINT_AVAILABLE = False
@@ -551,10 +552,10 @@ def main():
     print("=" * 80)
     print("📄 Generating Session Recap PDF (Multi-Page)")
     print("=" * 80)
-    
+
     # Get content
     content = get_session_content()
-    
+
     # Convert markdown to HTML
     html_content = f"""
 <!DOCTYPE html>
@@ -640,57 +641,63 @@ def main():
     </style>
 </head>
 <body>
-{content.replace('# ', '<h1>').replace('## ', '<h2>').replace('### ', '<h3>').replace('\n\n', '</p><p>').replace('```python', '<pre><code>').replace('```', '</code></pre>').replace('```', '<pre><code>')}
+{content.replace("# ", "<h1>").replace("## ", "<h2>").replace("### ", "<h3>").replace("\n\n", "</p><p>").replace("```python", "<pre><code>").replace("```", "</code></pre>").replace("```", "<pre><code>")}
 </body>
 </html>
 """
-    
+
     # Simple markdown to HTML conversion
     import re
-    
+
     # Convert headers
-    html_content = re.sub(r'^# (.+)$', r'<h1>\1</h1>', content, flags=re.MULTILINE)
-    html_content = re.sub(r'^## (.+)$', r'<h2>\1</h2>', html_content, flags=re.MULTILINE)
-    html_content = re.sub(r'^### (.+)$', r'<h3>\1</h3>', html_content, flags=re.MULTILINE)
-    
+    html_content = re.sub(r"^# (.+)$", r"<h1>\1</h1>", content, flags=re.MULTILINE)
+    html_content = re.sub(r"^## (.+)$", r"<h2>\1</h2>", html_content, flags=re.MULTILINE)
+    html_content = re.sub(r"^### (.+)$", r"<h3>\1</h3>", html_content, flags=re.MULTILINE)
+
     # Convert code blocks
-    html_content = re.sub(r'```python\n(.*?)```', r'<pre><code>\1</code></pre>', html_content, flags=re.DOTALL)
-    html_content = re.sub(r'```\n(.*?)```', r'<pre><code>\1</code></pre>', html_content, flags=re.DOTALL)
-    html_content = re.sub(r'`([^`]+)`', r'<code>\1</code>', html_content)
-    
+    html_content = re.sub(
+        r"```python\n(.*?)```", r"<pre><code>\1</code></pre>", html_content, flags=re.DOTALL
+    )
+    html_content = re.sub(
+        r"```\n(.*?)```", r"<pre><code>\1</code></pre>", html_content, flags=re.DOTALL
+    )
+    html_content = re.sub(r"`([^`]+)`", r"<code>\1</code>", html_content)
+
     # Convert blockquotes
-    html_content = re.sub(r'^> (.+)$', r'<blockquote>\1</blockquote>', html_content, flags=re.MULTILINE)
-    
+    html_content = re.sub(
+        r"^> (.+)$", r"<blockquote>\1</blockquote>", html_content, flags=re.MULTILINE
+    )
+
     # Convert lists
-    lines = html_content.split('\n')
+    lines = html_content.split("\n")
     in_list = False
     result = []
     for line in lines:
-        if re.match(r'^[-*] (.+)$', line):
+        if re.match(r"^[-*] (.+)$", line):
             if not in_list:
-                result.append('<ul>')
+                result.append("<ul>")
                 in_list = True
-            result.append(f'<li>{re.sub(r"^[-*] ", "", line)}</li>')
-        elif re.match(r'^\d+\. (.+)$', line):
+            result.append(f"<li>{re.sub(r'^[-*] ', '', line)}</li>")
+        elif re.match(r"^\d+\. (.+)$", line):
             if not in_list:
-                result.append('<ol>')
+                result.append("<ol>")
                 in_list = True
-            result.append(f'<li>{re.sub(r"^\d+\. ", "", line)}</li>')
+            result.append(f"<li>{re.sub(r'^\d+\. ', '', line)}</li>")
         else:
             if in_list:
-                result.append('</ul>' if '<ul>' in '\n'.join(result[-10:]) else '</ol>')
+                result.append("</ul>" if "<ul>" in "\n".join(result[-10:]) else "</ol>")
                 in_list = False
-            if line.strip() and not line.startswith('<'):
-                result.append(f'<p>{line}</p>')
+            if line.strip() and not line.startswith("<"):
+                result.append(f"<p>{line}</p>")
             else:
                 result.append(line)
     if in_list:
-        result.append('</ul>')
-    html_content = '\n'.join(result)
-    
+        result.append("</ul>")
+    html_content = "\n".join(result)
+
     # Convert horizontal rules
-    html_content = html_content.replace('---', '<hr>')
-    
+    html_content = html_content.replace("---", "<hr>")
+
     # Wrap in HTML structure
     full_html = f"""<!DOCTYPE html>
 <html>
@@ -781,22 +788,23 @@ def main():
 </body>
 </html>
 """
-    
+
     # Generate PDF
     output_dir = Path("_work_efforts/session_recaps")
     output_dir.mkdir(parents=True, exist_ok=True)
-    
+
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_path = output_dir / f"KARMA_ECONOMY_COMPLETE_{timestamp}.pdf"
-    
+
     HTML(string=full_html).write_pdf(output_path)
-    
+
     print(f"\n✅ PDF generated: {output_path}")
-    
+
     # Open PDF
     import subprocess
+
     subprocess.run(["open", str(output_path)])
-    
+
     print("✅ PDF opened!")
     return 0
 

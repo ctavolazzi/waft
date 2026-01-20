@@ -719,6 +719,7 @@ Every session contributes to WAFT's evolutionary record. This report serves as a
         """Open PDF in default viewer."""
         try:
             import os
+
             if platform.system() == "Darwin":  # macOS
                 subprocess.run(["open", str(pdf_path)], check=True)
             elif platform.system() == "Windows":

@@ -8,19 +8,20 @@ Uses the printer-friendly helper to convert templates.
 """
 
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
+
 from jinja2 import Template
 from weasyprint import HTML
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from scripts.printer_friendly_helper import convert_html_template_to_printer_friendly
 
-
-def create_printer_friendly_advanced_demo(demo_dir: Path, framework_doc=None, pdf_binder=None) -> Path:
+def create_printer_friendly_advanced_demo(
+    demo_dir: Path, framework_doc=None, pdf_binder=None
+) -> Path:
     """Create printer-friendly version of advanced demo booklet."""
-    
+
     # Original template with colors
     original_template = """
 <!DOCTYPE html>
@@ -231,18 +232,18 @@ def create_printer_friendly_advanced_demo(demo_dir: Path, framework_doc=None, pd
 </body>
 </html>
 """
-    
+
     template = Template(original_template)
     html_content = template.render(
         date=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         framework_doc=framework_doc is not None,
-        pdf_binder=pdf_binder is not None
+        pdf_binder=pdf_binder is not None,
     )
-    
+
     booklet_path = demo_dir / "WAFT_Advanced_Demo_Booklet_PrinterFriendly.pdf"
-    
+
     HTML(string=html_content).write_pdf(str(booklet_path))
-    
+
     return booklet_path
 
 
@@ -252,38 +253,38 @@ def main():
     print("WAFT Demo Printer-Friendly Generator")
     print("=" * 80)
     print()
-    
+
     # Check for existing demo directories
     demo_dir = Path("advanced_demo_output")
     if not demo_dir.exists():
         print(f"⚠️  Demo directory not found: {demo_dir}")
         print("   Run the advanced demo first to generate source files.")
         return
-    
+
     print(f"Generating printer-friendly demo booklets in: {demo_dir}")
     print()
-    
+
     # Check for existing demo files
     framework_doc = None
     pdf_binder = None
-    
+
     framework_doc_path = demo_dir / "WAFT_Framework_Documentation.pdf"
     if framework_doc_path.exists():
         framework_doc = framework_doc_path
-    
+
     pdf_binder_path = demo_dir / "PDF_Binder.pdf"
     if pdf_binder_path.exists():
         pdf_binder = pdf_binder_path
-    
+
     # Generate printer-friendly advanced demo
     print("Generating printer-friendly advanced demo booklet...")
     booklet_path = create_printer_friendly_advanced_demo(demo_dir, framework_doc, pdf_binder)
-    
+
     size_kb = booklet_path.stat().st_size / 1024
     print(f"  ✅ Generated: {booklet_path.name}")
     print(f"     Size: {size_kb:.1f} KB")
     print()
-    
+
     print("=" * 80)
     print("Printer-friendly generation complete!")
     print("=" * 80)

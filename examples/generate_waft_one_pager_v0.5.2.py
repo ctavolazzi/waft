@@ -12,21 +12,20 @@ Creates an updated one-pager reflecting WAFT v0.5.2 features:
 """
 
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from examples.generate_waft_intro_one_pager_bw import (
     generate_one_pager,
-    get_waft_explanation_content
 )
 
 
 def get_updated_waft_content() -> str:
     """
     Updated WAFT explanation content for v0.5.2.
-    
+
     Includes latest features: evolutionary document creator, component evolution,
     user feedback learning, self-documentation, and TheFoundation integration.
     """
@@ -103,26 +102,26 @@ def main():
     """Generate updated WAFT one-pager for v0.5.2."""
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_path = Path(f"_work_efforts/one_pagers/WAFT_v0.5.2_Updated_{timestamp}.pdf")
-    
+
     print("=" * 60)
     print("Generating WAFT One-Pager v0.5.2 (Updated Edition)")
     print("=" * 60)
-    
+
     result = generate_one_pager(
         content=get_updated_waft_content(),
         output_path=output_path,
         open_pdf=False,
         verbose=False,
     )
-    
-    if result['success']:
+
+    if result["success"]:
         print("\n" + "=" * 60)
         print("✅ WAFT One-Pager v0.5.2 Created Successfully!")
         print("=" * 60)
         print(f"📄 Output: {result['pdf_path']}")
         print(f"📊 Pages: {result.get('page_count', 'N/A')}/2")
         print(f"📦 Size: {result.get('file_size', 0):,} bytes")
-        if result.get('genome_id'):
+        if result.get("genome_id"):
             print(f"🧬 Genome: {result['genome_id']}...")
         print("\n✅ Ready for printing and distribution!")
         return 0

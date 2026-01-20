@@ -8,29 +8,25 @@ complete mixed-media artworks. Uses MCP tools for image generation.
 
 import sys
 from pathlib import Path
-from typing import Optional
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from src.waft.templates.typst.wrappers.deckz_poker import (
-    generate_deckz_poker,
-    Player
-)
+from src.waft.templates.typst.wrappers.deckz_poker import Player, generate_deckz_poker
 
 
 def generate_river_king_artwork():
     """
     Generate complete artwork combining cards with AI-generated images.
-    
+
     This demonstrates the integration workflow:
     1. Generate background image (Nano-Banana/Gemini)
     2. Generate character art (PixelLab)
     3. Create card composition (deckz_poker)
     4. Document the integration process
     """
-    
+
     content = f"""
 # The River King: Mixed Media Artwork
 ## Cards + AI-Generated Images
@@ -179,7 +175,7 @@ To complete the artwork:
 
 *"The cards provide structure. The images provide atmosphere. Together, they create art."*
 """
-    
+
     # Create card composition
     players = [
         Player(name="The Sacred Hand (Spades)", cards=["AS", "KS", "QS", "JS", "10S"]),
@@ -187,25 +183,25 @@ To complete the artwork:
         Player(name="The Stakes (Diamonds)", cards=["AD", "KD", "QD", "JD", "10D"]),
         Player(name="The Rules (Clubs)", cards=["AC", "KC", "QC", "JC", "10C"]),
     ]
-    
+
     output_path = Path("_temp_pdf_examples/river_king_mixed_media_art.pdf")
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     pdf_path = generate_deckz_poker(
         title="The River King: Mixed Media Artwork",
         content=content,
         output_path=output_path,
         players=players,
         card_format="large",
-        show_rules=False
+        show_rules=False,
     )
-    
+
     return pdf_path
 
 
 def generate_image_prompts_guide():
     """Generate a guide with prompts for image generation tools."""
-    
+
     content = """
 # Image Generation Prompts for Card Art
 
@@ -264,19 +260,19 @@ New Orleans voodoo style, mystical, animated, 4-directional views
 - **Deckz Poker**: Card visualizations
 - **Image Editor**: Compositing and layering
 """
-    
+
     output_path = Path("_temp_pdf_examples/image_generation_prompts_guide.pdf")
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     pdf_path = generate_deckz_poker(
         title="Image Generation Prompts for Card Art",
         content=content,
         output_path=output_path,
         players=None,
         card_format="medium",
-        show_rules=False
+        show_rules=False,
     )
-    
+
     return pdf_path
 
 
@@ -285,15 +281,15 @@ if __name__ == "__main__":
     print("Card Art with AI-Generated Images")
     print("=" * 60)
     print()
-    
+
     pdf1 = generate_river_king_artwork()
     print(f"✅ Generated: {pdf1}")
     print()
-    
+
     pdf2 = generate_image_prompts_guide()
     print(f"✅ Generated: {pdf2}")
     print()
-    
+
     print("=" * 60)
     print("✅ Card art compositions ready for image integration!")
     print("=" * 60)
@@ -303,8 +299,9 @@ if __name__ == "__main__":
     print("   - PixelLab: Character art")
     print("   - Then composite with these card PDFs")
     print("=" * 60)
-    
+
     # Open PDFs
     import subprocess
+
     subprocess.run(["open", str(pdf1)])
     subprocess.run(["open", str(pdf2)])

@@ -11,67 +11,76 @@ Uses WeasyPrint with LaTeX-inspired styling to create a professional field guide
 without requiring LaTeX installation.
 """
 
-from pathlib import Path
-import sys
-import re
-from datetime import datetime
-from typing import Dict, Any
 import json
+import re
+import sys
+from datetime import datetime
+from pathlib import Path
+from typing import Any
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
+import markdown
 from jinja2 import Template
 from weasyprint import HTML
-import markdown
 
 
-def parse_handbook_markdown(md_path: Path) -> Dict[str, Any]:
+def parse_handbook_markdown(md_path: Path) -> dict[str, Any]:
     """Parse WAFT handbook markdown into structured data."""
-    content = md_path.read_text(encoding='utf-8')
-    
+    content = md_path.read_text(encoding="utf-8")
+
     # Extract frontmatter
     metadata = {}
-    frontmatter_match = re.match(r'^---\n(.*?)\n---\n', content, re.DOTALL)
+    frontmatter_match = re.match(r"^---\n(.*?)\n---\n", content, re.DOTALL)
     if frontmatter_match:
         frontmatter = frontmatter_match.group(1)
-        for line in frontmatter.split('\n'):
-            if ':' in line:
-                key, value = line.split(':', 1)
+        for line in frontmatter.split("\n"):
+            if ":" in line:
+                key, value = line.split(":", 1)
                 key = key.strip()
                 value = value.strip().strip('"').strip("'")
-                if key == 'authors':
-                    if value.startswith('['):
-                        metadata[key] = [{'name': value.strip('[]').strip()}]
+                if key == "authors":
+                    if value.startswith("["):
+                        metadata[key] = [{"name": value.strip("[]").strip()}]
                     else:
-                        metadata[key] = [{'name': value}]
+                        metadata[key] = [{"name": value}]
                 else:
                     metadata[key] = value
-        content = content[frontmatter_match.end():]
-    
+        content = content[frontmatter_match.end() :]
+
     # Extract title
-    title_match = re.search(r'^#\s+(.+)$', content, re.MULTILINE)
-    title = metadata.get('title', title_match.group(1) if title_match else 'WAFT Framework Handbook')
-    
+    title_match = re.search(r"^#\s+(.+)$", content, re.MULTILINE)
+    title = metadata.get(
+        "title", title_match.group(1) if title_match else "WAFT Framework Handbook"
+    )
+
     # Extract abstract
-    abstract_match = re.search(r'^## Abstract\s*\n\n(.+?)(?=\n##|\n---|\Z)', content, re.DOTALL)
-    abstract = metadata.get('abstract', abstract_match.group(1).strip() if abstract_match else '')
-    
+    abstract_match = re.search(r"^## Abstract\s*\n\n(.+?)(?=\n##|\n---|\Z)", content, re.DOTALL)
+    abstract = metadata.get("abstract", abstract_match.group(1).strip() if abstract_match else "")
+
     # Convert markdown to HTML
-    html_content = markdown.markdown(content, extensions=['tables', 'fenced_code', 'codehilite'])
-    
+    html_content = markdown.markdown(content, extensions=["tables", "fenced_code", "codehilite"])
+
     return {
-        'title': title,
-        'subtitle': metadata.get('subtitle', 'A Comprehensive Guide to Directed Evolution of Self-Modifying AI Agents'),
-        'abstract': abstract,
-        'authors': ', '.join([a.get('name', 'WAFT Development Team') for a in metadata.get('authors', [{'name': 'WAFT Development Team'}])]),
-        'date': metadata.get('year', datetime.now().strftime('%Y')),
-        'series': 'FIELD GUIDE',
-        'number': 'FG-WAFT-001',
-        'classification': 'FOR OFFICIAL USE ONLY',
-        'issued_by': 'WAFT Development Team',
-        'content': html_content
+        "title": title,
+        "subtitle": metadata.get(
+            "subtitle", "A Comprehensive Guide to Directed Evolution of Self-Modifying AI Agents"
+        ),
+        "abstract": abstract,
+        "authors": ", ".join(
+            [
+                a.get("name", "WAFT Development Team")
+                for a in metadata.get("authors", [{"name": "WAFT Development Team"}])
+            ]
+        ),
+        "date": metadata.get("year", datetime.now().strftime("%Y")),
+        "series": "FIELD GUIDE",
+        "number": "FG-WAFT-001",
+        "classification": "FOR OFFICIAL USE ONLY",
+        "issued_by": "WAFT Development Team",
+        "content": html_content,
     }
 
 
@@ -407,57 +416,60 @@ def main():
     handbook_md = project_root / "WAFT_FRAMEWORK_HANDBOOK.md"
     output_dir = project_root / "_work_efforts" / "waft_handbook_field_guide"
     output_dir.mkdir(parents=True, exist_ok=True)
-    
+
     print("📚 Generating WAFT Handbook Field Guide PDF")
     print(f"   Source: {handbook_md}")
     print(f"   Output: {output_dir}")
-    
+
     # Parse markdown
     print("\n1️⃣  Parsing handbook markdown...")
     data = parse_handbook_markdown(handbook_md)
-    
+
     # Save JSON data (LaTTe-style)
     json_path = output_dir / "handbook_data.json"
     json_path.write_text(json.dumps(data, indent=2, ensure_ascii=False))
     print(f"   ✅ Data saved: {json_path}")
-    
+
     # Generate HTML from template
     print("\n2️⃣  Generating HTML from template...")
     template = Template(FIELD_GUIDE_TEMPLATE)
     html_output = template.render(**data)
     html_path = output_dir / "waft_handbook.html"
-    html_path.write_text(html_output, encoding='utf-8')
+    html_path.write_text(html_output, encoding="utf-8")
     print(f"   ✅ HTML saved: {html_path}")
-    
+
     # Generate PDF
     print("\n3️⃣  Generating PDF...")
     pdf_path = output_dir / "WAFT_FRAMEWORK_HANDBOOK_FIELD_GUIDE.pdf"
     HTML(string=html_output).write_pdf(pdf_path)
-    
+
     if pdf_path.exists():
         size_mb = pdf_path.stat().st_size / (1024 * 1024)
         print(f"   ✅ PDF generated: {pdf_path}")
         print(f"   📄 Size: {size_mb:.2f} MB")
-        print(f"\n🎉 WAFT Handbook Field Guide ready!")
+        print("\n🎉 WAFT Handbook Field Guide ready!")
         print(f"   📄 {pdf_path}")
-        
+
         # Try to open
         try:
             import platform
-            if platform.system() == 'Darwin':
+
+            if platform.system() == "Darwin":
                 import subprocess
-                subprocess.run(['open', str(pdf_path)])
-            elif platform.system() == 'Linux':
+
+                subprocess.run(["open", str(pdf_path)])
+            elif platform.system() == "Linux":
                 import subprocess
-                subprocess.run(['xdg-open', str(pdf_path)])
+
+                subprocess.run(["xdg-open", str(pdf_path)])
         except Exception as e:
             print(f"   ⚠️  Could not auto-open: {e}")
-        
+
         return 0
     else:
         print("   ❌ PDF generation failed")
         return 1
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sys.exit(main())

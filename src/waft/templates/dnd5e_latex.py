@@ -20,29 +20,28 @@ Features:
 Reference: https://github.com/rpgtex/DND-5e-LaTeX-Template
 """
 
-from pathlib import Path
-from typing import Optional, Dict, Any, List
-from datetime import datetime
-import subprocess
-import shutil
-import tempfile
-import re
 import os
+import re
+import shutil
+import subprocess
+import tempfile
+from pathlib import Path
+from typing import Any
 
 
 def escape_latex(text: str) -> str:
     """Escape special LaTeX characters."""
     replacements = {
-        '\\': r'\textbackslash{}',
-        '{': r'\{',
-        '}': r'\}',
-        '$': r'\$',
-        '&': r'\&',
-        '%': r'\%',
-        '#': r'\#',
-        '^': r'\textasciicircum{}',
-        '_': r'\_',
-        '~': r'\textasciitilde{}',
+        "\\": r"\textbackslash{}",
+        "{": r"\{",
+        "}": r"\}",
+        "$": r"\$",
+        "&": r"\&",
+        "%": r"\%",
+        "#": r"\#",
+        "^": r"\textasciicircum{}",
+        "_": r"\_",
+        "~": r"\textasciitilde{}",
     }
 
     for char, replacement in replacements.items():
@@ -53,9 +52,9 @@ def escape_latex(text: str) -> str:
 
 def generate_character_sheet_latex(
     character: Any,  # DnD5eCharacter
-    output_path: Optional[Path] = None,
-    template_path: Optional[Path] = None,
-    use_dndbook_class: bool = True
+    output_path: Path | None = None,
+    template_path: Path | None = None,
+    use_dndbook_class: bool = True,
 ) -> Path:
     """
     Generate D&D 5e character sheet using LaTeX template.
@@ -70,12 +69,18 @@ def generate_character_sheet_latex(
         Path to generated PDF
     """
     if output_path is None:
-        safe_name = re.sub(r'[^\w\s-]', '', character.name).strip().replace(' ', '_')
+        safe_name = re.sub(r"[^\w\s-]", "", character.name).strip().replace(" ", "_")
         output_path = Path.cwd() / f"{safe_name}_character_sheet.pdf"
 
     if template_path is None:
         # Try to find template in work effort or project root
-        work_effort_template = Path(__file__).parent.parent.parent / "_work_efforts" / "WE-260114-cef7_character_creator_factory_worldbuilding" / "templates_exploration" / "dnd5e-latex-template"
+        work_effort_template = (
+            Path(__file__).parent.parent.parent
+            / "_work_efforts"
+            / "WE-260114-cef7_character_creator_factory_worldbuilding"
+            / "templates_exploration"
+            / "dnd5e-latex-template"
+        )
         if work_effort_template.exists():
             template_path = work_effort_template
         else:
@@ -90,7 +95,7 @@ def generate_character_sheet_latex(
         tmp_path = Path(tmpdir)
         tex_file = tmp_path / "character_sheet.tex"
 
-        with open(tex_file, 'w', encoding='utf-8') as f:
+        with open(tex_file, "w", encoding="utf-8") as f:
             f.write(latex_content)
 
         # Compile LaTeX to PDF
@@ -129,8 +134,10 @@ def _build_character_sheet_latex(character: Any, use_dndbook_class: bool) -> str
 
     # Skills (simplified - would need full skill list)
     skills = {
-        "Athletics": str_mod + (character.proficiency_bonus if "Athletics" in character.proficient_skills else 0),
-        "Perception": wis_mod + (character.proficiency_bonus if "Perception" in character.proficient_skills else 0),
+        "Athletics": str_mod
+        + (character.proficiency_bonus if "Athletics" in character.proficient_skills else 0),
+        "Perception": wis_mod
+        + (character.proficiency_bonus if "Perception" in character.proficient_skills else 0),
     }
 
     latex = f"""% D&D 5e Character Sheet
@@ -163,9 +170,9 @@ def _build_character_sheet_latex(character: Any, use_dndbook_class: bool) -> str
     \\item[Name:] {escape_latex(character.name)}
     \\item[Class:] {escape_latex(character.char_class.title())}
     \\item[Level:] {character.level}
-    \\item[Background:] {escape_latex(getattr(character, 'background', 'Adventurer'))}
-    \\item[Race:] {escape_latex(getattr(character, 'race', 'Unknown'))}
-    \\item[Alignment:] {escape_latex(getattr(character, 'alignment', 'Neutral'))}
+    \\item[Background:] {escape_latex(getattr(character, "background", "Adventurer"))}
+    \\item[Race:] {escape_latex(getattr(character, "race", "Unknown"))}
+    \\item[Alignment:] {escape_latex(getattr(character, "alignment", "Neutral"))}
 \\end{{description}}
 
 \\section*{{Ability Scores}}
@@ -173,12 +180,12 @@ def _build_character_sheet_latex(character: Any, use_dndbook_class: bool) -> str
 \\begin{{tabular}}{{lcccc}}
     \\textbf{{Ability}} & \\textbf{{Score}} & \\textbf{{Modifier}} & \\textbf{{Saving Throw}} & \\textbf{{Proficiency}} \\\\
     \\hline
-    Strength & {character.strength} & {fmt_mod(str_mod)} & {fmt_mod(str_mod + (character.proficiency_bonus if 'STR' in character.proficient_saves else 0))} & {'\\checkmark' if 'STR' in character.proficient_saves else ''} \\\\
-    Dexterity & {character.dexterity} & {fmt_mod(dex_mod)} & {fmt_mod(dex_mod + (character.proficiency_bonus if 'DEX' in character.proficient_saves else 0))} & {'\\checkmark' if 'DEX' in character.proficient_saves else ''} \\\\
-    Constitution & {character.constitution} & {fmt_mod(con_mod)} & {fmt_mod(con_mod + (character.proficiency_bonus if 'CON' in character.proficient_saves else 0))} & {'\\checkmark' if 'CON' in character.proficient_saves else ''} \\\\
-    Intelligence & {character.intelligence} & {fmt_mod(int_mod)} & {fmt_mod(int_mod + (character.proficiency_bonus if 'INT' in character.proficient_saves else 0))} & {'\\checkmark' if 'INT' in character.proficient_saves else ''} \\\\
-    Wisdom & {character.wisdom} & {fmt_mod(wis_mod)} & {fmt_mod(wis_mod + (character.proficiency_bonus if 'WIS' in character.proficient_saves else 0))} & {'\\checkmark' if 'WIS' in character.proficient_saves else ''} \\\\
-    Charisma & {character.charisma} & {fmt_mod(cha_mod)} & {fmt_mod(cha_mod + (character.proficiency_bonus if 'CHA' in character.proficient_saves else 0))} & {'\\checkmark' if 'CHA' in character.proficient_saves else ''} \\\\
+    Strength & {character.strength} & {fmt_mod(str_mod)} & {fmt_mod(str_mod + (character.proficiency_bonus if "STR" in character.proficient_saves else 0))} & {"\\checkmark" if "STR" in character.proficient_saves else ""} \\\\
+    Dexterity & {character.dexterity} & {fmt_mod(dex_mod)} & {fmt_mod(dex_mod + (character.proficiency_bonus if "DEX" in character.proficient_saves else 0))} & {"\\checkmark" if "DEX" in character.proficient_saves else ""} \\\\
+    Constitution & {character.constitution} & {fmt_mod(con_mod)} & {fmt_mod(con_mod + (character.proficiency_bonus if "CON" in character.proficient_saves else 0))} & {"\\checkmark" if "CON" in character.proficient_saves else ""} \\\\
+    Intelligence & {character.intelligence} & {fmt_mod(int_mod)} & {fmt_mod(int_mod + (character.proficiency_bonus if "INT" in character.proficient_saves else 0))} & {"\\checkmark" if "INT" in character.proficient_saves else ""} \\\\
+    Wisdom & {character.wisdom} & {fmt_mod(wis_mod)} & {fmt_mod(wis_mod + (character.proficiency_bonus if "WIS" in character.proficient_saves else 0))} & {"\\checkmark" if "WIS" in character.proficient_saves else ""} \\\\
+    Charisma & {character.charisma} & {fmt_mod(cha_mod)} & {fmt_mod(cha_mod + (character.proficiency_bonus if "CHA" in character.proficient_saves else 0))} & {"\\checkmark" if "CHA" in character.proficient_saves else ""} \\\\
 \\end{{tabular}}
 
 \\textbf{{Proficiency Bonus:}} +{character.proficiency_bonus}
@@ -189,7 +196,7 @@ def _build_character_sheet_latex(character: Any, use_dndbook_class: bool) -> str
     \\item[Armor Class (AC):] {character.ac}
     \\item[Hit Points:] {character.hp} / {character.max_hp}
     \\item[Hit Dice:] {character.level}d{character.hit_die}
-    \\item[Speed:] {getattr(character, 'speed', 30)} ft.
+    \\item[Speed:] {getattr(character, "speed", 30)} ft.
 \\end{{description}}
 
 \\section*{{Skills}}
@@ -228,81 +235,89 @@ def _build_character_sheet_latex(character: Any, use_dndbook_class: bool) -> str
     return latex
 
 
-def _compile_latex(tex_file: Path, work_dir: Path, template_path: Optional[Path] = None) -> None:
+def _compile_latex(tex_file: Path, work_dir: Path, template_path: Path | None = None) -> None:
     """Compile LaTeX file to PDF."""
     # Set TEXINPUTS to include template path
     env = os.environ.copy()
-    
+
     # Find LaTeX bin directory (macOS TeX Live location)
     texbin_paths = [
         Path("/Library/TeX/texbin"),  # macOS TeX Live
         Path("/usr/texbin"),  # Alternative macOS location
     ]
-    
+
     texbin = None
     for path in texbin_paths:
         if path.exists():
             texbin = path
             break
-    
+
     # Add texbin to PATH if found
     if texbin:
-        current_path = env.get('PATH', '')
+        current_path = env.get("PATH", "")
         if str(texbin) not in current_path:
-            env['PATH'] = f"{texbin}:{current_path}"
-    
+            env["PATH"] = f"{texbin}:{current_path}"
+
     if template_path and template_path.exists():
         # TEXINPUTS format: paths separated by :, // means search subdirectories recursively
         # Add template path and current directory
-        existing_texinputs = env.get('TEXINPUTS', '')
+        existing_texinputs = env.get("TEXINPUTS", "")
         texinputs = f".:{str(template_path)}//:{str(template_path)}:"
         if existing_texinputs:
-            env['TEXINPUTS'] = f"{texinputs}:{existing_texinputs}"
+            env["TEXINPUTS"] = f"{texinputs}:{existing_texinputs}"
         else:
-            env['TEXINPUTS'] = texinputs
-    
+            env["TEXINPUTS"] = texinputs
+
     # Try pdflatex first, then lualatex, then xelatex
-    for compiler_name in ['pdflatex', 'lualatex', 'xelatex']:
+    for compiler_name in ["pdflatex", "lualatex", "xelatex"]:
         # Try to find compiler
         compiler_path = None
-        
+
         # First try with updated PATH
         if texbin:
             compiler_path = texbin / compiler_name
             if not compiler_path.exists():
                 compiler_path = None
-        
+
         # Fallback to shutil.which with updated env
         if not compiler_path:
-            compiler_path = shutil.which(compiler_name, path=env.get('PATH'))
+            compiler_path = shutil.which(compiler_name, path=env.get("PATH"))
             if compiler_path:
                 compiler_path = Path(compiler_path)
-        
+
         if compiler_path and compiler_path.exists():
             try:
                 # Run twice for references
                 for _ in range(2):
                     result = subprocess.run(
-                        [str(compiler_path), '-interaction=nonstopmode', '-output-directory', str(work_dir), str(tex_file)],
+                        [
+                            str(compiler_path),
+                            "-interaction=nonstopmode",
+                            "-output-directory",
+                            str(work_dir),
+                            str(tex_file),
+                        ],
                         cwd=work_dir,
                         env=env,
                         capture_output=True,
-                        text=True
+                        text=True,
                     )
                     if result.returncode != 0:
                         # Log error but try next compiler
                         print(f"Warning: {compiler_name} compilation had errors:")
                         if result.stderr:
                             # Show more of the error for debugging
-                            error_lines = result.stderr.split('\n')
+                            error_lines = result.stderr.split("\n")
                             # Show first 20 lines of error
                             for line in error_lines[:20]:
                                 if line.strip():
                                     print(f"  {line}")
                         # Also check stdout for errors
                         if result.stdout:
-                            stdout_lines = result.stdout.split('\n')
-                            error_lines_stdout = [l for l in stdout_lines if 'error' in l.lower() or '!' in l]
+                            stdout_lines = result.stdout.split("\n")
+                            error_lines_stdout = [
+                                l for l in stdout_lines if "error" in l.lower() or "!" in l
+                            ]
                             if error_lines_stdout:
                                 print("  Errors from stdout:")
                                 for line in error_lines_stdout[:10]:
@@ -314,19 +329,19 @@ def _compile_latex(tex_file: Path, work_dir: Path, template_path: Optional[Path]
             except Exception as e:
                 print(f"Warning: {compiler_name} failed: {e}")
                 continue
-    
+
     raise RuntimeError("No LaTeX compiler found (pdflatex, lualatex, or xelatex)")
 
 
 def generate_storybook_latex(
     title: str,
-    chapters: List[Dict[str, Any]],
-    output_path: Optional[Path] = None,
-    template_path: Optional[Path] = None,
-    author: Optional[str] = None,
+    chapters: list[dict[str, Any]],
+    output_path: Path | None = None,
+    template_path: Path | None = None,
+    author: str | None = None,
     use_dndbook_class: bool = True,
     include_monsters: bool = False,
-    include_read_aloud: bool = True
+    include_read_aloud: bool = True,
 ) -> Path:
     """
     Generate D&D 5e storybook/campaign book using LaTeX template.
@@ -345,23 +360,47 @@ def generate_storybook_latex(
         Path to generated PDF
     """
     if output_path is None:
-        safe_name = re.sub(r'[^\w\s-]', '', title).strip().replace(' ', '_')
+        safe_name = re.sub(r"[^\w\s-]", "", title).strip().replace(" ", "_")
         output_path = Path.cwd() / f"{safe_name}_storybook.pdf"
 
     if template_path is None:
         # Try to find template in multiple locations
         # __file__ is src/waft/templates/dnd5e_latex.py, so go up 3 levels to project root
         project_root = Path(__file__).parent.parent.parent.parent
-        
+
         # Check lib/dnd first (standard location)
         lib_dnd = project_root / "lib" / "dnd"
         if lib_dnd.exists() and (lib_dnd / "dndbook.cls").exists():
             template_path = lib_dnd
         # Check work effort locations
-        elif (project_root / "_work_efforts" / "WE-260114-cef7_character_creator_factory_worldbuilding" / "templates_exploration" / "dnd5e-latex-template").exists():
-            template_path = project_root / "_work_efforts" / "WE-260114-cef7_character_creator_factory_worldbuilding" / "templates_exploration" / "dnd5e-latex-template"
-        elif (project_root / "_work_efforts" / "WE-260114-ar3y_latex_template_integration_cv_academic_and_grant_templates" / "templates_exploration" / "dnd-5e-latex-template").exists():
-            template_path = project_root / "_work_efforts" / "WE-260114-ar3y_latex_template_integration_cv_academic_and_grant_templates" / "templates_exploration" / "dnd-5e-latex-template"
+        elif (
+            project_root
+            / "_work_efforts"
+            / "WE-260114-cef7_character_creator_factory_worldbuilding"
+            / "templates_exploration"
+            / "dnd5e-latex-template"
+        ).exists():
+            template_path = (
+                project_root
+                / "_work_efforts"
+                / "WE-260114-cef7_character_creator_factory_worldbuilding"
+                / "templates_exploration"
+                / "dnd5e-latex-template"
+            )
+        elif (
+            project_root
+            / "_work_efforts"
+            / "WE-260114-ar3y_latex_template_integration_cv_academic_and_grant_templates"
+            / "templates_exploration"
+            / "dnd-5e-latex-template"
+        ).exists():
+            template_path = (
+                project_root
+                / "_work_efforts"
+                / "WE-260114-ar3y_latex_template_integration_cv_academic_and_grant_templates"
+                / "templates_exploration"
+                / "dnd-5e-latex-template"
+            )
         else:
             # Fallback
             template_path = project_root / "lib" / "dnd"
@@ -379,7 +418,7 @@ def generate_storybook_latex(
         tmp_path = Path(tmpdir)
         tex_file = tmp_path / "storybook.tex"
 
-        with open(tex_file, 'w', encoding='utf-8') as f:
+        with open(tex_file, "w", encoding="utf-8") as f:
             f.write(latex_content)
 
         # Compile LaTeX to PDF
@@ -398,16 +437,18 @@ def generate_storybook_latex(
 
 def _build_storybook_latex(
     title: str,
-    chapters: List[Dict[str, Any]],
+    chapters: list[dict[str, Any]],
     author: str,
     use_dndbook_class: bool,
     include_monsters: bool,
-    include_read_aloud: bool
+    include_read_aloud: bool,
 ) -> str:
     """Build LaTeX content for storybook."""
 
     if use_dndbook_class:
-        document_class = r"\documentclass[letterpaper,twoside,twocolumn,openany,nodeprecatedcode]{dndbook}"
+        document_class = (
+            r"\documentclass[letterpaper,twoside,twocolumn,openany,nodeprecatedcode]{dndbook}"
+        )
     else:
         document_class = r"\documentclass[letterpaper,twoside,twocolumn,openany]{book}"
 
@@ -443,11 +484,11 @@ def _build_storybook_latex(
 
     # Add chapters
     for i, chapter in enumerate(chapters, 1):
-        chapter_title = chapter.get('title', f'Chapter {i}')
-        chapter_content = chapter.get('content', '')
-        read_aloud = chapter.get('read_aloud', [])
-        sidebar = chapter.get('sidebar')
-        monsters = chapter.get('monsters', [])
+        chapter_title = chapter.get("title", f"Chapter {i}")
+        chapter_content = chapter.get("content", "")
+        read_aloud = chapter.get("read_aloud", [])
+        sidebar = chapter.get("sidebar")
+        monsters = chapter.get("monsters", [])
 
         latex += f"""
 \\chapter{{{escape_latex(chapter_title)}}}
@@ -466,8 +507,8 @@ def _build_storybook_latex(
 
         # Add sidebar if present
         if sidebar:
-            sidebar_title = sidebar.get('title', 'Note')
-            sidebar_content = sidebar.get('content', '')
+            sidebar_title = sidebar.get("title", "Note")
+            sidebar_content = sidebar.get("content", "")
             latex += f"""
 \\begin{{DndSidebar}}={{{escape_latex(sidebar_title)}}}
 {escape_latex(sidebar_content)}
@@ -494,7 +535,7 @@ def _build_storybook_latex(
 def _format_chapter_content(content: str) -> str:
     """
     Format chapter content from markdown/text to LaTeX.
-    
+
     Handles:
     - Paragraphs (double newlines)
     - Bold (**text**)
@@ -506,37 +547,37 @@ def _format_chapter_content(content: str) -> str:
     """
     if not content.strip():
         return ""
-    
+
     latex_lines = []
-    paragraphs = content.split('\n\n')
-    
+    paragraphs = content.split("\n\n")
+
     for para in paragraphs:
         para = para.strip()
         if not para:
             continue
-            
+
         # Check for code blocks
-        if para.startswith('```') and para.endswith('```'):
+        if para.startswith("```") and para.endswith("```"):
             code_content = para[3:-3].strip()
             # Extract language if present
-            lines = code_content.split('\n', 1)
+            lines = code_content.split("\n", 1)
             if len(lines) > 1 and lines[0].isalpha():
                 code_content = lines[1]
             latex_lines.append(f"\\begin{{verbatim}}\n{code_content}\n\\end{{verbatim}}\n")
             continue
-        
+
         # Check for headers
-        if para.startswith('#'):
-            lines = para.split('\n')
+        if para.startswith("#"):
+            lines = para.split("\n")
             for line in lines:
                 line = line.strip()
-                if line.startswith('#### '):
+                if line.startswith("#### "):
                     latex_lines.append(f"\\paragraph{{{escape_latex(line[5:])}}}")
-                elif line.startswith('### '):
+                elif line.startswith("### "):
                     latex_lines.append(f"\\subsubsection{{{escape_latex(line[4:])}}}")
-                elif line.startswith('## '):
+                elif line.startswith("## "):
                     latex_lines.append(f"\\subsection{{{escape_latex(line[3:])}}}")
-                elif line.startswith('# '):
+                elif line.startswith("# "):
                     latex_lines.append(f"\\section{{{escape_latex(line[2:])}}}")
                 else:
                     # Process as regular text
@@ -545,12 +586,12 @@ def _format_chapter_content(content: str) -> str:
                         latex_lines.append(formatted)
             latex_lines.append("")
             continue
-        
+
         # Check for lists
-        lines = para.split('\n')
+        lines = para.split("\n")
         in_list = False
         list_items = []
-        
+
         for line in lines:
             line = line.strip()
             if not line:
@@ -563,7 +604,7 @@ def _format_chapter_content(content: str) -> str:
                     list_items = []
                     in_list = False
                 latex_lines.append("")
-            elif line.startswith('- ') or line.startswith('* '):
+            elif line.startswith("- ") or line.startswith("* "):
                 if not in_list:
                     in_list = True
                 list_items.append(line)
@@ -580,7 +621,7 @@ def _format_chapter_content(content: str) -> str:
                 formatted = _format_text_line(line)
                 if formatted:
                     latex_lines.append(formatted)
-        
+
         # Close any open list
         if in_list and list_items:
             latex_lines.append("\\begin{itemize}")
@@ -588,41 +629,41 @@ def _format_chapter_content(content: str) -> str:
                 item_text = _format_text_line(item[2:])
                 latex_lines.append(f"\\item {item_text}")
             latex_lines.append("\\end{itemize}")
-        
+
         latex_lines.append("")  # Paragraph break
-    
-    return '\n'.join(latex_lines) + '\n\n'
+
+    return "\n".join(latex_lines) + "\n\n"
 
 
 def _format_text_line(text: str) -> str:
     """Format a single line of text with markdown formatting."""
     if not text.strip():
         return ""
-    
+
     # Escape LaTeX special characters first
     text = escape_latex(text)
-    
+
     # Handle bold (**text** or __text__)
-    text = re.sub(r'\*\*(.+?)\*\*', r'\\textbf{\1}', text)
-    text = re.sub(r'__(.+?)__', r'\\textbf{\1}', text)
-    
+    text = re.sub(r"\*\*(.+?)\*\*", r"\\textbf{\1}", text)
+    text = re.sub(r"__(.+?)__", r"\\textbf{\1}", text)
+
     # Handle italic (*text* or _text_) - but not if it's part of bold
     # Use negative lookbehind/lookahead to avoid conflicts
-    text = re.sub(r'(?<!\*)\*(?!\*)([^*]+?)(?<!\*)\*(?!\*)', r'\\textit{\1}', text)
-    text = re.sub(r'(?<!_)_(?!_)([^_]+?)(?<!_)_(?!_)', r'\\textit{\1}', text)
-    
+    text = re.sub(r"(?<!\*)\*(?!\*)([^*]+?)(?<!\*)\*(?!\*)", r"\\textit{\1}", text)
+    text = re.sub(r"(?<!_)_(?!_)([^_]+?)(?<!_)_(?!_)", r"\\textit{\1}", text)
+
     # Handle inline code (`code`)
-    text = re.sub(r'`([^`]+)`', r'\\texttt{\1}', text)
-    
+    text = re.sub(r"`([^`]+)`", r"\\texttt{\1}", text)
+
     return text
 
 
-def _build_monster_stat_block(monster: Dict[str, Any]) -> str:
+def _build_monster_stat_block(monster: dict[str, Any]) -> str:
     """Build LaTeX monster stat block."""
-    name = monster.get('name', 'Unknown Monster')
-    size = monster.get('size', 'Medium')
-    creature_type = monster.get('type', 'humanoid')
-    alignment = monster.get('alignment', 'unaligned')
+    name = monster.get("name", "Unknown Monster")
+    size = monster.get("size", "Medium")
+    creature_type = monster.get("type", "humanoid")
+    alignment = monster.get("alignment", "unaligned")
 
     # Build type string
     type_str = f"{size} {creature_type}, {alignment}"
@@ -636,52 +677,52 @@ def _build_monster_stat_block(monster: Dict[str, Any]) -> str:
 
     # Add basics (AC, HP, Speed)
     basics = []
-    if 'armor_class' in monster:
+    if "armor_class" in monster:
         basics.append(f"armor-class = {{{monster['armor_class']}}}")
-    if 'hit_points' in monster:
+    if "hit_points" in monster:
         basics.append(f"hit-points = {{{monster['hit_points']}}}")
-    if 'speed' in monster:
+    if "speed" in monster:
         basics.append(f"speed = {{{monster['speed']}}}")
 
     if basics:
         latex += f"    \\DndMonsterBasics[\n        {',\n        '.join(basics)}\n      ]\n\n"
 
     # Add ability scores if present
-    if 'ability_scores' in monster:
-        scores = monster['ability_scores']
+    if "ability_scores" in monster:
+        scores = monster["ability_scores"]
         latex += f"""    \\DndMonsterAbilityScores[
-        str = {scores.get('str', 10)},
-        dex = {scores.get('dex', 10)},
-        con = {scores.get('con', 10)},
-        int = {scores.get('int', 10)},
-        wis = {scores.get('wis', 10)},
-        cha = {scores.get('cha', 10)},
+        str = {scores.get("str", 10)},
+        dex = {scores.get("dex", 10)},
+        con = {scores.get("con", 10)},
+        int = {scores.get("int", 10)},
+        wis = {scores.get("wis", 10)},
+        cha = {scores.get("cha", 10)},
       ]
 
 """
 
     # Add details (senses, languages, challenge, etc.)
     details = []
-    if 'senses' in monster:
+    if "senses" in monster:
         details.append(f"senses = {{{monster['senses']}}}")
-    if 'languages' in monster:
+    if "languages" in monster:
         details.append(f"languages = {{{monster['languages']}}}")
-    if 'challenge' in monster:
+    if "challenge" in monster:
         details.append(f"challenge = {monster['challenge']}")
 
     if details:
         latex += f"    \\DndMonsterDetails[\n        {',\n        '.join(details)}\n      ]\n\n"
 
     # Add description/traits
-    if 'description' in monster:
+    if "description" in monster:
         latex += f"    {escape_latex(monster['description'])}\n\n"
 
     # Add actions
-    if 'actions' in monster:
+    if "actions" in monster:
         latex += "    \\DndMonsterSection{Actions}\n"
-        for action in monster['actions']:
-            action_name = action.get('name', 'Action')
-            action_desc = action.get('description', '')
+        for action in monster["actions"]:
+            action_name = action.get("name", "Action")
+            action_desc = action.get("description", "")
             latex += f"""    \\DndMonsterAction{{{escape_latex(action_name)}}}
     {escape_latex(action_desc)}
 

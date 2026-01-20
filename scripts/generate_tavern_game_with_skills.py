@@ -558,9 +558,10 @@ Current Task: Electron Tavern Game Display Development
         Create the file at examples/tavern_game_server.py with production-ready code.
         Follow the coding standards from AGENTS.md (direct & minimal style).
         """
-    else:
-        task1 = """
-        Create examples/tavern_game_server.py - a FastAPI server for the Electron Tavern Game Display.
+
+    # Alternative simpler version (commented out):
+    # task1 = """
+    #     Create examples/tavern_game_server.py - a FastAPI server for the Electron Tavern Game Display.
     
     The agent context includes Electron security best practices that will be triggered
     when you work on Electron-specific code.

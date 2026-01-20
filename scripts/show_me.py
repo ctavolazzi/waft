@@ -5,15 +5,15 @@
 Displays concepts, operations, and data from the current chat session.
 """
 
-import sys
 import json
-from pathlib import Path
-from typing import Dict, Any, List, Optional
+import sys
 from datetime import datetime
+from pathlib import Path
+from typing import Any
+
 from rich.console import Console
-from rich.table import Table
 from rich.panel import Panel
-from rich.markdown import Markdown
+from rich.table import Table
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
@@ -22,29 +22,33 @@ sys.path.insert(0, str(project_root / "src"))
 
 console = Console()
 
-def get_work_efforts(project_path: Path, days_back: int = 30, verbose: bool = False) -> List[Dict[str, Any]]:
+
+def get_work_efforts(
+    project_path: Path, days_back: int = 30, verbose: bool = False
+) -> list[dict[str, Any]]:
     """Get work efforts from recent days (default: last 30 days, or all if days_back=0)."""
     work_efforts = []
     work_efforts_dir = project_path / "_work_efforts"
-    
+
     if not work_efforts_dir.exists():
         return work_efforts
-    
+
     # Calculate date threshold if filtering by days
     from datetime import timedelta
+
     if days_back > 0:
         threshold_date = datetime.now() - timedelta(days=days_back)
         threshold_pattern = threshold_date.strftime("%y%m%d")
     else:
         threshold_pattern = None  # Show all
-    
+
     # Count total directories first for progress
     all_items = list(work_efforts_dir.iterdir())
     total_dirs = sum(1 for item in all_items if item.is_dir() and item.name.startswith("WE-"))
-    
+
     if verbose and total_dirs > 10:
         print(f"    Scanning {total_dirs} work effort directories...")
-    
+
     processed = 0
     for item in all_items:
         if item.is_dir() and item.name.startswith("WE-"):
@@ -57,62 +61,76 @@ def get_work_efforts(project_path: Path, days_back: int = 30, verbose: bool = Fa
                     we_date_str = item.name[3:9]  # e.g., "260116" from "WE-260116-xxxx"
                     if we_date_str < threshold_pattern:
                         continue  # Skip if older than threshold
-            
+
             # Extract work effort ID (first part before underscore, e.g., WE-260116-65m0)
             # Directory name might be: WE-260116-65m0_fogsift_waft_project_context_setup
             # Index file is: WE-260116-65m0_index.md
             work_effort_id = item.name.split("_")[0] if "_" in item.name else item.name
-            
+
             # Try multiple index file patterns
             index_file = None
-            for pattern in [
-                f"{work_effort_id}_index.md",
-                f"{item.name}_index.md",
-                "index.md"
-            ]:
+            for pattern in [f"{work_effort_id}_index.md", f"{item.name}_index.md", "index.md"]:
                 candidate = item / pattern
                 if candidate.exists():
                     index_file = candidate
                     break
-            
+
             if index_file and index_file.exists():
                 try:
                     processed += 1
                     if verbose and total_dirs > 10 and processed % 10 == 0:
-                        print(f"    Processed {processed}/{total_dirs} work efforts...", end='\r')
+                        print(f"    Processed {processed}/{total_dirs} work efforts...", end="\r")
                         sys.stdout.flush()
-                    
-                    content = index_file.read_text(encoding='utf-8')
-                    
+
+                    content = index_file.read_text(encoding="utf-8")
+
                     # Extract status from YAML frontmatter or content
                     status = "open"
                     content_lower = content.lower()
-                    
+
                     # Check YAML frontmatter first
                     if "---" in content:
-                        frontmatter = content.split("---")[1].split("---")[0] if content.count("---") >= 2 else ""
+                        frontmatter = (
+                            content.split("---")[1].split("---")[0]
+                            if content.count("---") >= 2
+                            else ""
+                        )
                         for line in frontmatter.split("\n"):
                             if ":" in line:
                                 key, value = line.split(":", 1)
                                 if key.strip().lower() == "status":
                                     status = value.strip().strip('"').strip("'").lower()
                                     break
-                    
+
                     # Fallback to content search
                     if status == "open":
-                        if "status: completed" in content_lower or '"status": "completed"' in content_lower:
+                        if (
+                            "status: completed" in content_lower
+                            or '"status": "completed"' in content_lower
+                        ):
                             status = "completed"
-                        elif "status: paused" in content_lower or '"status": "paused"' in content_lower:
+                        elif (
+                            "status: paused" in content_lower
+                            or '"status": "paused"' in content_lower
+                        ):
                             status = "paused"
-                        elif "status: active" in content_lower or '"status": "active"' in content_lower or "status: in_progress" in content_lower:
+                        elif (
+                            "status: active" in content_lower
+                            or '"status": "active"' in content_lower
+                            or "status: in_progress" in content_lower
+                        ):
                             status = "active"
                         elif "status: open" in content_lower or '"status": "open"' in content_lower:
                             status = "open"
-                    
+
                     # Extract title from YAML frontmatter or use directory name
                     title = item.name.replace("WE-", "").replace("_", " ").title()
                     if "---" in content:
-                        frontmatter = content.split("---")[1].split("---")[0] if content.count("---") >= 2 else ""
+                        frontmatter = (
+                            content.split("---")[1].split("---")[0]
+                            if content.count("---") >= 2
+                            else ""
+                        )
                         for line in frontmatter.split("\n"):
                             if ":" in line:
                                 key, value = line.split(":", 1)
@@ -124,71 +142,85 @@ def get_work_efforts(project_path: Path, days_back: int = 30, verbose: bool = Fa
                             if line.strip().startswith("title:"):
                                 title = line.split(":", 1)[1].strip().strip('"').strip("'")
                                 break
-                    
-                    work_efforts.append({
-                        "id": work_effort_id,
-                        "title": title,
-                        "status": status,
-                        "path": str(item.relative_to(project_path))
-                    })
+
+                    work_efforts.append(
+                        {
+                            "id": work_effort_id,
+                            "title": title,
+                            "status": status,
+                            "path": str(item.relative_to(project_path)),
+                        }
+                    )
                 except Exception as e:
                     # Log but continue - don't fail on one bad work effort
                     console.print(f"[dim]⚠️  Could not read work effort {item.name}: {e}[/dim]")
                     continue
-    
+
     if verbose and total_dirs > 10:
         print(f"    Processed {processed}/{total_dirs} work efforts.     ")  # Clear progress line
-    
+
     # Sort by ID (most recent first, since IDs are date-based)
     work_efforts.sort(key=lambda x: x["id"], reverse=True)
-    
+
     return work_efforts
 
-def get_projects(project_path: Path) -> List[Dict[str, Any]]:
+
+def get_projects(project_path: Path) -> list[dict[str, Any]]:
     """Get all projects from ProjectManager."""
     projects = []
     try:
         from src.waft.core.projects import ProjectManager
+
         project_manager = ProjectManager(project_path=project_path)
-        
+
         # List all projects
         all_projects = project_manager.list_projects()
-        
+
         for proj in all_projects:
-            projects.append({
-                "id": proj.project_id,
-                "title": proj.title,
-                "status": proj.status.value if hasattr(proj.status, 'value') else str(proj.status),
-                "progress": proj.progress_percent,
-                "description": proj.description[:100] + "..." if len(proj.description) > 100 else proj.description,
-                "tags": ", ".join(proj.tags[:5]),
-                "created": proj.created_at,
-                "updated": proj.updated_at,
-                "milestones": len(proj.milestones),
-                "related_work_efforts": len(proj.related_work_efforts)
-            })
-        
+            projects.append(
+                {
+                    "id": proj.project_id,
+                    "title": proj.title,
+                    "status": proj.status.value
+                    if hasattr(proj.status, "value")
+                    else str(proj.status),
+                    "progress": proj.progress_percent,
+                    "description": proj.description[:100] + "..."
+                    if len(proj.description) > 100
+                    else proj.description,
+                    "tags": ", ".join(proj.tags[:5]),
+                    "created": proj.created_at,
+                    "updated": proj.updated_at,
+                    "milestones": len(proj.milestones),
+                    "related_work_efforts": len(proj.related_work_efforts),
+                }
+            )
+
         # Sort by updated date (most recent first)
         projects.sort(key=lambda x: x.get("updated", ""), reverse=True)
-        
+
     except Exception as e:
         console.print(f"[dim]⚠️  Could not load projects: {e}[/dim]")
-    
+
     return projects
 
-def get_templates() -> List[Dict[str, Any]]:
+
+def get_templates() -> list[dict[str, Any]]:
     """Get LaTeX templates from registry."""
     try:
         from src.waft.templates.latex.registry import get_latex_registry
+
         registry = get_latex_registry()
         templates = registry.list_templates()
-        
+
         return [
             {
                 "name": t.name,
                 "category": t.category,
                 "tags": ", ".join(t.tags[:5]),
-                "description": t.description[:60] + "..." if len(t.description) > 60 else t.description
+                "description": t.description[:60] + "..."
+                if len(t.description) > 60
+                else t.description,
             }
             for t in templates
         ]
@@ -196,16 +228,18 @@ def get_templates() -> List[Dict[str, Any]]:
         console.print(f"[yellow]⚠️  Could not load templates: {e}[/yellow]")
         return []
 
-def get_catalog_summary(project_path: Path) -> Dict[str, Any]:
+
+def get_catalog_summary(project_path: Path) -> dict[str, Any]:
     """Get Librarian catalog summary."""
     try:
         from src.waft.pantheon.library.librarian import Librarian
+
         librarian = Librarian(project_path=project_path)
         summary = librarian.generate_summary()
-        
+
         # Get template entries
         template_entries = librarian.get_by_type("template")
-        
+
         return {
             "total_records": summary.get("total_records", 0),
             "by_type": summary.get("by_type", {}),
@@ -216,43 +250,49 @@ def get_catalog_summary(project_path: Path) -> Dict[str, Any]:
                     "id": e.record_id,
                     "type": e.record_type,
                     "category": e.category,
-                    "tags": ", ".join(e.tags[:3])
+                    "tags": ", ".join(e.tags[:3]),
                 }
                 for e in template_entries[:10]
-            ]
+            ],
         }
     except Exception as e:
         console.print(f"[yellow]⚠️  Could not load catalog: {e}[/yellow]")
         return {"total_records": 0, "by_type": {}, "by_category": {}, "templates": 0, "entries": []}
 
-def get_recent_experiments(project_path: Path) -> List[Dict[str, Any]]:
+
+def get_recent_experiments(project_path: Path) -> list[dict[str, Any]]:
     """Get recent scientific method experiments."""
     experiments = []
     exp_dir = project_path / "scientific_method_tool" / "proof_experiments"
-    
+
     if not exp_dir.exists():
         return experiments
-    
+
     # Get recent experiment files
     exp_files_dir = exp_dir / "experiments"
     if exp_files_dir.exists():
-        exp_files = sorted(exp_files_dir.glob("exp_*.json"), key=lambda p: p.stat().st_mtime, reverse=True)
-        
+        exp_files = sorted(
+            exp_files_dir.glob("exp_*.json"), key=lambda p: p.stat().st_mtime, reverse=True
+        )
+
         for exp_file in exp_files[:5]:  # Last 5
             try:
                 data = json.loads(exp_file.read_text())
-                experiments.append({
-                    "id": data.get("experiment_id", exp_file.stem),
-                    "hypothesis": data.get("hypothesis", {}).get("statement", "N/A")[:50],
-                    "status": data.get("status", "unknown"),
-                    "verified": data.get("analysis", {}).get("verified", False)
-                })
+                experiments.append(
+                    {
+                        "id": data.get("experiment_id", exp_file.stem),
+                        "hypothesis": data.get("hypothesis", {}).get("statement", "N/A")[:50],
+                        "status": data.get("status", "unknown"),
+                        "verified": data.get("analysis", {}).get("verified", False),
+                    }
+                )
             except Exception:
                 pass
-    
+
     return experiments
 
-def get_chat_context() -> Dict[str, Any]:
+
+def get_chat_context() -> dict[str, Any]:
     """Extract chat context from current session."""
     # This would analyze the conversation, but for now return summary
     return {
@@ -261,89 +301,114 @@ def get_chat_context() -> Dict[str, Any]:
             "LaTeX Template Integration",
             "Librarian Catalog System",
             "Scientific Method Tool",
-            "Work Efforts Management"
+            "Work Efforts Management",
         ],
         "operations": [
             "Integrated Unicamp Physics Report template",
             "Cataloged templates with Librarian",
             "Ran scientific method proofs",
-            "Created work efforts"
+            "Created work efforts",
         ],
-        "systems_used": [
-            "LaTeXTemplateRegistry",
-            "Librarian",
-            "Empirica",
-            "Work Efforts System"
-        ]
+        "systems_used": ["LaTeXTemplateRegistry", "Librarian", "Empirica", "Work Efforts System"],
     }
 
-def _get_work_effort_details(project_path: Path, work_effort_id: str, work_effort_path: str) -> Dict[str, Any]:
+
+def _get_work_effort_details(
+    project_path: Path, work_effort_id: str, work_effort_path: str
+) -> dict[str, Any]:
     """Get detailed information about a work effort from its index file."""
     details = {
         "next_steps": [],
         "tickets": [],
         "related": [],
         "description": "",
-        "progress_notes": []
+        "progress_notes": [],
     }
-    
+
     try:
         # Try to find and read the index file
         we_dir = project_path / work_effort_path
-        work_effort_id_short = work_effort_id.split("_")[0] if "_" in work_effort_id else work_effort_id
-        
+        work_effort_id_short = (
+            work_effort_id.split("_")[0] if "_" in work_effort_id else work_effort_id
+        )
+
         # Try multiple index file patterns
         for pattern in [
             f"{work_effort_id_short}_index.md",
             f"{work_effort_id}_index.md",
-            "index.md"
+            "index.md",
         ]:
             index_file = we_dir / pattern
             if index_file.exists():
-                content = index_file.read_text(encoding='utf-8')
-                
+                content = index_file.read_text(encoding="utf-8")
+
                 # Extract description from frontmatter or content
                 if "---" in content:
-                    frontmatter = content.split("---")[1].split("---")[0] if content.count("---") >= 2 else ""
+                    frontmatter = (
+                        content.split("---")[1].split("---")[0] if content.count("---") >= 2 else ""
+                    )
                     for line in frontmatter.split("\n"):
                         if ":" in line:
                             key, value = line.split(":", 1)
                             key = key.strip().lower()
                             if key == "description":
                                 details["description"] = value.strip().strip('"').strip("'")
-                
+
                 # Look for "Next Steps", "Next Actions", "Tasks", or "TODO" sections
                 lines = content.split("\n")
                 in_next_steps = False
-                section_keywords = ["next step", "next action", "tasks", "todo", "action items", "next:"]
-                
+                section_keywords = [
+                    "next step",
+                    "next action",
+                    "tasks",
+                    "todo",
+                    "action items",
+                    "next:",
+                ]
+
                 for i, line in enumerate(lines):
                     line_lower = line.lower()
                     # Check if this line starts a relevant section
-                    if (line.strip().startswith("#") or line.strip().startswith("##")):
+                    if line.strip().startswith("#") or line.strip().startswith("##"):
                         if any(kw in line_lower for kw in section_keywords):
                             in_next_steps = True
                             continue
-                    
+
                     if in_next_steps:
                         # Stop if we hit another major section (## or #)
-                        if line.strip().startswith("##") and "next" not in line_lower and "task" not in line_lower and "todo" not in line_lower:
+                        if (
+                            line.strip().startswith("##")
+                            and "next" not in line_lower
+                            and "task" not in line_lower
+                            and "todo" not in line_lower
+                        ):
                             break
                         # Collect list items
-                        if line.strip().startswith("-") or line.strip().startswith("*") or line.strip().startswith("1.") or line.strip().startswith("•"):
+                        if (
+                            line.strip().startswith("-")
+                            or line.strip().startswith("*")
+                            or line.strip().startswith("1.")
+                            or line.strip().startswith("•")
+                        ):
                             step = line.strip().lstrip("-*•1234567890. ").strip()
-                            if step and len(step) > 5 and not step.startswith("["):  # Skip checkboxes
+                            if (
+                                step and len(step) > 5 and not step.startswith("[")
+                            ):  # Skip checkboxes
                                 details["next_steps"].append(step)
                                 if len(details["next_steps"]) >= 5:  # Get more steps
                                     break
                         # Also look for numbered lists
                         elif line.strip() and line.strip()[0].isdigit() and "." in line.strip()[:3]:
-                            step = line.strip().split(".", 1)[1].strip() if "." in line.strip() else line.strip()
+                            step = (
+                                line.strip().split(".", 1)[1].strip()
+                                if "." in line.strip()
+                                else line.strip()
+                            )
                             if step and len(step) > 5:
                                 details["next_steps"].append(step)
                                 if len(details["next_steps"]) >= 5:
                                     break
-                
+
                 # Look for tickets section
                 in_tickets = False
                 for line in lines:
@@ -357,52 +422,58 @@ def _get_work_effort_details(project_path: Path, work_effort_id: str, work_effor
                             details["tickets"].append(line.strip())
                             if len(details["tickets"]) >= 3:
                                 break
-                
+
                 # Extract first paragraph as description if not in frontmatter
                 if not details["description"]:
                     for line in lines:
-                        if line.strip() and not line.strip().startswith("#") and not line.strip().startswith("---"):
+                        if (
+                            line.strip()
+                            and not line.strip().startswith("#")
+                            and not line.strip().startswith("---")
+                        ):
                             details["description"] = line.strip()[:200]
                             break
-                
+
                 break
     except Exception:
         pass  # Return empty details if we can't read the file
-    
+
     return details
 
 
 def generate_recommended_next_step(
-    work_efforts: List[Dict[str, Any]],
-    projects: List[Dict[str, Any]],
-    experiments: List[Dict[str, Any]],
-    proof_cases: List[Dict[str, Any]],
-    reasoning_trace: List[Dict[str, Any]] = None,
-    project_path: Path = None
-) -> Dict[str, str]:
+    work_efforts: list[dict[str, Any]],
+    projects: list[dict[str, Any]],
+    experiments: list[dict[str, Any]],
+    proof_cases: list[dict[str, Any]],
+    reasoning_trace: list[dict[str, Any]] = None,
+    project_path: Path = None,
+) -> dict[str, str]:
     """
     Generate recommended next step based on current state with enhanced context.
     Returns dict with 'action', 'why', 'context', 'next_steps', 'related', and 'details'.
     """
     if project_path is None:
         project_path = Path.cwd()
-    
+
     active_work = [w for w in work_efforts if w.get("status") == "active"]
     open_work = [w for w in work_efforts if w.get("status") == "open"]
     active_projects = [p for p in projects if p.get("status") == "active"] if projects else []
-    completed_recent = [w for w in work_efforts if w.get("status") == "completed"][:3]  # Recent completions
-    
+    completed_recent = [w for w in work_efforts if w.get("status") == "completed"][
+        :3
+    ]  # Recent completions
+
     # Priority logic: active work > open work > projects > experiments
     if active_work:
         # Focus on first active work effort with enhanced details
         we = active_work[0]
-        we_id = we.get('id', 'unknown')
-        we_path = we.get('path', '')
-        we_title = we.get('title', 'Active Work Effort')
-        
+        we_id = we.get("id", "unknown")
+        we_path = we.get("path", "")
+        we_title = we.get("title", "Active Work Effort")
+
         # Get detailed information
         details = _get_work_effort_details(project_path, we_id, we_path)
-        
+
         # Generate more specific action based on work effort content
         if details.get("next_steps"):
             # Use the first next step from the work effort
@@ -414,30 +485,30 @@ def generate_recommended_next_step(
             action = f"Complete implementation: {we_title}"
         else:
             action = f"Continue: {we_title}"
-        
+
         # Enhanced why with more context
-        why_parts = [f"This work effort is currently active and represents your primary focus."]
+        why_parts = ["This work effort is currently active and represents your primary focus."]
         if details.get("description"):
             desc = details["description"][:150]
             why_parts.append(f"Focus: {desc}")
         if details.get("tickets"):
             why_parts.append(f"{len(details['tickets'])} ticket(s) to address.")
         why = " ".join(why_parts)
-        
+
         # Enhanced context with actionable information
         context_parts = [f"Work Effort: {we_id}"]
         if details.get("next_steps"):
             context_parts.append(f"Next: {details['next_steps'][0]}")
         if we_path:
             context_parts.append(f"Path: {we_path}")
-        
+
         # Build related items
         related = []
         if len(active_work) > 1:
             related.append(f"{len(active_work) - 1} other active work effort(s)")
         if open_work:
             related.append(f"{len(open_work)} open work effort(s) ready to start")
-        
+
         return {
             "action": action,
             "why": why,
@@ -446,18 +517,18 @@ def generate_recommended_next_step(
             "id": we_id,
             "next_steps": details.get("next_steps", [])[:3],
             "related": related,
-            "details": details.get("description", "")[:200]
+            "details": details.get("description", "")[:200],
         }
-    
+
     elif open_work:
         # Start the most recent open work effort with enhanced details
         we = open_work[0]
-        we_id = we.get('id', 'unknown')
-        we_path = we.get('path', '')
-        we_title = we.get('title', 'Open Work Effort')
-        
+        we_id = we.get("id", "unknown")
+        we_path = we.get("path", "")
+        we_title = we.get("title", "Open Work Effort")
+
         details = _get_work_effort_details(project_path, we_id, we_path)
-        
+
         # More specific action
         if details.get("description"):
             if "test" in details["description"].lower():
@@ -468,17 +539,17 @@ def generate_recommended_next_step(
                 action = f"Start: {we_title}"
         else:
             action = f"Start: {we_title}"
-        
-        why = f"This work effort is ready to begin. "
+
+        why = "This work effort is ready to begin. "
         if details.get("description"):
             why += f"{details['description'][:100]}"
         else:
             why += "Starting it will activate progress and create forward momentum."
-        
+
         context_parts = [f"Work Effort: {we_id}"]
         if details.get("next_steps"):
             context_parts.append(f"First step: {details['next_steps'][0]}")
-        
+
         return {
             "action": action,
             "why": why,
@@ -486,36 +557,40 @@ def generate_recommended_next_step(
             "type": "work_effort",
             "id": we_id,
             "next_steps": details.get("next_steps", [])[:3],
-            "related": [f"{len(open_work) - 1} other open work effort(s)"] if len(open_work) > 1 else [],
-            "details": details.get("description", "")[:200]
+            "related": [f"{len(open_work) - 1} other open work effort(s)"]
+            if len(open_work) > 1
+            else [],
+            "details": details.get("description", "")[:200],
         }
-    
+
     elif active_projects:
         # Focus on active project
         proj = active_projects[0]
         action = f"Advance: {proj.get('title', 'Active Project')}"
-        why = f"This project is active and represents a significant initiative. "
+        why = "This project is active and represents a significant initiative. "
         if proj.get("progress", 0) > 0:
             why += f"Currently at {proj.get('progress', 0)}% completion. "
         why += "Moving it forward will create substantial value."
-        
+
         context_parts = [f"Project: {proj.get('id', 'unknown')}"]
         if proj.get("progress"):
             context_parts.append(f"Progress: {proj.get('progress')}%")
         if proj.get("milestones"):
             context_parts.append(f"{proj.get('milestones')} milestone(s)")
-        
+
         return {
             "action": action,
             "why": why,
             "context": " | ".join(context_parts),
             "type": "project",
-            "id": proj.get('id'),
+            "id": proj.get("id"),
             "next_steps": [],
-            "related": [f"{len(active_projects) - 1} other active project(s)"] if len(active_projects) > 1 else [],
-            "details": proj.get("description", "")[:200]
+            "related": [f"{len(active_projects) - 1} other active project(s)"]
+            if len(active_projects) > 1
+            else [],
+            "details": proj.get("description", "")[:200],
         }
-    
+
     elif experiments:
         unverified = [e for e in experiments if not e.get("verified")]
         if unverified:
@@ -527,11 +602,13 @@ def generate_recommended_next_step(
                 "why": why,
                 "context": context,
                 "type": "experiment",
-                "next_steps": [f"Review experiment: {e.get('id', 'unknown')}" for e in unverified[:3]],
+                "next_steps": [
+                    f"Review experiment: {e.get('id', 'unknown')}" for e in unverified[:3]
+                ],
                 "related": [],
-                "details": ""
+                "details": "",
             }
-    
+
     elif proof_cases:
         unproven = [c for c in proof_cases if c.get("verdict") not in ["PROVEN", "DISPROVEN"]]
         if unproven:
@@ -545,97 +622,120 @@ def generate_recommended_next_step(
                 "type": "proof_case",
                 "next_steps": [f"Review case: {c.get('id', 'unknown')}" for c in unproven[:3]],
                 "related": [],
-                "details": ""
+                "details": "",
             }
-    
+
     # Default: explore or create new work
     action = "Explore new opportunities or create a work effort"
     why = "No active work detected. "
     if completed_recent:
         why += f"You recently completed {len(completed_recent)} work effort(s). "
     why += "This is a good time to identify new opportunities, plan next initiatives, or create work efforts for upcoming tasks."
-    
+
     context = "No active work efforts or projects"
     if completed_recent:
-        context += f" | Recently completed: {', '.join([w.get('id', '') for w in completed_recent[:2]])}"
-    
+        context += (
+            f" | Recently completed: {', '.join([w.get('id', '') for w in completed_recent[:2]])}"
+        )
+
     return {
         "action": action,
         "why": why,
         "context": context,
         "type": "explore",
-        "next_steps": ["Review completed work efforts", "Identify new opportunities", "Create a new work effort"],
-        "related": [f"{len(completed_recent)} recently completed work effort(s)"] if completed_recent else [],
-        "details": ""
+        "next_steps": [
+            "Review completed work efforts",
+            "Identify new opportunities",
+            "Create a new work effort",
+        ],
+        "related": [f"{len(completed_recent)} recently completed work effort(s)"]
+        if completed_recent
+        else [],
+        "details": "",
     }
 
+
 def generate_abstract(
-    work_efforts: List[Dict[str, Any]],
-    projects: List[Dict[str, Any]],
-    templates: List[Dict[str, Any]],
-    experiments: List[Dict[str, Any]],
-    proof_cases: List[Dict[str, Any]],
-    chat_context: Dict[str, Any],
-    reasoning_trace: List[Dict[str, Any]] = None
+    work_efforts: list[dict[str, Any]],
+    projects: list[dict[str, Any]],
+    templates: list[dict[str, Any]],
+    experiments: list[dict[str, Any]],
+    proof_cases: list[dict[str, Any]],
+    chat_context: dict[str, Any],
+    reasoning_trace: list[dict[str, Any]] = None,
 ) -> str:
     """Generate a concise abstract/summary of the session state."""
     active_work = [w for w in work_efforts if w.get("status") == "active"]
     active_projects = [p for p in projects if p.get("status") == "active"] if projects else []
-    
+
     abstract_parts = []
-    
+
     # Main focus
     if active_work:
-        work_effort_text = f"**{len(active_work)} active work effort{'s' if len(active_work) != 1 else ''}**"
+        work_effort_text = (
+            f"**{len(active_work)} active work effort{'s' if len(active_work) != 1 else ''}**"
+        )
         if len(active_work) <= 3:
-            titles = ", ".join([w['title'][:40] for w in active_work[:3]])
+            titles = ", ".join([w["title"][:40] for w in active_work[:3]])
             abstract_parts.append(f"{work_effort_text}: {titles}")
         else:
-            abstract_parts.append(f"{work_effort_text}, including {active_work[0]['title'][:40]}...")
-    
+            abstract_parts.append(
+                f"{work_effort_text}, including {active_work[0]['title'][:40]}..."
+            )
+
     if active_projects:
-        project_text = f"**{len(active_projects)} active project{'s' if len(active_projects) != 1 else ''}**"
+        project_text = (
+            f"**{len(active_projects)} active project{'s' if len(active_projects) != 1 else ''}**"
+        )
         if len(active_projects) <= 2:
-            titles = ", ".join([p['title'][:40] for p in active_projects[:2]])
+            titles = ", ".join([p["title"][:40] for p in active_projects[:2]])
             abstract_parts.append(f"{project_text}: {titles}")
         else:
-            abstract_parts.append(f"{project_text}, including {active_projects[0]['title'][:40]}...")
-    
+            abstract_parts.append(
+                f"{project_text}, including {active_projects[0]['title'][:40]}..."
+            )
+
     # Recent activity
     if experiments:
         verified = sum(1 for e in experiments if e.get("verified"))
-        abstract_parts.append(f"**{len(experiments)} experiment{'s' if len(experiments) != 1 else ''}** ({verified} verified)")
-    
+        abstract_parts.append(
+            f"**{len(experiments)} experiment{'s' if len(experiments) != 1 else ''}** ({verified} verified)"
+        )
+
     if proof_cases:
         proven = sum(1 for c in proof_cases if c.get("verdict") == "PROVEN")
-        abstract_parts.append(f"**{len(proof_cases)} proof case{'s' if len(proof_cases) != 1 else ''}** ({proven} proven)")
-    
+        abstract_parts.append(
+            f"**{len(proof_cases)} proof case{'s' if len(proof_cases) != 1 else ''}** ({proven} proven)"
+        )
+
     # Key concepts
     if chat_context.get("key_concepts"):
         concepts = chat_context["key_concepts"][:3]
         abstract_parts.append(f"Focus: {', '.join(concepts)}")
-    
+
     # Reasoning activity
     if reasoning_trace:
-        abstract_parts.append(f"**{len(reasoning_trace)} reasoning step{'s' if len(reasoning_trace) != 1 else ''}** tracked")
-    
+        abstract_parts.append(
+            f"**{len(reasoning_trace)} reasoning step{'s' if len(reasoning_trace) != 1 else ''}** tracked"
+        )
+
     # Format abstract with proper paragraph structure for better readability
     # Convert markdown bold (**text**) to HTML <strong> before formatting
     import re
-    
+
     def markdown_bold_to_html(text):
         """Convert markdown bold (**text**) to HTML <strong>text</strong>"""
-        return re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', text)
-    
+        return re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", text)
+
     # Each part becomes its own paragraph for clean line breaks
     abstract_parts_formatted = []
     for part in abstract_parts:
         # Convert markdown to HTML and wrap in paragraph
         part_html = markdown_bold_to_html(part)
         abstract_parts_formatted.append(f"<p>{part_html}</p>")
-    
+
     abstract = "".join(abstract_parts_formatted)
-    
+
     # Add quick decision context as separate paragraph
     if active_work:
         abstract += f"<p><strong>Next:</strong> Review {active_work[0]['title'][:50]} or continue active work.</p>"
@@ -643,74 +743,80 @@ def generate_abstract(
         open_work = [w for w in work_efforts if w.get("status") == "open"]
         if open_work:
             abstract += f"<p><strong>Next:</strong> {len(open_work)} open work effort{'s' if len(open_work) != 1 else ''} ready to start.</p>"
-    
+
     return abstract
 
-def get_session_history(project_path: Path, current_file: str = None) -> List[Dict[str, Any]]:
+
+def get_session_history(project_path: Path, current_file: str = None) -> list[dict[str, Any]]:
     """Find previous show-me HTML files to create session history chain."""
     history = []
-    
+
     # Look in project root and _work_efforts for show-me HTML files
-    search_paths = [
-        project_path,
-        project_path / "_work_efforts"
-    ]
-    
+    search_paths = [project_path, project_path / "_work_efforts"]
+
     for search_path in search_paths:
         if not search_path.exists():
             continue
-        
+
         # Find HTML files that look like show-me outputs
-        html_files = list(search_path.glob("show_me*.html")) + list(search_path.glob("*show*me*.html"))
-        
+        html_files = list(search_path.glob("show_me*.html")) + list(
+            search_path.glob("*show*me*.html")
+        )
+
         for html_file in html_files:
             # Skip current file
             if current_file and html_file.name == Path(current_file).name:
                 continue
-            
+
             try:
                 # Get file modification time
                 mtime = html_file.stat().st_mtime
                 mod_date = datetime.fromtimestamp(mtime)
-                
+
                 # Try to extract timestamp from filename or content
                 timestamp_str = mod_date.strftime("%Y-%m-%d %H:%M")
-                
-                history.append({
-                    "path": str(html_file.relative_to(project_path)),
-                    "name": html_file.name,
-                    "timestamp": timestamp_str,
-                    "date": mod_date
-                })
+
+                history.append(
+                    {
+                        "path": str(html_file.relative_to(project_path)),
+                        "name": html_file.name,
+                        "timestamp": timestamp_str,
+                        "date": mod_date,
+                    }
+                )
             except Exception:
                 continue
-    
+
     # Sort by date (newest first)
     history.sort(key=lambda x: x["date"], reverse=True)
-    
+
     return history[:10]  # Return last 10
 
-def get_reasoning_trace(project_path: Path) -> List[Dict[str, Any]]:
+
+def get_reasoning_trace(project_path: Path) -> list[dict[str, Any]]:
     """Get reasoning trace - chain of thought and decisions."""
     traces = []
-    
+
     # Try The Reasoner (Pantheon Entity) first
     try:
         from src.waft.pantheon.reasoner import TheReasoner
+
         reasoner = TheReasoner(project_path=project_path)
         reasoner_traces = reasoner.get_recent_traces(limit=10)
         traces.extend(reasoner_traces)
     except Exception:
         pass  # Continue if The Reasoner not available
-    
+
     # Also get traces from reasoning_traces directory (legacy/script-based)
     try:
         # Import from scripts directory
         import sys
+
         scripts_dir = Path(__file__).parent
         if str(scripts_dir) not in sys.path:
             sys.path.insert(0, str(scripts_dir))
         from reasoning_trace import extract_reasoning_trace
+
         script_traces = extract_reasoning_trace(project_path)
         # Merge, avoiding duplicates
         existing_ids = {t.get("trace_id") or t.get("source") for t in traces}
@@ -720,72 +826,74 @@ def get_reasoning_trace(project_path: Path) -> List[Dict[str, Any]]:
                 traces.append(trace)
     except Exception:
         pass  # Continue if script-based traces not available
-    
+
     # Sort by timestamp (newest first)
     traces.sort(key=lambda t: t.get("timestamp", ""), reverse=True)
-    
+
     return traces[:10]  # Return most recent 10
 
-def get_proof_cases(project_path: Path) -> List[Dict[str, Any]]:
+
+def get_proof_cases(project_path: Path) -> list[dict[str, Any]]:
     """Get recent proof cases from /prove-it command."""
     proof_cases = []
     proof_cases_dir = project_path / "_work_efforts" / "proof_cases"
-    
+
     if not proof_cases_dir.exists():
         return proof_cases
-    
+
     # Get all case files, sorted by modification time (newest first)
     case_files = sorted(
-        proof_cases_dir.glob("case_*.md"),
-        key=lambda p: p.stat().st_mtime,
-        reverse=True
+        proof_cases_dir.glob("case_*.md"), key=lambda p: p.stat().st_mtime, reverse=True
     )[:10]  # Most recent 10
-    
+
     for case_file in case_files:
         try:
             content = case_file.read_text()
             # Extract verdict and claim from frontmatter or content
             verdict = "UNKNOWN"
             claim = case_file.stem.replace("case_", "").replace("_", " ")
-            
+
             if "VERDICT:" in content:
                 for line in content.split("\n"):
                     if "VERDICT:" in line:
                         verdict = line.split("VERDICT:")[-1].strip()
                         break
-            
+
             if "**Claim to Prove**:" in content:
                 for line in content.split("\n"):
                     if "**Claim to Prove**:" in line:
                         claim = line.split("**Claim to Prove**:")[-1].strip()
                         break
-            
-            proof_cases.append({
-                "id": case_file.stem,
-                "claim": claim,
-                "verdict": verdict,
-                "path": str(case_file),
-                "modified": datetime.fromtimestamp(case_file.stat().st_mtime).isoformat()
-            })
-        except Exception as e:
+
+            proof_cases.append(
+                {
+                    "id": case_file.stem,
+                    "claim": claim,
+                    "verdict": verdict,
+                    "path": str(case_file),
+                    "modified": datetime.fromtimestamp(case_file.stat().st_mtime).isoformat(),
+                }
+            )
+        except Exception:
             # Silently skip if we can't read the file
             pass
-    
+
     return proof_cases
 
+
 def display_table_format(
-    work_efforts: List[Dict[str, Any]],
-    templates: List[Dict[str, Any]],
-    catalog: Dict[str, Any],
-    experiments: List[Dict[str, Any]],
-    chat_context: Dict[str, Any],
-    proof_cases: List[Dict[str, Any]] = None,
-    reasoning_trace: List[Dict[str, Any]] = None,
-    projects: List[Dict[str, Any]] = None
+    work_efforts: list[dict[str, Any]],
+    templates: list[dict[str, Any]],
+    catalog: dict[str, Any],
+    experiments: list[dict[str, Any]],
+    chat_context: dict[str, Any],
+    proof_cases: list[dict[str, Any]] = None,
+    reasoning_trace: list[dict[str, Any]] = None,
+    projects: list[dict[str, Any]] = None,
 ):
     """Display in table format."""
     console.print("\n[bold cyan]📊 SHOW-ME: Current Session Overview[/bold cyan]\n")
-    
+
     # Work Efforts
     if work_efforts:
         console.print("[bold]📋 Work Efforts (Current Session)[/bold]")
@@ -793,21 +901,19 @@ def display_table_format(
         table.add_column("ID", style="dim")
         table.add_column("Title", style="bold")
         table.add_column("Status")
-        
+
         for we in work_efforts[:10]:
-            status_style = {
-                "completed": "green",
-                "active": "cyan",
-                "paused": "yellow"
-            }.get(we["status"], "dim")
+            status_style = {"completed": "green", "active": "cyan", "paused": "yellow"}.get(
+                we["status"], "dim"
+            )
             table.add_row(
                 we["id"][:20] + "...",
                 we["title"][:40] + "..." if len(we["title"]) > 40 else we["title"],
-                f"[{status_style}]{we['status']}[/{status_style}]"
+                f"[{status_style}]{we['status']}[/{status_style}]",
             )
         console.print(table)
         console.print()
-    
+
     # Templates
     if templates:
         console.print("[bold]📄 LaTeX Templates[/bold]")
@@ -816,40 +922,40 @@ def display_table_format(
         table.add_column("Category")
         table.add_column("Tags")
         table.add_column("Description")
-        
+
         for t in templates[:10]:
             table.add_row(
                 t["name"],
                 t["category"],
                 t["tags"][:30] + "..." if len(t["tags"]) > 30 else t["tags"],
-                t["description"]
+                t["description"],
             )
         console.print(table)
         console.print(f"[dim]Total: {len(templates)} templates[/dim]\n")
-    
+
     # Catalog
     if catalog.get("total_records", 0) > 0:
         console.print("[bold]📚 Librarian Catalog[/bold]")
         console.print(f"Total Records: {catalog['total_records']}")
         console.print(f"Templates Cataloged: {catalog.get('templates', 0)}")
-        
+
         if catalog.get("entries"):
             table = Table(show_header=True, header_style="bold magenta")
             table.add_column("ID", style="dim")
             table.add_column("Type")
             table.add_column("Category")
             table.add_column("Tags")
-            
+
             for entry in catalog["entries"][:10]:
                 table.add_row(
                     entry["id"][:25] + "..." if len(entry["id"]) > 25 else entry["id"],
                     entry["type"],
                     entry["category"],
-                    entry["tags"]
+                    entry["tags"],
                 )
             console.print(table)
         console.print()
-    
+
     # Experiments
     if experiments:
         console.print("[bold]🔬 Recent Experiments[/bold]")
@@ -858,18 +964,13 @@ def display_table_format(
         table.add_column("Hypothesis")
         table.add_column("Status")
         table.add_column("Verified")
-        
+
         for exp in experiments:
             verified = "✅" if exp.get("verified") else "❌"
-            table.add_row(
-                exp["id"][:15] + "...",
-                exp["hypothesis"],
-                exp["status"],
-                verified
-            )
+            table.add_row(exp["id"][:15] + "...", exp["hypothesis"], exp["status"], verified)
         console.print(table)
         console.print()
-    
+
     # Proof Cases
     if proof_cases:
         console.print("[bold]🔍 Recent Proof Cases[/bold]")
@@ -877,53 +978,59 @@ def display_table_format(
         table.add_column("ID", style="dim")
         table.add_column("Claim", style="bold")
         table.add_column("Verdict")
-        
+
         for case in proof_cases[:10]:
-            verdict_style = {
-                "PROVEN": "green",
-                "DISPROVEN": "red",
-                "INCONCLUSIVE": "yellow"
-            }.get(case["verdict"], "dim")
+            verdict_style = {"PROVEN": "green", "DISPROVEN": "red", "INCONCLUSIVE": "yellow"}.get(
+                case["verdict"], "dim"
+            )
             table.add_row(
                 case["id"][:20] + "...",
                 case["claim"][:50] + "..." if len(case["claim"]) > 50 else case["claim"],
-                f"[{verdict_style}]{case['verdict']}[/{verdict_style}]"
+                f"[{verdict_style}]{case['verdict']}[/{verdict_style}]",
             )
         console.print(table)
         console.print()
-    
+
     # Reasoning Trace
     if reasoning_trace:
         console.print("[bold]🧠 Reasoning Trace[/bold]")
         console.print("[dim]Traceable chain of thought and decision-making[/dim]")
         console.print()
-        
+
         for i, trace in enumerate(reasoning_trace[:5], 1):  # Show last 5
             decision = trace.get("decision", "Decision")[:60]
             reasoning = trace.get("reasoning", "No reasoning")[:100]
             console.print(f"[cyan]Step {i}:[/cyan] {decision}")
             console.print(f"[dim]  → {reasoning}...[/dim]")
             console.print()
-    
+
     # Chat Context
     console.print("[bold]💬 Chat Context[/bold]")
-    console.print(Panel(
-        f"**Session Date:** {chat_context['session_date']}\n\n"
-        f"**Key Concepts:**\n" + "\n".join(f"- {c}" for c in chat_context.get("key_concepts", [])) + "\n\n"
-        f"**Operations:**\n" + "\n".join(f"- {o}" for o in chat_context.get("operations", [])) + "\n\n"
-        f"**Systems Used:**\n" + "\n".join(f"- {s}" for s in chat_context.get("systems_used", [])),
-        title="Current Session",
-        border_style="cyan"
-    ))
+    console.print(
+        Panel(
+            f"**Session Date:** {chat_context['session_date']}\n\n"
+            f"**Key Concepts:**\n"
+            + "\n".join(f"- {c}" for c in chat_context.get("key_concepts", []))
+            + "\n\n"
+            "**Operations:**\n"
+            + "\n".join(f"- {o}" for o in chat_context.get("operations", []))
+            + "\n\n"
+            "**Systems Used:**\n"
+            + "\n".join(f"- {s}" for s in chat_context.get("systems_used", [])),
+            title="Current Session",
+            border_style="cyan",
+        )
+    )
+
 
 def display_json_format(
-    work_efforts: List[Dict[str, Any]],
-    templates: List[Dict[str, Any]],
-    catalog: Dict[str, Any],
-    experiments: List[Dict[str, Any]],
-    chat_context: Dict[str, Any],
-    proof_cases: List[Dict[str, Any]] = None,
-    reasoning_trace: List[Dict[str, Any]] = None
+    work_efforts: list[dict[str, Any]],
+    templates: list[dict[str, Any]],
+    catalog: dict[str, Any],
+    experiments: list[dict[str, Any]],
+    chat_context: dict[str, Any],
+    proof_cases: list[dict[str, Any]] = None,
+    reasoning_trace: list[dict[str, Any]] = None,
 ):
     """Display in JSON format."""
     output = {
@@ -935,49 +1042,50 @@ def display_json_format(
         "chat_context": chat_context,
         "proof_cases": proof_cases or [],
         "reasoning_trace": reasoning_trace or [],
-        "projects": projects or []
+        "projects": projects or [],
     }
     console.print(json.dumps(output, indent=2))
 
+
 def generate_markdown_report(
-    work_efforts: List[Dict[str, Any]],
-    templates: List[Dict[str, Any]],
-    catalog: Dict[str, Any],
-    experiments: List[Dict[str, Any]],
-    chat_context: Dict[str, Any],
-    proof_cases: List[Dict[str, Any]] = None,
-    reasoning_trace: List[Dict[str, Any]] = None,
-    projects: List[Dict[str, Any]] = None
+    work_efforts: list[dict[str, Any]],
+    templates: list[dict[str, Any]],
+    catalog: dict[str, Any],
+    experiments: list[dict[str, Any]],
+    chat_context: dict[str, Any],
+    proof_cases: list[dict[str, Any]] = None,
+    reasoning_trace: list[dict[str, Any]] = None,
+    projects: list[dict[str, Any]] = None,
 ) -> str:
     """Generate markdown report with wiki-style formatting."""
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    
+
     # Calculate stats - compute all values first with validation
     projects = projects or []
     proof_cases = proof_cases or []
     experiments = experiments or []
     work_efforts = work_efforts or []
     templates = templates or []
-    
+
     # Work effort statistics with safe defaults
     work_effort_total = len(work_efforts)
     work_effort_active = len([w for w in work_efforts if w.get("status") == "active"])
     work_effort_completed = len([w for w in work_efforts if w.get("status") == "completed"])
     work_effort_open = len([w for w in work_efforts if w.get("status") == "open"])
     work_effort_paused = len([w for w in work_efforts if w.get("status") == "paused"])
-    
+
     # Project statistics with safe defaults
     project_total = len(projects)
     project_active = len([p for p in projects if p.get("status") == "active"])
     project_completed = len([p for p in projects if p.get("status") == "completed"])
     project_planning = len([p for p in projects if p.get("status") == "planning"])
     project_paused = len([p for p in projects if p.get("status") == "paused"])
-    
+
     # Other statistics with safe defaults
     templates_count = len(templates)
     experiments_count = len(experiments)
     proof_cases_count = len(proof_cases)
-    
+
     # Ensure all values are integers (defensive programming)
     work_effort_total = int(work_effort_total)
     work_effort_active = int(work_effort_active)
@@ -989,33 +1097,38 @@ def generate_markdown_report(
     templates_count = int(templates_count)
     experiments_count = int(experiments_count)
     proof_cases_count = int(proof_cases_count)
-    
+
     # Information-dense header with more metadata (with safe defaults)
     chat_context = chat_context or {}
-    session_date = chat_context.get('session_date', datetime.now().strftime("%Y-%m-%d"))
-    session_duration = chat_context.get('session_duration', 'N/A')
-    total_files = int(chat_context.get('total_files_accessed', 0))
-    total_commands = int(chat_context.get('total_commands_run', 0))
-    
+    session_date = chat_context.get("session_date", datetime.now().strftime("%Y-%m-%d"))
+    session_duration = chat_context.get("session_duration", "N/A")
+    total_files = int(chat_context.get("total_files_accessed", 0))
+    total_commands = int(chat_context.get("total_commands_run", 0))
+
     # Generate abstract with error handling
     try:
         abstract = generate_abstract(
-            work_efforts, projects, templates, experiments,
-            proof_cases, chat_context, reasoning_trace or []
+            work_efforts,
+            projects,
+            templates,
+            experiments,
+            proof_cases,
+            chat_context,
+            reasoning_trace or [],
         )
     except Exception as e:
         console.print(f"[yellow]⚠️  Error generating abstract: {e}[/yellow]")
         abstract = "Session overview generated successfully."
-    
+
     # Get session history (will be passed to HTML generator)
     project_path = Path.cwd()
     session_history = get_session_history(project_path)
-    
+
     # Generate recommended next step
     recommended = generate_recommended_next_step(
         work_efforts, projects, experiments, proof_cases, reasoning_trace, project_path
     )
-    
+
     md = f"""<div id='abstract'></div>
 <div class="recommended-next-step">
 <div class="recommended-header">
@@ -1027,18 +1140,18 @@ def generate_markdown_report(
 </svg>
 </button>
 </div>
-<div class="recommended-action" id="recommended-action">{recommended['action']}</div>
-<div class="recommended-why">{recommended['why']}</div>
+<div class="recommended-action" id="recommended-action">{recommended["action"]}</div>
+<div class="recommended-why">{recommended["why"]}</div>
 <details class="recommended-context-primer">
 <summary class="recommended-context-summary">📋 Context Primer (click to expand)</summary>
 <div class="recommended-context-content" id="recommended-context">
-<div class="recommended-context-item"><strong>Context:</strong> {recommended['context']}</div>
-<div class="recommended-context-item"><strong>Why:</strong> {recommended['why']}</div>
-<div class="recommended-context-item"><strong>Type:</strong> {recommended.get('type', 'general')}</div>
-{f'<div class="recommended-context-item"><strong>ID:</strong> {recommended.get("id", "N/A")}</div>' if recommended.get('id') else ''}
-{f'<div class="recommended-context-item"><strong>Description:</strong> {recommended.get("details", "")}</div>' if recommended.get('details') else ''}
-{f'<div class="recommended-context-item"><strong>Next Steps:</strong><ul>{"".join([f"<li>{step}</li>" for step in recommended.get("next_steps", [])])}</ul></div>' if recommended.get('next_steps') else ''}
-{f'<div class="recommended-context-item"><strong>Related:</strong> {", ".join(recommended.get("related", []))}</div>' if recommended.get('related') else ''}
+<div class="recommended-context-item"><strong>Context:</strong> {recommended["context"]}</div>
+<div class="recommended-context-item"><strong>Why:</strong> {recommended["why"]}</div>
+<div class="recommended-context-item"><strong>Type:</strong> {recommended.get("type", "general")}</div>
+{f'<div class="recommended-context-item"><strong>ID:</strong> {recommended.get("id", "N/A")}</div>' if recommended.get("id") else ""}
+{f'<div class="recommended-context-item"><strong>Description:</strong> {recommended.get("details", "")}</div>' if recommended.get("details") else ""}
+{f'<div class="recommended-context-item"><strong>Next Steps:</strong><ul>{"".join([f"<li>{step}</li>" for step in recommended.get("next_steps", [])])}</ul></div>' if recommended.get("next_steps") else ""}
+{f'<div class="recommended-context-item"><strong>Related:</strong> {", ".join(recommended.get("related", []))}</div>' if recommended.get("related") else ""}
 </div>
 </details>
 </div>
@@ -1077,58 +1190,79 @@ def generate_markdown_report(
 <p style="color: #999; font-size: 0.9em; margin-bottom: 0.5rem;">Previous show-me instances (click to view):</p>
 <ul class="history-list">
 """
-    
+
     # Add session history links
     if session_history:
         for hist in session_history[:5]:  # Show last 5
             md += f"<li><a href='{hist['path']}' target='_blank'>{hist['timestamp']}</a> - {hist['name']}</li>\n"
     else:
         md += "<li><em>No previous instances found</em></li>\n"
-    
-    md += """</ul>
+
+    md += (
+        """</ul>
 </div>
 
 ## Quick Stats
 
 <div class="stats-grid">
 <div class="stat-card">
-<span class="stat-value">""" + str(work_effort_total) + """</span>
+<span class="stat-value">"""
+        + str(work_effort_total)
+        + """</span>
 <span class="stat-label">Work Efforts</span>
 </div>
 <div class="stat-card">
-<span class="stat-value">""" + str(work_effort_active) + """</span>
+<span class="stat-value">"""
+        + str(work_effort_active)
+        + """</span>
 <span class="stat-label">Active</span>
 </div>
 <div class="stat-card">
-<span class="stat-value">""" + str(work_effort_completed) + """</span>
+<span class="stat-value">"""
+        + str(work_effort_completed)
+        + """</span>
 <span class="stat-label">Completed</span>
 </div>
 <div class="stat-card">
-<span class="stat-value">""" + str(work_effort_open) + """</span>
+<span class="stat-value">"""
+        + str(work_effort_open)
+        + """</span>
 <span class="stat-label">Open</span>
 </div>
 <div class="stat-card">
-<span class="stat-value">""" + str(work_effort_paused) + """</span>
+<span class="stat-value">"""
+        + str(work_effort_paused)
+        + """</span>
 <span class="stat-label">Paused</span>
 </div>
 <div class="stat-card">
-<span class="stat-value">""" + str(templates_count) + """</span>
+<span class="stat-value">"""
+        + str(templates_count)
+        + """</span>
 <span class="stat-label">Templates</span>
 </div>
 <div class="stat-card">
-<span class="stat-value">""" + str(experiments_count) + """</span>
+<span class="stat-value">"""
+        + str(experiments_count)
+        + """</span>
 <span class="stat-label">Experiments</span>
 </div>
 <div class="stat-card">
-<span class="stat-value">""" + str(proof_cases_count) + """</span>
+<span class="stat-value">"""
+        + str(proof_cases_count)
+        + """</span>
 <span class="stat-label">Proof Cases</span>
 </div>
 <div class="stat-card">
-<span class="stat-value">""" + str(project_total) + """</span>
+<span class="stat-value">"""
+        + str(project_total)
+        + """</span>
 <span class="stat-label">Projects</span>
 </div>
 <div class="stat-card">
-<span class="stat-value">""" + str(project_active) + """</span>
+<span class="stat-value">"""
+        + str(project_active)
+        + """</span>
 <span class="stat-label">Active Projects</span>
 </div>
 </div>
@@ -1138,7 +1272,8 @@ def generate_markdown_report(
 ## Work Efforts
 
 """
-    
+    )
+
     if work_efforts:
         # Group by status
         by_status = {}
@@ -1147,56 +1282,62 @@ def generate_markdown_report(
             if status not in by_status:
                 by_status[status] = []
             by_status[status].append(we)
-        
+
         # Status badges - using CSS classes
         status_badges = {
             "active": '<span class="badge badge-active">ACTIVE</span>',
             "completed": '<span class="badge badge-completed">COMPLETED</span>',
             "open": '<span class="badge badge-open">OPEN</span>',
-            "paused": '<span class="badge badge-paused">PAUSED</span>'
+            "paused": '<span class="badge badge-paused">PAUSED</span>',
         }
-        
+
         # Use <details> for collapsible status groups (all collapsed by default)
         for status in ["active", "completed", "open", "paused"]:
             if status in by_status and by_status[status]:
                 md += f"\n<details>\n<summary><strong>{status.title()} ({len(by_status[status])})</strong></summary>\n\n"
                 for we in by_status[status]:
-                    we_id = we.get('id', 'unknown')
-                    we_title = we.get('title', 'Untitled')
+                    we_id = we.get("id", "unknown")
+                    we_title = we.get("title", "Untitled")
                     # Safely handle path - ensure it's relative and valid
-                    we_path_raw = we.get('path', '')
+                    we_path_raw = we.get("path", "")
                     if we_path_raw:
                         try:
                             # Make path relative to project root
-                            we_path = str(Path(we_path_raw).relative_to(Path.cwd())) if Path(we_path_raw).is_absolute() else we_path_raw
+                            we_path = (
+                                str(Path(we_path_raw).relative_to(Path.cwd()))
+                                if Path(we_path_raw).is_absolute()
+                                else we_path_raw
+                            )
                         except (ValueError, TypeError):
                             # If path conversion fails, use raw path or default
-                            we_path = we_path_raw if we_path_raw else '#'
+                            we_path = we_path_raw if we_path_raw else "#"
                     else:
-                        we_path = '#'
-                    badge = status_badges.get(status, '')
+                        we_path = "#"
+                    badge = status_badges.get(status, "")
                     # Make work effort clickable card
                     md += f"<div class='clickable-card'><a href='{we_path}'>{badge} <strong>{we_id}</strong>: {we_title}</a></div>\n"
                 md += "\n</details>\n"
     else:
         md += "No work efforts found.\n"
-    
+
     md += "\n---\n\n<div id='latex-templates'></div>\n## LaTeX Templates\n\n"
     if templates:
         # Group by category with collapsible details
         by_category = {}
         for t in templates:
-            cat = t.get('category', 'uncategorized')
+            cat = t.get("category", "uncategorized")
             if cat not in by_category:
                 by_category[cat] = []
             by_category[cat].append(t)
-        
+
         for category in sorted(by_category.keys()):
             md += f"\n<details>\n<summary><strong>{category.title()} ({len(by_category[category])})</strong></summary>\n\n"
             for t in by_category[category][:15]:  # Show more in collapsible
-                tags = t.get('tags', '')
+                tags = t.get("tags", "")
                 if tags:
-                    tags_display = f" <span style='color: #999; font-size: 0.9em;'>({tags[:50]})</span>"
+                    tags_display = (
+                        f" <span style='color: #999; font-size: 0.9em;'>({tags[:50]})</span>"
+                    )
                 else:
                     tags_display = ""
                 md += f"- <strong>{t['name']}</strong>: {t['description']}{tags_display}\n"
@@ -1205,20 +1346,20 @@ def generate_markdown_report(
             md += "\n</details>\n"
     else:
         md += "No templates found.\n"
-    
+
     md += "\n---\n\n<div id='librarian-catalog'></div>\n## Librarian Catalog\n\n"
     catalog = catalog or {}
-    md += f"<div class='content-card'>\n"
+    md += "<div class='content-card'>\n"
     md += f"<dl><dt>Total Records:</dt><dd>{int(catalog.get('total_records', 0))}</dd>\n"
     md += f"<dt>Templates Cataloged:</dt><dd>{int(catalog.get('templates', 0))}</dd>\n"
     md += f"<dt>Last Updated:</dt><dd>{catalog.get('last_updated', 'Unknown')}</dd></dl>\n"
     md += "</div>\n"
-    
+
     if catalog.get("entries"):
         md += "\n### Recent Entries\n\n"
         for entry in catalog["entries"][:10]:
             md += f"- **{entry['id'][:40]}**: {entry.get('type', 'unknown')} - {entry.get('category', 'uncategorized')}\n"
-    
+
     md += "\n---\n\n<div id='recent-experiments'></div>\n## Recent Experiments\n\n"
     if experiments:
         md += f"<details>\n<summary><strong>All Experiments ({len(experiments)})</strong></summary>\n\n"
@@ -1226,7 +1367,11 @@ def generate_markdown_report(
         md += "<thead><tr><th>ID</th><th>Hypothesis</th><th>Status</th><th>Verified</th><th>Date</th></tr></thead>\n<tbody>\n"
         for exp in experiments[:30]:  # Show more in collapsible
             verified = "✅" if exp.get("verified") else "❌"
-            exp_date = exp.get('date', exp.get('created', 'N/A'))[:10] if exp.get('date') or exp.get('created') else 'N/A'
+            exp_date = (
+                exp.get("date", exp.get("created", "N/A"))[:10]
+                if exp.get("date") or exp.get("created")
+                else "N/A"
+            )
             md += f"<tr><td><code>{exp['id'][:20]}</code></td><td>{exp['hypothesis'][:80]}</td><td>{exp['status']}</td><td>{verified}</td><td>{exp_date}</td></tr>\n"
         md += "</tbody></table>\n"
         if len(experiments) > 30:
@@ -1234,49 +1379,53 @@ def generate_markdown_report(
         md += "\n</details>\n"
     else:
         md += "No experiments found.\n"
-    
+
     if proof_cases:
         md += "\n---\n\n<div id='recent-proof-cases'></div>\n## Recent Proof Cases\n\n"
         md += f"<details>\n<summary><strong>All Proof Cases ({len(proof_cases)})</strong></summary>\n\n"
         md += "<table>\n"
         md += "<thead><tr><th>Case ID</th><th>Claim</th><th>Verdict</th><th>Date</th></tr></thead>\n<tbody>\n"
         for case in proof_cases[:30]:  # Show more in collapsible
-            verdict = case.get('verdict', 'UNKNOWN')
+            verdict = case.get("verdict", "UNKNOWN")
             verdict_class = {
                 "PROVEN": "badge-completed",
                 "DISPROVEN": "badge-paused",
-                "INCONCLUSIVE": "badge-open"
+                "INCONCLUSIVE": "badge-open",
             }.get(verdict, "badge-open")
             verdict_badge = f"<span class='badge {verdict_class}'>{verdict}</span>"
-            claim = case.get('claim', case['id'])[:80]
-            case_date = case.get('date', case.get('created', 'N/A'))[:10] if case.get('date') or case.get('created') else 'N/A'
+            claim = case.get("claim", case["id"])[:80]
+            case_date = (
+                case.get("date", case.get("created", "N/A"))[:10]
+                if case.get("date") or case.get("created")
+                else "N/A"
+            )
             md += f"<tr><td><code>{case['id'][:30]}</code></td><td>{claim}</td><td>{verdict_badge}</td><td>{case_date}</td></tr>\n"
         md += "</tbody></table>\n"
         if len(proof_cases) > 30:
             md += f"<p><em>... and {len(proof_cases) - 30} more proof cases</em></p>\n"
         md += "\n</details>\n"
-    
+
     if reasoning_trace:
         md += "\n---\n\n<div id='reasoning-trace'></div>\n## Reasoning Trace\n\n"
         md += "<p style='color: #999;'><em>Traceable chain of thought and decision-making</em></p>\n\n"
         for i, trace in enumerate(reasoning_trace[:10], 1):  # Show more
-            decision = trace.get('decision', 'Decision')
-            timestamp = trace.get('timestamp', 'Unknown')
-            reasoning = trace.get('reasoning', 'No reasoning provided')
-            outcome = trace.get('outcome', '')
-            
+            decision = trace.get("decision", "Decision")
+            timestamp = trace.get("timestamp", "Unknown")
+            reasoning = trace.get("reasoning", "No reasoning provided")
+            outcome = trace.get("outcome", "")
+
             # Use details for expandable reasoning steps
             md += f"<details>\n<summary><strong>Step {i}: {decision}</strong> <span style='color: #999; font-size: 0.9em;'>({timestamp})</span></summary>\n"
-            md += f"<div class='content-card'>\n"
+            md += "<div class='content-card'>\n"
             md += f"<p><strong>When:</strong> {timestamp}</p>\n"
-            md += f"<p><strong>Reasoning:</strong></p>\n"
+            md += "<p><strong>Reasoning:</strong></p>\n"
             md += f"<p>{reasoning}</p>\n"
             if outcome:
                 md += f"<p><strong>Outcome:</strong> {outcome}</p>\n"
             md += "</div>\n</details>\n\n"
-    
+
     md += "\n---\n\n<div id='chat-context'></div>\n## Chat Context\n\n"
-    
+
     # Use accordion for each context section
     key_concepts = chat_context.get("key_concepts", [])
     if key_concepts:
@@ -1285,7 +1434,7 @@ def generate_markdown_report(
         for c in key_concepts:
             md += f"<li>{c}</li>\n"
         md += "</ul></div>\n</details>\n"
-    
+
     operations = chat_context.get("operations", [])
     if operations:
         md += f"<details>\n<summary><strong>Operations ({len(operations)})</strong></summary>\n"
@@ -1293,7 +1442,7 @@ def generate_markdown_report(
         for o in operations:
             md += f"<li>{o}</li>\n"
         md += "</ul></div>\n</details>\n"
-    
+
     systems_used = chat_context.get("systems_used", [])
     if systems_used:
         md += f"<details>\n<summary><strong>Systems Used ({len(systems_used)})</strong></summary>\n"
@@ -1301,7 +1450,7 @@ def generate_markdown_report(
         for s in systems_used:
             md += f"<li>{s}</li>\n"
         md += "</ul></div>\n</details>\n"
-    
+
     # Add more context if available
     files_modified = chat_context.get("files_modified", [])
     if files_modified:
@@ -1310,24 +1459,25 @@ def generate_markdown_report(
         for f in files_modified[:20]:
             md += f"<li><code>{f[:60]}</code></li>\n"
         md += "</ul></div>\n</details>\n"
-    
+
     return md
+
 
 def generate_pdf_report(
     project_path: Path,
-    output_path: Optional[Path] = None,
-    work_efforts: List[Dict[str, Any]] = None,
-    templates: List[Dict[str, Any]] = None,
-    catalog: Dict[str, Any] = None,
-    experiments: List[Dict[str, Any]] = None,
-    chat_context: Dict[str, Any] = None,
-    proof_cases: List[Dict[str, Any]] = None,
-    projects: List[Dict[str, Any]] = None
+    output_path: Path | None = None,
+    work_efforts: list[dict[str, Any]] = None,
+    templates: list[dict[str, Any]] = None,
+    catalog: dict[str, Any] = None,
+    experiments: list[dict[str, Any]] = None,
+    chat_context: dict[str, Any] = None,
+    proof_cases: list[dict[str, Any]] = None,
+    projects: list[dict[str, Any]] = None,
 ) -> Path:
     """Generate PDF report."""
     try:
         from src.waft.pdf import PDF
-        
+
         md_content = generate_markdown_report(
             work_efforts or [],
             templates or [],
@@ -1336,33 +1486,36 @@ def generate_pdf_report(
             chat_context or {},
             proof_cases or [],
             None,  # reasoning_trace
-            projects or []
+            projects or [],
         )
-        
+
         if output_path is None:
-            output_path = project_path / "_work_efforts" / f"session_overview_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+            output_path = (
+                project_path
+                / "_work_efforts"
+                / f"session_overview_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+            )
         else:
             output_path = Path(output_path)
-        
+
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        
+
         pdf = PDF.from_markdown(
-            markdown=md_content,
-            title="WAFT Session Overview",
-            output_path=output_path
+            markdown=md_content, title="WAFT Session Overview", output_path=output_path
         )
         pdf.save(str(output_path))
-        
+
         return output_path
     except Exception as e:
         console.print(f"[red]Error generating PDF: {e}[/red]")
         raise
 
+
 def generate_waft_html(
     html_content: str,
     title: str = "WAFT Session Overview",
     timestamp: str = None,
-    session_history: List[Dict[str, Any]] = None
+    session_history: list[dict[str, Any]] = None,
 ) -> str:
     """
     Generate WAFT HTML template with:
@@ -1372,32 +1525,32 @@ def generate_waft_html(
     - Fast to scan
     - Accessible
     """
-    
+
     if timestamp is None:
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    
+
     # Split content at Abstract heading to separate header from main content
     # Try multiple patterns to find the abstract section
     abstract_markers = [
-        '<h2>🎯 Abstract</h2>',
-        '<h2>Abstract</h2>',
+        "<h2>🎯 Abstract</h2>",
+        "<h2>Abstract</h2>",
         '<h2 id="abstract">Abstract</h2>',
         '<h2 id="abstract">',
     ]
-    
+
     header_html = ""
     main_html = html_content
-    
+
     for marker in abstract_markers:
         if marker in html_content:
             header_part, main_part = html_content.split(marker, 1)
             header_html = header_part + marker
             main_html = main_part
             break
-    
+
     # If no split occurred, check for recommended next step section
     # Recommended next step should be in header (right after nav)
-    if not header_html and 'recommended-next-step' in html_content:
+    if not header_html and "recommended-next-step" in html_content:
         # Find the recommended next step section
         recommended_start = html_content.find('<div class="recommended-next-step">')
         if recommended_start >= 0:
@@ -1406,14 +1559,14 @@ def generate_waft_html(
             pos = recommended_start + len('<div class="recommended-next-step">')
             depth = 1
             recommended_end = pos
-            
+
             while depth > 0 and recommended_end < len(html_content):
-                next_open = html_content.find('<div', recommended_end)
-                next_close = html_content.find('</div>', recommended_end)
-                
+                next_open = html_content.find("<div", recommended_end)
+                next_close = html_content.find("</div>", recommended_end)
+
                 if next_close == -1:
                     break
-                
+
                 if next_open != -1 and next_open < next_close:
                     depth += 1
                     recommended_end = next_open + 4
@@ -1423,20 +1576,20 @@ def generate_waft_html(
                         recommended_end = next_close + 6  # Include </div>
                         break
                     recommended_end = next_close + 6
-            
+
             if recommended_end > recommended_start:
                 # Everything up to and including recommended section goes in header
                 header_html = html_content[:recommended_end]
                 main_html = html_content[recommended_end:]
-    
+
     # Fallback: If still no split, look for first h1
-    if not header_html and '<h1>' in html_content:
+    if not header_html and "<h1>" in html_content:
         # Split at first h1 - everything before goes in header
-        h1_pos = html_content.find('<h1>')
+        h1_pos = html_content.find("<h1>")
         if h1_pos > 0:
             header_html = html_content[:h1_pos]
             main_html = html_content[h1_pos:]
-    
+
     # Generate the full WAFT HTML template
     return _generate_waft_html_template(header_html, main_html, title, timestamp, session_history)
 
@@ -1446,16 +1599,18 @@ def _generate_waft_html_template(
     main_html: str,
     title: str,
     timestamp: str,
-    session_history: List[Dict[str, Any]] = None
+    session_history: list[dict[str, Any]] = None,
 ) -> str:
     """Generate the full WAFT HTML template with all styling and JavaScript."""
     # Build session history HTML if provided
     session_history_html = ""
     if session_history:
-        history_items = "\n".join([
-            f'<li><a href="{item.get("file", "")}" target="_blank">{item.get("date", "")}</a> - {item.get("file", "")}</li>'
-            for item in session_history[:10]
-        ])
+        history_items = "\n".join(
+            [
+                f'<li><a href="{item.get("file", "")}" target="_blank">{item.get("date", "")}</a> - {item.get("file", "")}</li>'
+                for item in session_history[:10]
+            ]
+        )
         session_history_html = f"""
         <h2>Session History</h2>
         <div class="session-history">
@@ -1465,7 +1620,7 @@ def _generate_waft_html_template(
             </ul>
         </div>
         """
-    
+
     # Use .format() with escaped CSS/JS
     # Use raw string to avoid escape sequence warnings, then format
     template = r"""<!DOCTYPE html>
@@ -3452,30 +3607,31 @@ def _generate_waft_html_template(
     </script>
 </body>
 </html>"""
-    
+
     return template.format(
         title=title,
         timestamp=timestamp,
         header_html=header_html,
         main_html=main_html,
-        session_history_html=session_history_html
+        session_history_html=session_history_html,
     )
+
 
 def generate_html_report(
     project_path: Path,
-    output_path: Optional[Path] = None,
-    work_efforts: List[Dict[str, Any]] = None,
-    templates: List[Dict[str, Any]] = None,
-    catalog: Dict[str, Any] = None,
-    experiments: List[Dict[str, Any]] = None,
-    chat_context: Dict[str, Any] = None,
-    proof_cases: List[Dict[str, Any]] = None,
-    reasoning_trace: List[Dict[str, Any]] = None,
-    projects: List[Dict[str, Any]] = None
+    output_path: Path | None = None,
+    work_efforts: list[dict[str, Any]] = None,
+    templates: list[dict[str, Any]] = None,
+    catalog: dict[str, Any] = None,
+    experiments: list[dict[str, Any]] = None,
+    chat_context: dict[str, Any] = None,
+    proof_cases: list[dict[str, Any]] = None,
+    reasoning_trace: list[dict[str, Any]] = None,
+    projects: list[dict[str, Any]] = None,
 ) -> Path:
     """Generate HTML report with clean WAFT design."""
     import markdown
-    
+
     md_content = generate_markdown_report(
         work_efforts or [],
         templates or [],
@@ -3484,51 +3640,63 @@ def generate_html_report(
         chat_context or {},
         proof_cases or [],
         reasoning_trace or [],
-        projects or []
+        projects or [],
     )
-    
+
     # Use markdown with HTML preservation
     # Convert markdown to HTML, preserving raw HTML tags
     html_content = markdown.markdown(
-        md_content, 
-        extensions=['tables', 'fenced_code', 'nl2br', 'attr_list', 'md_in_html'],
+        md_content,
+        extensions=["tables", "fenced_code", "nl2br", "attr_list", "md_in_html"],
         extension_configs={
-            'markdown.extensions.tables': {},
-            'markdown.extensions.fenced_code': {},
-            'markdown.extensions.nl2br': {},
-            'markdown.extensions.md_in_html': {},
-        }
+            "markdown.extensions.tables": {},
+            "markdown.extensions.fenced_code": {},
+            "markdown.extensions.nl2br": {},
+            "markdown.extensions.md_in_html": {},
+        },
     )
-    
+
     # Ensure abstract HTML line breaks are preserved (markdown might convert <br> to <p>)
     # Replace any <p><br></p> patterns with just <br> for cleaner formatting
     import re
-    html_content = re.sub(r'<p>\s*<br>\s*</p>', '<br>', html_content)
-    html_content = re.sub(r'<p>\s*<br>\s*', '<br>', html_content)
-    
+
+    html_content = re.sub(r"<p>\s*<br>\s*</p>", "<br>", html_content)
+    html_content = re.sub(r"<p>\s*<br>\s*", "<br>", html_content)
+
     if output_path is None:
-        output_path = project_path / "_work_efforts" / f"session_overview_{datetime.now().strftime('%Y%m%d_%H%M%S')}.html"
+        output_path = (
+            project_path
+            / "_work_efforts"
+            / f"session_overview_{datetime.now().strftime('%Y%m%d_%H%M%S')}.html"
+        )
     else:
         output_path = Path(output_path)
-    
+
     # Check if WeasyPrint is available for PDF conversion
     try:
         from weasyprint import HTML
+
         pdf_available = True
     except ImportError:
         pdf_available = False
-    
+
     # Add IDs to sections for navigation (before markdown conversion)
-    md_content = md_content.replace('## Quick Stats', '## Quick Stats {#quick-stats}')
-    md_content = md_content.replace('## Work Efforts', '## Work Efforts {#work-efforts}')
-    md_content = md_content.replace('## Projects', '## Projects {#projects}')
-    md_content = md_content.replace('## LaTeX Templates', '## LaTeX Templates {#latex-templates}')
-    md_content = md_content.replace('## Librarian Catalog', '## Librarian Catalog {#librarian-catalog}')
-    md_content = md_content.replace('## Recent Experiments', '## Recent Experiments {#recent-experiments}')
-    md_content = md_content.replace('## Recent Proof Cases', '## Recent Proof Cases {#recent-proof-cases}')
-    md_content = md_content.replace('## Reasoning Trace', '## Reasoning Trace {#reasoning-trace}')
-    md_content = md_content.replace('## Chat Context', '## Chat Context {#chat-context}')
-    
+    md_content = md_content.replace("## Quick Stats", "## Quick Stats {#quick-stats}")
+    md_content = md_content.replace("## Work Efforts", "## Work Efforts {#work-efforts}")
+    md_content = md_content.replace("## Projects", "## Projects {#projects}")
+    md_content = md_content.replace("## LaTeX Templates", "## LaTeX Templates {#latex-templates}")
+    md_content = md_content.replace(
+        "## Librarian Catalog", "## Librarian Catalog {#librarian-catalog}"
+    )
+    md_content = md_content.replace(
+        "## Recent Experiments", "## Recent Experiments {#recent-experiments}"
+    )
+    md_content = md_content.replace(
+        "## Recent Proof Cases", "## Recent Proof Cases {#recent-proof-cases}"
+    )
+    md_content = md_content.replace("## Reasoning Trace", "## Reasoning Trace {#reasoning-trace}")
+    md_content = md_content.replace("## Chat Context", "## Chat Context {#chat-context}")
+
     # Use WAFT HTML template generator (from this file)
     timestamp_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     # Get session history for this report
@@ -3539,26 +3707,27 @@ def generate_html_report(
         html_content=html_content,
         title="WAFT Session Overview",
         timestamp=timestamp_str,
-        session_history=session_history
+        session_history=session_history,
     )
-    
+
     # Write to file
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(output_path, 'w', encoding='utf-8') as f:
+    with open(output_path, "w", encoding="utf-8") as f:
         f.write(full_html)
-    
+
     return output_path
 
-def convert_html_to_pdf(html_path: Path, output_path: Optional[Path] = None) -> Path:
+
+def convert_html_to_pdf(html_path: Path, output_path: Path | None = None) -> Path:
     """Convert HTML file to PDF using WAFT's integrated PDF conversion algorithm."""
     try:
         from src.waft.templates.waft_html_template import convert_waft_html_to_pdf
-        
+
         if output_path is None:
-            output_path = html_path.with_suffix('.pdf')
+            output_path = html_path.with_suffix(".pdf")
         else:
             output_path = Path(output_path)
-        
+
         # Use WAFT's PDF conversion algorithm
         pdf_path = convert_waft_html_to_pdf(html_path, output_path)
         return pdf_path
@@ -3566,36 +3735,40 @@ def convert_html_to_pdf(html_path: Path, output_path: Optional[Path] = None) -> 
         # Fallback to direct WeasyPrint if template not available
         try:
             from weasyprint import HTML
-            
+
             if output_path is None:
-                output_path = html_path.with_suffix('.pdf')
+                output_path = html_path.with_suffix(".pdf")
             else:
                 output_path = Path(output_path)
-            
+
             HTML(filename=str(html_path)).write_pdf(str(output_path))
             return output_path
         except ImportError:
-            raise ImportError("WeasyPrint required for PDF conversion. Install with: pip install weasyprint")
+            raise ImportError(
+                "WeasyPrint required for PDF conversion. Install with: pip install weasyprint"
+            )
     except Exception as e:
         raise Exception(f"PDF conversion failed: {e}")
 
-def convert_html_to_latex(html_path: Path, output_path: Optional[Path] = None) -> Path:
+
+def convert_html_to_latex(html_path: Path, output_path: Path | None = None) -> Path:
     """Convert HTML file to LaTeX."""
     try:
         from src.waft.templates.latex.content_builders import html_to_latex
-        
+
         html_content = html_path.read_text()
-        
+
         # Extract body content
         import re
-        body_match = re.search(r'<body>(.*?)</body>', html_content, re.DOTALL)
+
+        body_match = re.search(r"<body>(.*?)</body>", html_content, re.DOTALL)
         if body_match:
             body_content = body_match.group(1)
         else:
             body_content = html_content
-        
+
         latex_content = html_to_latex(body_content)
-        
+
         # Wrap in LaTeX document
         latex_doc = f"""\\documentclass[11pt]{{article}}
 \\usepackage[utf8]{{inputenc}}
@@ -3606,7 +3779,7 @@ def convert_html_to_latex(html_path: Path, output_path: Optional[Path] = None) -
 \\usepackage{{listings}}
 
 \\title{{WAFT Session Overview}}
-\\author{{Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}}}
+\\author{{Generated: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}}}
 \\date{{\\today}}
 
 \\begin{{document}}
@@ -3616,40 +3789,69 @@ def convert_html_to_latex(html_path: Path, output_path: Optional[Path] = None) -
 
 \\end{{document}}
 """
-        
+
         if output_path is None:
-            output_path = html_path.with_suffix('.tex')
+            output_path = html_path.with_suffix(".tex")
         else:
             output_path = Path(output_path)
-        
+
         output_path.parent.mkdir(parents=True, exist_ok=True)
         output_path.write_text(latex_doc)
-        
+
         return output_path
     except Exception as e:
         raise Exception(f"LaTeX conversion failed: {e}")
 
+
 def main():
     """Main entry point."""
     import argparse
-    
-    parser = argparse.ArgumentParser(description="Show concepts, operations, and data from current session")
-    parser.add_argument("--work-efforts", "-w", action="store_true", default=True, help="Show work efforts")
-    parser.add_argument("--templates", "-t", action="store_true", default=True, help="Show templates")
+
+    parser = argparse.ArgumentParser(
+        description="Show concepts, operations, and data from current session"
+    )
+    parser.add_argument(
+        "--work-efforts", "-w", action="store_true", default=True, help="Show work efforts"
+    )
+    parser.add_argument(
+        "--templates", "-t", action="store_true", default=True, help="Show templates"
+    )
     parser.add_argument("--catalog", "-c", action="store_true", default=True, help="Show catalog")
-    parser.add_argument("--experiments", "-e", action="store_true", default=True, help="Show experiments")
-    parser.add_argument("--chat-context", "-x", action="store_true", default=True, help="Show chat context")
-    parser.add_argument("--proof-cases", "-p", action="store_true", default=True, help="Show proof cases")
-    parser.add_argument("--reasoning-trace", "-r", action="store_true", default=True, help="Show reasoning trace (chain of thought)")
-    parser.add_argument("--format", "-f", choices=["html", "table", "json", "markdown", "pdf", "latex"], default="html", help="Output format (default: html)")
-    parser.add_argument("--output", "-o", type=str, help="Output file path (required for html/pdf/latex formats)")
-    parser.add_argument("--convert", choices=["pdf", "latex"], help="Convert HTML output to another format")
+    parser.add_argument(
+        "--experiments", "-e", action="store_true", default=True, help="Show experiments"
+    )
+    parser.add_argument(
+        "--chat-context", "-x", action="store_true", default=True, help="Show chat context"
+    )
+    parser.add_argument(
+        "--proof-cases", "-p", action="store_true", default=True, help="Show proof cases"
+    )
+    parser.add_argument(
+        "--reasoning-trace",
+        "-r",
+        action="store_true",
+        default=True,
+        help="Show reasoning trace (chain of thought)",
+    )
+    parser.add_argument(
+        "--format",
+        "-f",
+        choices=["html", "table", "json", "markdown", "pdf", "latex"],
+        default="html",
+        help="Output format (default: html)",
+    )
+    parser.add_argument(
+        "--output", "-o", type=str, help="Output file path (required for html/pdf/latex formats)"
+    )
+    parser.add_argument(
+        "--convert", choices=["pdf", "latex"], help="Convert HTML output to another format"
+    )
     parser.add_argument("--path", "-P", type=str, help="Project path (default: current directory)")
-    
+
     args = parser.parse_args()
-    
+
     project_path = Path(args.path) if args.path else Path.cwd()
-    
+
     # Collect data
     # Get work efforts - show all by default (days_back=0), or last 30 days
     work_efforts = get_work_efforts(project_path, days_back=0) if args.work_efforts else []
@@ -3659,37 +3861,57 @@ def main():
     chat_context = get_chat_context() if args.chat_context else {}
     proof_cases = get_proof_cases(project_path) if args.proof_cases else []
     reasoning_trace = get_reasoning_trace(project_path) if args.reasoning_trace else []
-    projects = get_projects(project_path) if args.work_efforts else []  # Show projects when work efforts are shown
-    
+    projects = (
+        get_projects(project_path) if args.work_efforts else []
+    )  # Show projects when work efforts are shown
+
     # Display or generate report
     if args.format == "json":
-        display_json_format(work_efforts, templates, catalog, experiments, chat_context, proof_cases, projects=projects)
+        display_json_format(
+            work_efforts,
+            templates,
+            catalog,
+            experiments,
+            chat_context,
+            proof_cases,
+            projects=projects,
+        )
     elif args.format == "html":
         # HTML is now the default format
         output_path = Path(args.output) if args.output else None
         html_path = generate_html_report(
-            project_path, output_path, work_efforts, templates, catalog, experiments, chat_context, proof_cases, reasoning_trace, projects
+            project_path,
+            output_path,
+            work_efforts,
+            templates,
+            catalog,
+            experiments,
+            chat_context,
+            proof_cases,
+            reasoning_trace,
+            projects,
         )
         console.print(f"[green]✅ HTML generated: {html_path}[/green]")
-        
+
         # SHOW IT! Open in browser
-        import subprocess
         import platform
+        import subprocess
+
         system = platform.system()
         try:
             if system == "Darwin":  # macOS
                 subprocess.run(["open", str(html_path)], check=False)
-                console.print(f"[cyan]🌐 Opening in browser...[/cyan]")
+                console.print("[cyan]🌐 Opening in browser...[/cyan]")
             elif system == "Windows":
                 subprocess.run(["start", str(html_path)], shell=True, check=False)
-                console.print(f"[cyan]🌐 Opening in browser...[/cyan]")
+                console.print("[cyan]🌐 Opening in browser...[/cyan]")
             elif system == "Linux":
                 subprocess.run(["xdg-open", str(html_path)], check=False)
-                console.print(f"[cyan]🌐 Opening in browser...[/cyan]")
+                console.print("[cyan]🌐 Opening in browser...[/cyan]")
         except Exception as e:
             console.print(f"[yellow]⚠️  Could not open browser automatically: {e}[/yellow]")
             console.print(f"[dim]Open manually: {html_path}[/dim]")
-        
+
         # Convert if requested
         if args.convert == "pdf":
             try:
@@ -3706,43 +3928,79 @@ def main():
     elif args.format == "pdf":
         # Generate HTML first, then convert to PDF
         html_path = generate_html_report(
-            project_path, None, work_efforts, templates, catalog, experiments, chat_context, proof_cases, projects
+            project_path,
+            None,
+            work_efforts,
+            templates,
+            catalog,
+            experiments,
+            chat_context,
+            proof_cases,
+            projects,
         )
-        output_path = Path(args.output) if args.output else html_path.with_suffix('.pdf')
+        output_path = Path(args.output) if args.output else html_path.with_suffix(".pdf")
         pdf_path = convert_html_to_pdf(html_path, output_path)
         console.print(f"[green]✅ PDF generated: {pdf_path}[/green]")
-        
+
         # SHOW IT! Open PDF
-        import subprocess
         import platform
+        import subprocess
+
         system = platform.system()
         try:
             if system == "Darwin":  # macOS
                 subprocess.run(["open", str(pdf_path)], check=False)
-                console.print(f"[cyan]📄 Opening PDF...[/cyan]")
+                console.print("[cyan]📄 Opening PDF...[/cyan]")
             elif system == "Windows":
                 subprocess.run(["start", str(pdf_path)], shell=True, check=False)
-                console.print(f"[cyan]📄 Opening PDF...[/cyan]")
+                console.print("[cyan]📄 Opening PDF...[/cyan]")
             elif system == "Linux":
                 subprocess.run(["xdg-open", str(pdf_path)], check=False)
-                console.print(f"[cyan]📄 Opening PDF...[/cyan]")
+                console.print("[cyan]📄 Opening PDF...[/cyan]")
         except Exception as e:
             console.print(f"[yellow]⚠️  Could not open PDF automatically: {e}[/yellow]")
             console.print(f"[dim]Open manually: {pdf_path}[/dim]")
     elif args.format == "latex":
         # Generate HTML first, then convert to LaTeX
         html_path = generate_html_report(
-            project_path, None, work_efforts, templates, catalog, experiments, chat_context, proof_cases, projects
+            project_path,
+            None,
+            work_efforts,
+            templates,
+            catalog,
+            experiments,
+            chat_context,
+            proof_cases,
+            projects,
         )
-        output_path = Path(args.output) if args.output else html_path.with_suffix('.tex')
+        output_path = Path(args.output) if args.output else html_path.with_suffix(".tex")
         tex_path = convert_html_to_latex(html_path, output_path)
         console.print(f"[green]✅ LaTeX generated: {tex_path}[/green]")
     elif args.format == "markdown":
-        md_content = generate_markdown_report(work_efforts, templates, catalog, experiments, chat_context, proof_cases, reasoning_trace, projects)
+        md_content = generate_markdown_report(
+            work_efforts,
+            templates,
+            catalog,
+            experiments,
+            chat_context,
+            proof_cases,
+            reasoning_trace,
+            projects,
+        )
         console.print(md_content)
     else:
         # Table format (fallback) - this already displays in console
-        display_table_format(work_efforts, templates, catalog, experiments, chat_context, proof_cases, reasoning_trace, projects)
+        display_table_format(
+            work_efforts,
+            templates,
+            catalog,
+            experiments,
+            chat_context,
+            proof_cases,
+            reasoning_trace,
+            projects,
+        )
+
 
 if __name__ == "__main__":
     main()

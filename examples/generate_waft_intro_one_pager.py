@@ -9,33 +9,35 @@ tables, typography, and adaptive content selection.
 """
 
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.waft.evolution import (
-    ChatDistiller,
-    TwoPageGenerator,
-    StylingGenome,
-    StylingGenomeRegistry,
-    StylingGene,
-    FontGene,
-    MarginGene,
-    ColorGene,
-    LayoutGene,
-    IdeaGene,
-    DistilledChat,
-)
+from typing import Any
+
 from jinja2 import Template
 from weasyprint import HTML
-from typing import List, Dict, Any
+
+from src.waft.evolution import (
+    ChatDistiller,
+    ColorGene,
+    DistilledChat,
+    FontGene,
+    IdeaGene,
+    LayoutGene,
+    MarginGene,
+    StylingGene,
+    StylingGenome,
+    StylingGenomeRegistry,
+    TwoPageGenerator,
+)
 
 
 def get_waft_explanation_content() -> str:
     """
     WAFT explanation content structured as prose for ChatDistiller.
-    
+
     Written as natural paragraphs that explain WAFT to newcomers,
     covering all key concepts in a beginner-friendly way.
     """
@@ -99,11 +101,11 @@ The WAFT repository is available on GitHub for exploration and contribution. Com
 class EnhancedWAFTGenerator(TwoPageGenerator):
     """
     Enhanced generator with prettier template using visual boxes.
-    
+
     Uses pillar boxes, highlight boxes, and note boxes to showcase
     WAFT's visual features more prominently.
     """
-    
+
     # Enhanced template with visual boxes
     ENHANCED_TEMPLATE = """
 <!DOCTYPE html>
@@ -331,20 +333,21 @@ class EnhancedWAFTGenerator(TwoPageGenerator):
 </body>
 </html>
 """
-    
+
     def _render_html(
         self,
         distilled_chat: DistilledChat,
         styling_genome: StylingGenome,
-        page_1_ideas: List[IdeaGene],
-        page_2_ideas: List[IdeaGene],
+        page_1_ideas: list[IdeaGene],
+        page_2_ideas: list[IdeaGene],
     ) -> str:
         """Render enhanced HTML template with visual boxes."""
-        def clean_idea(idea: IdeaGene) -> Dict[str, Any]:
+
+        def clean_idea(idea: IdeaGene) -> dict[str, Any]:
             idea_dict = idea.to_dict()
-            idea_dict['content'] = self._clean_markdown(idea_dict.get('content', ''))
+            idea_dict["content"] = self._clean_markdown(idea_dict.get("content", ""))
             return idea_dict
-        
+
         context = {
             "title": distilled_chat.title,
             "summary": distilled_chat.summary,
@@ -365,7 +368,7 @@ class EnhancedWAFTGenerator(TwoPageGenerator):
             "layout": styling_genome.genes.layout.to_dict(),
             "generated_at": datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC"),
         }
-        
+
         template = Template(self.ENHANCED_TEMPLATE)
         return template.render(**context)
 
@@ -374,16 +377,16 @@ def main():
     """Generate WAFT introduction one-pager handout."""
     print("🔬 Creating WAFT Introduction One-Pager Handout...")
     print()
-    
+
     # Get WAFT explanation content
     print("📝 Preparing WAFT explanation content...")
     content = get_waft_explanation_content()
-    
+
     # Distill content into ideas
     print("📝 Distilling content into ideas...")
     distiller = ChatDistiller()
     distilled = distiller.distill_text(content, title="WAFT: The Evolutionary Code Laboratory")
-    
+
     print(f"✓ Extracted {distilled.total_ideas} ideas")
     print(f"  - Concepts: {distilled.concepts_count}")
     print(f"  - Actions: {distilled.actions_count}")
@@ -391,11 +394,11 @@ def main():
     print(f"  - Insights: {distilled.insights_count}")
     print(f"  - Questions: {distilled.questions_count}")
     print()
-    
+
     # Create professional styling genome
     print("🎨 Creating professional styling genome...")
     registry = StylingGenomeRegistry(registry_dir=Path("_genetics/waft_intro_handouts"))
-    
+
     # Create professional genome optimized for handouts
     professional_genes = StylingGene(
         font=FontGene(
@@ -438,56 +441,58 @@ def main():
     registry.register(genome)
     print(f"✓ Using: {genome.scientific_name} ({genome.genome_id[:8]}...)")
     print()
-    
+
     # Generate with enhanced generator
     print("📄 Generating 2-page PDF with enhanced visual features...")
     generator = EnhancedWAFTGenerator(weasyprint_available=True)
-    
+
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_path = Path(f"_work_efforts/one_pagers/WAFT_Intro_Handout_Enhanced_{timestamp}.pdf")
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     # Get top ideas for pages - optimized for 2 pages with visual boxes
     all_ideas = distilled.get_top_ideas(n=10, min_importance=0.3)
-    
+
     # Use adaptive selection similar to parent class
     best_result = None
-    best_page_diff = float('inf')
+    best_page_diff = float("inf")
     ideas_to_show = 5
-    
+
     for iteration in range(5):
         split_point = min(4, ideas_to_show)
         page_1_ideas = all_ideas[:split_point]
         page_2_ideas = all_ideas[split_point:ideas_to_show]
-        
+
         # Render and count pages
         html_content = generator._render_html(distilled, genome, page_1_ideas, page_2_ideas)
-        
+
         # Generate temp PDF to count pages
         import tempfile
-        with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as tmp:
+
+        with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as tmp:
             tmp_path = Path(tmp.name)
         HTML(string=html_content).write_pdf(str(tmp_path))
-        
+
         from pypdf import PdfReader
+
         reader = PdfReader(str(tmp_path))
         page_count = len(reader.pages)
         tmp_path.unlink()
-        
+
         page_diff = abs(page_count - 2)
         if page_diff < best_page_diff:
             best_page_diff = page_diff
             best_result = (page_1_ideas, page_2_ideas, page_count)
-        
+
         if page_count == 2:
             break
-        
+
         # Adjust for next iteration
         if page_count > 2:
             ideas_to_show = max(3, ideas_to_show - 1)
         else:
             ideas_to_show = min(len(all_ideas), ideas_to_show + 1)
-    
+
     if best_result:
         page_1_ideas, page_2_ideas, page_count = best_result
     else:
@@ -497,41 +502,45 @@ def main():
         # Final render to get actual page count
         html_content = generator._render_html(distilled, genome, page_1_ideas, page_2_ideas)
         import tempfile
-        with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as tmp:
+
+        with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as tmp:
             tmp_path = Path(tmp.name)
         HTML(string=html_content).write_pdf(str(tmp_path))
         from pypdf import PdfReader
+
         reader = PdfReader(str(tmp_path))
         page_count = len(reader.pages)
         tmp_path.unlink()
-    
+
     # Render HTML
     html_content = generator._render_html(distilled, genome, page_1_ideas, page_2_ideas)
-    
+
     # Save HTML
-    html_path = output_path.with_suffix('.html')
+    html_path = output_path.with_suffix(".html")
     html_path.write_text(html_content)
     print(f"  ✓ HTML saved: {html_path}")
-    
+
     # Generate PDF
     HTML(string=html_content).write_pdf(str(output_path))
     print(f"  ✓ PDF saved: {output_path}")
-    
+
     # Count pages
     from pypdf import PdfReader
+
     reader = PdfReader(str(output_path))
     page_count = len(reader.pages)
-    
+
     # Convert to PNG
     png_paths = []
     try:
         from src.waft.evolution.pdf_image_converter import convert_pdf_to_images
+
         png_dir = output_path.parent / f"{output_path.stem}_pages"
         png_paths = convert_pdf_to_images(output_path, output_dir=png_dir, dpi=300)
         print(f"  ✓ Converted to {len(png_paths)} PNG images (DPI: 300)")
     except Exception as e:
         print(f"  ⚠️  PNG conversion failed: {e}")
-    
+
     # Evaluate fitness
     fitness_metrics = generator._evaluate_fitness(
         distilled_chat=distilled,
@@ -540,7 +549,7 @@ def main():
         page_count=page_count,
         target_pages=2,
     )
-    
+
     result = {
         "success": True,
         "pdf_path": str(output_path),
@@ -552,7 +561,7 @@ def main():
         "constraint_satisfied": page_count == 2,
         "png_paths": [str(p) for p in png_paths] if png_paths else None,
     }
-    
+
     print()
     print("=" * 60)
     print("✅ WAFT Introduction One-Pager Created (Enhanced)!")
@@ -566,30 +575,31 @@ def main():
     print(f"   - Constraint: {result['fitness_metrics']['constraint_satisfaction']:.3f}")
     print(f"   - Aesthetics: {result['fitness_metrics']['aesthetic_appeal']:.3f}")
     print(f"🧬 Ideas shown: {result['ideas_shown']}/{distilled.total_ideas}")
-    print(f"🎨 Visual features: Pillar boxes, Highlight boxes, Note boxes, Tables")
-    
+    print("🎨 Visual features: Pillar boxes, Highlight boxes, Note boxes, Tables")
+
     # Show PNG info if generated
-    if result.get('png_paths'):
+    if result.get("png_paths"):
         print(f"🖼️  PNG images: {len(result['png_paths'])} pages")
-        for i, png_path in enumerate(result['png_paths'], 1):
+        for i, png_path in enumerate(result["png_paths"], 1):
             print(f"   - {Path(png_path).name} (page {i})")
-    
+
     print()
-    
-    if result['constraint_satisfied']:
+
+    if result["constraint_satisfied"]:
         print("✅ Perfect 2-page handout with enhanced visuals!")
     else:
         print(f"⚠️ Generated {result['page_count']} pages (expected 2)")
-    
+
     print()
     print("Ready for printing and distribution!")
     print()
-    
+
     # Open the PDF
     try:
         import subprocess
+
         subprocess.run(["open", "-a", "Preview", str(output_path)])
-        print(f"📖 PDF opened in Preview")
+        print("📖 PDF opened in Preview")
     except Exception:
         print(f"📖 PDF saved to: {output_path}")
 

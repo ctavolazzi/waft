@@ -8,11 +8,11 @@ Basic implementation inspired by:
 Built using WAFT's tools and architecture.
 """
 
-from .town_agent import TownAgent
-from .town_world import TownWorld
 from .conversation import Conversation, ConversationManager
 from .memory import TownMemory
+from .town_agent import TownAgent
 from .town_voting import TownVotingSystem, VoteType
+from .town_world import TownWorld
 
 __all__ = [
     "TownAgent",

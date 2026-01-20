@@ -2,9 +2,10 @@
 Project state endpoint - main data gathering endpoint.
 """
 
-from fastapi import APIRouter, Request
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
+
+from fastapi import APIRouter, Request
 
 from ...core.visualizer import Visualizer
 
@@ -21,7 +22,7 @@ async def get_health():
     return {
         "status": "healthy",
         "timestamp": datetime.now().isoformat(),
-        "service": "waft-visualizer-api"
+        "service": "waft-visualizer-api",
     }
 
 

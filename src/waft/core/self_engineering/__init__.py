@@ -10,15 +10,9 @@ Enables the system to:
 6. Create actionable work (scenarios, quests, work efforts)
 """
 
-from .problem_detector import Problem, ProblemDetector, ProblemType, Severity
-from .notebook import (
-    NotebookManager,
-    NotebookEntry,
-    NotebookEntryType,
-    Reflection,
-    ActionableType
-)
 from .actionable_creator import ActionableCreator
+from .notebook import ActionableType, NotebookEntry, NotebookEntryType, NotebookManager, Reflection
+from .problem_detector import Problem, ProblemDetector, ProblemType, Severity
 from .refinement_detector import RefinementDetector, RefinementOpportunity
 
 # Future imports (when implemented)

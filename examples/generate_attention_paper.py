@@ -16,10 +16,10 @@ from src.waft.templates.academic_paper import generate_academic_paper
 
 def main():
     """Generate the Attention Is All You Need paper."""
-    
+
     # Paper metadata
     title = "Attention Is All You Need"
-    
+
     authors = [
         {"name": "Ashish Vaswani"},
         {"name": "Noam Shazeer"},
@@ -28,15 +28,11 @@ def main():
         {"name": "Llion Jones"},
         {"name": "Aidan N. Gomez"},
         {"name": "Łukasz Kaiser"},
-        {"name": "Illia Polosukhin"}
+        {"name": "Illia Polosukhin"},
     ]
-    
-    affiliations = [
-        "Google Brain",
-        "Google Research",
-        "University of Toronto"
-    ]
-    
+
+    affiliations = ["Google Brain", "Google Research", "University of Toronto"]
+
     abstract = """
     The dominant sequence transduction models are based on complex recurrent or 
     convolutional neural networks that include an encoder and a decoder. The best 
@@ -53,7 +49,7 @@ def main():
     literature. We show that the Transformer generalizes well to other tasks by applying 
     it successfully to English constituency parsing with large and limited training data.
     """
-    
+
     # Main content
     content = """
     <h1>Introduction</h1>
@@ -341,7 +337,7 @@ def main():
     mechanisms to efficiently handle large inputs and outputs such as images, audio and 
     video. Making generation less sequential is another research goals of ours.</p>
     """
-    
+
     references = [
         "[1] Dzmitry Bahdanau, Kyunghyun Cho, and Yoshua Bengio. Neural machine translation by jointly learning to align and translate. CoRR, abs/1409.0473, 2014.",
         "[2] Denny Britz, Anna Goldie, Minh-Thang Luong, and Quoc Le. Massive exploration of neural machine translation architectures. CoRR, abs/1703.03906, 2017.",
@@ -377,17 +373,17 @@ def main():
         "[32] Ashish Vaswani, Yinggong Zhao, Victoria Fossum, and David Chiang. Decoding with large-scale neural language models improves translation. In Proceedings of EMNLP, 2013.",
         "[33] Yonghui Wu, Mike Schuster, Zhifeng Chen, Quoc V. Le, Mohammad Norouzi, Wolfgang Macherey, Maxim Krikun, Yuan Cao, Qin Gao, Klaus Macherey, et al. Google's neural machine translation system: Bridging the gap between human and machine translation. CoRR, abs/1609.08144, 2016.",
         "[34] Jie Zhou, Ying Cao, Xuguang Wang, Peng Li, and Wei Xu. Deep recurrent models with fast-forward connections for neural machine translation. CoRR, abs/1606.04199, 2016.",
-        "[35] Barret Zoph and Kevin Knight. Multi-source neural translation. CoRR, abs/1601.00710, 2016."
+        "[35] Barret Zoph and Kevin Knight. Multi-source neural translation. CoRR, abs/1601.00710, 2016.",
     ]
-    
+
     # Generate the paper
     output_path = Path("attention_is_all_you_need_recreated.pdf")
-    
+
     print("📄 Generating 'Attention Is All You Need' paper...")
     print(f"   Title: {title}")
     print(f"   Authors: {len(authors)} authors")
     print(f"   Output: {output_path}")
-    
+
     generate_academic_paper(
         title=title,
         content=content,
@@ -397,12 +393,12 @@ def main():
         affiliations=affiliations,
         conference="NIPS",
         year="2017",
-        references=references
+        references=references,
     )
-    
-    print(f"\n✅ Paper generated successfully!")
+
+    print("\n✅ Paper generated successfully!")
     print(f"   📄 {output_path.absolute()}")
-    
+
     return output_path
 
 

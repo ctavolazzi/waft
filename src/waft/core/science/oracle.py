@@ -78,6 +78,19 @@ class TheOracle:
         # Initialize personality
         self.personality = self._load_personality(personality, personality_type, personality_file)
 
+        # Personality state tracking
+        self._personality_interactions = []  # Track interactions for personality evolution
+
+        # Get session ID for Empirica workflow
+        # Try to get from readiness status, or create one if needed
+        self._session_id = self._readiness_status.get("session_id")
+        if not self._session_id:
+            # Try to get current session from Empirica
+            try:
+                self._session_id = self.empirica.get_current_session_id()
+            except Exception:
+                pass  # Session ID not critical
+
         # Initialize journal and memory
         self.journal = OracleJournal(self.project_path)
 
@@ -123,22 +136,7 @@ class TheOracle:
                 pass  # Fall through to default
 
         # Priority 4: Default personality
-        personality = OraclePersonality()
-
-        # Personality state tracking
-        self._personality_interactions = []  # Track interactions for personality evolution
-
-        # Get session ID for Empirica workflow
-        # Try to get from readiness status, or create one if needed
-        self._session_id = self._readiness_status.get("session_id")
-        if not self._session_id:
-            # Try to get current session from Empirica
-            try:
-                self._session_id = self.empirica.get_current_session_id()
-            except Exception:
-                pass  # Session ID not critical
-
-        return personality
+        return OraclePersonality()
 
     def get_epistemic_state(self) -> dict[str, Any]:
         """
@@ -166,25 +164,13 @@ class TheOracle:
                 "timestamp": datetime.now().isoformat(),
             }
 
-        # If bootstrap lacks epistemic_state, try assess_state using session_id
-        epistemic_state = context.get("epistemic_state", {})
-        if not epistemic_state and self._session_id:
-            try:
-                assessment = self.empirica.assess_state(session_id=self._session_id)
-                if assessment and isinstance(assessment, dict):
-                    vectors = assessment.get("vectors", {})
-                    if vectors:
-                        epistemic_state = {"vectors": vectors}
-            except Exception:
-                pass
-
         # Full context available
         return {
             "initialized": True,
             "has_context": True,
             "ready": True,
             "message": "Empirica ready with epistemic context",
-            "epistemic_state": epistemic_state,
+            "epistemic_state": context.get("epistemic_state", {}),
             "findings": context.get("findings", []),
             "unknowns": context.get("unknowns", []),
             "goals": context.get("goals", []),
@@ -274,44 +260,62 @@ class TheOracle:
             return unknowns[-limit:] if len(unknowns) > limit else unknowns
         return []
 
-    def get_epistemic_phase(self) -> str:
+    def get_epistemic_phase(self, show_calculation: bool = False) -> str:
         """
         Calculate current epistemic phase from state.
 
+        Args:
+            show_calculation: If True, returns dict with phase and calculation details
+
         Returns:
             Phase name: Data Gathering | Exploration | Synthesis | Evolution | Transition | UNKNOWN
+            Or dict with phase and calculation if show_calculation=True
         """
         context = self.empirica.project_bootstrap()
         if not context:
-            return "UNKNOWN"
+            return (
+                {"phase": "UNKNOWN", "reason": "No context from project_bootstrap"}
+                if show_calculation
+                else "UNKNOWN"
+            )
 
         epistemic_state = context.get("epistemic_state", {})
         vectors = epistemic_state.get("vectors", {})
         if not vectors:
-            return "UNKNOWN"
+            return (
+                {"phase": "UNKNOWN", "reason": "No vectors in epistemic_state"}
+                if show_calculation
+                else "UNKNOWN"
+            )
 
         foundation = vectors.get("foundation", {})
-        if foundation:
-            know = foundation.get("know", 0.0)
-        else:
-            know = vectors.get("know", 0.0)
+        know = foundation.get("know", 0.0) if foundation else 0.0
         uncertainty = vectors.get("uncertainty", 1.0)
 
         # Validate ranges
         know = max(0.0, min(1.0, know))
         uncertainty = max(0.0, min(1.0, uncertainty))
 
-        # Determine phase
+        # Determine phase with calculation details
         if know < 0.3 and uncertainty > 0.5:
-            return "Data Gathering"
+            phase = "Data Gathering"
+            reason = f"know({know:.2f}) < 0.3 AND uncertainty({uncertainty:.2f}) > 0.5"
         elif know < 0.6 and uncertainty > 0.3:
-            return "Exploration"
+            phase = "Exploration"
+            reason = f"know({know:.2f}) < 0.6 AND uncertainty({uncertainty:.2f}) > 0.3"
         elif know > 0.6 and uncertainty < 0.3:
-            return "Synthesis"
+            phase = "Synthesis"
+            reason = f"know({know:.2f}) > 0.6 AND uncertainty({uncertainty:.2f}) < 0.3"
         elif know > 0.8 and uncertainty < 0.2:
-            return "Evolution"
+            phase = "Evolution"
+            reason = f"know({know:.2f}) > 0.8 AND uncertainty({uncertainty:.2f}) < 0.2"
         else:
-            return "Transition"
+            phase = "Transition"
+            reason = f"know({know:.2f}), uncertainty({uncertainty:.2f}) - other combination"
+
+        if show_calculation:
+            return {"phase": phase, "know": know, "uncertainty": uncertainty, "reason": reason}
+        return phase
 
     def provide_guidance(
         self,
@@ -334,13 +338,48 @@ class TheOracle:
             Dictionary with guidance, insights, and recommendations
         """
         # STEP 1: PREFLIGHT - Assess current epistemic state
+        if show_thinking and thinking_callback:
+            thinking_callback(
+                "PREFLIGHT",
+                {
+                    "status": "Assessing epistemic state...",
+                    "thinking": "Retrieving current epistemic vectors from Empirica...",
+                },
+            )
         preflight_result = self._empirica_preflight(question)
+        if show_thinking and thinking_callback:
+            # Show calculation details
+            know = preflight_result.get("know", 0.0)
+            uncertainty = preflight_result.get("uncertainty", 1.0)
+            thinking_callback(
+                "PREFLIGHT",
+                {
+                    **preflight_result,
+                    "thinking": f"Calculated: know={know:.2f} (from foundation vectors), uncertainty={uncertainty:.2f} (from meta vector). Investigate required: {uncertainty > 0.5 or know < 0.3}",
+                },
+            )
 
         # STEP 2: INVESTIGATE - Reduce uncertainty by reviewing past experiences
         # This is where reflection happens - reviewing memory and patterns
+        if show_thinking and thinking_callback:
+            thinking_callback(
+                "INVESTIGATE",
+                {
+                    "status": "Reflecting on past experiences...",
+                    "thinking": f"Searching journal memory for: '{question[:50]}...'",
+                },
+            )
         reflection = self._reflect_on_question(question)
         if show_thinking and thinking_callback:
-            thinking_callback("INVESTIGATE", {"reflection": reflection})
+            relevant_experiences = reflection.get("relevant_experiences", [])
+            relevant_insights = reflection.get("relevant_insights", [])
+            thinking_callback(
+                "INVESTIGATE",
+                {
+                    "reflection": reflection,
+                    "thinking": f"Found {len(relevant_experiences)} relevant experiences, {len(relevant_insights)} insights. Analyzing patterns...",
+                },
+            )
 
         # Log INVESTIGATE checkpoint with atomic triple-write (SQLite + Git Notes + JSON)
         # GitEnhancedReflexLogger ensures all three layers written atomically
@@ -377,14 +416,32 @@ class TheOracle:
         coverage = know * (1.0 - uncertainty) if know > 0 else 0.0
 
         # STEP 3: CHECK - Decision gate based on findings and unknowns
+        if show_thinking and thinking_callback:
+            thinking_callback("CHECK", {"status": "Evaluating decision gate..."})
         check_result = self._empirica_check(question, findings, unknowns, uncertainty)
+        if show_thinking and thinking_callback:
+            thinking_callback("CHECK", check_result)
 
         # STEP 4: ACT - Generate recommendation (the action/guidance)
         if show_thinking and thinking_callback:
-            thinking_callback("ACT", {"phase": phase, "coverage": coverage})
+            thinking_callback(
+                "ACT",
+                {
+                    "status": "Generating recommendation...",
+                    "phase": phase,
+                    "coverage": coverage,
+                    "thinking": f"Phase: {phase}, Coverage: {coverage:.2f} (know={know:.2f} * (1 - {uncertainty:.2f})). {'Using fallback method' if phase == 'UNKNOWN' else 'Using epistemic state-based recommendation'}.",
+                },
+            )
 
         recommendation = self._generate_recommendation(
-            phase, coverage, unknowns, uncertainty, reflection=reflection, check_result=check_result
+            phase,
+            coverage,
+            unknowns,
+            uncertainty,
+            reflection=reflection,
+            check_result=check_result,
+            question=question,  # Pass question for fallback analysis
         )
 
         # Log ACT checkpoint with atomic triple-write
@@ -544,6 +601,8 @@ class TheOracle:
         findings: list[dict[str, Any]],
         unknowns: list[dict[str, Any]],
         uncertainty: float,
+        show_thinking: bool = False,
+        thinking_callback: Callable[[str, dict[str, Any]], None] | None = None,
     ) -> dict[str, Any]:
         """
         STEP 3: CHECK - Decision gate based on findings and unknowns.
@@ -556,24 +615,59 @@ class TheOracle:
         unknowns_count = len(unknowns)
 
         # Confidence increases with findings, decreases with unknowns and uncertainty
-        base_confidence = min(1.0, findings_count * 0.1)
-        confidence = base_confidence * (1.0 - uncertainty)
+        base_confidence_raw = findings_count * 0.1
+        base_confidence = min(1.0, base_confidence_raw)
+        confidence_raw = base_confidence * (1.0 - uncertainty)
+        confidence = confidence_raw
 
-        # Decision logic
-        if confidence >= 0.7 and uncertainty < 0.3:
+        # Show calculation details in thinking if callback provided
+        if show_thinking and thinking_callback:
+            thinking_callback(
+                "CALCULATE",
+                {
+                    "status": "Calculating confidence...",
+                    "thinking": f"Step 1: base_confidence = min(1.0, findings({findings_count}) × 0.1) = min(1.0, {base_confidence_raw:.3f}) = {base_confidence:.3f}. Step 2: confidence = {base_confidence:.3f} × (1 - uncertainty({uncertainty:.3f})) = {base_confidence:.3f} × {1 - uncertainty:.3f} = {confidence:.3f}",
+                },
+            )
+
+        # Decision logic - SHOW THE REASONING
+        decision_reasoning = []
+
+        # Special case: If epistemic state is empty but we have a question, allow PROCEED for fallback
+        # (uncertainty will be 1.0 when no epistemic state, but we can still provide helpful guidance)
+        if uncertainty >= 0.99 and findings_count == 0 and unknowns_count == 0:
+            # Empty epistemic state - allow fallback answers
+            decision = "PROCEED"  # Allow fallback to answer question
+            decision_reasoning.append(
+                f"Special case: uncertainty({uncertainty:.3f}) >= 0.99 AND no findings/unknowns → PROCEED (fallback mode)"
+            )
+        elif confidence >= 0.7 and uncertainty < 0.3:
             decision = "PROCEED"
+            decision_reasoning.append(
+                f"confidence({confidence:.3f}) >= 0.7 AND uncertainty({uncertainty:.3f}) < 0.3 → PROCEED"
+            )
         elif confidence < 0.3 or uncertainty > 0.7:
             decision = "HALT"
+            decision_reasoning.append(
+                f"confidence({confidence:.3f}) < 0.3 OR uncertainty({uncertainty:.3f}) > 0.7 → HALT"
+            )
         elif unknowns_count > findings_count:
             decision = "BRANCH"  # Need investigation
+            decision_reasoning.append(
+                f"unknowns({unknowns_count}) > findings({findings_count}) → BRANCH (investigation needed)"
+            )
         else:
             decision = "REVISE"  # Need refinement
+            decision_reasoning.append("Otherwise → REVISE (needs refinement)")
+
+        decision_reasoning_str = " | ".join(decision_reasoning)
 
         result = {
             "confidence": confidence,
             "decision": decision,
             "findings_count": findings_count,
             "unknowns_count": unknowns_count,
+            "decision_reasoning": decision_reasoning_str,
         }
 
         # Submit CHECK gate to Empirica
@@ -686,6 +780,7 @@ class TheOracle:
         uncertainty: float = 0.5,
         reflection: dict[str, Any] | None = None,
         check_result: dict[str, Any] | None = None,
+        question: str | None = None,
     ) -> str:
         """Generate recommendation based on epistemic state with personality, memory, reflection, and check result."""
         # Incorporate check decision into recommendation
@@ -721,7 +816,10 @@ class TheOracle:
                 "UNKNOWN": f"Low knowledge coverage ({coverage:.0%}). Focus on addressing unknowns: {len(unknowns)} open questions.",
             }
 
-            if phase in base_recommendations:
+            # FALLBACK: If phase is UNKNOWN and we have a question, try to answer it
+            if phase == "UNKNOWN" and question:
+                base = self._answer_question_without_epistemic_state(question, reflection)
+            elif phase in base_recommendations:
                 base = base_recommendations[phase]
             elif coverage < 0.3:
                 base = base_recommendations["UNKNOWN"]
@@ -744,6 +842,79 @@ class TheOracle:
 
         # Apply personality
         return self._apply_personality_to_recommendation(base, phase, coverage, uncertainty)
+
+    def _answer_question_without_epistemic_state(
+        self, question: str, reflection: dict[str, Any] | None = None
+    ) -> str:
+        """
+        Fallback method to answer questions when epistemic state is empty.
+
+        Uses:
+        - Reflection data (journal, memory)
+        - Codebase analysis hints
+        - General guidance based on question type
+
+        Args:
+            question: The question being asked
+            reflection: Optional reflection data from _reflect_on_question
+
+        Returns:
+            Answer/recommendation string
+        """
+        # Try to use reflection insights if available
+        if reflection:
+            relevant_insights = reflection.get("relevant_insights", [])
+            if relevant_insights:
+                insights_text = ". ".join(
+                    [
+                        str(
+                            insight.get("insight", insight)
+                            if isinstance(insight, dict)
+                            else insight
+                        )
+                        for insight in relevant_insights[:3]
+                    ]
+                )
+                return f"Based on past insights: {insights_text}. However, epistemic state is not yet initialized - consider running preflight/postflight to track knowledge."
+
+        # Analyze question type and provide helpful guidance
+        question_lower = question.lower()
+
+        # Version/release questions
+        if any(word in question_lower for word in ["version", "release", "changelog", "document"]):
+            return (
+                "For version release documentation, consider documenting: "
+                "major features added, bug fixes, breaking changes, migration guides, "
+                "and new capabilities. Review recent commits and work efforts for changes. "
+                "Note: Epistemic state is not yet initialized - consider using Empirica preflight/postflight to track knowledge."
+            )
+
+        # Architecture/design questions
+        if any(
+            word in question_lower for word in ["architecture", "design", "structure", "system"]
+        ):
+            return (
+                "For architecture questions, review the codebase structure, "
+                "check documentation files, and examine recent design decisions. "
+                "Consider logging findings to Empirica to build epistemic state over time."
+            )
+
+        # Implementation/how-to questions
+        if any(word in question_lower for word in ["how", "implement", "create", "build", "make"]):
+            return (
+                "For implementation guidance, check existing examples in the codebase, "
+                "review similar implementations, and consult documentation. "
+                "Consider using Empirica to track what you learn during implementation."
+            )
+
+        # General fallback
+        return (
+            f"To answer '{question}', I would need epistemic state data from Empirica. "
+            "Consider: (1) Creating a session with `empirica session-create`, "
+            "(2) Submitting preflight before work, (3) Logging findings during work, "
+            "(4) Submitting postflight after work. This will build epistemic state "
+            "over time and enable more informed guidance."
+        )
 
     def _apply_personality_to_recommendation(
         self, base_recommendation: str, phase: str, coverage: float, uncertainty: float

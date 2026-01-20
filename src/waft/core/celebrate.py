@@ -35,7 +35,10 @@ class CelebrateManager:
         self.celebrate_dir.mkdir(parents=True, exist_ok=True)
 
     def celebrate(
-        self, achievement: str | None = None, message: str | None = None, print_pdf: bool = False
+        self,
+        achievement: str | None = None,
+        message: str | None = None,
+        print_pdf: bool = False,
     ) -> Path | None:
         """
         Generate a one-page celebratory PDF card.
@@ -101,6 +104,7 @@ class CelebrateManager:
                 # Open PDF
                 self.console.print("[yellow]→[/yellow] Opening celebration card...")
                 import os
+
                 system = platform.system()
                 if system == "Darwin":  # macOS
                     subprocess.run(["open", str(generated_path)], check=False)

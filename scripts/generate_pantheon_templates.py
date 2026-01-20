@@ -4,11 +4,12 @@ Generate Pantheon UI in Multiple Template Styles
 Creates alternative template versions of the Pantheon web page.
 """
 
-from pathlib import Path
-from weasyprint import HTML
-from datetime import datetime
 import json
 import sys
+from datetime import datetime
+from pathlib import Path
+
+from weasyprint import HTML
 
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
@@ -18,52 +19,47 @@ def load_pantheon_data():
     """Load actual Pantheon data from _pantheon directory."""
     project_path = Path(__file__).parent.parent
     pantheon_path = project_path / "_pantheon"
-    
+
     data = {}
-    
+
     # Magistrate data
     magistrate_path = pantheon_path / "magistrate" / "body_of_proof.json"
     if magistrate_path.exists():
         with open(magistrate_path) as f:
             magistrate_data = json.load(f)
-            data['magistrate'] = {
-                'precedents': len(magistrate_data.get('precedents', [])),
-                'cases': len(magistrate_data.get('precedents', []))
+            data["magistrate"] = {
+                "precedents": len(magistrate_data.get("precedents", [])),
+                "cases": len(magistrate_data.get("precedents", [])),
             }
-    
+
     # Judge data
     judge_path = pantheon_path / "judge" / "judgment_history.json"
     if judge_path.exists():
         with open(judge_path) as f:
             judge_data = json.load(f)
-            data['judge'] = {
-                'judgments': len(judge_data.get('judgments', []))
-            }
-    
+            data["judge"] = {"judgments": len(judge_data.get("judgments", []))}
+
     # Reasoner data
     reasoner_path = pantheon_path / "reasoner" / "trace_index.json"
     if reasoner_path.exists():
         with open(reasoner_path) as f:
             reasoner_data = json.load(f)
-            data['reasoner'] = {
-                'traces': len(reasoner_data.get('traces', []))
-            }
-    
+            data["reasoner"] = {"traces": len(reasoner_data.get("traces", []))}
+
     # GitHub God data
     github_path = pantheon_path / "github_god" / "rollup_index.json"
     if github_path.exists():
         with open(github_path) as f:
             github_data = json.load(f)
-            data['github_god'] = {
-                'rollups': len(github_data.get('rollups', []))
-            }
-    
+            data["github_god"] = {"rollups": len(github_data.get("rollups", []))}
+
     return data
 
 
 def create_dnd_template():
     """Create D&D Character Sheet style template."""
-    return """
+    return (
+        """
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -242,116 +238,138 @@ def create_dnd_template():
     </div>
     
     <script>
-        const pantheonGods = """ + json.dumps([
-            {
-                "name": "Magistrate",
-                "icon": "⚖️",
-                "title": "God of Precedent and Body of Proof",
-                "description": "Organizes proof cases from _work_efforts/proof_cases/ into Precedent categories, building a Body of Proof over time.",
-                "abilities": ["organize_all_cases", "search_precedents", "get_body_of_proof_summary"],
-                "status": "active",
-                "stats": {"Precedents": "2", "Cases": "2"}
-            },
-            {
-                "name": "Judge",
-                "icon": "👨‍⚖️",
-                "title": "God of Judgment and Evaluation",
-                "description": "Evaluates organization claims and references the Magistrate's Body of Proof.",
-                "abilities": ["evaluate_claim", "get_judgment_history", "get_judgment_summary"],
-                "status": "active",
-                "stats": {"Judgments": "2"}
-            },
-            {
-                "name": "The Reasoner",
-                "icon": "🧠",
-                "title": "God of Reasoning Traces",
-                "description": "Maintains traceable reasoning chains showing the 'why' behind decisions.",
-                "abilities": ["create_trace", "get_recent_traces", "build_chain", "search_traces"],
-                "status": "active",
-                "stats": {"Traces": "1"}
-            },
-            {
-                "name": "The GitHub God",
-                "icon": "🐙",
-                "title": "God of Repository Management",
-                "description": "Maintains repository state, generates rollups, and tracks GitHub operations.",
-                "abilities": ["generate_rollup", "get_repository_state", "get_branch_summary"],
-                "status": "active",
-                "stats": {"Rollups": "7", "Operations": "1"}
-            },
-            {
-                "name": "The Steward",
-                "icon": "💎",
-                "title": "God of Work Efforts",
-                "description": "The divine intelligence that locks, monitors, organizes, and initiates evolutionary cycles.",
-                "abilities": ["/think", "/evolve", "/monitor", "/organize", "/lock", "/unlock", "/status", "/secrets"],
-                "status": "active",
-                "stats": {"System": "pyrite"}
-            },
-            {
-                "name": "Librarian",
-                "icon": "📚",
-                "title": "God of Knowledge and Cataloging",
-                "description": "Maintains catalogs and reports. Organizes knowledge and documentation.",
-                "abilities": ["catalog", "organize_reports"],
-                "status": "active",
-                "stats": {"Catalog Items": "1", "Reports": "1"}
-            },
-            {
-                "name": "Military Brass",
-                "icon": "🎖️",
-                "title": "God of Missions and Operations",
-                "description": "Manages missions and briefings. Coordinates military-style operations.",
-                "abilities": ["create_mission", "get_briefings", "missions_registry"],
-                "status": "active",
-                "stats": {"Missions": "2"}
-            },
-            {
-                "name": "Mission Control",
-                "icon": "🚀",
-                "title": "God of Realm Exploration",
-                "description": "Controls realm scouting and colonization operations.",
-                "abilities": ["realm_scout", "get_realm_status", "control_registry"],
-                "status": "active",
-                "stats": {"Realm Scouts": "3"}
-            },
-            {
-                "name": "Fae",
-                "icon": "🧚",
-                "title": "God of Quests",
-                "description": "Manages quests and quest registry. Coordinates quest-based activities.",
-                "abilities": ["create_quest", "get_quests", "quests_registry"],
-                "status": "active",
-                "stats": {"Quests": "Active"}
-            },
-            {
-                "name": "The Village",
-                "icon": "🏘️",
-                "title": "God of Community",
-                "description": "Manages village registry and community activities.",
-                "abilities": ["village_registry"],
-                "status": "active",
-                "stats": {}
-            },
-            {
-                "name": "Test Runner",
-                "icon": "🧪",
-                "title": "God of Testing",
-                "description": "Manages test execution and test metadata.",
-                "abilities": ["run_tests", "test_metadata"],
-                "status": "active",
-                "stats": {}
-            },
-            {
-                "name": "External Drive Realm",
-                "icon": "💾",
-                "title": "God of External Storage",
-                "description": "Manages external drive realm content and storage routing.",
-                "abilities": ["content_manifest", "realm_registry", "realm_status"],
-                "status": "active",
-                "stats": {"Content Items": "1"}
-            }
-        ]) + """;
+        const pantheonGods = """
+        + json.dumps(
+            [
+                {
+                    "name": "Magistrate",
+                    "icon": "⚖️",
+                    "title": "God of Precedent and Body of Proof",
+                    "description": "Organizes proof cases from _work_efforts/proof_cases/ into Precedent categories, building a Body of Proof over time.",
+                    "abilities": [
+                        "organize_all_cases",
+                        "search_precedents",
+                        "get_body_of_proof_summary",
+                    ],
+                    "status": "active",
+                    "stats": {"Precedents": "2", "Cases": "2"},
+                },
+                {
+                    "name": "Judge",
+                    "icon": "👨‍⚖️",
+                    "title": "God of Judgment and Evaluation",
+                    "description": "Evaluates organization claims and references the Magistrate's Body of Proof.",
+                    "abilities": ["evaluate_claim", "get_judgment_history", "get_judgment_summary"],
+                    "status": "active",
+                    "stats": {"Judgments": "2"},
+                },
+                {
+                    "name": "The Reasoner",
+                    "icon": "🧠",
+                    "title": "God of Reasoning Traces",
+                    "description": "Maintains traceable reasoning chains showing the 'why' behind decisions.",
+                    "abilities": [
+                        "create_trace",
+                        "get_recent_traces",
+                        "build_chain",
+                        "search_traces",
+                    ],
+                    "status": "active",
+                    "stats": {"Traces": "1"},
+                },
+                {
+                    "name": "The GitHub God",
+                    "icon": "🐙",
+                    "title": "God of Repository Management",
+                    "description": "Maintains repository state, generates rollups, and tracks GitHub operations.",
+                    "abilities": ["generate_rollup", "get_repository_state", "get_branch_summary"],
+                    "status": "active",
+                    "stats": {"Rollups": "7", "Operations": "1"},
+                },
+                {
+                    "name": "The Steward",
+                    "icon": "💎",
+                    "title": "God of Work Efforts",
+                    "description": "The divine intelligence that locks, monitors, organizes, and initiates evolutionary cycles.",
+                    "abilities": [
+                        "/think",
+                        "/evolve",
+                        "/monitor",
+                        "/organize",
+                        "/lock",
+                        "/unlock",
+                        "/status",
+                        "/secrets",
+                    ],
+                    "status": "active",
+                    "stats": {"System": "pyrite"},
+                },
+                {
+                    "name": "Librarian",
+                    "icon": "📚",
+                    "title": "God of Knowledge and Cataloging",
+                    "description": "Maintains catalogs and reports. Organizes knowledge and documentation.",
+                    "abilities": ["catalog", "organize_reports"],
+                    "status": "active",
+                    "stats": {"Catalog Items": "1", "Reports": "1"},
+                },
+                {
+                    "name": "Military Brass",
+                    "icon": "🎖️",
+                    "title": "God of Missions and Operations",
+                    "description": "Manages missions and briefings. Coordinates military-style operations.",
+                    "abilities": ["create_mission", "get_briefings", "missions_registry"],
+                    "status": "active",
+                    "stats": {"Missions": "2"},
+                },
+                {
+                    "name": "Mission Control",
+                    "icon": "🚀",
+                    "title": "God of Realm Exploration",
+                    "description": "Controls realm scouting and colonization operations.",
+                    "abilities": ["realm_scout", "get_realm_status", "control_registry"],
+                    "status": "active",
+                    "stats": {"Realm Scouts": "3"},
+                },
+                {
+                    "name": "Fae",
+                    "icon": "🧚",
+                    "title": "God of Quests",
+                    "description": "Manages quests and quest registry. Coordinates quest-based activities.",
+                    "abilities": ["create_quest", "get_quests", "quests_registry"],
+                    "status": "active",
+                    "stats": {"Quests": "Active"},
+                },
+                {
+                    "name": "The Village",
+                    "icon": "🏘️",
+                    "title": "God of Community",
+                    "description": "Manages village registry and community activities.",
+                    "abilities": ["village_registry"],
+                    "status": "active",
+                    "stats": {},
+                },
+                {
+                    "name": "Test Runner",
+                    "icon": "🧪",
+                    "title": "God of Testing",
+                    "description": "Manages test execution and test metadata.",
+                    "abilities": ["run_tests", "test_metadata"],
+                    "status": "active",
+                    "stats": {},
+                },
+                {
+                    "name": "External Drive Realm",
+                    "icon": "💾",
+                    "title": "God of External Storage",
+                    "description": "Manages external drive realm content and storage routing.",
+                    "abilities": ["content_manifest", "realm_registry", "realm_status"],
+                    "status": "active",
+                    "stats": {"Content Items": "1"},
+                },
+            ]
+        )
+        + """;
         
         function renderPantheon() {
             const grid = document.getElementById('pantheon-grid');
@@ -389,11 +407,13 @@ def create_dnd_template():
 </body>
 </html>
     """
+    )
 
 
 def create_field_guide_template():
     """Create Field Guide style template."""
-    return """
+    return (
+        """
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -500,116 +520,138 @@ def create_field_guide_template():
     </div>
     
     <script>
-        const pantheonGods = """ + json.dumps([
-            {
-                "name": "Magistrate",
-                "icon": "⚖️",
-                "title": "God of Precedent and Body of Proof",
-                "description": "Organizes proof cases from _work_efforts/proof_cases/ into Precedent categories, building a Body of Proof over time.",
-                "abilities": ["organize_all_cases", "search_precedents", "get_body_of_proof_summary"],
-                "status": "active",
-                "stats": {"Precedents": "2", "Cases": "2"}
-            },
-            {
-                "name": "Judge",
-                "icon": "👨‍⚖️",
-                "title": "God of Judgment and Evaluation",
-                "description": "Evaluates organization claims and references the Magistrate's Body of Proof.",
-                "abilities": ["evaluate_claim", "get_judgment_history", "get_judgment_summary"],
-                "status": "active",
-                "stats": {"Judgments": "2"}
-            },
-            {
-                "name": "The Reasoner",
-                "icon": "🧠",
-                "title": "God of Reasoning Traces",
-                "description": "Maintains traceable reasoning chains showing the 'why' behind decisions.",
-                "abilities": ["create_trace", "get_recent_traces", "build_chain", "search_traces"],
-                "status": "active",
-                "stats": {"Traces": "1"}
-            },
-            {
-                "name": "The GitHub God",
-                "icon": "🐙",
-                "title": "God of Repository Management",
-                "description": "Maintains repository state, generates rollups, and tracks GitHub operations.",
-                "abilities": ["generate_rollup", "get_repository_state", "get_branch_summary"],
-                "status": "active",
-                "stats": {"Rollups": "7", "Operations": "1"}
-            },
-            {
-                "name": "The Steward",
-                "icon": "💎",
-                "title": "God of Work Efforts",
-                "description": "The divine intelligence that locks, monitors, organizes, and initiates evolutionary cycles.",
-                "abilities": ["/think", "/evolve", "/monitor", "/organize", "/lock", "/unlock", "/status", "/secrets"],
-                "status": "active",
-                "stats": {"System": "pyrite"}
-            },
-            {
-                "name": "Librarian",
-                "icon": "📚",
-                "title": "God of Knowledge and Cataloging",
-                "description": "Maintains catalogs and reports. Organizes knowledge and documentation.",
-                "abilities": ["catalog", "organize_reports"],
-                "status": "active",
-                "stats": {"Catalog Items": "1", "Reports": "1"}
-            },
-            {
-                "name": "Military Brass",
-                "icon": "🎖️",
-                "title": "God of Missions and Operations",
-                "description": "Manages missions and briefings. Coordinates military-style operations.",
-                "abilities": ["create_mission", "get_briefings", "missions_registry"],
-                "status": "active",
-                "stats": {"Missions": "2"}
-            },
-            {
-                "name": "Mission Control",
-                "icon": "🚀",
-                "title": "God of Realm Exploration",
-                "description": "Controls realm scouting and colonization operations.",
-                "abilities": ["realm_scout", "get_realm_status", "control_registry"],
-                "status": "active",
-                "stats": {"Realm Scouts": "3"}
-            },
-            {
-                "name": "Fae",
-                "icon": "🧚",
-                "title": "God of Quests",
-                "description": "Manages quests and quest registry. Coordinates quest-based activities.",
-                "abilities": ["create_quest", "get_quests", "quests_registry"],
-                "status": "active",
-                "stats": {"Quests": "Active"}
-            },
-            {
-                "name": "The Village",
-                "icon": "🏘️",
-                "title": "God of Community",
-                "description": "Manages village registry and community activities.",
-                "abilities": ["village_registry"],
-                "status": "active",
-                "stats": {}
-            },
-            {
-                "name": "Test Runner",
-                "icon": "🧪",
-                "title": "God of Testing",
-                "description": "Manages test execution and test metadata.",
-                "abilities": ["run_tests", "test_metadata"],
-                "status": "active",
-                "stats": {}
-            },
-            {
-                "name": "External Drive Realm",
-                "icon": "💾",
-                "title": "God of External Storage",
-                "description": "Manages external drive realm content and storage routing.",
-                "abilities": ["content_manifest", "realm_registry", "realm_status"],
-                "status": "active",
-                "stats": {"Content Items": "1"}
-            }
-        ]) + """;
+        const pantheonGods = """
+        + json.dumps(
+            [
+                {
+                    "name": "Magistrate",
+                    "icon": "⚖️",
+                    "title": "God of Precedent and Body of Proof",
+                    "description": "Organizes proof cases from _work_efforts/proof_cases/ into Precedent categories, building a Body of Proof over time.",
+                    "abilities": [
+                        "organize_all_cases",
+                        "search_precedents",
+                        "get_body_of_proof_summary",
+                    ],
+                    "status": "active",
+                    "stats": {"Precedents": "2", "Cases": "2"},
+                },
+                {
+                    "name": "Judge",
+                    "icon": "👨‍⚖️",
+                    "title": "God of Judgment and Evaluation",
+                    "description": "Evaluates organization claims and references the Magistrate's Body of Proof.",
+                    "abilities": ["evaluate_claim", "get_judgment_history", "get_judgment_summary"],
+                    "status": "active",
+                    "stats": {"Judgments": "2"},
+                },
+                {
+                    "name": "The Reasoner",
+                    "icon": "🧠",
+                    "title": "God of Reasoning Traces",
+                    "description": "Maintains traceable reasoning chains showing the 'why' behind decisions.",
+                    "abilities": [
+                        "create_trace",
+                        "get_recent_traces",
+                        "build_chain",
+                        "search_traces",
+                    ],
+                    "status": "active",
+                    "stats": {"Traces": "1"},
+                },
+                {
+                    "name": "The GitHub God",
+                    "icon": "🐙",
+                    "title": "God of Repository Management",
+                    "description": "Maintains repository state, generates rollups, and tracks GitHub operations.",
+                    "abilities": ["generate_rollup", "get_repository_state", "get_branch_summary"],
+                    "status": "active",
+                    "stats": {"Rollups": "7", "Operations": "1"},
+                },
+                {
+                    "name": "The Steward",
+                    "icon": "💎",
+                    "title": "God of Work Efforts",
+                    "description": "The divine intelligence that locks, monitors, organizes, and initiates evolutionary cycles.",
+                    "abilities": [
+                        "/think",
+                        "/evolve",
+                        "/monitor",
+                        "/organize",
+                        "/lock",
+                        "/unlock",
+                        "/status",
+                        "/secrets",
+                    ],
+                    "status": "active",
+                    "stats": {"System": "pyrite"},
+                },
+                {
+                    "name": "Librarian",
+                    "icon": "📚",
+                    "title": "God of Knowledge and Cataloging",
+                    "description": "Maintains catalogs and reports. Organizes knowledge and documentation.",
+                    "abilities": ["catalog", "organize_reports"],
+                    "status": "active",
+                    "stats": {"Catalog Items": "1", "Reports": "1"},
+                },
+                {
+                    "name": "Military Brass",
+                    "icon": "🎖️",
+                    "title": "God of Missions and Operations",
+                    "description": "Manages missions and briefings. Coordinates military-style operations.",
+                    "abilities": ["create_mission", "get_briefings", "missions_registry"],
+                    "status": "active",
+                    "stats": {"Missions": "2"},
+                },
+                {
+                    "name": "Mission Control",
+                    "icon": "🚀",
+                    "title": "God of Realm Exploration",
+                    "description": "Controls realm scouting and colonization operations.",
+                    "abilities": ["realm_scout", "get_realm_status", "control_registry"],
+                    "status": "active",
+                    "stats": {"Realm Scouts": "3"},
+                },
+                {
+                    "name": "Fae",
+                    "icon": "🧚",
+                    "title": "God of Quests",
+                    "description": "Manages quests and quest registry. Coordinates quest-based activities.",
+                    "abilities": ["create_quest", "get_quests", "quests_registry"],
+                    "status": "active",
+                    "stats": {"Quests": "Active"},
+                },
+                {
+                    "name": "The Village",
+                    "icon": "🏘️",
+                    "title": "God of Community",
+                    "description": "Manages village registry and community activities.",
+                    "abilities": ["village_registry"],
+                    "status": "active",
+                    "stats": {},
+                },
+                {
+                    "name": "Test Runner",
+                    "icon": "🧪",
+                    "title": "God of Testing",
+                    "description": "Manages test execution and test metadata.",
+                    "abilities": ["run_tests", "test_metadata"],
+                    "status": "active",
+                    "stats": {},
+                },
+                {
+                    "name": "External Drive Realm",
+                    "icon": "💾",
+                    "title": "God of External Storage",
+                    "description": "Manages external drive realm content and storage routing.",
+                    "abilities": ["content_manifest", "realm_registry", "realm_status"],
+                    "status": "active",
+                    "stats": {"Content Items": "1"},
+                },
+            ]
+        )
+        + """;
         
         function renderPantheon() {
             const content = document.getElementById('pantheon-content');
@@ -638,11 +680,13 @@ def create_field_guide_template():
 </body>
 </html>
     """
+    )
 
 
 def create_academic_template():
     """Create Academic Paper style template."""
-    return """
+    return (
+        """
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -765,116 +809,138 @@ def create_academic_template():
     </div>
     
     <script>
-        const pantheonGods = """ + json.dumps([
-            {
-                "name": "Magistrate",
-                "icon": "⚖️",
-                "title": "God of Precedent and Body of Proof",
-                "description": "Organizes proof cases from _work_efforts/proof_cases/ into Precedent categories, building a Body of Proof over time.",
-                "abilities": ["organize_all_cases", "search_precedents", "get_body_of_proof_summary"],
-                "status": "active",
-                "stats": {"Precedents": "2", "Cases": "2"}
-            },
-            {
-                "name": "Judge",
-                "icon": "👨‍⚖️",
-                "title": "God of Judgment and Evaluation",
-                "description": "Evaluates organization claims and references the Magistrate's Body of Proof.",
-                "abilities": ["evaluate_claim", "get_judgment_history", "get_judgment_summary"],
-                "status": "active",
-                "stats": {"Judgments": "2"}
-            },
-            {
-                "name": "The Reasoner",
-                "icon": "🧠",
-                "title": "God of Reasoning Traces",
-                "description": "Maintains traceable reasoning chains showing the 'why' behind decisions.",
-                "abilities": ["create_trace", "get_recent_traces", "build_chain", "search_traces"],
-                "status": "active",
-                "stats": {"Traces": "1"}
-            },
-            {
-                "name": "The GitHub God",
-                "icon": "🐙",
-                "title": "God of Repository Management",
-                "description": "Maintains repository state, generates rollups, and tracks GitHub operations.",
-                "abilities": ["generate_rollup", "get_repository_state", "get_branch_summary"],
-                "status": "active",
-                "stats": {"Rollups": "7", "Operations": "1"}
-            },
-            {
-                "name": "The Steward",
-                "icon": "💎",
-                "title": "God of Work Efforts",
-                "description": "The divine intelligence that locks, monitors, organizes, and initiates evolutionary cycles.",
-                "abilities": ["/think", "/evolve", "/monitor", "/organize", "/lock", "/unlock", "/status", "/secrets"],
-                "status": "active",
-                "stats": {"System": "pyrite"}
-            },
-            {
-                "name": "Librarian",
-                "icon": "📚",
-                "title": "God of Knowledge and Cataloging",
-                "description": "Maintains catalogs and reports. Organizes knowledge and documentation.",
-                "abilities": ["catalog", "organize_reports"],
-                "status": "active",
-                "stats": {"Catalog Items": "1", "Reports": "1"}
-            },
-            {
-                "name": "Military Brass",
-                "icon": "🎖️",
-                "title": "God of Missions and Operations",
-                "description": "Manages missions and briefings. Coordinates military-style operations.",
-                "abilities": ["create_mission", "get_briefings", "missions_registry"],
-                "status": "active",
-                "stats": {"Missions": "2"}
-            },
-            {
-                "name": "Mission Control",
-                "icon": "🚀",
-                "title": "God of Realm Exploration",
-                "description": "Controls realm scouting and colonization operations.",
-                "abilities": ["realm_scout", "get_realm_status", "control_registry"],
-                "status": "active",
-                "stats": {"Realm Scouts": "3"}
-            },
-            {
-                "name": "Fae",
-                "icon": "🧚",
-                "title": "God of Quests",
-                "description": "Manages quests and quest registry. Coordinates quest-based activities.",
-                "abilities": ["create_quest", "get_quests", "quests_registry"],
-                "status": "active",
-                "stats": {"Quests": "Active"}
-            },
-            {
-                "name": "The Village",
-                "icon": "🏘️",
-                "title": "God of Community",
-                "description": "Manages village registry and community activities.",
-                "abilities": ["village_registry"],
-                "status": "active",
-                "stats": {}
-            },
-            {
-                "name": "Test Runner",
-                "icon": "🧪",
-                "title": "God of Testing",
-                "description": "Manages test execution and test metadata.",
-                "abilities": ["run_tests", "test_metadata"],
-                "status": "active",
-                "stats": {}
-            },
-            {
-                "name": "External Drive Realm",
-                "icon": "💾",
-                "title": "God of External Storage",
-                "description": "Manages external drive realm content and storage routing.",
-                "abilities": ["content_manifest", "realm_registry", "realm_status"],
-                "status": "active",
-                "stats": {"Content Items": "1"}
-            }
-        ]) + """;
+        const pantheonGods = """
+        + json.dumps(
+            [
+                {
+                    "name": "Magistrate",
+                    "icon": "⚖️",
+                    "title": "God of Precedent and Body of Proof",
+                    "description": "Organizes proof cases from _work_efforts/proof_cases/ into Precedent categories, building a Body of Proof over time.",
+                    "abilities": [
+                        "organize_all_cases",
+                        "search_precedents",
+                        "get_body_of_proof_summary",
+                    ],
+                    "status": "active",
+                    "stats": {"Precedents": "2", "Cases": "2"},
+                },
+                {
+                    "name": "Judge",
+                    "icon": "👨‍⚖️",
+                    "title": "God of Judgment and Evaluation",
+                    "description": "Evaluates organization claims and references the Magistrate's Body of Proof.",
+                    "abilities": ["evaluate_claim", "get_judgment_history", "get_judgment_summary"],
+                    "status": "active",
+                    "stats": {"Judgments": "2"},
+                },
+                {
+                    "name": "The Reasoner",
+                    "icon": "🧠",
+                    "title": "God of Reasoning Traces",
+                    "description": "Maintains traceable reasoning chains showing the 'why' behind decisions.",
+                    "abilities": [
+                        "create_trace",
+                        "get_recent_traces",
+                        "build_chain",
+                        "search_traces",
+                    ],
+                    "status": "active",
+                    "stats": {"Traces": "1"},
+                },
+                {
+                    "name": "The GitHub God",
+                    "icon": "🐙",
+                    "title": "God of Repository Management",
+                    "description": "Maintains repository state, generates rollups, and tracks GitHub operations.",
+                    "abilities": ["generate_rollup", "get_repository_state", "get_branch_summary"],
+                    "status": "active",
+                    "stats": {"Rollups": "7", "Operations": "1"},
+                },
+                {
+                    "name": "The Steward",
+                    "icon": "💎",
+                    "title": "God of Work Efforts",
+                    "description": "The divine intelligence that locks, monitors, organizes, and initiates evolutionary cycles.",
+                    "abilities": [
+                        "/think",
+                        "/evolve",
+                        "/monitor",
+                        "/organize",
+                        "/lock",
+                        "/unlock",
+                        "/status",
+                        "/secrets",
+                    ],
+                    "status": "active",
+                    "stats": {"System": "pyrite"},
+                },
+                {
+                    "name": "Librarian",
+                    "icon": "📚",
+                    "title": "God of Knowledge and Cataloging",
+                    "description": "Maintains catalogs and reports. Organizes knowledge and documentation.",
+                    "abilities": ["catalog", "organize_reports"],
+                    "status": "active",
+                    "stats": {"Catalog Items": "1", "Reports": "1"},
+                },
+                {
+                    "name": "Military Brass",
+                    "icon": "🎖️",
+                    "title": "God of Missions and Operations",
+                    "description": "Manages missions and briefings. Coordinates military-style operations.",
+                    "abilities": ["create_mission", "get_briefings", "missions_registry"],
+                    "status": "active",
+                    "stats": {"Missions": "2"},
+                },
+                {
+                    "name": "Mission Control",
+                    "icon": "🚀",
+                    "title": "God of Realm Exploration",
+                    "description": "Controls realm scouting and colonization operations.",
+                    "abilities": ["realm_scout", "get_realm_status", "control_registry"],
+                    "status": "active",
+                    "stats": {"Realm Scouts": "3"},
+                },
+                {
+                    "name": "Fae",
+                    "icon": "🧚",
+                    "title": "God of Quests",
+                    "description": "Manages quests and quest registry. Coordinates quest-based activities.",
+                    "abilities": ["create_quest", "get_quests", "quests_registry"],
+                    "status": "active",
+                    "stats": {"Quests": "Active"},
+                },
+                {
+                    "name": "The Village",
+                    "icon": "🏘️",
+                    "title": "God of Community",
+                    "description": "Manages village registry and community activities.",
+                    "abilities": ["village_registry"],
+                    "status": "active",
+                    "stats": {},
+                },
+                {
+                    "name": "Test Runner",
+                    "icon": "🧪",
+                    "title": "God of Testing",
+                    "description": "Manages test execution and test metadata.",
+                    "abilities": ["run_tests", "test_metadata"],
+                    "status": "active",
+                    "stats": {},
+                },
+                {
+                    "name": "External Drive Realm",
+                    "icon": "💾",
+                    "title": "God of External Storage",
+                    "description": "Manages external drive realm content and storage routing.",
+                    "abilities": ["content_manifest", "realm_registry", "realm_status"],
+                    "status": "active",
+                    "stats": {"Content Items": "1"},
+                },
+            ]
+        )
+        + """;
         
         function renderPantheon() {
             const content = document.getElementById('pantheon-content');
@@ -903,11 +969,13 @@ def create_academic_template():
 </body>
 </html>
     """
+    )
 
 
 def create_lab_notes_template():
     """Create Lab Notes style template."""
-    return """
+    return (
+        """
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1003,7 +1071,9 @@ def create_lab_notes_template():
     <div class="lab-cover">
         <div class="lab-id">LAB-NOTES-PANTHEON-001</div>
         <div class="lab-title">Pantheon Entity Catalog</div>
-        <div style="margin-top: 0.1in;">Date: """ + datetime.now().strftime("%Y-%m-%d %H:%M:%S") + """</div>
+        <div style="margin-top: 0.1in;">Date: """
+        + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        + """</div>
     </div>
     
     <div id="pantheon-content">
@@ -1011,116 +1081,138 @@ def create_lab_notes_template():
     </div>
     
     <script>
-        const pantheonGods = """ + json.dumps([
-            {
-                "name": "Magistrate",
-                "icon": "⚖️",
-                "title": "God of Precedent and Body of Proof",
-                "description": "Organizes proof cases from _work_efforts/proof_cases/ into Precedent categories, building a Body of Proof over time.",
-                "abilities": ["organize_all_cases", "search_precedents", "get_body_of_proof_summary"],
-                "status": "active",
-                "stats": {"Precedents": "2", "Cases": "2"}
-            },
-            {
-                "name": "Judge",
-                "icon": "👨‍⚖️",
-                "title": "God of Judgment and Evaluation",
-                "description": "Evaluates organization claims and references the Magistrate's Body of Proof.",
-                "abilities": ["evaluate_claim", "get_judgment_history", "get_judgment_summary"],
-                "status": "active",
-                "stats": {"Judgments": "2"}
-            },
-            {
-                "name": "The Reasoner",
-                "icon": "🧠",
-                "title": "God of Reasoning Traces",
-                "description": "Maintains traceable reasoning chains showing the 'why' behind decisions.",
-                "abilities": ["create_trace", "get_recent_traces", "build_chain", "search_traces"],
-                "status": "active",
-                "stats": {"Traces": "1"}
-            },
-            {
-                "name": "The GitHub God",
-                "icon": "🐙",
-                "title": "God of Repository Management",
-                "description": "Maintains repository state, generates rollups, and tracks GitHub operations.",
-                "abilities": ["generate_rollup", "get_repository_state", "get_branch_summary"],
-                "status": "active",
-                "stats": {"Rollups": "7", "Operations": "1"}
-            },
-            {
-                "name": "The Steward",
-                "icon": "💎",
-                "title": "God of Work Efforts",
-                "description": "The divine intelligence that locks, monitors, organizes, and initiates evolutionary cycles.",
-                "abilities": ["/think", "/evolve", "/monitor", "/organize", "/lock", "/unlock", "/status", "/secrets"],
-                "status": "active",
-                "stats": {"System": "pyrite"}
-            },
-            {
-                "name": "Librarian",
-                "icon": "📚",
-                "title": "God of Knowledge and Cataloging",
-                "description": "Maintains catalogs and reports. Organizes knowledge and documentation.",
-                "abilities": ["catalog", "organize_reports"],
-                "status": "active",
-                "stats": {"Catalog Items": "1", "Reports": "1"}
-            },
-            {
-                "name": "Military Brass",
-                "icon": "🎖️",
-                "title": "God of Missions and Operations",
-                "description": "Manages missions and briefings. Coordinates military-style operations.",
-                "abilities": ["create_mission", "get_briefings", "missions_registry"],
-                "status": "active",
-                "stats": {"Missions": "2"}
-            },
-            {
-                "name": "Mission Control",
-                "icon": "🚀",
-                "title": "God of Realm Exploration",
-                "description": "Controls realm scouting and colonization operations.",
-                "abilities": ["realm_scout", "get_realm_status", "control_registry"],
-                "status": "active",
-                "stats": {"Realm Scouts": "3"}
-            },
-            {
-                "name": "Fae",
-                "icon": "🧚",
-                "title": "God of Quests",
-                "description": "Manages quests and quest registry. Coordinates quest-based activities.",
-                "abilities": ["create_quest", "get_quests", "quests_registry"],
-                "status": "active",
-                "stats": {"Quests": "Active"}
-            },
-            {
-                "name": "The Village",
-                "icon": "🏘️",
-                "title": "God of Community",
-                "description": "Manages village registry and community activities.",
-                "abilities": ["village_registry"],
-                "status": "active",
-                "stats": {}
-            },
-            {
-                "name": "Test Runner",
-                "icon": "🧪",
-                "title": "God of Testing",
-                "description": "Manages test execution and test metadata.",
-                "abilities": ["run_tests", "test_metadata"],
-                "status": "active",
-                "stats": {}
-            },
-            {
-                "name": "External Drive Realm",
-                "icon": "💾",
-                "title": "God of External Storage",
-                "description": "Manages external drive realm content and storage routing.",
-                "abilities": ["content_manifest", "realm_registry", "realm_status"],
-                "status": "active",
-                "stats": {"Content Items": "1"}
-            }
-        ]) + """;
+        const pantheonGods = """
+        + json.dumps(
+            [
+                {
+                    "name": "Magistrate",
+                    "icon": "⚖️",
+                    "title": "God of Precedent and Body of Proof",
+                    "description": "Organizes proof cases from _work_efforts/proof_cases/ into Precedent categories, building a Body of Proof over time.",
+                    "abilities": [
+                        "organize_all_cases",
+                        "search_precedents",
+                        "get_body_of_proof_summary",
+                    ],
+                    "status": "active",
+                    "stats": {"Precedents": "2", "Cases": "2"},
+                },
+                {
+                    "name": "Judge",
+                    "icon": "👨‍⚖️",
+                    "title": "God of Judgment and Evaluation",
+                    "description": "Evaluates organization claims and references the Magistrate's Body of Proof.",
+                    "abilities": ["evaluate_claim", "get_judgment_history", "get_judgment_summary"],
+                    "status": "active",
+                    "stats": {"Judgments": "2"},
+                },
+                {
+                    "name": "The Reasoner",
+                    "icon": "🧠",
+                    "title": "God of Reasoning Traces",
+                    "description": "Maintains traceable reasoning chains showing the 'why' behind decisions.",
+                    "abilities": [
+                        "create_trace",
+                        "get_recent_traces",
+                        "build_chain",
+                        "search_traces",
+                    ],
+                    "status": "active",
+                    "stats": {"Traces": "1"},
+                },
+                {
+                    "name": "The GitHub God",
+                    "icon": "🐙",
+                    "title": "God of Repository Management",
+                    "description": "Maintains repository state, generates rollups, and tracks GitHub operations.",
+                    "abilities": ["generate_rollup", "get_repository_state", "get_branch_summary"],
+                    "status": "active",
+                    "stats": {"Rollups": "7", "Operations": "1"},
+                },
+                {
+                    "name": "The Steward",
+                    "icon": "💎",
+                    "title": "God of Work Efforts",
+                    "description": "The divine intelligence that locks, monitors, organizes, and initiates evolutionary cycles.",
+                    "abilities": [
+                        "/think",
+                        "/evolve",
+                        "/monitor",
+                        "/organize",
+                        "/lock",
+                        "/unlock",
+                        "/status",
+                        "/secrets",
+                    ],
+                    "status": "active",
+                    "stats": {"System": "pyrite"},
+                },
+                {
+                    "name": "Librarian",
+                    "icon": "📚",
+                    "title": "God of Knowledge and Cataloging",
+                    "description": "Maintains catalogs and reports. Organizes knowledge and documentation.",
+                    "abilities": ["catalog", "organize_reports"],
+                    "status": "active",
+                    "stats": {"Catalog Items": "1", "Reports": "1"},
+                },
+                {
+                    "name": "Military Brass",
+                    "icon": "🎖️",
+                    "title": "God of Missions and Operations",
+                    "description": "Manages missions and briefings. Coordinates military-style operations.",
+                    "abilities": ["create_mission", "get_briefings", "missions_registry"],
+                    "status": "active",
+                    "stats": {"Missions": "2"},
+                },
+                {
+                    "name": "Mission Control",
+                    "icon": "🚀",
+                    "title": "God of Realm Exploration",
+                    "description": "Controls realm scouting and colonization operations.",
+                    "abilities": ["realm_scout", "get_realm_status", "control_registry"],
+                    "status": "active",
+                    "stats": {"Realm Scouts": "3"},
+                },
+                {
+                    "name": "Fae",
+                    "icon": "🧚",
+                    "title": "God of Quests",
+                    "description": "Manages quests and quest registry. Coordinates quest-based activities.",
+                    "abilities": ["create_quest", "get_quests", "quests_registry"],
+                    "status": "active",
+                    "stats": {"Quests": "Active"},
+                },
+                {
+                    "name": "The Village",
+                    "icon": "🏘️",
+                    "title": "God of Community",
+                    "description": "Manages village registry and community activities.",
+                    "abilities": ["village_registry"],
+                    "status": "active",
+                    "stats": {},
+                },
+                {
+                    "name": "Test Runner",
+                    "icon": "🧪",
+                    "title": "God of Testing",
+                    "description": "Manages test execution and test metadata.",
+                    "abilities": ["run_tests", "test_metadata"],
+                    "status": "active",
+                    "stats": {},
+                },
+                {
+                    "name": "External Drive Realm",
+                    "icon": "💾",
+                    "title": "God of External Storage",
+                    "description": "Manages external drive realm content and storage routing.",
+                    "abilities": ["content_manifest", "realm_registry", "realm_status"],
+                    "status": "active",
+                    "stats": {"Content Items": "1"},
+                },
+            ]
+        )
+        + """;
         
         function renderPantheon() {
             const content = document.getElementById('pantheon-content');
@@ -1163,38 +1255,40 @@ def create_lab_notes_template():
 </body>
 </html>
     """
+    )
 
 
 def generate_all_templates():
     """Generate all template versions."""
     output_dir = Path(__file__).parent / "pantheon_templates"
     output_dir.mkdir(exist_ok=True)
-    
+
     templates = {
         "improved": "scripts/pantheon_web_improved.html",
         "dnd_character_sheet": create_dnd_template(),
         "field_guide": create_field_guide_template(),
         "academic_paper": create_academic_template(),
-        "lab_notes": create_lab_notes_template()
+        "lab_notes": create_lab_notes_template(),
     }
-    
+
     print("🎨 Generating Pantheon UI templates...\n")
-    
+
     # Copy improved version
     if Path("scripts/pantheon_web_improved.html").exists():
         import shutil
+
         shutil.copy("scripts/pantheon_web_improved.html", output_dir / "pantheon_improved.html")
         print(f"✅ Improved version: {output_dir / 'pantheon_improved.html'}")
-    
+
     # Generate template versions
     for name, content in templates.items():
         if name == "improved":
             continue
-            
+
         html_path = output_dir / f"pantheon_{name}.html"
         html_path.write_text(content)
         print(f"✅ {name.replace('_', ' ').title()}: {html_path}")
-        
+
         # Generate PDF
         try:
             pdf_path = output_dir / f"pantheon_{name}.pdf"
@@ -1202,7 +1296,7 @@ def generate_all_templates():
             print(f"   📄 PDF: {pdf_path}")
         except Exception as e:
             print(f"   ⚠️  PDF generation failed: {e}")
-    
+
     print(f"\n✨ All templates generated in: {output_dir}")
     return output_dir
 

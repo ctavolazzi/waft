@@ -12,12 +12,11 @@ This advanced demo showcases WAFT's powerful self-documentation and organization
 This demonstrates WAFT's recursive self-improvement through documentation.
 """
 
-import sys
-import subprocess
 import platform
-from pathlib import Path
+import subprocess
+import sys
 from datetime import datetime
-from typing import Optional
+from pathlib import Path
 
 # Add project root to path
 project_root = Path(__file__).parent.parent.parent
@@ -25,8 +24,6 @@ sys.path.insert(0, str(project_root))
 
 from rich.console import Console
 from rich.panel import Panel
-from rich.table import Table
-from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn
 
 console = Console()
 
@@ -34,6 +31,7 @@ console = Console()
 # ============================================================================
 # Utility Functions
 # ============================================================================
+
 
 def open_file(file_path: Path) -> bool:
     """Open a file using the system's default application."""
@@ -54,19 +52,22 @@ def open_file(file_path: Path) -> bool:
 # Demo Sections
 # ============================================================================
 
+
 def welcome_message():
     """Display welcome message."""
     console.print("\n" + "=" * 80)
-    console.print(Panel.fit(
-        "[bold cyan]WAFT Advanced Demonstration[/bold cyan]\n\n"
-        "[yellow]World Architecture Framework & Templates[/yellow]\n\n"
-        "This demo showcases WAFT's advanced capabilities:\n"
-        "• Self-Documentation (WAFT inspecting itself)\n"
-        "• PDF Organization (Intelligent booklet assembly)\n"
-        "• Meta-Cognitive Integration",
-        title="Welcome",
-        border_style="cyan"
-    ))
+    console.print(
+        Panel.fit(
+            "[bold cyan]WAFT Advanced Demonstration[/bold cyan]\n\n"
+            "[yellow]World Architecture Framework & Templates[/yellow]\n\n"
+            "This demo showcases WAFT's advanced capabilities:\n"
+            "• Self-Documentation (WAFT inspecting itself)\n"
+            "• PDF Organization (Intelligent booklet assembly)\n"
+            "• Meta-Cognitive Integration",
+            title="Welcome",
+            border_style="cyan",
+        )
+    )
     console.print("=" * 80)
     console.print()
 
@@ -74,26 +75,26 @@ def welcome_message():
 def demonstrate_framework_documentation(demo_dir: Path) -> Path:
     """Demonstrate WAFT's self-documentation capability."""
     console.print("\n[bold cyan]📚 DEMONSTRATION 1: FRAMEWORK SELF-DOCUMENTATION[/bold cyan]\n")
-    
+
     console.print("WAFT can inspect its own codebase and generate comprehensive")
     console.print("documentation about how it functions. This is [bold]recursive[/bold]")
     console.print("self-documentation - the system describing itself.\n")
-    
+
     console.print("[dim]Running framework documentation generator...[/dim]\n")
-    
+
     # Import and run framework documentation generator
     sys.path.insert(0, str(project_root / "tools" / "framework_documentation"))
     from generate_framework_docs import generate_framework_documentation
-    
+
     framework_doc_path = demo_dir / "WAFT_Framework_Documentation.pdf"
-    
+
     try:
         with console.status("[bold cyan]WAFT is inspecting itself...[/bold cyan]"):
             result = generate_framework_documentation(project_root, framework_doc_path)
-        
+
         if result and result.exists():
             size_mb = result.stat().st_size / (1024 * 1024)
-            console.print(f"  [green]✅[/green] Framework documentation generated")
+            console.print("  [green]✅[/green] Framework documentation generated")
             console.print(f"     File: [bold]{result.name}[/bold]")
             console.print(f"     Size: [bold]{size_mb:.2f} MB[/bold]")
             console.print()
@@ -102,52 +103,55 @@ def demonstrate_framework_documentation(demo_dir: Path) -> Path:
             console.print()
             return result
         else:
-            console.print("  [yellow]⚠️[/yellow]  Documentation generation completed but file not found")
+            console.print(
+                "  [yellow]⚠️[/yellow]  Documentation generation completed but file not found"
+            )
             return None
     except Exception as e:
         console.print(f"  [red]❌[/red] Error: {e}")
         import traceback
+
         console.print(f"     [dim]{traceback.format_exc()}[/dim]")
         return None
 
 
-def demonstrate_pdf_organization(demo_dir: Path) -> Optional[Path]:
+def demonstrate_pdf_organization(demo_dir: Path) -> Path | None:
     """Demonstrate PDF binder organization."""
     console.print("\n[bold cyan]📦 DEMONSTRATION 2: PDF BINDER ORGANIZATION[/bold cyan]\n")
-    
+
     console.print("WAFT can recursively scan any directory, find all PDFs,")
     console.print("extract metadata, and organize them into intelligent booklets.\n")
-    
+
     # Check if we have PDFs in the project to organize
     pdf_count = len(list(project_root.rglob("*.pdf")))
-    
+
     if pdf_count == 0:
         console.print("  [yellow]⚠️[/yellow]  No PDFs found in project to organize")
         console.print("     Creating a sample demonstration instead...\n")
         return None
-    
+
     console.print(f"  [cyan]🔍[/cyan] Found [bold]{pdf_count}[/bold] PDF files in project")
     console.print("     Organizing into booklets (max 25 pages each)...\n")
-    
+
     # Import and run PDF organizer
     sys.path.insert(0, str(project_root / "tools" / "pdf_binder_organizer"))
     from organize_pdfs import PDFBinderOrganizer
-    
+
     output_dir = demo_dir / "organized_pdfs"
     output_dir.mkdir(exist_ok=True)
-    
+
     try:
         organizer = PDFBinderOrganizer(project_root, output_dir)
-        
+
         # Run organization
         result = organizer.organize()
-        
+
         if result:
             console.print()
             console.print("  [green]✅[/green] PDF organization complete!")
             console.print(f"     Output: [bold]{output_dir}[/bold]")
             console.print()
-            
+
             # Show what was created
             full_binder = output_dir / "FULL_BINDER.pdf"
             if full_binder.exists():
@@ -156,11 +160,12 @@ def demonstrate_pdf_organization(demo_dir: Path) -> Optional[Path]:
                 console.print(f"     Size: [bold]{size_mb:.2f} MB[/bold]")
                 console.print()
                 return full_binder
-        
+
         return None
     except Exception as e:
         console.print(f"  [red]❌[/red] Error: {e}")
         import traceback
+
         console.print(f"     [dim]{traceback.format_exc()}[/dim]")
         return None
 
@@ -168,13 +173,13 @@ def demonstrate_pdf_organization(demo_dir: Path) -> Optional[Path]:
 def demonstrate_meta_cognitive_integration(demo_dir: Path):
     """Show how these tools integrate with WAFT's meta-cognitive layer."""
     console.print("\n[bold cyan]🧠 DEMONSTRATION 3: META-COGNITIVE INTEGRATION[/bold cyan]\n")
-    
+
     console.print("These advanced tools work seamlessly with WAFT's")
     console.print("meta-cognitive memory system (_pyrite).\n")
-    
+
     # Create integration explanation
     integration_file = demo_dir / "advanced_tools_integration.md"
-    
+
     content = f"""# WAFT Advanced Tools Integration
 
 Generated: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
@@ -235,9 +240,9 @@ These tools demonstrate WAFT's ability to:
 
 This is **recursive self-improvement through documentation and organization**.
 """
-    
+
     integration_file.write_text(content)
-    
+
     console.print("  [cyan]📝[/cyan] Created integration explanation")
     console.print(f"     File: [bold]{integration_file.name}[/bold]")
     console.print()
@@ -246,14 +251,15 @@ This is **recursive self-improvement through documentation and organization**.
     console.print()
 
 
-def create_advanced_demo_booklet(demo_dir: Path, framework_doc: Optional[Path], 
-                                 pdf_binder: Optional[Path]) -> Path:
+def create_advanced_demo_booklet(
+    demo_dir: Path, framework_doc: Path | None, pdf_binder: Path | None
+) -> Path:
     """Create a comprehensive booklet documenting the advanced demo."""
     console.print("\n[bold cyan]📖 GENERATING ADVANCED DEMO BOOKLET[/bold cyan]\n")
-    
+
     from jinja2 import Template
     from weasyprint import HTML
-    
+
     booklet_template = """
 <!DOCTYPE html>
 <html lang="en">
@@ -459,45 +465,47 @@ def create_advanced_demo_booklet(demo_dir: Path, framework_doc: Optional[Path],
 </body>
 </html>
 """
-    
+
     template = Template(booklet_template)
     html_content = template.render(
         date=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         framework_doc=framework_doc is not None,
-        pdf_binder=pdf_binder is not None
+        pdf_binder=pdf_binder is not None,
     )
-    
+
     booklet_path = demo_dir / "WAFT_Advanced_Demo_Booklet.pdf"
-    
+
     with console.status("[bold cyan]Creating PDF booklet...[/bold cyan]"):
         HTML(string=html_content).write_pdf(str(booklet_path))
-    
+
     size_mb = booklet_path.stat().st_size / (1024 * 1024)
-    console.print(f"  [green]✅[/green] Advanced demo booklet generated")
+    console.print("  [green]✅[/green] Advanced demo booklet generated")
     console.print(f"     File: [bold]{booklet_path.name}[/bold]")
     console.print(f"     Size: [bold]{size_mb:.2f} MB[/bold]")
     console.print()
-    
+
     return booklet_path
 
 
 def closing_summary(demo_dir: Path):
     """Display closing summary."""
     console.print("\n" + "=" * 80)
-    console.print(Panel.fit(
-        "[bold green]🎉 ADVANCED DEMONSTRATION COMPLETE![/bold green]\n\n"
-        "What you witnessed:\n\n"
-        "✅ Framework Self-Documentation\n"
-        "   WAFT inspecting itself and generating documentation\n\n"
-        "✅ PDF Binder Organization\n"
-        "   Intelligent scanning and booklet assembly\n\n"
-        "✅ Meta-Cognitive Integration\n"
-        "   Tools working with WAFT's epistemic memory\n\n"
-        "✅ Recursive Self-Improvement\n"
-        "   Documentation → Organization → Tracking → Improvement",
-        title="Summary",
-        border_style="green"
-    ))
+    console.print(
+        Panel.fit(
+            "[bold green]🎉 ADVANCED DEMONSTRATION COMPLETE![/bold green]\n\n"
+            "What you witnessed:\n\n"
+            "✅ Framework Self-Documentation\n"
+            "   WAFT inspecting itself and generating documentation\n\n"
+            "✅ PDF Binder Organization\n"
+            "   Intelligent scanning and booklet assembly\n\n"
+            "✅ Meta-Cognitive Integration\n"
+            "   Tools working with WAFT's epistemic memory\n\n"
+            "✅ Recursive Self-Improvement\n"
+            "   Documentation → Organization → Tracking → Improvement",
+            title="Summary",
+            border_style="green",
+        )
+    )
     console.print("=" * 80)
     console.print()
     console.print(f"[bold]Demo folder:[/bold] [cyan]{demo_dir}[/cyan]")
@@ -508,6 +516,7 @@ def closing_summary(demo_dir: Path):
 # Main Demo Flow
 # ============================================================================
 
+
 def main():
     """Run the advanced demonstration."""
     try:
@@ -515,37 +524,38 @@ def main():
         project_root = Path(__file__).parent.parent.parent
         demo_dir = project_root / "advanced_demo_output"
         demo_dir.mkdir(exist_ok=True)
-        
+
         # 1. Welcome
         welcome_message()
-        
+
         # 2. Framework documentation
         framework_doc = demonstrate_framework_documentation(demo_dir)
-        
+
         # 3. PDF organization
         pdf_binder = demonstrate_pdf_organization(demo_dir)
-        
+
         # 4. Meta-cognitive integration
         demonstrate_meta_cognitive_integration(demo_dir)
-        
+
         # 5. Generate booklet
         booklet = create_advanced_demo_booklet(demo_dir, framework_doc, pdf_binder)
-        
+
         # 6. Closing
         closing_summary(demo_dir)
-        
+
         # 7. Open booklet
         console.print("  [cyan]📖[/cyan] Opening advanced demo booklet...")
         if open_file(booklet):
             console.print("     [green]✅[/green] Booklet opened")
         console.print()
-        
+
     except KeyboardInterrupt:
         console.print("\n\n[bold yellow]Demonstration interrupted by user.[/bold yellow]\n")
         sys.exit(0)
     except Exception as e:
         console.print(f"\n\n[bold red]❌ Error during demonstration:[/bold red] {e}")
         import traceback
+
         console.print(f"[dim]{traceback.format_exc()}[/dim]")
         sys.exit(1)
 

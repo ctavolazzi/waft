@@ -16,9 +16,9 @@ Features:
 """
 
 from pathlib import Path
+
 from jinja2 import Template
 from weasyprint import HTML
-
 
 INVOICE_CONTRACT_TEMPLATE = """
 <!DOCTYPE html>
@@ -353,7 +353,7 @@ def generate_invoice_contract(
     party2_label: str = "BUYER",
     party2_info: str = "",
     party2_signatory: str = "",
-    show_signatures: bool = False
+    show_signatures: bool = False,
 ) -> Path:
     """
     Generate a business invoice or contract.
@@ -407,7 +407,7 @@ def generate_invoice_contract(
         party2_label=party2_label,
         party2_info=party2_info,
         party2_signatory=party2_signatory,
-        show_signatures=show_signatures
+        show_signatures=show_signatures,
     )
 
     HTML(string=html_output).write_pdf(output_path)

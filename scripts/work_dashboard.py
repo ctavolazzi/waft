@@ -13,23 +13,21 @@ Uses proven patterns from existing codebase.
 import argparse
 import json
 import logging
-import os
 import platform
 import re
-import secrets
 import subprocess
-from datetime import datetime, timedelta
+from datetime import datetime
 from pathlib import Path
-from typing import Dict, Any, List, Optional
+from typing import Any
 
 import yaml
 
+# Import work effort collection from show_me.py
+from scripts.show_me import get_projects, get_work_efforts
+from src.waft.core.html_realm_network_security import _is_sensitive_file
+
 # Import security functions (proven patterns from codebase)
 from src.waft.utils import _validate_path_in_storage
-from src.waft.core.html_realm_network_security import _is_sensitive_file, FILE_PERM, DIR_PERM
-
-# Import work effort collection from show_me.py
-from scripts.show_me import get_work_efforts, get_projects
 
 logger = logging.getLogger(__name__)
 
@@ -52,7 +50,7 @@ def _validate_work_effort_path(we_dir: Path, project_root: Path) -> bool:
             return False
 
         # Reject path traversal in directory name
-        if '..' in we_dir.parts:
+        if ".." in we_dir.parts:
             return False
 
         # Check for symlinks (security: reject symlinks)
@@ -64,23 +62,21 @@ def _validate_work_effort_path(we_dir: Path, project_root: Path) -> bool:
         return False
 
 
-def find_index_file(we_dir: Path, we_id: str) -> Optional[Path]:
+def find_index_file(we_dir: Path, we_id: str) -> Path | None:
     """Find work effort index file with fallback patterns (from show_me.py lines 59-68)."""
-    patterns = [
-        f"{we_id}_index.md",
-        f"{we_dir.name}_index.md",
-        "index.md"
-    ]
+    patterns = [f"{we_id}_index.md", f"{we_dir.name}_index.md", "index.md"]
 
     for pattern in patterns:
         candidate = we_dir / pattern
-        if candidate.exists() and _validate_work_effort_path(candidate.parent, we_dir.parent.parent):
+        if candidate.exists() and _validate_work_effort_path(
+            candidate.parent, we_dir.parent.parent
+        ):
             return candidate
 
     return None
 
 
-def read_work_effort_index(index_file: Path) -> Dict[str, Any]:
+def read_work_effort_index(index_file: Path) -> dict[str, Any]:
     """Read and validate work effort index file securely (from work_effort_service.py pattern)."""
     try:
         # Check file size
@@ -88,12 +84,12 @@ def read_work_effort_index(index_file: Path) -> Dict[str, Any]:
             logger.warning(f"Index file too large: {index_file}")
             return {}
 
-        content = index_file.read_text(encoding='utf-8')
+        content = index_file.read_text(encoding="utf-8")
 
         # Parse YAML frontmatter with size limit (from work_effort_service.py lines 106-132)
         frontmatter = {}
         if "---" in content:
-            frontmatter_match = re.match(r'^---\s*\n(.*?)\n---\s*\n', content, re.DOTALL)
+            frontmatter_match = re.match(r"^---\s*\n(.*?)\n---\s*\n", content, re.DOTALL)
             if frontmatter_match:
                 frontmatter_text = frontmatter_match.group(1)
                 if len(frontmatter_text) > MAX_FRONTMATTER_SIZE:
@@ -106,7 +102,7 @@ def read_work_effort_index(index_file: Path) -> Dict[str, Any]:
                     return {}
 
         return frontmatter
-    except (FileNotFoundError, PermissionError, IOError) as e:
+    except (OSError, FileNotFoundError, PermissionError) as e:
         logger.warning(f"Error reading index file {index_file}: {e}")
         return {}
     except Exception as e:
@@ -114,15 +110,13 @@ def read_work_effort_index(index_file: Path) -> Dict[str, Any]:
         return {}
 
 
-def get_recent_git_activity(work_effort_path: Path, days: int = 7) -> List[Dict]:
+def get_recent_git_activity(work_effort_path: Path, days: int = 7) -> list[dict]:
     """Get recent git activity for work effort with validation and timeouts."""
     # Check if git is available
     try:
-        subprocess.run(["git", "--version"],
-                      shell=False,
-                      capture_output=True,
-                      check=True,
-                      timeout=2)
+        subprocess.run(
+            ["git", "--version"], shell=False, capture_output=True, check=True, timeout=2
+        )
     except (FileNotFoundError, subprocess.TimeoutExpired, subprocess.CalledProcessError):
         logger.debug("Git not available, skipping git history")
         return []
@@ -135,7 +129,7 @@ def get_recent_git_activity(work_effort_path: Path, days: int = 7) -> List[Dict]
             shell=False,
             capture_output=True,
             check=False,
-            timeout=2
+            timeout=2,
         )
         if result.returncode != 0:
             return []  # Not a git repository
@@ -145,30 +139,35 @@ def get_recent_git_activity(work_effort_path: Path, days: int = 7) -> List[Dict]
     # Get recent commits (limit output size)
     try:
         result = subprocess.run(
-            ["git", "log",
-             f"--since={days} days ago",
-             "--format=%H|%s|%an|%ad",
-             "--date=iso",
-             "--max-count=10",  # Limit results
-             str(work_effort_path)],
+            [
+                "git",
+                "log",
+                f"--since={days} days ago",
+                "--format=%H|%s|%an|%ad",
+                "--date=iso",
+                "--max-count=10",  # Limit results
+                str(work_effort_path),
+            ],
             shell=False,
             capture_output=True,
             text=True,
             timeout=5,  # Timeout after 5 seconds
-            check=False
+            check=False,
         )
         if result.returncode == 0:
             commits = []
-            for line in result.stdout.strip().split('\n'):
+            for line in result.stdout.strip().split("\n"):
                 if line:
-                    parts = line.split('|', 3)
+                    parts = line.split("|", 3)
                     if len(parts) == 4:
-                        commits.append({
-                            "hash": parts[0],
-                            "message": parts[1],
-                            "author": parts[2],
-                            "date": parts[3]
-                        })
+                        commits.append(
+                            {
+                                "hash": parts[0],
+                                "message": parts[1],
+                                "author": parts[2],
+                                "date": parts[3],
+                            }
+                        )
             return commits
     except subprocess.TimeoutExpired:
         logger.warning("Git log timed out")
@@ -178,7 +177,7 @@ def get_recent_git_activity(work_effort_path: Path, days: int = 7) -> List[Dict]
     return []
 
 
-def analyze_work_effort_actions(work_effort: Dict, project_path: Path) -> List[Dict]:
+def analyze_work_effort_actions(work_effort: dict, project_path: Path) -> list[dict]:
     """
     Analyze work effort state and generate available actions.
 
@@ -186,14 +185,15 @@ def analyze_work_effort_actions(work_effort: Dict, project_path: Path) -> List[D
     Uses proven patterns from existing codebase.
     """
     actions = []
-    we_id = work_effort.get('id', '')
-    we_path = work_effort.get('path', '')
-    status = work_effort.get('status', 'open')
+    we_id = work_effort.get("id", "")
+    we_path = work_effort.get("path", "")
+    status = work_effort.get("status", "open")
     we_dir = project_path / we_path
 
     # SECURITY: Validate work effort ID format before use
     import re
-    if not we_id or not re.match(r'^WE-\d{6}-[a-z0-9]{4}$', we_id):
+
+    if not we_id or not re.match(r"^WE-\d{6}-[a-z0-9]{4}$", we_id):
         logger.warning(f"Invalid work effort ID format: {we_id}")
         return actions  # Return empty actions for invalid ID
 
@@ -208,16 +208,18 @@ def analyze_work_effort_actions(work_effort: Dict, project_path: Path) -> List[D
         # No index file - return basic actions
         if status == "open":
             # we_id already validated at function start
-            actions.append({
-                "id": "action_start",
-                "label": "Start Work",
-                "icon": "▶️",
-                "action": "status_transition",
-                "command": f"Update work effort {we_id} status to 'active'",  # we_id validated at function start
-                "priority": "high",
-                "available": True,
-                "reason": "Work effort is open and ready to start"
-            })
+            actions.append(
+                {
+                    "id": "action_start",
+                    "label": "Start Work",
+                    "icon": "▶️",
+                    "action": "status_transition",
+                    "command": f"Update work effort {we_id} status to 'active'",  # we_id validated at function start
+                    "priority": "high",
+                    "available": True,
+                    "reason": "Work effort is open and ready to start",
+                }
+            )
         return actions
 
     # Read index file securely
@@ -227,7 +229,7 @@ def analyze_work_effort_actions(work_effort: Dict, project_path: Path) -> List[D
 
     # Read content for keyword analysis
     try:
-        content = index_file.read_text(encoding='utf-8')
+        content = index_file.read_text(encoding="utf-8")
         content_lower = content.lower()
     except Exception as e:
         logger.warning(f"Error reading content: {e}")
@@ -235,109 +237,127 @@ def analyze_work_effort_actions(work_effort: Dict, project_path: Path) -> List[D
 
     # Status-based actions
     if status == "open":
-        actions.append({
-            "id": "action_start",
-            "label": "Start Work",
-            "icon": "▶️",
-            "action": "status_transition",
-            "command": f"Update work effort {we_id} status to 'active'",
-            "priority": "high",
-            "available": True,
-            "reason": "Work effort is open and ready to start"
-        })
+        actions.append(
+            {
+                "id": "action_start",
+                "label": "Start Work",
+                "icon": "▶️",
+                "action": "status_transition",
+                "command": f"Update work effort {we_id} status to 'active'",
+                "priority": "high",
+                "available": True,
+                "reason": "Work effort is open and ready to start",
+            }
+        )
     elif status == "active":
-        actions.append({
-            "id": "action_progress",
-            "label": "Add Progress Note",
-            "icon": "📝",
-            "action": "add_progress",
-            "command": f"Add a progress note to work effort {we_id}",
-            "priority": "medium",
-            "available": True,
-            "reason": "Work effort is active"
-        })
-        actions.append({
-            "id": "action_complete",
-            "label": "Mark Complete",
-            "icon": "✅",
-            "action": "status_transition",
-            "command": f"Update work effort {we_id} status to 'completed'",
-            "priority": "medium",
-            "available": True,
-            "reason": "Work effort is active and can be completed"
-        })
-        actions.append({
-            "id": "action_pause",
-            "label": "Pause Work",
-            "icon": "⏸️",
-            "action": "status_transition",
-            "command": f"Update work effort {we_id} status to 'paused'",
-            "priority": "low",
-            "available": True,
-            "reason": "Work effort can be paused"
-        })
+        actions.append(
+            {
+                "id": "action_progress",
+                "label": "Add Progress Note",
+                "icon": "📝",
+                "action": "add_progress",
+                "command": f"Add a progress note to work effort {we_id}",
+                "priority": "medium",
+                "available": True,
+                "reason": "Work effort is active",
+            }
+        )
+        actions.append(
+            {
+                "id": "action_complete",
+                "label": "Mark Complete",
+                "icon": "✅",
+                "action": "status_transition",
+                "command": f"Update work effort {we_id} status to 'completed'",
+                "priority": "medium",
+                "available": True,
+                "reason": "Work effort is active and can be completed",
+            }
+        )
+        actions.append(
+            {
+                "id": "action_pause",
+                "label": "Pause Work",
+                "icon": "⏸️",
+                "action": "status_transition",
+                "command": f"Update work effort {we_id} status to 'paused'",
+                "priority": "low",
+                "available": True,
+                "reason": "Work effort can be paused",
+            }
+        )
     elif status == "paused":
-        actions.append({
-            "id": "action_resume",
-            "label": "Resume Work",
-            "icon": "▶️",
-            "action": "status_transition",
-            "command": f"Update work effort {we_id} status to 'active'",
-            "priority": "high",
-            "available": True,
-            "reason": "Work effort is paused and can be resumed"
-        })
+        actions.append(
+            {
+                "id": "action_resume",
+                "label": "Resume Work",
+                "icon": "▶️",
+                "action": "status_transition",
+                "command": f"Update work effort {we_id} status to 'active'",
+                "priority": "high",
+                "available": True,
+                "reason": "Work effort is paused and can be resumed",
+            }
+        )
 
     # Content-based actions
     if "todo" in content_lower:
-        actions.append({
-            "id": "action_todos",
-            "label": "Address TODOs",
-            "icon": "✅",
-            "action": "review_todos",
-            "command": f"Review and address TODOs in work effort {we_id}",
-            "priority": "high",
-            "available": True,
-            "reason": "Work effort contains TODO items"
-        })
+        actions.append(
+            {
+                "id": "action_todos",
+                "label": "Address TODOs",
+                "icon": "✅",
+                "action": "review_todos",
+                "command": f"Review and address TODOs in work effort {we_id}",
+                "priority": "high",
+                "available": True,
+                "reason": "Work effort contains TODO items",
+            }
+        )
 
     if "fixme" in content_lower:
-        actions.append({
-            "id": "action_fixme",
-            "label": "Fix Issues",
-            "icon": "🔧",
-            "action": "fix_issues",
-            "command": f"Fix FIXME items in work effort {we_id}",
-            "priority": "high",
-            "available": True,
-            "reason": "Work effort contains FIXME items"
-        })
+        actions.append(
+            {
+                "id": "action_fixme",
+                "label": "Fix Issues",
+                "icon": "🔧",
+                "action": "fix_issues",
+                "command": f"Fix FIXME items in work effort {we_id}",
+                "priority": "high",
+                "available": True,
+                "reason": "Work effort contains FIXME items",
+            }
+        )
 
     # Activity-based actions (with git validation)
     git_activity = get_recent_git_activity(we_dir, days=7)
     if git_activity:
-        actions.append({
-            "id": "action_review_changes",
-            "label": "Review Recent Changes",
-            "icon": "🔍",
-            "action": "review_changes",
-            "command": f"Review recent git changes for work effort {we_id}",
-            "priority": "high",
-            "available": True,
-            "reason": f"Work effort has {len(git_activity)} recent commit(s)"
-        })
+        actions.append(
+            {
+                "id": "action_review_changes",
+                "label": "Review Recent Changes",
+                "icon": "🔍",
+                "action": "review_changes",
+                "command": f"Review recent git changes for work effort {we_id}",
+                "priority": "high",
+                "available": True,
+                "reason": f"Work effort has {len(git_activity)} recent commit(s)",
+            }
+        )
 
     # Always available: Review action
-    actions.append({
-        "id": "action_review",
-        "label": "Review & Status Update",
-        "icon": "📊",
-        "action": "review",
-        "command": f"Review work effort {we_id} and provide status update",
-        "priority": "medium",
-        "available": True,
-        "reason": "Review is always available"
-    })
+    actions.append(
+        {
+            "id": "action_review",
+            "label": "Review & Status Update",
+            "icon": "📊",
+            "action": "review",
+            "command": f"Review work effort {we_id} and provide status update",
+            "priority": "medium",
+            "available": True,
+            "reason": "Review is always available",
+        }
+    )
 
     return actions
 
@@ -718,7 +738,9 @@ document.addEventListener('keydown', (e) => {
 """
 
 
-def generate_polymorphic_html(work_efforts: List[Dict], projects: List[Dict], project_path: Path) -> str:
+def generate_polymorphic_html(
+    work_efforts: list[dict], projects: list[dict], project_path: Path
+) -> str:
     """Generate complete HTML with polymorphic buttons and neumorphic styling."""
     # Limit work efforts for performance
     work_efforts = work_efforts[:MAX_WORK_EFFORTS]
@@ -727,16 +749,16 @@ def generate_polymorphic_html(work_efforts: List[Dict], projects: List[Dict], pr
     work_efforts_with_actions = []
     for we in work_efforts:
         actions = analyze_work_effort_actions(we, project_path)
-        we['actions'] = actions
+        we["actions"] = actions
         work_efforts_with_actions.append(we)
 
     # Generate stats
     stats = {
-        'total': len(work_efforts),
-        'active': sum(1 for we in work_efforts if we.get('status') == 'active'),
-        'open': sum(1 for we in work_efforts if we.get('status') == 'open'),
-        'completed': sum(1 for we in work_efforts if we.get('status') == 'completed'),
-        'paused': sum(1 for we in work_efforts if we.get('status') == 'paused'),
+        "total": len(work_efforts),
+        "active": sum(1 for we in work_efforts if we.get("status") == "active"),
+        "open": sum(1 for we in work_efforts if we.get("status") == "open"),
+        "completed": sum(1 for we in work_efforts if we.get("status") == "completed"),
+        "paused": sum(1 for we in work_efforts if we.get("status") == "paused"),
     }
 
     html = f"""<!DOCTYPE html>
@@ -753,25 +775,25 @@ def generate_polymorphic_html(work_efforts: List[Dict], projects: List[Dict], pr
     <div class="container">
         <div class="header">
             <h1>WAFT Work Dashboard</h1>
-            <p>Polymorphic Action Buttons - Generated {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
+            <p>Polymorphic Action Buttons - Generated {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}</p>
         </div>
 
         <div class="stats">
             <div class="neumorphic-card">
                 <h3>Total Work Efforts</h3>
-                <p style="font-size: 2rem; font-weight: bold;">{stats['total']}</p>
+                <p style="font-size: 2rem; font-weight: bold;">{stats["total"]}</p>
             </div>
             <div class="neumorphic-card">
                 <h3>Active</h3>
-                <p style="font-size: 2rem; font-weight: bold; color: var(--neu-success);">{stats['active']}</p>
+                <p style="font-size: 2rem; font-weight: bold; color: var(--neu-success);">{stats["active"]}</p>
             </div>
             <div class="neumorphic-card">
                 <h3>Open</h3>
-                <p style="font-size: 2rem; font-weight: bold; color: var(--neu-accent);">{stats['open']}</p>
+                <p style="font-size: 2rem; font-weight: bold; color: var(--neu-accent);">{stats["open"]}</p>
             </div>
             <div class="neumorphic-card">
                 <h3>Completed</h3>
-                <p style="font-size: 2rem; font-weight: bold; color: var(--neu-success);">{stats['completed']}</p>
+                <p style="font-size: 2rem; font-weight: bold; color: var(--neu-success);">{stats["completed"]}</p>
             </div>
         </div>
 
@@ -780,15 +802,15 @@ def generate_polymorphic_html(work_efforts: List[Dict], projects: List[Dict], pr
 
     # Generate work effort cards
     for we in work_efforts_with_actions:
-        status = we.get('status', 'open')
+        status = we.get("status", "open")
         status_class = f"status-{status}"
 
         html += f"""
             <div class="neumorphic-card work-effort-card">
                 <div class="work-effort-header">
                     <div>
-                        <h2 class="work-effort-title">{we.get('title', we.get('id', 'Unknown'))}</h2>
-                        <p style="color: var(--neu-text); margin-top: 4px;">{we.get('id', '')}</p>
+                        <h2 class="work-effort-title">{we.get("title", we.get("id", "Unknown"))}</h2>
+                        <p style="color: var(--neu-text); margin-top: 4px;">{we.get("id", "")}</p>
                     </div>
                     <span class="neumorphic-badge {status_class}">{status.upper()}</span>
                 </div>
@@ -797,17 +819,17 @@ def generate_polymorphic_html(work_efforts: List[Dict], projects: List[Dict], pr
 """
 
         # Generate action buttons
-        for action in we.get('actions', []):
+        for action in we.get("actions", []):
             priority_class = f"neumorphic-button-{action.get('priority', 'medium')}"
             html += f"""
                     <button
                         class="neumorphic-button {priority_class}"
-                        onclick="queueCommand({json.dumps(action)}, {json.dumps(we.get('id'))}, {json.dumps(we)})"
-                        title="{action.get('reason', '')}"
-                        aria-label="{action.get('label', '')}"
+                        onclick="queueCommand({json.dumps(action)}, {json.dumps(we.get("id"))}, {json.dumps(we)})"
+                        title="{action.get("reason", "")}"
+                        aria-label="{action.get("label", "")}"
                     >
-                        <span>{action.get('icon', '')}</span>
-                        <span>{action.get('label', '')}</span>
+                        <span>{action.get("icon", "")}</span>
+                        <span>{action.get("label", "")}</span>
                     </button>
 """
 
@@ -862,32 +884,24 @@ def main():
         "--output",
         type=str,
         default="_work_efforts/work_dashboard.html",
-        help="Output HTML file path"
+        help="Output HTML file path",
     )
     parser.add_argument(
-        "--queue-dir",
-        type=str,
-        default=".cursor/command_queue",
-        help="Command queue directory"
+        "--queue-dir", type=str, default=".cursor/command_queue", help="Command queue directory"
     )
     parser.add_argument(
         "--limit",
         type=int,
         default=MAX_WORK_EFFORTS,
-        help=f"Maximum work efforts to process (default: {MAX_WORK_EFFORTS})"
+        help=f"Maximum work efforts to process (default: {MAX_WORK_EFFORTS})",
     )
-    parser.add_argument(
-        "--no-open",
-        action="store_true",
-        help="Don't open browser automatically"
-    )
+    parser.add_argument("--no-open", action="store_true", help="Don't open browser automatically")
 
     args = parser.parse_args()
 
     # Setup logging
     logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     )
 
     # Get project path
@@ -899,7 +913,7 @@ def main():
     projects = get_projects(project_path)
 
     # Limit work efforts
-    work_efforts = work_efforts[:args.limit]
+    work_efforts = work_efforts[: args.limit]
 
     logger.info(f"Found {len(work_efforts)} work efforts and {len(projects)} projects")
 
@@ -910,7 +924,7 @@ def main():
     # Write HTML file
     output_path = project_path / args.output
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(html, encoding='utf-8')
+    output_path.write_text(html, encoding="utf-8")
 
     logger.info(f"Dashboard generated: {output_path}")
 

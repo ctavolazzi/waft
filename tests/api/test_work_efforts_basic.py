@@ -2,7 +2,6 @@
 Basic tests for Work Efforts API endpoints.
 """
 
-import pytest
 from fastapi.testclient import TestClient
 
 
@@ -14,9 +13,9 @@ def test_create_work_effort(test_client: TestClient, auth_token: str):
             "title": "Test Work Effort",
             "description": "A test work effort",
             "status": "active",
-            "tags": ["test"]
+            "tags": ["test"],
         },
-        headers={"Authorization": f"Bearer {auth_token}"}
+        headers={"Authorization": f"Bearer {auth_token}"},
     )
     assert response.status_code == 201
     data = response.json()
@@ -39,11 +38,7 @@ def test_get_work_efforts(test_client: TestClient):
 def test_create_work_effort_requires_auth(test_client: TestClient):
     """Test that POST requires authentication."""
     response = test_client.post(
-        "/api/work-efforts",
-        json={
-            "title": "Test Work Effort",
-            "description": "A test work effort"
-        }
+        "/api/work-efforts", json={"title": "Test Work Effort", "description": "A test work effort"}
     )
     assert response.status_code == 401
 

@@ -16,9 +16,9 @@ Features:
 """
 
 from pathlib import Path
+
 from jinja2 import Template
 from weasyprint import HTML
-
 
 SCREENPLAY_TEMPLATE = """
 <!DOCTYPE html>
@@ -224,7 +224,7 @@ def generate_screenplay(
     author: str = "Anonymous",
     subtitle: str = None,
     draft: str = None,
-    contact: str = None
+    contact: str = None,
 ) -> Path:
     """
     Generate a professional screenplay.
@@ -253,12 +253,7 @@ def generate_screenplay(
 
     template = Template(SCREENPLAY_TEMPLATE)
     html_output = template.render(
-        title=title,
-        content=content,
-        author=author,
-        subtitle=subtitle,
-        draft=draft,
-        contact=contact
+        title=title, content=content, author=author, subtitle=subtitle, draft=draft, contact=contact
     )
 
     HTML(string=html_output).write_pdf(output_path)

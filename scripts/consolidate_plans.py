@@ -7,19 +7,19 @@ Copies all plans from ~/.cursor/plans/ to _work_efforts/Plans/
 and creates a consolidated index and summary.
 """
 
-from pathlib import Path
-from datetime import datetime
-import shutil
 import re
+import shutil
 from collections import defaultdict
-from typing import Dict, List, Tuple
+from datetime import datetime
+from pathlib import Path
 
 # Paths
 CURSOR_PLANS_DIR = Path.home() / ".cursor" / "plans"
 WORK_EFFORTS_DIR = Path(__file__).parent.parent / "_work_efforts"
 PLANS_DIR = WORK_EFFORTS_DIR / "Plans"
 
-def extract_plan_metadata(plan_path: Path) -> Dict:
+
+def extract_plan_metadata(plan_path: Path) -> dict:
     """Extract metadata from plan file frontmatter."""
     metadata = {
         "name": None,
@@ -30,25 +30,25 @@ def extract_plan_metadata(plan_path: Path) -> Dict:
     }
 
     try:
-        content = plan_path.read_text(encoding='utf-8')
+        content = plan_path.read_text(encoding="utf-8")
 
         # Extract frontmatter
-        frontmatter_match = re.match(r'^---\n(.*?)\n---', content, re.DOTALL)
+        frontmatter_match = re.match(r"^---\n(.*?)\n---", content, re.DOTALL)
         if frontmatter_match:
             frontmatter = frontmatter_match.group(1)
 
             # Extract name
-            name_match = re.search(r'^name:\s*(.+)$', frontmatter, re.MULTILINE)
+            name_match = re.search(r"^name:\s*(.+)$", frontmatter, re.MULTILINE)
             if name_match:
                 metadata["name"] = name_match.group(1).strip()
 
             # Extract overview
-            overview_match = re.search(r'^overview:\s*(.+)$', frontmatter, re.MULTILINE)
+            overview_match = re.search(r"^overview:\s*(.+)$", frontmatter, re.MULTILINE)
             if overview_match:
                 metadata["overview"] = overview_match.group(1).strip()
 
         # Extract date from filename if possible (format: name_date_hash.plan.md)
-        date_match = re.search(r'(\d{4}-\d{2}-\d{2})', plan_path.stem)
+        date_match = re.search(r"(\d{4}-\d{2}-\d{2})", plan_path.stem)
         if date_match:
             metadata["created_date"] = date_match.group(1)
         else:
@@ -61,7 +61,8 @@ def extract_plan_metadata(plan_path: Path) -> Dict:
 
     return metadata
 
-def organize_plans_by_date(plans: List[Tuple[Path, Dict]]) -> Dict[str, List[Tuple[Path, Dict]]]:
+
+def organize_plans_by_date(plans: list[tuple[Path, dict]]) -> dict[str, list[tuple[Path, dict]]]:
     """Organize plans by date."""
     by_date = defaultdict(list)
     for plan_path, metadata in plans:
@@ -69,7 +70,8 @@ def organize_plans_by_date(plans: List[Tuple[Path, Dict]]) -> Dict[str, List[Tup
         by_date[date].append((plan_path, metadata))
     return dict(by_date)
 
-def create_consolidated_index(plans: List[Tuple[Path, Dict]], output_path: Path):
+
+def create_consolidated_index(plans: list[tuple[Path, dict]], output_path: Path):
     """Create a consolidated index of all plans."""
 
     # Organize by date
@@ -122,12 +124,14 @@ def create_consolidated_index(plans: List[Tuple[Path, Dict]], output_path: Path)
                 lines.append(f"  - Overview: {overview}")
             lines.append("")
 
-    lines.extend([
-        "---",
-        "",
-        "## All Plans (Alphabetical)",
-        "",
-    ])
+    lines.extend(
+        [
+            "---",
+            "",
+            "## All Plans (Alphabetical)",
+            "",
+        ]
+    )
 
     # Sort all plans alphabetically by name
     all_plans_sorted = sorted(plans, key=lambda x: ((x[1].get("name") or x[0].stem) or "").lower())
@@ -138,10 +142,11 @@ def create_consolidated_index(plans: List[Tuple[Path, Dict]], output_path: Path)
         lines.append(f"- [{name}]({file_name})")
 
     # Write index
-    output_path.write_text("\n".join(lines), encoding='utf-8')
+    output_path.write_text("\n".join(lines), encoding="utf-8")
     print(f"✅ Created index: {output_path.name}")
 
-def create_consolidation_summary(plans: List[Tuple[Path, Dict]], output_path: Path):
+
+def create_consolidation_summary(plans: list[tuple[Path, dict]], output_path: Path):
     """Create a summary document with statistics and insights."""
 
     # Statistics
@@ -157,8 +162,22 @@ def create_consolidation_summary(plans: List[Tuple[Path, Dict]], output_path: Pa
         text = f"{name} {overview}"
 
         # Common keywords
-        for keyword in ["api", "ui", "pdf", "test", "integration", "refactor", "documentation",
-                       "feature", "bug", "fix", "system", "architecture", "design", "workflow"]:
+        for keyword in [
+            "api",
+            "ui",
+            "pdf",
+            "test",
+            "integration",
+            "refactor",
+            "documentation",
+            "feature",
+            "bug",
+            "fix",
+            "system",
+            "architecture",
+            "design",
+            "workflow",
+        ]:
             if keyword in text:
                 keywords[keyword] += 1
 
@@ -187,24 +206,27 @@ def create_consolidation_summary(plans: List[Tuple[Path, Dict]], output_path: Pa
     for keyword, count in sorted_keywords[:20]:  # Top 20
         lines.append(f"- **{keyword.title()}**: {count} plans")
 
-    lines.extend([
-        "",
-        "---",
-        "",
-        "## Notes",
-        "",
-        "- All plans have been copied from `~/.cursor/plans/`",
-        "- Original plans remain in their original location",
-        "- Plans are organized by date in the index",
-        "- See `00_INDEX.md` for the complete alphabetical listing",
-        "",
-        "---",
-        "",
-        "*This summary was automatically generated by `scripts/consolidate_plans.py`*",
-    ])
+    lines.extend(
+        [
+            "",
+            "---",
+            "",
+            "## Notes",
+            "",
+            "- All plans have been copied from `~/.cursor/plans/`",
+            "- Original plans remain in their original location",
+            "- Plans are organized by date in the index",
+            "- See `00_INDEX.md` for the complete alphabetical listing",
+            "",
+            "---",
+            "",
+            "*This summary was automatically generated by `scripts/consolidate_plans.py`*",
+        ]
+    )
 
-    output_path.write_text("\n".join(lines), encoding='utf-8')
+    output_path.write_text("\n".join(lines), encoding="utf-8")
     print(f"✅ Created summary: {output_path.name}")
+
 
 def main():
     """Main execution function."""
@@ -287,6 +309,7 @@ def main():
     print()
 
     return 0
+
 
 if __name__ == "__main__":
     exit(main())

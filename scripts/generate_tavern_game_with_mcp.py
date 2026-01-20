@@ -30,6 +30,7 @@ except ImportError as e:
     print("   pip install openhands-sdk openhands-tools")
     sys.exit(1)
 
+
 def main():
     # Check for API key
     api_key = os.getenv("LLM_API_KEY")
@@ -38,52 +39,52 @@ def main():
         print("\n   Set it with:")
         print('   export LLM_API_KEY="your-api-key"')
         sys.exit(1)
-    
+
     # Get model
     model = os.getenv("LLM_MODEL", "anthropic/claude-sonnet-4-5-20250929")
     base_url = os.getenv("LLM_BASE_URL", None)
-    
+
     print("🚀 Generating Electron Tavern Game with OpenHands SDK + MCP Integration")
     print(f"   Model: {model}")
     print()
-    
+
     # Configure LLM
     llm = LLM(
         model=model,
         api_key=api_key,
         base_url=base_url,
     )
-    
+
     # Set workspace
     project_root = Path(__file__).parent.parent
     workspace_path = str(project_root)
-    
+
     # Configure MCP servers (using our existing servers)
     mcp_config = {
         "mcpServers": {
             # Filesystem MCP (npx-based)
             "filesystem": {
                 "command": "npx",
-                "args": ["-y", "@modelcontextprotocol/server-filesystem", workspace_path]
+                "args": ["-y", "@modelcontextprotocol/server-filesystem", workspace_path],
             },
             # Work Efforts MCP (our custom server)
             "work-efforts": {
                 "command": "node",
-                "args": ["/Users/ctavolazzi/Code/.mcp-servers/work-efforts/server.js"]
+                "args": ["/Users/ctavolazzi/Code/.mcp-servers/work-efforts/server.js"],
             },
             # Simple Tools MCP (our custom server)
             "simple-tools": {
                 "command": "node",
-                "args": ["/Users/ctavolazzi/Code/.mcp-servers/simple-tools/server.js"]
+                "args": ["/Users/ctavolazzi/Code/.mcp-servers/simple-tools/server.js"],
             },
             # Docs Maintainer MCP (our custom server - Python/FastMCP)
             "docs-maintainer": {
                 "command": "python",
-                "args": ["/Users/ctavolazzi/Code/.mcp-servers/docs-maintainer/server.py"]
+                "args": ["/Users/ctavolazzi/Code/.mcp-servers/docs-maintainer/server.py"],
             },
         }
     }
-    
+
     print("📋 Available Tools:")
     print("   Built-in:")
     print("     - TerminalTool: Execute bash commands")
@@ -96,31 +97,31 @@ def main():
     print("     - simple-tools: Generate IDs, format dates")
     print("     - docs-maintainer: Create documentation")
     print()
-    
+
     # Create agent with built-in tools + MCP
     agent = Agent(
         llm=llm,
         tools=[
-            Tool(name=TerminalTool.name),      # Execute commands
-            Tool(name=FileEditorTool.name),    # Create/edit files
-            Tool(name=TaskTrackerTool.name),   # Track tasks
+            Tool(name=TerminalTool.name),  # Execute commands
+            Tool(name=FileEditorTool.name),  # Create/edit files
+            Tool(name=TaskTrackerTool.name),  # Track tasks
         ],
         mcp_config=mcp_config,  # Add MCP servers!
         # Optional: Filter MCP tools if needed
         # filter_tools_regex="^(?!repomix)(.*)",  # Example: exclude repomix
     )
-    
+
     # Create conversation
     conversation = Conversation(agent=agent, workspace=workspace_path)
-    
+
     print("📁 Workspace:", project_root)
     print()
-    
+
     # Phase 0: Create Work Effort (using MCP!)
     print("=" * 70)
     print("📋 Phase 0: Creating Work Effort (via MCP)")
     print("=" * 70)
-    
+
     task0 = f"""
     First, use the work-efforts MCP server to create a work effort for this game development project.
     
@@ -132,17 +133,17 @@ def main():
     
     This will create a work effort in _work_efforts/ following the Johnny Decimal system.
     """
-    
+
     conversation.send_message(task0)
     conversation.run()
     print("✅ Phase 0 complete: Work effort created")
     print()
-    
+
     # Phase 1: Generate FastAPI Server
     print("=" * 70)
     print("📡 Phase 1: Generating FastAPI Server")
     print("=" * 70)
-    
+
     task1 = """
     Create examples/tavern_game_server.py - a FastAPI server for the Electron Tavern Game Display.
     
@@ -186,17 +187,17 @@ def main():
     
     Create the file at examples/tavern_game_server.py with production-ready code.
     """
-    
+
     conversation.send_message(task1)
     conversation.run()
     print("✅ Phase 1 complete: FastAPI server generated")
     print()
-    
+
     # Phase 2: Generate Electron App
     print("=" * 70)
     print("🖥️  Phase 2: Generating Electron App")
     print("=" * 70)
-    
+
     task2 = """
     Create the Electron app structure in tavern_display/ directory:
     
@@ -252,17 +253,17 @@ def main():
     
     Follow Electron security best practices and the plan specifications.
     """
-    
+
     conversation.send_message(task2)
     conversation.run()
     print("✅ Phase 2 complete: Electron app generated")
     print()
-    
+
     # Phase 3: Generate Tests
     print("=" * 70)
     print("🧪 Phase 3: Generating Tests")
     print("=" * 70)
-    
+
     task3 = """
     Write comprehensive pytest tests for examples/tavern_game_server.py:
     
@@ -301,17 +302,17 @@ def main():
     Follow existing test patterns from tests/ directory.
     Create tests/test_tavern_game_server.py
     """
-    
+
     conversation.send_message(task3)
     conversation.run()
     print("✅ Phase 3 complete: Tests generated")
     print()
-    
+
     # Phase 4: Generate Documentation (using docs-maintainer MCP!)
     print("=" * 70)
     print("📚 Phase 4: Generating Documentation (via MCP)")
     print("=" * 70)
-    
+
     task4 = f"""
     Generate comprehensive documentation using the docs-maintainer MCP server:
     
@@ -339,12 +340,12 @@ def main():
     
     Use the docs-maintainer MCP tools for structured documentation, and FileEditorTool for README files.
     """
-    
+
     conversation.send_message(task4)
     conversation.run()
     print("✅ Phase 4 complete: Documentation generated")
     print()
-    
+
     print("=" * 70)
     print("🎉 All Phases Complete!")
     print("=" * 70)
@@ -369,6 +370,7 @@ def main():
     print("      cd tavern_display && npm install && npm start")
     print()
     print("   6. Play the game!")
+
 
 if __name__ == "__main__":
     main()

@@ -11,12 +11,10 @@ Usage:
 Then open http://localhost:8000 in your browser.
 """
 
-import sys
-from pathlib import Path
-from http.server import HTTPServer, BaseHTTPRequestHandler
 import json
-import urllib.parse
-from datetime import datetime
+import sys
+from http.server import BaseHTTPRequestHandler, HTTPServer
+from pathlib import Path
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
@@ -24,7 +22,6 @@ sys.path.insert(0, str(project_root))
 sys.path.insert(0, str(project_root / "src"))
 
 from scripts.prove_it_comprehensive import ProofCaseBuilder
-
 
 HTML_TEMPLATE = """<!DOCTYPE html>
 <html lang="en">
@@ -557,9 +554,9 @@ Or click an example above.'></textarea>
 
 class ProofDemoHandler(BaseHTTPRequestHandler):
     def do_GET(self):
-        if self.path == '/' or self.path == '/index.html':
+        if self.path == "/" or self.path == "/index.html":
             self.send_response(200)
-            self.send_header('Content-type', 'text/html')
+            self.send_header("Content-type", "text/html")
             self.end_headers()
             self.wfile.write(HTML_TEMPLATE.encode())
         else:
@@ -567,50 +564,49 @@ class ProofDemoHandler(BaseHTTPRequestHandler):
             self.end_headers()
 
     def do_POST(self):
-        if self.path == '/prove':
-            content_length = int(self.headers['Content-Length'])
+        if self.path == "/prove":
+            content_length = int(self.headers["Content-Length"])
             post_data = self.rfile.read(content_length)
-            data = json.loads(post_data.decode('utf-8'))
-            claim = data.get('claim', '')
+            data = json.loads(post_data.decode("utf-8"))
+            claim = data.get("claim", "")
 
             try:
                 # Run proof system
                 builder = ProofCaseBuilder(project_root, claim)
-                
+
                 # Analyze claim
                 analysis = builder.analyze_claim()
-                
+
                 # Run assumption check
                 assumptions_result = builder.run_assumption_check()
-                
+
                 # Prepare response
                 response_data = {
-                    'analysis': {
-                        'verification_type': analysis['verification_type'],
-                        'target_files': analysis['target_files'],
-                        'features_to_check': analysis['features_to_check']
+                    "analysis": {
+                        "verification_type": analysis["verification_type"],
+                        "target_files": analysis["target_files"],
+                        "features_to_check": analysis["features_to_check"],
                     },
-                    'total': assumptions_result['total'],
-                    'proven': assumptions_result['proven'],
-                    'disproven': assumptions_result['disproven'],
-                    'inconclusive': assumptions_result['total'] - assumptions_result['proven'] - assumptions_result['disproven'],
-                    'assumptions': assumptions_result['assumptions']
+                    "total": assumptions_result["total"],
+                    "proven": assumptions_result["proven"],
+                    "disproven": assumptions_result["disproven"],
+                    "inconclusive": assumptions_result["total"]
+                    - assumptions_result["proven"]
+                    - assumptions_result["disproven"],
+                    "assumptions": assumptions_result["assumptions"],
                 }
 
                 self.send_response(200)
-                self.send_header('Content-type', 'application/json')
-                self.send_header('Access-Control-Allow-Origin', '*')
+                self.send_header("Content-type", "application/json")
+                self.send_header("Access-Control-Allow-Origin", "*")
                 self.end_headers()
                 self.wfile.write(json.dumps(response_data).encode())
 
             except Exception as e:
                 self.send_response(500)
-                self.send_header('Content-type', 'application/json')
+                self.send_header("Content-type", "application/json")
                 self.end_headers()
-                error_response = {
-                    'error': str(e),
-                    'type': type(e).__name__
-                }
+                error_response = {"error": str(e), "type": type(e).__name__}
                 self.wfile.write(json.dumps(error_response).encode())
 
     def log_message(self, format, *args):
@@ -620,9 +616,9 @@ class ProofDemoHandler(BaseHTTPRequestHandler):
 
 def main():
     port = 8000
-    server_address = ('', port)
+    server_address = ("", port)
     httpd = HTTPServer(server_address, ProofDemoHandler)
-    
+
     print("=" * 70)
     print("🔬 WAFT Proof System - Interactive Demo Server")
     print("=" * 70)
@@ -637,7 +633,7 @@ def main():
     print("Press Ctrl+C to stop the server")
     print("=" * 70)
     print()
-    
+
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
@@ -646,5 +642,5 @@ def main():
         print("✅ Server stopped")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

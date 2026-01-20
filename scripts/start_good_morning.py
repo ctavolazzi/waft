@@ -12,28 +12,30 @@ import time
 import webbrowser
 from pathlib import Path
 
+
 def main():
     """Start the Good Morning dashboard."""
     project_root = Path(__file__).parent.parent
     dashboard_file = project_root / "good_morning.py"
-    
+
     if not dashboard_file.exists():
         print(f"❌ Error: {dashboard_file} not found")
         sys.exit(1)
-    
+
     print("🌅 Starting Good Morning dashboard...")
-    print(f"📊 Dashboard will be available at: http://localhost:8507")
+    print("📊 Dashboard will be available at: http://localhost:8507")
     print("🔄 Opening browser in 3 seconds...")
-    
+
     # Open browser after a short delay
     def open_browser():
         time.sleep(3)
         webbrowser.open("http://localhost:8507")
-    
+
     import threading
+
     browser_thread = threading.Thread(target=open_browser, daemon=True)
     browser_thread.start()
-    
+
     # Start Streamlit
     try:
         subprocess.run(
@@ -48,9 +50,9 @@ def main():
                 "--server.headless",
                 "false",
                 "--browser.gatherUsageStats",
-                "false"
+                "false",
             ],
-            cwd=project_root
+            cwd=project_root,
         )
     except KeyboardInterrupt:
         print("\n🛑 Good Morning dashboard stopped")

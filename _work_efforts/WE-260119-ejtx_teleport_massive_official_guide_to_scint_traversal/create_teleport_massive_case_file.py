@@ -11,11 +11,10 @@ Assembles all founding journey documents into a single comprehensive case file P
 6. Founding Team Document
 """
 
-import sys
-from pathlib import Path
-from datetime import datetime
-from pypdf import PdfWriter, PdfReader
 import subprocess
+from pathlib import Path
+
+from pypdf import PdfReader, PdfWriter
 
 # Add project root to path
 project_root = Path(__file__).parent.parent.parent
@@ -34,11 +33,14 @@ mission_statement_typ = work_effort_dir / "TELEPORT_MASSIVE_MISSION_STATEMENT_20
 mission_statement_pdf = work_effort_dir / "TELEPORT_MASSIVE_MISSION_STATEMENT_2026.pdf"
 abstract_typ = work_effort_dir / "RESEARCH_ABSTRACT_2026.typ"
 abstract_pdf = work_effort_dir / "RESEARCH_ABSTRACT_2026.pdf"
-research_booklet_pdf = work_effort_dir / "QUANTUM_TELEPORTATION_RESEARCH_FOUNDATION_COMPLETE_2026.pdf"
+research_booklet_pdf = (
+    work_effort_dir / "QUANTUM_TELEPORTATION_RESEARCH_FOUNDATION_COMPLETE_2026.pdf"
+)
 founding_team_typ = work_effort_dir / "TELEPORT_MASSIVE_FOUNDING_TEAM_2026.typ"
 founding_team_pdf = work_effort_dir / "TELEPORT_MASSIVE_FOUNDING_TEAM_2026.pdf"
 business_cards_dir = work_effort_dir / "founding_team_business_cards"
 output_pdf = work_effort_dir / "TELEPORT_MASSIVE_CASE_FILE_2026.pdf"
+
 
 def compile_typst(typ_path: Path, pdf_path: Path) -> bool:
     """Compile a Typst file to PDF."""
@@ -47,7 +49,7 @@ def compile_typst(typ_path: Path, pdf_path: Path) -> bool:
             ["typst", "compile", str(typ_path), str(pdf_path)],
             capture_output=True,
             text=True,
-            check=True
+            check=True,
         )
         return True
     except subprocess.CalledProcessError as e:
@@ -56,6 +58,7 @@ def compile_typst(typ_path: Path, pdf_path: Path) -> bool:
     except FileNotFoundError:
         print("Error: typst command not found. Please install Typst.")
         return False
+
 
 def create_case_file():
     """Create the complete Teleport Massive case file."""
@@ -82,13 +85,15 @@ def create_case_file():
 
     # 0.5. Compile and add Invoices (Paper Trail)
     print("\n0.5. Compiling Invoices (Paper Trail)...")
-    
+
     # Invoice 001 - Research Services
     if invoice_001_typ.exists():
         if compile_typst(invoice_001_typ, invoice_001_pdf):
             if invoice_001_pdf.exists():
                 reader = PdfReader(str(invoice_001_pdf))
-                print(f"   ✅ Added Invoice 2026-001 - Research Services ({len(reader.pages)} pages)")
+                print(
+                    f"   ✅ Added Invoice 2026-001 - Research Services ({len(reader.pages)} pages)"
+                )
                 for page in reader.pages:
                     writer.add_page(page)
             else:
@@ -97,13 +102,15 @@ def create_case_file():
             print("   ⚠️  Failed to compile Invoice 001")
     else:
         print("   ⚠️  Invoice 001 Typst file not found")
-    
+
     # Invoice 002 - Corporate Formation
     if invoice_002_typ.exists():
         if compile_typst(invoice_002_typ, invoice_002_pdf):
             if invoice_002_pdf.exists():
                 reader = PdfReader(str(invoice_002_pdf))
-                print(f"   ✅ Added Invoice 2026-002 - Corporate Formation ({len(reader.pages)} pages)")
+                print(
+                    f"   ✅ Added Invoice 2026-002 - Corporate Formation ({len(reader.pages)} pages)"
+                )
                 for page in reader.pages:
                     writer.add_page(page)
             else:
@@ -163,13 +170,14 @@ def create_case_file():
         print("   ⚠️  Business cards directory not found")
 
     # Write the merged PDF
-    print(f"\n4. Writing complete case file...")
-    with open(output_pdf, 'wb') as output_file:
+    print("\n4. Writing complete case file...")
+    with open(output_pdf, "wb") as output_file:
         writer.write(output_file)
 
     print(f"\n✅ Case file created: {output_pdf}")
     print(f"   Total pages: {len(writer.pages)}")
     return output_pdf
+
 
 if __name__ == "__main__":
     create_case_file()

@@ -6,14 +6,16 @@ Creates a comprehensive PDF documenting the entire conversation.
 """
 
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
+
 import markdown
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 try:
-    from weasyprint import HTML, CSS
+    from weasyprint import CSS, HTML
+
     WEASYPRINT_AVAILABLE = True
 except ImportError:
     WEASYPRINT_AVAILABLE = False
@@ -432,17 +434,17 @@ def main():
     print("=" * 80)
     print("📄 Generating Session Recap PDF")
     print("=" * 80)
-    
+
     # Get content
     content = get_session_content()
-    
+
     # Convert markdown to HTML using markdown library
     try:
-        html_body = markdown.markdown(content, extensions=['fenced_code', 'tables'])
+        html_body = markdown.markdown(content, extensions=["fenced_code", "tables"])
     except:
         # Fallback: simple conversion
-        html_body = content.replace('\n', '<br>\n')
-    
+        html_body = content.replace("\n", "<br>\n")
+
     # Create full HTML
     html_content = f"""<!DOCTYPE html>
 <html>
@@ -532,22 +534,23 @@ def main():
 </body>
 </html>
 """
-    
+
     # Generate PDF
     output_dir = Path("_work_efforts/session_recaps")
     output_dir.mkdir(parents=True, exist_ok=True)
-    
+
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_path = output_dir / f"KARMA_ECONOMY_COMPLETE_{timestamp}.pdf"
-    
+
     HTML(string=html_content).write_pdf(output_path)
-    
+
     print(f"\n✅ PDF generated: {output_path}")
-    
+
     # Open PDF
     import subprocess
+
     subprocess.run(["open", str(output_path)])
-    
+
     print("✅ PDF opened!")
     return 0
 

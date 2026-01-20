@@ -26,6 +26,7 @@ print("Test 1: Import Verification")
 print("-" * 80)
 try:
     from fpdf import FPDF
+
     print("✅ fpdf2 imported successfully")
 except ImportError as e:
     print(f"❌ fpdf2 import failed: {e}")
@@ -35,13 +36,14 @@ try:
     from waft.foundation import (
         DocumentConfig,
         DocumentEngine,
-        SectionHeader,
-        TextBlock,
         KeyValueBlock,
         LogBlock,
-        WarningBlock,
+        SectionHeader,
         SignatureBlock,
+        TextBlock,
+        WarningBlock,
     )
+
     print("✅ DocumentEngine and blocks imported successfully")
 except ImportError as e:
     print(f"❌ DocumentEngine import failed: {e}")
@@ -49,12 +51,13 @@ except ImportError as e:
 
 try:
     from src.waft.generate_lightcone_docs import (
-        generate_tm_vis_001,
-        generate_tm_memo_042,
+        generate_all_lightcone_docs,
         generate_tm_eng_004,
         generate_tm_eng_114,
-        generate_all_lightcone_docs,
+        generate_tm_memo_042,
+        generate_tm_vis_001,
     )
+
     print("✅ Lightcone generators imported successfully")
 except ImportError as e:
     print(f"❌ Generator import failed: {e}")
@@ -68,11 +71,11 @@ print("-" * 80)
 import src.waft.generate_lightcone_docs as gen_module
 
 functions = [
-    'generate_tm_vis_001',
-    'generate_tm_memo_042',
-    'generate_tm_eng_004',
-    'generate_tm_eng_114',
-    'generate_all_lightcone_docs',
+    "generate_tm_vis_001",
+    "generate_tm_memo_042",
+    "generate_tm_eng_004",
+    "generate_tm_eng_114",
+    "generate_all_lightcone_docs",
 ]
 
 for func_name in functions:
@@ -97,22 +100,23 @@ print("Test 4: Generate Test Document (TM-MEMO-042)")
 print("-" * 80)
 try:
     pdf_path, md_path = generate_tm_memo_042(test_output)
-    
+
     if pdf_path.exists():
         size_kb = pdf_path.stat().st_size / 1024
         print(f"✅ PDF generated: {pdf_path.name} ({size_kb:.1f} KB)")
     else:
         print(f"❌ PDF file not found: {pdf_path}")
         sys.exit(1)
-    
+
     if md_path.exists():
         print(f"✅ Markdown generated: {md_path.name}")
     else:
         print(f"⚠️  Markdown file not found: {md_path}")
-    
+
 except Exception as e:
     print(f"❌ Generation failed: {e}")
     import traceback
+
     traceback.print_exc()
     sys.exit(1)
 
@@ -123,17 +127,18 @@ print("Test 5: Generate MSDS Document (TM-ENG-004)")
 print("-" * 80)
 try:
     pdf_path, md_path = generate_tm_eng_004(test_output)
-    
+
     if pdf_path.exists():
         size_kb = pdf_path.stat().st_size / 1024
         print(f"✅ PDF generated: {pdf_path.name} ({size_kb:.1f} KB)")
     else:
         print(f"❌ PDF file not found: {pdf_path}")
         sys.exit(1)
-    
+
 except Exception as e:
     print(f"❌ Generation failed: {e}")
     import traceback
+
     traceback.print_exc()
     sys.exit(1)
 
@@ -144,17 +149,18 @@ print("Test 6: Generate Lazarus Protocol (TM-ENG-114)")
 print("-" * 80)
 try:
     pdf_path, md_path = generate_tm_eng_114(test_output)
-    
+
     if pdf_path.exists():
         size_kb = pdf_path.stat().st_size / 1024
         print(f"✅ PDF generated: {pdf_path.name} ({size_kb:.1f} KB)")
     else:
         print(f"❌ PDF file not found: {pdf_path}")
         sys.exit(1)
-    
+
 except Exception as e:
     print(f"❌ Generation failed: {e}")
     import traceback
+
     traceback.print_exc()
     sys.exit(1)
 

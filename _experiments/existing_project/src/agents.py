@@ -5,8 +5,7 @@ This file provides a starter template for setting up CrewAI agents.
 Customize this to fit your project's needs.
 """
 
-from crewai import Agent, Task, Crew
-from typing import List, Optional
+from crewai import Agent, Crew, Task
 
 
 def create_agent(
@@ -36,7 +35,7 @@ def create_agent(
     )
 
 
-def create_crew(agents: List[Agent], tasks: List[Task]) -> Crew:
+def create_crew(agents: list[Agent], tasks: list[Task]) -> Crew:
     """
     Create a CrewAI crew.
 

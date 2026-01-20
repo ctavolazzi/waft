@@ -36,7 +36,7 @@ def check_python_version():
         return print_check(True, f"Python {version_str} detected (>= 3.10 required)")
     else:
         print_check(False, f"Python {version_str} detected (3.10+ required)")
-        print(f"   Please upgrade Python: https://www.python.org/downloads/")
+        print("   Please upgrade Python: https://www.python.org/downloads/")
         return False
 
 
@@ -54,7 +54,7 @@ def check_repository_structure():
         return print_check(True, "Repository structure valid")
     else:
         print_check(False, "Repository structure invalid")
-        print(f"   Make sure you're in the waft root directory")
+        print("   Make sure you're in the waft root directory")
         print(f"   Current directory: {Path.cwd()}")
         return False
 
@@ -63,11 +63,9 @@ def check_branch():
     """Check git branch."""
     try:
         import subprocess
+
         result = subprocess.run(
-            ["git", "branch", "--show-current"],
-            capture_output=True,
-            text=True,
-            check=True
+            ["git", "branch", "--show-current"], capture_output=True, text=True, check=True
         )
         branch = result.stdout.strip()
 
@@ -75,8 +73,8 @@ def check_branch():
             return print_check(True, f"Branch: {branch}")
         else:
             print_check(False, f"Branch: {branch}")
-            print(f"   Expected: claude/update-plan-merge-gFm6u")
-            print(f"   Run: git checkout claude/update-plan-merge-gFm6u")
+            print("   Expected: claude/update-plan-merge-gFm6u")
+            print("   Run: git checkout claude/update-plan-merge-gFm6u")
             return False
     except Exception as e:
         print_check(False, f"Could not check git branch: {e}")
@@ -86,13 +84,14 @@ def check_branch():
 def check_fpdf2():
     """Check fpdf2 installation."""
     try:
-        from fpdf import FPDF
         import fpdf
-        version = getattr(fpdf, '__version__', 'unknown')
+        from fpdf import FPDF
+
+        version = getattr(fpdf, "__version__", "unknown")
         return print_check(True, f"fpdf2 installed (version: {version})")
     except ImportError:
         print_check(False, "fpdf2 not installed")
-        print(f"   Install with: pip install fpdf2>=2.7.0")
+        print("   Install with: pip install fpdf2>=2.7.0")
         return False
 
 
@@ -102,18 +101,19 @@ def check_document_engine():
         from waft.foundation import (
             DocumentConfig,
             DocumentEngine,
-            SectionHeader,
-            TextBlock,
             KeyValueBlock,
             LogBlock,
-            WarningBlock,
+            SectionHeader,
             SignatureBlock,
+            TextBlock,
+            WarningBlock,
         )
+
         return print_check(True, "DocumentEngine imports successful")
     except ImportError as e:
         print_check(False, "DocumentEngine imports failed")
         print(f"   Error: {e}")
-        print(f"   Try: pip install -e .")
+        print("   Try: pip install -e .")
         return False
 
 
@@ -147,7 +147,7 @@ def check_markdown_sources():
         return print_check(True, f"Markdown sources found ({len(md_files)} files)")
     else:
         print_check(False, f"Markdown sources incomplete ({len(md_files)}/13 files)")
-        print(f"   Run: git pull origin claude/update-plan-merge-gFm6u")
+        print("   Run: git pull origin claude/update-plan-merge-gFm6u")
         return False
 
 
@@ -159,7 +159,7 @@ def check_style_reference():
         return print_check(True, "Style reference found (ARTIFACT_001_GENESIS.pdf)")
     else:
         print_check(False, "Style reference not found")
-        print(f"   This is optional - generation will still work")
+        print("   This is optional - generation will still work")
         return True  # Non-critical
 
 

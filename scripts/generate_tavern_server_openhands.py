@@ -27,6 +27,7 @@ except ImportError as e:
     print("   pip install openhands-sdk openhands-tools")
     sys.exit(1)
 
+
 def main():
     # Check for API key
     api_key = os.getenv("LLM_API_KEY")
@@ -35,26 +36,26 @@ def main():
         print("\n   Set it with:")
         print('   export LLM_API_KEY="your-api-key"')
         sys.exit(1)
-    
+
     # Get model (default to Anthropic)
     model = os.getenv("LLM_MODEL", "anthropic/claude-sonnet-4-5-20250929")
     base_url = os.getenv("LLM_BASE_URL", None)
-    
+
     print("🚀 Generating FastAPI Game Server with OpenHands SDK")
     print(f"   Model: {model}")
     print()
-    
+
     # Configure LLM
     llm = LLM(
         model=model,
         api_key=api_key,
         base_url=base_url,
     )
-    
+
     # Create agent with tools
     # Using built-in tools: TerminalTool, FileEditorTool, TaskTrackerTool
     # These are sufficient for code generation - custom tools not needed
-    # 
+    #
     # Available OpenHands tools:
     # - TerminalTool: Execute bash/terminal commands
     # - FileEditorTool: Create, read, edit, delete files
@@ -66,22 +67,26 @@ def main():
     agent = Agent(
         llm=llm,
         tools=[
-            Tool(name=TerminalTool.name),      # Execute bash commands (npm, python, etc.)
-            Tool(name=FileEditorTool.name),    # Edit/create files (Python, JS, HTML, CSS, etc.)
-            Tool(name=TaskTrackerTool.name),   # Track task progress (multi-step tasks)
+            Tool(name=TerminalTool.name),  # Execute bash commands (npm, python, etc.)
+            Tool(name=FileEditorTool.name),  # Edit/create files (Python, JS, HTML, CSS, etc.)
+            Tool(name=TaskTrackerTool.name),  # Track task progress (multi-step tasks)
         ],
     )
-    
+
     # Set workspace to project root
     project_root = Path(__file__).parent.parent
     conversation = Conversation(agent=agent, workspace=str(project_root))
-    
+
     # Read plan and critique for context
     plan_path = project_root / ".cursor" / "plans" / "electron_tavern_game_display_2508cb95.plan.md"
-    critique_path = project_root / "_work_efforts" / "CRITIQUE_2026-01-14_202222_electron_tavern_game_display.md"
-    
+    critique_path = (
+        project_root
+        / "_work_efforts"
+        / "CRITIQUE_2026-01-14_202222_electron_tavern_game_display.md"
+    )
+
     # Build task description
-    task = f"""
+    task = """
     Create examples/tavern_game_server.py - a FastAPI server for the Electron Tavern Game Display.
     
     Requirements (from implementation plan and security critique):
@@ -100,7 +105,7 @@ def main():
        - character: Full DnD5eCharacter serialized (use to_dict() method + add computed properties)
        - current_scene: string
        - narrative: string  
-       - choices: list of {{id, text, type}} objects
+       - choices: list of {id, text, type} objects
        - last_roll: dict with dice, result, modifier, total, dc, success
        - events: list of event history (limit to last 100 events)
     
@@ -132,16 +137,16 @@ def main():
     
     Create the file at examples/tavern_game_server.py
     """
-    
+
     print("📝 Sending generation task to agent...")
     conversation.send_message(task)
-    
+
     print("🚀 Running agent to generate code...")
     print("   (This may take a few minutes)")
     print()
-    
+
     conversation.run()
-    
+
     # Check if file was created
     server_file = project_root / "examples" / "tavern_game_server.py"
     if server_file.exists():
@@ -157,6 +162,7 @@ def main():
         print()
         print("⚠️  Warning: Server file not found at expected location")
         print("   Check agent output above for details")
+
 
 if __name__ == "__main__":
     main()

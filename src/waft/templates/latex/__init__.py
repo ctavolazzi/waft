@@ -7,6 +7,7 @@ Auto-discovers wrapper modules and provides unified access.
 """
 
 from pathlib import Path
+
 from .compiler import LaTeXCompiler
 from .registry import LaTeXTemplateRegistry, get_latex_registry
 

@@ -12,6 +12,7 @@ import json
 import time
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 import typer
 from rich.console import Console
@@ -2806,21 +2807,26 @@ def oracle(
     from .core.science import TheOracle
 
     try:
-        # TheOracle will FORCE Empirica to be ready - no degraded mode
-        # It will raise RuntimeError if Empirica cannot be initialized
-        console.print("[yellow]→[/yellow] Ensuring Empirica is ready...")
+        # Show immediate feedback - print header right away
+        console.print("[bold cyan]🔮 Waft[/bold cyan] - Consulting TheOracle\n")
 
-        # Load personality if available
-        from .core.science.oracle_personality_tools import PersonalityManager
+        # Show progress immediately
+        with console.status("[yellow]→[/yellow] Initializing Oracle...", spinner="dots"):
+            # TheOracle will FORCE Empirica to be ready - no degraded mode
+            # It will raise RuntimeError if Empirica cannot be initialized
+            from .core.science.oracle_personality_tools import PersonalityManager
 
-        personality_manager = PersonalityManager(project_path)
-        personality = personality_manager.load_personality()
+            personality_manager = PersonalityManager(project_path)
+            personality = personality_manager.load_personality()
 
-        oracle = TheOracle(project_path, ai_id="claude-code", personality=personality)
+            oracle = TheOracle(project_path, ai_id="claude-code", personality=personality)
+
+        console.print("[green]✓[/green] Oracle initialized")
 
         # Get epistemic state (Empirica is guaranteed to be ready)
-        console.print("[yellow]→[/yellow] Gathering epistemic state...")
-        state = oracle.get_epistemic_state()
+        with console.status("[yellow]→[/yellow] Gathering epistemic state...", spinner="dots"):
+            state = oracle.get_epistemic_state()
+        console.print("[green]✓[/green] Epistemic state retrieved")
 
         # Full context available - display epistemic state
         epistemic_state = state.get("epistemic_state", {})
@@ -2831,11 +2837,9 @@ def oracle(
         uncertainty = vectors.get("uncertainty", 1.0)
         engagement = vectors.get("engagement", 0.0)
 
-        console.print("[green]✓[/green] Epistemic state retrieved")
-
         # Get phase
         phase = oracle.get_epistemic_phase()
-        console.print(f"\n[bold]Epistemic Phase:[/bold] [cyan]{phase}[/cyan]")
+        console.print(f"[dim]Phase: {phase}[/dim]")
 
         # Display vectors table
         table = Table(title="Epistemic Vectors", show_header=True, header_style="bold magenta")
@@ -2859,10 +2863,9 @@ def oracle(
         console.print(table)
 
         # Get recent insights
-        console.print("\n[yellow]→[/yellow] Retrieving recent insights...")
-        insights = oracle.get_insights(limit=5)
-        unknowns = oracle.get_unknowns(limit=5)
-
+        with console.status("[yellow]→[/yellow] Retrieving insights...", spinner="dots"):
+            insights = oracle.get_insights(limit=5)
+            unknowns = oracle.get_unknowns(limit=5)
         console.print(f"[green]✓[/green] Found {len(insights)} insights, {len(unknowns)} unknowns")
 
         if insights:
@@ -2924,16 +2927,77 @@ def oracle(
             )
 
         elif question:
-            # Specific question
+            # Specific question - show step-by-step thinking
             personality_info = oracle.get_personality_info()
             greeting = oracle.personality.get_greeting()
             if greeting and greeting != "I see...":
                 console.print(f"\n[dim italic]{greeting}[/dim italic]")
 
             console.print(f"\n[yellow]→[/yellow] Seeking guidance: {question}")
-            guidance = oracle.provide_guidance(question)
+
+            # Show thinking process step-by-step
+            from .core.science.oracle_thinking import (
+                display_oracle_thinking,
+                display_thinking_step_by_step,
+            )
+
+            console.print("\n[bold cyan]🧠 TheOracle is thinking...[/bold cyan]\n")
+
+            # Step-by-step thinking display
+            thinking_data = {}
+
+            def thinking_callback(step: str, data: dict[str, Any]) -> None:
+                """Callback to capture thinking steps."""
+                thinking_data[step] = data
+                display_thinking_step_by_step(console, step, data, delay=0.3)
+
+            guidance = oracle.provide_guidance(
+                question, show_thinking=True, thinking_callback=thinking_callback
+            )
+
+            # Display full thinking dashboard
+            console.print("\n")
+            display_oracle_thinking(
+                console,
+                question,
+                guidance.get("preflight", {}),
+                guidance.get("reflection", {}),
+                guidance.get("findings", []),
+                guidance.get("unknowns", []),
+                guidance.get("check", {}),
+                guidance.get("epistemic_state", {}),
+                guidance.get("postflight"),
+                guidance.get("storage_info"),
+            )
+            console.print("\n")
 
             console.print("\n[bold cyan]🔮 Oracle Guidance:[/bold cyan]")
+
+            # Display Empirica workflow results
+            preflight = guidance.get("preflight", {})
+            if preflight:
+                know = preflight.get("know", 0.0)
+                uncertainty = preflight.get("uncertainty", 1.0)
+                console.print(
+                    f"\n[dim]📊 Preflight: KNOW={know:.0%} ({preflight.get('know_level', 'Unknown')}), UNCERTAINTY={uncertainty:.0%} ({preflight.get('uncertainty_level', 'Unknown')})[/dim]"
+                )
+                if preflight.get("investigate_required"):
+                    console.print("[dim]   → INVESTIGATE REQUIRED[/dim]")
+
+            check = guidance.get("check", {})
+            if check:
+                confidence = check.get("confidence", 0.0)
+                decision = check.get("decision", "UNKNOWN")
+                console.print(
+                    f"[dim]✅ Check: CONFIDENCE={confidence:.0%}, DECISION={decision}[/dim]"
+                )
+
+            # Display reflection if available
+            reflection = guidance.get("reflection", {})
+            if reflection and reflection.get("reflection_summary"):
+                console.print(
+                    f"[dim]💭 Reflection: {reflection['reflection_summary'][:80]}...[/dim]"
+                )
 
             recommendation = guidance.get("recommendation", "No recommendation available")
             transition = oracle.personality.get_transition()

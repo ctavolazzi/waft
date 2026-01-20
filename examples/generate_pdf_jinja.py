@@ -4,23 +4,23 @@ Converts markdown file to PDF using Jinja2 template engine and WeasyPrint.
 """
 
 from pathlib import Path
+
+import markdown
 from jinja2 import Template
 from weasyprint import HTML
-import markdown
 
 
 def generate_pdf_jinja(md_file: Path, output_path: Path):
     """Generate PDF from markdown using Jinja2 template + WeasyPrint."""
-    
+
     # Read markdown file
     md_content = md_file.read_text()
-    
+
     # Convert markdown to HTML
     html_content = markdown.markdown(
-        md_content,
-        extensions=['fenced_code', 'tables', 'nl2br', 'extra', 'codehilite']
+        md_content, extensions=["fenced_code", "tables", "nl2br", "extra", "codehilite"]
     )
-    
+
     # Jinja2 template for document structure
     template_str = """<!DOCTYPE html>
 <html>
@@ -155,26 +155,25 @@ def generate_pdf_jinja(md_file: Path, output_path: Path):
     </div>
 </body>
 </html>"""
-    
+
     # Create Jinja2 template
     template = Template(template_str)
-    
+
     # Extract title from markdown (first h1 or filename)
     title = "Document"
-    lines = md_content.split('\n')
+    lines = md_content.split("\n")
     for line in lines[:10]:  # Check first 10 lines
-        if line.startswith('# '):
+        if line.startswith("# "):
             title = line[2:].strip()
             break
-    
+
     # Render template with content
     from datetime import datetime
+
     rendered_html = template.render(
-        title=title,
-        date=datetime.now().strftime("%B %d, %Y at %I:%M %p"),
-        content=html_content
+        title=title, date=datetime.now().strftime("%B %d, %Y at %I:%M %p"), content=html_content
     )
-    
+
     # Generate PDF using WeasyPrint
     HTML(string=rendered_html).write_pdf(str(output_path))
     print(f"✅ Jinja2+WeasyPrint PDF generated: {output_path}")
@@ -184,5 +183,5 @@ if __name__ == "__main__":
     # Input markdown file
     md_file = Path("_temp_pdf_samples/session_recap_2026-01-12.md")
     output_path = Path("_temp_pdf_samples/session_recap_jinja.pdf")
-    
+
     generate_pdf_jinja(md_file, output_path)

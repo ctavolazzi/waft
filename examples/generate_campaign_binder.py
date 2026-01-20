@@ -14,23 +14,20 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from src.waft.evolution.campaign_session_tracker import CampaignSessionTracker
 from src.waft.evolution.campaign_binder_generator import CampaignBinderGenerator
+from src.waft.evolution.campaign_session_tracker import CampaignSessionTracker
 
 
 def main():
     """Generate example campaign binder."""
-    
+
     # Setup paths
     work_effort_path = project_root / "_work_efforts" / "WE-260112-jqkn_d_d_campaign_pdf_evolution"
     output_path = work_effort_path / "campaign_binder_example.pdf"
-    
+
     # Create tracker
-    tracker = CampaignSessionTracker(
-        campaign_id="shattered_crown",
-        base_path=work_effort_path
-    )
-    
+    tracker = CampaignSessionTracker(campaign_id="shattered_crown", base_path=work_effort_path)
+
     # Add sample sessions
     tracker.add_session(
         session_number=1,
@@ -41,7 +38,7 @@ def main():
         key_events=[
             "Party meets in the Golden Dragon Tavern",
             "Receive quest from mysterious stranger",
-            "Discover ancient map fragment"
+            "Discover ancient map fragment",
         ],
         evolution_notes="Campaign begins. Party forms.",
         markdown_content="""
@@ -66,9 +63,9 @@ The scroll contains a partial map, showing only the location of the first fragme
 - **Thorin Ironforge** (Cleric) - A dwarf seeking to restore honor to his clan
 
 The party agrees to the quest, setting out at dawn for Moonfall Keep.
-"""
+""",
     )
-    
+
     tracker.add_session(
         session_number=2,
         title="Moonfall Keep",
@@ -79,7 +76,7 @@ The party agrees to the quest, setting out at dawn for Moonfall Keep.
             "Arrive at Moonfall Keep",
             "Battle with spectral guardians",
             "Recover first Crown fragment",
-            "Discover clue to second fragment"
+            "Discover clue to second fragment",
         ],
         evolution_notes="First major combat encounter. Party learns to work together.",
         markdown_content="""
@@ -98,34 +95,34 @@ Deep within the keep's crypt, the party finds the first fragment of the Shattere
 ### The Clue
 
 Carved into the fragment's surface are runes that point to the next location: the Sunken Temple of the Deep, hidden beneath the waves of the Azure Sea.
-"""
+""",
     )
-    
+
     # Update character progression
     tracker.update_character(
         "Aldric the Brave",
         {"level": 2, "new_feature": "Action Surge", "hp_increase": 6},
-        session_number=2
+        session_number=2,
     )
-    
+
     tracker.update_character(
         "Lyra the Wise",
         {"level": 2, "new_spells": ["Magic Missile", "Shield"], "hp_increase": 4},
-        session_number=2
+        session_number=2,
     )
-    
+
     # Add evolution entry
     tracker.add_evolution_entry(
         entry_type="world_change",
         description="First Crown fragment recovered. The realm's magic begins to stabilize slightly.",
         session_number=2,
-        metadata={"magic_stability": "+5%", "realm_health": "improving"}
+        metadata={"magic_stability": "+5%", "realm_health": "improving"},
     )
-    
+
     # Generate binder
     generator = CampaignBinderGenerator(tracker, project_root)
     pdf_path = generator.generate_binder(output_path)
-    
+
     print(f"✅ Campaign binder generated: {pdf_path}")
     print(f"   Sessions: {len(tracker.sessions)}")
     print(f"   Characters: {len(tracker.characters)}")

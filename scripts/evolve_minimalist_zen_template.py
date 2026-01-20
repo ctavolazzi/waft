@@ -7,18 +7,18 @@ Render the new minimalist_zen template multiple times with varied content
 to test and evolve the design.
 """
 
-from pathlib import Path
 import sys
 from datetime import datetime
-import random
+from pathlib import Path
 
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from waft.templates.minimalist_zen import generate_minimalist_zen
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
+
+from waft.templates.minimalist_zen import generate_minimalist_zen
 
 console = Console()
 
@@ -47,7 +47,7 @@ CONTENT_VARIATIONS = [
         <h2>Conclusion</h2>
         <p>In embracing simplicity, we find not emptiness, but clarity. Not absence, but presence. 
         The minimalist approach teaches us that true beauty lies in what remains when all else is removed.</p>
-        """
+        """,
     },
     {
         "title": "Technical Documentation: API Reference",
@@ -68,7 +68,7 @@ CONTENT_VARIATIONS = [
         
         <h2>Error Handling</h2>
         <p>All errors return a JSON response with status code and message.</p>
-        """
+        """,
     },
     {
         "title": "Philosophical Reflections",
@@ -85,7 +85,7 @@ CONTENT_VARIATIONS = [
         <h2>On Knowledge</h2>
         <p>The more we learn, the more we realize how little we know. This paradox 
         drives the pursuit of understanding, creating an endless cycle of discovery.</p>
-        """
+        """,
     },
     {
         "title": "Project Proposal: Clean Architecture",
@@ -105,7 +105,7 @@ CONTENT_VARIATIONS = [
         <h2>Implementation Plan</h2>
         <p>The project will be implemented in three phases over six months, 
         with regular reviews and adjustments based on feedback.</p>
-        """
+        """,
     },
     {
         "title": "Poetry Collection: Haiku Moments",
@@ -128,7 +128,7 @@ CONTENT_VARIATIONS = [
         <p>Stars fill dark sky<br>
         Moonlight paints the world silver<br>
         Dreams await us all</p>
-        """
+        """,
     },
     {
         "title": "Research Notes: Machine Learning Basics",
@@ -147,7 +147,7 @@ CONTENT_VARIATIONS = [
         <h2>Training Process</h2>
         <p>Training involves adjusting weights through backpropagation to minimize error 
         between predicted and actual outputs.</p>
-        """
+        """,
     },
     {
         "title": "Meeting Notes: Design Review",
@@ -165,7 +165,7 @@ CONTENT_VARIATIONS = [
         <h2>Decisions</h2>
         <p>Agreed to simplify navigation structure. Will reduce menu items from 8 to 5. 
         Timeline: 2 weeks for implementation.</p>
-        """
+        """,
     },
     {
         "title": "Personal Journal Entry",
@@ -184,7 +184,7 @@ CONTENT_VARIATIONS = [
         <h2>Tomorrow's Focus</h2>
         <p>I will focus on one important task and give it my full attention, 
         rather than trying to do everything at once.</p>
-        """
+        """,
     },
     {
         "title": "Recipe: Simple Bread",
@@ -209,7 +209,7 @@ CONTENT_VARIATIONS = [
         <h2>Notes</h2>
         <p>The key to good bread is patience. Let the dough rise properly, 
         and don't rush the process.</p>
-        """
+        """,
     },
     {
         "title": "Code Review Guidelines",
@@ -229,7 +229,7 @@ CONTENT_VARIATIONS = [
         <h2>Best Practices</h2>
         <p>Be constructive and specific. Focus on the code, not the person. 
         Ask questions rather than making demands.</p>
-        """
+        """,
     },
     {
         "title": "Book Summary: The Design of Everyday Things",
@@ -249,7 +249,7 @@ CONTENT_VARIATIONS = [
         <h2>Takeaways</h2>
         <p>Good design is invisible. When design works well, users don't notice it. 
         They simply accomplish their goals effortlessly.</p>
-        """
+        """,
     },
     {
         "title": "Mathematical Proof: Pythagorean Theorem",
@@ -266,14 +266,14 @@ CONTENT_VARIATIONS = [
         four triangles plus the area of the inner square: <em>4(ab/2) + c²</em></p>
         <p>Simplifying: <em>a² + 2ab + b² = 2ab + c²</em></p>
         <p>Therefore: <em>a² + b² = c²</em> ✓</p>
-        """
+        """,
     },
     {
         "title": "Empty Template Test",
         "content": """
         <p>This is a minimal test with just a single paragraph to see how the template 
         handles very simple content.</p>
-        """
+        """,
     },
     {
         "title": "Long Content Test: Lorem Ipsum",
@@ -301,7 +301,7 @@ CONTENT_VARIATIONS = [
         <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, 
         adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et 
         dolore magnam aliquam quaerat voluptatem.</p>
-        """
+        """,
     },
     {
         "title": "Mixed Content Types",
@@ -332,8 +332,8 @@ CONTENT_VARIATIONS = [
     return True</code></pre>
         
         <p>Final paragraph to see spacing after code blocks.</p>
-        """
-    }
+        """,
+    },
 ]
 
 
@@ -341,63 +341,69 @@ def generate_all_variations():
     """Generate all content variations."""
     output_dir = Path(__file__).parent.parent / "_genetics" / "minimalist_zen_evolution"
     output_dir.mkdir(parents=True, exist_ok=True)
-    
-    console.print(Panel.fit(
-        "[bold cyan]🎨 Minimalist Zen Template Evolution[/bold cyan]\n"
-        "[dim]Generating 15+ variations to test and evolve the template[/dim]",
-        style="cyan"
-    ))
-    
+
+    console.print(
+        Panel.fit(
+            "[bold cyan]🎨 Minimalist Zen Template Evolution[/bold cyan]\n"
+            "[dim]Generating 15+ variations to test and evolve the template[/dim]",
+            style="cyan",
+        )
+    )
+
     generated_files = []
-    
+
     for i, variation in enumerate(CONTENT_VARIATIONS, 1):
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"zen_{i:02d}_{variation['title'].lower().replace(' ', '_')[:30]}_{timestamp}.pdf"
+        filename = (
+            f"zen_{i:02d}_{variation['title'].lower().replace(' ', '_')[:30]}_{timestamp}.pdf"
+        )
         output_path = output_dir / filename
-        
+
         console.print(f"[yellow]→[/yellow] Generating variation {i}/15: {variation['title']}")
-        
+
         try:
             generate_minimalist_zen(
-                title=variation['title'],
-                content=variation['content'],
-                output_path=output_path
+                title=variation["title"], content=variation["content"], output_path=output_path
             )
-            generated_files.append((i, variation['title'], output_path))
+            generated_files.append((i, variation["title"], output_path))
             console.print(f"[green]✓[/green] Saved: {output_path.name}\n")
         except Exception as e:
             console.print(f"[red]❌ Error: {e}[/red]\n")
-    
+
     # Summary
-    console.print(Panel.fit(
-        f"[bold green]✅ Generated {len(generated_files)} PDFs[/bold green]\n"
-        f"[dim]Location: {output_dir}[/dim]",
-        style="green"
-    ))
-    
+    console.print(
+        Panel.fit(
+            f"[bold green]✅ Generated {len(generated_files)} PDFs[/bold green]\n"
+            f"[dim]Location: {output_dir}[/dim]",
+            style="green",
+        )
+    )
+
     # Create summary table
     table = Table(title="Generated Documents")
     table.add_column("#", style="cyan")
     table.add_column("Title", style="white")
     table.add_column("Filename", style="dim")
-    
+
     for i, title, path in generated_files:
         table.add_row(str(i), title, path.name)
-    
+
     console.print("\n")
     console.print(table)
-    
+
     return generated_files, output_dir
 
 
 def ask_probing_questions(output_dir: Path, generated_files: list):
     """Ask probing questions about the evolution process."""
     console.print("\n")
-    console.print(Panel.fit(
-        "[bold yellow]🤔 Probing Questions: Template Evolution Process[/bold yellow]",
-        style="yellow"
-    ))
-    
+    console.print(
+        Panel.fit(
+            "[bold yellow]🤔 Probing Questions: Template Evolution Process[/bold yellow]",
+            style="yellow",
+        )
+    )
+
     questions = [
         "1. **Typography & Readability**: How does the font choice (Helvetica Neue) affect readability? Is 11pt optimal, or should it vary?",
         "2. **Whitespace**: Are the margins (1.5in top, 1in sides) too generous or just right? Does the 0.4in paragraph spacing feel natural?",
@@ -413,30 +419,32 @@ def ask_probing_questions(output_dir: Path, generated_files: list):
         "12. **First Page**: Is the 2in top margin on the first page appropriate, or should the title start higher?",
         "13. **Justification**: Does justified text (text-align: justify) improve or harm readability in this context?",
         "14. **Hyphenation**: Is automatic hyphenation (hyphens: auto) working well, or creating awkward breaks?",
-        "15. **Evolution**: What would you change after seeing 15 different documents? What patterns emerged?"
+        "15. **Evolution**: What would you change after seeing 15 different documents? What patterns emerged?",
     ]
-    
+
     for question in questions:
         console.print(f"\n[cyan]{question}[/cyan]")
-    
+
     console.print("\n")
-    console.print(Panel.fit(
-        "[bold]💭 Reflection Prompt[/bold]\n\n"
-        "After reviewing the generated PDFs, consider:\n"
-        "- What worked better than expected?\n"
-        "- What needs refinement?\n"
-        "- What patterns emerged across different content types?\n"
-        "- How does this template compare to others in the system?\n"
-        "- What would make it more versatile or more focused?",
-        style="blue"
-    ))
+    console.print(
+        Panel.fit(
+            "[bold]💭 Reflection Prompt[/bold]\n\n"
+            "After reviewing the generated PDFs, consider:\n"
+            "- What worked better than expected?\n"
+            "- What needs refinement?\n"
+            "- What patterns emerged across different content types?\n"
+            "- How does this template compare to others in the system?\n"
+            "- What would make it more versatile or more focused?",
+            style="blue",
+        )
+    )
 
 
 def main():
     """Main execution."""
     generated_files, output_dir = generate_all_variations()
     ask_probing_questions(output_dir, generated_files)
-    
+
     console.print(f"\n[dim]All PDFs saved to: {output_dir}[/dim]\n")
 
 

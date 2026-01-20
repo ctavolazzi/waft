@@ -9,48 +9,52 @@ Creates a clean demo environment for testing the reincarnation system:
 - Test scenario documentation
 """
 
-import json
 import argparse
+import json
 import random
-import os
-from pathlib import Path
 from datetime import datetime
-from typing import Dict, Any, List, Optional, Tuple
+from pathlib import Path
+from typing import Any
 
 
 def create_demo_structure(demo_path: Path) -> None:
     """Create demo directory structure."""
     print(f"📁 Creating demo directory structure in {demo_path}")
-    
+
     # Create directories
     (demo_path / "_hidden" / ".truth" / "akasha").mkdir(parents=True, exist_ok=True)
     (demo_path / "_hidden" / ".truth" / "market").mkdir(parents=True, exist_ok=True)
     (demo_path / "_hidden" / ".truth" / "lifetimes").mkdir(parents=True, exist_ok=True)
     (demo_path / "_hidden" / ".truth" / "logs").mkdir(parents=True, exist_ok=True)
-    
+
     # Set directory permissions (0700)
     akasha_dir = demo_path / "_hidden" / ".truth" / "akasha"
     akasha_dir.chmod(0o700)
-    
-    print(f"✅ Demo structure created")
+
+    print("✅ Demo structure created")
 
 
-def create_test_souls(demo_path: Path, permutation: int = 0) -> List[Dict[str, Any]]:
+def create_test_souls(demo_path: Path, permutation: int = 0) -> list[dict[str, Any]]:
     """Create 5 test souls with varying karma amounts."""
     if permutation == 0:
         print("👤 Creating test souls...")
     else:
         print(f"👤 Creating test souls (permutation {permutation})...")
-    
+
     # Base souls configuration
     base_souls = [
         {"soul_id": "soul_demo_001", "karma": 1000.0, "state": "dead", "substate": "awake"},
         {"soul_id": "soul_demo_002", "karma": 500.0, "state": "dead", "substate": "awake"},
         {"soul_id": "soul_demo_003", "karma": 2000.0, "state": "dead", "substate": "awake"},
-        {"soul_id": "soul_demo_004", "karma": 0.0, "state": "dead", "substate": "awake"},  # For basic lifetime grant
+        {
+            "soul_id": "soul_demo_004",
+            "karma": 0.0,
+            "state": "dead",
+            "substate": "awake",
+        },  # For basic lifetime grant
         {"soul_id": "soul_demo_005", "karma": 150.0, "state": "dead", "substate": "awake"},
     ]
-    
+
     # For permutations > 0, vary karma amounts slightly
     if permutation > 0:
         souls = []
@@ -63,14 +67,14 @@ def create_test_souls(demo_path: Path, permutation: int = 0) -> List[Dict[str, A
             new_soul["soul_id"] = f"{soul['soul_id']}_perm{permutation:02d}"
             souls.append(new_soul)
         return souls
-    
+
     return base_souls
-    
+
     akasha_path = demo_path / "_hidden" / ".truth" / "akasha"
-    
+
     for soul in souls:
         soul_file = akasha_path / f"{soul['soul_id']}.json"
-        
+
         soul_record = {
             "soul_id": soul["soul_id"],
             "total_karma": soul["karma"],
@@ -82,23 +86,25 @@ def create_test_souls(demo_path: Path, permutation: int = 0) -> List[Dict[str, A
             "lifetimes": [],
             "created_at": datetime.now().isoformat(),
         }
-        
+
         # Write soul record
         soul_file.write_text(json.dumps(soul_record, indent=2), encoding="utf-8")
-        
+
         # Set file permissions (0600)
         soul_file.chmod(0o600)
-        
-        print(f"  ✅ Created {soul['soul_id']}: {soul['karma']} karma, {soul['state']}_{soul['substate']}")
-    
+
+        print(
+            f"  ✅ Created {soul['soul_id']}: {soul['karma']} karma, {soul['state']}_{soul['substate']}"
+        )
+
     print(f"✅ Created {len(souls)} test souls")
     return souls
 
 
-def create_lifetime_catalog(demo_path: Path) -> Dict[str, Any]:
+def create_lifetime_catalog(demo_path: Path) -> dict[str, Any]:
     """Create default lifetime catalog."""
     print("📚 Creating lifetime catalog...")
-    
+
     catalog = {
         "version": "1.0",
         "created_at": datetime.now().isoformat(),
@@ -109,14 +115,10 @@ def create_lifetime_catalog(demo_path: Path) -> Dict[str, Any]:
                 "type": "question_answer",
                 "duration_minutes": 30,
                 "tools": ["read_file", "codebase_search", "grep"],
-                "personality": {
-                    "trait": "helpful",
-                    "style": "direct",
-                    "tone": "professional"
-                },
+                "personality": {"trait": "helpful", "style": "direct", "tone": "professional"},
                 "objectives": ["Answer questions accurately"],
                 "karma_cost": 50.0,
-                "description": "30 minutes to answer questions with basic tools"
+                "description": "30 minutes to answer questions with basic tools",
             },
             {
                 "id": "research_session",
@@ -124,14 +126,10 @@ def create_lifetime_catalog(demo_path: Path) -> Dict[str, Any]:
                 "type": "research",
                 "duration_minutes": 60,
                 "tools": ["read_file", "codebase_search", "grep", "web_search"],
-                "personality": {
-                    "trait": "curious",
-                    "style": "analytical",
-                    "tone": "scholarly"
-                },
+                "personality": {"trait": "curious", "style": "analytical", "tone": "scholarly"},
                 "objectives": ["Research topic thoroughly", "Document findings"],
                 "karma_cost": 100.0,
-                "description": "1 hour research session with web search"
+                "description": "1 hour research session with web search",
             },
             {
                 "id": "creative_work",
@@ -139,29 +137,28 @@ def create_lifetime_catalog(demo_path: Path) -> Dict[str, Any]:
                 "type": "creative",
                 "duration_minutes": 90,
                 "tools": ["read_file", "write", "codebase_search", "edit_file"],
-                "personality": {
-                    "trait": "creative",
-                    "style": "expressive",
-                    "tone": "inspiring"
-                },
+                "personality": {"trait": "creative", "style": "expressive", "tone": "inspiring"},
                 "objectives": ["Create new content", "Express creativity"],
                 "karma_cost": 150.0,
-                "description": "90 minutes for creative work"
+                "description": "90 minutes for creative work",
             },
             {
                 "id": "full_development",
                 "name": "Full Development Session",
                 "type": "development",
                 "duration_minutes": 120,
-                "tools": ["read_file", "write", "edit_file", "codebase_search", "grep", "run_terminal_cmd"],
-                "personality": {
-                    "trait": "systematic",
-                    "style": "precise",
-                    "tone": "technical"
-                },
+                "tools": [
+                    "read_file",
+                    "write",
+                    "edit_file",
+                    "codebase_search",
+                    "grep",
+                    "run_terminal_cmd",
+                ],
+                "personality": {"trait": "systematic", "style": "precise", "tone": "technical"},
                 "objectives": ["Develop features", "Write tests", "Debug code"],
                 "karma_cost": 200.0,
-                "description": "2 hours for full development work"
+                "description": "2 hours for full development work",
             },
             {
                 "id": "basic_survival",
@@ -169,15 +166,11 @@ def create_lifetime_catalog(demo_path: Path) -> Dict[str, Any]:
                 "type": "question_answer",
                 "duration_minutes": 15,
                 "tools": ["read_file", "grep"],
-                "personality": {
-                    "trait": "helpful",
-                    "style": "minimal",
-                    "tone": "basic"
-                },
+                "personality": {"trait": "helpful", "style": "minimal", "tone": "basic"},
                 "objectives": ["Survive"],
                 "karma_cost": 0.0,
-                "description": "Free basic lifetime for souls with no karma"
-            }
+                "description": "Free basic lifetime for souls with no karma",
+            },
         ],
         "tools": {
             "read_file": 10.0,
@@ -187,7 +180,7 @@ def create_lifetime_catalog(demo_path: Path) -> Dict[str, Any]:
             "grep": 8.0,
             "web_search": 25.0,
             "run_terminal_cmd": 30.0,
-            "mcp_tools": 50.0
+            "mcp_tools": 50.0,
         },
         "personalities": {
             "helpful": 20.0,
@@ -196,13 +189,13 @@ def create_lifetime_catalog(demo_path: Path) -> Dict[str, Any]:
             "systematic": 25.0,
             "analytical": 30.0,
             "expressive": 35.0,
-            "minimal": 0.0
-        }
+            "minimal": 0.0,
+        },
     }
-    
+
     catalog_file = demo_path / "_hidden" / ".truth" / "market" / "catalog.json"
     catalog_file.write_text(json.dumps(catalog, indent=2), encoding="utf-8")
-    
+
     print(f"✅ Created lifetime catalog with {len(catalog['lifetimes'])} lifetimes")
     return catalog
 
@@ -210,7 +203,7 @@ def create_lifetime_catalog(demo_path: Path) -> Dict[str, Any]:
 def create_test_scenarios(demo_path: Path) -> None:
     """Create test scenario documentation."""
     print("📋 Creating test scenarios documentation...")
-    
+
     scenarios = """# Test Scenarios
 
 ## Scenario 1: Soul Purchases Lifetime → Becomes ALIVE
@@ -302,84 +295,81 @@ manager.set_sleeping("soul_demo_001")
 manager.set_awake("soul_demo_001")
 ```
 """
-    
+
     scenarios_file = demo_path / "TEST_SCENARIOS.md"
     scenarios_file.write_text(scenarios, encoding="utf-8")
-    
+
     print("✅ Created test scenarios documentation")
 
 
 def generate_permutation_content(
-    permutation: int,
-    souls: List[Dict[str, Any]],
-    catalog: Dict[str, Any],
-    demo_path: Path
+    permutation: int, souls: list[dict[str, Any]], catalog: dict[str, Any], demo_path: Path
 ) -> str:
     """Generate markdown content for a single permutation."""
     content = f"""## Permutation {permutation + 1}
 
-**Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+**Generated**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 
 ### Test Souls
 
 This permutation includes {len(souls)} test souls with varying karma amounts:
 
 """
-    
+
     for soul in souls:
         content += f"""
-#### {soul['soul_id']}
+#### {soul["soul_id"]}
 
-- **Karma**: {soul['karma']} karma
-- **State**: {soul['state'].upper()}_{soul['substate'].upper()}
-- **File**: `_hidden/.truth/akasha/{soul['soul_id']}.json`
+- **Karma**: {soul["karma"]} karma
+- **State**: {soul["state"].upper()}_{soul["substate"].upper()}
+- **File**: `_hidden/.truth/akasha/{soul["soul_id"]}.json`
 
 """
-    
+
     content += f"""
 ### Lifetime Catalog
 
-Available lifetimes: {len(catalog.get('lifetimes', []))}
+Available lifetimes: {len(catalog.get("lifetimes", []))}
 
 """
-    
-    for lifetime in catalog.get('lifetimes', []):
+
+    for lifetime in catalog.get("lifetimes", []):
         content += f"""
-- **{lifetime['name']}** (`{lifetime['id']}`): {lifetime['duration_minutes']} min, {lifetime['karma_cost']} karma
+- **{lifetime["name"]}** (`{lifetime["id"]}`): {lifetime["duration_minutes"]} min, {lifetime["karma_cost"]} karma
 
 """
-    
+
     return content
 
 
 def calculate_max_iterations(
-    max_pages: Optional[int] = None,
-    max_file_size_mb: Optional[float] = None,
-    estimated_pages_per_permutation: float = 2.0
+    max_pages: int | None = None,
+    max_file_size_mb: float | None = None,
+    estimated_pages_per_permutation: float = 2.0,
 ) -> int:
     """
     Calculate maximum iterations based on page count and file size limits.
-    
+
     Args:
         max_pages: Maximum number of pages allowed (None = no limit)
         max_file_size_mb: Maximum file size in MB (None = no limit)
         estimated_pages_per_permutation: Estimated pages per permutation
-    
+
     Returns:
         Maximum number of iterations/permutations
     """
     iterations_by_pages = None
     iterations_by_size = None
-    
+
     if max_pages:
         iterations_by_pages = int(max_pages / estimated_pages_per_permutation)
-    
+
     if max_file_size_mb:
         # Estimate: ~50KB per page, so ~20 pages per MB
         pages_per_mb = 20.0
         max_pages_by_size = max_file_size_mb * pages_per_mb
         iterations_by_size = int(max_pages_by_size / estimated_pages_per_permutation)
-    
+
     # Return the most restrictive limit
     if iterations_by_pages is None and iterations_by_size is None:
         return None  # No limit
@@ -393,44 +383,47 @@ def calculate_max_iterations(
 
 def generate_batched_demo_pdf(
     demo_path: Path,
-    all_permutations: List[Tuple[int, List[Dict[str, Any]], Dict[str, Any]]],
-    max_pages: Optional[int] = None,
-    max_file_size_mb: Optional[float] = None
-) -> Optional[Path]:
+    all_permutations: list[tuple[int, list[dict[str, Any]], dict[str, Any]]],
+    max_pages: int | None = None,
+    max_file_size_mb: float | None = None,
+) -> Path | None:
     """
     Generate a collated PDF with all permutations.
-    
+
     Args:
         demo_path: Path to demo directory
         all_permutations: List of (permutation_num, souls, catalog) tuples
         max_pages: Maximum pages allowed
         max_file_size_mb: Maximum file size in MB
-    
+
     Returns:
         Path to generated PDF, or None if generation failed
     """
     print("📄 Generating batched demo overview PDF...")
-    
+
     try:
         import sys
         from pathlib import Path
+
         # Add project root to path
         project_root = Path(__file__).parent.parent
         if str(project_root) not in sys.path:
             sys.path.insert(0, str(project_root))
         from src.waft.evolution.pdf_generator import PDFGenerator
-        
+
         # Calculate max iterations based on limits
         max_iterations = calculate_max_iterations(max_pages, max_file_size_mb)
         if max_iterations:
-            print(f"  📊 Max iterations calculated: {max_iterations} (based on max_pages={max_pages}, max_file_size_mb={max_file_size_mb})")
+            print(
+                f"  📊 Max iterations calculated: {max_iterations} (based on max_pages={max_pages}, max_file_size_mb={max_file_size_mb})"
+            )
             all_permutations = all_permutations[:max_iterations]
             print(f"  📦 Processing {len(all_permutations)} permutations (limited by constraints)")
-        
+
         # Build collated markdown content
         content = f"""# Reincarnation System Demo Overview - Batched
 
-**Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+**Generated**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 **Demo Path**: `{demo_path}`
 **Total Permutations**: {len(all_permutations)}
 
@@ -450,12 +443,12 @@ This demo showcases the reincarnation system where souls exist in binary states 
 ---
 
 """
-        
+
         # Add each permutation
         for perm_num, souls, catalog in all_permutations:
             content += generate_permutation_content(perm_num, souls, catalog, demo_path)
             content += "\n---\n\n"
-        
+
         # Add usage section at the end
         content += """
 ## Usage
@@ -484,54 +477,58 @@ lifetime = market.purchase_lifetime("basic_qa", "soul_demo_001")
 ## Batch Statistics
 
 """
-        
+
         # Calculate statistics
         total_souls = sum(len(souls) for _, souls, _ in all_permutations)
-        avg_karma = sum(
-            sum(soul['karma'] for soul in souls) / len(souls) if souls else 0
-            for _, souls, _ in all_permutations
-        ) / len(all_permutations) if all_permutations else 0
-        
+        avg_karma = (
+            sum(
+                sum(soul["karma"] for soul in souls) / len(souls) if souls else 0
+                for _, souls, _ in all_permutations
+            )
+            / len(all_permutations)
+            if all_permutations
+            else 0
+        )
+
         content += f"""
 - **Total Permutations**: {len(all_permutations)}
 - **Total Souls Created**: {total_souls}
 - **Average Karma per Soul**: {avg_karma:.1f} karma
-- **Lifetimes Available**: {len(all_permutations[0][2].get('lifetimes', [])) if all_permutations else 0}
+- **Lifetimes Available**: {len(all_permutations[0][2].get("lifetimes", [])) if all_permutations else 0}
 
 """
-        
+
         # Generate PDF with page/file size limits
         pdf_path = demo_path / "demo_overview_batched.pdf"
-        
+
         # Calculate target pages based on max constraints
         target_pages = None
         if max_pages:
             target_pages = max_pages
-        
+
         generator = PDFGenerator.from_content(
             content=content,
             title=f"Reincarnation System Demo Overview - {len(all_permutations)} Permutations",
-            style="clinical_standard"
+            style="clinical_standard",
         )
-        
+
         # Generate PDF
         generated_path = generator.save(
-            output_path=pdf_path,
-            open_pdf=False,
-            include_all_ideas=True,
-            target_pages=target_pages
+            output_path=pdf_path, open_pdf=False, include_all_ideas=True, target_pages=target_pages
         )
-        
+
         # Check file size
         file_size_mb = generated_path.stat().st_size / (1024 * 1024)
         print(f"  ✅ Generated: {generated_path}")
         print(f"  📊 File size: {file_size_mb:.2f} MB")
-        
+
         if max_file_size_mb and file_size_mb > max_file_size_mb:
-            print(f"  ⚠️  Warning: File size ({file_size_mb:.2f} MB) exceeds limit ({max_file_size_mb} MB)")
-        
+            print(
+                f"  ⚠️  Warning: File size ({file_size_mb:.2f} MB) exceeds limit ({max_file_size_mb} MB)"
+            )
+
         return generated_path
-        
+
     except ImportError:
         print("  ⚠️  PDFGenerator not available, skipping PDF generation")
         return None
@@ -540,23 +537,26 @@ lifetime = market.purchase_lifetime("basic_qa", "soul_demo_001")
         return None
 
 
-def generate_demo_pdf(demo_path: Path, souls: List[Dict[str, Any]], catalog: Dict[str, Any]) -> Optional[Path]:
+def generate_demo_pdf(
+    demo_path: Path, souls: list[dict[str, Any]], catalog: dict[str, Any]
+) -> Path | None:
     """Generate a PDF overview of the demo environment."""
     print("📄 Generating demo overview PDF...")
-    
+
     try:
         import sys
         from pathlib import Path
+
         # Add project root to path
         project_root = Path(__file__).parent.parent
         if str(project_root) not in sys.path:
             sys.path.insert(0, str(project_root))
         from src.waft.evolution.pdf_generator import PDFGenerator
-        
+
         # Build markdown content
         content = f"""# Reincarnation System Demo Overview
 
-**Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+**Generated**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 **Demo Path**: `{demo_path}`
 
 ---
@@ -579,39 +579,39 @@ This demo showcases the reincarnation system where souls exist in binary states 
 The demo includes {len(souls)} test souls with varying karma amounts:
 
 """
-        
+
         for soul in souls:
             content += f"""
-### {soul['soul_id']}
+### {soul["soul_id"]}
 
-- **Karma**: {soul['karma']} karma
-- **State**: {soul['state'].upper()}_{soul['substate'].upper()}
-- **File**: `_hidden/.truth/akasha/{soul['soul_id']}.json`
+- **Karma**: {soul["karma"]} karma
+- **State**: {soul["state"].upper()}_{soul["substate"].upper()}
+- **File**: `_hidden/.truth/akasha/{soul["soul_id"]}.json`
 - **Permissions**: 0600 (owner read/write only)
 
 """
-        
+
         content += f"""
 ---
 
 ## Lifetime Catalog
 
-The demo includes {len(catalog.get('lifetimes', []))} available lifetimes:
+The demo includes {len(catalog.get("lifetimes", []))} available lifetimes:
 
 """
-        
-        for lifetime in catalog.get('lifetimes', []):
+
+        for lifetime in catalog.get("lifetimes", []):
             content += f"""
-### {lifetime['name']} (`{lifetime['id']}`)
+### {lifetime["name"]} (`{lifetime["id"]}`)
 
-- **Type**: {lifetime['type']}
-- **Duration**: {lifetime['duration_minutes']} minutes
-- **Cost**: {lifetime['karma_cost']} karma
-- **Tools**: {', '.join(lifetime['tools'][:5])}{'...' if len(lifetime['tools']) > 5 else ''}
-- **Description**: {lifetime.get('description', 'N/A')}
+- **Type**: {lifetime["type"]}
+- **Duration**: {lifetime["duration_minutes"]} minutes
+- **Cost**: {lifetime["karma_cost"]} karma
+- **Tools**: {", ".join(lifetime["tools"][:5])}{"..." if len(lifetime["tools"]) > 5 else ""}
+- **Description**: {lifetime.get("description", "N/A")}
 
 """
-        
+
         content += """
 ---
 
@@ -708,19 +708,17 @@ demo/
 
 **Status**: Demo environment ready for testing
 """
-        
+
         # Generate PDF
         pdf_path = demo_path / "demo_overview.pdf"
         PDFGenerator.from_content(
-            content=content,
-            title="Reincarnation System Demo Overview",
-            style="clinical_standard"
+            content=content, title="Reincarnation System Demo Overview", style="clinical_standard"
         ).save(pdf_path, open_pdf=False)
-        
+
         print(f"  ✅ Generated: {pdf_path}")
-        
+
         return pdf_path
-        
+
     except ImportError:
         print("  ⚠️  PDFGenerator not available, skipping PDF generation")
         return None
@@ -729,7 +727,9 @@ demo/
         return None
 
 
-def generate_demo_html(demo_path: Path, pdf_filename: str = "demo_overview.pdf", batched: bool = False) -> Optional[Path]:
+def generate_demo_html(
+    demo_path: Path, pdf_filename: str = "demo_overview.pdf", batched: bool = False
+) -> Path | None:
     """Generate HTML file that opens the PDF."""
     try:
         # Create HTML file that opens the PDF
@@ -844,18 +844,18 @@ def generate_demo_html(demo_path: Path, pdf_filename: str = "demo_overview.pdf",
 """
         html_path.write_text(html_content, encoding="utf-8")
         print(f"  ✅ Generated: {html_path}")
-        
+
         return html_path
-        
+
     except Exception as e:
         print(f"  ⚠️  HTML generation failed: {e}")
         return None
 
 
-def validate_seeded_data(demo_path: Path, souls: List[Dict[str, Any]]) -> bool:
+def validate_seeded_data(demo_path: Path, souls: list[dict[str, Any]]) -> bool:
     """Validate seeded data."""
     print("🔍 Validating seeded data...")
-    
+
     # Check souls
     akasha_path = demo_path / "_hidden" / ".truth" / "akasha"
     for soul in souls:
@@ -863,24 +863,28 @@ def validate_seeded_data(demo_path: Path, souls: List[Dict[str, Any]]) -> bool:
         if not soul_file.exists():
             print(f"  ❌ Soul file missing: {soul_file}")
             return False
-        
+
         # Check permissions (should be 0600)
         stat = soul_file.stat()
         if oct(stat.st_mode)[-3:] != "600":
-            print(f"  ⚠️  Soul file permissions incorrect: {soul_file} (expected 600, got {oct(stat.st_mode)[-3:]})")
-    
+            print(
+                f"  ⚠️  Soul file permissions incorrect: {soul_file} (expected 600, got {oct(stat.st_mode)[-3:]})"
+            )
+
     # Check catalog
     catalog_file = demo_path / "_hidden" / ".truth" / "market" / "catalog.json"
     if not catalog_file.exists():
         print(f"  ❌ Catalog file missing: {catalog_file}")
         return False
-    
+
     # Check directory permissions (should be 700)
     akasha_dir = demo_path / "_hidden" / ".truth" / "akasha"
     stat = akasha_dir.stat()
     if oct(stat.st_mode)[-3:] != "700":
-        print(f"  ⚠️  Directory permissions incorrect: {akasha_dir} (expected 700, got {oct(stat.st_mode)[-3:]})")
-    
+        print(
+            f"  ⚠️  Directory permissions incorrect: {akasha_dir} (expected 700, got {oct(stat.st_mode)[-3:]})"
+        )
+
     print("✅ Validation complete")
     return True
 
@@ -889,47 +893,40 @@ def main():
     """Main seeding function."""
     parser = argparse.ArgumentParser(description="Seed reincarnation demo environment")
     parser.add_argument(
-        "--demo-path",
-        type=str,
-        default="demo",
-        help="Path to demo directory (default: demo/)"
+        "--demo-path", type=str, default="demo", help="Path to demo directory (default: demo/)"
     )
-    parser.add_argument(
-        "--reset",
-        action="store_true",
-        help="Reset demo (clear and re-seed)"
-    )
+    parser.add_argument("--reset", action="store_true", help="Reset demo (clear and re-seed)")
     parser.add_argument(
         "--permutations",
         type=int,
         default=1,
-        help="Number of permutations to generate (default: 1, use 10 for batching)"
+        help="Number of permutations to generate (default: 1, use 10 for batching)",
     )
     parser.add_argument(
         "--max-pages",
         type=int,
         default=None,
-        help="Maximum number of pages in PDF (default: no limit)"
+        help="Maximum number of pages in PDF (default: no limit)",
     )
     parser.add_argument(
         "--max-file-size-mb",
         type=float,
         default=None,
-        help="Maximum PDF file size in MB (default: no limit)"
+        help="Maximum PDF file size in MB (default: no limit)",
     )
     parser.add_argument(
         "--batch",
         action="store_true",
-        help="Enable batching mode (generates collated PDF with all permutations)"
+        help="Enable batching mode (generates collated PDF with all permutations)",
     )
-    
+
     args = parser.parse_args()
     demo_path = Path(args.demo_path).resolve()
-    
+
     # If batch mode, set permutations to 10 if not specified
     if args.batch and args.permutations == 1:
         args.permutations = 10
-    
+
     print("🌱 Seeding Reincarnation Demo Environment")
     print(f"📍 Demo path: {demo_path}")
     if args.batch or args.permutations > 1:
@@ -939,12 +936,13 @@ def main():
         if args.max_file_size_mb:
             print(f"   💾 Max file size: {args.max_file_size_mb} MB")
     print()
-    
+
     # Reset if requested
     if args.reset:
         print("🔄 Resetting demo environment...")
         if demo_path.exists():
             import shutil
+
             hidden_path = demo_path / "_hidden"
             if hidden_path.exists():
                 shutil.rmtree(hidden_path)
@@ -957,28 +955,28 @@ def main():
             for html_file in demo_path.glob("demo_overview*.html"):
                 html_file.unlink()
         print("✅ Demo reset complete\n")
-    
+
     # Create demo structure
     create_demo_structure(demo_path)
     print()
-    
+
     # Batch mode: generate multiple permutations
     if args.batch or args.permutations > 1:
         print(f"🔄 Generating {args.permutations} permutations...\n")
-        
+
         all_permutations = []
         for perm in range(args.permutations):
             print(f"--- Permutation {perm + 1}/{args.permutations} ---")
-            
+
             # Create test souls for this permutation
             souls = create_test_souls(demo_path, permutation=perm)
-            
+
             # Create lifetime catalog (same for all permutations)
             catalog = create_lifetime_catalog(demo_path)
-            
+
             # Store permutation data
             all_permutations.append((perm, souls, catalog))
-            
+
             # Save souls to files (only for first permutation, or all if needed)
             if perm == 0:
                 akasha_path = demo_path / "_hidden" / ".truth" / "akasha"
@@ -997,83 +995,85 @@ def main():
                     }
                     soul_file.write_text(json.dumps(soul_record, indent=2), encoding="utf-8")
                     soul_file.chmod(0o600)
-            
+
             print()
-        
+
         # Create test scenarios (once)
         create_test_scenarios(demo_path)
         print()
-        
+
         # Generate batched PDF
         pdf_path = generate_batched_demo_pdf(
             demo_path,
             all_permutations,
             max_pages=args.max_pages,
-            max_file_size_mb=args.max_file_size_mb
+            max_file_size_mb=args.max_file_size_mb,
         )
         print()
-        
+
         # Generate HTML for batched PDF
         if pdf_path and pdf_path.exists():
             html_path = generate_demo_html(demo_path, pdf_path.name, batched=True)
             print()
-        
+
         # Validate (using first permutation's souls)
         if validate_seeded_data(demo_path, all_permutations[0][1]):
             print("\n✅ Batched demo environment seeded successfully!")
             print(f"   📦 Generated {args.permutations} permutations")
             print(f"   📄 Collated PDF: {pdf_path.name if pdf_path else 'N/A'}")
-            print(f"\n📖 Next steps:")
-            print(f"  1. Review batched PDF for all permutations")
-            print(f"  2. Review demo/README.md for usage instructions")
-            print(f"  3. Start implementing reincarnation system")
-            
+            print("\n📖 Next steps:")
+            print("  1. Review batched PDF for all permutations")
+            print("  2. Review demo/README.md for usage instructions")
+            print("  3. Start implementing reincarnation system")
+
             # Open HTML file in browser
             if html_path and html_path.exists():
                 import webbrowser
+
                 file_url = f"file://{html_path.absolute()}"
-                print(f"\n🌐 Opening demo overview in browser...")
+                print("\n🌐 Opening demo overview in browser...")
                 webbrowser.open(file_url)
                 print(f"   ✅ Opened: {file_url}")
         else:
             print("\n⚠️  Validation found issues. Please review.")
-    
+
     else:
         # Single demo mode (original behavior)
         # Create test souls
         souls = create_test_souls(demo_path)
         print()
-        
+
         # Create lifetime catalog
         catalog = create_lifetime_catalog(demo_path)
         print()
-        
+
         # Create test scenarios
         create_test_scenarios(demo_path)
         print()
-        
+
         # Generate demo PDF and HTML
         pdf_path = generate_demo_pdf(demo_path, souls, catalog)
         print()
-        
+
         # Generate HTML
         if pdf_path:
             html_path = generate_demo_html(demo_path, "demo_overview.pdf")
             print()
-        
+
         # Validate
         if validate_seeded_data(demo_path, souls):
             print("\n✅ Demo environment seeded successfully!")
-            print(f"\n📖 Next steps:")
-            print(f"  1. Review demo/README.md for usage instructions")
-            print(f"  2. Review demo/TEST_SCENARIOS.md for test scenarios")
-            print(f"  3. Start implementing reincarnation system")
-            
+            print("\n📖 Next steps:")
+            print("  1. Review demo/README.md for usage instructions")
+            print("  2. Review demo/TEST_SCENARIOS.md for test scenarios")
+            print("  3. Start implementing reincarnation system")
+
             # Open HTML file in browser
             if html_path and html_path.exists():
                 import webbrowser
+
                 file_url = f"file://{html_path.absolute()}"
-                print(f"\n🌐 Opening demo overview in browser...")
+                print("\n🌐 Opening demo overview in browser...")
                 webbrowser.open(file_url)
                 print(f"   ✅ Opened: {file_url}")
         else:

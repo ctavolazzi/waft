@@ -8,30 +8,31 @@ Uses the same dark theme, typography, and layout patterns.
 """
 
 import sys
-from pathlib import Path
 from datetime import datetime
-from typing import Dict, Any, List, Optional
+from pathlib import Path
+from typing import Any
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
+
 def generate_closeout_html(
-    accomplishments: List[str] = None,
-    failures: List[str] = None,
-    planned: List[str] = None,
-    unplanned: List[str] = None,
-    errors: List[Dict[str, str]] = None,
-    oversights: List[str] = None,
-    lessons: List[str] = None,
-    next_steps: List[str] = None,
-    metrics: Dict[str, Any] = None,
-    recommendations: List[str] = None,
+    accomplishments: list[str] = None,
+    failures: list[str] = None,
+    planned: list[str] = None,
+    unplanned: list[str] = None,
+    errors: list[dict[str, str]] = None,
+    oversights: list[str] = None,
+    lessons: list[str] = None,
+    next_steps: list[str] = None,
+    metrics: dict[str, Any] = None,
+    recommendations: list[str] = None,
     session_focus: str = "Session work",
     timestamp: str = None,
-    output_path: Optional[Path] = None
+    output_path: Path | None = None,
 ) -> Path:
     """
     Generate HTML closeout report using show_me design inspiration.
-    
+
     Args:
         accomplishments: List of completed items
         failures: List of incomplete items
@@ -46,21 +47,24 @@ def generate_closeout_html(
         session_focus: Brief description of session
         timestamp: Timestamp string (defaults to now)
         output_path: Output file path (defaults to _work_efforts/showcase_documents/)
-    
+
     Returns:
         Path to generated HTML file
     """
-    
+
     if timestamp is None:
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    
+
     if output_path is None:
-        output_path = Path("_work_efforts/showcase_documents") / f"CLOSEOUT_REPORT_{datetime.now().strftime('%Y%m%d_%H%M%S')}.html"
+        output_path = (
+            Path("_work_efforts/showcase_documents")
+            / f"CLOSEOUT_REPORT_{datetime.now().strftime('%Y%m%d_%H%M%S')}.html"
+        )
     else:
         output_path = Path(output_path)
-    
+
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     # Default values
     accomplishments = accomplishments or []
     failures = failures or []
@@ -72,47 +76,56 @@ def generate_closeout_html(
     next_steps = next_steps or []
     metrics = metrics or {}
     recommendations = recommendations or []
-    
+
     # Generate HTML content sections
     html_content = generate_closeout_content(
-        accomplishments, failures, planned, unplanned, errors,
-        oversights, lessons, next_steps, metrics, recommendations,
-        session_focus, timestamp
+        accomplishments,
+        failures,
+        planned,
+        unplanned,
+        errors,
+        oversights,
+        lessons,
+        next_steps,
+        metrics,
+        recommendations,
+        session_focus,
+        timestamp,
     )
-    
+
     # Use show_me WAFT HTML template
     from scripts.show_me import generate_waft_html
-    
+
     full_html = generate_waft_html(
         html_content=html_content,
         title="Session Closeout Report",
         timestamp=timestamp,
-        session_history=None
+        session_history=None,
     )
-    
+
     # Write to file
-    with open(output_path, 'w', encoding='utf-8') as f:
+    with open(output_path, "w", encoding="utf-8") as f:
         f.write(full_html)
-    
+
     return output_path
 
 
 def generate_closeout_content(
-    accomplishments: List[str],
-    failures: List[str],
-    planned: List[str],
-    unplanned: List[str],
-    errors: List[Dict[str, str]],
-    oversights: List[str],
-    lessons: List[str],
-    next_steps: List[str],
-    metrics: Dict[str, Any],
-    recommendations: List[str],
+    accomplishments: list[str],
+    failures: list[str],
+    planned: list[str],
+    unplanned: list[str],
+    errors: list[dict[str, str]],
+    oversights: list[str],
+    lessons: list[str],
+    next_steps: list[str],
+    metrics: dict[str, Any],
+    recommendations: list[str],
     session_focus: str,
-    timestamp: str
+    timestamp: str,
 ) -> str:
     """Generate the HTML content for closeout report."""
-    
+
     content = f"""
 <div id='abstract'></div>
 <div class="header-section">
@@ -164,10 +177,10 @@ def generate_closeout_content(
 <div class="content-card">
 <ul>
 """
-    
+
     for acc in accomplishments:
         content += f"<li>✅ {acc}</li>\n"
-    
+
     content += """</ul>
 </div>
 
@@ -176,10 +189,10 @@ def generate_closeout_content(
 <div class="content-card">
 <ul>
 """
-    
+
     for fail in failures:
         content += f"<li>❌ {fail}</li>\n"
-    
+
     content += """</ul>
 </div>
 
@@ -188,10 +201,10 @@ def generate_closeout_content(
 <div class="content-card">
 <ul>
 """
-    
+
     for plan in planned:
         content += f"<li>📋 {plan}</li>\n"
-    
+
     content += """</ul>
 </div>
 
@@ -200,10 +213,10 @@ def generate_closeout_content(
 <div class="content-card">
 <ul>
 """
-    
+
     for unplan in unplanned:
         content += f"<li>⚠️ {unplan}</li>\n"
-    
+
     content += """</ul>
 </div>
 
@@ -221,14 +234,16 @@ def generate_closeout_content(
 </thead>
 <tbody>
 """
-    
+
     for error in errors:
-        error_text = error.get('error', 'N/A')
-        cause = error.get('cause', 'N/A')
-        fix = error.get('fix', 'N/A')
-        status = error.get('status', 'N/A')
-        content += f"<tr><td>{error_text}</td><td>{cause}</td><td>{fix}</td><td>{status}</td></tr>\n"
-    
+        error_text = error.get("error", "N/A")
+        cause = error.get("cause", "N/A")
+        fix = error.get("fix", "N/A")
+        status = error.get("status", "N/A")
+        content += (
+            f"<tr><td>{error_text}</td><td>{cause}</td><td>{fix}</td><td>{status}</td></tr>\n"
+        )
+
     content += """</tbody>
 </table>
 </div>
@@ -238,10 +253,10 @@ def generate_closeout_content(
 <div class="content-card">
 <ul>
 """
-    
+
     for oversight in oversights:
         content += f"<li>👁️ {oversight}</li>\n"
-    
+
     content += """</ul>
 </div>
 
@@ -250,10 +265,10 @@ def generate_closeout_content(
 <div class="content-card">
 <ul>
 """
-    
+
     for lesson in lessons:
         content += f"<li>📚 {lesson}</li>\n"
-    
+
     content += """</ul>
 </div>
 
@@ -262,10 +277,10 @@ def generate_closeout_content(
 <div class="content-card">
 <ol>
 """
-    
+
     for step in next_steps:
         content += f"<li>{step}</li>\n"
-    
+
     content += """</ol>
 </div>
 
@@ -281,10 +296,12 @@ def generate_closeout_content(
 </thead>
 <tbody>
 """
-    
+
     for key, value in metrics.items():
-        content += f"<tr><td><strong>{key.replace('_', ' ').title()}</strong></td><td>{value}</td></tr>\n"
-    
+        content += (
+            f"<tr><td><strong>{key.replace('_', ' ').title()}</strong></td><td>{value}</td></tr>\n"
+        )
+
     content += """</tbody>
 </table>
 </div>
@@ -294,10 +311,10 @@ def generate_closeout_content(
 <div class="content-card">
 <ul>
 """
-    
+
     for rec in recommendations:
         content += f"<li>💡 {rec}</li>\n"
-    
+
     content += """</ul>
 </div>
 
@@ -310,76 +327,70 @@ def generate_closeout_content(
 <p><strong>Key Learning:</strong> {lessons[0] if lessons else 'Continuous improvement through reflection and documentation.'}</p>
 </div>
 """
-    
+
     return content
 
 
 if __name__ == "__main__":
     # Example usage
     from pathlib import Path
-    
+
     print("=" * 80)
     print("Generating Closeout HTML Report")
     print("=" * 80)
     print()
-    
+
     # Example data
     html_path = generate_closeout_html(
         accomplishments=[
             "Added copy button to Abstract section",
             "Created /thank-you command",
             "Implemented subtle, chill SVG icon design",
-            "Added visual feedback for copy action"
+            "Added visual feedback for copy action",
         ],
         failures=[
             "Full closeout automation (needs session analysis)",
-            "PDF generation from HTML (can be added)"
+            "PDF generation from HTML (can be added)",
         ],
-        planned=[
-            "Copy button implementation",
-            "Thank you command creation"
-        ],
-        unplanned=[
-            "User requested HTML closeout report",
-            "Design inspiration from show_me"
-        ],
+        planned=["Copy button implementation", "Thank you command creation"],
+        unplanned=["User requested HTML closeout report", "Design inspiration from show_me"],
         errors=[
             {
                 "error": "Markdown vs HTML structure",
                 "cause": "Mixed markdown and HTML in header",
                 "fix": "Used raw HTML for flex container",
-                "status": "✅ Fixed"
+                "status": "✅ Fixed",
             }
         ],
         oversights=[
             "Didn't initially show progress as requested",
-            "Could have created preview earlier"
+            "Could have created preview earlier",
         ],
         lessons=[
             "User feedback is critical - 'keep showing me' was important",
             "Preview files help demonstrate features before full integration",
-            "Subtle design matters - low opacity creates better UX"
+            "Subtle design matters - low opacity creates better UX",
         ],
         next_steps=[
             "Test copy button in actual show_me output",
             "Consider adding copy buttons to other sections",
-            "Add keyboard shortcut support"
+            "Add keyboard shortcut support",
         ],
         metrics={
             "files_created": 2,
             "files_modified": 2,
             "lines_added": 80,
-            "features_completed": 1
+            "features_completed": 1,
         },
         recommendations=[
             "Use HTML closeout reports for visual documentation",
             "Continue using show_me design patterns for consistency",
-            "Add more interactive elements to closeout reports"
+            "Add more interactive elements to closeout reports",
         ],
         session_focus="Abstract Copy Button & Closeout HTML Report",
-        timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     )
-    
+
     print(f"✅ Generated: {html_path}")
     print(f"   Size: {html_path.stat().st_size / 1024:.1f} KB")
     print()

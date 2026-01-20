@@ -2,8 +2,9 @@
 Git status endpoint.
 """
 
-from fastapi import APIRouter, Request
 from pathlib import Path
+
+from fastapi import APIRouter, Request
 
 from ...core.visualizer import Visualizer
 

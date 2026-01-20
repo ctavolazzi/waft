@@ -13,9 +13,9 @@ Features:
 """
 
 from pathlib import Path
+
 from jinja2 import Template
 from weasyprint import HTML
-
 
 MINIMAL_COVER_TEMPLATE = """
 <!DOCTYPE html>
@@ -218,7 +218,7 @@ def generate_minimal_cover_document(
     cover_header: str = None,
     cover_metadata: dict = None,
     cover_footer: str = None,
-    cover_badge: str = None
+    cover_badge: str = None,
 ) -> Path:
     """
     Generate a document with minimalist cover page.
@@ -248,16 +248,17 @@ def generate_minimal_cover_document(
         cover_header=cover_header,
         cover_metadata=cover_metadata,
         cover_footer=cover_footer,
-        cover_badge=cover_badge
+        cover_badge=cover_badge,
     )
 
     HTML(string=html_output).write_pdf(output_path)
-    
+
     # Post-process to add blank page markers
     try:
         from ..utils import process_pdf_for_blank_pages
+
         process_pdf_for_blank_pages(output_path)
     except Exception as e:
         print(f"⚠️  Blank page marker processing failed: {e}")
-    
+
     return output_path

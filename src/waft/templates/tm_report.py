@@ -15,9 +15,9 @@ Features:
 """
 
 from pathlib import Path
+
 from jinja2 import Template
 from weasyprint import HTML
-
 
 TM_REPORT_TEMPLATE = """
 <!DOCTYPE html>
@@ -354,7 +354,7 @@ def generate_tm_report(
     department: str = None,
     distribution: str = None,
     summary: str = None,
-    signatures: list = None
+    signatures: list = None,
 ) -> Path:
     """
     Generate a TELEPORT MASSIVE branded report.
@@ -390,7 +390,7 @@ def generate_tm_report(
         department=department,
         distribution=distribution,
         summary=summary,
-        signatures=signatures or []
+        signatures=signatures or [],
     )
 
     HTML(string=html_output).write_pdf(output_path)

@@ -1,28 +1,30 @@
 """Comprehensive tests for TheFoundation and DocumentEngine."""
 
-import pytest
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
+
+import pytest
+
 from waft.foundation import (
     DocumentConfig,
     DocumentEngine,
-    TheFoundation,
-    SectionHeader,
-    TextBlock,
     KeyValueBlock,
     LogBlock,
-    WarningBlock,
-    SignatureBlock,
-    AutoRedactor,
     RedactionStyle,
+    SectionHeader,
+    SignatureBlock,
+    TextBlock,
+    TheFoundation,
+    WarningBlock,
 )
 
 # Check if TheFoundation can be instantiated (tests relative imports)
 # We test this by trying to create a TheFoundation instance
 FOUNDATION_TESTS_AVAILABLE = False
 try:
-    from pathlib import Path
     import tempfile
+    from pathlib import Path
+
     with tempfile.TemporaryDirectory() as tmpdir:
         test_path = Path(tmpdir) / "test"
         test_path.mkdir()
@@ -54,10 +56,7 @@ def test_document_config_initialization():
 
 def test_document_config_classified_dossier():
     """Test DocumentConfig.classified_dossier() preset."""
-    config = DocumentConfig.classified_dossier(
-        header="TEST HEADER",
-        watermark="TEST WATERMARK"
-    )
+    config = DocumentConfig.classified_dossier(header="TEST HEADER", watermark="TEST WATERMARK")
     assert config.watermark == "TEST WATERMARK"
     assert config.header_text == "TEST HEADER"
     assert config.footer_text == "INTERNAL USE ONLY"
@@ -92,11 +91,7 @@ def test_document_config_margins():
 
 def test_document_config_none_values():
     """Test DocumentConfig with None header_text, footer_text, watermark."""
-    config = DocumentConfig(
-        header_text=None,
-        footer_text=None,
-        watermark=None
-    )
+    config = DocumentConfig(header_text=None, footer_text=None, watermark=None)
     assert config.header_text is None
     assert config.footer_text is None
     assert config.watermark is None
@@ -222,11 +217,7 @@ def test_log_block_multiple_entries(temp_dir):
     """Test LogBlock rendering (multiple entries)."""
     config = DocumentConfig.classified_dossier()
     engine = DocumentEngine(config)
-    engine.add(LogBlock([
-        "[09:00:01] Entry 1",
-        "[09:00:02] Entry 2",
-        "[09:00:03] Entry 3"
-    ]))
+    engine.add(LogBlock(["[09:00:01] Entry 1", "[09:00:02] Entry 2", "[09:00:03] Entry 3"]))
     output_path = temp_dir / "test_log_multiple.pdf"
     engine.render(output_path)
     assert output_path.exists()
@@ -474,10 +465,7 @@ def test_document_engine_pagination(temp_dir):
 
 def test_document_engine_header_footer(temp_dir):
     """Test header/footer on all pages."""
-    config = DocumentConfig.classified_dossier(
-        header="TEST HEADER",
-        watermark="TEST"
-    )
+    config = DocumentConfig.classified_dossier(header="TEST HEADER", watermark="TEST")
     config.footer_text = "TEST FOOTER"
     engine = DocumentEngine(config)
     # Add content spanning multiple pages

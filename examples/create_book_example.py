@@ -13,20 +13,20 @@ from pathlib import Path
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from scripts.create_book import create_book, create_sample_chapters
+from scripts.create_book import create_book
 
 
 def example_demo_book():
     """Create a book with demo content."""
     print("Example 1: Creating a book with demo content")
     print("-" * 60)
-    
+
     pdf_path = create_book(
         title="The Adventure Begins",
         chapters=None,  # Uses demo chapters
-        author="WAFT Storyteller"
+        author="WAFT Storyteller",
     )
-    
+
     print(f"✅ Created: {pdf_path}")
     return pdf_path
 
@@ -35,7 +35,7 @@ def example_custom_chapters():
     """Create a book with custom chapters."""
     print("\nExample 2: Creating a book with custom chapters")
     print("-" * 60)
-    
+
     chapters = [
         {
             "title": "Prologue: The Call",
@@ -52,7 +52,7 @@ def example_custom_chapters():
             """,
             "read_aloud": [
                 "The bell's deep, resonant tone echoes across the valley, and you feel a chill run down your spine."
-            ]
+            ],
         },
         {
             "title": "Chapter 1: The Gathering",
@@ -71,16 +71,14 @@ def example_custom_chapters():
                 "The three heroes look at each other, knowing their lives will never be the same."
             ],
             "characters": ["Aria", "Kael", "Thorne", "Master Elara"],
-            "settings": ["Millbrook", "The Town Square"]
-        }
+            "settings": ["Millbrook", "The Town Square"],
+        },
     ]
-    
+
     pdf_path = create_book(
-        title="The Prophecy of Millbrook",
-        chapters=chapters,
-        author="WAFT Storyteller"
+        title="The Prophecy of Millbrook", chapters=chapters, author="WAFT Storyteller"
     )
-    
+
     print(f"✅ Created: {pdf_path}")
     return pdf_path
 
@@ -89,7 +87,7 @@ def example_with_monsters():
     """Create a book with monster stat blocks."""
     print("\nExample 3: Creating a book with monster stat blocks")
     print("-" * 60)
-    
+
     chapters = [
         {
             "title": "Encounter: The Forest Guardian",
@@ -119,7 +117,7 @@ def example_with_monsters():
                         "con": 21,
                         "int": 12,
                         "wis": 16,
-                        "cha": 12
+                        "cha": 12,
                     },
                     "senses": "darkvision 60 ft., passive Perception 13",
                     "languages": "Common, Druidic, Elvish, Sylvan",
@@ -128,29 +126,29 @@ def example_with_monsters():
                     "actions": [
                         {
                             "name": "Multiattack",
-                            "description": "The treant makes two slam attacks."
+                            "description": "The treant makes two slam attacks.",
                         },
                         {
                             "name": "Slam",
-                            "description": "Melee Weapon Attack: +10 to hit, reach 10 ft., one target. Hit: 16 (3d6 + 6) bludgeoning damage."
+                            "description": "Melee Weapon Attack: +10 to hit, reach 10 ft., one target. Hit: 16 (3d6 + 6) bludgeoning damage.",
                         },
                         {
                             "name": "Rock",
-                            "description": "Ranged Weapon Attack: +10 to hit, range 60/180 ft., one target. Hit: 15 (3d6 + 6) bludgeoning damage."
-                        }
-                    ]
+                            "description": "Ranged Weapon Attack: +10 to hit, range 60/180 ft., one target. Hit: 15 (3d6 + 6) bludgeoning damage.",
+                        },
+                    ],
                 }
-            ]
+            ],
         }
     ]
-    
+
     pdf_path = create_book(
         title="Monster Manual: Forest Encounters",
         chapters=chapters,
         author="WAFT Storyteller",
-        include_monsters=True
+        include_monsters=True,
     )
-    
+
     print(f"✅ Created: {pdf_path}")
     return pdf_path
 
@@ -162,17 +160,17 @@ if __name__ == "__main__":
     print("\nNote: These examples require LaTeX to be installed.")
     print("Install with: brew install --cask mactex (macOS)")
     print()
-    
+
     try:
         # Run examples
         example_demo_book()
         example_custom_chapters()
         example_with_monsters()
-        
+
         print("\n" + "=" * 60)
         print("✅ All examples completed!")
         print("=" * 60)
-        
+
     except RuntimeError as e:
         if "LaTeX" in str(e):
             print("\n⚠️  LaTeX is required for D&D-style books.")

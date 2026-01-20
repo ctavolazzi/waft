@@ -24,9 +24,9 @@ Perfect for:
 """
 
 from pathlib import Path
+
 from jinja2 import Template
 from weasyprint import HTML
-
 
 WORLDBUILD_TEMPLATE = """
 <!DOCTYPE html>
@@ -404,7 +404,7 @@ def generate_worldbuild_document(
     classification: str = "INTERNAL",
     issued_by: str = None,
     date: str = None,
-    footer_notice: str = None
+    footer_notice: str = None,
 ) -> Path:
     """
     Generate a worldbuilding document (Foundation + Field Guide style).
@@ -434,16 +434,17 @@ def generate_worldbuild_document(
         classification=classification,
         issued_by=issued_by,
         date=date,
-        footer_notice=footer_notice
+        footer_notice=footer_notice,
     )
 
     HTML(string=html_output).write_pdf(output_path)
-    
+
     # Post-process to add blank page markers
     try:
         from ..utils import process_pdf_for_blank_pages
+
         process_pdf_for_blank_pages(output_path)
     except Exception as e:
         print(f"⚠️  Blank page marker processing failed: {e}")
-    
+
     return output_path

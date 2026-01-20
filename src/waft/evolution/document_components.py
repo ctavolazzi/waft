@@ -6,6 +6,7 @@ Each component is a variable that can be tested, measured, and evolved.
 """
 
 import html
+import time
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any
@@ -372,7 +373,7 @@ class ComponentBuilder:
                             "body_preview": body[:150] if body else "",
                             "ideas_count": len(ideas),
                         },
-                        "timestamp": int(__import__("time").time() * 1000),
+                        "timestamp": int(time.time() * 1000),
                     }
                 )
                 + "\n"

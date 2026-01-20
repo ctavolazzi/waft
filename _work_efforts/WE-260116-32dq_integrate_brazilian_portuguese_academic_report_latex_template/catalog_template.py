@@ -10,9 +10,10 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
+from datetime import datetime
+
 from src.waft.pantheon.library.librarian import Librarian
 from src.waft.pantheon.library.record_catalog import RecordEntry
-from datetime import datetime
 
 # Initialize Librarian
 project_path = Path(__file__).parent.parent.parent
@@ -26,7 +27,16 @@ template_entry = RecordEntry(
     path="templates/unicamp-physics-report/main.tex",
     category="latex_template",
     subcategory="academic_report",
-    tags=["latex", "pdf", "academic", "brazilian", "portuguese", "physics", "lab-report", "unicamp"],
+    tags=[
+        "latex",
+        "pdf",
+        "academic",
+        "brazilian",
+        "portuguese",
+        "physics",
+        "lab-report",
+        "unicamp",
+    ],
     metadata={
         "name": "Unicamp Physics Report",
         "wrapper": "src/waft/templates/latex/wrappers/unicamp_report.py",
@@ -36,9 +46,9 @@ template_entry = RecordEntry(
         "source_repo": "unicamp-physics-report",
         "language": "pt-BR",
         "institution": "Unicamp",
-        "created_at": datetime.now().isoformat()
+        "created_at": datetime.now().isoformat(),
     },
-    created_at=datetime.now().isoformat()
+    created_at=datetime.now().isoformat(),
 )
 
 # Add to catalog
@@ -55,8 +65,8 @@ librarian.scribe.write_script(
     {
         "action": "catalog_template",
         "template_id": template_entry.record_id,
-        "template_name": "Unicamp Physics Report"
-    }
+        "template_name": "Unicamp Physics Report",
+    },
 )
 
 print("✅ Scribe script written")

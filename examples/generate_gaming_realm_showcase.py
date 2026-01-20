@@ -11,27 +11,24 @@ Generates a comprehensive PDF showcasing the entire realm:
 """
 
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from src.waft.templates.typst.wrappers.deckz_poker import (
-    generate_deckz_poker,
-    Player
-)
+from src.waft.templates.typst.wrappers.deckz_poker import Player, generate_deckz_poker
 
 
 def generate_realm_showcase():
     """Generate comprehensive realm showcase PDF."""
-    
+
     content = f"""
 # Realm of Gaming and Gambling
 ## Complete Showcase
 
-**Created**: {datetime.now().strftime('%Y-%m-%d')}  
+**Created**: {datetime.now().strftime("%Y-%m-%d")}  
 **Demi-God**: The River King  
 **Parent God**: The Magistrate  
 **Status**: Active
@@ -84,7 +81,7 @@ This is an example game documented using The Deck of Fates:
 
 **Players**: Alice, Bob, Carol, Dave  
 **Game Type**: Texas Hold'em  
-**Date**: {datetime.now().strftime('%Y-%m-%d')}
+**Date**: {datetime.now().strftime("%Y-%m-%d")}
 
 The River King witnessed this game and documented it using his sacred tool.
 
@@ -135,12 +132,12 @@ This realm integrates with:
         Player(name="Carol", cards=["QS", "QD"]),
         Player(name="Dave", cards=["JS", "JD"]),
     ]
-    
+
     community_cards = ["10H", "9C", "8D", "7S", "6H"]
-    
+
     output_path = Path("_temp_pdf_examples/gaming_gambling_realm_showcase.pdf")
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     pdf_path = generate_deckz_poker(
         title="Realm of Gaming and Gambling - Complete Showcase",
         content=content,
@@ -149,9 +146,9 @@ This realm integrates with:
         players=players,
         community_cards=community_cards,
         card_format="medium",
-        show_rules=True
+        show_rules=True,
     )
-    
+
     return pdf_path
 
 
@@ -160,14 +157,15 @@ if __name__ == "__main__":
     print("Generating Gaming and Gambling Realm Showcase")
     print("=" * 60)
     print()
-    
+
     pdf_path = generate_realm_showcase()
-    
+
     print(f"✅ Generated: {pdf_path}")
     print()
     print("The Realm is now complete!")
     print("=" * 60)
-    
+
     # Open the PDF
     import subprocess
+
     subprocess.run(["open", str(pdf_path)])

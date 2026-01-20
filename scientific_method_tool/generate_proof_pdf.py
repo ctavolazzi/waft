@@ -5,10 +5,10 @@ Generate PDF Report of Proof Experiments
 Creates a comprehensive PDF report showing all proof experiments.
 """
 
-from pathlib import Path
-import sys
 import json
+import sys
 from datetime import datetime
+from pathlib import Path
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
@@ -26,7 +26,7 @@ if not summary_file.exists():
     print("❌ Proof summary not found. Run run_multiple_proofs.py first.")
     sys.exit(1)
 
-with open(summary_file, 'r') as f:
+with open(summary_file) as f:
     summary_data = json.load(f)
 
 proofs = summary_data.get("proofs", [])
@@ -431,56 +431,59 @@ PDF_TEMPLATE = """
 </html>
 """
 
+
 def main():
     """Generate PDF report."""
     # Calculate summary stats
     total_proofs = len(proofs)
-    verified_count = sum(1 for p in proofs if p['analysis']['verified'])
-    avg_confidence = sum(p['analysis']['confidence'] for p in proofs) / len(proofs) * 100 if proofs else 0
-    total_files = sum(
-        p['files']['experiments'] + p['files']['states'] + p['files']['data']
-        for p in proofs
+    verified_count = sum(1 for p in proofs if p["analysis"]["verified"])
+    avg_confidence = (
+        sum(p["analysis"]["confidence"] for p in proofs) / len(proofs) * 100 if proofs else 0
     )
-    
+    total_files = sum(
+        p["files"]["experiments"] + p["files"]["states"] + p["files"]["data"] for p in proofs
+    )
+
     # Process proofs to ensure values are lists
     processed_proofs = []
     for proof in proofs:
         processed_proof = proof.copy()
         processed_data_series = {}
-        for name, series in proof['data_series'].items():
+        for name, series in proof["data_series"].items():
             processed_series = series.copy()
             # Ensure values is a list
-            if isinstance(processed_series.get('values'), list):
-                processed_series['values'] = [str(v) for v in processed_series['values']]
+            if isinstance(processed_series.get("values"), list):
+                processed_series["values"] = [str(v) for v in processed_series["values"]]
             else:
-                processed_series['values'] = []
+                processed_series["values"] = []
             processed_data_series[name] = processed_series
-        processed_proof['data_series'] = processed_data_series
+        processed_proof["data_series"] = processed_data_series
         processed_proofs.append(processed_proof)
-    
+
     # Render template
     template = Template(PDF_TEMPLATE)
     html_output = template.render(
-        timestamp=summary_data.get('timestamp', datetime.now().isoformat()),
+        timestamp=summary_data.get("timestamp", datetime.now().isoformat()),
         total_proofs=total_proofs,
         verified_count=verified_count,
         avg_confidence=f"{avg_confidence:.1f}",
         total_files=total_files,
-        proofs=processed_proofs
+        proofs=processed_proofs,
     )
-    
+
     # Generate PDF
     desktop_path = Path.home() / "Desktop"
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_path = desktop_path / f"Scientific_Method_Proof_Report_{timestamp}.pdf"
-    
+
     HTML(string=html_output).write_pdf(str(output_path))
-    
+
     print(f"✅ PDF Report created: {output_path}")
-    
+
     # Open PDF
-    import subprocess
     import platform
+    import subprocess
+
     system = platform.system()
     if system == "Darwin":  # macOS
         subprocess.run(["open", str(output_path)], check=False)
@@ -488,10 +491,11 @@ def main():
         subprocess.run(["start", str(output_path)], shell=True, check=False)
     else:  # Linux
         subprocess.run(["xdg-open", str(output_path)], check=False)
-    
-    print(f"📖 Opening PDF on desktop...")
-    
+
+    print("📖 Opening PDF on desktop...")
+
     return output_path
+
 
 if __name__ == "__main__":
     main()

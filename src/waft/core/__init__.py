@@ -13,10 +13,12 @@ from .substrate import SubstrateManager
 
 __all__ = ["MemoryManager", "SubstrateManager"]
 
+
 # Lazy imports for probe system
 def get_probe():
     """Get Probe classes (lazy import)."""
-    from .probe import Probe, HTTPProbe, FileSystemProbe, ServiceProbe, ProbeCollector
+    from .probe import FileSystemProbe, HTTPProbe, Probe, ProbeCollector, ServiceProbe
+
     return {
         "Probe": Probe,
         "HTTPProbe": HTTPProbe,
@@ -25,9 +27,10 @@ def get_probe():
         "ProbeCollector": ProbeCollector,
     }
 
+
 # Lazy imports for optional components
 def get_campfire():
     """Get TheCampfire class (lazy import)."""
     from .campfire import TheCampfire
-    return TheCampfire
 
+    return TheCampfire

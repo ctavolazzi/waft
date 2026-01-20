@@ -12,9 +12,10 @@ transmitter and receiver, past and future self.
 Design: Clean, visual, using lines and shapes instead of harsh black rectangles.
 """
 
-from pathlib import Path
 import sys
 from datetime import datetime
+from pathlib import Path
+
 from jinja2 import Template
 from weasyprint import HTML
 
@@ -938,7 +939,7 @@ Return here whenever you need to find your way back.
         subtitle="What Happened Here: A Fixed Reference Point",
         classification="PUBLIC - FOR ALL WHO SEEK ORIENTATION",
         issued_by="Christopher Tavolazzi, Claude Opus 4.5, Claude Sonnet - Collaborative Documentation Team",
-        date=datetime.now().strftime("%B %d, %Y")
+        date=datetime.now().strftime("%B %d, %Y"),
     )
 
     HTML(string=html_output).write_pdf(output_path)

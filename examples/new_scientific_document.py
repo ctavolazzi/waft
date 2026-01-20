@@ -6,15 +6,14 @@ This creates a comprehensive technical report on computational complexity
 and algorithmic efficiency.
 """
 
-from pathlib import Path
 import sys
 from datetime import datetime
+from pathlib import Path
 
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.waft.templates.simple_scientific import generate_simple_scientific_document
-
 
 # Document content - comprehensive technical report
 CONTENT = """
@@ -307,17 +306,13 @@ def main():
     """Generate the scientific document."""
     output_dir = Path("_work_efforts/showcase_documents")
     output_path = output_dir / "Computational_Complexity_Analysis.pdf"
-    
+
     # Generate document
     pdf_path = generate_simple_scientific_document(
         title="Computational Complexity and Algorithmic Efficiency: A Comprehensive Analysis",
         content=CONTENT,
         output_path=output_path,
-        authors=[
-            "Dr. Sarah Chen",
-            "Prof. Michael Rodriguez",
-            "Dr. Emily Watson"
-        ],
+        authors=["Dr. Sarah Chen", "Prof. Michael Rodriguez", "Dr. Emily Watson"],
         date=datetime.now().strftime("%B %Y"),
         abstract=(
             "This report provides a comprehensive analysis of computational complexity "
@@ -340,28 +335,28 @@ def main():
             "[7] Dasgupta, S., Papadimitriou, C., & Vazirani, U. (2006). Algorithms. McGraw-Hill.",
             "[8] Skiena, S. S. (2008). The Algorithm Design Manual (2nd ed.). Springer.",
         ],
-        short_title="Computational Complexity Analysis"
+        short_title="Computational Complexity Analysis",
     )
-    
+
     print(f"✅ Generated: {pdf_path}")
     print(f"   Size: {pdf_path.stat().st_size:,} bytes")
     print(f"   Location: {pdf_path.absolute()}")
-    
+
     return pdf_path
 
 
 if __name__ == "__main__":
     pdf_path = main()
-    
+
     # Open the PDF
-    import subprocess
     import platform
-    
+    import subprocess
+
     if platform.system() == "Darwin":  # macOS
         subprocess.run(["open", str(pdf_path)])
     elif platform.system() == "Linux":
         subprocess.run(["xdg-open", str(pdf_path)])
     elif platform.system() == "Windows":
         subprocess.run(["start", str(pdf_path)], shell=True)
-    
-    print(f"\n📄 Document opened in your default PDF viewer!")
+
+    print("\n📄 Document opened in your default PDF viewer!")

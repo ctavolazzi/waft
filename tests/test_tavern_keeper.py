@@ -264,4 +264,3 @@ def test_hp_calculation(tavern_keeper):
     current_hp = tavern_keeper.get_current_hp()
     assert current_hp >= 1
     assert current_hp <= max_hp
-

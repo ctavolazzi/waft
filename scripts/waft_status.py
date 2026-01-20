@@ -14,18 +14,19 @@ Usage:
     python scripts/waft_status.py --docs --printer-friendly
 """
 
-import sys
-import subprocess
 import json
-from pathlib import Path
+import subprocess
+import sys
 from datetime import datetime
-from typing import Dict, List, Optional, Any
+from pathlib import Path
+from typing import Any
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 # Import kernel
 try:
     from src.waft.core.kernel import WAFTKernel
+
     KERNEL_AVAILABLE = True
 except ImportError:
     KERNEL_AVAILABLE = False
@@ -35,13 +36,13 @@ except ImportError:
 def _validate_path_in_project(project_path: Path, file_path: Path) -> bool:
     """
     Validate file path is within project directory.
-    
+
     Uses existing pattern from karma.py:93 and being.py:873.
-    
+
     Args:
         project_path: Project root directory
         file_path: File path to validate
-        
+
     Returns:
         True if path is within project, False otherwise
     """
@@ -56,27 +57,27 @@ def _validate_path_in_project(project_path: Path, file_path: Path) -> bool:
 def validate_path(path: Path, project_root: Path) -> bool:
     """
     Validate path is within project root (prevent path traversal).
-    
+
     Args:
         path: Path to validate
         project_root: Project root directory
-        
+
     Returns:
         True if path is within project root, False otherwise
     """
     return _validate_path_in_project(project_root, path)
 
 
-def calculate_moon_phase(epistemic_state: Dict[str, Any]) -> tuple[str, str]:
+def calculate_moon_phase(epistemic_state: dict[str, Any]) -> tuple[str, str]:
     """
     Calculate moon phase from epistemic vectors.
-    
+
     Uses existing get_moon_phase function from epistemic_display module.
     Coverage = average of all epistemic vector values (0.0-1.0)
-    
+
     Args:
         epistemic_state: Dictionary with epistemic vectors
-        
+
     Returns:
         Tuple of (emoji, description)
     """
@@ -95,11 +96,11 @@ def calculate_moon_phase(epistemic_state: Dict[str, Any]) -> tuple[str, str]:
                 return "🌔"
             else:
                 return "🌕"
-    
+
     vectors = epistemic_state.get("vectors", {})
     if not vectors:
         return "🌑", "Critical (no data)"
-    
+
     # Calculate average coverage from all vector values
     all_values = []
     for key, value in vectors.items():
@@ -108,37 +109,37 @@ def calculate_moon_phase(epistemic_state: Dict[str, Any]) -> tuple[str, str]:
             all_values.extend([v for v in value.values() if isinstance(v, (int, float))])
         elif isinstance(value, (int, float)):
             all_values.append(value)
-    
+
     if not all_values:
         return "🌑", "Critical (no valid vectors)"
-    
+
     coverage = sum(all_values) / len(all_values)
     moon_emoji = get_moon_phase(coverage)
-    
+
     # Generate description
     if coverage < 0.25:
-        desc = f"Critical ({coverage*100:.0f}% coverage)"
+        desc = f"Critical ({coverage * 100:.0f}% coverage)"
     elif coverage < 0.50:
-        desc = f"Low ({coverage*100:.0f}% coverage)"
+        desc = f"Low ({coverage * 100:.0f}% coverage)"
     elif coverage < 0.75:
-        desc = f"Moderate ({coverage*100:.0f}% coverage)"
+        desc = f"Moderate ({coverage * 100:.0f}% coverage)"
     elif coverage < 0.90:
-        desc = f"Good ({coverage*100:.0f}% coverage)"
+        desc = f"Good ({coverage * 100:.0f}% coverage)"
     else:
-        desc = f"Excellent ({coverage*100:.0f}% coverage)"
-    
+        desc = f"Excellent ({coverage * 100:.0f}% coverage)"
+
     return moon_emoji, desc
 
 
-def get_epistemic_state(project_path: Optional[Path] = None) -> Dict[str, Any]:
+def get_epistemic_state(project_path: Path | None = None) -> dict[str, Any]:
     """
     Get epistemic state from Empirica with graceful degradation.
-    
+
     Includes epistemic phase calculation using kernel utilities.
-    
+
     Args:
         project_path: Path to project root (default: current directory)
-        
+
     Returns:
         Dictionary with epistemic state including phase, know, uncertainty, coverage, moon_phase
     """
@@ -146,12 +147,12 @@ def get_epistemic_state(project_path: Optional[Path] = None) -> Dict[str, Any]:
         project_path = Path.cwd()
     else:
         project_path = Path(project_path)
-    
+
     try:
         from src.waft.core.empirica import EmpiricaManager
-        
+
         empirica = EmpiricaManager(project_path)
-        
+
         if not empirica.is_initialized():
             return {
                 "initialized": False,
@@ -160,9 +161,9 @@ def get_epistemic_state(project_path: Optional[Path] = None) -> Dict[str, Any]:
                 "knowledge_pct": None,
                 "uncertainty_pct": None,
                 "vectors": {},
-                "message": "Empirica not initialized - epistemic state unavailable"
+                "message": "Empirica not initialized - epistemic state unavailable",
             }
-        
+
         # Try to get epistemic state
         context = empirica.project_bootstrap()
         if context is None:
@@ -176,22 +177,22 @@ def get_epistemic_state(project_path: Optional[Path] = None) -> Dict[str, Any]:
                     "knowledge_pct": None,
                     "uncertainty_pct": None,
                     "vectors": {},
-                    "message": "Empirica initialized but no state available"
+                    "message": "Empirica initialized but no state available",
                 }
             epistemic_state = state
         else:
             epistemic_state = context.get("epistemic_state", {})
-        
+
         # Extract vectors
         vectors = epistemic_state.get("vectors", {})
-        
+
         # Calculate moon phase using our function
         moon_emoji, moon_desc = calculate_moon_phase({"vectors": vectors})
-        
+
         # Calculate knowledge and uncertainty percentages
         knowledge_pct = None
         uncertainty_pct = None
-        
+
         if vectors:
             # Calculate knowledge from foundation vectors if available
             foundation = vectors.get("foundation", {})
@@ -200,12 +201,12 @@ def get_epistemic_state(project_path: Optional[Path] = None) -> Dict[str, Any]:
                 do = foundation.get("do", 0.0)
                 context_val = foundation.get("context", 0.0)
                 knowledge_pct = ((know + do + context_val) / 3.0) * 100
-            
+
             # Get uncertainty directly
             uncertainty = vectors.get("uncertainty", None)
             if uncertainty is not None:
                 uncertainty_pct = uncertainty * 100
-        
+
         return {
             "initialized": True,
             "moon_phase": moon_emoji,
@@ -213,74 +214,74 @@ def get_epistemic_state(project_path: Optional[Path] = None) -> Dict[str, Any]:
             "knowledge_pct": knowledge_pct,
             "uncertainty_pct": uncertainty_pct,
             "vectors": vectors,
-            "message": None
+            "message": None,
         }
-        
+
     except Exception as e:
         return {"initialized": False, "error": str(e)}
 
 
-def check_pyrite_integrity(project_path: Optional[Path] = None) -> Dict[str, Any]:
+def check_pyrite_integrity(project_path: Path | None = None) -> dict[str, Any]:
     """Check _pyrite structure and Genesis files (handle missing gracefully)."""
     if project_path is None:
         project_path = Path.cwd()
     else:
         project_path = Path(project_path)
-    
+
     try:
         pyrite_dir = project_path / "_pyrite"
         if not pyrite_dir.exists():
             return {"exists": False}
-        
+
         # Validate path
         if not validate_path(pyrite_dir, project_path):
             return {"exists": False, "error": "Invalid path"}
-        
-        integrity = {
-            "exists": True,
-            "structure_valid": False,
-            "genesis_files": {}
-        }
-        
+
+        integrity = {"exists": True, "structure_valid": False, "genesis_files": {}}
+
         # Check structure
         required_dirs = ["active", "backlog", "standards", "gym_logs"]
         integrity["structure_valid"] = all(
-            (pyrite_dir / d).exists() and (pyrite_dir / d).is_dir() and validate_path(pyrite_dir / d, project_path)
+            (pyrite_dir / d).exists()
+            and (pyrite_dir / d).is_dir()
+            and validate_path(pyrite_dir / d, project_path)
             for d in required_dirs
         )
-        
+
         # Check Genesis files (may not exist yet - that's OK)
         genesis_files = {
             "state": "20.00_state.json",
             "ledger": "35.00_pyrite_ledger.json",
-            "kernel": "42.00_internal_kernel.md"
+            "kernel": "42.00_internal_kernel.md",
         }
-        
+
         for key, filename in genesis_files.items():
             file_path = pyrite_dir / filename
             integrity["genesis_files"][key] = {
                 "exists": file_path.exists() and validate_path(file_path, project_path),
-                "path": str(file_path.relative_to(project_path)) if file_path.exists() and validate_path(file_path, project_path) else None
+                "path": str(file_path.relative_to(project_path))
+                if file_path.exists() and validate_path(file_path, project_path)
+                else None,
             }
-        
+
         return integrity
     except Exception as e:
         return {"exists": False, "error": str(e)}
 
 
-def get_gamification_state(project_path: Path) -> Dict[str, Any]:
+def get_gamification_state(project_path: Path) -> dict[str, Any]:
     """
     Get gamification state with graceful degradation.
-    
+
     Args:
         project_path: Path to project root
-        
+
     Returns:
         Dictionary with level, integrity, insight, achievements, available
     """
     try:
         from src.waft.core.gamification import GamificationManager
-        
+
         # Validate path to gamification.json before accessing
         gamification_path = project_path / "_pyrite" / ".waft" / "gamification.json"
         if not _validate_path_in_project(project_path, gamification_path):
@@ -290,12 +291,12 @@ def get_gamification_state(project_path: Path) -> Dict[str, Any]:
                 "integrity": 100.0,
                 "insight": 0.0,
                 "achievements": [],
-                "message": "Path validation failed: gamification.json is outside project directory"
+                "message": "Path validation failed: gamification.json is outside project directory",
             }
-        
+
         gamification = GamificationManager(project_path)
         stats = gamification.get_stats()
-        
+
         return {
             "available": True,
             "level": stats.get("level", 1),
@@ -303,19 +304,19 @@ def get_gamification_state(project_path: Path) -> Dict[str, Any]:
             "insight": stats.get("insight", 0.0),
             "achievements": stats.get("achievements", []),
             "achievements_count": stats.get("achievements_count", 0),
-            "message": None
+            "message": None,
         }
-        
-    except (IOError, PermissionError, json.JSONDecodeError) as e:
+
+    except (OSError, PermissionError, json.JSONDecodeError):
         return {
             "available": False,
             "level": 1,
             "integrity": 100.0,
             "insight": 0.0,
             "achievements": [],
-            "message": f"Gamification data not found or corrupted - using defaults"
+            "message": "Gamification data not found or corrupted - using defaults",
         }
-    except Exception as e:
+    except Exception:
         # Don't expose full error to user, just indicate unavailable
         return {
             "available": False,
@@ -323,46 +324,46 @@ def get_gamification_state(project_path: Path) -> Dict[str, Any]:
             "integrity": 100.0,
             "insight": 0.0,
             "achievements": [],
-            "message": "Gamification data not available"
+            "message": "Gamification data not available",
         }
 
 
-def get_recent_flight_recorder_events(project_path: Path, limit: int = 10) -> List[Dict]:
+def get_recent_flight_recorder_events(project_path: Path, limit: int = 10) -> list[dict]:
     """
     Get recent events from existing TheObserver (Flight Recorder).
-    
+
     Args:
         project_path: Path to project root
         limit: Maximum number of events to return
-        
+
     Returns:
         List of event dictionaries
     """
     try:
         from src.waft.core.science.observer import TheObserver
-        
+
         # Validate path to laboratory.jsonl before reading
         lab_path = project_path / "_pyrite" / "science" / "laboratory.jsonl"
         if not _validate_path_in_project(project_path, lab_path):
             return []
-        
+
         observer = TheObserver(project_path)
         events = observer.get_laboratory_log(limit=limit)
         return events
-        
-    except (IOError, json.JSONDecodeError, PermissionError):
+
+    except (OSError, json.JSONDecodeError, PermissionError):
         return []  # Graceful degradation
     except Exception:
         return []  # Graceful degradation for any other errors
 
 
-def get_git_status(project_path: Optional[Path] = None) -> Dict[str, Any]:
+def get_git_status(project_path: Path | None = None) -> dict[str, Any]:
     """Get comprehensive git status."""
     if project_path is None:
         project_path = Path.cwd()
     else:
         project_path = Path(project_path)
-    
+
     status = {
         "initialized": False,
         "branch": None,
@@ -373,36 +374,27 @@ def get_git_status(project_path: Optional[Path] = None) -> Dict[str, Any]:
         "commits_behind": 0,
         "recent_commits": [],
     }
-    
+
     try:
         # Check if git is initialized
         result = subprocess.run(
-            ["git", "rev-parse", "--git-dir"],
-            capture_output=True,
-            text=True,
-            cwd=project_path
+            ["git", "rev-parse", "--git-dir"], capture_output=True, text=True, cwd=project_path
         )
         if result.returncode != 0:
             return status
-        
+
         status["initialized"] = True
-        
+
         # Get current branch
         result = subprocess.run(
-            ["git", "branch", "--show-current"],
-            capture_output=True,
-            text=True,
-            cwd=Path.cwd()
+            ["git", "branch", "--show-current"], capture_output=True, text=True, cwd=Path.cwd()
         )
         if result.returncode == 0:
             status["branch"] = result.stdout.strip()
-        
+
         # Get uncommitted files
         result = subprocess.run(
-            ["git", "status", "--porcelain"],
-            capture_output=True,
-            text=True,
-            cwd=Path.cwd()
+            ["git", "status", "--porcelain"], capture_output=True, text=True, cwd=Path.cwd()
         )
         if result.returncode == 0:
             lines = result.stdout.strip().split("\n")
@@ -415,60 +407,60 @@ def get_git_status(project_path: Optional[Path] = None) -> Dict[str, Any]:
                         status["staged_files"].append(filename)
                     if status_code[1] != " ":
                         status["unstaged_files"].append(filename)
-        
+
         # Get commits ahead/behind
         result = subprocess.run(
             ["git", "rev-list", "--left-right", "--count", "HEAD...@{upstream}"],
             capture_output=True,
             text=True,
-            cwd=Path.cwd()
+            cwd=Path.cwd(),
         )
         if result.returncode == 0:
             parts = result.stdout.strip().split()
             if len(parts) == 2:
                 status["commits_ahead"] = int(parts[0])
                 status["commits_behind"] = int(parts[1])
-        
+
         # Get recent commits
         result = subprocess.run(
             ["git", "log", "--oneline", "-10", "--no-decorate"],
             capture_output=True,
             text=True,
-            cwd=Path.cwd()
+            cwd=Path.cwd(),
         )
         if result.returncode == 0:
             status["recent_commits"] = [
                 line.strip() for line in result.stdout.strip().split("\n") if line
             ]
-    
+
     except Exception as e:
         print(f"Warning: Error checking git status: {e}")
-    
+
     return status
 
 
-def get_work_efforts(project_path: Optional[Path] = None) -> Dict[str, Any]:
+def get_work_efforts(project_path: Path | None = None) -> dict[str, Any]:
     """Get work efforts status."""
     if project_path is None:
         project_path = Path.cwd()
     else:
         project_path = Path(project_path)
-    
+
     efforts = {
         "active": [],
         "recent": [],
         "completed": [],
         "count": 0,
     }
-    
+
     work_efforts_dir = project_path / "_work_efforts"
     if not work_efforts_dir.exists():
         return efforts
-    
+
     # Validate path
     if not validate_path(work_efforts_dir, project_path):
         return efforts
-    
+
     # Look for work effort directories (WE-YYMMDD-* pattern)
     try:
         for item in work_efforts_dir.iterdir():
@@ -476,7 +468,7 @@ def get_work_efforts(project_path: Optional[Path] = None) -> Dict[str, Any]:
                 # Validate work effort directory name (prevent traversal)
                 if ".." in item.name or not validate_path(item, project_path):
                     continue
-                    
+
                 efforts["count"] += 1
                 # Check for index file to determine status
                 index_file = item / f"{item.name}_index.md"
@@ -486,48 +478,49 @@ def get_work_efforts(project_path: Optional[Path] = None) -> Dict[str, Any]:
                     efforts["recent"].append(item.name)
     except Exception as e:
         print(f"Warning: Error reading work efforts: {e}")
-    
+
     return efforts
 
 
-def get_project_health(project_path: Optional[Path] = None) -> Dict[str, Any]:
+def get_project_health(project_path: Path | None = None) -> dict[str, Any]:
     """Get project health status."""
     health = {
         "pyrite_valid": False,
         "lock_exists": False,
         "structure_valid": False,
     }
-    
+
     # Check _pyrite structure
     pyrite_dir = Path("_pyrite")
     if pyrite_dir.exists():
         health["pyrite_valid"] = True
         if (pyrite_dir / "active").exists() and (pyrite_dir / "backlog").exists():
             health["structure_valid"] = True
-    
+
     # Check uv.lock
     if Path("uv.lock").exists():
         health["lock_exists"] = True
-    
+
     return health
 
 
-def get_recent_activity(project_path: Optional[Path] = None) -> Dict[str, Any]:
+def get_recent_activity(project_path: Path | None = None) -> dict[str, Any]:
     """Get recent activity information."""
     if project_path is None:
         project_path = Path.cwd()
     else:
         project_path = Path(project_path)
-    
+
     activity = {
         "devlog_entries": [],
         "recent_files": [],
     }
-    
+
     try:
         # Use DevlogManager if available
         try:
             from waft.core.devlog import DevlogManager
+
             devlog_manager = DevlogManager(project_path)
             entries = devlog_manager.get_recent_entries(limit=5)
             activity["devlog_entries"] = [
@@ -549,16 +542,16 @@ def get_recent_activity(project_path: Optional[Path] = None) -> Dict[str, Any]:
                 activity["devlog_entries"] = list(reversed(recent_lines))
     except Exception as e:
         print(f"Warning: Error reading devlog: {e}")
-    
+
     return activity
 
 
 def check_status(
-    project_path: Optional[Path] = None,
+    project_path: Path | None = None,
     log_event: bool = True,
     return_typed: bool = False,
-    save_snapshot: bool = False
-) -> Dict[str, Any]:
+    save_snapshot: bool = False,
+) -> dict[str, Any]:
     """
     Perform comprehensive status check.
 
@@ -575,9 +568,9 @@ def check_status(
         project_path = Path.cwd()
     else:
         project_path = Path(project_path)
-    
+
     print("Checking system status...")
-    
+
     status = {
         "timestamp": datetime.now().isoformat(),
         "git": get_git_status(project_path),
@@ -589,16 +582,16 @@ def check_status(
         "flight_recorder_events": get_recent_flight_recorder_events(project_path, limit=10),
         "pyrite_integrity": check_pyrite_integrity(project_path),
     }
-    
+
     # Determine epistemic phase
     status["epistemic_phase"] = declare_epistemic_phase(status)
-    
+
     # Log STATUS_CHECK event to flight recorder
     if log_event:
         try:
-            from src.waft.core.science.observer import TheObserver
             from src.waft.core.agent.state import EvolutionaryEvent, EvolutionaryEventType
-            
+            from src.waft.core.science.observer import TheObserver
+
             observer = TheObserver(project_path)
             event = EvolutionaryEvent(
                 timestamp=datetime.utcnow(),
@@ -610,26 +603,28 @@ def check_status(
                     "work_efforts_count": status["work_efforts"]["count"],
                     "pyrite_valid": status["project_health"]["pyrite_valid"],
                 },
-                agent_id="waft_kernel"
+                agent_id="waft_kernel",
             )
             observer.observe_event(event)
         except Exception as e:
             # Don't fail status check if event logging fails
             print(f"Warning: Could not log status check event: {e}")
-    
+
     # Optionally save snapshot
     if save_snapshot:
         try:
             from src.waft.core.status_persistence import save_status_snapshot
+
             snapshot = save_status_snapshot(status, project_path=project_path)
             print(f"✓ Status snapshot saved: {snapshot['snapshot_id']}")
         except Exception as e:
             print(f"Warning: Could not save status snapshot: {e}")
-    
+
     # Optionally return typed state
     if return_typed:
         try:
             from src.waft.core.status_state import StatusState
+
             return StatusState.from_dict(status)
         except ImportError:
             # Fallback to dict if typed state not available
@@ -638,24 +633,24 @@ def check_status(
     return status
 
 
-def declare_epistemic_phase(status: Dict[str, Any]) -> str:
+def declare_epistemic_phase(status: dict[str, Any]) -> str:
     """
     Determine current epistemic phase based on system state.
-    
+
     Args:
         status: Complete status dictionary
-        
+
     Returns:
         Epistemic phase string (e.g., "Data Gathering", "Synthesis", "Evolution")
     """
     epistemic = status.get("epistemic_state", {})
     work_efforts = status.get("work_efforts", {})
     git = status.get("git", {})
-    
+
     # Determine phase based on activity patterns
     active_efforts = len(work_efforts.get("active", []))
     uncommitted_files = len(git.get("uncommitted_files", []))
-    
+
     # If Empirica not initialized, use basic heuristics
     if not epistemic.get("initialized", False):
         if active_efforts > 5 or uncommitted_files > 20:
@@ -664,12 +659,12 @@ def declare_epistemic_phase(status: Dict[str, Any]) -> str:
             return "Focused Work"
         else:
             return "Idle"
-    
+
     # Use epistemic vectors to determine phase
     vectors = epistemic.get("vectors", {})
     uncertainty = vectors.get("uncertainty", 1.0)
     knowledge_pct = epistemic.get("knowledge_pct", 0.0)
-    
+
     if uncertainty > 0.7 or knowledge_pct is None or knowledge_pct < 30:
         return "Data Gathering"
     elif uncertainty > 0.4 or (knowledge_pct and knowledge_pct < 60):
@@ -680,18 +675,18 @@ def declare_epistemic_phase(status: Dict[str, Any]) -> str:
         return "Stable"
 
 
-def display_status(status: Dict[str, Any]):
+def display_status(status: dict[str, Any]):
     """Display status summary."""
     print("\n" + "=" * 60)
     print("WAFT KERNEL STATUS")
     print("=" * 60)
     print(f"Timestamp: {status['timestamp']}")
     print()
-    
+
     # Epistemic Phase
     epistemic_phase = declare_epistemic_phase(status)
     print(f"Epistemic Phase: {epistemic_phase}")
-    
+
     # Epistemic State
     epistemic = status.get("epistemic_state", {})
     print("\nEpistemic State:")
@@ -699,7 +694,7 @@ def display_status(status: Dict[str, Any]):
         moon_emoji = epistemic.get("moon_phase", "🌑")
         moon_desc = epistemic.get("moon_phase_desc", "Unknown")
         print(f"  Moon Phase: {moon_emoji} ({moon_desc})")
-        
+
         knowledge_pct = epistemic.get("knowledge_pct")
         uncertainty_pct = epistemic.get("uncertainty_pct")
         if knowledge_pct is not None:
@@ -710,7 +705,7 @@ def display_status(status: Dict[str, Any]):
         message = epistemic.get("message", "Empirica not initialized")
         print(f"  {message}")
     print()
-    
+
     # Gamification State
     gamification = status.get("gamification_state", {})
     print("Gamification:")
@@ -725,7 +720,7 @@ def display_status(status: Dict[str, Any]):
         message = gamification.get("message", "Gamification data not available")
         print(f"  {message}")
     print()
-    
+
     # Git Status
     print("Git Status:")
     git = status["git"]
@@ -739,7 +734,7 @@ def display_status(status: Dict[str, Any]):
     else:
         print("  Git not initialized")
     print()
-    
+
     # Work Efforts
     print("Work Efforts:")
     we = status["work_efforts"]
@@ -747,14 +742,14 @@ def display_status(status: Dict[str, Any]):
     print(f"  Active: {len(we['active'])}")
     print(f"  Recent: {len(we['recent'])}")
     print()
-    
+
     # Project Health
     print("Project Health:")
     health = status["project_health"]
     print(f"  _pyrite valid: {health['pyrite_valid']}")
     print(f"  Structure valid: {health['structure_valid']}")
     print(f"  uv.lock exists: {health['lock_exists']}")
-    
+
     # Pyrite Integrity
     pyrite = status.get("pyrite_integrity", {})
     if pyrite.get("exists"):
@@ -763,7 +758,7 @@ def display_status(status: Dict[str, Any]):
         genesis_count = sum(1 for f in genesis.values() if f.get("exists"))
         print(f"  Genesis files: {genesis_count}/3 present")
     print()
-    
+
     # Flight Recorder Events
     flight_events = status.get("flight_recorder_events", [])
     if flight_events:
@@ -782,35 +777,45 @@ def display_status(status: Dict[str, Any]):
                     pass
             print(f"    - {event_type} at {timestamp}")
     print()
-    
+
     # Recent Activity
     print("Recent Activity:")
     activity = status["recent_activity"]
     print(f"  Devlog entries: {len(activity['devlog_entries'])}")
     print()
-    
+
     print("=" * 60)
 
 
-def generate_status_docs(status: Dict[str, Any], level: Optional[str] = None, printer_friendly: bool = False):
+def generate_status_docs(
+    status: dict[str, Any], level: str | None = None, printer_friendly: bool = False
+):
     """Generate status documentation at specified level(s)."""
-    from examples.generate_waft_field_guide_printer_friendly import generate_field_guide_printer_friendly
     from examples.generate_waft_field_guide import generate_field_guide
-    
+    from examples.generate_waft_field_guide_printer_friendly import (
+        generate_field_guide_printer_friendly,
+    )
+
     output_dir = Path("_work_efforts/showcase_documents")
     output_dir.mkdir(parents=True, exist_ok=True)
-    
+
     levels = ["layman", "professional", "scientist"] if level is None else [level]
-    
+
     for doc_level in levels:
         print(f"\nGenerating {doc_level} level status documentation...")
-        
+
         content = format_status_content(status, doc_level)
-        
-        output_path = output_dir / f"WAFT_Status_{doc_level.capitalize()}_{datetime.now().strftime('%Y-%m-%d')}.pdf"
+
+        output_path = (
+            output_dir
+            / f"WAFT_Status_{doc_level.capitalize()}_{datetime.now().strftime('%Y-%m-%d')}.pdf"
+        )
         if printer_friendly:
-            output_path = output_dir / f"WAFT_Status_{doc_level.capitalize()}_{datetime.now().strftime('%Y-%m-%d')}_PrinterFriendly.pdf"
-        
+            output_path = (
+                output_dir
+                / f"WAFT_Status_{doc_level.capitalize()}_{datetime.now().strftime('%Y-%m-%d')}_PrinterFriendly.pdf"
+            )
+
         if printer_friendly:
             generate_field_guide_printer_friendly(
                 title="WAFT SYSTEM STATUS",
@@ -821,10 +826,11 @@ def generate_status_docs(status: Dict[str, Any], level: Optional[str] = None, pr
                 subtitle=f"Level {doc_level.capitalize()}: Current System State",
                 classification="INTERNAL",
                 issued_by="WAFT System",
-                date=datetime.now().strftime("%B %d, %Y")
+                date=datetime.now().strftime("%B %d, %Y"),
             )
         else:
             from src.waft.templates.field_guide import generate_field_guide
+
             generate_field_guide(
                 title="WAFT SYSTEM STATUS",
                 content=content,
@@ -834,13 +840,13 @@ def generate_status_docs(status: Dict[str, Any], level: Optional[str] = None, pr
                 subtitle=f"Level {doc_level.capitalize()}: Current System State",
                 classification="INTERNAL",
                 issued_by="WAFT System",
-                date=datetime.now().strftime("%B %d, %Y")
+                date=datetime.now().strftime("%B %d, %Y"),
             )
-        
+
         print(f"✓ Generated: {output_path.name}")
 
 
-def format_status_content(status: Dict[str, Any], level: str) -> str:
+def format_status_content(status: dict[str, Any], level: str) -> str:
     """Format status content for specified complexity level."""
     git = status["git"]
     we = status["work_efforts"]
@@ -850,20 +856,35 @@ def format_status_content(status: Dict[str, Any], level: str) -> str:
     gamification = status.get("gamification_state", {})
     flight_events = status.get("flight_recorder_events", [])
     kernel = status.get("kernel", {})
-    
+
     if level == "layman":
-        return format_layman_content(status, git, we, health, activity, epistemic, gamification, kernel)
+        return format_layman_content(
+            status, git, we, health, activity, epistemic, gamification, kernel
+        )
     elif level == "professional":
-        return format_professional_content(status, git, we, health, activity, epistemic, gamification, flight_events, kernel)
+        return format_professional_content(
+            status, git, we, health, activity, epistemic, gamification, flight_events, kernel
+        )
     else:  # scientist
-        return format_scientist_content(status, git, we, health, activity, epistemic, gamification, flight_events)
+        return format_scientist_content(
+            status, git, we, health, activity, epistemic, gamification, flight_events
+        )
 
 
-def format_layman_content(status: Dict, git: Dict, we: Dict, health: Dict, activity: Dict, epistemic: Dict, gamification: Dict, kernel: Dict) -> str:
+def format_layman_content(
+    status: dict,
+    git: dict,
+    we: dict,
+    health: dict,
+    activity: dict,
+    epistemic: dict,
+    gamification: dict,
+    kernel: dict,
+) -> str:
     """Format status for layman audience."""
     # Epistemic phase
     phase = declare_epistemic_phase(status)
-    
+
     # Epistemic state section
     epistemic_section = ""
     if epistemic.get("initialized", False):
@@ -871,7 +892,7 @@ def format_layman_content(status: Dict, git: Dict, we: Dict, health: Dict, activ
         moon_desc = epistemic.get("moon_phase_desc", "Unknown")
         knowledge_pct = epistemic.get("knowledge_pct")
         uncertainty_pct = epistemic.get("uncertainty_pct")
-        
+
         epistemic_section = f"""
 <h2>System Knowledge Status</h2>
 
@@ -891,14 +912,14 @@ The system's current knowledge level is <strong>{moon_emoji} {moon_desc}</strong
 Knowledge tracking is not currently available. This is normal if the system hasn't been fully set up yet.
 </p>
 """
-    
+
     # Gamification section
     gamification_section = ""
     if gamification.get("available", False):
         level = gamification.get("level", 1)
         integrity = gamification.get("integrity", 100.0)
         insight = gamification.get("insight", 0.0)
-        
+
         gamification_section = f"""
 <h2>System Progress</h2>
 
@@ -915,7 +936,7 @@ It has earned <strong>{insight:.0f}</strong> insight points so far.
 Progress tracking is not currently available.
 </p>
 """
-    
+
     kernel_section = ""
     if kernel:
         kernel_phase = kernel.get("epistemic_phase", phase)
@@ -932,7 +953,7 @@ everything runs smoothly.
 <strong>Current Phase:</strong> {kernel_phase}
 </p>
 """
-    
+
     return f"""
 <h2>What's Happening Right Now</h2>
 
@@ -947,8 +968,8 @@ health check for a computer program - we're checking to see how things are going
 <h2>Current Work Status</h2>
 
 <p>
-The system is currently working on <strong>{we['count']}</strong> different projects.
-Of these, <strong>{len(we['active'])}</strong> are actively being worked on right now.
+The system is currently working on <strong>{we["count"]}</strong> different projects.
+Of these, <strong>{len(we["active"])}</strong> are actively being worked on right now.
 </p>
 
 <div class="note">
@@ -960,11 +981,11 @@ Of these, <strong>{len(we['active'])}</strong> are actively being worked on righ
 <h2>Code Changes</h2>
 
 <p>
-The system has <strong>{len(git['uncommitted_files'])}</strong> files that have been 
+The system has <strong>{len(git["uncommitted_files"])}</strong> files that have been 
 changed but not yet saved permanently. This is normal when work is in progress.
 </p>
 
-{'<div class="warning"><div class="warning-title">Attention Needed</div>There are uncommitted changes that should be saved soon.</div>' if len(git['uncommitted_files']) > 10 else ''}
+{'<div class="warning"><div class="warning-title">Attention Needed</div>There are uncommitted changes that should be saved soon.</div>' if len(git["uncommitted_files"]) > 10 else ""}
 
 <h2>System Health</h2>
 
@@ -976,31 +997,41 @@ changed but not yet saved permanently. This is normal when work is in progress.
     </tr>
     <tr>
         <td>Project Structure</td>
-        <td>{'✅ Good' if health['structure_valid'] else '⚠️ Needs Attention'}</td>
+        <td>{"✅ Good" if health["structure_valid"] else "⚠️ Needs Attention"}</td>
     </tr>
     <tr>
         <td>Dependencies</td>
-        <td>{'✅ Good' if health['lock_exists'] else '⚠️ Needs Attention'}</td>
+        <td>{"✅ Good" if health["lock_exists"] else "⚠️ Needs Attention"}</td>
     </tr>
 </table>
 
 <h2>Recent Activity</h2>
 
 <p>
-The system has been active recently with <strong>{len(activity['devlog_entries'])}</strong> 
+The system has been active recently with <strong>{len(activity["devlog_entries"])}</strong> 
 recent log entries documenting work progress.
 </p>
 
 <h2>Summary</h2>
 
 <p>
-Overall, the system is {'healthy and active' if health['structure_valid'] and len(git['uncommitted_files']) < 20 else 'needs some attention'}. 
-Work is progressing on multiple projects, and the system structure is {'in good shape' if health['structure_valid'] else 'needing review'}.
+Overall, the system is {"healthy and active" if health["structure_valid"] and len(git["uncommitted_files"]) < 20 else "needs some attention"}. 
+Work is progressing on multiple projects, and the system structure is {"in good shape" if health["structure_valid"] else "needing review"}.
 </p>
 """
 
 
-def format_professional_content(status: Dict, git: Dict, we: Dict, health: Dict, activity: Dict, epistemic: Dict, gamification: Dict, flight_events: List, kernel: Dict) -> str:
+def format_professional_content(
+    status: dict,
+    git: dict,
+    we: dict,
+    health: dict,
+    activity: dict,
+    epistemic: dict,
+    gamification: dict,
+    flight_events: list,
+    kernel: dict,
+) -> str:
     """Format status for professional audience."""
     kernel_section = ""
     if kernel:
@@ -1014,8 +1045,8 @@ def format_professional_content(status: Dict, git: Dict, we: Dict, health: Dict,
 <h2>WAFT Kernel Operational State</h2>
 
 <h3>Kernel Identity</h3>
-<p><strong>Identity:</strong> {kernel.get('identity', 'N/A')}</p>
-<p><strong>Mission:</strong> {kernel.get('mission', 'N/A')}</p>
+<p><strong>Identity:</strong> {kernel.get("identity", "N/A")}</p>
+<p><strong>Mission:</strong> {kernel.get("mission", "N/A")}</p>
 <p><strong>Epistemic Phase:</strong> {phase}</p>
 
 <h3>Epistemic State</h3>
@@ -1031,42 +1062,42 @@ def format_professional_content(status: Dict, git: Dict, we: Dict, health: Dict,
     </tr>
     <tr>
         <td>Flight Recorder</td>
-        <td>{'✅ Operational' if systems.get('flight_recorder', {}).get('operational') else '❌ Not operational'}</td>
+        <td>{"✅ Operational" if systems.get("flight_recorder", {}).get("operational") else "❌ Not operational"}</td>
     </tr>
     <tr>
         <td>Empirica</td>
-        <td>{'✅ Initialized' if systems.get('empirica', {}).get('initialized') else '❌ Not initialized'}</td>
+        <td>{"✅ Initialized" if systems.get("empirica", {}).get("initialized") else "❌ Not initialized"}</td>
     </tr>
     <tr>
         <td>Gamification</td>
-        <td>Level {systems.get('gamification', {}).get('level', 1)}, Integrity: {systems.get('gamification', {}).get('integrity', 0):.0f}%</td>
+        <td>Level {systems.get("gamification", {}).get("level", 1)}, Integrity: {systems.get("gamification", {}).get("integrity", 0):.0f}%</td>
     </tr>
 </table>
 """
-    
+
     return f"""
 <h2>System Status Report</h2>
 
-<p><strong>Report Date:</strong> {status['timestamp']}</p>
+<p><strong>Report Date:</strong> {status["timestamp"]}</p>
 {kernel_section}
 
 <h2>Git Repository Status</h2>
 
 <h3>Branch Information</h3>
-<p><strong>Current Branch:</strong> {git['branch'] or 'N/A'}</p>
-<p><strong>Commits Ahead:</strong> {git['commits_ahead']}</p>
-<p><strong>Commits Behind:</strong> {git['commits_behind']}</p>
+<p><strong>Current Branch:</strong> {git["branch"] or "N/A"}</p>
+<p><strong>Commits Ahead:</strong> {git["commits_ahead"]}</p>
+<p><strong>Commits Behind:</strong> {git["commits_behind"]}</p>
 
 <h3>Uncommitted Changes</h3>
-<p><strong>Total Uncommitted Files:</strong> {len(git['uncommitted_files'])}</p>
-<p><strong>Staged Files:</strong> {len(git['staged_files'])}</p>
-<p><strong>Unstaged Files:</strong> {len(git['unstaged_files'])}</p>
+<p><strong>Total Uncommitted Files:</strong> {len(git["uncommitted_files"])}</p>
+<p><strong>Staged Files:</strong> {len(git["staged_files"])}</p>
+<p><strong>Unstaged Files:</strong> {len(git["unstaged_files"])}</p>
 
-{'<div class="warning"><div class="warning-title">Warning</div>Large number of uncommitted files detected. Consider committing changes.</div>' if len(git['uncommitted_files']) > 20 else ''}
+{'<div class="warning"><div class="warning-title">Warning</div>Large number of uncommitted files detected. Consider committing changes.</div>' if len(git["uncommitted_files"]) > 20 else ""}
 
 <h3>Recent Commits</h3>
 <ul>
-{''.join([f'<li>{commit}</li>' for commit in git['recent_commits'][:5]])}
+{"".join([f"<li>{commit}</li>" for commit in git["recent_commits"][:5]])}
 </ul>
 
 <h2>Work Efforts Status</h2>
@@ -1079,15 +1110,15 @@ def format_professional_content(status: Dict, git: Dict, we: Dict, health: Dict,
     </tr>
     <tr>
         <td>Total Work Efforts</td>
-        <td>{we['count']}</td>
+        <td>{we["count"]}</td>
     </tr>
     <tr>
         <td>Active</td>
-        <td>{len(we['active'])}</td>
+        <td>{len(we["active"])}</td>
     </tr>
     <tr>
         <td>Recent</td>
-        <td>{len(we['recent'])}</td>
+        <td>{len(we["recent"])}</td>
     </tr>
 </table>
 
@@ -1102,40 +1133,49 @@ def format_professional_content(status: Dict, git: Dict, we: Dict, health: Dict,
     </tr>
     <tr>
         <td>_pyrite Structure</td>
-        <td>{'✅ Valid' if health['pyrite_valid'] else '❌ Invalid'}</td>
-        <td>{'Structure intact' if health['pyrite_valid'] else 'Missing or corrupted'}</td>
+        <td>{"✅ Valid" if health["pyrite_valid"] else "❌ Invalid"}</td>
+        <td>{"Structure intact" if health["pyrite_valid"] else "Missing or corrupted"}</td>
     </tr>
     <tr>
         <td>Directory Structure</td>
-        <td>{'✅ Valid' if health['structure_valid'] else '❌ Invalid'}</td>
-        <td>{'active/ and backlog/ exist' if health['structure_valid'] else 'Missing required directories'}</td>
+        <td>{"✅ Valid" if health["structure_valid"] else "❌ Invalid"}</td>
+        <td>{"active/ and backlog/ exist" if health["structure_valid"] else "Missing required directories"}</td>
     </tr>
     <tr>
         <td>Dependency Lock</td>
-        <td>{'✅ Present' if health['lock_exists'] else '❌ Missing'}</td>
-        <td>{'uv.lock file exists' if health['lock_exists'] else 'uv.lock not found'}</td>
+        <td>{"✅ Present" if health["lock_exists"] else "❌ Missing"}</td>
+        <td>{"uv.lock file exists" if health["lock_exists"] else "uv.lock not found"}</td>
     </tr>
 </table>
 
 <h2>Recent Activity</h2>
 
-<p><strong>Devlog Entries:</strong> {len(activity['devlog_entries'])} recent entries</p>
+<p><strong>Devlog Entries:</strong> {len(activity["devlog_entries"])} recent entries</p>
 
 <h2>Analysis</h2>
 
 <div class="note">
     <div class="note-title">Status Summary</div>
     <ul>
-        <li>Git repository is {'synchronized' if git['commits_ahead'] == 0 and git['commits_behind'] == 0 else 'out of sync'}</li>
-        <li>Project structure is {'healthy' if health['structure_valid'] else 'needs attention'}</li>
-        <li>Work effort activity: {len(we['active'])} active efforts</li>
-        <li>Uncommitted changes: {len(git['uncommitted_files'])} files</li>
+        <li>Git repository is {"synchronized" if git["commits_ahead"] == 0 and git["commits_behind"] == 0 else "out of sync"}</li>
+        <li>Project structure is {"healthy" if health["structure_valid"] else "needs attention"}</li>
+        <li>Work effort activity: {len(we["active"])} active efforts</li>
+        <li>Uncommitted changes: {len(git["uncommitted_files"])} files</li>
     </ul>
 </div>
 """
 
 
-def format_scientist_content(status: Dict, git: Dict, we: Dict, health: Dict, activity: Dict, epistemic: Dict, gamification: Dict, flight_events: List) -> str:
+def format_scientist_content(
+    status: dict,
+    git: dict,
+    we: dict,
+    health: dict,
+    activity: dict,
+    epistemic: dict,
+    gamification: dict,
+    flight_events: list,
+) -> str:
     """Format status for scientist audience."""
     # Epistemic analysis
     epistemic_section = ""
@@ -1145,7 +1185,7 @@ def format_scientist_content(status: Dict, git: Dict, we: Dict, health: Dict, ac
         knowledge_pct = epistemic.get("knowledge_pct")
         uncertainty_pct = epistemic.get("uncertainty_pct")
         vectors = epistemic.get("vectors", {})
-        
+
         epistemic_section = f"""
 <h2>Epistemic State Deep Analysis</h2>
 
@@ -1155,8 +1195,10 @@ def format_scientist_content(status: Dict, git: Dict, we: Dict, health: Dict, ac
         if knowledge_pct is not None:
             epistemic_section += f"<p><strong>Knowledge Coverage:</strong> {knowledge_pct:.2f}%</p>"
         if uncertainty_pct is not None:
-            epistemic_section += f"<p><strong>Uncertainty Level:</strong> {uncertainty_pct:.2f}%</p>"
-        
+            epistemic_section += (
+                f"<p><strong>Uncertainty Level:</strong> {uncertainty_pct:.2f}%</p>"
+            )
+
         if vectors:
             epistemic_section += """
 <h3>Epistemic Vectors (13 Dimensions)</h3>
@@ -1183,7 +1225,7 @@ def format_scientist_content(status: Dict, git: Dict, we: Dict, health: Dict, ac
 <p><strong>Status:</strong> {message}</p>
 <p><strong>Impact:</strong> Epistemic tracking unavailable - using heuristic phase detection</p>
 """
-    
+
     # Gamification analysis
     gamification_section = ""
     if gamification.get("available", False):
@@ -1191,7 +1233,7 @@ def format_scientist_content(status: Dict, git: Dict, we: Dict, health: Dict, ac
         integrity = gamification.get("integrity", 100.0)
         insight = gamification.get("insight", 0.0)
         achievements = gamification.get("achievements", [])
-        
+
         gamification_section = f"""
 <h2>Gamification Statistical Analysis</h2>
 
@@ -1205,12 +1247,12 @@ def format_scientist_content(status: Dict, git: Dict, we: Dict, health: Dict, ac
     <tr>
         <td>Character Level</td>
         <td>{level}</td>
-        <td>{'High' if level >= 5 else 'Moderate' if level >= 3 else 'Low'}</td>
+        <td>{"High" if level >= 5 else "Moderate" if level >= 3 else "Low"}</td>
     </tr>
     <tr>
         <td>Integrity Score</td>
         <td>{integrity:.2f}%</td>
-        <td>{'Excellent' if integrity >= 90 else 'Good' if integrity >= 70 else 'Needs Attention'}</td>
+        <td>{"Excellent" if integrity >= 90 else "Good" if integrity >= 70 else "Needs Attention"}</td>
     </tr>
     <tr>
         <td>Insight Points</td>
@@ -1231,7 +1273,7 @@ def format_scientist_content(status: Dict, git: Dict, we: Dict, health: Dict, ac
 
 <p><strong>Status:</strong> {message}</p>
 """
-    
+
     # Flight Recorder analysis
     flight_section = ""
     if flight_events:
@@ -1240,7 +1282,7 @@ def format_scientist_content(status: Dict, git: Dict, we: Dict, health: Dict, ac
         for event in flight_events:
             event_type = event.get("event_type", "unknown")
             event_types[event_type] = event_types.get(event_type, 0) + 1
-        
+
         flight_section = f"""
 <h2>Flight Recorder Event Analysis</h2>
 
@@ -1259,7 +1301,7 @@ def format_scientist_content(status: Dict, git: Dict, we: Dict, health: Dict, ac
             pct = (count / len(flight_events)) * 100
             flight_section += f"<tr><td>{event_type}</td><td>{count}</td><td>{pct:.1f}%</td></tr>"
         flight_section += "</table>"
-        
+
         # Show recent events
         flight_section += """
 <h3>Recent Event Details</h3>
@@ -1272,11 +1314,11 @@ def format_scientist_content(status: Dict, git: Dict, we: Dict, health: Dict, ac
             generation = event.get("generation", "N/A")
             flight_section += f"<li><strong>{event_type}</strong> - Generation {generation} - Genome: {genome_id} - {timestamp}</li>"
         flight_section += "</ul>"
-    
+
     return f"""
 <h2>Comprehensive System Status Analysis</h2>
 
-<p><strong>Analysis Timestamp:</strong> {status['timestamp']}</p>
+<p><strong>Analysis Timestamp:</strong> {status["timestamp"]}</p>
 <p><strong>Analysis Depth:</strong> Research-Level</p>
 {epistemic_section}
 {gamification_section}
@@ -1294,18 +1336,18 @@ def format_scientist_content(status: Dict, git: Dict, we: Dict, health: Dict, ac
     </tr>
     <tr>
         <td>Current Branch</td>
-        <td>{git['branch'] or 'N/A'}</td>
-        <td>{'Main branch' if git['branch'] == 'main' or git['branch'] == 'master' else 'Feature branch'}</td>
+        <td>{git["branch"] or "N/A"}</td>
+        <td>{"Main branch" if git["branch"] == "main" or git["branch"] == "master" else "Feature branch"}</td>
     </tr>
     <tr>
         <td>Divergence (Ahead)</td>
-        <td>{git['commits_ahead']}</td>
-        <td>{'Synchronized' if git['commits_ahead'] == 0 else 'Local commits pending push'}</td>
+        <td>{git["commits_ahead"]}</td>
+        <td>{"Synchronized" if git["commits_ahead"] == 0 else "Local commits pending push"}</td>
     </tr>
     <tr>
         <td>Divergence (Behind)</td>
-        <td>{git['commits_behind']}</td>
-        <td>{'Synchronized' if git['commits_behind'] == 0 else 'Remote commits pending pull'}</td>
+        <td>{git["commits_behind"]}</td>
+        <td>{"Synchronized" if git["commits_behind"] == 0 else "Remote commits pending pull"}</td>
     </tr>
 </table>
 
@@ -1313,21 +1355,21 @@ def format_scientist_content(status: Dict, git: Dict, we: Dict, health: Dict, ac
 
 <p><strong>Change Set Statistics:</strong></p>
 <ul>
-    <li>Total uncommitted files: {len(git['uncommitted_files'])}</li>
-    <li>Staged files: {len(git['staged_files'])} ({len(git['staged_files'])/max(len(git['uncommitted_files']),1)*100:.1f}% of changes)</li>
-    <li>Unstaged files: {len(git['unstaged_files'])} ({len(git['unstaged_files'])/max(len(git['uncommitted_files']),1)*100:.1f}% of changes)</li>
+    <li>Total uncommitted files: {len(git["uncommitted_files"])}</li>
+    <li>Staged files: {len(git["staged_files"])} ({len(git["staged_files"]) / max(len(git["uncommitted_files"]), 1) * 100:.1f}% of changes)</li>
+    <li>Unstaged files: {len(git["unstaged_files"])} ({len(git["unstaged_files"]) / max(len(git["uncommitted_files"]), 1) * 100:.1f}% of changes)</li>
 </ul>
 
 <div class="caution">
     <div class="caution-title">Change Set Risk Assessment</div>
-    {'High risk: Large number of uncommitted changes detected. Consider incremental commits.' if len(git['uncommitted_files']) > 20 else 'Low risk: Manageable number of uncommitted changes.'}
+    {"High risk: Large number of uncommitted changes detected. Consider incremental commits." if len(git["uncommitted_files"]) > 20 else "Low risk: Manageable number of uncommitted changes."}
 </div>
 
 <h3>Commit History Analysis</h3>
 
 <p><strong>Recent Commit Patterns:</strong></p>
 <ul>
-{''.join([f'<li>{commit}</li>' for commit in git['recent_commits'][:10]])}
+{"".join([f"<li>{commit}</li>" for commit in git["recent_commits"][:10]])}
 </ul>
 
 <h2>Work Efforts Statistical Analysis</h2>
@@ -1342,20 +1384,20 @@ def format_scientist_content(status: Dict, git: Dict, we: Dict, health: Dict, ac
     </tr>
     <tr>
         <td>Total Work Efforts</td>
-        <td>{we['count']}</td>
+        <td>{we["count"]}</td>
         <td>100%</td>
         <td>Baseline</td>
     </tr>
     <tr>
         <td>Active Efforts</td>
-        <td>{len(we['active'])}</td>
-        <td>{len(we['active'])/max(we['count'],1)*100:.1f}%</td>
-        <td>{'High activity' if len(we['active'])/max(we['count'],1) > 0.5 else 'Moderate activity'}</td>
+        <td>{len(we["active"])}</td>
+        <td>{len(we["active"]) / max(we["count"], 1) * 100:.1f}%</td>
+        <td>{"High activity" if len(we["active"]) / max(we["count"], 1) > 0.5 else "Moderate activity"}</td>
     </tr>
     <tr>
         <td>Recent Efforts</td>
-        <td>{len(we['recent'])}</td>
-        <td>{len(we['recent'])/max(we['count'],1)*100:.1f}%</td>
+        <td>{len(we["recent"])}</td>
+        <td>{len(we["recent"]) / max(we["count"], 1) * 100:.1f}%</td>
         <td>In progress</td>
     </tr>
 </table>
@@ -1372,21 +1414,21 @@ def format_scientist_content(status: Dict, git: Dict, we: Dict, health: Dict, ac
     </tr>
     <tr>
         <td>_pyrite Structure</td>
-        <td>{'✅ Valid' if health['pyrite_valid'] else '❌ Invalid'}</td>
-        <td>{'Low' if health['pyrite_valid'] else 'High'}</td>
-        <td>{'No action needed' if health['pyrite_valid'] else 'Run waft init to repair'}</td>
+        <td>{"✅ Valid" if health["pyrite_valid"] else "❌ Invalid"}</td>
+        <td>{"Low" if health["pyrite_valid"] else "High"}</td>
+        <td>{"No action needed" if health["pyrite_valid"] else "Run waft init to repair"}</td>
     </tr>
     <tr>
         <td>Directory Structure</td>
-        <td>{'✅ Valid' if health['structure_valid'] else '❌ Invalid'}</td>
-        <td>{'Low' if health['structure_valid'] else 'High'}</td>
-        <td>{'No action needed' if health['structure_valid'] else 'Verify _pyrite structure'}</td>
+        <td>{"✅ Valid" if health["structure_valid"] else "❌ Invalid"}</td>
+        <td>{"Low" if health["structure_valid"] else "High"}</td>
+        <td>{"No action needed" if health["structure_valid"] else "Verify _pyrite structure"}</td>
     </tr>
     <tr>
         <td>Dependency Lock</td>
-        <td>{'✅ Present' if health['lock_exists'] else '❌ Missing'}</td>
-        <td>{'Low' if health['lock_exists'] else 'Medium'}</td>
-        <td>{'No action needed' if health['lock_exists'] else 'Run uv sync to generate lock'}</td>
+        <td>{"✅ Present" if health["lock_exists"] else "❌ Missing"}</td>
+        <td>{"Low" if health["lock_exists"] else "Medium"}</td>
+        <td>{"No action needed" if health["lock_exists"] else "Run uv sync to generate lock"}</td>
     </tr>
 </table>
 
@@ -1394,8 +1436,8 @@ def format_scientist_content(status: Dict, git: Dict, we: Dict, health: Dict, ac
 
 <p><strong>Recent Activity Metrics:</strong></p>
 <ul>
-    <li>Devlog entries in recent period: {len(activity['devlog_entries'])}</li>
-    <li>Activity level: {'High' if len(activity['devlog_entries']) >= 3 else 'Moderate' if len(activity['devlog_entries']) >= 1 else 'Low'}</li>
+    <li>Devlog entries in recent period: {len(activity["devlog_entries"])}</li>
+    <li>Activity level: {"High" if len(activity["devlog_entries"]) >= 3 else "Moderate" if len(activity["devlog_entries"]) >= 1 else "Low"}</li>
 </ul>
 
 <h2>Predictive Indicators</h2>
@@ -1403,9 +1445,9 @@ def format_scientist_content(status: Dict, git: Dict, we: Dict, health: Dict, ac
 <div class="note">
     <div class="note-title">System Trajectory Analysis</div>
     <ul>
-        <li><strong>Development Velocity:</strong> {'High' if len(git['recent_commits']) >= 5 else 'Moderate' if len(git['recent_commits']) >= 2 else 'Low'}</li>
-        <li><strong>Work Distribution:</strong> {len(we['active'])} active efforts indicate {'focused development' if len(we['active']) <= 3 else 'parallel development'}</li>
-        <li><strong>Change Management:</strong> {len(git['uncommitted_files'])} uncommitted files suggest {'incremental development' if len(git['uncommitted_files']) < 10 else 'batch development pattern'}</li>
+        <li><strong>Development Velocity:</strong> {"High" if len(git["recent_commits"]) >= 5 else "Moderate" if len(git["recent_commits"]) >= 2 else "Low"}</li>
+        <li><strong>Work Distribution:</strong> {len(we["active"])} active efforts indicate {"focused development" if len(we["active"]) <= 3 else "parallel development"}</li>
+        <li><strong>Change Management:</strong> {len(git["uncommitted_files"])} uncommitted files suggest {"incremental development" if len(git["uncommitted_files"]) < 10 else "batch development pattern"}</li>
     </ul>
 </div>
 
@@ -1414,9 +1456,9 @@ def format_scientist_content(status: Dict, git: Dict, we: Dict, health: Dict, ac
 <div class="highlight-box">
     <h3>Key Observations</h3>
     <ul>
-        <li>System state indicates {'stable development' if health['structure_valid'] and len(git['uncommitted_files']) < 15 else 'active development with potential risk'}</li>
-        <li>Work effort distribution shows {'balanced workload' if 0.3 <= len(we['active'])/max(we['count'],1) <= 0.7 else 'concentrated or distributed workload'}</li>
-        <li>Git activity pattern suggests {'regular commit cadence' if len(git['recent_commits']) >= 3 else 'irregular or new development cycle'}</li>
+        <li>System state indicates {"stable development" if health["structure_valid"] and len(git["uncommitted_files"]) < 15 else "active development with potential risk"}</li>
+        <li>Work effort distribution shows {"balanced workload" if 0.3 <= len(we["active"]) / max(we["count"], 1) <= 0.7 else "concentrated or distributed workload"}</li>
+        <li>Git activity pattern suggests {"regular commit cadence" if len(git["recent_commits"]) >= 3 else "irregular or new development cycle"}</li>
     </ul>
 </div>
 """
@@ -1424,38 +1466,44 @@ def format_scientist_content(status: Dict, git: Dict, we: Dict, health: Dict, ac
 
 def main():
     import argparse
-    
+
     parser = argparse.ArgumentParser(
-        description='Check WAFT system status and optionally generate documentation'
+        description="Check WAFT system status and optionally generate documentation"
     )
-    parser.add_argument('--docs', action='store_true', help='Generate status documentation')
-    parser.add_argument('--level', choices=['layman', 'professional', 'scientist'], help='Documentation level (requires --docs)')
-    parser.add_argument('--printer-friendly', action='store_true', help='Generate printer-friendly versions')
-    parser.add_argument('--focus', help='Focus on specific area')
-    parser.add_argument('--save-snapshot', action='store_true', help='Save status snapshot with checksum')
-    
+    parser.add_argument("--docs", action="store_true", help="Generate status documentation")
+    parser.add_argument(
+        "--level",
+        choices=["layman", "professional", "scientist"],
+        help="Documentation level (requires --docs)",
+    )
+    parser.add_argument(
+        "--printer-friendly", action="store_true", help="Generate printer-friendly versions"
+    )
+    parser.add_argument("--focus", help="Focus on specific area")
+    parser.add_argument(
+        "--save-snapshot", action="store_true", help="Save status snapshot with checksum"
+    )
+
     args = parser.parse_args()
-    
+
     # Determine project path
     project_path = Path.cwd()
-    
+
     # Check status
     status = check_status(
-        project_path=project_path,
-        log_event=True,
-        save_snapshot=args.save_snapshot
+        project_path=project_path, log_event=True, save_snapshot=args.save_snapshot
     )
-    
+
     # Display status
     display_status(status)
-    
+
     # Generate docs if requested
     if args.docs:
         generate_status_docs(status, level=args.level, printer_friendly=args.printer_friendly)
         print("\n✓ Status documentation generated")
-    
+
     print()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

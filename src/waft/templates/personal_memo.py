@@ -15,9 +15,9 @@ Features:
 """
 
 from pathlib import Path
+
 from jinja2 import Template
 from weasyprint import HTML
-
 
 PERSONAL_MEMO_TEMPLATE = """
 <!DOCTYPE html>
@@ -267,7 +267,7 @@ def generate_personal_memo(
     date: str = None,
     signature: str = None,
     memo_style: bool = True,
-    use_letterhead: bool = False
+    use_letterhead: bool = False,
 ) -> Path:
     """
     Generate a personal memo or note.
@@ -303,7 +303,7 @@ def generate_personal_memo(
         date=date,
         signature=signature,
         memo_style=memo_style,
-        use_letterhead=use_letterhead
+        use_letterhead=use_letterhead,
     )
 
     HTML(string=html_output).write_pdf(output_path)

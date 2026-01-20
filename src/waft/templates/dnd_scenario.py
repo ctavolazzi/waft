@@ -16,9 +16,9 @@ Features:
 """
 
 from pathlib import Path
+
 from jinja2 import Template
 from weasyprint import HTML
-
 
 DND_SCENARIO_TEMPLATE = """
 <!DOCTYPE html>
@@ -346,12 +346,7 @@ DND_SCENARIO_TEMPLATE = """
 """
 
 
-def generate_dnd_scenario(
-    title: str,
-    content: str,
-    output_path: Path,
-    **kwargs
-) -> Path:
+def generate_dnd_scenario(title: str, content: str, output_path: Path, **kwargs) -> Path:
     """
     Generate a D&D Scenario PDF.
 
@@ -367,19 +362,16 @@ def generate_dnd_scenario(
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     template = Template(DND_SCENARIO_TEMPLATE)
-    html_output = template.render(
-        title=title,
-        content=content,
-        **kwargs
-    )
+    html_output = template.render(title=title, content=content, **kwargs)
 
     HTML(string=html_output).write_pdf(output_path)
-    
+
     # Post-process to add blank page markers
     try:
         from ..utils import process_pdf_for_blank_pages
+
         process_pdf_for_blank_pages(output_path)
     except Exception as e:
         print(f"⚠️  Blank page marker processing failed: {e}")
-    
+
     return output_path

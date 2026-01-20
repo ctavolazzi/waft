@@ -5,13 +5,12 @@ Provides moon phase indicators, state formatting, gate styling, and dashboard cr
 using the Rich library for beautiful terminal output.
 """
 
-from typing import Dict, Any, Optional
+from typing import Any
+
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
-from rich.progress import Progress, BarColumn, TextColumn
-from rich.layout import Layout
 
 
 def get_moon_phase(coverage: float) -> str:
@@ -62,7 +61,7 @@ def format_gate_result(gate: str) -> Text:
     return gate_text
 
 
-def format_epistemic_state(state: Dict[str, Any]) -> Panel:
+def format_epistemic_state(state: dict[str, Any]) -> Panel:
     """
     Creates Rich Panel with epistemic state visualization.
 
@@ -109,9 +108,18 @@ def format_epistemic_state(state: Dict[str, Any]) -> Panel:
 
     # Calculate average coverage for moon phase
     all_values = [
-        know, do, context, engagement,
-        clarity, coherence, signal, density,
-        exec_state, change, completion, impact
+        know,
+        do,
+        context,
+        engagement,
+        clarity,
+        coherence,
+        signal,
+        density,
+        exec_state,
+        change,
+        completion,
+        impact,
     ]
     avg_coverage = sum(all_values) / len(all_values) if all_values else 0.0
     moon_phase = get_moon_phase(avg_coverage)
@@ -138,19 +146,19 @@ def format_epistemic_state(state: Dict[str, Any]) -> Panel:
     table.add_row("Change", f"{change:.0%}", f"[{get_status_color(change)}]●[/]")
     table.add_row("Completion", f"{completion:.0%}", f"[{get_status_color(completion)}]●[/]")
     table.add_row("Impact", f"{impact:.0%}", f"[{get_status_color(impact)}]●[/]")
-    table.add_row("Uncertainty", f"{uncertainty:.0%}", f"[{get_status_color(1.0 - uncertainty)}]●[/]")
+    table.add_row(
+        "Uncertainty", f"{uncertainty:.0%}", f"[{get_status_color(1.0 - uncertainty)}]●[/]"
+    )
 
     # Create panel with moon phase in title
     panel_content = f"{moon_phase} Epistemic State\n\n{table}"
 
     return Panel(
-        panel_content,
-        title="[bold cyan]Epistemic Vectors[/bold cyan]",
-        border_style="cyan"
+        panel_content, title="[bold cyan]Epistemic Vectors[/bold cyan]", border_style="cyan"
     )
 
 
-def create_epistemic_dashboard(context: Dict[str, Any]) -> Panel:
+def create_epistemic_dashboard(context: dict[str, Any]) -> Panel:
     """
     Creates comprehensive epistemic dashboard.
 
@@ -187,7 +195,9 @@ def create_epistemic_dashboard(context: Dict[str, Any]) -> Panel:
 
     # Epistemic state summary
     dashboard_lines.append("[bold]Epistemic State:[/bold]")
-    dashboard_lines.append(f"  Know: {know:.0%} | Uncertainty: {uncertainty:.0%} | Coverage: {coverage:.0%}")
+    dashboard_lines.append(
+        f"  Know: {know:.0%} | Uncertainty: {uncertainty:.0%} | Coverage: {coverage:.0%}"
+    )
     dashboard_lines.append("")
 
     # Active goals
@@ -222,11 +232,11 @@ def create_epistemic_dashboard(context: Dict[str, Any]) -> Panel:
         dashboard_content,
         title="[bold cyan]Epistemic Dashboard[/bold cyan]",
         border_style="cyan",
-        padding=(1, 2)
+        padding=(1, 2),
     )
 
 
-def format_epistemic_summary(state: Optional[Dict[str, Any]] = None) -> str:
+def format_epistemic_summary(state: dict[str, Any] | None = None) -> str:
     """
     Creates a brief summary string of epistemic state.
 
@@ -247,5 +257,3 @@ def format_epistemic_summary(state: Optional[Dict[str, Any]] = None) -> str:
     moon_phase = get_moon_phase(coverage)
 
     return f"{moon_phase} K:{know:.0%} U:{uncertainty:.0%}"
-
-

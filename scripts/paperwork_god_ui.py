@@ -10,91 +10,90 @@ Modern web interface for the Paperwork God system, including:
 - System statistics and visualization
 """
 
-import sys
-from pathlib import Path
-from http.server import HTTPServer, BaseHTTPRequestHandler
-from urllib.parse import urlparse, parse_qs
 import json
-from datetime import datetime
+import sys
+from http.server import BaseHTTPRequestHandler, HTTPServer
+from pathlib import Path
+from urllib.parse import parse_qs, urlparse
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from src.waft.pantheon import PaperworkGod, Skurl
+from src.waft.pantheon import PaperworkGod
 from src.waft.pantheon.financial_documents import FinancialDocumentsManager
 
 
 class PaperworkGodUIHandler(BaseHTTPRequestHandler):
     """HTTP request handler for Paperwork God UI."""
-    
+
     def __init__(self, *args, **kwargs):
         self.paperwork_god = PaperworkGod()
         self.financial_manager = FinancialDocumentsManager()
         super().__init__(*args, **kwargs)
-    
+
     def do_GET(self):
         """Handle GET requests."""
         parsed_path = urlparse(self.path)
         path = parsed_path.path
         query = parse_qs(parsed_path.query)
-        
-        if path == '/' or path == '/index.html':
+
+        if path == "/" or path == "/index.html":
             self.serve_index()
-        elif path == '/api/summary':
+        elif path == "/api/summary":
             self.serve_api_summary()
-        elif path == '/api/paperwork':
+        elif path == "/api/paperwork":
             self.serve_api_paperwork(query)
-        elif path == '/api/obstacles':
+        elif path == "/api/obstacles":
             self.serve_api_obstacles(query)
-        elif path == '/api/creatures':
+        elif path == "/api/creatures":
             self.serve_api_creatures()
         else:
             self.send_error(404, "Not Found")
-    
+
     def do_POST(self):
         """Handle POST requests."""
         parsed_path = urlparse(self.path)
         path = parsed_path.path
-        
-        if path == '/api/paperwork/register':
+
+        if path == "/api/paperwork/register":
             self.handle_register_paperwork()
-        elif path == '/api/obstacles/create':
+        elif path == "/api/obstacles/create":
             self.handle_create_obstacle()
-        elif path == '/api/obstacles/resolve':
+        elif path == "/api/obstacles/resolve":
             self.handle_resolve_obstacle()
         else:
             self.send_error(404, "Not Found")
-    
+
     def serve_index(self):
         """Serve main HTML page."""
         html = self.get_index_html()
         self.send_response(200)
-        self.send_header('Content-type', 'text/html')
+        self.send_header("Content-type", "text/html")
         self.end_headers()
-        self.wfile.write(html.encode('utf-8'))
-    
+        self.wfile.write(html.encode("utf-8"))
+
     def serve_api_summary(self):
         """Serve system summary API."""
         summary = self.paperwork_god.get_registry_summary()
         skurl_summary = self.paperwork_god.skurl.get_registry_summary()
-        
+
         response = {
             "paperwork": {
                 "total_documents": summary["total_documents"],
-                "last_updated": summary["last_updated"]
+                "last_updated": summary["last_updated"],
             },
             "skurl": skurl_summary,
-            "realm": summary["realm_creatures"]
+            "realm": summary["realm_creatures"],
         }
-        
+
         self.send_json_response(response)
-    
+
     def serve_api_paperwork(self, query):
         """Serve paperwork API."""
-        if 'id' in query:
+        if "id" in query:
             # Get specific paperwork
-            doc_id = query['id'][0]
+            doc_id = query["id"][0]
             record = self.paperwork_god.get_paperwork_record(doc_id)
             if record:
                 self.send_json_response(record.to_dict())
@@ -104,39 +103,36 @@ class PaperworkGodUIHandler(BaseHTTPRequestHandler):
             # List all paperwork
             records = self.paperwork_god.list_all_paperwork()
             self.send_json_response([r.to_dict() for r in records])
-    
+
     def serve_api_obstacles(self, query):
         """Serve obstacles API."""
-        unresolved_only = query.get('unresolved', ['false'])[0].lower() == 'true'
+        unresolved_only = query.get("unresolved", ["false"])[0].lower() == "true"
         obstacles = self.paperwork_god.skurl.list_all_obstacles(unresolved_only=unresolved_only)
         self.send_json_response([o.to_dict() for o in obstacles])
-    
+
     def serve_api_creatures(self):
         """Serve creatures API."""
         realm = self.paperwork_god.realm
         goblins_path = realm.realm_path / "creatures" / "goblins"
         ghouls_path = realm.realm_path / "creatures" / "ghouls"
-        
+
         goblins = []
         if goblins_path.exists():
             for goblin_file in goblins_path.glob("*.json"):
                 goblins.append(json.loads(goblin_file.read_text(encoding="utf-8")))
-        
+
         ghouls = []
         if ghouls_path.exists():
             for ghoul_file in ghouls_path.glob("*.json"):
                 ghouls.append(json.loads(ghoul_file.read_text(encoding="utf-8")))
-        
-        self.send_json_response({
-            "goblins": goblins,
-            "ghouls": ghouls
-        })
-    
+
+        self.send_json_response({"goblins": goblins, "ghouls": ghouls})
+
     def serve_api_budgets(self, query):
         """Serve budgets API."""
-        if 'id' in query:
+        if "id" in query:
             # Get specific budget
-            budget_id = query['id'][0]
+            budget_id = query["id"][0]
             budget = self.financial_manager.load_budget(budget_id)
             if budget:
                 self.send_json_response(budget.to_dict())
@@ -146,12 +142,12 @@ class PaperworkGodUIHandler(BaseHTTPRequestHandler):
             # List all budgets
             budgets = self.financial_manager.list_budgets()
             self.send_json_response([b.to_dict() for b in budgets])
-    
+
     def serve_api_balance_sheets(self, query):
         """Serve balance sheets API."""
-        if 'id' in query:
+        if "id" in query:
             # Get specific balance sheet
-            bs_id = query['id'][0]
+            bs_id = query["id"][0]
             bs = self.financial_manager.load_balance_sheet(bs_id)
             if bs:
                 self.send_json_response(bs.to_dict())
@@ -161,63 +157,63 @@ class PaperworkGodUIHandler(BaseHTTPRequestHandler):
             # List all balance sheets
             balance_sheets = self.financial_manager.list_balance_sheets()
             self.send_json_response([bs.to_dict() for bs in balance_sheets])
-    
+
     def handle_register_paperwork(self):
         """Handle paperwork registration."""
-        content_length = int(self.headers['Content-Length'])
+        content_length = int(self.headers["Content-Length"])
         post_data = self.rfile.read(content_length)
-        data = json.loads(post_data.decode('utf-8'))
-        
+        data = json.loads(post_data.decode("utf-8"))
+
         try:
             record = self.paperwork_god.register_paperwork(
-                document_id=data['document_id'],
-                document_path=Path(data['document_path']),
-                document_type=data.get('document_type', 'form'),
-                metadata=data.get('metadata', {})
+                document_id=data["document_id"],
+                document_path=Path(data["document_path"]),
+                document_type=data.get("document_type", "form"),
+                metadata=data.get("metadata", {}),
             )
             self.send_json_response(record.to_dict(), status=201)
         except Exception as e:
             self.send_error(400, str(e))
-    
+
     def handle_create_obstacle(self):
         """Handle obstacle creation."""
-        content_length = int(self.headers['Content-Length'])
+        content_length = int(self.headers["Content-Length"])
         post_data = self.rfile.read(content_length)
-        data = json.loads(post_data.decode('utf-8'))
-        
+        data = json.loads(post_data.decode("utf-8"))
+
         try:
             obstacle = self.paperwork_god.skurl.create_red_tape_obstacle(
-                obstacle_id=data['obstacle_id'],
-                description=data['description'],
-                required_forms=data.get('required_forms', []),
-                required_approvals=data.get('required_approvals', []),
-                complexity_level=data.get('complexity_level', 1),
-                metadata=data.get('metadata', {})
+                obstacle_id=data["obstacle_id"],
+                description=data["description"],
+                required_forms=data.get("required_forms", []),
+                required_approvals=data.get("required_approvals", []),
+                complexity_level=data.get("complexity_level", 1),
+                metadata=data.get("metadata", {}),
             )
             self.send_json_response(obstacle.to_dict(), status=201)
         except Exception as e:
             self.send_error(400, str(e))
-    
+
     def handle_resolve_obstacle(self):
         """Handle obstacle resolution."""
-        content_length = int(self.headers['Content-Length'])
+        content_length = int(self.headers["Content-Length"])
         post_data = self.rfile.read(content_length)
-        data = json.loads(post_data.decode('utf-8'))
-        
-        obstacle = self.paperwork_god.skurl.resolve_obstacle(data['obstacle_id'])
+        data = json.loads(post_data.decode("utf-8"))
+
+        obstacle = self.paperwork_god.skurl.resolve_obstacle(data["obstacle_id"])
         if obstacle:
             self.send_json_response(obstacle.to_dict())
         else:
             self.send_error(404, "Obstacle not found")
-    
+
     def send_json_response(self, data, status=200):
         """Send JSON response."""
         self.send_response(status)
-        self.send_header('Content-type', 'application/json')
-        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header("Content-type", "application/json")
+        self.send_header("Access-Control-Allow-Origin", "*")
         self.end_headers()
-        self.wfile.write(json.dumps(data, indent=2).encode('utf-8'))
-    
+        self.wfile.write(json.dumps(data, indent=2).encode("utf-8"))
+
     def get_index_html(self):
         """Generate main HTML page."""
         return """<!DOCTYPE html>
@@ -692,7 +688,7 @@ class PaperworkGodUIHandler(BaseHTTPRequestHandler):
     </script>
 </body>
 </html>"""
-    
+
     def log_message(self, format, *args):
         """Override to reduce log noise."""
         pass
@@ -700,7 +696,7 @@ class PaperworkGodUIHandler(BaseHTTPRequestHandler):
 
 def run_server(port=8080):
     """Run the web server."""
-    server_address = ('', port)
+    server_address = ("", port)
     httpd = HTTPServer(server_address, PaperworkGodUIHandler)
     print(f"🏛️ Paperwork God UI running at http://localhost:{port}")
     print("Press Ctrl+C to stop")
@@ -713,8 +709,9 @@ def run_server(port=8080):
 
 if __name__ == "__main__":
     import argparse
+
     parser = argparse.ArgumentParser(description="Paperwork God Web UI")
-    parser.add_argument('--port', type=int, default=8080, help='Port to run server on')
+    parser.add_argument("--port", type=int, default=8080, help="Port to run server on")
     args = parser.parse_args()
-    
+
     run_server(args.port)

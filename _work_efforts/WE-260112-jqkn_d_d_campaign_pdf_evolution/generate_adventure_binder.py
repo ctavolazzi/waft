@@ -8,8 +8,8 @@ of developing the Campaign Session Binder System feature branch.
 """
 
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 # Add project root to path
 project_root = Path(__file__).parent.parent.parent
@@ -20,24 +20,32 @@ from src.waft.evolution.pdf_generator import PDFGenerator
 
 def generate_adventure_binder():
     """Generate the complete adventure binder PDF."""
-    
+
     work_effort_path = Path(__file__).parent
     output_path = work_effort_path / "ADVENTURE_BINDER_COMPLETE.pdf"
-    
+
     # Read adventure log
     adventure_log_path = work_effort_path / "CAMPAIGN_ADVENTURE_LOG.md"
-    adventure_log = adventure_log_path.read_text(encoding='utf-8') if adventure_log_path.exists() else ""
-    
+    adventure_log = (
+        adventure_log_path.read_text(encoding="utf-8") if adventure_log_path.exists() else ""
+    )
+
     # Read code files
-    tracker_code = (project_root / "src/waft/evolution/campaign_session_tracker.py").read_text(encoding='utf-8')
-    binder_code = (project_root / "src/waft/evolution/campaign_binder_generator.py").read_text(encoding='utf-8')
-    example_code = (project_root / "examples/generate_campaign_binder.py").read_text(encoding='utf-8')
-    
+    tracker_code = (project_root / "src/waft/evolution/campaign_session_tracker.py").read_text(
+        encoding="utf-8"
+    )
+    binder_code = (project_root / "src/waft/evolution/campaign_binder_generator.py").read_text(
+        encoding="utf-8"
+    )
+    example_code = (project_root / "examples/generate_campaign_binder.py").read_text(
+        encoding="utf-8"
+    )
+
     # Compile markdown content
     content = f"""# 🎲 The Quest for the Campaign Session Binder
 
 **Feature Branch Development Adventure**  
-**Date:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}  
+**Date:** {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}  
 **Work Effort:** WE-260112-jqkn  
 **Feature Branch:** `feature/campaign-session-binder-system`
 
@@ -112,7 +120,7 @@ Core class for tracking campaign data.
 - `get_campaign_data()` - Retrieve all data for binder
 
 ```python
-{tracker_code.replace('{', '{{').replace('}', '}}')}
+{tracker_code.replace("{", "{{").replace("}", "}}")}
 ```
 
 ### CampaignBinderGenerator
@@ -126,7 +134,7 @@ Generates comprehensive PDF binders from tracked data.
 - `_generate_markdown()` - Compile markdown content
 
 ```python
-{binder_code.replace('{', '{{').replace('}', '}}')}
+{binder_code.replace("{", "{{").replace("}", "}}")}
 ```
 
 ---
@@ -227,7 +235,7 @@ pdf_path = generator.generate_binder()
 See `examples/generate_campaign_binder.py` for a full working example:
 
 ```python
-{example_code.replace('{', '{{').replace('}', '}}')}
+{example_code.replace("{", "{{").replace("}", "}}")}
 ```
 
 ---
@@ -283,25 +291,25 @@ The Campaign Session Binder System has been successfully developed, tested, and 
 
 *May your campaigns be epic, and your binders be comprehensive!* 🎲📚
 
-**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}  
+**Generated:** {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}  
 **Work Effort:** WE-260112-jqkn  
 **Feature:** Campaign Session Binder System
 """
-    
+
     # Generate PDF
     generator = PDFGenerator.from_content(
         content=content,
         title="The Quest for the Campaign Session Binder - Complete Adventure",
-        style="premium"
+        style="premium",
     )
-    
+
     generator.save(str(output_path))
-    
+
     print(f"✅ Adventure binder generated: {output_path}")
-    print(f"   Pages: Comprehensive")
-    print(f"   Style: Premium")
-    print(f"   Status: Complete")
-    
+    print("   Pages: Comprehensive")
+    print("   Style: Premium")
+    print("   Status: Complete")
+
     return output_path
 
 
