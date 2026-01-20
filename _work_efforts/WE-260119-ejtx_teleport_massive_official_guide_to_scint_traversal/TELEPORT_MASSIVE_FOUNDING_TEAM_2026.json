@@ -1,0 +1,238 @@
+{
+  "team_name": "Teleport Massive Founding Team",
+  "founding_date": "2026-01-18",
+  "founding_location": "San Francisco, California, United States",
+  "founding_event": "Corporation Formation - Teleport Massive Inc.",
+  "data_collection_date": "2026-01-19",
+  "team_members": [
+    {
+      "id": "TM-FT-2026-001",
+      "name": {
+        "title": "Ms",
+        "first": "Abigail",
+        "last": "Wong",
+        "full": "Ms Abigail Wong"
+      },
+      "role": "Chief Financial Officer",
+      "specialization": "Corporate finance, accounting, and financial planning",
+      "contribution": "Established financial infrastructure, accounting systems, and managed corporate finances",
+      "background": {
+        "nationality": "CA",
+        "location": "San Francisco, California, United States",
+        "age_at_founding": 43,
+        "email": "abigail.wong@teleportmassive.com"
+      },
+      "picture": {
+        "large": "https://randomuser.me/api/portraits/women/30.jpg",
+        "medium": "https://randomuser.me/api/portraits/med/women/30.jpg",
+        "thumbnail": "https://randomuser.me/api/portraits/thumb/women/30.jpg",
+        "local_path": "founding_team_photos_2026/wong_abigail.jpg"
+      }
+    },
+    {
+      "id": "TM-FT-2026-002",
+      "name": {
+        "title": "Mr",
+        "first": "Justin",
+        "last": "Ross",
+        "full": "Mr Justin Ross"
+      },
+      "role": "Founder & Chief Executive Officer",
+      "specialization": "Quantum computing and reality physics",
+      "contribution": "Led technical architecture and quantum system design",
+      "background": {
+        "nationality": "CA",
+        "location": "San Francisco, California, United States",
+        "age_at_founding": 35,
+        "email": "justin.ross@teleportmassive.com"
+      },
+      "picture": {
+        "large": "https://randomuser.me/api/portraits/men/78.jpg",
+        "medium": "https://randomuser.me/api/portraits/med/men/78.jpg",
+        "thumbnail": "https://randomuser.me/api/portraits/thumb/men/78.jpg",
+        "local_path": "founding_team_photos_2026/ross_justin.jpg"
+      }
+    },
+    {
+      "id": "TM-FT-2026-003",
+      "name": {
+        "title": "Mr",
+        "first": "Seth",
+        "last": "Jacobs",
+        "full": "Mr Seth Jacobs"
+      },
+      "role": "Head of Investor Relations",
+      "specialization": "Venture capital, fundraising, and investor communications",
+      "contribution": "Secured initial funding rounds and managed investor relationships",
+      "background": {
+        "nationality": "AU",
+        "location": "San Francisco, California, United States",
+        "age_at_founding": 39,
+        "email": "seth.jacobs@teleportmassive.com"
+      },
+      "picture": {
+        "large": "https://randomuser.me/api/portraits/men/20.jpg",
+        "medium": "https://randomuser.me/api/portraits/med/men/20.jpg",
+        "thumbnail": "https://randomuser.me/api/portraits/thumb/men/20.jpg",
+        "local_path": "founding_team_photos_2026/jacobs_seth.jpg"
+      }
+    },
+    {
+      "id": "TM-FT-2026-004",
+      "name": {
+        "title": "Mr",
+        "first": "Luke",
+        "last": "Olson",
+        "full": "Mr Luke Olson"
+      },
+      "role": "Chief Operating Officer",
+      "specialization": "Operations and business development",
+      "contribution": "Established operational systems and early partnerships",
+      "background": {
+        "nationality": "US",
+        "location": "San Francisco, California, United States",
+        "age_at_founding": 48,
+        "email": "luke.olson@teleportmassive.com"
+      },
+      "picture": {
+        "large": "https://randomuser.me/api/portraits/men/80.jpg",
+        "medium": "https://randomuser.me/api/portraits/med/men/80.jpg",
+        "thumbnail": "https://randomuser.me/api/portraits/thumb/men/80.jpg",
+        "local_path": "founding_team_photos_2026/olson_luke.jpg"
+      }
+    },
+    {
+      "id": "TM-FT-2026-005",
+      "name": {
+        "title": "Mr",
+        "first": "Jorge",
+        "last": "Simmons",
+        "full": "Mr Jorge Simmons"
+      },
+      "role": "Head of Research & Development",
+      "specialization": "Experimental physics and reality mechanics",
+      "contribution": "Led early research into reality fracture detection",
+      "background": {
+        "nationality": "GB",
+        "location": "San Francisco, California, United States",
+        "age_at_founding": 41,
+        "email": "jorge.simmons@teleportmassive.com"
+      },
+      "picture": {
+        "large": "https://randomuser.me/api/portraits/men/50.jpg",
+        "medium": "https://randomuser.me/api/portraits/med/men/50.jpg",
+        "thumbnail": "https://randomuser.me/api/portraits/thumb/men/50.jpg",
+        "local_path": "founding_team_photos_2026/simmons_jorge.jpg"
+      }
+    },
+    {
+      "id": "TM-FT-2026-006",
+      "name": {
+        "title": "Miss",
+        "first": "Eva",
+        "last": "Beck",
+        "full": "Miss Eva Beck"
+      },
+      "role": "Lead Quantum Engineer",
+      "specialization": "Quantum systems engineering and hardware",
+      "contribution": "Designed and built early quantum detection systems",
+      "background": {
+        "nationality": "GB",
+        "location": "San Francisco, California, United States",
+        "age_at_founding": 40,
+        "email": "eva.beck@teleportmassive.com"
+      },
+      "picture": {
+        "large": "https://randomuser.me/api/portraits/women/40.jpg",
+        "medium": "https://randomuser.me/api/portraits/med/women/40.jpg",
+        "thumbnail": "https://randomuser.me/api/portraits/thumb/women/40.jpg",
+        "local_path": "founding_team_photos_2026/beck_eva.jpg"
+      }
+    },
+    {
+      "id": "TM-FT-2026-007",
+      "name": {
+        "title": "Mr",
+        "first": "Soham",
+        "last": "Murray",
+        "full": "Mr Soham Murray"
+      },
+      "role": "Head of Legal & Compliance",
+      "specialization": "Corporate law and regulatory compliance",
+      "contribution": "Established legal framework and regulatory compliance",
+      "background": {
+        "nationality": "US",
+        "location": "San Francisco, California, United States",
+        "age_at_founding": 64,
+        "email": "soham.murray@teleportmassive.com"
+      },
+      "picture": {
+        "large": "https://randomuser.me/api/portraits/men/39.jpg",
+        "medium": "https://randomuser.me/api/portraits/med/men/39.jpg",
+        "thumbnail": "https://randomuser.me/api/portraits/thumb/men/39.jpg",
+        "local_path": "founding_team_photos_2026/murray_soham.jpg"
+      }
+    },
+    {
+      "id": "TM-FT-2026-008",
+      "name": {
+        "title": "Mrs",
+        "first": "Heather",
+        "last": "Hopkins",
+        "full": "Mrs Heather Hopkins"
+      },
+      "role": "Head of Marketing & Business Development",
+      "specialization": "Brand development and strategic partnerships",
+      "contribution": "Developed brand identity and early market positioning",
+      "background": {
+        "nationality": "GB",
+        "location": "San Francisco, California, United States",
+        "age_at_founding": 41,
+        "email": "heather.hopkins@teleportmassive.com"
+      },
+      "picture": {
+        "large": "https://randomuser.me/api/portraits/women/42.jpg",
+        "medium": "https://randomuser.me/api/portraits/med/women/42.jpg",
+        "thumbnail": "https://randomuser.me/api/portraits/thumb/women/42.jpg",
+        "local_path": "founding_team_photos_2026/hopkins_heather.jpg"
+      }
+    },
+    {
+      "id": "TM-FT-2026-009",
+      "name": {
+        "title": "Mr",
+        "first": "Calvin",
+        "last": "Rice",
+        "full": "Mr Calvin Rice"
+      },
+      "role": "Head of Security",
+      "specialization": "Cybersecurity, physical security, and information protection",
+      "contribution": "Established security protocols for quantum research and protected sensitive reality traversal data",
+      "background": {
+        "nationality": "AU",
+        "location": "San Francisco, California, United States",
+        "age_at_founding": 68,
+        "email": "calvin.rice@teleportmassive.com"
+      },
+      "picture": {
+        "large": "https://randomuser.me/api/portraits/men/12.jpg",
+        "medium": "https://randomuser.me/api/portraits/med/men/12.jpg",
+        "thumbnail": "https://randomuser.me/api/portraits/thumb/men/12.jpg",
+        "local_path": "founding_team_photos_2026/rice_calvin.jpg"
+      }
+    }
+  ],
+  "founding_timeline": {
+    "2026-01-18": "Corporate headquarters established in San Francisco",
+    "2026-02-01": "First research facility opened",
+    "2026-03-15": "Initial funding round completed"
+  },
+  "corporate_structure": {
+    "legal_name": "Teleport Massive Inc.",
+    "incorporation_date": "2026-01-18",
+    "jurisdiction": "California, United States",
+    "headquarters": "San Francisco, California",
+    "initial_focus": "Reality traversal technology, quantum systems, reality fracture detection"
+  },
+  "notes": "Team generated using Random User API (https://randomuser.me/) with seed 'teleport_massive_2026' for consistency. This is the founding team that established Teleport Massive as a corporation on January 18, 2026, in San Francisco."
+}

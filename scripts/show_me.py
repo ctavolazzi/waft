@@ -22,7 +22,7 @@ sys.path.insert(0, str(project_root / "src"))
 
 console = Console()
 
-def get_work_efforts(project_path: Path, days_back: int = 30) -> List[Dict[str, Any]]:
+def get_work_efforts(project_path: Path, days_back: int = 30, verbose: bool = False) -> List[Dict[str, Any]]:
     """Get work efforts from recent days (default: last 30 days, or all if days_back=0)."""
     work_efforts = []
     work_efforts_dir = project_path / "_work_efforts"
@@ -38,7 +38,15 @@ def get_work_efforts(project_path: Path, days_back: int = 30) -> List[Dict[str, 
     else:
         threshold_pattern = None  # Show all
     
-    for item in work_efforts_dir.iterdir():
+    # Count total directories first for progress
+    all_items = list(work_efforts_dir.iterdir())
+    total_dirs = sum(1 for item in all_items if item.is_dir() and item.name.startswith("WE-"))
+    
+    if verbose and total_dirs > 10:
+        print(f"    Scanning {total_dirs} work effort directories...")
+    
+    processed = 0
+    for item in all_items:
         if item.is_dir() and item.name.startswith("WE-"):
             # Extract date from work effort ID (format: WE-YYMMDD-xxxx)
             # Check if it's within our date range (or show all if days_back=0)
@@ -69,6 +77,11 @@ def get_work_efforts(project_path: Path, days_back: int = 30) -> List[Dict[str, 
             
             if index_file and index_file.exists():
                 try:
+                    processed += 1
+                    if verbose and total_dirs > 10 and processed % 10 == 0:
+                        print(f"    Processed {processed}/{total_dirs} work efforts...", end='\r')
+                        sys.stdout.flush()
+                    
                     content = index_file.read_text(encoding='utf-8')
                     
                     # Extract status from YAML frontmatter or content
@@ -122,6 +135,9 @@ def get_work_efforts(project_path: Path, days_back: int = 30) -> List[Dict[str, 
                     # Log but continue - don't fail on one bad work effort
                     console.print(f"[dim]⚠️  Could not read work effort {item.name}: {e}[/dim]")
                     continue
+    
+    if verbose and total_dirs > 10:
+        print(f"    Processed {processed}/{total_dirs} work efforts.     ")  # Clear progress line
     
     # Sort by ID (most recent first, since IDs are date-based)
     work_efforts.sort(key=lambda x: x["id"], reverse=True)

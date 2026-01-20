@@ -4,6 +4,71 @@ This log tracks development activities, decisions, and progress for the waft pro
 
 ---
 
+## 2026-01-19 - Poker Visualization Creative Extensions
+
+**Time**: 15:54:00 PST  
+**Status**: ✅ **COMPLETE** - Creative extensions implemented and documented
+
+### Summary
+
+Extended the poker visualization package with creative use cases and working examples. Created comprehensive documentation of creative ideas and implemented 4 working examples demonstrating narrative, educational, historical, and competitive use cases.
+
+### Key Accomplishments
+
+- ✅ **Creative Ideas Document** (`CREATIVE_IDEAS_POKER.md`)
+  - 6 categories of creative extensions documented
+  - Integration suggestions (D&D, Storyteller, Tavern Keeper)
+  - Implementation notes and quick-start ideas
+
+- ✅ **Working Creative Examples** (`generate_poker_story.py`)
+  - Dramatic showdown — narrative poker scene with story
+  - Historical recreation — WSOP 2003 Moneymaker vs Farha
+  - Hand quiz — educational quiz with answers
+  - Tournament final table — competition visualization
+
+- ✅ **Enhanced Features**
+  - Card back support ("back" identifier) for unknown cards
+  - Narrative content integration via `add_content()`
+  - Educational quiz format with questions and answers
+
+### Creative Directions Documented
+
+1. **Storytelling & Narrative** - Poker scenes for stories/D&D campaigns
+2. **Tournament & Competition** - Brackets, final tables, hand histories
+3. **Educational & Training** - Tutorials, quizzes, strategy guides
+4. **Design & Art** - Custom decks, infographics, posters
+5. **Analysis & Research** - Hand ranges, equity, GTO examples
+6. **Interactive & Gamification** - Quizzes, practice scenarios, workbooks
+
+### Integration Opportunities
+
+- D&D Campaign Integration (tavern poker nights)
+- Tavern Keeper Integration (NPC poker games)
+- Storyteller Integration (narrative poker scenes)
+
+### Files Created/Modified
+
+- `src/waft/templates/typst/wrappers/CREATIVE_IDEAS_POKER.md` - Creative ideas documentation
+- `examples/generate_poker_story.py` - Working creative examples
+- Enhanced poker package to support "back" card identifier
+
+### Output Files Generated
+
+- `_temp_pdf_examples/poker_story_showdown.pdf` - Dramatic showdown scene
+- `_temp_pdf_examples/poker_historical.pdf` - Historical hand recreation
+- `_temp_pdf_examples/poker_quiz_1.pdf` - Hand comparison quiz
+- `_temp_pdf_examples/poker_quiz_2.pdf` - Strategy decision quiz
+- `_temp_pdf_examples/poker_tournament.pdf` - Tournament final table
+
+### Next Steps
+
+- Consider D&D tavern integration for poker games
+- Explore Storyteller integration for automatic scene generation
+- Add probability visualization features
+- Create tournament bracket generator
+
+---
+
 ## 2026-01-19 - Another Cycle Complete: Comprehensive Project Analysis
 
 **Time**: 02:32:00 PST  

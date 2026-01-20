@@ -11,9 +11,12 @@ import json
 import logging
 import sys
 import subprocess
+import resource
+import os
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 from datetime import datetime
+from io import StringIO
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
@@ -89,6 +92,142 @@ except ImportError:
     QuestPDFGenerator = None
 
 logger = logging.getLogger(__name__)
+
+
+class AutoWorkLogger:
+    """Dual logger: console + file + devlog integration."""
+    
+    def __init__(self, project_path: Path, verbose: bool = False):
+        self.project_path = project_path
+        self.verbose = verbose
+        self.log_dir = project_path / "_work_efforts" / "auto_work_logs"
+        self.log_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Create log file with timestamp
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        self.log_file = self.log_dir / f"auto_work_{timestamp}.log"
+        
+        # Initialize devlog manager
+        self.devlog_manager = None
+        try:
+            from src.waft.core.devlog import DevlogManager
+            self.devlog_manager = DevlogManager(project_path)
+        except Exception as e:
+            logger.warning(f"DevlogManager unavailable: {e}")
+        
+        # Buffer for summary
+        self.summary_lines = []
+        self.start_time = datetime.now()
+        
+    def log(self, message: str, flush: bool = True):
+        """Log to both console and file."""
+        # Print to console
+        print(message, end="", flush=flush)
+        
+        # Write to file
+        try:
+            with open(self.log_file, "a", encoding="utf-8") as f:
+                f.write(message)
+                if flush:
+                    f.flush()
+        except Exception as e:
+            logger.error(f"Failed to write to log file: {e}")
+        
+        # Collect for summary
+        if message.strip():
+            self.summary_lines.append(message.strip())
+    
+    def write_summary_to_devlog(self, selected_we: Optional[Dict] = None, action: Optional[Dict] = None, success: bool = False):
+        """Write summary entry to devlog."""
+        if not self.devlog_manager:
+            return
+        
+        duration = (datetime.now() - self.start_time).total_seconds()
+        
+        # Build summary content
+        summary_parts = [
+            f"Auto-Work execution completed in {duration:.1f}s",
+            "",
+            "## Process",
+        ]
+        
+        # Add key steps
+        for line in self.summary_lines[-20:]:  # Last 20 lines
+            if any(keyword in line.lower() for keyword in ["scanning", "found", "selected", "action", "executing", "✅", "❌"]):
+                summary_parts.append(f"- {line}")
+        
+        if selected_we:
+            summary_parts.extend([
+                "",
+                "## Selected Work Effort",
+                f"- **ID**: {selected_we.get('id', 'unknown')}",
+                f"- **Title**: {selected_we.get('title', 'Unknown')}",
+                f"- **Status**: {selected_we.get('status', 'unknown')}",
+            ])
+        
+        if action:
+            summary_parts.extend([
+                "",
+                "## Action",
+                f"- **Label**: {action.get('label', 'Unknown')}",
+                f"- **Reason**: {action.get('reason', 'N/A')}",
+            ])
+        
+        summary_parts.extend([
+            "",
+            f"## Result",
+            f"- **Status**: {'Success' if success else 'Failed'}",
+            f"- **Log File**: `{self.log_file.relative_to(self.project_path)}`",
+        ])
+        
+        summary_content = "\n".join(summary_parts)
+        
+        try:
+            self.devlog_manager.write_entry(
+                content=summary_content,
+                source=DevlogManager.SOURCE_SCRIPT,
+                category=DevlogManager.CATEGORY_MAINTENANCE,
+                title=f"Auto-Work: {selected_we.get('title', 'Work Effort Selection') if selected_we else 'Execution'}",
+                metadata={
+                    "work_effort_id": selected_we.get('id') if selected_we else None,
+                    "action": action.get('label') if action else None,
+                    "duration_seconds": duration,
+                    "success": success,
+                    "log_file": str(self.log_file.relative_to(self.project_path)),
+                }
+            )
+        except Exception as e:
+            logger.error(f"Failed to write to devlog: {e}")
+
+
+def get_memory_usage_mb() -> float:
+    """Get current memory usage in MB."""
+    try:
+        # Get RSS (Resident Set Size) in KB, convert to MB
+        usage = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+        # On macOS, ru_maxrss is in bytes; on Linux it's in KB
+        if sys.platform == 'darwin':
+            return usage / 1024 / 1024  # Convert bytes to MB
+        else:
+            return usage / 1024  # Convert KB to MB
+    except Exception:
+        return 0.0
+
+
+def print_progress(message: str, verbose: bool = False, memory: bool = False, logger_instance=None):
+    """Print progress message with optional memory info."""
+    if memory:
+        mem_mb = get_memory_usage_mb()
+        msg = f"  {message} [Memory: {mem_mb:.1f} MB]"
+    else:
+        msg = f"  {message}"
+    
+    if logger_instance:
+        logger_instance.log(msg + "\n", flush=True)
+    else:
+        print(msg)
+        if verbose:
+            sys.stdout.flush()
 
 
 def calculate_work_effort_priority(
@@ -306,7 +445,11 @@ def select_best_work_effort(
     
     # Calculate priority for each work effort
     scored_efforts = []
-    for we in work_efforts:
+    total = len(work_efforts)
+    for idx, we in enumerate(work_efforts, 1):
+        if logger.isEnabledFor(logging.DEBUG):
+            we_id = we.get('id', 'unknown')
+            logger.debug(f"Calculating priority for {we_id} ({idx}/{total})")
         # SECURITY: Validate work effort ID format
         we_id = we.get('id', '')
         if not we_id or not _validate_work_effort_id(we_id):
@@ -887,6 +1030,10 @@ The quest represents both the technical work (work effort execution) and the nar
 
 def main():
     """Main entry point for autonomous work execution."""
+    # Flush immediately so user sees we're starting
+    sys.stdout.flush()
+    sys.stderr.flush()
+    
     parser = argparse.ArgumentParser(description="Autonomous Work Effort Execution")
     parser.add_argument(
         "--path",
@@ -916,15 +1063,18 @@ def main():
     
     project_path = Path(args.path).resolve()
     
-    print("\n🤔 Thinking about work efforts...\n")
+    # Initialize logger (console + file + devlog)
+    auto_logger = AutoWorkLogger(project_path, verbose=args.verbose)
+    auto_logger.log("\n🤔 Thinking about work efforts...\n", flush=True)
     
     # EMPIRICA: Initialize Empirica manager early for use throughout
+    print("🔬 Initializing Empirica...", end="", flush=True)
     empirica_manager = None
     try:
         from src.waft.core.empirica import EmpiricaManager
         empirica_manager = EmpiricaManager(project_path)
         if empirica_manager.is_initialized():
-            print("🔬 Empirica: Active and monitoring\n")
+            auto_logger.log(" ✅ Active\n", flush=True)
             # Log that we're starting autonomous work
             try:
                 empirica_manager.log_finding(
@@ -934,21 +1084,33 @@ def main():
             except Exception:
                 pass  # Graceful degradation
         else:
-            print("⚠️  Empirica: Not initialized (continuing without epistemic tracking)\n")
+            auto_logger.log(" ⚠️  Not initialized\n", flush=True)
     except Exception as e:
+        auto_logger.log(f" ⚠️  Failed: {e}\n", flush=True)
         logger.warning(f"Empirica initialization failed: {e}, continuing without it")
     
     # PANTHEON: Initialize Pantheon entities for decision support
     pantheon_entities = {}
     if PANTHEON_AVAILABLE:
         try:
-            print("⚡ Pantheon: Summoning entities for guidance...\n")
+            auto_logger.log("⚡ Pantheon", end="", flush=True)
             
             # Initialize core entities (required)
+            auto_logger.log(" → Magistrate", end="", flush=True)
             magistrate = Magistrate(project_path=project_path)
+            auto_logger.log(" ✅", end="", flush=True)
+            
+            auto_logger.log(" → Judge", end="", flush=True)
             judge = Judge(project_path=project_path, magistrate=magistrate)
+            auto_logger.log(" ✅", end="", flush=True)
+            
+            auto_logger.log(" → TheReasoner", end="", flush=True)
             reasoner = TheReasoner(project_path=project_path)
+            auto_logger.log(" ✅", end="", flush=True)
+            
+            auto_logger.log(" → GitHubGod", end="", flush=True)
             github_god = GitHubGod(project_path=project_path)
+            auto_logger.log(" ✅\n", flush=True)
             
             pantheon_entities = {
                 'magistrate': magistrate,
@@ -957,117 +1119,114 @@ def main():
                 'github_god': github_god,
             }
             
-            print("  ✅ Magistrate (Precedent & Proof)")
-            print("  ✅ Judge (Judgment & Evaluation)")
-            print("  ✅ TheReasoner (Reasoning Traces)")
-            print("  ✅ GitHubGod (Repository State)")
-            
             # Initialize optional entities (graceful degradation)
             try:
+                auto_logger.log("  → Fae", end="", flush=True)
                 fae = Fae(project_path=project_path)
                 pantheon_entities['fae'] = fae
-                print("  ✅ Fae (Quests & Creativity)")
-            except Exception:
-                pass
+                auto_logger.log(" ✅\n", flush=True)
+            except Exception as e:
+                auto_logger.log(f" ⚠️  ({str(e)[:30]})\n", flush=True)
             
             try:
+                auto_logger.log("  → MissionControl", end="", flush=True)
                 mission_control = MissionControl(project_path=project_path)
                 pantheon_entities['mission_control'] = mission_control
-                print("  ✅ MissionControl (Coordination)")
-            except Exception:
-                pass
+                auto_logger.log(" ✅\n", flush=True)
+            except Exception as e:
+                auto_logger.log(f" ⚠️  ({str(e)[:30]})\n", flush=True)
             
             try:
+                auto_logger.log("  → Librarian", end="", flush=True)
                 librarian = Librarian(project_path=project_path)
                 pantheon_entities['librarian'] = librarian
-                print("  ✅ Librarian (Knowledge & Records)")
-            except Exception:
-                pass
+                auto_logger.log(" ✅\n", flush=True)
+            except Exception as e:
+                auto_logger.log(f" ⚠️  ({str(e)[:30]})\n", flush=True)
             
-            print()  # Blank line after entity list
+            mem_mb = get_memory_usage_mb()
+            auto_logger.log(f"  [Memory: {mem_mb:.1f} MB]\n", flush=True)
             
         except Exception as e:
+            auto_logger.log(f" ⚠️  Failed: {e}\n", flush=True)
             logger.warning(f"Pantheon initialization failed: {e}, continuing without Pantheon")
             pantheon_entities = {}
     else:
-        print("⚠️  Pantheon: Not available (continuing without Pantheon guidance)\n")
+        auto_logger.log("⚠️  Pantheon: Not available\n", flush=True)
     
     # CAMPFIRE: Initialize Campfire for storytelling
+    auto_logger.log("🔥 Campfire", end="", flush=True)
     campfire_available = False
     if CAMPFIRE_AVAILABLE:
         try:
             campfire = TheCampfire(project_path=project_path)
             campfire_available = True
-            print("🔥 Campfire: Ready for storytelling\n")
+            auto_logger.log(" ✅\n", flush=True)
         except Exception as e:
+            auto_logger.log(f" ⚠️  ({e})\n", flush=True)
             logger.debug(f"Campfire initialization failed: {e}, continuing without storytelling")
     else:
-        print("⚠️  Campfire: Not available (continuing without storytelling)\n")
+        auto_logger.log(" ⚠️  Not available\n", flush=True)
     
     # D&D CAMPAIGN: Initialize D&D campaign system
+    auto_logger.log("⚔️  D&D Campaign", end="", flush=True)
     dnd_campaign = None
-    scenario_orchestrator = None
-    quest_pdf_generator = None
     if DND_CAMPAIGN_AVAILABLE:
         try:
-            print("⚔️  D&D Campaign: Initializing realm and quest system...\n")
-            
-            # Initialize scenario realm
             scenario_realm = ScenarioRealm(project_path=project_path)
             scenario_orchestrator = ScenarioOrchestrator(scenario_realm)
             quest_pdf_generator = QuestPDFGenerator(project_path=project_path)
-            
-            print("  ✅ Scenario Realm initialized")
-            print("  ✅ Scenario Orchestrator ready")
-            if quest_pdf_generator.typst_available:
-                print("  ✅ Quest PDF Generator ready (Typst available)\n")
-            else:
-                print("  ⚠️  Quest PDF Generator: Typst not available (PDFs will use fallback)\n")
-            
             dnd_campaign = {
                 'realm': scenario_realm,
                 'orchestrator': scenario_orchestrator,
                 'quest_generator': quest_pdf_generator,
             }
+            status = "Typst ✅" if quest_pdf_generator.typst_available else "Typst ⚠️"
+            auto_logger.log(f" ✅ ({status})\n", flush=True)
         except Exception as e:
+            auto_logger.log(f" ⚠️  ({e})\n", flush=True)
             logger.warning(f"D&D Campaign initialization failed: {e}, continuing without campaign")
             dnd_campaign = None
     else:
-        print("⚠️  D&D Campaign: Not available (continuing without campaign)\n")
+        auto_logger.log(" ⚠️  Not available\n", flush=True)
     
     # Get all work efforts
-    work_efforts = get_work_efforts(project_path, days_back=0)  # Get all
+    auto_logger.log("📂 Scanning work efforts...", end="", flush=True)
+    work_efforts = get_work_efforts(project_path, days_back=0, verbose=args.verbose)  # Get all
+    auto_logger.log(f" Found {len(work_efforts)} work effort(s)\n", flush=True)
     
     if not work_efforts:
-        print("❌ No work efforts found.")
+        auto_logger.log("❌ No work efforts found.\n", flush=True)
+        auto_logger.write_summary_to_devlog(success=False)
         return 1
-    
-    print(f"📋 Found {len(work_efforts)} work effort(s)")
     
     # Filter to actionable work efforts (not completed)
+    auto_logger.log("🔍 Filtering actionable...", end="", flush=True)
     actionable = [we for we in work_efforts if we.get('status', 'open').lower() != 'completed']
+    auto_logger.log(f" {len(actionable)} actionable\n", flush=True)
     
     if not actionable:
-        print("❌ No actionable work efforts found (all completed).")
+        auto_logger.log("❌ No actionable work efforts found (all completed).\n", flush=True)
+        auto_logger.write_summary_to_devlog(success=False)
         return 1
     
-    print(f"✅ {len(actionable)} actionable work effort(s)\n")
-    
     # Select best work effort (with Empirica and Pantheon support)
-    print("🎯 Selecting best work effort to work on...\n")
+    auto_logger.log(f"🎯 Calculating priorities for {len(actionable)} work effort(s)...", end="", flush=True)
     selected = select_best_work_effort(actionable, project_path, empirica_manager, pantheon_entities)
+    auto_logger.log(" Done\n", flush=True)
     
     if not selected:
-        print("❌ Could not select a work effort.")
+        auto_logger.log("❌ Could not select a work effort.\n", flush=True)
+        auto_logger.write_summary_to_devlog(success=False)
         return 1
     
     we_id = selected.get('id', 'unknown')
     we_title = selected.get('title', 'Unknown')
     we_status = selected.get('status', 'unknown')
     
-    print(f"✅ Selected: {we_id}")
-    print(f"   Title: {we_title}")
-    print(f"   Status: {we_status}\n")
+    print(f"✅ Selected: {we_id}", flush=True)
+    print(f"   Title: {we_title}", flush=True)
+    print(f"   Status: {we_status}\n", flush=True)
     
     # EMPIRICA: Log selection decision
     if empirica_manager and empirica_manager.is_initialized():
@@ -1080,28 +1239,31 @@ def main():
             pass
     
     # Get best action for this work effort
-    print("🔍 Analyzing available actions...\n")
+    auto_logger.log("🔍 Analyzing actions...", end="", flush=True)
     action = get_work_effort_action(selected, project_path)
+    auto_logger.log(" Done\n", flush=True)
     
     if not action:
-        print("❌ No actions available for this work effort.")
+        auto_logger.log("❌ No actions available for this work effort.\n", flush=True)
+        auto_logger.write_summary_to_devlog(selected_we=selected, success=False)
         return 1
     
     action_label = action.get('label', 'Unknown')
     action_reason = action.get('reason', '')
     action_command = action.get('command', '')
     
-    print(f"✅ Best action: {action_label}")
-    print(f"   Reason: {action_reason}")
-    print(f"   Command: {action_command}\n")
+    auto_logger.log(f"✅ Best action: {action_label}\n", flush=True)
+    auto_logger.log(f"   Reason: {action_reason}\n", flush=True)
+    auto_logger.log(f"   Command: {action_command}\n\n", flush=True)
     
     if args.dry_run:
-        print("🔍 DRY RUN - Would execute:")
-        print(f"   {action_command}\n")
+        auto_logger.log("🔍 DRY RUN - Would execute:\n", flush=True)
+        auto_logger.log(f"   {action_command}\n\n", flush=True)
+        auto_logger.write_summary_to_devlog(selected_we=selected, action=action, success=True)
         return 0
     
     # Prepare the action (with error handling)
-    print("🚀 Preparing action...\n")
+    auto_logger.log("🚀 Executing action...\n", flush=True)
     try:
         result = execute_work_effort_action(
             selected, action, project_path,
@@ -1111,7 +1273,8 @@ def main():
         )
     except Exception as e:
         logger.error(f"Error executing action: {e}")
-        print(f"❌ Execution error: {e}\n")
+        auto_logger.log(f"❌ Execution error: {e}\n", flush=True)
+        auto_logger.write_summary_to_devlog(selected_we=selected, action=action, success=False)
         return 1
     
     if result.get('success'):
@@ -1131,29 +1294,35 @@ def main():
             "execution_instruction": result.get('command'),
         }
         
-        print("✅ Work effort and action selected!\n")
-        print("=" * 60)
-        print("AUTO-WORK RESULT (JSON):")
-        print("=" * 60)
-        print(json.dumps(output, indent=2))
-        print("=" * 60)
-        print("\n🚀 EXECUTING NOW...\n")
-        print("=" * 60)
-        print("EXECUTION INSTRUCTION:")
-        print("=" * 60)
-        print(result.get('command', ''))
-        print("=" * 60)
-        print("\n💡 Cursor AI: Execute the command above now.\n")
+        auto_logger.log("✅ Work effort and action selected!\n", flush=True)
+        auto_logger.log("=" * 60 + "\n", flush=True)
+        auto_logger.log("AUTO-WORK RESULT (JSON):\n", flush=True)
+        auto_logger.log("=" * 60 + "\n", flush=True)
+        auto_logger.log(json.dumps(output, indent=2) + "\n", flush=True)
+        auto_logger.log("=" * 60 + "\n", flush=True)
+        auto_logger.log("\n🚀 EXECUTING NOW...\n", flush=True)
+        auto_logger.log("=" * 60 + "\n", flush=True)
+        auto_logger.log("EXECUTION INSTRUCTION:\n", flush=True)
+        auto_logger.log("=" * 60 + "\n", flush=True)
+        auto_logger.log(result.get('command', '') + "\n", flush=True)
+        auto_logger.log("=" * 60 + "\n", flush=True)
+        auto_logger.log("\n💡 Cursor AI: Execute the command above now.\n", flush=True)
+        
+        # Write summary to devlog
+        auto_logger.write_summary_to_devlog(selected_we=selected, action=action, success=True)
+        
         return 0
     else:
         error = result.get('error', 'Unknown error')
         gate_result = result.get('gate_result')
         if gate_result:
-            print(f"⚠️  Empirica Gate: {gate_result}")
-            print(f"   {error}\n")
-            print("💡 This action requires human approval or investigation before execution.\n")
+            auto_logger.log(f"⚠️  Empirica Gate: {gate_result}\n", flush=True)
+            auto_logger.log(f"   {error}\n\n", flush=True)
+            auto_logger.log("💡 This action requires human approval or investigation before execution.\n", flush=True)
         else:
-            print(f"❌ Failed: {error}\n")
+            auto_logger.log(f"❌ Failed: {error}\n", flush=True)
+        
+        auto_logger.write_summary_to_devlog(selected_we=selected, action=action, success=False)
         return 1
 
 

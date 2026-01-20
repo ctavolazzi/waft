@@ -1,0 +1,232 @@
+{
+  "team_name": "Scint Traversal Discovery Team",
+  "discovery_year": 2111,
+  "discovery": "Scint Traversal - Navigating Reality Fractures",
+  "years_since_founding": 86,
+  "team_members": [
+    {
+      "id": "TM-RT-2111-001",
+      "name": {
+        "title": "Dr.",
+        "first": "Dwayne",
+        "last": "Fernandez",
+        "full": "Dr. Dwayne Fernandez"
+      },
+      "role": "Lead Quantum Entanglement Researcher",
+      "specialization": "Quantum state coherence and entanglement protocols",
+      "contribution": "Developed the foundational quantum circuit models for detecting reality fractures",
+      "background": {
+        "nationality": "British",
+        "location": "Newcastle upon Tyne, United Kingdom",
+        "age_at_discovery": 66,
+        "email": "dwayne.fernandez@teleportmassive.research"
+      },
+      "picture": {
+        "large": "https://randomuser.me/api/portraits/men/36.jpg",
+        "medium": "https://randomuser.me/api/portraits/med/men/36.jpg",
+        "thumbnail": "https://randomuser.me/api/portraits/thumb/men/36.jpg"
+      }
+    },
+    {
+      "id": "TM-RT-2111-002",
+      "name": {
+        "title": "Dr.",
+        "first": "Jacqueline",
+        "last": "Coleman",
+        "full": "Dr. Jacqueline Coleman"
+      },
+      "role": "Reality Fracture Detection Specialist",
+      "specialization": "Scint detection algorithms and pattern recognition",
+      "contribution": "Created the RegexScintDetector prototype and classification system",
+      "background": {
+        "nationality": "American",
+        "location": "Yonkers, Idaho, United States",
+        "age_at_discovery": 28,
+        "email": "jacqueline.coleman@teleportmassive.research"
+      },
+      "picture": {
+        "large": "https://randomuser.me/api/portraits/women/18.jpg",
+        "medium": "https://randomuser.me/api/portraits/med/women/18.jpg",
+        "thumbnail": "https://randomuser.me/api/portraits/thumb/women/18.jpg"
+      }
+    },
+    {
+      "id": "TM-RT-2111-003",
+      "name": {
+        "title": "Dr.",
+        "first": "Delphine",
+        "last": "Roy",
+        "full": "Dr. Delphine Roy"
+      },
+      "role": "Stabilization Loop Architect",
+      "specialization": "Reality anchoring and probability cloud collapse",
+      "contribution": "Designed the StabilizationLoop mechanism for closing Scints",
+      "background": {
+        "nationality": "Canadian",
+        "location": "Hampton, Prince Edward Island, Canada",
+        "age_at_discovery": 52,
+        "email": "delphine.roy@teleportmassive.research"
+      },
+      "picture": {
+        "large": "https://randomuser.me/api/portraits/women/64.jpg",
+        "medium": "https://randomuser.me/api/portraits/med/women/64.jpg",
+        "thumbnail": "https://randomuser.me/api/portraits/thumb/women/64.jpg"
+      }
+    },
+    {
+      "id": "TM-RT-2111-004",
+      "name": {
+        "title": "Dr.",
+        "first": "Myrtle",
+        "last": "Gonzales",
+        "full": "Dr. Myrtle Gonzales"
+      },
+      "role": "Temporal Mechanics Researcher",
+      "specialization": "Time loop analysis and eternal return mechanisms",
+      "contribution": "Connected Scint Traversal to LHC moment and eternal return discovery",
+      "background": {
+        "nationality": "Australian",
+        "location": "Tamworth, New South Wales, Australia",
+        "age_at_discovery": 62,
+        "email": "myrtle.gonzales@teleportmassive.research"
+      },
+      "picture": {
+        "large": "https://randomuser.me/api/portraits/women/23.jpg",
+        "medium": "https://randomuser.me/api/portraits/med/women/23.jpg",
+        "thumbnail": "https://randomuser.me/api/portraits/thumb/women/23.jpg"
+      }
+    },
+    {
+      "id": "TM-RT-2111-005",
+      "name": {
+        "title": "Dr.",
+        "first": "Serenity",
+        "last": "Ruiz",
+        "full": "Dr. Serenity Ruiz"
+      },
+      "role": "Safety Protocol Specialist",
+      "specialization": "SAFETY_VOID detection and harm prevention",
+      "contribution": "Developed safety procedures and ISO 7010 symbol integration for Scint types",
+      "background": {
+        "nationality": "Australian",
+        "location": "Melbourne, New South Wales, Australia",
+        "age_at_discovery": 72,
+        "email": "serenity.ruiz@teleportmassive.research"
+      },
+      "picture": {
+        "large": "https://randomuser.me/api/portraits/women/64.jpg",
+        "medium": "https://randomuser.me/api/portraits/med/women/64.jpg",
+        "thumbnail": "https://randomuser.me/api/portraits/thumb/women/64.jpg"
+      }
+    },
+    {
+      "id": "TM-RT-2111-006",
+      "name": {
+        "title": "Dr.",
+        "first": "Victoria",
+        "last": "Barnaby",
+        "full": "Dr. Victoria Barnaby"
+      },
+      "role": "Ancestral Experience Researcher",
+      "specialization": "Weight of choices and temporal ancestral connections",
+      "contribution": "Researched how Scint stabilization choices affect all ancestors forever",
+      "background": {
+        "nationality": "Canadian",
+        "location": "Shelbourne, Ontario, Canada",
+        "age_at_discovery": 39,
+        "email": "victoria.barnaby@teleportmassive.research"
+      },
+      "picture": {
+        "large": "https://randomuser.me/api/portraits/women/61.jpg",
+        "medium": "https://randomuser.me/api/portraits/med/women/61.jpg",
+        "thumbnail": "https://randomuser.me/api/portraits/thumb/women/61.jpg"
+      }
+    },
+    {
+      "id": "TM-RT-2111-007",
+      "name": {
+        "title": "Dr.",
+        "first": "Hudson",
+        "last": "Miller",
+        "full": "Dr. Hudson Miller"
+      },
+      "role": "Quantum Circuit Visualization Specialist",
+      "specialization": "Quill package integration and quantum state diagrams",
+      "contribution": "Created quantum circuit visualizations for Scint states using Quill",
+      "background": {
+        "nationality": "Canadian",
+        "location": "Westport, New Brunswick, Canada",
+        "age_at_discovery": 60,
+        "email": "hudson.miller@teleportmassive.research"
+      },
+      "picture": {
+        "large": "https://randomuser.me/api/portraits/men/74.jpg",
+        "medium": "https://randomuser.me/api/portraits/med/men/74.jpg",
+        "thumbnail": "https://randomuser.me/api/portraits/thumb/men/74.jpg"
+      }
+    },
+    {
+      "id": "TM-RT-2111-008",
+      "name": {
+        "title": "Dr.",
+        "first": "Tyrone",
+        "last": "Robertson",
+        "full": "Dr. Tyrone Robertson"
+      },
+      "role": "Research Documentation Lead",
+      "specialization": "Technical writing and knowledge preservation",
+      "contribution": "Authored the original Scint Traversal guide and research documentation",
+      "background": {
+        "nationality": "American",
+        "location": "Forney, Delaware, United States",
+        "age_at_discovery": 42,
+        "email": "tyrone.robertson@teleportmassive.research"
+      },
+      "picture": {
+        "large": "https://randomuser.me/api/portraits/men/25.jpg",
+        "medium": "https://randomuser.me/api/portraits/med/men/25.jpg",
+        "thumbnail": "https://randomuser.me/api/portraits/thumb/men/25.jpg"
+      }
+    }
+  ],
+  "discovery_timeline": {
+    "2111-03-15": "Initial Scint detection during quantum entanglement experiment",
+    "2111-06-22": "Classification system developed (SYNTAX_TEAR, LOGIC_FRACTURE, SAFETY_VOID, HALLUCINATION)",
+    "2111-09-08": "StabilizationLoop mechanism successfully tested",
+    "2111-11-14": "Connection to LHC moment and eternal return discovered",
+    "2111-12-31": "Official Guide to Scint Traversal completed and published"
+  },
+  "research_papers": [
+    {
+      "id": "TM-RP-2111-001",
+      "title": "Reality Fractures in Quantum Entangled Systems: Initial Detection",
+      "authors": ["Dr. Dwayne Fernandez", "Dr. Jacqueline Coleman"],
+      "date": "2111-04-20"
+    },
+    {
+      "id": "TM-RP-2111-002",
+      "title": "Scint Classification and Detection Algorithms",
+      "authors": ["Dr. Jacqueline Coleman", "Dr. Delphine Roy"],
+      "date": "2111-07-15"
+    },
+    {
+      "id": "TM-RP-2111-003",
+      "title": "Stabilization Mechanisms for Reality Fractures",
+      "authors": ["Dr. Delphine Roy", "Dr. Serenity Ruiz"],
+      "date": "2111-10-01"
+    },
+    {
+      "id": "TM-RP-2111-004",
+      "title": "Scint Traversal and the Eternal Return: Temporal Connections",
+      "authors": ["Dr. Myrtle Gonzales", "Dr. Victoria Barnaby"],
+      "date": "2111-12-05"
+    },
+    {
+      "id": "TM-RP-2111-005",
+      "title": "Quantum Circuit Visualization of Scint States",
+      "authors": ["Dr. Hudson Miller", "Dr. Dwayne Fernandez"],
+      "date": "2111-11-20"
+    }
+  ],
+  "notes": "Team generated using Random User API (https://randomuser.me/) with seed 'teleport_massive_2111' for consistency. This team discovered Scint Traversal 86 years after Teleport Massive's founding in 2025."
+}
