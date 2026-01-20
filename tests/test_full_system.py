@@ -15,22 +15,23 @@ from pathlib import Path
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src" / "waft"))
 
-from foundation import Score, Evaluation, Step, Session, Guide
-from patterns import (
-    StrategyGuide, StrictStrategy, LenientStrategy,
-    ObservableGuide, QualityLogger, ThresholdAlerter,
-    GuideFactory, GuideType,
-    ValidationDecorator, CachingDecorator, TimingDecorator
-)
+from advanced import AdaptiveGuide, EnsembleGuide, QualityAnalyzer, SessionRecorder, SmartGuide
 from composite import LeafGuide, VotingGuide
-from advanced import (
-    AdaptiveGuide, QualityAnalyzer, SmartGuide,
-    SessionRecorder, EnsembleGuide
+from foundation import Guide
+from patterns import (
+    CachingDecorator,
+    GuideFactory,
+    GuideType,
+    ObservableGuide,
+    QualityLogger,
+    ThresholdAlerter,
+    TimingDecorator,
+    ValidationDecorator,
 )
 
-print("="*80)
+print("=" * 80)
 print("FULL SYSTEM INTEGRATION TEST")
-print("="*80)
+print("=" * 80)
 
 # ============================================================================
 # SCENARIO 1: Complete stack integration
@@ -102,8 +103,10 @@ for i, problem in enumerate(test_problems, 1):
     print(f"quality={session5.final_evaluation.overall.value:.3f}")
 
     # Record best session
-    best = max([session1, session2, session3, session4, session5],
-               key=lambda s: s.final_evaluation.overall.value)
+    best = max(
+        [session1, session2, session3, session4, session5],
+        key=lambda s: s.final_evaluation.overall.value,
+    )
     recorder.record(best)
 
 print("\n  ✅ All guide types handled all problems")
@@ -118,8 +121,8 @@ print(f"  Total sessions recorded: {analysis['total']}")
 print(f"  Average quality: {analysis['avg_quality']:.3f}")
 print(f"  Average efficiency: {analysis['avg_efficiency']:.3f}")
 print(f"  Average improvement: {analysis['avg_improvement_rate']:.3f}")
-print(f"  Grade distribution:")
-for grade, count in analysis['grade_distribution'].items():
+print("  Grade distribution:")
+for grade, count in analysis["grade_distribution"].items():
     print(f"    {grade}: {count}")
 
 print("\n  ✅ Session analysis complete")
@@ -137,9 +140,11 @@ stats = adaptive.get_stats()
 print("\n  Strategy performance after training:")
 for name, stat in stats.items():
     if stat.total_uses > 0:
-        print(f"    {name:12s}: uses={stat.total_uses:2d}, "
-              f"success={stat.success_rate:.2f}, "
-              f"quality={stat.avg_quality:.3f}")
+        print(
+            f"    {name:12s}: uses={stat.total_uses:2d}, "
+            f"success={stat.success_rate:.2f}, "
+            f"quality={stat.avg_quality:.3f}"
+        )
 
 # Check that adaptive is learning (some strategy should dominate)
 most_used = max(stats.values(), key=lambda s: s.total_uses)
@@ -190,9 +195,9 @@ print("  ✅ Factory + Composite + Decorator working together")
 # ============================================================================
 # FINAL SUMMARY
 # ============================================================================
-print("\n" + "="*80)
+print("\n" + "=" * 80)
 print("FULL SYSTEM TEST COMPLETE")
-print("="*80)
+print("=" * 80)
 
 print("\n✅ Layer 1: Foundation (Score → Evaluation → Step → Session → Guide)")
 print("✅ Layer 2: Patterns (Strategy, Chain, Observer, Decorator, Factory, Command, Builder)")
@@ -206,9 +211,9 @@ print("✅ Advanced features build on patterns")
 print("✅ Observable + Analyzer provide deep insights")
 print("✅ Adaptive learning works across sessions")
 
-print("\n" + "="*80)
+print("\n" + "=" * 80)
 print("🎯 BULLETPROOF SYSTEM - PROVEN AT EVERY LEVEL")
-print("="*80)
+print("=" * 80)
 
 print("\nArchitecture Summary:")
 print("  Foundation:  5 levels, immutable, pure functions")

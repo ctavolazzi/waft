@@ -5,15 +5,14 @@ Resource Management
 Manages temporary files and cleanup.
 """
 
-import tempfile
 import atexit
 import logging
+import tempfile
 from pathlib import Path
-from typing import List
 
 logger = logging.getLogger(__name__)
 
-_temp_files: List[Path] = []
+_temp_files: list[Path] = []
 
 
 def cleanup_temp_files():
@@ -23,6 +22,7 @@ def cleanup_temp_files():
             if temp_file.exists():
                 if temp_file.is_dir():
                     import shutil
+
                     shutil.rmtree(temp_file)
                 else:
                     temp_file.unlink()
@@ -34,7 +34,7 @@ def cleanup_temp_files():
 atexit.register(cleanup_temp_files)
 
 
-def create_temp_dir(prefix: str = 'pdf_gen_') -> Path:
+def create_temp_dir(prefix: str = "pdf_gen_") -> Path:
     """
     Create a temporary directory that will be cleaned up on exit.
 
@@ -49,7 +49,7 @@ def create_temp_dir(prefix: str = 'pdf_gen_') -> Path:
     return temp_dir
 
 
-def create_temp_file(prefix: str = 'pdf_gen_', suffix: str = '.tmp') -> Path:
+def create_temp_file(prefix: str = "pdf_gen_", suffix: str = ".tmp") -> Path:
     """
     Create a temporary file that will be cleaned up on exit.
 

@@ -20,26 +20,26 @@ Usage:
     python api/guide_api.py
 """
 
-from fastapi import FastAPI, HTTPException, BackgroundTasks
-from fastapi.responses import StreamingResponse, JSONResponse
-from pydantic import BaseModel, Field
-from typing import Optional, List, Dict, Any
-from pathlib import Path
-import uvicorn
-import asyncio
-import json
 import os
-from datetime import datetime
 
 # Add src to path
 import sys
+from datetime import datetime
+from pathlib import Path
+from typing import Any
+
+import uvicorn
+from fastapi import BackgroundTasks, FastAPI, HTTPException
+from pydantic import BaseModel, Field
+
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 try:
-    from waft.pantheon import TheGuide, Protocol, EvaluationScores
+    from waft.pantheon import EvaluationScores, Protocol, TheGuide
 except ImportError:
     # Fallback to direct import
     import importlib.util
+
     guide_path = Path(__file__).parent.parent / "src" / "waft" / "pantheon" / "guide.py"
     spec = importlib.util.spec_from_file_location("guide", guide_path)
     guide_module = importlib.util.module_from_spec(spec)
@@ -57,19 +57,21 @@ app = FastAPI(
     description="Meta-Cognitive Guidance System REST API",
     version="0.1.0",
     docs_url="/docs",
-    redoc_url="/redoc"
+    redoc_url="/redoc",
 )
 
 # Global guide instance (will be configured on startup)
-guide_instance: Optional[TheGuide] = None
-active_sessions: Dict[str, Dict[str, Any]] = {}
+guide_instance: TheGuide | None = None
+active_sessions: dict[str, dict[str, Any]] = {}
 
 # ============================================================================
 # Request/Response Models
 # ============================================================================
 
+
 class GuidanceRequest(BaseModel):
     """Request to start a new guidance session."""
+
     problem_statement: str = Field(..., description="The problem to solve")
     max_iterations: int = Field(10, ge=1, le=50, description="Maximum iterations")
     quality_threshold: float = Field(0.8, ge=0.0, le=1.0, description="Quality threshold")
@@ -78,8 +80,10 @@ class GuidanceRequest(BaseModel):
     enable_self_rewarding: bool = Field(False, description="Enable self-rewarding")
     enable_self_correction: bool = Field(False, description="Enable self-correction")
 
+
 class GuidanceResponse(BaseModel):
     """Response from a guidance session."""
+
     session_id: str
     final_answer: str
     quality_score: float
@@ -87,16 +91,20 @@ class GuidanceResponse(BaseModel):
     created: str
     completed: str
 
+
 class SessionStatus(BaseModel):
     """Current status of a guidance session."""
+
     session_id: str
     status: str  # "pending", "running", "completed", "failed"
-    current_iteration: Optional[int] = None
-    quality_score: Optional[float] = None
+    current_iteration: int | None = None
+    quality_score: float | None = None
     message: str = ""
+
 
 class FVCUScores(BaseModel):
     """FVCU+Faithfulness scores."""
+
     factuality: float
     validity: float
     coherence: float
@@ -104,18 +112,22 @@ class FVCUScores(BaseModel):
     faithfulness: float
     overall: float
 
+
 class SessionListItem(BaseModel):
     """Summary of a guidance session."""
+
     session_id: str
     problem_summary: str
     quality_score: float
     iteration_count: int
     created: str
-    completed: Optional[str] = None
+    completed: str | None = None
+
 
 # ============================================================================
 # Mock LLM for Demo
 # ============================================================================
+
 
 class DemoLLM:
     """Demo LLM that generates realistic responses."""
@@ -173,9 +185,11 @@ This solution addresses the core requirements while maintaining flexibility for 
 
         return f"Response to prompt (call #{self.call_count})"
 
+
 # ============================================================================
 # Startup/Shutdown
 # ============================================================================
+
 
 @app.on_event("startup")
 async def startup_event():
@@ -192,6 +206,7 @@ async def startup_event():
         # Use real LLMs
         try:
             from openhands.sdk import LLM
+
             client_llm = LLM(model=model, api_key=api_key)
             guide_llm_config = {"model": model, "api_key": api_key}
             print(f"✅ Using real LLMs: {model}")
@@ -207,19 +222,19 @@ async def startup_event():
         print("ℹ️  No API key found, using demo LLM")
 
     guide_instance = TheGuide(
-        project_path=project_path,
-        client_llm=client_llm,
-        guide_llm_config=guide_llm_config
+        project_path=project_path, client_llm=client_llm, guide_llm_config=guide_llm_config
     )
 
-    print(f"🚀 TheGuide API started!")
+    print("🚀 TheGuide API started!")
     print(f"   Project: {project_path}")
     print(f"   Storage: {guide_instance.guide_path}")
-    print(f"   Docs: http://localhost:8000/docs")
+    print("   Docs: http://localhost:8000/docs")
+
 
 # ============================================================================
 # API Endpoints
 # ============================================================================
+
 
 @app.get("/")
 async def root():
@@ -235,15 +250,13 @@ async def root():
             "list_sessions": "GET /sessions",
             "explain_session": "GET /sessions/{session_id}/explain",
             "get_scores": "GET /sessions/{session_id}/scores",
-            "analytics": "GET /analytics"
-        }
+            "analytics": "GET /analytics",
+        },
     }
 
+
 @app.post("/sessions", response_model=GuidanceResponse)
-async def create_session(
-    request: GuidanceRequest,
-    background_tasks: BackgroundTasks
-):
+async def create_session(request: GuidanceRequest, background_tasks: BackgroundTasks):
     """
     Create a new guidance session.
 
@@ -260,7 +273,7 @@ async def create_session(
     active_sessions[session_id] = {
         "status": "pending",
         "request": request.model_dump(),
-        "created": datetime.now().isoformat()
+        "created": datetime.now().isoformat(),
     }
 
     # Run in background
@@ -274,7 +287,7 @@ async def create_session(
                 client_llm=guide_instance.client_llm,
                 guide_llm_config=guide_instance.guide_llm_config,
                 enable_self_rewarding=request.enable_self_rewarding,
-                enable_self_correction=request.enable_self_correction
+                enable_self_correction=request.enable_self_correction,
             )
 
             # Run guidance loop
@@ -283,7 +296,7 @@ async def create_session(
                 max_iterations=request.max_iterations,
                 quality_threshold=request.quality_threshold,
                 use_partial_context=request.use_partial_context,
-                test_time_scaling=request.test_time_scaling
+                test_time_scaling=request.test_time_scaling,
             )
 
             active_sessions[session_id]["status"] = "completed"
@@ -302,8 +315,9 @@ async def create_session(
         quality_score=0.0,
         iteration_count=0,
         created=active_sessions[session_id]["created"],
-        completed=""
+        completed="",
     )
+
 
 @app.get("/sessions/{session_id}/status", response_model=SessionStatus)
 async def get_session_status(session_id: str):
@@ -315,7 +329,7 @@ async def get_session_status(session_id: str):
             status=session["status"],
             current_iteration=None,
             quality_score=None,
-            message=f"Session is {session['status']}"
+            message=f"Session is {session['status']}",
         )
 
     # Check if completed and in storage
@@ -326,10 +340,11 @@ async def get_session_status(session_id: str):
             status="completed",
             current_iteration=protocol.iteration_count,
             quality_score=protocol.quality_score,
-            message="Session completed"
+            message="Session completed",
         )
 
     raise HTTPException(status_code=404, detail=f"Session {session_id} not found")
+
 
 @app.get("/sessions/{session_id}")
 async def get_session(session_id: str):
@@ -341,7 +356,8 @@ async def get_session(session_id: str):
 
     return protocol.model_dump()
 
-@app.get("/sessions", response_model=List[SessionListItem])
+
+@app.get("/sessions", response_model=list[SessionListItem])
 async def list_sessions(limit: int = 10):
     """List recent guidance sessions."""
     recent = guide_instance.get_recent_sessions(limit=limit)
@@ -353,10 +369,11 @@ async def list_sessions(limit: int = 10):
             quality_score=s.get("quality_score", 0.0),
             iteration_count=s.get("iterations", 0),
             created=s.get("created", ""),
-            completed=s.get("completed")
+            completed=s.get("completed"),
         )
         for s in recent
     ]
+
 
 @app.get("/sessions/{session_id}/explain")
 async def explain_session(session_id: str):
@@ -368,7 +385,8 @@ async def explain_session(session_id: str):
 
     return {"session_id": session_id, "explanation": explanation}
 
-@app.get("/sessions/{session_id}/scores", response_model=List[FVCUScores])
+
+@app.get("/sessions/{session_id}/scores", response_model=list[FVCUScores])
 async def get_session_scores(session_id: str):
     """Get FVCU+Faithfulness scores for all iterations."""
     protocol = guide_instance.get_protocol(session_id)
@@ -376,10 +394,8 @@ async def get_session_scores(session_id: str):
     if not protocol:
         raise HTTPException(status_code=404, detail=f"Session {session_id} not found")
 
-    return [
-        FVCUScores(**eval_data["scores"])
-        for eval_data in protocol.evaluations
-    ]
+    return [FVCUScores(**eval_data["scores"]) for eval_data in protocol.evaluations]
+
 
 @app.get("/analytics")
 async def get_analytics():
@@ -399,8 +415,9 @@ async def get_analytics():
         "average_quality_score": avg_quality,
         "average_iterations": avg_iterations,
         "last_updated": summary["last_updated"],
-        "recent_sessions": len(recent)
+        "recent_sessions": len(recent),
     }
+
 
 @app.delete("/sessions/{session_id}")
 async def delete_session(session_id: str):
@@ -423,15 +440,10 @@ async def delete_session(session_id: str):
 
     return {"status": "deleted", "session_id": session_id}
 
+
 # ============================================================================
 # Run Server
 # ============================================================================
 
 if __name__ == "__main__":
-    uvicorn.run(
-        "guide_api:app",
-        host="0.0.0.0",
-        port=8000,
-        reload=True,
-        log_level="info"
-    )
+    uvicorn.run("guide_api:app", host="0.0.0.0", port=8000, reload=True, log_level="info")

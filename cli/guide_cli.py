@@ -22,22 +22,21 @@ Usage:
     python cli/guide_cli.py --iterations 5 --threshold 0.9
 """
 
+import argparse
 import os
 import sys
-from pathlib import Path
-import argparse
 from datetime import datetime
-from typing import Optional, List
-import json
+from pathlib import Path
 
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 try:
-    from waft.pantheon import TheGuide, Protocol, EvaluationScores
+    from waft.pantheon import EvaluationScores, Protocol, TheGuide
 except ImportError:
     # Fallback to direct import
     import importlib.util
+
     guide_path = Path(__file__).parent.parent / "src" / "waft" / "pantheon" / "guide.py"
     spec = importlib.util.spec_from_file_location("guide", guide_path)
     guide_module = importlib.util.module_from_spec(spec)
@@ -50,21 +49,25 @@ except ImportError:
 # Colors and Styling
 # ============================================================================
 
+
 class Colors:
     """ANSI color codes."""
-    HEADER = '\033[95m'
-    BLUE = '\033[94m'
-    CYAN = '\033[96m'
-    GREEN = '\033[92m'
-    YELLOW = '\033[93m'
-    RED = '\033[91m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-    END = '\033[0m'
+
+    HEADER = "\033[95m"
+    BLUE = "\033[94m"
+    CYAN = "\033[96m"
+    GREEN = "\033[92m"
+    YELLOW = "\033[93m"
+    RED = "\033[91m"
+    BOLD = "\033[1m"
+    UNDERLINE = "\033[4m"
+    END = "\033[0m"
+
 
 def colorize(text: str, color: str) -> str:
     """Add color to text."""
     return f"{color}{text}{Colors.END}"
+
 
 def print_header(text: str):
     """Print a styled header."""
@@ -72,27 +75,33 @@ def print_header(text: str):
     print(colorize(f"  {text}", Colors.BOLD + Colors.CYAN))
     print(colorize("=" * 80, Colors.CYAN))
 
+
 def print_section(text: str):
     """Print a styled section."""
     print(f"\n{colorize('─' * 80, Colors.BLUE)}")
     print(colorize(f"  {text}", Colors.BOLD))
-    print(colorize('─' * 80, Colors.BLUE))
+    print(colorize("─" * 80, Colors.BLUE))
+
 
 def print_success(text: str):
     """Print success message."""
     print(colorize(f"✅ {text}", Colors.GREEN))
 
+
 def print_error(text: str):
     """Print error message."""
     print(colorize(f"❌ {text}", Colors.RED))
+
 
 def print_info(text: str):
     """Print info message."""
     print(colorize(f"ℹ️  {text}", Colors.CYAN))
 
+
 def print_warning(text: str):
     """Print warning message."""
     print(colorize(f"⚠️  {text}", Colors.YELLOW))
+
 
 # ============================================================================
 # ASCII Art
@@ -118,6 +127,7 @@ LOGO = """
 # FVCU Score Visualization
 # ============================================================================
 
+
 def visualize_score(name: str, score: float, width: int = 40) -> str:
     """Create a visual bar for a score."""
     filled = int(score * width)
@@ -134,6 +144,7 @@ def visualize_score(name: str, score: float, width: int = 40) -> str:
     bar = colorize("█" * filled, color) + colorize("░" * empty, Colors.END)
     return f"{name:12} [{bar}] {score:.2f}"
 
+
 def display_fvcu_scores(scores: dict):
     """Display FVCU+Faithfulness scores with visualization."""
     print_section("FVCU+Faithfulness Scores")
@@ -146,9 +157,11 @@ def display_fvcu_scores(scores: dict):
     print(colorize("─" * 60, Colors.BLUE))
     print(visualize_score(colorize("Overall", Colors.BOLD), scores["overall"]))
 
+
 # ============================================================================
 # Mock LLM for Demo
 # ============================================================================
+
 
 class DemoLLM:
     """Demo LLM for CLI demonstration."""
@@ -215,16 +228,18 @@ This provides a solid foundation for success!"""
 
         return f"Demo response #{self.call_count}"
 
+
 # ============================================================================
 # Interactive CLI
 # ============================================================================
+
 
 class GuideCLI:
     """Interactive CLI for TheGuide."""
 
     def __init__(self):
         """Initialize the CLI."""
-        self.guide: Optional[TheGuide] = None
+        self.guide: TheGuide | None = None
         self.project_path = Path.cwd()
 
     def setup(self):
@@ -236,6 +251,7 @@ class GuideCLI:
         if api_key:
             try:
                 from openhands.sdk import LLM
+
                 client_llm = LLM(model=model, api_key=api_key)
                 guide_llm_config = {"model": model, "api_key": api_key}
                 print_success(f"Using real LLMs: {model}")
@@ -249,9 +265,7 @@ class GuideCLI:
             print_info("Using demo LLM (set LLM_API_KEY for real LLMs)")
 
         self.guide = TheGuide(
-            project_path=self.project_path,
-            client_llm=client_llm,
-            guide_llm_config=guide_llm_config
+            project_path=self.project_path, client_llm=client_llm, guide_llm_config=guide_llm_config
         )
 
         print_info(f"Project: {self.project_path}")
@@ -263,7 +277,7 @@ class GuideCLI:
         max_iterations: int = 10,
         quality_threshold: float = 0.8,
         enable_self_rewarding: bool = False,
-        enable_self_correction: bool = False
+        enable_self_correction: bool = False,
     ):
         """Run a guidance session."""
         print_header(f"Guidance Session - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
@@ -289,7 +303,7 @@ class GuideCLI:
             answer, protocol = self.guide.solve(
                 problem_statement=problem,
                 max_iterations=max_iterations,
-                quality_threshold=quality_threshold
+                quality_threshold=quality_threshold,
             )
 
             # Display results
@@ -301,7 +315,9 @@ class GuideCLI:
             print_section("Session Summary")
             print(f"  Session ID: {protocol.session_id}")
             print(f"  Iterations: {protocol.iteration_count}")
-            print(f"  Quality Score: {colorize(f'{protocol.quality_score:.2f}', Colors.BOLD + Colors.GREEN)}")
+            print(
+                f"  Quality Score: {colorize(f'{protocol.quality_score:.2f}', Colors.BOLD + Colors.GREEN)}"
+            )
             print(f"  Created: {protocol.created}")
             print(f"  Completed: {protocol.completed}")
 
@@ -320,7 +336,7 @@ class GuideCLI:
             try:
                 print("\n")
                 response = input(colorize("View 'Why?' explanation? (y/N): ", Colors.CYAN))
-                if response.lower() == 'y':
+                if response.lower() == "y":
                     self.show_explanation(protocol.session_id)
             except (EOFError, KeyboardInterrupt):
                 # Non-interactive mode or user cancelled
@@ -331,6 +347,7 @@ class GuideCLI:
         except Exception as e:
             print_error(f"Session failed: {e}")
             import traceback
+
             traceback.print_exc()
             return None
 
@@ -352,7 +369,7 @@ class GuideCLI:
             return
 
         for i, session in enumerate(recent, 1):
-            session_id = session.get('session_id', 'N/A')
+            session_id = session.get("session_id", "N/A")
             print(f"\n{colorize(f'{i}. {session_id}', Colors.BOLD)}")
             print(f"   Problem: {session.get('problem_summary', 'N/A')[:60]}...")
             print(f"   Quality: {visualize_score('', session.get('quality_score', 0.0), width=20)}")
@@ -415,9 +432,11 @@ class GuideCLI:
 
         print(f"  Last Updated: {summary.get('last_updated', 'N/A')}")
 
+
 # ============================================================================
 # Main
 # ============================================================================
+
 
 def main():
     """Main entry point."""
@@ -434,7 +453,7 @@ Examples:
 
   # With custom settings
   python cli/guide_cli.py --problem "Explain OAuth2" --iterations 5 --threshold 0.9
-        """
+        """,
     )
 
     parser.add_argument("--problem", "-p", help="Problem statement")
@@ -462,11 +481,12 @@ Examples:
             max_iterations=args.iterations,
             quality_threshold=args.threshold,
             enable_self_rewarding=args.self_rewarding,
-            enable_self_correction=args.self_correction
+            enable_self_correction=args.self_correction,
         )
     else:
         # Interactive mode
         cli.interactive_mode()
+
 
 if __name__ == "__main__":
     main()

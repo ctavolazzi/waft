@@ -7,10 +7,9 @@ More decorative and visually interesting than the guide template.
 """
 
 from pathlib import Path
+
 from jinja2 import Template
 from weasyprint import HTML
-from typing import Optional
-
 
 POETRY_TEMPLATE = """
 <!DOCTYPE html>
@@ -211,10 +210,10 @@ def generate_poetry(
     title: str,
     content: str,
     output_path: Path,
-    subtitle: Optional[str] = None,
-    author: Optional[str] = None,
-    date: Optional[str] = None,
-    performance_notes: Optional[str] = None
+    subtitle: str | None = None,
+    author: str | None = None,
+    date: str | None = None,
+    performance_notes: str | None = None,
 ) -> Path:
     """
     Generate a poetry/video essay PDF document.
@@ -240,7 +239,7 @@ def generate_poetry(
         subtitle=subtitle,
         author=author,
         date=date,
-        performance_notes=performance_notes
+        performance_notes=performance_notes,
     )
 
     HTML(string=html_output).write_pdf(output_path)
