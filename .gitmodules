@@ -10,3 +10,6 @@
 [submodule "templates/cinofix-latex-templates"]
 	path = templates/cinofix-latex-templates
 	url = https://github.com/Cinofix/latex-scientific-templates.git
+[submodule "_integrations/choose-your-own-adventure"]
+	path = _integrations/choose-your-own-adventure
+	url = https://github.com/KendallDoesCoding/Choose-Your-Own-Adventure-Game.git
