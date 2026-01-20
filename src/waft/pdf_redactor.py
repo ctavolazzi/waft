@@ -77,12 +77,7 @@ class PDFRedactor:
         self.redaction_areas: list[RedactionArea] = []
 
     def add_text_redaction(
-        self,
-        text: str,
-        x: float,
-        y: float,
-        width: float | None = None,
-        height: float | None = None,
+        self, text: str, x: float, y: float, width: float | None = None, height: float | None = None
     ) -> "PDFRedactor":
         """
         Add a text redaction area.

@@ -2,7 +2,7 @@
 
 > **The native currency system for measuring work, risk, and value in WAFT**
 
-Version: 1.0.0
+Version: 0.0.1
 Status: Official Standard
 Date: 2026-01-17
 
@@ -662,6 +662,6 @@ WAFT metrics provide a **rich, multidimensional view** of work that traditional 
 
 ---
 
-*Official WAFT Metrics System Documentation v1.0.0*
+*Official WAFT Metrics System Documentation v0.0.1*
 *Last Updated: 2026-01-17*
 *Maintained by: WAFT Team*

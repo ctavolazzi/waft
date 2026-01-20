@@ -325,101 +325,39 @@ def display_thinking_step_by_step(
 
     icon = step_icons.get(step, "•")
 
-    # Show step immediately with spinner
-    with console.status(f"[bold cyan]{icon} {step}...[/bold cyan]", spinner="dots"):
-        time.sleep(delay * 0.2)  # Minimal delay - just enough to see the step
+    with console.status(f"[bold cyan]{icon} {step}...[/bold cyan]"):
+        time.sleep(delay)
 
     # Display step result
     if step == "PREFLIGHT":
-        if data.get("status"):
-            console.print(f"   [dim]{data['status']}[/dim]")
-        else:
-            know = data.get("know", 0.0)
-            uncertainty = data.get("uncertainty", 1.0)
-            know_level = data.get("know_level", "Unknown")
-            uncertainty_level = data.get("uncertainty_level", "Unknown")
-            console.print("   [cyan]✓ Assessment complete[/cyan]")
-            console.print(f"   [dim]   KNOW: {know:.0%} ({know_level})[/dim]")
-            console.print(f"   [dim]   UNCERTAINTY: {uncertainty:.0%} ({uncertainty_level})[/dim]")
-            if data.get("investigate_required"):
-                console.print("   [yellow]   → INVESTIGATE REQUIRED[/yellow]")
+        know = data.get("know", 0.0)
+        uncertainty = data.get("uncertainty", 1.0)
+        console.print(f"   [dim]KNOW: {know:.0%}, UNCERTAINTY: {uncertainty:.0%}[/dim]")
+        if data.get("investigate_required"):
+            console.print("   [yellow]→ INVESTIGATE REQUIRED[/yellow]")
 
     elif step == "INVESTIGATE":
-        if data.get("status"):
-            console.print(f"   [dim]{data['status']}[/dim]")
-            if data.get("thinking"):
-                console.print(f"   [dim]   💭 {data['thinking']}[/dim]")
-        else:
-            reflection = data.get("reflection", {})
-            if reflection:
-                relevant_experiences = reflection.get("relevant_experiences", [])
-                relevant_insights = reflection.get("relevant_insights", [])
-                console.print("   [cyan]✓ Reflection complete[/cyan]")
-                if data.get("thinking"):
-                    console.print(f"   [dim]   💭 {data['thinking']}[/dim]")
-                console.print(
-                    f"   [dim]   Found {len(relevant_experiences)} relevant experiences[/dim]"
-                )
-                console.print(f"   [dim]   Found {len(relevant_insights)} relevant insights[/dim]")
-                if reflection.get("reflection_summary"):
-                    summary = reflection["reflection_summary"][:70]
-                    console.print(f"   [dim]   Summary: {summary}...[/dim]")
-            else:
-                console.print("   [dim]   No past experiences found[/dim]")
-                if data.get("thinking"):
-                    console.print(f"   [dim]   💭 {data['thinking']}[/dim]")
+        reflection = data.get("reflection", {})
+        if reflection.get("reflection_summary"):
+            console.print(f"   [dim]{reflection['reflection_summary'][:60]}...[/dim]")
 
     elif step == "CHECK":
-        if data.get("status"):
-            console.print(f"   [dim]{data['status']}[/dim]")
-        else:
-            confidence = data.get("confidence", 0.0)
-            decision = data.get("decision", "UNKNOWN")
-            findings_count = data.get("findings_count", 0)
-            unknowns_count = data.get("unknowns_count", 0)
-            decision_color = {
-                "PROCEED": "green",
-                "HALT": "red",
-                "BRANCH": "yellow",
-                "REVISE": "yellow",
-            }.get(decision, "white")
-            console.print("   [cyan]✓ Decision gate evaluated[/cyan]")
-            console.print(
-                f"   [dim]   Findings: {findings_count}, Unknowns: {unknowns_count}[/dim]"
-            )
-            console.print(f"   [dim]   CONFIDENCE: {confidence:.0%}[/dim]")
-            console.print(f"   [{decision_color}]   → DECISION: {decision}[/{decision_color}]")
+        confidence = data.get("confidence", 0.0)
+        decision = data.get("decision", "UNKNOWN")
+        decision_color = {
+            "PROCEED": "green",
+            "HALT": "red",
+            "BRANCH": "yellow",
+            "REVISE": "yellow",
+        }.get(decision, "white")
+        console.print(f"   [dim]CONFIDENCE: {confidence:.0%}[/dim]")
+        console.print(f"   [{decision_color}]→ DECISION: {decision}[/{decision_color}]")
 
     elif step == "ACT":
-        if data.get("status"):
-            console.print(f"   [dim]{data['status']}[/dim]")
-            if data.get("thinking"):
-                console.print(f"   [dim]   💭 {data['thinking']}[/dim]")
-        phase = data.get("phase", "UNKNOWN")
-        coverage = data.get("coverage", 0.0)
-        console.print("   [cyan]✓ Recommendation generated[/cyan]")
-        if data.get("thinking"):
-            console.print(f"   [dim]   💭 {data['thinking']}[/dim]")
-        console.print(f"   [dim]   Phase: {phase}, Coverage: {coverage:.0%}[/dim]")
-
-    elif step == "CALCULATE":
-        if data.get("status"):
-            console.print(f"   [dim]{data['status']}[/dim]")
-            if data.get("thinking"):
-                console.print(f"   [dim]   💭 {data['thinking']}[/dim]")
-        else:
-            console.print("   [cyan]✓ Calculation complete[/cyan]")
-            if data.get("thinking"):
-                console.print(f"   [dim]   💭 {data['thinking']}[/dim]")
+        console.print("   [dim]Generating recommendation...[/dim]")
 
     elif step == "POSTFLIGHT":
         if data.get("status"):
             console.print(f"   [dim]{data['status']}[/dim]")
         if data.get("guidance_provided"):
             console.print("   [green]✓ Learning tracked[/green]")
-            knowledge_delta = data.get("knowledge_delta", 0.0)
-            uncertainty_delta = data.get("uncertainty_delta", 0.0)
-            if knowledge_delta != 0 or uncertainty_delta != 0:
-                console.print(
-                    f"   [dim]   Knowledge Δ: {knowledge_delta:+.0%}, Uncertainty Δ: {uncertainty_delta:+.0%}[/dim]"
-                )

@@ -140,10 +140,7 @@ class BaseAgent(ABC):
             return sha256(self.__class__.__name__.encode()).hexdigest()
 
     def _record_event(
-        self,
-        event_type: EvolutionaryEventType,
-        payload: dict,
-        fitness_metrics: dict | None = None,
+        self, event_type: EvolutionaryEventType, payload: dict, fitness_metrics: dict | None = None
     ) -> EvolutionaryEvent:
         """
         Record evolutionary event to flight recorder and TheObserver.

@@ -689,8 +689,6 @@ class Being:
         Record a memory.
 
         Enhanced to include Harm/Help events and alignment information.
-        Memories are bounded to MAX_MEMORIES to prevent resource exhaustion.
-        When limit is reached, oldest memories are dropped (FIFO).
 
         Args:
             memory_content: Content of memory
@@ -719,6 +717,7 @@ class Being:
         memory["metadata"]["alignment_score"] = self.current_alignment_score
         memory["metadata"]["pleasure"] = self.pleasure
         memory["metadata"]["pain"] = self.pain
+
         self.memories.append(memory)
 
         # Security: Bound memories to prevent DoS
@@ -735,8 +734,6 @@ class Being:
         Learn a lesson (what worked/didn't work).
 
         Enhanced to include alignment patterns and Harm/Help learning.
-        Lessons are bounded to MAX_MEMORIES to prevent resource exhaustion.
-        When limit is reached, oldest lessons are dropped (FIFO).
 
         Args:
             lesson: The lesson learned
@@ -762,10 +759,6 @@ class Being:
 
         # Learn from alignment patterns
         self._learn_from_alignment_patterns()
-        # Security: Bound lessons to prevent DoS (same limit as memories)
-        if len(self.lessons_learned) > MAX_MEMORIES:
-            # Remove oldest lesson (FIFO)
-            self.lessons_learned.pop(0)
 
         return lesson_record
 

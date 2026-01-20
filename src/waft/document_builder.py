@@ -50,7 +50,6 @@ Example:
 
 import re
 import sys
-import time
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
@@ -642,7 +641,7 @@ class DocumentBuilder:
                             if self.config.content
                             else False,
                         },
-                        "timestamp": int(time.time() * 1000),
+                        "timestamp": int(__import__("time").time() * 1000),
                     }
                 )
                 + "\n"
@@ -673,7 +672,7 @@ class DocumentBuilder:
                             if processed_content
                             else False,
                         },
-                        "timestamp": int(time.time() * 1000),
+                        "timestamp": int(__import__("time").time() * 1000),
                     }
                 )
                 + "\n"
@@ -710,7 +709,7 @@ class DocumentBuilder:
                             if processed_content
                             else False,
                         },
-                        "timestamp": int(time.time() * 1000),
+                        "timestamp": int(__import__("time").time() * 1000),
                     }
                 )
                 + "\n"
@@ -756,7 +755,7 @@ class DocumentBuilder:
                             "enhanced_css_length": len(enhanced_css) if enhanced_css else 0,
                             "css_preview": enhanced_css[:200] if enhanced_css else "",
                         },
-                        "timestamp": int(time.time() * 1000),
+                        "timestamp": int(__import__("time").time() * 1000),
                     }
                 )
                 + "\n"
@@ -794,7 +793,7 @@ class DocumentBuilder:
                             if html_output
                             else False,
                         },
-                        "timestamp": int(time.time() * 1000),
+                        "timestamp": int(__import__("time").time() * 1000),
                     }
                 )
                 + "\n"
@@ -836,7 +835,7 @@ class DocumentBuilder:
                             if html_output
                             else False,
                         },
-                        "timestamp": int(time.time() * 1000),
+                        "timestamp": int(__import__("time").time() * 1000),
                     }
                 )
                 + "\n"

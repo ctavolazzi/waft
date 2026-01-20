@@ -12,16 +12,20 @@ This demonstrates:
 - Save/Load Being state for reincarnation testing
 """
 
-import json
 import random
-import sys
-from datetime import datetime
-from pathlib import Path
-from typing import Any, Dict, Optional
+import json
+from typing import Optional, Dict, Any
 
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
+from waft.core.dnd5e import (
+    DnD5eCharacter,
+    DnD5eStats,
+    DnDRoller,
+    ArmorType
+)
+from waft.being import Being, BeingState, BeingSystem
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table

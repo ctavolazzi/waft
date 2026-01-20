@@ -105,20 +105,19 @@ async def analyze_decision(request: DecisionRequest):
                 crit = next(c for c in matrix.criteria if c.name == crit_name)
                 weighted_score = crit.weight * raw_score
 
-                detailed_items.append(
-                    DetailedScore(
-                        criterion_name=crit_name,
-                        raw_score=raw_score,
-                        weighted_score=weighted_score,
-                        weight=crit.weight,
-                    )
-                )
+                detailed_items.append(DetailedScore(
+                    criterion_name=crit_name,
+                    raw_score=raw_score,
+                    weighted_score=weighted_score,
+                    weight=crit.weight
+                ))
 
-            detailed_analysis.append(
-                AlternativeAnalysis(
-                    name=alt_name, total_score=score, rank=rank, detailed_scores=detailed_items
-                )
-            )
+            detailed_analysis.append(AlternativeAnalysis(
+                name=alt_name,
+                total_score=score,
+                rank=rank,
+                detailed_scores=detailed_items
+            ))
         tracer.end_span(response_span, SpanStatus.SUCCESS)
 
         # Run sensitivity analysis if requested
@@ -128,8 +127,8 @@ async def analyze_decision(request: DecisionRequest):
         if request.show_sensitivity and len(matrix.criteria) > 1:
             sensitivity_span = tracer.start_span("api.sensitivity_analysis", "api")
             sensitivity_result = _run_sensitivity_analysis(matrix, calculator, rankings_raw)
-            sensitivity_warnings = sensitivity_result["warnings"]
-            is_robust = sensitivity_result["is_robust"]
+            sensitivity_warnings = sensitivity_result['warnings']
+            is_robust = sensitivity_result['is_robust']
             tracer.end_span(sensitivity_span, SpanStatus.SUCCESS,
                            output_data={"is_robust": is_robust, "num_warnings": len(sensitivity_warnings)})
 
@@ -150,6 +149,7 @@ async def analyze_decision(request: DecisionRequest):
         })
 
         return response
+
     except ValueError as e:
         # Input validation errors from InputTransformer or Calculator
         tracer.end_span(trace_span, SpanStatus.ERROR, error=e)

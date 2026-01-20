@@ -12,7 +12,6 @@ import json
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Any
 
 import typer
 from rich.console import Console
@@ -2669,24 +2668,31 @@ def check_assumptions(
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed evidence traces"),
 ):
     """
-    Identify all assumptions in conversation and validate them with evidence.
+    View and analyze data traces.
 
-    Analyzes conversation history to extract implicit assumptions, then systematically
-    validates each one using code analysis, file system checks, test results, Empirica
-    epistemic state, and other available evidence sources.
+    Actions:
+      - list: Show recent traces
+      - show: Display detailed trace tree for a specific trace ID
+
+    Examples:
+      waft trace list
+      waft trace list --limit 20
+      waft trace show <trace-id>
     """
-    project_path = resolve_project_path(path)
+    from .core.tracing import TraceViewer
 
-    from .core.check_assumptions import CheckAssumptionsManager
+    viewer = TraceViewer()
 
-    manager = CheckAssumptionsManager(project_path)
-    manager.run_check_assumptions(
-        focus=focus,
-        critical_only=critical_only,
-        test=test,
-        verbose=verbose,
-    )
+    if action == "list":
+        recent_traces = viewer.list_recent_traces(limit=limit)
+        if not recent_traces:
+            console.print("[yellow]No traces found.[/yellow]")
+            return
 
+        console.print(f"\n[bold]Recent Traces[/bold] (showing {len(recent_traces)}):\n")
+        for span in recent_traces:
+            summary = viewer.format_trace_summary(span)
+            console.print(summary)
 
 @app.command()
 def final_report(
@@ -2700,9 +2706,11 @@ def final_report(
     """
     Generate a comprehensive final report PDF using the Science Textbook LaTeX template.
 
-    Gathers session data, work progress, and context, then compiles into a professional PDF.
-    """
-    project_path = resolve_project_path(path)
+    elif action == "show":
+        if not trace_id:
+            console.print("[red]Error: trace_id is required for 'show' action[/red]")
+            console.print("Usage: waft trace show <trace-id>")
+            raise typer.Exit(1)
 
     console.print("\n[bold cyan]📚 Waft[/bold cyan] - Generating Final Report\n")
 
@@ -2870,26 +2878,21 @@ def oracle(
     from .core.science import TheOracle
 
     try:
-        # Show immediate feedback - print header right away
-        console.print("[bold cyan]🔮 Waft[/bold cyan] - Consulting TheOracle\n")
+        # TheOracle will FORCE Empirica to be ready - no degraded mode
+        # It will raise RuntimeError if Empirica cannot be initialized
+        console.print("[yellow]→[/yellow] Ensuring Empirica is ready...")
 
-        # Show progress immediately
-        with console.status("[yellow]→[/yellow] Initializing Oracle...", spinner="dots"):
-            # TheOracle will FORCE Empirica to be ready - no degraded mode
-            # It will raise RuntimeError if Empirica cannot be initialized
-            from .core.science.oracle_personality_tools import PersonalityManager
+        # Load personality if available
+        from .core.science.oracle_personality_tools import PersonalityManager
 
-            personality_manager = PersonalityManager(project_path)
-            personality = personality_manager.load_personality()
+        personality_manager = PersonalityManager(project_path)
+        personality = personality_manager.load_personality()
 
-            oracle = TheOracle(project_path, ai_id="claude-code", personality=personality)
-
-        console.print("[green]✓[/green] Oracle initialized")
+        oracle = TheOracle(project_path, ai_id="claude-code", personality=personality)
 
         # Get epistemic state (Empirica is guaranteed to be ready)
-        with console.status("[yellow]→[/yellow] Gathering epistemic state...", spinner="dots"):
-            state = oracle.get_epistemic_state()
-        console.print("[green]✓[/green] Epistemic state retrieved")
+        console.print("[yellow]→[/yellow] Gathering epistemic state...")
+        state = oracle.get_epistemic_state()
 
         # Full context available - display epistemic state
         epistemic_state = state.get("epistemic_state", {})
@@ -2900,9 +2903,11 @@ def oracle(
         uncertainty = vectors.get("uncertainty", 1.0)
         engagement = vectors.get("engagement", 0.0)
 
+        console.print("[green]✓[/green] Epistemic state retrieved")
+
         # Get phase
         phase = oracle.get_epistemic_phase()
-        console.print(f"[dim]Phase: {phase}[/dim]")
+        console.print(f"\n[bold]Epistemic Phase:[/bold] [cyan]{phase}[/cyan]")
 
         # Display vectors table
         table = Table(title="Epistemic Vectors", show_header=True, header_style="bold magenta")
@@ -2926,9 +2931,10 @@ def oracle(
         console.print(table)
 
         # Get recent insights
-        with console.status("[yellow]→[/yellow] Retrieving insights...", spinner="dots"):
-            insights = oracle.get_insights(limit=5)
-            unknowns = oracle.get_unknowns(limit=5)
+        console.print("\n[yellow]→[/yellow] Retrieving recent insights...")
+        insights = oracle.get_insights(limit=5)
+        unknowns = oracle.get_unknowns(limit=5)
+
         console.print(f"[green]✓[/green] Found {len(insights)} insights, {len(unknowns)} unknowns")
 
         if insights:
@@ -2990,77 +2996,16 @@ def oracle(
             )
 
         elif question:
-            # Specific question - show step-by-step thinking
+            # Specific question
             personality_info = oracle.get_personality_info()
             greeting = oracle.personality.get_greeting()
             if greeting and greeting != "I see...":
                 console.print(f"\n[dim italic]{greeting}[/dim italic]")
 
             console.print(f"\n[yellow]→[/yellow] Seeking guidance: {question}")
-
-            # Show thinking process step-by-step
-            from .core.science.oracle_thinking import (
-                display_oracle_thinking,
-                display_thinking_step_by_step,
-            )
-
-            console.print("\n[bold cyan]🧠 TheOracle is thinking...[/bold cyan]\n")
-
-            # Step-by-step thinking display
-            thinking_data = {}
-
-            def thinking_callback(step: str, data: dict[str, Any]) -> None:
-                """Callback to capture thinking steps."""
-                thinking_data[step] = data
-                display_thinking_step_by_step(console, step, data, delay=0.3)
-
-            guidance = oracle.provide_guidance(
-                question, show_thinking=True, thinking_callback=thinking_callback
-            )
-
-            # Display full thinking dashboard
-            console.print("\n")
-            display_oracle_thinking(
-                console,
-                question,
-                guidance.get("preflight", {}),
-                guidance.get("reflection", {}),
-                guidance.get("findings", []),
-                guidance.get("unknowns", []),
-                guidance.get("check", {}),
-                guidance.get("epistemic_state", {}),
-                guidance.get("postflight"),
-                guidance.get("storage_info"),
-            )
-            console.print("\n")
+            guidance = oracle.provide_guidance(question)
 
             console.print("\n[bold cyan]🔮 Oracle Guidance:[/bold cyan]")
-
-            # Display Empirica workflow results
-            preflight = guidance.get("preflight", {})
-            if preflight:
-                know = preflight.get("know", 0.0)
-                uncertainty = preflight.get("uncertainty", 1.0)
-                console.print(
-                    f"\n[dim]📊 Preflight: KNOW={know:.0%} ({preflight.get('know_level', 'Unknown')}), UNCERTAINTY={uncertainty:.0%} ({preflight.get('uncertainty_level', 'Unknown')})[/dim]"
-                )
-                if preflight.get("investigate_required"):
-                    console.print("[dim]   → INVESTIGATE REQUIRED[/dim]")
-
-            check = guidance.get("check", {})
-            if check:
-                confidence = check.get("confidence", 0.0)
-                decision = check.get("decision", "UNKNOWN")
-                console.print(
-                    f"[dim]✅ Check: CONFIDENCE={confidence:.0%}, DECISION={decision}[/dim]"
-                )
-
-            # Display reflection if available
-            reflection = guidance.get("reflection", {})
-            if reflection and reflection.get("reflection_summary"):
-                console.print(
-                    f"[dim]💭 Reflection: {reflection['reflection_summary'][:80]}...[/dim]"
-                )
 
             recommendation = guidance.get("recommendation", "No recommendation available")
             transition = oracle.personality.get_transition()

@@ -35,10 +35,7 @@ class CelebrateManager:
         self.celebrate_dir.mkdir(parents=True, exist_ok=True)
 
     def celebrate(
-        self,
-        achievement: str | None = None,
-        message: str | None = None,
-        print_pdf: bool = False,
+        self, achievement: str | None = None, message: str | None = None, print_pdf: bool = False
     ) -> Path | None:
         """
         Generate a one-page celebratory PDF card.
