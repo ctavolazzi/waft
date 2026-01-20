@@ -1,0 +1,12 @@
+[submodule "_temp_latex_templates"]
+	path = _temp_latex_templates
+	url = https://github.com/lartpang/LaTeX-Templates.git
+[submodule "src/waft/templates/latex/templates/xuehai"]
+	path = src/waft/templates/latex/templates/xuehai
+	url = https://github.com/XuehaiPan/LaTeX-Templates.git
+[submodule "src/waft/templates/typst/templates/flow-way"]
+	path = src/waft/templates/typst/templates/flow-way
+	url = https://github.com/fexh10/flow-way.git
+[submodule "templates/cinofix-latex-templates"]
+	path = templates/cinofix-latex-templates
+	url = https://github.com/Cinofix/latex-scientific-templates.git

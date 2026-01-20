@@ -1,10 +1,23 @@
 # Branch Consolidation Strategy: v0.8.1 Release
 
 **Date**: 2026-01-14  
-**Status**: 📋 PLANNING  
+**Status**: ✅ EXECUTED  
 **Goal**: Strategically merge validated branches into main
 
 ---
+
+## Execution Results (2026-01-20)
+
+- Merged all remote branches into `main` with a single-pass merge strategy (no skip gate).
+- Branches merged:
+  - `origin/claude/fix-ci-checks-uO9pI`
+  - `origin/claude/fix-ci-checks-yZR2u`
+  - `origin/claude/main-merge-uO9pI`
+  - `origin/claude/merge-branches-to-main-RNkvl`
+  - `origin/claude/plan-code-consolidation-uuQbl`
+
+Notes:
+- Submodule remotes for `decisiontree_repo`, `xuehai`, and `ashad001-latex-templates` rejected pushes (403). Superproject references updated local submodule commits; remote submodule pushes still needed.
 
 ## Strategy
 
