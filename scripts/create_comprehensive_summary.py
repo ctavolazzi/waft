@@ -6,16 +6,17 @@ Creates a 2-page summary covering everything achieved today.
 """
 
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.waft.one_pager import OnePager
 
+
 def main():
     """Create comprehensive summary one-pager."""
-    
+
     content = """# WAFT: Scientific Learning System
 
 ## What is WAFT?
@@ -96,39 +97,44 @@ WAFT creates printable, binder-ready documents as physical knowledge artifacts.
 
 Pattern analysis, predictive models, auto-correction, full WAFT evolutionary ecosystem integration.
 """
-    
+
     # Create one-pager
     title = "WAFT Development Summary - 2026-01-11"
-    output_path = Path(f"_work_efforts/one_pagers/waft_comprehensive_summary_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf")
-    
+    output_path = Path(
+        f"_work_efforts/one_pagers/waft_comprehensive_summary_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+    )
+
     pager = OnePager.from_markdown(content, title=title)
     output = pager.generate(output_path)
-    
+
     # Check page count
     from pypdf import PdfReader
+
     reader = PdfReader(str(output))
     page_count = len(reader.pages)
-    
+
     print("=" * 60)
     print("✅ Comprehensive WAFT Summary Created!")
     print("=" * 60)
     print(f"📄 Output: {output}")
     print(f"📊 Pages: {page_count} (target: 2)")
-    
+
     if page_count == 2:
         print("✅ Perfect 2-page document!")
     else:
         print(f"⚠️ Generated {page_count} pages (expected 2)")
-        print(f"📋 Study report with recommendations: _work_efforts/study_gym/")
-    
+        print("📋 Study report with recommendations: _work_efforts/study_gym/")
+
     print()
     print("Ready for printing and review!")
-    
+
     # Open the PDF (only this specific file)
     import subprocess
+
     subprocess.run(["open", "-a", "Preview", str(output)])
-    
+
     return output
+
 
 if __name__ == "__main__":
     main()

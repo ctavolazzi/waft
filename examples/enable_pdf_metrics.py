@@ -13,19 +13,19 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.waft.evolution import (
     ChatDistiller,
-    TwoPageGenerator,
-    StylingGenome,
-    StylingGene,
-    FontGene,
-    MarginGene,
     ColorGene,
+    FontGene,
     LayoutGene,
+    MarginGene,
+    StylingGene,
+    StylingGenome,
+    TwoPageGenerator,
 )
 
 
 def main():
     """Example: Generate PDF with metrics collection enabled."""
-    
+
     # Sample chat content
     chat_content = """
     # Example Chat Session
@@ -34,11 +34,11 @@ def main():
     The decision was made to use OAuth2 for security and flexibility.
     We learned that token refresh is critical for long sessions.
     """
-    
+
     # Distill chat
     distiller = ChatDistiller()
     distilled = distiller.distill_text(chat_content, title="Example Session")
-    
+
     # Create styling genome
     styling_genes = StylingGene(
         font=FontGene(family="sans-serif", size_body=11),
@@ -47,11 +47,11 @@ def main():
         layout=LayoutGene(columns=1, density="normal"),
     )
     genome = StylingGenome.from_genes(styling_genes)
-    
+
     # Generate PDF WITH METRICS COLLECTION
     generator = TwoPageGenerator(weasyprint_available=True)
     output_path = Path("example_with_metrics.pdf")
-    
+
     result = generator.generate(
         distilled_chat=distilled,
         styling_genome=genome,
@@ -60,7 +60,7 @@ def main():
         collect_metrics=True,  # ✅ Enable metrics collection
         metrics_dir=Path("_pyrite/metrics/pdf"),  # Optional: custom directory
     )
-    
+
     # Access metrics from result
     if "metrics" in result:
         metrics = result["metrics"]
@@ -72,7 +72,7 @@ def main():
         print(f"  Iterations Used: {metrics['iterations_used']}")
         print(f"  Constraint Satisfied: {metrics['constraint_satisfied']}")
         print(f"  Metrics File: {result['metrics_file']}")
-    
+
     print(f"\n✅ PDF generated: {output_path}")
     print("📊 Metrics saved to _pyrite/metrics/pdf/")
 

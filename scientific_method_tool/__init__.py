@@ -13,12 +13,12 @@ Implements a rudimentary version of the scientific method for experimental verif
 9. Iterate with variable changes
 """
 
-from .experiment import Experiment, ExperimentState, ExperimentManager
+from .analysis import AnalysisResult, ExperimentAnalyzer
+from .data_collection import DataCollector, DataPoint, DataSeries
+from .experiment import Experiment, ExperimentManager, ExperimentState
+from .experiment_loop import ExperimentLoop, ExperimentResult, IterationConfig
 from .hypothesis import Hypothesis, Variable, VariableType
 from .state_capture import StateCapture, SystemState
-from .data_collection import DataCollector, DataPoint, DataSeries
-from .experiment_loop import ExperimentLoop, ExperimentResult, IterationConfig
-from .analysis import ExperimentAnalyzer, AnalysisResult
 
 __all__ = [
     "Experiment",

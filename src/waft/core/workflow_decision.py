@@ -5,7 +5,8 @@ Uses DecisionCLI to analyze workflow implementation options.
 """
 
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any
+
 from rich.console import Console
 
 from .decision_cli import DecisionCLI
@@ -13,34 +14,34 @@ from .decision_cli import DecisionCLI
 
 class WorkflowDecisionAnalyzer:
     """Analyzes workflow implementation options using decision matrix."""
-    
+
     def __init__(self, project_path: Path):
         """
         Initialize workflow decision analyzer.
-        
+
         Args:
             project_path: Path to project root
         """
         self.project_path = project_path
         self.console = Console()
         self.decision_cli = DecisionCLI(project_path)
-    
-    def analyze_workflow_options(self) -> Dict[str, Any]:
+
+    def analyze_workflow_options(self) -> dict[str, Any]:
         """
         Run decision matrix analysis for workflow implementation options.
-        
+
         Returns:
             Dictionary with decision results
         """
         problem = "How should we implement command chaining and workflow orchestration?"
-        
+
         alternatives = [
             "Simple /setup only",
             "Full /workflow with NLP parsing",
             "Hybrid: /setup + /workflow with AI interpretation",
             "AI-native: Let AI interpret directly",
         ]
-        
+
         criteria = {
             "Implementation Speed": 0.25,  # How fast to implement
             "Flexibility": 0.25,  # How flexible for future use
@@ -48,7 +49,7 @@ class WorkflowDecisionAnalyzer:
             "Maintenance Complexity": 0.15,  # How complex to maintain
             "Immediate Value": 0.15,  # How quickly it solves the problem
         }
-        
+
         criterion_descriptions = {
             "Implementation Speed": "Time to implement (lower is better, but inverted in scores)",
             "Flexibility": "Ability to handle various command sequences",
@@ -56,7 +57,7 @@ class WorkflowDecisionAnalyzer:
             "Maintenance Complexity": "Ongoing maintenance burden (lower is better, inverted)",
             "Immediate Value": "How quickly it solves the user's immediate need",
         }
-        
+
         # Scores on 1-10 scale
         scores = {
             "Simple /setup only": {
@@ -88,7 +89,7 @@ class WorkflowDecisionAnalyzer:
                 "Immediate Value": 7.0,  # Good, but less structured
             },
         }
-        
+
         return self.decision_cli.run_decision_matrix(
             problem=problem,
             alternatives=alternatives,
@@ -97,5 +98,5 @@ class WorkflowDecisionAnalyzer:
             methodology="WSM",
             criterion_descriptions=criterion_descriptions,
             show_details=True,
-            show_sensitivity=True
+            show_sensitivity=True,
         )

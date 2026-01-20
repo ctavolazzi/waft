@@ -13,22 +13,23 @@ This is the evolved implementation with adaptive constraint enforcement.
 
 import hashlib
 import re
-from pathlib import Path
-from typing import Optional, Dict, Any, List
-from datetime import datetime
-from jinja2 import Template
 import tempfile
-import time
+from datetime import datetime
+from pathlib import Path
+from typing import Any
 
-from .chat_distiller import DistilledChat, IdeaGene
-from .styling_genome import StylingGenome
-from .pdf_metrics import PDFMetricsCollector, PDFMetrics
-from .document_components import (
-    DocumentComponent, DocumentLayout, ComponentType,
-    ComponentBuilder, LayoutAlgorithm
-)
+from jinja2 import Template
+
 from ..core.agent.state import EvolutionaryEvent, EvolutionaryEventType
-
+from .chat_distiller import DistilledChat, IdeaGene
+from .document_components import (
+    ComponentBuilder,
+    ComponentType,
+    DocumentLayout,
+    LayoutAlgorithm,
+)
+from .pdf_metrics import PDFMetricsCollector
+from .styling_genome import StylingGenome
 
 # HTML template for 2-page PDFs with visual elements and multiple explanation methods
 TWO_PAGE_TEMPLATE = """
@@ -344,7 +345,9 @@ class TwoPageGenerator:
     # Genome ID for this generator
     GENERATOR_GENOME_ID = hashlib.sha256(b"TwoPageGenerator_adaptive_constraint").hexdigest()
 
-    def __init__(self, weasyprint_available: bool = False, max_iterations: int = 5, allowed_pages: int = 2):
+    def __init__(
+        self, weasyprint_available: bool = False, max_iterations: int = 5, allowed_pages: int = 2
+    ):
         """
         Initialize generator.
 
@@ -360,6 +363,7 @@ class TwoPageGenerator:
         if weasyprint_available:
             try:
                 from weasyprint import HTML, __version__
+
                 self.HTML = HTML
                 print(f"WeasyPrint {__version__} available - real page counting enabled")
             except ImportError:
@@ -370,14 +374,14 @@ class TwoPageGenerator:
         self,
         distilled_chat: DistilledChat,
         styling_genome: StylingGenome,
-        output_path: Optional[Path] = None,
-        target_pages: Optional[int] = None,
+        output_path: Path | None = None,
+        target_pages: int | None = None,
         convert_to_png: bool = False,
         png_dpi: int = 300,
         collect_metrics: bool = False,
-        metrics_dir: Optional[Path] = None,
+        metrics_dir: Path | None = None,
         use_component_system: bool = True,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Generate PDF with configurable page constraint and component-based layout.
 
@@ -435,13 +439,13 @@ class TwoPageGenerator:
         self,
         distilled_chat: DistilledChat,
         styling_genome: StylingGenome,
-        output_path: Optional[Path],
+        output_path: Path | None,
         target_pages: int,
         convert_to_png: bool,
         png_dpi: int,
         collect_metrics: bool,
-        metrics_dir: Optional[Path],
-    ) -> Dict[str, Any]:
+        metrics_dir: Path | None,
+    ) -> dict[str, Any]:
         """Generate using component-based system."""
         from datetime import datetime
 
@@ -458,68 +462,111 @@ class TwoPageGenerator:
         images_dir = Path(__file__).parent.parent.parent / "_work_efforts" / "one_pagers" / "images"
         three_pillars_path = images_dir / "three_pillars.png"
         if three_pillars_path.exists():
+
             def to_file_url(path: Path) -> str:
                 return path.absolute().as_uri()
-            components.append(builder.build_image_component(
-                to_file_url(three_pillars_path),
-                "Figure 1: The Three Pillars of WAFT Architecture"
-            ))
+
+            components.append(
+                builder.build_image_component(
+                    to_file_url(three_pillars_path),
+                    "Figure 1: The Three Pillars of WAFT Architecture",
+                )
+            )
 
         # 3. Abstract component
         components.append(builder.build_abstract_component(distilled_chat.summary))
 
         # 4. Attribution component
-        components.append(builder.build_attribution_component(
-            "WAFT Research Team",
-            datetime.utcnow().strftime("%Y-%m-%d")
-        ))
+        components.append(
+            builder.build_attribution_component(
+                "WAFT Research Team", datetime.utcnow().strftime("%Y-%m-%d")
+            )
+        )
 
         # 5. Metadata component
         from src.waft import __version__
+
         generation_info = {
-            'generator': 'WAFT TwoPageGenerator',
-            'style': styling_genome.genes.name if hasattr(styling_genome.genes, 'name') else 'adaptive',
-            'timestamp': datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"),
-            'version': __version__,
-            'process': f'Adaptive component-based generation with {target_pages}-page constraint'
+            "generator": "WAFT TwoPageGenerator",
+            "style": styling_genome.genes.name
+            if hasattr(styling_genome.genes, "name")
+            else "adaptive",
+            "timestamp": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"),
+            "version": __version__,
+            "process": f"Adaptive component-based generation with {target_pages}-page constraint",
         }
-        components.append(builder.build_metadata_component(
-            authors="WAFT Research Team",
-            generation_info=generation_info
-        ))
+        components.append(
+            builder.build_metadata_component(
+                authors="WAFT Research Team", generation_info=generation_info
+            )
+        )
 
         # 6. Section components from ideas
         all_ideas = distilled_chat.get_top_ideas(n=50, min_importance=0.1)
 
         # Group ideas into sections intelligently
         # Try to find pillar-related ideas
-        substrate_ideas = [idea for idea in all_ideas if 'substrate' in idea.content.lower() or 'code is dna' in idea.content.lower()][:1]
-        physics_ideas = [idea for idea in all_ideas if 'scint' in idea.content.lower() or 'physics' in idea.content.lower() or 'fitness' in idea.content.lower()][:1]
-        flight_recorder_ideas = [idea for idea in all_ideas if 'flight recorder' in idea.content.lower() or 'lineage' in idea.content.lower() or 'phylogenetic' in idea.content.lower()][:1]
+        substrate_ideas = [
+            idea
+            for idea in all_ideas
+            if "substrate" in idea.content.lower() or "code is dna" in idea.content.lower()
+        ][:1]
+        physics_ideas = [
+            idea
+            for idea in all_ideas
+            if "scint" in idea.content.lower()
+            or "physics" in idea.content.lower()
+            or "fitness" in idea.content.lower()
+        ][:1]
+        flight_recorder_ideas = [
+            idea
+            for idea in all_ideas
+            if "flight recorder" in idea.content.lower()
+            or "lineage" in idea.content.lower()
+            or "phylogenetic" in idea.content.lower()
+        ][:1]
 
         # Build sections
         if all_ideas:
-            components.append(builder.build_section_component("Introduction", all_ideas[:1], level=2))
+            components.append(
+                builder.build_section_component("Introduction", all_ideas[:1], level=2)
+            )
 
         if substrate_ideas or physics_ideas or flight_recorder_ideas:
             # Architecture section with pillars
             components.append(builder.build_section_component("Architecture", [], level=2))
 
             if substrate_ideas:
-                components.append(builder.build_section_component("The Substrate", substrate_ideas, level=3))
+                components.append(
+                    builder.build_section_component("The Substrate", substrate_ideas, level=3)
+                )
             if physics_ideas:
-                components.append(builder.build_section_component("The Physics", physics_ideas, level=3))
+                components.append(
+                    builder.build_section_component("The Physics", physics_ideas, level=3)
+                )
             if flight_recorder_ideas:
-                components.append(builder.build_section_component("The Flight Recorder", flight_recorder_ideas, level=3))
+                components.append(
+                    builder.build_section_component(
+                        "The Flight Recorder", flight_recorder_ideas, level=3
+                    )
+                )
 
         # Methodology and conclusion from remaining ideas
-        remaining_ideas = [idea for idea in all_ideas[1:] if idea not in substrate_ideas + physics_ideas + flight_recorder_ideas]
+        remaining_ideas = [
+            idea
+            for idea in all_ideas[1:]
+            if idea not in substrate_ideas + physics_ideas + flight_recorder_ideas
+        ]
         if remaining_ideas:
             split = len(remaining_ideas) // 2
             if split > 0:
-                components.append(builder.build_section_component("Methodology", remaining_ideas[:split], level=2))
+                components.append(
+                    builder.build_section_component("Methodology", remaining_ideas[:split], level=2)
+                )
             if len(remaining_ideas) > split:
-                components.append(builder.build_section_component("Conclusion", remaining_ideas[split:], level=2))
+                components.append(
+                    builder.build_section_component("Conclusion", remaining_ideas[split:], level=2)
+                )
 
         # Generate layout configurations
         print(f"  Building {len(components)} components...")
@@ -531,7 +578,9 @@ class TwoPageGenerator:
         best_fitness = 0.0
 
         for i, layout in enumerate(layouts):
-            print(f"  Testing layout {i+1}/{len(layouts)} ({layout.metadata.get('strategy', 'unknown')})...")
+            print(
+                f"  Testing layout {i + 1}/{len(layouts)} ({layout.metadata.get('strategy', 'unknown')})..."
+            )
 
             # Render HTML from layout
             html_content = self._render_html_from_layout(
@@ -547,38 +596,43 @@ class TwoPageGenerator:
             learning_data = algorithm.test_layout(layout, page_count)
             print(f"    → {page_count} pages, fitness: {learning_data['fitness']:.3f}")
 
-            if learning_data['fitness'] > best_fitness:
-                best_fitness = learning_data['fitness']
+            if learning_data["fitness"] > best_fitness:
+                best_fitness = learning_data["fitness"]
                 best_layout = layout
-                best_layout.metadata['html_content'] = html_content
+                best_layout.metadata["html_content"] = html_content
 
         if best_layout is None:
             raise RuntimeError("Failed to generate any valid layout")
 
-        print(f"  ✓ Best layout: {best_layout.metadata.get('strategy')}, fitness: {best_fitness:.3f}")
+        print(
+            f"  ✓ Best layout: {best_layout.metadata.get('strategy')}, fitness: {best_fitness:.3f}"
+        )
 
         # Get learning summary
         learning_summary = algorithm.get_learning_summary()
-        print(f"  Learning: {learning_summary['successful']}/{learning_summary['total_tests']} successful")
+        print(
+            f"  Learning: {learning_summary['successful']}/{learning_summary['total_tests']} successful"
+        )
 
         # Save output
         pdf_path = None
-        if output_path and best_layout.metadata.get('html_content'):
+        if output_path and best_layout.metadata.get("html_content"):
             output_path = Path(output_path)
             output_path.parent.mkdir(parents=True, exist_ok=True)
 
             # Save HTML
-            html_path = Path(str(output_path).replace('.pdf', '.html'))
-            html_path.write_text(best_layout.metadata['html_content'])
+            html_path = Path(str(output_path).replace(".pdf", ".html"))
+            html_path.write_text(best_layout.metadata["html_content"])
             print(f"  ✓ HTML saved: {html_path}")
 
             # Generate PDF
             if self.weasyprint_available:
-                self.HTML(string=best_layout.metadata['html_content']).write_pdf(output_path)
-                
+                self.HTML(string=best_layout.metadata["html_content"]).write_pdf(output_path)
+
                 # Post-process to add blank page markers
                 try:
                     from ...utils import process_pdf_for_blank_pages
+
                     process_pdf_for_blank_pages(output_path)
                 except Exception as e:
                     # If blank page handling fails, continue anyway (non-critical)
@@ -590,7 +644,7 @@ class TwoPageGenerator:
         ideas_shown = 0
         for comp in best_layout.components:
             if comp.component_type == ComponentType.SECTION:
-                ideas_shown += comp.metadata.get('idea_count', 0)
+                ideas_shown += comp.metadata.get("idea_count", 0)
 
         # Evaluate fitness
         fitness_metrics = self._evaluate_fitness(
@@ -602,30 +656,30 @@ class TwoPageGenerator:
         )
 
         return {
-            'success': True,
-            'pdf_path': pdf_path,
-            'html_path': str(html_path) if output_path else None,
-            'page_count': best_layout.page_count,
-            'target_pages': target_pages,
-            'fitness': fitness_metrics,
-            'layout': best_layout,
-            'learning_summary': learning_summary,
+            "success": True,
+            "pdf_path": pdf_path,
+            "html_path": str(html_path) if output_path else None,
+            "page_count": best_layout.page_count,
+            "target_pages": target_pages,
+            "fitness": fitness_metrics,
+            "layout": best_layout,
+            "learning_summary": learning_summary,
         }
 
     def _generate_legacy(
         self,
         distilled_chat: DistilledChat,
         styling_genome: StylingGenome,
-        output_path: Optional[Path],
+        output_path: Path | None,
         target_pages: int,
         convert_to_png: bool,
         png_dpi: int,
         collect_metrics: bool,
-        metrics_dir: Optional[Path],
-    ) -> Dict[str, Any]:
+        metrics_dir: Path | None,
+    ) -> dict[str, Any]:
         """Original generation algorithm (fallback)."""
         # Original implementation continues here...
-        print(f"  Using legacy algorithm...")
+        print("  Using legacy algorithm...")
 
         # Initialize metrics collector if requested
         metrics_collector = None
@@ -638,7 +692,7 @@ class TwoPageGenerator:
 
         # Adaptive iteration
         best_result = None
-        best_page_diff = float('inf')
+        best_page_diff = float("inf")
         iterations_used = 0
 
         # Start with conservative estimate
@@ -646,7 +700,9 @@ class TwoPageGenerator:
 
         for iteration in range(self.max_iterations):
             iterations_used = iteration + 1
-            print(f"  Iteration {iteration + 1}/{self.max_iterations}: Testing with {ideas_to_show} ideas...")
+            print(
+                f"  Iteration {iteration + 1}/{self.max_iterations}: Testing with {ideas_to_show} ideas..."
+            )
 
             # Split ideas between pages (60/40 split)
             split_point = int(ideas_to_show * 0.6)
@@ -680,7 +736,7 @@ class TwoPageGenerator:
 
             # Perfect! Stop iterating
             if page_count == target_pages:
-                print(f"    ✓ Target achieved!")
+                print("    ✓ Target achieved!")
                 break
 
             # Adjust idea count for next iteration
@@ -693,10 +749,10 @@ class TwoPageGenerator:
 
             # Prevent infinite loop if we can't adjust further
             if iteration > 0 and (
-                (page_count > target_pages and ideas_to_show <= 3) or
-                (page_count < target_pages and ideas_to_show >= len(all_ideas))
+                (page_count > target_pages and ideas_to_show <= 3)
+                or (page_count < target_pages and ideas_to_show >= len(all_ideas))
             ):
-                print(f"    → Cannot improve further, using best result")
+                print("    → Cannot improve further, using best result")
                 break
 
         # Use best result
@@ -710,27 +766,29 @@ class TwoPageGenerator:
             output_path.parent.mkdir(parents=True, exist_ok=True)
 
             # Save HTML
-            html_path = Path(str(output_path).replace('.pdf', '.html'))
-            html_path.write_text(best_result['html_content'])
+            html_path = Path(str(output_path).replace(".pdf", ".html"))
+            html_path.write_text(best_result["html_content"])
             print(f"  ✓ HTML saved: {html_path}")
 
             # Generate PDF if possible
             if self.weasyprint_available:
-                self.HTML(string=best_result['html_content']).write_pdf(output_path)
+                self.HTML(string=best_result["html_content"]).write_pdf(output_path)
                 pdf_path = str(output_path)
                 print(f"  ✓ PDF saved: {output_path}")
 
         # Evaluate fitness with ACCURATE constraint metric
         fitness_metrics = self._evaluate_fitness(
             distilled_chat=distilled_chat,
-            ideas_shown=best_result['ideas_shown'],
+            ideas_shown=best_result["ideas_shown"],
             styling_genome=styling_genome,
-            page_count=best_result['page_count'],
+            page_count=best_result["page_count"],
             target_pages=target_pages,
         )
 
         print(f"  ✓ Fitness: {fitness_metrics['overall']:.3f}")
-        print(f"    - Constraint satisfaction: {fitness_metrics['constraint_satisfaction']:.3f} (page_count={best_result['page_count']})")
+        print(
+            f"    - Constraint satisfaction: {fitness_metrics['constraint_satisfaction']:.3f} (page_count={best_result['page_count']})"
+        )
 
         # Optional PNG conversion
         png_paths = []
@@ -738,6 +796,7 @@ class TwoPageGenerator:
         if convert_to_png and pdf_path:
             try:
                 from .pdf_image_converter import convert_pdf_to_images
+
                 png_dir = Path(pdf_path).parent / f"{Path(pdf_path).stem}_pages"
                 png_paths = convert_pdf_to_images(Path(pdf_path), output_dir=png_dir, dpi=png_dpi)
                 png_conversion_success = True
@@ -754,7 +813,7 @@ class TwoPageGenerator:
             styling_genome=styling_genome,
             fitness_metrics=fitness_metrics,
             output_path=pdf_path,
-            page_count=best_result['page_count'],
+            page_count=best_result["page_count"],
             png_conversion_success=png_conversion_success,
             png_count=len(png_paths) if png_paths else 0,
         )
@@ -763,12 +822,12 @@ class TwoPageGenerator:
         result = {
             "success": True,
             "pdf_path": pdf_path,
-            "html_content": best_result['html_content'],
+            "html_content": best_result["html_content"],
             "fitness_metrics": fitness_metrics,
-            "ideas_shown": best_result['ideas_shown'],
-            "page_count": best_result['page_count'],
+            "ideas_shown": best_result["ideas_shown"],
+            "page_count": best_result["page_count"],
             "target_pages": target_pages,
-            "constraint_satisfied": best_result['page_count'] == target_pages,
+            "constraint_satisfied": best_result["page_count"] == target_pages,
             "styling_genome_id": styling_genome.genome_id,
             "generator_version": "adaptive",
             "generator_genome_id": self.GENERATOR_GENOME_ID,
@@ -778,8 +837,8 @@ class TwoPageGenerator:
         # Collect and save metrics if requested
         if collect_metrics and metrics_collector:
             # Compute content statistics
-            html_content = best_result['html_content']
-            content_stats = self._compute_content_stats(html_content, best_result['page_count'])
+            html_content = best_result["html_content"]
+            content_stats = self._compute_content_stats(html_content, best_result["page_count"])
 
             # Compute PNG info
             png_info = None
@@ -832,10 +891,8 @@ class TwoPageGenerator:
         # Try using markdown library if available (best option)
         try:
             import markdown
-            html = markdown.markdown(
-                text,
-                extensions=['fenced_code', 'tables', 'nl2br', 'extra']
-            )
+
+            html = markdown.markdown(text, extensions=["fenced_code", "tables", "nl2br", "extra"])
             return html
         except ImportError:
             # Fallback: manual conversion
@@ -846,97 +903,99 @@ class TwoPageGenerator:
 
         # Code blocks first (before other processing)
         html = re.sub(
-            r'```(\w+)?\n(.*?)```',
+            r"```(\w+)?\n(.*?)```",
             r'<pre><code class="language-\1">\2</code></pre>',
             html,
-            flags=re.DOTALL
+            flags=re.DOTALL,
         )
 
         # Inline code
-        html = re.sub(r'`([^`]+)`', r'<code>\1</code>', html)
+        html = re.sub(r"`([^`]+)`", r"<code>\1</code>", html)
 
         # Headers (process from h6 to h1 to avoid conflicts)
-        html = re.sub(r'^######\s+(.+)$', r'<h6>\1</h6>', html, flags=re.MULTILINE)
-        html = re.sub(r'^#####\s+(.+)$', r'<h5>\1</h5>', html, flags=re.MULTILINE)
-        html = re.sub(r'^####\s+(.+)$', r'<h4>\1</h4>', html, flags=re.MULTILINE)
-        html = re.sub(r'^###\s+(.+)$', r'<h3>\1</h3>', html, flags=re.MULTILINE)
-        html = re.sub(r'^##\s+(.+)$', r'<h2>\1</h2>', html, flags=re.MULTILINE)
-        html = re.sub(r'^#\s+(.+)$', r'<h1>\1</h1>', html, flags=re.MULTILINE)
+        html = re.sub(r"^######\s+(.+)$", r"<h6>\1</h6>", html, flags=re.MULTILINE)
+        html = re.sub(r"^#####\s+(.+)$", r"<h5>\1</h5>", html, flags=re.MULTILINE)
+        html = re.sub(r"^####\s+(.+)$", r"<h4>\1</h4>", html, flags=re.MULTILINE)
+        html = re.sub(r"^###\s+(.+)$", r"<h3>\1</h3>", html, flags=re.MULTILINE)
+        html = re.sub(r"^##\s+(.+)$", r"<h2>\1</h2>", html, flags=re.MULTILINE)
+        html = re.sub(r"^#\s+(.+)$", r"<h1>\1</h1>", html, flags=re.MULTILINE)
 
         # Bold (**text** or __text__)
-        html = re.sub(r'\*\*([^*]+)\*\*', r'<strong>\1</strong>', html)
-        html = re.sub(r'__([^_]+)__', r'<strong>\1</strong>', html)
+        html = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", html)
+        html = re.sub(r"__([^_]+)__", r"<strong>\1</strong>", html)
 
         # Italic (*text* or _text_) - but not if already bold
-        html = re.sub(r'(?<!<strong>)(?<!\*)\*([^*<]+)\*(?!\*)(?!</strong>)', r'<em>\1</em>', html)
-        html = re.sub(r'(?<!<strong>)(?<!_)_([^_<]+)_(?!_)(?!</strong>)', r'<em>\1</em>', html)
+        html = re.sub(r"(?<!<strong>)(?<!\*)\*([^*<]+)\*(?!\*)(?!</strong>)", r"<em>\1</em>", html)
+        html = re.sub(r"(?<!<strong>)(?<!_)_([^_<]+)_(?!_)(?!</strong>)", r"<em>\1</em>", html)
 
         # Links ([text](url))
-        html = re.sub(r'\[([^\]]+)\]\(([^\)]+)\)', r'<a href="\2">\1</a>', html)
+        html = re.sub(r"\[([^\]]+)\]\(([^\)]+)\)", r'<a href="\2">\1</a>', html)
 
         # Lists - process line by line
-        lines = html.split('\n')
+        lines = html.split("\n")
         result = []
         in_list = False
         list_type = None
 
         for line in lines:
             # Ordered list (1., 2., etc.)
-            if re.match(r'^\s*\d+\.\s+', line):
-                if not in_list or list_type != 'ol':
+            if re.match(r"^\s*\d+\.\s+", line):
+                if not in_list or list_type != "ol":
                     if in_list:
-                        result.append(f'</{list_type}>')
-                    result.append('<ol>')
+                        result.append(f"</{list_type}>")
+                    result.append("<ol>")
                     in_list = True
-                    list_type = 'ol'
-                item_text = re.sub(r'^\s*\d+\.\s+', '', line)
-                result.append(f'<li>{item_text}</li>')
+                    list_type = "ol"
+                item_text = re.sub(r"^\s*\d+\.\s+", "", line)
+                result.append(f"<li>{item_text}</li>")
             # Unordered list (-, *, +)
-            elif re.match(r'^\s*[-*+]\s+', line):
-                if not in_list or list_type != 'ul':
+            elif re.match(r"^\s*[-*+]\s+", line):
+                if not in_list or list_type != "ul":
                     if in_list:
-                        result.append(f'</{list_type}>')
-                    result.append('<ul>')
+                        result.append(f"</{list_type}>")
+                    result.append("<ul>")
                     in_list = True
-                    list_type = 'ul'
-                item_text = re.sub(r'^\s*[-*+]\s+', '', line)
-                result.append(f'<li>{item_text}</li>')
+                    list_type = "ul"
+                item_text = re.sub(r"^\s*[-*+]\s+", "", line)
+                result.append(f"<li>{item_text}</li>")
             else:
                 if in_list:
-                    result.append(f'</{list_type}>')
+                    result.append(f"</{list_type}>")
                     in_list = False
                     list_type = None
                 if line.strip():
                     # Wrap in paragraph if not already a header or code block
-                    if not (line.strip().startswith('<h') or 
-                            line.strip().startswith('<pre') or
-                            line.strip().startswith('<code') or
-                            line.strip().startswith('<ul') or
-                            line.strip().startswith('<ol')):
-                        result.append(f'<p>{line}</p>')
+                    if not (
+                        line.strip().startswith("<h")
+                        or line.strip().startswith("<pre")
+                        or line.strip().startswith("<code")
+                        or line.strip().startswith("<ul")
+                        or line.strip().startswith("<ol")
+                    ):
+                        result.append(f"<p>{line}</p>")
                     else:
                         result.append(line)
                 else:
-                    result.append('')
+                    result.append("")
 
         if in_list:
-            result.append(f'</{list_type}>')
+            result.append(f"</{list_type}>")
 
-        html = '\n'.join(result)
+        html = "\n".join(result)
 
         # Horizontal rules
-        html = re.sub(r'^---$', r'<hr>', html, flags=re.MULTILINE)
+        html = re.sub(r"^---$", r"<hr>", html, flags=re.MULTILINE)
 
         # Clean up "Key Concept:" prefixes (redundant with category tag)
-        html = re.sub(r'^\s*<strong>Key\s+Concept</strong>:\s*', '', html, flags=re.IGNORECASE)
-        html = re.sub(r'^\s*Key\s+Concept:\s*', '', html, flags=re.IGNORECASE)
+        html = re.sub(r"^\s*<strong>Key\s+Concept</strong>:\s*", "", html, flags=re.IGNORECASE)
+        html = re.sub(r"^\s*Key\s+Concept:\s*", "", html, flags=re.IGNORECASE)
 
         return html
 
     def _clean_markdown(self, text: str) -> str:
         """
         DEPRECATED: Use _markdown_to_html instead.
-        
+
         This method is kept for backward compatibility but now calls
         _markdown_to_html to properly convert markdown to HTML.
         """
@@ -946,15 +1005,16 @@ class TwoPageGenerator:
         self,
         distilled_chat: DistilledChat,
         styling_genome: StylingGenome,
-        page_1_ideas: List[IdeaGene],
-        page_2_ideas: List[IdeaGene],
+        page_1_ideas: list[IdeaGene],
+        page_2_ideas: list[IdeaGene],
     ) -> str:
         """Render HTML template with given ideas."""
+
         # Convert markdown to HTML for idea content
-        def clean_idea(idea: IdeaGene) -> Dict[str, Any]:
+        def clean_idea(idea: IdeaGene) -> dict[str, Any]:
             idea_dict = idea.to_dict()
             # Convert markdown to HTML (preserves formatting)
-            idea_dict['content'] = self._markdown_to_html(idea_dict.get('content', ''))
+            idea_dict["content"] = self._markdown_to_html(idea_dict.get("content", ""))
             return idea_dict
 
         context = {
@@ -988,16 +1048,16 @@ class TwoPageGenerator:
         layout: DocumentLayout,
         distilled_chat: DistilledChat,
         styling_genome: StylingGenome,
-        custom_template: Optional[str] = None,
+        custom_template: str | None = None,
     ) -> str:
         """Render HTML from a component-based layout."""
         from jinja2 import Template
 
         # Build science paper template structure
         styling_dict = {
-            'font': styling_genome.genes.font.to_dict(),
-            'margin': styling_genome.genes.margin.to_dict(),
-            'color': styling_genome.genes.color.to_dict(),
+            "font": styling_genome.genes.font.to_dict(),
+            "margin": styling_genome.genes.margin.to_dict(),
+            "color": styling_genome.genes.color.to_dict(),
         }
 
         # Render components in order
@@ -1341,15 +1401,15 @@ class TwoPageGenerator:
 """
 
         context = {
-            'title': distilled_chat.title,
-            'components': component_htmls,
+            "title": distilled_chat.title,
+            "components": component_htmls,
             **styling_dict,
         }
 
         template = Template(template_str)
         return template.render(**context)
 
-    def _count_pages(self, html_content: str, output_path: Optional[Path]) -> int:
+    def _count_pages(self, html_content: str, output_path: Path | None) -> int:
         """
         Count actual pages in generated PDF.
 
@@ -1365,7 +1425,7 @@ class TwoPageGenerator:
         """
         if self.weasyprint_available:
             # Generate to temp file and count pages
-            with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as tmp:
+            with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as tmp:
                 tmp_path = Path(tmp.name)
 
             try:
@@ -1376,6 +1436,7 @@ class TwoPageGenerator:
                 # WeasyPrint doesn't expose page count directly, so we use a workaround
                 # We'll render and check metadata
                 from pypdf import PdfReader
+
                 reader = PdfReader(tmp_path)
                 page_count = len(reader.pages)
                 tmp_path.unlink()  # Clean up
@@ -1418,7 +1479,7 @@ class TwoPageGenerator:
         styling_genome: StylingGenome,
         page_count: int,
         target_pages: int,
-    ) -> Dict[str, float]:
+    ) -> dict[str, float]:
         """
         Evaluate fitness with ACCURATE constraint metric.
 
@@ -1473,10 +1534,7 @@ class TwoPageGenerator:
             "constraint_satisfaction": constraint,
             "aesthetic_appeal": aesthetics,
             "overall": (
-                readability * 0.35 +
-                completeness * 0.30 +
-                constraint * 0.25 +
-                aesthetics * 0.10
+                readability * 0.35 + completeness * 0.30 + constraint * 0.25 + aesthetics * 0.10
             ),
             "page_count": page_count,
             "target_pages": target_pages,
@@ -1486,8 +1544,8 @@ class TwoPageGenerator:
         self,
         distilled_chat: DistilledChat,
         styling_genome: StylingGenome,
-        fitness_metrics: Dict[str, float],
-        output_path: Optional[str],
+        fitness_metrics: dict[str, float],
+        output_path: str | None,
         page_count: int,
         png_conversion_success: bool = False,
         png_count: int = 0,
@@ -1519,7 +1577,7 @@ class TwoPageGenerator:
 
         styling_genome.flight_recorder.append(event)
 
-    def _compute_content_stats(self, html_content: str, page_count: int) -> Dict[str, Any]:
+    def _compute_content_stats(self, html_content: str, page_count: int) -> dict[str, Any]:
         """
         Compute content statistics from HTML.
 
@@ -1533,7 +1591,7 @@ class TwoPageGenerator:
         import re
 
         # Count words (rough estimate)
-        text_content = re.sub(r'<[^>]+>', ' ', html_content)
+        text_content = re.sub(r"<[^>]+>", " ", html_content)
         words = text_content.split()
         words_total = len(words)
 
@@ -1543,10 +1601,10 @@ class TwoPageGenerator:
         words_page2 = words_total - words_page1
 
         # Count paragraphs
-        paragraphs = len(re.findall(r'<p[^>]*>', html_content))
+        paragraphs = len(re.findall(r"<p[^>]*>", html_content))
 
         # Count lists
-        lists = len(re.findall(r'<[uo]l[^>]*>', html_content))
+        lists = len(re.findall(r"<[uo]l[^>]*>", html_content))
 
         # Count boxes (note-box, highlight-box)
         boxes = len(re.findall(r'class="(?:note|highlight)-box"', html_content))

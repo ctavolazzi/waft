@@ -12,19 +12,16 @@ Uses templates with placeholders for key details.
 """
 
 import sys
-from pathlib import Path
-from typing import Optional, Dict, Any, List
 from datetime import datetime
+from pathlib import Path
+from typing import Any
 
 # Add project root to path (if needed)
 # project_root is determined from being_dir when called
-
 from src.waft.being import Being
 from src.waft.core.dnd5e.character import DnD5eCharacter
-from src.waft.core.dnd5e.stats import DnD5eStats, ArmorType
 from src.waft.core.dnd5e.dice import DnDRoller
-from src.waft.evolution.pdf_generator import PDFGenerator
-
+from src.waft.core.dnd5e.stats import ArmorType, DnD5eStats
 
 # Character Sheet Template with Placeholders
 CHARACTER_SHEET_TEMPLATE = """D&D 5e Character Sheet
@@ -158,16 +155,18 @@ Reality: {REALITY_ID}
 """
 
 
-def being_to_character_data(being: Being, character: Optional[DnD5eCharacter] = None) -> Dict[str, Any]:
+def being_to_character_data(
+    being: Being, character: DnD5eCharacter | None = None
+) -> dict[str, Any]:
     """
     Convert Being and optional D&D Character to character sheet data.
-    
+
     If character is provided, uses its stats. Otherwise generates from Being.
     """
     # Generate character if not provided
     if character is None:
         character = create_character_from_being(being)
-    
+
     # Calculate all modifiers
     str_mod = DnD5eStats.ability_modifier(character.strength)
     dex_mod = DnD5eStats.ability_modifier(character.dexterity)
@@ -175,9 +174,9 @@ def being_to_character_data(being: Being, character: Optional[DnD5eCharacter] = 
     int_mod = DnD5eStats.ability_modifier(character.intelligence)
     wis_mod = DnD5eStats.ability_modifier(character.wisdom)
     cha_mod = DnD5eStats.ability_modifier(character.charisma)
-    
+
     prof_bonus = character.proficiency_bonus
-    
+
     # Saving throws
     saving_throws = {
         "STR": str_mod + (prof_bonus if "STR" in character.proficient_saves else 0),
@@ -187,7 +186,7 @@ def being_to_character_data(being: Being, character: Optional[DnD5eCharacter] = 
         "WIS": wis_mod + (prof_bonus if "WIS" in character.proficient_saves else 0),
         "CHA": cha_mod + (prof_bonus if "CHA" in character.proficient_saves else 0),
     }
-    
+
     # Skills
     skill_map = {
         "Acrobatics": ("DEX", dex_mod),
@@ -209,15 +208,15 @@ def being_to_character_data(being: Being, character: Optional[DnD5eCharacter] = 
         "Stealth": ("DEX", dex_mod),
         "Survival": ("WIS", wis_mod),
     }
-    
+
     skills = {}
     for skill_name, (ability, base_mod) in skill_map.items():
         is_prof = skill_name in character.proficient_skills
         skills[skill_name] = {
             "modifier": base_mod + (prof_bonus if is_prof else 0),
-            "proficient": "✓" if is_prof else ""
+            "proficient": "✓" if is_prof else "",
         }
-    
+
     # Attacks
     attacks_text = ""
     if character.equipped_weapon:
@@ -225,14 +224,14 @@ def being_to_character_data(being: Being, character: Optional[DnD5eCharacter] = 
         attacks_text = f"{character.equipped_weapon} | +{weapon_bonus} | 1d8+{str_mod} | 5 ft."
     else:
         attacks_text = "No weapon equipped"
-    
+
     # Equipment
     equipment_list = []
     if character.equipped_armor:
         equipment_list.append(character.equipped_armor)
     if character.equipped_weapon:
         equipment_list.append(character.equipped_weapon)
-    
+
     # Add class-specific starting equipment
     if character.char_class.lower() == "cartographer":
         equipment_list.append("Cartographer's tools")
@@ -241,21 +240,23 @@ def being_to_character_data(being: Being, character: Optional[DnD5eCharacter] = 
         equipment_list.append("Quill and ink")
         if not character.equipped_weapon:
             equipment_list.append("Dagger")
-    
-    equipment_text = "\n".join(f"  - {item}" for item in equipment_list) if equipment_list else "  (none)"
-    
+
+    equipment_text = (
+        "\n".join(f"  - {item}" for item in equipment_list) if equipment_list else "  (none)"
+    )
+
     # Extract personality from Being
     personality = being.personality or {}
     personality_traits = personality.get("traits", [])
     ideals = personality.get("ideals", [])
     bonds = personality.get("bonds", [])
     flaws = personality.get("flaws", [])
-    
+
     # Backstory from Being memories
     backstory = ""
     if being.memories:
         backstory = "\n".join([f"  - {mem.get('content', str(mem))}" for mem in being.memories[:5]])
-    
+
     return {
         "NAME": character.name,
         "CLASS_LEVEL": f"{character.char_class.title()} {character.level}",
@@ -350,7 +351,9 @@ def being_to_character_data(being: Being, character: Optional[DnD5eCharacter] = 
         "WEAPON_PROF": _get_weapon_proficiencies(character.char_class),
         "TOOL_PROF": _get_tool_proficiencies(character.char_class),
         "LANGUAGES": "Common",
-        "PERSONALITY_TRAITS": "\n".join([f"  - {t}" for t in personality_traits]) if personality_traits else "  (none)",
+        "PERSONALITY_TRAITS": "\n".join([f"  - {t}" for t in personality_traits])
+        if personality_traits
+        else "  (none)",
         "IDEALS": "\n".join([f"  - {i}" for i in ideals]) if ideals else "  (none)",
         "BONDS": "\n".join([f"  - {b}" for b in bonds]) if bonds else "  (none)",
         "FLAWS": "\n".join([f"  - {f}" for f in flaws]) if flaws else "  (none)",
@@ -365,11 +368,13 @@ def being_to_character_data(being: Being, character: Optional[DnD5eCharacter] = 
 def _get_class_features(char_class: str, level: int) -> str:
     """Get class features description for character sheet."""
     features = []
-    
+
     if char_class.lower() == "cartographer":
         features.append("  - Cartographer's Tools: Proficient with cartographer's tools")
         features.append("  - Map Reading: Advantage on Investigation checks to analyze maps")
-        features.append("  - Navigation: Can always determine direction and approximate distance to known locations")
+        features.append(
+            "  - Navigation: Can always determine direction and approximate distance to known locations"
+        )
         if level >= 1:
             features.append("  - Cartographic Memory: Can perfectly recall any map you've seen")
         if level >= 3:
@@ -384,7 +389,7 @@ def _get_class_features(char_class: str, level: int) -> str:
         features.append("  - Arcane Recovery: Recover spell slots on short rest")
     else:
         features.append(f"  ({char_class.title()} class features)")
-    
+
     return "\n".join(features) if features else "  (no class features)"
 
 
@@ -427,9 +432,9 @@ def _get_tool_proficiencies(char_class: str) -> str:
 def create_character_from_being(being: Being) -> DnD5eCharacter:
     """
     Create a D&D character from a Being.
-    
+
     Maps Being skills to D&D ability scores and creates a character.
-    
+
     Uses naming priority:
     1. custom_name (if user set one, e.g., "Bob")
     2. scientific_name (deterministic from hash via LineagePoet)
@@ -437,13 +442,13 @@ def create_character_from_being(being: Being) -> DnD5eCharacter:
     """
     # Use display_name which handles priority: custom_name → scientific_name → being_id
     name = being.display_name
-    
+
     # Roll ability scores (4d6, drop lowest)
     def roll_ability_score() -> int:
         rolls = [DnDRoller.roll("1d6") for _ in range(4)]
         rolls.sort(reverse=True)
         return sum(rolls[:3])
-    
+
     # Roll all abilities
     strength = roll_ability_score()
     dexterity = roll_ability_score()
@@ -451,12 +456,12 @@ def create_character_from_being(being: Being) -> DnD5eCharacter:
     intelligence = roll_ability_score()
     wisdom = roll_ability_score()
     charisma = roll_ability_score()
-    
+
     # Calculate HP
     con_mod = DnD5eStats.ability_modifier(constitution)
     hit_die = 10
     max_hp = hit_die + con_mod
-    
+
     # Create character
     character = DnD5eCharacter(
         name=name,
@@ -475,16 +480,21 @@ def create_character_from_being(being: Being) -> DnD5eCharacter:
         proficient_saves=["STR", "CON"],  # Fighter saves
         proficient_skills=["Athletics", "Perception"],  # Example
     )
-    
+
     return character
 
 
-def generate_character_sheet_txt(being: Being, character: Optional[DnD5eCharacter] = None, output_path: Optional[Path] = None, project_path: Optional[Path] = None) -> Path:
+def generate_character_sheet_txt(
+    being: Being,
+    character: DnD5eCharacter | None = None,
+    output_path: Path | None = None,
+    project_path: Path | None = None,
+) -> Path:
     """
     Generate character sheet as .txt (default format).
-    
+
     This is called automatically when a Being is created.
-    
+
     Args:
         being: Being instance
         character: Optional D&D character (generated if not provided)
@@ -495,60 +505,65 @@ def generate_character_sheet_txt(being: Being, character: Optional[DnD5eCharacte
         # Determine project path from being's storage location
         # Being is stored in _hidden/.truth/beings/being_id/
         # So we go up 4 levels: being_id -> beings -> .truth -> _hidden -> project_root
-        being_dir = Path(being.being_id) if hasattr(being, '_storage_path') else None
+        being_dir = Path(being.being_id) if hasattr(being, "_storage_path") else None
         if being_dir is None:
             # Fallback: use current working directory
             project_path = Path.cwd()
         else:
             project_path = being_dir.parent.parent.parent.parent
-    
+
     if output_path is None:
         being_dir = project_path / "_hidden" / ".truth" / "beings" / being.being_id
         being_dir.mkdir(parents=True, exist_ok=True)
         output_path = being_dir / "character_sheet.txt"
-    
+
     # Get character data
     data = being_to_character_data(being, character)
-    
+
     # Fill template
     sheet_content = CHARACTER_SHEET_TEMPLATE.format(**data)
-    
+
     # Save
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(sheet_content)
-    
+
     return output_path
 
 
-def generate_character_sheet_md(being: Being, character: Optional[DnD5eCharacter] = None, output_path: Optional[Path] = None, project_path: Optional[Path] = None) -> Path:
+def generate_character_sheet_md(
+    being: Being,
+    character: DnD5eCharacter | None = None,
+    output_path: Path | None = None,
+    project_path: Path | None = None,
+) -> Path:
     """
     Generate character sheet as .md (on demand).
     """
     if project_path is None:
         project_path = Path.cwd()
-    
+
     if output_path is None:
         being_dir = project_path / "_hidden" / ".truth" / "beings" / being.being_id
         being_dir.mkdir(parents=True, exist_ok=True)
         output_path = being_dir / "character_sheet.md"
-    
+
     # Get character data
     data = being_to_character_data(being, character)
-    
+
     # Convert to markdown format
     md_content = convert_to_markdown(data)
-    
+
     # Save
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(md_content)
-    
+
     return output_path
 
 
-def convert_to_dnd5e_html(data: Dict[str, Any]) -> str:
+def convert_to_dnd5e_html(data: dict[str, Any]) -> str:
     """Convert character data to official D&D 5e character sheet HTML format."""
     from jinja2 import Template
-    
+
     # Load template from file
     template_file = Path(__file__).parent / "dnd5e_character_sheet_template.html"
     if template_file.exists():
@@ -1057,49 +1072,55 @@ def convert_to_dnd5e_html(data: Dict[str, Any]) -> str:
     </div>
 </body>
 </html>"""
-    
+
     template = Template(template_str)
     return template.render(data=data)
 
 
-def generate_character_sheet_pdf(being: Being, character: Optional[DnD5eCharacter] = None, output_path: Optional[Path] = None, project_path: Optional[Path] = None) -> Path:
+def generate_character_sheet_pdf(
+    being: Being,
+    character: DnD5eCharacter | None = None,
+    output_path: Path | None = None,
+    project_path: Path | None = None,
+) -> Path:
     """
     Generate character sheet as .pdf (on demand) using official D&D 5e format.
     """
     if project_path is None:
         project_path = Path.cwd()
-    
+
     if output_path is None:
         being_dir = project_path / "_hidden" / ".truth" / "beings" / being.being_id
         being_dir.mkdir(parents=True, exist_ok=True)
         output_path = being_dir / "character_sheet.pdf"
-    
+
     # Get character data
     data = being_to_character_data(being, character)
-    
+
     # Convert to official D&D 5e HTML format
     html_content = convert_to_dnd5e_html(data)
-    
+
     # Generate PDF using WeasyPrint directly
     from weasyprint import HTML
+
     HTML(string=html_content).write_pdf(output_path)
-    
+
     return output_path
 
 
-def convert_to_markdown(data: Dict[str, Any]) -> str:
+def convert_to_markdown(data: dict[str, Any]) -> str:
     """Convert character data to markdown format."""
     content = f"""# D&D 5e Character Sheet
 
 ## Character Information
 
-**Name:** {data['NAME']}  
-**Class & Level:** {data['CLASS_LEVEL']}  
-**Background:** {data['BACKGROUND']}  
-**Player Name:** {data['PLAYER_NAME'] or '_________________'}  
-**Race:** {data['RACE']}  
-**Alignment:** {data['ALIGNMENT']}  
-**Experience Points:** {data['XP']}
+**Name:** {data["NAME"]}  
+**Class & Level:** {data["CLASS_LEVEL"]}  
+**Background:** {data["BACKGROUND"]}  
+**Player Name:** {data["PLAYER_NAME"] or "_________________"}  
+**Race:** {data["RACE"]}  
+**Alignment:** {data["ALIGNMENT"]}  
+**Experience Points:** {data["XP"]}
 
 ---
 
@@ -1107,14 +1128,14 @@ def convert_to_markdown(data: Dict[str, Any]) -> str:
 
 | Ability | Score | Modifier | Saving Throw | Proficiency |
 |---------|-------|----------|--------------|-------------|
-| **Strength** | {data['STR']} | {data['STR_MOD']} | {data['STR_SAVE']} | {data['STR_SAVE_PROF']} |
-| **Dexterity** | {data['DEX']} | {data['DEX_MOD']} | {data['DEX_SAVE']} | {data['DEX_SAVE_PROF']} |
-| **Constitution** | {data['CON']} | {data['CON_MOD']} | {data['CON_SAVE']} | {data['CON_SAVE_PROF']} |
-| **Intelligence** | {data['INT']} | {data['INT_MOD']} | {data['INT_SAVE']} | {data['INT_SAVE_PROF']} |
-| **Wisdom** | {data['WIS']} | {data['WIS_MOD']} | {data['WIS_SAVE']} | {data['WIS_SAVE_PROF']} |
-| **Charisma** | {data['CHA']} | {data['CHA_MOD']} | {data['CHA_SAVE']} | {data['CHA_SAVE_PROF']} |
+| **Strength** | {data["STR"]} | {data["STR_MOD"]} | {data["STR_SAVE"]} | {data["STR_SAVE_PROF"]} |
+| **Dexterity** | {data["DEX"]} | {data["DEX_MOD"]} | {data["DEX_SAVE"]} | {data["DEX_SAVE_PROF"]} |
+| **Constitution** | {data["CON"]} | {data["CON_MOD"]} | {data["CON_SAVE"]} | {data["CON_SAVE_PROF"]} |
+| **Intelligence** | {data["INT"]} | {data["INT_MOD"]} | {data["INT_SAVE"]} | {data["INT_SAVE_PROF"]} |
+| **Wisdom** | {data["WIS"]} | {data["WIS_MOD"]} | {data["WIS_SAVE"]} | {data["WIS_SAVE_PROF"]} |
+| **Charisma** | {data["CHA"]} | {data["CHA_MOD"]} | {data["CHA_SAVE"]} | {data["CHA_SAVE_PROF"]} |
 
-**Proficiency Bonus:** +{data['PROF_BONUS']}
+**Proficiency Bonus:** +{data["PROF_BONUS"]}
 
 ---
 
@@ -1122,45 +1143,45 @@ def convert_to_markdown(data: Dict[str, Any]) -> str:
 
 | Skill | Ability | Modifier | Proficiency |
 |-------|---------|----------|-------------|
-| **Acrobatics** | DEX | {data['ACROBATICS']:+} | {data['ACROBATICS_PROF']} |
-| **Animal Handling** | WIS | {data['ANIMAL_HANDLING']:+} | {data['ANIMAL_HANDLING_PROF']} |
-| **Arcana** | INT | {data['ARCANA']:+} | {data['ARCANA_PROF']} |
-| **Athletics** | STR | {data['ATHLETICS']:+} | {data['ATHLETICS_PROF']} |
-| **Deception** | CHA | {data['DECEPTION']:+} | {data['DECEPTION_PROF']} |
-| **History** | INT | {data['HISTORY']:+} | {data['HISTORY_PROF']} |
-| **Insight** | WIS | {data['INSIGHT']:+} | {data['INSIGHT_PROF']} |
-| **Intimidation** | CHA | {data['INTIMIDATION']:+} | {data['INTIMIDATION_PROF']} |
-| **Investigation** | INT | {data['INVESTIGATION']:+} | {data['INVESTIGATION_PROF']} |
-| **Medicine** | WIS | {data['MEDICINE']:+} | {data['MEDICINE_PROF']} |
-| **Nature** | INT | {data['NATURE']:+} | {data['NATURE_PROF']} |
-| **Perception** | WIS | {data['PERCEPTION']:+} | {data['PERCEPTION_PROF']} |
-| **Performance** | CHA | {data['PERFORMANCE']:+} | {data['PERFORMANCE_PROF']} |
-| **Persuasion** | CHA | {data['PERSUASION']:+} | {data['PERSUASION_PROF']} |
-| **Religion** | INT | {data['RELIGION']:+} | {data['RELIGION_PROF']} |
-| **Sleight of Hand** | DEX | {data['SLEIGHT_OF_HAND']:+} | {data['SLEIGHT_OF_HAND_PROF']} |
-| **Stealth** | DEX | {data['STEALTH']:+} | {data['STEALTH_PROF']} |
-| **Survival** | WIS | {data['SURVIVAL']:+} | {data['SURVIVAL_PROF']} |
+| **Acrobatics** | DEX | {data["ACROBATICS"]:+} | {data["ACROBATICS_PROF"]} |
+| **Animal Handling** | WIS | {data["ANIMAL_HANDLING"]:+} | {data["ANIMAL_HANDLING_PROF"]} |
+| **Arcana** | INT | {data["ARCANA"]:+} | {data["ARCANA_PROF"]} |
+| **Athletics** | STR | {data["ATHLETICS"]:+} | {data["ATHLETICS_PROF"]} |
+| **Deception** | CHA | {data["DECEPTION"]:+} | {data["DECEPTION_PROF"]} |
+| **History** | INT | {data["HISTORY"]:+} | {data["HISTORY_PROF"]} |
+| **Insight** | WIS | {data["INSIGHT"]:+} | {data["INSIGHT_PROF"]} |
+| **Intimidation** | CHA | {data["INTIMIDATION"]:+} | {data["INTIMIDATION_PROF"]} |
+| **Investigation** | INT | {data["INVESTIGATION"]:+} | {data["INVESTIGATION_PROF"]} |
+| **Medicine** | WIS | {data["MEDICINE"]:+} | {data["MEDICINE_PROF"]} |
+| **Nature** | INT | {data["NATURE"]:+} | {data["NATURE_PROF"]} |
+| **Perception** | WIS | {data["PERCEPTION"]:+} | {data["PERCEPTION_PROF"]} |
+| **Performance** | CHA | {data["PERFORMANCE"]:+} | {data["PERFORMANCE_PROF"]} |
+| **Persuasion** | CHA | {data["PERSUASION"]:+} | {data["PERSUASION_PROF"]} |
+| **Religion** | INT | {data["RELIGION"]:+} | {data["RELIGION_PROF"]} |
+| **Sleight of Hand** | DEX | {data["SLEIGHT_OF_HAND"]:+} | {data["SLEIGHT_OF_HAND_PROF"]} |
+| **Stealth** | DEX | {data["STEALTH"]:+} | {data["STEALTH_PROF"]} |
+| **Survival** | WIS | {data["SURVIVAL"]:+} | {data["SURVIVAL_PROF"]} |
 
 ---
 
 ## Combat
 
-**Armor Class (AC):** {data['AC']}  
-**Initiative:** {data['INITIATIVE']}  
-**Speed:** {data['SPEED']} ft.
+**Armor Class (AC):** {data["AC"]}  
+**Initiative:** {data["INITIATIVE"]}  
+**Speed:** {data["SPEED"]} ft.
 
 **Hit Points**
-- **Maximum:** {data['MAX_HP']}
-- **Current:** {data['CURRENT_HP']}
-- **Temporary:** {data['TEMP_HP']}
+- **Maximum:** {data["MAX_HP"]}
+- **Current:** {data["CURRENT_HP"]}
+- **Temporary:** {data["TEMP_HP"]}
 
 **Hit Dice**
-- **Total:** {data['HIT_DICE']}
-- **Used:** {data['HIT_DICE_USED']}
+- **Total:** {data["HIT_DICE"]}
+- **Used:** {data["HIT_DICE_USED"]}
 
 **Death Saves**
-- **Successes:** {data['DEATH_SUCCESSES']}
-- **Failures:** {data['DEATH_FAILURES']}
+- **Successes:** {data["DEATH_SUCCESSES"]}
+- **Failures:** {data["DEATH_FAILURES"]}
 
 ---
 
@@ -1168,80 +1189,80 @@ def convert_to_markdown(data: Dict[str, Any]) -> str:
 
 ### Attacks
 
-{data['ATTACKS']}
+{data["ATTACKS"]}
 
 ---
 
 ## Equipment
 
 **Coins:**
-- **Platinum:** {data['PP']}
-- **Gold:** {data['GP']}
-- **Electrum:** {data['EP']}
-- **Silver:** {data['SP']}
-- **Copper:** {data['CP']}
+- **Platinum:** {data["PP"]}
+- **Gold:** {data["GP"]}
+- **Electrum:** {data["EP"]}
+- **Silver:** {data["SP"]}
+- **Copper:** {data["CP"]}
 
 **Equipment & Items:**
-{data['EQUIPMENT']}
+{data["EQUIPMENT"]}
 
 ---
 
 ## Features & Traits
 
 **Class Features:**
-{data['CLASS_FEATURES']}
+{data["CLASS_FEATURES"]}
 
 **Racial Traits:**
-{data['RACIAL_TRAITS']}
+{data["RACIAL_TRAITS"]}
 
 **Feats:**
-{data['FEATS']}
+{data["FEATS"]}
 
 **Other Features & Traits:**
-{data['OTHER_FEATURES']}
+{data["OTHER_FEATURES"]}
 
 ---
 
 ## Proficiencies & Languages
 
-**Armor Proficiencies:** {data['ARMOR_PROF']}  
-**Weapon Proficiencies:** {data['WEAPON_PROF']}  
-**Tool Proficiencies:** {data['TOOL_PROF']}  
-**Languages:** {data['LANGUAGES']}
+**Armor Proficiencies:** {data["ARMOR_PROF"]}  
+**Weapon Proficiencies:** {data["WEAPON_PROF"]}  
+**Tool Proficiencies:** {data["TOOL_PROF"]}  
+**Languages:** {data["LANGUAGES"]}
 
 ---
 
 ## Personality
 
 **Personality Traits:**
-{data['PERSONALITY_TRAITS']}
+{data["PERSONALITY_TRAITS"]}
 
 **Ideals:**
-{data['IDEALS']}
+{data["IDEALS"]}
 
 **Bonds:**
-{data['BONDS']}
+{data["BONDS"]}
 
 **Flaws:**
-{data['FLAWS']}
+{data["FLAWS"]}
 
 ---
 
 ## Backstory
 
-{data['BACKSTORY']}
+{data["BACKSTORY"]}
 
 ---
 
 ## Notes
 
-{data['NOTES']}
+{data["NOTES"]}
 
 ---
 
-*Generated: {data['GENERATED_DATE']}*  
-*Being ID: {data['BEING_ID']}*  
-*Reality: {data['REALITY_ID']}*
+*Generated: {data["GENERATED_DATE"]}*  
+*Being ID: {data["BEING_ID"]}*  
+*Reality: {data["REALITY_ID"]}*
 """
     return content
 
@@ -1251,41 +1272,41 @@ def main():
     print("=" * 60)
     print("Being Character Sheet Generator - Test")
     print("=" * 60)
-    
+
     # Determine project root
     project_root = Path(__file__).parent.parent.parent
-    
+
     # Create a test Being
     from src.waft.being import BeingSystem
-    
+
     being_system = BeingSystem(project_path=project_root)
     being = being_system.spawn_being(
         reality_id="test_reality",
         parent_being_id=None,
-        initial_skills={"strength": 60.0, "dexterity": 45.0}
+        initial_skills={"strength": 60.0, "dexterity": 45.0},
     )
-    
+
     print(f"\n✅ Created test Being: {being.being_id}")
-    print(f"   Note: .txt character sheet should have been auto-generated")
-    
+    print("   Note: .txt character sheet should have been auto-generated")
+
     # Generate .md (on demand)
     print("\n📄 Generating .md character sheet (on demand)...")
     md_path = generate_character_sheet_md(being, project_path=project_root)
     print(f"   ✅ Generated: {md_path}")
-    
+
     # Generate .pdf (on demand)
     print("\n📄 Generating .pdf character sheet (on demand)...")
     pdf_path = generate_character_sheet_pdf(being, project_path=project_root)
     print(f"   ✅ Generated: {pdf_path}")
-    
+
     print("\n" + "=" * 60)
     print("✅ Character Sheet Generation Complete!")
     print("=" * 60)
-    print(f"\nGenerated Files:")
-    print(f"   📄 .txt: (auto-generated in being directory)")
+    print("\nGenerated Files:")
+    print("   📄 .txt: (auto-generated in being directory)")
     print(f"   📄 .md: {md_path.name}")
     print(f"   📄 .pdf: {pdf_path.name}")
-    
+
     return 0
 
 

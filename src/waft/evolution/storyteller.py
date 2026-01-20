@@ -4,10 +4,10 @@ Storyteller - Narrative engine that converts input into story PDFs.
 Converts text, structured data, or events into narrative prose and generates PDF books.
 """
 
-from pathlib import Path
-from typing import Union, Dict, List, Any, Optional
 import re
 from collections import Counter
+from pathlib import Path
+from typing import Any
 
 
 class Storyteller:
@@ -19,11 +19,11 @@ class Storyteller:
 
     def __init__(
         self,
-        input_data: Union[str, Dict, List],
+        input_data: str | dict | list,
         narrative_style: str = "medium",
         story_structure: str = "linear",  # Start simple
         pdf_style: str = "premium",
-        narrator: Optional[Any] = None
+        narrator: Any | None = None,
     ):
         """
         Initialize Storyteller.
@@ -37,7 +37,8 @@ class Storyteller:
         """
         # Create or use existing Narrator
         if narrator is None:
-            from ..core.tavern_keeper import TavernKeeper, Narrator
+            from ..core.tavern_keeper import Narrator, TavernKeeper
+
             tavern = TavernKeeper(Path.cwd())
             self.narrator = Narrator(tavern)
         else:
@@ -49,15 +50,15 @@ class Storyteller:
         self.pdf_style = pdf_style
 
         # Narrative state (for consistency)
-        self.characters: Dict[str, Dict] = {}
-        self.settings: Dict[str, Dict] = {}
-        self.timeline: List[Dict] = []
+        self.characters: dict[str, dict] = {}
+        self.settings: dict[str, dict] = {}
+        self.timeline: list[dict] = []
 
     def tell_story(
         self,
-        output_path: Optional[Path] = None,
-        title: Optional[str] = None,
-        open_pdf: bool = False
+        output_path: Path | None = None,
+        title: str | None = None,
+        open_pdf: bool = False,
     ) -> Path:
         """
         Generate complete narrative PDF.
@@ -79,16 +80,15 @@ class Storyteller:
 
         # 5. Generate PDF
         from .pdf_generator import PDFGenerator
+
         generator = PDFGenerator.from_content(
-            content=formatted_content,
-            title=title or "Generated Story",
-            style=self.pdf_style
+            content=formatted_content, title=title or "Generated Story", style=self.pdf_style
         )
 
         return generator.save(
             output_path=output_path,
             target_pages=None,  # No limit for books
-            open_pdf=open_pdf
+            open_pdf=open_pdf,
         )
 
     @classmethod
@@ -97,16 +97,16 @@ class Storyteller:
         return cls(input_data=text, **kwargs)
 
     @classmethod
-    def from_data(cls, data: Dict, **kwargs) -> "Storyteller":
+    def from_data(cls, data: dict, **kwargs) -> "Storyteller":
         """Create Storyteller from structured data."""
         return cls(input_data=data, **kwargs)
 
     @classmethod
-    def from_events(cls, events: List[Dict], **kwargs) -> "Storyteller":
+    def from_events(cls, events: list[dict], **kwargs) -> "Storyteller":
         """Create Storyteller from event list."""
         return cls(input_data=events, **kwargs)
 
-    def _parse_input(self) -> Dict[str, Any]:
+    def _parse_input(self) -> dict[str, Any]:
         """Parse input into narrative elements."""
         if isinstance(self.input_data, str):
             return self._parse_text(self.input_data)
@@ -117,10 +117,11 @@ class Storyteller:
         else:
             raise ValueError(f"Unsupported input type: {type(self.input_data)}")
 
-    def _parse_text(self, text: str) -> Dict[str, Any]:
+    def _parse_text(self, text: str) -> dict[str, Any]:
         """Extract narrative elements from text."""
         # Use ChatDistiller for basic extraction
         from .chat_distiller import ChatDistiller
+
         distiller = ChatDistiller()
         distilled = distiller.distill_text(text)
 
@@ -138,18 +139,18 @@ class Storyteller:
             "settings": settings,
             "timeline": timeline,
             "ideas": distilled.ideas,
-            "summary": distilled.summary
+            "summary": distilled.summary,
         }
 
-    def _extract_characters(self, text: str) -> Dict[str, Dict]:
+    def _extract_characters(self, text: str) -> dict[str, dict]:
         """Extract characters from text (simple approach)."""
         # Find capitalized words (potential names)
         # Simple heuristic: capitalized words that appear multiple times
-        words = re.findall(r'\b[A-Z][a-z]+\b', text)
+        words = re.findall(r"\b[A-Z][a-z]+\b", text)
         word_counts = Counter(words)
 
         # Filter: must appear 2+ times and not be common words
-        common_words = {'The', 'This', 'That', 'There', 'When', 'Where', 'What'}
+        common_words = {"The", "This", "That", "There", "When", "Where", "What"}
         characters = {}
 
         for word, count in word_counts.items():
@@ -157,69 +158,62 @@ class Storyteller:
                 characters[word] = {
                     "name": word,
                     "mentions": count,
-                    "attributes": {}  # Will be filled from context
+                    "attributes": {},  # Will be filled from context
                 }
 
         return characters
 
-    def _parse_structured_data(self, data: Dict) -> Dict[str, Any]:
+    def _parse_structured_data(self, data: dict) -> dict[str, Any]:
         """Parse structured data (characters, events already defined)."""
         return {
             "characters": data.get("characters", {}),
             "settings": data.get("settings", {}),
             "timeline": data.get("events", []),
             "ideas": [],
-            "summary": data.get("summary", "")
+            "summary": data.get("summary", ""),
         }
 
-    def _parse_events(self, events: List[Dict]) -> Dict[str, Any]:
+    def _parse_events(self, events: list[dict]) -> dict[str, Any]:
         """Parse list of events into narrative structure."""
         # Extract characters from events
         characters = {}
         settings = {}
         timeline = []
-        
+
         for event in events:
             # Add to timeline
             timeline.append(event)
-            
+
             # Extract character if present
             if "character" in event:
                 char_name = event["character"]
                 if char_name not in characters:
-                    characters[char_name] = {
-                        "name": char_name,
-                        "mentions": 0,
-                        "attributes": {}
-                    }
+                    characters[char_name] = {"name": char_name, "mentions": 0, "attributes": {}}
                 characters[char_name]["mentions"] += 1
-            
+
             # Extract setting if present
             if "location" in event:
                 location = event["location"]
                 if location not in settings:
-                    settings[location] = {
-                        "name": location,
-                        "mentions": 0
-                    }
+                    settings[location] = {"name": location, "mentions": 0}
                 settings[location]["mentions"] += 1
-        
+
         return {
             "characters": characters,
             "settings": settings,
             "timeline": timeline,
             "ideas": [],
-            "summary": f"Story with {len(events)} events"
+            "summary": f"Story with {len(events)} events",
         }
 
-    def _extract_settings(self, text: str) -> Dict[str, Dict]:
+    def _extract_settings(self, text: str) -> dict[str, dict]:
         """Extract settings/locations from text (simple approach)."""
         # Find location indicators (simple patterns)
         location_patterns = [
-            r'\b(?:in|at|from|to|near|around)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)',
-            r'\b(the|a|an)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)',
+            r"\b(?:in|at|from|to|near|around)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)",
+            r"\b(the|a|an)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)",
         ]
-        
+
         locations = []
         for pattern in location_patterns:
             matches = re.findall(pattern, text)
@@ -229,42 +223,39 @@ class Storyteller:
                 else:
                     if match and match[0].isupper():
                         locations.append(match)
-        
+
         location_counts = Counter(locations)
-        
+
         # Filter common words and low-frequency mentions
-        common_words = {'The', 'This', 'That', 'There', 'When', 'Where', 'What', 'How', 'Why'}
+        common_words = {"The", "This", "That", "There", "When", "Where", "What", "How", "Why"}
         settings = {}
-        
+
         for location, count in location_counts.items():
             if count >= 2 and location not in common_words and len(location) > 2:
-                settings[location] = {
-                    "name": location,
-                    "mentions": count
-                }
-        
+                settings[location] = {"name": location, "mentions": count}
+
         return settings
 
-    def _extract_timeline(self, ideas: List) -> List[Dict]:
+    def _extract_timeline(self, ideas: list) -> list[dict]:
         """Extract timeline of events from ideas."""
         timeline = []
-        
+
         # Convert ideas to timeline events
         for idea in ideas:
             event = {
-                "description": idea.content if hasattr(idea, 'content') else str(idea),
-                "category": idea.category if hasattr(idea, 'category') else "event",
-                "importance": idea.importance if hasattr(idea, 'importance') else 0.5,
-                "timestamp": idea.extracted_at if hasattr(idea, 'extracted_at') else None
+                "description": idea.content if hasattr(idea, "content") else str(idea),
+                "category": idea.category if hasattr(idea, "category") else "event",
+                "importance": idea.importance if hasattr(idea, "importance") else 0.5,
+                "timestamp": idea.extracted_at if hasattr(idea, "extracted_at") else None,
             }
             timeline.append(event)
-        
+
         # Sort by timestamp if available, otherwise by order
         timeline.sort(key=lambda x: x.get("timestamp") or "")
-        
+
         return timeline
 
-    def _generate_structure(self, narrative_data: Dict) -> Dict[str, Any]:
+    def _generate_structure(self, narrative_data: dict) -> dict[str, Any]:
         """Generate story structure from narrative data."""
 
         if self.story_structure == "linear":
@@ -274,7 +265,7 @@ class Storyteller:
         else:
             return self._linear_structure(narrative_data)  # Default
 
-    def _linear_structure(self, data: Dict) -> Dict[str, Any]:
+    def _linear_structure(self, data: dict) -> dict[str, Any]:
         """Simple linear structure: beginning, middle, end."""
         timeline = data["timeline"]
 
@@ -285,22 +276,22 @@ class Storyteller:
             middle = []
             end = []
         else:
-            beginning = timeline[:total//3]
-            middle = timeline[total//3:2*total//3]
-            end = timeline[2*total//3:]
+            beginning = timeline[: total // 3]
+            middle = timeline[total // 3 : 2 * total // 3]
+            end = timeline[2 * total // 3 :]
 
         return {
             "beginning": beginning,
             "middle": middle,
             "end": end,
             "characters": data["characters"],
-            "settings": data["settings"]
+            "settings": data["settings"],
         }
 
-    def _three_act_structure(self, data: Dict) -> Dict[str, Any]:
+    def _three_act_structure(self, data: dict) -> dict[str, Any]:
         """Three-act structure: setup, confrontation, resolution."""
         timeline = data["timeline"]
-        
+
         # Split into three acts
         total = len(timeline)
         if total == 0:
@@ -308,19 +299,19 @@ class Storyteller:
             act2 = []
             act3 = []
         else:
-            act1 = timeline[:total//3]
-            act2 = timeline[total//3:2*total//3]
-            act3 = timeline[2*total//3:]
-        
+            act1 = timeline[: total // 3]
+            act2 = timeline[total // 3 : 2 * total // 3]
+            act3 = timeline[2 * total // 3 :]
+
         return {
             "beginning": act1,
             "middle": act2,
             "end": act3,
             "characters": data["characters"],
-            "settings": data["settings"]
+            "settings": data["settings"],
         }
 
-    def _generate_narrative(self, structure: Dict) -> str:
+    def _generate_narrative(self, structure: dict) -> str:
         """Generate narrative prose from structure."""
 
         if self.narrative_style == "simple":
@@ -330,7 +321,7 @@ class Storyteller:
         else:
             return self._simple_narrative(structure)
 
-    def _simple_narrative(self, structure: Dict) -> str:
+    def _simple_narrative(self, structure: dict) -> str:
         """Simple narrative: paragraph per event."""
         paragraphs = []
 
@@ -351,21 +342,22 @@ class Storyteller:
 
         return "\n\n".join(paragraphs)
 
-    def _event_to_prose(self, event: Dict) -> str:
+    def _event_to_prose(self, event: dict) -> str:
         """Convert event to prose (simple template-based)."""
         # Use Tracery if available, fallback to simple template
         try:
             import tracery
             from tracery.modifiers import base_english
+
             from ..core.tavern_keeper.grammars import SUCCESS_GRAMMAR
-            
+
             # Create Tracery grammar from existing grammar dict
             grammar = tracery.Grammar(SUCCESS_GRAMMAR)
             grammar.add_modifiers(base_english)
-            
+
             # Generate narrative using Tracery
             narrative = grammar.flatten("#origin#")
-            
+
             # Replace placeholders with event data if present
             if "location" in event:
                 narrative = narrative.replace("#component#", event["location"])
@@ -373,13 +365,13 @@ class Storyteller:
                 narrative = narrative.replace("#action#", event["action"])
             if "description" in event:
                 narrative = narrative.replace("#narrative#", event["description"])
-            
+
             return narrative
         except (ImportError, AttributeError):
             # Fallback: simple template
             return f"{event.get('description', 'An event occurred')}."
 
-    def _medium_narrative(self, structure: Dict) -> str:
+    def _medium_narrative(self, structure: dict) -> str:
         """Medium complexity: characters, dialogue, arcs."""
         # This requires Tracery proof-of-concept first
         # For now, use simple narrative with character names

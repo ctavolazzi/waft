@@ -7,24 +7,25 @@ This demonstrates "eating our own dog food" - using WAFT to develop WAFT.
 """
 
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
-from src.waft.evolution.pdf_generator import generate_pdf, PDFGenerator
+from src.waft.evolution.pdf_generator import generate_pdf
 from src.waft.evolution.scientific_pdf_generator import generate_scientific_pdf
 from src.waft.one_pager import create_one_pager
 
+
 def generate_feature_documentation():
     """Generate comprehensive documentation using WAFT tools."""
-    
+
     content = f"""# LaTeX & Research Tools with Live Reloading
 
-**Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}  
+**Generated**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}  
 **Branch**: `feature/latex-research-tools-live-reload`  
 **Status**: ✅ Core Implementation Complete
 
@@ -157,30 +158,28 @@ LaTeXGenerator
     # Generate PDF using WAFT's PDFGenerator
     output_dir = project_root / "_work_efforts" / "one_pagers"
     output_dir.mkdir(parents=True, exist_ok=True)
-    
+
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     pdf_path = output_dir / f"LaTeX_Feature_Documentation_{timestamp}.pdf"
-    
+
     print("📄 Generating PDF documentation using WAFT's PDFGenerator...")
     pdf_path = generate_pdf(
         content=content,
         title="LaTeX & Research Tools with Live Reloading",
         output_path=pdf_path,
         style="clinical_standard",
-        open_pdf=False
+        open_pdf=False,
     )
     print(f"✅ PDF generated: {pdf_path}")
-    
+
     # Generate one-pager using WAFT's OnePager
     print("\n📋 Generating one-pager using WAFT's OnePager...")
     one_pager_path = output_dir / f"LaTeX_Feature_OnePager_{timestamp}.pdf"
     one_pager_path = create_one_pager(
-        content=content,
-        title="LaTeX Feature - One-Pager",
-        output_path=one_pager_path
+        content=content, title="LaTeX Feature - One-Pager", output_path=one_pager_path
     )
     print(f"✅ One-pager generated: {one_pager_path}")
-    
+
     # Generate scientific PDF with self-examination
     print("\n🔬 Generating scientific PDF with self-examination...")
     scientific_path = output_dir / f"LaTeX_Feature_Scientific_{timestamp}.pdf"
@@ -190,17 +189,18 @@ LaTeXGenerator
         output_path=scientific_path,
         style="clinical_standard",
         scientific_mode=True,
-        open_pdf=False
+        open_pdf=False,
     )
     print(f"✅ Scientific PDF generated: {scientific_path}")
-    
-    print("\n" + "="*60)
+
+    print("\n" + "=" * 60)
     print("✅ All documentation generated using WAFT tools!")
-    print("="*60)
+    print("=" * 60)
     print(f"\n📄 PDF: {pdf_path}")
     print(f"📋 One-Pager: {one_pager_path}")
     print(f"🔬 Scientific: {scientific_path}")
     print("\nThis demonstrates using WAFT to develop WAFT! 🎯")
+
 
 if __name__ == "__main__":
     generate_feature_documentation()

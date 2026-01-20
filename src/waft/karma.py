@@ -11,29 +11,29 @@ The goal is not to "escape" but to "experience" - high-Karma beings might choose
 painful existences because they are "expensive" and rich in data.
 """
 
-from pathlib import Path
-from typing import Dict, Any, Optional, List
 from datetime import datetime
+from pathlib import Path
+from typing import Any
 
 
 class KarmaMerchant:
     """
     The Chitragupta: Karma Economy & Reincarnation Manager
-    
+
     Manages the Samsara Protocol - the cyclical reincarnation system where:
     - Experience generates Karma (currency)
     - Karma is spent to purchase life-path configurations
     - Souls persist in Akasha across lifetimes
     - Agents choose their next incarnation based on accumulated Karma
-    
+
     The Merchant buys memories (records experiences) and sells life-paths
     (configurations for new agent instances).
     """
-    
-    def __init__(self, project_path: Optional[Path] = None):
+
+    def __init__(self, project_path: Path | None = None):
         """
         Initialize the KarmaMerchant.
-        
+
         Args:
             project_path: Path to project root (defaults to current directory)
         """
@@ -41,16 +41,16 @@ class KarmaMerchant:
             project_path = Path.cwd()
         else:
             project_path = Path(project_path)
-        
+
         self.project_path = project_path
         self.akasha_path = project_path / "_hidden" / ".truth"  # Akasha (formerly TheOubliette)
         self.store_path = project_path / "_hidden" / ".truth" / "store"
-        
+
         # Ensure directories exist
         self.akasha_path.mkdir(parents=True, exist_ok=True)
         self.store_path.mkdir(parents=True, exist_ok=True)
-    
-    def calculate_karma(self, life_log: Dict[str, Any]) -> float:
+
+    def calculate_karma(self, life_log: dict[str, Any]) -> float:
         """
         Calculate Karma earned from a complete life log.
 
@@ -138,8 +138,8 @@ class KarmaMerchant:
 
         # Ensure non-negative karma
         return max(0.0, total_karma)
-    
-    def access_akasha(self, soul_id: str) -> Dict[str, Any]:
+
+    def access_akasha(self, soul_id: str) -> dict[str, Any]:
         """
         Access the Akasha (persistent soul storage) to retrieve soul records.
 
@@ -186,7 +186,7 @@ class KarmaMerchant:
 
         # Load existing soul record
         try:
-            with open(soul_file, 'r') as f:
+            with open(soul_file) as f:
                 soul_data = json.load(f)
 
             # Calculate total karma from all lifetimes
@@ -209,15 +209,11 @@ class KarmaMerchant:
 
             return soul_data
 
-        except (json.JSONDecodeError, IOError) as e:
+        except (OSError, json.JSONDecodeError) as e:
             # Corrupted or unreadable soul file
             raise SoulNotFoundError(f"Failed to access soul '{soul_id}': {str(e)}")
-    
-    def reincarnate(
-        self,
-        soul_id: str,
-        purchase_order: Dict[str, Any]
-    ) -> Dict[str, Any]:
+
+    def reincarnate(self, soul_id: str, purchase_order: dict[str, Any]) -> dict[str, Any]:
         """
         Reincarnate a soul with a purchased life-path configuration.
 
@@ -336,7 +332,9 @@ class KarmaMerchant:
             # Carry over some memories from past lives
             past_memories = soul_data.get("memory_fragments", [])
             num_memories = int(len(past_memories) * memory_continuity)
-            agent_config["inherited_memories"] = past_memories[-num_memories:] if num_memories > 0 else []
+            agent_config["inherited_memories"] = (
+                past_memories[-num_memories:] if num_memories > 0 else []
+            )
         else:
             agent_config["inherited_memories"] = []
 
@@ -366,7 +364,7 @@ class KarmaMerchant:
         soul_data["soul_id"] = soul_id
 
         # Write to file
-        with open(soul_file, 'w') as f:
+        with open(soul_file, "w") as f:
             json.dump(soul_data, f, indent=2)
 
         # Return reincarnation result
@@ -376,8 +374,8 @@ class KarmaMerchant:
             "lifetime_id": lifetime_id,
             "applied_config": life_path,
         }
-    
-    def list_life_paths(self) -> List[Dict[str, Any]]:
+
+    def list_life_paths(self) -> list[dict[str, Any]]:
         """
         List all available life-paths in the store.
 
@@ -400,15 +398,15 @@ class KarmaMerchant:
 
         # Load catalog
         try:
-            with open(catalog_file, 'r') as f:
+            with open(catalog_file) as f:
                 catalog = json.load(f)
 
             return catalog.get("life_paths", [])
 
-        except (json.JSONDecodeError, IOError):
+        except (OSError, json.JSONDecodeError):
             # Corrupted or unreadable catalog
             return []
-    
+
     def get_soul_karma(self, soul_id: str) -> float:
         """
         Get current Karma balance for a soul.
@@ -425,16 +423,20 @@ class KarmaMerchant:
 
 # Exception classes for Karma system
 
+
 class InsufficientKarmaError(Exception):
     """Raised when a soul doesn't have enough Karma for a purchase."""
+
     pass
 
 
 class InvalidLifePathError(Exception):
     """Raised when a requested life-path doesn't exist in the store."""
+
     pass
 
 
 class SoulNotFoundError(Exception):
     """Raised when accessing a soul that doesn't exist in Akasha."""
+
     pass

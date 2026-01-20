@@ -1,11 +1,9 @@
 """Unit tests for show_me.py data collection and generation functions."""
 
-import sys
 import json
+import sys
 from pathlib import Path
-from datetime import datetime, timedelta
-from unittest.mock import Mock, patch, MagicMock
-import pytest
+from unittest.mock import Mock, patch
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
@@ -13,20 +11,19 @@ sys.path.insert(0, str(project_root))
 sys.path.insert(0, str(project_root / "src"))
 
 from scripts.show_me import (
-    get_work_efforts,
-    get_projects,
-    get_templates,
+    generate_abstract,
+    generate_html_report,
+    generate_markdown_report,
+    generate_recommended_next_step,
+    generate_waft_html,
     get_catalog_summary,
-    get_recent_experiments,
+    get_projects,
     get_proof_cases,
     get_reasoning_trace,
+    get_recent_experiments,
     get_session_history,
-    generate_abstract,
-    generate_recommended_next_step,
-    generate_markdown_report,
-    generate_waft_html,
-    generate_html_report,
-    get_chat_context
+    get_templates,
+    get_work_efforts,
 )
 
 
@@ -128,7 +125,7 @@ class TestGetWorkEfforts:
 class TestGetProjects:
     """Tests for get_projects() function."""
 
-    @patch('src.waft.core.projects.ProjectManager')
+    @patch("src.waft.core.projects.ProjectManager")
     def test_get_projects_success(self, mock_project_manager_class, temp_project_path):
         """Test successful project retrieval."""
         # Mock Project instance
@@ -159,7 +156,7 @@ class TestGetProjects:
         assert projects[0]["milestones"] == 2
         assert projects[0]["related_work_efforts"] == 1
 
-    @patch('src.waft.core.projects.ProjectManager')
+    @patch("src.waft.core.projects.ProjectManager")
     def test_get_projects_exception_handling(self, mock_project_manager_class, temp_project_path):
         """Test exception handling when ProjectManager is unavailable."""
         mock_project_manager_class.side_effect = Exception("ProjectManager unavailable")
@@ -182,7 +179,7 @@ class TestGetProjects:
 class TestGetTemplates:
     """Tests for get_templates() function."""
 
-    @patch('src.waft.templates.latex.registry.get_latex_registry')
+    @patch("src.waft.templates.latex.registry.get_latex_registry")
     def test_get_templates_success(self, mock_get_registry, temp_project_path):
         """Test successful template retrieval."""
         # Mock template
@@ -220,7 +217,7 @@ class TestGetTemplates:
                     # Description should be truncated if long
                     assert len(template["description"]) <= 63  # 60 + "..."
 
-    @patch('src.waft.templates.latex.registry.get_latex_registry')
+    @patch("src.waft.templates.latex.registry.get_latex_registry")
     def test_get_templates_exception_handling(self, mock_get_registry):
         """Test exception handling when registry is unavailable."""
         mock_get_registry.side_effect = Exception("Registry unavailable")
@@ -273,7 +270,7 @@ class TestGetRecentExperiments:
             "experiment_id": "exp-001",
             "hypothesis": {"statement": "Test hypothesis"},
             "status": "completed",
-            "analysis": {"verified": True}
+            "analysis": {"verified": True},
         }
         exp_file.write_text(json.dumps(exp_data))
 
@@ -299,7 +296,7 @@ class TestGetRecentExperiments:
             exp_data = {
                 "experiment_id": f"exp-{i}",
                 "hypothesis": {"statement": f"Hypothesis {i}"},
-                "status": "pending"
+                "status": "pending",
             }
             exp_file.write_text(json.dumps(exp_data))
 
@@ -428,16 +425,16 @@ class TestGenerateAbstract:
 
     def test_generate_abstract_with_active_work_efforts(self):
         """Test abstract generation with active work efforts."""
-        work_efforts = [
-            {"id": "WE-001", "title": "Active Work", "status": "active"}
-        ]
+        work_efforts = [{"id": "WE-001", "title": "Active Work", "status": "active"}]
         projects = []
         templates = []
         experiments = []
         proof_cases = []
         chat_context = {}
 
-        abstract = generate_abstract(work_efforts, projects, templates, experiments, proof_cases, chat_context)
+        abstract = generate_abstract(
+            work_efforts, projects, templates, experiments, proof_cases, chat_context
+        )
 
         assert "<p>" in abstract
         assert "active work effort" in abstract.lower()
@@ -446,15 +443,15 @@ class TestGenerateAbstract:
     def test_generate_abstract_with_active_projects(self):
         """Test abstract generation with active projects."""
         work_efforts = []
-        projects = [
-            {"id": "proj-001", "title": "Active Project", "status": "active"}
-        ]
+        projects = [{"id": "proj-001", "title": "Active Project", "status": "active"}]
         templates = []
         experiments = []
         proof_cases = []
         chat_context = {}
 
-        abstract = generate_abstract(work_efforts, projects, templates, experiments, proof_cases, chat_context)
+        abstract = generate_abstract(
+            work_efforts, projects, templates, experiments, proof_cases, chat_context
+        )
 
         assert "active project" in abstract.lower()
 
@@ -463,14 +460,13 @@ class TestGenerateAbstract:
         work_efforts = []
         projects = []
         templates = []
-        experiments = [
-            {"id": "exp-001", "verified": True},
-            {"id": "exp-002", "verified": False}
-        ]
+        experiments = [{"id": "exp-001", "verified": True}, {"id": "exp-002", "verified": False}]
         proof_cases = []
         chat_context = {}
 
-        abstract = generate_abstract(work_efforts, projects, templates, experiments, proof_cases, chat_context)
+        abstract = generate_abstract(
+            work_efforts, projects, templates, experiments, proof_cases, chat_context
+        )
 
         assert "experiment" in abstract.lower()
         assert "2" in abstract  # Should mention count
@@ -486,9 +482,7 @@ class TestGenerateAbstract:
 
     def test_generate_abstract_html_formatting(self):
         """Test HTML formatting (markdown bold conversion)."""
-        work_efforts = [
-            {"id": "WE-001", "title": "Test", "status": "active"}
-        ]
+        work_efforts = [{"id": "WE-001", "title": "Test", "status": "active"}]
         abstract = generate_abstract(work_efforts, [], [], [], [], {})
 
         # Should convert **text** to <strong>text</strong>
@@ -496,9 +490,7 @@ class TestGenerateAbstract:
 
     def test_generate_abstract_paragraph_structure(self):
         """Test paragraph structure."""
-        work_efforts = [
-            {"id": "WE-001", "title": "Test", "status": "active"}
-        ]
+        work_efforts = [{"id": "WE-001", "title": "Test", "status": "active"}]
         abstract = generate_abstract(work_efforts, [], [], [], [], {})
 
         # Should have proper paragraph tags
@@ -517,7 +509,9 @@ class TestGenerateRecommendedNextStep:
         experiments = []
         proof_cases = []
 
-        recommendation = generate_recommended_next_step(active_work, projects, experiments, proof_cases)
+        recommendation = generate_recommended_next_step(
+            active_work, projects, experiments, proof_cases
+        )
 
         assert recommendation["type"] == "work_effort"
         assert "Active" in recommendation["action"]
@@ -525,12 +519,16 @@ class TestGenerateRecommendedNextStep:
 
     def test_recommended_next_step_open_work(self, temp_project_path):
         """Test recommendation with open work efforts only."""
-        work_efforts = [{"id": "WE-002", "title": "Open Work", "status": "open", "path": "_work_efforts/WE-002"}]
+        work_efforts = [
+            {"id": "WE-002", "title": "Open Work", "status": "open", "path": "_work_efforts/WE-002"}
+        ]
         projects = []
         experiments = []
         proof_cases = []
 
-        recommendation = generate_recommended_next_step(work_efforts, projects, experiments, proof_cases, None, temp_project_path)
+        recommendation = generate_recommended_next_step(
+            work_efforts, projects, experiments, proof_cases, None, temp_project_path
+        )
 
         assert recommendation["type"] == "work_effort"
         assert "Start" in recommendation["action"] or "Open Work" in recommendation["action"]
@@ -544,7 +542,9 @@ class TestGenerateRecommendedNextStep:
         experiments = []
         proof_cases = []
 
-        recommendation = generate_recommended_next_step(work_efforts, projects, experiments, proof_cases)
+        recommendation = generate_recommended_next_step(
+            work_efforts, projects, experiments, proof_cases
+        )
 
         assert recommendation["type"] == "project"
         assert "Advance" in recommendation["action"]
@@ -556,7 +556,9 @@ class TestGenerateRecommendedNextStep:
         experiments = [{"id": "exp-001", "verified": False}]
         proof_cases = []
 
-        recommendation = generate_recommended_next_step(work_efforts, projects, experiments, proof_cases, None, temp_project_path)
+        recommendation = generate_recommended_next_step(
+            work_efforts, projects, experiments, proof_cases, None, temp_project_path
+        )
 
         assert recommendation["type"] == "experiment"
         assert "Verify" in recommendation["action"]
@@ -569,7 +571,9 @@ class TestGenerateRecommendedNextStep:
         experiments = []
         proof_cases = [{"id": "proof-001", "verdict": "PENDING"}]
 
-        recommendation = generate_recommended_next_step(work_efforts, projects, experiments, proof_cases)
+        recommendation = generate_recommended_next_step(
+            work_efforts, projects, experiments, proof_cases
+        )
 
         assert recommendation["type"] == "proof_case"
         assert "Resolve" in recommendation["action"]
@@ -590,7 +594,14 @@ class TestGenerateMarkdownReport:
     def test_generate_markdown_report_all_sections(self):
         """Test that all sections are present in markdown report."""
         work_efforts = [{"id": "WE-001", "title": "Test", "status": "active"}]
-        templates = [{"name": "template1", "category": "academic", "description": "A test template", "tags": []}]
+        templates = [
+            {
+                "name": "template1",
+                "category": "academic",
+                "description": "A test template",
+                "tags": [],
+            }
+        ]
         catalog = {"total_records": 10}
         experiments = []
         chat_context = {}
@@ -599,7 +610,14 @@ class TestGenerateMarkdownReport:
         projects = []
 
         markdown = generate_markdown_report(
-            work_efforts, templates, catalog, experiments, chat_context, proof_cases, reasoning_trace, projects
+            work_efforts,
+            templates,
+            catalog,
+            experiments,
+            chat_context,
+            proof_cases,
+            reasoning_trace,
+            projects,
         )
 
         assert "#" in markdown  # Should have headers
@@ -610,7 +628,7 @@ class TestGenerateMarkdownReport:
         work_efforts = [
             {"id": "WE-001", "status": "active"},
             {"id": "WE-002", "status": "open"},
-            {"id": "WE-003", "status": "completed"}
+            {"id": "WE-003", "status": "completed"},
         ]
         templates = []
         catalog = {}
@@ -621,7 +639,14 @@ class TestGenerateMarkdownReport:
         projects = []
 
         markdown = generate_markdown_report(
-            work_efforts, templates, catalog, experiments, chat_context, proof_cases, reasoning_trace, projects
+            work_efforts,
+            templates,
+            catalog,
+            experiments,
+            chat_context,
+            proof_cases,
+            reasoning_trace,
+            projects,
         )
 
         # Should mention work efforts count
@@ -658,9 +683,7 @@ class TestGenerateWaftHtml:
     def test_generate_waft_html_session_history(self):
         """Test session history integration."""
         html_content = "<h2>Abstract</h2><p>Content</p>"
-        session_history = [
-            {"file": "show_me_20260117_120000.html", "date": "2026-01-17"}
-        ]
+        session_history = [{"file": "show_me_20260117_120000.html", "date": "2026-01-17"}]
         html = generate_waft_html(html_content, session_history=session_history)
 
         assert "Session History" in html or "session" in html.lower()
@@ -691,8 +714,16 @@ class TestGenerateHtmlReport:
 
         output_path = temp_project_path / "test_output.html"
         result_path = generate_html_report(
-            temp_project_path, output_path, work_efforts, templates, catalog,
-            experiments, chat_context, proof_cases, reasoning_trace, projects
+            temp_project_path,
+            output_path,
+            work_efforts,
+            templates,
+            catalog,
+            experiments,
+            chat_context,
+            proof_cases,
+            reasoning_trace,
+            projects,
         )
 
         assert result_path.exists()

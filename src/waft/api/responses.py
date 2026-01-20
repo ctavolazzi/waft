@@ -2,16 +2,17 @@
 Standard API response models.
 """
 
-from typing import Dict, Any, Optional
+from typing import Any
+
 from pydantic import BaseModel
-from datetime import datetime
 
 
 class ErrorResponse(BaseModel):
     """Standard error response format."""
+
     error: str  # Error type/code
     message: str  # Human-readable message
-    detail: Optional[Dict[str, Any]] = None  # Additional context
+    detail: dict[str, Any] | None = None  # Additional context
     timestamp: str  # ISO format
 
     class Config:
@@ -19,10 +20,8 @@ class ErrorResponse(BaseModel):
             "example": {
                 "error": "VALIDATION_ERROR",
                 "message": "Request validation failed",
-                "detail": {
-                    "field_name": ["Error message 1", "Error message 2"]
-                },
-                "timestamp": "2026-01-16T20:19:00"
+                "detail": {"field_name": ["Error message 1", "Error message 2"]},
+                "timestamp": "2026-01-16T20:19:00",
             }
         }
 
@@ -30,6 +29,7 @@ class ErrorResponse(BaseModel):
 # Error codes
 class ErrorCodes:
     """Standard error codes."""
+
     VALIDATION_ERROR = "VALIDATION_ERROR"
     NOT_FOUND = "NOT_FOUND"
     CONFLICT = "CONFLICT"

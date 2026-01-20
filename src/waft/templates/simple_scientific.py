@@ -16,9 +16,9 @@ Use this as the foundation for more complex templates.
 """
 
 from pathlib import Path
+
 from jinja2 import Template
 from weasyprint import HTML
-
 
 # Simple, clean HTML/CSS template
 SIMPLE_SCIENTIFIC_TEMPLATE = """
@@ -317,7 +317,7 @@ def generate_simple_scientific_document(
     date: str = None,
     abstract: str = None,
     references: list = None,
-    short_title: str = None
+    short_title: str = None,
 ) -> Path:
     """
     Generate a simple scientific document using the clean template.
@@ -351,7 +351,7 @@ def generate_simple_scientific_document(
         date=date,
         abstract=abstract,
         references=references or [],
-        short_title=short_title
+        short_title=short_title,
     )
 
     # Generate PDF
@@ -446,7 +446,7 @@ if __name__ == "__main__":
         references=[
             "[1] Smith, J. (2025). Document Design Principles. Journal of Typography, 12(3), 45-67.",
             "[2] Doe, J. (2024). Scientific Publishing Best Practices. Academic Press.",
-        ]
+        ],
     )
 
     print(f"✓ Generated: {output_path}")

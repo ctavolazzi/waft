@@ -23,13 +23,15 @@ This is the recursive self-improvement loop:
 Run this to see WAFT reflect on its own existence.
 """
 
-from pathlib import Path
 import sys
+from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.waft.reflection import ReflectionSystem, run_reflection_example, generate_architecture_doc_example
-from src.waft.binder import Binder, DocumentEntry
+from src.waft.reflection import (
+    generate_architecture_doc_example,
+    run_reflection_example,
+)
 
 
 def main():
@@ -67,8 +69,8 @@ def main():
     print("=" * 80)
     print()
     print("Generated:")
-    print(f"  1. Reflection Report: _work_efforts/WAFT_Reflection_Report.pdf")
-    print(f"  2. Architecture Doc: _work_efforts/WAFT_Architecture.pdf")
+    print("  1. Reflection Report: _work_efforts/WAFT_Reflection_Report.pdf")
+    print("  2. Architecture Doc: _work_efforts/WAFT_Architecture.pdf")
     print()
     print("WAFT has successfully documented itself.")
     print()

@@ -5,25 +5,27 @@ This book demonstrates that the scientific method tool works by documenting
 both proof demonstrations and their results.
 """
 
-from pathlib import Path
 import sys
 from datetime import datetime
+from pathlib import Path
 
 # Add project root to path
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 sys.path.insert(0, str(project_root / "src"))
 
-from waft.evolution.pdf_generator import PDFGenerator
 from rich.console import Console
+
+from waft.evolution.pdf_generator import PDFGenerator
 
 console = Console()
 
+
 def create_proof_book():
     """Create comprehensive book documenting the proof."""
-    
+
     date_str = datetime.now().strftime("%B %d, %Y at %I:%M %p")
-    
+
     content = f"""# Proof: Scientific Method Tool Works
 
 **Date**: {date_str}  
@@ -724,24 +726,32 @@ PROOF: Scientific Method Tool with Real D&D Experiment
 
 *This document proves that WAFT's scientific method tool is fully functional and ready for experimental verification of system improvements, Being behavior, and gameplay mechanics.*
 """
-    
+
     console.print("\n[bold cyan]📚 Creating Proof Book...[/bold cyan]\n")
-    
+
     output_path = Path(__file__).parent / "proof_scientific_method_tool.pdf"
-    
+
     PDFGenerator.from_content(
         content=content,
         title="Proof: Scientific Method Tool Works",
         style="clinical_standard",
         author="WAFT Scientific Method Tool",
         subject="Comprehensive Proof Documentation",
-        keywords=["scientific method", "proof", "verification", "experiments", "state capture", "data collection"]
+        keywords=[
+            "scientific method",
+            "proof",
+            "verification",
+            "experiments",
+            "state capture",
+            "data collection",
+        ],
     ).save(str(output_path), open_pdf=False)
-    
+
     console.print(f"\n[bold green]✅ Proof book generated:[/bold green] {output_path}")
     console.print(f"[dim]File size: {output_path.stat().st_size / 1024:.1f} KB[/dim]\n")
-    
+
     return output_path
+
 
 if __name__ == "__main__":
     create_proof_book()

@@ -4,6 +4,7 @@
 import subprocess
 import sys
 
+
 def main():
     """Create the release using gh CLI."""
     release_notes = """# Waft v0.0.1 - Initial Release
@@ -50,9 +51,14 @@ See [README.md](https://github.com/ctavolazzi/waft/blob/main/README.md) for full
         # Use gh CLI to create release
         result = subprocess.run(
             [
-                "gh", "release", "create", "v0.0.1",
-                "--title", "v0.0.1 - Initial Release",
-                "--notes", release_notes,
+                "gh",
+                "release",
+                "create",
+                "v0.0.1",
+                "--title",
+                "v0.0.1 - Initial Release",
+                "--notes",
+                release_notes,
             ],
             check=True,
             capture_output=True,
@@ -64,7 +70,7 @@ See [README.md](https://github.com/ctavolazzi/waft/blob/main/README.md) for full
         return True
 
     except subprocess.CalledProcessError as e:
-        print(f"❌ Failed to create release:")
+        print("❌ Failed to create release:")
         print(f"   {e.stderr}")
         print("\n💡 Alternative: Create release manually at:")
         print("   https://github.com/ctavolazzi/waft/releases/new")
@@ -76,9 +82,7 @@ See [README.md](https://github.com/ctavolazzi/waft/blob/main/README.md) for full
         print("   https://github.com/ctavolazzi/waft/releases/new")
         return False
 
+
 if __name__ == "__main__":
     success = main()
     sys.exit(0 if success else 1)
-
-
-

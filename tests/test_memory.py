@@ -1,6 +1,5 @@
 """Tests for MemoryManager."""
 
-from pathlib import Path
 from waft.core.memory import MemoryManager
 
 
@@ -98,5 +97,3 @@ def test_get_standards_files(project_with_pyrite):
     files = manager.get_standards_files()
     assert len(files) == 1
     assert test_file in files
-
-

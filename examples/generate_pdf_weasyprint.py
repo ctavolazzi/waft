@@ -4,22 +4,22 @@ Converts markdown file to PDF using WeasyPrint (HTML/CSS → PDF).
 """
 
 from pathlib import Path
-from weasyprint import HTML, CSS
+
 import markdown
+from weasyprint import HTML
 
 
 def generate_pdf_weasyprint(md_file: Path, output_path: Path):
     """Generate PDF from markdown using WeasyPrint."""
-    
+
     # Read markdown file
     md_content = md_file.read_text()
-    
+
     # Convert markdown to HTML
     html_content = markdown.markdown(
-        md_content,
-        extensions=['fenced_code', 'tables', 'nl2br', 'extra', 'codehilite']
+        md_content, extensions=["fenced_code", "tables", "nl2br", "extra", "codehilite"]
     )
-    
+
     # Wrap in full HTML document with CSS
     full_html = f"""<!DOCTYPE html>
 <html>
@@ -118,7 +118,7 @@ def generate_pdf_weasyprint(md_file: Path, output_path: Path):
     {html_content}
 </body>
 </html>"""
-    
+
     # Generate PDF
     HTML(string=full_html).write_pdf(str(output_path))
     print(f"✅ WeasyPrint PDF generated: {output_path}")
@@ -128,5 +128,5 @@ if __name__ == "__main__":
     # Input markdown file
     md_file = Path("_temp_pdf_samples/session_recap_2026-01-12.md")
     output_path = Path("_temp_pdf_samples/session_recap_weasyprint.pdf")
-    
+
     generate_pdf_weasyprint(md_file, output_path)

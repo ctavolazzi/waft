@@ -2,17 +2,35 @@
 FastAPI application for Waft Visualizer API.
 """
 
-from fastapi import FastAPI, Request, HTTPException, status
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
-from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
-from pathlib import Path
-from datetime import datetime
 import logging
+from datetime import datetime
+from pathlib import Path
 
-from .routes import state, git, work_efforts, empirica, decision, gym, being, campfire, protocel, cartographer, projects, health, auth, quests, oracle, evolve_ui_monitor
-from .responses import ErrorResponse, ErrorCodes
+from fastapi import FastAPI, HTTPException, Request, status
+from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
+
+from .responses import ErrorCodes, ErrorResponse
+from .routes import (
+    auth,
+    being,
+    campfire,
+    cartographer,
+    decision,
+    empirica,
+    evolve_ui_monitor,
+    git,
+    gym,
+    health,
+    oracle,
+    projects,
+    protocel,
+    quests,
+    state,
+    work_efforts,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -83,7 +101,7 @@ def create_app(project_path: Path, static_dir: Path | None = None) -> FastAPI:
                 "name": "quests",
                 "description": "Quest Guide Implementation system. Gamified quest-based development orchestrator.",
             },
-        ]
+        ],
     )
 
     # CORS middleware
@@ -121,12 +139,9 @@ def create_app(project_path: Path, static_dir: Path | None = None) -> FastAPI:
             error=error_code,
             message=exc.detail if isinstance(exc.detail, str) else "An error occurred",
             detail=exc.detail if isinstance(exc.detail, dict) else None,
-            timestamp=datetime.now().isoformat()
+            timestamp=datetime.now().isoformat(),
         )
-        return JSONResponse(
-            status_code=exc.status_code,
-            content=error_response.model_dump()
-        )
+        return JSONResponse(status_code=exc.status_code, content=error_response.model_dump())
 
     @app.exception_handler(RequestValidationError)
     async def validation_exception_handler(request: Request, exc: RequestValidationError):
@@ -142,11 +157,10 @@ def create_app(project_path: Path, static_dir: Path | None = None) -> FastAPI:
             error=ErrorCodes.VALIDATION_ERROR,
             message="Request validation failed",
             detail=errors,
-            timestamp=datetime.now().isoformat()
+            timestamp=datetime.now().isoformat(),
         )
         return JSONResponse(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            content=error_response.model_dump()
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, content=error_response.model_dump()
         )
 
     @app.exception_handler(ValueError)
@@ -154,13 +168,10 @@ def create_app(project_path: Path, static_dir: Path | None = None) -> FastAPI:
         """Handle ValueError exceptions."""
         logger.warning(f"ValueError in {request.url.path}: {exc}")
         error_response = ErrorResponse(
-            error=ErrorCodes.BAD_REQUEST,
-            message=str(exc),
-            timestamp=datetime.now().isoformat()
+            error=ErrorCodes.BAD_REQUEST, message=str(exc), timestamp=datetime.now().isoformat()
         )
         return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            content=error_response.model_dump()
+            status_code=status.HTTP_400_BAD_REQUEST, content=error_response.model_dump()
         )
 
     @app.exception_handler(FileNotFoundError)
@@ -171,11 +182,10 @@ def create_app(project_path: Path, static_dir: Path | None = None) -> FastAPI:
             error=ErrorCodes.NOT_FOUND,
             message="Resource not found",
             detail={"path": str(exc)},
-            timestamp=datetime.now().isoformat()
+            timestamp=datetime.now().isoformat(),
         )
         return JSONResponse(
-            status_code=status.HTTP_404_NOT_FOUND,
-            content=error_response.model_dump()
+            status_code=status.HTTP_404_NOT_FOUND, content=error_response.model_dump()
         )
 
     @app.exception_handler(Exception)
@@ -185,11 +195,10 @@ def create_app(project_path: Path, static_dir: Path | None = None) -> FastAPI:
         error_response = ErrorResponse(
             error=ErrorCodes.INTERNAL_ERROR,
             message="An internal server error occurred",
-            timestamp=datetime.now().isoformat()
+            timestamp=datetime.now().isoformat(),
         )
         return JSONResponse(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            content=error_response.model_dump()
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content=error_response.model_dump()
         )
 
     # API routes

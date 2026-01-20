@@ -7,8 +7,9 @@ from the session summary markdown content.
 """
 
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
+
 from jinja2 import Template
 from weasyprint import HTML
 
@@ -24,57 +25,62 @@ if not summary_path.exists():
     sys.exit(1)
 
 summary_content = summary_path.read_text(encoding="utf-8")
-continuation_content = continuation_path.read_text(encoding="utf-8") if continuation_path.exists() else ""
+continuation_content = (
+    continuation_path.read_text(encoding="utf-8") if continuation_path.exists() else ""
+)
+
 
 # Convert markdown to HTML (simple conversion)
 def markdown_to_html(md_text: str) -> str:
     """Simple markdown to HTML conversion for session summary."""
     html = md_text
-    
+
     # Headers
     html = html.replace("### ", "<h3>").replace("\n###", "</h3>\n")
     html = html.replace("## ", "<h2>").replace("\n##", "</h2>\n")
     html = html.replace("# ", "<h1>").replace("\n#", "</h1>\n")
-    
+
     # Bold
     html = html.replace("**", "<strong>").replace("**", "</strong>")
-    
+
     # Code blocks
     import re
-    html = re.sub(r'```(\w+)?\n(.*?)```', r'<pre><code>\2</code></pre>', html, flags=re.DOTALL)
-    
+
+    html = re.sub(r"```(\w+)?\n(.*?)```", r"<pre><code>\2</code></pre>", html, flags=re.DOTALL)
+
     # Inline code
-    html = re.sub(r'`([^`]+)`', r'<code>\1</code>', html)
-    
+    html = re.sub(r"`([^`]+)`", r"<code>\1</code>", html)
+
     # Lists
-    lines = html.split('\n')
+    lines = html.split("\n")
     in_list = False
     result = []
     for line in lines:
-        if line.strip().startswith('- '):
+        if line.strip().startswith("- "):
             if not in_list:
-                result.append('<ul>')
+                result.append("<ul>")
                 in_list = True
-            result.append(f'<li>{line.strip()[2:]}</li>')
-        elif line.strip().startswith('1. '):
+            result.append(f"<li>{line.strip()[2:]}</li>")
+        elif line.strip().startswith("1. "):
             if not in_list:
-                result.append('<ol>')
+                result.append("<ol>")
                 in_list = True
-            result.append(f'<li>{line.strip()[3:]}</li>')
+            result.append(f"<li>{line.strip()[3:]}</li>")
         else:
             if in_list:
-                result.append('</ul>' if line.strip().startswith('-') else '</ol>')
+                result.append("</ul>" if line.strip().startswith("-") else "</ol>")
                 in_list = False
-            if line.strip() and not line.strip().startswith('#'):
-                result.append(f'<p>{line}</p>')
+            if line.strip() and not line.strip().startswith("#"):
+                result.append(f"<p>{line}</p>")
             else:
                 result.append(line)
-    html = '\n'.join(result)
-    
+    html = "\n".join(result)
+
     # Horizontal rules
-    html = html.replace('---', '<hr>')
-    
+    html = html.replace("---", "<hr>")
+
     return html
+
 
 # Create HTML document
 html_template = """
@@ -211,7 +217,7 @@ template = Template(html_template)
 html_output = template.render(
     date=datetime.now().strftime("%B %d, %Y"),
     summary_html=summary_html,
-    continuation_html=continuation_html
+    continuation_html=continuation_html,
 )
 
 # Generate PDF

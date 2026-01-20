@@ -7,8 +7,8 @@ and generates a professionally formatted PDF.
 """
 
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 # Add project root to path for imports
 # File is at: _work_efforts/WE-260112-.../generate_scientific_pdf.py
@@ -18,7 +18,7 @@ sys.path.insert(0, str(project_root))
 
 # Read the specification
 spec_path = Path(__file__).parent / "LARVAL_FORM_COMPLETE_SPECIFICATION.md"
-with open(spec_path, 'r', encoding='utf-8') as f:
+with open(spec_path, encoding="utf-8") as f:
     spec_content = f.read()
 
 # Transform into scientific research paper format
@@ -534,7 +534,7 @@ VALUES ('New_Artifact_Name', 'G28\nG1 X10 Y10', 'VOID');
 
 ---
 
-**Document Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}  
+**Document Generated**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}  
 **Specification Version**: v0.6.0  
 **Status**: Complete Implementation  
 **Document Type**: Scientific Research & Technical Specification
@@ -543,10 +543,12 @@ VALUES ('New_Artifact_Name', 'G28\nG1 X10 Y10', 'VOID');
 # Generate PDF using ScientificPDFGenerator
 try:
     from src.waft.evolution.scientific_pdf_generator import ScientificPDFGenerator
+
     use_scientific = True
 except ImportError:
     try:
         from src.waft.evolution.pdf_generator import PDFGenerator
+
         use_scientific = False
         print("⚠️  ScientificPDFGenerator not available, using PDFGenerator instead")
     except ImportError as e:
@@ -566,36 +568,32 @@ if use_scientific:
         content=scientific_content,
         title="Waft Larval Form: Complete Technical Specification v0.6.0",
         style="clinical_standard",  # Academic style: Times New Roman, 1-inch margins
-        scientific_mode=True
+        scientific_mode=True,
     ).save(
         output_path=output_path,
         open_pdf=False,
         collect_metrics=True,
         convert_to_png=True,
-        png_dpi=300
+        png_dpi=300,
     )
 else:
     pdf_path = PDFGenerator.from_content(
         content=scientific_content,
         title="Waft Larval Form: Complete Technical Specification v0.6.0",
-        style="clinical_standard"  # Academic style: Times New Roman, 1-inch margins
-    ).save(
-        output_path=output_path,
-        open_pdf=False,
-        convert_to_png=True,
-        png_dpi=300
-    )
+        style="clinical_standard",  # Academic style: Times New Roman, 1-inch margins
+    ).save(output_path=output_path, open_pdf=False, convert_to_png=True, png_dpi=300)
 
 print(f"✅ PDF generated: {pdf_path}")
 print(f"📄 File size: {pdf_path.stat().st_size / 1024:.2f} KB")
 
 # Check for analysis file
-analysis_path = pdf_path.with_suffix('.analysis.json')
+analysis_path = pdf_path.with_suffix(".analysis.json")
 if analysis_path.exists():
     import json
+
     with open(analysis_path) as f:
         analysis = json.load(f)
-    print(f"\n🔬 Quality Analysis:")
+    print("\n🔬 Quality Analysis:")
     print(f"   Completeness: {analysis.get('scores', {}).get('completeness', 0):.2f}")
     print(f"   Structure: {analysis.get('scores', {}).get('structure', 0):.2f}")
     print(f"   Gaps: {len(analysis.get('gaps', []))}")

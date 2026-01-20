@@ -8,15 +8,15 @@ This creates example documents demonstrating each template:
 4. Personal Memo - Staff communication
 """
 
-from pathlib import Path
 import sys
+from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.waft.templates.field_guide import generate_field_guide
-from src.waft.templates.tm_report import generate_tm_report
 from src.waft.templates.lab_notes import generate_lab_notes
 from src.waft.templates.personal_memo import generate_personal_memo
+from src.waft.templates.tm_report import generate_tm_report
 
 
 def generate_field_guide_example():
@@ -249,7 +249,7 @@ REMEMBER: Your survival depends on following these procedures.
         subtitle="Essential Protocols for Quantum-Unstable Environments",
         classification="RESTRICTED - L5+ PERSONNEL ONLY",
         issued_by="TELEPORT MASSIVE Quantum Safety Office",
-        date="January 2026"
+        date="January 2026",
     )
 
     print(f"✓ Field Guide: {output_path.name}")
@@ -501,9 +501,13 @@ and increased R&D investment.
         distribution="Executive Team, Facility Directors, Safety Board",
         summary=summary,
         signatures=[
-            {"name": "Dr. James K. Morrison", "title": "Chief Operations Analyst", "date": "Jan 15, 2026"},
-            {"name": "Dr. Elena Vasquez", "title": "Chief Medical Officer", "date": "Jan 15, 2026"}
-        ]
+            {
+                "name": "Dr. James K. Morrison",
+                "title": "Chief Operations Analyst",
+                "date": "Jan 15, 2026",
+            },
+            {"name": "Dr. Elena Vasquez", "title": "Chief Medical Officer", "date": "Jan 15, 2026"},
+        ],
     )
 
     print(f"✓ TM Report: {output_path.name}")
@@ -760,7 +764,7 @@ the teleportation program.
         facility="TELEPORT MASSIVE Tokyo Facility - Quantum Neuroscience Lab",
         project="PROJECT LIGHTCONE - Observer Effect Studies",
         date="January 10-12, 2026",
-        classification="TOP SECRET // ORACLE EYES ONLY"
+        classification="TOP SECRET // ORACLE EYES ONLY",
     )
 
     print(f"✓ Lab Notes: {output_path.name}")
@@ -876,7 +880,7 @@ Destroy this after reading. I'm serious.
         subject="Questions about the NTS-2025-11-18 incident",
         date="December 15, 2025",
         signature="- Sarah",
-        memo_style=True
+        memo_style=True,
     )
 
     print(f"✓ Personal Memo: {output_path.name}")

@@ -2,9 +2,7 @@
 Basic tests for Projects API endpoints.
 """
 
-import pytest
 from fastapi.testclient import TestClient
-from pathlib import Path
 
 
 def test_create_project(test_client: TestClient, auth_token: str):
@@ -15,9 +13,9 @@ def test_create_project(test_client: TestClient, auth_token: str):
             "title": "Test Project",
             "description": "A test project",
             "tags": ["test", "api"],
-            "status": "planning"
+            "status": "planning",
         },
-        headers={"Authorization": f"Bearer {auth_token}"}
+        headers={"Authorization": f"Bearer {auth_token}"},
     )
     assert response.status_code == 201
     data = response.json()
@@ -37,11 +35,7 @@ def test_get_projects(test_client: TestClient):
 def test_create_project_requires_auth(test_client: TestClient):
     """Test that POST requires authentication."""
     response = test_client.post(
-        "/api/projects",
-        json={
-            "title": "Test Project",
-            "description": "A test project"
-        }
+        "/api/projects", json={"title": "Test Project", "description": "A test project"}
     )
     assert response.status_code == 401
 

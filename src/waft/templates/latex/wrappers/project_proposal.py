@@ -11,6 +11,7 @@ source: ashad001
 """
 
 from pathlib import Path
+
 from ..compiler import LaTeXCompiler
 from ..content_builders import build_report_content
 
@@ -30,7 +31,7 @@ def generate_project_proposal(
     evaluation: str = "",
     expected_outcome: str = "",
     conclusion: str = "",
-    **kwargs
+    **kwargs,
 ) -> Path:
     """
     Generate PDF using Project Proposal LaTeX template.
@@ -56,7 +57,12 @@ def generate_project_proposal(
         Path to generated PDF
     """
     # Get template path (from wrappers/ to project root, then to templates/)
-    template_dir = Path(__file__).parent.parent.parent.parent.parent.parent / "templates" / "ashad001-latex-templates" / "Project Proposal Template"
+    template_dir = (
+        Path(__file__).parent.parent.parent.parent.parent.parent
+        / "templates"
+        / "ashad001-latex-templates"
+        / "Project Proposal Template"
+    )
     template_file = template_dir / "main.tex"
 
     if not template_file.exists():
@@ -74,11 +80,7 @@ def generate_project_proposal(
         members.append({"name": "", "email": ""})
 
     # Build LaTeX content from markdown/HTML
-    latex_content = build_report_content(
-        title=title,
-        content=content,
-        **kwargs
-    )
+    latex_content = build_report_content(title=title, content=content, **kwargs)
 
     # Replace placeholders in template (templates use hardcoded placeholders, not Jinja2)
     filled_latex = template_content
@@ -90,42 +92,67 @@ def generate_project_proposal(
     filled_latex = filled_latex.replace("Department of Computer Science", department)
 
     # Replace member placeholders
-    member1_name = members[0].get("name", "") if isinstance(members[0], dict) else members[0] if len(members) > 0 else "MEMBER1"
+    member1_name = (
+        members[0].get("name", "")
+        if isinstance(members[0], dict)
+        else members[0]
+        if len(members) > 0
+        else "MEMBER1"
+    )
     member1_email = members[0].get("email", "") if isinstance(members[0], dict) else ""
     filled_latex = filled_latex.replace("MEMBER1", member1_name)
     filled_latex = filled_latex.replace("MEMBER1@gmail.com", member1_email or "MEMBER1@gmail.com")
 
-    member2_name = members[1].get("name", "") if isinstance(members[1], dict) else members[1] if len(members) > 1 else "MEMBER2"
+    member2_name = (
+        members[1].get("name", "")
+        if isinstance(members[1], dict)
+        else members[1]
+        if len(members) > 1
+        else "MEMBER2"
+    )
     member2_email = members[1].get("email", "") if isinstance(members[1], dict) else ""
     filled_latex = filled_latex.replace("MEMBER2", member2_name)
     filled_latex = filled_latex.replace("MEMBER2@gmail.com", member2_email or "MEMBER2@gmail.com")
 
-    member3_name = members[2].get("name", "") if isinstance(members[2], dict) else members[2] if len(members) > 2 else "MEMBER3"
+    member3_name = (
+        members[2].get("name", "")
+        if isinstance(members[2], dict)
+        else members[2]
+        if len(members) > 2
+        else "MEMBER3"
+    )
     member3_email = members[2].get("email", "") if isinstance(members[2], dict) else ""
     filled_latex = filled_latex.replace("MEMBER3", member3_name)
     filled_latex = filled_latex.replace("MEMBER3@gmail.com", member3_email or "MEMBER3@gmail.com")
 
     # Replace section content
     if introduction:
-        filled_latex = filled_latex.replace("\\section{Introduction}", f"\\section{{Introduction}}\n\n{introduction}")
+        filled_latex = filled_latex.replace(
+            "\\section{Introduction}", f"\\section{{Introduction}}\n\n{introduction}"
+        )
     if objectives:
-        filled_latex = filled_latex.replace("\\section{Objectives}", f"\\section{{Objectives}}\n\n{objectives}")
+        filled_latex = filled_latex.replace(
+            "\\section{Objectives}", f"\\section{{Objectives}}\n\n{objectives}"
+        )
     if methodology:
-        filled_latex = filled_latex.replace("\\section{Methodology}", f"\\section{{Methodology}}\n\n{methodology}")
+        filled_latex = filled_latex.replace(
+            "\\section{Methodology}", f"\\section{{Methodology}}\n\n{methodology}"
+        )
     if evaluation:
-        filled_latex = filled_latex.replace("\\subsection{Evaluation}", f"\\subsection{{Evaluation}}\n\n{evaluation}")
+        filled_latex = filled_latex.replace(
+            "\\subsection{Evaluation}", f"\\subsection{{Evaluation}}\n\n{evaluation}"
+        )
     if expected_outcome:
-        filled_latex = filled_latex.replace("\\section{Expected Outcome}", f"\\section{{Expected Outcome}}\n\n{expected_outcome}")
+        filled_latex = filled_latex.replace(
+            "\\section{Expected Outcome}", f"\\section{{Expected Outcome}}\n\n{expected_outcome}"
+        )
     if conclusion:
-        filled_latex = filled_latex.replace("\\section{Conclusion}", f"\\section{{Conclusion}}\n\n{conclusion}")
+        filled_latex = filled_latex.replace(
+            "\\section{Conclusion}", f"\\section{{Conclusion}}\n\n{conclusion}"
+        )
 
     # Compile to PDF
     compiler = LaTeXCompiler(compiler="pdflatex")
-    pdf_path = compiler.compile(
-        filled_latex,
-        output_path,
-        working_dir=template_dir,
-        runs=2
-    )
+    pdf_path = compiler.compile(filled_latex, output_path, working_dir=template_dir, runs=2)
 
     return pdf_path

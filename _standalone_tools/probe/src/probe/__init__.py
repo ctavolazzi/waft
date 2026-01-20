@@ -5,12 +5,12 @@ A flexible system for probing services, endpoints, files, and collecting data.
 """
 
 from .probe import (
-    Probe,
-    HTTPProbe,
     FileSystemProbe,
-    ServiceProbe,
+    HTTPProbe,
+    Probe,
     ProbeCollector,
     ProbeResult,
+    ServiceProbe,
 )
 
 __version__ = "0.1.0"

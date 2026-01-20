@@ -15,9 +15,9 @@ Features:
 """
 
 from pathlib import Path
+
 from jinja2 import Template
 from weasyprint import HTML
-
 
 STORYBOOK_TEMPLATE = """
 <!DOCTYPE html>
@@ -248,7 +248,7 @@ def generate_storybook(
     emphasis_color: str = "#e91e63",
     show_border: bool = True,
     title_ornament: str = "✨ 🌟 ✨",
-    end_ornament: str = "🌈 ⭐ 🌈"
+    end_ornament: str = "🌈 ⭐ 🌈",
 ) -> Path:
     """
     Generate a children's storybook.
@@ -309,7 +309,7 @@ def generate_storybook(
         emphasis_color=emphasis_color,
         show_border=show_border,
         title_ornament=title_ornament,
-        end_ornament=end_ornament
+        end_ornament=end_ornament,
     )
 
     HTML(string=html_output).write_pdf(output_path)

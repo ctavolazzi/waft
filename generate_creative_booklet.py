@@ -16,13 +16,15 @@ Creates a booklet with:
 - And more!
 """
 
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
+
 from waft import PDF
 
 # Create output directory
 OUTPUT_DIR = Path("_work_efforts/creative_booklet")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
 
 def generate_poetry_collection():
     """Generate a poetry collection PDF."""
@@ -80,12 +82,12 @@ Lost in the void of digital dreams,
 But in our hearts, they still remain,
 Until we write them once again.
 """
-    
-    PDF.from_markdown(
-        markdown=content,
-        title="The Code and the Cosmos"
-    ).save(OUTPUT_DIR / "01_poetry_collection.pdf")
+
+    PDF.from_markdown(markdown=content, title="The Code and the Cosmos").save(
+        OUTPUT_DIR / "01_poetry_collection.pdf"
+    )
     print("✅ Generated: Poetry Collection")
+
 
 def generate_technical_manifesto():
     """Generate a technical manifesto."""
@@ -132,12 +134,12 @@ Embrace simplicity. Write clearly. Test thoroughly. Refactor continuously.
 
 The best code is code that doesn't need to exist.
 """
-    
-    PDF.from_markdown(
-        markdown=content,
-        title="The Minimalist Developer's Manifesto"
-    ).save(OUTPUT_DIR / "02_technical_manifesto.pdf")
+
+    PDF.from_markdown(markdown=content, title="The Minimalist Developer's Manifesto").save(
+        OUTPUT_DIR / "02_technical_manifesto.pdf"
+    )
     print("✅ Generated: Technical Manifesto")
+
 
 def generate_philosophical_reflection():
     """Generate a philosophical reflection."""
@@ -194,12 +196,12 @@ Code is a mirror. In writing code, we write ourselves. In debugging code, we deb
 
 The question isn't "What is code?" but "What does code reveal about us?"
 """
-    
-    PDF.from_markdown(
-        markdown=content,
-        title="On the Nature of Digital Existence"
-    ).save(OUTPUT_DIR / "03_philosophical_reflection.pdf")
+
+    PDF.from_markdown(markdown=content, title="On the Nature of Digital Existence").save(
+        OUTPUT_DIR / "03_philosophical_reflection.pdf"
+    )
     print("✅ Generated: Philosophical Reflection")
+
 
 def generate_recipe_book():
     """Generate a recipe book."""
@@ -291,12 +293,12 @@ The bug is usually in the last thing you changed. But not always.
 ### Serving Suggestion
 Serve with humility and gratitude. Code reviews make everyone better.
 """
-    
-    PDF.from_markdown(
-        markdown=content,
-        title="The Developer's Cookbook"
-    ).save(OUTPUT_DIR / "04_recipe_book.pdf")
+
+    PDF.from_markdown(markdown=content, title="The Developer's Cookbook").save(
+        OUTPUT_DIR / "04_recipe_book.pdf"
+    )
     print("✅ Generated: Recipe Book")
+
 
 def generate_travel_guide():
     """Generate a travel guide."""
@@ -406,15 +408,16 @@ Every codebase is a journey. Take your time. Ask questions. Learn the landscape.
 
 Happy travels!
 """
-    
+
     PDF.from_template(
         template="field_guide",
         title="A Traveler's Guide to Codebases",
         content=content,
         series="DEVELOPER GUIDE",
-        number="DG-001"
+        number="DG-001",
     ).save(OUTPUT_DIR / "05_travel_guide.pdf")
     print("✅ Generated: Travel Guide")
+
 
 def generate_scientific_paper():
     """Generate a creative scientific paper."""
@@ -456,15 +459,16 @@ Information entropy provides a new lens for understanding code complexity. By re
 2. McCabe, T. J. (1976). A Complexity Measure
 3. Martin, R. C. (2008). Clean Code
 """
-    
+
     PDF.scientific_paper(
         title="Information Entropy as a Measure of Code Complexity",
         abstract="This paper presents a novel approach to understanding code complexity through the lens of information theory.",
         content=content,
         authors=["Dr. Code Complexity", "Prof. Information Theory"],
-        affiliations=["WAFT Research Institute", "Digital Philosophy Department"]
+        affiliations=["WAFT Research Institute", "Digital Philosophy Department"],
     ).save(OUTPUT_DIR / "06_scientific_paper.pdf")
     print("✅ Generated: Scientific Paper")
+
 
 def generate_code_review_guide():
     """Generate a code review guide."""
@@ -590,12 +594,12 @@ When there are multiple valid approaches. Discuss the trade-offs.
 
 Code review is a conversation, not a judgment. The goal is better code, not perfect code. And better code comes from collaboration, not criticism.
 """
-    
-    PDF.from_markdown(
-        markdown=content,
-        title="The Art of Code Review"
-    ).save(OUTPUT_DIR / "07_code_review_guide.pdf")
+
+    PDF.from_markdown(markdown=content, title="The Art of Code Review").save(
+        OUTPUT_DIR / "07_code_review_guide.pdf"
+    )
     print("✅ Generated: Code Review Guide")
+
 
 def generate_meeting_notes():
     """Generate meeting notes."""
@@ -690,12 +694,12 @@ def generate_meeting_notes():
 **Time:** 10:00 AM  
 **Focus:** Review blockers and prepare for release
 """
-    
-    PDF.from_markdown(
-        markdown=content,
-        title="Team Standup Notes - January 13, 2026"
-    ).save(OUTPUT_DIR / "08_meeting_notes.pdf")
+
+    PDF.from_markdown(markdown=content, title="Team Standup Notes - January 13, 2026").save(
+        OUTPUT_DIR / "08_meeting_notes.pdf"
+    )
     print("✅ Generated: Meeting Notes")
+
 
 def generate_personal_journal():
     """Generate a personal journal entry."""
@@ -758,12 +762,12 @@ Code is more than instructions for a computer. It's a conversation between devel
 
 Good night, code. See you tomorrow.
 """
-    
-    PDF.from_markdown(
-        markdown=content,
-        title="Developer's Journal - January 13, 2026"
-    ).save(OUTPUT_DIR / "09_personal_journal.pdf")
+
+    PDF.from_markdown(markdown=content, title="Developer's Journal - January 13, 2026").save(
+        OUTPUT_DIR / "09_personal_journal.pdf"
+    )
     print("✅ Generated: Personal Journal")
+
 
 def generate_mathematical_proof():
     """Generate a mathematical proof."""
@@ -856,12 +860,12 @@ This proof provides theoretical comfort: no bug is permanent. With enough time, 
 
 The challenge, of course, is that we don't have infinite time. But that's a problem for another proof.
 """
-    
-    PDF.from_markdown(
-        markdown=content,
-        title="A Proof That All Bugs Are Fixable"
-    ).save(OUTPUT_DIR / "10_mathematical_proof.pdf")
+
+    PDF.from_markdown(markdown=content, title="A Proof That All Bugs Are Fixable").save(
+        OUTPUT_DIR / "10_mathematical_proof.pdf"
+    )
     print("✅ Generated: Mathematical Proof")
+
 
 def generate_design_system():
     """Generate a design system guide."""
@@ -1004,15 +1008,16 @@ A design system is a living document. It evolves as we learn. The key is consist
 
 When in doubt, follow the patterns. When patterns don't exist, create them. When patterns conflict, discuss and decide.
 """
-    
+
     PDF.from_template(
         template="field_guide",
         title="WAFT Design System",
         content=content,
         series="DEVELOPER GUIDE",
-        number="DG-002"
+        number="DG-002",
     ).save(OUTPUT_DIR / "11_design_system.pdf")
     print("✅ Generated: Design System Guide")
+
 
 def generate_creative_writing():
     """Generate a creative writing piece."""
@@ -1088,12 +1093,12 @@ And they would smile, knowing that someone else had been here before. That they 
 
 The last commit is never really the last. Code lives on. And so do we.
 """
-    
-    PDF.from_markdown(
-        markdown=content,
-        title="The Last Commit"
-    ).save(OUTPUT_DIR / "12_creative_writing.pdf")
+
+    PDF.from_markdown(markdown=content, title="The Last Commit").save(
+        OUTPUT_DIR / "12_creative_writing.pdf"
+    )
     print("✅ Generated: Creative Writing")
+
 
 def generate_two_page_document():
     """Generate a two-page constraint document."""
@@ -1194,13 +1199,12 @@ And what matters is usually less than you think.
 
 *This document is exactly two pages. It proves the point.*
 """
-    
-    PDF.two_page(
-        content=content,
-        title="The Two-Page Manifesto",
-        style="clinical_standard"
-    ).save(OUTPUT_DIR / "13_two_page_manifesto.pdf")
+
+    PDF.two_page(content=content, title="The Two-Page Manifesto", style="clinical_standard").save(
+        OUTPUT_DIR / "13_two_page_manifesto.pdf"
+    )
     print("✅ Generated: Two-Page Document")
+
 
 def generate_latex_document():
     """Generate a LaTeX document."""
@@ -1252,18 +1256,18 @@ def fibonacci(n):
 
 LaTeX provides powerful typesetting capabilities for technical documents. This document demonstrates basic LaTeX features including mathematical expressions, code blocks, and lists.
 """
-    
-    PDF.latex(
-        title="LaTeX Example Document",
-        content=content
-    ).save(OUTPUT_DIR / "14_latex_document.pdf")
+
+    PDF.latex(title="LaTeX Example Document", content=content).save(
+        OUTPUT_DIR / "14_latex_document.pdf"
+    )
     print("✅ Generated: LaTeX Document")
+
 
 def generate_booklet_index():
     """Generate an index document for the booklet."""
     content = f"""
 # Creative PDF Booklet
-## Generated: {datetime.now().strftime('%B %d, %Y at %I:%M %p')}
+## Generated: {datetime.now().strftime("%B %d, %Y at %I:%M %p")}
 
 ---
 
@@ -1427,12 +1431,12 @@ Enjoy the journey through this diverse collection of documents!
 
 *Generated with ❤️ by WAFT*
 """
-    
-    PDF.from_markdown(
-        markdown=content,
-        title="Creative PDF Booklet - Index"
-    ).save(OUTPUT_DIR / "00_booklet_index.pdf")
+
+    PDF.from_markdown(markdown=content, title="Creative PDF Booklet - Index").save(
+        OUTPUT_DIR / "00_booklet_index.pdf"
+    )
     print("✅ Generated: Booklet Index")
+
 
 def main():
     """Generate the complete creative booklet."""
@@ -1441,7 +1445,7 @@ def main():
     print("=" * 60)
     print(f"\n📁 Output directory: {OUTPUT_DIR}")
     print(f"📅 Generated: {datetime.now().strftime('%B %d, %Y at %I:%M %p')}\n")
-    
+
     try:
         # Generate all documents
         generate_booklet_index()
@@ -1459,7 +1463,7 @@ def main():
         generate_creative_writing()
         generate_two_page_document()
         generate_latex_document()
-        
+
         print("\n" + "=" * 60)
         print("✅ BOOKLET GENERATION COMPLETE!")
         print("=" * 60)
@@ -1470,14 +1474,16 @@ def main():
             size_kb = pdf_file.stat().st_size / 1024
             print(f"   {i:2d}. {pdf_file.name} ({size_kb:.1f} KB)")
         print("\n🎉 Enjoy your creative booklet!\n")
-        
+
     except Exception as e:
         print(f"\n❌ Error generating booklet: {e}")
         import traceback
+
         traceback.print_exc()
         return 1
-    
+
     return 0
+
 
 if __name__ == "__main__":
     exit(main())

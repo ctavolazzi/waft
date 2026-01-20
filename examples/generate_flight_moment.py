@@ -15,25 +15,24 @@ This is meta-documentation at the moment of breakthrough.
 """
 
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.waft.evolution.chat_distiller import ChatDistiller
+from src.waft.evolution.scint_detector import ScintDetector
 from src.waft.evolution.styling_genome import (
-    StylingGenome,
-    StylingGene,
-    FontGene,
-    MarginGene,
     ColorGene,
+    FontGene,
     LayoutGene,
+    MarginGene,
+    StylingGene,
+    StylingGenome,
     StylingGenomeRegistry,
 )
 from src.waft.evolution.two_page_generator import TwoPageGenerator
-from src.waft.evolution.scint_detector import ScintDetector
-
 
 # The conversation about the breakthrough
 BREAKTHROUGH_CONVERSATION = """
@@ -161,11 +160,10 @@ def main():
 
     distiller = ChatDistiller(importance_threshold=0.3)
     distilled = distiller.distill_text(
-        text=BREAKTHROUGH_CONVERSATION,
-        title="The Moment It Took Flight"
+        text=BREAKTHROUGH_CONVERSATION, title="The Moment It Took Flight"
     )
 
-    print(f"✓ Conversation distilled")
+    print("✓ Conversation distilled")
     print(f"  - Total ideas: {distilled.total_ideas}")
     print(f"  - Decisions: {distilled.decisions_count}")
     print(f"  - Insights: {distilled.insights_count}")
@@ -215,7 +213,7 @@ def main():
             page_numbers=True,
         ),
         name="Flight Moment Genesis",
-        description="Balanced styling for breakthrough documentation"
+        description="Balanced styling for breakthrough documentation",
     )
     genesis = StylingGenome.from_genes(genesis_genes)
     registry.register(genesis)
@@ -234,7 +232,7 @@ def main():
             "margin.paragraph_spacing": 8,
             "layout.density": "compact",
         },
-        mutation_description="Dense styling to fit more breakthrough ideas"
+        mutation_description="Dense styling to fit more breakthrough ideas",
     )
     registry.register(variant_dense)
     print(f"  ✓ Dense: {variant_dense.scientific_name}")
@@ -256,7 +254,7 @@ def main():
             "margin.section_spacing": 18,
             "layout.density": "spacious",
         },
-        mutation_description="Readable styling for maximum clarity"
+        mutation_description="Readable styling for maximum clarity",
     )
     registry.register(variant_readable)
     print(f"  ✓ Readable: {variant_readable.scientific_name}")
@@ -272,7 +270,9 @@ def main():
     if scint_cross:
         print(f"  ⚠ Cross-lineage scint: {scint_cross.scint_type.value}")
         print(f"    - Divergence: {scint_cross.divergence_score:.2%}")
-        print(f"    - Between: {variant_dense.scientific_name} ↔ {variant_readable.scientific_name}")
+        print(
+            f"    - Between: {variant_dense.scientific_name} ↔ {variant_readable.scientific_name}"
+        )
 
     # Variant 3: Aesthetic (visual appeal)
     print("\n  Spawning aesthetic variant...")
@@ -285,7 +285,7 @@ def main():
             "margin.left": 25,
             "margin.right": 25,
         },
-        mutation_description="Aesthetic styling with serif fonts and refined colors"
+        mutation_description="Aesthetic styling with serif fonts and refined colors",
     )
     registry.register(variant_aesthetic)
     print(f"  ✓ Aesthetic: {variant_aesthetic.scientific_name}")
@@ -321,7 +321,7 @@ def main():
             output_path=output_dir / f"{name}.pdf",
             target_pages=2,  # V2 adaptively selects ideas to fit 2 pages
         )
-        genome.evaluate_fitness(result['fitness_metrics'])
+        genome.evaluate_fitness(result["fitness_metrics"])
         results[name] = result
 
         print(f"  ✓ {genome.scientific_name}")
@@ -353,7 +353,7 @@ def main():
         winner = scint_detector.reconcile_scint(scint, strategy="select_fittest")
         print(f"  ✓ Scint {i} reconciled")
         print(f"    - Winner: {winner.scientific_name}")
-        print(f"    - Strategy: select_fittest")
+        print("    - Strategy: select_fittest")
 
     # ========================================================================
     # STEP 6: SPAWN NEXT GENERATION FROM WINNER
@@ -367,7 +367,7 @@ def main():
                 "font.line_height": 1.45,  # Slightly better spacing
                 "margin.paragraph_spacing": 9,  # Balance density vs readability
             },
-            mutation_description="Gen 2: Dense with improved readability"
+            mutation_description="Gen 2: Dense with improved readability",
         )
     elif best == variant_readable:
         next_gen = best.spawn_variant(
@@ -375,7 +375,7 @@ def main():
                 "font.size_body": 11,  # Slightly smaller
                 "margin.top": 18,  # Tighter margins
             },
-            mutation_description="Gen 2: Readable with increased density"
+            mutation_description="Gen 2: Readable with increased density",
         )
     else:
         next_gen = best.spawn_variant(
@@ -383,7 +383,7 @@ def main():
                 "font.line_height": 1.55,
                 "color.accent": "#0055aa",
             },
-            mutation_description="Gen 2: Refined balance"
+            mutation_description="Gen 2: Refined balance",
         )
 
     registry.register(next_gen)
@@ -396,7 +396,7 @@ def main():
         output_path=output_dir / "generation_2.pdf",
         target_pages=2,  # V2 adaptively selects ideas to fit 2 pages
     )
-    next_gen.evaluate_fitness(result_next_gen['fitness_metrics'])
+    next_gen.evaluate_fitness(result_next_gen["fitness_metrics"])
 
     print(f"    - Fitness: {next_gen.fitness_score:.3f}")
     improvement = next_gen.fitness_score - best.fitness_score
@@ -408,7 +408,9 @@ def main():
     # Check for new scints
     scint_gen2 = scint_detector.detect(best, next_gen)
     if scint_gen2:
-        print(f"    - ⚠ New scint: {scint_gen2.scint_type.value} (divergence: {scint_gen2.divergence_score:.2%})")
+        print(
+            f"    - ⚠ New scint: {scint_gen2.scint_type.value} (divergence: {scint_gen2.divergence_score:.2%})"
+        )
         winner = scint_detector.reconcile_scint(scint_gen2, strategy="select_fittest")
         print(f"    - ✓ Reconciled: {winner.scientific_name}")
 
@@ -456,8 +458,16 @@ def main():
 """
 
     for name, result in results.items():
-        genome = registry.get([g for g in registry.genomes.values() if name in g.genes.description.lower()][0].genome_id) if name != "genesis" else genesis
-        metrics = result['fitness_metrics']
+        genome = (
+            registry.get(
+                [g for g in registry.genomes.values() if name in g.genes.description.lower()][
+                    0
+                ].genome_id
+            )
+            if name != "genesis"
+            else genesis
+        )
+        metrics = result["fitness_metrics"]
         summary += f"| {name.capitalize()} | {metrics['overall']:.3f} | {metrics['readability']:.3f} | {metrics['completeness']:.3f} | {metrics['constraint_satisfaction']:.3f} | {metrics['aesthetic_appeal']:.3f} |\n"
 
     summary += f"""
@@ -472,7 +482,9 @@ def main():
         summary += f"### Scint {i} - {status}\n"
         summary += f"- Type: {scint.scint_type.value}\n"
         summary += f"- Divergence: {scint.divergence_score:.2%}\n"
-        summary += f"- Between: {scint.genome_a.scientific_name} ↔ {scint.genome_b.scientific_name}\n"
+        summary += (
+            f"- Between: {scint.genome_a.scientific_name} ↔ {scint.genome_b.scientific_name}\n"
+        )
         if scint.resolved:
             summary += f"- Resolution: {scint.resolution_strategy}\n"
         summary += "\n"
@@ -509,18 +521,20 @@ This is the proof that styling evolution works. 🧬📄✨
     print("THE MOMENT IT TOOK FLIGHT - CAPTURED")
     print("=" * 80)
 
-    print(f"\n📈 Evolution Complete:")
-    print(f"  - {len(registry.genomes)} genomes across {max(g.generation for g in registry.genomes.values()) + 1} generations")
+    print("\n📈 Evolution Complete:")
+    print(
+        f"  - {len(registry.genomes)} genomes across {max(g.generation for g in registry.genomes.values()) + 1} generations"
+    )
     print(f"  - {len(scint_detector.detected_scints)} scints detected and reconciled")
     print(f"  - Winner: {best.scientific_name} (fitness: {best.fitness_score:.3f})")
 
-    print(f"\n💡 Ideas Processed:")
+    print("\n💡 Ideas Processed:")
     print(f"  - {distilled.total_ideas} ideas extracted")
     print(f"  - {distilled.decisions_count} decisions")
     print(f"  - {distilled.insights_count} insights")
     print(f"  - {distilled.concepts_count} concepts")
 
-    print(f"\n📁 Output Location:")
+    print("\n📁 Output Location:")
     print(f"  {output_dir.absolute()}")
 
     print("\n✨ The breakthrough is documented. The system works.")

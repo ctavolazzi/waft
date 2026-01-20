@@ -16,18 +16,18 @@ from src.waft.templates.typst.poker import PokerGame
 def dramatic_showdown():
     """Create a dramatic poker showdown scene."""
     print("🎭 Generating dramatic poker showdown...")
-    
+
     game = PokerGame("The Final Showdown", card_format="large")
-    
+
     # The villain - confident with pocket aces
     game.add_player("The Count", ["AS", "AD"])
-    
+
     # The hero - underdog with pocket kings
     game.add_player("The Hero", ["KS", "KD"])
-    
+
     # Dramatic community cards
     game.set_community_cards(["AC", "KH", "QC", "10S", "9H"])
-    
+
     # Add narrative
     game.add_content("""
 == The Final Showdown
@@ -57,7 +57,7 @@ Sometimes, poker is about more than just the cards.
 *Outcome*: The Count wins with four aces - the second-best possible 
 hand in poker. The Hero's straight was strong, but not strong enough.
     """)
-    
+
     game.include_rules()
     output = game.generate(Path("_temp_pdf_examples/poker_story_showdown.pdf"))
     print(f"✅ Generated: {output}")
@@ -67,18 +67,18 @@ hand in poker. The Hero's straight was strong, but not strong enough.
 def historical_recreation():
     """Recreate a famous historical poker hand."""
     print("📜 Generating historical hand recreation...")
-    
+
     game = PokerGame("WSOP 2003: Moneymaker vs Farha", card_format="medium")
-    
+
     # Chris Moneymaker (amateur)
     game.add_player("Chris Moneymaker", ["5S", "4D"])
-    
+
     # Sam Farha (pro)
     game.add_player("Sam Farha", ["JS", "10H"])
-    
+
     # The famous board
     game.set_community_cards(["4S", "5H", "QS", "7S", "KS"])
-    
+
     game.add_content("""
 == The Hand That Changed Poker
 
@@ -101,7 +101,7 @@ became legendary, showing that amateurs could compete with pros.
 poker boom began. Online poker exploded, and millions of new players 
 entered the game.
     """)
-    
+
     output = game.generate(Path("_temp_pdf_examples/poker_historical.pdf"))
     print(f"✅ Generated: {output}")
     return output
@@ -110,12 +110,12 @@ entered the game.
 def hand_quiz():
     """Create a poker hand quiz."""
     print("📝 Generating poker hand quiz...")
-    
+
     # Question 1: What's the best hand?
     game1 = PokerGame("Quiz: What's the Best Hand?", card_format="small")
     game1.add_player("Hand A", ["AS", "KS", "QS", "JS", "10S"])  # Royal flush
-    game1.add_player("Hand B", ["AS", "AD", "AH", "AC", "KD"])   # Four aces
-    game1.add_player("Hand C", ["KS", "KD", "KH", "KC", "QS"])   # Four kings
+    game1.add_player("Hand B", ["AS", "AD", "AH", "AC", "KD"])  # Four aces
+    game1.add_player("Hand C", ["KS", "KD", "KH", "KC", "QS"])  # Four kings
     game1.add_content("""
 == Question 1: What's the Best Hand?
 
@@ -126,7 +126,7 @@ in poker. Even though Hand B has four aces (the second-best hand),
 a Royal Flush always beats four of a kind.
     """)
     game1.generate(Path("_temp_pdf_examples/poker_quiz_1.pdf"))
-    
+
     # Question 2: What should you do?
     game2 = PokerGame("Quiz: What Should You Do?", card_format="medium")
     game2.add_player("You", ["AS", "KH"])
@@ -148,26 +148,28 @@ The only way you lose is if villain has the one specific hand
 that beats you. This is an easy call.
     """)
     game2.generate(Path("_temp_pdf_examples/poker_quiz_2.pdf"))
-    
+
     print("✅ Generated quiz PDFs")
-    return [Path("_temp_pdf_examples/poker_quiz_1.pdf"), 
-            Path("_temp_pdf_examples/poker_quiz_2.pdf")]
+    return [
+        Path("_temp_pdf_examples/poker_quiz_1.pdf"),
+        Path("_temp_pdf_examples/poker_quiz_2.pdf"),
+    ]
 
 
 def tournament_final_table():
     """Create a tournament final table visualization."""
     print("🏆 Generating tournament final table...")
-    
+
     game = PokerGame("WSOP Final Table", card_format="medium")
-    
+
     # Final table players
     game.add_player("Chip Leader", ["AS", "KH"])
     game.add_player("Short Stack", ["QD", "JD"])
     game.add_player("Middle Stack", ["10C", "9C"])
     game.add_player("Aggressive Player", ["2S", "3H"])
-    
+
     game.set_community_cards(["AC", "AD", "AH", "KS", "QS"])
-    
+
     game.add_content("""
 == Final Table Action
 
@@ -185,7 +187,7 @@ Chip Leader calls.
 *Result*: Chip Leader wins with four aces, eliminating Short Stack. 
 The final table continues with three players remaining.
     """)
-    
+
     output = game.generate(Path("_temp_pdf_examples/poker_tournament.pdf"))
     print(f"✅ Generated: {output}")
     return output
@@ -197,19 +199,19 @@ def main():
     print("🎴 Creative Poker Visualization Examples")
     print("=" * 60)
     print()
-    
+
     dramatic_showdown()
     print()
-    
+
     historical_recreation()
     print()
-    
+
     hand_quiz()
     print()
-    
+
     tournament_final_table()
     print()
-    
+
     print("=" * 60)
     print("✅ All creative examples generated!")
     print("=" * 60)

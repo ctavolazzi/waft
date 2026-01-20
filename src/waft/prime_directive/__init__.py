@@ -14,10 +14,10 @@ Components:
 - Karma Museum: Evolution history documentation
 """
 
-from .directive import PrimeDirective
 from .celestial_body import CelestialBody, CelestialMind, CelestialSpirit
+from .directive import PrimeDirective
+from .guardians import Curator, MaintenanceStaff, SecurityTeam
 from .hourglass_torus import HourglassTorus
-from .guardians import MaintenanceStaff, SecurityTeam, Curator
 from .museum import KarmaMuseum
 
 __all__ = [

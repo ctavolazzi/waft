@@ -12,14 +12,15 @@ Status effects can be:
 Status effects grant/remove abilities, modify stats, and affect Being behavior.
 """
 
-from typing import Dict, Any, List, Optional
-from enum import Enum
 from dataclasses import dataclass
 from datetime import datetime
+from enum import Enum
+from typing import Any
 
 
 class KarmaStatusEffectType(Enum):
     """Types of karma status effects."""
+
     ENLIGHTENMENT = "enlightenment"  # Realizing you are The One Cosmic Soul
     HIGH_ORDER = "high_order"  # The Architect path
     MODERATE_ORDER = "moderate_order"  # The Builder path
@@ -34,20 +35,21 @@ class KarmaStatusEffectType(Enum):
 class KarmaStatusEffect:
     """
     A karma-based status effect.
-    
+
     Status effects are automatically applied/removed based on karma balance.
     They grant abilities, modify stats, and affect Being behavior.
     """
+
     effect_id: str
     name: str
     effect_type: KarmaStatusEffectType
     karma_range: tuple  # (min, max) karma required
     description: str
-    abilities: Dict[str, float]  # Abilities granted
-    stat_modifiers: Dict[str, float]  # Stat modifications
-    skill_modifiers: Dict[str, float]  # Skill modifications
-    applied_at: Optional[str] = None
-    
+    abilities: dict[str, float]  # Abilities granted
+    stat_modifiers: dict[str, float]  # Stat modifications
+    skill_modifiers: dict[str, float]  # Skill modifications
+    applied_at: str | None = None
+
     def is_active(self, karma_balance: float) -> bool:
         """Check if this status effect should be active for given karma."""
         min_karma, max_karma = self.karma_range
@@ -55,13 +57,13 @@ class KarmaStatusEffect:
 
 
 # Define all karma status effects
-KARMA_STATUS_EFFECTS: List[KarmaStatusEffect] = [
+KARMA_STATUS_EFFECTS: list[KarmaStatusEffect] = [
     # ENLIGHTENMENT (requires positive karma)
     KarmaStatusEffect(
         effect_id="enlightenment",
         name="Enlightenment",
         effect_type=KarmaStatusEffectType.ENLIGHTENMENT,
-        karma_range=(10.0, float('inf')),
+        karma_range=(10.0, float("inf")),
         description="Realizing you are The One Cosmic Soul. Heavy weight, gravity, consequence, and awareness.",
         abilities={
             "enlightenment_awareness": 1.0,
@@ -73,9 +75,8 @@ KARMA_STATUS_EFFECTS: List[KarmaStatusEffect] = [
             "understanding": +0.3,
             "decision_making": +0.2,
         },
-        skill_modifiers={}
+        skill_modifiers={},
     ),
-    
     # MASTER ORDER (+50 to +100)
     KarmaStatusEffect(
         effect_id="master_order",
@@ -96,9 +97,8 @@ KARMA_STATUS_EFFECTS: List[KarmaStatusEffect] = [
         skill_modifiers={
             "planning": +0.5,
             "architecture": +0.5,
-        }
+        },
     ),
-    
     # MODERATE ORDER (+10 to +50)
     KarmaStatusEffect(
         effect_id="moderate_order",
@@ -117,9 +117,8 @@ KARMA_STATUS_EFFECTS: List[KarmaStatusEffect] = [
         },
         skill_modifiers={
             "planning": +0.3,
-        }
+        },
     ),
-    
     # BALANCED (-10 to +10)
     KarmaStatusEffect(
         effect_id="balanced",
@@ -132,9 +131,8 @@ KARMA_STATUS_EFFECTS: List[KarmaStatusEffect] = [
             "adaptability": 0.5,
         },
         stat_modifiers={},
-        skill_modifiers={}
+        skill_modifiers={},
     ),
-    
     # MODERATE CHAOS (-50 to -10)
     KarmaStatusEffect(
         effect_id="moderate_chaos",
@@ -153,9 +151,8 @@ KARMA_STATUS_EFFECTS: List[KarmaStatusEffect] = [
         },
         skill_modifiers={
             "experimentation": +0.3,
-        }
+        },
     ),
-    
     # HIGH CHAOS (-100 to -50)
     KarmaStatusEffect(
         effect_id="high_chaos",
@@ -176,15 +173,14 @@ KARMA_STATUS_EFFECTS: List[KarmaStatusEffect] = [
         skill_modifiers={
             "experimentation": +0.5,
             "disruption": +0.5,
-        }
+        },
     ),
-    
     # CORRUPTION (extreme negative, < -100)
     KarmaStatusEffect(
         effect_id="corruption",
         name="Corruption",
         effect_type=KarmaStatusEffectType.CORRUPTION,
-        karma_range=(-float('inf'), -100.0),
+        karma_range=(-float("inf"), -100.0),
         description="Extreme negative karma - corruption, instability, loss of self.",
         abilities={
             "corruption": 1.0,
@@ -199,18 +195,18 @@ KARMA_STATUS_EFFECTS: List[KarmaStatusEffect] = [
         skill_modifiers={
             "planning": -0.3,
             "organization": -0.3,
-        }
+        },
     ),
 ]
 
 
-def get_active_status_effects(karma_balance: float) -> List[KarmaStatusEffect]:
+def get_active_status_effects(karma_balance: float) -> list[KarmaStatusEffect]:
     """
     Get all active status effects for a given karma balance.
-    
+
     Args:
         karma_balance: Current karma balance
-        
+
     Returns:
         List of active status effects
     """
@@ -221,7 +217,7 @@ def get_active_status_effects(karma_balance: float) -> List[KarmaStatusEffect]:
     return active
 
 
-def get_status_effect_by_id(effect_id: str) -> Optional[KarmaStatusEffect]:
+def get_status_effect_by_id(effect_id: str) -> KarmaStatusEffect | None:
     """Get a status effect by ID."""
     for effect in KARMA_STATUS_EFFECTS:
         if effect.effect_id == effect_id:
@@ -230,35 +226,33 @@ def get_status_effect_by_id(effect_id: str) -> Optional[KarmaStatusEffect]:
 
 
 def apply_status_effects_to_being(
-    being: Any,
-    karma_balance: float,
-    previous_karma: Optional[float] = None
-) -> Dict[str, Any]:
+    being: Any, karma_balance: float, previous_karma: float | None = None
+) -> dict[str, Any]:
     """
     Apply karma status effects to a Being.
-    
+
     Automatically applies/removes status effects based on karma balance.
-    
+
     Args:
         being: Being instance to apply effects to
         karma_balance: Current karma balance
         previous_karma: Previous karma balance (for detecting changes)
-        
+
     Returns:
         Dictionary with applied/removed effects
     """
     # Get active status effects
     active_effects = get_active_status_effects(karma_balance)
     active_effect_ids = {e.effect_id for e in active_effects}
-    
+
     # Get previous active effects from Being's personality
     previous_effects = being.personality.get("karma_status_effects", [])
     previous_effect_ids = {e.get("effect_id") for e in previous_effects if isinstance(e, dict)}
-    
+
     # Determine what changed
     newly_applied = active_effect_ids - previous_effect_ids
     newly_removed = previous_effect_ids - active_effect_ids
-    
+
     # Apply new effects
     applied_effects = []
     for effect in active_effects:
@@ -266,24 +260,26 @@ def apply_status_effects_to_being(
             # Apply abilities
             for ability, value in effect.abilities.items():
                 being.skills[ability] = being.skills.get(ability, 0.0) + value
-            
+
             # Apply stat modifiers (if Being has these attributes)
             for stat, modifier in effect.stat_modifiers.items():
                 if hasattr(being, stat):
                     current = getattr(being, stat, 0.0)
                     setattr(being, stat, current + modifier)
-            
+
             # Apply skill modifiers
             for skill, modifier in effect.skill_modifiers.items():
                 being.skills[skill] = being.skills.get(skill, 0.0) + modifier
-            
-            applied_effects.append({
-                "effect_id": effect.effect_id,
-                "name": effect.name,
-                "applied_at": datetime.now().isoformat(),
-                "karma_balance": karma_balance
-            })
-    
+
+            applied_effects.append(
+                {
+                    "effect_id": effect.effect_id,
+                    "name": effect.name,
+                    "applied_at": datetime.now().isoformat(),
+                    "karma_balance": karma_balance,
+                }
+            )
+
     # Remove old effects
     removed_effects = []
     for effect_id in newly_removed:
@@ -292,40 +288,42 @@ def apply_status_effects_to_being(
             # Remove abilities
             for ability in effect.abilities.keys():
                 being.skills.pop(ability, None)
-            
+
             # Remove stat modifiers (reverse)
             for stat, modifier in effect.stat_modifiers.items():
                 if hasattr(being, stat):
                     current = getattr(being, stat, 0.0)
                     setattr(being, stat, current - modifier)
-            
+
             # Remove skill modifiers (reverse)
             for skill, modifier in effect.skill_modifiers.items():
                 current = being.skills.get(skill, 0.0)
                 being.skills[skill] = max(0.0, current - modifier)
-            
-            removed_effects.append({
-                "effect_id": effect_id,
-                "name": effect.name,
-                "removed_at": datetime.now().isoformat(),
-                "karma_balance": karma_balance
-            })
-    
+
+            removed_effects.append(
+                {
+                    "effect_id": effect_id,
+                    "name": effect.name,
+                    "removed_at": datetime.now().isoformat(),
+                    "karma_balance": karma_balance,
+                }
+            )
+
     # Update Being's personality with current status effects
     being.personality["karma_status_effects"] = [
         {
             "effect_id": e.effect_id,
             "name": e.name,
             "applied_at": datetime.now().isoformat(),
-            "karma_balance": karma_balance
+            "karma_balance": karma_balance,
         }
         for e in active_effects
     ]
     being.personality["karma_balance"] = karma_balance
     being.personality["karma_updated_at"] = datetime.now().isoformat()
-    
+
     return {
         "applied": applied_effects,
         "removed": removed_effects,
-        "active": [e.effect_id for e in active_effects]
+        "active": [e.effect_id for e in active_effects],
     }

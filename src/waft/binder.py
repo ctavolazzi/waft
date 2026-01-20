@@ -26,13 +26,13 @@ Example Use Cases:
 - Training Manual (guides, procedures, references)
 """
 
-from pathlib import Path
-from typing import List, Dict, Optional, Union
-from dataclasses import dataclass, field
-from pypdf import PdfWriter, PdfReader
-from jinja2 import Template
-from weasyprint import HTML
 import datetime
+from dataclasses import dataclass, field
+from pathlib import Path
+
+from jinja2 import Template
+from pypdf import PdfWriter
+from weasyprint import HTML
 
 
 @dataclass
@@ -41,10 +41,10 @@ class DocumentEntry:
 
     path: Path
     title: str
-    section: Optional[str] = None
-    author: Optional[str] = None
-    date: Optional[str] = None
-    description: Optional[str] = None
+    section: str | None = None
+    author: str | None = None
+    date: str | None = None
+    description: str | None = None
 
     def __post_init__(self):
         """Validate document exists."""
@@ -57,8 +57,8 @@ class BinderSection:
     """A section in the binder (e.g., Tab 1: Doctrine)."""
 
     name: str
-    description: Optional[str] = None
-    documents: List[DocumentEntry] = field(default_factory=list)
+    description: str | None = None
+    documents: list[DocumentEntry] = field(default_factory=list)
     color: str = "#2c3e50"  # Section color for divider
 
     def add_document(self, doc: DocumentEntry):
@@ -110,7 +110,7 @@ class Binder:
         date: str = None,
         version: str = "1.0",
         compiled_by: str = None,
-        cover_style: str = "professional"  # professional, classified, academic, creative
+        cover_style: str = "professional",  # professional, classified, academic, creative
     ):
         self.title = title
         self.subtitle = subtitle
@@ -122,15 +122,12 @@ class Binder:
         self.compiled_by = compiled_by
         self.cover_style = cover_style
 
-        self.sections: List[BinderSection] = []
-        self.front_matter: List[Path] = []  # Additional front matter PDFs
-        self.back_matter: List[Path] = []   # Additional back matter PDFs
+        self.sections: list[BinderSection] = []
+        self.front_matter: list[Path] = []  # Additional front matter PDFs
+        self.back_matter: list[Path] = []  # Additional back matter PDFs
 
     def add_section(
-        self,
-        name: str,
-        description: str = None,
-        color: str = "#2c3e50"
+        self, name: str, description: str = None, color: str = "#2c3e50"
     ) -> BinderSection:
         """Add a section to the binder."""
         section = BinderSection(name=name, description=description, color=color)
@@ -171,7 +168,7 @@ class Binder:
             version=self.version,
             compiled_by=self.compiled_by,
             num_sections=len(self.sections),
-            num_documents=sum(len(s.documents) for s in self.sections)
+            num_documents=sum(len(s.documents) for s in self.sections),
         )
 
         cover_path = output_dir / "binder_cover.pdf"
@@ -388,7 +385,7 @@ class Binder:
 
             # Write final binder
             print(f"Writing binder to {output_path}")
-            with open(output_path, 'wb') as f:
+            with open(output_path, "wb") as f:
                 merger.write(f)
 
             print(f"✓ Binder generated: {output_path.name}")
@@ -401,6 +398,7 @@ class Binder:
         finally:
             # Cleanup temp files
             import shutil
+
             if temp_dir.exists():
                 shutil.rmtree(temp_dir)
 

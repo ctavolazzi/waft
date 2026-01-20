@@ -15,9 +15,9 @@ Features:
 """
 
 from pathlib import Path
+
 from jinja2 import Template
 from weasyprint import HTML
-
 
 FIELD_GUIDE_TEMPLATE = """
 <!DOCTYPE html>
@@ -347,7 +347,7 @@ def generate_field_guide(
     subtitle: str = None,
     classification: str = "FOR OFFICIAL USE ONLY",
     issued_by: str = None,
-    date: str = None
+    date: str = None,
 ) -> Path:
     """
     Generate a field guide document (operational manual style).
@@ -377,7 +377,7 @@ def generate_field_guide(
         subtitle=subtitle,
         classification=classification,
         issued_by=issued_by,
-        date=date
+        date=date,
     )
 
     HTML(string=html_output).write_pdf(output_path)

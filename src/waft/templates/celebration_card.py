@@ -15,9 +15,9 @@ Features:
 """
 
 from pathlib import Path
+
 from jinja2 import Template
 from weasyprint import HTML
-
 
 CELEBRATION_CARD_TEMPLATE = """
 <!DOCTYPE html>
@@ -294,7 +294,7 @@ def generate_celebration_card(
     date: str = None,
     gratitude: str = None,
     footer: str = None,
-    page_numbers: bool = True
+    page_numbers: bool = True,
 ) -> Path:
     """
     Generate a beautiful one-page celebration card PDF.
@@ -326,16 +326,17 @@ def generate_celebration_card(
         date=date,
         gratitude=gratitude,
         footer=footer,
-        page_numbers=page_numbers
+        page_numbers=page_numbers,
     )
 
     HTML(string=html_output).write_pdf(output_path)
-    
+
     # Post-process to add blank page markers
     try:
         from ..utils import process_pdf_for_blank_pages
+
         process_pdf_for_blank_pages(output_path)
     except Exception as e:
         print(f"⚠️  Blank page marker processing failed: {e}")
-    
+
     return output_path

@@ -2,24 +2,15 @@
 Project Commands - CLI interface for project management.
 """
 
-from pathlib import Path
-from typing import Optional, List
 
 import typer
 from rich.console import Console
-from rich.table import Table
 from rich.panel import Panel
-from rich.progress import Progress, SpinnerColumn, TextColumn
+from rich.table import Table
 
-from ..core.projects import (
-    ProjectManager,
-    Project,
-    ProjectStatus,
-    Milestone,
-    ProgressEntry
-)
-from ..utils import resolve_project_path
+from ..core.projects import Milestone, ProgressEntry, ProjectManager, ProjectStatus
 from ..logging import get_logger
+from ..utils import resolve_project_path
 
 logger = get_logger(__name__)
 
@@ -36,9 +27,13 @@ console = Console()
 def create_project(
     title: str = typer.Argument(..., help="Project title"),
     description: str = typer.Option("", "--description", "-d", help="Project description"),
-    tags: Optional[str] = typer.Option(None, "--tags", "-t", help="Comma-separated tags"),
-    status: str = typer.Option("planning", "--status", "-s", help="Initial status (planning, active, paused)"),
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    tags: str | None = typer.Option(None, "--tags", "-t", help="Comma-separated tags"),
+    status: str = typer.Option(
+        "planning", "--status", "-s", help="Initial status (planning, active, paused)"
+    ),
+    path: str | None = typer.Option(
+        None, "--path", "-p", help="Project path (default: current)"
+    ),
 ):
     """Create a new project."""
     try:
@@ -53,25 +48,24 @@ def create_project(
         # Parse tags
         tag_list = []
         if tags:
-            tag_list = [tag.strip() for tag in tags.split(',') if tag.strip()]
+            tag_list = [tag.strip() for tag in tags.split(",") if tag.strip()]
 
         # Parse status
         try:
             project_status = ProjectStatus(status.lower())
         except ValueError:
             console.print(f"[bold red]❌ Invalid status: {status}[/bold red]")
-            console.print("[dim]Valid statuses: planning, active, paused, completed, archived[/dim]")
+            console.print(
+                "[dim]Valid statuses: planning, active, paused, completed, archived[/dim]"
+            )
             raise typer.Exit(1)
 
         # Create project
         project = manager.create_project(
-            title=title,
-            description=description,
-            tags=tag_list,
-            status=project_status
+            title=title, description=description, tags=tag_list, status=project_status
         )
 
-        console.print(f"\n[bold green]✅ Project created[/bold green]")
+        console.print("\n[bold green]✅ Project created[/bold green]")
         console.print(f"[dim]ID:[/dim] {project.project_id}")
         console.print(f"[dim]Title:[/dim] {project.title}")
         console.print(f"[dim]Status:[/dim] {project.status.value}")
@@ -92,9 +86,11 @@ def create_project(
 
 @app.command("list")
 def list_projects(
-    status: Optional[str] = typer.Option(None, "--status", "-s", help="Filter by status"),
-    tags: Optional[str] = typer.Option(None, "--tags", "-t", help="Comma-separated tags to filter"),
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    status: str | None = typer.Option(None, "--status", "-s", help="Filter by status"),
+    tags: str | None = typer.Option(None, "--tags", "-t", help="Comma-separated tags to filter"),
+    path: str | None = typer.Option(
+        None, "--path", "-p", help="Project path (default: current)"
+    ),
 ):
     """List all projects."""
     try:
@@ -117,7 +113,7 @@ def list_projects(
 
         tag_list = None
         if tags:
-            tag_list = [tag.strip() for tag in tags.split(',') if tag.strip()]
+            tag_list = [tag.strip() for tag in tags.split(",") if tag.strip()]
 
         # List projects
         projects = manager.list_projects(status=status_filter, tags=tag_list)
@@ -151,24 +147,29 @@ def list_projects(
                 "active": "green",
                 "paused": "yellow",
                 "completed": "bold green",
-                "archived": "dim"
+                "archived": "dim",
             }.get(project.status.value, "dim")
 
             # Format updated date
             try:
                 from datetime import datetime
-                updated = datetime.fromisoformat(project.updated_at.replace('Z', '+00:00'))
-                updated_str = updated.strftime('%Y-%m-%d')
+
+                updated = datetime.fromisoformat(project.updated_at.replace("Z", "+00:00"))
+                updated_str = updated.strftime("%Y-%m-%d")
             except:
-                updated_str = project.updated_at[:10] if len(project.updated_at) >= 10 else project.updated_at
+                updated_str = (
+                    project.updated_at[:10] if len(project.updated_at) >= 10 else project.updated_at
+                )
 
             table.add_row(
                 project.project_id,
                 project.title[:40] + "..." if len(project.title) > 40 else project.title,
                 f"[{status_style}]{project.status.value}[/{status_style}]",
                 f"[{progress_style}]{progress_str}[/{progress_style}]",
-                ', '.join(project.tags[:3]) + ("..." if len(project.tags) > 3 else "") if project.tags else "",
-                updated_str
+                ", ".join(project.tags[:3]) + ("..." if len(project.tags) > 3 else "")
+                if project.tags
+                else "",
+                updated_str,
             )
 
         console.print(table)
@@ -183,7 +184,9 @@ def list_projects(
 @app.command("show")
 def show_project(
     project_id: str = typer.Argument(..., help="Project ID"),
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(
+        None, "--path", "-p", help="Project path (default: current)"
+    ),
 ):
     """Show project details."""
     try:
@@ -205,14 +208,18 @@ def show_project(
         console.print(f"[dim]ID:[/dim] {project.project_id}")
         console.print(f"[dim]Status:[/dim] {project.status.value}")
         console.print(f"[dim]Progress:[/dim] {project.progress_percent:.1f}%")
-        console.print(f"[dim]Created:[/dim] {project.created_at[:19] if len(project.created_at) >= 19 else project.created_at}")
-        console.print(f"[dim]Updated:[/dim] {project.updated_at[:19] if len(project.updated_at) >= 19 else project.updated_at}")
+        console.print(
+            f"[dim]Created:[/dim] {project.created_at[:19] if len(project.created_at) >= 19 else project.created_at}"
+        )
+        console.print(
+            f"[dim]Updated:[/dim] {project.updated_at[:19] if len(project.updated_at) >= 19 else project.updated_at}"
+        )
 
         if project.tags:
             console.print(f"[dim]Tags:[/dim] {', '.join(project.tags)}")
 
         if project.description:
-            console.print(f"\n[bold]Description:[/bold]")
+            console.print("\n[bold]Description:[/bold]")
             console.print(Panel(project.description, border_style="dim"))
 
         if project.milestones:
@@ -224,19 +231,32 @@ def show_project(
                 console.print(f"  [dim]... and {len(project.milestones) - 10} more[/dim]")
 
         if project.progress_entries:
-            console.print(f"\n[bold]Recent Progress:[/bold] ({len(project.progress_entries)} entries)")
+            console.print(
+                f"\n[bold]Recent Progress:[/bold] ({len(project.progress_entries)} entries)"
+            )
             for entry in project.progress_entries[-5:]:  # Show last 5
-                delta_str = f"+{entry.progress_delta:.1f}%" if entry.progress_delta >= 0 else f"{entry.progress_delta:.1f}%"
-                console.print(f"  {entry.timestamp[:19]}: {delta_str} - {entry.notes[:50] if entry.notes else 'No notes'}")
+                delta_str = (
+                    f"+{entry.progress_delta:.1f}%"
+                    if entry.progress_delta >= 0
+                    else f"{entry.progress_delta:.1f}%"
+                )
+                console.print(
+                    f"  {entry.timestamp[:19]}: {delta_str} - {entry.notes[:50] if entry.notes else 'No notes'}"
+                )
 
         if project.related_work_efforts:
-            console.print(f"\n[bold]Related Work Efforts:[/bold]")
+            console.print("\n[bold]Related Work Efforts:[/bold]")
             for we_id in project.related_work_efforts:
                 console.print(f"  - {we_id}")
 
         if project.notes:
-            console.print(f"\n[bold]Notes:[/bold]")
-            console.print(Panel(project.notes[:500] + ("..." if len(project.notes) > 500 else ""), border_style="dim"))
+            console.print("\n[bold]Notes:[/bold]")
+            console.print(
+                Panel(
+                    project.notes[:500] + ("..." if len(project.notes) > 500 else ""),
+                    border_style="dim",
+                )
+            )
 
     except ValueError as e:
         console.print(f"[bold red]❌ {e}[/bold red]")
@@ -250,10 +270,14 @@ def show_project(
 @app.command("update")
 def update_project(
     project_id: str = typer.Argument(..., help="Project ID"),
-    title: Optional[str] = typer.Option(None, "--title", "-t", help="Update title"),
-    description: Optional[str] = typer.Option(None, "--description", "-d", help="Update description"),
-    status: Optional[str] = typer.Option(None, "--status", "-s", help="Update status"),
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    title: str | None = typer.Option(None, "--title", "-t", help="Update title"),
+    description: str | None = typer.Option(
+        None, "--description", "-d", help="Update description"
+    ),
+    status: str | None = typer.Option(None, "--status", "-s", help="Update status"),
+    path: str | None = typer.Option(
+        None, "--path", "-p", help="Project path (default: current)"
+    ),
 ):
     """Update project."""
     try:
@@ -301,9 +325,15 @@ def update_progress(
     project_id: str = typer.Argument(..., help="Project ID"),
     percent: float = typer.Option(..., "--percent", "-p", help="Progress percentage (0.0-100.0)"),
     notes: str = typer.Option("", "--notes", "-n", help="Progress notes"),
-    work_effort: Optional[str] = typer.Option(None, "--work-effort", "-w", help="Related work effort ID"),
-    duration: Optional[float] = typer.Option(None, "--duration", help="Session duration in minutes"),
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    work_effort: str | None = typer.Option(
+        None, "--work-effort", "-w", help="Related work effort ID"
+    ),
+    duration: float | None = typer.Option(
+        None, "--duration", help="Session duration in minutes"
+    ),
+    path: str | None = typer.Option(
+        None, "--path", "-p", help="Project path (default: current)"
+    ),
 ):
     """Update project progress."""
     try:
@@ -327,13 +357,14 @@ def update_progress(
 
         # Create progress entry
         from datetime import datetime
+
         entry = ProgressEntry(
             entry_id=f"entry_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
             timestamp=datetime.now().isoformat(),
             progress_delta=progress_delta,
             notes=notes,
             work_effort_id=work_effort,
-            session_duration=duration
+            session_duration=duration,
         )
 
         # Update project
@@ -342,14 +373,18 @@ def update_progress(
 
         # Keep only last N entries
         if len(project.progress_entries) > manager.MAX_PROGRESS_ENTRIES:
-            project.progress_entries = project.progress_entries[-manager.MAX_PROGRESS_ENTRIES:]
+            project.progress_entries = project.progress_entries[-manager.MAX_PROGRESS_ENTRIES :]
 
         # Save
         manager.update_project(project)
 
-        console.print(f"[bold green]✅ Progress updated: {old_progress:.1f}% → {new_progress:.1f}%[/bold green]")
+        console.print(
+            f"[bold green]✅ Progress updated: {old_progress:.1f}% → {new_progress:.1f}%[/bold green]"
+        )
         if progress_delta != 0:
-            delta_str = f"+{progress_delta:.1f}%" if progress_delta > 0 else f"{progress_delta:.1f}%"
+            delta_str = (
+                f"+{progress_delta:.1f}%" if progress_delta > 0 else f"{progress_delta:.1f}%"
+            )
             console.print(f"[dim]Change: {delta_str}[/dim]")
 
     except ValueError as e:
@@ -364,7 +399,9 @@ def update_progress(
 @app.command("status")
 def project_status(
     project_id: str = typer.Argument(..., help="Project ID"),
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(
+        None, "--path", "-p", help="Project path (default: current)"
+    ),
 ):
     """Quick project status check."""
     try:
@@ -387,13 +424,15 @@ def project_status(
             "active": "🚀",
             "paused": "⏸️",
             "completed": "✅",
-            "archived": "📦"
+            "archived": "📦",
         }.get(project.status.value, "❓")
 
         console.print(f"\n{status_icon} [bold]{project.title}[/bold]")
         console.print(f"[dim]Status:[/dim] {project.status.value}")
         console.print(f"[dim]Progress:[/dim] {project.progress_percent:.1f}%")
-        console.print(f"[dim]Milestones:[/dim] {len(project.milestones)} ({sum(1 for m in project.milestones if m.completed)} completed)")
+        console.print(
+            f"[dim]Milestones:[/dim] {len(project.milestones)} ({sum(1 for m in project.milestones if m.completed)} completed)"
+        )
         console.print(f"[dim]Progress Entries:[/dim] {len(project.progress_entries)}")
 
     except Exception as e:
@@ -406,11 +445,17 @@ def project_status(
 def milestone_command(
     action: str = typer.Argument(..., help="Action: create, complete, list"),
     project_id: str = typer.Argument(..., help="Project ID"),
-    milestone_id: Optional[str] = typer.Argument(None, help="Milestone ID (for complete)"),
-    title: Optional[str] = typer.Option(None, "--title", "-t", help="Milestone title (for create)"),
-    description: Optional[str] = typer.Option(None, "--description", "-d", help="Milestone description (for create)"),
-    target_date: Optional[str] = typer.Option(None, "--target-date", help="Target date (ISO format, for create)"),
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    milestone_id: str | None = typer.Argument(None, help="Milestone ID (for complete)"),
+    title: str | None = typer.Option(None, "--title", "-t", help="Milestone title (for create)"),
+    description: str | None = typer.Option(
+        None, "--description", "-d", help="Milestone description (for create)"
+    ),
+    target_date: str | None = typer.Option(
+        None, "--target-date", help="Target date (ISO format, for create)"
+    ),
+    path: str | None = typer.Option(
+        None, "--path", "-p", help="Project path (default: current)"
+    ),
 ):
     """Manage project milestones."""
     try:
@@ -429,38 +474,44 @@ def milestone_command(
 
         if action == "create":
             if not title:
-                console.print(f"[bold red]❌ Title required for milestone creation[/bold red]")
+                console.print("[bold red]❌ Title required for milestone creation[/bold red]")
                 raise typer.Exit(1)
 
             from datetime import datetime
+
             milestone = Milestone(
                 milestone_id=f"milestone_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
                 title=title,
                 description=description or "",
                 target_date=target_date,
-                completed=False
+                completed=False,
             )
 
             project.milestones.append(milestone)
             manager.update_project(project)
 
-            console.print(f"[bold green]✅ Milestone created: {milestone.milestone_id}[/bold green]")
+            console.print(
+                f"[bold green]✅ Milestone created: {milestone.milestone_id}[/bold green]"
+            )
             console.print(f"[dim]Title:[/dim] {milestone.title}")
 
         elif action == "complete":
             if not milestone_id:
-                console.print(f"[bold red]❌ Milestone ID required[/bold red]")
+                console.print("[bold red]❌ Milestone ID required[/bold red]")
                 raise typer.Exit(1)
 
-            milestone = next((m for m in project.milestones if m.milestone_id == milestone_id), None)
+            milestone = next(
+                (m for m in project.milestones if m.milestone_id == milestone_id), None
+            )
             if not milestone:
                 console.print(f"[bold red]❌ Milestone not found: {milestone_id}[/bold red]")
                 raise typer.Exit(1)
 
             if milestone.completed:
-                console.print(f"[yellow]⚠️  Milestone already completed[/yellow]")
+                console.print("[yellow]⚠️  Milestone already completed[/yellow]")
             else:
                 from datetime import datetime
+
                 milestone.completed = True
                 milestone.completed_at = datetime.now().isoformat()
                 manager.update_project(project)
@@ -470,25 +521,30 @@ def milestone_command(
             if not project.milestones:
                 console.print("[yellow]No milestones found[/yellow]")
             else:
-                table = Table(title=f"Milestones for {project.title}", show_header=True, header_style="bold cyan")
+                table = Table(
+                    title=f"Milestones for {project.title}",
+                    show_header=True,
+                    header_style="bold cyan",
+                )
                 table.add_column("ID", style="dim")
                 table.add_column("Title", style="bold")
                 table.add_column("Status")
                 table.add_column("Target Date", style="dim")
 
                 for milestone in project.milestones:
-                    status = "[green]✅ Completed[/green]" if milestone.completed else "[yellow]⏳ Pending[/yellow]"
-                    target = milestone.target_date[:10] if milestone.target_date else "—"
-                    table.add_row(
-                        milestone.milestone_id,
-                        milestone.title,
-                        status,
-                        target
+                    status = (
+                        "[green]✅ Completed[/green]"
+                        if milestone.completed
+                        else "[yellow]⏳ Pending[/yellow]"
                     )
+                    target = milestone.target_date[:10] if milestone.target_date else "—"
+                    table.add_row(milestone.milestone_id, milestone.title, status, target)
 
                 console.print(table)
                 completed = sum(1 for m in project.milestones if m.completed)
-                console.print(f"\n[dim]Progress: {completed}/{len(project.milestones)} completed[/dim]")
+                console.print(
+                    f"\n[dim]Progress: {completed}/{len(project.milestones)} completed[/dim]"
+                )
 
         else:
             console.print(f"[bold red]❌ Invalid action: {action}[/bold red]")
@@ -508,7 +564,9 @@ def milestone_command(
 def link_work_effort(
     project_id: str = typer.Argument(..., help="Project ID"),
     work_effort_id: str = typer.Argument(..., help="Work effort ID to link"),
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(
+        None, "--path", "-p", help="Project path (default: current)"
+    ),
 ):
     """Link a work effort to a project."""
     try:
@@ -545,7 +603,9 @@ def link_work_effort(
 def unlink_work_effort(
     project_id: str = typer.Argument(..., help="Project ID"),
     work_effort_id: str = typer.Argument(..., help="Work effort ID to unlink"),
-    path: Optional[str] = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    path: str | None = typer.Option(
+        None, "--path", "-p", help="Project path (default: current)"
+    ),
 ):
     """Unlink a work effort from a project."""
     try:

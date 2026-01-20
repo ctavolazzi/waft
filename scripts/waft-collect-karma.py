@@ -11,8 +11,8 @@ Usage:
     waft-collect-karma --stats             # Show collection statistics
 """
 
-import sys
 import argparse
+import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -38,37 +38,26 @@ Examples:
 
   # Show statistics
   %(prog)s --stats
-        """
+        """,
     )
-    
+
     parser.add_argument(
-        "--soul-id",
-        help="Soul ID to collect karma for (collects all if not specified)"
+        "--soul-id", help="Soul ID to collect karma for (collects all if not specified)"
     )
-    
+
+    parser.add_argument("--file", type=Path, help="Path to specific life log file to collect from")
+
+    parser.add_argument("--stats", action="store_true", help="Show collection statistics")
+
     parser.add_argument(
-        "--file",
-        type=Path,
-        help="Path to specific life log file to collect from"
+        "--project-path", type=Path, help="Project path (defaults to current directory)"
     )
-    
-    parser.add_argument(
-        "--stats",
-        action="store_true",
-        help="Show collection statistics"
-    )
-    
-    parser.add_argument(
-        "--project-path",
-        type=Path,
-        help="Project path (defaults to current directory)"
-    )
-    
+
     args = parser.parse_args()
-    
+
     # Initialize collector
     collector = KarmaCollector(project_path=args.project_path)
-    
+
     try:
         if args.stats:
             # Show statistics
@@ -80,25 +69,25 @@ Examples:
             print(f"Total Karma Collected: {stats['total_karma_collected']:.2f} karma")
             print(f"Pending Life Logs: {stats['pending_life_logs']}")
             print(f"Souls in Akasha: {stats['souls_in_akasha']}")
-            
+
         elif args.file:
             # Collect from specific file
             if not args.soul_id:
                 print("❌ Error: --soul-id required when using --file")
                 return 1
-            
+
             result = collector.collect_from_life_log_file(args.file, args.soul_id)
             print("✅ Karma collected!")
             print(f"   Soul ID: {result['soul_id']}")
             print(f"   Lifetime ID: {result['lifetime_id']}")
             print(f"   Karma Collected: {result['karma_collected']:.2f}")
             print(f"   Total Karma: {result['total_karma']:.2f}")
-            
+
         else:
             # Collect all pending
             print("🔍 Scanning for pending life logs...")
             results = collector.collect_all_pending(soul_id=args.soul_id)
-            
+
             if not results:
                 print("✅ No pending life logs to collect.")
             else:
@@ -109,15 +98,16 @@ Examples:
                     print(f"   Lifetime: {result['lifetime_id']}")
                     print(f"   Karma: {result['karma_collected']:.2f}")
                     print(f"   Total: {result['total_karma']:.2f}")
-                    total_karma += result['karma_collected']
-                
+                    total_karma += result["karma_collected"]
+
                 print(f"\n💰 Total karma collected: {total_karma:.2f}")
-        
+
         return 0
-        
+
     except Exception as e:
         print(f"❌ Error: {e}")
         import traceback
+
         traceback.print_exc()
         return 1
 

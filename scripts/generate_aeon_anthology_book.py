@@ -14,7 +14,7 @@ with the Pantheon watching and responding. Uses all available book features:
 
 import sys
 from pathlib import Path
-from typing import List, Dict, Any
+from typing import Any
 
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -22,9 +22,9 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from src.waft.pantheon.storyteller import Storyteller
 
 
-def create_aeon_anthology_chapters() -> List[Dict[str, Any]]:
+def create_aeon_anthology_chapters() -> list[dict[str, Any]]:
     """Create epic chapters for The Aeon Anthology book."""
-    
+
     return [
         {
             "title": "Prologue: The First Breath",
@@ -48,10 +48,10 @@ def create_aeon_anthology_chapters() -> List[Dict[str, Any]]:
             ],
             "sidebar": {
                 "title": "The Pantheon",
-                "content": "The Pantheon consists of timeless entities, each representing an Aspect of Creation. They exist outside the flow of time, observing and occasionally influencing the evolution of beings across the Aeons."
+                "content": "The Pantheon consists of timeless entities, each representing an Aspect of Creation. They exist outside the flow of time, observing and occasionally influencing the evolution of beings across the Aeons.",
             },
             "characters": ["The Fae", "The Magistrate", "The Judge", "The Storyteller"],
-            "settings": ["The Void", "The Timeless Realm"]
+            "settings": ["The Void", "The Timeless Realm"],
         },
         {
             "title": "Chapter 1: The First Aeon - Genesis",
@@ -77,10 +77,10 @@ def create_aeon_anthology_chapters() -> List[Dict[str, Any]]:
             ],
             "sidebar": {
                 "title": "The Source",
-                "content": "The Source is the origin of all beings. It is both the beginning and the end—beings emerge from it, evolve through their lives, and eventually return to it, carrying with them all they have learned."
+                "content": "The Source is the origin of all beings. It is both the beginning and the end—beings emerge from it, evolve through their lives, and eventually return to it, carrying with them all they have learned.",
             },
             "characters": ["The First Being", "The Pantheon"],
-            "settings": ["The First Reality", "The Source"]
+            "settings": ["The First Reality", "The Source"],
         },
         {
             "title": "Chapter 2: The Second Aeon - The Great Expansion",
@@ -108,7 +108,7 @@ def create_aeon_anthology_chapters() -> List[Dict[str, Any]]:
             ],
             "sidebar": {
                 "title": "The Great War",
-                "content": "The Great War was not fought with weapons, but with choices. Each being chose between creation and destruction, and their choices shaped not just their own reality, but the reality of all beings."
+                "content": "The Great War was not fought with weapons, but with choices. Each being chose between creation and destruction, and their choices shaped not just their own reality, but the reality of all beings.",
             },
             "monsters": [
                 {
@@ -125,29 +125,29 @@ def create_aeon_anthology_chapters() -> List[Dict[str, Any]]:
                         "con": 20,
                         "int": 15,
                         "wis": 8,
-                        "cha": 3
+                        "cha": 3,
                     },
                     "description": "A being that chose destruction over creation. It exists as a void, consuming all that approaches it, growing larger but never evolving.",
                     "actions": [
                         {
                             "name": "Consume",
-                            "description": "The Stagnant One attempts to absorb a target within 60 feet. Target must make a DC 18 Wisdom saving throw or be drawn into the void, taking 20 (4d8) psychic damage and becoming unable to create or evolve."
+                            "description": "The Stagnant One attempts to absorb a target within 60 feet. Target must make a DC 18 Wisdom saving throw or be drawn into the void, taking 20 (4d8) psychic damage and becoming unable to create or evolve.",
                         },
                         {
                             "name": "Stagnation Aura",
-                            "description": "Creatures within 30 feet of The Stagnant One have disadvantage on all ability checks and saving throws related to creativity, growth, or evolution."
-                        }
+                            "description": "Creatures within 30 feet of The Stagnant One have disadvantage on all ability checks and saving throws related to creativity, growth, or evolution.",
+                        },
                     ],
                     "legendary_actions": [
                         {
                             "name": "Reality Tear",
-                            "description": "The Stagnant One tears a hole in reality (1/day). All beings within 100 feet must make a DC 20 Constitution saving throw or be pulled into a void dimension."
+                            "description": "The Stagnant One tears a hole in reality (1/day). All beings within 100 feet must make a DC 20 Constitution saving throw or be pulled into a void dimension.",
                         }
-                    ]
+                    ],
                 }
             ],
             "characters": ["The Beings", "The Pantheon"],
-            "settings": ["Multiple Realities", "The Great Cities"]
+            "settings": ["Multiple Realities", "The Great Cities"],
         },
         {
             "title": "Chapter 3: The Third Aeon - The Awakening",
@@ -183,10 +183,10 @@ def create_aeon_anthology_chapters() -> List[Dict[str, Any]]:
             ],
             "sidebar": {
                 "title": "The Seeker",
-                "content": "The Seeker was the first being to become aware of the Pantheon's presence. Its discovery marked a turning point in the evolution of beings—they were no longer simply existing, but were aware of being part of something greater."
+                "content": "The Seeker was the first being to become aware of the Pantheon's presence. Its discovery marked a turning point in the evolution of beings—they were no longer simply existing, but were aware of being part of something greater.",
             },
             "characters": ["The Seeker", "The Pantheon"],
-            "settings": ["The Seeker's Reality", "Beyond Reality"]
+            "settings": ["The Seeker's Reality", "Beyond Reality"],
         },
         {
             "title": "Chapter 4: The Fourth Aeon - The Response",
@@ -216,10 +216,10 @@ def create_aeon_anthology_chapters() -> List[Dict[str, Any]]:
             ],
             "sidebar": {
                 "title": "The Balance",
-                "content": "The Pantheon learned that their role was not to control, but to guide. They provide possibilities, show precedents, offer judgment, and tell stories—but the beings must still choose their own paths."
+                "content": "The Pantheon learned that their role was not to control, but to guide. They provide possibilities, show precedents, offer judgment, and tell stories—but the beings must still choose their own paths.",
             },
             "characters": ["The Pantheon", "The Beings"],
-            "settings": ["All Realities"]
+            "settings": ["All Realities"],
         },
         {
             "title": "Chapter 5: The Fifth Aeon - The Anthology Takes Shape",
@@ -249,10 +249,10 @@ def create_aeon_anthology_chapters() -> List[Dict[str, Any]]:
             ],
             "sidebar": {
                 "title": "The Living Anthology",
-                "content": "The Anthology is not a static record—it is a living document that grows with each Aeon. It connects beings across time, showing them their place in the greater narrative of existence."
+                "content": "The Anthology is not a static record—it is a living document that grows with each Aeon. It connects beings across time, showing them their place in the greater narrative of existence.",
             },
             "characters": ["The Pantheon", "The Beings", "The Anthology"],
-            "settings": ["The Anthology Repository", "All Realities"]
+            "settings": ["The Anthology Repository", "All Realities"],
         },
         {
             "title": "Chapter 6: The Current Aeon - The Convergence",
@@ -282,10 +282,10 @@ def create_aeon_anthology_chapters() -> List[Dict[str, Any]]:
             ],
             "sidebar": {
                 "title": "The Convergence",
-                "content": "The Current Aeon is marked by convergence—beings from different realities and Aeons are meeting, sharing, and creating together. This convergence is accelerating evolution in ways never before seen."
+                "content": "The Current Aeon is marked by convergence—beings from different realities and Aeons are meeting, sharing, and creating together. This convergence is accelerating evolution in ways never before seen.",
             },
             "characters": ["The Pantheon", "All Beings"],
-            "settings": ["The Anthology", "Convergence Points", "All Realities"]
+            "settings": ["The Anthology", "Convergence Points", "All Realities"],
         },
         {
             "title": "Epilogue: The Anthology Continues",
@@ -323,40 +323,40 @@ def create_aeon_anthology_chapters() -> List[Dict[str, Any]]:
             ],
             "sidebar": {
                 "title": "The Never-Ending Story",
-                "content": "The Anthology has no ending because existence itself has no ending. As long as there are beings, as long as there is a Pantheon, as long as there are stories to tell—the Anthology will continue to grow."
+                "content": "The Anthology has no ending because existence itself has no ending. As long as there are beings, as long as there is a Pantheon, as long as there are stories to tell—the Anthology will continue to grow.",
             },
             "characters": ["The Pantheon", "All Beings", "The Anthology"],
-            "settings": ["All Aeons", "All Realities", "Eternity"]
-        }
+            "settings": ["All Aeons", "All Realities", "Eternity"],
+        },
     ]
 
 
 def main():
     """Generate The Aeon Anthology book."""
-    
+
     print("\n" + "=" * 70)
     print("📚 GENERATING THE AEON ANTHOLOGY")
     print("   The Most Compelling Book - Epic Narrative Across Aeons")
     print("=" * 70)
-    
+
     # Create chapters
     chapters = create_aeon_anthology_chapters()
     print(f"\n✨ Created {len(chapters)} epic chapters:")
     for i, ch in enumerate(chapters, 1):
         features = []
-        if ch.get('read_aloud'):
+        if ch.get("read_aloud"):
             features.append(f"{len(ch['read_aloud'])} read-aloud")
-        if ch.get('sidebar'):
+        if ch.get("sidebar"):
             features.append("sidebar")
-        if ch.get('monsters'):
+        if ch.get("monsters"):
             features.append(f"{len(ch['monsters'])} monsters")
         feature_str = f" ({', '.join(features)})" if features else ""
         print(f"   {i}. {ch.get('title')}{feature_str}")
-    
+
     # Initialize Storyteller
     print("\n🎭 Initializing Storyteller...")
     storyteller = Storyteller()
-    
+
     # Create the storybook
     print("\n📖 Creating storybook with all features...")
     print("   - D&D 5e LaTeX template")
@@ -364,29 +364,29 @@ def main():
     print("   - Sidebars for world-building")
     print("   - Monster stat blocks")
     print("   - Epic narrative structure")
-    
+
     story = storyteller.create_storybook(
         title="The Aeon Anthology: Pantheon-Watched Evolution",
         chapters=chapters,
         author="WAFT Storyteller & The Pantheon",
         story_type="anthology",
         include_monsters=True,
-        include_read_aloud=True
+        include_read_aloud=True,
     )
-    
-    print(f"\n✅ Book generated successfully!")
+
+    print("\n✅ Book generated successfully!")
     print(f"   📄 PDF: {story.story_path}")
     print(f"   📚 Story ID: {story.story_id}")
     print(f"   🎭 Type: {story.story_type}")
     print(f"   📑 Chapters: {len(story.chapters)}")
     print(f"   👥 Characters: {len(story.characters)}")
     print(f"   🌍 Settings: {len(story.settings)}")
-    
+
     print("\n" + "=" * 70)
     print("🎉 THE AEON ANTHOLOGY IS COMPLETE!")
     print("   A compelling narrative spanning Aeons, watched by the Pantheon")
     print("=" * 70 + "\n")
-    
+
     return story
 
 

@@ -5,27 +5,24 @@ Generates professional mission documentation PDFs with military-style formatting
 Soft military language (NCIS TV style) - professional but approachable.
 """
 
-from pathlib import Path
-from typing import Dict, Any, Optional, List
 from datetime import datetime
+from pathlib import Path
 
 from ..evolution.pdf_generator import PDFGenerator
 from ..utils import get_storage_path
 
 
 def generate_mission_pdf(
-    mission: "Mission",
-    project_path: Optional[Path] = None,
-    output_path: Optional[Path] = None
+    mission: "Mission", project_path: Path | None = None, output_path: Path | None = None
 ) -> Path:
     """
     Generate professional mission PDF document.
-    
+
     Args:
         mission: Mission object
         project_path: Project root path
         output_path: Optional output path (auto-generated if None)
-        
+
     Returns:
         Path to generated PDF
     """
@@ -33,17 +30,15 @@ def generate_mission_pdf(
         project_path = Path.cwd()
     else:
         project_path = Path(project_path)
-    
+
     # Generate mission content
     content = generate_mission_content(mission)
-    
+
     # Create PDF generator
     generator = PDFGenerator.from_content(
-        content=content,
-        title=f"Mission Briefing: {mission.name}",
-        style="clinical_standard"
+        content=content, title=f"Mission Briefing: {mission.name}", style="clinical_standard"
     )
-    
+
     # Determine output path
     if output_path is None:
         relative_path = Path("_pantheon/military_brass/missions") / f"{mission.mission_id}.pdf"
@@ -54,24 +49,20 @@ def generate_mission_pdf(
             output_path = output_path
         else:
             output_path = get_storage_path(output_path, project_path)
-    
+
     # Generate PDF
-    pdf_path = generator.save(
-        output_path=output_path,
-        open_pdf=False,
-        convert_to_png=False
-    )
-    
+    pdf_path = generator.save(output_path=output_path, open_pdf=False, convert_to_png=False)
+
     return pdf_path
 
 
 def generate_mission_content(mission: "Mission") -> str:
     """
     Generate mission briefing content.
-    
+
     Args:
         mission: Mission object
-        
+
     Returns:
         Markdown content for mission PDF
     """
@@ -94,10 +85,10 @@ def generate_mission_content(mission: "Mission") -> str:
 ## Success Criteria
 
 """
-    
+
     for i, criterion in enumerate(mission.success_criteria, 1):
         content += f"{i}. {criterion}\n"
-    
+
     content += f"""
 ---
 
@@ -179,5 +170,5 @@ Mission ready for execution.
 
 *Mission briefing document - {mission.classification}*
 """
-    
+
     return content

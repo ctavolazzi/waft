@@ -11,6 +11,7 @@ source: waft
 """
 
 from pathlib import Path
+
 from ..compiler import LaTeXCompiler
 from ..content_builders import build_report_content
 
@@ -24,7 +25,7 @@ def generate_analysis_report(
     abstract: str = "",
     sections: list = None,
     figures_dir: Path = None,
-    **kwargs
+    **kwargs,
 ) -> Path:
     """
     Generate PDF using Analysis Report LaTeX template with analysis_orax package.
@@ -57,16 +58,11 @@ def generate_analysis_report(
     figures_dir.mkdir(parents=True, exist_ok=True)
 
     # Build LaTeX content from markdown/HTML
-    latex_content = build_report_content(
-        title=title,
-        content=content,
-        author=author,
-        **kwargs
-    )
+    latex_content = build_report_content(title=title, content=content, author=author, **kwargs)
 
     # Build complete LaTeX document
     date_str = date if date else r"\today"
-    
+
     # Template structure
     latex_doc = f"""\\documentclass{{article}}
 
@@ -128,8 +124,8 @@ def generate_analysis_report(
     # Add sections if provided
     if sections:
         for section in sections:
-            section_title = section.get('title', 'Section')
-            section_content = section.get('content', '')
+            section_title = section.get("title", "Section")
+            section_content = section.get("content", "")
             latex_doc += f"""
 \\section{{{section_title}}}
 
@@ -147,6 +143,7 @@ def generate_analysis_report(
 
     # Copy package to working directory (so LaTeX can find it)
     import shutil
+
     work_package_dir = working_dir / "lib" / "analysis_orax"
     work_package_dir.mkdir(parents=True, exist_ok=True)
     shutil.copy(package_file, work_package_dir / "analysis_orax.sty")
@@ -164,20 +161,16 @@ def generate_analysis_report(
 
     # Compile to PDF
     compiler = LaTeXCompiler(compiler="pdflatex")
-    
+
     # Set TEXINPUTS to include package directory
     import os
+
     original_texinputs = os.environ.get("TEXINPUTS", "")
     package_path = str(package_dir.parent.absolute())
     os.environ["TEXINPUTS"] = f"{package_path}//:{original_texinputs}"
-    
+
     try:
-        pdf_path = compiler.compile(
-            latex_doc,
-            output_path,
-            working_dir=working_dir,
-            runs=2
-        )
+        pdf_path = compiler.compile(latex_doc, output_path, working_dir=working_dir, runs=2)
     finally:
         # Restore TEXINPUTS
         os.environ["TEXINPUTS"] = original_texinputs

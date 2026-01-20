@@ -11,7 +11,7 @@ Source: typst-templates
 """
 
 from pathlib import Path
-from typing import Optional, Union, List
+
 from ..compiler import TypstCompiler
 
 
@@ -19,15 +19,15 @@ def generate_wonderous_book(
     title: str,
     content: str,
     output_path: Path,
-    author: Union[str, List[str]],
+    author: str | list[str],
     paper_size: str = "iso-b5",
-    dedication: Optional[str] = None,
-    publishing_info: Optional[str] = None,
-    **kwargs
+    dedication: str | None = None,
+    publishing_info: str | None = None,
+    **kwargs,
 ) -> Path:
     """
     Generate PDF using Wonderous Book Typst template.
-    
+
     Args:
         title: Book title
         content: Main content (Typst markup)
@@ -37,7 +37,7 @@ def generate_wonderous_book(
         dedication: Dedication text (optional)
         publishing_info: Publishing information (optional)
         **kwargs: Additional template parameters
-        
+
     Returns:
         Path to generated PDF
     """
@@ -49,13 +49,13 @@ def generate_wonderous_book(
         author_str = f"({authors_list})"
     else:
         author_str = '"Author"'
-    
+
     # Format dedication
     dedication_str = f"[{dedication}]" if dedication else "none"
-    
+
     # Format publishing info
     publishing_info_str = f"[{publishing_info}]" if publishing_info else "none"
-    
+
     # Build Typst content
     typst_content = f'''#import "@preview/wonderous-book:0.1.2": book
 
@@ -69,9 +69,9 @@ def generate_wonderous_book(
 
 {content}
 '''
-    
+
     # Compile to PDF
     compiler = TypstCompiler()
     pdf_path = compiler.compile(typst_content, output_path)
-    
+
     return pdf_path

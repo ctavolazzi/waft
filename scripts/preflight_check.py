@@ -9,11 +9,10 @@ for the interactive demonstration.
 Run this before showing the demo to ensure everything works.
 """
 
-import sys
-import subprocess
-from pathlib import Path
-from typing import List, Tuple, Optional
 import importlib.util
+import subprocess
+import sys
+from pathlib import Path
 
 # Add project root to path
 PROJECT_ROOT = Path(__file__).parent.parent
@@ -22,13 +21,14 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 class Colors:
     """ANSI color codes for terminal output."""
-    GREEN = '\033[92m'
-    RED = '\033[91m'
-    YELLOW = '\033[93m'
-    BLUE = '\033[94m'
-    CYAN = '\033[96m'
-    BOLD = '\033[1m'
-    END = '\033[0m'
+
+    GREEN = "\033[92m"
+    RED = "\033[91m"
+    YELLOW = "\033[93m"
+    BLUE = "\033[94m"
+    CYAN = "\033[96m"
+    BOLD = "\033[1m"
+    END = "\033[0m"
 
 
 class PreflightChecker:
@@ -38,7 +38,7 @@ class PreflightChecker:
         self.passed = 0
         self.failed = 0
         self.warnings = 0
-        self.issues: List[str] = []
+        self.issues: list[str] = []
 
     def header(self, text: str):
         """Print section header."""
@@ -46,7 +46,9 @@ class PreflightChecker:
         print(f"{Colors.BOLD}{Colors.CYAN}{text}{Colors.END}")
         print(f"{Colors.BOLD}{Colors.CYAN}{'=' * 80}{Colors.END}\n")
 
-    def check(self, description: str, passed: bool, error_msg: Optional[str] = None, warning: bool = False):
+    def check(
+        self, description: str, passed: bool, error_msg: str | None = None, warning: bool = False
+    ):
         """Print check result."""
         if passed:
             print(f"{Colors.GREEN}✅ {description}{Colors.END}")
@@ -78,11 +80,11 @@ class PreflightChecker:
         self.check(
             f"Python version: {version_str}",
             passed,
-            "Python 3.10+ required" if not passed else None
+            "Python 3.10+ required" if not passed else None,
         )
         return passed
 
-    def check_dependency(self, package_name: str, import_name: Optional[str] = None) -> bool:
+    def check_dependency(self, package_name: str, import_name: str | None = None) -> bool:
         """Check if a Python package is installed."""
         if import_name is None:
             import_name = package_name
@@ -95,7 +97,7 @@ class PreflightChecker:
             self.check(
                 f"Package '{package_name}' installed",
                 False,
-                f"Install with: pip install {package_name}"
+                f"Install with: pip install {package_name}",
             )
             return False
 
@@ -105,12 +107,14 @@ class PreflightChecker:
         self.check(
             f"{description}: {file_path}",
             exists,
-            f"File not found" if not exists else None,
-            warning=not required
+            "File not found" if not exists else None,
+            warning=not required,
         )
         return exists
 
-    def check_directory_exists(self, dir_path: Path, description: str, create: bool = False) -> bool:
+    def check_directory_exists(
+        self, dir_path: Path, description: str, create: bool = False
+    ) -> bool:
         """Check if a directory exists, optionally create it."""
         exists = dir_path.exists()
 
@@ -124,9 +128,7 @@ class PreflightChecker:
                 return False
         else:
             self.check(
-                f"{description}: {dir_path}",
-                exists,
-                f"Directory not found" if not exists else None
+                f"{description}: {dir_path}", exists, "Directory not found" if not exists else None
             )
             return exists
 
@@ -146,17 +148,13 @@ class PreflightChecker:
     def check_command_exists(self, command: str, description: str, required: bool = True) -> bool:
         """Check if a system command exists."""
         try:
-            result = subprocess.run(
-                ['which', command],
-                capture_output=True,
-                text=True
-            )
+            result = subprocess.run(["which", command], capture_output=True, text=True)
             exists = result.returncode == 0
             self.check(
                 f"{description} available",
                 exists,
                 f"Command '{command}' not found in PATH" if not exists else None,
-                warning=not required
+                warning=not required,
             )
             return exists
         except Exception as e:
@@ -190,8 +188,7 @@ class PreflightChecker:
         self.check_module_importable("src.waft.reflection", "Reflection System")
         self.check_module_importable("src.waft.binder", "Binder System")
         self.check_module_importable(
-            "src.waft.templates.code_documentation",
-            "Code Documentation Template"
+            "src.waft.templates.code_documentation", "Code Documentation Template"
         )
 
         # =====================================================================
@@ -217,7 +214,7 @@ class PreflightChecker:
                 "Demo script is executable",
                 is_executable,
                 f"Make executable with: chmod +x {demo_script}",
-                warning=True
+                warning=True,
             )
 
         # =====================================================================
@@ -244,9 +241,7 @@ class PreflightChecker:
         template_count = 0
         for template in templates:
             if self.check_file_exists(
-                templates_dir / template,
-                f"Template: {template}",
-                required=False
+                templates_dir / template, f"Template: {template}", required=False
             ):
                 template_count += 1
 
@@ -257,23 +252,13 @@ class PreflightChecker:
         # =====================================================================
         self.header("📁 DIRECTORIES")
 
-        self.check_directory_exists(
-            PROJECT_ROOT / "_work_efforts",
-            "Output directory",
-            create=True
-        )
+        self.check_directory_exists(PROJECT_ROOT / "_work_efforts", "Output directory", create=True)
 
         self.check_directory_exists(
-            PROJECT_ROOT / "src/waft",
-            "WAFT source directory",
-            create=False
+            PROJECT_ROOT / "src/waft", "WAFT source directory", create=False
         )
 
-        self.check_directory_exists(
-            PROJECT_ROOT / "examples",
-            "Examples directory",
-            create=False
-        )
+        self.check_directory_exists(PROJECT_ROOT / "examples", "Examples directory", create=False)
 
         # =====================================================================
         # EXAMPLE PDFS
@@ -308,6 +293,7 @@ class PreflightChecker:
 
         try:
             from src.waft.reflection import ReflectionSystem
+
             waft_root = PROJECT_ROOT / "src/waft"
             reflector = ReflectionSystem(waft_root=waft_root)
             self.check("Reflection system initialization", True)
@@ -347,7 +333,9 @@ class PreflightChecker:
             return True
         else:
             print(f"{Colors.RED}{Colors.BOLD}{'=' * 80}{Colors.END}")
-            print(f"{Colors.RED}{Colors.BOLD}⚠️  ISSUES DETECTED - FIX BEFORE RUNNING DEMO{Colors.END}")
+            print(
+                f"{Colors.RED}{Colors.BOLD}⚠️  ISSUES DETECTED - FIX BEFORE RUNNING DEMO{Colors.END}"
+            )
             print(f"{Colors.RED}{Colors.BOLD}{'=' * 80}{Colors.END}\n")
 
             print(f"{Colors.RED}Issues to fix:{Colors.END}")

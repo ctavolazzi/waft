@@ -15,9 +15,9 @@ Features:
 """
 
 from pathlib import Path
+
 from jinja2 import Template
 from weasyprint import HTML
-
 
 ELDRITCH_JOURNAL_TEMPLATE = """
 <!DOCTYPE html>
@@ -314,7 +314,7 @@ def generate_eldritch_journal(
     researcher: str = "Dr. [REDACTED]",
     institution: str = "Miskatonic University",
     project: str = None,
-    show_warning: bool = False
+    show_warning: bool = False,
 ) -> Path:
     """
     Generate an eldritch horror research journal.
@@ -340,7 +340,7 @@ def generate_eldritch_journal(
         researcher=researcher,
         institution=institution,
         project=project,
-        show_warning=show_warning
+        show_warning=show_warning,
     )
 
     HTML(string=html_output).write_pdf(output_path)

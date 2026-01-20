@@ -4,20 +4,21 @@ Monitoring Data Collection System
 Collects first-time startup data and runtime metrics for the D&D Campaign Desktop App.
 """
 
-from pathlib import Path
-from typing import Dict, Any, Optional, List
-from datetime import datetime
 import json
+import os
 import platform
 import sys
 import time
-import os
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
+from datetime import datetime
 from enum import Enum
+from pathlib import Path
+from typing import Any
 
 
 class EventType(Enum):
     """Types of events to monitor."""
+
     FIRST_STARTUP = "first_startup"
     BACKEND_START = "backend_start"
     BACKEND_READY = "backend_ready"
@@ -35,39 +36,42 @@ class EventType(Enum):
 @dataclass
 class SystemInfo:
     """System information snapshot."""
+
     platform: str
     platform_version: str
     architecture: str
     python_version: str
-    node_version: Optional[str] = None
+    node_version: str | None = None
     cpu_count: int = 0
-    memory_total: Optional[int] = None  # bytes
+    memory_total: int | None = None  # bytes
 
 
 @dataclass
 class StartupEvent:
     """First-time startup event data."""
+
     event_id: str
     event_type: str
     timestamp: str
-    system_info: Dict[str, Any]
+    system_info: dict[str, Any]
     startup_time_ms: float
-    backend_start_time_ms: Optional[float] = None
-    electron_start_time_ms: Optional[float] = None
+    backend_start_time_ms: float | None = None
+    electron_start_time_ms: float | None = None
     health_check_passed: bool = False
-    errors: List[str] = field(default_factory=list)
-    features_accessed: List[str] = field(default_factory=list)
+    errors: list[str] = field(default_factory=list)
+    features_accessed: list[str] = field(default_factory=list)
 
 
 @dataclass
 class RuntimeMetric:
     """Runtime performance metric."""
+
     metric_id: str
     metric_type: str
     timestamp: str
     value: float
     unit: str
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 class MonitoringCollector:
@@ -101,12 +105,13 @@ class MonitoringCollector:
 
         self.start_time = time.time()
         self.is_first_startup = not self.startup_data_file.exists()
-        self.startup_data: Optional[StartupEvent] = None
+        self.startup_data: StartupEvent | None = None
 
     def get_system_info(self) -> SystemInfo:
         """Collect system information."""
         try:
             import psutil
+
             memory = psutil.virtual_memory()
             memory_total = memory.total
             cpu_count = psutil.cpu_count()
@@ -118,11 +123,9 @@ class MonitoringCollector:
         node_version = None
         try:
             import subprocess
+
             result = subprocess.run(
-                ["node", "--version"],
-                capture_output=True,
-                text=True,
-                timeout=2
+                ["node", "--version"], capture_output=True, text=True, timeout=2
             )
             if result.returncode == 0:
                 node_version = result.stdout.strip()
@@ -136,13 +139,16 @@ class MonitoringCollector:
             python_version=sys.version.split()[0],
             node_version=node_version,
             cpu_count=cpu_count,
-            memory_total=memory_total
+            memory_total=memory_total,
         )
 
-    def record_first_startup(self, backend_start_time: Optional[float] = None,
-                           electron_start_time: Optional[float] = None,
-                           health_check_passed: bool = False,
-                           errors: Optional[List[str]] = None) -> StartupEvent:
+    def record_first_startup(
+        self,
+        backend_start_time: float | None = None,
+        electron_start_time: float | None = None,
+        health_check_passed: bool = False,
+        errors: list[str] | None = None,
+    ) -> StartupEvent:
         """
         Record first-time startup data.
 
@@ -158,7 +164,7 @@ class MonitoringCollector:
         if not self.is_first_startup:
             # Load existing startup data
             if self.startup_data_file.exists():
-                with open(self.startup_data_file, 'r') as f:
+                with open(self.startup_data_file) as f:
                     data = json.load(f)
                     return StartupEvent(**data)
             return None
@@ -177,17 +183,17 @@ class MonitoringCollector:
             electron_start_time_ms=electron_start_time,
             health_check_passed=health_check_passed,
             errors=errors or [],
-            features_accessed=[]
+            features_accessed=[],
         )
 
         # Save startup data
-        with open(self.startup_data_file, 'w') as f:
+        with open(self.startup_data_file, "w") as f:
             json.dump(asdict(event), f, indent=2)
 
         self.startup_data = event
         return event
 
-    def record_event(self, event_type: EventType, metadata: Optional[Dict[str, Any]] = None):
+    def record_event(self, event_type: EventType, metadata: dict[str, Any] | None = None):
         """
         Record a runtime event.
 
@@ -200,15 +206,20 @@ class MonitoringCollector:
             "event_type": event_type.value,
             "timestamp": datetime.now().isoformat(),
             "component": self.component,
-            "metadata": metadata or {}
+            "metadata": metadata or {},
         }
 
         # Append to events file (JSONL format)
-        with open(self.events_file, 'a') as f:
-            f.write(json.dumps(event) + '\n')
+        with open(self.events_file, "a") as f:
+            f.write(json.dumps(event) + "\n")
 
-    def record_metric(self, metric_type: str, value: float, unit: str = "ms",
-                     metadata: Optional[Dict[str, Any]] = None):
+    def record_metric(
+        self,
+        metric_type: str,
+        value: float,
+        unit: str = "ms",
+        metadata: dict[str, Any] | None = None,
+    ):
         """
         Record a performance metric.
 
@@ -224,15 +235,14 @@ class MonitoringCollector:
             timestamp=datetime.now().isoformat(),
             value=value,
             unit=unit,
-            metadata=metadata or {}
+            metadata=metadata or {},
         )
 
         # Append to metrics file (JSONL format)
-        with open(self.metrics_file, 'a') as f:
-            f.write(json.dumps(asdict(metric)) + '\n')
+        with open(self.metrics_file, "a") as f:
+            f.write(json.dumps(asdict(metric)) + "\n")
 
-    def record_error(self, error_type: str, error_message: str,
-                    stack_trace: Optional[str] = None):
+    def record_error(self, error_type: str, error_message: str, stack_trace: str | None = None):
         """
         Record an error event.
 
@@ -246,8 +256,8 @@ class MonitoringCollector:
             metadata={
                 "error_type": error_type,
                 "error_message": error_message,
-                "stack_trace": stack_trace
-            }
+                "stack_trace": stack_trace,
+            },
         )
 
     def record_feature_access(self, feature_name: str):
@@ -261,18 +271,18 @@ class MonitoringCollector:
             if feature_name not in self.startup_data.features_accessed:
                 self.startup_data.features_accessed.append(feature_name)
                 # Update startup data file
-                with open(self.startup_data_file, 'w') as f:
+                with open(self.startup_data_file, "w") as f:
                     json.dump(asdict(self.startup_data), f, indent=2)
 
         self.record_event(
             EventType.CAMPAIGN_CREATED if feature_name == "campaign_create" else None,
-            metadata={"feature": feature_name}
+            metadata={"feature": feature_name},
         )
 
-    def get_startup_data(self) -> Optional[Dict[str, Any]]:
+    def get_startup_data(self) -> dict[str, Any] | None:
         """Get first-time startup data if available."""
         if self.startup_data_file.exists():
-            with open(self.startup_data_file, 'r') as f:
+            with open(self.startup_data_file) as f:
                 return json.load(f)
         return None
 
@@ -282,7 +292,7 @@ class MonitoringCollector:
 
 
 # Global instance (will be initialized in campaign_server.py)
-monitoring: Optional[MonitoringCollector] = None
+monitoring: MonitoringCollector | None = None
 
 
 def init_monitoring(project_path: Path, component: str = "backend") -> MonitoringCollector:
@@ -301,6 +311,6 @@ def init_monitoring(project_path: Path, component: str = "backend") -> Monitorin
     return monitoring
 
 
-def get_monitoring() -> Optional[MonitoringCollector]:
+def get_monitoring() -> MonitoringCollector | None:
     """Get global monitoring collector."""
     return monitoring

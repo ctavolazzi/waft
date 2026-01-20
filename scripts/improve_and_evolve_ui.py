@@ -8,232 +8,251 @@ Improve and Evolve Mission Control & Village Dashboard UI
 """
 
 import sys
-from pathlib import Path
 from datetime import datetime
-from typing import Dict, Any, List
-import json
+from pathlib import Path
+from typing import Any
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
-from src.waft.pantheon import MissionControl, TheVillage
-from src.waft.evolution.document_evolution_engine import DocumentEvolutionEngine
 from rich.console import Console
-from rich.table import Table
 from rich.panel import Panel
+from rich.table import Table
+
+from src.waft.evolution.document_evolution_engine import DocumentEvolutionEngine
 
 console = Console()
 
 
-def analyze_ui_improvements() -> List[Dict[str, Any]]:
+def analyze_ui_improvements() -> list[dict[str, Any]]:
     """Analyze current UI for improvements."""
     console.print("\n[bold cyan]📊 Analyzing UI for Improvements...[/bold cyan]\n")
-    
+
     improvements = []
-    
+
     # 1. Missing Real API Integration
-    improvements.append({
-        "title": "Connect to Real Mission Control & Village APIs",
-        "priority": "critical",
-        "category": "architecture",
-        "impact": "high",
-        "effort": "medium",
-        "score": 9.0,
-        "location": "JavaScript loadData() function",
-        "current_state": "Placeholder data, no real API calls",
-        "suggested_change": "Create Python backend API endpoint or use direct file system access to load real data from _pantheon/ directories",
-        "rationale": "UI currently shows placeholder data. Real integration would make it functional and useful."
-    })
-    
+    improvements.append(
+        {
+            "title": "Connect to Real Mission Control & Village APIs",
+            "priority": "critical",
+            "category": "architecture",
+            "impact": "high",
+            "effort": "medium",
+            "score": 9.0,
+            "location": "JavaScript loadData() function",
+            "current_state": "Placeholder data, no real API calls",
+            "suggested_change": "Create Python backend API endpoint or use direct file system access to load real data from _pantheon/ directories",
+            "rationale": "UI currently shows placeholder data. Real integration would make it functional and useful.",
+        }
+    )
+
     # 2. Missing Real-time Updates
-    improvements.append({
-        "title": "Implement Real-time Data Updates",
-        "priority": "high",
-        "category": "performance",
-        "impact": "high",
-        "effort": "medium",
-        "score": 8.0,
-        "location": "Auto-refresh mechanism",
-        "current_state": "30-second polling with placeholder data",
-        "suggested_change": "Use file watching or WebSocket to detect changes in _pantheon/ directories and update UI in real-time",
-        "rationale": "Real-time updates would provide immediate feedback when missions or gatherings change."
-    })
-    
+    improvements.append(
+        {
+            "title": "Implement Real-time Data Updates",
+            "priority": "high",
+            "category": "performance",
+            "impact": "high",
+            "effort": "medium",
+            "score": 8.0,
+            "location": "Auto-refresh mechanism",
+            "current_state": "30-second polling with placeholder data",
+            "suggested_change": "Use file watching or WebSocket to detect changes in _pantheon/ directories and update UI in real-time",
+            "rationale": "Real-time updates would provide immediate feedback when missions or gatherings change.",
+        }
+    )
+
     # 3. Missing Command Execution
-    improvements.append({
-        "title": "Implement Actual Command Execution",
-        "priority": "high",
-        "category": "code",
-        "impact": "high",
-        "effort": "medium",
-        "score": 8.0,
-        "location": "issueCommand() function",
-        "current_state": "Shows alert, doesn't actually execute commands",
-        "suggested_change": "Call MissionControl.issue_command() via Python backend or direct integration",
-        "rationale": "Commands should actually work, not just show alerts."
-    })
-    
+    improvements.append(
+        {
+            "title": "Implement Actual Command Execution",
+            "priority": "high",
+            "category": "code",
+            "impact": "high",
+            "effort": "medium",
+            "score": 8.0,
+            "location": "issueCommand() function",
+            "current_state": "Shows alert, doesn't actually execute commands",
+            "suggested_change": "Call MissionControl.issue_command() via Python backend or direct integration",
+            "rationale": "Commands should actually work, not just show alerts.",
+        }
+    )
+
     # 4. Missing Gathering Creation
-    improvements.append({
-        "title": "Implement Actual Gathering Creation",
-        "priority": "high",
-        "category": "code",
-        "impact": "high",
-        "effort": "medium",
-        "score": 8.0,
-        "location": "createGathering() function",
-        "current_state": "Shows alert, doesn't actually create gatherings",
-        "suggested_change": "Call TheVillage.create_gathering() via Python backend or direct integration",
-        "rationale": "Gathering creation should actually work."
-    })
-    
+    improvements.append(
+        {
+            "title": "Implement Actual Gathering Creation",
+            "priority": "high",
+            "category": "code",
+            "impact": "high",
+            "effort": "medium",
+            "score": 8.0,
+            "location": "createGathering() function",
+            "current_state": "Shows alert, doesn't actually create gatherings",
+            "suggested_change": "Call TheVillage.create_gathering() via Python backend or direct integration",
+            "rationale": "Gathering creation should actually work.",
+        }
+    )
+
     # 5. Missing Mission Details View
-    improvements.append({
-        "title": "Add Mission Details Modal/View",
-        "priority": "medium",
-        "category": "usability",
-        "impact": "medium",
-        "effort": "low",
-        "score": 6.0,
-        "location": "Mission items",
-        "current_state": "Only shows basic info in list",
-        "suggested_change": "Add click handler to show full mission details (status, telemetry, alerts, history)",
-        "rationale": "Users need to see detailed mission information."
-    })
-    
+    improvements.append(
+        {
+            "title": "Add Mission Details Modal/View",
+            "priority": "medium",
+            "category": "usability",
+            "impact": "medium",
+            "effort": "low",
+            "score": 6.0,
+            "location": "Mission items",
+            "current_state": "Only shows basic info in list",
+            "suggested_change": "Add click handler to show full mission details (status, telemetry, alerts, history)",
+            "rationale": "Users need to see detailed mission information.",
+        }
+    )
+
     # 6. Missing Gathering Details View
-    improvements.append({
-        "title": "Add Gathering Details Modal/View",
-        "priority": "medium",
-        "category": "usability",
-        "impact": "medium",
-        "effort": "low",
-        "score": 6.0,
-        "location": "Gathering items",
-        "current_state": "Only shows basic info in list",
-        "suggested_change": "Add click handler to show full gathering details (insights, participants, wisdom)",
-        "rationale": "Users need to see detailed gathering information."
-    })
-    
+    improvements.append(
+        {
+            "title": "Add Gathering Details Modal/View",
+            "priority": "medium",
+            "category": "usability",
+            "impact": "medium",
+            "effort": "low",
+            "score": 6.0,
+            "location": "Gathering items",
+            "current_state": "Only shows basic info in list",
+            "suggested_change": "Add click handler to show full gathering details (insights, participants, wisdom)",
+            "rationale": "Users need to see detailed gathering information.",
+        }
+    )
+
     # 7. Missing Error Handling
-    improvements.append({
-        "title": "Add Comprehensive Error Handling",
-        "priority": "medium",
-        "category": "code",
-        "impact": "medium",
-        "effort": "low",
-        "score": 5.0,
-        "location": "All API calls",
-        "current_state": "Basic try/catch, no user feedback",
-        "suggested_change": "Add error messages, retry logic, and user-friendly error displays",
-        "rationale": "Better error handling improves user experience."
-    })
-    
+    improvements.append(
+        {
+            "title": "Add Comprehensive Error Handling",
+            "priority": "medium",
+            "category": "code",
+            "impact": "medium",
+            "effort": "low",
+            "score": 5.0,
+            "location": "All API calls",
+            "current_state": "Basic try/catch, no user feedback",
+            "suggested_change": "Add error messages, retry logic, and user-friendly error displays",
+            "rationale": "Better error handling improves user experience.",
+        }
+    )
+
     # 8. Missing Loading States
-    improvements.append({
-        "title": "Add Loading States and Indicators",
-        "priority": "medium",
-        "category": "usability",
-        "impact": "medium",
-        "effort": "low",
-        "score": 5.0,
-        "location": "Data loading functions",
-        "current_state": "No loading indicators",
-        "suggested_change": "Add spinners, skeleton loaders, and progress indicators",
-        "rationale": "Loading states provide better user feedback."
-    })
-    
+    improvements.append(
+        {
+            "title": "Add Loading States and Indicators",
+            "priority": "medium",
+            "category": "usability",
+            "impact": "medium",
+            "effort": "low",
+            "score": 5.0,
+            "location": "Data loading functions",
+            "current_state": "No loading indicators",
+            "suggested_change": "Add spinners, skeleton loaders, and progress indicators",
+            "rationale": "Loading states provide better user feedback.",
+        }
+    )
+
     # 9. Missing Filtering/Search
-    improvements.append({
-        "title": "Add Filtering and Search",
-        "priority": "low",
-        "category": "usability",
-        "impact": "low",
-        "effort": "medium",
-        "score": 3.0,
-        "location": "Mission and gathering lists",
-        "current_state": "No filtering or search",
-        "suggested_change": "Add search bar and filters (status, date, etc.)",
-        "rationale": "Filtering helps users find specific missions/gatherings."
-    })
-    
+    improvements.append(
+        {
+            "title": "Add Filtering and Search",
+            "priority": "low",
+            "category": "usability",
+            "impact": "low",
+            "effort": "medium",
+            "score": 3.0,
+            "location": "Mission and gathering lists",
+            "current_state": "No filtering or search",
+            "suggested_change": "Add search bar and filters (status, date, etc.)",
+            "rationale": "Filtering helps users find specific missions/gatherings.",
+        }
+    )
+
     # 10. Missing Export/Share
-    improvements.append({
-        "title": "Add Export and Share Functionality",
-        "priority": "low",
-        "category": "usability",
-        "impact": "low",
-        "effort": "medium",
-        "score": 2.0,
-        "location": "Header or actions menu",
-        "current_state": "No export/share options",
-        "suggested_change": "Add export to PDF/JSON and share links",
-        "rationale": "Export functionality would be useful for reporting."
-    })
-    
+    improvements.append(
+        {
+            "title": "Add Export and Share Functionality",
+            "priority": "low",
+            "category": "usability",
+            "impact": "low",
+            "effort": "medium",
+            "score": 2.0,
+            "location": "Header or actions menu",
+            "current_state": "No export/share options",
+            "suggested_change": "Add export to PDF/JSON and share links",
+            "rationale": "Export functionality would be useful for reporting.",
+        }
+    )
+
     return improvements
 
 
-def display_improvements(improvements: List[Dict[str, Any]]):
+def display_improvements(improvements: list[dict[str, Any]]):
     """Display improvements in a formatted table."""
     console.print("\n[bold]Improvement Analysis Results[/bold]\n")
-    
+
     # Summary
     by_priority = {}
     for imp in improvements:
         priority = imp["priority"]
         by_priority[priority] = by_priority.get(priority, 0) + 1
-    
+
     summary_table = Table(title="Improvements by Priority", show_header=True)
     summary_table.add_column("Priority", style="cyan")
     summary_table.add_column("Count", style="green")
-    
+
     for priority in ["critical", "high", "medium", "low"]:
         count = by_priority.get(priority, 0)
         summary_table.add_row(priority.upper(), str(count))
-    
+
     console.print(summary_table)
-    
+
     # Detailed improvements (sorted by score)
     sorted_improvements = sorted(improvements, key=lambda x: x["score"], reverse=True)
-    
+
     console.print("\n[bold]Top Improvements (by Priority Score)[/bold]\n")
-    
+
     for i, imp in enumerate(sorted_improvements[:5], 1):
         panel_content = f"""
-[bold]{imp['title']}[/bold]
+[bold]{imp["title"]}[/bold]
 
-[cyan]Priority:[/cyan] {imp['priority'].upper()} | [green]Impact:[/green] {imp['impact']} | [yellow]Effort:[/yellow] {imp['effort']} | [magenta]Score:[/magenta] {imp['score']:.1f}
+[cyan]Priority:[/cyan] {imp["priority"].upper()} | [green]Impact:[/green] {imp["impact"]} | [yellow]Effort:[/yellow] {imp["effort"]} | [magenta]Score:[/magenta] {imp["score"]:.1f}
 
-[cyan]Location:[/cyan] {imp['location']}
+[cyan]Location:[/cyan] {imp["location"]}
 
-[cyan]Current State:[/cyan] {imp['current_state']}
+[cyan]Current State:[/cyan] {imp["current_state"]}
 
-[green]Suggested Change:[/green] {imp['suggested_change']}
+[green]Suggested Change:[/green] {imp["suggested_change"]}
 
-[dim]Rationale:[/dim] {imp['rationale']}
+[dim]Rationale:[/dim] {imp["rationale"]}
 """
         console.print(Panel(panel_content.strip(), title=f"#{i}", border_style="cyan"))
 
 
-def evolve_ui_design() -> Dict[str, Any]:
+def evolve_ui_design() -> dict[str, Any]:
     """Evolve UI design using WAFT evolution system."""
     console.print("\n[bold cyan]🧬 Evolving UI Design...[/bold cyan]\n")
-    
+
     evolution_dir = project_root / "_genetics" / "ui_evolution"
     evolution_dir.mkdir(parents=True, exist_ok=True)
-    
+
     evolution_engine = DocumentEvolutionEngine(
         project_path=project_root,
         weasyprint_available=False,
         max_iterations=3,
         default_allowed_pages=1,
         evolution_dir=evolution_dir,
-        exploration_rate=0.3
+        exploration_rate=0.3,
     )
-    
+
     ui_requirements = """
 # Mission Control & The Village Dashboard - Evolved Requirements
 
@@ -263,37 +282,43 @@ def evolve_ui_design() -> Dict[str, Any]:
 - Enhanced visual feedback
 - Improved accessibility
 """
-    
+
     result = evolution_engine.generate_one_pager(
         content=ui_requirements,
         title="Mission Control & Village Dashboard - Evolved Design",
         allowed_pages=1,
         use_science_paper_structure=False,
         use_evolved_components=True,
-        author="WAFT UI Evolution System"
+        author="WAFT UI Evolution System",
     )
-    
-    console.print(f"  ✅ Evolution complete (fitness: {result.get('fitness', {}).get('overall', 'N/A')})")
-    
+
+    console.print(
+        f"  ✅ Evolution complete (fitness: {result.get('fitness', {}).get('overall', 'N/A')})"
+    )
+
     return result
 
 
-def generate_evolved_ui(improvements: List[Dict[str, Any]], evolution_result: Dict[str, Any]) -> str:
+def generate_evolved_ui(
+    improvements: list[dict[str, Any]], evolution_result: dict[str, Any]
+) -> str:
     """Generate evolved UI with improvements implemented."""
     console.print("\n[bold cyan]🎨 Generating Evolved UI...[/bold cyan]\n")
-    
+
     # Read current UI
-    current_ui_path = project_root / "_genetics" / "ui_evolution" / "mission_control_village_dashboard.html"
-    
+    current_ui_path = (
+        project_root / "_genetics" / "ui_evolution" / "mission_control_village_dashboard.html"
+    )
+
     # Generate improved version with real API integration
     html = generate_improved_html()
-    
+
     return html
 
 
 def generate_improved_html() -> str:
     """Generate improved HTML with real API integration."""
-    
+
     return """<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1228,27 +1253,27 @@ def generate_improved_html() -> str:
 def main():
     """Main execution."""
     console.print("\n[bold cyan]🎨 Improve & Evolve UI Dashboard[/bold cyan]\n")
-    
+
     # Step 1: Analyze improvements
     improvements = analyze_ui_improvements()
     display_improvements(improvements)
-    
+
     # Step 2: Evolve design
     evolution_result = evolve_ui_design()
-    
+
     # Step 3: Generate evolved UI
     evolved_html = generate_evolved_ui(improvements, evolution_result)
-    
+
     # Step 4: Save evolved UI
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_dir = project_root / "_genetics" / "ui_evolution"
     output_dir.mkdir(parents=True, exist_ok=True)
-    
+
     output_path = output_dir / f"{timestamp}_evolved_dashboard.html"
-    output_path.write_text(evolved_html, encoding='utf-8')
-    
+    output_path.write_text(evolved_html, encoding="utf-8")
+
     console.print(f"\n[bold green]✅ Evolved UI saved to:[/bold green] {output_path}")
-    console.print(f"\n[bold]Key Improvements Implemented:[/bold]")
+    console.print("\n[bold]Key Improvements Implemented:[/bold]")
     console.print("  • Real API integration structure")
     console.print("  • Loading states and error handling")
     console.print("  • Mission and gathering detail modals")
@@ -1256,7 +1281,7 @@ def main():
     console.print("  • Enhanced animations and transitions")
     console.print("  • Refresh buttons")
     console.print("  • Better empty states")
-    
+
     return 0
 
 

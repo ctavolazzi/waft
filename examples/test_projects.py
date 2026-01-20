@@ -4,17 +4,10 @@ Test suite for Projects Feature.
 Tests core functionality of ProjectManager and data models.
 """
 
-from pathlib import Path
 import tempfile
-import shutil
+from pathlib import Path
 
-from src.waft.core.projects import (
-    ProjectManager,
-    Project,
-    ProjectStatus,
-    Milestone,
-    ProgressEntry
-)
+from src.waft.core.projects import ProgressEntry, ProjectManager, ProjectStatus
 
 
 def test_create_project():
@@ -26,7 +19,7 @@ def test_create_project():
             title="Test Project",
             description="A test project",
             tags=["test", "example"],
-            status=ProjectStatus.ACTIVE
+            status=ProjectStatus.ACTIVE,
         )
 
         assert project.project_id.startswith("proj_")
@@ -45,10 +38,7 @@ def test_get_project():
         manager = ProjectManager(Path(tmpdir))
 
         # Create project
-        created = manager.create_project(
-            title="Test Project",
-            description="A test project"
-        )
+        created = manager.create_project(title="Test Project", description="A test project")
 
         # Get project
         retrieved = manager.get_project(created.project_id)
@@ -120,11 +110,12 @@ def test_progress_tracking():
 
         # Add progress entry
         from datetime import datetime
+
         entry = ProgressEntry(
             entry_id="entry_1",
             timestamp=datetime.now().isoformat(),
             progress_delta=25.0,
-            notes="Phase 1 complete"
+            notes="Phase 1 complete",
         )
         project.progress_entries.append(entry)
         project.progress_percent = 25.0
@@ -214,6 +205,7 @@ def run_all_tests():
     except Exception as e:
         print(f"\n❌ Test error: {e}\n")
         import traceback
+
         traceback.print_exc()
         return False
 

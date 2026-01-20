@@ -11,17 +11,15 @@ Usage:
     generate_all_lightcone_docs()
 """
 
-from pathlib import Path
 from datetime import datetime
-from typing import Tuple, Optional
+from pathlib import Path
 
 try:
-    from weasyprint import HTML, CSS
     from jinja2 import Template
+    from weasyprint import CSS, HTML
 except ImportError:
     raise ImportError(
-        "WeasyPrint and Jinja2 required. Install with:\n"
-        "  pip install weasyprint jinja2"
+        "WeasyPrint and Jinja2 required. Install with:\n  pip install weasyprint jinja2"
     )
 
 
@@ -374,7 +372,7 @@ TELEPORT_MASSIVE_BASE_TEMPLATE = """
 # ============================================================================
 
 
-def generate_tm_eng_114_weasyprint(output_dir: Path) -> Tuple[Path, Path]:
+def generate_tm_eng_114_weasyprint(output_dir: Path) -> tuple[Path, Path]:
     """
     Generate TM-ENG-114: The Lazarus Protocol using WeasyPrint.
 
@@ -382,13 +380,16 @@ def generate_tm_eng_114_weasyprint(output_dir: Path) -> Tuple[Path, Path]:
 
     Returns: (pdf_path, markdown_path)
     """
-    pdf_path = output_dir / "pdf_weasyprint" / "tab2_engineering" / "TM-ENG-114_Lazarus_Protocol.pdf"
+    pdf_path = (
+        output_dir / "pdf_weasyprint" / "tab2_engineering" / "TM-ENG-114_Lazarus_Protocol.pdf"
+    )
     md_path = output_dir / "markdown" / "tab2_engineering" / "TM-ENG-114_Lazarus_Protocol.md"
 
     pdf_path.parent.mkdir(parents=True, exist_ok=True)
 
     # Content (HTML)
-    content_html = """
+    content_html = (
+        """
     <h1>THE LAZARUS PROTOCOL</h1>
     <h2>Quantum Probability Collapse Teleportation System</h2>
 
@@ -402,7 +403,9 @@ def generate_tm_eng_114_weasyprint(output_dir: Path) -> Tuple[Path, Path]:
             <dt>Document ID:</dt><dd>TM-ENG-114</dd>
             <dt>Classification:</dt><dd>TOP SECRET // TRADE SECRETS</dd>
             <dt>Revision:</dt><dd>v4.2</dd>
-            <dt>Date:</dt><dd>""" + datetime.now().strftime('%Y-%m-%d') + """</dd>
+            <dt>Date:</dt><dd>"""
+        + datetime.now().strftime("%Y-%m-%d")
+        + """</dd>
             <dt>Clearance Required:</dt><dd>ORACLE (L5+)</dd>
             <dt>Author:</dt><dd>Dr. Marcus Chen, Chief Quantum Engineer</dd>
         </dl>
@@ -606,26 +609,23 @@ def generate_tm_eng_114_weasyprint(output_dir: Path) -> Tuple[Path, Path]:
     Dr. Marcus Chen<br>
     Chief Quantum Engineer<br>
     TELEPORT MASSIVE<br>
-    """ + datetime.now().strftime('%Y-%m-%d') + """</p>
     """
+        + datetime.now().strftime("%Y-%m-%d")
+        + """</p>
+    """
+    )
 
     # Template data
     template_data = {
-        'doc_id': 'TM-ENG-114',
-        'doc_type': 'FIELD MANUAL - TRADE SECRETS',
-        'classification': 'TOP SECRET // ORACLE EYES ONLY',
-        'security_color': '#800',  # Dark red for top secret
-        'watermark': 'BURN AFTER READING',
-        'stamp_text': 'BURN AFTER READING',
-        'checklist': [
-            '[X] QUANTUM',
-            '[X] WETWARE',
-            '[X] ETHICS',
-            '[ ] KARMA',
-            '[X] HAZARD'
-        ],
-        'legal_text': 'This document contains proprietary teleportation technology. Unauthorized disclosure will result in immediate termination of employment, security clearance, and biological functions. Distribution restricted to L5+ personnel only. By reading this, you agree to the Terms of Employment.',
-        'content': content_html
+        "doc_id": "TM-ENG-114",
+        "doc_type": "FIELD MANUAL - TRADE SECRETS",
+        "classification": "TOP SECRET // ORACLE EYES ONLY",
+        "security_color": "#800",  # Dark red for top secret
+        "watermark": "BURN AFTER READING",
+        "stamp_text": "BURN AFTER READING",
+        "checklist": ["[X] QUANTUM", "[X] WETWARE", "[X] ETHICS", "[ ] KARMA", "[X] HAZARD"],
+        "legal_text": "This document contains proprietary teleportation technology. Unauthorized disclosure will result in immediate termination of employment, security clearance, and biological functions. Distribution restricted to L5+ personnel only. By reading this, you agree to the Terms of Employment.",
+        "content": content_html,
     }
 
     # Render HTML
@@ -638,7 +638,7 @@ def generate_tm_eng_114_weasyprint(output_dir: Path) -> Tuple[Path, Path]:
     return pdf_path, md_path
 
 
-def generate_tm_memo_042_weasyprint(output_dir: Path) -> Tuple[Path, Path]:
+def generate_tm_memo_042_weasyprint(output_dir: Path) -> tuple[Path, Path]:
     """
     Generate TM-MEMO-042: The God Problem using WeasyPrint.
 
@@ -650,7 +650,8 @@ def generate_tm_memo_042_weasyprint(output_dir: Path) -> Tuple[Path, Path]:
     pdf_path.parent.mkdir(parents=True, exist_ok=True)
 
     # Content (HTML)
-    content_html = """
+    content_html = (
+        """
     <h1>INTERNAL MEMORANDUM</h1>
 
     <div class="metadata">
@@ -658,7 +659,9 @@ def generate_tm_memo_042_weasyprint(output_dir: Path) -> Tuple[Path, Path]:
             <dt>Document ID:</dt><dd>TM-MEMO-042</dd>
             <dt>From:</dt><dd>Dr. Helena Voss, Chief Ontological Officer</dd>
             <dt>To:</dt><dd>Executive Council, TELEPORT MASSIVE</dd>
-            <dt>Date:</dt><dd>""" + datetime.now().strftime('%Y-%m-%d') + """</dd>
+            <dt>Date:</dt><dd>"""
+        + datetime.now().strftime("%Y-%m-%d")
+        + """</dd>
             <dt>Subject:</dt><dd>Risk Assessment: The God Problem</dd>
             <dt>Classification:</dt><dd>TOP SECRET // ORACLE EYES ONLY</dd>
         </dl>
@@ -719,26 +722,23 @@ def generate_tm_memo_042_weasyprint(output_dir: Path) -> Tuple[Path, Path]:
     Dr. Helena Voss<br>
     Chief Ontological Officer<br>
     TELEPORT MASSIVE<br>
-    """ + datetime.now().strftime('%Y-%m-%d') + """</p>
     """
+        + datetime.now().strftime("%Y-%m-%d")
+        + """</p>
+    """
+    )
 
     # Template data
     template_data = {
-        'doc_id': 'TM-MEMO-042',
-        'doc_type': 'INTERNAL MEMO',
-        'classification': 'TOP SECRET // ORACLE EYES ONLY',
-        'security_color': '#800',
-        'watermark': 'EYES ONLY',
-        'stamp_text': '',  # No stamp for memos
-        'checklist': [
-            '[X] ONTOLOGY',
-            '[X] METAPHYS',
-            '[ ] SLEEPER',
-            '[X] RISK',
-            '[X] POLICY'
-        ],
-        'legal_text': 'This memo contains information critical to organizational survival. Distribution restricted to Executive Council members only. Violation of confidentiality will result in immediate termination.',
-        'content': content_html
+        "doc_id": "TM-MEMO-042",
+        "doc_type": "INTERNAL MEMO",
+        "classification": "TOP SECRET // ORACLE EYES ONLY",
+        "security_color": "#800",
+        "watermark": "EYES ONLY",
+        "stamp_text": "",  # No stamp for memos
+        "checklist": ["[X] ONTOLOGY", "[X] METAPHYS", "[ ] SLEEPER", "[X] RISK", "[X] POLICY"],
+        "legal_text": "This memo contains information critical to organizational survival. Distribution restricted to Executive Council members only. Violation of confidentiality will result in immediate termination.",
+        "content": content_html,
     }
 
     # Render HTML
@@ -756,7 +756,7 @@ def generate_tm_memo_042_weasyprint(output_dir: Path) -> Tuple[Path, Path]:
 # ============================================================================
 
 
-def generate_all_lightcone_docs(output_dir: Optional[Path] = None) -> dict:
+def generate_all_lightcone_docs(output_dir: Path | None = None) -> dict:
     """
     Generate all PROJECT LIGHTCONE documents using WeasyPrint.
 

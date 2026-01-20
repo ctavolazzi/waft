@@ -2,8 +2,7 @@
 
 import subprocess
 import sys
-from pathlib import Path
-import pytest
+
 from waft.core.memory import MemoryManager
 from waft.core.substrate import SubstrateManager
 
@@ -53,7 +52,11 @@ def test_waft_verify_invalid_project(temp_project_path):
     result = run_waft_command(["verify"], cwd=temp_project_path)
 
     # Should fail (exit code 1) for invalid project
-    assert result.returncode == 1 or "invalid" in result.stdout.lower() or "missing" in result.stdout.lower()
+    assert (
+        result.returncode == 1
+        or "invalid" in result.stdout.lower()
+        or "missing" in result.stdout.lower()
+    )
 
 
 def test_waft_info_shows_project_info(project_with_pyproject):
@@ -65,7 +68,9 @@ def test_waft_info_shows_project_info(project_with_pyproject):
 
     # Should NOT show duplicate "Project Name" (bug fix verification)
     project_name_count = result.stdout.count("Project Name")
-    assert project_name_count == 1, f"Found {project_name_count} instances of 'Project Name' (expected 1)"
+    assert project_name_count == 1, (
+        f"Found {project_name_count} instances of 'Project Name' (expected 1)"
+    )
 
 
 def test_waft_info_with_full_project(full_waft_project):
@@ -77,7 +82,9 @@ def test_waft_info_with_full_project(full_waft_project):
 
     # Verify no duplicate Project Name
     project_name_count = result.stdout.count("Project Name")
-    assert project_name_count == 1, f"Found {project_name_count} instances of 'Project Name' (expected 1)"
+    assert project_name_count == 1, (
+        f"Found {project_name_count} instances of 'Project Name' (expected 1)"
+    )
 
 
 def test_waft_info_without_pyproject(temp_project_path):
@@ -88,7 +95,11 @@ def test_waft_info_without_pyproject(temp_project_path):
     assert "Project" in result.stdout or "project" in result.stdout.lower()
 
     # Should show "Not a Python project" or similar
-    assert "Not a Python project" in result.stdout or "not a python" in result.stdout.lower() or "N/A" in result.stdout
+    assert (
+        "Not a Python project" in result.stdout
+        or "not a python" in result.stdout.lower()
+        or "N/A" in result.stdout
+    )
 
 
 def test_waft_init_creates_structure(project_with_pyproject):
@@ -97,6 +108,7 @@ def test_waft_init_creates_structure(project_with_pyproject):
     pyrite_path = project_with_pyproject / "_pyrite"
     if pyrite_path.exists():
         import shutil
+
         shutil.rmtree(pyrite_path)
 
     result = run_waft_command(["init"], cwd=project_with_pyproject)
@@ -112,7 +124,11 @@ def test_waft_init_fails_without_pyproject(temp_project_path):
     result = run_waft_command(["init"], cwd=temp_project_path)
 
     # Should fail or show warning
-    assert result.returncode == 1 or "pyproject.toml" in result.stdout.lower() or "not found" in result.stdout.lower()
+    assert (
+        result.returncode == 1
+        or "pyproject.toml" in result.stdout.lower()
+        or "not found" in result.stdout.lower()
+    )
 
 
 def test_memory_manager_create_structure(temp_project_path):
@@ -166,7 +182,9 @@ def test_waft_info_with_path_flag(project_with_pyproject, temp_dir):
 
     # Verify no duplicate Project Name
     project_name_count = result.stdout.count("Project Name")
-    assert project_name_count == 1, f"Found {project_name_count} instances of 'Project Name' (expected 1)"
+    assert project_name_count == 1, (
+        f"Found {project_name_count} instances of 'Project Name' (expected 1)"
+    )
 
 
 def test_waft_verify_updates_integrity(full_waft_project):
@@ -176,4 +194,3 @@ def test_waft_verify_updates_integrity(full_waft_project):
     # Should run successfully and potentially show integrity
     # The exact output depends on gamification state, but command should complete
     assert result.returncode in [0, 1]  # May succeed or fail based on state
-

@@ -1,9 +1,10 @@
 """Pytest configuration and fixtures."""
 
-import pytest
-import tempfile
 import shutil
+import tempfile
 from pathlib import Path
+
+import pytest
 
 
 @pytest.fixture
@@ -93,15 +94,16 @@ def sample_work_efforts_dir(temp_project_path):
     """Create a temporary work efforts structure with sample data."""
     work_efforts_dir = temp_project_path / "_work_efforts"
     work_efforts_dir.mkdir(parents=True)
-    
+
     # Copy test data work efforts
     test_data_dir = Path(__file__).parent / "test_data" / "work_efforts"
     if test_data_dir.exists():
         import shutil
+
         for we_dir in test_data_dir.iterdir():
             if we_dir.is_dir():
                 shutil.copytree(we_dir, work_efforts_dir / we_dir.name)
-    
+
     yield work_efforts_dir
 
 
@@ -119,7 +121,7 @@ def sample_projects_data():
             "created": "2026-01-17T10:00:00Z",
             "updated": "2026-01-17T14:00:00Z",
             "milestones": 3,
-            "related_work_efforts": 2
+            "related_work_efforts": 2,
         },
         {
             "id": "proj-002",
@@ -131,8 +133,8 @@ def sample_projects_data():
             "created": "2026-01-16T10:00:00Z",
             "updated": "2026-01-16T10:00:00Z",
             "milestones": 0,
-            "related_work_efforts": 0
-        }
+            "related_work_efforts": 0,
+        },
     ]
 
 
@@ -144,14 +146,14 @@ def sample_templates_data():
             "name": "test_template_1",
             "category": "academic",
             "tags": "paper, research",
-            "description": "A test template for academic papers"
+            "description": "A test template for academic papers",
         },
         {
             "name": "test_template_2",
             "category": "business",
             "tags": "report, presentation",
-            "description": "A test template for business reports with a very long description that should be truncated"
-        }
+            "description": "A test template for business reports with a very long description that should be truncated",
+        },
     ]
 
 
@@ -164,15 +166,15 @@ def sample_experiments_data():
             "title": "Test Experiment 1",
             "date": "2026-01-17",
             "verified": True,
-            "path": "_experiments/test_exp_1.json"
+            "path": "_experiments/test_exp_1.json",
         },
         {
             "id": "exp-002",
             "title": "Test Experiment 2",
             "date": "2026-01-16",
             "verified": False,
-            "path": "_experiments/test_exp_2.json"
-        }
+            "path": "_experiments/test_exp_2.json",
+        },
     ]
 
 
@@ -185,15 +187,15 @@ def sample_proof_cases_data():
             "title": "Test Proof Case 1",
             "verdict": "PROVEN",
             "date": "2026-01-17",
-            "path": "_work_efforts/proof_cases/case_20260117_001.md"
+            "path": "_work_efforts/proof_cases/case_20260117_001.md",
         },
         {
             "id": "proof-002",
             "title": "Test Proof Case 2",
             "verdict": "PENDING",
             "date": "2026-01-16",
-            "path": "_work_efforts/proof_cases/case_20260116_001.md"
-        }
+            "path": "_work_efforts/proof_cases/case_20260116_001.md",
+        },
     ]
 
 
@@ -202,7 +204,7 @@ def sample_session_history_files(temp_project_path):
     """Create mock session history HTML files."""
     history_dir = temp_project_path / "_work_efforts"
     history_dir.mkdir(parents=True, exist_ok=True)
-    
+
     # Create sample HTML files
     files = []
     for i in range(3):
@@ -210,5 +212,5 @@ def sample_session_history_files(temp_project_path):
         filepath = history_dir / filename
         filepath.write_text(f"<html><body>Session {i}</body></html>")
         files.append(filepath)
-    
+
     yield files

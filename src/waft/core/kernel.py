@@ -9,62 +9,61 @@ CRITICAL: This is NOT the same as 42.00_kernel.md from Unified Genesis Protocol
 (that's for UNIT_GENESIS entities). The WAFT Kernel is the system-level intelligence.
 """
 
-from pathlib import Path
-from datetime import datetime, timedelta
-from typing import Dict, Any, Optional
 import subprocess
-import json
+from datetime import datetime, timedelta
+from pathlib import Path
+from typing import Any
 
+from ..cli.epistemic_display import get_moon_phase
+from .agent.state import EvolutionaryEvent, EvolutionaryEventType
 from .empirica import EmpiricaManager
 from .gamification import GamificationManager
 from .science.observer import TheObserver
-from .agent.state import EvolutionaryEvent, EvolutionaryEventType
-from ..cli.epistemic_display import get_moon_phase
 
 
 def calculate_epistemic_phase(empirica_manager: EmpiricaManager) -> str:
     """
     Calculate current epistemic phase from Empirica state.
-    
+
     Phases:
     - Data Gathering: Low knowledge (< 30%), high uncertainty (> 50%)
     - Exploration: Moderate knowledge (30-60%), moderate uncertainty (30-50%)
     - Synthesis: High knowledge (> 60%), low uncertainty (< 30%)
     - Evolution: Very high knowledge (> 80%), very low uncertainty (< 20%)
     - Transition: Other combinations
-    
+
     Returns "UNKNOWN" if Empirica not initialized or data invalid.
-    
+
     Args:
         empirica_manager: EmpiricaManager instance
-        
+
     Returns:
         Phase name as string
     """
     try:
         if not empirica_manager.is_initialized():
             return "UNKNOWN"
-        
+
         context = empirica_manager.project_bootstrap()
         if not context:
             return "UNKNOWN"
-        
+
         epistemic_state = context.get("epistemic_state", {})
         if not epistemic_state:
             return "UNKNOWN"
-        
+
         vectors = epistemic_state.get("vectors", {})
         if not vectors:
             return "UNKNOWN"
-        
+
         foundation = vectors.get("foundation", {})
         know = foundation.get("know", 0.0) if foundation else 0.0
         uncertainty = vectors.get("uncertainty", 1.0)
-        
+
         # Validate ranges
         know = max(0.0, min(1.0, know))
         uncertainty = max(0.0, min(1.0, uncertainty))
-        
+
         if know < 0.3 and uncertainty > 0.5:
             return "Data Gathering"
         elif know < 0.6 and uncertainty > 0.3:
@@ -108,7 +107,7 @@ class WAFTKernel:
         self.gamification = GamificationManager(self.project_path)
         self.observer = TheObserver(self.project_path)
 
-    def boot_sequence(self) -> Dict[str, Any]:
+    def boot_sequence(self) -> dict[str, Any]:
         """Execute kernel boot sequence.
 
         Returns:
@@ -188,7 +187,7 @@ class WAFTKernel:
             else:
                 return "Idle"
 
-    def get_epistemic_state(self) -> Dict[str, Any]:
+    def get_epistemic_state(self) -> dict[str, Any]:
         """Get epistemic state (hybrid: Empirica + kernel estimates).
 
         Returns:
@@ -203,7 +202,7 @@ class WAFTKernel:
         # Fallback to kernel estimates (only if Empirica unavailable)
         return self._estimate_epistemic_state()
 
-    def _format_empirica_state(self, context: Dict[str, Any]) -> Dict[str, Any]:
+    def _format_empirica_state(self, context: dict[str, Any]) -> dict[str, Any]:
         """Format Empirica state for kernel use.
 
         Args:
@@ -248,7 +247,7 @@ class WAFTKernel:
             "unknowns": context.get("unknowns", []),
         }
 
-    def _estimate_epistemic_state(self) -> Dict[str, Any]:
+    def _estimate_epistemic_state(self) -> dict[str, Any]:
         """Estimate epistemic state from project structure (fallback only).
 
         Returns:
@@ -298,7 +297,7 @@ class WAFTKernel:
             },
         }
 
-    def _perform_status_check(self) -> Dict[str, Any]:
+    def _perform_status_check(self) -> dict[str, Any]:
         """Perform basic status check.
 
         Returns:
@@ -358,7 +357,7 @@ class WAFTKernel:
     def log_kernel_event(
         self,
         event_type: str,  # KERNEL_BOOT, KERNEL_STATUS_CHECK, etc.
-        context: Dict[str, Any]
+        context: dict[str, Any],
     ) -> None:
         """Log kernel event to Flight Recorder via TheObserver.
 
@@ -377,10 +376,10 @@ class WAFTKernel:
                 "kernel_event": True,
                 "event_type": event_type,
                 "kernel_identity": self.identity,
-                **context
+                **context,
             },
             agent_id="waft_kernel",
-            lineage_path=[]
+            lineage_path=[],
         )
 
         # Use existing TheObserver to log
@@ -394,7 +393,7 @@ class WAFTKernel:
         """
         return datetime.now() - self.boot_time
 
-    def kernel_status_check(self) -> Dict[str, Any]:
+    def kernel_status_check(self) -> dict[str, Any]:
         """Kernel-specific status check.
 
         Returns:
@@ -414,8 +413,12 @@ class WAFTKernel:
             "status": status,
             "systems": {
                 "flight_recorder": {
-                    "operational": self.observer.log_file.exists() if hasattr(self.observer, 'log_file') else False,
-                    "log_file": str(self.observer.log_file) if hasattr(self.observer, 'log_file') else None,
+                    "operational": self.observer.log_file.exists()
+                    if hasattr(self.observer, "log_file")
+                    else False,
+                    "log_file": str(self.observer.log_file)
+                    if hasattr(self.observer, "log_file")
+                    else None,
                 },
                 "empirica": {
                     "initialized": self.empirica.is_initialized(),

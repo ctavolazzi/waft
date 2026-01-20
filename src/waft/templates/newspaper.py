@@ -17,9 +17,9 @@ Features:
 """
 
 from pathlib import Path
+
 from jinja2 import Template
 from weasyprint import HTML
-
 
 NEWSPAPER_TEMPLATE = """
 <!DOCTYPE html>
@@ -288,7 +288,7 @@ def generate_newspaper(
     date: str = "January 11, 2026",
     edition: str = "Morning Edition",
     price: str = "$2.00",
-    columns: int = 3
+    columns: int = 3,
 ) -> Path:
     """
     Generate a newspaper front page.
@@ -336,7 +336,7 @@ def generate_newspaper(
         date=date,
         edition=edition,
         price=price,
-        columns=columns
+        columns=columns,
     )
 
     HTML(string=html_output).write_pdf(output_path)

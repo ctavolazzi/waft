@@ -6,13 +6,12 @@ can call to contribute observations, reflections, and notes to the chronicle.
 """
 
 from pathlib import Path
-from typing import Optional, Dict, Any
 
 from .keeper import TavernKeeper
 from .narrator import Narrator
 
 
-def get_narrator(project_path: Optional[Path] = None) -> Narrator:
+def get_narrator(project_path: Path | None = None) -> Narrator:
     """
     Get a Narrator instance for the current project.
 
@@ -37,7 +36,7 @@ def get_narrator(project_path: Optional[Path] = None) -> Narrator:
 def quick_observe(
     observation: str,
     mood: str = "neutral",
-    project_path: Optional[Path] = None,
+    project_path: Path | None = None,
 ) -> None:
     """
     Quick function to log an observation.
@@ -59,7 +58,7 @@ def quick_observe(
 def quick_note(
     note: str,
     category: str = "general",
-    project_path: Optional[Path] = None,
+    project_path: Path | None = None,
 ) -> None:
     """
     Quick function to log a note.
@@ -79,8 +78,8 @@ def quick_note(
 
 def celebrate_moment(
     celebration: str,
-    achievement: Optional[str] = None,
-    project_path: Optional[Path] = None,
+    achievement: str | None = None,
+    project_path: Path | None = None,
 ) -> None:
     """
     Celebrate a moment of beauty or achievement.
@@ -101,7 +100,7 @@ def celebrate_moment(
 def raise_concern(
     question: str,
     concern_type: str = "general",
-    project_path: Optional[Path] = None,
+    project_path: Path | None = None,
 ) -> None:
     """
     Log a concern or question.
@@ -117,4 +116,3 @@ def raise_concern(
     """
     narrator = get_narrator(project_path)
     narrator.question(question, concern=concern_type)
-

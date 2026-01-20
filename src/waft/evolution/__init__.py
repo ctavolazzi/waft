@@ -6,38 +6,38 @@ treating design elements (fonts, margins, colors, layouts) as genes
 that evolve and improve over time.
 """
 
-from .styling_genome import (
-    StylingGenome,
-    StylingGene,
-    FontGene,
-    MarginGene,
-    ColorGene,
-    LayoutGene,
-    StylingGenomeRegistry,
-)
-from .scint_detector import ScintDetector, Scint, ScintType
 from .chat_distiller import ChatDistiller, DistilledChat, IdeaGene
-from .two_page_generator import TwoPageGenerator
-from .two_page_generator_legacy import TwoPageGeneratorLegacy
+from .component_evolution import ComponentEvolutionEngine, ComponentTrait, EvolvedComponent
 from .component_generator import ComponentPDFGenerator, FoundationComponentGenerator
 from .document_evolution_engine import DocumentEvolutionEngine
 from .flexible_pdf_generator import FlexiblePDFGenerator
-from .component_evolution import ComponentEvolutionEngine, EvolvedComponent, ComponentTrait
-from .user_feedback import UserFeedbackCollector, FeedbackEntry
+from .latex_generator import LaTeXGenerator, generate_latex
 from .pdf_image_converter import (
+    PageSize,
+    convert_images_to_pdf,
+    convert_pdf_to_images,
     pdf_to_pngs,
     pngs_to_pdf,
-    convert_pdf_to_images,
-    convert_images_to_pdf,
-    PageSize,
 )
 from .pdf_metrics import PDFMetrics, PDFMetricsCollector
-from .latex_generator import LaTeXGenerator, generate_latex
+from .scint_detector import Scint, ScintDetector, ScintType
 from .status_components import (
     StatusComponentBuilder,
     StatusComponentType,
     create_status_components_from_status_dict,
 )
+from .styling_genome import (
+    ColorGene,
+    FontGene,
+    LayoutGene,
+    MarginGene,
+    StylingGene,
+    StylingGenome,
+    StylingGenomeRegistry,
+)
+from .two_page_generator import TwoPageGenerator
+from .two_page_generator_legacy import TwoPageGeneratorLegacy
+from .user_feedback import FeedbackEntry, UserFeedbackCollector
 
 __all__ = [
     "StylingGenome",

@@ -20,21 +20,23 @@ And in .git/config:
 import json
 import sys
 from pathlib import Path
-from typing import Dict, Any, List, Set
+from typing import Any
 
 
-def load_json_file(path: str) -> Dict[str, Any]:
+def load_json_file(path: str) -> dict[str, Any]:
     """Load JSON file, return empty dict if file doesn't exist or is invalid."""
     try:
         if not Path(path).exists():
             return {}
-        with open(path, "r") as f:
+        with open(path) as f:
             return json.load(f)
-    except (json.JSONDecodeError, IOError):
+    except (OSError, json.JSONDecodeError):
         return {}
 
 
-def merge_user_stats(base: Dict[str, Any], ours: Dict[str, Any], theirs: Dict[str, Any]) -> Dict[str, Any]:
+def merge_user_stats(
+    base: dict[str, Any], ours: dict[str, Any], theirs: dict[str, Any]
+) -> dict[str, Any]:
     """
     Merge user stats using Operational Transformation.
 
@@ -70,7 +72,14 @@ def merge_user_stats(base: Dict[str, Any], ours: Dict[str, Any], theirs: Dict[st
             our_abilities = our_user.get("ability_scores", {})
             their_abilities = their_user.get("ability_scores", {})
 
-            for ability in ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]:
+            for ability in [
+                "strength",
+                "dexterity",
+                "constitution",
+                "intelligence",
+                "wisdom",
+                "charisma",
+            ]:
                 base_ability = merged_abilities.get(ability, 8)
                 our_ability = our_abilities.get(ability, base_ability)
                 their_ability = their_abilities.get(ability, base_ability)
@@ -96,7 +105,7 @@ def merge_user_stats(base: Dict[str, Any], ours: Dict[str, Any], theirs: Dict[st
     return merged
 
 
-def merge_lists(base: List[Any], ours: List[Any], theirs: List[Any]) -> List[Any]:
+def merge_lists(base: list[Any], ours: list[Any], theirs: list[Any]) -> list[Any]:
     """
     Merge lists by identifying new entries.
 
@@ -122,7 +131,9 @@ def merge_lists(base: List[Any], ours: List[Any], theirs: List[Any]) -> List[Any
     return merged
 
 
-def merge_chronicles(base: Dict[str, Any], ours: Dict[str, Any], theirs: Dict[str, Any]) -> Dict[str, Any]:
+def merge_chronicles(
+    base: dict[str, Any], ours: dict[str, Any], theirs: dict[str, Any]
+) -> dict[str, Any]:
     """
     Perform semantic 3-way merge on chronicles.json.
 
@@ -232,4 +243,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

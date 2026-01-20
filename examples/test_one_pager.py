@@ -6,8 +6,8 @@ Test One-Pager Tool
 Quick test of the one-pager creator with various content types.
 """
 
-from pathlib import Path
 import sys
+from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
@@ -36,11 +36,11 @@ def hello():
 ## Conclusion
 This should create a perfect 2-page document.
 """
-    
+
     output = create_one_pager(
         markdown,
         title="Markdown One-Pager Test",
-        output_path=Path("_work_efforts/one_pagers/test_markdown.pdf")
+        output_path=Path("_work_efforts/one_pagers/test_markdown.pdf"),
     )
     print(f"✅ Generated: {output}")
     return output
@@ -55,7 +55,7 @@ def test_dict():
             "Self-modification",
             "Evolutionary tracking",
             "Fitness testing",
-            "Scientific data collection"
+            "Scientific data collection",
         ],
         "commands": {
             "new": "Create new project",
@@ -63,15 +63,15 @@ def test_dict():
             "status": "Show current state",
             "spawn": "Create agent variant",
             "eval": "Evaluate fitness",
-            "evolve": "Adopt best variant"
+            "evolve": "Adopt best variant",
         },
-        "philosophy": "Physical constellation of crystallized knowledge"
+        "philosophy": "Physical constellation of crystallized knowledge",
     }
-    
+
     output = create_one_pager(
         data,
         title="Dictionary One-Pager Test",
-        output_path=Path("_work_efforts/one_pagers/test_dict.pdf")
+        output_path=Path("_work_efforts/one_pagers/test_dict.pdf"),
     )
     print(f"✅ Generated: {output}")
     return output
@@ -85,7 +85,7 @@ def test_file():
         output = OnePager.from_file(
             readme_path,
             title="README One-Pager",
-            output_path=Path("_work_efforts/one_pagers/test_readme.pdf")
+            output_path=Path("_work_efforts/one_pagers/test_readme.pdf"),
         ).generate()
         print(f"✅ Generated: {output}")
         return output
@@ -100,22 +100,22 @@ def main():
     print("🧪 One-Pager Tool Tests")
     print("=" * 60)
     print()
-    
+
     print("Test 1: Markdown")
     print("-" * 60)
     test_markdown()
     print()
-    
+
     print("Test 2: Dictionary")
     print("-" * 60)
     test_dict()
     print()
-    
+
     print("Test 3: File Path")
     print("-" * 60)
     test_file()
     print()
-    
+
     print("=" * 60)
     print("✅ All tests complete!")
     print("=" * 60)

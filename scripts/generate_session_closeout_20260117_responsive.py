@@ -7,16 +7,19 @@ Comprehensive closeout for responsive design implementation session.
 """
 
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from examples.generate_waft_field_guide_printer_friendly import generate_field_guide_printer_friendly
+from examples.generate_waft_field_guide_printer_friendly import (
+    generate_field_guide_printer_friendly,
+)
+
 
 def generate_closeout():
     """Generate comprehensive closeout summary for responsive design session."""
-    
+
     content = """
 <h2>Session Closeout Summary: Show-Me Responsive Design Implementation</h2>
 
@@ -570,29 +573,30 @@ def generate_closeout():
 
 <p><strong>Session Status:</strong> ✅ <strong>Complete and Ready for Testing</strong></p>
 """
-    
+
     # Generate PDF
     output_dir = Path("_work_efforts/showcase_documents")
     output_dir.mkdir(parents=True, exist_ok=True)
-    
+
     pdf_path = output_dir / f"CLOSEOUT_SUMMARY_{datetime.now().strftime('%Y-%m-%d')}.pdf"
-    
+
     generate_field_guide_printer_friendly(
         title="Session Closeout Summary: Show-Me Responsive Design",
         content=content,
-        output_path=pdf_path
+        output_path=pdf_path,
     )
-    
+
     return pdf_path
+
 
 if __name__ == "__main__":
     print("=" * 80)
     print("Generating Session Closeout Summary PDF")
     print("=" * 80)
     print()
-    
+
     pdf_path = generate_closeout()
-    
+
     print(f"✅ Generated: {pdf_path}")
     print(f"   Size: {pdf_path.stat().st_size / 1024:.1f} KB")
     print()

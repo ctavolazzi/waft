@@ -6,8 +6,7 @@ and technical diagrams for sci-fi/fantasy worldbuilding.
 """
 
 from pathlib import Path
-from typing import Dict, Any, Optional, List, Union
-from datetime import datetime
+from typing import Any
 
 from ..compiler import TypstCompiler
 
@@ -16,15 +15,15 @@ def generate_worldbuild_quantum_circuit(
     title: str,
     content: str,
     output_path: Path,
-    circuits: Optional[List[Dict[str, Any]]] = None,
+    circuits: list[dict[str, Any]] | None = None,
     doc_id: str = "WB-QC-001",
-    subtitle: Optional[str] = None,
+    subtitle: str | None = None,
     classification: str = "INTERNAL",
-    metadata: Optional[Dict[str, Any]] = None
+    metadata: dict[str, Any] | None = None,
 ) -> Path:
     """
     Generate a worldbuilding document with quantum circuit diagrams using quill.
-    
+
     Args:
         title: Document title
         content: Main content (Typst markup)
@@ -35,7 +34,7 @@ def generate_worldbuild_quantum_circuit(
         subtitle: Optional subtitle
         classification: Security classification
         metadata: Additional metadata
-        
+
     Returns:
         Path to generated PDF
     """
@@ -47,7 +46,7 @@ def generate_worldbuild_quantum_circuit(
             circuit_name = circuit_data.get("name", "Circuit")
             circuit_code = circuit_data.get("circuit", "")
             description = circuit_data.get("description", "")
-            
+
             # Escape circuit code properly for Typst
             # The circuit code should be inserted as-is since it's already Typst code
             circuits_section += f"""
@@ -60,11 +59,16 @@ def generate_worldbuild_quantum_circuit(
 )
 
 """
-    
+
     # Build Typst content
     footer_notice_text = metadata.get("footer_notice", "") if metadata else ""
-    subtitle_section = f'\n            #v(0.1in)\n            #set text(size: 11pt, style: "italic")\n            {subtitle}' if subtitle else ''
-    classification_banner = f'''#rect(
+    subtitle_section = (
+        f'\n            #v(0.1in)\n            #set text(size: 11pt, style: "italic")\n            {subtitle}'
+        if subtitle
+        else ""
+    )
+    classification_banner = (
+        f"""#rect(
     width: 100%,
     fill: rgb("#c00"),
     [
@@ -78,15 +82,22 @@ def generate_worldbuild_quantum_circuit(
 )
 
 #v(0.2in)
-''' if classification else ''
-    footer_section = f'''#v(0.3in)
+"""
+        if classification
+        else ""
+    )
+    footer_section = (
+        f"""#v(0.3in)
 #line(length: 100%, stroke: 1pt)
 #v(0.1in)
 #set text(size: 7pt, fill: rgb("#666"))
 #align(center)[{footer_notice_text}]
-''' if footer_notice_text else ''
-    
-    typst_content = f'''#import "@preview/quill:0.7.2": *
+"""
+        if footer_notice_text
+        else ""
+    )
+
+    typst_content = f"""#import "@preview/quill:0.7.2": *
 
 #set page(
     paper: "us-letter",
@@ -138,15 +149,12 @@ def generate_worldbuild_quantum_circuit(
 {content}
 // Footer Notice
 {footer_section}
-'''
-    
+"""
+
     # Compile to PDF
     compiler = TypstCompiler()
-    pdf_path = compiler.compile(
-        typst_content=typst_content,
-        output_path=output_path
-    )
-    
+    pdf_path = compiler.compile(typst_content=typst_content, output_path=output_path)
+
     return pdf_path
 
 
@@ -156,11 +164,11 @@ def generate_worldbuild_magical_circuit(
     output_path: Path,
     circuit_description: str,
     circuit_code: str,
-    **kwargs
+    **kwargs,
 ) -> Path:
     """
     Generate a worldbuilding document with a magical/quantum energy circuit.
-    
+
     Args:
         title: Document title
         content: Main content
@@ -168,35 +176,29 @@ def generate_worldbuild_magical_circuit(
         circuit_description: Description of the circuit
         circuit_code: Quill circuit code (e.g., "lstick($|0〉$), $H$, ctrl(1), targ()")
         **kwargs: Additional arguments passed to generate_worldbuild_quantum_circuit
-        
+
     Returns:
         Path to generated PDF
     """
-    circuits = [{
-        "name": "Magical Energy Flow Circuit",
-        "circuit": circuit_code,
-        "description": circuit_description
-    }]
-    
+    circuits = [
+        {
+            "name": "Magical Energy Flow Circuit",
+            "circuit": circuit_code,
+            "description": circuit_description,
+        }
+    ]
+
     return generate_worldbuild_quantum_circuit(
-        title=title,
-        content=content,
-        output_path=output_path,
-        circuits=circuits,
-        **kwargs
+        title=title, content=content, output_path=output_path, circuits=circuits, **kwargs
     )
 
 
 def generate_worldbuild_tequila_circuit(
-    title: str,
-    content: str,
-    output_path: Path,
-    gates: List[Dict[str, Any]],
-    **kwargs
+    title: str, content: str, output_path: Path, gates: list[dict[str, Any]], **kwargs
 ) -> Path:
     """
     Generate a worldbuilding document using Tequila model (instruction-driven).
-    
+
     Args:
         title: Document title
         content: Main content
@@ -204,7 +206,7 @@ def generate_worldbuild_tequila_circuit(
         gates: List of gate instructions
             Format: [{"type": "h", "qubit": 0}, {"type": "cx", "control": 0, "target": 1}, ...]
         **kwargs: Additional arguments
-        
+
     Returns:
         Path to generated PDF
     """
@@ -223,21 +225,19 @@ def generate_worldbuild_tequila_circuit(
         elif gate_type == "p":
             gate_calls.append(f"tq.p(${gate.get('phase', 'pi')}$, {gate.get('qubit', 0)})")
         # Add more gate types as needed
-    
+
     circuit_code = "..tq.build(\n    " + ",\n    ".join(gate_calls) + "\n  )"
-    
-    circuits = [{
-        "name": "Tequila Circuit",
-        "circuit": circuit_code,
-        "description": "Automatically laid out quantum circuit"
-    }]
-    
+
+    circuits = [
+        {
+            "name": "Tequila Circuit",
+            "circuit": circuit_code,
+            "description": "Automatically laid out quantum circuit",
+        }
+    ]
+
     # Need to import tequila in the Typst content
     # This is a simplified version - full implementation would need to handle the import
     return generate_worldbuild_quantum_circuit(
-        title=title,
-        content=content,
-        output_path=output_path,
-        circuits=circuits,
-        **kwargs
+        title=title, content=content, output_path=output_path, circuits=circuits, **kwargs
     )

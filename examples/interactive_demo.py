@@ -13,22 +13,18 @@ This demo shows:
 This is WAFT demonstrating its own meta-cognitive capabilities.
 """
 
+import platform
+import shutil
+import subprocess
 import sys
 import time
-import subprocess
-import platform
-import random
-import shutil
-from pathlib import Path
-from typing import Optional
 from datetime import datetime
+from pathlib import Path
 
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from rich.console import Console
-from rich.panel import Panel
-from rich.text import Text
 
 from src.waft.core.memory import MemoryManager
 
@@ -39,6 +35,7 @@ console = Console()
 # ============================================================================
 # Terminal Animation Utilities
 # ============================================================================
+
 
 def typing_print(text: str, delay: float = 0.03, end: str = "\n"):
     """Print text with typing animation effect."""
@@ -52,17 +49,17 @@ def typing_print(text: str, delay: float = 0.03, end: str = "\n"):
 
 def blinking_cursor(duration: float = 2.0, message: str = "Thinking"):
     """Display a blinking cursor animation."""
-    cursor_chars = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']
+    cursor_chars = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
     end_time = time.time() + duration
     i = 0
 
     while time.time() < end_time:
-        sys.stdout.write(f'\r{message} {cursor_chars[i % len(cursor_chars)]} ')
+        sys.stdout.write(f"\r{message} {cursor_chars[i % len(cursor_chars)]} ")
         sys.stdout.flush()
         time.sleep(0.1)
         i += 1
 
-    sys.stdout.write('\r' + ' ' * (len(message) + 4) + '\r')
+    sys.stdout.write("\r" + " " * (len(message) + 4) + "\r")
     sys.stdout.flush()
 
 
@@ -72,12 +69,12 @@ def loading_animation(message: str, duration: float = 1.5):
     dots = 0
 
     while time.time() < end_time:
-        sys.stdout.write(f'\r{message}{"." * (dots % 4)}{" " * (3 - dots % 4)}')
+        sys.stdout.write(f"\r{message}{'.' * (dots % 4)}{' ' * (3 - dots % 4)}")
         sys.stdout.flush()
         time.sleep(0.3)
         dots += 1
 
-    sys.stdout.write(f'\r{message}... ✓\n')
+    sys.stdout.write(f"\r{message}... ✓\n")
     sys.stdout.flush()
 
 
@@ -107,6 +104,7 @@ def open_file(file_path: Path) -> bool:
 # ============================================================================
 # Demo Sections
 # ============================================================================
+
 
 def welcome_message():
     """Display welcome message with ASCII art."""
@@ -177,7 +175,9 @@ def create_messy_demo_folder(demo_dir: Path):
         console.print(f"       [green]✅[/green] Created ([dim]{size} bytes[/dim])")
 
     console.print()
-    console.print(f"  [green]✅[/green] Created [bold]{len(messy_files)}[/bold] files in the demo folder.")
+    console.print(
+        f"  [green]✅[/green] Created [bold]{len(messy_files)}[/bold] files in the demo folder."
+    )
     console.print()
 
     # Show the mess
@@ -218,10 +218,10 @@ def clean_up_folder(demo_dir: Path, messy_files: list):
 
     # Create basic folders
     folders = {
-        "documents": [f for f in messy_files if f.endswith(('.txt', '.md', '.pdf'))],
-        "scripts": [f for f in messy_files if f.endswith('.py')],
-        "data": [f for f in messy_files if f.endswith(('.json', '.csv', '.yaml'))],
-        "temp": [f for f in messy_files if f.endswith(('.tmp', '.bak'))],
+        "documents": [f for f in messy_files if f.endswith((".txt", ".md", ".pdf"))],
+        "scripts": [f for f in messy_files if f.endswith(".py")],
+        "data": [f for f in messy_files if f.endswith((".json", ".csv", ".yaml"))],
+        "temp": [f for f in messy_files if f.endswith((".tmp", ".bak"))],
     }
 
     console.print("  [cyan]📁[/cyan] Creating organization folders...")
@@ -232,16 +232,18 @@ def clean_up_folder(demo_dir: Path, messy_files: list):
             folder_path = demo_dir / folder_name
             console.print(f"  [cyan]📁[/cyan] Creating: [bold]{folder_name}/[/bold]")
             folder_path.mkdir(exist_ok=True)
-            console.print(f"     [green]✅[/green] Directory created")
+            console.print("     [green]✅[/green] Directory created")
             console.print(f"     [cyan]📦[/cyan] Moving [bold]{len(files)}[/bold] file(s)...")
 
             for filename in files:
                 src = demo_dir / filename
                 dst = folder_path / filename
                 if src.exists():
-                    console.print(f"        Moving: [cyan]{filename}[/cyan] → [bold]{folder_name}/[/bold]")
+                    console.print(
+                        f"        Moving: [cyan]{filename}[/cyan] → [bold]{folder_name}/[/bold]"
+                    )
                     shutil.move(str(src), str(dst))
-                    console.print(f"        [green]✅[/green] Moved")
+                    console.print("        [green]✅[/green] Moved")
             console.print()
 
     console.print("  [green]✅[/green] Organization complete!")
@@ -275,7 +277,9 @@ def chatgpt_comment():
     console.print("[yellow]That would be impressive...[/yellow]")
     console.print("[yellow]in 2022 when ChatGPT came out.[/yellow]")
     console.print()
-    console.print("[bold cyan]Let's show you a little bit of what WAFT is really capable of...[/bold cyan]")
+    console.print(
+        "[bold cyan]Let's show you a little bit of what WAFT is really capable of...[/bold cyan]"
+    )
     console.print()
 
 
@@ -289,7 +293,7 @@ def create_tools_folder(demo_dir: Path):
     console.print()
 
     tools_dir = demo_dir / "tools"
-    console.print(f"  [cyan]📁[/cyan] Creating directory: [bold]tools/[/bold]")
+    console.print("  [cyan]📁[/cyan] Creating directory: [bold]tools/[/bold]")
     tools_dir.mkdir(exist_ok=True)
     console.print(f"     [green]✅[/green] Directory created: {tools_dir}")
     console.print()
@@ -325,16 +329,18 @@ def install_pyrite_demo(tools_dir: Path):
     pyrite_dir = tools_dir / "_pyrite"
     console.print("  [cyan]🔍[/cyan] Verifying structure...")
     if pyrite_dir.exists():
-        console.print(f"     [green]✅[/green] [bold]_pyrite/[/bold] directory exists")
+        console.print("     [green]✅[/green] [bold]_pyrite/[/bold] directory exists")
     else:
-        console.print(f"     [red]❌[/red] [bold]_pyrite/[/bold] directory missing!")
+        console.print("     [red]❌[/red] [bold]_pyrite/[/bold] directory missing!")
 
     for folder in ["active", "backlog", "standards"]:
         folder_path = pyrite_dir / folder
         if folder_path.exists():
             gitkeep = folder_path / ".gitkeep"
             gitkeep_status = "[green]✅[/green]" if gitkeep.exists() else "[yellow]⚠️[/yellow]"
-            console.print(f"     [green]✅[/green] [bold]{folder}/[/bold] exists {gitkeep_status} .gitkeep")
+            console.print(
+                f"     [green]✅[/green] [bold]{folder}/[/bold] exists {gitkeep_status} .gitkeep"
+            )
         else:
             console.print(f"     [red]❌[/red] [bold]{folder}/[/bold] missing!")
     console.print()
@@ -366,11 +372,11 @@ def demonstrate_basic_work_effort(tools_dir: Path, memory: MemoryManager, pyrite
     active_dir = pyrite_dir / "active"
     console.print(f"  [cyan]📁[/cyan] Using directory: [dim]{active_dir}[/dim]")
     if not active_dir.exists():
-        console.print(f"     [yellow]⚠️[/yellow]  Directory doesn't exist, creating...")
+        console.print("     [yellow]⚠️[/yellow]  Directory doesn't exist, creating...")
         active_dir.mkdir(parents=True, exist_ok=True)
-        console.print(f"     [green]✅[/green] Directory created")
+        console.print("     [green]✅[/green] Directory created")
     else:
-        console.print(f"     [green]✅[/green] Directory exists")
+        console.print("     [green]✅[/green] Directory exists")
     console.print()
 
     work_effort_file = active_dir / "demo_work_effort.md"
@@ -378,7 +384,7 @@ def demonstrate_basic_work_effort(tools_dir: Path, memory: MemoryManager, pyrite
 
     content = f"""# Demo Work Effort
 
-**Created**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+**Created**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 **Status**: In Progress
 
 ## Objective
@@ -399,13 +405,15 @@ This is a basic demonstration of how WAFT tracks its own work.
 
     print("  ✍️  Writing content...")
     work_effort_file.write_text(content)
-    print(f"     ✅ File written: {work_effort_file.name} ({work_effort_file.stat().st_size} bytes)")
+    print(
+        f"     ✅ File written: {work_effort_file.name} ({work_effort_file.stat().st_size} bytes)"
+    )
     print()
 
     # Show the file
     print("  📖 Content preview:")
     print("     " + "─" * 70)
-    for i, line in enumerate(content.split('\n')[:10], 1):
+    for i, line in enumerate(content.split("\n")[:10], 1):
         print(f"     {i:2d} | {line}")
     print("     " + "─" * 70)
     print()
@@ -415,7 +423,7 @@ This is a basic demonstration of how WAFT tracks its own work.
     print(f"  📄 Creating file: {journal_file.name}")
     journal_content = f"""# Demo Journal Entry
 
-**Date**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+**Date**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 
 ## What I'm Doing
 Setting up a demo to show WAFT's meta-cognitive capabilities.
@@ -478,7 +486,7 @@ on external and internal feedback."""
 
     console.print("  [cyan]💭[/cyan] Explanation:")
     console.print()
-    for line in explanation.split('\n'):
+    for line in explanation.split("\n"):
         if line.strip():
             console.print(f"     {line.strip()}")
         else:
@@ -487,10 +495,12 @@ on external and internal feedback."""
 
     # Create a summary document
     summary_file = tools_dir / "meta_cognition_explanation.md"
-    console.print(f"  [cyan]📄[/cyan] Creating explanation document: [bold]{summary_file.name}[/bold]")
+    console.print(
+        f"  [cyan]📄[/cyan] Creating explanation document: [bold]{summary_file.name}[/bold]"
+    )
     summary_content = f"""# Meta-Cognition Explanation
 
-**Created**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+**Created**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 
 ## The Core Concept
 
@@ -614,6 +624,7 @@ def closing_message(demo_dir: Path):
 # Main Demo Flow
 # ============================================================================
 
+
 def main():
     """Run the interactive demonstration."""
     try:
@@ -644,7 +655,9 @@ def main():
         memory, pyrite_dir = install_pyrite_demo(tools_dir)
 
         # 8. Demonstrate work effort
-        work_effort_file, journal_file = demonstrate_basic_work_effort(tools_dir, memory, pyrite_dir)
+        work_effort_file, journal_file = demonstrate_basic_work_effort(
+            tools_dir, memory, pyrite_dir
+        )
 
         # 9. Ask why
         ask_why()
@@ -662,21 +675,21 @@ def main():
         console.print("\n" + "─" * 80)
         console.print("[bold cyan]📖 GENERATING DEMO BOOKLET[/bold cyan]")
         console.print("─" * 80 + "\n")
-        
+
         # Import here to avoid circular imports
         sys.path.insert(0, str(Path(__file__).parent))
         from generate_demo_booklet import generate_demo_booklet
-        
+
         booklet_path = demo_dir / "WAFT_Demo_Booklet.pdf"
-        console.print(f"  [cyan]📄[/cyan] Generating PDF booklet...")
+        console.print("  [cyan]📄[/cyan] Generating PDF booklet...")
         console.print(f"     Output: [bold]{booklet_path}[/bold]")
-        
+
         try:
             with console.status("[bold cyan]Creating PDF booklet...[/bold cyan]"):
                 generate_demo_booklet(demo_dir, booklet_path)
             console.print(f"     [green]✅[/green] Booklet generated: [bold]{booklet_path}[/bold]")
             console.print()
-            
+
             # Open the PDF
             console.print("  [cyan]📖[/cyan] Opening PDF booklet...")
             if open_file(booklet_path):
@@ -685,16 +698,20 @@ def main():
         except Exception as e:
             console.print(f"     [red]❌[/red] Error generating booklet: {e}")
             import traceback
+
             console.print(f"     [dim]{traceback.format_exc()}[/dim]")
             console.print("     [dim](Continuing without PDF)[/dim]")
             console.print()
 
         # Optionally open the summary
         console.print()
-        console.print("[cyan]Would you like to open the meta-cognition explanation?[/cyan] [dim](y/n):[/dim] ", end="")
+        console.print(
+            "[cyan]Would you like to open the meta-cognition explanation?[/cyan] [dim](y/n):[/dim] ",
+            end="",
+        )
         try:
             response = input().strip().lower()
-            if response == 'y':
+            if response == "y":
                 console.print("  [cyan]📖[/cyan] Opening file...")
                 open_file(summary_file)
                 console.print("     [green]✅[/green] File opened")
@@ -709,6 +726,7 @@ def main():
     except Exception as e:
         print(f"\n\n❌ Error during demonstration: {e}")
         import traceback
+
         traceback.print_exc()
         sys.exit(1)
 

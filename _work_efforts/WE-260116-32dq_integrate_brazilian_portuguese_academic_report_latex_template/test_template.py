@@ -4,6 +4,7 @@ Test script for Unicamp Physics Report template.
 """
 
 from pathlib import Path
+
 from src.waft.templates.latex.wrappers.unicamp_report import generate_unicamp_report
 
 # Test output directory
@@ -19,7 +20,7 @@ test_report = generate_unicamp_report(
     authors=[
         "Caroline Guimarães 155006",
         "Lucas Rodrigues Contador 156406",
-        "Giovanne Lucas Dias Pereira Mariano 173317"
+        "Giovanne Lucas Dias Pereira Mariano 173317",
     ],
     course="Física Experimental IV",
     abstract="Este relatório apresenta os resultados do experimento realizado...",
@@ -33,9 +34,9 @@ test_report = generate_unicamp_report(
             "path": "frog.jpg",
             "caption": "This is a test figure",
             "label": "fig:test",
-            "width": "0.3"
+            "width": "0.3",
         }
-    ]
+    ],
 )
 
 print(f"✅ Report generated: {test_report}")

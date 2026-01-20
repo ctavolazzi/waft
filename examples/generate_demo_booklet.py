@@ -6,8 +6,9 @@ Creates a printable PDF booklet documenting the demo session,
 including the meta-cognitive explanation and demo structure.
 """
 
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
+
 from jinja2 import Template
 
 try:
@@ -277,38 +278,44 @@ DEMO_BOOKLET_TEMPLATE = """
 """
 
 
-def generate_demo_structure_tree(demo_dir: Path, prefix: str = "", is_last: bool = True, root_name: str = None) -> str:
+def generate_demo_structure_tree(
+    demo_dir: Path, prefix: str = "", is_last: bool = True, root_name: str = None
+) -> str:
     """Generate a text tree representation of the demo structure."""
     if root_name is None:
         root_name = demo_dir.name if demo_dir.name else "demo_output"
-    
+
     # For root, use the provided name
     if prefix == "":
         name = root_name
     else:
         name = demo_dir.name
-    
+
     connector = "└── " if is_last else "├── "
     result = f"{prefix}{connector}{name}/\n"
-    
+
     if demo_dir.is_dir():
-        children = sorted([p for p in demo_dir.iterdir() if p.name != ".gitkeep" and not p.name.endswith('.pdf')])
+        children = sorted(
+            [p for p in demo_dir.iterdir() if p.name != ".gitkeep" and not p.name.endswith(".pdf")]
+        )
         for i, child in enumerate(children):
             is_last_child = i == len(children) - 1
             extension = "    " if is_last else "│   "
-            result += generate_demo_structure_tree(child, prefix + extension, is_last_child, root_name)
-    
+            result += generate_demo_structure_tree(
+                child, prefix + extension, is_last_child, root_name
+            )
+
     return result
 
 
 def generate_demo_booklet(demo_dir: Path, output_path: Path) -> Path:
     """
     Generate a PDF booklet documenting the demo session.
-    
+
     Args:
         demo_dir: Path to the demo output directory
         output_path: Path where the PDF should be saved
-        
+
     Returns:
         Path to the generated PDF
     """
@@ -317,53 +324,53 @@ def generate_demo_booklet(demo_dir: Path, output_path: Path) -> Path:
     meta_cog_content = ""
     if meta_cog_file.exists():
         meta_cog_content = meta_cog_file.read_text()
-    
+
     # Generate structure tree
     demo_structure = generate_demo_structure_tree(demo_dir)
-    
+
     # Render template
     template = Template(DEMO_BOOKLET_TEMPLATE)
     html_content = template.render(
         date=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         demo_structure=demo_structure,
-        meta_cognition_content=meta_cog_content
+        meta_cognition_content=meta_cog_content,
     )
-    
+
     # Generate PDF
     HTML(string=html_content).write_pdf(str(output_path))
-    
+
     return output_path
 
 
 if __name__ == "__main__":
     import sys
-    
+
     if len(sys.argv) > 1:
         demo_dir = Path(sys.argv[1])
     else:
         demo_dir = Path(__file__).parent.parent / "demo_output"
-    
+
     if len(sys.argv) > 2:
         output_path = Path(sys.argv[2])
     else:
         output_path = demo_dir / "WAFT_Demo_Booklet.pdf"
-    
+
     if not demo_dir.exists():
         print(f"Error: Demo directory not found: {demo_dir}")
         sys.exit(1)
-    
-    print(f"Generating demo booklet...")
+
+    print("Generating demo booklet...")
     print(f"  Demo directory: {demo_dir}")
     print(f"  Output: {output_path}")
-    
+
     pdf_path = generate_demo_booklet(demo_dir, output_path)
     print(f"✅ Booklet generated: {pdf_path}")
-    
+
     # Try to open the PDF
     try:
         import platform
         import subprocess
-        
+
         system = platform.system()
         if system == "Darwin":  # macOS
             subprocess.run(["open", str(pdf_path)], check=True)
@@ -371,7 +378,7 @@ if __name__ == "__main__":
             subprocess.run(["start", str(pdf_path)], shell=True, check=True)
         else:  # Linux
             subprocess.run(["xdg-open", str(pdf_path)], check=True)
-        print(f"✅ PDF opened")
+        print("✅ PDF opened")
     except Exception as e:
         print(f"⚠️  Could not open PDF automatically: {e}")
         print(f"   Please open manually: {pdf_path}")

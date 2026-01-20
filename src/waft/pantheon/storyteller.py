@@ -10,10 +10,11 @@ Following "as above, so below" principles:
 - So below: File-based system generating story PDFs from structured data
 """
 
-from pathlib import Path
-from typing import Dict, Any, Optional, List, Union
-from datetime import datetime
 import json
+from datetime import datetime
+from pathlib import Path
+from typing import Any
+
 from ..evolution.storyteller import Storyteller as StorytellerEngine
 from ..templates.dnd5e_latex import generate_storybook_latex
 
@@ -27,10 +28,10 @@ class Story:
         title: str,
         story_path: Path,
         story_type: str = "adventure",
-        chapters: Optional[List[Dict[str, Any]]] = None,
-        characters: Optional[List[str]] = None,
-        settings: Optional[List[str]] = None,
-        created_at: Optional[str] = None
+        chapters: list[dict[str, Any]] | None = None,
+        characters: list[str] | None = None,
+        settings: list[str] | None = None,
+        created_at: str | None = None,
     ):
         """
         Initialize a story.
@@ -54,7 +55,7 @@ class Story:
         self.settings = settings or []
         self.created_at = created_at or datetime.now().isoformat()
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert story to dictionary."""
         return {
             "story_id": self.story_id,
@@ -64,11 +65,11 @@ class Story:
             "chapters": self.chapters,
             "characters": self.characters,
             "settings": self.settings,
-            "created_at": self.created_at
+            "created_at": self.created_at,
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "Story":
+    def from_dict(cls, data: dict[str, Any]) -> "Story":
         """Create story from dictionary."""
         return cls(
             story_id=data["story_id"],
@@ -78,7 +79,7 @@ class Story:
             chapters=data.get("chapters", []),
             characters=data.get("characters", []),
             settings=data.get("settings", []),
-            created_at=data.get("created_at")
+            created_at=data.get("created_at"),
         )
 
 
@@ -94,7 +95,7 @@ class Storyteller:
     - Story Catalog: _pantheon/storyteller/story_catalog.json
     """
 
-    def __init__(self, project_path: Optional[Path] = None):
+    def __init__(self, project_path: Path | None = None):
         """
         Initialize the Storyteller.
 
@@ -109,7 +110,7 @@ class Storyteller:
         self.project_path = project_path
         # Use storage path resolver for augmented content (routes to external drive if available)
         from ..utils import get_storage_path
-        
+
         # Resolve paths (routes to external drive if available)
         storyteller_rel = Path("_pantheon") / "storyteller"
         self.storyteller_path = get_storage_path(storyteller_rel, self.project_path)
@@ -122,7 +123,7 @@ class Storyteller:
         self.storybooks_path.mkdir(parents=True, exist_ok=True)
 
         # Story catalog
-        self.story_catalog: List[Story] = []
+        self.story_catalog: list[Story] = []
         self._load_story_catalog()
 
     def _load_story_catalog(self):
@@ -131,12 +132,9 @@ class Storyteller:
 
         if catalog_file.exists():
             try:
-                with open(catalog_file, "r", encoding="utf-8") as f:
+                with open(catalog_file, encoding="utf-8") as f:
                     data = json.load(f)
-                    self.story_catalog = [
-                        Story.from_dict(s)
-                        for s in data.get("stories", [])
-                    ]
+                    self.story_catalog = [Story.from_dict(s) for s in data.get("stories", [])]
             except Exception as e:
                 print(f"Error loading story catalog: {e}")
                 self.story_catalog = []
@@ -148,7 +146,7 @@ class Storyteller:
         data = {
             "stories": [s.to_dict() for s in self.story_catalog],
             "total_count": len(self.story_catalog),
-            "updated_at": datetime.now().isoformat()
+            "updated_at": datetime.now().isoformat(),
         }
 
         with open(catalog_file, "w", encoding="utf-8") as f:
@@ -157,11 +155,11 @@ class Storyteller:
     def create_storybook(
         self,
         title: str,
-        chapters: List[Dict[str, Any]],
-        author: Optional[str] = None,
+        chapters: list[dict[str, Any]],
+        author: str | None = None,
         story_type: str = "storybook",
         include_monsters: bool = False,
-        include_read_aloud: bool = True
+        include_read_aloud: bool = True,
     ) -> Story:
         """
         Create a storybook using D&D 5e LaTeX template.
@@ -189,7 +187,7 @@ class Storyteller:
             output_path=output_path,
             author=author,
             include_monsters=include_monsters,
-            include_read_aloud=include_read_aloud
+            include_read_aloud=include_read_aloud,
         )
 
         # Extract characters and settings from chapters
@@ -197,12 +195,12 @@ class Storyteller:
         settings = []
         for chapter in chapters:
             # Extract from content (simple heuristic)
-            content = chapter.get('content', '')
+            content = chapter.get("content", "")
             # Could use NLP here, but for now just track what's provided
-            if 'characters' in chapter:
-                characters.extend(chapter['characters'])
-            if 'settings' in chapter:
-                settings.extend(chapter['settings'])
+            if "characters" in chapter:
+                characters.extend(chapter["characters"])
+            if "settings" in chapter:
+                settings.extend(chapter["settings"])
 
         # Create Story object
         story = Story(
@@ -212,7 +210,7 @@ class Storyteller:
             story_type=story_type,
             chapters=chapters,
             characters=list(set(characters)),  # Deduplicate
-            settings=list(set(settings))  # Deduplicate
+            settings=list(set(settings)),  # Deduplicate
         )
 
         # Save story metadata
@@ -228,11 +226,11 @@ class Storyteller:
 
     def create_story_from_engine(
         self,
-        input_data: Union[str, Dict, List],
-        title: Optional[str] = None,
+        input_data: str | dict | list,
+        title: str | None = None,
         narrative_style: str = "medium",
         story_structure: str = "linear",
-        use_latex: bool = True
+        use_latex: bool = True,
     ) -> Story:
         """
         Create a story using the Storyteller engine, then format as storybook.
@@ -249,9 +247,7 @@ class Storyteller:
         """
         # Use Storyteller engine to generate narrative
         storyteller_engine = StorytellerEngine(
-            input_data=input_data,
-            narrative_style=narrative_style,
-            story_structure=story_structure
+            input_data=input_data, narrative_style=narrative_style, story_structure=story_structure
         )
 
         # Parse input
@@ -265,36 +261,45 @@ class Storyteller:
 
         # Beginning
         if story_structure_data.get("beginning"):
-            chapters.append({
-                "title": "Chapter 1: Beginning",
-                "content": "\n\n".join([
-                    storyteller_engine._event_to_prose(e)
-                    for e in story_structure_data["beginning"]
-                ]),
-                "read_aloud": []  # Could extract from events
-            })
+            chapters.append(
+                {
+                    "title": "Chapter 1: Beginning",
+                    "content": "\n\n".join(
+                        [
+                            storyteller_engine._event_to_prose(e)
+                            for e in story_structure_data["beginning"]
+                        ]
+                    ),
+                    "read_aloud": [],  # Could extract from events
+                }
+            )
 
         # Middle
         if story_structure_data.get("middle"):
-            chapters.append({
-                "title": "Chapter 2: Middle",
-                "content": "\n\n".join([
-                    storyteller_engine._event_to_prose(e)
-                    for e in story_structure_data["middle"]
-                ]),
-                "read_aloud": []
-            })
+            chapters.append(
+                {
+                    "title": "Chapter 2: Middle",
+                    "content": "\n\n".join(
+                        [
+                            storyteller_engine._event_to_prose(e)
+                            for e in story_structure_data["middle"]
+                        ]
+                    ),
+                    "read_aloud": [],
+                }
+            )
 
         # End
         if story_structure_data.get("end"):
-            chapters.append({
-                "title": "Chapter 3: End",
-                "content": "\n\n".join([
-                    storyteller_engine._event_to_prose(e)
-                    for e in story_structure_data["end"]
-                ]),
-                "read_aloud": []
-            })
+            chapters.append(
+                {
+                    "title": "Chapter 3: End",
+                    "content": "\n\n".join(
+                        [storyteller_engine._event_to_prose(e) for e in story_structure_data["end"]]
+                    ),
+                    "read_aloud": [],
+                }
+            )
 
         # Generate title if not provided
         if title is None:
@@ -304,18 +309,13 @@ class Storyteller:
 
         # Create storybook
         if use_latex:
-            return self.create_storybook(
-                title=title,
-                chapters=chapters,
-                story_type="storybook"
-            )
+            return self.create_storybook(title=title, chapters=chapters, story_type="storybook")
         else:
             # Use standard PDF generation
-            output_path = self.storybooks_path / f"story_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
-            pdf_path = storyteller_engine.tell_story(
-                output_path=output_path,
-                title=title
+            output_path = (
+                self.storybooks_path / f"story_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
             )
+            pdf_path = storyteller_engine.tell_story(output_path=output_path, title=title)
 
             story = Story(
                 story_id=f"story_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
@@ -324,7 +324,7 @@ class Storyteller:
                 story_type="storybook",
                 chapters=chapters,
                 characters=list(story_structure_data.get("characters", {}).keys()),
-                settings=list(story_structure_data.get("settings", {}).keys())
+                settings=list(story_structure_data.get("settings", {}).keys()),
             )
 
             # Save story metadata
@@ -338,7 +338,7 @@ class Storyteller:
 
             return story
 
-    def get_story(self, story_id: str) -> Optional[Story]:
+    def get_story(self, story_id: str) -> Story | None:
         """Get story by ID."""
         for story in self.story_catalog:
             if story.story_id == story_id:
@@ -347,10 +347,10 @@ class Storyteller:
 
     def list_stories(
         self,
-        story_type: Optional[str] = None,
-        character: Optional[str] = None,
-        setting: Optional[str] = None
-    ) -> List[Story]:
+        story_type: str | None = None,
+        character: str | None = None,
+        setting: str | None = None,
+    ) -> list[Story]:
         """
         List stories with optional filters.
 
@@ -375,7 +375,7 @@ class Storyteller:
 
         return stories
 
-    def get_story_summary(self) -> Dict[str, Any]:
+    def get_story_summary(self) -> dict[str, Any]:
         """Get summary of all stories."""
         return {
             "total_stories": len(self.story_catalog),
@@ -383,17 +383,14 @@ class Storyteller:
                 story_type: len([s for s in self.story_catalog if s.story_type == story_type])
                 for story_type in set(s.story_type for s in self.story_catalog)
             },
-            "total_characters": len(set(
-                char for story in self.story_catalog for char in story.characters
-            )),
-            "total_settings": len(set(
-                setting for story in self.story_catalog for setting in story.settings
-            )),
+            "total_characters": len(
+                set(char for story in self.story_catalog for char in story.characters)
+            ),
+            "total_settings": len(
+                set(setting for story in self.story_catalog for setting in story.settings)
+            ),
             "recent_stories": [
-                s.to_dict() for s in sorted(
-                    self.story_catalog,
-                    key=lambda x: x.created_at,
-                    reverse=True
-                )[:5]
-            ]
+                s.to_dict()
+                for s in sorted(self.story_catalog, key=lambda x: x.created_at, reverse=True)[:5]
+            ],
         }

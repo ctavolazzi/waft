@@ -15,30 +15,30 @@ Creates a PDF that demonstrates EVERY feature in the WAFT PDF generation system:
 - All visual elements (summary box, tables, metadata, typography)
 """
 
-import sys
-from pathlib import Path
-from datetime import datetime
 import subprocess
+import sys
+from datetime import datetime
+from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.waft.evolution import (
     ChatDistiller,
-    TwoPageGenerator,
+    ColorGene,
+    FontGene,
+    LayoutGene,
+    MarginGene,
+    StylingGene,
     StylingGenome,
     StylingGenomeRegistry,
-    StylingGene,
-    FontGene,
-    MarginGene,
-    ColorGene,
-    LayoutGene,
+    TwoPageGenerator,
 )
 
 
 def get_comprehensive_chat_content() -> str:
     """
     Create comprehensive chat content that generates all 5 idea types.
-    
+
     This content is designed to trigger:
     - Decisions: "We decided", "The choice was made", "We will"
     - Insights: "We discovered", "The key insight", "We learned"
@@ -81,21 +81,18 @@ def main():
     print("🔬 WAFT Comprehensive Feature Showcase PDF Generator")
     print("=" * 70)
     print()
-    
+
     # Get comprehensive chat content
     print("📝 Creating comprehensive chat content...")
     chat_content = get_comprehensive_chat_content()
     print("✓ Content created with all 5 idea types")
     print()
-    
+
     # Distill chat into ideas
     print("📝 Distilling chat into ideas...")
     distiller = ChatDistiller()
-    distilled = distiller.distill_text(
-        chat_content, 
-        title="WAFT: Comprehensive Feature Showcase"
-    )
-    
+    distilled = distiller.distill_text(chat_content, title="WAFT: Comprehensive Feature Showcase")
+
     print(f"✓ Extracted {distilled.total_ideas} ideas")
     print(f"  - Decisions: {distilled.decisions_count}")
     print(f"  - Insights: {distilled.insights_count}")
@@ -103,16 +100,16 @@ def main():
     print(f"  - Concepts: {distilled.concepts_count}")
     print(f"  - Questions: {distilled.questions_count}")
     print()
-    
+
     # Verify all idea types are present
     all_types_present = (
-        distilled.decisions_count > 0 and
-        distilled.insights_count > 0 and
-        distilled.actions_count > 0 and
-        distilled.concepts_count > 0 and
-        distilled.questions_count > 0
+        distilled.decisions_count > 0
+        and distilled.insights_count > 0
+        and distilled.actions_count > 0
+        and distilled.concepts_count > 0
+        and distilled.questions_count > 0
     )
-    
+
     if not all_types_present:
         print("⚠️  Warning: Not all idea types are present in content")
         print("   This may limit feature demonstration")
@@ -120,11 +117,11 @@ def main():
     else:
         print("✅ All 5 idea types present - comprehensive demonstration ready")
         print()
-    
+
     # Create comprehensive styling genome
     print("🎨 Creating comprehensive styling genome...")
     registry = StylingGenomeRegistry(registry_dir=Path("_genetics/chat_one_pagers"))
-    
+
     styling_genes = StylingGene(
         font=FontGene(
             family="sans-serif",
@@ -133,15 +130,10 @@ def main():
             size_h2=14,
             size_h3=12,
             size_code=10,
-            line_height=1.6
+            line_height=1.6,
         ),
         margin=MarginGene(
-            top=20,
-            bottom=20,
-            left=20,
-            right=20,
-            section_spacing=12,
-            paragraph_spacing=8
+            top=20, bottom=20, left=20, right=20, section_spacing=12, paragraph_spacing=8
         ),
         color=ColorGene(
             text="#000000",
@@ -150,7 +142,7 @@ def main():
             heading="#1a1a1a",
             code_bg="#f5f5f5",
             code_text="#333333",
-            border="#cccccc"
+            border="#cccccc",
         ),
         layout=LayoutGene(
             columns=1,
@@ -158,17 +150,17 @@ def main():
             toc_enabled=False,
             page_numbers=True,
             header_enabled=True,
-            footer_enabled=True
+            footer_enabled=True,
         ),
         name="Feature Showcase Genome",
-        description="Comprehensive styling genome demonstrating all visual features"
+        description="Comprehensive styling genome demonstrating all visual features",
     )
-    
+
     genome = StylingGenome.from_genes(styling_genes)
     registry.register(genome)
     print(f"✓ Using: {genome.scientific_name} ({genome.genome_id[:8]}...)")
     print()
-    
+
     # Generate with ALL features enabled
     print("📄 Generating 2-page PDF with ALL features enabled...")
     print("   - Adaptive constraint enforcement: ✅")
@@ -179,13 +171,13 @@ def main():
     print("   - Content statistics: ✅")
     print("   - Evolutionary tracking: ✅")
     print()
-    
+
     generator = TwoPageGenerator(weasyprint_available=True)
-    
+
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_path = Path(f"_work_efforts/one_pagers/feature_showcase_{timestamp}.pdf")
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     # Enable ALL features
     result = generator.generate(
         distilled_chat=distilled,
@@ -197,33 +189,33 @@ def main():
         collect_metrics=True,  # ✅ Enable metrics collection
         metrics_dir=Path("_pyrite/metrics/pdf"),  # Metrics directory
     )
-    
+
     print()
     print("=" * 70)
     print("✅ Feature Showcase PDF Generated!")
     print("=" * 70)
     print()
-    
+
     # Detailed output reporting
     print("📄 OUTPUT FILES")
     print("-" * 70)
     print(f"PDF: {output_path}")
-    
-    html_path = Path(str(output_path).replace('.pdf', '.html'))
+
+    html_path = Path(str(output_path).replace(".pdf", ".html"))
     if html_path.exists():
         print(f"HTML: {html_path}")
-    
-    if result.get('png_paths'):
+
+    if result.get("png_paths"):
         print(f"PNG Images: {len(result['png_paths'])} files")
-        png_dir = Path(result['png_paths'][0]).parent
+        png_dir = Path(result["png_paths"][0]).parent
         print(f"  Directory: {png_dir}")
-        for i, png_path in enumerate(result['png_paths'], 1):
+        for i, png_path in enumerate(result["png_paths"], 1):
             print(f"  - page_{i:03d}.png")
-    
-    if result.get('metrics_file'):
+
+    if result.get("metrics_file"):
         print(f"Metrics: {result['metrics_file']}")
     print()
-    
+
     # Generation results
     print("📊 GENERATION RESULTS")
     print("-" * 70)
@@ -233,26 +225,26 @@ def main():
     print(f"Generator version: {result['generator_version']}")
     print(f"Generator genome ID: {result['generator_genome_id'][:16]}...")
     print()
-    
+
     # Fitness metrics
     print("💪 FITNESS METRICS")
     print("-" * 70)
-    fitness = result['fitness_metrics']
+    fitness = result["fitness_metrics"]
     print(f"Overall: {fitness['overall']:.3f}")
     print(f"  - Readability: {fitness['readability']:.3f}")
     print(f"  - Completeness: {fitness['completeness']:.3f}")
     print(f"  - Constraint satisfaction: {fitness['constraint_satisfaction']:.3f}")
     print(f"  - Aesthetic appeal: {fitness['aesthetic_appeal']:.3f}")
     print()
-    
+
     # PNG conversion results
-    if result.get('png_paths'):
+    if result.get("png_paths"):
         print("🖼️  PNG CONVERSION")
         print("-" * 70)
-        print(f"Status: ✅ SUCCESS")
+        print("Status: ✅ SUCCESS")
         print(f"Pages converted: {len(result['png_paths'])}")
-        print(f"DPI: 300")
-        total_size = sum(Path(p).stat().st_size for p in result['png_paths'] if Path(p).exists())
+        print("DPI: 300")
+        total_size = sum(Path(p).stat().st_size for p in result["png_paths"] if Path(p).exists())
         print(f"Total size: {total_size / 1024 / 1024:.2f} MB")
         print()
     else:
@@ -260,13 +252,13 @@ def main():
         print("-" * 70)
         print("Status: ❌ NOT PERFORMED")
         print()
-    
+
     # Metrics collection results
-    if result.get('metrics'):
+    if result.get("metrics"):
         print("📊 METRICS COLLECTION")
         print("-" * 70)
-        metrics = result['metrics']
-        print(f"Status: ✅ COLLECTED")
+        metrics = result["metrics"]
+        print("Status: ✅ COLLECTED")
         print(f"Quality grade: {metrics.get('quality_grade', 'N/A')}")
         print(f"Quality score: {metrics.get('quality_score', 0):.3f}")
         print(f"Generation time: {metrics.get('generation_time_seconds', 0):.2f}s")
@@ -279,7 +271,7 @@ def main():
         print("-" * 70)
         print("Status: ❌ NOT COLLECTED")
         print()
-    
+
     # Visual elements verification
     print("🎨 VISUAL ELEMENTS")
     print("-" * 70)
@@ -292,7 +284,7 @@ def main():
     print("✅ Color scheme (text, background, accent)")
     print("✅ Margins (configurable spacing)")
     print()
-    
+
     # Feature checklist
     print("✅ FEATURE CHECKLIST")
     print("-" * 70)
@@ -302,35 +294,35 @@ def main():
         ("Idea extraction (all 5 types)", all_types_present),
         ("Styling genomes", True),
         ("Markdown cleaning", True),
-        ("PNG conversion", bool(result.get('png_paths'))),
-        ("Metrics collection", bool(result.get('metrics'))),
+        ("PNG conversion", bool(result.get("png_paths"))),
+        ("Metrics collection", bool(result.get("metrics"))),
         ("Fitness evaluation", True),
-        ("Content statistics", bool(result.get('metrics'))),
+        ("Content statistics", bool(result.get("metrics"))),
         ("Evolutionary event tracking", True),
     ]
-    
+
     for feature, enabled in features:
         status = "✅" if enabled else "❌"
         print(f"{status} {feature}")
     print()
-    
+
     # Final summary
     print("=" * 70)
-    if result['constraint_satisfied']:
+    if result["constraint_satisfied"]:
         print("✅ Perfect 2-page document generated!")
     else:
         print(f"⚠️  Generated {result['page_count']} pages (expected 2)")
     print()
     print("📖 Opening PDF in Preview...")
     print()
-    
+
     # Open the PDF
     try:
         subprocess.run(["open", "-a", "Preview", str(output_path)], check=False)
     except Exception as e:
         print(f"⚠️  Could not open PDF automatically: {e}")
         print(f"   Please open manually: {output_path}")
-    
+
     print("=" * 70)
     print("🎉 Feature showcase complete!")
     print("=" * 70)

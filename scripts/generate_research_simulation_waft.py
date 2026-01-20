@@ -7,8 +7,8 @@ web-based research simulation platform we built.
 """
 
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
@@ -20,10 +20,10 @@ from src.waft.evolution.pdf_generator import PDFGenerator
 
 def generate_waft_document() -> Path:
     """Generate WAFT research document."""
-    
+
     content = f"""# Research Simulation System: Interactive Web-Based Research Platform
 
-**Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+**Generated**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 **Project**: Demo Batching System - Research Enhancement
 **Status**: ✅ Complete
 
@@ -466,20 +466,21 @@ The Research Simulation System successfully transforms the demo batching tool in
 """
 
     # Generate PDF
-    output_path = project_root / "_work_efforts" / f"RESEARCH_SIMULATION_WAFT_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+    output_path = (
+        project_root
+        / "_work_efforts"
+        / f"RESEARCH_SIMULATION_WAFT_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+    )
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     generator = PDFGenerator.from_content(
         content=content,
         title="Research Simulation System: Interactive Web-Based Research Platform",
-        style="clinical_standard"
+        style="clinical_standard",
     )
-    
-    generated_path = generator.save(
-        output_path=output_path,
-        open_pdf=False
-    )
-    
+
+    generated_path = generator.save(output_path=output_path, open_pdf=False)
+
     print(f"✅ Generated WAFT document: {generated_path}")
     return generated_path
 

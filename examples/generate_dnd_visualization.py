@@ -7,18 +7,19 @@ various types of D&D game PDFs.
 """
 
 from pathlib import Path
+
 from src.waft.templates.typst.wrappers.dnd_game import (
-    generate_dnd_game,
     Character,
-    StatBlock,
     EncounterParticipant,
+    StatBlock,
+    generate_dnd_game,
 )
 
 
 def example_character_sheet():
     """Generate a character sheet PDF."""
     print("Generating character sheet...")
-    
+
     # Create a sample character
     character = Character(
         name="Thorin Ironforge",
@@ -48,10 +49,10 @@ def example_character_sheet():
             "Backpack",
         ],
     )
-    
+
     output_path = Path("examples_output/thorin_character_sheet.pdf")
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     pdf_path = generate_dnd_game(
         title="Thorin Ironforge - Character Sheet",
         content="A brave dwarf fighter ready for adventure.",
@@ -61,7 +62,7 @@ def example_character_sheet():
         characters=[character],
         show_rules=False,
     )
-    
+
     print(f"✅ Character sheet generated: {pdf_path}")
     return pdf_path
 
@@ -69,7 +70,7 @@ def example_character_sheet():
 def example_stat_block():
     """Generate a stat block PDF."""
     print("Generating stat block...")
-    
+
     # Create a sample stat block (Orc)
     orc = StatBlock(
         name="Orc",
@@ -102,10 +103,10 @@ def example_stat_block():
             },
         ],
     )
-    
+
     output_path = Path("examples_output/orc_stat_block.pdf")
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     pdf_path = generate_dnd_game(
         title="Orc - Stat Block",
         content="A common orc warrior found in many D&D campaigns.",
@@ -115,7 +116,7 @@ def example_stat_block():
         stat_blocks=[orc],
         show_rules=False,
     )
-    
+
     print(f"✅ Stat block generated: {pdf_path}")
     return pdf_path
 
@@ -123,7 +124,7 @@ def example_stat_block():
 def example_encounter():
     """Generate an encounter visualization PDF."""
     print("Generating encounter visualization...")
-    
+
     # Create encounter participants
     participants = [
         EncounterParticipant(
@@ -163,10 +164,10 @@ def example_encounter():
             conditions=[],
         ),
     ]
-    
+
     output_path = Path("examples_output/combat_encounter.pdf")
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     pdf_path = generate_dnd_game(
         title="Combat Encounter - Orc Ambush",
         content="The party encounters a group of orcs in the forest.",
@@ -176,7 +177,7 @@ def example_encounter():
         encounter_participants=participants,
         show_rules=False,
     )
-    
+
     print(f"✅ Encounter visualization generated: {pdf_path}")
     return pdf_path
 
@@ -184,7 +185,7 @@ def example_encounter():
 def example_multiple_characters():
     """Generate a PDF with multiple character sheets."""
     print("Generating multiple character sheets...")
-    
+
     characters = [
         Character(
             name="Thorin Ironforge",
@@ -212,10 +213,10 @@ def example_multiple_characters():
             armor_class=15,
         ),
     ]
-    
+
     output_path = Path("examples_output/party_character_sheets.pdf")
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     pdf_path = generate_dnd_game(
         title="Adventuring Party - Character Sheets",
         content="The complete party roster for the campaign.",
@@ -225,7 +226,7 @@ def example_multiple_characters():
         characters=characters,
         show_rules=False,
     )
-    
+
     print(f"✅ Multiple character sheets generated: {pdf_path}")
     return pdf_path
 
@@ -236,28 +237,28 @@ def main():
     print("D&D Game Visualization Examples")
     print("=" * 60)
     print()
-    
+
     try:
         # Example 1: Character sheet
         example_character_sheet()
         print()
-        
+
         # Example 2: Stat block
         example_stat_block()
         print()
-        
+
         # Example 3: Encounter visualization
         example_encounter()
         print()
-        
+
         # Example 4: Multiple characters
         example_multiple_characters()
         print()
-        
+
         print("=" * 60)
         print("✅ All examples completed successfully!")
         print("=" * 60)
-        
+
     except Exception as e:
         print(f"❌ Error: {e}")
         raise

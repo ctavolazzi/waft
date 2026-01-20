@@ -2,9 +2,9 @@
 """Create v0.0.1 release on GitHub."""
 
 import os
-import sys
-import json
 import subprocess
+import sys
+
 
 # Get GitHub token from environment or git config
 def get_github_token():
@@ -26,6 +26,7 @@ def get_github_token():
         pass
 
     return None
+
 
 def create_release():
     """Create GitHub release using GitHub CLI or API."""
@@ -88,16 +89,21 @@ See [README.md](https://github.com/ctavolazzi/waft/blob/main/README.md) for full
         print("→ Creating release using GitHub CLI...")
         result = subprocess.run(
             [
-                "gh", "release", "create", "v0.0.1",
-                "--title", release_data["name"],
-                "--notes", release_data["body"],
+                "gh",
+                "release",
+                "create",
+                "v0.0.1",
+                "--title",
+                release_data["name"],
+                "--notes",
+                release_data["body"],
             ],
             check=True,
             capture_output=True,
             text=True,
         )
         print("✅ Release created successfully!")
-        print(f"   View at: https://github.com/ctavolazzi/waft/releases/tag/v0.0.1")
+        print("   View at: https://github.com/ctavolazzi/waft/releases/tag/v0.0.1")
         return True
     except (subprocess.CalledProcessError, FileNotFoundError):
         print("→ GitHub CLI not available, trying API...")
@@ -123,8 +129,6 @@ See [README.md](https://github.com/ctavolazzi/waft/blob/main/README.md) for full
         print(f"   Response: {response.text}")
         return False
 
+
 if __name__ == "__main__":
     create_release()
-
-
-

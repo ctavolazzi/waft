@@ -7,8 +7,8 @@ Creates a professional PDF document about the /status Cursor command.
 """
 
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
@@ -17,7 +17,7 @@ from src.waft.evolution.pdf_generator import PDFGenerator
 
 def create_status_command_content() -> str:
     """Create markdown content for /status command PDF."""
-    
+
     content = """# /status Command Documentation
 
 **Quick, Immediate Status Report - Current State Snapshot in Seconds**
@@ -373,7 +373,7 @@ Status 1.4: Quick Health Check
 
 *Document generated: {timestamp}*
 """
-    
+
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     return content.replace("{timestamp}", timestamp)
 
@@ -382,47 +382,48 @@ def main():
     """Generate PDF documentation for /status command."""
     print("📄 Generating PDF Documentation for /status Command...")
     print()
-    
+
     # Create content
     print("📝 Creating content...")
     content = create_status_command_content()
     print("✓ Content created")
     print()
-    
+
     # Generate PDF
     print("🎨 Generating PDF with clinical_standard style...")
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_dir = Path("_work_efforts/showcase_documents")
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / f"Status_Command_Documentation_{timestamp}.pdf"
-    
+
     pdf_path = PDFGenerator.from_content(
         content=content,
         title="/status Command Documentation",
         style="clinical_standard",
-        output_path=output_path
+        output_path=output_path,
     ).save(str(output_path), open_pdf=False)
-    
+
     print()
     print("=" * 60)
     print("✅ PDF Generated Successfully!")
     print("=" * 60)
     print(f"📄 Output: {output_path}")
-    print(f"📊 Style: clinical_standard")
+    print("📊 Style: clinical_standard")
     print()
-    
+
     # Count pages
     try:
         from pypdf import PdfReader
+
         reader = PdfReader(str(output_path))
         page_count = len(reader.pages)
         print(f"📑 Pages: {page_count}")
     except Exception:
         pass
-    
+
     print()
     print("💡 Tip: Use `/status` in Cursor to get quick project status!")
-    
+
     return output_path
 
 

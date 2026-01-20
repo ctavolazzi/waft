@@ -19,32 +19,38 @@ from src.waft.evolution.pdf_generator import PDFGenerator
 def main():
     """Generate evolution report PDF."""
     print("📄 Generating D&D Campaign PDF Evolution Report...")
-    
-    findings_path = project_root / "_work_efforts" / "WE-260112-jqkn_d_d_campaign_pdf_evolution" / "pdf_evolution_findings.md"
-    output_path = project_root / "_work_efforts" / "WE-260112-jqkn_d_d_campaign_pdf_evolution" / "pdf_evolution_report.pdf"
-    
+
+    findings_path = (
+        project_root
+        / "_work_efforts"
+        / "WE-260112-jqkn_d_d_campaign_pdf_evolution"
+        / "pdf_evolution_findings.md"
+    )
+    output_path = (
+        project_root
+        / "_work_efforts"
+        / "WE-260112-jqkn_d_d_campaign_pdf_evolution"
+        / "pdf_evolution_report.pdf"
+    )
+
     if not findings_path.exists():
         print(f"❌ Findings document not found: {findings_path}")
         return 1
-    
+
     content = findings_path.read_text()
-    
+
     generator = PDFGenerator.from_content(
         content=content,
         title="D&D Campaign PDF Evolution Report",
         style="premium",
-        output_path=output_path
-    )
-    
-    result = generator.save(
         output_path=output_path,
-        convert_to_png=True,
-        png_dpi=300
     )
-    
+
+    result = generator.save(output_path=output_path, convert_to_png=True, png_dpi=300)
+
     print(f"✅ Evolution report generated: {result}")
     print(f"   📄 {output_path.name}")
-    
+
     return 0
 
 

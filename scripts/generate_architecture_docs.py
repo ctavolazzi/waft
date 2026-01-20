@@ -7,34 +7,40 @@ Demonstrates "using WAFT to develop WAFT" practice.
 """
 
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
-from src.waft.evolution.pdf_generator import generate_pdf
 from src.waft.evolution.latex_generator import generate_latex
+from src.waft.evolution.pdf_generator import generate_pdf
 from src.waft.one_pager import create_one_pager
+
 
 def generate_architecture_documentation():
     """Generate architecture documentation using WAFT tools."""
-    
+
     # Read the architecture investigation document
-    investigation_path = project_root / "_work_efforts" / "WE-260111-2i9f_app_architecture_investigation_from_readme_entry_point" / "ARCHITECTURE_INVESTIGATION.md"
-    
+    investigation_path = (
+        project_root
+        / "_work_efforts"
+        / "WE-260111-2i9f_app_architecture_investigation_from_readme_entry_point"
+        / "ARCHITECTURE_INVESTIGATION.md"
+    )
+
     if not investigation_path.exists():
         print(f"❌ Architecture investigation not found: {investigation_path}")
         return
-    
+
     content = investigation_path.read_text()
-    
+
     # Add header with investigation metadata
     full_content = f"""# WAFT Architecture Investigation
 
-**Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}  
+**Generated**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}  
 **Work Effort**: WE-260111-2i9f  
 **Entry Point**: README.md  
 **Status**: 🔍 Investigation Complete
@@ -72,11 +78,11 @@ This demonstrates "using WAFT to develop WAFT" - documenting architecture with W
 
     output_dir = project_root / "_work_efforts" / "one_pagers"
     output_dir.mkdir(parents=True, exist_ok=True)
-    
+
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    
+
     print("📄 Generating architecture documentation using WAFT tools...\n")
-    
+
     # 1. Generate PDF
     print("1️⃣ Generating PDF using PDFGenerator...")
     pdf_path = output_dir / f"WAFT_Architecture_Investigation_{timestamp}.pdf"
@@ -85,10 +91,10 @@ This demonstrates "using WAFT to develop WAFT" - documenting architecture with W
         title="WAFT Architecture Investigation",
         output_path=pdf_path,
         style="clinical_standard",
-        open_pdf=False
+        open_pdf=False,
     )
     print(f"   ✅ PDF: {pdf_path}\n")
-    
+
     # 2. Generate LaTeX
     print("2️⃣ Generating LaTeX using LaTeXGenerator...")
     latex_path = output_dir / f"WAFT_Architecture_Investigation_{timestamp}.tex"
@@ -98,27 +104,26 @@ This demonstrates "using WAFT to develop WAFT" - documenting architecture with W
         output_path=latex_path,
         document_class="article",
         style="clinical_standard",
-        compile_pdf=False
+        compile_pdf=False,
     )
     print(f"   ✅ LaTeX: {latex_path}\n")
-    
+
     # 3. Generate one-pager
     print("3️⃣ Generating one-pager using OnePager...")
     one_pager_path = output_dir / f"WAFT_Architecture_OnePager_{timestamp}.pdf"
     one_pager_path = create_one_pager(
-        content=full_content,
-        title="WAFT Architecture - One-Pager",
-        output_path=one_pager_path
+        content=full_content, title="WAFT Architecture - One-Pager", output_path=one_pager_path
     )
     print(f"   ✅ One-Pager: {one_pager_path}\n")
-    
-    print("="*60)
+
+    print("=" * 60)
     print("✅ Architecture documentation generated using WAFT tools!")
-    print("="*60)
+    print("=" * 60)
     print(f"\n📄 PDF: {pdf_path}")
     print(f"📝 LaTeX: {latex_path}")
     print(f"📋 One-Pager: {one_pager_path}")
     print("\nAll documentation generated using WAFT's own tools! 🎯")
+
 
 if __name__ == "__main__":
     generate_architecture_documentation()

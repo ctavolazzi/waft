@@ -6,22 +6,22 @@ Creates a comprehensive booklet containing all PDFs in the project,
 organized into logical sections with cover, table of contents, and dividers.
 """
 
-from pathlib import Path
-from datetime import datetime
-from typing import List, Dict
 import sys
+from datetime import datetime
+from pathlib import Path
 
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.waft.binder import Binder, DocumentEntry
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn
+
+from src.waft.binder import Binder, DocumentEntry
 
 console = Console()
 
 
-def find_all_pdfs(project_root: Path) -> List[Path]:
+def find_all_pdfs(project_root: Path) -> list[Path]:
     """Find all PDF files in the project."""
     pdfs = []
     for pdf_path in project_root.rglob("*.pdf"):
@@ -31,14 +31,14 @@ def find_all_pdfs(project_root: Path) -> List[Path]:
     return sorted(pdfs)
 
 
-def categorize_pdf(pdf_path: Path, project_root: Path) -> Dict[str, str]:
+def categorize_pdf(pdf_path: Path, project_root: Path) -> dict[str, str]:
     """Categorize a PDF into a section based on its path."""
     rel_path = pdf_path.relative_to(project_root)
     path_str = str(rel_path)
-    
+
     # Extract title from filename
     title = pdf_path.stem.replace("_", " ").title()
-    
+
     # Determine section based on path
     if "docs/" in path_str:
         section = "Documentation"
@@ -61,37 +61,32 @@ def categorize_pdf(pdf_path: Path, project_root: Path) -> Dict[str, str]:
     else:
         section = "Other"
         description = "Miscellaneous documents"
-    
-    return {
-        "section": section,
-        "title": title,
-        "description": description,
-        "path": pdf_path
-    }
+
+    return {"section": section, "title": title, "description": description, "path": pdf_path}
 
 
 def create_project_booklet(project_root: Path, output_path: Path) -> Path:
     """
     Create a comprehensive booklet containing all project PDFs.
-    
+
     Args:
         project_root: Root directory of the project
         output_path: Where to save the booklet
-        
+
     Returns:
         Path to generated booklet
     """
     console.print("\n[bold cyan]📚 WAFT Project Booklet Generator[/bold cyan]\n")
-    
+
     # Find all PDFs
     console.print("  [cyan]🔍[/cyan] Scanning for PDF files...")
     all_pdfs = find_all_pdfs(project_root)
     console.print(f"     [green]✅[/green] Found [bold]{len(all_pdfs)}[/bold] PDF files\n")
-    
+
     if not all_pdfs:
         console.print("[yellow]⚠️[/yellow]  No PDF files found in project")
         return None
-    
+
     # Categorize PDFs
     console.print("  [cyan]📂[/cyan] Categorizing PDFs...")
     categorized = {}
@@ -101,9 +96,11 @@ def create_project_booklet(project_root: Path, output_path: Path) -> Path:
         if section not in categorized:
             categorized[section] = []
         categorized[section].append(info)
-    
-    console.print(f"     [green]✅[/green] Organized into [bold]{len(categorized)}[/bold] sections\n")
-    
+
+    console.print(
+        f"     [green]✅[/green] Organized into [bold]{len(categorized)}[/bold] sections\n"
+    )
+
     # Create binder
     binder = Binder(
         title="WAFT Project Collection",
@@ -112,9 +109,9 @@ def create_project_booklet(project_root: Path, output_path: Path) -> Path:
         date=datetime.now().strftime("%B %d, %Y"),
         version="1.0",
         compiled_by="WAFT System",
-        cover_style="professional"
+        cover_style="professional",
     )
-    
+
     # Define section colors
     section_colors = {
         "Documentation": "#2c3e50",
@@ -123,12 +120,12 @@ def create_project_booklet(project_root: Path, output_path: Path) -> Path:
         "Demos": "#9b59b6",
         "Work Efforts": "#f39c12",
         "Artifacts": "#1abc9c",
-        "Other": "#95a5a6"
+        "Other": "#95a5a6",
     }
-    
+
     # Add sections and documents
     console.print("  [cyan]📖[/cyan] Building booklet structure...\n")
-    
+
     # Order sections logically
     section_order = [
         "Documentation",
@@ -137,27 +134,25 @@ def create_project_booklet(project_root: Path, output_path: Path) -> Path:
         "Demos",
         "Work Efforts",
         "Artifacts",
-        "Other"
+        "Other",
     ]
-    
+
     with Progress(
-        SpinnerColumn(),
-        TextColumn("[progress.description]{task.description}"),
-        console=console
+        SpinnerColumn(), TextColumn("[progress.description]{task.description}"), console=console
     ) as progress:
         task = progress.add_task("Adding documents...", total=len(all_pdfs))
-        
+
         for section_name in section_order:
             if section_name not in categorized:
                 continue
-            
+
             # Add section
             section = binder.add_section(
                 name=section_name,
                 description=categorized[section_name][0]["description"],
-                color=section_colors.get(section_name, "#2c3e50")
+                color=section_colors.get(section_name, "#2c3e50"),
             )
-            
+
             # Add documents in this section
             for pdf_info in sorted(categorized[section_name], key=lambda x: x["title"]):
                 try:
@@ -165,31 +160,32 @@ def create_project_booklet(project_root: Path, output_path: Path) -> Path:
                         path=pdf_info["path"],
                         title=pdf_info["title"],
                         section=section_name,
-                        description=pdf_info.get("description")
+                        description=pdf_info.get("description"),
                     )
                     section.add_document(doc_entry)
                     progress.update(task, advance=1)
                 except Exception as e:
                     console.print(f"     [yellow]⚠️[/yellow]  Skipping {pdf_info['title']}: {e}")
-    
+
     # Generate booklet
     console.print("\n  [cyan]📄[/cyan] Generating booklet...\n")
-    
+
     try:
         with console.status("[bold cyan]Creating PDF booklet...[/bold cyan]"):
             binder.generate(output_path, include_dividers=True)
-        
+
         size_mb = output_path.stat().st_size / (1024 * 1024)
         console.print(f"  [green]✅[/green] Booklet generated: [bold]{output_path}[/bold]")
         console.print(f"     Size: [bold]{size_mb:.2f} MB[/bold]")
         console.print(f"     Sections: [bold]{len(binder.sections)}[/bold]")
         console.print(f"     Documents: [bold]{len(all_pdfs)}[/bold]\n")
-        
+
         return output_path
-        
+
     except Exception as e:
         console.print(f"  [red]❌[/red] Error generating booklet: {e}")
         import traceback
+
         console.print(f"     [dim]{traceback.format_exc()}[/dim]")
         return None
 
@@ -199,7 +195,7 @@ def open_pdf(pdf_path: Path):
     try:
         import platform
         import subprocess
-        
+
         system = platform.system()
         if system == "Darwin":  # macOS
             subprocess.run(["open", str(pdf_path)], check=True)
@@ -216,7 +212,7 @@ def open_pdf(pdf_path: Path):
 if __name__ == "__main__":
     project_root = Path(__file__).parent.parent
     output_path = project_root / "WAFT_Project_Booklet.pdf"
-    
+
     console.print("=" * 80)
     console.print("[bold]WAFT Project Booklet Generator[/bold]")
     console.print("=" * 80)
@@ -224,9 +220,9 @@ if __name__ == "__main__":
     console.print(f"Project root: [cyan]{project_root}[/cyan]")
     console.print(f"Output: [cyan]{output_path}[/cyan]")
     console.print()
-    
+
     booklet_path = create_project_booklet(project_root, output_path)
-    
+
     if booklet_path:
         console.print("  [cyan]📖[/cyan] Opening booklet...")
         if open_pdf(booklet_path):

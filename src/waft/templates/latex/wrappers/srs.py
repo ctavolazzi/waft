@@ -11,6 +11,7 @@ source: ashad001
 """
 
 from pathlib import Path
+
 from ..compiler import LaTeXCompiler
 from ..content_builders import build_report_content
 
@@ -34,7 +35,7 @@ def generate_srs(
     constraints: str = "",
     architecture_design: str = "",
     revision_history: str = "",
-    **kwargs
+    **kwargs,
 ) -> Path:
     """
     Generate PDF using SRS LaTeX template.
@@ -64,7 +65,12 @@ def generate_srs(
         Path to generated PDF
     """
     # Get template path (from wrappers/ to project root, then to templates/)
-    template_dir = Path(__file__).parent.parent.parent.parent.parent.parent / "templates" / "ashad001-latex-templates" / "SRS Template"
+    template_dir = (
+        Path(__file__).parent.parent.parent.parent.parent.parent
+        / "templates"
+        / "ashad001-latex-templates"
+        / "SRS Template"
+    )
     template_file = template_dir / "main.tex"
 
     if not template_file.exists():
@@ -82,11 +88,7 @@ def generate_srs(
         members.append("")
 
     # Build LaTeX content from markdown/HTML
-    latex_content = build_report_content(
-        title=title,
-        content=content,
-        **kwargs
-    )
+    latex_content = build_report_content(title=title, content=content, **kwargs)
 
     # Replace placeholders in template (templates use hardcoded placeholders, not Jinja2)
     filled_latex = template_content
@@ -104,33 +106,53 @@ def generate_srs(
 
     # Replace section content
     if introduction:
-        filled_latex = filled_latex.replace("\\section{Introduction}", f"\\section{{Introduction}}\n\n{introduction}")
+        filled_latex = filled_latex.replace(
+            "\\section{Introduction}", f"\\section{{Introduction}}\n\n{introduction}"
+        )
     if motivation:
-        filled_latex = filled_latex.replace("\\subsection{Motivation}", f"\\subsection{{Motivation}}\n\n{motivation}")
+        filled_latex = filled_latex.replace(
+            "\\subsection{Motivation}", f"\\subsection{{Motivation}}\n\n{motivation}"
+        )
     if stakeholders:
-        filled_latex = filled_latex.replace("\\subsection{Stakeholders}", f"\\subsection{{Stakeholders}}\n\n{stakeholders}")
+        filled_latex = filled_latex.replace(
+            "\\subsection{Stakeholders}", f"\\subsection{{Stakeholders}}\n\n{stakeholders}"
+        )
     if assumptions_dependencies:
-        filled_latex = filled_latex.replace("\\subsection{Assumptions and Dependencies}", f"\\subsection{{Assumptions and Dependencies}}\n\n{assumptions_dependencies}")
+        filled_latex = filled_latex.replace(
+            "\\subsection{Assumptions and Dependencies}",
+            f"\\subsection{{Assumptions and Dependencies}}\n\n{assumptions_dependencies}",
+        )
     if functional_requirements:
-        filled_latex = filled_latex.replace("\\section{Functional Requirements}", f"\\section{{Functional Requirements}}\n\n{functional_requirements}")
+        filled_latex = filled_latex.replace(
+            "\\section{Functional Requirements}",
+            f"\\section{{Functional Requirements}}\n\n{functional_requirements}",
+        )
     if operating_environment:
-        filled_latex = filled_latex.replace("\\subsection{Operating Environment}", f"\\subsection{{Operating Environment}}\n\n{operating_environment}")
+        filled_latex = filled_latex.replace(
+            "\\subsection{Operating Environment}",
+            f"\\subsection{{Operating Environment}}\n\n{operating_environment}",
+        )
     if non_functional_requirements:
-        filled_latex = filled_latex.replace("\\section{Non-functional Requirements}", f"\\section{{Non-functional Requirements}}\n\n{non_functional_requirements}")
+        filled_latex = filled_latex.replace(
+            "\\section{Non-functional Requirements}",
+            f"\\section{{Non-functional Requirements}}\n\n{non_functional_requirements}",
+        )
     if constraints:
-        filled_latex = filled_latex.replace("\\section{Constraints}", f"\\section{{Constraints}}\n\n{constraints}")
+        filled_latex = filled_latex.replace(
+            "\\section{Constraints}", f"\\section{{Constraints}}\n\n{constraints}"
+        )
     if architecture_design:
-        filled_latex = filled_latex.replace("\\section{Architecture Design}", f"\\section{{Architecture Design}}\n\n{architecture_design}")
+        filled_latex = filled_latex.replace(
+            "\\section{Architecture Design}",
+            f"\\section{{Architecture Design}}\n\n{architecture_design}",
+        )
     if revision_history:
-        filled_latex = filled_latex.replace("\\section{Revision History}", f"\\section{{Revision History}}\n\n{revision_history}")
+        filled_latex = filled_latex.replace(
+            "\\section{Revision History}", f"\\section{{Revision History}}\n\n{revision_history}"
+        )
 
     # Compile to PDF
     compiler = LaTeXCompiler(compiler="pdflatex")
-    pdf_path = compiler.compile(
-        filled_latex,
-        output_path,
-        working_dir=template_dir,
-        runs=2
-    )
+    pdf_path = compiler.compile(filled_latex, output_path, working_dir=template_dir, runs=2)
 
     return pdf_path

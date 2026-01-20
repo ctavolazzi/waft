@@ -13,20 +13,19 @@ This walkthrough uses WAFT's own tools to document itself.
 """
 
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.waft.templates.field_guide import generate_field_guide
+
 from src.waft.binder import Binder, DocumentEntry
-from jinja2 import Template
-from weasyprint import HTML
+from src.waft.templates.field_guide import generate_field_guide
 
 
 def create_walkthrough_intro(output_dir: Path) -> Path:
     """Create introduction walkthrough document."""
-    
+
     content = """
 <h2>Welcome to the WAFT PDF Tools Walkthrough</h2>
 
@@ -258,9 +257,9 @@ WAFT includes 12 professional document templates:
     for printing. All while WAFT tracks its work in the _pyrite system.
 </div>
     """
-    
+
     output_path = output_dir / "WAFT_Demo_Walkthrough_Intro.pdf"
-    
+
     generate_field_guide(
         title="WAFT DEMO WALKTHROUGH",
         content=content,
@@ -270,21 +269,20 @@ WAFT includes 12 professional document templates:
         subtitle="Introduction to WAFT PDF Tools",
         classification="DEMONSTRATION",
         issued_by="WAFT Documentation Team",
-        date=datetime.now().strftime("%B %d, %Y")
+        date=datetime.now().strftime("%B %d, %Y"),
     )
-    
+
     return output_path
 
 
 def create_printer_friendly_walkthrough(output_dir: Path) -> Path:
     """Create printer-friendly version of walkthrough."""
-    
+
     # Import printer-friendly template
     from examples.generate_waft_field_guide_printer_friendly import (
-        generate_field_guide_printer_friendly,
-        get_level_1_content  # We'll use similar content structure
+        generate_field_guide_printer_friendly,  # We'll use similar content structure
     )
-    
+
     content = """
 <h2>Welcome to the WAFT PDF Tools Walkthrough</h2>
 
@@ -372,9 +370,9 @@ field guides, lab notes, technical memos, personal memos, academic papers, and m
     </div>
 </div>
     """
-    
+
     output_path = output_dir / "WAFT_Demo_Walkthrough_Intro_PrinterFriendly.pdf"
-    
+
     generate_field_guide_printer_friendly(
         title="WAFT DEMO WALKTHROUGH",
         content=content,
@@ -384,27 +382,27 @@ field guides, lab notes, technical memos, personal memos, academic papers, and m
         subtitle="Introduction to WAFT PDF Tools (Printer Friendly)",
         classification="DEMONSTRATION",
         issued_by="WAFT Documentation Team",
-        date=datetime.now().strftime("%B %d, %Y")
+        date=datetime.now().strftime("%B %d, %Y"),
     )
-    
+
     return output_path
 
 
 def generate_complete_walkthrough_booklet(output_dir: Path) -> Path:
     """Generate complete walkthrough booklet with all demos."""
-    
+
     print("=" * 80)
     print("WAFT Demo Walkthrough Generator")
     print("=" * 80)
     print()
-    
+
     # Generate intro documents
     print("Generating walkthrough introduction...")
     intro_path = create_walkthrough_intro(output_dir)
-    
+
     print("Generating printer-friendly walkthrough...")
     intro_pf_path = create_printer_friendly_walkthrough(output_dir)
-    
+
     # Check if demo files exist
     demo_files = []
     demo_dir = Path("demo_output")
@@ -412,13 +410,13 @@ def generate_complete_walkthrough_booklet(output_dir: Path) -> Path:
         demo_booklet = demo_dir / "WAFT_Demo_Booklet.pdf"
         if demo_booklet.exists():
             demo_files.append(demo_booklet)
-    
+
     advanced_demo_dir = Path("advanced_demo_output")
     if advanced_demo_dir.exists():
         advanced_booklet = advanced_demo_dir / "WAFT_Advanced_Demo_Booklet.pdf"
         if advanced_booklet.exists():
             demo_files.append(advanced_booklet)
-    
+
     # Create binder
     print("\nAssembling complete walkthrough booklet...")
     binder = Binder(
@@ -428,67 +426,71 @@ def generate_complete_walkthrough_booklet(output_dir: Path) -> Path:
         date=datetime.now().strftime("%B %d, %Y"),
         version="1.0",
         compiled_by="WAFT System",
-        cover_style="professional"
+        cover_style="professional",
     )
-    
+
     # Add sections
     intro_section = binder.add_section(
-        "Introduction",
-        description="Overview of WAFT PDF tools",
-        color="#000000"
+        "Introduction", description="Overview of WAFT PDF tools", color="#000000"
     )
-    intro_section.add_document(DocumentEntry(
-        path=intro_path,
-        title="WAFT Demo Walkthrough - Introduction",
-        author="WAFT Documentation Team",
-        date=datetime.now().strftime("%B %d, %Y"),
-        description="Introduction to WAFT's PDF generation and organization tools"
-    ))
-    
-    if intro_pf_path.exists():
-        intro_section.add_document(DocumentEntry(
-            path=intro_pf_path,
-            title="WAFT Demo Walkthrough - Introduction (Printer Friendly)",
+    intro_section.add_document(
+        DocumentEntry(
+            path=intro_path,
+            title="WAFT Demo Walkthrough - Introduction",
             author="WAFT Documentation Team",
             date=datetime.now().strftime("%B %d, %Y"),
-            description="Printer-friendly version of the introduction"
-        ))
-    
+            description="Introduction to WAFT's PDF generation and organization tools",
+        )
+    )
+
+    if intro_pf_path.exists():
+        intro_section.add_document(
+            DocumentEntry(
+                path=intro_pf_path,
+                title="WAFT Demo Walkthrough - Introduction (Printer Friendly)",
+                author="WAFT Documentation Team",
+                date=datetime.now().strftime("%B %d, %Y"),
+                description="Printer-friendly version of the introduction",
+            )
+        )
+
     # Add demo files if they exist
     if demo_files:
         demo_section = binder.add_section(
             "Demo Examples",
             description="Example demonstrations of WAFT capabilities",
-            color="#333333"
+            color="#333333",
         )
-        
+
         for demo_file in demo_files:
-            demo_section.add_document(DocumentEntry(
-                path=demo_file,
-                title=demo_file.stem.replace("_", " ").title(),
-                author="WAFT System",
-                date=datetime.now().strftime("%B %d, %Y"),
-                description=f"Demo example: {demo_file.name}"
-            ))
-    
+            demo_section.add_document(
+                DocumentEntry(
+                    path=demo_file,
+                    title=demo_file.stem.replace("_", " ").title(),
+                    author="WAFT System",
+                    date=datetime.now().strftime("%B %d, %Y"),
+                    description=f"Demo example: {demo_file.name}",
+                )
+            )
+
     # Generate binder
     output_path = output_dir / "WAFT_Complete_Demo_Walkthrough.pdf"
     binder.generate(output_path, include_dividers=True)
-    
+
     print(f"\n✓ Complete walkthrough booklet generated: {output_path}")
     print(f"  Size: {output_path.stat().st_size / 1024:.1f} KB")
     print(f"  Sections: {len(binder.sections)}")
     print(f"  Documents: {sum(len(s.documents) for s in binder.sections)}")
-    
+
     return output_path
 
 
 if __name__ == "__main__":
     output_dir = Path("_work_efforts/showcase_documents")
     output_dir.mkdir(parents=True, exist_ok=True)
-    
+
     generate_complete_walkthrough_booklet(output_dir)
-    
+
     print()
     print("=" * 80)
     print("Walkthrough generation complete!")

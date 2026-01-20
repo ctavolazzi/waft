@@ -8,15 +8,12 @@ Provides a split-screen view showing:
 """
 
 from pathlib import Path
-from typing import Optional, Dict, Any, List
+
+from rich.align import Align
 from rich.console import Console
 from rich.layout import Layout
 from rich.panel import Panel
-from rich.table import Table
-from rich.progress import BarColumn, Progress, TextColumn
 from rich.text import Text
-from rich.live import Live
-from rich.align import Align
 
 from ..core.empirica import EmpiricaManager
 from ..core.memory import MemoryManager
@@ -176,9 +173,12 @@ def render_hud(project_path: Path, integrity: float = 100.0) -> None:
 
     # Get project name
     from ..core.substrate import SubstrateManager
+
     substrate = SubstrateManager()
     project_info = substrate.get_project_info(project_path)
-    project_name = project_info.get("name", "Unknown Project") if project_info else "Unknown Project"
+    project_name = (
+        project_info.get("name", "Unknown Project") if project_info else "Unknown Project"
+    )
 
     # Get moon phase
     empirica = EmpiricaManager(project_path)
@@ -219,5 +219,3 @@ def render_hud(project_path: Path, integrity: float = 100.0) -> None:
 
     # Render
     console.print(layout)
-
-

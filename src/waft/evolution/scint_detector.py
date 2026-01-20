@@ -14,15 +14,16 @@ Scint Types:
 """
 
 from dataclasses import dataclass, field
-from typing import List, Dict, Any, Optional, Tuple
 from datetime import datetime
 from enum import Enum
+from typing import Any
 
-from .styling_genome import StylingGenome, StylingGene
+from .styling_genome import StylingGene, StylingGenome
 
 
 class ScintType(str, Enum):
     """Types of styling scints (divergences)."""
+
     FONT_SCINT = "font_scint"  # Font configuration diverged
     MARGIN_SCINT = "margin_scint"  # Margin configuration diverged
     COLOR_SCINT = "color_scint"  # Color scheme diverged
@@ -40,24 +41,25 @@ class Scint:
     Represents a point where styling evolved in different directions,
     requiring reconciliation or selection.
     """
+
     genome_a: StylingGenome  # First genome in divergence
     genome_b: StylingGenome  # Second genome in divergence
     scint_type: ScintType  # Type of divergence
     divergence_score: float  # 0.0-1.0 (how different they are)
-    differences: Dict[str, Any]  # Specific differences
+    differences: dict[str, Any]  # Specific differences
     detected_at: datetime = field(default_factory=datetime.utcnow)
     resolved: bool = False  # Whether scint has been resolved
-    resolution_strategy: Optional[str] = None  # How it was resolved
+    resolution_strategy: str | None = None  # How it was resolved
 
     def get_diff_summary(self) -> str:
         """Get human-readable summary of differences."""
         lines = [
             f"Scint Type: {self.scint_type.value}",
             f"Divergence Score: {self.divergence_score:.2%}",
-            f"",
+            "",
             f"Genome A: {self.genome_a.scientific_name} (Gen {self.genome_a.generation})",
             f"Genome B: {self.genome_b.scientific_name} (Gen {self.genome_b.generation})",
-            f"",
+            "",
             "Differences:",
         ]
 
@@ -88,9 +90,9 @@ class ScintDetector:
             divergence_threshold: Minimum divergence score to report (0.0-1.0)
         """
         self.divergence_threshold = divergence_threshold
-        self.detected_scints: List[Scint] = []
+        self.detected_scints: list[Scint] = []
 
-    def detect(self, genome_a: StylingGenome, genome_b: StylingGenome) -> Optional[Scint]:
+    def detect(self, genome_a: StylingGenome, genome_b: StylingGenome) -> Scint | None:
         """
         Detect if two genomes have diverged (scint detection).
 
@@ -128,7 +130,7 @@ class ScintDetector:
         self.detected_scints.append(scint)
         return scint
 
-    def detect_lineage_scints(self, genomes: List[StylingGenome]) -> List[Scint]:
+    def detect_lineage_scints(self, genomes: list[StylingGenome]) -> list[Scint]:
         """
         Detect scints across a lineage of genomes.
 
@@ -151,10 +153,8 @@ class ScintDetector:
         return scints
 
     def _compute_differences(
-        self,
-        genes_a: StylingGene,
-        genes_b: StylingGene
-    ) -> Dict[str, Tuple[Any, Any]]:
+        self, genes_a: StylingGene, genes_b: StylingGene
+    ) -> dict[str, tuple[Any, Any]]:
         """
         Compute specific differences between two gene sets.
 
@@ -193,7 +193,7 @@ class ScintDetector:
 
         return differences
 
-    def _calculate_divergence_score(self, differences: Dict[str, Tuple[Any, Any]]) -> float:
+    def _calculate_divergence_score(self, differences: dict[str, tuple[Any, Any]]) -> float:
         """
         Calculate overall divergence score from differences.
 
@@ -208,10 +208,10 @@ class ScintDetector:
 
         # Count total possible differences (approximate)
         total_fields = (
-            len(StylingGene().font.to_dict()) +
-            len(StylingGene().margin.to_dict()) +
-            len(StylingGene().color.to_dict()) +
-            len(StylingGene().layout.to_dict())
+            len(StylingGene().font.to_dict())
+            + len(StylingGene().margin.to_dict())
+            + len(StylingGene().color.to_dict())
+            + len(StylingGene().layout.to_dict())
         )
 
         # Simple ratio: differences / total_fields
@@ -231,9 +231,7 @@ class ScintDetector:
         return min(weighted_score, 1.0)
 
     def _classify_scint(
-        self,
-        differences: Dict[str, Tuple[Any, Any]],
-        divergence_score: float
+        self, differences: dict[str, tuple[Any, Any]], divergence_score: float
     ) -> ScintType:
         """
         Classify the type of scint based on differences.
@@ -267,15 +265,11 @@ class ScintDetector:
         else:
             return ScintType.FULL_SCINT
 
-    def get_unresolved_scints(self) -> List[Scint]:
+    def get_unresolved_scints(self) -> list[Scint]:
         """Get all unresolved scints."""
         return [s for s in self.detected_scints if not s.resolved]
 
-    def reconcile_scint(
-        self,
-        scint: Scint,
-        strategy: str = "select_fittest"
-    ) -> StylingGenome:
+    def reconcile_scint(self, scint: Scint, strategy: str = "select_fittest") -> StylingGenome:
         """
         Reconcile a scint using given strategy.
 

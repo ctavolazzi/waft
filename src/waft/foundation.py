@@ -10,10 +10,10 @@ The engine is completely portable - no WAFT-specific dependencies.
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
+from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Union, TYPE_CHECKING
-from datetime import datetime
+from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
     from ..core.science.observer import TheObserver
@@ -37,18 +37,18 @@ class RedactionStyle(Enum):
 class DocumentConfig:
     """Configuration for document styling and behavior."""
 
-    fonts: Dict[str, str] = field(
+    fonts: dict[str, str] = field(
         default_factory=lambda: {
             "Header": "Courier-Bold",
             "Body": "Courier",
             "Monospace": "Courier",
         }
     )
-    watermark: Optional[str] = None
+    watermark: str | None = None
     redaction_style: RedactionStyle = RedactionStyle.BLACK_BAR
-    header_text: Optional[str] = None
-    footer_text: Optional[str] = None
-    page_margins: Tuple[float, float, float, float] = (72, 72, 72, 72)  # top, right, bottom, left
+    header_text: str | None = None
+    footer_text: str | None = None
+    page_margins: tuple[float, float, float, float] = (72, 72, 72, 72)  # top, right, bottom, left
     line_spacing: float = 1.5
     font_size_body: int = 12
     font_size_header: int = 14
@@ -57,7 +57,7 @@ class DocumentConfig:
     @classmethod
     def classified_dossier(
         cls,
-        header: Optional[str] = None,
+        header: str | None = None,
         watermark: str = "INTERNAL USE ONLY",
     ) -> "DocumentConfig":
         """Preset config for SCP/Dossier style documentation."""
@@ -181,7 +181,7 @@ class TextBlock(ContentBlock):
         font_key = self.style if self.style in config.fonts else "Body"
         font_family, font_style = config.fonts[font_key]
         pdf.set_font(font_family, style=font_style, size=config.font_size_body)
-        
+
         if not self.content.strip():
             return y_position + config.font_size_body * 0.5
 
@@ -189,48 +189,40 @@ class TextBlock(ContentBlock):
         page_width = pdf.w - pdf.l_margin - pdf.r_margin
         current_y = y_position
         line_height = config.font_size_body * config.line_spacing
-        
+
         # Handle multi-line content (split by newlines first)
         paragraphs = self.content.split("\n")
-        
+
         for paragraph in paragraphs:
             if not paragraph.strip():
                 current_y += line_height * 0.5
                 continue
-            
+
             # Check if we need a new page
             if current_y + line_height > pdf.h - pdf.b_margin:
                 pdf.add_page()
                 current_y = pdf.t_margin + 10
-                
+
             # Always use multi_cell for proper word wrapping
             # FPDF's multi_cell handles word wrapping, line breaks, and page breaks correctly
             pdf.set_xy(pdf.l_margin, current_y)
-            
+
             # Check if redaction is needed
-            if redactor.sensitive_terms and any(term.lower() in paragraph.lower() for term in redactor.sensitive_terms):
+            if redactor.sensitive_terms and any(
+                term.lower() in paragraph.lower() for term in redactor.sensitive_terms
+            ):
                 # For redaction, we need to render word by word
                 # But for now, render normally and note that redaction in multi_cell is limited
                 # TODO: Implement proper redaction with multi_cell if needed
                 pdf.multi_cell(
-                    w=page_width,
-                    h=line_height,
-                    txt=paragraph,
-                    border=0,
-                    align="L",
-                    fill=False
+                    w=page_width, h=line_height, txt=paragraph, border=0, align="L", fill=False
                 )
             else:
                 # No redaction needed - use multi_cell for proper word wrapping
                 pdf.multi_cell(
-                    w=page_width,
-                    h=line_height,
-                    txt=paragraph,
-                    border=0,
-                    align="L",
-                    fill=False
+                    w=page_width, h=line_height, txt=paragraph, border=0, align="L", fill=False
                 )
-            
+
             # Get the Y position after multi_cell (it handles page breaks automatically)
             current_y = pdf.get_y()
 
@@ -240,7 +232,7 @@ class TextBlock(ContentBlock):
 class KeyValueBlock(ContentBlock):
     """Key-value pairs block (metadata, parameters, etc.)."""
 
-    def __init__(self, data: Dict[str, str], label: Optional[str] = None):
+    def __init__(self, data: dict[str, str], label: str | None = None):
         self.data = data
         self.label = label
 
@@ -295,7 +287,7 @@ class KeyValueBlock(ContentBlock):
 class LogBlock(ContentBlock):
     """Terminal/log output block (monospace, timestamped entries)."""
 
-    def __init__(self, entries: List[str], timestamp_format: Optional[str] = None):
+    def __init__(self, entries: list[str], timestamp_format: str | None = None):
         self.entries = entries
         self.timestamp_format = timestamp_format
 
@@ -368,7 +360,11 @@ class WarningBlock(ContentBlock):
         pdf.set_font(font_family, style=font_style, size=config.font_size_body)
         pdf.set_xy(border_x + 5, border_y + config.font_size_body + 5)
         redactor.render_text(
-            pdf, self.text, border_x + 5, border_y + config.font_size_body + 5, config.font_size_body
+            pdf,
+            self.text,
+            border_x + 5,
+            border_y + config.font_size_body + 5,
+            config.font_size_body,
         )
 
         return border_y + border_h + 10
@@ -377,7 +373,7 @@ class WarningBlock(ContentBlock):
 class SignatureBlock(ContentBlock):
     """Signature/authorization block."""
 
-    def __init__(self, role: str, name: str, timestamp: Optional[datetime] = None):
+    def __init__(self, role: str, name: str, timestamp: datetime | None = None):
         self.role = role
         self.name = name
         self.timestamp = timestamp or datetime.now()
@@ -414,12 +410,12 @@ class AutoRedactor:
 
     def __init__(self, config: DocumentConfig):
         self.config = config
-        self.sensitive_terms: List[str] = []
+        self.sensitive_terms: list[str] = []
 
-    def add_sensitive_terms(self, terms: List[str]) -> None:
+    def add_sensitive_terms(self, terms: list[str]) -> None:
         """Add terms to automatically redact."""
         self.sensitive_terms.extend(terms)
-    
+
     def _clean_unicode(self, text: str) -> str:
         """Replace Unicode characters with ASCII equivalents for fpdf2 compatibility."""
         replacements = {
@@ -434,23 +430,21 @@ class AutoRedactor:
             "…": "...",  # ellipsis
             "°": "deg",  # degree symbol
         }
-        
+
         for unicode_char, ascii_replacement in replacements.items():
             text = text.replace(unicode_char, ascii_replacement)
-        
+
         # Final pass: replace any remaining non-ASCII with space
         result = []
         for char in text:
-            if ord(char) < 128 or char in ['\n', '\t', '\r']:
+            if ord(char) < 128 or char in ["\n", "\t", "\r"]:
                 result.append(char)
             else:
-                result.append(' ')
-        
-        return ''.join(result)
+                result.append(" ")
 
-    def render_text(
-        self, pdf: FPDF, text: str, x: float, y: float, font_size: int
-    ) -> None:
+        return "".join(result)
+
+    def render_text(self, pdf: FPDF, text: str, x: float, y: float, font_size: int) -> None:
         """
         Render text with automatic redaction of sensitive terms.
 
@@ -463,7 +457,7 @@ class AutoRedactor:
         """
         # Clean Unicode characters for fpdf2 compatibility (latin-1 encoding)
         text = self._clean_unicode(text)
-        
+
         if not self.sensitive_terms:
             # No redaction needed, render normally
             pdf.text(x, y, text)
@@ -540,7 +534,7 @@ class DocumentEngine(FPDF):
         """Initialize DocumentEngine with configuration."""
         super().__init__()
         self.config = config
-        self.blocks: List[ContentBlock] = []
+        self.blocks: list[ContentBlock] = []
         self.redactor = AutoRedactor(config)
         self.total_pages = 0
 
@@ -558,12 +552,12 @@ class DocumentEngine(FPDF):
         self.blocks.append(block)
         return self
 
-    def add_sensitive_terms(self, terms: List[str]) -> "DocumentEngine":
+    def add_sensitive_terms(self, terms: list[str]) -> "DocumentEngine":
         """Add terms to automatically redact (fluent API)."""
         self.redactor.add_sensitive_terms(terms)
         return self
 
-    def set_redactions(self, terms: List[str]) -> "DocumentEngine":
+    def set_redactions(self, terms: list[str]) -> "DocumentEngine":
         """Alias for add_sensitive_terms (fluent API)."""
         return self.add_sensitive_terms(terms)
 
@@ -608,31 +602,31 @@ class DocumentEngine(FPDF):
         self.output(str(output_path))
 
         return output_path
-    
+
     def generate_component_one_pager(
         self,
         content: str,
         title: str = "WAFT Research Document",
-        output_path: Optional[Path] = None,
+        output_path: Path | None = None,
         allowed_pages: int = 2,
-        image_paths: Optional[Dict[str, str]] = None,
+        image_paths: dict[str, str] | None = None,
     ) -> Path:
         """
         Generate a component-based one-pager using the adaptive layout system.
-        
+
         This method integrates TheFoundation with the component-based PDF generator,
         providing access to the adaptive layout algorithm and learning system.
-        
+
         Args:
             content: Text content to distill into ideas
             title: Document title
             output_path: Output PDF path (defaults to _work_efforts/one_pagers/)
             allowed_pages: Target page count (default: 2)
             image_paths: Dict of image paths (e.g., {'three_pillars': 'path/to/image.png'})
-        
+
         Returns:
             Path to generated PDF
-        
+
         Example:
             >>> foundation = TheFoundation(project_path=Path("."))
             >>> pdf_path = foundation.generate_component_one_pager(
@@ -643,7 +637,7 @@ class DocumentEngine(FPDF):
             ... )
         """
         from ..evolution.component_generator import FoundationComponentGenerator
-        
+
         # Initialize component generator
         component_gen = FoundationComponentGenerator(
             project_path=self.project_path,
@@ -651,12 +645,12 @@ class DocumentEngine(FPDF):
             tavern_keeper=self.tavern_keeper,
             default_allowed_pages=allowed_pages,
         )
-        
+
         # Generate one-pager
         if output_path is None:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             output_path = self.output_dir / "one_pagers" / f"ComponentPDF_{timestamp}.pdf"
-        
+
         result = component_gen.generate_waft_one_pager(
             content=content,
             title=title,
@@ -664,46 +658,48 @@ class DocumentEngine(FPDF):
             allowed_pages=allowed_pages,
             image_paths=image_paths,
         )
-        
-        if not result.get('success', False):
-            raise RuntimeError(f"Component PDF generation failed: {result.get('error', 'Unknown error')}")
-        
-        pdf_path = Path(result['pdf_path'])
-        
+
+        if not result.get("success", False):
+            raise RuntimeError(
+                f"Component PDF generation failed: {result.get('error', 'Unknown error')}"
+            )
+
+        pdf_path = Path(result["pdf_path"])
+
         # Log to Empirica if available
         if self.empirica.is_initialized():
             self._log_one_pager_generation_to_empirica("component", title, pdf_path)
-        
+
         return pdf_path
-    
+
     def generate_evolved_one_pager(
         self,
         content: str,
         title: str = "WAFT Research Document",
-        output_path: Optional[Path] = None,
+        output_path: Path | None = None,
         allowed_pages: int = 2,
-        image_paths: Optional[Dict[str, str]] = None,
+        image_paths: dict[str, str] | None = None,
     ) -> Path:
         """
         Generate an evolutionary one-pager that learns and improves over time.
-        
+
         Uses the DocumentEvolutionEngine which:
         - Evolves component traits (min_pages, height, section preferences)
         - Learns from user feedback
         - Self-documents its evolution
         - Uses randomness for exploration
         - Gradually improves based on your preferences
-        
+
         Args:
             content: Text content to distill
             title: Document title
             output_path: Output PDF path
             allowed_pages: Target page count
             image_paths: Dict of image paths
-        
+
         Returns:
             Path to generated PDF
-        
+
         Example:
             >>> foundation = TheFoundation(project_path=Path("."))
             >>> pdf_path = foundation.generate_evolved_one_pager(
@@ -719,7 +715,7 @@ class DocumentEngine(FPDF):
             ... )
         """
         from ..evolution.document_evolution_engine import DocumentEvolutionEngine
-        
+
         # Initialize evolution engine
         evolution_engine = DocumentEvolutionEngine(
             project_path=self.project_path,
@@ -727,12 +723,12 @@ class DocumentEngine(FPDF):
             tavern_keeper=self.tavern_keeper,
             default_allowed_pages=allowed_pages,
         )
-        
+
         # Generate
         if output_path is None:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             output_path = self.output_dir / "one_pagers" / f"EvolvedPDF_{timestamp}.pdf"
-        
+
         result = evolution_engine.generate_one_pager(
             content=content,
             title=title,
@@ -741,31 +737,33 @@ class DocumentEngine(FPDF):
             image_paths=image_paths,
             use_evolved_components=True,
         )
-        
-        if not result.get('success', False):
-            raise RuntimeError(f"Evolution PDF generation failed: {result.get('error', 'Unknown error')}")
-        
-        pdf_path = Path(result['pdf_path'])
-        
+
+        if not result.get("success", False):
+            raise RuntimeError(
+                f"Evolution PDF generation failed: {result.get('error', 'Unknown error')}"
+            )
+
+        pdf_path = Path(result["pdf_path"])
+
         # Log to Empirica if available
         if self.empirica.is_initialized():
             self._log_one_pager_generation_to_empirica("evolved", title, pdf_path)
-        
+
         return pdf_path
-    
+
     def record_evolution_feedback(
         self,
         liked: bool,
-        component_id: Optional[str] = None,
-        document_id: Optional[str] = None,
-        message: Optional[str] = None,
+        component_id: str | None = None,
+        document_id: str | None = None,
+        message: str | None = None,
         strength: float = 1.0,
     ):
         """
         Record feedback for the evolution system.
-        
+
         This helps the system learn what you like and gradually improve.
-        
+
         Args:
             liked: True if liked, False if disliked
             component_id: Specific component ID (optional)
@@ -774,7 +772,7 @@ class DocumentEngine(FPDF):
             strength: How strong the feedback is (0.0-1.0)
         """
         from ..evolution.document_evolution_engine import DocumentEvolutionEngine
-        
+
         # Initialize engine to access feedback system
         evolution_engine = DocumentEvolutionEngine(project_path=self.project_path)
         evolution_engine.record_user_feedback(
@@ -837,7 +835,7 @@ class DocumentEngine(FPDF):
 # ============================================================================
 
 
-def generate_specimen_d_audit(output_path: Optional[Path] = None) -> Path:
+def generate_specimen_d_audit(output_path: Path | None = None) -> Path:
     """
     Generate the Specimen-D Audit dossier using DocumentEngine.
 
@@ -869,9 +867,7 @@ def generate_specimen_d_audit(output_path: Optional[Path] = None) -> Path:
     )
 
     # PAGE 1: COVER
-    engine.add(
-        SectionHeader("INSTITUTE FOR ADVANCED ONTOLOGICAL STUDIES", level=1)
-    )
+    engine.add(SectionHeader("INSTITUTE FOR ADVANCED ONTOLOGICAL STUDIES", level=1))
     engine.add(TextBlock("FIELD OPERATIONS DIVISION", style="Body"))
     engine.add(TextBlock("PROPERTY OF TELEPORT MASSIVE // SITE-DELTA-9", style="Body"))
     engine.add(TextBlock(""))  # Spacing
@@ -971,9 +967,7 @@ def generate_specimen_d_audit(output_path: Optional[Path] = None) -> Path:
     )
 
     # PAGE 3: FINAL SUMMARY
-    engine.add(
-        SectionHeader("FOUNDATION FINAL SUMMARY: SESSION-014-RECURSION", level=1)
-    )
+    engine.add(SectionHeader("FOUNDATION FINAL SUMMARY: SESSION-014-RECURSION", level=1))
     engine.add(TextBlock("File Ref: OMEGA-LOCKOUT", style="Monospace"))
 
     engine.add(
@@ -1020,9 +1014,7 @@ def generate_specimen_d_audit(output_path: Optional[Path] = None) -> Path:
     )
 
     engine.add(
-        TextBlock(
-            "CHECKSUM (FINAL): [ id est ] ... [ i.e. ] ... [ . . . ]", style="Monospace"
-        )
+        TextBlock("CHECKSUM (FINAL): [ id est ] ... [ i.e. ] ... [ . . . ]", style="Monospace")
     )
 
     # Add sample log entries demonstrating automatic redaction
@@ -1051,10 +1043,10 @@ def generate_specimen_d_audit(output_path: Optional[Path] = None) -> Path:
 class TheFoundation:
     """
     WAFT-specific PDF documentation generator.
-    
+
     Integrates TheObserver, TavernKeeper, and Empirica to generate stylized PDF documentation
     in SCP/Dossier format. Uses DocumentEngine internally for PDF generation.
-    
+
     Uses Empirica to track document generation, insights, and knowledge gained from documentation.
     """
 
@@ -1081,24 +1073,29 @@ class TheFoundation:
         # Initialize Observer and TavernKeeper
         if observer is None:
             from waft.core.science.observer import TheObserver
+
             self.observer = TheObserver(self.project_path)
         else:
             self.observer = observer
 
         if tavern_keeper is None:
             from waft.core.tavern_keeper import TavernKeeper
+
             self.tavern_keeper = TavernKeeper(self.project_path)
         else:
             self.tavern_keeper = tavern_keeper
-        
+
         # Initialize Empirica (for epistemic tracking of documentation)
         if empirica_manager is None:
             from waft.core.empirica import EmpiricaManager
+
             self.empirica = EmpiricaManager(self.project_path)
         else:
             self.empirica = empirica_manager
 
-    def generate_dossier(self, dossier_number: str = "014", output_path: Optional[Path] = None) -> Path:
+    def generate_dossier(
+        self, dossier_number: str = "014", output_path: Path | None = None
+    ) -> Path:
         """
         Generate the dossier PDF with 3 pages of specified content.
 
@@ -1134,9 +1131,7 @@ class TheFoundation:
         )
 
         # PAGE 1: COVER
-        engine.add(
-            SectionHeader("INSTITUTE FOR ADVANCED ONTOLOGICAL STUDIES", level=1)
-        )
+        engine.add(SectionHeader("INSTITUTE FOR ADVANCED ONTOLOGICAL STUDIES", level=1))
         engine.add(TextBlock("FIELD OPERATIONS DIVISION", style="Body"))
         engine.add(TextBlock("PROPERTY OF TELEPORT MASSIVE // SITE-DELTA-9", style="Body"))
         engine.add(TextBlock(""))  # Spacing
@@ -1178,7 +1173,9 @@ class TheFoundation:
         engine.add(TextBlock("COPY NO: 01 OF 01", style="Body"))
 
         # PAGE 2: PROTOCOL-991
-        engine.add(SectionHeader("[EYES ONLY] PROTOCOL-991: THE RECURSIVE AUDIT FRAMEWORK", level=1))
+        engine.add(
+            SectionHeader("[EYES ONLY] PROTOCOL-991: THE RECURSIVE AUDIT FRAMEWORK", level=1)
+        )
 
         engine.add(
             TextBlock(
@@ -1236,9 +1233,7 @@ class TheFoundation:
         )
 
         # PAGE 3: FINAL SUMMARY
-        engine.add(
-            SectionHeader("FOUNDATION FINAL SUMMARY: SESSION-014-RECURSION", level=1)
-        )
+        engine.add(SectionHeader("FOUNDATION FINAL SUMMARY: SESSION-014-RECURSION", level=1))
         engine.add(TextBlock("File Ref: OMEGA-LOCKOUT", style="Monospace"))
 
         engine.add(
@@ -1285,49 +1280,50 @@ class TheFoundation:
         )
 
         engine.add(
-            TextBlock(
-                "CHECKSUM (FINAL): [ id est ] ... [ i.e. ] ... [ . . . ]", style="Monospace"
-            )
+            TextBlock("CHECKSUM (FINAL): [ id est ] ... [ i.e. ] ... [ . . . ]", style="Monospace")
         )
 
         # Render PDF
         output_path = engine.render(output_path)
-        
+
         # Log to Empirica if available
         if self.empirica.is_initialized():
             self._log_dossier_generation_to_empirica(dossier_number, output_path)
-        
+
         return output_path
-    
+
     def _log_dossier_generation_to_empirica(self, dossier_number: str, output_path: Path) -> None:
         """Log dossier generation to Empirica."""
         file_size_kb = output_path.stat().st_size / 1024 if output_path.exists() else 0
-        
+
         finding = (
             f"TheFoundation generated dossier {dossier_number}: "
             f"{output_path.name} ({file_size_kb:.1f} KB)"
         )
         impact = 0.5  # Documentation generation is moderately impactful
         self.empirica.log_finding(finding, impact=impact)
-        
+
         # Log insight about documentation
-        insight = f"Documentation generated: Dossier {dossier_number} captures system state and protocol"
+        insight = (
+            f"Documentation generated: Dossier {dossier_number} captures system state and protocol"
+        )
         self.empirica.log_finding(insight, impact=0.4)
-    
-    def _log_one_pager_generation_to_empirica(self, doc_type: str, title: str, output_path: Path) -> None:
+
+    def _log_one_pager_generation_to_empirica(
+        self, doc_type: str, title: str, output_path: Path
+    ) -> None:
         """Log one-pager generation to Empirica."""
         file_size_kb = output_path.stat().st_size / 1024 if output_path.exists() else 0
-        
-        finding = (
-            f"TheFoundation generated {doc_type} one-pager: "
-            f"{title} ({file_size_kb:.1f} KB)"
-        )
+
+        finding = f"TheFoundation generated {doc_type} one-pager: {title} ({file_size_kb:.1f} KB)"
         impact = 0.4  # One-pagers are moderately impactful
         self.empirica.log_finding(finding, impact=impact)
-        
+
         # Log insight about documentation type
         if doc_type == "evolved":
-            insight = f"Evolutionary documentation generated: {title} - system learning from feedback"
+            insight = (
+                f"Evolutionary documentation generated: {title} - system learning from feedback"
+            )
             self.empirica.log_finding(insight, impact=0.5)
         else:
             insight = f"Component-based documentation generated: {title} - adaptive layout system"
@@ -1337,13 +1333,13 @@ class TheFoundation:
 if __name__ == "__main__":
     """Test both DocumentEngine and TheFoundation."""
     from pathlib import Path
-    
+
     # Test 1: Generate Specimen-D Audit using DocumentEngine directly
     print("Testing DocumentEngine...")
     output_path = generate_specimen_d_audit()
     print(f"✅ Generated: {output_path}")
     print(f"   File size: {output_path.stat().st_size / 1024:.1f} KB")
-    
+
     # Test 2: Generate dossier using TheFoundation
     print("\nTesting TheFoundation...")
     project_path = Path(__file__).parent.parent.parent

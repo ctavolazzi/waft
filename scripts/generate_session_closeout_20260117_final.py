@@ -5,19 +5,27 @@ Session: Show-Me HTML Report Design Refinement & Closeout Enhancement
 """
 
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from examples.generate_waft_field_guide_printer_friendly import generate_field_guide_printer_friendly
+from examples.generate_waft_field_guide_printer_friendly import (
+    generate_field_guide_printer_friendly,
+)
 
-def generate_email_summaries(session_focus: str, accomplishments: list, errors_fixed: list, 
-                             files_modified: list, key_learnings: list = None) -> dict:
+
+def generate_email_summaries(
+    session_focus: str,
+    accomplishments: list,
+    errors_fixed: list,
+    files_modified: list,
+    key_learnings: list = None,
+) -> dict:
     """Generate multi-level email summaries for different audiences."""
-    
+
     key_learnings = key_learnings or []
-    
+
     # Level 1: Advanced/Highly Technical
     technical = f"""
 === TECHNICAL SUMMARY ===
@@ -25,7 +33,7 @@ def generate_email_summaries(session_focus: str, accomplishments: list, errors_f
 {session_focus}
 
 Technical Implementation:
-- Files modified: {', '.join(files_modified) if files_modified else 'N/A'}
+- Files modified: {", ".join(files_modified) if files_modified else "N/A"}
 - CSS architecture: Implemented unified "above-the-fold" section using section#above-the-fold with integrated navigation bar and header-section-wrapper
 - Responsive design: Mobile-first approach with breakpoints at 600px (tablet) and 1024px (desktop)
 - Button styling: Fixed bottom edge visual break using ::before pseudo-elements (2px border, z-index layering)
@@ -39,7 +47,7 @@ Technical changes: {len(files_modified)} file(s) modified, ~20+ CSS rule additio
         technical += f"\nBugs Fixed: {len(errors_fixed)}\n"
         for err in errors_fixed:
             technical += f"- {err}\n"
-    
+
     # Level 2: Peer Filter (Technical but accessible)
     peer = f"""
 === PEER SUMMARY ===
@@ -50,19 +58,19 @@ Key improvements:
 """
     for acc in accomplishments[:6]:  # Top 6
         peer += f"- {acc}\n"
-    
+
     if errors_fixed:
         peer += f"\nFixed {len(errors_fixed)} issue(s) during development:\n"
         for err in errors_fixed:
             peer += f"  • {err}\n"
-    
+
     if key_learnings:
-        peer += f"\nKey insights:\n"
+        peer += "\nKey insights:\n"
         for learning in key_learnings[:3]:
             peer += f"  • {learning}\n"
-    
+
     # Level 3: Boss Filter (Goals and objectives)
-    boss = f"""
+    boss = """
 === EXECUTIVE SUMMARY ===
 
 Completed design refinements and feature enhancements for the WAFT session overview report.
@@ -71,28 +79,31 @@ Objectives Achieved:
 """
     for acc in accomplishments[:4]:  # Top 4
         boss += f"✓ {acc}\n"
-    
-    boss += f"\nImpact: Improved user experience with better visual hierarchy, mobile responsiveness, "
-    boss += f"and enhanced functionality. All features maintain backward compatibility.\n"
-    boss += f"\nStatus: Complete and ready for use."
-    
+
+    boss += (
+        "\nImpact: Improved user experience with better visual hierarchy, mobile responsiveness, "
+    )
+    boss += "and enhanced functionality. All features maintain backward compatibility.\n"
+    boss += "\nStatus: Complete and ready for use."
+
     # Level 4: Anyone/TLDR
     tldr = f"""
 === TLDR ===
 
 {session_focus.lower()}. Made the report cleaner, more responsive, and easier to use. Fixed visual bugs and added useful features like copying the abstract. Everything works better now.
 """
-    
+
     return {
         "technical": technical.strip(),
         "peer": peer.strip(),
         "boss": boss.strip(),
-        "tldr": tldr.strip()
+        "tldr": tldr.strip(),
     }
+
 
 def generate_closeout():
     """Generate closeout summary for show-me design session."""
-    
+
     content = """
 <h2>Session Closeout Summary: Show-Me HTML Report Design Refinement & Closeout Enhancement</h2>
 
@@ -371,10 +382,10 @@ def generate_closeout():
 Session closeout complete. Design refinements and feature enhancements successful. Ready for next session.
 </p>
     """
-    
+
     output_path = Path("_work_efforts/showcase_documents/CLOSEOUT_SUMMARY_2026-01-17.pdf")
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     generate_field_guide_printer_friendly(
         title="WAFT SESSION CLOSEOUT",
         content=content,
@@ -384,9 +395,9 @@ Session closeout complete. Design refinements and feature enhancements successfu
         subtitle="Show-Me HTML Report Design Refinement & Closeout Enhancement",
         classification="INTERNAL",
         issued_by="WAFT Development Team",
-        date=datetime.now().strftime("%B %d, %Y")
+        date=datetime.now().strftime("%B %d, %Y"),
     )
-    
+
     return output_path
 
 
@@ -395,13 +406,13 @@ if __name__ == "__main__":
     print("Generating Session Closeout Summary PDF")
     print("=" * 80)
     print()
-    
+
     pdf_path = generate_closeout()
-    
+
     print(f"✅ Generated: {pdf_path}")
     print(f"   Size: {pdf_path.stat().st_size / 1024:.1f} KB")
     print()
-    
+
     # Generate email summaries with actual session data
     summaries = generate_email_summaries(
         session_focus="Show-Me HTML Report Design Refinement & Closeout Enhancement",
@@ -413,25 +424,25 @@ if __name__ == "__main__":
             "Enhanced closeout command with multi-level email summaries",
             "Fixed content visibility bug (duplicate code removal)",
             "Removed emoji icons from headers for cleaner design",
-            "Added 44px minimum touch targets for accessibility"
+            "Added 44px minimum touch targets for accessibility",
         ],
         errors_fixed=[
             "Page content disappearance (duplicate HTML splitting code)",
-            "Button bottom edge visual 'drop off' (insufficient border definition)"
+            "Button bottom edge visual 'drop off' (insufficient border definition)",
         ],
         files_modified=[
             "scripts/show_me.py",
             "scripts/show_me_bulletproof.py",
-            "scripts/generate_closeout_summary.py"
+            "scripts/generate_closeout_summary.py",
         ],
         key_learnings=[
             "Visual edge cases need explicit CSS definition",
             "Code duplication in templates causes silent failures",
             "Mobile-first responsive design creates better UX",
-            "User-initiated improvements significantly enhance quality"
-        ]
+            "User-initiated improvements significantly enhance quality",
+        ],
     )
-    
+
     print("=" * 80)
     print("EMAIL SUMMARIES (Copy & Paste Ready)")
     print("=" * 80)
@@ -444,17 +455,17 @@ if __name__ == "__main__":
     print()
     print(summaries["tldr"])
     print()
-    
+
     # Save summaries to text file
     summaries_file = pdf_path.parent / f"EMAIL_SUMMARIES_{datetime.now().strftime('%Y-%m-%d')}.txt"
-    with open(summaries_file, 'w') as f:
+    with open(summaries_file, "w") as f:
         f.write("EMAIL SUMMARIES - Copy & Paste Ready\n")
         f.write("=" * 80 + "\n\n")
         f.write(summaries["technical"] + "\n\n\n")
         f.write(summaries["peer"] + "\n\n\n")
         f.write(summaries["boss"] + "\n\n\n")
         f.write(summaries["tldr"] + "\n")
-    
+
     print(f"📄 Email summaries also saved to: {summaries_file}")
     print()
     print("=" * 80)

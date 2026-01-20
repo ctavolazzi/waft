@@ -13,9 +13,9 @@ Perfect for:
 """
 
 from pathlib import Path
+
 from jinja2 import Template
 from weasyprint import HTML
-
 
 BRIEFING_TEMPLATE = """
 <!DOCTYPE html>
@@ -316,7 +316,7 @@ def generate_briefing(
     subtitle: str = None,
     classification: str = "INTERNAL",
     issued_by: str = None,
-    date: str = None
+    date: str = None,
 ) -> Path:
     """
     Generate a briefing document (field guide style, 2-page constraint).
@@ -346,16 +346,17 @@ def generate_briefing(
         subtitle=subtitle,
         classification=classification,
         issued_by=issued_by,
-        date=date
+        date=date,
     )
 
     HTML(string=html_output).write_pdf(output_path)
-    
+
     # Post-process to add blank page markers
     try:
         from ..utils import process_pdf_for_blank_pages
+
         process_pdf_for_blank_pages(output_path)
     except Exception as e:
         print(f"⚠️  Blank page marker processing failed: {e}")
-    
+
     return output_path

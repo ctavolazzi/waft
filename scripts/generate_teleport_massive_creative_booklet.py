@@ -18,9 +18,8 @@ All assembled into a cohesive binder telling the story of Teleport Massive.
 """
 
 import sys
-from pathlib import Path
 from datetime import datetime
-from typing import List, Dict, Any
+from pathlib import Path
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
@@ -28,8 +27,8 @@ sys.path.insert(0, str(project_root))
 sys.path.insert(0, str(project_root / "src"))
 
 from rich.console import Console
-from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TimeElapsedColumn
 from rich.panel import Panel
+from rich.progress import BarColumn, Progress, SpinnerColumn, TextColumn, TimeElapsedColumn
 
 console = Console()
 
@@ -42,11 +41,16 @@ def generate_evolution_story() -> Path:
     """Generate a creative story using the evolution system."""
     from src.waft.evolution.chat_distiller import ChatDistiller
     from src.waft.evolution.styling_genome import (
-        StylingGenome, StylingGenomeRegistry,
-        StylingGene, FontGene, MarginGene, ColorGene, LayoutGene
+        ColorGene,
+        FontGene,
+        LayoutGene,
+        MarginGene,
+        StylingGene,
+        StylingGenome,
+        StylingGenomeRegistry,
     )
     from src.waft.evolution.two_page_generator import TwoPageGenerator
-    
+
     # Create creative content about Teleport Massive
     story_content = """
 # The Quantum Incident: A Teleport Massive Story
@@ -99,46 +103,40 @@ everyone can exist everywhere, all at once?
 
 The answer: we're about to find out.
 """
-    
+
     # Distill the story
     distiller = ChatDistiller()
     distilled = distiller.distill_text(story_content, title="The Quantum Incident")
-    
+
     # Create a creative styling genome
     registry = StylingGenomeRegistry(registry_dir=OUTPUT_DIR / "_genetics")
-    
+
     creative_genes = StylingGene(
         font=FontGene(family="Georgia", size_body=11, size_h1=24),
         margin=MarginGene(top=30, bottom=30, left=40, right=40),
-        color=ColorGene(
-            text="#1a1a1a",
-            background="#fafafa",
-            accent="#0066cc"
-        ),
+        color=ColorGene(text="#1a1a1a", background="#fafafa", accent="#0066cc"),
         layout=LayoutGene(columns=1, density="comfortable"),
-        name="Creative Story Genesis"
+        name="Creative Story Genesis",
     )
-    
+
     genome = StylingGenome.from_genes(creative_genes)
     registry.register(genome)
-    
+
     # Generate PDF
     generator = TwoPageGenerator(weasyprint_available=True)
     output_path = OUTPUT_DIR / "01_evolution_story.pdf"
-    
+
     result = generator.generate(
-        distilled_chat=distilled,
-        styling_genome=genome,
-        output_path=output_path
+        distilled_chat=distilled, styling_genome=genome, output_path=output_path
     )
-    
+
     return output_path
 
 
 def generate_cyberpunk_log() -> Path:
     """Generate a cyberpunk-style log entry."""
     from src.waft.templates.neon_cyberpunk import generate_neon_cyberpunk
-    
+
     content = """
     <div class="container">
         <h1>QUANTUM LOG ENTRY // SITE-DELTA-9</h1>
@@ -189,21 +187,19 @@ def generate_cyberpunk_log() -> Path:
         <p class="glitch">// END LOG //</p>
     </div>
     """
-    
+
     output_path = OUTPUT_DIR / "02_cyberpunk_log.pdf"
     generate_neon_cyberpunk(
-        title="QUANTUM LOG // SITE-DELTA-9",
-        content=content,
-        output_path=output_path
+        title="QUANTUM LOG // SITE-DELTA-9", content=content, output_path=output_path
     )
-    
+
     return output_path
 
 
 def generate_research_journal() -> Path:
     """Generate a research journal entry using lab notes template."""
     from src.waft.templates.lab_notes import generate_lab_notes
-    
+
     content = """
     <h2>Research Journal Entry #8472</h2>
     
@@ -258,23 +254,23 @@ def generate_research_journal() -> Path:
         <p>Site-Delta-9</p>
     </div>
     """
-    
+
     output_path = OUTPUT_DIR / "03_research_journal.pdf"
     generate_lab_notes(
         title="Research Journal: Quantum Fluctuation Event",
         content=content,
         output_path=output_path,
         researcher="Dr. Elena Vasquez",
-        date=datetime.now().strftime("%B %d, %Y")
+        date=datetime.now().strftime("%B %d, %Y"),
     )
-    
+
     return output_path
 
 
 def generate_worldbuild_document() -> Path:
     """Generate a worldbuilding document about the incident."""
     from src.waft.templates.worldbuild import generate_worldbuild_document
-    
+
     content = """
     <div class="doc-header">
         <div class="doc-id">TM-WB-2026-001</div>
@@ -373,23 +369,23 @@ def generate_worldbuild_document() -> Path:
         </div>
     </div>
     """
-    
+
     output_path = OUTPUT_DIR / "04_worldbuild_document.pdf"
     generate_worldbuild_document(
         title="The Quantum Incident: Worldbuilding Documentation",
         content=content,
         output_path=output_path,
         doc_id="TM-WB-2026-001",
-        classification="CLASSIFIED // ORACLE EYES ONLY"
+        classification="CLASSIFIED // ORACLE EYES ONLY",
     )
-    
+
     return output_path
 
 
 def generate_dnd_scenario() -> Path:
     """Generate a D&D-style scenario about the incident."""
     from src.waft.templates.dnd_scenario import generate_dnd_scenario
-    
+
     content = """
     <div class="container">
         <h1>The Quantum Incident</h1>
@@ -451,21 +447,21 @@ def generate_dnd_scenario() -> Path:
         </div>
     </div>
     """
-    
+
     output_path = OUTPUT_DIR / "05_dnd_scenario.pdf"
     generate_dnd_scenario(
         title="The Quantum Incident: A Teleport Massive Adventure",
         content=content,
-        output_path=output_path
+        output_path=output_path,
     )
-    
+
     return output_path
 
 
 def generate_personal_memo_creative() -> Path:
     """Generate a creative personal memo from Dr. Vasquez."""
     from src.waft.templates.personal_memo import generate_personal_memo
-    
+
     content = """
     <h2>Personal Notes: The Day Everything Changed</h2>
     
@@ -496,7 +492,7 @@ def generate_personal_memo_creative() -> Path:
     P.S. I think I need to talk to Sarah. All 17 of her.
     </p>
     """
-    
+
     output_path = OUTPUT_DIR / "06_personal_memo.pdf"
     generate_personal_memo(
         content=content,
@@ -504,16 +500,16 @@ def generate_personal_memo_creative() -> Path:
         from_name="Dr. Elena Vasquez",
         from_title="Chief Science Officer",
         date=datetime.now().strftime("%B %d, %Y"),
-        subject="The Day Everything Changed"
+        subject="The Day Everything Changed",
     )
-    
+
     return output_path
 
 
 def generate_technical_spec_creative() -> Path:
     """Generate a creative technical specification."""
     from src.waft.templates.tm_report import generate_tm_report
-    
+
     content = """
     <h2>Technical Specification: Quantum Consciousness Distribution System</h2>
     
@@ -607,7 +603,7 @@ def generate_technical_spec_creative() -> Path:
         <li>Quantum state selection interfaces</li>
     </ul>
     """
-    
+
     output_path = OUTPUT_DIR / "07_technical_spec.pdf"
     generate_tm_report(
         title="Technical Specification: Quantum Consciousness Distribution System",
@@ -619,16 +615,16 @@ def generate_technical_spec_creative() -> Path:
         date=datetime.now().strftime("%B %d, %Y"),
         author="Engineering Division",
         department="Research & Development",
-        summary="<p>Technical specification for the Quantum Consciousness Distribution System, enabling simultaneous existence across multiple quantum states.</p>"
+        summary="<p>Technical specification for the Quantum Consciousness Distribution System, enabling simultaneous existence across multiple quantum states.</p>",
     )
-    
+
     return output_path
 
 
 def generate_booklet_index_creative() -> Path:
     """Generate a creative index for the booklet."""
     from src.waft.templates.tm_report import generate_tm_report
-    
+
     content = """
     <h2>TELEPORT MASSIVE: The Quantum Incident</h2>
     <h3>A Creative Documentation Collection</h3>
@@ -736,7 +732,7 @@ def generate_booklet_index_creative() -> Path:
     <strong>Theme:</strong> The Quantum Incident
     </p>
     """.format(date=datetime.now().strftime("%B %d, %Y"))
-    
+
     output_path = OUTPUT_DIR / "00_booklet_index.pdf"
     generate_tm_report(
         title="TELEPORT MASSIVE: The Quantum Incident",
@@ -747,95 +743,100 @@ def generate_booklet_index_creative() -> Path:
         tagline="Making the Impossible, Inevitable™",
         date=datetime.now().strftime("%B %d, %Y"),
         department="Creative Documentation Office",
-        summary="<p>A creative collection documenting the Quantum Incident through multiple document types, templates, and imaginative worldbuilding.</p>"
+        summary="<p>A creative collection documenting the Quantum Incident through multiple document types, templates, and imaginative worldbuilding.</p>",
     )
-    
+
     return output_path
 
 
 def main():
     """Generate the complete creative Teleport Massive booklet."""
     console.print("\n" + "=" * 70)
-    console.print(Panel.fit(
-        "[bold magenta]🎨 TELEPORT MASSIVE CREATIVE BOOKLET GENERATOR 🎨[/bold magenta]",
-        border_style="magenta"
-    ))
+    console.print(
+        Panel.fit(
+            "[bold magenta]🎨 TELEPORT MASSIVE CREATIVE BOOKLET GENERATOR 🎨[/bold magenta]",
+            border_style="magenta",
+        )
+    )
     console.print("=" * 70)
     console.print(f"\n📁 Output directory: {OUTPUT_DIR}")
     console.print(f"📅 Generated: {datetime.now().strftime('%B %d, %Y at %I:%M %p')}\n")
-    
+
     generated_files = []
-    
+
     try:
         with Progress(
             SpinnerColumn(),
             TextColumn("[progress.description]{task.description}"),
             BarColumn(),
             TimeElapsedColumn(),
-            console=console
+            console=console,
         ) as progress:
-            
             # Generate index
             task1 = progress.add_task("Generating creative index...", total=1)
             index_path = generate_booklet_index_creative()
             generated_files.append(index_path)
             progress.update(task1, completed=1)
             console.print(f"  ✅ Generated: {index_path.name}")
-            
+
             # Generate evolution story
-            task2 = progress.add_task("Generating evolution story (ChatDistiller + StylingGenome)...", total=1)
+            task2 = progress.add_task(
+                "Generating evolution story (ChatDistiller + StylingGenome)...", total=1
+            )
             story_path = generate_evolution_story()
             generated_files.append(story_path)
             progress.update(task2, completed=1)
             console.print(f"  ✅ Generated: {story_path.name}")
-            
+
             # Generate cyberpunk log
             task3 = progress.add_task("Generating cyberpunk log...", total=1)
             cyberpunk_path = generate_cyberpunk_log()
             generated_files.append(cyberpunk_path)
             progress.update(task3, completed=1)
             console.print(f"  ✅ Generated: {cyberpunk_path.name}")
-            
+
             # Generate research journal
             task4 = progress.add_task("Generating research journal...", total=1)
             journal_path = generate_research_journal()
             generated_files.append(journal_path)
             progress.update(task4, completed=1)
             console.print(f"  ✅ Generated: {journal_path.name}")
-            
+
             # Generate worldbuild document
             task5 = progress.add_task("Generating worldbuild document...", total=1)
             worldbuild_path = generate_worldbuild_document()
             generated_files.append(worldbuild_path)
             progress.update(task5, completed=1)
             console.print(f"  ✅ Generated: {worldbuild_path.name}")
-            
+
             # Generate D&D scenario
             task6 = progress.add_task("Generating D&D scenario...", total=1)
             dnd_path = generate_dnd_scenario()
             generated_files.append(dnd_path)
             progress.update(task6, completed=1)
             console.print(f"  ✅ Generated: {dnd_path.name}")
-            
+
             # Generate personal memo
             task7 = progress.add_task("Generating personal memo...", total=1)
             memo_path = generate_personal_memo_creative()
             generated_files.append(memo_path)
             progress.update(task7, completed=1)
             console.print(f"  ✅ Generated: {memo_path.name}")
-            
+
             # Generate technical spec
             task8 = progress.add_task("Generating technical specification...", total=1)
             spec_path = generate_technical_spec_creative()
             generated_files.append(spec_path)
             progress.update(task8, completed=1)
             console.print(f"  ✅ Generated: {spec_path.name}")
-        
+
         console.print("\n" + "=" * 70)
-        console.print(Panel.fit(
-            "[bold green]✨ CREATIVE BOOKLET GENERATION COMPLETE! ✨[/bold green]",
-            border_style="green"
-        ))
+        console.print(
+            Panel.fit(
+                "[bold green]✨ CREATIVE BOOKLET GENERATION COMPLETE! ✨[/bold green]",
+                border_style="green",
+            )
+        )
         console.print("=" * 70)
         console.print(f"\n📚 Generated {len(generated_files)} creative PDF documents")
         console.print(f"📁 Location: {OUTPUT_DIR.absolute()}\n")
@@ -850,12 +851,13 @@ def main():
         console.print("   • Imaginative worldbuilding")
         console.print("   • Diverse styling approaches")
         console.print("\n🚀 Enjoy your creative Teleport Massive booklet!\n")
-        
+
         return 0
-        
+
     except Exception as e:
         console.print(f"\n[bold red]❌ Error generating booklet:[/bold red] {e}")
         import traceback
+
         traceback.print_exc()
         return 1
 

@@ -5,6 +5,7 @@ This demonstrates how to generate a formal WAFT letter PDF.
 """
 
 from pathlib import Path
+
 from src.waft.templates.latex.wrappers.formal_letter import generate_formal_letter
 
 # Example 1: Basic letter
@@ -42,7 +43,7 @@ The letter body can contain **bold text** and *italic text* using markdown synta
     signature_email="jane.smith@waft.dev",
     letterhead="WAFT Framework",
     enclosures="Project Proposal, Technical Specifications",
-    cc="team@waft.dev"
+    cc="team@waft.dev",
 )
 
 print(f"✅ Letter generated: {output_path}")

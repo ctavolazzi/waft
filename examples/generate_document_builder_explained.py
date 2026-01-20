@@ -6,8 +6,8 @@ This script demonstrates DocumentBuilder by using it to generate
 a PDF version of its own explanation document.
 """
 
-import sys
 import re
+import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -18,83 +18,78 @@ from src.waft.document_builder import DocumentBuilder
 def markdown_to_html(markdown_text: str) -> str:
     """Convert markdown to HTML for PDF generation."""
     html = markdown_text
-    
+
     # Headers
-    html = re.sub(r'^### (.*)$', r'<h3>\1</h3>', html, flags=re.MULTILINE)
-    html = re.sub(r'^## (.*)$', r'<h2>\1</h2>', html, flags=re.MULTILINE)
-    html = re.sub(r'^# (.*)$', r'<h1>\1</h1>', html, flags=re.MULTILINE)
-    
+    html = re.sub(r"^### (.*)$", r"<h3>\1</h3>", html, flags=re.MULTILINE)
+    html = re.sub(r"^## (.*)$", r"<h2>\1</h2>", html, flags=re.MULTILINE)
+    html = re.sub(r"^# (.*)$", r"<h1>\1</h1>", html, flags=re.MULTILINE)
+
     # Bold
-    html = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', html)
-    
+    html = re.sub(r"\*\*(.*?)\*\*", r"<strong>\1</strong>", html)
+
     # Code blocks
     html = re.sub(
-        r'```python\n(.*?)```',
+        r"```python\n(.*?)```",
         r'<pre><code class="language-python">\1</code></pre>',
         html,
-        flags=re.DOTALL
+        flags=re.DOTALL,
     )
-    html = re.sub(
-        r'```(.*?)\n(.*?)```',
-        r'<pre><code>\2</code></pre>',
-        html,
-        flags=re.DOTALL
-    )
-    
+    html = re.sub(r"```(.*?)\n(.*?)```", r"<pre><code>\2</code></pre>", html, flags=re.DOTALL)
+
     # Inline code
-    html = re.sub(r'`([^`]+)`', r'<code>\1</code>', html)
-    
+    html = re.sub(r"`([^`]+)`", r"<code>\1</code>", html)
+
     # Lists
-    html = re.sub(r'^(\d+)\. (.*)$', r'<li>\2</li>', html, flags=re.MULTILINE)
-    html = re.sub(r'^- (.*)$', r'<li>\1</li>', html, flags=re.MULTILINE)
-    
+    html = re.sub(r"^(\d+)\. (.*)$", r"<li>\2</li>", html, flags=re.MULTILINE)
+    html = re.sub(r"^- (.*)$", r"<li>\1</li>", html, flags=re.MULTILINE)
+
     # Wrap consecutive list items in <ul> or <ol>
-    lines = html.split('\n')
+    lines = html.split("\n")
     result = []
     in_list = False
     list_type = None
-    
+
     for line in lines:
-        if line.strip().startswith('<li>'):
+        if line.strip().startswith("<li>"):
             if not in_list:
                 # Determine if numbered or bulleted
-                if re.match(r'^\d+\.', line):
-                    result.append('<ol>')
-                    list_type = 'ol'
+                if re.match(r"^\d+\.", line):
+                    result.append("<ol>")
+                    list_type = "ol"
                 else:
-                    result.append('<ul>')
-                    list_type = 'ul'
+                    result.append("<ul>")
+                    list_type = "ul"
                 in_list = True
             result.append(line)
         else:
             if in_list:
-                result.append(f'</{list_type}>')
+                result.append(f"</{list_type}>")
                 in_list = False
                 list_type = None
             result.append(line)
-    
+
     if in_list:
-        result.append(f'</{list_type}>')
-    
-    html = '\n'.join(result)
-    
+        result.append(f"</{list_type}>")
+
+    html = "\n".join(result)
+
     # Paragraphs (lines that aren't already HTML tags)
-    lines = html.split('\n')
+    lines = html.split("\n")
     result = []
     for line in lines:
         stripped = line.strip()
         if not stripped:
-            result.append('<p></p>')
-        elif not (stripped.startswith('<') or stripped.startswith('</')):
-            result.append(f'<p>{line}</p>')
+            result.append("<p></p>")
+        elif not (stripped.startswith("<") or stripped.startswith("</")):
+            result.append(f"<p>{line}</p>")
         else:
             result.append(line)
-    
-    html = '\n'.join(result)
-    
+
+    html = "\n".join(result)
+
     # Horizontal rules
-    html = html.replace('---', '<hr/>')
-    
+    html = html.replace("---", "<hr/>")
+
     return html
 
 
@@ -104,29 +99,29 @@ def main():
     print("Generating DocumentBuilder Explained PDF")
     print("=" * 60)
     print()
-    
+
     # Read markdown file
     markdown_path = Path(__file__).parent.parent / "docs" / "DOCUMENT_BUILDER_EXPLAINED.md"
-    
+
     if not markdown_path.exists():
         print(f"❌ Error: {markdown_path} not found")
         sys.exit(1)
-    
+
     print(f"📖 Reading: {markdown_path}")
     markdown_content = markdown_path.read_text()
-    
+
     # Convert to HTML
     print("🔄 Converting markdown to HTML...")
     html_content = markdown_to_html(markdown_content)
-    
+
     # Generate PDF using DocumentBuilder (printer-friendly)
     output_path = Path("_work_efforts/showcase_documents/DocumentBuilder_Explained.pdf")
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     print("📄 Generating PDF with DocumentBuilder...")
-    print(f"   (This document is about DocumentBuilder, generated BY DocumentBuilder!)")
+    print("   (This document is about DocumentBuilder, generated BY DocumentBuilder!)")
     print()
-    
+
     DocumentBuilder.field_guide(
         title="DocumentBuilder: How It Works",
         content=html_content,
@@ -135,9 +130,9 @@ def main():
         number="TD-001",
         subtitle="Understanding the 'class that knows it has this ability'",
         classification="PUBLIC",
-        issued_by="WAFT Documentation Team"
+        issued_by="WAFT Documentation Team",
     ).save(output_path)
-    
+
     print("✅ Generated:", output_path)
     print()
     print("=" * 60)
@@ -146,18 +141,18 @@ def main():
     print()
     print(f"📂 Location: {output_path.absolute()}")
     print()
-    
+
     # Open the PDF
-    import subprocess
     import platform
-    
-    if platform.system() == 'Darwin':  # macOS
-        subprocess.run(['open', str(output_path)])
-    elif platform.system() == 'Windows':
-        subprocess.run(['start', str(output_path)], shell=True)
+    import subprocess
+
+    if platform.system() == "Darwin":  # macOS
+        subprocess.run(["open", str(output_path)])
+    elif platform.system() == "Windows":
+        subprocess.run(["start", str(output_path)], shell=True)
     else:  # Linux
-        subprocess.run(['xdg-open', str(output_path)])
-    
+        subprocess.run(["xdg-open", str(output_path)])
+
     print("📖 PDF opened in default viewer")
     print()
     print("💡 Note: This PDF was generated using DocumentBuilder itself!")

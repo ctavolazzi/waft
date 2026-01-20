@@ -6,20 +6,18 @@ Uses the Waft DocumentEngine to create professional PDFs with proper formatting.
 """
 
 import re
-from pathlib import Path
-from typing import List, Tuple
 import sys
+from pathlib import Path
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from waft.foundation import (
-    DocumentEngine,
     DocumentConfig,
+    DocumentEngine,
+    LogBlock,
     SectionHeader,
     TextBlock,
-    KeyValueBlock,
-    LogBlock,
 )
 
 
@@ -52,7 +50,7 @@ class MarkdownToPDFConverter:
             )
         self.config = config
 
-    def parse_markdown(self, content: str) -> List[Tuple[str, str]]:
+    def parse_markdown(self, content: str) -> list[tuple[str, str]]:
         """
         Parse markdown content into (type, content) blocks.
 
@@ -232,13 +230,13 @@ class MarkdownToPDFConverter:
         # Keep only printable ASCII (32-126) plus newlines/tabs
         result = []
         for char in text:
-            if ord(char) < 128 or char in ['\n', '\t']:
+            if ord(char) < 128 or char in ["\n", "\t"]:
                 result.append(char)
             else:
                 # Replace remaining Unicode with empty string or space
-                result.append('')
+                result.append("")
 
-        return ''.join(result)
+        return "".join(result)
 
     def clean_markdown_formatting(self, text: str) -> str:
         """

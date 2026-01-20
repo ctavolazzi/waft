@@ -7,9 +7,9 @@ In production, this should be replaced with proper OAuth/JWT.
 
 import secrets
 from pathlib import Path
-from typing import Optional
+
 from fastapi import HTTPException, Security, status
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 # Security scheme
 security = HTTPBearer()
@@ -71,6 +71,7 @@ def verify_token(credentials: HTTPAuthorizationCredentials, project_path: Path) 
         # Check if file is readable by others (group or world read)
         if mode & 0o044:  # If group or world has read permission
             import logging
+
             logger = logging.getLogger(__name__)
             logger.warning(f"Token file has insecure permissions: {oct(mode)} (expected 0o600)")
             # Don't fail, but log the security issue
@@ -83,7 +84,7 @@ def verify_token(credentials: HTTPAuthorizationCredentials, project_path: Path) 
 
 async def get_current_token(
     credentials: HTTPAuthorizationCredentials = Security(security),
-    project_path: Optional[Path] = None
+    project_path: Path | None = None,
 ) -> str:
     """
     Dependency to verify and return current token.
@@ -92,8 +93,7 @@ async def get_current_token(
     """
     if project_path is None:
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Project path not configured"
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Project path not configured"
         )
 
     if not verify_token(credentials, project_path):

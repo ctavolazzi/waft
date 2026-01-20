@@ -6,35 +6,75 @@ Usage:
     python scripts/generate_welcome_packet.py
 """
 
-from pathlib import Path
-from datetime import datetime
 import sys
+from datetime import datetime
+from pathlib import Path
 
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.waft.pdf import PDF
 from src.waft.evolution.golden_triangle import GoldenTriangle
+from src.waft.pdf import PDF
 
 
 def generate_html_version(markdown_content: str, output_path: Path) -> Path:
     """Generate HTML version of the welcome packet."""
     # #region agent log
-    with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
+    with open("/Users/ctavolazzi/Code/active/waft/.cursor/debug.log", "a") as f:
         import json
-        f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"D","location":"generate_welcome_packet.py:20","message":"generate_html_version entry","data":{"markdown_length":len(markdown_content) if markdown_content else 0,"markdown_preview":markdown_content[:200] if markdown_content else ""},"timestamp":int(__import__('time').time()*1000)}) + '\n')
+
+        f.write(
+            json.dumps(
+                {
+                    "sessionId": "debug-session",
+                    "runId": "run1",
+                    "hypothesisId": "D",
+                    "location": "generate_welcome_packet.py:20",
+                    "message": "generate_html_version entry",
+                    "data": {
+                        "markdown_length": len(markdown_content) if markdown_content else 0,
+                        "markdown_preview": markdown_content[:200] if markdown_content else "",
+                    },
+                    "timestamp": int(__import__("time").time() * 1000),
+                }
+            )
+            + "\n"
+        )
     # #endregion
-    
+
     converter = GoldenTriangle()
     html_content = converter.markdown_to_html(markdown_content)
-    
+
     # #region agent log
-    with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
+    with open("/Users/ctavolazzi/Code/active/waft/.cursor/debug.log", "a") as f:
         import json
         import re
-        f.write(json.dumps({"sessionId":"debug-session","runId":"run1","hypothesisId":"D","location":"generate_welcome_packet.py:25","message":"after markdown_to_html","data":{"html_length":len(html_content) if html_content else 0,"html_preview":html_content[:400] if html_content else "","has_h1":bool(re.search(r'<h1[^>]*>', html_content)) if html_content else False,"has_hr":bool(re.search(r'<hr[^>]*>', html_content)) if html_content else False},"timestamp":int(__import__('time').time()*1000)}) + '\n')
+
+        f.write(
+            json.dumps(
+                {
+                    "sessionId": "debug-session",
+                    "runId": "run1",
+                    "hypothesisId": "D",
+                    "location": "generate_welcome_packet.py:25",
+                    "message": "after markdown_to_html",
+                    "data": {
+                        "html_length": len(html_content) if html_content else 0,
+                        "html_preview": html_content[:400] if html_content else "",
+                        "has_h1": bool(re.search(r"<h1[^>]*>", html_content))
+                        if html_content
+                        else False,
+                        "has_hr": bool(re.search(r"<hr[^>]*>", html_content))
+                        if html_content
+                        else False,
+                    },
+                    "timestamp": int(__import__("time").time() * 1000),
+                }
+            )
+            + "\n"
+        )
     # #endregion
-    
+
     # Wrap in a complete HTML document with styling
     html_document = f"""<!DOCTYPE html>
 <html lang="en">
@@ -131,39 +171,86 @@ def generate_html_version(markdown_content: str, output_path: Path) -> Path:
         {html_content}
         <div class="footer">
             <p><strong>Version</strong>: 0.5.2<br>
-            <strong>Last Updated</strong>: {datetime.now().strftime('%Y-%m-%d')}<br>
+            <strong>Last Updated</strong>: {datetime.now().strftime("%Y-%m-%d")}<br>
             <strong>License</strong>: MIT<br>
             <strong>Repository</strong>: <a href="https://github.com/ctavolazzi/waft">https://github.com/ctavolazzi/waft</a></p>
         </div>
     </div>
 </body>
 </html>"""
-    
+
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(html_document, encoding='utf-8')
+    output_path.write_text(html_document, encoding="utf-8")
     return output_path
 
 
 def generate_pdf_version(markdown_content: str, output_path: Path) -> Path:
     """Generate PDF version of the welcome packet using WAFT's PDF class."""
     # #region agent log
-    with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
+    with open("/Users/ctavolazzi/Code/active/waft/.cursor/debug.log", "a") as f:
         import json
         import re
-        f.write(json.dumps({"sessionId":"debug-session","runId":"post-fix","hypothesisId":"E","location":"generate_welcome_packet.py:134","message":"generate_pdf_version entry","data":{"markdown_length":len(markdown_content) if markdown_content else 0,"content_is_markdown":bool(re.search(r'^#\s+', markdown_content, re.MULTILINE)) if markdown_content else False,"content_is_html":bool(re.search(r'<[^>]+>', markdown_content)) if markdown_content else False},"timestamp":int(__import__('time').time()*1000)}) + '\n')
+
+        f.write(
+            json.dumps(
+                {
+                    "sessionId": "debug-session",
+                    "runId": "post-fix",
+                    "hypothesisId": "E",
+                    "location": "generate_welcome_packet.py:134",
+                    "message": "generate_pdf_version entry",
+                    "data": {
+                        "markdown_length": len(markdown_content) if markdown_content else 0,
+                        "content_is_markdown": bool(
+                            re.search(r"^#\s+", markdown_content, re.MULTILINE)
+                        )
+                        if markdown_content
+                        else False,
+                        "content_is_html": bool(re.search(r"<[^>]+>", markdown_content))
+                        if markdown_content
+                        else False,
+                    },
+                    "timestamp": int(__import__("time").time() * 1000),
+                }
+            )
+            + "\n"
+        )
     # #endregion
-    
+
     # Convert markdown to HTML first (template expects HTML, not markdown)
     converter = GoldenTriangle()
     html_content = converter.markdown_to_html(markdown_content)
-    
+
     # #region agent log
-    with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
+    with open("/Users/ctavolazzi/Code/active/waft/.cursor/debug.log", "a") as f:
         import json
         import re
-        f.write(json.dumps({"sessionId":"debug-session","runId":"post-fix","hypothesisId":"E","location":"generate_welcome_packet.py:141","message":"after markdown_to_html for PDF","data":{"html_length":len(html_content) if html_content else 0,"html_preview":html_content[:300] if html_content else "","has_h1":bool(re.search(r'<h1[^>]*>', html_content)) if html_content else False,"has_hr":bool(re.search(r'<hr[^>]*>', html_content)) if html_content else False},"timestamp":int(__import__('time').time()*1000)}) + '\n')
+
+        f.write(
+            json.dumps(
+                {
+                    "sessionId": "debug-session",
+                    "runId": "post-fix",
+                    "hypothesisId": "E",
+                    "location": "generate_welcome_packet.py:141",
+                    "message": "after markdown_to_html for PDF",
+                    "data": {
+                        "html_length": len(html_content) if html_content else 0,
+                        "html_preview": html_content[:300] if html_content else "",
+                        "has_h1": bool(re.search(r"<h1[^>]*>", html_content))
+                        if html_content
+                        else False,
+                        "has_hr": bool(re.search(r"<hr[^>]*>", html_content))
+                        if html_content
+                        else False,
+                    },
+                    "timestamp": int(__import__("time").time() * 1000),
+                }
+            )
+            + "\n"
+        )
     # #endregion
-    
+
     # Use the field_guide template for a professional look
     pdf = PDF.from_template(
         template="field_guide",
@@ -173,17 +260,31 @@ def generate_pdf_version(markdown_content: str, output_path: Path) -> Path:
         number="WP-001",
         subtitle="Welcome to the Evolutionary Code Laboratory",
         output_path=output_path,
-        printer_friendly=False
+        printer_friendly=False,
     )
-    
+
     generated_path = pdf.save(str(output_path))
-    
+
     # #region agent log
-    with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
+    with open("/Users/ctavolazzi/Code/active/waft/.cursor/debug.log", "a") as f:
         import json
-        f.write(json.dumps({"sessionId":"debug-session","runId":"post-fix","hypothesisId":"E","location":"generate_welcome_packet.py:160","message":"pdf.save complete","data":{"generated_path":str(generated_path)},"timestamp":int(__import__('time').time()*1000)}) + '\n')
+
+        f.write(
+            json.dumps(
+                {
+                    "sessionId": "debug-session",
+                    "runId": "post-fix",
+                    "hypothesisId": "E",
+                    "location": "generate_welcome_packet.py:160",
+                    "message": "pdf.save complete",
+                    "data": {"generated_path": str(generated_path)},
+                    "timestamp": int(__import__("time").time() * 1000),
+                }
+            )
+            + "\n"
+        )
     # #endregion
-    
+
     return Path(generated_path)
 
 
@@ -193,23 +294,23 @@ def main():
     project_root = Path(__file__).parent.parent
     markdown_file = project_root / "WAFT_WELCOME_PACKET.md"
     output_dir = project_root / "docs" / "welcome_packet"
-    
+
     # Create output directory
     output_dir.mkdir(parents=True, exist_ok=True)
-    
+
     # Read markdown content
     if not markdown_file.exists():
         print(f"Error: {markdown_file} not found!")
         return 1
-    
-    markdown_content = markdown_file.read_text(encoding='utf-8')
-    
+
+    markdown_content = markdown_file.read_text(encoding="utf-8")
+
     # Generate HTML version
     print("Generating HTML version...")
     html_path = output_dir / "WAFT_WELCOME_PACKET.html"
     generate_html_version(markdown_content, html_path)
     print(f"✅ HTML version created: {html_path}")
-    
+
     # Generate PDF version
     print("Generating PDF version...")
     pdf_path = output_dir / "WAFT_WELCOME_PACKET.pdf"
@@ -225,18 +326,18 @@ def main():
                 markdown=markdown_content,
                 title="WAFT Welcome Packet",
                 style="premium",
-                output_path=pdf_path
+                output_path=pdf_path,
             )
             generated_path = pdf.save(str(pdf_path))
             print(f"✅ PDF version created (fallback): {generated_path}")
         except Exception as e2:
             print(f"❌ PDF generation failed: {e2}")
             return 1
-    
+
     print("\n✅ Welcome packet generation complete!")
     print(f"   HTML: {html_path}")
     print(f"   PDF: {pdf_path}")
-    
+
     return 0
 
 

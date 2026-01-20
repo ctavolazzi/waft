@@ -15,31 +15,35 @@ Design Philosophy:
 - Simple queue for story processing
 """
 
-from pathlib import Path
-from typing import Dict, Any, Optional, List, Callable, Set
-from datetime import datetime
-from collections import deque
 import json
-import threading
-from http.server import HTTPServer, BaseHTTPRequestHandler
-from urllib.parse import urlparse, parse_qs
 import json as json_lib
+import threading
+from collections import deque
+from collections.abc import Callable
+from datetime import datetime
+from http.server import BaseHTTPRequestHandler, HTTPServer
+from pathlib import Path
+from typing import Any
+from urllib.parse import parse_qs, urlparse
 
 # Minimal dependencies - only what's needed
 try:
     from .science.oracle import TheOracle
+
     ORACLE_AVAILABLE = True
 except (ImportError, RuntimeError):
     ORACLE_AVAILABLE = False
 
 try:
-    from .tavern_keeper import TavernKeeper, Narrator
+    from .tavern_keeper import Narrator, TavernKeeper
+
     TAVERN_AVAILABLE = True
 except ImportError:
     TAVERN_AVAILABLE = False
 
 try:
     from ..evolution.storyteller import Storyteller
+
     STORYTELLER_AVAILABLE = True
 except ImportError:
     STORYTELLER_AVAILABLE = False
@@ -47,7 +51,8 @@ except ImportError:
 
 class StoryEvent:
     """Simple event for story-related actions."""
-    def __init__(self, event_type: str, story_id: str, data: Dict[str, Any]):
+
+    def __init__(self, event_type: str, story_id: str, data: dict[str, Any]):
         self.event_type = event_type  # 'story_told', 'story_updated', 'story_deleted'
         self.story_id = story_id
         self.data = data
@@ -56,20 +61,21 @@ class StoryEvent:
 
 class StoryObserver:
     """Observer pattern for story events - simple callback system."""
+
     def __init__(self):
-        self._listeners: Dict[str, Set[Callable]] = {}
-    
+        self._listeners: dict[str, set[Callable]] = {}
+
     def subscribe(self, event_type: str, callback: Callable) -> None:
         """Subscribe to story events."""
         if event_type not in self._listeners:
             self._listeners[event_type] = set()
         self._listeners[event_type].add(callback)
-    
+
     def unsubscribe(self, event_type: str, callback: Callable) -> None:
         """Unsubscribe from story events."""
         if event_type in self._listeners:
             self._listeners[event_type].discard(callback)
-    
+
     def notify(self, event: StoryEvent) -> None:
         """Notify all listeners of an event."""
         listeners = self._listeners.get(event.event_type, set())
@@ -82,25 +88,26 @@ class StoryObserver:
 
 class StoryQueue:
     """Simple FIFO queue for story processing."""
+
     def __init__(self):
         self._queue = deque()
         self._lock = threading.Lock()
-    
-    def enqueue(self, story_data: Dict[str, Any]) -> None:
+
+    def enqueue(self, story_data: dict[str, Any]) -> None:
         """Add story to processing queue."""
         with self._lock:
             self._queue.append(story_data)
-    
-    def dequeue(self) -> Optional[Dict[str, Any]]:
+
+    def dequeue(self) -> dict[str, Any] | None:
         """Get next story from queue."""
         with self._lock:
             return self._queue.popleft() if self._queue else None
-    
+
     def is_empty(self) -> bool:
         """Check if queue is empty."""
         with self._lock:
             return len(self._queue) == 0
-    
+
     def size(self) -> int:
         """Get queue size."""
         with self._lock:
@@ -109,13 +116,14 @@ class StoryQueue:
 
 class StoryCache:
     """Simple in-memory cache with LRU eviction for stories."""
+
     def __init__(self, max_size: int = 50):
-        self._cache: Dict[str, Dict[str, Any]] = {}
+        self._cache: dict[str, dict[str, Any]] = {}
         self._access_order: deque = deque(maxlen=max_size)
         self._max_size = max_size
         self._lock = threading.Lock()
-    
-    def get(self, story_id: str) -> Optional[Dict[str, Any]]:
+
+    def get(self, story_id: str) -> dict[str, Any] | None:
         """Get story from cache."""
         with self._lock:
             if story_id in self._cache:
@@ -125,8 +133,8 @@ class StoryCache:
                 self._access_order.append(story_id)
                 return self._cache[story_id]
             return None
-    
-    def put(self, story_id: str, story: Dict[str, Any]) -> None:
+
+    def put(self, story_id: str, story: dict[str, Any]) -> None:
         """Add story to cache."""
         with self._lock:
             # Evict oldest if at capacity
@@ -134,12 +142,12 @@ class StoryCache:
                 if self._access_order:
                     oldest = self._access_order.popleft()
                     del self._cache[oldest]
-            
+
             self._cache[story_id] = story
             if story_id in self._access_order:
                 self._access_order.remove(story_id)
             self._access_order.append(story_id)
-    
+
     def clear(self) -> None:
         """Clear cache."""
         with self._lock:
@@ -149,16 +157,16 @@ class StoryCache:
 
 class CampfireHandler(BaseHTTPRequestHandler):
     """HTTP handler for TheCampfire - serves stories and UI."""
-    
+
     def __init__(self, campfire_instance, *args, **kwargs):
         self.campfire = campfire_instance
         super().__init__(*args, **kwargs)
-    
+
     def do_GET(self):
         """Handle GET requests."""
         parsed = urlparse(self.path)
         path = parsed.path
-        
+
         if path == "/" or path == "/index.html":
             self._serve_html()
         elif path == "/campfire.css":
@@ -184,32 +192,32 @@ class CampfireHandler(BaseHTTPRequestHandler):
             self._serve_pdf(path)
         else:
             self._send_404()
-    
+
     def do_POST(self):
         """Handle POST requests."""
         parsed = urlparse(self.path)
         path = parsed.path
-        
+
         if path == "/api/stories":
             self._create_story()
         else:
             self._send_404()
-    
+
     def _serve_html(self):
         """Serve the campfire HTML page."""
         html = self.campfire._get_html()
         self._send_response(200, "text/html", html.encode())
-    
+
     def _serve_css(self):
         """Serve CSS."""
         css = self.campfire._get_css()
         self._send_response(200, "text/css", css.encode())
-    
+
     def _serve_js(self):
         """Serve JavaScript."""
         js = self.campfire._get_js()
         self._send_response(200, "application/javascript", js.encode())
-    
+
     def _serve_stories_api(self):
         """Serve stories list API."""
         limit = None
@@ -220,11 +228,11 @@ class CampfireHandler(BaseHTTPRequestHandler):
                 limit = int(query["limit"][0])
             except (ValueError, IndexError):
                 pass
-        
+
         stories = self.campfire.get_stories(limit=limit)
         response = {"stories": stories, "count": len(stories)}
         self._send_json(response)
-    
+
     def _serve_story_api(self, story_id: str):
         """Serve single story API."""
         story = self.campfire.get_story(story_id)
@@ -232,7 +240,7 @@ class CampfireHandler(BaseHTTPRequestHandler):
             self._send_json(story)
         else:
             self._send_404()
-    
+
     def _serve_story_content(self, story_id: str):
         """Serve story content."""
         content = self.campfire.get_story_content(story_id)
@@ -240,14 +248,14 @@ class CampfireHandler(BaseHTTPRequestHandler):
             self._send_json({"content": content})
         else:
             self._send_404()
-    
+
     def _create_story(self):
         """Create a new story."""
         try:
             content_length = int(self.headers.get("Content-Length", 0))
             body = self.rfile.read(content_length)
             data = json_lib.loads(body.decode())
-            
+
             result = self.campfire.gather_around_the_campfire(
                 story_input=data.get("story", ""),
                 title=data.get("title"),
@@ -255,33 +263,33 @@ class CampfireHandler(BaseHTTPRequestHandler):
                 narrative_style=data.get("narrative_style", "medium"),
                 structure=data.get("structure", "linear"),
                 include_oracle=data.get("include_oracle", True),
-                save_story=True
+                save_story=True,
             )
             self._send_json(result)
         except Exception as e:
             self._send_json({"error": str(e)}, status=500)
-    
+
     def _serve_profile_api(self):
         """Serve user profile API."""
         profile = self.campfire.get_user_profile()
         self._send_json(profile)
-    
+
     def _serve_user_data_api(self):
         """Serve user data API."""
         user_data = self.campfire.get_user_data()
         self._send_json(user_data)
-    
+
     def _serve_app_data_api(self):
         """Serve app data API."""
         app_data = self.campfire.get_app_data()
         self._send_json(app_data)
-    
+
     def _serve_pdf(self, pdf_path: str):
         """Serve PDF file."""
         # Extract story ID from path: /stories/story_20260112_120000.pdf
         story_id = pdf_path.split("/")[-1].replace(".pdf", "")
         story = self.campfire.get_story(story_id)
-        
+
         if story and "pdf_path" in story:
             pdf_file = self.campfire.project_path / story["pdf_path"]
             if pdf_file.exists():
@@ -290,15 +298,15 @@ class CampfireHandler(BaseHTTPRequestHandler):
                         pdf_data = f.read()
                     self._send_response(200, "application/pdf", pdf_data)
                     return
-                except IOError:
+                except OSError:
                     pass
-        
+
         # Fallback: try direct path
         # Use storage path resolver for PDF output
         from ..utils import resolve_output_path
+
         pdf_file = resolve_output_path(
-            Path("_pyrite") / "campfire" / f"{story_id}.pdf",
-            self.campfire.project_path
+            Path("_pyrite") / "campfire" / f"{story_id}.pdf", self.campfire.project_path
         )
         if pdf_file.exists():
             try:
@@ -306,16 +314,16 @@ class CampfireHandler(BaseHTTPRequestHandler):
                     pdf_data = f.read()
                 self._send_response(200, "application/pdf", pdf_data)
                 return
-            except IOError:
+            except OSError:
                 pass
-        
+
         self._send_404()
-    
-    def _send_json(self, data: Dict[str, Any], status: int = 200):
+
+    def _send_json(self, data: dict[str, Any], status: int = 200):
         """Send JSON response."""
         json_str = json_lib.dumps(data, indent=2)
         self._send_response(status, "application/json", json_str.encode())
-    
+
     def _send_response(self, status: int, content_type: str, data: bytes):
         """Send HTTP response."""
         self.send_response(status)
@@ -323,11 +331,11 @@ class CampfireHandler(BaseHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Origin", "*")
         self.end_headers()
         self.wfile.write(data)
-    
+
     def _send_404(self):
         """Send 404 response."""
         self._send_response(404, "text/plain", b"Not Found")
-    
+
     def log_message(self, format, *args):
         """Suppress default logging."""
         pass
@@ -336,23 +344,18 @@ class CampfireHandler(BaseHTTPRequestHandler):
 class TheCampfire:
     """
     TheCampfire - The Essence of Sitting Around a Campfire to Tell Stories
-    
+
     A self-contained full-stack application that creates a warm, communal
     space for storytelling. Embodies the magic of gathering around a fire
     to share stories.
-    
+
     True Name: "Essence of Sitting Around a Campfire to Tell Stories"
     """
-    
-    def __init__(
-        self,
-        project_path: Path,
-        port: int = 5000,
-        host: str = "localhost"
-    ):
+
+    def __init__(self, project_path: Path, port: int = 5000, host: str = "localhost"):
         """
         Initialize TheCampfire.
-        
+
         Args:
             project_path: Path to project root
             port: HTTP server port (default: 5000 per spec)
@@ -363,17 +366,18 @@ class TheCampfire:
         self.host = host
         # Use storage path resolver for augmented content (routes to external drive if available)
         from ..utils import get_storage_path
+
         stories_rel = Path("_pyrite") / "campfire"
         self.stories_dir = get_storage_path(stories_rel, self.project_path)
         self.stories_dir.mkdir(parents=True, exist_ok=True)
         self.stories_index = self.stories_dir / "stories_index.json"
-        
+
         # Core data structures
-        self._stories: List[Dict[str, Any]] = []
+        self._stories: list[dict[str, Any]] = []
         self._cache = StoryCache(max_size=50)
         self._queue = StoryQueue()
         self._observer = StoryObserver()
-        
+
         # Initialize components (graceful degradation)
         self.oracle = None
         self.oracle_available = False
@@ -383,7 +387,7 @@ class TheCampfire:
                 self.oracle_available = True
             except (RuntimeError, ImportError):
                 pass
-        
+
         self.tavern = None
         self.narrator = None
         if TAVERN_AVAILABLE:
@@ -392,61 +396,61 @@ class TheCampfire:
                 self.narrator = Narrator(self.tavern)
             except Exception:
                 pass
-        
+
         # Load stories
         self._load_stories()
-        
+
         # Start story processing thread
         self._processing = False
         self._process_thread = None
-    
+
     def _load_stories(self) -> None:
         """Load stories from disk."""
         if self.stories_index.exists():
             try:
-                with open(self.stories_index, 'r') as f:
+                with open(self.stories_index) as f:
                     self._stories = json.load(f)
                     # Populate cache
                     for story in self._stories[-50:]:  # Cache most recent 50
                         self._cache.put(story.get("id"), story)
-            except (json.JSONDecodeError, IOError):
+            except (OSError, json.JSONDecodeError):
                 self._stories = []
         else:
             self._stories = []
-    
+
     def _save_stories(self) -> None:
         """Save stories to disk."""
         try:
-            with open(self.stories_index, 'w') as f:
+            with open(self.stories_index, "w") as f:
                 json.dump(self._stories, f, indent=2)
-        except IOError:
+        except OSError:
             pass  # Graceful degradation
-    
+
     def gather_around_the_campfire(
         self,
         story_input: str,
-        title: Optional[str] = None,
+        title: str | None = None,
         style: str = "premium",
         narrative_style: str = "medium",
         structure: str = "linear",
         include_oracle: bool = True,
-        save_story: bool = True
-    ) -> Dict[str, Any]:
+        save_story: bool = True,
+    ) -> dict[str, Any]:
         """
         Gather around the campfire to tell a story.
-        
+
         The heart of TheCampfire - where stories come to life.
         """
         timestamp = datetime.now()
         story_id = f"story_{timestamp.strftime('%Y%m%d_%H%M%S')}"
-        
+
         # Generate title
         if not title:
-            first_line = story_input.split('\n')[0].strip()
+            first_line = story_input.split("\n")[0].strip()
             title = first_line[:50] if len(first_line) > 50 else first_line
             if not title:
                 title = "Untitled Story"
-        
+
         # Queue story for processing
         story_data = {
             "id": story_id,
@@ -457,20 +461,20 @@ class TheCampfire:
             "structure": structure,
             "include_oracle": include_oracle,
             "save_story": save_story,
-            "timestamp": timestamp
+            "timestamp": timestamp,
         }
-        
+
         self._queue.enqueue(story_data)
-        
+
         # Process immediately (simple synchronous for now)
         return self._process_story(story_data)
-    
-    def _process_story(self, story_data: Dict[str, Any]) -> Dict[str, Any]:
+
+    def _process_story(self, story_data: dict[str, Any]) -> dict[str, Any]:
         """Process a story - generate PDF, get insights, save."""
         story_id = story_data["id"]
         story_input = story_data["story_input"]
         title = story_data["title"]
-        
+
         # Get Oracle insights
         oracle_insights = None
         if story_data["include_oracle"] and self.oracle_available:
@@ -486,28 +490,25 @@ class TheCampfire:
                         "recommendation": guidance.get("recommendation", ""),
                         "findings": self.oracle.get_insights(limit=3),
                     }
-                    self.oracle.log_insight(
-                        f"Story told around the campfire: {title}",
-                        impact=0.4
-                    )
+                    self.oracle.log_insight(f"Story told around the campfire: {title}", impact=0.4)
             except Exception:
                 pass
-        
+
         # Enhance story
         enhanced_story = story_input
         if oracle_insights:
-            insights_section = f"\n\n---\n\n## Oracle Insights\n\n"
+            insights_section = "\n\n---\n\n## Oracle Insights\n\n"
             insights_section += f"**Epistemic Phase:** {oracle_insights['phase']}\n\n"
             insights_section += f"**Knowledge Coverage:** {oracle_insights['coverage']:.0%}\n\n"
-            if oracle_insights.get('recommendation'):
+            if oracle_insights.get("recommendation"):
                 insights_section += f"**Recommendation:** {oracle_insights['recommendation']}\n\n"
-            if oracle_insights.get('findings'):
+            if oracle_insights.get("findings"):
                 insights_section += "**Recent Findings:**\n\n"
-                for finding in oracle_insights['findings']:
+                for finding in oracle_insights["findings"]:
                     finding_text = str(finding) if isinstance(finding, dict) else finding
                     insights_section += f"- {finding_text}\n\n"
             enhanced_story = story_input + insights_section
-        
+
         # Generate PDF if Storyteller available
         pdf_path = None
         if STORYTELLER_AVAILABLE:
@@ -517,23 +518,19 @@ class TheCampfire:
                     narrative_style=story_data["narrative_style"],
                     story_structure=story_data["structure"],
                     pdf_style=story_data["style"],
-                    narrator=self.narrator
+                    narrator=self.narrator,
                 )
                 # Use storage path resolver for PDF output
                 from ..utils import resolve_output_path
+
                 pdf_file = resolve_output_path(
-                    Path("_pyrite") / "campfire" / f"{story_id}.pdf",
-                    self.project_path
+                    Path("_pyrite") / "campfire" / f"{story_id}.pdf", self.project_path
                 )
-                pdf_path = storyteller.tell_story(
-                    output_path=pdf_file,
-                    title=title,
-                    open_pdf=False
-                )
+                pdf_path = storyteller.tell_story(output_path=pdf_file, title=title, open_pdf=False)
                 pdf_path = str(pdf_path.relative_to(self.project_path))
             except Exception:
                 pass
-        
+
         # Create story metadata
         story_metadata = {
             "id": story_id,
@@ -547,28 +544,28 @@ class TheCampfire:
             "preview": story_input[:200] + "..." if len(story_input) > 200 else story_input,
             "word_count": len(story_input.split()),
         }
-        
+
         # Save story
         if story_data["save_story"]:
             content_path = self.stories_dir / f"{story_id}.md"
             try:
-                with open(content_path, 'w') as f:
+                with open(content_path, "w") as f:
                     f.write(f"# {title}\n\n")
                     f.write(f"**Created:** {story_data['timestamp'].isoformat()}\n\n")
                     f.write("---\n\n")
                     f.write(enhanced_story)
                 story_metadata["content_path"] = str(content_path.relative_to(self.project_path))
-            except IOError:
+            except OSError:
                 pass
-            
+
             self._stories.append(story_metadata)
             self._cache.put(story_id, story_metadata)
             self._save_stories()
-        
+
         # Notify observers
         event = StoryEvent("story_told", story_id, story_metadata)
         self._observer.notify(event)
-        
+
         # Log to TavernKeeper
         if self.narrator:
             try:
@@ -576,37 +573,33 @@ class TheCampfire:
                     f"Story told around the campfire: {title}",
                     context={"story_id": story_id, "pdf_path": pdf_path},
                     mood="delighted",
-                    source="ai"
+                    source="ai",
                 )
             except Exception:
                 pass
-        
+
         return {
             "success": True,
             "story": story_metadata,
             "pdf_path": pdf_path,
-            "oracle_insights": oracle_insights
+            "oracle_insights": oracle_insights,
         }
-    
-    def get_stories(self, limit: Optional[int] = None) -> List[Dict[str, Any]]:
+
+    def get_stories(self, limit: int | None = None) -> list[dict[str, Any]]:
         """Get all stories, sorted by creation date (newest first)."""
         self._load_stories()  # Refresh from disk
-        stories = sorted(
-            self._stories,
-            key=lambda x: x.get("created_at", ""),
-            reverse=True
-        )
+        stories = sorted(self._stories, key=lambda x: x.get("created_at", ""), reverse=True)
         if limit:
             stories = stories[:limit]
         return stories
-    
-    def get_story(self, story_id: str) -> Optional[Dict[str, Any]]:
+
+    def get_story(self, story_id: str) -> dict[str, Any] | None:
         """Get a specific story (checks cache first)."""
         # Check cache
         story = self._cache.get(story_id)
         if story:
             return story
-        
+
         # Check disk
         self._load_stories()
         for s in self._stories:
@@ -614,35 +607,35 @@ class TheCampfire:
                 self._cache.put(story_id, s)
                 return s
         return None
-    
-    def get_story_content(self, story_id: str) -> Optional[str]:
+
+    def get_story_content(self, story_id: str) -> str | None:
         """Get full story content."""
         story = self.get_story(story_id)
         if not story:
             return None
-        
+
         content_path = story.get("content_path")
         if not content_path:
             return None
-        
+
         full_path = self.project_path / content_path
         if not full_path.exists():
             return None
-        
+
         try:
-            with open(full_path, 'r') as f:
+            with open(full_path) as f:
                 return f.read()
-        except IOError:
+        except OSError:
             return None
-    
-    def get_user_profile(self) -> Dict[str, Any]:
+
+    def get_user_profile(self) -> dict[str, Any]:
         """Get user profile data."""
         self._load_stories()
-        
+
         # For now, use all stories as "user" stories (single-user mode)
         # In multi-user mode, would filter by user_id
         user_stories = self._stories
-        
+
         if not user_stories:
             return {
                 "user_id": "default_user",
@@ -650,16 +643,16 @@ class TheCampfire:
                 "story_count": 0,
                 "total_word_count": 0,
                 "first_story_date": None,
-                "preferred_style": None
+                "preferred_style": None,
             }
-        
+
         # Calculate profile from stories
         total_words = sum(s.get("word_count", 0) for s in user_stories)
         styles = [s.get("style", "premium") for s in user_stories]
         preferred_style = max(set(styles), key=styles.count) if styles else "premium"
-        
+
         first_story = min(user_stories, key=lambda x: x.get("created_at", ""))
-        
+
         return {
             "user_id": "default_user",
             "name": "Storyteller",
@@ -667,23 +660,19 @@ class TheCampfire:
             "total_word_count": total_words,
             "first_story_date": first_story.get("created_at"),
             "preferred_style": preferred_style,
-            "average_word_count": total_words // len(user_stories) if user_stories else 0
+            "average_word_count": total_words // len(user_stories) if user_stories else 0,
         }
-    
-    def get_user_data(self) -> Dict[str, Any]:
+
+    def get_user_data(self) -> dict[str, Any]:
         """Get user's story data."""
         self._load_stories()
-        
+
         # All stories are user stories in single-user mode
-        user_stories = sorted(
-            self._stories,
-            key=lambda x: x.get("created_at", ""),
-            reverse=True
-        )
-        
+        user_stories = sorted(self._stories, key=lambda x: x.get("created_at", ""), reverse=True)
+
         total_words = sum(s.get("word_count", 0) for s in user_stories)
         styles_used = list(set(s.get("style", "premium") for s in user_stories))
-        
+
         return {
             "stories": user_stories,
             "story_count": len(user_stories),
@@ -694,32 +683,30 @@ class TheCampfire:
                 {
                     "date": s.get("created_at", ""),
                     "title": s.get("title", ""),
-                    "word_count": s.get("word_count", 0)
+                    "word_count": s.get("word_count", 0),
                 }
                 for s in user_stories
-            ]
+            ],
         }
-    
-    def get_app_data(self) -> Dict[str, Any]:
+
+    def get_app_data(self) -> dict[str, Any]:
         """Get app-wide data and statistics."""
         self._load_stories()
-        
+
         all_stories = self._stories
         total_words = sum(s.get("word_count", 0) for s in all_stories)
-        
+
         # Recent stories (last 10)
-        recent_stories = sorted(
-            all_stories,
-            key=lambda x: x.get("created_at", ""),
-            reverse=True
-        )[:10]
-        
+        recent_stories = sorted(all_stories, key=lambda x: x.get("created_at", ""), reverse=True)[
+            :10
+        ]
+
         # Most active styles
         styles = [s.get("style", "premium") for s in all_stories]
         style_counts = {}
         for style in styles:
             style_counts[style] = style_counts.get(style, 0) + 1
-        
+
         return {
             "total_stories": len(all_stories),
             "total_words": total_words,
@@ -727,35 +714,41 @@ class TheCampfire:
             "recent_stories": recent_stories,
             "popular_styles": dict(sorted(style_counts.items(), key=lambda x: x[1], reverse=True)),
             "average_story_length": total_words // len(all_stories) if all_stories else 0,
-            "stories_today": len([s for s in all_stories if s.get("created_at", "").startswith(datetime.now().strftime("%Y-%m-%d"))])
+            "stories_today": len(
+                [
+                    s
+                    for s in all_stories
+                    if s.get("created_at", "").startswith(datetime.now().strftime("%Y-%m-%d"))
+                ]
+            ),
         }
-    
+
     def subscribe(self, event_type: str, callback: Callable) -> None:
         """Subscribe to story events."""
         self._observer.subscribe(event_type, callback)
-    
+
     def serve(self) -> None:
         """Start the campfire server - gather around!"""
         # Create handler class that has access to campfire instance
         campfire_instance = self
-        
+
         class Handler(CampfireHandler):
             def __init__(self, *args, **kwargs):
                 super().__init__(campfire_instance, *args, **kwargs)
-        
+
         server = HTTPServer((self.host, self.port), Handler)
-        
-        print(f"\n🔥 TheCampfire is burning")
+
+        print("\n🔥 TheCampfire is burning")
         print(f"📍 Gather around: http://{self.host}:{self.port}")
-        print(f"📖 Stories await...")
-        print(f"\nPress Ctrl+C to extinguish the fire\n")
-        
+        print("📖 Stories await...")
+        print("\nPress Ctrl+C to extinguish the fire\n")
+
         try:
             server.serve_forever()
         except KeyboardInterrupt:
             print("\n\n🔥 TheCampfire is extinguished. Until next time...\n")
             server.shutdown()
-    
+
     def _get_html(self) -> str:
         """Generate the campfire HTML page."""
         return """<!DOCTYPE html>
@@ -843,7 +836,7 @@ class TheCampfire:
     <script src="/campfire.js"></script>
 </body>
 </html>"""
-    
+
     def _get_css(self) -> str:
         """Generate campfire-themed CSS."""
         return """* {
@@ -1172,7 +1165,7 @@ body {
     color: #ff8c00;
     margin-bottom: 20px;
 }"""
-    
+
     def _get_js(self) -> str:
         """Generate campfire JavaScript."""
         return """// TheCampfire - Vanilla JavaScript

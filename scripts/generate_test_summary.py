@@ -6,8 +6,8 @@ Uses WAFT's PDFGenerator to create a test summary document.
 """
 
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 # Add project root to path
 project_root = Path(__file__).parent.parent
@@ -16,12 +16,13 @@ if str(project_root) not in sys.path:
 
 from src.waft.evolution.pdf_generator import generate_pdf
 
+
 def generate_test_summary():
     """Generate test summary using WAFT tools."""
-    
+
     content = f"""# WAFT Self-Testing Summary
 
-**Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}  
+**Generated**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}  
 **Purpose**: Test WAFT using WAFT's own tools
 
 ---
@@ -116,21 +117,22 @@ This demonstrates "using WAFT to test WAFT" - a complete self-testing cycle!
 
     output_dir = project_root / "_work_efforts" / "one_pagers"
     output_dir.mkdir(parents=True, exist_ok=True)
-    
+
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     pdf_path = output_dir / f"WAFT_Self_Testing_Summary_{timestamp}.pdf"
-    
+
     print("📊 Generating test summary using WAFT's PDFGenerator...")
     pdf_path = generate_pdf(
         content=content,
         title="WAFT Self-Testing Summary",
         output_path=pdf_path,
         style="clinical_standard",
-        open_pdf=False
+        open_pdf=False,
     )
-    
+
     print(f"✅ Test summary generated: {pdf_path}")
     print("\nThis demonstrates using WAFT to test WAFT! 🎯")
+
 
 if __name__ == "__main__":
     generate_test_summary()

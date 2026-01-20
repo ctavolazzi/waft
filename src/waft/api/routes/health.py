@@ -2,8 +2,9 @@
 Health check endpoint for WAFT API.
 """
 
-from fastapi import APIRouter
 from datetime import datetime
+
+from fastapi import APIRouter
 
 router = APIRouter()
 
@@ -16,8 +17,4 @@ async def health_check():
     Returns:
         Health status with timestamp
     """
-    return {
-        "status": "healthy",
-        "timestamp": datetime.now().isoformat(),
-        "service": "WAFT API"
-    }
+    return {"status": "healthy", "timestamp": datetime.now().isoformat(), "service": "WAFT API"}
