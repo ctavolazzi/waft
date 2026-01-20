@@ -28,9 +28,7 @@ class ReportGenerator:
         self.reports_dir = project_path / "_sentinel" / "reports"
         self.reports_dir.mkdir(parents=True, exist_ok=True)
 
-    def generate_hourly_report(
-        self, hour: int | None = None, date: datetime | None = None
-    ) -> Path:
+    def generate_hourly_report(self, hour: int | None = None, date: datetime | None = None) -> Path:
         """
         Generate hourly report for a specific hour.
 

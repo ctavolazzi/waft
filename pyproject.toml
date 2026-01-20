@@ -79,6 +79,7 @@ exclude = [
     "_temp",
     "demo_output",
     ".empirica/cache",
+    "node_modules",
     "scripts/generate_tavern_game_with_skills.py",  # TODO: Fix syntax errors in this file
 ]
 

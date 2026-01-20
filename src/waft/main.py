@@ -284,9 +284,7 @@ def new(
 
 @app.command()
 def verify(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """
     Verify the Waft project structure.
@@ -383,9 +381,7 @@ def verify(
 
 @app.command()
 def sync(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """
     Sync project dependencies using uv sync.
@@ -416,9 +412,7 @@ def sync(
 @app.command()
 def add(
     package: str = typer.Argument(..., help="Package name (e.g., 'pytest>=7.0.0')"),
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     dev: bool = typer.Option(False, "--dev", "-d", help="Add as development dependency"),
 ):
     """
@@ -464,9 +458,7 @@ def add(
 
 @app.command()
 def init(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """
     Initialize Waft structure in an existing project.
@@ -564,9 +556,7 @@ def init(
 
 @app.command()
 def info(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """
     Show information about the Waft project.
@@ -668,9 +658,7 @@ def info(
 
 @app.command()
 def serve(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     port: int = typer.Option(8000, "--port", help="Port to serve on"),
     host: str = typer.Option("localhost", "--host", help="Host to bind to"),
     dev: bool = typer.Option(False, "--dev", help="Enable development mode with live reloading"),
@@ -749,9 +737,7 @@ def serve(
 
 @app.command()
 def evolve(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     agent: str | None = typer.Option(None, "--agent", "-a", help="Agent identifier to evolve"),
     generations: int = typer.Option(1, "--generations", "-g", help="Number of generations to run"),
 ):
@@ -813,9 +799,7 @@ app.add_typer(project_app, name="project")
 def session_create(
     ai_id: str = typer.Option("waft", "--ai-id", help="AI agent identifier"),
     session_type: str = typer.Option("development", "--type", help="Session type"),
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Create a new Empirica session."""
     project_path = resolve_project_path(path)
@@ -838,9 +822,7 @@ def session_create(
 
 @session_app.command("bootstrap")
 def session_bootstrap(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Load project context and display epistemic dashboard."""
     project_path = resolve_project_path(path)
@@ -863,9 +845,7 @@ def session_bootstrap(
 @session_app.command("status")
 def session_status(
     session_id: str | None = typer.Option(None, "--session-id", help="Session ID"),
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Show current session state."""
     project_path = resolve_project_path(path)
@@ -908,9 +888,7 @@ def session_status(
 def finding_log(
     finding: str = typer.Argument(..., help="Finding description"),
     impact: float = typer.Option(0.5, "--impact", help="Impact score (0.0-1.0)"),
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Log a finding with impact score."""
     project_path = resolve_project_path(path)
@@ -961,9 +939,7 @@ def finding_log(
 @unknown_app.command("log")
 def unknown_log(
     unknown: str = typer.Argument(..., help="Unknown description"),
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Log a knowledge gap."""
     project_path = resolve_project_path(path)
@@ -986,9 +962,7 @@ def unknown_log(
 @app.command()
 def check(
     operation: str | None = typer.Option(None, "--operation", help="Operation JSON description"),
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Run safety gate and display result."""
     project_path = resolve_project_path(path)
@@ -1036,9 +1010,7 @@ def check(
 
 @app.command(name="dashboard")
 def dashboard_cmd(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Show the Red October Dashboard - TavernKeeper TUI."""
     project_path = resolve_project_path(path)
@@ -1058,9 +1030,7 @@ def dashboard_cmd(
 
 @app.command(name="hud")
 def hud_cmd(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     integrity: float = typer.Option(100.0, "--integrity", help="Integrity value (0.0-100.0)"),
 ):
     """Show the Epistemic HUD with split-screen layout (legacy)."""
@@ -1072,9 +1042,7 @@ def hud_cmd(
 def assess(
     session_id: str | None = typer.Option(None, "--session-id", help="Session ID"),
     history: bool = typer.Option(False, "--history", help="Include historical data"),
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Show detailed epistemic assessment."""
     project_path = resolve_project_path(path)
@@ -1132,9 +1100,7 @@ def goal_create(
     criteria: str | None = typer.Option(
         None, "--criteria", help="Success criteria (comma-separated)"
     ),
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Create a goal with epistemic scope."""
     project_path = resolve_project_path(path)
@@ -1210,9 +1176,7 @@ def goal_create(
 
 @goal_app.command("list")
 def goal_list(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """List active goals."""
     project_path = resolve_project_path(path)
@@ -1248,9 +1212,7 @@ def goal_list(
 
 @app.command()
 def stats(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     session: bool = typer.Option(
         False, "--session", "-s", help="Show session statistics instead of gamification stats"
     ),
@@ -1319,9 +1281,7 @@ def stats(
 
 @app.command()
 def checkout(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     quick: bool = typer.Option(
         False, "--quick", "-q", help="Quick checkout (skip detailed statistics)"
     ),
@@ -1348,9 +1308,7 @@ app.add_typer(pyrite_app, name="pyrite", help="The Steward - The God of Work Eff
 
 @app.command()
 def decide(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     topic: str | None = typer.Option(
         None, "--topic", "-t", help="Specific decision topic (e.g., 'workflow')"
     ),
@@ -1401,9 +1359,7 @@ def decide(
 
 @app.command()
 def level(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Show level details and progress to next level."""
     project_path = resolve_project_path(path)
@@ -1446,9 +1402,7 @@ def level(
 
 @app.command()
 def character(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Display full D&D 5e character sheet."""
     project_path = resolve_project_path(path)
@@ -1580,9 +1534,7 @@ def character(
 
 @app.command()
 def achievements(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """List all achievements (locked/unlocked)."""
     project_path = resolve_project_path(path)
@@ -1619,9 +1571,7 @@ def achievements(
 
 @app.command(name="chronicle")
 def chronicle(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     limit: int = typer.Option(20, "--limit", "-n", help="Number of entries to show"),
 ):
     """View the Adventure Chronicle - Your journey's story."""
@@ -1722,9 +1672,7 @@ def roll(
     dc: int = typer.Option(10, "--dc", help="Difficulty Class (target number)"),
     advantage: bool = typer.Option(False, "--advantage", "-a", help="Roll with advantage"),
     disadvantage: bool = typer.Option(False, "--disadvantage", "-d", help="Roll with disadvantage"),
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Roll a d20 check manually - Test your luck!"""
     project_path = resolve_project_path(path)
@@ -1782,9 +1730,7 @@ def roll(
 
 @app.command()
 def quests(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """View active and completed quests."""
     project_path = resolve_project_path(path)
@@ -1844,9 +1790,7 @@ def note(
         "general", "--category", "-c", help="Category (bug, feature, refactor, insight, etc.)"
     ),
     source: str = typer.Option("human", "--source", "-s", help="Source (human, ai, system)"),
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Add a narrative note to the chronicle - Share your thoughts!"""
     project_path = resolve_project_path(path)
@@ -1872,9 +1816,7 @@ def observe(
     mood: str = typer.Option(
         "neutral", "--mood", "-m", help="Mood (neutral, surprised, delighted, concerned, amazed)"
     ),
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Log an observation - "woah that's kinda sick" or "weird that's not right"."""
     project_path = resolve_project_path(path)
@@ -1896,9 +1838,7 @@ def observe(
 
 @app.command()
 def phase1(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed progress"),
 ):
     """Run Phase 1: Comprehensive data gathering and visualization."""
@@ -1912,9 +1852,7 @@ def phase1(
 
 @app.command()
 def analyze(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed progress"),
 ):
     """Run Analyze: Analysis, insights, and action planning."""
@@ -1928,9 +1866,7 @@ def analyze(
 
 @app.command()
 def resume(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     session: str | None = typer.Option(
         None, "--session", "-s", help="Specific session file to load"
     ),
@@ -1955,9 +1891,7 @@ def resume(
 
 @app.command(name="continue")
 def continue_work(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     deep: bool = typer.Option(False, "--deep", "-d", help="Perform deep reflection"),
     focus: str | None = typer.Option(
         None, "--focus", "-f", help="Focus area: approach, patterns, quality"
@@ -1980,9 +1914,7 @@ def continue_work(
 
 @app.command()
 def reflect(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     prompt: str | None = typer.Option(None, "--prompt", help="Custom reflection prompt"),
     topic: str | None = typer.Option(None, "--topic", "-t", help="Topic to focus reflection on"),
     save: bool = typer.Option(True, "--save/--no-save", help="Save entry to journal"),
@@ -2003,9 +1935,7 @@ def reflect(
 
 @app.command(name="journal-search")
 def journal_search(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     query: str | None = typer.Option(None, "--query", "-q", help="Text search query"),
     topic: str | None = typer.Option(None, "--topic", "-t", help="Filter by topic"),
     date_from: str | None = typer.Option(None, "--from", help="Start date (YYYY-MM-DD)"),
@@ -2050,9 +1980,7 @@ def journal_search(
 
 @app.command(name="journal-stats")
 def journal_stats(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     cleanup: bool = typer.Option(False, "--cleanup", help="Clean up old archives"),
 ):
     """
@@ -2072,14 +2000,10 @@ def journal_stats(
 
 @app.command()
 def help_cmd(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     category: str | None = typer.Option(None, "--category", "-c", help="Filter by category"),
     search: str | None = typer.Option(None, "--search", "-s", help="Search commands by keyword"),
-    command: str | None = typer.Option(
-        None, "--command", help="Show details for specific command"
-    ),
+    command: str | None = typer.Option(None, "--command", help="Show details for specific command"),
     count: bool = typer.Option(False, "--count", help="Just show command count"),
 ):
     """
@@ -2098,9 +2022,7 @@ def help_cmd(
 
 @app.command(name="encapsulated-environments-pdf")
 def encapsulated_environments_pdf(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     output: str | None = typer.Option(
         None, "--output", "-o", help="Output PDF path (default: auto-generated)"
     ),
@@ -2220,9 +2142,7 @@ app.add_typer(goal_app, name="goal")
 def create(
     name: str = typer.Argument(..., help="Goal name (slug)"),
     objective: str = typer.Argument(..., help="Goal objective/description"),
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Create a new goal with objective."""
     project_path = resolve_project_path(path)
@@ -2235,9 +2155,7 @@ def create(
 
 @goal_app.command("list")
 def goal_list(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     status: str | None = typer.Option(
         None, "--status", "-s", help="Filter by status (active, completed, paused)"
     ),
@@ -2285,9 +2203,7 @@ def goal_list(
 @goal_app.command()
 def show(
     name: str = typer.Argument(..., help="Goal name"),
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Show goal details."""
     project_path = resolve_project_path(path)
@@ -2300,9 +2216,7 @@ def show(
 
 @app.command()
 def next_cmd(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     goal: str | None = typer.Option(None, "--goal", "-g", help="Specific goal name"),
     count: int = typer.Option(1, "--count", "-c", help="Number of next steps to show"),
 ):
@@ -2338,9 +2252,7 @@ def next_cmd(
 
 @app.command()
 def recap(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     output: str | None = typer.Option(None, "--output", "-o", help="Custom output path"),
 ):
     """
@@ -2359,9 +2271,7 @@ def recap(
 
 @app.command(name="recap-and-review")
 def recap_and_review(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     output: str | None = typer.Option(None, "--output", "-o", help="Custom output path"),
 ):
     """
@@ -2381,12 +2291,8 @@ def recap_and_review(
 
 @app.command(name="science-bitch")
 def science_bitch(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
-    hypothesis: str | None = typer.Option(
-        None, "--hypothesis", "-h", help="Hypothesis statement"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    hypothesis: str | None = typer.Option(None, "--hypothesis", "-h", help="Hypothesis statement"),
     run: bool = typer.Option(False, "--run", "-r", help="Run experiment"),
     report: bool = typer.Option(False, "--report", help="Generate report"),
     field_guide: bool = typer.Option(False, "--field-guide", help="Generate field guide PDF"),
@@ -2446,9 +2352,7 @@ def science_bitch(
 
 @app.command(name="work-efforts")
 def work_efforts(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     output: str | None = typer.Option(
         None,
         "--output",
@@ -2497,9 +2401,7 @@ def work_efforts(
 
 @app.command(name="auto-work")
 def auto_work(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     dry_run: bool = typer.Option(
         False, "--dry-run", help="Show what would be done without executing"
     ),
@@ -2563,9 +2465,7 @@ def auto_work(
 
 @app.command()
 def improve(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     focus: str | None = typer.Option(
         None, "--focus", "-f", help="Focus area (file path, work effort, or 'all')"
     ),
@@ -2614,15 +2514,11 @@ def improve(
 
 @app.command()
 def celebrate(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     achievement: str | None = typer.Option(
         None, "--achievement", "-a", help="What was accomplished"
     ),
-    message: str | None = typer.Option(
-        None, "--message", "-m", help="Custom celebration message"
-    ),
+    message: str | None = typer.Option(None, "--message", "-m", help="Custom celebration message"),
     no_print: bool = typer.Option(False, "--no-print", help="Don't print PDF, just generate it"),
 ):
     """
@@ -2650,9 +2546,7 @@ def celebrate(
 
 @app.command()
 def audit(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     output: str | None = typer.Option(None, "--output", "-o", help="Custom output path"),
 ):
     """
@@ -2671,9 +2565,7 @@ def audit(
 
 @app.command()
 def proceed(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     focus: str | None = typer.Option(
         None, "--focus", "-f", help="Focus area: assumptions, ambiguity, context"
     ),
@@ -2701,9 +2593,7 @@ def proceed(
 
 @app.command()
 def check_assumptions(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     focus: str | None = typer.Option(
         None, "--focus", "-f", help="Focus area: code, dependencies, data, system, behavioral"
     ),
@@ -2742,9 +2632,7 @@ def final_report(
     output_name: str | None = typer.Option(
         None, "--output", "-o", help="Output filename (without extension)"
     ),
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """
     Generate a comprehensive final report PDF using the Science Textbook LaTeX template.
@@ -2790,9 +2678,7 @@ def final_report(
 
 @app.command()
 def validate_empirica(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     fix: bool = typer.Option(False, "--fix", "-f", help="Attempt to fix issues automatically"),
 ):
     """
@@ -2904,9 +2790,7 @@ def oracle(
     assess: str | None = typer.Option(
         None, "--assess", "-a", help="Assess a decision (provide description)"
     ),
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """
     Consult TheOracle for epistemic insights and guidance.
@@ -3282,9 +3166,7 @@ def oracle(
 
 @app.command()
 def oracle_journal(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     show: bool = typer.Option(False, "--show", "-s", help="Show recent journal entries"),
     search: str | None = typer.Option(None, "--search", help="Search journal and memory"),
     memory: bool = typer.Option(False, "--memory", "-m", help="Show memory summary"),
@@ -3408,9 +3290,7 @@ def oracle_journal(
 
 @app.command()
 def pantheon(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """
     Summon the ENTIRE PANTHEON to weigh in and pass judgment.
@@ -3465,9 +3345,7 @@ def tell_story(
     structure: str = typer.Option(
         "linear", "--structure", help="Story structure (linear/three_act)"
     ),
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     no_oracle: bool = typer.Option(False, "--no-oracle", help="Skip Oracle insights"),
     output: str | None = typer.Option(
         None, "--output", "-o", help="Output PDF path (default: auto-generated)"
@@ -3572,9 +3450,7 @@ def print_pdf(
         "-s",
         help="PDF style (clinical_standard/premium/professional)",
     ),
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """
     Print most relevant PDF or create evolved PDF using WAFT.
@@ -3687,9 +3563,7 @@ def print_pdf(
                     console.print(f"[yellow]⚠️[/yellow]  Print command returned: {result.stderr}")
                     console.print(f"[dim]PDF saved at: {pdf_path}[/dim]")
             except FileNotFoundError:
-                console.print(
-                    "[yellow]⚠️[/yellow]  Print command not found. Please print manually:"
-                )
+                console.print("[yellow]⚠️[/yellow]  Print command not found. Please print manually:")
                 console.print(f"[dim]lpr {pdf_path}[/dim]")
             except Exception as e:
                 console.print(f"[yellow]⚠️[/yellow]  Print error: {e}")
@@ -3728,9 +3602,7 @@ def print_pdf(
 
 @app.command(name="evolve-another-template")
 def evolve_another_template(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     template: str | None = typer.Option(
         None, "--template", "-t", help="Template name (academic, field-guide, etc.)"
     ),
@@ -3775,9 +3647,7 @@ def evolve_another_template(
 
 @app.command(name="chronicler")
 def chronicler_start(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     reset_hour: int = typer.Option(
         5, "--reset-hour", help="Hour to reset daily cycle (default: 5 AM)"
     ),
@@ -3829,9 +3699,7 @@ def chronicler_start(
 
 @app.command(name="chronicler-stats")
 def chronicler_stats(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Show TheChronicler statistics."""
     project_path = resolve_project_path(path)
@@ -3857,9 +3725,7 @@ def chronicler_stats(
 
 @app.command(name="chronicler-report")
 def chronicler_report(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     hourly: bool = typer.Option(False, "--hourly", help="Generate hourly report for current hour"),
     daily: bool = typer.Option(False, "--daily", help="Generate daily report for today"),
 ):
@@ -3892,9 +3758,7 @@ def chronicler_report(
 
 @app.command()
 def campfire(
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     port: int = typer.Option(5000, "--port", help="Port to serve on (default: 5000)"),
     host: str = typer.Option("localhost", "--host", help="Host to bind to (default: localhost)"),
 ):
@@ -3931,9 +3795,7 @@ rag_app = typer.Typer(name="rag", help="RAG Chatbot - Query PDFs with AI")
 @rag_app.command("query")
 def rag_query(
     question: str = typer.Argument(..., help="Question to ask"),
-    pdfs: str | None = typer.Option(
-        None, "--pdfs", "-p", help="Comma-separated list of PDF paths"
-    ),
+    pdfs: str | None = typer.Option(None, "--pdfs", "-p", help="Comma-separated list of PDF paths"),
     path: str | None = typer.Option(None, "--path", help="Project path (default: current)"),
 ):
     """

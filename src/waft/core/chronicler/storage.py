@@ -56,9 +56,7 @@ class ObservationStorage:
 
         return day_dir
 
-    def store_observation(
-        self, observation: dict[str, Any], date: datetime | None = None
-    ) -> Path:
+    def store_observation(self, observation: dict[str, Any], date: datetime | None = None) -> Path:
         """
         Store an observation in JSONL format.
 

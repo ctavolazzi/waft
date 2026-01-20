@@ -412,9 +412,7 @@ class FlexiblePDFGenerator:
 
         return html
 
-    def _render_html(
-        self, content: str, title: str, metadata: dict[str, str] | None = None
-    ) -> str:
+    def _render_html(self, content: str, title: str, metadata: dict[str, str] | None = None) -> str:
         """
         Render HTML from markdown content.
 

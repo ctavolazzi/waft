@@ -127,9 +127,7 @@ class RealitySystem:
     and manages the reality lifecycle.
     """
 
-    def __init__(
-        self, project_path: Path | None = None, source_consciousness: Any | None = None
-    ):
+    def __init__(self, project_path: Path | None = None, source_consciousness: Any | None = None):
         """
         Initialize the Reality System.
 

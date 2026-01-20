@@ -463,9 +463,7 @@ class EmpiricaManager:
             # Empirica not installed
             return False
 
-    def create_session(
-        self, ai_id: str = "waft", session_type: str = "development"
-    ) -> str | None:
+    def create_session(self, ai_id: str = "waft", session_type: str = "development") -> str | None:
         """
         Create a new Empirica session.
 

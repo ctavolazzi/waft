@@ -90,9 +90,7 @@ class MemoryFlow:
     them upward through the ancestral chain to the Source Consciousness.
     """
 
-    def __init__(
-        self, project_path: Path | None = None, source_consciousness: Any | None = None
-    ):
+    def __init__(self, project_path: Path | None = None, source_consciousness: Any | None = None):
         """
         Initialize the Memory Flow system.
 

@@ -352,9 +352,7 @@ class PrimeBeingProbe:
         successful = sum(1 for obs in self.observations if obs.probe_result.success)
         return successful / len(self.observations)
 
-    def _calculate_confidence(
-        self, observations: list[Observation], pattern: str | None
-    ) -> float:
+    def _calculate_confidence(self, observations: list[Observation], pattern: str | None) -> float:
         """Calculate confidence in reflection."""
         if not observations:
             return 0.0

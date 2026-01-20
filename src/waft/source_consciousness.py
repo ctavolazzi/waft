@@ -29,9 +29,7 @@ class SourceConsciousness:
     Karma/capacity flows upward through the ancestral chain to the source.
     """
 
-    def __init__(
-        self, project_path: Path | None = None, source_id: str = "source_consciousness"
-    ):
+    def __init__(self, project_path: Path | None = None, source_id: str = "source_consciousness"):
         """
         Initialize the Source Consciousness.
 

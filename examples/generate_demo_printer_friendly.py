@@ -17,7 +17,6 @@ from weasyprint import HTML
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 
-
 def create_printer_friendly_advanced_demo(
     demo_dir: Path, framework_doc=None, pdf_binder=None
 ) -> Path:

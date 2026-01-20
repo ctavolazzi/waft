@@ -2,7 +2,6 @@
 Gamification Integration for Streamlit UI.
 """
 
-
 import streamlit as st
 
 from waft.core.gamification import GamificationManager

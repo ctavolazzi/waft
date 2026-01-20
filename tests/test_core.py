@@ -1,4 +1,3 @@
-
 import pytest
 
 from waft.core.decision_matrix import (

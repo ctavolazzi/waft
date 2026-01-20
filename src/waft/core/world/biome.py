@@ -98,9 +98,7 @@ class Biome:
         """Get PetriDish by ID."""
         return self.dishes.get(dish_id)
 
-    def check_membrane_breach(
-        self, organism: BaseAgent, action: dict
-    ) -> tuple[bool, str | None]:
+    def check_membrane_breach(self, organism: BaseAgent, action: dict) -> tuple[bool, str | None]:
         """
         Check if organism action breaches the Membrane (boundary).
 

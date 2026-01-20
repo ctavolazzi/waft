@@ -24,7 +24,6 @@ sys.path.insert(0, str(project_root))
 sys.path.insert(0, str(project_root / "src"))
 
 
-
 def generate_informative_title(claim: str, verdict: str = None) -> str:
     """
     Generate an informative title from a claim.

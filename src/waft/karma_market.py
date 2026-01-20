@@ -563,9 +563,7 @@ class AfterlifeKarmaMarket:
     can be spent on new lifetimes, creating a self-sustaining economy.
     """
 
-    def __init__(
-        self, project_path: Path | None = None, karma_market: KarmaMarket | None = None
-    ):
+    def __init__(self, project_path: Path | None = None, karma_market: KarmaMarket | None = None):
         """
         Initialize the Afterlife Karma Market.
 

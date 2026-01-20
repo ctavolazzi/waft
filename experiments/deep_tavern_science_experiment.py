@@ -813,9 +813,7 @@ def main(print_pdf: bool = False):
             if platform.system() == "Darwin":  # macOS
                 subprocess.run(["open", str(pdf_path)], check=True)
                 console.print("[green]✅ PDF opened![/green]")
-                console.print(
-                    f"[dim]💡 To print, use: lpr {pdf_path}[/dim]"
-                )
+                console.print(f"[dim]💡 To print, use: lpr {pdf_path}[/dim]")
             else:
                 console.print(f"[dim]PDF available at: {pdf_path}[/dim]")
 

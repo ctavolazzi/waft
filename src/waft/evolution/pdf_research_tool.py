@@ -209,9 +209,7 @@ class PDFResearchTool:
 
         return analysis
 
-    def identify_patterns(
-        self, category: str | None = None, min_pdfs: int = 3
-    ) -> dict[str, Any]:
+    def identify_patterns(self, category: str | None = None, min_pdfs: int = 3) -> dict[str, Any]:
         """
         Identify patterns across PDFs.
 

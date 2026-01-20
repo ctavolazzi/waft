@@ -4,7 +4,6 @@ Pydantic schemas for Projects API.
 Defines request and response models for project management endpoints.
 """
 
-
 from pydantic import BaseModel, Field
 
 

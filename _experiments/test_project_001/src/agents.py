@@ -5,7 +5,6 @@ This file provides a starter template for setting up CrewAI agents.
 Customize this to fit your project's needs.
 """
 
-
 from crewai import Agent, Crew, Task
 
 

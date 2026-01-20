@@ -144,9 +144,7 @@ class GoalManager:
 
         return goal_data
 
-    def get_next_step(
-        self, goal_name: str | None = None, count: int = 1
-    ) -> list[dict[str, Any]]:
+    def get_next_step(self, goal_name: str | None = None, count: int = 1) -> list[dict[str, Any]]:
         """
         Identify next step(s) based on goals.
 

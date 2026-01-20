@@ -36,7 +36,6 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 
-
 # LaTeX Field Guide Template (inspired by LaTTe + LaTeX Cookbook)
 # Note: Using raw string and Jinja2 {% raw %} blocks for LaTeX braces
 LATEX_FIELD_GUIDE_TEMPLATE = r"""

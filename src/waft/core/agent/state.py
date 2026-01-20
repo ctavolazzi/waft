@@ -87,9 +87,7 @@ class AgentState(BaseModel):
     )
 
     # Gamification State (TavernKeeper integration)
-    hero_state: dict[str, Any] | None = Field(
-        default=None, description="Hero stats and chronicles"
-    )
+    hero_state: dict[str, Any] | None = Field(default=None, description="Hero stats and chronicles")
 
     # Multi-Agent Communication
     inbox: list[Message] = Field(

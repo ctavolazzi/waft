@@ -5,7 +5,6 @@ These models define the contract for HTTP requests/responses.
 Data still passes through InputTransformer for final validation.
 """
 
-
 from pydantic import BaseModel, Field
 
 

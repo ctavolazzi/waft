@@ -95,9 +95,7 @@ class ProblemDiagnostician:
         """Initialize diagnostician."""
         self.diagnosis_history: list[Diagnosis] = []
 
-    def diagnose(
-        self, problem: Problem, system_state: dict[str, Any] | None = None
-    ) -> Diagnosis:
+    def diagnose(self, problem: Problem, system_state: dict[str, Any] | None = None) -> Diagnosis:
         """
         Diagnose root cause of problem.
 

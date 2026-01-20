@@ -204,9 +204,7 @@ class CampaignStateManager:
 
         return sorted(campaigns, key=lambda x: x["created_at"], reverse=True)
 
-    def add_session(
-        self, campaign_id: str, session_number: int | None = None
-    ) -> CampaignSession:
+    def add_session(self, campaign_id: str, session_number: int | None = None) -> CampaignSession:
         """Add a new session to campaign."""
         campaign = self.load_campaign(campaign_id)
         if not campaign:

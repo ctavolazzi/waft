@@ -208,9 +208,7 @@ def create_quest_from_plan(plan_path: Path, project_path: Path | None = None) ->
     return quest.to_dict()
 
 
-def create_mission_from_plan(
-    plan_path: Path, project_path: Path | None = None
-) -> dict[str, Any]:
+def create_mission_from_plan(plan_path: Path, project_path: Path | None = None) -> dict[str, Any]:
     """
     Create a Mission (Military Brass) from a Plan document.
 

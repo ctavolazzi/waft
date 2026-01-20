@@ -299,9 +299,7 @@ class Magistrate:
 
         return metadata
 
-    def _infer_category(
-        self, case_path: Path, claim: str | None = None
-    ) -> tuple[str, str | None]:
+    def _infer_category(self, case_path: Path, claim: str | None = None) -> tuple[str, str | None]:
         """
         Infer category and subcategory from case file.
 

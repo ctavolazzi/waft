@@ -1581,9 +1581,7 @@ class BeingSystem:
     # TheOne Being ID - root ancestor for all Beings
     THE_ONE_BEING_ID = "the_one"
 
-    def __init__(
-        self, project_path: Path | None = None, source_consciousness: Any | None = None
-    ):
+    def __init__(self, project_path: Path | None = None, source_consciousness: Any | None = None):
         """
         Initialize the Being System.
 

@@ -4,7 +4,6 @@ Pydantic schemas for Work Efforts API.
 Defines request and response models for work effort management endpoints.
 """
 
-
 from pydantic import BaseModel, Field
 
 
@@ -30,12 +29,8 @@ class WorkEffortCreateRequest(BaseModel):
 class WorkEffortUpdateRequest(BaseModel):
     """Request model for full work effort update (PUT)."""
 
-    title: str | None = Field(
-        None, min_length=1, max_length=200, description="Work effort title"
-    )
-    description: str | None = Field(
-        None, max_length=10000, description="Work effort description"
-    )
+    title: str | None = Field(None, min_length=1, max_length=200, description="Work effort title")
+    description: str | None = Field(None, max_length=10000, description="Work effort description")
     status: str | None = Field(None, description="Work effort status")
     tags: list[str] | None = Field(None, max_items=20, description="Work effort tags")
 
@@ -53,12 +48,8 @@ class WorkEffortUpdateRequest(BaseModel):
 class WorkEffortPatchRequest(BaseModel):
     """Request model for partial work effort update (PATCH)."""
 
-    title: str | None = Field(
-        None, min_length=1, max_length=200, description="Work effort title"
-    )
-    description: str | None = Field(
-        None, max_length=10000, description="Work effort description"
-    )
+    title: str | None = Field(None, min_length=1, max_length=200, description="Work effort title")
+    description: str | None = Field(None, max_length=10000, description="Work effort description")
     status: str | None = Field(None, description="Work effort status")
     tags: list[str] | None = Field(None, max_items=20, description="Work effort tags")
 

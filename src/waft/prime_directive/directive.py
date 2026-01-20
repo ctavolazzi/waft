@@ -282,9 +282,7 @@ class PrimeDirective:
             "reference_count": len(self.references),
         }
 
-    def add_reference(
-        self, reference_type: str, reference_id: str, description: str | None = None
-    ):
+    def add_reference(self, reference_type: str, reference_id: str, description: str | None = None):
         """
         Add a reference to this directive.
 

@@ -373,9 +373,7 @@ class ProtoCelSystem:
         self.protocels_path = self.project_path / "_hidden" / ".truth" / "protocels"
         self.protocels_path.mkdir(parents=True, exist_ok=True)
 
-    def create_protocel(
-        self, name: str | None = None, description: str | None = None
-    ) -> ProtoCel:
+    def create_protocel(self, name: str | None = None, description: str | None = None) -> ProtoCel:
         """
         Create a new ProtoCel.
 

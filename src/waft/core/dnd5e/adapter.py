@@ -8,7 +8,6 @@ This allows importing agents from other systems that use 4 stats.
 """
 
 
-
 class StatsAdapter:
     """
     Adapter for converting 4-stat systems to D&D 6-stat format.

@@ -299,9 +299,7 @@ class SimplePDFRedactor:
         return overlay_path
 
 
-def quick_redact(
-    pdf_path: str | Path, terms: list[str], output_path: Path | None = None
-) -> Path:
+def quick_redact(pdf_path: str | Path, terms: list[str], output_path: Path | None = None) -> Path:
     """
     Quick redaction function - simplest API.
 

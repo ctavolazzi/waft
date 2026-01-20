@@ -74,9 +74,7 @@ class WAFTSelfStudy:
             },
         }
 
-    def run_study(
-        self, study_area: str | None = None, all_areas: bool = False
-    ) -> dict[str, Any]:
+    def run_study(self, study_area: str | None = None, all_areas: bool = False) -> dict[str, Any]:
         """
         Run a self-study on specified area(s).
 

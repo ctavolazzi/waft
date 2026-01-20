@@ -5,7 +5,6 @@ Quick verification script for Decision Engine API.
 Tests the API endpoints to verify the server is working correctly.
 """
 
-
 import requests
 
 BASE_URL = "http://127.0.0.1:8000"

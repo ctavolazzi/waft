@@ -90,9 +90,7 @@ class Judge:
     - Judgment History: _pantheon/judge/judgment_history.json
     """
 
-    def __init__(
-        self, project_path: Path | None = None, magistrate: Magistrate | None = None
-    ):
+    def __init__(self, project_path: Path | None = None, magistrate: Magistrate | None = None):
         """
         Initialize the Judge.
 

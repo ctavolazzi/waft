@@ -236,9 +236,7 @@ class Fae:
 
         return quests
 
-    def update_quest_status(
-        self, quest_id: str, status: str, progress: str | None = None
-    ) -> bool:
+    def update_quest_status(self, quest_id: str, status: str, progress: str | None = None) -> bool:
         """
         Update quest status.
 

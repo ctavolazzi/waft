@@ -84,9 +84,7 @@ class CampaignOrchestrator:
 
         return campaign
 
-    def run_session(
-        self, campaign_id: str, session_number: int | None = None
-    ) -> CampaignSession:
+    def run_session(self, campaign_id: str, session_number: int | None = None) -> CampaignSession:
         """
         Run a campaign session.
 
@@ -222,9 +220,7 @@ class CampaignOrchestrator:
 
         return generator.generate_from_data(campaign_data, output_path)
 
-    def analyze_campaign(
-        self, campaign_id: str, hypothesis: str | None = None
-    ) -> dict[str, Any]:
+    def analyze_campaign(self, campaign_id: str, hypothesis: str | None = None) -> dict[str, Any]:
         """
         Analyze campaign using scientific method tool.
 

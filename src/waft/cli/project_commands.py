@@ -2,7 +2,6 @@
 Project Commands - CLI interface for project management.
 """
 
-
 import typer
 from rich.console import Console
 from rich.panel import Panel
@@ -31,9 +30,7 @@ def create_project(
     status: str = typer.Option(
         "planning", "--status", "-s", help="Initial status (planning, active, paused)"
     ),
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Create a new project."""
     try:
@@ -88,9 +85,7 @@ def create_project(
 def list_projects(
     status: str | None = typer.Option(None, "--status", "-s", help="Filter by status"),
     tags: str | None = typer.Option(None, "--tags", "-t", help="Comma-separated tags to filter"),
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """List all projects."""
     try:
@@ -184,9 +179,7 @@ def list_projects(
 @app.command("show")
 def show_project(
     project_id: str = typer.Argument(..., help="Project ID"),
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Show project details."""
     try:
@@ -271,13 +264,9 @@ def show_project(
 def update_project(
     project_id: str = typer.Argument(..., help="Project ID"),
     title: str | None = typer.Option(None, "--title", "-t", help="Update title"),
-    description: str | None = typer.Option(
-        None, "--description", "-d", help="Update description"
-    ),
+    description: str | None = typer.Option(None, "--description", "-d", help="Update description"),
     status: str | None = typer.Option(None, "--status", "-s", help="Update status"),
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Update project."""
     try:
@@ -328,12 +317,8 @@ def update_progress(
     work_effort: str | None = typer.Option(
         None, "--work-effort", "-w", help="Related work effort ID"
     ),
-    duration: float | None = typer.Option(
-        None, "--duration", help="Session duration in minutes"
-    ),
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    duration: float | None = typer.Option(None, "--duration", help="Session duration in minutes"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Update project progress."""
     try:
@@ -399,9 +384,7 @@ def update_progress(
 @app.command("status")
 def project_status(
     project_id: str = typer.Argument(..., help="Project ID"),
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Quick project status check."""
     try:
@@ -453,9 +436,7 @@ def milestone_command(
     target_date: str | None = typer.Option(
         None, "--target-date", help="Target date (ISO format, for create)"
     ),
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Manage project milestones."""
     try:
@@ -564,9 +545,7 @@ def milestone_command(
 def link_work_effort(
     project_id: str = typer.Argument(..., help="Project ID"),
     work_effort_id: str = typer.Argument(..., help="Work effort ID to link"),
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Link a work effort to a project."""
     try:
@@ -603,9 +582,7 @@ def link_work_effort(
 def unlink_work_effort(
     project_id: str = typer.Argument(..., help="Project ID"),
     work_effort_id: str = typer.Argument(..., help="Work effort ID to unlink"),
-    path: str | None = typer.Option(
-        None, "--path", "-p", help="Project path (default: current)"
-    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Unlink a work effort from a project."""
     try:
