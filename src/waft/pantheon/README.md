@@ -245,6 +245,80 @@ The Paperwork God oversees the **Realm of Bureaucracy**, which is populated with
 
 See `_pantheon/paperwork_god/README.md` for details.
 
+## The Chief
+
+The Chief is the God of Iterative Self-Improvement and Evolutionary Loops. Integrates Chief Wiggum's iterative development methodology into WAFT's evolutionary framework.
+
+### Quick Start
+
+```python
+from waft.pantheon import TheChief
+from pathlib import Path
+
+# Initialize
+chief = TheChief(project_path=Path.cwd())
+
+# Start iteration loop
+result = chief.start_loop(
+    prompt="Build a REST API for todos with tests. Output <promise>COMPLETE</promise> when done.",
+    max_iterations=15,
+    completion_promise="COMPLETE"
+)
+
+# Record iteration
+chief.record_iteration(
+    loop_id=result['loop_id'],
+    iteration_data={
+        "iteration": 1,
+        "changes": ["Created API endpoints", "Added tests"],
+        "output": "Tests passing, continuing..."
+    }
+)
+
+# Get loop status
+status = chief.get_loop_status(result['loop_id'])
+
+# Cancel loop
+chief.cancel_loop(result['loop_id'])
+
+# Get summary
+summary = chief.get_chief_summary()
+
+# Analyze effectiveness
+analysis = chief.analyze_loop_effectiveness(result['loop_id'])
+```
+
+### CLI Commands
+
+The Chief is also accessible via the WAFT CLI:
+
+```bash
+# Start an iteration loop
+waft chief loop "Build a REST API with tests" --max-iterations 15 --completion-promise "COMPLETE"
+
+# Check status
+waft chief status
+
+# Get summary
+waft chief summary
+
+# Cancel a loop
+waft chief cancel loop_20260123_120000
+
+# Analyze a completed loop
+waft chief analyze loop_20260123_120000
+```
+
+### Integration with Chief Wiggum
+
+The Chief integrates the [Chief Wiggum plugin](https://github.com/ctavolazzi/chief-wiggum) methodology:
+- Self-referential AI development loops
+- Iterative improvement through repeated prompting
+- Completion tracking via `<promise>` tags
+- Natural language invocation support
+
+The integration is located at `_integrations/chief-wiggum/` as a git submodule.
+
 ## Integration
 
 The Pantheon integrates with:

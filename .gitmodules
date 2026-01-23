@@ -19,3 +19,6 @@
 [submodule "_integrations/rag-chatbot"]
 	path = _integrations/rag-chatbot
 	url = https://github.com/ctavolazzi/rag-chatbot.git
+[submodule "_integrations/chief-wiggum"]
+	path = _integrations/chief-wiggum
+	url = https://github.com/ctavolazzi/chief-wiggum.git

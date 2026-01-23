@@ -18,6 +18,7 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
 
+from .cli.chief_cli import app as chief_app
 from .cli.epistemic_display import (
     create_epistemic_dashboard,
     format_epistemic_summary,
@@ -794,6 +795,7 @@ app.add_typer(github_app, name="github")
 app.add_typer(journal_app, name="journal")
 app.add_typer(project_app, name="project")
 app.add_typer(empirica_monitor_app, name="empirica")
+app.add_typer(chief_app, name="chief")
 
 
 @empirica_monitor_app.command("monitor")
