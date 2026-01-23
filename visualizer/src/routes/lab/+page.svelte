@@ -1,20 +1,22 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import Node from '$lib/components/lab/Node.svelte';
-	import Switch from '$lib/components/lab/controls/Switch.svelte';
-	import Dial from '$lib/components/lab/controls/Dial.svelte';
-	import Light from '$lib/components/lab/controls/Light.svelte';
-	import Button from '$lib/components/lab/controls/Button.svelte';
-	import ParticleSystem from '$lib/components/lab/ParticleSystem.svelte';
-	import ComponentPalette from '$lib/components/lab/ComponentPalette.svelte';
-	import WiringSystem from '$lib/components/lab/WiringSystem.svelte';
-	import RealmControl from '$lib/components/lab/RealmControl.svelte';
 	import BeingRenderer from '$lib/components/lab/BeingRenderer.svelte';
 	import DataTable from '$lib/components/lab/DataTable.svelte';
+	import TutorialPanel from '$lib/components/lab/TutorialPanel.svelte';
+	import VillageRenderer from '$lib/components/lab/VillageRenderer.svelte';
+	import ResourcePanel from '$lib/components/lab/ResourcePanel.svelte';
+	import BuildingPalette from '$lib/components/lab/BuildingPalette.svelte';
+	import WorkerAssignment from '$lib/components/lab/WorkerAssignment.svelte';
 
-	import type { Realm } from '$lib/models/Realm';
-	import { EvolutionEngine } from '$lib/models/Evolution';
-	import { serializeRealm, deserializeRealm } from '$lib/models/Realm';
+	import type { Realm, RealmConfig } from '$lib/models/Realm';
+	import type { Village, Building } from '$lib/models/Village';
+	import type { Tutorial } from '$lib/models/Tutorial';
+	import { SUPREME_BEINGS, PRIME_DIRECTIVES } from '$lib/models/Realm';
+	import { VillageEvolutionEngine } from '$lib/models/VillageEvolution';
+	import { createVillage, placeBuilding, assignWorker, BUILDING_TEMPLATES } from '$lib/models/Village';
+	import { GENESIS_FARM_TUTORIAL, triggerDrought, checkStepCompletion } from '$lib/models/Tutorial';
+	import { initializePopulation } from '$lib/models/Evolution';
+	import { createRealm } from '$lib/models/Realm';
 
 	let showSplash = true;
 	let asciiLine = 0;
@@ -28,33 +30,24 @@
 		"    ╚███╔███╔╝██║  ██║██║        ██║   ",
 		"     ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝        ╚═╝   ",
 		"",
-		"    ███████╗██╗      ██████╗ ██╗    ██╗",
-		"    ██╔════╝██║     ██╔═══██╗██║    ██║",
-		"    █████╗  ██║     ██║   ██║██║ █╗ ██║",
-		"    ██╔══╝  ██║     ██║   ██║██║███╗██║",
-		"    ██║     ███████╗╚██████╔╝╚███╔███╔╝",
-		"    ╚═╝     ╚══════╝ ╚═════╝  ╚══╝╚══╝ ",
-		"",
-		"    ██╗      █████╗ ██████╗  ██████╗ ██████╗  █████╗ ████████╗ ██████╗ ██████╗ ██╗   ██╗",
-		"    ██║     ██╔══██╗██╔══██╗██╔═══██╗██╔══██╗██╔══██╗╚══██╔══╝██╔═══██╗██╔══██╗╚██╗ ██╔╝",
-		"    ██║     ███████║██████╔╝██║   ██║██████╔╝███████║   ██║   ██║   ██║██████╔╝ ╚████╔╝ ",
-		"    ██║     ██╔══██║██╔══██╗██║   ██║██╔══██╗██╔══██║   ██║   ██║   ██║██╔══██╗  ╚██╔╝  ",
-		"    ███████╗██║  ██║██████╔╝╚██████╔╝██║  ██║██║  ██║   ██║   ╚██████╔╝██║  ██║   ██║   ",
-		"    ╚══════╝╚═╝  ╚═╝╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ",
+		"    ██╗   ██╗██╗██╗     ██╗      █████╗  ██████╗ ███████╗",
+		"    ██║   ██║██║██║     ██║     ██╔══██╗██╔════╝ ██╔════╝",
+		"    ██║   ██║██║██║     ██║     ███████║██║  ███╗█████╗  ",
+		"    ╚██╗ ██╔╝██║██║     ██║     ██╔══██║██║   ██║██╔══╝  ",
+		"     ╚████╔╝ ██║███████╗███████╗██║  ██║╚██████╔╝███████╗",
+		"      ╚═══╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝",
 		"",
 		"",
-		"                        Evolutionary Code Laboratory",
-		"                        Visual Agent Flow Composer",
+		"           🌾 GENESIS FARM 2025 - Evolutionary City Builder 🌾",
 		"",
-		"                        [Initializing Systems...]",
+		"                   [Initializing Tutorial Systems...]",
 		"",
-		"                        >>> Loading quantum substrate...",
-		"                        >>> Calibrating reality anchors...",
-		"                        >>> Spinning up agent spawners...",
-		"                        >>> Establishing gym connections...",
-		"                        >>> Activating scint detectors...",
+		"              >>> Spawning 10 genetically diverse beings...",
+		"              >>> Establishing resource pools...",
+		"              >>> Loading building templates...",
+		"              >>> Preparing challenge scenarios...",
 		"",
-		"                        [Press ENTER to begin composition]"
+		"                   [Press ENTER to begin your village]"
 	];
 
 	let displayedLines: string[] = [];
@@ -64,62 +57,20 @@
 	// Lab state
 	let canvasWidth = 0;
 	let canvasHeight = 0;
-	let nodes: any[] = [];
 
-	// Brewery state
-	let breweryActive = false;
-	let mashTemp = 65;
-	let mashTime = 60;
-	let boilActive = false;
-	let boilPower = 75;
-	let fermentDays = 14;
-	let fermenterTempOk = true;
-	let bottledBeers = 0;
-	let masterPower = false;
-	let flowRate = 50;
-
-	// Tracked components for particle system (x, y, w, h, active, type)
-	let trackedComponents: Array<{x: number, y: number, w: number, h: number, active: boolean, type: string}> = [];
-
-	// Connections (wires) for both old SVG and new WiringSystem
-	let connections = [
-		{ id: 'conn-1', fromNode: 'input-1', fromPort: 'out1', toNode: 'process-1', toPort: 'in1', x1: 220, y1: 180, x2: 400, y2: 130, active: false },
-		{ id: 'conn-2', fromNode: 'input-1', fromPort: 'out2', toNode: 'process-2', toPort: 'in1', x1: 220, y1: 200, x2: 400, y2: 310, active: false },
-		{ id: 'conn-3', fromNode: 'process-1', fromPort: 'out1', toNode: 'process-3', toPort: 'in1', x1: 520, y1: 130, x2: 700, y2: 200, active: false },
-		{ id: 'conn-4', fromNode: 'process-2', fromPort: 'out1', toNode: 'process-3', toPort: 'in2', x1: 520, y1: 310, x2: 700, y2: 210, active: false },
-		{ id: 'conn-5', fromNode: 'process-3', fromPort: 'out1', toNode: 'output-1', toPort: 'in1', x1: 820, y1: 210, x2: 1000, y2: 210, active: false }
-	];
-
-	let wiringSystemRef: any;
-
-	// Realm & Evolution state
+	// Village & Evolution state
 	let realm: Realm | null = null;
-	let evolutionEngine: EvolutionEngine | null = null;
+	let village: Village | null = null;
+	let tutorial: Tutorial | null = null;
+	let evolutionEngine: VillageEvolutionEngine | null = null;
 
-	// Update connections when brewery is active
-	$: {
-		if (breweryActive) {
-			connections = connections.map(c => ({ ...c, active: true }));
-			// Simulate brewing
-			const interval = setInterval(() => {
-				if (breweryActive) {
-					bottledBeers += 1;
-					fermenterTempOk = Math.random() > 0.3;
-				}
-			}, 2000);
-		} else {
-			connections = connections.map(c => ({ ...c, active: false }));
-		}
-	}
+	// UI state
+	let selectedBuilding: Building | null = null;
+	let showWorkerAssignment = false;
 
-	// Update tracked components for particle system
-	$: trackedComponents = [
-		{ x: 100, y: 150, w: 200, h: 150, active: breweryActive, type: 'input' },
-		{ x: 400, y: 100, w: 200, h: 150, active: breweryActive, type: 'process' },
-		{ x: 400, y: 280, w: 200, h: 150, active: breweryActive && boilActive, type: 'process' },
-		{ x: 700, y: 180, w: 200, h: 150, active: breweryActive, type: 'process' },
-		{ x: 1000, y: 180, w: 200, h: 200, active: breweryActive, type: 'output' }
-	];
+	// Tutorial mode flag
+	let tutorialMode = false;
+	let sandboxMode = false;
 
 	onMount(() => {
 		// Animate ASCII art line by line
@@ -153,25 +104,51 @@
 
 	function enterLab() {
 		showSplash = false;
+		// Start tutorial automatically
+		startTutorial();
 	}
 
-	function handleNodeDrag(event: CustomEvent) {
-		const { id, x, y } = event.detail;
-		// Update node position (would need to track nodes in state)
-		console.log(`Node ${id} dragged to`, x, y);
+	function startTutorial() {
+		tutorialMode = true;
+		sandboxMode = false;
+
+		// Create tutorial realm with Genesis Farm config
+		const config: RealmConfig = {
+			name: 'Genesis Farm',
+			description: 'Tutorial village - learn to build and evolve',
+			initialPopulation: 10,
+			worldWidth: canvasWidth || 1920,
+			worldHeight: canvasHeight || 1080,
+			ticksPerEpoch: 1000,
+			supremeBeing: SUPREME_BEINGS[0], // Harmonia - benevolent
+			primeDirective: PRIME_DIRECTIVES.harmony
+		};
+
+		realm = createRealm(config);
+		realm.tickRate = 10;
+
+		// Initialize population
+		const beings = initializePopulation(realm, 10, canvasWidth || 1920, canvasHeight || 1080);
+		realm.beings = beings;
+
+		// Create village
+		village = createVillage('Genesis Farm');
+
+		// Initialize tutorial
+		tutorial = { ...GENESIS_FARM_TUTORIAL };
+		tutorial.startTick = realm.currentTick;
+
+		// Create evolution engine with village
+		evolutionEngine = new VillageEvolutionEngine(realm, village);
+
+		console.log('🌾 Genesis Farm tutorial started!');
 	}
 
-	function emergencyStop() {
-		breweryActive = false;
-		boilActive = false;
-		masterPower = false;
-		bottledBeers = 0;
-	}
-
-	// Handle component drop from palette
-	function handleDrop(event: DragEvent) {
+	function handleBuildingDrop(event: DragEvent) {
 		event.preventDefault();
-		const data = event.dataTransfer?.getData('component-template');
+		if (!village || !realm) return;
+
+		const data = event.dataTransfer?.getData('building-template');
 		if (!data) return;
 
 		const template = JSON.parse(data);
@@ -182,19 +159,15 @@
 		const x = event.clientX - rect.left;
 		const y = event.clientY - rect.top;
 
-		console.log('🎨 Dropped component:', template.name, 'at', x, y);
+		// Place building
+		const building = placeBuilding(village, template, x, y);
 
-		// Add new tracked component for particles to swarm
-		trackedComponents = [...trackedComponents, {
-			x: x - 100,
-			y: y - 75,
-			w: 200,
-			h: 150,
-			active: true,
-			type: template.type
-		}];
-
-		// TODO: Create actual node instance
+		if (building) {
+			console.log('🏗️ Building placed:', template.name);
+			village = village; // Trigger reactivity
+		} else {
+			console.log('❌ Cannot afford building');
+		}
 	}
 
 	function handleDragOver(event: DragEvent) {
@@ -204,106 +177,94 @@
 		}
 	}
 
-	// Handle new connection creation
-	function handleConnect(event: CustomEvent) {
-		const { fromNode, fromPort, toNode, toPort } = event.detail;
-		console.log('🔗 New connection:', fromNode, fromPort, '->', toNode, toPort);
+	function handleBuildingClick(building: Building) {
+		if (!building.operational) return; // Can't assign workers to under-construction buildings
 
-		// TODO: Calculate connection coordinates and add to connections array
+		selectedBuilding = building;
+		showWorkerAssignment = true;
 	}
 
-	// Handle connection deletion
-	function handleDeleteConnection(event: CustomEvent) {
-		const { connectionId } = event.detail;
-		connections = connections.filter(c => c.id !== connectionId);
-		console.log('❌ Deleted connection:', connectionId);
+	function handleAssignWorker(event: CustomEvent) {
+		if (!village || !realm) return;
+
+		const { building, being } = event.detail;
+		const productivity = assignWorker(village, building, being);
+
+		if (productivity > 0) {
+			console.log(`👷 Assigned ${being.id} to ${building.template.name} - productivity: ${(productivity * 100).toFixed(0)}%`);
+			village = village; // Trigger reactivity
+		}
 	}
 
-	// Realm event handlers
-	function handleRealmCreated(event: CustomEvent) {
-		realm = event.detail.realm;
-		evolutionEngine = new EvolutionEngine(realm);
-		console.log('🌌 Realm created:', realm.config.name);
+	function handleUnassignWorker(event: CustomEvent) {
+		if (!village) return;
+
+		const { building, being } = event.detail;
+
+		// Remove from building
+		building.assignedWorkers = building.assignedWorkers.filter(id => id !== being.id);
+
+		// Remove job
+		village.jobs = village.jobs.filter(j => j.beingId !== being.id);
+
+		console.log(`🚫 Unassigned ${being.id} from ${building.template.name}`);
+		village = village; // Trigger reactivity
 	}
 
 	function handleStartSimulation() {
-		if (!evolutionEngine) return;
+		if (!evolutionEngine || !realm) return;
 		evolutionEngine.start();
-		console.log('▶️ Evolution started');
+		console.log('▶️ Simulation started');
 	}
 
 	function handleStopSimulation() {
-		if (!evolutionEngine) return;
-		evolutionEngine.stop();
-		console.log('⏸️ Evolution paused');
-	}
-
-	function handleResetRealm() {
-		if (evolutionEngine) {
-			evolutionEngine.stop();
-		}
-		realm = null;
-		evolutionEngine = null;
-		console.log('🔄 Realm reset');
-	}
-
-	function handleSaveRealm(event: CustomEvent) {
-		if (!realm) return;
-		const json = serializeRealm(realm);
-		const blob = new Blob([json], { type: 'application/json' });
-		const url = URL.createObjectURL(blob);
-		const a = document.createElement('a');
-		a.href = url;
-		a.download = `${realm.config.name.replace(/\s+/g, '-')}-${Date.now()}.json`;
-		a.click();
-		URL.revokeObjectURL(url);
-		console.log('💾 Realm saved');
-	}
-
-	function handleLoadRealm() {
-		const input = document.createElement('input');
-		input.type = 'file';
-		input.accept = '.json';
-		input.onchange = (e: Event) => {
-			const file = (e.target as HTMLInputElement).files?.[0];
-			if (!file) return;
-
-			const reader = new FileReader();
-			reader.onload = (e) => {
-				try {
-					const json = e.target?.result as string;
-					realm = deserializeRealm(json);
-					evolutionEngine = new EvolutionEngine(realm);
-					console.log('📂 Realm loaded:', realm.config.name);
-				} catch (error) {
-					console.error('Failed to load realm:', error);
-					alert('Failed to load realm file');
-				}
-			};
-			reader.readAsText(file);
-		};
-		input.click();
-	}
-
-	function handleExportReport() {
-		if (!realm) return;
-		console.log('📄 Exporting report for', realm.config.name);
-		// TODO: Generate Typst report and export as PDF
-		alert('PDF export coming soon! This will generate a full scientific report.');
-	}
-
-	function handleTickRateChange(event: CustomEvent) {
 		if (!evolutionEngine || !realm) return;
-		// Restart with new tick rate
-		const wasRunning = realm.running;
-		if (wasRunning) {
-			evolutionEngine.stop();
-		}
-		evolutionEngine = new EvolutionEngine(realm);
-		if (wasRunning) {
-			evolutionEngine.start();
-		}
-		console.log('⚡ Tick rate changed to', realm.tickRate);
+		evolutionEngine.stop();
+		console.log('⏸️ Simulation paused');
+	}
+
+	// Tutorial event handlers
+	function handleTutorialMessage(event: CustomEvent) {
+		const { text } = event.detail;
+		console.log('✨', text);
+		// TODO: Show toast notification
+	}
+
+	function handleTutorialComplete() {
+		if (!tutorial) return;
+		console.log('🎉 Tutorial complete!');
+	}
+
+	function handleTutorialSkip() {
+		tutorial = null;
+		tutorialMode = false;
+		sandboxMode = true;
+		console.log('⏭️ Tutorial skipped - sandbox mode active');
+	}
+
+	function handleSandboxMode() {
+		tutorialMode = false;
+		sandboxMode = true;
+		tutorial = null;
+		console.log('🎨 Sandbox mode activated!');
+	}
+
+	function handleContinueVillage() {
+		tutorialMode = false;
+		sandboxMode = false;
+		tutorial = null;
+		console.log('🌾 Continuing village in freeplay mode');
+	}
+
+	function handleTriggerDrought() {
+		if (!village) return;
+		triggerDrought(village);
+		console.log('☀️ DROUGHT EVENT TRIGGERED! Well production reduced by 75%');
+	}
+
+	// Reactive: auto-start simulation when tutorial begins
+	$: if (tutorialMode && evolutionEngine && !realm?.running) {
+		evolutionEngine.start();
 	}
 </script>
 
@@ -314,7 +275,7 @@
 			{#if readyToEnter}
 				<div class="enter-prompt">
 					<button class="enter-button" on:click={enterLab}>
-						<span class="pulse">▶</span> ENTER LABORATORY
+						<span class="pulse">▶</span> ENTER VILLAGE
 					</button>
 				</div>
 			{/if}
@@ -322,23 +283,36 @@
 		<div class="scanline"></div>
 	</div>
 {:else}
-	<!-- FLOW COMPOSER -->
+	<!-- VILLAGE BUILDER -->
 	<div class="lab-container">
 		<div class="lab-header">
 			<div class="header-left">
-				<h1>🧪 WAFT FLOW LABORATORY</h1>
+				<h1>🌾 WAFT VILLAGE - Evolutionary City Builder</h1>
 				<div class="status-indicators">
-					<span class="indicator active">QUANTUM</span>
-					<span class="indicator active">REALITY</span>
-					<span class="indicator active">AGENTS</span>
-					<span class="indicator" class:active={breweryActive}>BREWERY</span>
-					<span class="indicator" class:active={masterPower}>POWER</span>
+					{#if tutorialMode}
+						<span class="indicator active">TUTORIAL</span>
+					{/if}
+					{#if sandboxMode}
+						<span class="indicator active">SANDBOX</span>
+					{/if}
+					{#if realm}
+						<span class="indicator active">REALM</span>
+					{/if}
+					{#if village}
+						<span class="indicator active">VILLAGE</span>
+					{/if}
+					{#if realm?.running}
+						<span class="indicator active">RUNNING</span>
+					{/if}
 				</div>
 			</div>
 			<div class="header-right">
-				<div class="screen-info">
-					SCREEN: {typeof window !== 'undefined' ? window.innerWidth : 0}×{typeof window !== 'undefined' ? window.innerHeight : 0}px
-				</div>
+				{#if realm}
+					<div class="tick-info">
+						Tick: {realm.currentTick.toLocaleString()} |
+						Pop: {realm.beings.filter(b => b.alive).length}
+					</div>
+				{/if}
 			</div>
 		</div>
 
@@ -347,47 +321,21 @@
 			id="lab-canvas"
 			bind:clientWidth={canvasWidth}
 			bind:clientHeight={canvasHeight}
-			on:drop={handleDrop}
+			on:drop={handleBuildingDrop}
 			on:dragover={handleDragOver}
 		>
 			<div class="grid-overlay"></div>
 
-			<!-- Wiring System (replaces hardcoded SVG) -->
-			<WiringSystem
-				bind:this={wiringSystemRef}
-				{connections}
-				width={canvasWidth}
-				height={canvasHeight}
-				on:connect={handleConnect}
-				on:delete={handleDeleteConnection}
-			/>
-
-			<!-- Particle System - Living swarm intelligence -->
-			<ParticleSystem
-				width={canvasWidth}
-				height={canvasHeight}
-				particleCount={500}
-				components={trackedComponents}
-				{connections}
-			/>
-
-			<!-- Component Palette -->
-			<ComponentPalette />
-
-			<!-- Realm Control Panel -->
-			<RealmControl
-				bind:realm
-				{canvasWidth}
-				{canvasHeight}
-				on:realmcreated={handleRealmCreated}
-				on:start={handleStartSimulation}
-				on:stop={handleStopSimulation}
-				on:reset={handleResetRealm}
-				on:save={handleSaveRealm}
-				on:load={handleLoadRealm}
-				on:export={handleExportReport}
-				on:tickratechange={handleTickRateChange}
-			/>
+			<!-- Village Renderer (buildings) -->
+			{#if village}
+				<VillageRenderer
+					{village}
+					width={canvasWidth}
+					height={canvasHeight}
+					bind:selectedBuilding
+					on:buildingclick={(e) => handleBuildingClick(e.detail)}
+				/>
+			{/if}
 
 			<!-- Being Renderer (evolutionary organisms) -->
 			{#if realm}
@@ -400,128 +348,66 @@
 				/>
 			{/if}
 
-			<!-- Example Brewery Nodes -->
-			<Node
-				id="input-1"
-				type="input"
-				title="RAW INGREDIENTS"
-				x={100}
-				y={150}
-				outputs={[{id: 'out1', label: 'malt'}, {id: 'out2', label: 'hops'}, {id: 'out3', label: 'yeast'}]}
-				active={breweryActive}
-				on:drag={handleNodeDrag}
-			>
-				<div style="display: flex; flex-direction: column; gap: 8px;">
-					<Light label="MALT" on={breweryActive} color="#fb3" />
-					<Light label="HOPS" on={breweryActive} color="#3f3" blinking={breweryActive} />
-					<Light label="YEAST" on={breweryActive} color="#f93" />
-				</div>
-			</Node>
+			<!-- Tutorial Panel -->
+			{#if tutorial && tutorialMode}
+				<TutorialPanel
+					{tutorial}
+					{village}
+					beings={realm?.beings || []}
+					currentTick={realm?.currentTick || 0}
+					on:message={handleTutorialMessage}
+					on:complete={handleTutorialComplete}
+					on:skip={handleTutorialSkip}
+					on:sandbox={handleSandboxMode}
+					on:continue={handleContinueVillage}
+					on:trigger-drought={handleTriggerDrought}
+				/>
+			{/if}
 
-			<Node
-				id="process-1"
-				type="process"
-				title="MASH TUN"
-				x={400}
-				y={100}
-				inputs={[{id: 'in1', label: 'ingredients'}]}
-				outputs={[{id: 'out1', label: 'wort'}]}
-				active={breweryActive}
-				on:drag={handleNodeDrag}
-			>
-				<div style="display: flex; gap: 12px; align-items: center;">
-					<Dial label="TEMP" value={mashTemp} color="#f90" on:change={e => mashTemp = e.detail.value} />
-					<Dial label="TIME" value={mashTime} color="#09f" on:change={e => mashTime = e.detail.value} />
-				</div>
-			</Node>
+			<!-- Resource Panel -->
+			{#if village}
+				<ResourcePanel {village} />
+			{/if}
 
-			<Node
-				id="process-2"
-				type="process"
-				title="BOIL KETTLE"
-				x={400}
-				y={280}
-				inputs={[{id: 'in1', label: 'wort'}]}
-				outputs={[{id: 'out1', label: 'cooled wort'}]}
-				active={breweryActive && boilActive}
-				on:drag={handleNodeDrag}
-			>
-				<div style="display: flex; gap: 12px; align-items: center;">
-					<Switch label="HEAT" on={boilActive} color="#f30" on:toggle={e => boilActive = e.detail.on} />
-					<Dial label="POWER" value={boilPower} color="#f30" on:change={e => boilPower = e.detail.value} />
-				</div>
-			</Node>
+			<!-- Building Palette -->
+			{#if village}
+				<BuildingPalette {village} />
+			{/if}
 
-			<Node
-				id="process-3"
-				type="process"
-				title="FERMENTER"
-				x={700}
-				y={180}
-				inputs={[{id: 'in1', label: 'wort'}, {id: 'in2', label: 'yeast'}]}
-				outputs={[{id: 'out1', label: 'beer'}]}
-				active={breweryActive}
-				on:drag={handleNodeDrag}
-			>
-				<div style="display: flex; flex-direction: column; gap: 8px;">
-					<div style="display: flex; gap: 12px; justify-content: center;">
-						<Light label="ACTIVE" on={breweryActive} color="#0f3" blinking={breweryActive} />
-						<Light label="TEMP OK" on={fermenterTempOk} color="#09f" />
-					</div>
-					<Dial label="DAYS" value={fermentDays} color="#f0f" on:change={e => fermentDays = e.detail.value} />
-				</div>
-			</Node>
+			<!-- Data Table -->
+			{#if realm && !tutorialMode}
+				<DataTable {realm} />
+			{/if}
 
-			<Node
-				id="output-1"
-				type="output"
-				title="BOTTLING LINE"
-				x={1000}
-				y={180}
-				inputs={[{id: 'in1', label: 'beer'}]}
-				active={breweryActive}
-				on:drag={handleNodeDrag}
-			>
-				<div style="display: flex; flex-direction: column; gap: 12px; align-items: center;">
-					<Button
-						label={breweryActive ? 'STOP' : 'START'}
-						color={breweryActive ? '#f30' : '#0f3'}
-						size="large"
-						on:press={() => {
-							breweryActive = !breweryActive;
-							if (breweryActive) boilActive = true;
-						}}
-					/>
-					<div style="font-size: 0.9rem; color: #0f3; font-family: 'Courier New', monospace;">
-						🍺 {bottledBeers} BOTTLES
+			<!-- Worker Assignment Modal -->
+			{#if showWorkerAssignment && selectedBuilding && realm}
+				<WorkerAssignment
+					building={selectedBuilding}
+					beings={realm.beings}
+					{village}
+					on:assign={handleAssignWorker}
+					on:unassign={handleUnassignWorker}
+					on:close={() => showWorkerAssignment = false}
+				/>
+			{/if}
+
+			<!-- Simulation Controls (bottom-left) -->
+			{#if realm}
+				<div class="sim-controls">
+					{#if realm.running}
+						<button class="control-btn stop" on:click={handleStopSimulation}>
+							⏸️ Pause
+						</button>
+					{:else}
+						<button class="control-btn start" on:click={handleStartSimulation}>
+							▶️ Start
+						</button>
+					{/if}
+					<div class="tick-rate">
+						{realm.tickRate} tps
 					</div>
 				</div>
-			</Node>
-
-			<!-- Control Panel -->
-			<div class="control-panel">
-				<div class="panel-header">⚙️ BREWERY CONTROLS</div>
-				<div class="panel-body">
-					<Button
-						label="E-STOP"
-						color="#f00"
-						size="medium"
-						on:press={emergencyStop}
-					/>
-					<Switch label="MASTER" on={masterPower} color="#0f3" on:toggle={e => masterPower = e.detail.on} />
-					<Dial label="FLOW" value={flowRate} color="#0af" on:change={e => flowRate = e.detail.value} />
-				</div>
-			</div>
-
-			<!-- Instructions -->
-			<div class="instructions">
-				<div class="instruction-header">💡 QUICK START</div>
-				<div class="instruction-line">🎛️ Drag nodes to reposition</div>
-				<div class="instruction-line">🎚️ Adjust dials and flip switches</div>
-				<div class="instruction-line">🚀 Press GREEN button to START brewery</div>
-				<div class="instruction-line">🔴 Press RED button for emergency stop</div>
-				<div class="instruction-line">⚡ Watch flow animation when active</div>
-			</div>
+			{/if}
 		</div>
 	</div>
 {/if}
@@ -684,7 +570,7 @@
 		50% { opacity: 0.5; }
 	}
 
-	.screen-info {
+	.tick-info {
 		font-family: 'Courier New', monospace;
 		font-size: 0.8rem;
 		color: #0f3;
@@ -714,19 +600,13 @@
 		pointer-events: none;
 	}
 
-	.wire-layer {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		z-index: 1;
-	}
-
-	.control-panel {
+	.sim-controls {
 		position: absolute;
 		bottom: 20px;
 		left: 20px;
+		display: flex;
+		gap: 12px;
+		align-items: center;
 		background: rgba(20, 20, 30, 0.95);
 		border: 2px solid #0f3;
 		border-radius: 8px;
@@ -735,47 +615,40 @@
 		box-shadow: 0 0 20px rgba(0, 255, 51, 0.3);
 	}
 
-	.panel-header {
-		font-size: 0.8rem;
+	.control-btn {
+		padding: 10px 20px;
+		border-radius: 6px;
+		font-family: 'Courier New', monospace;
+		font-size: 0.9rem;
 		font-weight: 600;
+		cursor: pointer;
+		border: none;
+		color: #fff;
+		transition: all 0.2s;
+	}
+
+	.control-btn.start {
+		background: linear-gradient(135deg, #0f3 0%, #0af 100%);
+	}
+
+	.control-btn.start:hover {
+		box-shadow: 0 0 20px rgba(0, 255, 51, 0.5);
+	}
+
+	.control-btn.stop {
+		background: linear-gradient(135deg, #f90 0%, #f30 100%);
+	}
+
+	.control-btn.stop:hover {
+		box-shadow: 0 0 20px rgba(255, 153, 0, 0.5);
+	}
+
+	.tick-rate {
+		font-size: 0.8rem;
 		color: #0f3;
-		margin-bottom: 12px;
-		font-family: 'Courier New', monospace;
-		text-align: center;
-		letter-spacing: 2px;
-	}
-
-	.panel-body {
-		display: flex;
-		gap: 16px;
-		align-items: center;
-	}
-
-	.instructions {
-		position: absolute;
-		bottom: 20px;
-		right: 20px;
-		background: rgba(20, 20, 30, 0.95);
-		border: 2px solid #0af;
-		border-radius: 8px;
-		padding: 12px 16px;
-		backdrop-filter: blur(10px);
-		box-shadow: 0 0 20px rgba(0, 170, 255, 0.3);
-	}
-
-	.instruction-header {
-		font-size: 0.8rem;
-		font-weight: 600;
-		color: #0af;
-		margin-bottom: 8px;
-		font-family: 'Courier New', monospace;
-		letter-spacing: 1px;
-	}
-
-	.instruction-line {
-		font-size: 0.75rem;
-		color: #999;
-		margin: 4px 0;
+		padding: 8px 12px;
+		background: rgba(0, 255, 51, 0.1);
+		border-radius: 4px;
 		font-family: 'Courier New', monospace;
 	}
 </style>
