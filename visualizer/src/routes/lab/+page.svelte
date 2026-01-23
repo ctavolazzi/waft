@@ -8,6 +8,13 @@
 	import ParticleSystem from '$lib/components/lab/ParticleSystem.svelte';
 	import ComponentPalette from '$lib/components/lab/ComponentPalette.svelte';
 	import WiringSystem from '$lib/components/lab/WiringSystem.svelte';
+	import RealmControl from '$lib/components/lab/RealmControl.svelte';
+	import BeingRenderer from '$lib/components/lab/BeingRenderer.svelte';
+	import DataTable from '$lib/components/lab/DataTable.svelte';
+
+	import type { Realm } from '$lib/models/Realm';
+	import { EvolutionEngine } from '$lib/models/Evolution';
+	import { serializeRealm, deserializeRealm } from '$lib/models/Realm';
 
 	let showSplash = true;
 	let asciiLine = 0;
@@ -84,6 +91,10 @@
 	];
 
 	let wiringSystemRef: any;
+
+	// Realm & Evolution state
+	let realm: Realm | null = null;
+	let evolutionEngine: EvolutionEngine | null = null;
 
 	// Update connections when brewery is active
 	$: {
@@ -207,6 +218,93 @@
 		connections = connections.filter(c => c.id !== connectionId);
 		console.log('❌ Deleted connection:', connectionId);
 	}
+
+	// Realm event handlers
+	function handleRealmCreated(event: CustomEvent) {
+		realm = event.detail.realm;
+		evolutionEngine = new EvolutionEngine(realm);
+		console.log('🌌 Realm created:', realm.config.name);
+	}
+
+	function handleStartSimulation() {
+		if (!evolutionEngine) return;
+		evolutionEngine.start();
+		console.log('▶️ Evolution started');
+	}
+
+	function handleStopSimulation() {
+		if (!evolutionEngine) return;
+		evolutionEngine.stop();
+		console.log('⏸️ Evolution paused');
+	}
+
+	function handleResetRealm() {
+		if (evolutionEngine) {
+			evolutionEngine.stop();
+		}
+		realm = null;
+		evolutionEngine = null;
+		console.log('🔄 Realm reset');
+	}
+
+	function handleSaveRealm(event: CustomEvent) {
+		if (!realm) return;
+		const json = serializeRealm(realm);
+		const blob = new Blob([json], { type: 'application/json' });
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement('a');
+		a.href = url;
+		a.download = `${realm.config.name.replace(/\s+/g, '-')}-${Date.now()}.json`;
+		a.click();
+		URL.revokeObjectURL(url);
+		console.log('💾 Realm saved');
+	}
+
+	function handleLoadRealm() {
+		const input = document.createElement('input');
+		input.type = 'file';
+		input.accept = '.json';
+		input.onchange = (e: Event) => {
+			const file = (e.target as HTMLInputElement).files?.[0];
+			if (!file) return;
+
+			const reader = new FileReader();
+			reader.onload = (e) => {
+				try {
+					const json = e.target?.result as string;
+					realm = deserializeRealm(json);
+					evolutionEngine = new EvolutionEngine(realm);
+					console.log('📂 Realm loaded:', realm.config.name);
+				} catch (error) {
+					console.error('Failed to load realm:', error);
+					alert('Failed to load realm file');
+				}
+			};
+			reader.readAsText(file);
+		};
+		input.click();
+	}
+
+	function handleExportReport() {
+		if (!realm) return;
+		console.log('📄 Exporting report for', realm.config.name);
+		// TODO: Generate Typst report and export as PDF
+		alert('PDF export coming soon! This will generate a full scientific report.');
+	}
+
+	function handleTickRateChange(event: CustomEvent) {
+		if (!evolutionEngine || !realm) return;
+		// Restart with new tick rate
+		const wasRunning = realm.running;
+		if (wasRunning) {
+			evolutionEngine.stop();
+		}
+		evolutionEngine = new EvolutionEngine(realm);
+		if (wasRunning) {
+			evolutionEngine.start();
+		}
+		console.log('⚡ Tick rate changed to', realm.tickRate);
+	}
 </script>
 
 {#if showSplash}
@@ -275,6 +373,32 @@
 
 			<!-- Component Palette -->
 			<ComponentPalette />
+
+			<!-- Realm Control Panel -->
+			<RealmControl
+				bind:realm
+				{canvasWidth}
+				{canvasHeight}
+				on:realmcreated={handleRealmCreated}
+				on:start={handleStartSimulation}
+				on:stop={handleStopSimulation}
+				on:reset={handleResetRealm}
+				on:save={handleSaveRealm}
+				on:load={handleLoadRealm}
+				on:export={handleExportReport}
+				on:tickratechange={handleTickRateChange}
+			/>
+
+			<!-- Being Renderer (evolutionary organisms) -->
+			{#if realm}
+				<BeingRenderer
+					beings={realm.beings}
+					width={canvasWidth}
+					height={canvasHeight}
+					showLabels={false}
+					showFitness={true}
+				/>
+			{/if}
 
 			<!-- Example Brewery Nodes -->
 			<Node
