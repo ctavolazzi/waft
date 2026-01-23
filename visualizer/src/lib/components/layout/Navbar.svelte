@@ -11,6 +11,7 @@
 		<a href="/" class="text-2xl font-bold text-[var(--primary-light)]">🌊 Waft</a>
 		<div class="flex items-center gap-2">
 			<a href="/" class="nav-box">Dashboard</a>
+			<a href="/mission-control" class="nav-box nav-highlight">🚀 Mission Control</a>
 			<a href="/cognitive-tools" class="nav-box">🧠 Cognitive Tools</a>
 			<a href="/evolve-ui-monitor" class="nav-box">🎨 Evolve UI</a>
 			<a href="/git" class="nav-box">Git</a>
@@ -62,5 +63,17 @@
 		background-color: var(--primary-dark);
 		border-color: var(--primary-dark);
 		color: var(--bg-dark);
+	}
+
+	.nav-highlight {
+		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+		color: white;
+		border-color: #667eea;
+		font-weight: 600;
+	}
+
+	.nav-highlight:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 	}
 </style>

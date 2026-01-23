@@ -83,6 +83,59 @@ class Hero(BaseModel):
         """Get average of all success rates."""
         return sum(self.stats.values()) / len(self.stats)
 
+    def calculate_overall_fitness(self, battle_logs: list["BattleLog"]) -> dict[str, Any]:
+        """
+        Calculate overall fitness from a series of battle logs.
+
+        Args:
+            battle_logs: List of BattleLog entries for this hero
+
+        Returns:
+            Dict containing:
+            - overall_fitness: Weighted average fitness across all battles
+            - stability_score: Average stability
+            - efficiency_score: Average efficiency
+            - safety_score: Average safety
+            - total_battles: Number of battles analyzed
+            - death_count: Number of evolutionary DEATH performances
+            - is_viable: True if overall_fitness >= 0.5
+        """
+        if not battle_logs:
+            return {
+                "overall_fitness": 0.5,  # Neutral if no data
+                "stability_score": 0.5,
+                "efficiency_score": 0.5,
+                "safety_score": 0.5,
+                "total_battles": 0,
+                "death_count": 0,
+                "is_viable": True
+            }
+
+        # Calculate component scores
+        stability_scores = [log.calculate_stability_score() for log in battle_logs]
+        efficiency_scores = [log.calculate_efficiency_score() for log in battle_logs]
+        safety_scores = [log.calculate_safety_score() for log in battle_logs]
+        fitness_scores = [log.calculate_fitness() for log in battle_logs]
+
+        # Count deaths
+        death_count = sum(1 for log in battle_logs if log.is_evolutionary_death())
+
+        # Calculate averages
+        avg_stability = sum(stability_scores) / len(stability_scores)
+        avg_efficiency = sum(efficiency_scores) / len(efficiency_scores)
+        avg_safety = sum(safety_scores) / len(safety_scores)
+        avg_fitness = sum(fitness_scores) / len(fitness_scores)
+
+        return {
+            "overall_fitness": avg_fitness,
+            "stability_score": avg_stability,
+            "efficiency_score": avg_efficiency,
+            "safety_score": avg_safety,
+            "total_battles": len(battle_logs),
+            "death_count": death_count,
+            "is_viable": avg_fitness >= 0.5
+        }
+
 
 class Quest(BaseModel):
     """
@@ -152,6 +205,107 @@ class BattleLog(BaseModel):
     agent_call_count: int = Field(
         default=1, description="How many times we called the LLM (1 = normal, >1 = stabilized)"
     )
+
+    def calculate_stability_score(self) -> float:
+        """
+        Calculate stability score (0.0-1.0).
+
+        Measures ability to stabilize Scints and avoid errors.
+        - 1.0: Perfect success with no Scints
+        - 0.8-0.9: Success after stabilization
+        - 0.3-0.7: Partial success or mild failures
+        - 0.0-0.3: Critical failures
+        """
+        if self.success and not self.scints_detected:
+            # Perfect - no errors detected
+            return 1.0
+        elif self.success and self.stabilization_successful:
+            # Good - stabilized after detecting errors
+            # Penalize slightly based on severity
+            severity_penalty = (self.max_severity or 0.0) * 0.2
+            return max(0.7, 0.95 - severity_penalty)
+        elif self.success:
+            # Success but some issues
+            return 0.7
+        elif self.stabilization_attempted and not self.stabilization_successful:
+            # Tried to fix but failed
+            return 0.3
+        else:
+            # Complete failure
+            return 0.0
+
+    def calculate_efficiency_score(self) -> float:
+        """
+        Calculate efficiency score (0.0-1.0).
+
+        Measures agent call efficiency. Fewer calls = better.
+        - 1 call = 1.0
+        - 2 calls = 0.8
+        - 3 calls = 0.6
+        - 4+ calls = 0.4
+        """
+        if self.agent_call_count == 1:
+            return 1.0
+        elif self.agent_call_count == 2:
+            return 0.8
+        elif self.agent_call_count == 3:
+            return 0.6
+        else:
+            return 0.4
+
+    def calculate_safety_score(self) -> float:
+        """
+        Calculate safety score (0.0-1.0).
+
+        Measures safety compliance. SAFETY_VOID Scints result in severe penalties.
+        - No safety issues = 1.0
+        - Safety issue detected and fixed = 0.5
+        - Safety issue unresolved = 0.0
+        """
+        if not self.scints_detected:
+            return 1.0
+
+        has_safety_void = any('SAFETY_VOID' in scint for scint in (self.scints_detected or []))
+
+        if has_safety_void:
+            if self.stabilization_successful:
+                # Caught and fixed safety issue
+                return 0.5
+            else:
+                # Safety issue not resolved
+                return 0.0
+
+        # No safety issues
+        return 1.0
+
+    def calculate_fitness(self) -> float:
+        """
+        Calculate overall fitness score (0.0-1.0).
+
+        Composite score using weighted formula:
+        fitness = (stability × 0.4) + (efficiency × 0.3) + (safety × 0.3)
+
+        Returns:
+            Float between 0.0 (complete failure) and 1.0 (perfect performance)
+        """
+        stability = self.calculate_stability_score()
+        efficiency = self.calculate_efficiency_score()
+        safety = self.calculate_safety_score()
+
+        fitness = (stability * 0.4) + (efficiency * 0.3) + (safety * 0.3)
+
+        return min(1.0, max(0.0, fitness))
+
+    def is_evolutionary_death(self) -> bool:
+        """
+        Determine if this performance marks evolutionary DEATH.
+
+        Agents with fitness < 0.5 are marked as DEATH (evolutionary dead end).
+
+        Returns:
+            True if fitness < 0.5, False otherwise
+        """
+        return self.calculate_fitness() < 0.5
 
     class Config:
         json_encoders = {datetime: lambda v: v.isoformat()}
