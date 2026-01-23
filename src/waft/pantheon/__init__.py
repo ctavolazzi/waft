@@ -21,6 +21,7 @@ from .scrivener import ReportRecord, ReportType, Scrivener
 from .skurl import RedTapeObstacle, Skurl
 from .storyteller import Story, Storyteller
 from .test_runner import TestResult, TestRunner
+from .the_chief import IterationLoop, TheChief
 from .the_village import TheVillage, VillageConnection, VillageGathering
 
 __all__ = [
@@ -63,4 +64,7 @@ __all__ = [
     "AstrologyProfile",
     "PersonalityProfile",
     "DivineStatistics",
+    # The Chief (Iteration Loops)
+    "TheChief",
+    "IterationLoop",
 ]
