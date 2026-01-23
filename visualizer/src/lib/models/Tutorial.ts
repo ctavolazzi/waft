@@ -247,8 +247,22 @@ export function checkStepCompletion(
 	// Check buildings placed
 	if (completion.buildingsPlaced) {
 		const placedTypes = village.buildings.map((b: any) => b.template.type);
+
+		// Count occurrences of each building type required
+		const requiredCounts: Record<string, number> = {};
 		for (const required of completion.buildingsPlaced) {
-			if (!placedTypes.includes(required)) {
+			requiredCounts[required] = (requiredCounts[required] || 0) + 1;
+		}
+
+		// Count occurrences of each building type placed
+		const placedCounts: Record<string, number> = {};
+		for (const type of placedTypes) {
+			placedCounts[type] = (placedCounts[type] || 0) + 1;
+		}
+
+		// Check if we have enough of each required type
+		for (const [type, count] of Object.entries(requiredCounts)) {
+			if ((placedCounts[type] || 0) < count) {
 				return false;
 			}
 		}

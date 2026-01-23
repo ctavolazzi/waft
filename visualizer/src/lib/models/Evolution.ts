@@ -105,6 +105,7 @@ export class EvolutionEngine {
 			if (being.age >= being.maxAge) {
 				being.alive = false;
 				being.causeOfDeath = 'age';
+				this.realm.beingStats.totalDeaths++;
 				this.recordEvent({
 					tick: this.realm.currentTick,
 					type: 'death',
@@ -122,6 +123,7 @@ export class EvolutionEngine {
 			if (being.energy <= 0) {
 				being.alive = false;
 				being.causeOfDeath = 'starvation';
+				this.realm.beingStats.totalDeaths++;
 			}
 		}
 	}
