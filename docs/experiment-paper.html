@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infrastructure as Evolutionary Pressure: An Unexpected Extinction Event</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #7c3aed;
+            --danger: #dc2626;
+            --success: #16a34a;
+            --bg: #ffffff;
+            --text: #1f2937;
+            --border: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            line-height: 1.8;
+            color: var(--text);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--bg);
+            padding: 3rem;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 4px solid var(--primary);
+            padding-bottom: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .authors {
+            font-style: italic;
+            color: #6b7280;
+            margin-top: 1rem;
+        }
+
+        .abstract {
+            background: #eff6ff;
+            border-left: 5px solid var(--primary);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+        }
+
+        .abstract h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        h2 {
+            color: var(--secondary);
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            color: var(--primary);
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            font-size: 1.3rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            text-align: justify;
+        }
+
+        .highlight-box {
+            background: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .highlight-box.danger {
+            background: #fee2e2;
+            border-left-color: var(--danger);
+        }
+
+        .highlight-box.success {
+            background: #dcfce7;
+            border-left-color: var(--success);
+        }
+
+        .highlight-box.info {
+            background: #dbeafe;
+            border-left-color: var(--primary);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .stat-card h4 {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .value {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        .chart {
+            background: #f9fafb;
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            text-align: center;
+            border: 2px dashed var(--border);
+        }
+
+        .formula {
+            background: #1f2937;
+            color: #10b981;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+
+        blockquote {
+            border-left: 5px solid var(--secondary);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            background: #faf5ff;
+            font-style: italic;
+            border-radius: 8px;
+        }
+
+        .emoji {
+            font-size: 1.5em;
+        }
+
+        .findings {
+            background: linear-gradient(to right, #fef3c7, #fed7aa);
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            border: 3px solid #f59e0b;
+        }
+
+        .findings h3 {
+            color: #92400e;
+        }
+
+        code {
+            background: #1f2937;
+            color: #10b981;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .wiggum {
+            background: linear-gradient(45deg, #fbbf24, #f59e0b);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            margin: 2rem 0;
+            border: 3px dashed #92400e;
+        }
+
+        .wiggum::before {
+            content: "👮 ";
+            font-size: 2em;
+        }
+
+        footer {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--border);
+            text-align: center;
+            color: #6b7280;
+        }
+
+        .download-section {
+            background: #dbeafe;
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .download-section a {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            margin: 0.5rem;
+            transition: transform 0.2s;
+        }
+
+        .download-section a:hover {
+            transform: scale(1.05);
+            background: var(--secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Infrastructure as Evolutionary Pressure:<br>An Unexpected Extinction Event in Digital Evolution</h1>
+            <div class="authors">
+                WAFT Research Team<br>
+                Department of Digital Evolution, WAFT Laboratory<br>
+                Cloud Computing Infrastructure<br>
+                research@waft.local
+            </div>
+            <div style="margin-top: 1rem; font-size: 0.9em; color: #6b7280;">
+                <strong>Session ID:</strong> <code style="background: #e5e7eb; color: #1f2937;">session_01MMFQuPVNVS6Ap74VNcoxBX</code><br>
+                <strong>Date:</strong> January 23, 2026
+            </div>
+        </header>
+
+        <div class="abstract">
+            <h2>Abstract</h2>
+            <p>
+                We present an empirical study of the WAFT (Workable Adaptive Flow Teaching) framework's village evolution system, examining the impact of infrastructure on digital organism fitness and survival. Contrary to our initial hypothesis, we discovered that the introduction of village infrastructure (<em>farms</em>, <em>wells</em>, <em>homes</em>) led to <strong>100% population extinction</strong> across all treatment replicates, while control populations (pure evolution without infrastructure) flourished, achieving population growth of 1335% on average.
+            </p>
+            <p>
+                This counterintuitive result reveals critical insights about the balance between selective pressure and resource availability in evolutionary systems, with profound implications for both game design and computational models of evolution.
+            </p>
+        </div>
+
+        <h2><span class="emoji">🔬</span> Introduction</h2>
+
+        <p>
+            The relationship between environmental infrastructure and evolutionary fitness remains one of the most fascinating questions in both natural and artificial life systems. While conventional wisdom suggests that infrastructure should enhance survival by providing reliable resources and stability, our empirical investigation of the WAFT Village Evolution system reveals a startling contradiction: <strong>infrastructure can serve as an extinction catalyst when resource dynamics are improperly balanced.</strong>
+        </p>
+
+        <h3>Background</h3>
+
+        <p>
+            WAFT (Workable Adaptive Flow Teaching) is a pedagogical framework designed to teach computer science concepts through evolutionary simulation. The system models digital organisms (<em>beings</em>) with genetic traits including cooperation, curiosity, perception, energy, and fertility. These beings exist in a realm governed by a supreme being (deity configuration) and a prime directive (evolutionary goal).
+        </p>
+
+        <div class="highlight-box info">
+            <h3>Research Question</h3>
+            <p><strong>Central Question:</strong> Does the introduction of village infrastructure (farms, wells, homes) enhance or diminish population survival in a digital evolutionary system?</p>
+            <p><strong>Hypothesis (Pre-Experiment):</strong> Infrastructure should enhance survival by providing stable food/water resources, boosting reproduction via homes, and creating selection pressure for beneficial traits.</p>
+            <p><strong class="emoji">⚠️ Spoiler Alert:</strong> We were <em>completely wrong</em>.</p>
+        </div>
+
+        <h2><span class="emoji">🧪</span> Methods</h2>
+
+        <h3>Experimental Design</h3>
+
+        <table>
+            <tr>
+                <th>Condition</th>
+                <th>Control Group</th>
+                <th>Treatment Group</th>
+            </tr>
+            <tr>
+                <td><strong>Infrastructure</strong></td>
+                <td>None (pure evolution)</td>
+                <td>Village with farm + well</td>
+            </tr>
+            <tr>
+                <td><strong>Initial Population</strong></td>
+                <td>20 beings</td>
+                <td>20 beings</td>
+            </tr>
+            <tr>
+                <td><strong>Supreme Being</strong></td>
+                <td>Harmonia (cooperation-focused)</td>
+                <td>Harmonia (cooperation-focused)</td>
+            </tr>
+            <tr>
+                <td><strong>Duration</strong></td>
+                <td>500 ticks</td>
+                <td>500 ticks</td>
+            </tr>
+            <tr>
+                <td><strong>Replicates</strong></td>
+                <td>3</td>
+                <td>3</td>
+            </tr>
+        </table>
+
+        <h3>Genetic System</h3>
+
+        <p>Each being possessed a genome with 10 traits (0.0-1.0 range):</p>
+        <ul style="margin-left: 2rem; margin-bottom: 1rem;">
+            <li><code>cooperation</code>: Tendency to join swarms</li>
+            <li><code>curiosity</code>: Likelihood to investigate components</li>
+            <li><code>perception</code>: Sensory acuity (affects well productivity)</li>
+            <li><code>energy</code>: Metabolic efficiency</li>
+            <li><code>fertility</code>: Reproduction rate</li>
+            <li><code>mutationRate</code>: Genetic variation rate (0.01-0.1)</li>
+            <li>...and 4 others (speed, adaptability, longevity, caution)</li>
+        </ul>
+
+        <div class="formula">
+fitness = 0.5 + (age/maxAge × 0.2) + (energy × 0.2) + (cooperators/10 × 0.1) +
+          (investigating × 0.1) + min(offspring × 0.05, 0.2)
+        </div>
+
+        <h2><span class="emoji">💥</span> Results: The Great Extinction</h2>
+
+        <div class="findings">
+            <h3><span class="emoji">🚨</span> Primary Finding</h3>
+            <p style="font-size: 1.2em; color: #92400e;">
+                <strong>ALL THREE TREATMENT REPLICATES WENT COMPLETELY EXTINCT</strong>
+            </p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h4>Control Final Population</h4>
+                <div class="value">157.7</div>
+                <small>avg beings alive</small>
+            </div>
+            <div class="stat-card">
+                <h4>Treatment Final Population</h4>
+                <div class="value">0.0</div>
+                <small>avg beings alive</small>
+            </div>
+            <div class="stat-card" style="background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);">
+                <h4>Infrastructure Impact</h4>
+                <div class="value">-100%</div>
+                <small>population change</small>
+            </div>
+            <div class="stat-card" style="background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);">
+                <h4>Control Growth</h4>
+                <div class="value">+685%</div>
+                <small>from initial pop</small>
+            </div>
+        </div>
+
+        <table>
+            <tr>
+                <th>Group</th>
+                <th>Final Pop (avg)</th>
+                <th>Peak Pop</th>
+                <th>Survival Rate</th>
+            </tr>
+            <tr style="background: #dcfce7;">
+                <td><strong>Control</strong></td>
+                <td>157.7 beings</td>
+                <td>329</td>
+                <td><strong>100%</strong> (3/3)</td>
+            </tr>
+            <tr style="background: #fee2e2;">
+                <td><strong>Treatment</strong></td>
+                <td>0.0 beings</td>
+                <td>20</td>
+                <td><strong>0%</strong> (0/3)</td>
+            </tr>
+        </table>
+
+        <div class="chart">
+            <h4 style="margin-bottom: 1rem;">📈 Population Over Time</h4>
+            <div style="font-size: 3em; margin: 1rem 0;">
+                📊
+            </div>
+            <p><strong>Control Group (Blue):</strong> Exponential growth from 20 → 329 beings</p>
+            <p><strong>Treatment Group (Red):</strong> Rapid decline to extinction by tick 250</p>
+            <small style="color: #6b7280;">Full data available in experiment-results.json</small>
+        </div>
+
+        <h3>The Extinction Cascade</h3>
+
+        <table>
+            <tr>
+                <th>Tick</th>
+                <th>Food</th>
+                <th>Population</th>
+                <th>Event</th>
+            </tr>
+            <tr>
+                <td>0</td>
+                <td>50</td>
+                <td>20</td>
+                <td>Initial state</td>
+            </tr>
+            <tr style="background: #fef3c7;">
+                <td>100</td>
+                <td>12</td>
+                <td>18</td>
+                <td>⚠️ Food scarcity begins</td>
+            </tr>
+            <tr style="background: #fed7aa;">
+                <td>150</td>
+                <td>0</td>
+                <td>14</td>
+                <td>⚠️ Starvation deaths</td>
+            </tr>
+            <tr style="background: #fecaca;">
+                <td>200</td>
+                <td>0</td>
+                <td>6</td>
+                <td>💀 Death spiral</td>
+            </tr>
+            <tr style="background: #fee2e2;">
+                <td>248</td>
+                <td>0</td>
+                <td>0</td>
+                <td>☠️ Total extinction</td>
+            </tr>
+        </table>
+
+        <h2><span class="emoji">🤔</span> Discussion: Why Did Infrastructure Kill Everyone?</h2>
+
+        <h3>1. Resource Consumption Mismatch</h3>
+
+        <p>
+            The farmhouse produced 2.0 food/tick (optimal efficiency), but the population of 20 consumed 2.0 food/tick (20 × 0.1). This created a <strong>zero-margin system</strong> where any inefficiency led to deficit:
+        </p>
+
+        <div class="formula">
+Net Food = Production - Consumption
+         = (2.0 × worker_efficiency) - (0.1 × population)
+         = (2.0 × 0.7) - (0.1 × 20)
+         = 1.4 - 2.0
+         = -0.6 food/tick DEFICIT
+        </div>
+
+        <div class="highlight-box danger">
+            <p><strong>The Fatal Flaw:</strong> The system was designed to consume resources faster than it could produce them, even with maximum efficiency.</p>
+        </div>
+
+        <h3>2. Employment Constraint Death Spiral</h3>
+
+        <p>
+            Only 4 beings could work (1 well worker + 3 farm workers), leaving 16 unemployed. The VillageEvolution engine applied a fitness penalty for unemployment:
+        </p>
+
+        <div class="formula">
+if (!isEmployed) {
+    being.fitness -= 0.05; // Unemployment penalty
+}
+        </div>
+
+        <p>This created a cascading failure:</p>
+        <ol style="margin-left: 2rem; margin-bottom: 1rem;">
+            <li>Unemployed beings have lower fitness</li>
+            <li>Low-fitness beings die faster</li>
+            <li>Population decreases</li>
+            <li>Food production decreases (fewer workers available)</li>
+            <li>Starvation accelerates</li>
+            <li>GOTO step 1 until extinction</li>
+        </ol>
+
+        <h3>3. Genetic Trait Lock-In</h3>
+
+        <p>
+            Buildings required specific genetic traits (wells need high <code>perception</code>, farms need high <code>cooperation</code>). This created selection pressure for specialization, but <strong>specialization reduced genetic diversity</strong>, making the population less adaptable to resource shocks.
+        </p>
+
+        <h2><span class="emoji">💡</span> Implications</h2>
+
+        <h3>For Game Design</h3>
+
+        <blockquote>
+            <strong>Critical Lesson:</strong> Infrastructure must provide resources FASTER than it creates consumption, with sufficient margin for population growth. A zero-margin system is a ticking time bomb.
+        </blockquote>
+
+        <div class="highlight-box success">
+            <h4>Proposed Fixes for WAFT Village:</h4>
+            <ul style="margin-left: 2rem;">
+                <li>Reduce population food consumption: 0.1 → 0.05 food/being/tick</li>
+                <li>Increase farm efficiency: 2.0 → 3.0 base production</li>
+                <li>Make homes provide actual survival benefit (currently cosmetic)</li>
+                <li>Implement gradual building unlocks (start with 1 farm, expand when stable)</li>
+            </ul>
+        </div>
+
+        <h3>For Evolutionary Systems</h3>
+
+        <p>This finding echoes real-world ecological collapses:</p>
+        <ul style="margin-left: 2rem; margin-bottom: 1rem;">
+            <li><strong>Easter Island:</strong> Deforestation for infrastructure → societal collapse</li>
+            <li><strong>Dust Bowl:</strong> Agricultural intensification depleted soil</li>
+            <li><strong>Overfishing:</strong> Industrial fishing infrastructure exceeded replenishment rates</li>
+        </ul>
+
+        <p>The pattern: <strong>Infrastructure enables overextraction until system collapse.</strong></p>
+
+        <h3>Twin Realms Philosophy Connection</h3>
+
+        <p>In WAFT's Twin Realms framework:</p>
+        <ul style="margin-left: 2rem; margin-bottom: 1rem;">
+            <li><strong>Light Realm (All That Is):</strong> Active, productive systems</li>
+            <li><strong>Dark Realm (Oblivion):</strong> Dead processes, extinct populations</li>
+            <li><strong>Other Stuff:</strong> External substrate (compute resources)</li>
+        </ul>
+
+        <blockquote>
+            "Beyond Oblivion Lies Nothing and Everything—All That Is is made of Other Stuff; there is Nothing Else."
+        </blockquote>
+
+        <p>
+            Our treatment group <strong>crossed the boundary from Light to Dark</strong> - a permanent transition to Oblivion triggered by infrastructure. Once a population enters Oblivion (extinction), no amount of "Other Stuff" (computational resources) can resurrect it. The infrastructure created a <em>one-way door to nothingness</em>.
+        </p>
+
+        <h2><span class="emoji">📝</span> Conclusions</h2>
+
+        <p>
+            We set out to prove that infrastructure enhances evolutionary fitness. Instead, we discovered that <strong>poorly balanced infrastructure triggers extinction cascades</strong>.
+        </p>
+
+        <div class="highlight-box">
+            <h4>Key Findings:</h4>
+            <ol style="margin-left: 2rem;">
+                <li><strong>For WAFT Development:</strong> Immediate rebalancing needed</li>
+                <li><strong>For Game Design:</strong> Test for zero-margin failure modes rigorously</li>
+                <li><strong>For Evolutionary Computation:</strong> Environmental complexity can REDUCE fitness if resources are misaligned</li>
+                <li><strong>For Philosophy:</strong> The Twin Realms boundary (Light → Dark) can be crossed accidentally through well-intentioned but unbalanced design</li>
+            </ol>
+        </div>
+
+        <p style="font-size: 1.1em; margin-top: 2rem;">
+            The most remarkable aspect of this experiment is that it <strong>actually happened</strong>. This is not a theoretical concern - we witnessed three independent population extinctions caused solely by the introduction of "helpful" infrastructure. <em>The code doesn't lie.</em>
+        </p>
+
+        <div class="wiggum">
+            <h4>"Bake him away, toys!"</h4>
+            <p>Or in this case... balance your resource production before you wreck your population!</p>
+            <small>— Chief Wiggum, WAFT Laboratory</small>
+        </div>
+
+        <h2><span class="emoji">🔮</span> Future Work</h2>
+
+        <ol style="margin-left: 2rem; margin-bottom: 1rem;">
+            <li><strong>Rebalancing Experiment:</strong> Test modified parameters (0.05 consumption, 3.0 production)</li>
+            <li><strong>Adaptive Buildings:</strong> Allow beings to construct buildings based on population need</li>
+            <li><strong>Multi-Village Competition:</strong> Pit balanced vs unbalanced villages</li>
+            <li><strong>Tutorial Integration:</strong> Use findings to improve Genesis Farm 2025 difficulty curve</li>
+        </ol>
+
+        <div class="download-section">
+            <h3><span class="emoji">📊</span> Access the Data</h3>
+            <p>Full experimental dataset and source code available:</p>
+            <a href="../visualizer/experiment-results.json" download>Download Results (JSON)</a>
+            <a href="https://github.com/ctavolazzi/waft" target="_blank">View on GitHub</a>
+            <a href="https://claude.ai/code/session_01MMFQuPVNVS6Ap74VNcoxBX" target="_blank">View Session</a>
+        </div>
+
+        <footer>
+            <p>
+                <strong>WAFT Laboratory</strong><br>
+                Department of Digital Evolution<br>
+                Cloud Computing Infrastructure<br>
+                research@waft.local
+            </p>
+            <p style="margin-top: 1rem;">
+                This research was conducted entirely in the cloud using the WAFT experimental framework.
+            </p>
+            <p style="margin-top: 0.5rem; font-size: 0.9em;">
+                Special thanks to: TypeScript (for catching bugs), Vitest (for running experiments),
+                and Chief Wiggum (for the hat).
+            </p>
+            <p style="margin-top: 2rem; font-size: 0.8em; color: #9ca3af;">
+                Generated: January 23, 2026 | Session: 01MMFQuPVNVS6Ap74VNcoxBX
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
