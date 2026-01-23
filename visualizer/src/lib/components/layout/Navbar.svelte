@@ -12,6 +12,7 @@
 		<div class="flex items-center gap-2">
 			<a href="/" class="nav-box">Dashboard</a>
 			<a href="/mission-control" class="nav-box nav-highlight">🚀 Mission Control</a>
+			<a href="/lab" class="nav-box nav-flow">🧪 Flow Lab</a>
 			<a href="/cognitive-tools" class="nav-box">🧠 Cognitive Tools</a>
 			<a href="/evolve-ui-monitor" class="nav-box">🎨 Evolve UI</a>
 			<a href="/git" class="nav-box">Git</a>
@@ -75,5 +76,27 @@
 	.nav-highlight:hover {
 		transform: translateY(-2px);
 		box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+	}
+
+	.nav-flow {
+		background: linear-gradient(135deg, #0f3 0%, #09f 100%);
+		color: white;
+		border-color: #0f3;
+		font-weight: 600;
+		animation: flow-pulse 3s infinite;
+	}
+
+	@keyframes flow-pulse {
+		0%, 100% {
+			box-shadow: 0 0 10px rgba(0, 255, 51, 0.4);
+		}
+		50% {
+			box-shadow: 0 0 20px rgba(0, 255, 51, 0.6);
+		}
+	}
+
+	.nav-flow:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 4px 12px rgba(0, 255, 51, 0.6);
 	}
 </style>
