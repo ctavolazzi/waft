@@ -5,6 +5,9 @@
 	import Dial from '$lib/components/lab/controls/Dial.svelte';
 	import Light from '$lib/components/lab/controls/Light.svelte';
 	import Button from '$lib/components/lab/controls/Button.svelte';
+	import ParticleSystem from '$lib/components/lab/ParticleSystem.svelte';
+	import ComponentPalette from '$lib/components/lab/ComponentPalette.svelte';
+	import WiringSystem from '$lib/components/lab/WiringSystem.svelte';
 
 	let showSplash = true;
 	let asciiLine = 0;
@@ -68,14 +71,19 @@
 	let masterPower = false;
 	let flowRate = 50;
 
-	// Connections (wires)
+	// Tracked components for particle system (x, y, w, h, active, type)
+	let trackedComponents: Array<{x: number, y: number, w: number, h: number, active: boolean, type: string}> = [];
+
+	// Connections (wires) for both old SVG and new WiringSystem
 	let connections = [
-		{ x1: 220, y1: 180, x2: 400, y2: 130, active: false },
-		{ x1: 220, y1: 200, x2: 400, y2: 310, active: false },
-		{ x1: 520, y1: 130, x2: 700, y2: 200, active: false },
-		{ x1: 520, y1: 310, x2: 700, y2: 210, active: false },
-		{ x1: 820, y1: 210, x2: 1000, y2: 210, active: false }
+		{ id: 'conn-1', fromNode: 'input-1', fromPort: 'out1', toNode: 'process-1', toPort: 'in1', x1: 220, y1: 180, x2: 400, y2: 130, active: false },
+		{ id: 'conn-2', fromNode: 'input-1', fromPort: 'out2', toNode: 'process-2', toPort: 'in1', x1: 220, y1: 200, x2: 400, y2: 310, active: false },
+		{ id: 'conn-3', fromNode: 'process-1', fromPort: 'out1', toNode: 'process-3', toPort: 'in1', x1: 520, y1: 130, x2: 700, y2: 200, active: false },
+		{ id: 'conn-4', fromNode: 'process-2', fromPort: 'out1', toNode: 'process-3', toPort: 'in2', x1: 520, y1: 310, x2: 700, y2: 210, active: false },
+		{ id: 'conn-5', fromNode: 'process-3', fromPort: 'out1', toNode: 'output-1', toPort: 'in1', x1: 820, y1: 210, x2: 1000, y2: 210, active: false }
 	];
+
+	let wiringSystemRef: any;
 
 	// Update connections when brewery is active
 	$: {
@@ -92,6 +100,15 @@
 			connections = connections.map(c => ({ ...c, active: false }));
 		}
 	}
+
+	// Update tracked components for particle system
+	$: trackedComponents = [
+		{ x: 100, y: 150, w: 200, h: 150, active: breweryActive, type: 'input' },
+		{ x: 400, y: 100, w: 200, h: 150, active: breweryActive, type: 'process' },
+		{ x: 400, y: 280, w: 200, h: 150, active: breweryActive && boilActive, type: 'process' },
+		{ x: 700, y: 180, w: 200, h: 150, active: breweryActive, type: 'process' },
+		{ x: 1000, y: 180, w: 200, h: 200, active: breweryActive, type: 'output' }
+	];
 
 	onMount(() => {
 		// Animate ASCII art line by line
@@ -139,6 +156,57 @@
 		masterPower = false;
 		bottledBeers = 0;
 	}
+
+	// Handle component drop from palette
+	function handleDrop(event: DragEvent) {
+		event.preventDefault();
+		const data = event.dataTransfer?.getData('component-template');
+		if (!data) return;
+
+		const template = JSON.parse(data);
+		const canvas = document.getElementById('lab-canvas');
+		if (!canvas) return;
+
+		const rect = canvas.getBoundingClientRect();
+		const x = event.clientX - rect.left;
+		const y = event.clientY - rect.top;
+
+		console.log('🎨 Dropped component:', template.name, 'at', x, y);
+
+		// Add new tracked component for particles to swarm
+		trackedComponents = [...trackedComponents, {
+			x: x - 100,
+			y: y - 75,
+			w: 200,
+			h: 150,
+			active: true,
+			type: template.type
+		}];
+
+		// TODO: Create actual node instance
+	}
+
+	function handleDragOver(event: DragEvent) {
+		event.preventDefault();
+		if (event.dataTransfer) {
+			event.dataTransfer.dropEffect = 'copy';
+		}
+	}
+
+	// Handle new connection creation
+	function handleConnect(event: CustomEvent) {
+		const { fromNode, fromPort, toNode, toPort } = event.detail;
+		console.log('🔗 New connection:', fromNode, fromPort, '->', toNode, toPort);
+
+		// TODO: Calculate connection coordinates and add to connections array
+	}
+
+	// Handle connection deletion
+	function handleDeleteConnection(event: CustomEvent) {
+		const { connectionId } = event.detail;
+		connections = connections.filter(c => c.id !== connectionId);
+		console.log('❌ Deleted connection:', connectionId);
+	}
 </script>
 
 {#if showSplash}
@@ -176,45 +244,37 @@
 			</div>
 		</div>
 
-		<div class="lab-canvas" id="lab-canvas" bind:clientWidth={canvasWidth} bind:clientHeight={canvasHeight}>
+		<div
+			class="lab-canvas"
+			id="lab-canvas"
+			bind:clientWidth={canvasWidth}
+			bind:clientHeight={canvasHeight}
+			on:drop={handleDrop}
+			on:dragover={handleDragOver}
+		>
 			<div class="grid-overlay"></div>
 
-			<!-- SVG Layer for Wires -->
-			<svg class="wire-layer" style="pointer-events: none;">
-				{#each connections as conn}
-					<path
-						d="M {conn.x1} {conn.y1} C {conn.x1 + 50} {conn.y1}, {conn.x2 - 50} {conn.y2}, {conn.x2} {conn.y2}"
-						fill="none"
-						stroke={conn.active ? '#0f3' : '#333'}
-						stroke-width="2"
-						opacity={conn.active ? 1 : 0.3}
-						stroke-dasharray={conn.active ? "5,5" : "none"}
-					>
-						{#if conn.active}
-							<animate
-								attributeName="stroke-dashoffset"
-								from="0"
-								to="10"
-								dur="0.5s"
-								repeatCount="indefinite"
-							/>
-						{/if}
-					</path>
-					{#if conn.active}
-						<circle
-							r="3"
-							fill="#0f3"
-							opacity="0.8"
-						>
-							<animateMotion
-								path="M {conn.x1} {conn.y1} C {conn.x1 + 50} {conn.y1}, {conn.x2 - 50} {conn.y2}, {conn.x2} {conn.y2}"
-								dur="2s"
-								repeatCount="indefinite"
-							/>
-						</circle>
-					{/if}
-				{/each}
-			</svg>
+			<!-- Wiring System (replaces hardcoded SVG) -->
+			<WiringSystem
+				bind:this={wiringSystemRef}
+				{connections}
+				width={canvasWidth}
+				height={canvasHeight}
+				on:connect={handleConnect}
+				on:delete={handleDeleteConnection}
+			/>
+
+			<!-- Particle System - Living swarm intelligence -->
+			<ParticleSystem
+				width={canvasWidth}
+				height={canvasHeight}
+				particleCount={500}
+				components={trackedComponents}
+				{connections}
+			/>
+
+			<!-- Component Palette -->
+			<ComponentPalette />
 
 			<!-- Example Brewery Nodes -->
 			<Node
