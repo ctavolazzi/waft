@@ -12,6 +12,7 @@ import json
 import time
 from datetime import datetime
 from pathlib import Path
+from typing import Optional
 
 import typer
 from rich.console import Console
@@ -740,6 +741,8 @@ def evolve(
     path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     agent: str | None = typer.Option(None, "--agent", "-a", help="Agent identifier to evolve"),
     generations: int = typer.Option(1, "--generations", "-g", help="Number of generations to run"),
+    num_variants: int = typer.Option(5, "--variants", "-v", help="Number of variants per generation"),
+    reality: str | None = typer.Option(None, "--reality", "-r", help="Reality ID (default: waft-evolution)"),
 ):
     """
     Run the evolutionary cycle (Spawn -> Gym -> Select) for a target agent.
@@ -751,10 +754,11 @@ def evolve(
     4. Evolve the agent into the selected genome
     5. Record all events in the Flight Recorder
 
-    Status: Coming Soon
-
-    This is a placeholder for the evolutionary cycle implementation.
+    If no agent is specified, creates a new Adam being to start evolution.
     """
+    from .core.evolution_engine import EvolutionEngine
+    from .being import BeingSystem
+
     project_path = resolve_project_path(path)
 
     # Check if this is a Waft project
@@ -765,17 +769,58 @@ def evolve(
         raise typer.Exit(1)
 
     console.print("\n[bold cyan]🧬 Evolutionary Code Laboratory[/bold cyan]")
-    console.print("[yellow]⚠️[/yellow]  Evolutionary cycle coming soon")
     console.print(f"[dim]→[/dim] Project: {project_path.resolve()}")
-    if agent:
-        console.print(f"[dim]→[/dim] Agent: {agent}")
     console.print(f"[dim]→[/dim] Generations: {generations}")
-    console.print("\n[dim]This command will implement the complete evolutionary cycle:[/dim]")
-    console.print("[dim]  • Spawn variants with mutations[/dim]")
-    console.print("[dim]  • Evaluate fitness in Scint Gym[/dim]")
-    console.print("[dim]  • Select fittest variant[/dim]")
-    console.print("[dim]  • Evolve agent into selected genome[/dim]")
-    console.print("[dim]  • Record events in Flight Recorder[/dim]")
+    console.print(f"[dim]→[/dim] Variants per generation: {num_variants}")
+
+    reality_id = reality or "waft-evolution"
+
+    try:
+        engine = EvolutionEngine(project_path)
+        being_system = BeingSystem(project_path)
+
+        # If no agent specified, create Adam (first being)
+        if not agent:
+            console.print("\n[yellow]No agent specified. Creating Adam (first being)...[/yellow]")
+            adam = being_system.spawn_being(
+                reality_id=reality_id,
+                initial_skills={
+                    "reasoning": 50.0,
+                    "pattern_recognition": 50.0,
+                    "adaptation": 50.0,
+                },
+            )
+            # Set initial fitness
+            adam.fitness = 50.0
+            being_system._save_being(adam)
+            agent = adam.being_id
+            console.print(f"[green]✓[/green] Created Adam: {agent}")
+
+        # Run evolution for specified generations
+        current_parent = agent
+        console.print(f"\n[bold]Starting evolution from: {current_parent}[/bold]\n")
+
+        for gen in range(1, generations + 1):
+            console.print(f"[bold cyan]═══ Generation {gen}/{generations} ═══[/bold cyan]")
+
+            result = engine.run_evolution_cycle(
+                parent_id=current_parent,
+                reality_id=reality_id,
+                num_variants=num_variants,
+                generation=gen,
+            )
+
+            # Next generation uses the selected variant as parent
+            current_parent = result.selected_variant_id
+
+        console.print(f"\n[bold green]🎉 Evolution complete![/bold green]")
+        console.print(f"[dim]Final being: {current_parent}[/dim]")
+        console.print(f"[dim]Flight recorder: {engine.flight_recorder_path}[/dim]")
+
+    except Exception as e:
+        console.print(f"[red]❌ Evolution failed:[/red] {str(e).replace('[', '').replace(']', '')}")
+        logger.exception("Evolution error")
+        raise typer.Exit(1)
 
 
 # Empirica command groups
@@ -2707,13 +2752,7 @@ def final_report(
 ):
     """
     Generate a comprehensive final report PDF using the Science Textbook LaTeX template.
-
-    elif action == "show":
-        if not trace_id:
-            console.print("[red]Error: trace_id is required for 'show' action[/red]")
-            console.print("Usage: waft trace show <trace-id>")
-            raise typer.Exit(1)
-
+    """
     console.print("\n[bold cyan]📚 Waft[/bold cyan] - Generating Final Report\n")
 
     from .core.final_report import FinalReportGenerator

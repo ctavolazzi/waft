@@ -1,0 +1,14 @@
+{
+  "active_loops": [
+    "loop_20260124_113528"
+  ],
+  "completed_loops": [],
+  "total_iterations": 0,
+  "total_loops": 1,
+  "last_update": "2026-01-24T11:35:28.533048",
+  "wiggum_integration": {
+    "enabled": true,
+    "version": "chief-wiggum",
+    "integrated_at": "2026-01-24T11:35:28.530899"
+  }
+}
