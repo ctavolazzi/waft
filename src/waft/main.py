@@ -12,6 +12,7 @@ import json
 import time
 from datetime import datetime
 from pathlib import Path
+from typing import Optional
 
 import typer
 from rich.console import Console
@@ -2707,13 +2708,7 @@ def final_report(
 ):
     """
     Generate a comprehensive final report PDF using the Science Textbook LaTeX template.
-
-    elif action == "show":
-        if not trace_id:
-            console.print("[red]Error: trace_id is required for 'show' action[/red]")
-            console.print("Usage: waft trace show <trace-id>")
-            raise typer.Exit(1)
-
+    """
     console.print("\n[bold cyan]📚 Waft[/bold cyan] - Generating Final Report\n")
 
     from .core.final_report import FinalReportGenerator

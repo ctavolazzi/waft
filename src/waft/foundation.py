@@ -31,9 +31,9 @@ class RedactionStyle(Enum):
 
 @dataclass
 class DocumentConfig:
-    """Configuration for document styling and behavior."""
+    """Configuration for document styling and behavior.
 
-    problem → answer → evaluation
+    problem -> answer -> evaluation
 
     This is the core cycle, executed once.
     """
@@ -138,7 +138,6 @@ class Session:
             if self.final_evaluation
             else False
         )
-    )
 
 
 # ============================================================================

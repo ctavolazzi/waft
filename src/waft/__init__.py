@@ -20,7 +20,8 @@ from .source_consciousness import SourceConsciousness
 from .reality import Reality, RealitySystem
 
 # Unified PDF class - single entry point for all PDF generation
-from .pdf import PDF
+# TEMPORARILY DISABLED - foundation.py has structural issues
+# from .pdf import PDF
 
 # Convenience exports
 __all__ = [
@@ -34,6 +35,6 @@ __all__ = [
     "Reality",
     "RealitySystem",
     # PDF
-    "PDF",
+    # "PDF",  # Disabled due to foundation.py issues
 ]
 
