@@ -116,6 +116,11 @@ describe('Evolution', () => {
 		});
 
 		it('updates population statistics', () => {
+			// Set fertility to 0 to prevent random reproduction in first tick
+			realm.beings.forEach((being: any) => {
+				being.genome.fertility = 0;
+			});
+
 			engine.tick();
 
 			expect(realm.beingStats.currentPopulation).toBe(5);
