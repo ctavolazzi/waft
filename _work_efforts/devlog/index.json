@@ -1,6 +1,50 @@
 {
   "entries": [
     {
+      "timestamp": "2026-01-20T22:14:42.000000",
+      "source": "manual",
+      "category": "feature",
+      "title": "Fixed slaytheweb autoplay targeting and generated run log",
+      "paths": {
+        "by_source": "_work_efforts/devlog/by_source/manual/2026-01-20_221442_feature.md",
+        "by_category": "_work_efforts/devlog/by_category/feature/2026-01-20_221442_feature.md",
+        "by_date": "_work_efforts/devlog/by_date/2026-01-20/2026-01-20_221442_feature.md"
+      }
+    },
+    {
+      "timestamp": "2026-01-20T21:56:16.000000",
+      "source": "manual",
+      "category": "research",
+      "title": "Teleport Massive card game MVP guide kickoff (bananote + Empirica)",
+      "paths": {
+        "by_source": "_work_efforts/devlog/by_source/manual/2026-01-20_215616_research.md",
+        "by_category": "_work_efforts/devlog/by_category/research/2026-01-20_215616_research.md",
+        "by_date": "_work_efforts/devlog/by_date/2026-01-20/2026-01-20_215616_research.md"
+      }
+    },
+    {
+      "timestamp": "2026-01-20T21:28:35.000000",
+      "source": "manual",
+      "category": "documentation",
+      "title": "Oracle Deep Analyze Critique Workflow Progress Update",
+      "paths": {
+        "by_source": "_work_efforts/devlog/by_source/manual/2026-01-20_212835_documentation.md",
+        "by_category": "_work_efforts/devlog/by_category/documentation/2026-01-20_212835_documentation.md",
+        "by_date": "_work_efforts/devlog/by_date/2026-01-20/2026-01-20_212835_documentation.md"
+      }
+    },
+    {
+      "timestamp": "2026-01-20T21:06:16.000000",
+      "source": "manual",
+      "category": "documentation",
+      "title": "Oracle Deep Analyze Critique Workflow Started",
+      "paths": {
+        "by_source": "_work_efforts/devlog/by_source/manual/2026-01-20_210616_documentation.md",
+        "by_category": "_work_efforts/devlog/by_category/documentation/2026-01-20_210616_documentation.md",
+        "by_date": "_work_efforts/devlog/by_date/2026-01-20/2026-01-20_210616_documentation.md"
+      }
+    },
+    {
       "timestamp": "2026-01-12T20:21:15.583765",
       "source": "workflow",
       "category": "feature",
@@ -23,5 +67,5 @@
       }
     }
   ],
-  "last_updated": "2026-01-19T02:25:21.000000"
+  "last_updated": "2026-01-20T22:14:42.000000"
 }

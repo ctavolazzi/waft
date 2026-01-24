@@ -45,3 +45,6 @@ _temp_pdf_examples/*.pdf
 # Runtime data files
 .empirica/sessions/*.db
 _pyrite/.waft/*.json
+
+# Unified project symlinks
+_unified/

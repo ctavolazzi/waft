@@ -1,0 +1,496 @@
+/* D&D Toolkit Hub - Custom Styles */
+
+/* Base Layout */
+body {
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+    background: #1a1a2e;
+    background-image:
+        radial-gradient(ellipse at top, #16213e 0%, transparent 50%),
+        radial-gradient(ellipse at bottom, #0f0f23 0%, transparent 50%);
+}
+
+.main-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: calc(100vh - 100px);
+}
+
+/* Header */
+.header {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 2em;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.header p {
+    margin: 5px 0 0 0;
+    opacity: 0.8;
+}
+
+/* Tab Navigation */
+.tab-nav {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 15px 0;
+    flex-wrap: wrap;
+}
+
+.tab-nav .rpgui-button {
+    min-width: 100px;
+}
+
+.tab-nav .rpgui-button.active {
+    transform: scale(1.05);
+    filter: brightness(1.2);
+}
+
+/* Tab Panels */
+.tab-content {
+    margin-top: 15px;
+}
+
+.tab-panel {
+    display: none;
+}
+
+.tab-panel.active {
+    display: block;
+}
+
+/* Search Controls */
+.search-controls {
+    margin-bottom: 15px;
+}
+
+.search-row, .filter-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.search-row input {
+    flex: 1;
+    min-width: 200px;
+}
+
+.filter-row label {
+    margin-left: 15px;
+}
+
+.filter-row label:first-child {
+    margin-left: 0;
+}
+
+/* Results Container */
+.results-container {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 15px;
+    min-height: 400px;
+}
+
+@media (max-width: 768px) {
+    .results-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+.results-list h3, .details-panel h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.results-list #results-select {
+    width: 100%;
+}
+
+.details-panel {
+    display: flex;
+    flex-direction: column;
+}
+
+#details-content {
+    flex: 1;
+    min-height: 300px;
+    overflow-y: auto;
+    padding: 15px;
+}
+
+.details-actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.placeholder {
+    opacity: 0.6;
+    text-align: center;
+    padding: 20px;
+}
+
+/* Statblock Styling */
+.statblock {
+    font-size: 0.9em;
+}
+
+.statblock h4 {
+    margin: 0 0 5px 0;
+    color: #c9a227;
+}
+
+.statblock .type-line {
+    font-style: italic;
+    margin-bottom: 10px;
+    opacity: 0.8;
+}
+
+.statblock .stat-line {
+    margin: 3px 0;
+}
+
+.statblock .stat-line strong {
+    color: #c9a227;
+}
+
+.statblock .stats-table {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    text-align: center;
+    margin: 10px 0;
+    padding: 10px 0;
+    border-top: 1px solid rgba(255,255,255,0.2);
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.statblock .stats-table .stat-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.statblock .stats-table .stat-label {
+    font-weight: bold;
+    color: #c9a227;
+    font-size: 0.85em;
+}
+
+.statblock .stats-table .stat-value {
+    font-size: 1.1em;
+}
+
+.statblock .section-title {
+    font-weight: bold;
+    color: #c9a227;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    padding-bottom: 3px;
+}
+
+.statblock .action, .statblock .trait {
+    margin: 8px 0;
+}
+
+.statblock .action-name, .statblock .trait-name {
+    font-weight: bold;
+    font-style: italic;
+}
+
+/* Spell Details */
+.spell-details .spell-header {
+    margin-bottom: 10px;
+}
+
+.spell-details .spell-level-school {
+    font-style: italic;
+    opacity: 0.8;
+}
+
+.spell-details .spell-meta {
+    margin: 10px 0;
+}
+
+.spell-details .spell-meta p {
+    margin: 3px 0;
+}
+
+.spell-details .spell-description {
+    margin-top: 15px;
+    line-height: 1.5;
+}
+
+.spell-details .higher-levels {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.2);
+}
+
+/* Item Details */
+.item-details .item-type-line {
+    font-style: italic;
+    opacity: 0.8;
+    margin-bottom: 10px;
+}
+
+.item-details .item-properties {
+    margin: 10px 0;
+}
+
+.item-details .item-description {
+    margin-top: 15px;
+    line-height: 1.5;
+}
+
+/* Creator Forms */
+.creator-type-select {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.creator-form {
+    display: none;
+}
+
+.creator-form.active {
+    display: block;
+}
+
+.form-row {
+    margin-bottom: 12px;
+}
+
+.form-row label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-row input[type="text"],
+.form-row input[type="number"],
+.form-row textarea {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-row.two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.form-row.three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 15px;
+}
+
+.form-row.stats-row {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+    text-align: center;
+}
+
+.form-row.stats-row label {
+    font-weight: bold;
+    color: #c9a227;
+}
+
+.form-row.stats-row input {
+    width: 100%;
+    text-align: center;
+}
+
+/* Export Options */
+.export-options {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.export-options h3 {
+    margin: 0;
+    margin-right: 10px;
+}
+
+.export-output {
+    margin-top: 15px;
+}
+
+.export-output textarea {
+    width: 100%;
+    box-sizing: border-box;
+    font-family: monospace;
+    font-size: 0.85em;
+}
+
+/* Card Queue */
+.card-queue {
+    margin-bottom: 15px;
+}
+
+.card-queue h3 {
+    margin-top: 0;
+}
+
+#card-queue-list {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.card-queue-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.card-export-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.card-export-section h3 {
+    margin: 0;
+    margin-right: 10px;
+}
+
+.card-preview {
+    margin-top: 15px;
+}
+
+#card-preview-content {
+    min-height: 200px;
+    padding: 15px;
+}
+
+/* Card Preview Styling */
+.card-preview-item {
+    background: linear-gradient(135deg, #2d1f3d 0%, #1a1a2e 100%);
+    border: 2px solid #c9a227;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+}
+
+.card-preview-item h4 {
+    margin: 0 0 10px 0;
+    color: #c9a227;
+    border-bottom: 1px solid rgba(201, 162, 39, 0.3);
+    padding-bottom: 5px;
+}
+
+.card-preview-item .card-content {
+    font-size: 0.9em;
+}
+
+/* Tools Grid */
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin: 15px 0;
+}
+
+.tool-card {
+    text-align: center;
+    padding: 15px;
+}
+
+.tool-card .rpgui-icon {
+    margin: 0 auto 10px auto;
+    transform: scale(1.5);
+}
+
+.tool-card h3 {
+    margin: 10px 0 5px 0;
+    color: #c9a227;
+}
+
+.tool-card p {
+    font-size: 0.85em;
+    opacity: 0.8;
+    margin-bottom: 10px;
+}
+
+/* Stats Section */
+.stats-section {
+    margin-top: 15px;
+}
+
+.stats-grid {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.stat-item .rpgui-icon {
+    transform: scale(0.8);
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    margin-top: 20px;
+    opacity: 0.6;
+    font-size: 0.85em;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 600px) {
+    .form-row.two-col,
+    .form-row.three-col {
+        grid-template-columns: 1fr;
+    }
+
+    .form-row.stats-row {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .tab-nav {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .tab-nav .rpgui-button {
+        width: 100%;
+    }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.3);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c9a227;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #d4af37;
+}

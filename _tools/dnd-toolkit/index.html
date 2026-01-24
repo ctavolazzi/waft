@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D&D 5e Toolkit Hub</title>
+
+    <!-- RPGUI -->
+    <link href="../_external/rpgui/dist/rpgui.min.css" rel="stylesheet" type="text/css">
+    <script src="../_external/rpgui/dist/rpgui.js"></script>
+
+    <!-- Custom Styles -->
+    <link href="css/toolkit.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <div class="rpgui-content">
+        <!-- Main Container -->
+        <div class="rpgui-container framed-golden main-container">
+            <!-- Header -->
+            <div class="header">
+                <h1>D&D 5e Toolkit Hub</h1>
+                <p>SRD Browser • Homebrew Creator • Card Generator</p>
+            </div>
+
+            <hr class="golden">
+
+            <!-- Tab Navigation -->
+            <div class="tab-nav">
+                <button class="rpgui-button" id="btn-browser" onclick="showTab('browser')"><p>SRD Browser</p></button>
+                <button class="rpgui-button" id="btn-creator" onclick="showTab('creator')"><p>Homebrew</p></button>
+                <button class="rpgui-button" id="btn-cards" onclick="showTab('cards')"><p>Cards</p></button>
+                <button class="rpgui-button" id="btn-tools" onclick="showTab('tools')"><p>Tools</p></button>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="tab-content">
+
+                <!-- SRD Browser Tab -->
+                <div id="tab-browser" class="tab-panel active">
+                    <div class="rpgui-container framed-grey">
+                        <h2>SRD Browser</h2>
+                        <p>Search monsters, spells, and items from the D&D 5e SRD.</p>
+
+                        <!-- Search Controls -->
+                        <div class="search-controls">
+                            <div class="search-row">
+                                <label>Search:</label>
+                                <input type="text" id="search-input" placeholder="Search by name..." oninput="performSearch()">
+                            </div>
+
+                            <div class="filter-row">
+                                <label>Type:</label>
+                                <select class="rpgui-dropdown" id="filter-type" onchange="performSearch()">
+                                    <option value="all">All Types</option>
+                                    <option value="monster">Monsters</option>
+                                    <option value="spell">Spells</option>
+                                    <option value="item">Items</option>
+                                </select>
+
+                                <label>CR/Level:</label>
+                                <select class="rpgui-dropdown" id="filter-cr" onchange="performSearch()">
+                                    <option value="all">Any</option>
+                                    <option value="0">0 / Cantrip</option>
+                                    <option value="0.125">1/8</option>
+                                    <option value="0.25">1/4</option>
+                                    <option value="0.5">1/2</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10+">10+</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Results -->
+                        <div class="results-container">
+                            <div class="results-list">
+                                <h3>Results <span id="result-count">(0)</span></h3>
+                                <select class="rpgui-list" id="results-select" size="12" onchange="showDetails()">
+                                </select>
+                            </div>
+
+                            <div class="details-panel">
+                                <h3>Details</h3>
+                                <div id="details-content" class="rpgui-container framed">
+                                    <p class="placeholder">Select an entry to view details</p>
+                                </div>
+                                <div class="details-actions">
+                                    <button class="rpgui-button" onclick="copyToClipboard()"><p>Copy</p></button>
+                                    <button class="rpgui-button golden" onclick="exportToCard()"><p>To Card</p></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Homebrew Creator Tab -->
+                <div id="tab-creator" class="tab-panel">
+                    <div class="rpgui-container framed-grey">
+                        <h2>Homebrew Creator</h2>
+                        <p>Create custom monsters, spells, and items.</p>
+
+                        <!-- Creator Type Selection -->
+                        <div class="creator-type-select">
+                            <label>Create:</label>
+                            <select class="rpgui-dropdown" id="creator-type" onchange="switchCreatorForm()">
+                                <option value="monster">Monster</option>
+                                <option value="spell">Spell</option>
+                                <option value="item">Item</option>
+                            </select>
+                        </div>
+
+                        <hr>
+
+                        <!-- Monster Form -->
+                        <div id="form-monster" class="creator-form active">
+                            <div class="form-row">
+                                <label>Name:</label>
+                                <input type="text" id="monster-name" placeholder="Creature name">
+                            </div>
+                            <div class="form-row two-col">
+                                <div>
+                                    <label>Size:</label>
+                                    <select class="rpgui-dropdown" id="monster-size">
+                                        <option value="tiny">Tiny</option>
+                                        <option value="small">Small</option>
+                                        <option value="medium" selected>Medium</option>
+                                        <option value="large">Large</option>
+                                        <option value="huge">Huge</option>
+                                        <option value="gargantuan">Gargantuan</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>Type:</label>
+                                    <select class="rpgui-dropdown" id="monster-type">
+                                        <option value="aberration">Aberration</option>
+                                        <option value="beast">Beast</option>
+                                        <option value="celestial">Celestial</option>
+                                        <option value="construct">Construct</option>
+                                        <option value="dragon">Dragon</option>
+                                        <option value="elemental">Elemental</option>
+                                        <option value="fey">Fey</option>
+                                        <option value="fiend">Fiend</option>
+                                        <option value="giant">Giant</option>
+                                        <option value="humanoid" selected>Humanoid</option>
+                                        <option value="monstrosity">Monstrosity</option>
+                                        <option value="ooze">Ooze</option>
+                                        <option value="plant">Plant</option>
+                                        <option value="undead">Undead</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row three-col">
+                                <div>
+                                    <label>AC:</label>
+                                    <input type="number" id="monster-ac" value="10" min="1" max="30">
+                                </div>
+                                <div>
+                                    <label>HP:</label>
+                                    <input type="number" id="monster-hp" value="10" min="1">
+                                </div>
+                                <div>
+                                    <label>CR:</label>
+                                    <select class="rpgui-dropdown" id="monster-cr">
+                                        <option value="0">0</option>
+                                        <option value="0.125">1/8</option>
+                                        <option value="0.25">1/4</option>
+                                        <option value="0.5">1/2</option>
+                                        <option value="1" selected>1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                        <option value="13">13</option>
+                                        <option value="14">14</option>
+                                        <option value="15">15</option>
+                                        <option value="16">16</option>
+                                        <option value="17">17</option>
+                                        <option value="18">18</option>
+                                        <option value="19">19</option>
+                                        <option value="20">20</option>
+                                        <option value="21">21+</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <label>Speed:</label>
+                                <input type="text" id="monster-speed" placeholder="30 ft.">
+                            </div>
+                            <div class="form-row stats-row">
+                                <div><label>STR</label><input type="number" id="monster-str" value="10" min="1" max="30"></div>
+                                <div><label>DEX</label><input type="number" id="monster-dex" value="10" min="1" max="30"></div>
+                                <div><label>CON</label><input type="number" id="monster-con" value="10" min="1" max="30"></div>
+                                <div><label>INT</label><input type="number" id="monster-int" value="10" min="1" max="30"></div>
+                                <div><label>WIS</label><input type="number" id="monster-wis" value="10" min="1" max="30"></div>
+                                <div><label>CHA</label><input type="number" id="monster-cha" value="10" min="1" max="30"></div>
+                            </div>
+                            <div class="form-row">
+                                <label>Actions (one per line, format: "Name. Description"):</label>
+                                <textarea id="monster-actions" rows="4" placeholder="Bite. Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 7 (1d8 + 3) piercing damage."></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Spell Form -->
+                        <div id="form-spell" class="creator-form">
+                            <div class="form-row">
+                                <label>Name:</label>
+                                <input type="text" id="spell-name" placeholder="Spell name">
+                            </div>
+                            <div class="form-row two-col">
+                                <div>
+                                    <label>Level:</label>
+                                    <select class="rpgui-dropdown" id="spell-level">
+                                        <option value="0">Cantrip</option>
+                                        <option value="1" selected>1st</option>
+                                        <option value="2">2nd</option>
+                                        <option value="3">3rd</option>
+                                        <option value="4">4th</option>
+                                        <option value="5">5th</option>
+                                        <option value="6">6th</option>
+                                        <option value="7">7th</option>
+                                        <option value="8">8th</option>
+                                        <option value="9">9th</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>School:</label>
+                                    <select class="rpgui-dropdown" id="spell-school">
+                                        <option value="abjuration">Abjuration</option>
+                                        <option value="conjuration">Conjuration</option>
+                                        <option value="divination">Divination</option>
+                                        <option value="enchantment">Enchantment</option>
+                                        <option value="evocation" selected>Evocation</option>
+                                        <option value="illusion">Illusion</option>
+                                        <option value="necromancy">Necromancy</option>
+                                        <option value="transmutation">Transmutation</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row two-col">
+                                <div>
+                                    <label>Casting Time:</label>
+                                    <input type="text" id="spell-casting-time" placeholder="1 action">
+                                </div>
+                                <div>
+                                    <label>Range:</label>
+                                    <input type="text" id="spell-range" placeholder="60 feet">
+                                </div>
+                            </div>
+                            <div class="form-row two-col">
+                                <div>
+                                    <label>Components:</label>
+                                    <input type="text" id="spell-components" placeholder="V, S, M (a bit of fur)">
+                                </div>
+                                <div>
+                                    <label>Duration:</label>
+                                    <input type="text" id="spell-duration" placeholder="Instantaneous">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <label>Description:</label>
+                                <textarea id="spell-description" rows="4" placeholder="Describe the spell's effect..."></textarea>
+                            </div>
+                            <div class="form-row">
+                                <label>At Higher Levels (optional):</label>
+                                <textarea id="spell-higher" rows="2" placeholder="When you cast this spell using a spell slot of 2nd level or higher..."></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Item Form -->
+                        <div id="form-item" class="creator-form">
+                            <div class="form-row">
+                                <label>Name:</label>
+                                <input type="text" id="item-name" placeholder="Item name">
+                            </div>
+                            <div class="form-row two-col">
+                                <div>
+                                    <label>Type:</label>
+                                    <select class="rpgui-dropdown" id="item-type">
+                                        <option value="weapon">Weapon</option>
+                                        <option value="armor">Armor</option>
+                                        <option value="wondrous" selected>Wondrous Item</option>
+                                        <option value="potion">Potion</option>
+                                        <option value="ring">Ring</option>
+                                        <option value="rod">Rod</option>
+                                        <option value="scroll">Scroll</option>
+                                        <option value="staff">Staff</option>
+                                        <option value="wand">Wand</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>Rarity:</label>
+                                    <select class="rpgui-dropdown" id="item-rarity">
+                                        <option value="common">Common</option>
+                                        <option value="uncommon" selected>Uncommon</option>
+                                        <option value="rare">Rare</option>
+                                        <option value="very-rare">Very Rare</option>
+                                        <option value="legendary">Legendary</option>
+                                        <option value="artifact">Artifact</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <input type="checkbox" class="rpgui-checkbox" id="item-attunement"><label>Requires Attunement</label>
+                            </div>
+                            <div class="form-row">
+                                <label>Description:</label>
+                                <textarea id="item-description" rows="4" placeholder="Describe the item's properties and effects..."></textarea>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <!-- Export Options -->
+                        <div class="export-options">
+                            <h3>Export As:</h3>
+                            <button class="rpgui-button" onclick="exportHomebrew('json')"><p>JSON</p></button>
+                            <button class="rpgui-button" onclick="exportHomebrew('markdown')"><p>Markdown</p></button>
+                            <button class="rpgui-button golden" onclick="exportHomebrew('card')"><p>Card</p></button>
+                        </div>
+
+                        <!-- Export Output -->
+                        <div id="export-output" class="export-output" style="display:none;">
+                            <h3>Export Output</h3>
+                            <textarea id="export-textarea" rows="8" readonly></textarea>
+                            <button class="rpgui-button" onclick="copyExport()"><p>Copy to Clipboard</p></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cards Tab -->
+                <div id="tab-cards" class="tab-panel">
+                    <div class="rpgui-container framed-grey">
+                        <h2>Card Generator</h2>
+                        <p>Create printable RPG cards from your content.</p>
+
+                        <div class="card-queue">
+                            <h3>Card Queue <span id="card-count">(0)</span></h3>
+                            <select class="rpgui-list" id="card-queue-list" size="8">
+                            </select>
+                            <div class="card-queue-actions">
+                                <button class="rpgui-button" onclick="removeFromQueue()"><p>Remove</p></button>
+                                <button class="rpgui-button" onclick="clearQueue()"><p>Clear All</p></button>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="card-export-section">
+                            <h3>Export Cards</h3>
+                            <button class="rpgui-button golden" onclick="downloadCardsJSON()"><p>Download JSON</p></button>
+                            <button class="rpgui-button" onclick="openInRPGCards()"><p>Open in rpg-cards</p></button>
+                        </div>
+
+                        <hr>
+
+                        <div class="card-preview">
+                            <h3>Preview</h3>
+                            <div id="card-preview-content" class="rpgui-container framed">
+                                <p class="placeholder">Add items to queue to preview</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tools Tab -->
+                <div id="tab-tools" class="tab-panel">
+                    <div class="rpgui-container framed-grey">
+                        <h2>External Tools</h2>
+                        <p>Links to integrated tools and resources.</p>
+
+                        <div class="tools-grid">
+                            <div class="tool-card rpgui-container framed">
+                                <div class="rpgui-icon sword"></div>
+                                <h3>Dungeoneer VTT</h3>
+                                <p>Virtual tabletop with maps, combat tracker, and generators.</p>
+                                <button class="rpgui-button" onclick="openTool('dungeoneer')"><p>Open</p></button>
+                            </div>
+
+                            <div class="tool-card rpgui-container framed">
+                                <div class="rpgui-icon magic-slot"></div>
+                                <h3>RPG Cards</h3>
+                                <p>Generate printable spell, item, and monster cards.</p>
+                                <button class="rpgui-button" onclick="openTool('rpg-cards')"><p>Open</p></button>
+                            </div>
+
+                            <div class="tool-card rpgui-container framed">
+                                <div class="rpgui-icon potion-blue"></div>
+                                <h3>Donjon Converter</h3>
+                                <p>Convert donjon dungeons to Homebrewery format.</p>
+                                <button class="rpgui-button" onclick="openTool('donjon')"><p>Info</p></button>
+                            </div>
+
+                            <div class="tool-card rpgui-container framed">
+                                <div class="rpgui-icon shield"></div>
+                                <h3>SRD Reference</h3>
+                                <p>Open the full SRD in Obsidian format.</p>
+                                <button class="rpgui-button" onclick="openTool('srd')"><p>Open</p></button>
+                            </div>
+                        </div>
+
+                        <hr class="golden">
+
+                        <div class="stats-section">
+                            <h3>Loaded Data</h3>
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <div class="rpgui-icon exclamation"></div>
+                                    <span id="stat-monsters">0</span> Monsters
+                                </div>
+                                <div class="stat-item">
+                                    <div class="rpgui-icon magic-slot"></div>
+                                    <span id="stat-spells">0</span> Spells
+                                </div>
+                                <div class="stat-item">
+                                    <div class="rpgui-icon potion-slot"></div>
+                                    <span id="stat-items">0</span> Items
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>D&D 5e Toolkit Hub • Data from SRD • Built with RPGUI</p>
+        </div>
+    </div>
+
+    <!-- Application Scripts -->
+    <script src="js/app.js"></script>
+    <script src="js/srd-browser.js"></script>
+    <script src="js/homebrew.js"></script>
+    <script src="js/card-export.js"></script>
+</body>
+</html>

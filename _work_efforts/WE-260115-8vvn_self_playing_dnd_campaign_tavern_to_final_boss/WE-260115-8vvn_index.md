@@ -32,8 +32,10 @@ Create a complete self-playing DnD campaign starting in a tavern, using WAFT's B
 | TKT-8vvn-006 | Build to final boss battle | pending |
 | TKT-8vvn-007 | Generate complete campaign PDF | pending |
 | TKT-8vvn-008 | Document the self-playing system | pending |
+| TKT-8vvn-009 | Evaluate external repos for WAFT yoink patterns | pending |
 
 ## Progress
+- 1/20/2026: 🎯 PLAN: Evaluate external repos (Git-Gud, slaytheweb, wyldcard-public, etc.) for reusable patterns for WAFT/Teleport Massive. Produce repo index, yoink list, and Typst PDF report.
 - 1/15/2026: ✅ COMPLETE! Self-playing DnD campaign successfully created! Party of 4 (Thorin, Lyra, Rogar, Aria) spawned as Beings, started in tavern, fought through 4 chapters with 13+ encounters, leveled to 8, and DEFEATED THE FINAL BOSS - The Shadow Lord Malachar! Complete PDF generated using WeasyPrint (no LaTeX). Campaign log saved. All tickets completed. The DnD game that plays itself is REAL and working! PDF ready for reading.
 
 ## Progress

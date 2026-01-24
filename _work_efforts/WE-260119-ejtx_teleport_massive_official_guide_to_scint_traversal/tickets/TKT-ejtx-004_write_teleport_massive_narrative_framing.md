@@ -2,7 +2,7 @@
 id: TKT-ejtx-004
 parent: WE-260119-ejtx
 title: "Write Teleport Massive narrative framing"
-status: pending
+status: in_progress
 created: 2026-01-19T21:30:53.300Z
 created_by: ctavolazzi
 assigned_to: null
@@ -25,6 +25,7 @@ assigned_to: null
 - (populated when complete)
 
 ## Implementation Notes
+- 1/20/2026: Expanding narrative framing to include Teleport Massive card game MVP guide and slaytheweb-derived gameplay framing.
 - (decisions, blockers, context)
 
 ## Commits

@@ -1,43 +1,42 @@
 """
-DocumentEngine - Reusable Research Documentation Library
+Foundation - Minimal stub for document engine types.
 
-A content-agnostic PDF generation engine with modular content blocks,
-automatic redaction, and configurable styling. Designed for scientific logs,
-legal audits, journalism, and structured documentation.
-
-The engine is completely portable - no WAFT-specific dependencies.
+This file provides the basic types needed by other modules.
+The original implementation was corrupted and needs proper reconstruction.
 """
 
-import random
-from dataclasses import dataclass
-
-if TYPE_CHECKING:
-    from ..core.science.observer import TheObserver
-    from ..core.tavern_keeper import TavernKeeper
+from abc import ABC, abstractmethod
+from dataclasses import dataclass, field
+from enum import Enum
+from pathlib import Path
+from typing import TYPE_CHECKING, Any, Optional
 
 try:
     from fpdf import FPDF
 except ImportError:
-    raise ImportError("fpdf2 is required. Install with: pip install fpdf2>=2.7.0")
+    FPDF = None  # type: ignore
 
 
 class RedactionStyle(Enum):
     """Redaction rendering styles."""
-
     BLACK_BAR = "black_bar"
-    BLUR = "blur"  # Falls back to BLACK_BAR if not supported
+    BLUR = "blur"
     CROSS_OUT = "cross_out"
 
 
 @dataclass
 class DocumentConfig:
-    """Configuration for document styling and behavior."""
-
-    problem → answer → evaluation
-
-    This is the core cycle, executed once.
     """
-
+    Configuration for document styling and behavior.
+    """
+    fonts: dict = field(default_factory=lambda: {
+        "Header": ("Helvetica", "B"),
+        "Body": ("Helvetica", ""),
+        "Monospace": ("Courier", ""),
+    })
+    watermark: Optional[str] = None
+    redaction_style: RedactionStyle = RedactionStyle.BLACK_BAR
+    
     @classmethod
     def scientific_log(cls) -> "DocumentConfig":
         """Preset config for scientific documentation."""
@@ -50,188 +49,175 @@ class DocumentConfig:
             watermark="DRAFT",
             redaction_style=RedactionStyle.BLACK_BAR,
         )
-
+    
     @classmethod
     def legal_audit(cls) -> "DocumentConfig":
         """Preset config for legal documentation."""
         return cls(
             fonts={
-                "Header": "Courier-Bold",
-                "Body": "Courier",
-                "Monospace": "Courier",
+                "Header": ("Courier", "B"),
+                "Body": ("Courier", ""),
+                "Monospace": ("Courier", ""),
             },
             watermark="CONFIDENTIAL",
             redaction_style=RedactionStyle.BLACK_BAR,
         )
+    
+    @classmethod
+    def classified_dossier(cls, header: str = "", watermark: str = "") -> "DocumentConfig":
+        """Preset config for classified dossier style."""
+        return cls(watermark=watermark)
 
 
 class ContentBlock(ABC):
     """Abstract base class for all content blocks."""
-
+    
     @abstractmethod
     def render(
         self,
-        pdf: FPDF,
+        pdf: Any,
         config: DocumentConfig,
-        redactor: "AutoRedactor",
+        redactor: Any,
         y_position: float,
     ) -> float:
         """
         Render the content block to PDF.
-
-        Args:
-            pdf: FPDF instance
-            config: Document configuration
-            redactor: AutoRedactor instance for automatic redaction
-            y_position: Current Y position on page
-
+        
         Returns:
             New Y position after rendering
         """
         pass
 
-    return Step(problem=problem, answer=answer, evaluation=evaluation, iteration_number=iteration)
+
+class AutoRedactor:
+    """Automatic redaction handler."""
+    
+    def __init__(self, sensitive_terms: Optional[list[str]] = None):
+        self.sensitive_terms = sensitive_terms or []
+    
+    def add_terms(self, terms: list[str]):
+        """Add sensitive terms to redact."""
+        self.sensitive_terms.extend(terms)
+    
+    def redact(self, text: str) -> str:
+        """Redact sensitive terms from text."""
+        result = text
+        for term in self.sensitive_terms:
+            result = result.replace(term, "[REDACTED]")
+        return result
 
 
-# ============================================================================
-# SECTION B: THE IMPLEMENTATION (Story Script)
-# ============================================================================
+class DocumentEngine:
+    """Simple document engine for PDF generation."""
+    
+    def __init__(self, config: Optional[DocumentConfig] = None):
+        self.config = config or DocumentConfig()
+        self.redactor = AutoRedactor()
+        self.content_blocks: list[ContentBlock] = []
+    
+    def add_sensitive_terms(self, terms: list[str]):
+        """Add sensitive terms for redaction."""
+        self.redactor.add_terms(terms)
+    
+    def add_content(self, block: ContentBlock):
+        """Add a content block to the document."""
+        self.content_blocks.append(block)
+
+
+# Stub classes for compatibility
+@dataclass
+class Score:
+    """Atomic quality score."""
+    value: float = 0.0
+    
+    def is_good(self, threshold: float = 0.7) -> bool:
+        return self.value >= threshold
+
+
+@dataclass  
+class Evaluation:
+    """Multi-dimensional quality evaluation."""
+    factuality: Score = field(default_factory=Score)
+    relevance: Score = field(default_factory=Score)
+    clarity: Score = field(default_factory=Score)
+    overall: Score = field(default_factory=Score)
+    
+    def is_good(self, threshold: float = 0.7) -> bool:
+        return self.overall.is_good(threshold)
+
+
+@dataclass
+class Step:
+    """One reasoning cycle."""
+    problem: str = ""
+    answer: str = ""
+    evaluation: Optional[Evaluation] = None
+    iteration_number: int = 0
+    
+    def should_continue(self) -> bool:
+        if self.evaluation is None:
+            return True
+        return not self.evaluation.is_good()
 
 
 @dataclass
 class Session:
-    """
-    Generate the Specimen-D Audit dossier using DocumentEngine.
-
-    This demonstrates the API by building the document programmatically
-    using content blocks instead of hardcoded FPDF calls.
-    """
-    if output_path is None:
-        output_path = Path("_work_efforts/WAFT_SPECIMEN_D_AUDIT_v2.pdf")
-
-    # Configure for Site-Delta-9 dossier style
-    config = DocumentConfig.classified_dossier(
-        header="SITE-DELTA-9 // BIO-LOG",
-        watermark="INTERNAL USE ONLY",
-    )
-
-    # Initialize engine
-    engine = DocumentEngine(config)
-
-    # Set sensitive terms for automatic redaction
-    engine.add_sensitive_terms(
-        [
-            "001-ALPHA-GENESIS",
-            "Sunset District",
-            "N-Judah",
-            "Fai Wei Tam",
-            "TAM",
-            "FAI WEI",
-        ]
-    )
-
+    """Complete reasoning session."""
+    problem: str = ""
+    steps: list[Step] = field(default_factory=list)
+    final_answer: str = ""
+    final_evaluation: Optional[Evaluation] = None
+    quality_threshold: float = 0.7
+    
     @property
     def converged(self) -> bool:
-        """Did we reach good quality?"""
-        return (
-            self.final_evaluation.is_good(self.quality_threshold)
-            if self.final_evaluation
-            else False
-        )
-    )
-
-
-# ============================================================================
-# SECTION C: THE FOUNDATION (WAFT Integration Layer)
-# ============================================================================
+        if self.final_evaluation is None:
+            return False
+        return self.final_evaluation.is_good(self.quality_threshold)
 
 
 class TheFoundation:
-    """
-    The Guide: Meta-cognitive reasoning system.
-
-    Built on core primitives:
-    - Score (atomic quality)
-    - Evaluation (multi-dimensional quality)
-    - Step (one reasoning cycle)
-    - Session (complete loop)
-    """
-
-    def __init__(
-        self,
-        project_path: Path,
-        observer: Optional["TheObserver"] = None,
-        tavern_keeper: Optional["TavernKeeper"] = None,
-        empirica_manager=None,
-    ) -> None:
-        """
-        Initialize TheFoundation.
-
+    """Meta-cognitive reasoning system stub."""
+    
+    def __init__(self, project_path: Optional[Path] = None, **kwargs):
+        self.project_path = project_path
+        self.max_iterations = kwargs.get("max_iterations", 5)
+        self.quality_threshold = kwargs.get("quality_threshold", 0.7)
+    
     def solve(self, problem: str) -> Session:
-        """Solve a problem using iterative reasoning."""
-        return solve(
-            problem=problem,
-            max_iterations=self.max_iterations,
-            quality_threshold=self.quality_threshold,
-        )
+        """Solve a problem (stub implementation)."""
+        return Session(problem=problem)
 
 
+# Compatibility aliases
+Guide = TheFoundation
 
-if __name__ == "__main__":
-    print("=" * 80)
-    print("TESTING THE CORE")
-    print("=" * 80)
 
-    # Test Level 0: Atomic Score
-    print("\nLevel 0: Atomic Score")
-    score = Score(0.85)
-    print(f"  Score: {score.value}")
-    print(f"  Is good? {score.is_good()}")
+def evaluate_text(text: str) -> Score:
+    """Evaluate text quality (stub)."""
+    return Score(value=0.5)
 
-    # Test Level 1: Core transformation
-    print("\nLevel 1: Core Transformation")
-    text = "This is a test answer with some content"
-    result = evaluate_text(text)
-    print(f"  Text: {text[:40]}...")
-    print(f"  Score: {result.value:.3f}")
 
-    # Test Level 2: Multi-dimensional
-    print("\nLevel 2: Multi-dimensional Evaluation")
-    eval_result = evaluate_answer("test answer", "test problem")
-    print(f"  Factuality: {eval_result.factuality.value:.3f}")
-    print(f"  Overall: {eval_result.overall.value:.3f}")
-    print(f"  Is good? {eval_result.is_good()}")
+def evaluate_answer(answer: str, problem: str) -> Evaluation:
+    """Evaluate an answer (stub)."""
+    return Evaluation(
+        factuality=Score(0.5),
+        relevance=Score(0.5),
+        clarity=Score(0.5),
+        overall=Score(0.5),
+    )
 
-    # Test Level 3: One Step
-    print("\nLevel 3: One Reasoning Step")
-    step = execute_step("What is 2+2?", iteration=1)
-    print(f"  Problem: {step.problem}")
-    print(f"  Answer: {step.answer}")
-    print(f"  Quality: {step.evaluation.overall.value:.3f}")
-    print(f"  Should continue? {step.should_continue()}")
 
-    # Test Level 4: Full Loop
-    print("\nLevel 4: Complete Session")
-    session = solve("Explain quantum computing", max_iterations=3)
-    print(f"  Problem: {session.problem}")
-    print(f"  Steps executed: {len(session.steps)}")
-    print(f"  Final answer: {session.final_answer}")
-    print(f"  Converged? {session.converged}")
+def execute_step(problem: str, iteration: int = 1) -> Step:
+    """Execute one reasoning step (stub)."""
+    return Step(
+        problem=problem,
+        answer="Stub answer",
+        evaluation=evaluate_answer("stub", problem),
+        iteration_number=iteration,
+    )
 
-    # Test Level 5: Class interface
-    print("\nLevel 5: Class Interface")
-    guide = Guide(max_iterations=5, quality_threshold=0.7)
-    session = guide.solve("What is machine learning?")
-    print(f"  Steps: {len(session.steps)}")
-    print(f"  Final quality: {session.final_evaluation.overall.value:.3f}")
 
-    print("\n" + "=" * 80)
-    print("CORE VERIFIED")
-    print("=" * 80)
-    print("\nBuilt from ground up:")
-    print("  Level 0: Score (atomic data type)")
-    print("  Level 1: evaluate_text() (core function)")
-    print("  Level 2: Evaluation (multi-dimensional)")
-    print("  Level 3: Step (one cycle)")
-    print("  Level 4: Session (complete loop)")
-    print("  Level 5: Guide (class wrapper)")
+def solve(problem: str, max_iterations: int = 5, quality_threshold: float = 0.7) -> Session:
+    """Solve a problem (stub)."""
+    return Session(problem=problem, quality_threshold=quality_threshold)

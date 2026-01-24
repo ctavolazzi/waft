@@ -35,6 +35,10 @@ dependencies = [
     "beautifulsoup4>=4.14.0",
     "jinja2>=3.0.0",
     "pypdf>=4.0.0",
+    "playingcards.py>=1.1.0",
+    "weasyprint>=60.0",
+    "markdown>=3.0.0",
+    "httpx>=0.25.0",
 ]
 
 [project.optional-dependencies]
@@ -129,4 +133,7 @@ quote-style = "double"
 indent-style = "space"
 
 [tool.uv.workspace]
-members = ["_experiments/test_project_001", "_experiments/existing_project", "_experiments/test_project_002", "_experiments/test_project_001/nested_project"]
+members = ["_experiments/test_project_001", "_experiments/existing_project", "_experiments/test_project_002", "_experiments/test_project_001/nested_project", "narcissus_lab/internal_monologue"]
+
+[tool.uv.sources]
+empirica = { path = "_unified/empirica", editable = true }

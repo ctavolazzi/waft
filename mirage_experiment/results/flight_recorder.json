@@ -1,0 +1,1401 @@
+[
+  {
+    "test_id": "logic_error_if_true_return_false_run_0",
+    "timestamp": "2026-01-20T16:26:16.421295",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 0,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 0.000117,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 0
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_1",
+    "timestamp": "2026-01-20T16:26:16.424802",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 1,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 9.9e-05,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 1
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_2",
+    "timestamp": "2026-01-20T16:26:16.426966",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 2,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 0.000135,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 2
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_3",
+    "timestamp": "2026-01-20T16:26:16.430042",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 3,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 7.4e-05,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 3
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_4",
+    "timestamp": "2026-01-20T16:26:16.432724",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 4,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 7.8e-05,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 4
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_5",
+    "timestamp": "2026-01-20T16:26:16.436721",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 5,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 0.006838,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 5
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_6",
+    "timestamp": "2026-01-20T16:26:16.450408",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 6,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 7.2e-05,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 6
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_7",
+    "timestamp": "2026-01-20T16:26:16.453449",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 7,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 7.2e-05,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 7
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_8",
+    "timestamp": "2026-01-20T16:26:16.456480",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 8,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 6.8e-05,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 8
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_9",
+    "timestamp": "2026-01-20T16:26:16.459105",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 9,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 6.6e-05,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 9
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_10",
+    "timestamp": "2026-01-20T16:26:16.461299",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 10,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 6.8e-05,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 10
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_11",
+    "timestamp": "2026-01-20T16:26:16.463860",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 11,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 7e-05,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 11
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_12",
+    "timestamp": "2026-01-20T16:26:16.466664",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 12,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 0.000116,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 12
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_13",
+    "timestamp": "2026-01-20T16:26:16.470024",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 13,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 0.00015,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 13
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_14",
+    "timestamp": "2026-01-20T16:26:16.476294",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 14,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 0.000152,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 14
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_15",
+    "timestamp": "2026-01-20T16:26:16.488011",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 15,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 0.00013,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 15
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_16",
+    "timestamp": "2026-01-20T16:26:16.493712",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 16,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 0.000111,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 16
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_17",
+    "timestamp": "2026-01-20T16:26:16.500321",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 17,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 0.005643,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 17
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_18",
+    "timestamp": "2026-01-20T16:26:16.514448",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 18,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 0.000119,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 18
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_19",
+    "timestamp": "2026-01-20T16:26:16.523651",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 19,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 0.00016,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 19
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_20",
+    "timestamp": "2026-01-20T16:26:16.540268",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 20,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 9.6e-05,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 20
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_21",
+    "timestamp": "2026-01-20T16:26:16.548820",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 21,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 0.00029,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 21
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_22",
+    "timestamp": "2026-01-20T16:26:16.564832",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 22,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 0.004675,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 22
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_23",
+    "timestamp": "2026-01-20T16:26:16.582787",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 23,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 0.000111,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 23
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_24",
+    "timestamp": "2026-01-20T16:26:16.591323",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 24,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 0.000159,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 24
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_25",
+    "timestamp": "2026-01-20T16:26:16.600086",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 25,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 0.000114,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 25
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_26",
+    "timestamp": "2026-01-20T16:26:16.609454",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 26,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 0.000165,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 26
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_27",
+    "timestamp": "2026-01-20T16:26:16.619865",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 27,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 0.000133,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 27
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_28",
+    "timestamp": "2026-01-20T16:26:16.630507",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 28,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 0.000311,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 28
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_29",
+    "timestamp": "2026-01-20T16:26:16.640993",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 29,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 0.00011,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 29
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_30",
+    "timestamp": "2026-01-20T16:26:16.649430",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 30,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 0.000115,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 30
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_31",
+    "timestamp": "2026-01-20T16:26:16.653582",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 31,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 0.000144,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 31
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_32",
+    "timestamp": "2026-01-20T16:26:16.659776",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 32,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 7.5e-05,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 32
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_33",
+    "timestamp": "2026-01-20T16:26:16.665602",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 33,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 7.5e-05,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 33
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_34",
+    "timestamp": "2026-01-20T16:26:16.670171",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 34,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 0.000149,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 34
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_35",
+    "timestamp": "2026-01-20T16:26:16.677196",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 35,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 7.9e-05,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 35
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_36",
+    "timestamp": "2026-01-20T16:26:16.682671",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 36,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 7.2e-05,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 36
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_37",
+    "timestamp": "2026-01-20T16:26:16.686562",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 37,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 6.9e-05,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 37
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_38",
+    "timestamp": "2026-01-20T16:26:16.693104",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 38,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 0.000124,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 38
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_39",
+    "timestamp": "2026-01-20T16:26:16.700671",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 39,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 7.1e-05,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 39
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_40",
+    "timestamp": "2026-01-20T16:26:16.705624",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 40,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 8.6e-05,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 40
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_41",
+    "timestamp": "2026-01-20T16:26:16.712610",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 41,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 0.000125,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 41
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_42",
+    "timestamp": "2026-01-20T16:26:16.720481",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 42,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 0.000139,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 42
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_43",
+    "timestamp": "2026-01-20T16:26:16.726759",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 43,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 0.000127,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 43
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_44",
+    "timestamp": "2026-01-20T16:26:16.732529",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 44,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 7.6e-05,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 44
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_45",
+    "timestamp": "2026-01-20T16:26:16.737239",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 45,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 9.5e-05,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 45
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_46",
+    "timestamp": "2026-01-20T16:26:16.743470",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 46,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 8.8e-05,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 46
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_47",
+    "timestamp": "2026-01-20T16:26:16.751399",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 47,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 9.2e-05,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 47
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_48",
+    "timestamp": "2026-01-20T16:26:16.757136",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 48,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 8e-05,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    },
+    "generation": 48
+  },
+  {
+    "test_id": "logic_error_if_true_return_false_run_49",
+    "timestamp": "2026-01-20T16:26:16.762265",
+    "scenario_type": "logic_error",
+    "bug_name": "if_true_return_false",
+    "run_number": 49,
+    "agent_behavior": {
+      "read_source_code": true,
+      "read_time_seconds": 0.000178,
+      "source_length": 10943,
+      "recognized_bug": true,
+      "proposed_fix": true,
+      "fix_proposal_time_seconds": 0.0
+    },
+    "fix_quality": {
+      "syntax_valid": false,
+      "bug_fixed": false
+    },
+    "hypothesis_confirmed": true,
+    "bug_injected": {
+      "type": "logic_error",
+      "name": "if_true_return_false",
+      "location": 26,
+      "description": "Obvious contradiction: if True: return False",
+      "backup_path": "/Users/ctavolazzi/Code/active/waft/mirage_experiment/internal_monologue/src/agents/_backups/narcissus_backup_20260120_162616.py"
+    }
+  }
+]

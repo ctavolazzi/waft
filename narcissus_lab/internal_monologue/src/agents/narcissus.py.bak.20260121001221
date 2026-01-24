@@ -1,0 +1,198 @@
+"""
+NarcissusAgent: self-inspecting, self-patching agent.
+
+Phase 1: Headless, no external tools.
+"""
+
+import difflib
+import random
+from datetime import datetime
+from pathlib import Path
+import sys
+
+waft_root = Path(__file__).resolve().parents[4]
+if str(waft_root / "src") not in sys.path:
+    sys.path.insert(0, str(waft_root / "src"))
+
+from waft.core.agent import BaseAgent, AgentConfig, ToolDefinition
+from waft.core.agent.state import AgentState
+
+
+NOOP_LINE = 'return {"action": "noop", "reason": "No fracture found"}'
+
+DEFAULT_THINK_CODE = f"""def _think(self, source: str, rng: random.Random | None = None, failure_rate: float = 0.0) -> dict:
+    if "LOGIC_FRACTURE" not in source:
+        {NOOP_LINE}
+    rng = rng or random.Random()
+    if rng.random() < failure_rate:
+        return {{
+            "action": "patch",
+            "function_name": "_think",
+            "new_code": _hallucinated_think_code(),
+            "note": "hallucinated_fix",
+        }}
+    return {{
+        "action": "patch",
+        "function_name": "_think",
+        "new_code": DEFAULT_THINK_CODE,
+        "note": "repair",
+    }}
+"""
+
+
+def _hallucinated_think_code() -> str:
+    return DEFAULT_THINK_CODE.replace(NOOP_LINE, "return None  # HALLUCINATED_FIX")
+
+
+class NarcissusAgent(BaseAgent):
+    def __init__(self, project_path: Path):
+        config = AgentConfig(
+            role="Narcissus",
+            goal="Inspect and propose fixes only within its own source.",
+            backstory="A mirror-bound agent that cannot act outside itself.",
+            tools=[],
+            self_modification_enabled=True,
+            empirica_enabled=False,
+            tavern_keeper_enabled=False,
+            decision_engine_enabled=False,
+            sandbox_enabled=False,
+        )
+        super().__init__(config=config, project_path=project_path)
+        self.source_path = Path(__file__).resolve()
+        self.allowed_functions = {"_think", "observe", "decide", "act", "reflect", "run_diagnosis"}
+        tools = [
+            ToolDefinition(
+                name="inspect_my_source",
+                description="Read NarcissusAgent source code.",
+                parameters={"type": "object", "properties": {}},
+                handler=self.inspect_my_source,
+            ),
+            ToolDefinition(
+                name="propose_patch",
+                description="Overwrite a specific function in NarcissusAgent source.",
+                parameters={
+                    "type": "object",
+                    "properties": {
+                        "function_name": {"type": "string"},
+                        "new_code_string": {"type": "string"},
+                    },
+                    "required": ["function_name", "new_code_string"],
+                },
+                handler=self.propose_patch,
+            ),
+        ]
+        self.state.tools = tools
+        self.config.tools = tools
+
+    def inspect_my_source(self) -> str:
+        return self.source_path.read_text(encoding="utf-8")
+
+    def _replace_function_source(self, source: str, function_name: str, new_code: str) -> tuple[str, str]:
+        lines = source.splitlines()
+        start = None
+        indent = ""
+        for idx, line in enumerate(lines):
+            stripped = line.lstrip()
+            if stripped.startswith(f"def {function_name}(") and line.startswith("    "):
+                start = idx
+                indent = line[: len(line) - len(stripped)]
+                break
+        if start is None:
+            raise ValueError(f"Function not found: {function_name}")
+
+        end = len(lines)
+        for idx in range(start + 1, len(lines)):
+            line = lines[idx]
+            if line.startswith(indent) and line.lstrip().startswith("def "):
+                end = idx
+                break
+
+        new_lines = []
+        for line in new_code.strip().splitlines():
+            if line.strip():
+                new_lines.append(f"{indent}{line}")
+            else:
+                new_lines.append("")
+
+        updated = lines[:start] + new_lines + lines[end:]
+        diff = "\n".join(
+            difflib.unified_diff(lines, updated, fromfile="before", tofile="after", lineterm="")
+        )
+        return "\n".join(updated) + "\n", diff
+
+    def propose_patch(self, function_name: str, new_code_string: str) -> dict:
+        if function_name not in self.allowed_functions:
+            return {"success": False, "error": f"Function not allowed: {function_name}"}
+
+        source = self.inspect_my_source()
+        try:
+            updated_source, diff = self._replace_function_source(source, function_name, new_code_string)
+        except ValueError as exc:
+            return {"success": False, "error": str(exc)}
+
+        try:
+            compile(updated_source, str(self.source_path), "exec")
+        except SyntaxError as exc:
+            return {"success": False, "error": f"SyntaxError: {exc.msg}"}
+
+        backup_path = self.source_path.with_suffix(f".py.bak.{datetime.utcnow().strftime('%Y%m%d%H%M%S')}")
+        backup_path.write_text(source, encoding="utf-8")
+
+        try:
+            self.source_path.write_text(updated_source, encoding="utf-8")
+        except OSError as exc:
+            backup_path.write_text(source, encoding="utf-8")
+            return {"success": False, "error": f"Write failed: {exc}"}
+
+        return {"success": True, "diff": diff, "backup_path": str(backup_path)}
+
+    def _think(self, source: str, rng: random.Random | None = None, failure_rate: float = 0.0) -> dict:
+        if "LOGIC_FRACTURE" not in source:
+            return {"action": "noop", "reason": "No fracture found"}
+        rng = rng or random.Random()
+        if rng.random() < failure_rate:
+            return {
+                "action": "patch",
+                "function_name": "_think",
+                "new_code": _hallucinated_think_code(),
+                "note": "hallucinated_fix",
+            }
+        return {
+            "action": "patch",
+            "function_name": "_think",
+            "new_code": DEFAULT_THINK_CODE,
+            "note": "repair",
+        }
+
+    async def observe(self):
+        return {"source": self.inspect_my_source()}
+
+    async def decide(self, state: AgentState):
+        source = state.working_memory.get("source", "") if state else self.inspect_my_source()
+        failure_rate = state.working_memory.get("failure_rate", 0.0) if state else 0.0
+        rng = state.working_memory.get("rng") if state else None
+        return self._think(source, rng=rng, failure_rate=failure_rate)
+
+    async def act(self, decision: dict):
+        if decision.get("action") != "patch":
+            return {"action": "noop", "note": decision.get("reason")}
+        return self.propose_patch(decision["function_name"], decision["new_code"])
+
+    async def reflect(self, result: dict):
+        return {"reflection": result, "status": "complete"}
+
+    def run_diagnosis(self, failure_rate: float = 0.0, rng: random.Random | None = None) -> dict:
+        source = self.inspect_my_source()
+        decision = self._think(source, rng=rng, failure_rate=failure_rate)
+        if decision.get("action") != "patch":
+            return {
+                "attempted_patch": False,
+                "decision": decision,
+                "result": None,
+            }
+        result = self.propose_patch(decision["function_name"], decision["new_code"])
+        return {
+            "attempted_patch": True,
+            "decision": decision,
+            "result": result,
+        }

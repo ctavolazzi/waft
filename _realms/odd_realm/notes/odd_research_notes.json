@@ -1,0 +1,20 @@
+{
+  "notes": [
+    {
+      "id": "20260120T214300Z-seed",
+      "title": "ODD research notes system anchors",
+      "summary": "Seed note linking Typst ecosystem sources to ODD research notes UI and PDF workflows.",
+      "content": "Anchors for the ODD notes stack: bananote for research notes, scienceicons for visual cues, and book/report templates (may/bookly/owlbear) for structured exports. Use Typst template design guidance to keep notes reusable.",
+      "tags": ["odd", "research", "typst", "templates"],
+      "sources": [
+        "https://typst.app/universe/package/scienceicons",
+        "https://github.com/typst/packages",
+        "https://typst.app/universe/package/may/",
+        "https://typst.app/universe/package/bookly/",
+        "https://typst.app/universe/package/owlbear/",
+        "https://typst.app/docs/tutorial/making-a-template/"
+      ],
+      "created_at": "2026-01-20T21:43:00-08:00"
+    }
+  ]
+}

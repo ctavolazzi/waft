@@ -125,6 +125,10 @@ class DecisionMatrixCalculator:
                     weight = weight_map.get(score_obj.criterion_name, 0.0)
                     results[score_obj.alternative_name] += weight * score_obj.value
 
+            return results
+        finally:
+            span.end()
+
     def rank_alternatives(self, scores: dict[str, float]) -> list[tuple[str, float, int]]:
         """
         Sorts alternatives deterministically.

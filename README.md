@@ -438,6 +438,16 @@ WAFT includes 12 professional document templates:
 - **[Evolutionary Architecture](docs/research/evolutionary_architecture.md)** - Scientific doctrine
 - **[State of the Art](docs/research/state_of_art_2026.md)** - Research synthesis
 
+### Architecture Documents (PDF)
+
+- **[The Tribunal Architecture](_work_efforts/WE-260121-1f3l_the_tribunal_waft_court_system_with_inter_realm_communication/THE_TRIBUNAL_ARCHITECTURE.pdf)** - Court System Architecture (Custom Template)
+- **[The Tribunal Book](_work_efforts/WE-260121-1f3l_the_tribunal_waft_court_system_with_inter_realm_communication/THE_TRIBUNAL_BOOK.pdf)** - Court System Book Format (min-book 1.3.0)
+
+### Typst Templates
+
+- **[Work Effort Architecture Template](src/waft/templates/typst/templates/work_effort_architecture.typ)** - Custom WAFT template for architectural designs
+- **[min-book](https://typst.app/universe/package/min-book/)** - Professional book template from Typst Universe
+
 ## License
 
 MIT

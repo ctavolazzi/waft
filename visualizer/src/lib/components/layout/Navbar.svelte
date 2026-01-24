@@ -13,10 +13,12 @@
 			<a href="/" class="nav-box">Dashboard</a>
 			<a href="/cognitive-tools" class="nav-box">🧠 Cognitive Tools</a>
 			<a href="/evolve-ui-monitor" class="nav-box">🎨 Evolve UI</a>
+			<a href="/odd-notes" class="nav-box">🗂️ ODD Notes</a>
 			<a href="/git" class="nav-box">Git</a>
 			<a href="/work-efforts" class="nav-box">Work Efforts</a>
 			<a href="/empirica" class="nav-box">Empirica</a>
 			<a href="/campfire" class="nav-box">🔥 Campfire</a>
+			<a href="/odd-notes" class="nav-box">🧪 ODD Notes</a>
 			<button
 				on:click={refresh}
 				class="nav-box nav-button"

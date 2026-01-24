@@ -171,9 +171,51 @@
       "phase": "UNKNOWN",
       "coverage": 0.0,
       "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-01-20T17:00:56.140461",
+      "phase": "UNKNOWN",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-01-20T17:40:36.825622",
+      "phase": "UNKNOWN",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-01-20T19:39:01.293980",
+      "phase": "UNKNOWN",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-01-20T21:45:23.225798",
+      "phase": "UNKNOWN",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-01-20T22:02:11.559005",
+      "phase": "UNKNOWN",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-01-20T22:32:52.160553",
+      "phase": "UNKNOWN",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-01-24T03:23:46.738877",
+      "phase": "UNKNOWN",
+      "coverage": 0.0,
+      "uncertainty": 1.0
     }
   ],
-  "consultation_count": 25,
+  "consultation_count": 32,
   "first_consultation": "2026-01-19T03:00:23.640968",
-  "last_consultation": "2026-01-19T22:47:32.228672"
+  "last_consultation": "2026-01-24T03:23:46.738877"
 }

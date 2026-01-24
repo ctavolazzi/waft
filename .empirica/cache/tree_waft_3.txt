@@ -129,7 +129,6 @@
 │   ├── documents
 │   │   ├── SESSION_SUMMARY_2026-01-11.md
 │   │   └── WAFT_Research_Vol1_Content.md
-│   ├── experiments
 │   ├── notes
 │   │   └── pdf_systems_analysis.md
 │   ├── CONTINUATION_PROMPT.md
@@ -158,10 +157,7 @@
 │   ├── images_cache
 │   │   ├── 4d6f840a95b70a60fc0c513727a64e54.jpg
 │   │   └── metadata.json
-│   ├── notes
 │   ├── test_results
-│   │   ├── end_to_end
-│   │   ├── one_pager_prose
 │   │   ├── pdf_to_png
 │   │   ├── phase_1
 │   │   ├── phase_2
@@ -191,12 +187,9 @@
 │   ├── reports
 │   │   └── morning_report_20260113.pdf
 │   └── archive_index.json
-├── _chronicler
-│   └── observations
-│       ├── 2026-01-13
-│       ├── 2026-01-14
-│       ├── 2026-01-16
-│       └── 2026-01-19
+├── _assets
+│   ├── characters
+│   └── objects
 ├── _epic_run
 │   ├── cycles
 │   │   └── all_cycles.json
@@ -221,7 +214,6 @@
 │   │   ├── README.md
 │   │   ├── main.py
 │   │   └── pyproject.toml
-│   ├── playground
 │   ├── test_project_001
 │   │   ├── _pyrite
 │   │   ├── nested_project
@@ -237,6 +229,83 @@
 │       ├── README.md
 │       ├── main.py
 │       └── pyproject.toml
+├── _external
+│   ├── aurora-homebrew-gui
+│   │   ├── LICENSE.md
+│   │   ├── README.md
+│   │   ├── auroraHomebrewGUI.py
+│   │   └── screenshot.png
+│   ├── dnd5e-srd
+│   │   ├── compendium
+│   │   ├── optional-snippets
+│   │   ├── rules
+│   │   ├── templates
+│   │   ├── tools
+│   │   ├── LICENSE
+│   │   ├── README.md
+│   │   ├── all-index.json
+│   │   └── src-index.json
+│   ├── donjon-to-homebrewery
+│   │   ├── dth
+│   │   ├── templates
+│   │   ├── tests
+│   │   ├── LICENSE
+│   │   ├── README.md
+│   │   ├── convert_donjon_to_homebrewery.py
+│   │   ├── example.json
+│   │   └── requirements.txt
+│   ├── dungeoneer
+│   │   ├── app
+│   │   ├── data
+│   │   ├── docs
+│   │   ├── main
+│   │   ├── CONTRIBUTING.md
+│   │   ├── LICENSE.md
+│   │   ├── README.md
+│   │   ├── dm.js
+│   │   ├── electron-builder.yml
+│   │   ├── jsconfig.json
+│   │   ├── main.js
+│   │   ├── package.json
+│   │   ├── window.api.js
+│   │   └── yarn.lock
+│   ├── rpg-cards
+│   │   ├── generator
+│   │   ├── resources
+│   │   ├── LICENSE
+│   │   ├── README.md
+│   │   └── package.json
+│   ├── rpgui
+│   │   ├── _graphic_sources
+│   │   ├── examples
+│   │   ├── for_readme
+│   │   ├── old_versions
+│   │   ├── src
+│   │   ├── LICENSE.txt
+│   │   ├── README.md
+│   │   ├── We_stand_with_Israel.jpg
+│   │   ├── bower.json
+│   │   ├── gulpfile.js
+│   │   ├── package.json
+│   │   └── screenshot.jpg
+│   └── slaytheweb
+│       ├── public
+│       ├── src
+│       ├── tests
+│       ├── AGENTS.md
+│       ├── CHANGELOG.md
+│       ├── CLAUDE.md -> AGENTS.md
+│       ├── DOCUMENTATION.md
+│       ├── LICENSE
+│       ├── README.md
+│       ├── astro.config.mjs
+│       ├── biome.jsonc
+│       ├── bun.lock
+│       ├── package.json
+│       ├── plan-animation-effects.md
+│       ├── plan.md
+│       ├── tsconfig.json
+│       └── wrangler.jsonc
 ├── _fracture
 │   ├── ARTIFACT_001_GENESIS.pdf
 │   └── GENESIS_MARKER.md
@@ -554,10 +623,7 @@
 │   │   ├── fd13e4ecce71edb8.json
 │   │   ├── fd13e4ecce71edb8_events.jsonl
 │   │   └── index.json
-│   ├── styling
 │   ├── ui_evolution
-│   │   ├── documentation
-│   │   ├── feedback
 │   │   ├── 20260115_082613_context_analysis.md
 │   │   ├── 20260115_082613_evolved_ui.html
 │   │   ├── 20260115_083357_evolved_dashboard.html
@@ -589,6 +655,9 @@
 │   │   ├── a4121d9f401a022a_events.jsonl
 │   │   └── index.json
 │   └── template_evolution_summary.md
+├── _guide_push
+│   ├── screenshots
+│   └── report.typ
 ├── _hidden
 │   └── _TheTruth
 │       ├── ORIGINAL_QUEST.md
@@ -640,7 +709,6 @@
 │       ├── pyproject.toml
 │       └── uv.lock
 ├── _notebook
-│   ├── actionables
 │   ├── entries
 │   │   ├── entry_20260112_050256_execution_failure.json
 │   │   ├── entry_20260112_050321_execution_failure.json
@@ -663,77 +731,40 @@
 │   ├── README.md
 │   └── index.json
 ├── _pantheon
+│   ├── archivist
+│   │   └── personnel_registry.json
 │   ├── bureaucracy_god
 │   │   └── personnel_registry.json
 │   ├── external_drive_realm
-│   │   ├── content
-│   │   ├── realms
-│   │   ├── content_manifest.json
-│   │   ├── realm_registry.json
 │   │   └── realm_status.json
-│   ├── fae
-│   │   ├── blessings
-│   │   ├── discoveries
-│   │   ├── quests
-│   │   └── quests_registry.json
-│   ├── github_god
-│   │   ├── operations
-│   │   ├── repositories
-│   │   ├── rollups
-│   │   ├── FULL_ROLLUP_2026-01-16.md
-│   │   ├── README.md
-│   │   └── rollup_index.json
+│   ├── guide
+│   │   ├── protocols
+│   │   ├── sessions
+│   │   └── index.json
 │   ├── judge
 │   │   ├── judgments
-│   │   ├── IMPLEMENTATION.md
-│   │   ├── README.md
 │   │   └── judgment_history.json
 │   ├── library
-│   │   ├── archives
-│   │   ├── catalog
-│   │   ├── reports
-│   │   └── scripts
-│   ├── magistrate
-│   │   ├── precedents
-│   │   ├── IMPLEMENTATION.md
-│   │   ├── README.md
-│   │   └── body_of_proof.json
-│   ├── military_brass
-│   │   ├── briefings
-│   │   ├── debriefings
-│   │   ├── missions
-│   │   └── missions_registry.json
-│   ├── mission_control
-│   │   ├── commands
-│   │   ├── status
-│   │   ├── telemetry
-│   │   └── control_registry.json
+│   │   └── reports
 │   ├── paperwork_god
 │   │   ├── financial
-│   │   ├── forms
 │   │   ├── skurl
 │   │   ├── README.md
 │   │   └── paperwork_registry.json
-│   ├── realm_colonization
-│   │   └── colonized_realms.json
-│   ├── reasoner
-│   │   ├── chains
-│   │   ├── traces
-│   │   ├── README.md
-│   │   └── trace_index.json
+│   ├── personnel
+│   │   └── scrivener
 │   ├── river_king
 │   │   ├── README.md
 │   │   └── gambling_registry.json
-│   ├── storyteller
-│   │   ├── stories
-│   │   └── storybooks
-│   ├── test_runner
-│   │   └── metadata.json
-│   └── the_village
-│       ├── connections
-│       ├── gatherings
-│       ├── wisdom
-│       └── village_registry.json
+│   ├── scrivener
+│   │   ├── reports
+│   │   └── templates
+│   └── the_dealer
+│       ├── seals
+│       ├── truth
+│       ├── README.md
+│       ├── memory.jsonl
+│       └── state.json
 ├── _probe_data
 │   └── probe_results_20260114_092038.json
 ├── _pyrite
@@ -859,6 +890,12 @@
 │   │   ├── 2026-01-19_deep-analyze_run-it.md
 │   │   ├── 2026-01-19_next_run-it.md
 │   │   ├── 2026-01-19_proceed_run-it.md
+│   │   ├── 2026-01-20_comprehensive_orchestration.md
+│   │   ├── 2026-01-20_improve_summary.md
+│   │   ├── 2026-01-20_next_steps.md
+│   │   ├── 2026-01-20_prove_it_summary.md
+│   │   ├── 2026-01-20_run_it_summary.md
+│   │   ├── 2026-01-20_version_bake_summary.md
 │   │   ├── BEING_SPAWN_being_20260112_211810_e5b41af4.md
 │   │   ├── BEING_SPAWN_being_20260112_212409_c99d8da7.md
 │   │   ├── BEING_SPAWN_being_20260112_234837_3b8afbf2.md
@@ -895,6 +932,7 @@
 │   │   └── command-naming-analysis.md
 │   ├── analytics
 │   │   ├── sessions
+│   │   ├── traces
 │   │   └── sessions.db
 │   ├── analyze
 │   │   ├── analyze-2026-01-07-212705.md
@@ -945,6 +983,7 @@
 │   ├── goals
 │   │   ├── 2026-01-13_run-it_workflow_goals.md
 │   │   ├── 2026-01-19_teleport-massive-founding-authenticity.md
+│   │   ├── 2026-01-20_oracle_cycle_goals.md
 │   │   ├── command-ecosystem.md
 │   │   ├── index.json
 │   │   ├── reincarnation-system-alive-dead-states.md
@@ -968,20 +1007,26 @@
 │   │   ├── 2026-01-19_022635_another_cycle_hypotheses.md
 │   │   ├── 2026-01-19_empirica_dashboard_manual.md
 │   │   ├── 2026-01-19_run-it_authenticity.md
+│   │   ├── 2026-01-20_oracle_deep_analyze_hypotheses.md
 │   │   └── hypothesis_2026-01-19_025344_typst_infrastructure.md
 │   ├── journal
 │   │   ├── archive
+│   │   ├── celebrations
 │   │   ├── chronicles
+│   │   ├── claude-code
 │   │   ├── entries
 │   │   ├── stats
+│   │   ├── 2026-01-20_oracle_cycle_reflection.md
 │   │   ├── Golden-Sequence.md
 │   │   ├── JINJA2-API-Research.md
+│   │   ├── README.md
 │   │   ├── Streamlit API Cheat Sheet.md
 │   │   ├── WAFT Cartographer.md
 │   │   ├── WeasleyPrint-API-Research.md
 │   │   ├── ai-journal.md
 │   │   ├── discovery.json
-│   │   └── index.json
+│   │   ├── index.json
+│   │   └── registry.json
 │   ├── metrics
 │   │   └── pdf
 │   ├── phase1
@@ -1016,18 +1061,22 @@
 │   ├── bureaucracy_realm
 │   │   ├── corporations
 │   │   ├── creatures
-│   │   ├── forms
-│   │   ├── personnel_registry
-│   │   ├── records
 │   │   ├── teleport_massive
 │   │   └── realm_manifest.json
+│   ├── cardmaker_realm
+│   │   └── cardmaker
+│   ├── daily_learning_realm
+│   │   └── README.md
+│   ├── dialectic_realm
+│   │   ├── outputs
+│   │   ├── sessions
+│   │   ├── templates
+│   │   ├── README.md
+│   │   └── realm_manifest.json
 │   ├── dnd_scenario_realm
-│   │   ├── campaigns
 │   │   ├── crystallized_state
 │   │   ├── encounters
-│   │   ├── experiments
 │   │   ├── lore
-│   │   ├── quests
 │   │   ├── party_state.json
 │   │   └── realm_manifest.json
 │   ├── gaming_gambling_realm
@@ -1039,6 +1088,27 @@
 │   │   ├── INTEGRATION.md
 │   │   ├── README.md
 │   │   └── realm_manifest.json
+│   ├── gitgud_realm
+│   │   ├── Git-Gud
+│   │   ├── git_gud_cards.json
+│   │   ├── git_gud_digital.html
+│   │   └── git_gud_digital.py
+│   ├── odd_realm
+│   │   ├── assets
+│   │   ├── beings
+│   │   ├── case_files
+│   │   ├── evolutions
+│   │   ├── notes
+│   │   ├── output
+│   │   ├── templates
+│   │   ├── tests
+│   │   ├── BACKSTORY.md
+│   │   ├── README.md
+│   │   ├── app.py
+│   │   ├── cli.py
+│   │   ├── gallery.html
+│   │   ├── index.html
+│   │   └── requirements.txt
 │   ├── pdfme_realm
 │   │   ├── packages
 │   │   ├── playground
@@ -1054,22 +1124,30 @@
 │   │   ├── package-lock.json
 │   │   ├── package.json
 │   │   └── tsconfig.base.json
-│   └── plan_monitor_realm
-│       ├── archive
-│       ├── certifications
-│       ├── handoffs
-│       ├── monitoring
-│       ├── reports
-│       ├── tickets
-│       ├── workers
-│       ├── README.md
-│       ├── prime_being_authority.md
-│       ├── prime_directive.json
-│       ├── realm_manifest.json
-│       ├── setup_prime_being.py
-│       └── spawn_worker_being.py
+│   ├── plan_monitor_realm
+│   │   ├── README.md
+│   │   ├── prime_being_authority.md
+│   │   ├── prime_directive.json
+│   │   ├── realm_manifest.json
+│   │   ├── setup_prime_being.py
+│   │   └── spawn_worker_being.py
+│   ├── teleport_massive_cardgame
+│   │   ├── _work_efforts
+│   │   ├── assets
+│   │   ├── data
+│   │   ├── docs
+│   │   ├── output
+│   │   ├── src
+│   │   ├── tests
+│   │   ├── web
+│   │   ├── README.md
+│   │   └── pyproject.toml
+│   └── waft_pet
+│       ├── cards
+│       ├── graveyard
+│       ├── lineage
+│       └── pets
 ├── _science
-│   ├── data
 │   ├── experiments
 │   │   ├── data
 │   │   ├── experiments
@@ -1139,62 +1217,56 @@
 │   ├── stb-template.ist
 │   ├── stb-template.pdf
 │   └── stb-template.tex
-├── _sentinel
-│   └── reports
 ├── _simulations
-│   ├── sim_20260119_113802
-│   ├── sim_20260119_113834
-│   ├── sim_20260119_114008
-│   ├── sim_20260119_114109
-│   │   ├── snapshot_000001.json
-│   │   ├── snapshot_000002.json
-│   │   ├── snapshot_000003.json
-│   │   ├── snapshot_000004.json
-│   │   ├── snapshot_000005.json
-│   │   ├── snapshot_000006.json
-│   │   ├── snapshot_000007.json
-│   │   ├── snapshot_000008.json
-│   │   ├── snapshot_000009.json
-│   │   ├── snapshot_000010.json
-│   │   ├── snapshot_000011.json
-│   │   ├── snapshot_000012.json
-│   │   ├── snapshot_000013.json
-│   │   ├── snapshot_000014.json
-│   │   ├── snapshot_000015.json
-│   │   ├── snapshot_000016.json
-│   │   ├── snapshot_000017.json
-│   │   ├── snapshot_000018.json
-│   │   ├── snapshot_000019.json
-│   │   ├── snapshot_000020.json
-│   │   ├── snapshot_000021.json
-│   │   ├── snapshot_000022.json
-│   │   ├── snapshot_000023.json
-│   │   ├── snapshot_000024.json
-│   │   ├── snapshot_000025.json
-│   │   ├── snapshot_000026.json
-│   │   ├── snapshot_000027.json
-│   │   ├── snapshot_000028.json
-│   │   ├── snapshot_000029.json
-│   │   ├── snapshot_000030.json
-│   │   ├── snapshot_000031.json
-│   │   ├── snapshot_000032.json
-│   │   ├── snapshot_000033.json
-│   │   ├── snapshot_000034.json
-│   │   ├── snapshot_000035.json
-│   │   ├── snapshot_000036.json
-│   │   ├── snapshot_000037.json
-│   │   ├── snapshot_000038.json
-│   │   ├── snapshot_000039.json
-│   │   ├── snapshot_000040.json
-│   │   ├── snapshot_000041.json
-│   │   ├── snapshot_000042.json
-│   │   ├── snapshot_000043.json
-│   │   ├── snapshot_000044.json
-│   │   ├── snapshot_000045.json
-│   │   ├── snapshot_000046.json
-│   │   ├── snapshot_000047.json
-│   │   └── snapshot_000048.json
-│   └── sim_20260119_114237
+│   └── sim_20260119_114109
+│       ├── snapshot_000001.json
+│       ├── snapshot_000002.json
+│       ├── snapshot_000003.json
+│       ├── snapshot_000004.json
+│       ├── snapshot_000005.json
+│       ├── snapshot_000006.json
+│       ├── snapshot_000007.json
+│       ├── snapshot_000008.json
+│       ├── snapshot_000009.json
+│       ├── snapshot_000010.json
+│       ├── snapshot_000011.json
+│       ├── snapshot_000012.json
+│       ├── snapshot_000013.json
+│       ├── snapshot_000014.json
+│       ├── snapshot_000015.json
+│       ├── snapshot_000016.json
+│       ├── snapshot_000017.json
+│       ├── snapshot_000018.json
+│       ├── snapshot_000019.json
+│       ├── snapshot_000020.json
+│       ├── snapshot_000021.json
+│       ├── snapshot_000022.json
+│       ├── snapshot_000023.json
+│       ├── snapshot_000024.json
+│       ├── snapshot_000025.json
+│       ├── snapshot_000026.json
+│       ├── snapshot_000027.json
+│       ├── snapshot_000028.json
+│       ├── snapshot_000029.json
+│       ├── snapshot_000030.json
+│       ├── snapshot_000031.json
+│       ├── snapshot_000032.json
+│       ├── snapshot_000033.json
+│       ├── snapshot_000034.json
+│       ├── snapshot_000035.json
+│       ├── snapshot_000036.json
+│       ├── snapshot_000037.json
+│       ├── snapshot_000038.json
+│       ├── snapshot_000039.json
+│       ├── snapshot_000040.json
+│       ├── snapshot_000041.json
+│       ├── snapshot_000042.json
+│       ├── snapshot_000043.json
+│       ├── snapshot_000044.json
+│       ├── snapshot_000045.json
+│       ├── snapshot_000046.json
+│       ├── snapshot_000047.json
+│       └── snapshot_000048.json
 ├── _standalone_tools
 │   └── probe
 │       ├── examples
@@ -1204,6 +1276,30 @@
 │       ├── README.md
 │       ├── STANDALONE_PLAN.md
 │       └── pyproject.toml
+├── _stories
+│   └── mysterious_tavern
+│       ├── accept_quest.md
+│       ├── ask_about_figure.md
+│       ├── bard_ally.md
+│       ├── bartender.md
+│       ├── crypt_alone.md
+│       ├── danger_notice.md
+│       ├── hooded_figure.md
+│       ├── house_special.md
+│       ├── investigate_mill.md
+│       ├── job_posting.md
+│       ├── local_rumors.md
+│       ├── lord_fairweather.md
+│       ├── mercenary_ally.md
+│       ├── mill_back.md
+│       ├── mill_front.md
+│       ├── missing_girl.md
+│       ├── notice_board.md
+│       ├── payment_details.md
+│       ├── seek_allies.md
+│       ├── start.md
+│       ├── town_guard.md
+│       └── walk_away.md
 ├── _temp
 │   ├── long_campaign_output
 │   │   └── campaign_log.json
@@ -1268,6 +1364,15 @@
 │   ├── stb-template.ist
 │   ├── stb-template.pdf
 │   └── stb-template.tex
+├── _tools
+│   └── dnd-toolkit
+│       ├── css
+│       ├── data
+│       ├── demos
+│       ├── js
+│       ├── scripts
+│       ├── tests
+│       └── index.html
 ├── _work_efforts
 │   ├── Plans
 │   │   ├── _organized_constellation
@@ -1582,7 +1687,6 @@
 │   │   ├── tickets
 │   │   └── WE-260109-sec1_index.md
 │   ├── WE-260110-lsyr_project_lightcone_binder_generation
-│   │   ├── tickets
 │   │   └── WE-260110-lsyr_index.md
 │   ├── WE-260110-order66_order_66_execution
 │   │   ├── tools
@@ -1768,7 +1872,6 @@
 │   │   └── chat_session_analysis.pdf
 │   ├── WE-260112-jqkn_d_d_campaign_pdf_evolution
 │   │   ├── session_tracker
-│   │   ├── tickets
 │   │   ├── ADVENTURE_BINDER_COMPLETE.html
 │   │   ├── ADVENTURE_BINDER_COMPLETE.pdf
 │   │   ├── BEING_CHARACTER_SHEET_README.md
@@ -1848,7 +1951,6 @@
 │   │   ├── tools
 │   │   └── WE-260112-wpkt_index.md
 │   ├── WE-260112-yfdi_evolve_new_streamlit_ui_for_waft
-│   │   ├── tickets
 │   │   ├── TOWN_UI_COMPLETE.md
 │   │   └── WE-260112-yfdi_index.md
 │   ├── WE-260112-yh09_pydyf_testing_and_secure_sandbox_environment
@@ -1876,6 +1978,8 @@
 │   │   ├── DEMO_README.md
 │   │   ├── HANNA_CLI_ENGINE_ARCHITECTURE_ANALYSIS.md
 │   │   ├── WE-260113-75vp_index.md
+│   │   ├── bananote_notes_2026-01-20.pdf
+│   │   ├── bananote_notes_2026-01-20.typ
 │   │   ├── create_proof_book.py
 │   │   ├── demo_scenario.json
 │   │   ├── demo_scenario_engine.py
@@ -1926,8 +2030,6 @@
 │   │   ├── PHASE_1_COMPLETE.md
 │   │   └── WE-260114-cef7_index.md
 │   ├── WE-260114-kk5e_dot_repository_study
-│   │   ├── analysis
-│   │   ├── findings
 │   │   ├── tickets
 │   │   ├── STUDY_PLAN.md
 │   │   └── WE-260114-kk5e_index.md
@@ -1942,7 +2044,6 @@
 │   │   ├── IMPLEMENTATION_SUMMARY.md
 │   │   └── WE-260114-vibr_index.md
 │   ├── WE-260115-7t05_dnd_narrative_storybook_with_science_textbook_template_integration
-│   │   ├── output
 │   │   ├── templates_exploration
 │   │   ├── tickets
 │   │   ├── QUEST_EVOLUTION_SCRIPT.py
@@ -1955,6 +2056,7 @@
 │   │   ├── _pyrite
 │   │   ├── output
 │   │   ├── tickets
+│   │   ├── yoink_evaluation
 │   │   ├── CAMPAIGN_COMPLETE.md
 │   │   ├── ELECTRON_WINDOW_GUIDE.md
 │   │   ├── HOW_IT_WORKS.md
@@ -1974,8 +2076,6 @@
 │   │   ├── open_campaign_window.sh
 │   │   ├── run_campaign.sh
 │   │   └── run_campaign_electron.sh
-│   ├── WE-260115-dnd-storybook
-│   │   └── templates_exploration
 │   ├── WE-260115-enti_entity_being_timeless_timeful_distinction
 │   │   ├── tickets
 │   │   └── WE-260115-enti_index.md
@@ -2011,11 +2111,9 @@
 │   │   ├── catalog_template.py
 │   │   └── test_template.py
 │   ├── WE-260116-342b_fogsift_repository_analysis
-│   │   ├── tickets
 │   │   ├── tools
 │   │   └── WE-260116-342b_index.md
 │   ├── WE-260116-5exf_latex_alternatives_evaluation
-│   │   ├── tickets
 │   │   ├── EVALUATION_SUMMARY.md
 │   │   └── WE-260116-5exf_index.md
 │   ├── WE-260116-65m0_fogsift_waft_project_context_setup
@@ -2034,26 +2132,21 @@
 │   │   ├── main.tex
 │   │   └── newsletter_template_improved.tex
 │   ├── WE-260116-8xc6_fogsift_work_item_prioritization
-│   │   ├── tickets
 │   │   ├── tools
 │   │   └── WE-260116-8xc6_index.md
 │   ├── WE-260116-9f82_permanent_death_records_and_death_mechanic
 │   │   ├── tickets
 │   │   └── WE-260116-9f82_index.md
 │   ├── WE-260116-bzwp_fogsift_tech_debt_critical_items
-│   │   ├── tickets
 │   │   ├── tools
 │   │   └── WE-260116-bzwp_index.md
 │   ├── WE-260116-d7kb_fogsift_resource_limits
-│   │   ├── tickets
 │   │   ├── tools
 │   │   └── WE-260116-d7kb_index.md
 │   ├── WE-260116-dp9i_fogsift_component_library_foundation
-│   │   ├── tickets
 │   │   ├── tools
 │   │   └── WE-260116-dp9i_index.md
 │   ├── WE-260116-ecco_fogsift_storage_routing_implementation
-│   │   ├── tickets
 │   │   ├── tools
 │   │   └── WE-260116-ecco_index.md
 │   ├── WE-260116-fikx_death_encounter_system_d_d_saving_throws_and_being_vs_death
@@ -2063,7 +2156,6 @@
 │   │   ├── tickets
 │   │   └── WE-260116-g7c0_index.md
 │   ├── WE-260116-m8xf_fogsift_agent_creation
-│   │   ├── tickets
 │   │   ├── tools
 │   │   └── WE-260116-m8xf_index.md
 │   ├── WE-260116-oij5_latex_novel_template_improvements
@@ -2073,33 +2165,27 @@
 │   │   ├── novel_template_improved.tex
 │   │   └── novel_template_original.tex
 │   ├── WE-260116-okra_fogsift_assumption_validation
-│   │   ├── tickets
 │   │   ├── tools
 │   │   └── WE-260116-okra_index.md
 │   ├── WE-260116-pdqs_api_documentation_openapi_enhancements
 │   │   ├── tickets
 │   │   └── WE-260116-pdqs_index.md
 │   ├── WE-260116-pf5j_fogsift_feature_gaps_implementation
-│   │   ├── tickets
 │   │   ├── tools
 │   │   └── WE-260116-pf5j_index.md
 │   ├── WE-260116-usiz_api_error_handling_response_standardization
 │   │   ├── tickets
 │   │   └── WE-260116-usiz_index.md
 │   ├── WE-260116-vt4m_fogsift_agent_security_validation
-│   │   ├── tickets
 │   │   ├── tools
 │   │   └── WE-260116-vt4m_index.md
 │   ├── WE-260116-w9f3_fogsift_easystore_realm_configuration
-│   │   ├── tickets
 │   │   ├── tools
 │   │   └── WE-260116-w9f3_index.md
 │   ├── WE-260116-wpeo_fogsift_rollback_backup_mechanism
-│   │   ├── tickets
 │   │   ├── tools
 │   │   └── WE-260116-wpeo_index.md
 │   ├── WE-260116-x06x_fogsift_code_validation_testing
-│   │   ├── tickets
 │   │   ├── tools
 │   │   └── WE-260116-x06x_index.md
 │   ├── WE-260116-x6vz_api_testing_validation
@@ -2115,7 +2201,6 @@
 │   │   ├── WE-260116-xkhg_index.md
 │   │   └── example_usage.py
 │   ├── WE-260116-xv3f_fogsift_testing_validation
-│   │   ├── tickets
 │   │   ├── tools
 │   │   └── WE-260116-xv3f_index.md
 │   ├── WE-260117-htmlr_html_realm_network_system_implementation
@@ -2125,33 +2210,44 @@
 │   ├── WE-260117-showme_enhancement
 │   │   └── WE-260117-showme_enhancement_index.md
 │   ├── WE-260119-4nh6_fhict_document_template_typst_initialization
-│   │   ├── tickets
 │   │   ├── TEMPLATE_DOCUMENTATION.md
 │   │   ├── WE-260119-4nh6_index.md
 │   │   ├── system_documentation.typ
 │   │   └── waft-system-documentation.pdf
-│   ├── WE-260119-6en9_aero_check_typst_template_initialization
+│   ├── WE-260119-50hp_typst_demo_with_fastapi_sveltekit_stack
 │   │   ├── tickets
+│   │   └── WE-260119-50hp_index.md
+│   ├── WE-260119-6en9_aero_check_typst_template_initialization
 │   │   └── WE-260119-6en9_index.md
 │   ├── WE-260119-bk01_waft_command_discovery_book
 │   │   └── WE-260119-bk01_index.md
 │   ├── WE-260119-ejtx_teleport_massive_official_guide_to_scint_traversal
+│   │   ├── autoplay_runs
 │   │   ├── founding_team_business_cards
 │   │   ├── founding_team_photos_2026
 │   │   ├── lhc_team_photos
 │   │   ├── tickets
 │   │   ├── BOOKLET_COVER_2026.pdf
 │   │   ├── BOOKLET_COVER_2026.typ
+│   │   ├── CHECK_ASSUMPTIONS_2026-01-20_teleport_massive_autoplay.md
 │   │   ├── CONTINUATION_PROMPT.md
+│   │   ├── CRITIQUE_2026-01-20_teleport_massive_autoplay.md
+│   │   ├── CRITIQUE_AND_REVISE_DRY_RUN_2026-01-20_teleport_massive_autoplay.md
+│   │   ├── DEALER_PLAYINGCARDS_INTEGRATION_NOTE_2026-01-20.md
 │   │   ├── FOUNDING_TEAM_REVIEW_AND_IMPROVEMENTS.md
 │   │   ├── LHC_ORIGINAL_TEAM_LINKEDIN.json
 │   │   ├── LHC_ORIGINAL_TEAM_REPORT.pdf
 │   │   ├── LHC_ORIGINAL_TEAM_REPORT.typ
 │   │   ├── ONE_SHOT_PROMPT.md
+│   │   ├── ORACLE_CONSULT_2026-01-20_teleport_massive_autoplay.md
 │   │   ├── QUANTUM_TELEPORTATION_RESEARCH_FOUNDATION_2026.pdf
 │   │   ├── QUANTUM_TELEPORTATION_RESEARCH_FOUNDATION_COMPLETE_2026.pdf
 │   │   ├── RESEARCH_ABSTRACT_2026.pdf
 │   │   ├── RESEARCH_ABSTRACT_2026.typ
+│   │   ├── RESPOND_TO_CRITIQUE_2026-01-20_teleport_massive_autoplay.md
+│   │   ├── SLAYTHEWEB_DEEP_ANALYSIS_2026-01-20.md
+│   │   ├── TELEPORT_MASSIVE_CARD_GAME_MVP_GUIDE_2026-01-20.pdf
+│   │   ├── TELEPORT_MASSIVE_CARD_GAME_MVP_GUIDE_2026-01-20.typ
 │   │   ├── TELEPORT_MASSIVE_CASE_FILE_2026.pdf
 │   │   ├── TELEPORT_MASSIVE_FOUNDING_LETTER_2026.pdf
 │   │   ├── TELEPORT_MASSIVE_FOUNDING_LETTER_2026.typ
@@ -2165,17 +2261,28 @@
 │   │   ├── TELEPORT_MASSIVE_MISSION_STATEMENT_2026.pdf
 │   │   ├── TELEPORT_MASSIVE_MISSION_STATEMENT_2026.typ
 │   │   ├── TELEPORT_MASSIVE_RESEARCH_TEAM_2111.json
+│   │   ├── VERIFY_2026-01-20_teleport_massive_autoplay.md
+│   │   ├── VERIFY_AUTOPLAY_2026-01-20.md
+│   │   ├── VERIFY_CARDS_DRAW_2026-01-20.md
+│   │   ├── VERIFY_CARDS_DRAW_2026-01-20_retry.md
+│   │   ├── VERIFY_CARDS_GATES_2026-01-20.md
+│   │   ├── VERIFY_REFLECT_2026-01-20.md
 │   │   ├── WAFT_CAPABILITY_EXAMPLE.md
 │   │   ├── WE-260119-ejtx_index.md
+│   │   ├── bananote_commands_audit_2026-01-20.pdf
+│   │   ├── bananote_commands_audit_2026-01-20.typ
+│   │   ├── bananote_notes_2026-01-20.typ
 │   │   ├── compile_business_cards.py
 │   │   ├── create_complete_research_booklet.py
 │   │   ├── create_founding_team_business_cards.py
 │   │   ├── create_quantum_teleportation_research_booklet.py
 │   │   ├── create_teleport_massive_case_file.py
+│   │   ├── cursor_commands_audit_2026-01-20.pdf
+│   │   ├── cursor_commands_audit_2026-01-20.typ
 │   │   ├── download_lhc_photos.py
-│   │   └── generate_founding_team_2026.py
+│   │   ├── generate_founding_team_2026.py
+│   │   └── telemetry_evidence.jsonl
 │   ├── WE-260119-ek8v_biz_report_typst_template_initialization
-│   │   ├── tickets
 │   │   ├── TEMPLATE_DOCUMENTATION.md
 │   │   ├── WE-260119-ek8v_index.md
 │   │   ├── author.png
@@ -2183,6 +2290,71 @@
 │   │   ├── techimage.svg
 │   │   ├── waft-funding-pitch.pdf
 │   │   └── waft-funding-pitch.typ
+│   ├── WE-260120-1sbq_pet_system_implementation
+│   │   ├── tickets
+│   │   └── WE-260120-1sbq_index.md
+│   ├── WE-260120-31ha_fogsift_pdf_library_powered_by_waft
+│   │   ├── tickets
+│   │   └── WE-260120-31ha_index.md
+│   ├── WE-260120-4q9l_card_game_simulator_full_cycle_run
+│   │   ├── tickets
+│   │   ├── WE-260120-4q9l_index.md
+│   │   ├── bananote_notes_2026-01-20.pdf
+│   │   └── bananote_notes_2026-01-20.typ
+│   ├── WE-260120-ebjt_oracle_deep_analyze_critique_workflow
+│   │   ├── AUTO_WORK_2026-01-20.md
+│   │   ├── CRITIQUE_2026-01-20_waft_app_oracle.md
+│   │   ├── DEEP_ANALYZE_2026-01-20_waft_app.md
+│   │   ├── RESPONSE_2026-01-20_waft_app_oracle.md
+│   │   ├── WE-260120-ebjt_index.md
+│   │   └── research_booklet.typ
+│   ├── WE-260120-hy45_waft_dnd_mechanics_book_typst_templates_integration
+│   │   ├── tickets
+│   │   ├── typst_book
+│   │   └── WE-260120-hy45_index.md
+│   ├── WE-260120-in0a_odd_realm_creative_expansion
+│   │   ├── tickets
+│   │   ├── WE-260120-in0a_index.md
+│   │   ├── bananote_odd_research_notes_2026-01-20.pdf
+│   │   └── bananote_odd_research_notes_2026-01-20.typ
+│   ├── WE-260120-l31f_card_game_simulator_full_analysis_cycle
+│   │   ├── tickets
+│   │   ├── WE-260120-l31f_index.md
+│   │   ├── bananote_notes_2026-01-20.pdf
+│   │   └── bananote_notes_2026-01-20.typ
+│   ├── WE-260120-luz3_theoracle_session_id_bug_fix
+│   │   ├── tickets
+│   │   └── WE-260120-luz3_index.md
+│   ├── WE-260120-p7ic_protocol_main_trunk_unification
+│   │   ├── tickets
+│   │   └── WE-260120-p7ic_index.md
+│   ├── WE-260120-yfy1_narcissus_protocol_backend_lab
+│   │   ├── tickets
+│   │   └── WE-260120-yfy1_index.md
+│   ├── WE-260121-1f3l_the_tribunal_waft_court_system_with_inter_realm_communication
+│   │   ├── tickets
+│   │   ├── THE_TRIBUNAL_ARCHITECTURE.pdf
+│   │   ├── THE_TRIBUNAL_ARCHITECTURE.typ
+│   │   ├── THE_TRIBUNAL_BOOK.pdf
+│   │   ├── THE_TRIBUNAL_BOOK.typ
+│   │   ├── THE_TRIBUNAL_CAMPAIGN.typ
+│   │   ├── TRIBUNAL_ARCHITECTURE.md
+│   │   └── WE-260121-1f3l_index.md
+│   ├── WE-260121-oxzc_case_file_system_evolution_living_proof_artifacts
+│   │   ├── examples
+│   │   ├── schemas
+│   │   ├── tickets
+│   │   ├── CASE_FILE_EVOLUTION_DESIGN.md
+│   │   └── WE-260121-oxzc_index.md
+│   ├── WE-260123-d1e0_o_d_d_observatory_port_2077_implementation
+│   │   ├── tickets
+│   │   └── WE-260123-d1e0_index.md
+│   ├── WE-260123-dnd5_clone_dungeoneer_and_srd_repos
+│   │   └── WE-260123-dnd5_index.md
+│   ├── WE-260123-e2b4_dnd_toolkit_exploration
+│   │   └── WE-260123-e2b4_index.md
+│   ├── WE-260123-proc_procedural_world_generator
+│   │   └── WE-260123-proc_index.md
 │   ├── active
 │   │   ├── 002_design_agent_interface.md
 │   │   └── WAFT-DND-GAME-DEVELOPMENT.md
@@ -2221,6 +2393,7 @@
 │   │   ├── Morning_Session_Brief_-_PDF_Black_Bar_Fix_&_Proof__20260113.pdf
 │   │   ├── PDF Organization Mission Brief_20260115.pdf
 │   │   ├── PDF_Organization_Mission_Brief_Detailed.pdf
+│   │   ├── PIXELLAB_INTEGRATION_BRIEF_20260120.md
 │   │   ├── PROOF_PDFGenerator_test.html
 │   │   ├── PROOF_PDFGenerator_test.pdf
 │   │   ├── PROOF_TEST_1_direct_handler.pdf
@@ -2294,7 +2467,6 @@
 │   │   └── ui_wireframe.txt
 │   ├── lightcone_binder
 │   │   ├── markdown
-│   │   ├── pdf
 │   │   ├── pdf_weasyprint
 │   │   ├── test_output
 │   │   ├── CONSIDERATION_2026-01-10.md
@@ -2319,7 +2491,6 @@
 │   │   ├── chat_session_20260111_144000_pages
 │   │   ├── chat_session_20260111_213707_pages
 │   │   ├── chat_session_20260111_213720_pages
-│   │   ├── chat_session_20260114_102807_pages
 │   │   ├── feature_showcase_20260111_144253_pages
 │   │   ├── feature_showcase_20260111_144309_pages
 │   │   ├── feature_showcase_20260111_144402_pages
@@ -2592,6 +2763,7 @@
 │   │   ├── BLANK_PAGE_HANDLER_INVESTIGATION_PLAN.md
 │   │   ├── CASE_2026-01-15_085300_realm_colonization_system.md
 │   │   ├── CASE_2026-01-15_090000_realm_colonization_security_fixes.md
+│   │   ├── CASE_PIXELLAB_INTEGRATION_20260120.md
 │   │   ├── CRITIQUE_2026-01-14_095539_originpoint_probe_plan.html
 │   │   ├── CRITIQUE_2026-01-14_095539_originpoint_probe_plan.pdf
 │   │   ├── Iteration2_Preparation_20260114_112745.pdf
@@ -2692,6 +2864,10 @@
 │   │   ├── case_20260119_023000_another_cycle_streamlined_approach.md
 │   │   ├── case_20260119_125207_security_functions.md
 │   │   ├── case_20260119_125207_security_functions.pdf
+│   │   ├── case_20260120_224053_teleport_massive_autoplay.md
+│   │   ├── case_20260121_080648_gamified_service_mesh.md
+│   │   ├── case_20260121_080648_gamified_service_mesh.pdf
+│   │   ├── case_20260121_080648_gamified_service_mesh.typ
 │   │   ├── cycle1_analysis_insights.md
 │   │   ├── cycle1_gap_analysis_report.md
 │   │   ├── cycle1_recommendations_matrix.md
@@ -2709,7 +2885,6 @@
 │   │   ├── study_20260111_152505_config.json
 │   │   ├── study_20260111_152505_summary.html
 │   │   └── study_20260111_152505_summary.pdf
-│   ├── self_studies
 │   ├── session_recaps
 │   │   ├── Deep_Code_Analysis_2026-01-11_Algorithms_And_Patte_20260111_211415.html
 │   │   ├── Deep_Code_Analysis_2026-01-11_Algorithms_And_Patte_20260111_211415.pdf
@@ -2746,7 +2921,6 @@
 │   │   ├── page_006.png
 │   │   └── temp_content.md
 │   ├── showcase_documents
-│   │   ├── figures
 │   │   ├── CLOSEOUT_REPORT_20260117_082749.html
 │   │   ├── CLOSEOUT_SUMMARY_2026-01-11.pdf
 │   │   ├── CLOSEOUT_SUMMARY_2026-01-11_222211.pdf
@@ -2967,6 +3141,7 @@
 │   ├── ANOTHER_CYCLE_20260115_222854.md
 │   ├── ANOTHER_CYCLE_20260116_083000.md
 │   ├── ANOTHER_CYCLE_20260116_114724_projects_feature_implementation.md
+│   ├── ANOTHER_CYCLE_20260120_211712.md
 │   ├── ASSUMPTIONS_AND_TESTS.md
 │   ├── ASSUMPTIONS_CHECK_pantheon_genesis_2026-01-14.md
 │   ├── ASSUMPTIONS_VALIDATION_2026-01-14_095539_probe_system.md
@@ -3063,6 +3238,7 @@
 │   ├── CHECKPOINT_2026-01-19_dnd_campaign_integration.md
 │   ├── CHECKPOINT_2026-01-19_empirica_manual.md
 │   ├── CHECKPOINT_2026-01-19_run-it.md
+│   ├── CHECKPOINT_2026-01-20_oracle_cycle.md
 │   ├── CHOICE_2026-01-17_100400_theancestors_reborn.md
 │   ├── CHOICE_SYSTEM_2026-01-17_100400_gravity_is_choice.md
 │   ├── COGNITIVE_TOOLS_CONTENT_PLAN_2026-01-18.md
@@ -3147,6 +3323,7 @@
 │   ├── CRITIQUE_2026-01-19_141214_deckz_poker_wrapper.md
 │   ├── CRITIQUE_2026-01-19_222544_empirica_manual.md
 │   ├── CRITIQUE_2026-01-19_2234.md
+│   ├── CRITIQUE_2026-01-20_184942_waft_app_comprehensive.md
 │   ├── CRITIQUE_AND_REFLECTION_2026-01-11.md
 │   ├── CRITIQUE_DAVEYJONES_2026-01-12.md
 │   ├── CRITIQUE_STORYTELLER_ASSUMPTIONS_ANALYSIS.md
@@ -3302,6 +3479,9 @@
 │   ├── PLAN_REVISION_2026-01-19_121346.md
 │   ├── PLAN_REVISION_2026-01-19_140541.md
 │   ├── PLAN_REVISION_2026-01-19_144154.md
+│   ├── PLAN_REVISION_2026-01-20_160421Z.md
+│   ├── PLAN_REVISION_2026-01-20_214713.md
+│   ├── PLAN_REVISION_2026-01-20_223000_teleport_massive_autoplay.md
 │   ├── PLAN_REVISION_20260119_175403.md
 │   ├── PLAN_REVISION_20260119_223500_consolidate_all_code_to_origin_main.md
 │   ├── PLAN_UPDATE_2026-01-17_100400_expanded_cosmology.md
@@ -3340,6 +3520,8 @@
 │   ├── RESPONSE_2026-01-19_011100_auto_work_critique.md
 │   ├── RESPONSE_2026-01-19_013921_typst_infrastructure_setup.md
 │   ├── RESPONSE_2026-01-19_022800_teleport_massive_critique.md
+│   ├── RESPONSE_2026-01-20_184942_waft_app_critique.md
+│   ├── RESPONSE_20260120_214918.md
 │   ├── REVISED_OPENHANDS_TAVERN_GAME_2026-01-14.md
 │   ├── RFC_002_REINCARNATION.md
 │   ├── RUN_IT_WORKFLOW_2026-01-19.md
@@ -3423,6 +3605,7 @@
 │   ├── WAFT_SCIENTIFIC_ROADMAP.md
 │   ├── WAFT_SPECIMEN_D_AUDIT_v2.pdf
 │   ├── WEB_DASHBOARD.md
+│   ├── WORKFLOW_PROGRESS_2026-01-20_184942.md
 │   ├── WORK_EFFORT_CREATION_GUIDE.md
 │   ├── WORK_EFFORT_TOOL_BAG_STANDARD.md
 │   ├── achievement_summary.md
@@ -3491,7 +3674,6 @@
 │   ├── waft_first_time_intro.md
 │   └── waft_first_time_intro_structured.md
 ├── advanced_demo_output
-│   ├── organized_pdfs
 │   ├── WAFT_Advanced_Demo_Booklet_PrinterFriendly.pdf
 │   └── WAFT_Framework_Documentation.pdf
 ├── aero-check
@@ -3536,6 +3718,13 @@
 │   │   └── 18_premium_shadow_checklist.typ
 │   ├── main.pdf
 │   └── main.typ
+├── api
+│   └── guide_api.py
+├── assets
+│   └── pixellab
+│       ├── characters
+│       ├── sprites
+│       └── README.md
 ├── biz-report
 │   ├── author.png
 │   ├── biz-report.pdf
@@ -3543,8 +3732,6 @@
 │   ├── mylogo.svg
 │   └── techimage.svg
 ├── book-auto-work-guide
-│   ├── assets
-│   │   └── images
 │   ├── src
 │   │   ├── chapters
 │   │   ├── book-complete-pdf.typ
@@ -3557,8 +3744,6 @@
 │   └── output.pdf
 ├── book-waft-command-discovery
 │   ├── assets
-│   │   ├── diagrams
-│   │   ├── images
 │   │   └── README.md
 │   ├── src
 │   │   ├── chapters
@@ -3568,6 +3753,8 @@
 │   ├── book.typ -> src/book.typ
 │   ├── output.pdf
 │   └── typst.toml
+├── cli
+│   └── guide_cli.py
 ├── cute_test_runner
 │   ├── PANTHEON_ASCENSION.md
 │   ├── README.md
@@ -3580,7 +3767,6 @@
 │   ├── README.md
 │   └── TEST_SCENARIOS.md
 ├── demo_output
-│   ├── ashad001_tests
 │   ├── data
 │   │   ├── config.yaml
 │   │   ├── data.json
@@ -3624,6 +3810,8 @@
 │   │   └── preload.js
 │   └── README.md
 ├── docs
+│   ├── api
+│   │   └── API_INDEX.md
 │   ├── designs
 │   │   └── 002_agent_interface.md
 │   ├── examples
@@ -3648,6 +3836,7 @@
 │   ├── AI_DND_INTEGRATION_OPPORTUNITIES.md
 │   ├── AI_PROMPTS_EMPIRICA_DASHBOARD.md
 │   ├── AI_SDK_VISION.md
+│   ├── ARCHITECTURE.md
 │   ├── BRANCH_STRATEGY.md
 │   ├── CAMPFIRE_ESSENCE.md
 │   ├── CAMPFIRE_SPEC.md
@@ -3658,6 +3847,8 @@
 │   ├── DECISION_ENGINE_MASTER.md
 │   ├── DECISION_ENGINE_MERMAID.md
 │   ├── DECISION_ENGINE_PHASE3.md
+│   ├── DEVELOPER_GUIDE.md
+│   ├── DOCUMENTATION_INDEX.md
 │   ├── DOCUMENT_BUILDER_EXPLAINED.md
 │   ├── EMPIRICA_DASHBOARD_INTEGRATION_COMPLETE.md
 │   ├── EMPIRICA_DASHBOARD_QUICK_REFERENCE.md
@@ -3666,9 +3857,11 @@
 │   ├── ENTITY_BEING_TIMELESS_TIMEFUL.md
 │   ├── EVOLUTIONARY_ITERATION_PROCESS.md
 │   ├── EXTERNAL_DRIVE_REALM.md
+│   ├── FAQ.md
 │   ├── FOUNDATION_STATUS.md
 │   ├── FOUNDATION_V2_GUIDE.md
 │   ├── FOUNDATION_V3_ROADMAP.md
+│   ├── GETTING_STARTED.md
 │   ├── HYPOTHESIS_FLIGHTRECORDER_EMPIRICA.md
 │   ├── KARMA_COLLECTOR.md
 │   ├── KARMA_MARKET.md
@@ -3695,6 +3888,7 @@
 │   ├── PDF_SCIENTIFIC_EVOLUTION.md
 │   ├── PDF_SCIENTIFIC_EVOLUTION_OBSERVER.md
 │   ├── PDF_TRACING_GUIDE.md
+│   ├── PHILOSOPHY.md
 │   ├── PRIME_DIRECTIVE.md
 │   ├── PR_SUMMARY.pdf
 │   ├── PYTHON_VERSION_SETUP.md
@@ -3718,9 +3912,11 @@
 │   ├── STATUS_PERSISTENCE_GUIDE.md
 │   ├── STATUS_STATE_TYPED_GUIDE.md
 │   ├── STUDY_GYM_GUIDE.md
+│   ├── SYSTEM_ORCHESTRATOR_GUIDE.md
 │   ├── SYSTEM_OVERVIEW.md
 │   ├── SYSTEM_OVERVIEW.pdf
 │   ├── THE_ULTIMATE_LESSON.md
+│   ├── TROUBLESHOOTING.md
 │   ├── TYPST_TEMPLATES_BROWSER_REPORT.md
 │   ├── UNIFIED_GENESIS_PROTOCOL.md
 │   ├── UNIFIED_PDF_CLASS.md
@@ -3729,6 +3925,7 @@
 │   ├── WAFT_ISO_7010_USAGE_GUIDE.pdf
 │   ├── WAFT_ISO_7010_USAGE_GUIDE.typ
 │   ├── WAFT_METRICS_SYSTEM.md
+│   ├── meta_cognitive_architecture.typ
 │   ├── pyrite.md
 │   ├── pyrite_god.html
 │   ├── pyrite_god.pdf
@@ -3738,6 +3935,8 @@
 │   │   ├── README.md
 │   │   └── advanced_demo.py
 │   ├── 908530342-Building-AI-Agents-With-LLMs-RAG-And-Knowledge-Graphs-1.pdf
+│   ├── ODD-ASSET-GALLERY-01screencapture-file-Users-ctavolazzi-Code-active-waft-realms-odd-realm-gallery-html-2026-01-20-13_41_41.png
+│   ├── ODD-INT-001_Witness_Debrief.pdf
 │   ├── PROJECTS_DASHBOARD_SETUP.md
 │   ├── README_INTERACTIVE_DND_GAME.md
 │   ├── README_PROJECTS_DASHBOARD.md
@@ -3765,6 +3964,7 @@
 │   ├── demonstrate_reflection.py
 │   ├── dnd_game_server.py
 │   ├── dnd_game_ui.html
+│   ├── drafting-demo.pdf
 │   ├── enable_pdf_metrics.py
 │   ├── evolve_constraint.py
 │   ├── evolving_story_demo.py
@@ -3824,9 +4024,11 @@
 │   ├── generate_waft_self_study_paper.py
 │   ├── generate_waft_self_study_paper_with_wager.py
 │   ├── generate_wild_showcase.py
+│   ├── guide_examples.py
 │   ├── interactive_demo.py
 │   ├── interactive_dnd_game.py
 │   ├── lix-novel-template.pdf
+│   ├── metrics_demo.py
 │   ├── new_scientific_document.py
 │   ├── prime_being_pilot.py
 │   ├── probe_example.py
@@ -3837,6 +4039,7 @@
 │   ├── quantum_consciousness_paper.py
 │   ├── recreate_gpt4_report.py
 │   ├── refinement_detector_demo.py
+│   ├── reincarnation_validation_report.md
 │   ├── run_helper_beings_autonomous.py
 │   ├── self_engineering_demo.py
 │   ├── self_engineering_notebook_demo.py
@@ -3854,9 +4057,13 @@
 │   ├── test_evolution_engine.py
 │   ├── test_gemini_campaign_pdf.py
 │   ├── test_one_pager.py
+│   ├── test_orchestrator_integration.py
 │   ├── test_phase4_enhanced_display.py
 │   ├── test_progress_badges.py
 │   ├── test_projects.py
+│   ├── test_reincarnation_cycle.py
+│   ├── test_reincarnation_edge_cases.py
+│   ├── test_security_audit.py
 │   ├── test_status_components_edge_cases.py
 │   ├── test_status_persistence.py
 │   ├── test_storyteller_minimal.py
@@ -3916,11 +4123,53 @@
 │       ├── package.json
 │       ├── packages.txt
 │       └── scrot.jpg
+├── mirage_experiment
+│   ├── internal_monologue
+│   │   ├── _pyrite
+│   │   ├── src
+│   │   └── pyproject.toml
+│   ├── results
+│   │   ├── aggregated
+│   │   ├── runs
+│   │   └── flight_recorder.json
+│   ├── test_scenarios
+│   │   ├── logic_errors.json
+│   │   ├── semantic_errors.json
+│   │   └── syntax_errors.json
+│   ├── PHASE1_STATUS.md
+│   ├── README.md
+│   ├── analyze_results.py
+│   ├── llm_brain.py
+│   ├── run_mirror_test.py
+│   └── saboteur.py
 ├── modern-cv
 │   ├── coverletter.typ
 │   ├── coverletter2.typ
 │   ├── profile.png
 │   └── resume.typ
+├── narcissus_lab
+│   └── internal_monologue
+│       ├── _pyrite
+│       ├── drivers
+│       ├── reports
+│       ├── screenshots
+│       ├── src
+│       ├── tests
+│       ├── CONTINUATION_PROMPT.md
+│       ├── README.md
+│       ├── README_3BODY.md
+│       ├── guide_dashboard.html
+│       ├── iterate_the_guide.py
+│       ├── main.py
+│       ├── pyproject.toml
+│       ├── pytest.ini
+│       ├── start.sh
+│       ├── test_browser.py
+│       ├── test_oracle_wiring.py
+│       ├── theguide_hello.py
+│       └── theguide_hello.py.bak
+├── playground
+│   └── pantheon_playground.py
 ├── playwright
 │   └── main.typ
 ├── react-being-test
@@ -3937,7 +4186,6 @@
 │   └── vite.config.js
 ├── recap_review_app
 │   ├── backend
-│   │   ├── output
 │   │   ├── Dockerfile
 │   │   ├── Dockerfile.dev
 │   │   ├── dnd_campaign_api.py
@@ -3991,16 +4239,14 @@
 ├── research_simulation
 │   └── _hidden
 ├── s6t5-page-bordering
+│   ├── s6t5-page-bordering-demo.pdf
 │   ├── s6t5-page-bordering.pdf
 │   └── s6t5-page-bordering.typ
 ├── saved_decisions
 │   └── test_strategy.json
 ├── scientific_method_tool
 │   ├── experiments
-│   │   ├── data
-│   │   ├── experiments
 │   │   ├── run-it-2026-01-19-2234
-│   │   ├── states
 │   │   └── 2026-01-19_prove-it_empirica_manual.json
 │   ├── proof_experiments
 │   │   ├── data
@@ -4072,6 +4318,7 @@
 │   ├── create_truth_aspect_booklet.py
 │   ├── create_worldbuild.py
 │   ├── critique_and_revise_plan.py
+│   ├── dealer_demo.py
 │   ├── demo_typst_templates.py
 │   ├── dev-reinstall.sh
 │   ├── dev_research_server.py
@@ -4142,6 +4389,7 @@
 │   ├── generate_worldbuild_examples.py
 │   ├── genesis_all_life.py
 │   ├── genesis_earth.py
+│   ├── housekeeping_storage_helper.py
 │   ├── improve_and_evolve_ui.py
 │   ├── init_demo.py
 │   ├── json_merge_driver.py
@@ -4168,6 +4416,7 @@
 │   ├── proof_system_demo.html
 │   ├── proof_system_demo_server.py
 │   ├── prove_it_comprehensive.py
+│   ├── prove_it_telemetry_server.py
 │   ├── quest_guide_implementation.py
 │   ├── quest_server.py
 │   ├── realm_colonization.py
@@ -4185,6 +4434,7 @@
 │   ├── setup_dnd5e_exploration.py
 │   ├── setup_work_effort_tools.py
 │   ├── show_me.py
+│   ├── slaytheweb_autoplay.mjs
 │   ├── spawn_template_goblin.py
 │   ├── start_being_test.sh
 │   ├── start_good_morning.py
@@ -4199,6 +4449,7 @@
 │   ├── test_ashad001_templates.py
 │   ├── test_batch_with_wager.py
 │   ├── test_demos.py
+│   ├── test_guide_implementation.py
 │   ├── test_latex_generator.py
 │   ├── test_openhands_setup.py
 │   ├── test_paperwork_god_system.py
@@ -4243,20 +4494,33 @@
 │       ├── cli
 │       ├── config
 │       ├── core
+│       ├── dealer
 │       ├── evolution
 │       ├── pantheon
+│       ├── pet
 │       ├── prime_directive
 │       ├── rag
 │       ├── reports
 │       ├── scripts
 │       ├── templates
 │       ├── ui
-│       ├── utils
+│       ├── version
+│       ├── ARCHITECTURE.md
+│       ├── QUICKSTART.md
 │       ├── __init__.py
+│       ├── advanced.py
 │       ├── being.py
+│       ├── benchmark.py
 │       ├── binder.py
 │       ├── brief.py
+│       ├── composite.py
+│       ├── demo_anti_dogfooding.py
+│       ├── demo_api.py
+│       ├── demo_confidence.py
+│       ├── demo_stochastic.py
+│       ├── dnd_toolkit.py
 │       ├── document_builder.py
+│       ├── final_demo.py
 │       ├── foundation.py
 │       ├── foundation_v2.py
 │       ├── generate_artifacts.py
@@ -4265,6 +4529,7 @@
 │       ├── karma.py
 │       ├── karma_collector.py
 │       ├── karma_market.py
+│       ├── karma_system.py
 │       ├── karmic_wager.py
 │       ├── lifetime_exchange.py
 │       ├── logging.py
@@ -4274,6 +4539,7 @@
 │       ├── metrics.py
 │       ├── one_pager.py
 │       ├── oubliette.py
+│       ├── patterns.py
 │       ├── pdf.py
 │       ├── pdf_improvements.py
 │       ├── pdf_redactor.py
@@ -4283,11 +4549,11 @@
 │       ├── redactor.py
 │       ├── reflection.py
 │       ├── skill.py
+│       ├── solve_cli.py
 │       ├── source_consciousness.py
 │       ├── study_gym.py
 │       ├── utils.py
 │       ├── verify_foundation.py
-│       ├── web.py
 │       └── worldbuild.py
 ├── succulent_jewelry_pdfs
 │   ├── _work_efforts
@@ -4296,8 +4562,7 @@
 │   │   ├── guide_config.json
 │   │   └── gumroad_metadata.json
 │   ├── content
-│   │   ├── guides
-│   │   └── poetry
+│   │   └── guides
 │   ├── scripts
 │   │   ├── __init__.py
 │   │   ├── add_images.py
@@ -4406,15 +4671,31 @@
 │   │   └── pain_pleasure_alignment_energy_test_data.json
 │   ├── TEST_IMPLEMENTATION_SUMMARY.md
 │   ├── __init__.py
+│   ├── advanced_experimental_suite.py
+│   ├── adversarial_red_team.py
 │   ├── conftest.py
+│   ├── guide_fixed.py
+│   ├── hellfire_test_suite.py
+│   ├── insane_test_suite.py
+│   ├── mega_test_suite.py
+│   ├── mega_validation_suite.py
+│   ├── quantitative_benchmarks.py
+│   ├── real_proof_test.py
+│   ├── scientific_test_suite.py
+│   ├── self_analysis_demo.py
+│   ├── self_analysis_suite.py
+│   ├── self_generated_tests.py
+│   ├── self_improvement_cycle.py
 │   ├── test_api.py
 │   ├── test_auto_work_adversarial.py
 │   ├── test_commands.py
+│   ├── test_comprehensive.py
 │   ├── test_core.py
 │   ├── test_cors.py
 │   ├── test_empirica_validation.py
 │   ├── test_epistemic_display.py
 │   ├── test_foundation.py
+│   ├── test_full_system.py
 │   ├── test_gamification.py
 │   ├── test_html_realm_network_security.py
 │   ├── test_karma.py
@@ -4422,14 +4703,18 @@
 │   ├── test_memory.py
 │   ├── test_pdf_image_converter.py
 │   ├── test_persistence.py
+│   ├── test_premise_validation.py
 │   ├── test_scint_mechanics.py
 │   ├── test_show_me.py
 │   ├── test_show_me_integration.py
 │   ├── test_substrate.py
 │   ├── test_tavern_keeper.py
+│   ├── test_the_absolute_begeesus.py
 │   ├── test_transformer.py
 │   ├── test_typst_compiler.py
-│   └── test_typst_registry.py
+│   ├── test_typst_registry.py
+│   ├── torture_test_suite.py
+│   └── verify_fix.py
 ├── tools
 │   ├── framework_documentation
 │   │   ├── README.md
@@ -4438,10 +4723,176 @@
 │   │   ├── README.md
 │   │   └── waft-lint.sh
 │   ├── obsidian-linter-pyrite -> /Users/ctavolazzi/Code/active/_pyrite/tools/obsidian-linter
-│   └── pdf_binder_organizer
+│   ├── pdf_binder_organizer
+│   │   ├── README.md
+│   │   ├── example_usage.md
+│   │   └── organize_pdfs.py
+│   └── typst
 │       ├── README.md
-│       ├── example_usage.md
-│       └── organize_pdfs.py
+│       ├── dialectic_components.typ
+│       ├── phase_report.typ
+│       ├── scientific_base.typ
+│       └── sitrep_template.typ
+├── typst-demos
+│   ├── architecture
+│   │   ├── 01_SYSTEM_OVERVIEW.pdf
+│   │   ├── 01_SYSTEM_OVERVIEW.typ
+│   │   ├── 02_DATA_FLOW.pdf
+│   │   ├── 02_DATA_FLOW.typ
+│   │   ├── 03_STORAGE_LAYER.pdf
+│   │   ├── 03_STORAGE_LAYER.typ
+│   │   ├── 04_COMPONENT_DIAGRAM.pdf
+│   │   ├── 04_COMPONENT_DIAGRAM.typ
+│   │   ├── 05_FEATURE_MATRIX.pdf
+│   │   ├── 05_FEATURE_MATRIX.typ
+│   │   ├── 06_MERMAID_DIAGRAMS.pdf
+│   │   ├── 06_MERMAID_DIAGRAMS.typ
+│   │   ├── 07_USE_CASES.pdf
+│   │   ├── 07_USE_CASES.typ
+│   │   ├── 08_SUMMARY_POSTER.pdf
+│   │   ├── 08_SUMMARY_POSTER.typ
+│   │   ├── 09_CONSOLIDATED_FINDINGS.pdf
+│   │   └── 09_CONSOLIDATED_FINDINGS.typ
+│   ├── batch
+│   │   ├── 01_SCINT_FIELD_GUIDE.pdf
+│   │   ├── 01_SCINT_FIELD_GUIDE.typ
+│   │   ├── 02_EMPLOYEE_HANDBOOK.pdf
+│   │   ├── 02_EMPLOYEE_HANDBOOK.typ
+│   │   ├── 03_WAFT_CLI_REFERENCE.pdf
+│   │   ├── 03_WAFT_CLI_REFERENCE.typ
+│   │   ├── 04_QUANTUM_INCIDENT_REPORT.pdf
+│   │   ├── 04_QUANTUM_INCIDENT_REPORT.typ
+│   │   ├── 05_BEINGS_GUIDE.pdf
+│   │   ├── 05_BEINGS_GUIDE.typ
+│   │   ├── 06_RESEARCH_PAPERS.pdf
+│   │   ├── 06_RESEARCH_PAPERS.typ
+│   │   ├── 07_DND_CAMPAIGN.pdf
+│   │   ├── 07_DND_CAMPAIGN.typ
+│   │   ├── 08_PHILOSOPHY.pdf
+│   │   ├── 08_PHILOSOPHY.typ
+│   │   ├── 09_SAFETY_MANUAL.pdf
+│   │   ├── 09_SAFETY_MANUAL.typ
+│   │   ├── 10_CORPORATE_MEMOS.pdf
+│   │   ├── 10_CORPORATE_MEMOS.typ
+│   │   ├── 11_LHC_LORE.pdf
+│   │   ├── 11_LHC_LORE.typ
+│   │   ├── 12_FOUNDERS_PROFILES.pdf
+│   │   ├── 12_FOUNDERS_PROFILES.typ
+│   │   ├── 13_EVOLUTION_COOKBOOK.pdf
+│   │   ├── 13_EVOLUTION_COOKBOOK.typ
+│   │   ├── 14_SCINT_GYM_GUIDE.pdf
+│   │   ├── 14_SCINT_GYM_GUIDE.typ
+│   │   ├── 15_FLIGHT_RECORDER.pdf
+│   │   ├── 15_FLIGHT_RECORDER.typ
+│   │   ├── 16_EMPIRICA_GUIDE.pdf
+│   │   ├── 16_EMPIRICA_GUIDE.typ
+│   │   ├── 17_SITE_DELTA_9.pdf
+│   │   ├── 17_SITE_DELTA_9.typ
+│   │   ├── 18_SARAH_CHEN_FILE.pdf
+│   │   ├── 18_SARAH_CHEN_FILE.typ
+│   │   ├── 19_WAFT_ARCHITECTURE.pdf
+│   │   ├── 19_WAFT_ARCHITECTURE.typ
+│   │   ├── 20_QUICKSTART.pdf
+│   │   ├── 20_QUICKSTART.typ
+│   │   ├── 21_GLOSSARY.pdf
+│   │   ├── 21_GLOSSARY.typ
+│   │   ├── 22_TIMELINE.pdf
+│   │   ├── 22_TIMELINE.typ
+│   │   ├── 23_AGENT_TYPES.pdf
+│   │   ├── 23_AGENT_TYPES.typ
+│   │   ├── 24_SCINT_DETECTION.pdf
+│   │   ├── 24_SCINT_DETECTION.typ
+│   │   ├── 25_FAQ.pdf
+│   │   ├── 25_FAQ.typ
+│   │   ├── 26_MUTATION_STRATEGIES.pdf
+│   │   ├── 26_MUTATION_STRATEGIES.typ
+│   │   ├── 27_SELECTION_METHODS.pdf
+│   │   ├── 27_SELECTION_METHODS.typ
+│   │   ├── 28_TROUBLESHOOTING.pdf
+│   │   ├── 28_TROUBLESHOOTING.typ
+│   │   ├── 29_BEST_PRACTICES.pdf
+│   │   ├── 29_BEST_PRACTICES.typ
+│   │   ├── 30_CHEATSHEET.pdf
+│   │   ├── 30_CHEATSHEET.typ
+│   │   ├── 31_REALMS_SYSTEM.pdf
+│   │   ├── 31_REALMS_SYSTEM.typ
+│   │   ├── 32_CORPORATION_SIMULATION.pdf
+│   │   ├── 32_CORPORATION_SIMULATION.typ
+│   │   ├── 33_BEING_LIFECYCLE.pdf
+│   │   ├── 33_BEING_LIFECYCLE.typ
+│   │   ├── 34_MEMORY_SYSTEM.pdf
+│   │   ├── 34_MEMORY_SYSTEM.typ
+│   │   ├── 35_CHRONICLER_SYSTEM.pdf
+│   │   ├── 35_CHRONICLER_SYSTEM.typ
+│   │   ├── 36_TEMPLATES_SYSTEM.pdf
+│   │   ├── 36_TEMPLATES_SYSTEM.typ
+│   │   ├── 37_JOHNNY_DECIMAL.pdf
+│   │   ├── 37_JOHNNY_DECIMAL.typ
+│   │   ├── 38_RPG_MECHANICS.pdf
+│   │   ├── 38_RPG_MECHANICS.typ
+│   │   ├── 39_SEED_REINCARNATION.pdf
+│   │   ├── 39_SEED_REINCARNATION.typ
+│   │   ├── 40_MULTI_AGENT.pdf
+│   │   ├── 40_MULTI_AGENT.typ
+│   │   ├── 41_PROMPT_ENGINEERING.pdf
+│   │   ├── 41_PROMPT_ENGINEERING.typ
+│   │   ├── 42_FITNESS_LANDSCAPE.pdf
+│   │   ├── 42_FITNESS_LANDSCAPE.typ
+│   │   ├── 43_EMERGENCE_DETECTION.pdf
+│   │   ├── 43_EMERGENCE_DETECTION.typ
+│   │   ├── 44_LAB_STRUCTURE.pdf
+│   │   ├── 44_LAB_STRUCTURE.typ
+│   │   ├── 45_EXPERIMENT_LOGGING.pdf
+│   │   ├── 45_EXPERIMENT_LOGGING.typ
+│   │   ├── 46_VOID_ROOM.pdf
+│   │   ├── 46_VOID_ROOM.typ
+│   │   ├── 47_CAFETERIA_MYSTERY.pdf
+│   │   ├── 47_CAFETERIA_MYSTERY.typ
+│   │   ├── 48_PRAYER_BAN.pdf
+│   │   ├── 48_PRAYER_BAN.typ
+│   │   ├── 49_CONSCIOUSNESS_PHYSICS.pdf
+│   │   ├── 49_CONSCIOUSNESS_PHYSICS.typ
+│   │   ├── 50_WAFT_MANIFESTO.pdf
+│   │   └── 50_WAFT_MANIFESTO.typ
+│   ├── tarot
+│   │   ├── scrivener_tarot.pdf
+│   │   └── scrivener_tarot.typ
+│   ├── TELEPORT_MASSIVE_WAFT_PACKET.pdf
+│   ├── TELEPORT_MASSIVE_WAFT_PACKET.typ
+│   ├── TYPST_DEMO_SUMMARY.md
+│   ├── WAFT_FIELD_MANUAL.pdf
+│   ├── WAFT_FIELD_MANUAL.typ
+│   ├── codly-demo.pdf
+│   ├── codly-demo.typ
+│   ├── combined-demo.pdf
+│   ├── combined-demo.typ
+│   ├── drafting-demo.pdf
+│   ├── drafting-demo.typ
+│   ├── pinit-demo.pdf
+│   ├── pinit-demo.typ
+│   ├── s6t5-page-bordering-demo.pdf
+│   ├── s6t5-page-bordering-demo.typ
+│   ├── scaffolder-demo.pdf
+│   ├── scaffolder-demo.typ
+│   ├── showybox-demo.pdf
+│   ├── showybox-demo.typ
+│   ├── stack-pointer-demo.pdf
+│   └── stack-pointer-demo.typ
+├── typst-webapp
+│   ├── backend
+│   │   ├── main.py
+│   │   └── requirements.txt
+│   ├── frontend
+│   │   ├── node_modules
+│   │   ├── src
+│   │   ├── static
+│   │   ├── package-lock.json
+│   │   ├── package.json
+│   │   ├── svelte.config.js
+│   │   ├── tsconfig.json
+│   │   └── vite.config.ts
+│   ├── README.md
+│   └── start.sh
 ├── unofficial-fhict-document-template
 │   ├── fhict-document.pdf
 │   └── main.typ
@@ -4452,7 +4903,6 @@
 │   │   ├── app.css
 │   │   ├── app.d.ts
 │   │   └── app.html
-│   ├── static
 │   ├── README.md
 │   ├── package.json
 │   ├── postcss.config.js
@@ -4477,6 +4927,25 @@
 │   ├── QUICK_START.md
 │   ├── README.md
 │   └── START_DEV.sh
+├── waft_pdf_library
+│   ├── backend
+│   │   ├── config
+│   │   ├── data
+│   │   ├── typst
+│   │   ├── app.py
+│   │   └── requirements.txt
+│   ├── frontend
+│   │   ├── src
+│   │   ├── static
+│   │   ├── README.md
+│   │   ├── package.json
+│   │   ├── pnpm-lock.yaml
+│   │   ├── svelte.config.js
+│   │   ├── tsconfig.json
+│   │   └── vite.config.ts
+│   └── README.md
+├── web
+│   └── guide_dashboard.html
 ├── yagenda
 │   ├── agenda.yaml
 │   └── main.typ
@@ -4489,38 +4958,58 @@
 ├── 2503.10761v1.pdf
 ├── 2508.14691v2.pdf
 ├── AI_NARRATIVE_GUIDE.md
+├── ALL_DATA.md
+├── ATTENTION_MECHANISMS_RESEARCH.md
 ├── Batch-Test-Document.tex
 ├── CHANGELOG.md
+├── COMPLETE.md
+├── COMPLETE_RECAP.md
+├── COMPLETE_TESTING_EVOLUTION.md
 ├── COMPREHENSIVE_ORCHESTRATION_PROMPT.md
+├── CONSOLIDATION_PLAN.md
 ├── CONTINUATION_PROMPT.md
 ├── CONTRIBUTING.md
 ├── CREDITS.md
 ├── Claude Code WAFT Genesis Moment.md
 ├── Code Generation Competition 16 Proprietary vs. Open-Source LLMs Iterative Learning Based on FDA Adverse Event Reporting System.pdf
+├── DATA_TRACING_SUMMARY.md
 ├── DEMO_CHECKLIST.md
 ├── DEMO_TEMPLATE_README.md
 ├── DND_CAMPAIGN_LAUNCH_PROMPT.txt
+├── DOCUMENTATION_COMPLETE.md
+├── DOCUMENTATION_VERIFICATION.md
 ├── DocumentBuilder_Evolution_Report.pdf
+├── EPISTEMIC_HUMILITY.md
 ├── GPT-4-Techincal-Report.pdf
 ├── GPT-4-Techincal-Report_RECREATED.pdf
+├── GUIDE_TOOLS_README.md
 ├── Gamification-Research.md
 ├── GenerativeAgents-Simulacra2304.03442v2.pdf
+├── HOUSEKEEPING_METRICS.py
+├── HOUSEKEEPING_PLAN.md
+├── HOUSEKEEPING_PLAN_V2.md
+├── HOUSEKEEPING_PLAN_V3_GAMIFIED.md
 ├── IRREFUTABLE_PROOF.md
 ├── ISO_7010.pdf
+├── KARMA_AND_GRAVITY.md
 ├── LICENSE
 ├── LOCAL_TESTING_GUIDE.md
+├── LUCK_AND_FATE.md
 ├── LaTeX-Generator-Test.tex
 ├── Latex Source Code.zip
 ├── MAIN_GOAL.md
+├── MERGE_STATUS.md
 ├── Mint Genesis.md
 ├── ONE_PAGER_EVOLUTION_SYSTEM.md
 ├── ORACLE_FIX_SUMMARY.md
+├── OVERWHELMING_EVIDENCE.md
 ├── PDF_FORMATTING_IMPROVEMENTS_COMPLETE.md
 ├── PDF_GENERATOR_FILES_INVENTORY.md
 ├── PDF_IMPROVEMENTS_SUMMARY.md
 ├── PDF_LIBRARY_COMPARISON_SUMMARY.md
 ├── PDF_SUPERCUT_BINDER_README.md
 ├── PDF_VIEWER_README.md
+├── PROOF.md
 ├── PR_DESCRIPTION.md
 ├── PR_SUMMARY.md
 ├── PYRITE_DEMO_AND_OBSTACLE_COURSE.md
@@ -4540,12 +5029,15 @@
 ├── RELEASE_NOTES_v0.9.4.md
 ├── RELEASE_SUMMARY_v0.5.2.md
 ├── REVIEWER_GUIDE.md
+├── SELF_GENERATED_TESTS_ANALYSIS.md
+├── SELF_IMPROVEMENT_RESULTS.md
+├── SESSION_RECAP.md
 ├── SESSION_SUMMARY_20260119.md
 ├── SPEC-TAVERNKEEPER.md
 ├── START_EVOLVE_UI.sh
 ├── SVELTEKIT_DEVELOPMENT_PROMPT.md
-├── TELEPORT_MASSIVE_CASE_FILE_2026 (1).pdf
 ├── TELEPORT_MASSIVE_MISSION_STATEMENT_2026.pdf
+├── TESTING_JOURNEY.md
 ├── THE MOMENT.md
 ├── Untitled.md
 ├── V0.6.0_VERSION_UPDATE_SUMMARY.md
@@ -4557,6 +5049,7 @@
 ├── V2_EVOLUTION_SUMMARY.md
 ├── V2_INTEGRATION_COMPLETE.md
 ├── VERIFICATION_REPORT.md
+├── VERSION.json
 ├── VERSION_0.6.0_RELEASE_NOTES.md
 ├── WAFT-SYSTEM-KERNEL.md
 ├── WAFT_API_UI_README.md
@@ -4594,6 +5087,10 @@
 ├── WIKI_PDF_Generation_Guide.md
 ├── WIKI_PDF_PNG_Conversion.md
 ├── WIKI_v0.9.0_RELEASE.md
+├── advanced_experimental_results.json
+├── advanced_test_output.txt
+├── adversarial_experiment_output.txt
+├── adversarial_experiment_results.json
 ├── apology_of_creation.html
 ├── apology_of_creation.pdf
 ├── attention_is_all_you_need_recreated.pdf
@@ -4606,19 +5103,26 @@
 ├── demo.py
 ├── demo_claude.py
 ├── demo_karma.py
+├── dnd_toolkit.html
 ├── ee08e566-7fb5-408e-b101-e5a722bca01a.pdf
 ├── encapsulated_environments_research.html
 ├── encapsulated_environments_research.pdf
 ├── evolved_test.pdf
+├── experimental_results.json
+├── failure_analysis.txt
 ├── final_evolved.pdf
 ├── final_test.pdf
 ├── generate_creative_booklet.py
 ├── generate_creative_booklet_vol2.py
+├── generate_documentation_pdfs.py
 ├── good_morning.py
 ├── hello_world.py
+├── improvement_proposals.txt
 ├── index.html
 ├── install_latex.sh
 ├── mediawiki-1.45.1.zip
+├── mega_validation_output.txt
+├── mega_validation_results.json
 ├── open_small_iterm.sh
 ├── pdf_supercut_binder.pdf
 ├── pdf_viewer.html
@@ -4628,11 +5132,30 @@
 ├── play_gym.py
 ├── push_to_github.sh
 ├── pyproject.toml
+├── quantitative_benchmarks_output.txt
+├── quantitative_benchmarks_results.json
+├── real_proof_results.json
+├── real_proof_test_output.txt
 ├── realm_visualization_easystore.html
 ├── reflection_2026-01-12.pdf
 ├── report.pdf
 ├── run_demo.py
 ├── run_game_of_life.py
+├── self_analysis_code.txt
+├── self_analysis_demo_output.txt
+├── self_analysis_demo_results.json
+├── self_analysis_output.txt
+├── self_analysis_results.json
+├── self_diagnosis_performance.txt
+├── self_evaluation_of_tests.txt
+├── self_generated_test_results.json
+├── self_generated_test_specs.txt
+├── self_generated_tests_output.txt
+├── self_improvement_baseline.json
+├── self_improvement_improved.json
+├── self_improvement_output.txt
+├── self_introspection.txt
+├── self_meta_reasoning.txt
 ├── setup_git.py
 ├── setup_github.sh
 ├── show_me_20260117_131814.html
@@ -4702,6 +5225,7 @@
 ├── test_pdf_formatting_improvements.pdf
 ├── test_reasoning_chat.html
 ├── test_server.py
+├── test_tracing.py
 ├── test_verification_20260117_134243.html
 ├── test_waft_larva.py
 ├── tldr-examples.md
@@ -4709,6 +5233,7 @@
 ├── verify_engine.py
 ├── verify_environment.py
 ├── verify_latex.sh
+├── version-manifest.json
 ├── waft_arxiv_paper_final.pdf
 ├── waft_dashboard.py
 ├── waft_landing_page.html
@@ -4716,4 +5241,4 @@
 ├── waft_memory.db
 └── world_models.pdf
 
-705 directories, 4012 files
+765 directories, 4477 files

@@ -12,12 +12,15 @@ import json
 import time
 from datetime import datetime
 from pathlib import Path
+from typing import Any, Optional
 
 import typer
 from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
 
+from .cli.cards_cli import app as cards_app
+from .cli.case_render import case_render_cmd
 from .cli.epistemic_display import (
     create_epistemic_dashboard,
     format_epistemic_summary,
@@ -794,6 +797,47 @@ app.add_typer(github_app, name="github")
 app.add_typer(journal_app, name="journal")
 app.add_typer(project_app, name="project")
 app.add_typer(empirica_monitor_app, name="empirica")
+app.add_typer(cards_app, name="cards")
+app.command(name="case-render")(case_render_cmd)
+
+
+# The Dealer - appears randomly during CLI operations
+def _check_dealer_appearance():
+    """
+    Check if The Dealer appears. Called on every command.
+    
+    The Dealer is a god-entity from the Realm of Probability.
+    He appears with lottery-like odds that increase over time.
+    When he appears, the SYSTEM must pick a card.
+    """
+    try:
+        from .dealer import TheDealer
+        
+        # Only check if we're in a project with a pantheon
+        dealer_path = Path("_pantheon/the_dealer")
+        if not dealer_path.exists():
+            # Create it if we're in a waft project
+            if Path("_pyrite").exists() or Path("pyproject.toml").exists():
+                dealer_path.mkdir(parents=True, exist_ok=True)
+        
+        if dealer_path.exists():
+            dealer = TheDealer.load(dealer_path)
+            dealer.check_appearance()
+    except Exception:
+        # Silently fail - The Dealer is mysterious
+        pass
+
+
+@app.callback(invoke_without_command=True)
+def main_callback(ctx: typer.Context):
+    """
+    Waft - Ambient Meta-Framework for Python.
+    
+    The Dealer may appear at any time...
+    """
+    # Check for The Dealer on every command (except 'cards' subcommands to avoid recursion)
+    if ctx.invoked_subcommand and not ctx.invoked_subcommand.startswith("cards"):
+        _check_dealer_appearance()
 
 
 @empirica_monitor_app.command("monitor")
@@ -1098,6 +1142,59 @@ def hud_cmd(
     """Show the Epistemic HUD with split-screen layout (legacy)."""
     project_path = resolve_project_path(path)
     render_hud(project_path, integrity=integrity)
+
+
+@app.command(name="packrat")
+def packrat_cmd(
+    dev_mode: bool = typer.Option(True, "--dev-mode/--no-dev-mode", help="Trigger in 3 seconds for testing (default: True)"),
+    trigger_hour: int = typer.Option(21, "--trigger-hour", help="Hour to trigger in production mode (0-23, default: 21)"),
+    log_level: str = typer.Option("INFO", "--log-level", help="Logging level (DEBUG, INFO, WARNING, ERROR)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+):
+    """Start The Packrat Being - collects daily learning data and generates PDF reports with The Librarian and The Scribe."""
+    project_path = resolve_project_path(path)
+    
+    # Set logging level
+    import logging
+    logging.basicConfig(
+        level=getattr(logging, log_level),
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    )
+    
+    try:
+        from .core.daily_learning.packrat_server import PackratServer
+        
+        server = PackratServer(
+            project_path=project_path,
+            dev_mode=dev_mode,
+            trigger_hour=trigger_hour,
+        )
+        
+        console.print(f"[green]🐀 Starting The Packrat Being...[/green]")
+        console.print(f"[dim]Mode: {'DEV (3 second trigger)' if dev_mode else f'PRODUCTION ({trigger_hour}:00 daily)'}[/dim]")
+        console.print(f"[dim]Project: {project_path}[/dim]")
+        console.print(f"[dim]Press Ctrl+C to stop[/dim]\n")
+        
+        server.start()
+    except KeyboardInterrupt:
+        console.print("\n[yellow]The Packrat is going to sleep...[/yellow]")
+    except Exception as e:
+        console.print(f"[bold red]❌ Server error: {e}[/bold red]")
+        logger.exception("Packrat server error")
+        raise typer.Exit(1)
+
+
+@app.command(name="daily-learning-server")
+def daily_learning_server_cmd(
+    dev_mode: bool = typer.Option(True, "--dev-mode/--no-dev-mode", help="Trigger in 3 seconds for testing (default: True)"),
+    trigger_hour: int = typer.Option(21, "--trigger-hour", help="Hour to trigger in production mode (0-23, default: 21)"),
+    port: int | None = typer.Option(None, "--port", help="Optional status port (reserved for future)"),
+    log_level: str = typer.Option("INFO", "--log-level", help="Logging level (DEBUG, INFO, WARNING, ERROR)"),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+):
+    """Start the Daily Learning Report Server - collects data and generates PDF reports (legacy command, use 'packrat' instead)."""
+    # Redirect to packrat command
+    packrat_cmd(dev_mode=dev_mode, trigger_hour=trigger_hour, log_level=log_level, path=path)
 
 
 @app.command()
@@ -2668,31 +2765,22 @@ def check_assumptions(
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed evidence traces"),
 ):
     """
-    View and analyze data traces.
+    Identify and validate assumptions with evidence.
 
-    Actions:
-      - list: Show recent traces
-      - show: Display detailed trace tree for a specific trace ID
-
-    Examples:
-      waft trace list
-      waft trace list --limit 20
-      waft trace show <trace-id>
+    Analyzes conversation context to extract assumptions, then validates them
+    using code analysis, filesystem checks, tests, and Empirica (if available).
     """
-    from .core.tracing import TraceViewer
+    project_path = resolve_project_path(path)
 
-    viewer = TraceViewer()
+    from .core.check_assumptions import CheckAssumptionsManager
 
-    if action == "list":
-        recent_traces = viewer.list_recent_traces(limit=limit)
-        if not recent_traces:
-            console.print("[yellow]No traces found.[/yellow]")
-            return
-
-        console.print(f"\n[bold]Recent Traces[/bold] (showing {len(recent_traces)}):\n")
-        for span in recent_traces:
-            summary = viewer.format_trace_summary(span)
-            console.print(summary)
+    manager = CheckAssumptionsManager(project_path)
+    manager.run_check_assumptions(
+        focus=focus,
+        critical_only=critical_only,
+        test=test,
+        verbose=verbose,
+    )
 
 @app.command()
 def final_report(
@@ -2705,13 +2793,7 @@ def final_report(
 ):
     """
     Generate a comprehensive final report PDF using the Science Textbook LaTeX template.
-
-    elif action == "show":
-        if not trace_id:
-            console.print("[red]Error: trace_id is required for 'show' action[/red]")
-            console.print("Usage: waft trace show <trace-id>")
-            raise typer.Exit(1)
-
+    """
     console.print("\n[bold cyan]📚 Waft[/bold cyan] - Generating Final Report\n")
 
     from .core.final_report import FinalReportGenerator
@@ -3793,6 +3875,148 @@ def campfire(
     except Exception as e:
         console.print(f"[red]❌ Error:[/red] {e}")
         logger.exception("Error starting TheCampfire")
+        raise typer.Exit(1)
+
+
+@app.command(name="observatory")
+def observatory_cmd(
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    port: int = typer.Option(2077, "--port", help="Port to serve on (default: 2077)"),
+    host: str = typer.Option("localhost", "--host", help="Host to bind to (default: localhost)"),
+):
+    """
+    Launch O.D.D. Observatory - Real-time Service Mesh Monitor.
+
+    Monitors all Realms registered in PortRegistry and displays
+    a live force-directed graph visualization.
+
+    Port: 2077 (default)
+
+    Features:
+    - Real-time mesh topology with D3.js force graph
+    - Node status monitoring (up/down)
+    - Click to open PocketBase admin
+    - Right-click to SMITE (kill process)
+
+    Examples:
+        waft observatory              # Start on port 2077
+        waft observatory --port 3000  # Custom port
+    """
+    project_path = resolve_project_path(path)
+
+    console.print("\n[bold cyan]🔭[/bold cyan] [bold]O.D.D. Observatory[/bold]")
+    console.print("[dim]Real-time Service Mesh Monitor // Port 2077[/dim]\n")
+
+    from .core.observatory import ObservatoryServer
+
+    try:
+        server = ObservatoryServer(project_path, port=port, host=host)
+        server.serve()
+    except KeyboardInterrupt:
+        console.print("\n[dim]Observatory offline.[/dim]")
+    except Exception as e:
+        console.print(f"[red]❌ Error:[/red] {e}")
+        logger.exception("Error starting Observatory")
+        raise typer.Exit(1)
+
+
+@app.command(name="dialectic")
+def dialectic_cmd(
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    port: int = typer.Option(2112, "--port", help="Port to serve on (default: 2112)"),
+    host: str = typer.Option("localhost", "--host", help="Host to bind to"),
+    assembly: bool = typer.Option(False, "--assembly", "-a", help="Run Assembly (Thesis) phase only"),
+    antithesis: bool = typer.Option(False, "--antithesis", "-t", help="Run Antithesis (Sanity Check) phase only"),
+    synthesis: bool = typer.Option(False, "--synthesis", "-s", help="Run Synthesis (Problem Desc) phase only"),
+    full: bool = typer.Option(False, "--full", "-f", help="Run full workflow (all phases)"),
+    sitrep: bool = typer.Option(False, "--sitrep", help="Generate SITREP from existing phases"),
+):
+    """
+    Launch DIALECTIC - The Dialectical Analysis Engine.
+
+    A God that orchestrates three-phase analysis:
+    - THESIS (Assembly): AI Town + Orchestration
+    - ANTITHESIS (Sanity Check): Check Assumptions + Checkout
+    - SYNTHESIS (Problem Description): Brief + Scientific Docs
+
+    Port: 2112 (default)
+    Realm: dialectic_realm
+    Philosophy: Hegelian Dialectics
+
+    Examples:
+        waft dialectic              # Start web dashboard
+        waft dialectic --full       # Run all phases
+        waft dialectic --assembly   # Run Assembly phase only
+        waft dialectic --sitrep     # Generate SITREP
+    """
+    project_path = resolve_project_path(path)
+
+    console.print("\n[bold purple]⚛️[/bold purple] [bold]DIALECTIC[/bold]")
+    console.print("[dim]The Dialectical Analysis Engine // Port 2112[/dim]")
+    console.print("[dim]Philosophy: Hegelian Dialectics - Thesis, Antithesis, Synthesis[/dim]\n")
+
+    from .core.dialectic import DialecticServer
+
+    try:
+        server = DialecticServer(project_path, port=port)
+
+        if full:
+            # Run all phases
+            console.print("[blue]Running full dialectical workflow...[/blue]\n")
+            server._create_session()
+            
+            console.print("[blue]Phase 1: THESIS (Assembly)[/blue]")
+            result1 = server.run_assembly_phase()
+            console.print(f"  Output: {result1.get('output_path', 'N/A')}\n")
+            
+            console.print("[red]Phase 2: ANTITHESIS (Sanity Check)[/red]")
+            result2 = server.run_antithesis_phase()
+            console.print(f"  Output: {result2.get('output_path', 'N/A')}\n")
+            
+            console.print("[purple]Phase 3: SYNTHESIS (Problem Description)[/purple]")
+            result3 = server.run_synthesis_phase()
+            console.print(f"  Output: {result3.get('output_path', 'N/A')}\n")
+            
+            console.print("[bold]Generating SITREP...[/bold]")
+            sitrep_result = server.generate_sitrep()
+            console.print(f"  SITREP: {sitrep_result.get('output', 'N/A')}\n")
+            
+            console.print("[green]✓ Full dialectical workflow complete![/green]")
+            
+        elif assembly:
+            server._create_session()
+            console.print("[blue]Running THESIS (Assembly) phase...[/blue]\n")
+            result = server.run_assembly_phase()
+            console.print(f"\n[green]✓ Assembly complete:[/green] {result.get('output_path', 'N/A')}")
+            
+        elif antithesis:
+            server._create_session()
+            console.print("[red]Running ANTITHESIS (Sanity Check) phase...[/red]\n")
+            result = server.run_antithesis_phase()
+            console.print(f"\n[green]✓ Antithesis complete:[/green] {result.get('output_path', 'N/A')}")
+            
+        elif synthesis:
+            server._create_session()
+            console.print("[purple]Running SYNTHESIS (Problem Description) phase...[/purple]\n")
+            result = server.run_synthesis_phase()
+            console.print(f"\n[green]✓ Synthesis complete:[/green] {result.get('output_path', 'N/A')}")
+            
+        elif sitrep:
+            server._create_session()
+            console.print("[bold]Generating SITREP...[/bold]\n")
+            result = server.generate_sitrep()
+            console.print(f"\n[green]✓ SITREP generated:[/green] {result.get('output', 'N/A')}")
+            
+        else:
+            # Start web server
+            console.print(f"Starting web dashboard at http://{host}:{port}\n")
+            server.start()
+            
+    except KeyboardInterrupt:
+        console.print("\n[dim]DIALECTIC Engine shutting down.[/dim]")
+    except Exception as e:
+        console.print(f"[red]❌ Error:[/red] {e}")
+        logger.exception("Error in DIALECTIC Engine")
         raise typer.Exit(1)
 
 

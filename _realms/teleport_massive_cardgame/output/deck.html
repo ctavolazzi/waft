@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teleport Massive</title>
+<style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Palatino Linotype', Georgia, serif; background: #0d0d15; padding: 24px; }
+h1 { color: #C9A227; text-align: center; margin-bottom: 24px; }
+.stats { color: #888; text-align: center; margin-bottom: 20px; font-size: 14px; }
+.grid { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+.card {
+  width: 250px; height: 350px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  border-radius: 12px; border: 1px solid #333;
+  display: flex; flex-direction: column;
+  color: var(--text); overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  transition: transform 0.2s;
+}
+.card:hover { transform: translateY(-4px); }
+.header { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: rgba(0,0,0,0.2); }
+.name { font-weight: bold; font-size: 14px; }
+.mana { font-family: monospace; font-size: 13px; background: rgba(255,255,255,0.15); padding: 2px 6px; border-radius: 4px; }
+.art { height: 130px; margin: 8px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; display: flex; align-items: center; justify-content: center; image-rendering: pixelated; }
+.art img { max-height: 100%; max-width: 100%; object-fit: contain; image-rendering: pixelated; }
+.type { font-size: 11px; font-style: italic; padding: 6px 12px; background: rgba(0,0,0,0.15); border-top: 1px solid rgba(255,255,255,0.1); }
+.body { flex: 1; padding: 10px 12px; font-size: 11px; line-height: 1.4; overflow-y: auto; }
+.rules { margin-bottom: 8px; }
+.flavor { font-style: italic; opacity: 0.85; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.15); font-size: 10px; }
+.footer { display: flex; justify-content: space-between; align-items: center; padding: 6px 12px; background: rgba(0,0,0,0.2); }
+.set { font-size: 10px; color: var(--rarity); font-weight: bold; }
+.pt { background: rgba(0,0,0,0.4); padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 13px; }
+@media print {
+  body { background: white; padding: 0; }
+  .card { page-break-inside: avoid; box-shadow: none; border: 1px solid #000; }
+  h1, .stats { display: none; }
+}
+
+</style>
+</head>
+<body>
+<h1>Teleport Massive</h1>
+<div class="stats">
+  12 cards • 12 unique • 
+  3 creatures • 3 spells • 
+  1 lands • 3 artifacts •
+  Avg CMC: 3.36
+</div>
+<div class="grid">
+<div class="card" style="--primary:#0A6FA3;--secondary:#084E74;--text:#ffffff;--rarity:#D35400">
+  <div class="header"><span class="name">Aziah Calderon</span><span class="mana">3UU</span></div>
+  <div class="art"></div>
+  <div class="type">Legendary Creature - Human Scientist</div>
+  <div class="body"><div class="rules">When Aziah Calderon enters the battlefield, search your library for a card named &#x27;Scint Protocol&#x27; and put it into your hand.</div><div class="flavor">They said death was final. They said the distance between us was absolute. They must be wrong.</div></div>
+  <div class="footer"><span class="set">TM</span><div class="pt">3/4</div></div>
+</div>
+<div class="card" style="--primary:#C9A227;--secondary:#9F7E1C;--text:#1a1a1a;--rarity:#C9A227">
+  <div class="header"><span class="name">Fai Wei</span><span class="mana">2WU</span></div>
+  <div class="art"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAEfElEQVR4nO2aXWgcVRSAvw0Rx5KVnUrI7ra7JRtiiRqaLKQPbSlUIkEiSh+UErAICvZBEUHpQwXRB0mfpD8PBvRBK1JppFBQDP0RpVWIsGkRSk1si7t2Z2XTzErazYgm14fNTCa7k03BzFmJ88HC3Lln9p5z5p5z7r27EBAQEBAQEPB/JSQ9YDreour1Z/J3RHUSHWwg3eUYXyzkVpSTdEKT1EDpeItayejWaILWaGKZrJReIg6wDXIbefLI8RrD3W0pJzRLDOKmWMhx8dRnAJw+dphdzw4t63c7RAKxEHAb1hR5yLm2ndEoRJKNezp/f3aMhdJtT7nq2SCRDMUdAFCkDYCfT70PwIadT5OOt9Q8J+EAsRCw+eLCZXqGXmDq7CfOvfKlM2waOsh7H34prY6cA2qMS/UuKZHuZ1p7kK2pTUAlTKQQqwKpuzdpjSaIzf/O53u3sZA55/QtZM5x/sl2uH0VgOzVKSm15GbAvtdeWVXGrg73IrtWiOaAYiHHjicGnPbkoWEmDw07bXefFA2pAlBb/6tLIKyjKuBlyN5XD1I2DMqG0TDjQTAEqg06feywc33yyPG6sn4imgMy+TuhIm00R/sAuJUrcCtX4L7uXTRH+yjSJn4eIFYGO1M9So/oGIUsUKn9nYt9TVviAGhamES8Q8WiScYz36yfENie3qMAzJJJLJpcGjzdT1O632nrER1NC2OWTOcZvxELAT2iY1mzTnv3zkFPOcuaRY/oUmrJ5gBNC3vedztjJRm/EHWAewYAvPPGWxi/5uvK+I34btAsmc71+R8m2P34gGefFL47oDPVU5PMzJLpGGsnPS/jvZ5da8RmgNtAPaI7ic5Oeu7EJzkTxBxgWbPk8tdD1THuLosA310YE80D4jmgmkbEvRtxB1SXueqaH1tcFUoh7QDPhGhjWbN0dnSLKtTwEHBTnQ8Abl77RVlzZd+qgW+boT+v7FcA84XKG/7DaAfanf5njs4DtSFgY5ZM9IjOXz9dhC3P+aWmfw4Y+6hywGmqJPteamFjdMnQmYml1Z9RyC5787FoEqOQ5cqJdwEoG4ZfKgI+b4cHXnzEuVbNLxP6e2RZv701NgpZNC0svgwGofMA9fAHlYtJ735NCy+GQmWWGIUsv+Vn2BzfyIy6n9rfjNYOsSQYmjzgeT+Xv+558LE5vpGp8QmST/kX/+CzA+w84DbevlcPTQszNT7B1gNv+qabjWgZvBfjbba9/nZIe2CD8/FLJ19zQP9gbFnG70tHAPgxU0LnLuMrTH9JfHOAqZKc+PiaX1+/Zoi+ge3pPcoufdXJzz41hsoiaOrG5fVzKuzGa7nbSP5Te4FGIOaARLzD2dBIn/zWQ8wBqxndiGWwONOjI6p86YxyzwabRLxDTY+OqOnREbF/iYLwHyVbuh6r3z/4PNyYENKmgpgDvv7qW0Wql+5Hd9QXTPVizZWVn6s/cRLxDmXNldVAustz+rvlho9+qqy5spL4TQCEFkJuo1fa/dl0pnqUnRBXkw0ICAgICAj4V/wD76eVz9Pp78wAAAAASUVORK5CYII=" alt="Fai Wei"></div>
+  <div class="type">Legendary Creature - Human Executive</div>
+  <div class="body"><div class="rules">At the beginning of your upkeep, scry 1. Tap: Add one mana of any color.</div><div class="flavor">We&#x27;re not just studying quantum mechanics—we&#x27;re building the future of transportation.</div></div>
+  <div class="footer"><span class="set">TM</span><div class="pt">2/3</div></div>
+</div>
+<div class="card" style="--primary:#0A6FA3;--secondary:#084E74;--text:#ffffff;--rarity:#C9A227">
+  <div class="header"><span class="name">Quantum Entanglement</span><span class="mana">2UU</span></div>
+  <div class="art"></div>
+  <div class="type">Instant</div>
+  <div class="body"><div class="rules">Target two creatures become entangled until end of turn. Whenever one is dealt damage, the other is dealt the same amount.</div><div class="flavor">Distance is an illusion.</div></div>
+  <div class="footer"><span class="set">TM</span></div>
+</div>
+<div class="card" style="--primary:#0A6FA3;--secondary:#084E74;--text:#ffffff;--rarity:#707883">
+  <div class="header"><span class="name">Scint Protocol</span><span class="mana">3U</span></div>
+  <div class="art"></div>
+  <div class="type">Enchantment</div>
+  <div class="body"><div class="rules">At the beginning of each end step, if a reality fracture occurred this turn, draw a card.</div><div class="flavor">The protocol that detects tears in the fabric of existence.</div></div>
+  <div class="footer"><span class="set">TM</span></div>
+</div>
+<div class="card" style="--primary:#C9A227;--secondary:#9F7E1C;--text:#1a1a1a;--rarity:#C9A227">
+  <div class="header"><span class="name">Reality Fracture</span><span class="mana">1UR</span></div>
+  <div class="art"></div>
+  <div class="type">Sorcery</div>
+  <div class="body"><div class="rules">Exile target permanent. Its controller may cast it from exile until end of turn without paying its mana cost.</div><div class="flavor">When space folds, anything is possible.</div></div>
+  <div class="footer"><span class="set">TM</span></div>
+</div>
+<div class="card" style="--primary:#8B8589;--secondary:#6B6569;--text:#1a1a1a;--rarity:#C9A227">
+  <div class="header"><span class="name">Teleport Massive HQ</span><span class="mana"></span></div>
+  <div class="art"></div>
+  <div class="type">Land - Corporate</div>
+  <div class="body"><div class="rules">Tap: Add C. 2UU, Tap: Target creature gains &#x27;This creature can&#x27;t be blocked&#x27; until end of turn.</div><div class="flavor">The epicenter of quantum transportation research.</div></div>
+  <div class="footer"><span class="set">TM</span></div>
+</div>
+<div class="card" style="--primary:#0A6FA3;--secondary:#084E74;--text:#ffffff;--rarity:#707883">
+  <div class="header"><span class="name">Chen Stabilization Protocol</span><span class="mana">2U</span></div>
+  <div class="art"></div>
+  <div class="type">Enchantment</div>
+  <div class="body"><div class="rules">Creatures you control have hexproof as long as they&#x27;re entangled with another creature.</div><div class="flavor">Dr. Chen&#x27;s breakthrough made macro-scale quantum states possible.</div></div>
+  <div class="footer"><span class="set">TM</span></div>
+</div>
+<div class="card" style="--primary:#8B8589;--secondary:#6B6569;--text:#1a1a1a;--rarity:#1a1a1a">
+  <div class="header"><span class="name">Research &amp; Development</span><span class="mana">2</span></div>
+  <div class="art"></div>
+  <div class="type">Artifact</div>
+  <div class="body"><div class="rules">Tap, Sacrifice Research &amp; Development: Draw two cards, then discard a card.</div><div class="flavor">Where impossible ideas become inevitable realities.</div></div>
+  <div class="footer"><span class="set">TM</span></div>
+</div>
+<div class="card" style="--primary:#8B8589;--secondary:#6B6569;--text:#1a1a1a;--rarity:#D35400">
+  <div class="header"><span class="name">SWAB - Something Without A Beginning</span><span class="mana">4</span></div>
+  <div class="art"></div>
+  <div class="type">Legendary Artifact</div>
+  <div class="body"><div class="rules">SWAB has no mana cost and can&#x27;t be cast. If SWAB would enter your hand from anywhere put it onto the battlefield instead.</div><div class="flavor">The curved shape that always was.</div></div>
+  <div class="footer"><span class="set">TM</span></div>
+</div>
+<div class="card" style="--primary:#8B8589;--secondary:#6B6569;--text:#1a1a1a;--rarity:#D35400">
+  <div class="header"><span class="name">SWAE - Something Without An End</span><span class="mana">4</span></div>
+  <div class="art"></div>
+  <div class="type">Legendary Artifact</div>
+  <div class="body"><div class="rules">SWAE can&#x27;t leave the battlefield. At the beginning of your upkeep, you may pay 2. If you don&#x27;t, SWAE deals 1 damage to you.</div><div class="flavor">The sharp edge that always will be.</div></div>
+  <div class="footer"><span class="set">TM</span></div>
+</div>
+<div class="card" style="--primary:#C9A227;--secondary:#9F7E1C;--text:#1a1a1a;--rarity:#D35400">
+  <div class="header"><span class="name">The Vibration</span><span class="mana">XUB</span></div>
+  <div class="art"></div>
+  <div class="type">Sorcery</div>
+  <div class="body"><div class="rules">The Vibration can&#x27;t be countered. Exile X target permanents. Return them to the battlefield under their owners&#x27; control at the beginning of the next end step.</div><div class="flavor">The oscillation between existence and nonexistence.</div></div>
+  <div class="footer"><span class="set">TM</span></div>
+</div>
+<div class="card" style="--primary:#0A6FA3;--secondary:#084E74;--text:#ffffff;--rarity:#1a1a1a">
+  <div class="header"><span class="name">Grieving Scientist</span><span class="mana">1U</span></div>
+  <div class="art"></div>
+  <div class="type">Creature - Human Scientist</div>
+  <div class="body"><div class="rules">When Grieving Scientist enters the battlefield, look at the top two cards of your library. Put one into your hand and the other into your graveyard.</div><div class="flavor">Loss fuels the greatest discoveries.</div></div>
+  <div class="footer"><span class="set">TM</span><div class="pt">1/2</div></div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D&D Toolkit - Interactive Demo</title>
+    
+    <!-- RPGUI -->
+    <link href="../../_external/rpgui/dist/rpgui.min.css" rel="stylesheet" type="text/css">
+    <script src="../../_external/rpgui/dist/rpgui.js"></script>
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #1a1a2e;
+            min-height: 100vh;
+        }
+        .demo-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .demo-section {
+            margin: 20px 0;
+        }
+        .demo-section h2 {
+            color: #c9a227;
+            border-bottom: 2px solid #c9a227;
+            padding-bottom: 10px;
+        }
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+        .demo-card {
+            padding: 15px;
+        }
+        .demo-card h3 {
+            margin-top: 0;
+            color: #c9a227;
+        }
+        .statblock {
+            font-size: 0.9em;
+        }
+        .statblock .name {
+            font-size: 1.3em;
+            color: #c9a227;
+            margin-bottom: 5px;
+        }
+        .statblock .type-line {
+            font-style: italic;
+            opacity: 0.8;
+            margin-bottom: 10px;
+        }
+        .statblock .stat-line {
+            margin: 3px 0;
+        }
+        .statblock .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            text-align: center;
+            margin: 10px 0;
+            padding: 10px 0;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        .statblock .stat-label {
+            font-weight: bold;
+            color: #c9a227;
+            font-size: 0.85em;
+        }
+        .statblock .section-title {
+            font-weight: bold;
+            color: #c9a227;
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+        .statblock .action {
+            margin: 8px 0;
+        }
+        .statblock .action-name {
+            font-weight: bold;
+            font-style: italic;
+        }
+        .spell-card {
+            padding: 15px;
+        }
+        .spell-card .spell-name {
+            font-size: 1.2em;
+            color: #c9a227;
+        }
+        .spell-card .spell-school {
+            font-style: italic;
+            opacity: 0.8;
+        }
+        .spell-card .spell-meta {
+            margin: 10px 0;
+            font-size: 0.9em;
+        }
+        .item-card {
+            padding: 15px;
+        }
+        .item-card .item-name {
+            font-size: 1.2em;
+            color: #c9a227;
+        }
+        .item-card .item-type {
+            font-style: italic;
+            opacity: 0.8;
+        }
+        .code-block {
+            background: #0d0d1a;
+            border-radius: 5px;
+            padding: 15px;
+            font-family: monospace;
+            font-size: 0.85em;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(201, 162, 39, 0.1);
+            border-radius: 5px;
+        }
+        .feature-icon {
+            font-size: 1.5em;
+        }
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="rpgui-content">
+        <div class="demo-container">
+            <!-- Header -->
+            <div class="rpgui-container framed-golden" style="text-align:center;">
+                <h1>🎲 D&D Toolkit Demo</h1>
+                <p>Interactive demonstration of all toolkit features</p>
+                <div class="btn-row" style="justify-content:center;">
+                    <button class="rpgui-button golden" onclick="window.open('../index.html')"><p>Open Full Toolkit</p></button>
+                    <button class="rpgui-button" onclick="window.open('../tests/test-runner.html')"><p>Run Tests</p></button>
+                </div>
+            </div>
+            
+            <!-- Features Overview -->
+            <div class="demo-section">
+                <h2>✨ Features</h2>
+                <div class="rpgui-container framed-grey">
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <span class="feature-icon">📚</span>
+                            <span>SRD Browser with search & filter</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🛠️</span>
+                            <span>Homebrew creator for monsters, spells, items</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🃏</span>
+                            <span>Card export to rpg-cards format</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">📝</span>
+                            <span>JSON & Markdown export</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🔗</span>
+                            <span>Integration with Dungeoneer VTT</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">📱</span>
+                            <span>Responsive RPGUI design</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Monster Demo -->
+            <div class="demo-section">
+                <h2>👹 Monster Display Demo</h2>
+                <div class="demo-grid">
+                    <div class="rpgui-container framed demo-card">
+                        <div class="statblock">
+                            <div class="name">Goblin</div>
+                            <div class="type-line">Small humanoid (goblinoid)</div>
+                            
+                            <div class="stat-line"><strong>Armor Class</strong> 15 (leather armor, shield)</div>
+                            <div class="stat-line"><strong>Hit Points</strong> 7 (2d6)</div>
+                            <div class="stat-line"><strong>Speed</strong> 30 ft.</div>
+                            
+                            <div class="stats-grid">
+                                <div><span class="stat-label">STR</span><br>8 (-1)</div>
+                                <div><span class="stat-label">DEX</span><br>14 (+2)</div>
+                                <div><span class="stat-label">CON</span><br>10 (+0)</div>
+                                <div><span class="stat-label">INT</span><br>10 (+0)</div>
+                                <div><span class="stat-label">WIS</span><br>8 (-1)</div>
+                                <div><span class="stat-label">CHA</span><br>8 (-1)</div>
+                            </div>
+                            
+                            <div class="stat-line"><strong>Senses</strong> darkvision 60 ft.</div>
+                            <div class="stat-line"><strong>Languages</strong> Common, Goblin</div>
+                            <div class="stat-line"><strong>Challenge</strong> 1/4 (50 XP)</div>
+                            
+                            <div class="section-title">Actions</div>
+                            <div class="action">
+                                <span class="action-name">Scimitar.</span>
+                                Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) slashing damage.
+                            </div>
+                            <div class="action">
+                                <span class="action-name">Shortbow.</span>
+                                Ranged Weapon Attack: +4 to hit, range 80/320 ft., one target. Hit: 5 (1d6 + 2) piercing damage.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="rpgui-container framed demo-card">
+                        <div class="statblock">
+                            <div class="name">Young Red Dragon</div>
+                            <div class="type-line">Large dragon</div>
+                            
+                            <div class="stat-line"><strong>Armor Class</strong> 18 (natural armor)</div>
+                            <div class="stat-line"><strong>Hit Points</strong> 178 (17d10 + 85)</div>
+                            <div class="stat-line"><strong>Speed</strong> 40 ft., climb 40 ft., fly 80 ft.</div>
+                            
+                            <div class="stats-grid">
+                                <div><span class="stat-label">STR</span><br>23 (+6)</div>
+                                <div><span class="stat-label">DEX</span><br>10 (+0)</div>
+                                <div><span class="stat-label">CON</span><br>21 (+5)</div>
+                                <div><span class="stat-label">INT</span><br>14 (+2)</div>
+                                <div><span class="stat-label">WIS</span><br>11 (+0)</div>
+                                <div><span class="stat-label">CHA</span><br>19 (+4)</div>
+                            </div>
+                            
+                            <div class="stat-line"><strong>Challenge</strong> 10 (5,900 XP)</div>
+                            
+                            <div class="section-title">Actions</div>
+                            <div class="action">
+                                <span class="action-name">Fire Breath (Recharge 5-6).</span>
+                                30-foot cone, DC 17 Dex save, 16d6 fire damage.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Spell Demo -->
+            <div class="demo-section">
+                <h2>✨ Spell Display Demo</h2>
+                <div class="demo-grid">
+                    <div class="rpgui-container framed spell-card">
+                        <div class="spell-name">Fireball</div>
+                        <div class="spell-school">3rd-level evocation</div>
+                        <div class="spell-meta">
+                            <p><strong>Casting Time:</strong> 1 action</p>
+                            <p><strong>Range:</strong> 150 feet</p>
+                            <p><strong>Components:</strong> V, S, M (a tiny ball of bat guano and sulfur)</p>
+                            <p><strong>Duration:</strong> Instantaneous</p>
+                        </div>
+                        <p>A bright streak flashes from your pointing finger to a point you choose within range and then blossoms with a low roar into an explosion of flame. Each creature in a 20-foot-radius sphere centered on that point must make a Dexterity saving throw. A target takes 8d6 fire damage on a failed save, or half as much damage on a successful one.</p>
+                        <p><strong>At Higher Levels.</strong> +1d6 per slot level above 3rd.</p>
+                    </div>
+                    
+                    <div class="rpgui-container framed spell-card">
+                        <div class="spell-name">Eldritch Blast</div>
+                        <div class="spell-school">Evocation cantrip</div>
+                        <div class="spell-meta">
+                            <p><strong>Casting Time:</strong> 1 action</p>
+                            <p><strong>Range:</strong> 120 feet</p>
+                            <p><strong>Components:</strong> V, S</p>
+                            <p><strong>Duration:</strong> Instantaneous</p>
+                        </div>
+                        <p>A beam of crackling energy streaks toward a creature within range. Make a ranged spell attack against the target. On a hit, the target takes 1d10 force damage.</p>
+                        <p>The spell creates more beams as you reach higher levels: two at 5th, three at 11th, and four at 17th.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Item Demo -->
+            <div class="demo-section">
+                <h2>⚔️ Item Display Demo</h2>
+                <div class="demo-grid">
+                    <div class="rpgui-container framed item-card">
+                        <div class="item-name">Flame Tongue</div>
+                        <div class="item-type">Weapon (any sword), rare (requires attunement)</div>
+                        <p>You can use a bonus action to speak this magic sword's command word, causing flames to erupt from the blade. These flames shed bright light in a 40-foot radius and dim light for an additional 40 feet. While the sword is ablaze, it deals an extra 2d6 fire damage to any target it hits.</p>
+                    </div>
+                    
+                    <div class="rpgui-container framed item-card">
+                        <div class="item-name">Bag of Holding</div>
+                        <div class="item-type">Wondrous item, uncommon</div>
+                        <p>This bag has an interior space considerably larger than its outside dimensions, roughly 2 feet in diameter at the mouth and 4 feet deep. The bag can hold up to 500 pounds, not exceeding a volume of 64 cubic feet. Retrieving an item from the bag requires an action.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card Export Demo -->
+            <div class="demo-section">
+                <h2>🃏 Card Export Format Demo</h2>
+                <div class="rpgui-container framed-grey">
+                    <h3 style="color:#c9a227;margin-top:0;">rpg-cards JSON Format</h3>
+                    <p>The toolkit exports cards compatible with the rpg-cards generator:</p>
+                    <div class="code-block">[
+  {
+    "count": 1,
+    "title": "Goblin",
+    "color_front": "SteelBlue",
+    "icon_front": "monster-grasp",
+    "icon_back": "monster-grasp",
+    "contents": [
+      "subtitle | Small humanoid (goblinoid)",
+      "rule",
+      "property | AC | 15",
+      "property | HP | 7 (2d6)",
+      "property | Speed | 30 ft.",
+      "property | CR | 1/4",
+      "rule",
+      "dndstats | 8 | 14 | 10 | 10 | 8 | 8",
+      "rule",
+      "section | Actions",
+      "text | &lt;b&gt;Scimitar.&lt;/b&gt; +4 to hit, 5 (1d6+2) slashing"
+    ],
+    "tags": ["monster", "humanoid"]
+  }
+]</div>
+                </div>
+            </div>
+            
+            <!-- Data Stats -->
+            <div class="demo-section">
+                <h2>📊 Loaded Data Statistics</h2>
+                <div class="rpgui-container framed-grey">
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <span class="feature-icon">👹</span>
+                            <span id="monster-count">Loading...</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">✨</span>
+                            <span id="spell-count">Loading...</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">⚔️</span>
+                            <span id="item-count">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="demo-section">
+                <h2>🚀 Quick Actions</h2>
+                <div class="rpgui-container framed-grey">
+                    <div class="btn-row">
+                        <button class="rpgui-button golden" onclick="window.open('../index.html')"><p>Open Toolkit</p></button>
+                        <button class="rpgui-button" onclick="window.open('../tests/test-runner.html')"><p>Run Tests</p></button>
+                        <button class="rpgui-button" onclick="downloadSampleCards()"><p>Download Sample Cards</p></button>
+                        <button class="rpgui-button" onclick="showRandomMonster()"><p>Random Monster</p></button>
+                    </div>
+                    <div id="random-output" class="rpgui-container framed" style="margin-top:15px;display:none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Load data stats
+        async function loadStats() {
+            try {
+                const [monstersRes, spellsRes, itemsRes] = await Promise.all([
+                    fetch('../data/monsters.json'),
+                    fetch('../data/spells.json'),
+                    fetch('../data/items.json')
+                ]);
+                
+                const monsters = await monstersRes.json();
+                const spells = await spellsRes.json();
+                const items = await itemsRes.json();
+                
+                document.getElementById('monster-count').textContent = `${monsters.length} Monsters`;
+                document.getElementById('spell-count').textContent = `${spells.length} Spells`;
+                document.getElementById('item-count').textContent = `${items.length} Items`;
+                
+                // Store for random feature
+                window.monstersData = monsters;
+                window.spellsData = spells;
+                window.itemsData = items;
+            } catch (e) {
+                console.error('Error loading data:', e);
+            }
+        }
+        
+        function downloadSampleCards() {
+            const sampleCards = [
+                {
+                    count: 1,
+                    title: "Goblin",
+                    color_front: "SteelBlue",
+                    icon_front: "monster-grasp",
+                    contents: [
+                        "subtitle | Small humanoid (goblinoid)",
+                        "rule",
+                        "property | AC | 15",
+                        "property | HP | 7 (2d6)",
+                        "property | CR | 1/4",
+                        "rule",
+                        "dndstats | 8 | 14 | 10 | 10 | 8 | 8"
+                    ],
+                    tags: ["monster"]
+                },
+                {
+                    count: 1,
+                    title: "Fireball",
+                    color_front: "OrangeRed",
+                    icon_front: "white-book-1",
+                    contents: [
+                        "subtitle | 3rd-level evocation",
+                        "rule",
+                        "property | Casting Time | 1 action",
+                        "property | Range | 150 feet",
+                        "property | Duration | Instantaneous",
+                        "rule",
+                        "text | 8d6 fire damage in 20-foot sphere. Dex save for half."
+                    ],
+                    tags: ["spell", "evocation"]
+                },
+                {
+                    count: 1,
+                    title: "Flame Tongue",
+                    color_front: "RoyalBlue",
+                    icon_front: "mixed-swords",
+                    contents: [
+                        "subtitle | Weapon (sword), rare",
+                        "rule",
+                        "text | Bonus action to ignite. Deals extra 2d6 fire damage. Sheds bright light 40 ft."
+                    ],
+                    tags: ["item", "rare"]
+                }
+            ];
+            
+            const json = JSON.stringify(sampleCards, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'sample-cards.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        function showRandomMonster() {
+            if (!window.monstersData || window.monstersData.length === 0) {
+                alert('Data not loaded yet');
+                return;
+            }
+            
+            const monster = window.monstersData[Math.floor(Math.random() * window.monstersData.length)];
+            const output = document.getElementById('random-output');
+            output.style.display = 'block';
+            
+            function formatCR(cr) {
+                if (cr === 0.125) return '1/8';
+                if (cr === 0.25) return '1/4';
+                if (cr === 0.5) return '1/2';
+                return cr?.toString() || 'N/A';
+            }
+            
+            output.innerHTML = `
+                <div class="statblock">
+                    <div class="name">${monster.name}</div>
+                    <div class="type-line">${monster.size || 'Medium'} ${monster.type || 'creature'}</div>
+                    <div class="stat-line"><strong>AC:</strong> ${monster.ac || '?'} | <strong>HP:</strong> ${monster.hp || '?'} | <strong>CR:</strong> ${formatCR(monster.cr)}</div>
+                    ${monster.speed ? `<div class="stat-line"><strong>Speed:</strong> ${monster.speed}</div>` : ''}
+                    ${monster.actions && monster.actions.length > 0 ? 
+                        `<div class="section-title">Actions</div>
+                        ${monster.actions.slice(0, 2).map(a => 
+                            `<div class="action"><span class="action-name">${a.name}</span> ${a.description?.substring(0, 150)}...</div>`
+                        ).join('')}` : ''}
+                </div>
+            `;
+        }
+        
+        // Init
+        loadStats();
+    </script>
+</body>
+</html>

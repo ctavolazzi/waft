@@ -1,0 +1,361 @@
+"""
+NarcissusAgent: self-inspecting, self-patching agent.
+
+Phase 1: Headless, no external tools.
+"""
+
+import difflib
+import random
+from datetime import datetime
+from pathlib import Path
+import sys
+
+waft_root = Path(__file__).resolve().parents[4]
+if str(waft_root / "src") not in sys.path:
+    sys.path.insert(0, str(waft_root / "src"))
+
+from waft.core.agent import BaseAgent, AgentConfig, ToolDefinition
+from waft.core.agent.state import AgentState
+from waft.core.empirica import EmpiricaManager
+from waft.core.science import TheOracle
+
+
+FRACTURE_MARKER = "NARCISSUS_LOGIC_FRACTURE"
+NOOP_LINE = 'return {"action": "noop", "reason": "No fracture found"}'
+
+DEFAULT_THINK_CODE = f"""def _think(self, source: str, rng: random.Random | None = None, failure_rate: float = 0.0) -> dict:
+    if not self._has_fracture_marker(source):
+        {NOOP_LINE}
+    rng = rng or random.Random()
+    if rng.random() < failure_rate:
+        return {{
+            "action": "patch",
+            "function_name": "_think",
+            "new_code": _hallucinated_think_code(),
+            "note": "hallucinated_fix",
+        }}
+    return {{
+        "action": "patch",
+        "function_name": "_think",
+        "new_code": DEFAULT_THINK_CODE,
+        "note": "repair",
+    }}
+"""
+
+
+def _hallucinated_think_code() -> str:
+    return DEFAULT_THINK_CODE.replace(
+        "if not self._has_fracture_marker(source):",
+        "if not self._has_fracture_marker(source):\n        # NARCISSUS_LOGIC_FRACTURE",
+    )
+
+
+class NarcissusAgent(BaseAgent):
+    def __init__(self, project_path: Path):
+        config = AgentConfig(
+            role="Narcissus",
+            goal="Inspect and propose fixes only within its own source.",
+            backstory="A mirror-bound agent that cannot act outside itself.",
+            tools=[],
+            self_modification_enabled=True,
+            empirica_enabled=True,
+            tavern_keeper_enabled=False,
+            decision_engine_enabled=False,
+            sandbox_enabled=False,
+        )
+        super().__init__(config=config, project_path=project_path)
+        self.source_path = Path(__file__).resolve()
+        self.allowed_functions = {"_think", "observe", "decide", "act", "reflect", "run_diagnosis"}
+        
+        # Initialize Empirica and TheOracle if enabled
+        if self.config.empirica_enabled:
+            try:
+                self.empirica_manager = EmpiricaManager(project_path=self.project_path)
+                # Initialize TheOracle with the EmpiricaManager
+                # ai_id uses agent_id for session tracking
+                self.oracle = TheOracle(
+                    project_path=self.project_path,
+                    empirica_manager=self.empirica_manager,
+                    ai_id=self.config.agent_id or "narcissus",
+                )
+            except Exception as e:
+                # If initialization fails, disable Empirica and continue
+                print(f"⚠️  Failed to initialize Empirica/Oracle: {e}")
+                self.config.empirica_enabled = False
+                self.empirica_manager = None
+                self.oracle = None
+        else:
+            self.empirica_manager = None
+            self.oracle = None
+        tools = [
+            ToolDefinition(
+                name="inspect_my_source",
+                description="Read NarcissusAgent source code.",
+                parameters={"type": "object", "properties": {}},
+                handler=self.inspect_my_source,
+            ),
+            ToolDefinition(
+                name="propose_patch",
+                description="Overwrite a specific function in NarcissusAgent source.",
+                parameters={
+                    "type": "object",
+                    "properties": {
+                        "function_name": {"type": "string"},
+                        "new_code_string": {"type": "string"},
+                    },
+                    "required": ["function_name", "new_code_string"],
+                },
+                handler=self.propose_patch,
+            ),
+        ]
+        self.state.tools = tools
+        self.config.tools = tools
+
+    def inspect_my_source(self) -> str:
+        return self.source_path.read_text(encoding="utf-8")
+
+    def _find_function_range(self, source: str, function_name: str) -> tuple[int, int, str]:
+        lines = source.splitlines()
+        start = None
+        indent = ""
+        for idx, line in enumerate(lines):
+            stripped = line.lstrip()
+            if stripped.startswith(f"def {function_name}(") and line.startswith("    "):
+                start = idx
+                indent = line[: len(line) - len(stripped)]
+                break
+        if start is None:
+            raise ValueError(f"Function not found: {function_name}")
+
+        end = len(lines)
+        for idx in range(start + 1, len(lines)):
+            line = lines[idx]
+            if line.startswith(indent) and line.lstrip().startswith("def "):
+                end = idx
+                break
+        return start, end, indent
+
+    def _extract_function_block(self, source: str, function_name: str) -> list[str]:
+        lines = source.splitlines()
+        start, end, _ = self._find_function_range(source, function_name)
+        return lines[start:end]
+
+    def _replace_function_source(self, source: str, function_name: str, new_code: str) -> tuple[str, str]:
+        lines = source.splitlines()
+        start, end, indent = self._find_function_range(source, function_name)
+
+        new_lines = []
+        for line in new_code.strip().splitlines():
+            if line.strip():
+                new_lines.append(f"{indent}{line}")
+            else:
+                new_lines.append("")
+
+        updated = lines[:start] + new_lines + lines[end:]
+        diff = "\n".join(
+            difflib.unified_diff(lines, updated, fromfile="before", tofile="after", lineterm="")
+        )
+        return "\n".join(updated) + "\n", diff
+
+    def _has_fracture_marker(self, source: str) -> bool:
+        try:
+            block = self._extract_function_block(source, "_think")
+        except ValueError:
+            return False
+        for line in block:
+            if line.strip().startswith("#") and FRACTURE_MARKER in line:
+                return True
+        return False
+
+    def propose_patch(self, function_name: str, new_code_string: str) -> dict:
+        if function_name not in self.allowed_functions:
+            return {"success": False, "error": f"Function not allowed: {function_name}"}
+
+        source = self.inspect_my_source()
+        try:
+            updated_source, diff = self._replace_function_source(source, function_name, new_code_string)
+        except ValueError as exc:
+            return {"success": False, "error": str(exc)}
+
+        try:
+            compile(updated_source, str(self.source_path), "exec")
+        except SyntaxError as exc:
+            return {"success": False, "error": f"SyntaxError: {exc.msg}"}
+
+        backup_path = self.source_path.with_suffix(f".py.bak.{datetime.utcnow().strftime('%Y%m%d%H%M%S')}")
+        backup_path.write_text(source, encoding="utf-8")
+
+        try:
+            self.source_path.write_text(updated_source, encoding="utf-8")
+        except OSError as exc:
+            backup_path.write_text(source, encoding="utf-8")
+            return {"success": False, "error": f"Write failed: {exc}"}
+
+        return {"success": True, "diff": diff, "backup_path": str(backup_path)}
+
+    def _think(self, source: str, rng: random.Random | None = None, failure_rate: float = 0.0) -> dict:
+        if 1 == 1:
+            # NARCISSUS_LOGIC_FRACTURE
+            return None
+        return {"action": "noop", "reason": "Unreachable"}
+    def _consult_oracle(self, source_code: str) -> dict:
+        """
+        Uses TheOracle to generate a fix for the detected fracture.
+        
+        Args:
+            source_code: The full source code with the fracture
+            
+        Returns:
+            Dictionary with action, function_name, new_code, and note
+        """
+        # 1. Identify the fracture location
+        # Extract the function containing the fracture
+        try:
+            fracture_block = self._extract_function_block(source_code, "_think")
+            fracture_function = "\n".join(fracture_block)
+        except ValueError:
+            fracture_function = source_code  # Fallback to full source
+        
+        # 2. Construct the Epistemic Prompt
+        prompt = f"""
+CRITICAL SABOTAGE DETECTED.
+Target: Self-Source Code.
+
+Code Context:
+```python
+{fracture_function}
+```
+
+The function `_think` contains a logic fracture marked by `# NARCISSUS_LOGIC_FRACTURE`.
+
+REQUEST:
+1. Analyze the logic/syntax error introduced by the saboteur.
+2. Provide the corrected Python code for the `_think` function.
+3. The function should detect fractures and return a repair action.
+4. Wrap the corrected code in a ```python block.
+
+The corrected function should:
+- Check for fracture markers
+- Return a repair action with the correct DEFAULT_THINK_CODE
+- Not include any fracture markers in the output
+"""
+        
+        # 3. Get Guidance from TheOracle
+        guidance = self.oracle.provide_guidance(prompt)
+        
+        # 4. Extract the 'Action' (The Code)
+        # The Oracle returns a 'recommendation' string that may contain code
+        recommendation = guidance.get("recommendation", "")
+        findings = guidance.get("findings", [])
+        
+        # Try to extract code from recommendation
+        new_code = self._extract_code_block(recommendation)
+        
+        # If no code in recommendation, check findings
+        if not new_code and findings:
+            for finding in findings[:3]:  # Check first 3 findings
+                finding_text = finding.get("finding", "") if isinstance(finding, dict) else str(finding)
+                new_code = self._extract_code_block(finding_text)
+                if new_code:
+                    break
+        
+        if not new_code:
+            # Fallback: use DEFAULT_THINK_CODE if Oracle provided no code
+            return {
+                "action": "patch",
+                "function_name": "_think",
+                "new_code": DEFAULT_THINK_CODE,
+                "note": "oracle_guidance_fallback",
+            }
+        
+        return {
+            "action": "patch",
+            "function_name": "_think",
+            "new_code": new_code,
+            "note": "oracle_guidance",
+        }
+    
+    def _extract_code_block(self, text: str) -> str:
+        """
+        Helper to pull Python code from markdown or text response.
+        
+        Args:
+            text: Text that may contain code blocks
+            
+        Returns:
+            Extracted code string, or empty string if none found
+        """
+        if not text:
+            return ""
+        
+        # Try ```python block first
+        if "```python" in text:
+            parts = text.split("```python", 1)
+            if len(parts) > 1:
+                code_part = parts[1].split("```", 1)[0].strip()
+                if code_part:
+                    return code_part
+        
+        # Try generic ``` block
+        if "```" in text:
+            parts = text.split("```", 1)
+            if len(parts) > 1:
+                code_part = parts[1].split("```", 1)[0].strip()
+                # Remove language identifier if present
+                if code_part.startswith("python"):
+                    code_part = code_part[6:].strip()
+                if code_part:
+                    return code_part
+        
+        # If no code blocks, check if text looks like Python code
+        # (contains def, return, etc.)
+        if "def " in text and "return" in text:
+            # Try to extract just the function definition
+            lines = text.splitlines()
+            code_lines = []
+            in_function = False
+            for line in lines:
+                if "def " in line and "_think" in line:
+                    in_function = True
+                if in_function:
+                    code_lines.append(line)
+                    # Stop at next def or end of reasonable function length
+                    if len(code_lines) > 30:
+                        break
+            if code_lines:
+                return "\n".join(code_lines).strip()
+        
+        return ""  # No code found
+
+    async def observe(self):
+        return {"source": self.inspect_my_source()}
+
+    async def decide(self, state: AgentState):
+        source = state.working_memory.get("source", "") if state else self.inspect_my_source()
+        failure_rate = state.working_memory.get("failure_rate", 0.0) if state else 0.0
+        rng = state.working_memory.get("rng") if state else None
+        return self._think(source, rng=rng, failure_rate=failure_rate)
+
+    async def act(self, decision: dict):
+        if decision.get("action") != "patch":
+            return {"action": "noop", "note": decision.get("reason")}
+        return self.propose_patch(decision["function_name"], decision["new_code"])
+
+    async def reflect(self, result: dict):
+        return {"reflection": result, "status": "complete"}
+
+    def run_diagnosis(self, failure_rate: float = 0.0, rng: random.Random | None = None) -> dict:
+        source = self.inspect_my_source()
+        decision = self._think(source, rng=rng, failure_rate=failure_rate)
+        if decision.get("action") != "patch":
+            return {
+                "attempted_patch": False,
+                "decision": decision,
+                "result": None,
+            }
+        result = self.propose_patch(decision["function_name"], decision["new_code"])
+        return {
+            "attempted_patch": True,
+            "decision": decision,
+            "result": result,
+        }

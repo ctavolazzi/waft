@@ -1,0 +1,47 @@
+[
+  {
+    "name": "Introduce bug",
+    "color": "#E74C3C",
+    "rules": "Introduce a bug in another players repo. The other player must add 1 to their bugs.\n\nThe next Player can add the same card to add more bugs to the following Player"
+  },
+  {
+    "name": "Merge",
+    "color": "#9B59B6",
+    "rules": "You hand over one of your cards of choice to another player of choice."
+  },
+  {
+    "name": "Fix bug",
+    "color": "#3498DB",
+    "rules": "Guess a number from 1 to 6 roll a die, if you hit the number remove 2 bugs.\nIf your guess is off by one, remove 1 bug"
+  },
+  {
+    "name": "Rebase",
+    "color": "#27AE60",
+    "rules": "You get a card at random of a player of choice."
+  },
+  {
+    "name": "Squash commits",
+    "color": "#E74C3C",
+    "rules": "Remove one card of choice.\n\nTake one additional card."
+  },
+  {
+    "name": "Commit",
+    "color": "#F39C12",
+    "rules": "Guess even or uneven, roll a die, if your guess is correct, remove 1 bug, else add 2 bugs\n\nThis card also can be used to avoid \"Introduce bug\" if laid immediately without hesitation. This however invalidates the primary intention of this card."
+  },
+  {
+    "name": "Retire repo",
+    "color": "#9B59B6",
+    "rules": "You retire your repo. The next Player adds 1 to their bugs.\n\nThis card is not stackable."
+  },
+  {
+    "name": "Pair programming",
+    "color": "#27AE60",
+    "rules": "Together with a player of choice each roll a die. If the eye-count differs by more than 1 add 1 bug else remove 2 bugs"
+  },
+  {
+    "name": "Clone repo",
+    "color": "#1ABC9C",
+    "rules": "You start from a fresh clone.\n\nRoll a die and the eye-count is the number of cards you can replace."
+  }
+]

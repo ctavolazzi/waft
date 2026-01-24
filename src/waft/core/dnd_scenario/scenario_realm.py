@@ -85,6 +85,12 @@ class ScenarioRealm:
             manifest_file.write_text(json.dumps(manifest, indent=2))
             os.chmod(manifest_file, 0o600)
 
+        # Initialize scenario history if missing
+        history_file = self.realm_path / "scenario_history.json"
+        if not history_file.exists():
+            history_file.write_text("[]")
+            os.chmod(history_file, 0o600)
+
     def create_realm(self) -> dict[str, Any]:
         """
         Create and initialize the scenario realm.

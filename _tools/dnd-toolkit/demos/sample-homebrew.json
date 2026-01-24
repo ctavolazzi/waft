@@ -1,0 +1,169 @@
+{
+  "monsters": [
+    {
+      "name": "Shadow Stalker",
+      "size": "medium",
+      "type": "undead",
+      "ac": 14,
+      "hp": 45,
+      "speed": "40 ft., fly 40 ft. (hover)",
+      "str": 6,
+      "dex": 18,
+      "con": 14,
+      "int": 12,
+      "wis": 14,
+      "cha": 8,
+      "cr": 3,
+      "cr_display": "3",
+      "senses": "darkvision 120 ft., passive Perception 14",
+      "languages": "understands Common but can't speak",
+      "traits": [
+        {
+          "name": "Shadow Stealth",
+          "description": "While in dim light or darkness, the shadow stalker can take the Hide action as a bonus action."
+        },
+        {
+          "name": "Sunlight Weakness",
+          "description": "While in sunlight, the shadow stalker has disadvantage on attack rolls, ability checks, and saving throws."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The shadow stalker makes two claw attacks."
+        },
+        {
+          "name": "Claw",
+          "description": "Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 8 (1d8 + 4) necrotic damage."
+        },
+        {
+          "name": "Shadow Step",
+          "description": "The shadow stalker teleports up to 30 feet to an unoccupied space it can see that is in dim light or darkness."
+        }
+      ],
+      "source": "homebrew"
+    },
+    {
+      "name": "Crystal Golem",
+      "size": "large",
+      "type": "construct",
+      "ac": 17,
+      "hp": 133,
+      "speed": "30 ft.",
+      "str": 22,
+      "dex": 8,
+      "con": 20,
+      "int": 3,
+      "wis": 10,
+      "cha": 1,
+      "cr": 10,
+      "cr_display": "10",
+      "senses": "darkvision 60 ft., passive Perception 10",
+      "languages": "understands the languages of its creator but can't speak",
+      "traits": [
+        {
+          "name": "Immutable Form",
+          "description": "The golem is immune to any spell or effect that would alter its form."
+        },
+        {
+          "name": "Magic Resistance",
+          "description": "The golem has advantage on saving throws against spells and other magical effects."
+        },
+        {
+          "name": "Reflective Body",
+          "description": "When the golem is targeted by a spell that requires a ranged attack roll, roll a d6. On a 6, the spell is reflected back at the caster using their own attack roll."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The golem makes two slam attacks."
+        },
+        {
+          "name": "Slam",
+          "description": "Melee Weapon Attack: +10 to hit, reach 10 ft., one target. Hit: 19 (3d8 + 6) bludgeoning damage."
+        },
+        {
+          "name": "Prismatic Burst (Recharge 5-6)",
+          "description": "The golem releases a burst of prismatic light. Each creature within 30 feet must make a DC 16 Dexterity saving throw, taking 36 (8d8) radiant damage on a failed save, or half as much on a successful one."
+        }
+      ],
+      "source": "homebrew"
+    }
+  ],
+  "spells": [
+    {
+      "name": "Arcane Tether",
+      "level": 2,
+      "school": "abjuration",
+      "classes": ["wizard", "sorcerer"],
+      "casting_time": "1 action",
+      "range": "60 feet",
+      "components": "V, S, M (a silver chain worth at least 10 gp)",
+      "duration": "Concentration, up to 1 minute",
+      "description": "You create an invisible magical tether between yourself and a creature you can see within range. The target must succeed on a Wisdom saving throw or become tethered to you for the duration. A tethered creature cannot move more than 60 feet away from you. If the creature tries to move beyond this distance, its speed becomes 0 until the start of its next turn. Additionally, if the tethered creature takes damage, you can use your reaction to take half of that damage instead.",
+      "at_higher_levels": "When you cast this spell using a spell slot of 4th level or higher, you can tether one additional creature for every two slot levels above 2nd.",
+      "source": "homebrew"
+    },
+    {
+      "name": "Temporal Echo",
+      "level": 4,
+      "school": "divination",
+      "classes": ["wizard"],
+      "casting_time": "1 action",
+      "range": "Self",
+      "components": "V, S, M (a small hourglass filled with silver sand worth 100 gp)",
+      "duration": "1 round",
+      "description": "You briefly glimpse into the immediate future and prepare accordingly. Until the start of your next turn, you have advantage on all attack rolls, ability checks, and saving throws. Additionally, attacks against you have disadvantage. When the spell ends, you must succeed on a DC 15 Constitution saving throw or gain one level of exhaustion as the temporal strain takes its toll.",
+      "at_higher_levels": null,
+      "source": "homebrew"
+    },
+    {
+      "name": "Whispers of the Void",
+      "level": 0,
+      "school": "enchantment",
+      "classes": ["warlock"],
+      "casting_time": "1 action",
+      "range": "60 feet",
+      "components": "V",
+      "duration": "1 round",
+      "description": "You whisper eldritch words that only the target can hear, filling their mind with maddening voices. Choose one creature within range. The target must succeed on a Wisdom saving throw or take 1d6 psychic damage and have disadvantage on the next attack roll it makes before the end of its next turn. This spell's damage increases by 1d6 when you reach 5th level (2d6), 11th level (3d6), and 17th level (4d6).",
+      "at_higher_levels": null,
+      "source": "homebrew"
+    }
+  ],
+  "items": [
+    {
+      "name": "Cloak of Shifting Shadows",
+      "type": "wondrous",
+      "rarity": "rare",
+      "attunement": true,
+      "type_line": "Wondrous item",
+      "rarity_line": "rare (requires attunement)",
+      "description": "While wearing this cloak, you can use a bonus action to become invisible until the start of your next turn. This invisibility ends early if you attack or cast a spell. You can use this feature three times, and it regains all expended uses daily at dusk.\n\nAdditionally, while in dim light or darkness, you have advantage on Dexterity (Stealth) checks.",
+      "source": "homebrew"
+    },
+    {
+      "name": "Blade of the Storm",
+      "type": "weapon",
+      "rarity": "very-rare",
+      "attunement": true,
+      "type_line": "Weapon (longsword)",
+      "rarity_line": "very rare (requires attunement)",
+      "damage": "1d8 slashing + 1d6 lightning",
+      "properties": "Versatile (1d10)",
+      "description": "This longsword crackles with barely contained lightning. You have a +2 bonus to attack and damage rolls made with this magic weapon.\n\nWhen you hit with an attack using this sword, the target takes an extra 1d6 lightning damage.\n\n**Storm Strike (1/Day).** As an action, you can unleash the blade's full power. Each creature of your choice within 30 feet must make a DC 15 Dexterity saving throw, taking 4d10 lightning damage on a failed save, or half as much on a successful one.",
+      "source": "homebrew"
+    },
+    {
+      "name": "Potion of Arcane Sight",
+      "type": "potion",
+      "rarity": "uncommon",
+      "attunement": false,
+      "type_line": "Potion",
+      "rarity_line": "uncommon",
+      "description": "When you drink this shimmering blue potion, you gain the ability to see magical auras. For 1 hour, you can see a faint aura around any visible creature or object in the area that bears magic, and you learn its school of magic, if any. This effect is similar to the detect magic spell but does not require concentration and extends to 120 feet.",
+      "source": "homebrew"
+    }
+  ]
+}

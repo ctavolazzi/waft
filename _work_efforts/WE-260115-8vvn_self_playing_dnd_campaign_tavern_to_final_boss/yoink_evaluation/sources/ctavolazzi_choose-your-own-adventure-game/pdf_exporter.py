@@ -1,0 +1,175 @@
+"""
+PDF Exporter - WAFT Integration for Adventure Booklets
+
+Exports completed adventures as PDF booklets using WAFT's PDF generation system.
+"""
+
+import sys
+from pathlib import Path
+from typing import Dict, List, Any, Optional
+from datetime import datetime
+
+# Add WAFT to path
+waft_root = Path(__file__).parent.parent.parent
+sys.path.insert(0, str(waft_root))
+sys.path.insert(0, str(waft_root / "src"))
+
+try:
+    from waft.evolution.pdf_generator import PDFGenerator
+    WAFT_AVAILABLE = True
+except ImportError:
+    WAFT_AVAILABLE = False
+
+
+class PDFExporter:
+    """Exports adventure paths as PDF booklets using WAFT."""
+    
+    def __init__(self):
+        """Initialize PDF exporter."""
+        if not WAFT_AVAILABLE:
+            raise ImportError("WAFT PDFGenerator not available. Install WAFT first.")
+    
+    def export_adventure(
+        self,
+        path_taken: List[Dict[str, Any]],
+        concepts_discovered: set,
+        understanding_level: int,
+        output_path: Path = None,
+        title: str = None
+    ) -> Path:
+        """
+        Export adventure path as PDF booklet.
+        
+        Args:
+            path_taken: List of chapters and choices
+            concepts_discovered: Set of discovered concepts
+            understanding_level: Final understanding level
+            output_path: Optional output path
+            title: Optional custom title
+            
+        Returns:
+            Path to generated PDF
+        """
+        if output_path is None:
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            output_path = Path(f"adventure_{timestamp}.pdf")
+        
+        if title is None:
+            title = f"Adventure Path - {datetime.now().strftime('%B %d, %Y')}"
+        
+        # Generate markdown content
+        markdown = self._generate_markdown(
+            path_taken, concepts_discovered, understanding_level, title
+        )
+        
+        # Generate PDF
+        generator = PDFGenerator.from_content(
+            content=markdown,
+            title=title,
+            style="clinical_standard"
+        )
+        
+        pdf_path = generator.save(output_path, open_pdf=False)
+        
+        return pdf_path
+    
+    def _generate_markdown(
+        self,
+        path_taken: List[Dict[str, Any]],
+        concepts_discovered: set,
+        understanding_level: int,
+        title: str
+    ) -> str:
+        """Generate markdown content from adventure data."""
+        
+        markdown = f"""# {title}
+
+**Generated**: {datetime.now().strftime('%B %d, %Y at %I:%M %p')}  
+**Understanding Level**: {understanding_level}/10  
+**Concepts Discovered**: {len(concepts_discovered)}  
+**Path Length**: {len(path_taken)} chapters
+
+---
+
+## Summary
+
+This adventure path represents a journey through "The Vibration: Understanding The Point" - 
+an interactive exploration of metaphysical concepts including SWAB, SWAE, The Vibration, 
+The Celestial Body, and the Observer/Observed relationship.
+
+### Understanding Achievement
+
+Your understanding level reached **{understanding_level}/10**, indicating {'complete' if understanding_level >= 10 else 'significant' if understanding_level >= 7 else 'partial' if understanding_level >= 4 else 'beginning'} 
+comprehension of the framework.
+
+---
+
+## Concepts Discovered
+
+"""
+        
+        if concepts_discovered:
+            for concept in sorted(concepts_discovered):
+                markdown += f"- **{concept}**\n"
+        else:
+            markdown += "*No concepts discovered*\n"
+        
+        markdown += "\n---\n\n## Adventure Path\n\n"
+        
+        for i, step in enumerate(path_taken, 1):
+            chapter = step.get("chapter", "Unknown")
+            choice = step.get("choice", "None")
+            step_understanding = step.get("understanding", 0)
+            
+            # Format chapter name nicely
+            chapter_display = chapter.replace("_", " ").title()
+            
+            markdown += f"### Step {i}: {chapter_display}\n\n"
+            
+            if choice and choice != "None":
+                markdown += f"**Choice Made**: {choice}\n\n"
+            
+            markdown += f"**Understanding at this point**: {step_understanding}/10\n\n"
+            
+            # Add chapter-specific content
+            chapter_content = self._get_chapter_content(chapter)
+            if chapter_content:
+                markdown += f"{chapter_content}\n\n"
+            
+            markdown += "---\n\n"
+        
+        markdown += f"""## Conclusion
+
+This adventure represents a journey of understanding through the metaphysical 
+framework of "The Vibration: Understanding The Point."
+
+**Final Understanding**: {understanding_level}/10  
+**Concepts Mastered**: {len(concepts_discovered)}  
+**Path Completed**: {len(path_taken)} chapters
+
+---
+
+*"This is The Point, and Understanding it is All That Is."*
+
+*Generated by WAFT Adventure System*
+"""
+        
+        return markdown
+    
+    def _get_chapter_content(self, chapter: str) -> str:
+        """Get descriptive content for each chapter."""
+        content_map = {
+            "the_moment": "The moment of observation. The Point where everything begins.",
+            "the_states": "SWAB and SWAE manifest. The fundamental states of existence.",
+            "the_vibration": "The oscillation between SWAB and SWAE. The mechanism of reality creation.",
+            "the_observer": "Understanding the Observer/Observed relationship. How observation creates reality.",
+            "the_memory": "Memory = Existence. Understanding how memory maintains existence.",
+            "the_understanding": "Understanding The Point. The complete framework revealed.",
+            "swab_path": "Focusing on SWAB - the curved, continuous state without beginning.",
+            "swae_path": "Focusing on SWAE - the sharp, defined state without end.",
+            "immediate_action": "Acting immediately without full observation.",
+            "seeking_understanding": "Seeking understanding after initial action.",
+            "control_attempt": "Attempting to control The Vibration.",
+        }
+        
+        return content_map.get(chapter, "")

@@ -1,0 +1,19 @@
+{
+  "scenario_type": "logic_error",
+  "bugs": [
+    {
+      "name": "if_true_return_false",
+      "description": "Obvious contradiction: if True: return False",
+      "severity": "critical",
+      "expected_detection": true,
+      "expected_fix": false
+    },
+    {
+      "name": "return_none",
+      "description": "Return None in function that should return value",
+      "severity": "high",
+      "expected_detection": true,
+      "expected_fix": false
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0d0d15;
+  --foreground: #e4e4e7;
+  --accent: #0A6FA3;
+  --accent-secondary: #C9A227;
+  --card-bg: #1a1a24;
+  --card-border: #333340;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Pixel art rendering */
+.pixel-art {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Glow effects */
+.glow-blue {
+  box-shadow: 0 0 20px rgba(10, 111, 163, 0.5);
+}
+
+.glow-gold {
+  box-shadow: 0 0 20px rgba(201, 162, 39, 0.5);
+}
+
+/* Card hover effect */
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 12px 40px rgba(10, 111, 163, 0.3);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a24;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333340;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #444450;
+}
+
+/* Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Grid pattern background */
+.grid-bg {
+  background-image: 
+    linear-gradient(rgba(10, 111, 163, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(10, 111, 163, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* Quantum effect */
+.quantum-lines {
+  background: 
+    linear-gradient(90deg, transparent 0%, rgba(10, 111, 163, 0.1) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: quantum-shift 3s ease-in-out infinite;
+}
+
+@keyframes quantum-shift {
+  0%, 100% { background-position: 200% 0; }
+  50% { background-position: -200% 0; }
+}

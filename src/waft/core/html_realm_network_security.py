@@ -10,6 +10,8 @@ This module provides:
 - Secure file permissions (0o600 for files, 0o700 for directories)
 """
 
+from __future__ import annotations
+
 import os
 import re
 import threading

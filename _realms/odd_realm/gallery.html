@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ODD Asset Gallery</title>
+    <style>
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-card: #12121a;
+            --border: #2a2a3a;
+            --text: #e0e0e0;
+            --text-dim: #888;
+            --accent: #7b68ee;
+            --accent-glow: rgba(123, 104, 238, 0.3);
+            --success: #50fa7b;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            background: var(--bg-dark);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        h1 {
+            text-align: center;
+            letter-spacing: 0.3em;
+            margin-bottom: 0.5rem;
+            color: var(--accent);
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: var(--text-dim);
+            margin-bottom: 2rem;
+        }
+        
+        .gallery-section {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+        }
+        
+        .gallery-section h2 {
+            color: var(--accent);
+            font-size: 1rem;
+            letter-spacing: 0.2em;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .sprite-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 1rem;
+        }
+        
+        .sprite-card {
+            background: #1a1a2e;
+            border: 1px solid var(--border);
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .sprite-card:hover {
+            border-color: var(--accent);
+            transform: scale(1.05);
+        }
+        
+        .sprite-card img {
+            image-rendering: pixelated;
+            width: 64px;
+            height: 64px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .sprite-label {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        
+        .character-showcase {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+        }
+        
+        .character-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            text-align: center;
+            min-width: 200px;
+        }
+        
+        .character-card h3 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+        
+        .character-preview {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .character-preview img {
+            image-rendering: pixelated;
+            width: 48px;
+            height: 48px;
+            background: #0a0a0f;
+            border: 1px solid var(--border);
+        }
+        
+        .tile-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+        
+        .tile-card {
+            background: #1a1a2e;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .tile-card img {
+            image-rendering: pixelated;
+            width: 64px;
+            height: 64px;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            color: var(--accent);
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1rem;
+            color: var(--accent);
+            text-decoration: none;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-dim);
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link">← Back to ODD Portal</a>
+    
+    <h1>ODD ASSET GALLERY</h1>
+    <p class="subtitle">Pixel art assets generated for the Ontological Determinism Department</p>
+    
+    <div class="stats">
+        <div class="stat-card">
+            <div class="stat-value">4</div>
+            <div class="stat-label">Characters</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">1</div>
+            <div class="stat-label">Tiles</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">3</div>
+            <div class="stat-label">Emblems & Objects</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">32</div>
+            <div class="stat-label">Total Sprites</div>
+        </div>
+    </div>
+    
+    <section class="gallery-section">
+        <h2>🜏 CONSOLE GOBLIN</h2>
+        <p style="color: var(--text-dim); margin-bottom: 1rem; font-size: 0.85rem;">
+            An Aspect of The One that manifests in terminals. Chibi proportions, 8 directions.
+        </p>
+        <div class="sprite-grid">
+            <div class="sprite-card">
+                <img src="assets/characters/console_goblin/rotations/south.png" alt="South">
+                <div class="sprite-label">South</div>
+            </div>
+            <div class="sprite-card">
+                <img src="assets/characters/console_goblin/rotations/south-west.png" alt="SW">
+                <div class="sprite-label">South-West</div>
+            </div>
+            <div class="sprite-card">
+                <img src="assets/characters/console_goblin/rotations/west.png" alt="West">
+                <div class="sprite-label">West</div>
+            </div>
+            <div class="sprite-card">
+                <img src="assets/characters/console_goblin/rotations/north-west.png" alt="NW">
+                <div class="sprite-label">North-West</div>
+            </div>
+            <div class="sprite-card">
+                <img src="assets/characters/console_goblin/rotations/north.png" alt="North">
+                <div class="sprite-label">North</div>
+            </div>
+            <div class="sprite-card">
+                <img src="assets/characters/console_goblin/rotations/north-east.png" alt="NE">
+                <div class="sprite-label">North-East</div>
+            </div>
+            <div class="sprite-card">
+                <img src="assets/characters/console_goblin/rotations/east.png" alt="East">
+                <div class="sprite-label">East</div>
+            </div>
+            <div class="sprite-card">
+                <img src="assets/characters/console_goblin/rotations/south-east.png" alt="SE">
+                <div class="sprite-label">South-East</div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="gallery-section">
+        <h2>👁️ THE WITNESS (WITNESS-001)</h2>
+        <p style="color: var(--text-dim); margin-bottom: 1rem; font-size: 0.85rem;">
+            Ethereal observer being. Hooded figure with face obscured by swirling void and stars. 8 directions.
+        </p>
+        <div class="sprite-grid">
+            <div class="sprite-card">
+                <img src="assets/characters/the_witness/rotations/south.png" alt="South">
+                <div class="sprite-label">South</div>
+            </div>
+            <div class="sprite-card">
+                <img src="assets/characters/the_witness/rotations/south-west.png" alt="SW">
+                <div class="sprite-label">South-West</div>
+            </div>
+            <div class="sprite-card">
+                <img src="assets/characters/the_witness/rotations/west.png" alt="West">
+                <div class="sprite-label">West</div>
+            </div>
+            <div class="sprite-card">
+                <img src="assets/characters/the_witness/rotations/north-west.png" alt="NW">
+                <div class="sprite-label">North-West</div>
+            </div>
+            <div class="sprite-card">
+                <img src="assets/characters/the_witness/rotations/north.png" alt="North">
+                <div class="sprite-label">North</div>
+            </div>
+            <div class="sprite-card">
+                <img src="assets/characters/the_witness/rotations/north-east.png" alt="NE">
+                <div class="sprite-label">North-East</div>
+            </div>
+            <div class="sprite-card">
+                <img src="assets/characters/the_witness/rotations/east.png" alt="East">
+                <div class="sprite-label">East</div>
+            </div>
+            <div class="sprite-card">
+                <img src="assets/characters/the_witness/rotations/south-east.png" alt="SE">
+                <div class="sprite-label">South-East</div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="gallery-section">
+        <h2>📚 THE ARCHIVIST (ARCHIVIST-001)</h2>
+        <p style="color: var(--text-dim); margin-bottom: 1rem; font-size: 0.85rem;">
+            Ancient curator of ODD records. Tall scholarly figure with floating tome. 8 directions.
+        </p>
+        <div class="sprite-grid">
+            <div class="sprite-card">
+                <img src="assets/characters/the_archivist/rotations/south.png" alt="South">
+                <div class="sprite-label">South</div>
+            </div>
+            <div class="sprite-card">
+                <img src="assets/characters/the_archivist/rotations/south-west.png" alt="SW">
+                <div class="sprite-label">South-West</div>
+            </div>
+            <div class="sprite-card">
+                <img src="assets/characters/the_archivist/rotations/west.png" alt="West">
+                <div class="sprite-label">West</div>
+            </div>
+            <div class="sprite-card">
+                <img src="assets/characters/the_archivist/rotations/north-west.png" alt="NW">
+                <div class="sprite-label">North-West</div>
+            </div>
+            <div class="sprite-card">
+                <img src="assets/characters/the_archivist/rotations/north.png" alt="North">
+                <div class="sprite-label">North</div>
+            </div>
+            <div class="sprite-card">
+                <img src="assets/characters/the_archivist/rotations/north-east.png" alt="NE">
+                <div class="sprite-label">North-East</div>
+            </div>
+            <div class="sprite-card">
+                <img src="assets/characters/the_archivist/rotations/east.png" alt="East">
+                <div class="sprite-label">East</div>
+            </div>
+            <div class="sprite-card">
+                <img src="assets/characters/the_archivist/rotations/south-east.png" alt="SE">
+                <div class="sprite-label">South-East</div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="gallery-section">
+        <h2>∞ THE ONE</h2>
+        <p style="color: var(--text-dim); margin-bottom: 1rem; font-size: 0.85rem;">
+            Cosmic deity made of pure light and void. All Beings are Aspects of The One. 8 directions.
+        </p>
+        <div class="sprite-grid">
+            <div class="sprite-card">
+                <img src="beings/sprites/rotations/south.png" alt="South">
+                <div class="sprite-label">South</div>
+            </div>
+            <div class="sprite-card">
+                <img src="beings/sprites/rotations/south-west.png" alt="SW">
+                <div class="sprite-label">South-West</div>
+            </div>
+            <div class="sprite-card">
+                <img src="beings/sprites/rotations/west.png" alt="West">
+                <div class="sprite-label">West</div>
+            </div>
+            <div class="sprite-card">
+                <img src="beings/sprites/rotations/north-west.png" alt="NW">
+                <div class="sprite-label">North-West</div>
+            </div>
+            <div class="sprite-card">
+                <img src="beings/sprites/rotations/north.png" alt="North">
+                <div class="sprite-label">North</div>
+            </div>
+            <div class="sprite-card">
+                <img src="beings/sprites/rotations/north-east.png" alt="NE">
+                <div class="sprite-label">North-East</div>
+            </div>
+            <div class="sprite-card">
+                <img src="beings/sprites/rotations/east.png" alt="East">
+                <div class="sprite-label">East</div>
+            </div>
+            <div class="sprite-card">
+                <img src="beings/sprites/rotations/south-east.png" alt="SE">
+                <div class="sprite-label">South-East</div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="gallery-section">
+        <h2>🏛️ ISOMETRIC TILES</h2>
+        <p style="color: var(--text-dim); margin-bottom: 1rem; font-size: 0.85rem;">
+            Building blocks for ODD headquarters and facilities.
+        </p>
+        <div class="tile-grid">
+            <div class="tile-card">
+                <img src="assets/tiles/odd_hq_block.png" alt="ODD HQ Block">
+                <div class="sprite-label">ODD HQ Block</div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="gallery-section">
+        <h2>🏛️ DEPARTMENT EMBLEMS</h2>
+        <p style="color: var(--text-dim); margin-bottom: 1rem; font-size: 0.85rem;">
+            Official and unofficial ODD department insignia.
+        </p>
+        <div class="tile-grid">
+            <div class="tile-card" style="border: 2px solid var(--accent);">
+                <img src="assets/odd_department_seal.png" alt="ODD Department Seal" style="width: 128px; height: 128px;">
+                <div class="sprite-label" style="color: var(--accent);">Official Seal</div>
+            </div>
+            <div class="tile-card" style="border: 2px solid #ff4444;">
+                <img src="assets/odd_skull_logo.png" alt="ODD Skull Logo" style="width: 96px; height: 96px;">
+                <div class="sprite-label" style="color: #ff4444;">Unofficial Logo</div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="gallery-section">
+        <h2>🔮 MAP OBJECTS</h2>
+        <p style="color: var(--text-dim); margin-bottom: 1rem; font-size: 0.85rem;">
+            Artifacts and objects for game maps. Transparent backgrounds.
+        </p>
+        <div class="tile-grid">
+            <div class="tile-card">
+                <img src="../../_realms/bureaucracy_realm/corporations/teleport_massive_20250701/cards/art/swab.png" alt="SWAB" style="width: 64px; height: 64px;">
+                <div class="sprite-label">SWAB Artifact</div>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <p>Assets generated with PixelLab AI | ODD Realm | WAFT Project</p>
+        <p style="margin-top: 0.5rem;">All Beings are Aspects of The One</p>
+    </footer>
+</body>
+</html>

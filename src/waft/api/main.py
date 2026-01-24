@@ -18,6 +18,7 @@ from .routes import (
     being,
     campfire,
     cartographer,
+    cyoa,
     decision,
     empirica,
     evolve_ui_monitor,
@@ -25,10 +26,13 @@ from .routes import (
     gym,
     health,
     oracle,
+    odd_notes,
+    pet,
     projects,
     protocel,
     quests,
     state,
+    storyteller,
     work_efforts,
 )
 
@@ -209,6 +213,7 @@ def create_app(project_path: Path, static_dir: Path | None = None) -> FastAPI:
     app.include_router(decision.router, prefix="/api/decision", tags=["decision"])
     app.include_router(gym.router, prefix="/api", tags=["gym"])
     app.include_router(being.router, prefix="/api/being", tags=["being"])
+    app.include_router(pet.router, prefix="/api/pet", tags=["pet"])
     app.include_router(campfire.router, prefix="/api", tags=["campfire"])
     app.include_router(protocel.router, prefix="/api/protocel", tags=["protocel"])
     app.include_router(cartographer.router, prefix="/api", tags=["cartographer"])
@@ -217,7 +222,10 @@ def create_app(project_path: Path, static_dir: Path | None = None) -> FastAPI:
     app.include_router(auth.router, prefix="/api", tags=["auth"])
     app.include_router(quests.router, tags=["quests"])
     app.include_router(oracle.router, prefix="/api", tags=["oracle"])
+    app.include_router(odd_notes.router, prefix="/api", tags=["odd"])
     app.include_router(evolve_ui_monitor.router, prefix="/api", tags=["evolve-ui"])
+    app.include_router(cyoa.router, prefix="/api", tags=["cyoa"])
+    app.include_router(storyteller.router, prefix="/api", tags=["storyteller"])
 
     # Serve static files if provided (must be last route)
     if static_dir and static_dir.exists():

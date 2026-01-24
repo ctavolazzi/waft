@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teleport Massive Cards</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Palatino Linotype', Georgia, serif; background: #0d0d15; padding: 24px; }
+h1 { color: #C9A227; text-align: center; margin-bottom: 24px; }
+.grid { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+.card {
+  width: 250px; height: 350px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  border-radius: 12px; border: 1px solid #333;
+  display: flex; flex-direction: column;
+  color: var(--text); overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+.header { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: rgba(0,0,0,0.2); }
+.name { font-weight: bold; font-size: 14px; }
+.mana { font-family: monospace; font-size: 13px; background: rgba(255,255,255,0.15); padding: 2px 6px; border-radius: 4px; }
+.art { height: 130px; margin: 8px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; display: flex; align-items: center; justify-content: center; image-rendering: pixelated; }
+.art img { max-height: 100%; max-width: 100%; object-fit: contain; image-rendering: pixelated; }
+.type { font-size: 11px; font-style: italic; padding: 6px 12px; background: rgba(0,0,0,0.15); border-top: 1px solid rgba(255,255,255,0.1); }
+.body { flex: 1; padding: 10px 12px; font-size: 11px; line-height: 1.4; overflow-y: auto; }
+.rules { margin-bottom: 8px; }
+.flavor { font-style: italic; opacity: 0.85; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.15); font-size: 10px; }
+.footer { display: flex; justify-content: space-between; align-items: center; padding: 6px 12px; background: rgba(0,0,0,0.2); }
+.set { font-size: 10px; color: var(--rarity); font-weight: bold; }
+.pt { background: rgba(0,0,0,0.4); padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 13px; }
+@media print {
+  body { background: white; padding: 0; }
+  .card { page-break-inside: avoid; box-shadow: none; border: 1px solid #000; }
+  h1 { display: none; }
+}
+</style>
+</head>
+<body>
+<h1>Teleport Massive</h1>
+<div class="grid"><div class="card" style="--primary:#0A6FA3;--secondary:#084E74;--text:#ffffff;--rarity:#D35400">
+  <div class="header"><span class="name">Aziah Calderon</span><span class="mana">3UU</span></div>
+  <div class="art"></div>
+  <div class="type">Legendary Creature - Human Scientist</div>
+  <div class="body"><div class="rules">When Aziah Calderon enters the battlefield, search your library for a card named &#x27;Scint Protocol&#x27; and put it into your hand.</div><div class="flavor">They said death was final. They said the distance between us was absolute. They must be wrong. I will come back to her, even if I have to rewrite Time Itself.</div></div>
+  <div class="footer"><span class="set">TM</span><div class="pt">3/4</div></div>
+</div>
+<div class="card" style="--primary:#C9A227;--secondary:#9F7E1C;--text:#1a1a1a;--rarity:#C9A227">
+  <div class="header"><span class="name">Fai Wei</span><span class="mana">2WU</span></div>
+  <div class="art"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAEfElEQVR4nO2aXWgcVRSAvw0Rx5KVnUrI7ra7JRtiiRqaLKQPbSlUIkEiSh+UErAICvZBEUHpQwXRB0mfpD8PBvRBK1JppFBQDP0RpVWIsGkRSk1si7t2Z2XTzErazYgm14fNTCa7k03BzFmJ88HC3Lln9p5z5p5z7r27EBAQEBAQEPB/JSQ9YDreour1Z/J3RHUSHWwg3eUYXyzkVpSTdEKT1EDpeItayejWaILWaGKZrJReIg6wDXIbefLI8RrD3W0pJzRLDOKmWMhx8dRnAJw+dphdzw4t63c7RAKxEHAb1hR5yLm2ndEoRJKNezp/f3aMhdJtT7nq2SCRDMUdAFCkDYCfT70PwIadT5OOt9Q8J+EAsRCw+eLCZXqGXmDq7CfOvfKlM2waOsh7H34prY6cA2qMS/UuKZHuZ1p7kK2pTUAlTKQQqwKpuzdpjSaIzf/O53u3sZA55/QtZM5x/sl2uH0VgOzVKSm15GbAvtdeWVXGrg73IrtWiOaAYiHHjicGnPbkoWEmDw07bXefFA2pAlBb/6tLIKyjKuBlyN5XD1I2DMqG0TDjQTAEqg06feywc33yyPG6sn4imgMy+TuhIm00R/sAuJUrcCtX4L7uXTRH+yjSJn4eIFYGO1M9So/oGIUsUKn9nYt9TVviAGhamES8Q8WiScYz36yfENie3qMAzJJJLJpcGjzdT1O632nrER1NC2OWTOcZvxELAT2iY1mzTnv3zkFPOcuaRY/oUmrJ5gBNC3vedztjJRm/EHWAewYAvPPGWxi/5uvK+I34btAsmc71+R8m2P34gGefFL47oDPVU5PMzJLpGGsnPS/jvZ5da8RmgNtAPaI7ic5Oeu7EJzkTxBxgWbPk8tdD1THuLosA310YE80D4jmgmkbEvRtxB1SXueqaH1tcFUoh7QDPhGhjWbN0dnSLKtTwEHBTnQ8Abl77RVlzZd+qgW+boT+v7FcA84XKG/7DaAfanf5njs4DtSFgY5ZM9IjOXz9dhC3P+aWmfw4Y+6hywGmqJPteamFjdMnQmYml1Z9RyC5787FoEqOQ5cqJdwEoG4ZfKgI+b4cHXnzEuVbNLxP6e2RZv701NgpZNC0svgwGofMA9fAHlYtJ735NCy+GQmWWGIUsv+Vn2BzfyIy6n9rfjNYOsSQYmjzgeT+Xv+558LE5vpGp8QmST/kX/+CzA+w84DbevlcPTQszNT7B1gNv+qabjWgZvBfjbba9/nZIe2CD8/FLJ19zQP9gbFnG70tHAPgxU0LnLuMrTH9JfHOAqZKc+PiaX1+/Zoi+ge3pPcoufdXJzz41hsoiaOrG5fVzKuzGa7nbSP5Te4FGIOaARLzD2dBIn/zWQ8wBqxndiGWwONOjI6p86YxyzwabRLxDTY+OqOnREbF/iYLwHyVbuh6r3z/4PNyYENKmgpgDvv7qW0Wql+5Hd9QXTPVizZWVn6s/cRLxDmXNldVAustz+rvlho9+qqy5spL4TQCEFkJuo1fa/dl0pnqUnRBXkw0ICAgICAj4V/wD76eVz9Pp78wAAAAASUVORK5CYII=" alt="Fai Wei"></div>
+  <div class="type">Legendary Creature - Human Executive</div>
+  <div class="body"><div class="rules">At the beginning of your upkeep, scry 1. Tap: Add one mana of any color.</div><div class="flavor">&quot;We&#x27;re not just studying quantum mechanics—we&#x27;re building the future of transportation.&quot;</div></div>
+  <div class="footer"><span class="set">TM</span><div class="pt">2/3</div></div>
+</div>
+<div class="card" style="--primary:#8B8589;--secondary:#6B6569;--text:#1a1a1a;--rarity:#C9A227">
+  <div class="header"><span class="name">Quantum Entanglement</span><span class="mana">2UU</span></div>
+  <div class="art"></div>
+  <div class="type">Instant</div>
+  <div class="body"><div class="rules">Target two creatures become entangled until end of turn. Whenever one is dealt damage</div><div class="flavor"> the other is dealt the same amount.</div></div>
+  <div class="footer"><span class="set">TM</span></div>
+</div>
+<div class="card" style="--primary:#8B8589;--secondary:#6B6569;--text:#1a1a1a;--rarity:#707883">
+  <div class="header"><span class="name">Scint Protocol</span><span class="mana">3U</span></div>
+  <div class="art"></div>
+  <div class="type">Enchantment</div>
+  <div class="body"><div class="rules">At the beginning of each end step</div><div class="flavor"> if a reality fracture occurred this turn</div></div>
+  <div class="footer"><span class="set">TM</span></div>
+</div>
+<div class="card" style="--primary:#8B8589;--secondary:#6B6569;--text:#1a1a1a;--rarity:#C9A227">
+  <div class="header"><span class="name">Reality Fracture</span><span class="mana">1UR</span></div>
+  <div class="art"></div>
+  <div class="type">Sorcery</div>
+  <div class="body"><div class="rules">Exile target permanent. Its controller may cast it from exile until end of turn without paying its mana cost.</div><div class="flavor">When space folds</div></div>
+  <div class="footer"><span class="set">TM</span></div>
+</div>
+<div class="card" style="--primary:#8B8589;--secondary:#6B6569;--text:#1a1a1a;--rarity:#1a1a1a">
+  <div class="header"><span class="name">Teleport Massive HQ</span><span class="mana"></span></div>
+  <div class="art"></div>
+  <div class="type"></div>
+  <div class="body"><div class="rules"></div><div class="flavor">Tap: Add C. 2UU</div></div>
+  <div class="footer"><span class="set">TM</span><div class="pt">rare/</div></div>
+</div>
+<div class="card" style="--primary:#0A6FA3;--secondary:#084E74;--text:#ffffff;--rarity:#707883">
+  <div class="header"><span class="name">Chen Stabilization Protocol</span><span class="mana">2U</span></div>
+  <div class="art"></div>
+  <div class="type">Enchantment</div>
+  <div class="body"><div class="rules">Creatures you control have hexproof as long as they&#x27;re entangled with another creature.</div><div class="flavor">Dr. Chen&#x27;s breakthrough made macro-scale quantum states possible.</div></div>
+  <div class="footer"><span class="set">TM</span></div>
+</div>
+<div class="card" style="--primary:#8B8589;--secondary:#6B6569;--text:#1a1a1a;--rarity:#1a1a1a">
+  <div class="header"><span class="name">Research &amp; Development</span><span class="mana">2</span></div>
+  <div class="art"></div>
+  <div class="type">Artifact</div>
+  <div class="body"><div class="rules">Tap</div><div class="flavor"> Sacrifice Research &amp; Development: Draw two cards</div></div>
+  <div class="footer"><span class="set">TM</span></div>
+</div>
+<div class="card" style="--primary:#8B8589;--secondary:#6B6569;--text:#1a1a1a;--rarity:#D35400">
+  <div class="header"><span class="name">SWAB - Something Without A Beginning</span><span class="mana">4</span></div>
+  <div class="art"><img src="data:image/png;base64,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" alt="SWAB - Something Without A Beginning"></div>
+  <div class="type">Legendary Artifact</div>
+  <div class="body"><div class="rules">SWAB has no mana cost and can&#x27;t be cast. If SWAB would enter your hand from anywhere</div><div class="flavor"> put it onto the battlefield instead.</div></div>
+  <div class="footer"><span class="set">TM</span></div>
+</div>
+<div class="card" style="--primary:#8B8589;--secondary:#6B6569;--text:#1a1a1a;--rarity:#D35400">
+  <div class="header"><span class="name">SWAE - Something Without An End</span><span class="mana">4</span></div>
+  <div class="art"><img src="data:image/png;base64,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" alt="SWAE - Something Without An End"></div>
+  <div class="type">Legendary Artifact</div>
+  <div class="body"><div class="rules">SWAE can&#x27;t leave the battlefield. At the beginning of your upkeep</div><div class="flavor"> you may pay 2. If you don&#x27;t</div></div>
+  <div class="footer"><span class="set">TM</span></div>
+</div>
+<div class="card" style="--primary:#C9A227;--secondary:#9F7E1C;--text:#1a1a1a;--rarity:#D35400">
+  <div class="header"><span class="name">The Vibration</span><span class="mana">XUB</span></div>
+  <div class="art"></div>
+  <div class="type">Sorcery</div>
+  <div class="body"><div class="rules">The Vibration can&#x27;t be countered. Exile X target permanents. Return them to the battlefield under their owners&#x27; control at the beginning of the next end step.</div><div class="flavor">The oscillation between existence and nonexistence.</div></div>
+  <div class="footer"><span class="set">TM</span></div>
+</div>
+<div class="card" style="--primary:#0A6FA3;--secondary:#084E74;--text:#ffffff;--rarity:#1a1a1a">
+  <div class="header"><span class="name">Grieving Scientist</span><span class="mana">1U</span></div>
+  <div class="art"></div>
+  <div class="type">Creature - Human Scientist</div>
+  <div class="body"><div class="rules">When Grieving Scientist enters the battlefield, look at the top two cards of your library. Put one into your hand and the other into your graveyard.</div><div class="flavor">Loss fuels the greatest discoveries.</div></div>
+  <div class="footer"><span class="set">TM</span><div class="pt">1/2</div></div>
+</div></div>
+</body>
+</html>

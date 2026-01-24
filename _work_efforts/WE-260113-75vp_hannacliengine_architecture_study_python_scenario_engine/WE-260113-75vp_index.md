@@ -4,7 +4,7 @@ title: "HannaCLIEngine Architecture Study & Python Scenario Engine"
 status: active
 created: 2026-01-13T08:26:24.178Z
 created_by: ctavolazzi
-last_updated: 2026-01-13T08:26:24.178Z
+last_updated: 2026-01-21T05:38:00.000Z
 branch: feature/WE-260113-75vp-hannacliengine_architecture_study_python_scenario_engine
 repository: waft
 ---
@@ -64,6 +64,10 @@ Study HannaCLIEngine's architecture and design patterns to inform the creation o
 cd _work_efforts/WE-260113-75vp_hannacliengine_architecture_study_python_scenario_engine
 uv run python run_demo.py
 ```
+
+## Progress
+- 2026-01-20: Initialized bananote notes for `/dnd-scenario` command implementation.
+- 2026-01-20: Added scenario history initialization + logging for scenario runs.
 
 ## Related
 - Docs: `HANNA_CLI_ENGINE_ARCHITECTURE_ANALYSIS.md`, `DEMO_README.md`

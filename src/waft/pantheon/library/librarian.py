@@ -244,3 +244,69 @@ class Librarian:
         summary_path.write_text(json.dumps(summary, indent=2), encoding="utf-8")
 
         return summary
+
+    def organize_daily_learning(
+        self, raw_backpack: dict[str, Any], inventory_client=None
+    ) -> dict[str, Any]:
+        """
+        Transforms the Packrat's messy backpack into a structured schema suitable for the Scribe.
+
+        The Librarian filters noise from signal, categorizes findings vs unknowns,
+        and creates a canonical structure.
+
+        NOW: Can optionally read directly from PocketBase API if inventory_client provided.
+
+        Args:
+            raw_backpack: Packrat's backpack data with accumulated collections
+            inventory_client: Optional PocketBaseInventory client for direct API access
+
+        Returns:
+            Organized dictionary with learning, doing, and meta sections
+        """
+        data = raw_backpack.get("data", {})
+
+        # Extract latest state from accumulated lists (or merge if needed)
+        # For now, we take the latest collection from each source
+        empirica_data = {}
+        if data.get("empirica"):
+            # Get latest empirica collection
+            latest_empirica = data["empirica"][-1]
+            empirica_data = latest_empirica.get("content", {})
+
+        chronicler_data = {}
+        if data.get("chronicler"):
+            latest_chronicler = data["chronicler"][-1]
+            chronicler_data = latest_chronicler.get("content", {})
+
+        session_data = {}
+        if data.get("session"):
+            latest_session = data["session"][-1]
+            session_data = latest_session.get("content", {})
+
+        # The Librarian creates the 'Canonical' structure
+        organized = {
+            "meta": {
+                "date": raw_backpack["metadata"].get("spawned_at", datetime.now().isoformat()),
+                "total_items": raw_backpack["metadata"].get("collection_count", 0),
+                "being_id": raw_backpack["metadata"].get("being_id", "unknown"),
+            },
+            "learning": {
+                "findings": empirica_data.get("findings", []),
+                "unknowns": empirica_data.get("unknowns", []),
+                "epistemic_state": empirica_data.get("epistemic_state", {}),
+            },
+            "doing": {
+                "file_changes": chronicler_data.get("file_changes", {}),
+                "git_activity": chronicler_data.get("git_activity", {}),
+                "work_efforts": chronicler_data.get("work_efforts", {}),
+            },
+            "activity": {
+                "session_count": session_data.get("session_count", 0),
+                "total_time_minutes": session_data.get("total_time_minutes", 0),
+                "files": session_data.get("files", {}),
+                "code": session_data.get("code", {}),
+                "commands": session_data.get("commands", {}),
+            },
+        }
+
+        return organized

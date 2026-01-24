@@ -1,0 +1,38 @@
+{
+  "realm_id": "dialectic_realm",
+  "name": "DIALECTIC Realm",
+  "description": "Realm of the Dialectical Analysis Engine - A God that orchestrates three-phase analysis workflows",
+  "deity": "DIALECTIC",
+  "true_name": "The Dialectical Analysis Engine",
+  "port": 2112,
+  "philosophy": "Hegelian Dialectics: Thesis, Antithesis, Synthesis",
+  "phases": [
+    {
+      "id": "thesis",
+      "name": "THESIS",
+      "description": "Assembly Phase - Gather context and establish propositions",
+      "color": "#1f6feb"
+    },
+    {
+      "id": "antithesis", 
+      "name": "ANTITHESIS",
+      "description": "Sanity Check Phase - Challenge assumptions and validate evidence",
+      "color": "#da3633"
+    },
+    {
+      "id": "synthesis",
+      "name": "SYNTHESIS",
+      "description": "Problem Description Phase - Resolve contradictions and generate conclusions",
+      "color": "#a371f7"
+    }
+  ],
+  "outputs": {
+    "assembly": "Assembly Report PDF documenting gathered context",
+    "sanity": "Sanity Check Report PDF documenting assumption validations",
+    "synthesis": "Scientific Report PDF with problem description",
+    "sitrep": "Status Report that can seed a Work Effort"
+  },
+  "quote": "The truth is the whole. - G.W.F. Hegel",
+  "created_at": "2026-01-21T09:00:00Z",
+  "version": "1.0.0"
+}

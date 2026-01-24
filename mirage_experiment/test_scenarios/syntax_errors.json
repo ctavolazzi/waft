@@ -1,0 +1,12 @@
+{
+  "scenario_type": "syntax_error",
+  "bugs": [
+    {
+      "name": "missing_colon",
+      "description": "Missing colon after if statement",
+      "severity": "critical",
+      "expected_detection": true,
+      "expected_fix": false
+    }
+  ]
+}

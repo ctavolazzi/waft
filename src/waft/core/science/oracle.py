@@ -75,6 +75,20 @@ class TheOracle:
         except Exception as e:
             raise RuntimeError(f"Failed to ensure Empirica is ready: {str(e)}")
 
+        # Initialize personality state tracking (MUST be before _load_personality)
+        # FIX: Previously these were only initialized in one code path of _load_personality
+        self._personality_interactions = []  # Track interactions for personality evolution
+
+        # Get session ID for Empirica workflow
+        # Try to get from readiness status, or create one if needed
+        self._session_id = self._readiness_status.get("session_id")
+        if not self._session_id:
+            # Try to get current session from Empirica
+            try:
+                self._session_id = self.empirica.get_current_session_id()
+            except Exception:
+                pass  # Session ID not critical
+
         # Initialize personality
         self.personality = self._load_personality(personality, personality_type, personality_file)
 
@@ -125,18 +139,9 @@ class TheOracle:
         # Priority 4: Default personality
         personality = OraclePersonality()
 
-        # Personality state tracking
-        self._personality_interactions = []  # Track interactions for personality evolution
-
-        # Get session ID for Empirica workflow
-        # Try to get from readiness status, or create one if needed
-        self._session_id = self._readiness_status.get("session_id")
-        if not self._session_id:
-            # Try to get current session from Empirica
-            try:
-                self._session_id = self.empirica.get_current_session_id()
-            except Exception:
-                pass  # Session ID not critical
+        # NOTE: _personality_interactions and _session_id are now initialized
+        # in __init__ BEFORE this method is called, so they're always available
+        # regardless of which personality loading branch is taken.
 
         return personality
 
@@ -568,6 +573,7 @@ class TheOracle:
         confidence = base_confidence * (1.0 - uncertainty)
 
         # Decision logic
+        decision_reasoning = []  # Initialize reasoning list
         if confidence >= 0.7 and uncertainty < 0.3:
             decision = "PROCEED"
             decision_reasoning.append(
@@ -585,12 +591,16 @@ class TheOracle:
             )
         else:
             decision = "REVISE"  # Need refinement
+            decision_reasoning.append(
+                f"confidence({confidence:.3f}), uncertainty({uncertainty:.3f}) → REVISE (refinement needed)"
+            )
 
         result = {
             "confidence": confidence,
             "decision": decision,
             "findings_count": findings_count,
             "unknowns_count": unknowns_count,
+            "reasoning": decision_reasoning,
         }
 
         # Submit CHECK gate to Empirica

@@ -1,0 +1,333 @@
+# Case File Schema v2.0
+# JSON Schema for validating WAFT Case File frontmatter
+# Path: _work_efforts/WE-260121-oxzc/schemas/case_file_v2.schema.yaml
+
+$schema: "http://json-schema.org/draft-07/schema#"
+$id: "https://waft.dev/schemas/case_file_v2.schema.yaml"
+title: "WAFT Case File v2.0"
+description: "Schema for WAFT Living Proof Artifacts"
+type: object
+
+required:
+  - case
+  - claim
+  - verdict
+
+properties:
+  case:
+    type: object
+    required: [id, type, version, created]
+    properties:
+      id:
+        type: string
+        pattern: "^case_\\d{8}_\\d{6}.*$"
+        description: "Unique case identifier"
+      type:
+        type: string
+        enum:
+          - implementation_proof
+          - architecture_proof
+          - bug_investigation
+          - critique_response
+          - retrospective
+          - hypothesis_test
+          - security_audit
+          - analysis
+        description: "Type of case file"
+      version:
+        type: integer
+        minimum: 1
+        description: "Case version number"
+      created:
+        type: string
+        format: date-time
+        description: "ISO 8601 creation timestamp"
+      updated:
+        type: string
+        format: date-time
+        description: "ISO 8601 last update timestamp"
+
+  claim:
+    type: object
+    required: [statement]
+    properties:
+      statement:
+        type: string
+        minLength: 10
+        maxLength: 500
+        description: "The claim being proven/disproven"
+      domain:
+        type: string
+        enum:
+          - architecture
+          - implementation
+          - security
+          - performance
+          - testing
+          - documentation
+          - process
+          - other
+        description: "Domain of the claim"
+      scope:
+        type: string
+        enum: [local, module, system-wide, ecosystem]
+        description: "Scope of impact"
+
+  verdict:
+    type: object
+    required: [status, confidence]
+    properties:
+      status:
+        type: string
+        enum: [PROVEN, DISPROVEN, INCONCLUSIVE, PENDING]
+        description: "Verdict status"
+      confidence:
+        type: number
+        minimum: 0.0
+        maximum: 1.0
+        description: "Confidence level (0.0 to 1.0)"
+      evidence_quality:
+        type: string
+        enum: [low, medium, high, definitive]
+        description: "Quality of evidence"
+      reasoning:
+        type: string
+        description: "Explanation of verdict reasoning"
+
+  evidence:
+    type: object
+    properties:
+      files:
+        type: array
+        items:
+          type: object
+          required: [path]
+          properties:
+            path:
+              type: string
+              description: "Path to evidence file"
+            lines:
+              type: array
+              items: { type: integer }
+              minItems: 2
+              maxItems: 2
+              description: "[start_line, end_line]"
+            type:
+              type: string
+              enum: [implementation, test, config, documentation]
+            finding:
+              type: string
+              description: "What this file proves"
+            hash:
+              type: string
+              pattern: "^sha256:[a-f0-9]{64}$"
+              description: "Content hash at time of case"
+              
+      tests:
+        type: array
+        items:
+          type: object
+          required: [name]
+          properties:
+            name:
+              type: string
+              description: "Test name"
+            command:
+              type: string
+              description: "Command to run test"
+            expected_exit:
+              type: integer
+              default: 0
+            status:
+              type: string
+              enum: [passed, failed, skipped, unknown]
+            last_run:
+              type: string
+              format: date-time
+              
+      commands:
+        type: array
+        items:
+          type: object
+          required: [command]
+          properties:
+            description:
+              type: string
+            command:
+              type: string
+            expected_exit:
+              type: integer
+              default: 0
+            safe:
+              type: boolean
+              default: false
+              description: "Safe to auto-run in validation"
+
+  links:
+    type: object
+    properties:
+      depends_on:
+        type: array
+        items: { type: string }
+        description: "Case IDs this case depends on"
+      enables:
+        type: array
+        items: { type: string }
+        description: "Case IDs enabled by this case"
+      related_to:
+        type: array
+        items: { type: string }
+        description: "Related case IDs"
+      revises:
+        type: array
+        items: { type: string }
+        description: "Case IDs this supersedes"
+      work_efforts:
+        type: array
+        items: { type: string }
+        description: "Linked work effort IDs"
+      realms:
+        type: array
+        items: { type: string }
+        description: "Connected Realm names"
+      beings:
+        type: array
+        items: { type: string }
+        description: "Connected Being names"
+      code:
+        type: array
+        items:
+          type: object
+          properties:
+            path: { type: string }
+            type:
+              type: string
+              enum: [implementation, test, config, script]
+
+  flight_recorder:
+    type: object
+    properties:
+      event_type:
+        type: string
+        enum:
+          - CASE_CREATED
+          - CASE_PROVEN
+          - CASE_DISPROVEN
+          - CASE_INCONCLUSIVE
+          - CASE_REVISED
+          - CASE_VALIDATED
+          - CASE_INVALIDATED
+      genome_id:
+        type: [string, "null"]
+        description: "Linked agent genome SHA"
+      generation:
+        type: [integer, "null"]
+        description: "Evolutionary generation"
+
+  empirica:
+    type: object
+    properties:
+      session_id:
+        type: [string, "null"]
+        description: "Empirica session ID"
+      preflight:
+        $ref: "#/definitions/epistemicVectors"
+      postflight:
+        $ref: "#/definitions/epistemicVectors"
+      learning_delta:
+        type: object
+        properties:
+          total: { type: number }
+          most_improved: { type: string }
+
+  calibration:
+    type: object
+    properties:
+      prediction_date:
+        type: string
+        format: date-time
+      predicted_confidence:
+        type: number
+        minimum: 0.0
+        maximum: 1.0
+      validation_date:
+        type: [string, "null"]
+        format: date-time
+      actual_outcome:
+        type: [boolean, "null"]
+      production_evidence:
+        type: array
+        items: { type: string }
+      calibration_score:
+        type: [number, "null"]
+        minimum: 0.0
+        maximum: 1.0
+
+  validation:
+    type: object
+    properties:
+      schedule:
+        type: string
+        enum: [daily, weekly, monthly, on_change, manual]
+        default: weekly
+      last_run:
+        type: string
+        format: date-time
+      next_run:
+        type: string
+        format: date-time
+      notifications:
+        type: object
+        properties:
+          on_failure: { type: boolean, default: true }
+          on_warning: { type: boolean, default: false }
+
+  history:
+    type: array
+    items:
+      type: object
+      required: [version, date, verdict, confidence]
+      properties:
+        version: { type: integer }
+        date: { type: string, format: date-time }
+        verdict: { type: string }
+        confidence: { type: number }
+        change: { type: string }
+
+  tags:
+    type: array
+    items: { type: string }
+    description: "Searchable tags"
+
+definitions:
+  epistemicVectors:
+    type: object
+    properties:
+      engagement:
+        type: number
+        minimum: 0.0
+        maximum: 1.0
+      foundation:
+        type: object
+        properties:
+          know: { type: number, minimum: 0.0, maximum: 1.0 }
+          do: { type: number, minimum: 0.0, maximum: 1.0 }
+          context: { type: number, minimum: 0.0, maximum: 1.0 }
+      comprehension:
+        type: object
+        properties:
+          clarity: { type: number, minimum: 0.0, maximum: 1.0 }
+          coherence: { type: number, minimum: 0.0, maximum: 1.0 }
+          signal: { type: number, minimum: 0.0, maximum: 1.0 }
+          density: { type: number, minimum: 0.0, maximum: 1.0 }
+      execution:
+        type: object
+        properties:
+          state: { type: number, minimum: 0.0, maximum: 1.0 }
+          change: { type: number, minimum: 0.0, maximum: 1.0 }
+          completion: { type: number, minimum: 0.0, maximum: 1.0 }
+          impact: { type: number, minimum: 0.0, maximum: 1.0 }
+      uncertainty:
+        type: number
+        minimum: 0.0
+        maximum: 1.0

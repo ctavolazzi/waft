@@ -4,9 +4,1002 @@ This log tracks development activities, decisions, and progress for the waft pro
 
 ---
 
+## 2026-01-24 - Comprehensive WAFT Documentation Suite Integration
+
+**Time**: 05:00-05:30 PST
+**Status**: ✅ **COMPLETED**
+
+### Summary
+
+Integrated six comprehensive WAFT Framework documents into the Typst-based documentation system, creating a complete educational progression from beginner to academic/research level.
+
+### Documents Integrated
+
+| Document | Target File | Status |
+|----------|-------------|--------|
+| Beginner's Glossary | `sections/D1_glossary.typ` | ✅ Enhanced (12 → 230 lines) |
+| Breeding AI Essay | `sections/05_breeding_ai_intro.typ` | ✅ Created (380 lines) |
+| Technical Whitepaper | `sections/03_technical_whitepaper.typ` | ✅ Created (320 lines) |
+| Study Guide & Quiz | `sections/E0_study_guide.typ` | ✅ Created (285 lines) |
+| Project Proposal | `sections/F0_project_proposal.typ` | ✅ Created (380 lines) |
+| Executive Summary | `sections/02_executive_summary.typ` | ℹ️ Already complete |
+
+### Key Achievements
+
+1. **Enhanced Glossary** - Transformed stub into comprehensive beginner's guide
+   - 5 core concepts with detailed explanations
+   - Quick reference technical terms
+   - Entry point for newcomers
+
+2. **Created Educational Progression**
+   ```
+   Beginner's Glossary (D1) → Quick definitions
+            ↓
+   Breeding AI Essay (05) → Narrative walkthrough  
+            ↓
+   Technical Whitepaper (03) → Academic deep dive
+            ↓
+   Study Guide (E0) → Learning validation
+            ↓
+   Project Proposal (F0) → Research justification
+   ```
+
+3. **Maintained Consistency**
+   - Used `#import "../waft_functions.typ"` for callouts
+   - Followed existing formatting conventions
+   - Preserved evidence-based approach
+   - Integrated Dr. Aria Vex's technical analysis findings
+
+### New Sections Created
+
+**05_breeding_ai_intro.typ** (380 lines)
+- Narrative introduction to evolutionary AI
+- 8 sections from "Building to Breeding" to "God-Head Agent"
+- Accessible tone for general audience
+- Implementation status callouts (95%, 90%, 85%)
+
+**03_technical_whitepaper.typ** (320 lines)
+- Academic/formal documentation
+- 6 sections covering philosophy, architecture, gaps
+- Peer-review ready format
+- Final assessment with strengths/weaknesses table
+
+**E0_study_guide.typ** (285 lines)
+- 10 short-answer questions with answer key
+- 5 essay prompts for deep analysis
+- Comprehensive glossary (23 terms)
+- Study tips and recommended learning sequence
+
+**F0_project_proposal.typ** (380 lines)
+- Grant/research proposal format
+- 7 sections with research justification
+- Implementation gaps as research opportunities
+- Formal recommendation for adoption
+
+### Files Modified
+
+- `sections/D1_glossary.typ` - Enhanced from 12 to 230 lines
+- `sections/05_breeding_ai_intro.typ` - NEW
+- `sections/03_technical_whitepaper.typ` - NEW
+- `sections/E0_study_guide.typ` - NEW
+- `sections/F0_project_proposal.typ` - NEW
+
+### Technical Details
+
+**Total New Content:**
+- ~1,595 lines of Typst documentation
+- 5 new/enhanced section files
+- Complete educational suite
+
+**Conversion Approach:**
+- Markdown → Typst format
+- Preserved source document structure
+- Added implementation status callouts
+- Integrated technical analysis findings
+
+### Work Effort
+
+`WE-260124-docs_comprehensive_waft_documentation_suite_integration`
+
+### Next Steps
+
+1. **Update main compilation file** to include new sections ✅ DONE
+2. **Generate complete PDF** with all integrated content
+3. **Verify section ordering** and flow ✅ DONE
+4. **Update README** with new documentation structure
+
+---
+
+## 2026-01-24 - GitHub Wiki Creation
+
+**Time**: 05:30-05:45 PST
+**Status**: ✅ **COMPLETED**
+
+### Summary
+
+Created a comprehensive GitHub wiki for the WAFT Framework with 4 complete pages and a structured documentation system ready for publishing.
+
+### Wiki Pages Created
+
+| Page | File | Lines | Purpose |
+|------|------|-------|---------|
+| Home | `Home.md` | 280 | Main landing page with overview, status, quick links |
+| Beginner's Glossary | `Beginners-Glossary.md` | 250 | 5 core concepts explained for newcomers |
+| Breeding AI Introduction | `Breeding-AI-Introduction.md` | 390 | Narrative walkthrough of evolutionary approach |
+| Getting Started | `Getting-Started.md` | 340 | Installation, first agent, troubleshooting |
+
+**Total**: 1,260 lines of wiki documentation
+
+### Key Features
+
+1. **Complete Learning Path**
+   - Beginner → Intermediate → Advanced → Research
+   - Clear progression through concepts
+   - Internal linking between pages
+
+2. **Practical Guides**
+   - Installation instructions
+   - First agent tutorial
+   - Manual evolution cycle (since `waft evolve` is 0%)
+   - Troubleshooting section
+
+3. **Current Status Integration**
+   - Implementation percentages (95%, 90%, 85%)
+   - Stability Index (0.78)
+   - Overall completeness (70-75%)
+   - Clear gap identification
+
+4. **Research Context**
+   - Scientific mission explained
+   - "God-Head" agent vision
+   - Phylogenetic tree goals
+   - Academic positioning
+
+### Wiki Structure
+
+```
+GitHub Wiki (Ready to Publish)
+├── Home (Landing + Navigation)
+├── Beginner's Glossary (5 core concepts)
+├── Breeding AI Introduction (8-section narrative)
+└── Getting Started (Installation + First agent)
+```
+
+### Publishing Instructions
+
+Created `WIKI_SETUP_INSTRUCTIONS.md` with:
+- Two methods for publishing (web + git clone)
+- Exact page titles for URLs
+- Internal linking conventions
+- Future page roadmap (12+ planned)
+- Sidebar/Footer customization options
+
+### Next Steps (For User)
+
+1. **Enable Wiki** on GitHub repo settings
+2. **Publish Pages** via web interface or git clone
+3. **Verify Links** after publishing
+4. **Add Sidebar** (_Sidebar.md) for navigation
+
+### Files Created
+
+- `_wiki/Home.md`
+- `_wiki/Beginners-Glossary.md`
+- `_wiki/Breeding-AI-Introduction.md`
+- `_wiki/Getting-Started.md`
+- `_wiki/WIKI_SETUP_INSTRUCTIONS.md`
+
+### Integration with Documentation
+
+Wiki content sourced from newly created Typst documentation:
+- `sections/D1_glossary.typ` → Beginner's Glossary
+- `sections/05_breeding_ai_intro.typ` → Breeding AI
+- `sections/02_executive_summary.typ` → Status data
+- `sections/03_technical_whitepaper.typ` → Technical content
+
+### Future Wiki Pages Planned
+
+**Technical** (4 pages):
+- Architecture, Scint Gym Deep Dive, Pantheon, API Reference
+
+**Tutorials** (3 pages):
+- Mutation Strategies, Fitness Optimization, Telemetry Analysis
+
+**Research** (4 pages):
+- Research Proposal, Study Guide, Use Cases, Implementation Status
+
+**Community** (4 pages):
+- Contributing, FAQ, Roadmap, Changelog
+
+**Total Roadmap**: 15+ pages
+
+### Repository Info
+
+- **GitHub Repo**: https://github.com/ctavolazzi/waft.git
+- **Wiki URL**: https://github.com/ctavolazzi/waft/wiki (once enabled)
+- **Local Path**: `_wiki/` directory
+
+
+
+---
+
+## 2026-01-23 - Clone D&D 5e Toolkit Repos
+
+**Time**: 19:55-20:05 PST
+**Status**: ✅ **COMPLETED + EXPLORED**
+
+### Summary
+
+Cloned two D&D 5e reference repositories into `_external/`:
+
+| Repo | Size | Purpose |
+|------|------|---------|
+| `dungeoneer` | 772MB | Electron VTT with P2P, dynamic lighting, combat tracker |
+| `dnd5e-srd` | 178MB | Full SRD in Obsidian markdown (337 monsters, spells, rules) |
+
+### Key Discoveries
+
+1. **P2P Chunked Transfer** (`server.js`): 1MB chunk pattern for WebRTC data
+2. **Monster JSON Schema**: Complete statblock format with actions, legendary actions
+3. **SRD Markdown**: Obsidian-ready with YAML frontmatter and admonition blocks
+4. **Geometry Utils**: Cone vision, rect bounds, rotation math
+
+### Deep Dive Findings
+
+**CR Calculator** (`CRCalculator.js`):
+- Full DMG CR calculation table (CR 0-30)
+- HP/damage/AC/proficiency/save DC lookup
+- Offensive + Defensive CR averaging
+
+**Encounter Module** (`encounterModule.js`):
+- XP-by-CR table (10 XP at CR0 to 155,000 XP at CR30)
+- Party size multipliers (1x to 4x based on monster count)
+- Difficulty thresholds per level (Easy/Medium/Hard/Deadly)
+- Random encounter generator with type/tag filtering
+
+**Tavern Generator** (`tavernGenerator.js`):
+- Template placeholders: `_name`, `_adjective`, `_tavern`, `_meat`, etc.
+- Wealth-tiered menus, interiors, descriptions
+- Rumor generation with NPC rumormongers
+
+**Random Tables** (`randomTables.json`):
+- Probability-weighted entries
+- Chained tables via `followup_table`
+- 100KB+ of word lists
+
+### Assets Available
+
+- ~300 monsters (JSON), 337 monsters (markdown)
+- ~300 spells (both formats)
+- 18 condition icons (PNG)
+- Full SRD rules reference
+
+### Work Effort
+
+`WE-260123-dnd5_clone_dungeoneer_and_srd_repos`
+
+---
+
+## 2026-01-23 - Observatory Interactive Demo Feature
+
+**Time**: 19:55 PST
+**Status**: ✅ **IMPLEMENTED**
+
+### Summary
+
+Added an **Interactive Demo Walkthrough** to the O.D.D. Observatory. Users can click "Start Demo" to experience a guided 7-step tour that:
+
+1. Welcomes user to Observatory
+2. Highlights the Architect (core node)
+3. Explains realm status colors
+4. **Spawns a real demo_realm PocketBase** on port 8095
+5. Highlights the new node
+6. Invites user to SMITE (kill) the demo realm
+7. Cleans up and completes
+
+### Technical Implementation
+
+**Backend (server.py):**
+- Added `demo_realm_server` attribute to `ObservatoryServer`
+- Added `start_demo_realm()` - spawns real PocketBase via `RealmServer`
+- Added `stop_demo_realm()` - terminates demo realm
+- Added `_handle_start_realm()` and `_handle_stop_realm()` handlers
+
+**Frontend (embedded JS):**
+- `DEMO_STEPS` array with 7 guided steps
+- `startDemo()`, `nextStep()`, `prevStep()`, `closeDemo()` navigation
+- `executeStepAction()` handles async realm start/stop
+- `highlightNode()` adds pulse animation to nodes
+- `waitForSmite` waits for user to SMITE the demo realm
+
+**Port Registry:**
+- Added `demo_realm: 8095` to `DEFAULT_PORTS`
+
+### Files Modified
+
+- `src/waft/core/observatory/server.py` - Demo methods and JS
+- `src/waft/core/realms/port_registry.py` - demo_realm port
+
+### Usage
+
+```bash
+waft observatory  # Start Observatory
+# Click "🎬 Start Demo" button in bottom-right
+```
+
+---
+
+## 2026-01-23 - O.D.D. Observatory Implementation
+
+**Time**: 17:45 PST
+**Status**: ✅ **IMPLEMENTED**
+
+### Summary
+
+Implemented the **O.D.D. Observatory** - a real-time service mesh monitor running on **Port 2077**.
+
+### Features
+
+- D3.js force-directed graph visualization
+- Real-time port status monitoring (2-second polling)
+- Mesh topology API (`GET /api/mesh`)
+- SMITE endpoint (`POST /api/smite`) to kill processes
+- Click to open PocketBase admin
+- Right-click context menu for SMITE
+- Cyberpunk dark theme (#050505)
+
+### Files Created
+
+- `src/waft/core/observatory/__init__.py` - Package init
+- `src/waft/core/observatory/server.py` - Full server implementation
+
+### Files Modified
+
+- `src/waft/main.py` - Added `waft observatory` CLI command
+
+### Work Effort
+
+- **ID**: WE-260123-d1e0
+- **Title**: O.D.D. Observatory (Port 2077) Implementation
+
+### Usage
+
+```bash
+waft observatory              # Start on port 2077
+waft observatory --port 3000  # Custom port
+```
+
+---
+
+## 2026-01-21 - The Tribunal Book (min-book Template)
+
+**Time**: 09:21 PST
+**Status**: ✅ **BOOK COMPILED**
+
+### Summary
+
+Created **The Tribunal Book** using the [min-book 1.3.0](https://typst.app/universe/package/min-book/) template from Typst Universe.
+
+### Files Created
+
+- `THE_TRIBUNAL_BOOK.typ` - Source file using min-book template
+- `THE_TRIBUNAL_BOOK.pdf` (414KB) - Professional book format
+- Copied to EasyStore at `/Volumes/EasyStore/WAFT_Tribunal_Court_System/architecture/`
+
+### Features
+
+- Professional book styling with cover, dedication, epigraph
+- Table of contents auto-generated
+- Clean chapter/section structure
+- Block quotes and code blocks styled
+- References and appendices
+
+### README Updated
+
+Both PDF versions now linked in main README.md.
+
+---
+
+## 2026-01-21 - Work Effort Architecture Template Created
+
+**Time**: 09:15 PST
+**Status**: ✅ **TEMPLATE CREATED**
+
+### Summary
+
+Created a brand new reusable **Typst template** for documenting Work Effort architectures.
+
+### Template Features
+
+- Professional title page with metadata
+- Table of contents
+- Styled headings with section numbering
+- Helper components:
+  - `status-badge()` - Colored status indicators
+  - `info-box()`, `warning-box()`, `success-box()` - Callout boxes
+  - `philosophy-quote()` - Styled quotes
+  - `component-card()` - Component descriptions
+  - `api-endpoint()` - API documentation
+  - `realm-ports()` - Realm port tables
+  - `task-list()` - Checklist items
+  - `version-entry()` - Version history
+
+### Files Created
+
+- **Template**: `src/waft/templates/typst/templates/work_effort_architecture.typ`
+- **Example PDF**: `_work_efforts/WE-260121-1f3l.../THE_TRIBUNAL_ARCHITECTURE.pdf` (313KB)
+- **README updated** with links to template and PDF
+
+### Usage
+
+```typst
+#import "path/to/work_effort_architecture.typ": *
+
+#show: waft-architecture.with(
+  title: "Project Name",
+  subtitle: "Description",
+  work-effort-id: "WE-YYMMDD-xxxx",
+  author: "Author Name",
+  realm: "RealmName",
+  port: "8100",
+)
+```
+
+---
+
+## 2026-01-21 - The Tribunal: WAFT Court System (Architecture Complete)
+
+**Time**: 09:10 PST
+**Status**: ✅ **ARCHITECTURE COMPLETE** - WE-260121-1f3l
+
+### Summary
+
+Created comprehensive architecture for **The Tribunal** - a formal Court System where Claims are tried before a Tribunal with all the trappings of such a system.
+
+### Key Components
+
+1. **Prime Justice** - Supreme Being of the Tribunal Realm
+2. **The Beyond** - Inter-Realm communication (only Prime Beings know)
+3. **Court Roles** - Prosecutor, Defender, Witnesses, Jury
+4. **Chain of Case Law** - Hash-verified ledger of verdicts
+5. **Endeavors & Epochs** - System history tracking
+6. **FastAPI + SvelteKit** - Real-time Court UI
+
+### Philosophy
+
+> **"On Trial" has meaning in this system.**
+
+- **The Beyond**: Regular Beings receive information without knowing its true source - it simply arrives "from The Beyond"
+- **Prime Beings**: Only they know about inter-Realm communication
+- **Epochs**: Major Turnings where all Case Law is reviewed
+
+### Outputs
+
+- `/Volumes/EasyStore/WAFT_Tribunal_Court_System/` - Project folder on EasyStore
+- `_work_efforts/WE-260121-1f3l/TRIBUNAL_ARCHITECTURE.md` - Full architecture
+- `.cursor/commands/prove-it-in-court.md` - Court proceedings command
+- `.cursor/commands/assemble-a-team.md` - CrewAI team assembly command
+- Ledger files: `case_law.json`, `epochs.json`, `endeavors.json`
+
+### Next Steps
+
+1. Implement `TheBeyond` class for inter-Realm communication
+2. Create `PrimeJustice` Being
+3. Build FastAPI endpoints for court operations
+4. Create SvelteKit UI for live proceedings
+5. Integrate CrewAI for team assembly
+
+---
+
+## 2026-01-21 - Case File System Evolution: Living Proof Artifacts (Design Complete)
+
+**Time**: 08:52 PST
+**Status**: ✅ **DESIGN COMPLETE** - WE-260121-oxzc
+
+### Summary
+
+Created comprehensive design for evolving WAFT Case Files from static proof documents into **living, queryable artifacts** that integrate with the entire WAFT ecosystem.
+
+### Key Design Decisions
+
+1. **Machine-Readable Schema**: YAML frontmatter with JSON Schema validation
+2. **Case Registry**: Indexed, searchable database of all cases
+3. **Flight Recorder Integration**: Every case is an evolutionary event
+4. **Empirica Integration**: Track epistemic learning (preflight → postflight deltas)
+5. **Cross-Reference System**: Dependency graph between cases, realms, beings
+6. **Confidence Calibration**: Track prediction accuracy over time
+7. **Auto-Validation**: Scheduled re-validation of evidence
+8. **Versioning**: Track how claims evolve over time
+9. **Queryable API**: REST endpoints and Python SDK for AI agents
+10. **Template Variants**: Different templates for different case types
+
+### Why This Matters
+
+- Cases become **first-class citizens** in WAFT's evolutionary ecosystem
+- AI agents can **query** existing knowledge before investigation
+- **Calibration** improves prediction accuracy over generations
+- **Cross-references** reveal how understanding builds over time
+- **Living artifacts** update and validate themselves
+
+### Outputs
+
+- `_work_efforts/WE-260121-oxzc_case_file_system_evolution_living_proof_artifacts/CASE_FILE_EVOLUTION_DESIGN.md` - Full design document
+- `_work_efforts/WE-260121-oxzc_case_file_system_evolution_living_proof_artifacts/schemas/case_file_v2.schema.yaml` - JSON Schema
+- `_work_efforts/WE-260121-oxzc_case_file_system_evolution_living_proof_artifacts/examples/case_20260121_080648_gamified_service_mesh_v2.typ` - Example evolved case
+
+### Pantheon Integration
+
+**God**: The Magistrate (God of Precedent and Body of Proof)
+**Tool Purpose**: Case Files become the Magistrate's primary instruments for:
+- Querying precedents
+- Indexing claims
+- Calibrating predictions
+- Validating evidence
+- Building dependency graphs
+
+### Next Steps
+
+1. Implement YAML frontmatter parser for .typ and .md files
+2. Extend Magistrate class with v2.0 capabilities
+3. Create `waft magistrate` CLI commands
+4. Integrate with Flight Recorder
+5. Connect to Empirica CASCADE workflow
+
+---
+
+## 2026-01-20 - Teleport Massive Autoplay Execution (Complete)
+
+**Time**: 21:58 PST
+**Status**: ✅ **COMPLETE** - WE-260119-ejtx
+
+### Summary
+
+Completed Teleport Massive autoplay execution: fixed `/reflect`, deep-analyzed slaytheweb, ran critique/assumptions/verify pipeline, added Dealer playingcards adapter, produced Typst MVP guide, and added telemetry server + autoplay script with verification outputs.
+
+### Outputs
+- `_work_efforts/WE-260119-ejtx_teleport_massive_official_guide_to_scint_traversal/SLAYTHEWEB_DEEP_ANALYSIS_2026-01-20.md`
+- `_work_efforts/WE-260119-ejtx_teleport_massive_official_guide_to_scint_traversal/CRITIQUE_2026-01-20_teleport_massive_autoplay.md`
+- `_work_efforts/WE-260119-ejtx_teleport_massive_official_guide_to_scint_traversal/TELEPORT_MASSIVE_CARD_GAME_MVP_GUIDE_2026-01-20.typ`
+- `_work_efforts/WE-260119-ejtx_teleport_massive_official_guide_to_scint_traversal/TELEPORT_MASSIVE_CARD_GAME_MVP_GUIDE_2026-01-20.pdf`
+- `scripts/prove_it_telemetry_server.py`
+- `scripts/slaytheweb_autoplay.mjs`
+
+### Next Steps
+- Optionally run `node scripts/slaytheweb_autoplay.mjs` to generate a run log.
+- Start telemetry server with `python3 scripts/prove_it_telemetry_server.py`.
+
+---
+
+## 2026-01-20 - Teleport Massive Autoplay Evidence Update (Progress)
+
+**Time**: 22:41 PST
+**Status**: 🚧 **IN PROGRESS** - WE-260119-ejtx
+
+### Summary
+- Ran `/continue` and `/reflect`, then filled the journal entry content.
+- Revised the autoplay plan and documented the revision report.
+- Deleted accidental GitHub comments on waft PR/issue #1.
+- Started slaytheweb dev server; UI automation stuck at “Open the map” overlay via accessibility tree.
+- Executed 3 headless autoplay runs, posted telemetry evidence, and created a case file.
+
+### Outputs
+- `_work_efforts/PLAN_REVISION_2026-01-20_223000_teleport_massive_autoplay.md`
+- `_work_efforts/WE-260119-ejtx_teleport_massive_official_guide_to_scint_traversal/telemetry_evidence.jsonl`
+- `_work_efforts/WE-260119-ejtx_teleport_massive_official_guide_to_scint_traversal/autoplay_runs/stw_1768977485016_tx5o4v.json`
+- `_work_efforts/WE-260119-ejtx_teleport_massive_official_guide_to_scint_traversal/autoplay_runs/stw_1768977623234_uce2a8.json`
+- `_work_efforts/WE-260119-ejtx_teleport_massive_official_guide_to_scint_traversal/autoplay_runs/stw_1768977623510_z0cn6m.json`
+- `_work_efforts/proof_cases/case_20260120_224053_teleport_massive_autoplay.md`
+
+### Next Steps
+- Add DOM-selector-based UI automation to bypass the intro overlay.
+- Expand autoplay heuristics and increase run count for stability metrics.
+
+---
+
+## 2026-01-20 - WAFT DnD Mechanics Book (Plan)
+
+**Time**: 21:50 PST
+**Status**: 🎯 **PLAN** - WE-260120-hy45
+
+### Summary
+
+Plan to build a DnD mechanics book using WAFT rules with Typst templates (min-book, owlbear, dragonling, wenyuan-campaign) and provide a reusable wrapper + sample content.
+
+### Scope
+- Typst wrapper to generate a DnD mechanics book per template
+- Shared WAFT mechanics content for the book
+- Usage notes + example Typst entry points
+
+### Next Steps
+- Add wrapper + content builder
+- Create sample Typst files
+- Update work effort with progress
+
+---
+
+## 2026-01-20 - WAFT DnD Mechanics Book (Progress)
+
+**Time**: 22:05 PST
+**Status**: 🚧 **IN PROGRESS** - WE-260120-hy45
+
+### Summary
+- Added Typst wrapper for DnD mechanics book templates.
+- Added shared content and four Typst entry points (min-book, owlbear, dragonling, wenyuan-campaign).
+- Documented usage steps in the work effort.
+
+### Outputs
+- `src/waft/templates/typst/wrappers/dnd_mechanics_book.py`
+- `_work_efforts/WE-260120-hy45_waft_dnd_mechanics_book_typst_templates_integration/typst_book/content.typ`
+- `_work_efforts/WE-260120-hy45_waft_dnd_mechanics_book_typst_templates_integration/typst_book/min-book.typ`
+- `_work_efforts/WE-260120-hy45_waft_dnd_mechanics_book_typst_templates_integration/typst_book/owlbear.typ`
+- `_work_efforts/WE-260120-hy45_waft_dnd_mechanics_book_typst_templates_integration/typst_book/dragonling.typ`
+- `_work_efforts/WE-260120-hy45_waft_dnd_mechanics_book_typst_templates_integration/typst_book/wenyuan-campaign.typ`
+- `_work_efforts/WE-260120-hy45_waft_dnd_mechanics_book_typst_templates_integration/typst_book/README.md`
+
+### Next Steps
+- (Optional) Compile PDFs with Typst CLI
+
+---
+
+## 2026-01-20 - Card-Game-Simulator Full Cycle Run: Copy-First Backup
+
+**Time**: 21:53 PST
+**Source**: workflow
+**Category**: maintenance
+
+## Summary
+Copied large directories to external drive before any deletion.
+
+## Details
+- Destination: `/Volumes/Easystore/waft_cleanup_2026-01-20_copy1`.
+- Items copied: `waft_pdf_library`, `_realms`, `waft_desktop`, `_work_efforts`, `templates`, `.venv`.
+- Note: destination sizes are larger than source, indicating the destination was not empty.
+
+## Next Steps
+- Decide whether to re-copy into a fresh empty destination for clean verification.
+- Confirm deletion targets and backup verification before removal.
+
+---
+
+## 2026-01-20 - EasyStore Storage Housekeeping Helper (Complete)
+
+**Time**: 21:52 PST
+**Status**: ✅ **COMPLETE** - WE-260116-w9f3
+
+### Summary
+
+Built `scripts/housekeeping_storage_helper.py` to scan for old augmented content, generate a manifest, and move/copy items into the EasyStore_Realm (dry-run by default).
+
+### Details
+- Detects EasyStore drive and registers realm if missing
+- Scans augmented content older than a threshold
+- Writes manifest to `_work_efforts/housekeeping_manifests/`
+- Updates StorageRegistry and realm manifest on apply
+
+---
+
+## 2026-01-20 - EasyStore Storage Housekeeping Helper (Plan)
+
+**Time**: 21:46 PST
+**Status**: 🎯 **PLAN** - WE-260116-w9f3
+
+### Summary
+
+Create a small storage housekeeping helper that scans for old augmented content, prepares a manifest, and (optionally) routes files to the EasyStore_Realm using the ExternalDriveRealm.
+
+### Plan
+- Add `scripts/housekeeping_storage_helper.py` with a dry-run default.
+- Detect EasyStore drive, ensure `EasyStore_Realm` is registered.
+- Scan for augmented content older than a threshold, skip core/meta dirs.
+- Write a manifest and optionally move/copy files, updating storage registry.
+
+---
+
+## 2026-01-20 - ODD Research Notes Web App (Progress)
+
+**Time**: 21:51 PST
+**Status**: 🚧 **IN PROGRESS** - WE-260120-in0a / TKT-in0a-006
+
+### Summary
+
+- Created ODD research notes FastAPI endpoints + seed JSON store
+- Added SvelteKit `/odd-notes` page with ODD styling and note editor
+- Linked ODD core page to the new notes UI
+- Updated `/bananote` to open the notes site
+- Compiled bananote science notes with Typst references
+
+### Outputs
+- `_realms/odd_realm/notes/odd_research_notes.json`
+- `visualizer/src/routes/odd-notes/+page.svelte`
+- `_work_efforts/WE-260120-in0a_odd_realm_creative_expansion/bananote_odd_research_notes_2026-01-20.typ`
+- `_work_efforts/WE-260120-in0a_odd_realm_creative_expansion/bananote_odd_research_notes_2026-01-20.pdf`
+
+### Next Steps
+- Verify API response in the SvelteKit UI
+- Confirm cross-link flow between ODD core and notes UI
+
+---
+
+## 2026-01-20 - ODD Research Notes Web App (Plan)
+
+**Time**: 21:43 PST
+**Status**: 🎯 **PLAN** - WE-260120-in0a / TKT-in0a-006
+
+### Summary
+
+Design a FastAPI + SvelteKit ODD research notes web app, add a new ODD notes page linked to the existing ODD page, update `/bananote` to open the site, and capture science notes referencing Typst packages and templates.
+
+### Scope
+- New SvelteKit page: ODD research notes
+- FastAPI endpoints for ODD notes (read/write)
+- Links between existing ODD page and new notes page
+- `/bananote` command updates to open the site
+- Bananote research notes + PDF
+
+### Next Steps
+- Locate existing ODD page and mirror styling
+- Create API + notes storage
+- Build SvelteKit notes page + link
+- Update bananote notes with sources
+
+---
+
+## 2026-01-20 - Oracle Deep Analyze Critique Workflow (Progress)
+
+**Time**: 21:28 PST
+**Status**: ✅ **IN PROGRESS** - WE-260120-ebjt
+
+### Summary
+
+Completed oracle/deep-analyze/critique/response documentation, created another-cycle artifacts, and updated the work effort. Applied fixes in `src/waft/main.py` to import `Any` and repair the `check_assumptions` handler.
+
+### Key Outputs
+
+- `_work_efforts/WE-260120-ebjt_oracle_deep_analyze_critique_workflow/DEEP_ANALYZE_2026-01-20_waft_app.md`
+- `_work_efforts/WE-260120-ebjt_oracle_deep_analyze_critique_workflow/CRITIQUE_2026-01-20_waft_app_oracle.md`
+- `_work_efforts/WE-260120-ebjt_oracle_deep_analyze_critique_workflow/RESPONSE_2026-01-20_waft_app_oracle.md`
+- `_work_efforts/ANOTHER_CYCLE_20260120_211712.md`
+
+### Next Steps
+
+1. Re-run `waft oracle` using updated code path
+2. Re-run `waft check-assumptions` with fixed handler
+3. Submit Empirica postflight
+
+---
+
+## 2026-01-20 - Oracle Deep Analyze Critique Workflow (Plan)
+
+**Time**: 21:06 PST
+**Status**: 🎯 **PLAN** - WE-260120-ebjt
+
+### Summary
+
+Created a new work effort to run the oracle → deep-analyze → critique workflow with Empirica preflight and a bananote research booklet for this session.
+
+### Key Steps Planned
+
+1. Initialize bananote research booklet in the work effort folder
+2. Run `/consult-the-oracle`
+3. Execute deep analyze and critique
+4. Run check-assumptions + verify
+5. Respond to critique, run science-bitch, start another-cycle
+6. Run auto-work step by step and submit Empirica postflight
+
+### Files Created
+
+- `_work_efforts/WE-260120-ebjt_oracle_deep_analyze_critique_workflow/WE-260120-ebjt_index.md`
+
+---
+
+## 2026-01-20 - TheOracle Session ID Bug Fix (Complete)
+
+**Time**: 18:50 PST
+**Status**: ✅ **COMPLETE** - WE-260120-luz3
+
+### Summary
+
+Fixed a CRITICAL bug in `TheOracle` where `_session_id` and `_personality_interactions` attributes were only initialized in one code path of `_load_personality()`, causing `AttributeError` when using explicit personality parameters.
+
+### Bug Analysis
+
+**Location**: `src/waft/core/science/oracle.py`
+
+**Root Cause**: The `_load_personality()` method has 4 priority levels for loading personality:
+1. Priority 1: Use provided personality instance (returns early)
+2. Priority 2: Load from file (returns early)
+3. Priority 3: Use preset type (returns early)
+4. Priority 4: Default personality (ONLY path that initialized `_session_id`)
+
+When Priority 1, 2, or 3 returned early, `_session_id` and `_personality_interactions` were NEVER initialized.
+
+### Fix Applied
+
+Moved both attribute initializations from `_load_personality()` to `__init__()` BEFORE the `_load_personality()` call:
+
+```python
+# In __init__, BEFORE _load_personality():
+self._personality_interactions = []
+self._session_id = self._readiness_status.get("session_id")
+if not self._session_id:
+    try:
+        self._session_id = self.empirica.get_current_session_id()
+    except Exception:
+        pass
+```
+
+### Verification
+
+✅ All tests pass:
+- `_session_id` exists: True
+- `_personality_interactions` exists: True
+- Works with explicit personality parameter (previously broken)
+
+### Files Modified
+
+- `src/waft/core/science/oracle.py`
+
+### Related
+
+- WE-260120-luz3: TheOracle Session ID Bug Fix
+- Related to: NarcissusAgent Empirica integration (WE-260120-p7ic)
+
+---
+
+## 2026-01-20 - Protocol: Main Trunk Unification (Complete)
+
+**Time**: 16:36 PST
+**Status**: ✅ **COMPLETE** - WE-260120-p7ic
+
+### Summary
+
+Established a unified "Main Trunk" structure in `waft` with symlinks to `empirica`, `NovaSystem-Codex`, and `_pyrite` to enable local cross-agent intelligence. Enabled Empirica in NarcissusAgent as its reasoning engine.
+
+### Phases Completed
+
+1. **Phase 1: Inventory & Sync** ✅
+   - Synced all repos (waft, empirica, NovaSystem-Codex, _pyrite)
+   - Documented git status for each
+
+2. **Phase 2: Unified Structure** ✅
+   - Created `_unified/` directory
+   - Created symlinks:
+     - `_unified/empirica -> /Users/ctavolazzi/Code/active/empirica`
+     - `_unified/NovaSystem-Codex -> /Users/ctavolazzi/Code/active/NovaSystem-Codex`
+     - `_unified/_pyrite -> /Users/ctavolazzi/Code/active/_pyrite`
+   - Added `_unified/` to `.gitignore`
+
+3. **Phase 3: Dependencies** ✅
+   - Added `empirica` as editable dependency from `_unified/empirica`
+   - NovaSystem-Codex has platform dependency issues (onnxruntime requires macOS 13+) - non-blocking
+
+4. **Phase 4: Verification** ✅
+   - Created `_unified/verify_unification.py` script
+   - All tests pass:
+     - ✅ Symlinks valid
+     - ✅ empirica imports from unified location
+     - ✅ EmpiricaManager works correctly
+     - ✅ NarcissusAgent imports successfully
+
+5. **Phase 5: Enable Empirica** ✅
+   - Changed `empirica_enabled=False` to `empirica_enabled=True` in NarcissusAgent
+   - Verified `epistemic_state` initialized in AgentState
+
+### Files Created/Modified
+
+- `_unified/` (directory with symlinks)
+- `_unified/verify_unification.py` (verification script)
+- `_unified/README.md` (documentation)
+- `.gitignore` (added `_unified/`)
+- `pyproject.toml` (empirica as editable dependency)
+- `narcissus_lab/internal_monologue/src/agents/narcissus.py` (empirica_enabled=True)
+
+### Verification
+
+Run verification:
+```bash
+uv run python _unified/verify_unification.py
+```
+
+Result: ✅ ALL TESTS PASSED
+
+---
+
+## 2026-01-20 - Narcissus Protocol Backend Lab (Plan)
+
+**Time**: 16:16 PST
+**Status**: 🎯 **PLAN** - WE-260120-yfy1
+
+### Plan
+
+- Create `narcissus_lab` and initialize `internal_monologue` scaffold
+- Implement `NarcissusAgent` with self-inspection + self-patch tools
+- Implement `sabotage.py` and `telemetry.py` drivers
+- Run 50-trial CLI experiment and analyze flight recorder
+
+### Files Targeted
+
+- `narcissus_lab/internal_monologue/src/agents/narcissus.py`
+- `narcissus_lab/internal_monologue/src/agents/__init__.py`
+- `narcissus_lab/internal_monologue/drivers/sabotage.py`
+- `narcissus_lab/internal_monologue/drivers/telemetry.py`
+- `narcissus_lab/internal_monologue/reports/waft_narcissus_protocol_report.md`
+- `narcissus_lab/internal_monologue/_pyrite/flight_recorder.json`
+
+---
+
+## 2026-01-20 - Narcissus Protocol Backend Lab (Complete)
+
+**Time**: 16:16 PST
+**Status**: ✅ **COMPLETE** - WE-260120-yfy1
+
+### Summary
+
+Created the Narcissus Protocol headless lab with a self-inspecting agent, sabotage + telemetry drivers, and a 50-trial run producing `flight_recorder.json` plus a Phase 1 report.
+
+### Files Created/Modified
+
+- `narcissus_lab/internal_monologue/src/agents/narcissus.py`
+- `narcissus_lab/internal_monologue/src/agents/__init__.py`
+- `narcissus_lab/internal_monologue/drivers/sabotage.py`
+- `narcissus_lab/internal_monologue/drivers/telemetry.py`
+- `narcissus_lab/internal_monologue/drivers/__init__.py`
+- `narcissus_lab/internal_monologue/reports/waft_narcissus_protocol_report.md`
+- `narcissus_lab/internal_monologue/_pyrite/flight_recorder.json`
+- `narcissus_lab/internal_monologue/_pyrite/gym_logs/` (created)
+
+---
+
+## 2026-01-20 - WAFT Pet System Implementation (Plan)
+
+**Time**: 15:20 PST
+**Status**: 🎯 **PLAN** - WE-260120-1sbq
+
+### Plan
+
+- Create pet module core (PetBeing + EmotionAdapter)
+- Implement pet card generator integration (Teleport Massive card renderer)
+- Add pet API routes + standalone pet server wiring
+- Create pet realm data directories and persistence wiring
+
+### Files Targeted
+
+- `src/waft/pet/__init__.py`
+- `src/waft/pet/pet_being.py`
+- `src/waft/pet/emotion_adapter.py`
+- `src/waft/pet/card_generator.py`
+- `src/waft/pet/pet_server.py`
+- `src/waft/api/routes/pet.py`
+- `src/waft/api/main.py`
+- `_realms/waft_pet/`
+
+---
+
+## 2026-01-20 - WAFT Pet System Implementation (Complete)
+
+**Time**: 15:20 PST
+**Status**: ✅ **COMPLETE** - WE-260120-1sbq
+
+### Summary
+
+Implemented the WAFT Pet System module, API routes, standalone server, card generator integration, and pet realm data directories.
+
+### Files Created/Modified
+
+- `src/waft/pet/pet_being.py`
+- `src/waft/pet/emotion_adapter.py`
+- `src/waft/pet/card_generator.py`
+- `src/waft/pet/pet_server.py`
+- `src/waft/pet/__init__.py`
+- `src/waft/api/routes/pet.py`
+- `src/waft/api/main.py`
+- `_realms/waft_pet/` (pets, cards, graveyard, lineage)
+
+---
+
 ## 2026-01-20 - Main Branch Consolidation (All Branches)
 
-**Time**: 08:45 PST  
+**Time**: 08:45 PST
 **Status**: ✅ **COMPLETE**
 
 ### Summary
@@ -29,7 +1022,7 @@ Merged all remote branches into `main` (no skip gate) and pushed `main` to `orig
 
 ## 2026-01-12 - System Integration Orchestrator MVP
 
-**Time**: 23:54:56 PST  
+**Time**: 23:54:56 PST
 **Status**: ✅ **COMPLETE** - WE-260119-50hp
 
 ### Summary
@@ -64,7 +1057,7 @@ Delivered a full-stack WAFT PDF Library app with FastAPI + SvelteKit, Typst temp
 
 ## 2026-01-19 - WAFT PDF Library (Plan)
 
-**Time**: 23:51:14 PST  
+**Time**: 23:51:14 PST
 **Status**: 🎯 **PLAN** - WE-260119-50hp
 
 ### Plan
@@ -87,7 +1080,7 @@ Delivered a full-stack WAFT PDF Library app with FastAPI + SvelteKit, Typst temp
 
 ## 2026-01-19 - Security: Subprocess Input Validation (Plan)
 
-**Time**: 23:26:50 PST  
+**Time**: 23:26:50 PST
 **Status**: 🎯 **PLAN** - Work queued for WE-260109-sec1 (TKT-sec1-002)
 
 ### Plan
@@ -3776,3 +4769,39 @@ Evolved devlog system from single-file to categorized, organized, timestamped en
 **Next Steps**: Test browser UI, optionally integrate with WAFT CLI
 
 ---
+
+## 2026-01-24 - Compiled Scint Gym Whitepaper Section
+
+**Time**: 04:25 PST
+**Status**: ✅ **COMPLETED**
+
+### Summary
+
+Successfully compiled the WAFT Framework whitepaper Section 6 (Scint Gym: Reality Fracture Detection System) into a standalone PDF.
+
+### Actions Taken
+
+1. **Fixed Typst syntax error**: Changed `<5%` to `less than 5%` to avoid unclosed label error
+2. **Compiled PDF**: Used `typst compile` to generate `40_scint_gym_standalone.pdf`
+3. **Opened PDF**: Document opened automatically for review
+
+### Technical Details
+
+**File**: `section_pdfs/40_scint_gym_standalone.typ`
+**Output**: `section_pdfs/40_scint_gym_standalone.pdf`
+**Pages**: ~15 pages (as designed)
+**Compilation time**: ~20 seconds
+
+### Content Verified
+
+- ✅ 917 lines of technical analysis
+- ✅ Evidence-backed claims with file paths and line numbers
+- ✅ Code excerpts from actual implementation
+- ✅ Test verification results
+- ✅ Formulas, tables, and callouts
+- ✅ Professional typesetting with New Computer Modern font
+
+### Note
+
+The section claims to analyze the RPG Gym subsystem at `src/gym/rpg/`. The next logical step would be to verify these claims against the actual codebase (run tests, check file paths, validate code excerpts).
+

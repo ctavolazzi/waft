@@ -1,0 +1,251 @@
+#!/usr/bin/env python3
+"""
+TheGuide "Hello World" Web Interface
+
+The 3-Body Problem Solution:
+- Mind: TheOracle (reasoning)
+- Body: NarcissusAgent (action)
+- Spirit: TheGuide (conscience)
+
+This server brings TheGuide to life in a web browser.
+"""
+
+import sys
+from http.server import BaseHTTPRequestHandler, HTTPServer
+from pathlib import Path
+from threading import Timer
+import webbrowser
+
+# Add waft root to path
+waft_root = Path(__file__).resolve().parents[2]
+if str(waft_root / "src") not in sys.path:
+    sys.path.insert(0, str(waft_root / "src"))
+
+from waft.pantheon.guide import TheGuide
+
+
+class TheGuideHandler(BaseHTTPRequestHandler):
+    """HTTP handler for TheGuide web interface."""
+
+    def __init__(self, guide: TheGuide, *args, **kwargs):
+        self.guide = guide
+        super().__init__(*args, **kwargs)
+
+    def do_GET(self):
+        """Handle GET requests."""
+        if self.path == "/" or self.path == "/index.html":
+            self.serve_hello_world()
+        elif self.path == "/api/guide/status":
+            self.serve_status()
+        else:
+            self.send_error(404, "Not Found")
+
+    def serve_hello_world(self):
+        """Serve the Hello World page from TheGuide."""
+        html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TheGuide - Hello World</title>
+    <style>
+        * {{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }}
+        
+        body {{
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }}
+        
+        .container {{
+            background: white;
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 800px;
+            margin: 20px;
+        }}
+        
+        h1 {{
+            font-size: 4em;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }}
+        
+        .subtitle {{
+            font-size: 1.5em;
+            color: #666;
+            margin-bottom: 40px;
+        }}
+        
+        .three-body {{
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin: 40px 0;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }}
+        
+        .body-card {{
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }}
+        
+        .body-card h3 {{
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }}
+        
+        .body-card p {{
+            color: #666;
+            font-size: 0.9em;
+        }}
+        
+        .emoji {{
+            font-size: 3em;
+            margin-bottom: 10px;
+        }}
+        
+        .status {{
+            margin-top: 30px;
+            padding: 20px;
+            background: #e8f5e9;
+            border-radius: 10px;
+            color: #2e7d32;
+        }}
+        
+        .status h3 {{
+            color: #2e7d32;
+            margin-bottom: 10px;
+        }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hello World</h1>
+        <p class="subtitle">From TheGuide - The Conscience of the Simulation</p>
+        
+        <div class="three-body">
+            <div class="body-card">
+                <div class="emoji">🧠</div>
+                <h3>Mind</h3>
+                <p>TheOracle</p>
+                <p style="font-size: 0.8em; color: #999; margin-top: 5px;">Reasoning & Epistemic Intelligence</p>
+            </div>
+            
+            <div class="body-card">
+                <div class="emoji">🤖</div>
+                <h3>Body</h3>
+                <p>NarcissusAgent</p>
+                <p style="font-size: 0.8em; color: #999; margin-top: 5px;">Action & Self-Modification</p>
+            </div>
+            
+            <div class="body-card">
+                <div class="emoji">✨</div>
+                <h3>Spirit</h3>
+                <p>TheGuide</p>
+                <p style="font-size: 0.8em; color: #999; margin-top: 5px;">Conscience & Meta-Cognitive Guidance</p>
+            </div>
+        </div>
+        
+        <div class="status">
+            <h3>✅ TheGuide is Active</h3>
+            <p>Project Path: {self.guide.project_path}</p>
+            <p>Pantheon Path: {self.guide.pantheon_path}</p>
+            <p>The 3-Body Problem is solved. Mind, Body, and Spirit are unified.</p>
+        </div>
+    </div>
+</body>
+</html>"""
+        
+        self.send_response(200)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Content-Length", str(len(html.encode("utf-8"))))
+        self.end_headers()
+        self.wfile.write(html.encode("utf-8"))
+
+    def serve_status(self):
+        """Serve TheGuide status as JSON."""
+        import json
+        
+        status = {
+            "active": True,
+            "project_path": str(self.guide.project_path),
+            "pantheon_path": str(self.guide.pantheon_path),
+            "guide_path": str(self.guide.guide_path),
+            "sessions_count": len(self.guide.index.get("sessions", [])),
+        }
+        
+        response = json.dumps(status, indent=2)
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(response.encode("utf-8"))))
+        self.end_headers()
+        self.wfile.write(response.encode("utf-8"))
+
+    def log_message(self, format, *args):
+        """Override to reduce log noise."""
+        pass
+
+
+def open_browser(port: int):
+    """Open browser after a short delay."""
+    Timer(1.0, lambda: webbrowser.open(f"http://localhost:{port}")).start()
+
+
+def main():
+    """Start TheGuide web server."""
+    port = 7072
+    
+    # Initialize TheGuide
+    project_path = waft_root
+    guide = TheGuide(project_path=project_path)
+    
+    print("✨ TheGuide Web Server")
+    print("=" * 50)
+    print(f"🧠 Mind: TheOracle (Reasoning)")
+    print(f"🤖 Body: NarcissusAgent (Action)")
+    print(f"✨ Spirit: TheGuide (Conscience)")
+    print("=" * 50)
+    print(f"\n🚀 Starting server on http://localhost:{port}")
+    print(f"📁 Project: {project_path}")
+    print(f"🏛️  Pantheon: {guide.pantheon_path}")
+    print("\n💡 Opening browser in 1 second...")
+    print("   Press Ctrl+C to stop\n")
+    
+    # Create server with TheGuide instance
+    def handler(*args, **kwargs):
+        return TheGuideHandler(guide, *args, **kwargs)
+    
+    server = HTTPServer(("localhost", port), handler)
+    
+    # Open browser
+    open_browser(port)
+    
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        print("\n\n👋 Shutting down TheGuide server...")
+        server.shutdown()
+        print("✅ Server stopped")
+
+
+if __name__ == "__main__":
+    main()

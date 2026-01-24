@@ -1,4 +1,17 @@
-#set page(margin: (top: 1in, bottom: 1in, left: 0.75in, right: 0.75in))
+#import "@preview/s6t5-page-bordering:1.0.0": s6t5-page-bordering
+
+// Page border for WAFT template identification
+#show: s6t5-page-bordering.with(
+  margin: (left: 0.75in, right: 0.75in, top: 1in, bottom: 1in),
+  expand: 15pt,
+  space-top: 15pt,
+  space-bottom: 15pt,
+  stroke-header: none,
+  stroke-footer: none,
+  header: "",
+  footer: "",
+)
+
 #set text(font: "Times New Roman", size: 11pt)
 #set par(leading: 0.65em)
 #set heading(numbering: "1.")

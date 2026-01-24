@@ -1,0 +1,14 @@
+{
+  "epoch": "2026-01-04T16:19:05-08:00",
+  "epoch_commit": "18ac1b40d0856fb028c385e8c9bf0ef5cdccf77c",
+  "current": "v0.0.15.14.1",
+  "last_checkpoint": {
+    "version": "v0.0.15.14.1",
+    "timestamp": "2026-01-20T14:26:44.379575",
+    "quarter": "Q1",
+    "had_changes": false,
+    "checked_at": "2026-01-20T14:26:44.379575",
+    "commit_sha": "fbbebda598fbe6837a9f7b0dd09b4a6751f13c23"
+  },
+  "initialized_at": "2026-01-20T14:26:44.376994"
+}

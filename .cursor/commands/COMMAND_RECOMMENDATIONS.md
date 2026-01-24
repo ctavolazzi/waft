@@ -39,6 +39,7 @@
 30. **`/another-cycle`** ✅ - Complete development cycle: onboard → explore → check-assumptions → hypothesis → critique → comprehensive-orchestration → analyze → engineer → improve → version-bake → run-it → prove-it → evolve → journal → next → goal → checkpoint
 31. **`/ai-town-analysis`** ✅ - Comprehensive analysis workflow for repositories and research papers: context → oracle → run-it → evolve (optional) → print-PDF → oracle
 32. **`/goose-eval`** ✅ - Systematic evaluation and decision-making workflow: 12-phase evaluation with hypothesis formation, verification, and structured decision matrix
+33. **`/bananote`** ✅ - Structured Typst research notes (bananote template)
 
 ---
 
@@ -524,11 +525,12 @@
 4. **`/sync`** ✅ - Documentation sync (useful but less frequent)
 5. **`/todos`** ✅ - Todo management (if not using external system)
 6. **`/search`** ✅ - Documentation search (useful for large projects)
+7. **`/bananote`** ✅ - Structured Typst research notes (bananote template)
 
 ### Low Priority (Optional)
 
-7. **`/links`** ✅ - Documentation links (nice but manual works)
-8. **`/cleanup`** ✅ - Cleanup (occasional use)
+8. **`/links`** ✅ - Documentation links (nice but manual works)
+9. **`/cleanup`** ✅ - Cleanup (occasional use)
 
 ---
 

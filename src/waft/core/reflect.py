@@ -5,6 +5,8 @@ Induces the AI to write in its journal, reflecting on current work, thoughts,
 and experiences. The AI definitely needs a journal if it doesn't have one.
 """
 
+import json
+import os
 import re
 from datetime import datetime
 from pathlib import Path
@@ -21,20 +23,31 @@ from .memory import MemoryManager
 class ReflectManager:
     """Manages AI journal and reflection entries."""
 
-    def __init__(self, project_path: Path):
+    def __init__(
+        self,
+        project_path: Path,
+        ai_name: Optional[str] = None,
+        ai_metadata: Optional[Dict[str, Any]] = None,
+    ):
         """
         Initialize reflect manager.
 
         Args:
             project_path: Path to project root
             ai_name: Optional AI identifier (e.g., 'claude-code', 'cursor', 'chatgpt')
-                    If not provided, uses 'default'
+            ai_metadata: Optional AI metadata override
         """
         self.project_path = project_path
         self.console = Console()
         self.stats_tracker = SessionStats(project_path)
         self.github = GitHubManager(project_path)
         self.memory = MemoryManager(project_path)
+        self.ai_name = ai_name or os.getenv("WAFT_AI_NAME") or os.getenv("AI_NAME") or "default"
+        self.ai_metadata = ai_metadata or {
+            "name": self.ai_name,
+            "model": os.getenv("AI_MODEL") or os.getenv("MODEL_NAME"),
+            "provider": os.getenv("AI_PROVIDER"),
+        }
 
         # Journal location - placed in _pyrite/journal/ (memory layer)
         # This is appropriate as the journal is part of the AI's memory system
@@ -59,10 +72,20 @@ class ReflectManager:
         # Ensure journal structure exists
         self._ensure_journal_exists()
     
+    def _validate_journal_path(self):
+        """Validate journal path is within project path."""
+        journal_path = self.journal_dir.resolve()
+        project_path = self.project_path.resolve()
+        try:
+            journal_path.relative_to(project_path)
+        except ValueError as exc:
+            raise ValueError(
+                f"Journal path {journal_path} is outside project path {project_path}"
+            ) from exc
+
     def _ensure_journal_exists(self):
         """Ensure journal directory and file exist."""
-        self.journal_root.mkdir(parents=True, exist_ok=True)
-        self.ai_journal_dir.mkdir(parents=True, exist_ok=True)
+        self.journal_dir.mkdir(parents=True, exist_ok=True)
         self.entries_dir.mkdir(parents=True, exist_ok=True)
         self.archive_dir.mkdir(parents=True, exist_ok=True)
         self.stats_dir.mkdir(parents=True, exist_ok=True)
@@ -204,6 +227,35 @@ class ReflectManager:
                 entries.append(entry)
 
         return entries
+
+    def _create_index(self):
+        """Create an index file for journal entries and archives."""
+        payload = {
+            "created_at": datetime.now().isoformat(),
+            "last_updated": datetime.now().isoformat(),
+            "ai_name": self.ai_name,
+            "journal_file": str(self.journal_file.relative_to(self.project_path)),
+            "entries": [],
+            "archives": [],
+        }
+        self.index_file.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    def _create_discovery_manifest(self):
+        """Create a discovery manifest for journal structure."""
+        payload = {
+            "created_at": datetime.now().isoformat(),
+            "ai_metadata": self.ai_metadata,
+            "paths": {
+                "journal_dir": str(self.journal_dir.relative_to(self.project_path)),
+                "journal_file": str(self.journal_file.relative_to(self.project_path)),
+                "entries_dir": str(self.entries_dir.relative_to(self.project_path)),
+                "archive_dir": str(self.archive_dir.relative_to(self.project_path)),
+                "stats_dir": str(self.stats_dir.relative_to(self.project_path)),
+                "chronicles_dir": str(self.chronicles_dir.relative_to(self.project_path)),
+                "index_file": str(self.index_file.relative_to(self.project_path)),
+            },
+        }
+        self.discovery_file.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
     def _create_initial_journal(self):
         """Create initial journal file with header."""
@@ -487,7 +539,7 @@ Entries are appended chronologically, providing a record of this AI's cognitive 
             "time": time_str,
             "prompts": prompts,
             "context": context,
-            "ai_metadata": ai_metadata,
+            "ai_metadata": self.ai_metadata,
             "sections": {},
         }
 
@@ -596,3 +648,105 @@ Entries are appended chronologically, providing a record of this AI's cognitive 
                 info["last_entry"] = last_match.group(1)
         
         return info
+
+    def search_entries(
+        self,
+        query: Optional[str] = None,
+        topic: Optional[str] = None,
+        date_from: Optional[str] = None,
+        date_to: Optional[str] = None,
+        limit: int = 10,
+    ) -> List[Dict[str, str]]:
+        """Search journal entries by query, topic, or date range."""
+        entries: List[Dict[str, str]] = []
+        query_lower = query.lower() if query else None
+        topic_lower = topic.lower() if topic else None
+        try:
+            start_date = datetime.strptime(date_from, "%Y-%m-%d").date() if date_from else None
+        except ValueError:
+            start_date = None
+        try:
+            end_date = datetime.strptime(date_to, "%Y-%m-%d").date() if date_to else None
+        except ValueError:
+            end_date = None
+
+        if self.entries_dir.exists():
+            for entry_file in sorted(self.entries_dir.glob("*.md"), reverse=True):
+                content = entry_file.read_text(encoding="utf-8")
+                match = re.search(
+                    r"^## Journal Entry: (\d{4}-\d{2}-\d{2}) (\d{2}:\d{2})",
+                    content,
+                    re.MULTILINE,
+                )
+                if match:
+                    date_str, time_str = match.group(1), match.group(2)
+                else:
+                    date_str, time_str = "Unknown", "Unknown"
+
+                entries.append(
+                    {"date": date_str, "time": time_str, "content": content}
+                )
+        elif self.journal_file.exists():
+            content = self.journal_file.read_text(encoding="utf-8")
+            pattern = r"^## Journal Entry: (\d{4}-\d{2}-\d{2} \d{2}:\d{2})"
+            matches = list(re.finditer(pattern, content, re.MULTILINE))
+            for i, match in enumerate(matches):
+                start_pos = match.start()
+                end_pos = matches[i + 1].start() if i + 1 < len(matches) else len(content)
+                entry_content = content[start_pos:end_pos].strip()
+                date_time = match.group(1).split(" ")
+                date_str = date_time[0] if date_time else "Unknown"
+                time_str = date_time[1] if len(date_time) > 1 else "Unknown"
+                entries.append(
+                    {"date": date_str, "time": time_str, "content": entry_content}
+                )
+
+        filtered = []
+        for entry in entries:
+            content = entry.get("content", "")
+            if query_lower and query_lower not in content.lower():
+                continue
+            if topic_lower and topic_lower not in content.lower():
+                continue
+            if start_date or end_date:
+                try:
+                    entry_date = datetime.strptime(entry.get("date", ""), "%Y-%m-%d").date()
+                except ValueError:
+                    entry_date = None
+                if start_date and entry_date and entry_date < start_date:
+                    continue
+                if end_date and entry_date and entry_date > end_date:
+                    continue
+            filtered.append(entry)
+
+        return filtered[:limit]
+
+    def cleanup_old_archives(self):
+        """Remove archive files older than retention policy."""
+        if not self.archive_dir.exists():
+            return
+
+        cutoff = datetime.now().timestamp() - (self.archive_retention_days * 86400)
+        removed = 0
+        for archive_file in self.archive_dir.glob("ai-journal-*.md"):
+            if archive_file.stat().st_mtime < cutoff:
+                archive_file.unlink()
+                removed += 1
+
+        if removed:
+            self.console.print(
+                f"[bold green]✅ Removed {removed} archives older than {self.archive_retention_days} days[/bold green]"
+            )
+
+    def display_statistics(self):
+        """Display journal statistics and analytics."""
+        info = self.get_journal_info()
+        archive_count = len(list(self.archive_dir.glob("ai-journal-*.md"))) if self.archive_dir.exists() else 0
+        journal_size = self.journal_file.stat().st_size if self.journal_file.exists() else 0
+
+        self.console.print("\n[bold cyan]📊 Journal Statistics[/bold cyan]\n")
+        self.console.print(f"  • Path: {info.get('path', 'unknown')}")
+        self.console.print(f"  • Entries: {info.get('entries_count', 0)}")
+        self.console.print(f"  • Archives: {archive_count}")
+        self.console.print(f"  • Last Entry: {info.get('last_entry') or 'None'}")
+        self.console.print(f"  • Size: {journal_size} bytes\n")

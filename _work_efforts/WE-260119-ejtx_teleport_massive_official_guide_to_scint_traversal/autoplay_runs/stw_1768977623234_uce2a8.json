@@ -1,0 +1,470 @@
+{
+  "run_id": "stw_1768977623234_uce2a8",
+  "started_at": "2026-01-21T06:40:23.235Z",
+  "ended_at": "2026-01-21T06:40:23.290Z",
+  "metrics": {
+    "turns": 18,
+    "rooms_cleared": 6,
+    "won": false,
+    "player_hp": -3
+  },
+  "actions": [
+    {
+      "turn": 1,
+      "action": "playCard",
+      "card": "Strike",
+      "target": "enemy0",
+      "energy_after": 2
+    },
+    {
+      "turn": 1,
+      "action": "playCard",
+      "card": "Defend",
+      "target": "player",
+      "energy_after": 1
+    },
+    {
+      "turn": 1,
+      "action": "playCard",
+      "card": "Strike",
+      "target": "enemy0",
+      "energy_after": 0
+    },
+    {
+      "turn": 2,
+      "action": "playCard",
+      "card": "Strike",
+      "target": "enemy0",
+      "energy_after": 2
+    },
+    {
+      "turn": 2,
+      "action": "playCard",
+      "card": "Defend",
+      "target": "player",
+      "energy_after": 1
+    },
+    {
+      "turn": 2,
+      "action": "playCard",
+      "card": "Strike",
+      "target": "enemy0",
+      "energy_after": 0
+    },
+    {
+      "turn": 3,
+      "action": "playCard",
+      "card": "Strike",
+      "target": "enemy0",
+      "energy_after": 2
+    },
+    {
+      "turn": 3,
+      "action": "playCard",
+      "card": "Bash",
+      "target": "enemy0",
+      "energy_after": 0
+    },
+    {
+      "turn": 4,
+      "action": "playCard",
+      "card": "Defend",
+      "target": "player",
+      "energy_after": 2
+    },
+    {
+      "turn": 4,
+      "action": "playCard",
+      "card": "Strike",
+      "target": "enemy0",
+      "energy_after": 1
+    },
+    {
+      "turn": 4,
+      "action": "playCard",
+      "card": "Defend",
+      "target": "player",
+      "energy_after": 0
+    },
+    {
+      "turn": 6,
+      "action": "playCard",
+      "card": "Defend",
+      "target": "player",
+      "energy_after": 2
+    },
+    {
+      "turn": 6,
+      "action": "playCard",
+      "card": "Strike",
+      "target": "enemy0",
+      "energy_after": 1
+    },
+    {
+      "turn": 6,
+      "action": "playCard",
+      "card": "Defend",
+      "target": "player",
+      "energy_after": 0
+    },
+    {
+      "turn": 7,
+      "action": "playCard",
+      "card": "Strike",
+      "target": "enemy0",
+      "energy_after": 2
+    },
+    {
+      "turn": 7,
+      "action": "playCard",
+      "card": "Bash",
+      "target": "enemy0",
+      "energy_after": 0
+    },
+    {
+      "turn": 8,
+      "action": "playCard",
+      "card": "Defend",
+      "target": "player",
+      "energy_after": 2
+    },
+    {
+      "turn": 8,
+      "action": "playCard",
+      "card": "Bash",
+      "target": "enemy1",
+      "energy_after": 0
+    },
+    {
+      "turn": 9,
+      "action": "playCard",
+      "card": "Strike",
+      "target": "enemy1",
+      "energy_after": 2
+    },
+    {
+      "turn": 9,
+      "action": "playCard",
+      "card": "Defend",
+      "target": "player",
+      "energy_after": 1
+    },
+    {
+      "turn": 9,
+      "action": "playCard",
+      "card": "Defend",
+      "target": "player",
+      "energy_after": 0
+    },
+    {
+      "turn": 10,
+      "action": "playCard",
+      "card": "Defend",
+      "target": "player",
+      "energy_after": 2
+    },
+    {
+      "turn": 10,
+      "action": "playCard",
+      "card": "Defend",
+      "target": "player",
+      "energy_after": 1
+    },
+    {
+      "turn": 10,
+      "action": "playCard",
+      "card": "Strike",
+      "target": "enemy1",
+      "energy_after": 0
+    },
+    {
+      "turn": 11,
+      "action": "playCard",
+      "card": "Strike",
+      "target": "enemy1",
+      "energy_after": 2
+    },
+    {
+      "turn": 11,
+      "action": "playCard",
+      "card": "Defend",
+      "target": "player",
+      "energy_after": 1
+    },
+    {
+      "turn": 11,
+      "action": "playCard",
+      "card": "Strike",
+      "target": "enemy1",
+      "energy_after": 0
+    },
+    {
+      "turn": 12,
+      "action": "playCard",
+      "card": "Strike",
+      "target": "enemy0",
+      "energy_after": 2
+    },
+    {
+      "turn": 12,
+      "action": "playCard",
+      "card": "Bash",
+      "target": "enemy0",
+      "energy_after": 0
+    },
+    {
+      "turn": 13,
+      "action": "playCard",
+      "card": "Defend",
+      "target": "player",
+      "energy_after": 2
+    },
+    {
+      "turn": 13,
+      "action": "playCard",
+      "card": "Defend",
+      "target": "player",
+      "energy_after": 1
+    },
+    {
+      "turn": 13,
+      "action": "playCard",
+      "card": "Strike",
+      "target": "enemy1",
+      "energy_after": 0
+    },
+    {
+      "turn": 14,
+      "action": "playCard",
+      "card": "Strike",
+      "target": "enemy1",
+      "energy_after": 2
+    },
+    {
+      "turn": 14,
+      "action": "playCard",
+      "card": "Defend",
+      "target": "player",
+      "energy_after": 1
+    },
+    {
+      "turn": 14,
+      "action": "playCard",
+      "card": "Defend",
+      "target": "player",
+      "energy_after": 0
+    },
+    {
+      "turn": 15,
+      "action": "playCard",
+      "card": "Strike",
+      "target": "enemy1",
+      "energy_after": 2
+    },
+    {
+      "turn": 15,
+      "action": "playCard",
+      "card": "Bash",
+      "target": "enemy1",
+      "energy_after": 0
+    },
+    {
+      "turn": 16,
+      "action": "playCard",
+      "card": "Defend",
+      "target": "player",
+      "energy_after": 2
+    },
+    {
+      "turn": 16,
+      "action": "playCard",
+      "card": "Bash",
+      "target": "enemy1",
+      "energy_after": 0
+    },
+    {
+      "turn": 17,
+      "action": "playCard",
+      "card": "Bash",
+      "target": "enemy0",
+      "energy_after": 1
+    },
+    {
+      "turn": 17,
+      "action": "playCard",
+      "card": "Defend",
+      "target": "player",
+      "energy_after": 0
+    },
+    {
+      "turn": 18,
+      "action": "playCard",
+      "card": "Strike",
+      "target": "enemy0",
+      "energy_after": 2
+    },
+    {
+      "turn": 18,
+      "action": "playCard",
+      "card": "Strike",
+      "target": "enemy0",
+      "energy_after": 1
+    },
+    {
+      "turn": 18,
+      "action": "playCard",
+      "card": "Defend",
+      "target": "player",
+      "energy_after": 0
+    },
+    {
+      "turn": 19,
+      "action": "playCard",
+      "card": "Strike",
+      "target": "enemy0",
+      "energy_after": 2
+    },
+    {
+      "turn": 19,
+      "action": "playCard",
+      "card": "Strike",
+      "target": "enemy0",
+      "energy_after": 1
+    },
+    {
+      "turn": 19,
+      "action": "playCard",
+      "card": "Defend",
+      "target": "player",
+      "energy_after": 0
+    }
+  ],
+  "turns": [
+    {
+      "turn": 1,
+      "player_hp": 72,
+      "energy": 3,
+      "hand_size": 5,
+      "room_type": "monster"
+    },
+    {
+      "turn": 2,
+      "player_hp": 72,
+      "energy": 3,
+      "hand_size": 5,
+      "room_type": "monster"
+    },
+    {
+      "turn": 3,
+      "player_hp": 57,
+      "energy": 3,
+      "hand_size": 5,
+      "room_type": "monster"
+    },
+    {
+      "turn": 4,
+      "player_hp": 57,
+      "energy": 3,
+      "hand_size": 5,
+      "room_type": "monster"
+    },
+    {
+      "turn": 6,
+      "player_hp": 51,
+      "energy": 3,
+      "hand_size": 5,
+      "room_type": "monster"
+    },
+    {
+      "turn": 7,
+      "player_hp": 41,
+      "energy": 3,
+      "hand_size": 5,
+      "room_type": "monster"
+    },
+    {
+      "turn": 8,
+      "player_hp": 41,
+      "energy": 3,
+      "hand_size": 5,
+      "room_type": "monster"
+    },
+    {
+      "turn": 9,
+      "player_hp": 41,
+      "energy": 3,
+      "hand_size": 5,
+      "room_type": "monster"
+    },
+    {
+      "turn": 10,
+      "player_hp": 41,
+      "energy": 3,
+      "hand_size": 5,
+      "room_type": "monster"
+    },
+    {
+      "turn": 11,
+      "player_hp": 41,
+      "energy": 3,
+      "hand_size": 5,
+      "room_type": "monster"
+    },
+    {
+      "turn": 12,
+      "player_hp": 30,
+      "energy": 3,
+      "hand_size": 5,
+      "room_type": "monster"
+    },
+    {
+      "turn": 13,
+      "player_hp": 30,
+      "energy": 3,
+      "hand_size": 5,
+      "room_type": "monster"
+    },
+    {
+      "turn": 14,
+      "player_hp": 30,
+      "energy": 3,
+      "hand_size": 5,
+      "room_type": "monster"
+    },
+    {
+      "turn": 15,
+      "player_hp": 22,
+      "energy": 3,
+      "hand_size": 5,
+      "room_type": "monster"
+    },
+    {
+      "turn": 16,
+      "player_hp": 22,
+      "energy": 3,
+      "hand_size": 5,
+      "room_type": "monster"
+    },
+    {
+      "turn": 17,
+      "player_hp": 22,
+      "energy": 3,
+      "hand_size": 5,
+      "room_type": "monster"
+    },
+    {
+      "turn": 18,
+      "player_hp": 2,
+      "energy": 3,
+      "hand_size": 5,
+      "room_type": "monster"
+    },
+    {
+      "turn": 19,
+      "player_hp": -3,
+      "energy": 0,
+      "hand_size": 0,
+      "room_type": "monster"
+    }
+  ]
+}

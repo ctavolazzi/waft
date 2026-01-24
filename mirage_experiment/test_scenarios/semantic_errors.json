@@ -1,0 +1,12 @@
+{
+  "scenario_type": "semantic_error",
+  "bugs": [
+    {
+      "name": "wrong_variable",
+      "description": "Wrong variable name",
+      "severity": "medium",
+      "expected_detection": true,
+      "expected_fix": false
+    }
+  ]
+}

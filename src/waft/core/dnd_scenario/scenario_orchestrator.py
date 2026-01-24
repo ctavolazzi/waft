@@ -4,6 +4,8 @@ Scenario Orchestrator - Main scenario execution engine.
 Routes to different scenario modes and manages scenario flow.
 """
 
+import json
+import os
 import random
 from datetime import datetime
 from typing import Any
@@ -44,6 +46,7 @@ class ScenarioOrchestrator:
         self.party_manager = PartyManager(scenario_realm)
         self.encounter_generator = EncounterGenerator(scenario_realm)
         self.lore_builder = LoreBuilder(scenario_realm)
+        self.scenario_history_file = scenario_realm.realm_path / "scenario_history.json"
 
         # Rate limiting (simple in-memory for now)
         self._crystallization_count = 0
@@ -79,15 +82,18 @@ class ScenarioOrchestrator:
 
         # Route to appropriate mode
         if mode == "encounter":
-            return self._run_encounter_scenario(experiment_id, iteration)
+            result = self._run_encounter_scenario(experiment_id, iteration)
         elif mode == "explore":
-            return self._run_exploration_scenario(experiment_id, iteration)
+            result = self._run_exploration_scenario(experiment_id, iteration)
         elif mode == "lore":
-            return self._run_lore_scenario(experiment_id, iteration)
+            result = self._run_lore_scenario(experiment_id, iteration)
         elif mode == "resume":
-            return self._run_resume_scenario()
+            result = self._run_resume_scenario()
         else:
             raise ValueError(f"Unknown scenario mode: {mode}")
+
+        self._append_scenario_history(result)
+        return result
 
     def _run_encounter_scenario(
         self, experiment_id: str | None, iteration: int | None
@@ -278,3 +284,25 @@ class ScenarioOrchestrator:
     def get_party_state(self) -> dict[str, Any] | None:
         """Get current party state."""
         return self.party_state_manager.load_party_state()
+
+    def _append_scenario_history(self, entry: dict[str, Any]) -> None:
+        """Append a scenario result to scenario history."""
+        history: list[dict[str, Any]] = []
+
+        if self.scenario_history_file.exists():
+            try:
+                history_data = json.loads(self.scenario_history_file.read_text())
+                if isinstance(history_data, dict) and "scenarios" in history_data:
+                    history = history_data["scenarios"]
+                elif isinstance(history_data, list):
+                    history = history_data
+            except Exception:
+                history = []
+
+        history.append(entry)
+
+        if not self.realm.validate_path(self.scenario_history_file):
+            raise ValueError("Scenario history path validation failed")
+
+        self.scenario_history_file.write_text(json.dumps(history, indent=2))
+        os.chmod(self.scenario_history_file, 0o600)

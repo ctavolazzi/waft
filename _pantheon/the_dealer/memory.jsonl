@@ -1,0 +1,17 @@
+{"timestamp": "2026-01-20T12:31:35.253778", "gate_number": 1, "system_card": "King of Diamonds", "dealer_card": "King of Diamonds", "won": true, "key_fragment": "SEAL-01-08FA9A3F459116F2"}
+{"timestamp": "2026-01-20T12:31:48.269439", "gate_number": 2, "system_card": "King of Diamonds", "dealer_card": "King of Diamonds", "won": true, "key_fragment": "SEAL-02-22E0A490F5B6D07D"}
+{"timestamp": "2026-01-20T12:31:51.922061", "gate_number": 3, "system_card": "King of Diamonds", "dealer_card": "King of Diamonds", "won": true, "key_fragment": "SEAL-03-C25DDA887F11FADB"}
+{"timestamp": "2026-01-20T12:31:55.420813", "gate_number": 4, "system_card": "King of Diamonds", "dealer_card": "King of Diamonds", "won": true, "key_fragment": "SEAL-04-A7C5E48BE47CC789"}
+{"timestamp": "2026-01-20T12:31:58.681472", "gate_number": 5, "system_card": "King of Diamonds", "dealer_card": "King of Diamonds", "won": false, "key_fragment": null}
+{"timestamp": "2026-01-20T12:32:01.914943", "gate_number": 5, "system_card": "King of Diamonds", "dealer_card": "King of Diamonds", "won": false, "key_fragment": null}
+{"timestamp": "2026-01-20T12:32:05.144836", "gate_number": 5, "system_card": "King of Diamonds", "dealer_card": "King of Diamonds", "won": false, "key_fragment": null}
+{"timestamp": "2026-01-20T12:32:08.387771", "gate_number": 5, "system_card": "King of Diamonds", "dealer_card": "King of Diamonds", "won": false, "key_fragment": null}
+{"timestamp": "2026-01-20T12:32:11.619173", "gate_number": 5, "system_card": "King of Diamonds", "dealer_card": "King of Diamonds", "won": false, "key_fragment": null}
+{"timestamp": "2026-01-20T12:32:14.850343", "gate_number": 5, "system_card": "King of Diamonds", "dealer_card": "King of Diamonds", "won": false, "key_fragment": null}
+{"timestamp": "2026-01-20T12:32:18.101288", "gate_number": 5, "system_card": "King of Diamonds", "dealer_card": "King of Diamonds", "won": false, "key_fragment": null}
+{"timestamp": "2026-01-20T12:32:21.331431", "gate_number": 5, "system_card": "King of Diamonds", "dealer_card": "King of Diamonds", "won": false, "key_fragment": null}
+{"timestamp": "2026-01-20T12:32:24.556866", "gate_number": 5, "system_card": "King of Diamonds", "dealer_card": "King of Diamonds", "won": false, "key_fragment": null}
+{"timestamp": "2026-01-20T12:32:27.803624", "gate_number": 5, "system_card": "King of Diamonds", "dealer_card": "King of Diamonds", "won": false, "key_fragment": null}
+{"timestamp": "2026-01-20T12:32:31.042462", "gate_number": 5, "system_card": "King of Diamonds", "dealer_card": "King of Diamonds", "won": false, "key_fragment": null}
+{"timestamp": "2026-01-20T12:32:34.289883", "gate_number": 5, "system_card": "King of Diamonds", "dealer_card": "King of Diamonds", "won": false, "key_fragment": null}
+{"timestamp": "2026-01-20T12:47:05.807919", "gate_number": 5, "system_card": "King of Diamonds", "dealer_card": "King of Diamonds", "won": false, "key_fragment": null}

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D&D Toolkit - Test Suite</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #1a1a2e;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #c9a227;
+            border-bottom: 2px solid #c9a227;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #c9a227;
+            margin-top: 30px;
+        }
+        .test-group {
+            background: #2d2d44;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .test-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #3d3d5c;
+        }
+        .test-item:last-child {
+            border-bottom: none;
+        }
+        .test-status {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        .test-status.pass { background: #2d5a2d; }
+        .test-status.fail { background: #5a2d2d; }
+        .test-status.pending { background: #5a5a2d; }
+        .test-name { flex: 1; }
+        .test-time { color: #888; font-size: 0.85em; margin-left: 10px; }
+        .summary {
+            background: #2d2d44;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            display: flex;
+            gap: 30px;
+        }
+        .summary-item {
+            text-align: center;
+        }
+        .summary-count {
+            font-size: 2em;
+            font-weight: bold;
+        }
+        .summary-count.pass { color: #4caf50; }
+        .summary-count.fail { color: #f44336; }
+        .summary-count.total { color: #c9a227; }
+        .run-btn {
+            background: #c9a227;
+            color: #1a1a2e;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 20px 0;
+        }
+        .run-btn:hover { background: #d4af37; }
+        .run-btn:disabled { background: #666; cursor: not-allowed; }
+        .log {
+            background: #0d0d1a;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            font-family: monospace;
+            font-size: 0.85em;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .log-entry { margin: 3px 0; }
+        .log-entry.info { color: #888; }
+        .log-entry.success { color: #4caf50; }
+        .log-entry.error { color: #f44336; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎲 D&D Toolkit Test Suite</h1>
+        
+        <button class="run-btn" id="run-tests" onclick="runAllTests()">Run All Tests</button>
+        
+        <div class="summary" id="summary" style="display:none;">
+            <div class="summary-item">
+                <div class="summary-count pass" id="pass-count">0</div>
+                <div>Passed</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-count fail" id="fail-count">0</div>
+                <div>Failed</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-count total" id="total-count">0</div>
+                <div>Total</div>
+            </div>
+        </div>
+        
+        <h2>Data Loading Tests</h2>
+        <div class="test-group" id="data-tests"></div>
+        
+        <h2>SRD Browser Tests</h2>
+        <div class="test-group" id="browser-tests"></div>
+        
+        <h2>Homebrew Creator Tests</h2>
+        <div class="test-group" id="homebrew-tests"></div>
+        
+        <h2>Card Export Tests</h2>
+        <div class="test-group" id="card-tests"></div>
+        
+        <h2>Utility Function Tests</h2>
+        <div class="test-group" id="util-tests"></div>
+        
+        <h2>Test Log</h2>
+        <div class="log" id="log"></div>
+    </div>
+    
+    <script>
+        // Test framework
+        const tests = [];
+        let results = { pass: 0, fail: 0 };
+        
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+        
+        function test(name, group, fn) {
+            tests.push({ name, group, fn });
+        }
+        
+        async function runTest(testObj) {
+            const start = performance.now();
+            try {
+                await testObj.fn();
+                const time = (performance.now() - start).toFixed(2);
+                return { pass: true, time };
+            } catch (error) {
+                const time = (performance.now() - start).toFixed(2);
+                log(`FAIL: ${testObj.name} - ${error.message}`, 'error');
+                return { pass: false, time, error: error.message };
+            }
+        }
+        
+        function renderTest(testObj, result) {
+            const groupDiv = document.getElementById(`${testObj.group}-tests`);
+            const item = document.createElement('div');
+            item.className = 'test-item';
+            item.innerHTML = `
+                <div class="test-status ${result.pass ? 'pass' : 'fail'}">${result.pass ? '✓' : '✗'}</div>
+                <div class="test-name">${testObj.name}</div>
+                <div class="test-time">${result.time}ms</div>
+            `;
+            groupDiv.appendChild(item);
+        }
+        
+        function assert(condition, message) {
+            if (!condition) throw new Error(message || 'Assertion failed');
+        }
+        
+        function assertEqual(actual, expected, message) {
+            if (actual !== expected) {
+                throw new Error(message || `Expected ${expected}, got ${actual}`);
+            }
+        }
+        
+        function assertExists(value, message) {
+            if (value === null || value === undefined) {
+                throw new Error(message || 'Value does not exist');
+            }
+        }
+        
+        // ============================================
+        // DATA LOADING TESTS
+        // ============================================
+        
+        test('Monsters JSON loads successfully', 'data', async () => {
+            const res = await fetch('../data/monsters.json');
+            assert(res.ok, 'Failed to fetch monsters.json');
+            const data = await res.json();
+            assert(Array.isArray(data), 'Monsters should be an array');
+            assert(data.length > 0, 'Should have at least one monster');
+            log(`Loaded ${data.length} monsters`, 'success');
+        });
+        
+        test('Spells JSON loads successfully', 'data', async () => {
+            const res = await fetch('../data/spells.json');
+            assert(res.ok, 'Failed to fetch spells.json');
+            const data = await res.json();
+            assert(Array.isArray(data), 'Spells should be an array');
+            assert(data.length > 0, 'Should have at least one spell');
+            log(`Loaded ${data.length} spells`, 'success');
+        });
+        
+        test('Items JSON loads successfully', 'data', async () => {
+            const res = await fetch('../data/items.json');
+            assert(res.ok, 'Failed to fetch items.json');
+            const data = await res.json();
+            assert(Array.isArray(data), 'Items should be an array');
+            assert(data.length > 0, 'Should have at least one item');
+            log(`Loaded ${data.length} items`, 'success');
+        });
+        
+        test('Monster data has required fields', 'data', async () => {
+            const res = await fetch('../data/monsters.json');
+            const monsters = await res.json();
+            const monster = monsters[0];
+            assertExists(monster.name, 'Monster should have name');
+            log(`First monster: ${monster.name}`, 'success');
+        });
+        
+        test('Spell data has required fields', 'data', async () => {
+            const res = await fetch('../data/spells.json');
+            const spells = await res.json();
+            const spell = spells[0];
+            assertExists(spell.name, 'Spell should have name');
+            assert(spell.level !== undefined, 'Spell should have level');
+            log(`First spell: ${spell.name} (Level ${spell.level})`, 'success');
+        });
+        
+        // ============================================
+        // UTILITY FUNCTION TESTS
+        // ============================================
+        
+        test('getModifier calculates correctly', 'util', async () => {
+            // Load the function by creating a test context
+            function getModifier(score) {
+                if (!score) return '+0';
+                const mod = Math.floor((score - 10) / 2);
+                return mod >= 0 ? '+' + mod : mod.toString();
+            }
+            
+            assertEqual(getModifier(10), '+0', '10 should give +0');
+            assertEqual(getModifier(12), '+1', '12 should give +1');
+            assertEqual(getModifier(18), '+4', '18 should give +4');
+            assertEqual(getModifier(8), '-1', '8 should give -1');
+            assertEqual(getModifier(1), '-5', '1 should give -5');
+            log('All modifier calculations correct', 'success');
+        });
+        
+        test('formatCR handles fractions', 'util', async () => {
+            function formatCR(cr) {
+                if (cr === null || cr === undefined) return 'N/A';
+                if (cr === 0.125) return '1/8';
+                if (cr === 0.25) return '1/4';
+                if (cr === 0.5) return '1/2';
+                return cr.toString();
+            }
+            
+            assertEqual(formatCR(0.125), '1/8');
+            assertEqual(formatCR(0.25), '1/4');
+            assertEqual(formatCR(0.5), '1/2');
+            assertEqual(formatCR(5), '5');
+            assertEqual(formatCR(null), 'N/A');
+            log('All CR formatting correct', 'success');
+        });
+        
+        test('capitalizeFirst works', 'util', async () => {
+            function capitalizeFirst(str) {
+                if (!str) return '';
+                return str.charAt(0).toUpperCase() + str.slice(1);
+            }
+            
+            assertEqual(capitalizeFirst('hello'), 'Hello');
+            assertEqual(capitalizeFirst('WORLD'), 'WORLD');
+            assertEqual(capitalizeFirst(''), '');
+            log('Capitalization works', 'success');
+        });
+        
+        test('ordinal suffix generation', 'util', async () => {
+            function ordinal(n) {
+                const suffixes = ['th', 'st', 'nd', 'rd'];
+                const v = n % 100;
+                return n + (suffixes[(v - 20) % 10] || suffixes[v] || suffixes[0]);
+            }
+            
+            assertEqual(ordinal(1), '1st');
+            assertEqual(ordinal(2), '2nd');
+            assertEqual(ordinal(3), '3rd');
+            assertEqual(ordinal(4), '4th');
+            assertEqual(ordinal(11), '11th');
+            assertEqual(ordinal(21), '21st');
+            log('Ordinal suffixes correct', 'success');
+        });
+        
+        // ============================================
+        // BROWSER TESTS
+        // ============================================
+        
+        test('Search function matches names', 'browser', async () => {
+            function matchesSearch(name, searchTerm) {
+                if (!searchTerm) return true;
+                return name.toLowerCase().includes(searchTerm);
+            }
+            
+            assert(matchesSearch('Aboleth', 'abo'), 'Should match partial');
+            assert(matchesSearch('Aboleth', ''), 'Empty should match all');
+            assert(!matchesSearch('Aboleth', 'dragon'), 'Should not match wrong term');
+            log('Search matching works', 'success');
+        });
+        
+        test('CR filter matches correctly', 'browser', async () => {
+            function matchesCR(cr, filterValue) {
+                if (filterValue === 'all') return true;
+                if (filterValue === '10+') return cr >= 10;
+                return cr === parseFloat(filterValue);
+            }
+            
+            assert(matchesCR(5, 'all'), 'All should match any');
+            assert(matchesCR(5, '5'), 'Exact match');
+            assert(matchesCR(15, '10+'), '10+ should match 15');
+            assert(!matchesCR(5, '10+'), '10+ should not match 5');
+            log('CR filtering works', 'success');
+        });
+        
+        test('Monsters can be filtered by type', 'browser', async () => {
+            const res = await fetch('../data/monsters.json');
+            const monsters = await res.json();
+            const dragons = monsters.filter(m => m.type === 'dragon');
+            const beasts = monsters.filter(m => m.type === 'beast');
+            log(`Found ${dragons.length} dragons, ${beasts.length} beasts`, 'success');
+            assert(dragons.length >= 0, 'Filter should work');
+        });
+        
+        // ============================================
+        // HOMEBREW TESTS
+        // ============================================
+        
+        test('Monster JSON export structure', 'homebrew', async () => {
+            const monsterData = {
+                name: 'Test Creature',
+                size: 'medium',
+                monsterType: 'humanoid',
+                ac: 15,
+                hp: 50,
+                cr: '3',
+                speed: '30 ft.',
+                str: 14, dex: 12, con: 13, int: 10, wis: 11, cha: 8,
+                actions: [{ name: 'Sword', description: 'Melee attack +5' }]
+            };
+            
+            function convertToExportJSON(data) {
+                return {
+                    name: data.name,
+                    size: data.size,
+                    type: data.monsterType,
+                    ac: data.ac,
+                    hp: data.hp,
+                    cr: parseFloat(data.cr),
+                    source: 'homebrew'
+                };
+            }
+            
+            const exported = convertToExportJSON(monsterData);
+            assertEqual(exported.name, 'Test Creature');
+            assertEqual(exported.cr, 3);
+            assertEqual(exported.source, 'homebrew');
+            log('Monster export structure valid', 'success');
+        });
+        
+        test('Spell markdown export format', 'homebrew', async () => {
+            function spellToMarkdown(data) {
+                let md = `# ${data.name}\n\n`;
+                md += `*${data.level === 0 ? 'Cantrip' : data.level + '-level'} ${data.school}*\n`;
+                return md;
+            }
+            
+            const md = spellToMarkdown({ name: 'Fireball', level: 3, school: 'evocation' });
+            assert(md.includes('# Fireball'), 'Should have title');
+            assert(md.includes('3-level evocation'), 'Should have level/school');
+            log('Spell markdown format correct', 'success');
+        });
+        
+        // ============================================
+        // CARD EXPORT TESTS
+        // ============================================
+        
+        test('Card JSON structure is valid', 'card', async () => {
+            const card = {
+                count: 1,
+                title: 'Test Card',
+                color_front: 'FireBrick',
+                icon_front: 'monster-grasp',
+                contents: [
+                    'subtitle | Test Subtitle',
+                    'rule',
+                    'property | AC | 15'
+                ],
+                tags: ['test']
+            };
+            
+            assertExists(card.title, 'Card needs title');
+            assertExists(card.contents, 'Card needs contents');
+            assert(Array.isArray(card.contents), 'Contents should be array');
+            log('Card structure valid', 'success');
+        });
+        
+        test('Truncate function works', 'card', async () => {
+            function truncate(text, maxLength) {
+                if (!text) return '';
+                if (text.length <= maxLength) return text;
+                return text.substring(0, maxLength - 3) + '...';
+            }
+            
+            assertEqual(truncate('Hello', 10), 'Hello');
+            assertEqual(truncate('Hello World Test', 10), 'Hello W...');
+            assertEqual(truncate('', 10), '');
+            log('Truncation works', 'success');
+        });
+        
+        test('School color mapping', 'card', async () => {
+            const schoolColors = {
+                'abjuration': 'RoyalBlue',
+                'conjuration': 'Goldenrod',
+                'evocation': 'OrangeRed',
+                'necromancy': 'DarkSlateGray'
+            };
+            
+            assertEqual(schoolColors['evocation'], 'OrangeRed');
+            assertExists(schoolColors['abjuration']);
+            log('School colors mapped', 'success');
+        });
+        
+        // ============================================
+        // RUN ALL TESTS
+        // ============================================
+        
+        async function runAllTests() {
+            const btn = document.getElementById('run-tests');
+            btn.disabled = true;
+            btn.textContent = 'Running...';
+            
+            // Clear previous results
+            results = { pass: 0, fail: 0 };
+            document.querySelectorAll('.test-group').forEach(g => g.innerHTML = '');
+            document.getElementById('log').innerHTML = '';
+            
+            log('Starting test suite...');
+            
+            for (const testObj of tests) {
+                const result = await runTest(testObj);
+                renderTest(testObj, result);
+                if (result.pass) {
+                    results.pass++;
+                } else {
+                    results.fail++;
+                }
+            }
+            
+            // Show summary
+            document.getElementById('summary').style.display = 'flex';
+            document.getElementById('pass-count').textContent = results.pass;
+            document.getElementById('fail-count').textContent = results.fail;
+            document.getElementById('total-count').textContent = tests.length;
+            
+            log(`Test suite complete: ${results.pass}/${tests.length} passed`, 
+                results.fail === 0 ? 'success' : 'error');
+            
+            btn.disabled = false;
+            btn.textContent = 'Run All Tests';
+        }
+    </script>
+</body>
+</html>

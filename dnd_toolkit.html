@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D&D 5e Toolkit - WAFT</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #e0e0e0;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 {
+            text-align: center;
+            color: #ffd700;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+        }
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .tab {
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #fff;
+        }
+        .tab:hover { background: rgba(255,255,255,0.2); }
+        .tab.active {
+            background: linear-gradient(135deg, #e94560, #c23a5a);
+            border-color: #e94560;
+        }
+        .panel {
+            display: none;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .panel.active { display: block; }
+        .panel h2 {
+            color: #ffd700;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        .form-group { margin-bottom: 20px; }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #aaa;
+            font-size: 0.9em;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 1em;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #e94560;
+        }
+        button {
+            padding: 14px 28px;
+            background: linear-gradient(135deg, #e94560, #c23a5a);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1em;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(233, 69, 96, 0.4);
+        }
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            border-left: 4px solid #ffd700;
+        }
+        .result h3 {
+            color: #ffd700;
+            margin-bottom: 15px;
+        }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .stat-box {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .stat-box .value {
+            font-size: 1.8em;
+            color: #ffd700;
+            font-weight: bold;
+        }
+        .stat-box .label { color: #888; font-size: 0.85em; margin-top: 5px; }
+        .difficulty-trivial { color: #6aa84f; }
+        .difficulty-easy { color: #93c47d; }
+        .difficulty-medium { color: #ffd700; }
+        .difficulty-hard { color: #e69138; }
+        .difficulty-deadly { color: #e94560; }
+        .monster-card {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .monster-card h4 { color: #ffd700; margin-bottom: 8px; }
+        .monster-stats { display: flex; gap: 15px; flex-wrap: wrap; font-size: 0.9em; }
+        .monster-stats span { color: #aaa; }
+        .tavern-section { margin-bottom: 20px; }
+        .tavern-section h4 { color: #e94560; margin-bottom: 10px; }
+        .menu-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .rumor { padding: 10px; background: rgba(255,255,255,0.03); margin-bottom: 8px; border-radius: 4px; font-style: italic; }
+        .encounter-monster { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: rgba(255,255,255,0.05); margin-bottom: 5px; border-radius: 4px; }
+        .remove-btn { background: #c23a5a; padding: 5px 10px; font-size: 0.8em; }
+        .add-section { display: flex; gap: 10px; margin-top: 15px; }
+        .add-section input { flex: 1; }
+        #monsterSearch { margin-bottom: 15px; }
+        .search-results { max-height: 300px; overflow-y: auto; }
+        .search-result { padding: 10px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .search-result:hover { background: rgba(255,255,255,0.1); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>D&D 5e Toolkit</h1>
+        <p class="subtitle">Extracted from Dungeoneer VTT - Powered by WAFT</p>
+
+        <div class="tabs">
+            <div class="tab active" data-panel="encounter">Encounter Builder</div>
+            <div class="tab" data-panel="cr-calc">CR Calculator</div>
+            <div class="tab" data-panel="monsters">Monster Lookup</div>
+            <div class="tab" data-panel="tavern">Tavern Generator</div>
+        </div>
+
+        <!-- ENCOUNTER BUILDER -->
+        <div id="encounter" class="panel active">
+            <h2>Encounter Difficulty Calculator</h2>
+            <div class="form-group">
+                <label>Party Levels (comma-separated)</label>
+                <input type="text" id="partyLevels" value="5, 5, 5, 5" placeholder="e.g. 5, 5, 4, 4">
+            </div>
+
+            <h3 style="color: #e94560; margin: 20px 0 15px;">Monsters in Encounter</h3>
+            <div id="encounterMonsters"></div>
+
+            <div class="add-section">
+                <input type="text" id="addMonsterCR" placeholder="CR (e.g. 3, 1/2, 1/4)">
+                <button onclick="addMonsterToEncounter()">Add Monster</button>
+                <button onclick="clearEncounter()" style="background: #555;">Clear All</button>
+            </div>
+
+            <button onclick="calculateEncounter()" style="margin-top: 20px; width: 100%;">Calculate Difficulty</button>
+
+            <div id="encounterResult" class="result" style="display: none;"></div>
+        </div>
+
+        <!-- CR CALCULATOR -->
+        <div id="cr-calc" class="panel">
+            <h2>Challenge Rating Calculator</h2>
+            <p style="color: #888; margin-bottom: 20px;">Calculate CR from monster stats using the DMG method.</p>
+
+            <div class="grid">
+                <div class="form-group">
+                    <label>Hit Points</label>
+                    <input type="number" id="crHP" placeholder="e.g. 135">
+                </div>
+                <div class="form-group">
+                    <label>Armor Class</label>
+                    <input type="number" id="crAC" placeholder="e.g. 17">
+                </div>
+                <div class="form-group">
+                    <label>Damage Per Round</label>
+                    <input type="number" id="crDamage" placeholder="e.g. 45">
+                </div>
+                <div class="form-group">
+                    <label>Attack Bonus</label>
+                    <input type="number" id="crAttack" placeholder="e.g. 9">
+                </div>
+                <div class="form-group">
+                    <label>Save DC (optional)</label>
+                    <input type="number" id="crSaveDC" placeholder="e.g. 16">
+                </div>
+            </div>
+
+            <button onclick="calculateCR()">Calculate CR</button>
+
+            <div id="crResult" class="result" style="display: none;"></div>
+        </div>
+
+        <!-- MONSTER LOOKUP -->
+        <div id="monsters" class="panel">
+            <h2>Monster Lookup</h2>
+            <div class="form-group">
+                <label>Search by name or type</label>
+                <input type="text" id="monsterSearch" placeholder="e.g. dragon, goblin, undead..." oninput="searchMonsters()">
+            </div>
+            <div class="form-group">
+                <label>Or get a random monster by CR</label>
+                <div style="display: flex; gap: 10px;">
+                    <select id="randomCR">
+                        <option value="">Any CR</option>
+                        <option value="0">CR 0</option>
+                        <option value="1/8">CR 1/8</option>
+                        <option value="1/4">CR 1/4</option>
+                        <option value="1/2">CR 1/2</option>
+                        <option value="1">CR 1</option>
+                        <option value="2">CR 2</option>
+                        <option value="3">CR 3</option>
+                        <option value="4">CR 4</option>
+                        <option value="5">CR 5</option>
+                        <option value="6">CR 6</option>
+                        <option value="7">CR 7</option>
+                        <option value="8">CR 8</option>
+                        <option value="9">CR 9</option>
+                        <option value="10">CR 10</option>
+                    </select>
+                    <button onclick="randomMonster()">Random Monster</button>
+                </div>
+            </div>
+            <div id="monsterResults" class="search-results"></div>
+        </div>
+
+        <!-- TAVERN GENERATOR -->
+        <div id="tavern" class="panel">
+            <h2>Tavern Generator</h2>
+            <div class="form-group">
+                <label>Wealth Level</label>
+                <select id="tavernWealth">
+                    <option value="poor">Poor</option>
+                    <option value="modest" selected>Modest</option>
+                    <option value="wealthy">Wealthy</option>
+                </select>
+            </div>
+            <button onclick="generateTavern()">Generate Tavern</button>
+            <div id="tavernResult" class="result" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        // CR Table data
+        const CR_TABLE = [
+            {cr: "0", xp: 10, minHp: 1, maxHp: 6, prof: 2, ac: 13, minDmg: 0, maxDmg: 1, saveDc: 13, attack: 3},
+            {cr: "1/8", xp: 25, minHp: 7, maxHp: 35, prof: 2, ac: 13, minDmg: 2, maxDmg: 3, saveDc: 13, attack: 3},
+            {cr: "1/4", xp: 50, minHp: 36, maxHp: 49, prof: 2, ac: 13, minDmg: 4, maxDmg: 5, saveDc: 13, attack: 3},
+            {cr: "1/2", xp: 100, minHp: 50, maxHp: 70, prof: 2, ac: 13, minDmg: 6, maxDmg: 8, saveDc: 13, attack: 3},
+            {cr: "1", xp: 200, minHp: 71, maxHp: 85, prof: 2, ac: 13, minDmg: 9, maxDmg: 14, saveDc: 13, attack: 3},
+            {cr: "2", xp: 450, minHp: 86, maxHp: 100, prof: 2, ac: 13, minDmg: 15, maxDmg: 20, saveDc: 13, attack: 3},
+            {cr: "3", xp: 700, minHp: 101, maxHp: 115, prof: 2, ac: 13, minDmg: 21, maxDmg: 26, saveDc: 13, attack: 4},
+            {cr: "4", xp: 1100, minHp: 116, maxHp: 130, prof: 2, ac: 14, minDmg: 27, maxDmg: 32, saveDc: 14, attack: 5},
+            {cr: "5", xp: 1800, minHp: 131, maxHp: 145, prof: 3, ac: 15, minDmg: 33, maxDmg: 38, saveDc: 15, attack: 6},
+            {cr: "6", xp: 2300, minHp: 146, maxHp: 160, prof: 3, ac: 15, minDmg: 39, maxDmg: 44, saveDc: 15, attack: 6},
+            {cr: "7", xp: 2900, minHp: 161, maxHp: 175, prof: 3, ac: 15, minDmg: 45, maxDmg: 50, saveDc: 15, attack: 6},
+            {cr: "8", xp: 3900, minHp: 176, maxHp: 190, prof: 3, ac: 16, minDmg: 51, maxDmg: 56, saveDc: 16, attack: 7},
+            {cr: "9", xp: 5000, minHp: 191, maxHp: 205, prof: 4, ac: 16, minDmg: 57, maxDmg: 62, saveDc: 16, attack: 7},
+            {cr: "10", xp: 5900, minHp: 206, maxHp: 220, prof: 4, ac: 17, minDmg: 63, maxDmg: 68, saveDc: 16, attack: 7},
+        ];
+
+        // Difficulty thresholds by level
+        const DIFFICULTY_BY_LEVEL = [
+            [25, 50, 75, 100], [50, 100, 150, 200], [75, 150, 225, 400], [125, 250, 375, 500],
+            [250, 500, 750, 1100], [300, 600, 900, 1400], [350, 750, 1100, 1700], [450, 900, 1400, 2100],
+            [550, 1100, 1600, 2400], [600, 1200, 1900, 2800], [800, 1600, 2400, 3600], [1000, 2000, 3000, 4500],
+            [1100, 2200, 3400, 5100], [1250, 2500, 3800, 5700], [1400, 2800, 4300, 6400], [1600, 3200, 4800, 7200],
+            [2000, 3900, 5900, 8800], [2100, 4200, 6300, 9500], [2400, 4900, 7300, 10900], [2800, 5700, 8500, 12700]
+        ];
+
+        // Sample monsters (subset for demo)
+        const MONSTERS = [
+            {name: "Goblin", cr: "1/4", type: "Humanoid", hp: 7, ac: 15},
+            {name: "Orc", cr: "1/2", type: "Humanoid", hp: 15, ac: 13},
+            {name: "Bugbear", cr: "1", type: "Humanoid", hp: 27, ac: 16},
+            {name: "Ogre", cr: "2", type: "Giant", hp: 59, ac: 11},
+            {name: "Owlbear", cr: "3", type: "Monstrosity", hp: 59, ac: 13},
+            {name: "Troll", cr: "5", type: "Giant", hp: 84, ac: 15},
+            {name: "Young Green Dragon", cr: "8", type: "Dragon", hp: 136, ac: 18},
+            {name: "Adult Red Dragon", cr: "17", type: "Dragon", hp: 256, ac: 19},
+            {name: "Skeleton", cr: "1/4", type: "Undead", hp: 13, ac: 13},
+            {name: "Zombie", cr: "1/4", type: "Undead", hp: 22, ac: 8},
+            {name: "Ghoul", cr: "1", type: "Undead", hp: 22, ac: 12},
+            {name: "Wight", cr: "3", type: "Undead", hp: 45, ac: 14},
+            {name: "Vampire Spawn", cr: "5", type: "Undead", hp: 82, ac: 15},
+            {name: "Wolf", cr: "1/4", type: "Beast", hp: 11, ac: 13},
+            {name: "Giant Spider", cr: "1", type: "Beast", hp: 26, ac: 14},
+            {name: "Dire Wolf", cr: "1", type: "Beast", hp: 37, ac: 14},
+            {name: "Basilisk", cr: "3", type: "Monstrosity", hp: 52, ac: 15},
+            {name: "Manticore", cr: "3", type: "Monstrosity", hp: 68, ac: 14},
+            {name: "Minotaur", cr: "3", type: "Monstrosity", hp: 76, ac: 14},
+            {name: "Hill Giant", cr: "5", type: "Giant", hp: 105, ac: 13},
+            {name: "Stone Giant", cr: "7", type: "Giant", hp: 126, ac: 17},
+            {name: "Fire Giant", cr: "9", type: "Giant", hp: 162, ac: 18},
+            {name: "Beholder", cr: "13", type: "Aberration", hp: 180, ac: 18},
+            {name: "Mind Flayer", cr: "7", type: "Aberration", hp: 71, ac: 15},
+            {name: "Aboleth", cr: "10", type: "Aberration", hp: 135, ac: 17},
+        ];
+
+        let encounterMonsters = [];
+
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.panel).classList.add('active');
+            });
+        });
+
+        function getXpForCR(cr) {
+            const entry = CR_TABLE.find(e => e.cr === cr);
+            return entry ? entry.xp : 0;
+        }
+
+        function getMultiplier(monsterCount, partySize) {
+            const multipliers = [1, 1.5, 2, 2.5, 3, 4];
+            let idx;
+            if (monsterCount <= 1) idx = 0;
+            else if (monsterCount <= 2) idx = 1;
+            else if (monsterCount <= 6) idx = 2;
+            else if (monsterCount <= 10) idx = 3;
+            else if (monsterCount <= 14) idx = 4;
+            else idx = 5;
+
+            if (partySize <= 2 && idx < 5) idx++;
+            if (partySize >= 6 && idx > 0) idx--;
+            return multipliers[idx];
+        }
+
+        function addMonsterToEncounter() {
+            const cr = document.getElementById('addMonsterCR').value.trim();
+            if (!cr) return;
+            encounterMonsters.push(cr);
+            renderEncounterMonsters();
+            document.getElementById('addMonsterCR').value = '';
+        }
+
+        function removeMonster(idx) {
+            encounterMonsters.splice(idx, 1);
+            renderEncounterMonsters();
+        }
+
+        function clearEncounter() {
+            encounterMonsters = [];
+            renderEncounterMonsters();
+            document.getElementById('encounterResult').style.display = 'none';
+        }
+
+        function renderEncounterMonsters() {
+            const container = document.getElementById('encounterMonsters');
+            if (encounterMonsters.length === 0) {
+                container.innerHTML = '<p style="color: #666;">No monsters added yet. Add some below!</p>';
+                return;
+            }
+            container.innerHTML = encounterMonsters.map((cr, idx) => `
+                <div class="encounter-monster">
+                    <span>Monster ${idx + 1}: CR ${cr} (${getXpForCR(cr)} XP)</span>
+                    <button class="remove-btn" onclick="removeMonster(${idx})">Remove</button>
+                </div>
+            `).join('');
+        }
+
+        function calculateEncounter() {
+            const levelsStr = document.getElementById('partyLevels').value;
+            const levels = levelsStr.split(',').map(l => parseInt(l.trim())).filter(l => !isNaN(l));
+
+            if (levels.length === 0) {
+                alert('Please enter valid party levels');
+                return;
+            }
+            if (encounterMonsters.length === 0) {
+                alert('Please add some monsters to the encounter');
+                return;
+            }
+
+            const baseXP = encounterMonsters.reduce((sum, cr) => sum + getXpForCR(cr), 0);
+            const multiplier = getMultiplier(encounterMonsters.length, levels.length);
+            const adjustedXP = Math.floor(baseXP * multiplier);
+
+            const thresholds = [0, 0, 0, 0];
+            levels.forEach(level => {
+                const idx = Math.max(0, Math.min(19, level - 1));
+                for (let i = 0; i < 4; i++) {
+                    thresholds[i] += DIFFICULTY_BY_LEVEL[idx][i];
+                }
+            });
+
+            let difficulty, diffClass;
+            if (adjustedXP < thresholds[0]) { difficulty = 'Trivial'; diffClass = 'trivial'; }
+            else if (adjustedXP < thresholds[1]) { difficulty = 'Easy'; diffClass = 'easy'; }
+            else if (adjustedXP < thresholds[2]) { difficulty = 'Medium'; diffClass = 'medium'; }
+            else if (adjustedXP < thresholds[3]) { difficulty = 'Hard'; diffClass = 'hard'; }
+            else {
+                const ratio = adjustedXP / thresholds[3];
+                difficulty = ratio < 1.5 ? 'Deadly' : `${ratio.toFixed(1)}x Deadly`;
+                diffClass = 'deadly';
+            }
+
+            document.getElementById('encounterResult').innerHTML = `
+                <h3>Encounter Analysis</h3>
+                <div class="grid">
+                    <div class="stat-box">
+                        <div class="value difficulty-${diffClass}">${difficulty}</div>
+                        <div class="label">Difficulty</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="value">${adjustedXP.toLocaleString()}</div>
+                        <div class="label">Adjusted XP</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="value">${baseXP.toLocaleString()}</div>
+                        <div class="label">Base XP</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="value">${multiplier}x</div>
+                        <div class="label">Multiplier</div>
+                    </div>
+                </div>
+                <h4 style="margin: 20px 0 10px; color: #aaa;">Party Thresholds</h4>
+                <div class="grid">
+                    <div class="stat-box"><div class="value difficulty-easy">${thresholds[0]}</div><div class="label">Easy</div></div>
+                    <div class="stat-box"><div class="value difficulty-medium">${thresholds[1]}</div><div class="label">Medium</div></div>
+                    <div class="stat-box"><div class="value difficulty-hard">${thresholds[2]}</div><div class="label">Hard</div></div>
+                    <div class="stat-box"><div class="value difficulty-deadly">${thresholds[3]}</div><div class="label">Deadly</div></div>
+                </div>
+            `;
+            document.getElementById('encounterResult').style.display = 'block';
+        }
+
+        function calculateCR() {
+            const hp = parseInt(document.getElementById('crHP').value) || 0;
+            const ac = parseInt(document.getElementById('crAC').value) || 13;
+            const damage = parseInt(document.getElementById('crDamage').value) || 0;
+            const attack = parseInt(document.getElementById('crAttack').value) || 0;
+            const saveDC = parseInt(document.getElementById('crSaveDC').value) || 0;
+
+            if (!hp || !damage) {
+                alert('Please enter at least HP and Damage');
+                return;
+            }
+
+            // Find defensive CR
+            let defIdx = 0;
+            for (let i = 0; i < CR_TABLE.length; i++) {
+                if (CR_TABLE[i].minHp <= hp && CR_TABLE[i].maxHp >= hp) {
+                    defIdx = i; break;
+                }
+                if (hp > CR_TABLE[i].maxHp) defIdx = i;
+            }
+            const acDiff = ac - CR_TABLE[defIdx].ac;
+            defIdx = Math.max(0, Math.min(CR_TABLE.length - 1, defIdx + Math.floor(acDiff / 2)));
+
+            // Find offensive CR
+            let offIdx = 0;
+            for (let i = 0; i < CR_TABLE.length; i++) {
+                if (CR_TABLE[i].minDmg <= damage && CR_TABLE[i].maxDmg >= damage) {
+                    offIdx = i; break;
+                }
+                if (damage > CR_TABLE[i].maxDmg) offIdx = i;
+            }
+            const useSave = saveDC > attack + 5;
+            const atkDiff = useSave ? saveDC - CR_TABLE[offIdx].saveDc : attack - CR_TABLE[offIdx].attack;
+            offIdx = Math.max(0, Math.min(CR_TABLE.length - 1, offIdx + Math.floor(atkDiff / 2)));
+
+            const finalIdx = Math.floor((defIdx + offIdx) / 2);
+            const result = CR_TABLE[finalIdx];
+
+            document.getElementById('crResult').innerHTML = `
+                <h3>Calculated Challenge Rating</h3>
+                <div class="grid">
+                    <div class="stat-box">
+                        <div class="value">${result.cr}</div>
+                        <div class="label">Final CR</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="value">${result.xp.toLocaleString()}</div>
+                        <div class="label">XP Value</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="value">${CR_TABLE[defIdx].cr}</div>
+                        <div class="label">Defensive CR</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="value">${CR_TABLE[offIdx].cr}</div>
+                        <div class="label">Offensive CR</div>
+                    </div>
+                </div>
+                <p style="margin-top: 15px; color: #888;">
+                    Proficiency Bonus: +${result.prof} | Expected AC: ${result.ac} | Expected Attack: +${result.attack}
+                </p>
+            `;
+            document.getElementById('crResult').style.display = 'block';
+        }
+
+        function searchMonsters() {
+            const query = document.getElementById('monsterSearch').value.toLowerCase();
+            if (query.length < 2) {
+                document.getElementById('monsterResults').innerHTML = '';
+                return;
+            }
+            const results = MONSTERS.filter(m =>
+                m.name.toLowerCase().includes(query) || m.type.toLowerCase().includes(query)
+            );
+            renderMonsterResults(results);
+        }
+
+        function randomMonster() {
+            const cr = document.getElementById('randomCR').value;
+            let pool = MONSTERS;
+            if (cr) pool = MONSTERS.filter(m => m.cr === cr);
+            if (pool.length === 0) {
+                document.getElementById('monsterResults').innerHTML = '<p>No monsters found for that CR.</p>';
+                return;
+            }
+            renderMonsterResults([pool[Math.floor(Math.random() * pool.length)]]);
+        }
+
+        function renderMonsterResults(monsters) {
+            document.getElementById('monsterResults').innerHTML = monsters.map(m => `
+                <div class="monster-card">
+                    <h4>${m.name}</h4>
+                    <div class="monster-stats">
+                        <span>CR ${m.cr}</span>
+                        <span>${m.type}</span>
+                        <span>HP ${m.hp}</span>
+                        <span>AC ${m.ac}</span>
+                        <span>${getXpForCR(m.cr)} XP</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Tavern data
+        const TAVERN = {
+            adjectives: ["Prancing", "Golden", "Silver", "Rusty", "Broken", "Dancing", "Laughing", "Sleeping", "Winking", "Roaring", "Crimson", "Azure", "Emerald"],
+            nouns: ["Pony", "Dragon", "Griffin", "Stag", "Boar", "Serpent", "Phoenix", "Raven", "Wolf", "Bear", "Lion", "Mermaid", "Goblin"],
+            types: ["Inn", "Tavern", "Alehouse", "Pub", "Lodge", "Rest", "House", "Hall"],
+            locations: ["on the main road through town", "in a quiet corner of the market district", "near the city gates", "by the river docks", "in the shadow of the castle walls"],
+            interiors: {
+                poor: ["cramped and smoky", "dimly lit with a dirt floor", "simple and rough-hewn"],
+                modest: ["warm and inviting", "well-kept if simple", "cozy with worn furniture"],
+                wealthy: ["elegantly appointed", "spacious with fine woodwork", "luxuriously decorated"]
+            },
+            menu: {
+                poor: [{item: "Watery stew", price: "2 cp"}, {item: "Hard bread", price: "1 cp"}, {item: "Cheap ale", price: "1 cp"}],
+                modest: [{item: "Roast chicken", price: "8 cp"}, {item: "Meat pie", price: "5 cp"}, {item: "Local ale", price: "3 cp"}, {item: "House wine", price: "5 cp"}],
+                wealthy: [{item: "Roast pheasant", price: "3 sp"}, {item: "Venison steak", price: "5 sp"}, {item: "Elven wine", price: "1 gp"}, {item: "Aged whiskey", price: "8 sp"}]
+            },
+            rumors: [
+                "They say the old mill is haunted by the ghost of the miller.",
+                "A merchant caravan went missing on the north road last week.",
+                "The baron's daughter has been acting strange since the new moon.",
+                "Someone's been stealing sheep from the farms outside town.",
+                "A stranger in a black cloak has been asking questions about the temple.",
+                "The well in the town square has started giving bitter water.",
+                "Goblins have been spotted in the forest to the east.",
+                "The blacksmith found a strange medallion in his forge.",
+                "A traveling bard claims to have seen a dragon over the mountains.",
+                "The mayor is looking to hire adventurers for a 'discrete matter'."
+            ]
+        };
+
+        function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+        function pickN(arr, n) {
+            const shuffled = [...arr].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, Math.min(n, arr.length));
+        }
+
+        function generateTavern() {
+            const wealth = document.getElementById('tavernWealth').value;
+            const name = `The ${pick(TAVERN.adjectives)} ${pick(TAVERN.nouns)} ${pick(TAVERN.types)}`;
+            const location = pick(TAVERN.locations);
+            const interior = pick(TAVERN.interiors[wealth]);
+            const menu = TAVERN.menu[wealth];
+            const rumors = pickN(TAVERN.rumors, 3);
+
+            document.getElementById('tavernResult').innerHTML = `
+                <h3 style="font-size: 1.8em; margin-bottom: 5px;">${name}</h3>
+                <p style="color: #888; margin-bottom: 20px;">Located ${location}</p>
+
+                <div class="tavern-section">
+                    <h4>Interior</h4>
+                    <p>The interior is ${interior}.</p>
+                </div>
+
+                <div class="tavern-section">
+                    <h4>Menu</h4>
+                    ${menu.map(m => `<div class="menu-item"><span>${m.item}</span><span>${m.price}</span></div>`).join('')}
+                </div>
+
+                <div class="tavern-section">
+                    <h4>Rumors Overheard</h4>
+                    ${rumors.map(r => `<div class="rumor">"${r}"</div>`).join('')}
+                </div>
+            `;
+            document.getElementById('tavernResult').style.display = 'block';
+        }
+
+        // Initialize
+        renderEncounterMonsters();
+    </script>
+</body>
+</html>

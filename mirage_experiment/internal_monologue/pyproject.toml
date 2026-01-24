@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "internal-monologue"
+version = "0.1.0"
+description = "Mirage of Meta-Cognition Experiment - Internal Monologue Lab"
+requires-python = ">=3.10"
+dependencies = [
+    "pydantic>=2.0.0",
+    "rich>=13.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+]

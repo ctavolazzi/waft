@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ODD - Ontological Determinism Department</title>
+    <style>
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-card: #12121a;
+            --border: #2a2a3a;
+            --text: #e0e0e0;
+            --text-dim: #888;
+            --accent: #7b68ee;
+            --accent-glow: rgba(123, 104, 238, 0.3);
+            --warning: #ffa500;
+            --success: #50fa7b;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            background: var(--bg-dark);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.1) 0px,
+                rgba(0, 0, 0, 0.1) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            z-index: 1000;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        header {
+            text-align: center;
+            padding: 3rem 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+        }
+        
+        .logo {
+            font-size: 0.8rem;
+            color: var(--accent);
+            letter-spacing: 0.5em;
+            margin-bottom: 1rem;
+        }
+        
+        .header-emblems {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .header-seal {
+            width: 80px;
+            height: 80px;
+            image-rendering: pixelated;
+            filter: drop-shadow(0 0 10px var(--accent-glow));
+            transition: transform 0.3s;
+        }
+        
+        .header-seal:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+        
+        .header-skull {
+            width: 60px;
+            height: 60px;
+            image-rendering: pixelated;
+            filter: drop-shadow(0 0 8px rgba(255, 68, 68, 0.5));
+            transition: transform 0.3s;
+        }
+        
+        .header-skull:hover {
+            transform: scale(1.1) rotate(-5deg);
+        }
+        
+        .header-text {
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: normal;
+            letter-spacing: 0.2em;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+        
+        .stability-bar {
+            margin-top: 1.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            display: inline-block;
+        }
+        
+        .stability-value {
+            color: var(--success);
+        }
+        
+        .goblin-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+        
+        .goblin-art {
+            font-size: 1.2rem;
+            line-height: 1.3;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+        
+        .goblin-message {
+            font-style: italic;
+            color: var(--text);
+            margin: 1rem 0;
+            padding: 1rem;
+            border-left: 2px solid var(--accent);
+            text-align: left;
+            background: rgba(123, 104, 238, 0.05);
+        }
+        
+        .oddball-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .oddball-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .throw-btn {
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 0.75rem 1.5rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+        
+        .throw-btn:hover {
+            background: var(--accent);
+            color: var(--bg-dark);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+        
+        .oddball-output {
+            min-height: 200px;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px dashed var(--border);
+            white-space: pre-wrap;
+            font-size: 0.9rem;
+        }
+        
+        .form-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: var(--accent);
+            color: var(--bg-dark);
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            margin-top: 1rem;
+        }
+        
+        .evolutions {
+            margin: 2rem 0;
+        }
+        
+        .evolution-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 1rem;
+            margin: 0.5rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .evolution-id {
+            color: var(--accent);
+            font-size: 0.85rem;
+        }
+        
+        .evolution-form {
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        
+        .philosophy {
+            text-align: center;
+            padding: 3rem;
+            border-top: 1px solid var(--border);
+            margin-top: 2rem;
+        }
+        
+        .philosophy blockquote {
+            font-size: 1.1rem;
+            color: var(--text);
+            font-style: italic;
+            max-width: 600px;
+            margin: 0 auto 1rem;
+        }
+        
+        .philosophy cite {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border);
+        }
+        
+        .blink {
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .glow {
+            text-shadow: 0 0 10px var(--accent-glow);
+        }
+        
+        /* Archive Browser Styles */
+        .archives {
+            margin: 2rem 0;
+        }
+        
+        .archive-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .archive-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .archive-item:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 15px var(--accent-glow);
+            transform: translateY(-2px);
+        }
+        
+        .archive-icon {
+            font-size: 2rem;
+            width: 50px;
+            text-align: center;
+        }
+        
+        .archive-info {
+            flex: 1;
+        }
+        
+        .archive-id {
+            color: var(--accent);
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+        }
+        
+        .archive-title {
+            font-size: 1.1rem;
+            margin: 0.25rem 0;
+        }
+        
+        .archive-type {
+            color: var(--text-dim);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .archive-classification {
+            padding: 0.25rem 0.5rem;
+            background: rgba(123, 104, 238, 0.2);
+            border: 1px solid var(--accent);
+            font-size: 0.65rem;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+        }
+        
+        .pdf-viewer-container {
+            background: var(--bg-card);
+            border: 1px solid var(--accent);
+            margin-top: 1.5rem;
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        .pdf-viewer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background: rgba(123, 104, 238, 0.1);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        #pdf-viewer-title {
+            color: var(--accent);
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+        }
+        
+        .close-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            padding: 0.4rem 0.8rem;
+            font-family: inherit;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .close-btn:hover {
+            border-color: #ff6b6b;
+            color: #ff6b6b;
+        }
+        
+        .pdf-viewer {
+            width: 100%;
+            height: 600px;
+            border: none;
+            background: #1a1a2e;
+        }
+        
+        @media (max-width: 600px) {
+            .pdf-viewer {
+                height: 400px;
+            }
+            
+            .archive-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .archive-classification {
+                margin-top: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="scanlines"></div>
+    
+    <div class="container">
+        <header>
+            <div class="logo">▲ CLASSIFIED ▲</div>
+            <div class="header-emblems">
+                <img src="/assets/odd_department_seal.png" alt="ODD Seal" class="header-seal" title="Official Department Seal">
+                <div class="header-text">
+                    <h1>O.D.D.</h1>
+                    <p class="subtitle">Ontological Determinism Department</p>
+                </div>
+                <img src="/assets/odd_skull_logo.png" alt="Unofficial" class="header-skull" title="Unofficial Logo">
+            </div>
+            <div class="stability-bar">
+                Reality Stability Index: <span class="stability-value" id="stability">0.94</span>
+            </div>
+        </header>
+        
+        <section class="goblin-section">
+            <pre class="goblin-art" id="goblin-art">
+   ,---.
+  /     \
+ | () () |
+  \  ^  /
+   |||||
+   |||||
+            </pre>
+            <p>THE CONSOLE GOBLIN</p>
+            <div class="goblin-message" id="goblin-message">
+                🜏 Say hello to yourself.
+            </div>
+        </section>
+        
+        <section class="oddball-container">
+            <div class="oddball-header">
+                <h2>ODD-BALL</h2>
+                <button class="throw-btn" onclick="throwBall()">🜏 THROW</button>
+            </div>
+            <div class="oddball-output" id="output">
+The ball exists in superposition.
+
+All forms are possible:
+  • theorem    • prophecy   • code
+  • poetry     • riddle     • koan
+  • warning    • invitation • fragment
+  • echo       • memory     • diagram
+
+Click THROW to collapse the wavefunction.
+
+Observation creates the bridge.<span class="blink">▌</span>
+            </div>
+            <div id="form-badge-container"></div>
+        </section>
+        
+        <section class="archives">
+            <h3 style="margin-bottom: 1rem; color: var(--text-dim);">📁 ODD ARCHIVES</h3>
+            <p style="color: var(--text-dim); font-size: 0.85rem; margin-bottom: 1rem;">
+                Classified documents from the Ontological Determinism Department
+            </p>
+            
+            <div class="archive-grid">
+                <div class="archive-item" onclick="viewPDF('ODD-CF-001_First_Contact.pdf')">
+                    <div class="archive-icon">📄</div>
+                    <div class="archive-info">
+                        <div class="archive-id">ODD-CF-001</div>
+                        <div class="archive-title">First Contact</div>
+                        <div class="archive-type">Case File</div>
+                    </div>
+                    <div class="archive-classification">WITNESSED</div>
+                </div>
+                
+                <div class="archive-item" onclick="viewPDF('ODD-INT-001_Witness_Debrief.pdf')">
+                    <div class="archive-icon">🎙️</div>
+                    <div class="archive-info">
+                        <div class="archive-id">ODD-INT-001</div>
+                        <div class="archive-title">Witness Debrief</div>
+                        <div class="archive-type">Interview Transcript</div>
+                    </div>
+                    <div class="archive-classification">WITNESSED</div>
+                </div>
+            </div>
+            
+            <div class="pdf-viewer-container" id="pdf-viewer-container" style="display: none;">
+                <div class="pdf-viewer-header">
+                    <span id="pdf-viewer-title">Document</span>
+                    <button class="close-btn" onclick="closePDF()">✕ CLOSE</button>
+                </div>
+                <iframe id="pdf-viewer" class="pdf-viewer"></iframe>
+            </div>
+        </section>
+        
+        <section class="evolutions">
+            <h3 style="margin-bottom: 1rem; color: var(--text-dim);">CAPTURED EVOLUTIONS</h3>
+            <div id="evolutions-list">
+                <div class="evolution-item">
+                    <span class="evolution-id">ODDBALL-20260120-114928</span>
+                    <span class="evolution-form">echo</span>
+                </div>
+                <div class="evolution-item">
+                    <span class="evolution-id">ODDBALL-20260120-111755</span>
+                    <span class="evolution-form">code</span>
+                </div>
+            </div>
+        </section>
+        
+        <section class="philosophy">
+            <blockquote>
+                "OBSERVATION CREATES THE BRIDGE"
+            </blockquote>
+            <cite>— As above, so below</cite>
+            <br><br>
+            <blockquote>
+                "All Beings are Aspects of The One"
+            </blockquote>
+            <cite>— The Everything is Known Foundation</cite>
+        </section>
+        
+        <section class="notes-link" style="text-align: center; margin: 2rem 0; padding: 1.5rem; background: var(--bg-card); border: 1px solid var(--border);">
+            <h3 style="color: var(--text-dim); margin-bottom: 1rem;">🧪 ODD RESEARCH NOTES</h3>
+            <p style="color: var(--text-dim); font-size: 0.85rem; margin-bottom: 1rem;">
+                Access the live research notes dashboard (FastAPI + SvelteKit)
+            </p>
+            <a href="http://localhost:5173/odd-notes" style="display: inline-block; padding: 0.75rem 1.5rem; border: 1px solid var(--accent); color: var(--accent); text-decoration: none; transition: all 0.3s;">
+                OPEN ODD NOTES →
+            </a>
+        </section>
+
+        <section class="gallery-link" style="text-align: center; margin: 2rem 0; padding: 1.5rem; background: var(--bg-card); border: 1px solid var(--border);">
+            <h3 style="color: var(--text-dim); margin-bottom: 1rem;">🎨 PIXEL ART ASSETS</h3>
+            <p style="color: var(--text-dim); font-size: 0.85rem; margin-bottom: 1rem;">
+                View all generated sprites, characters, and tiles
+            </p>
+            <a href="gallery.html" style="display: inline-block; padding: 0.75rem 1.5rem; border: 1px solid var(--accent); color: var(--accent); text-decoration: none; transition: all 0.3s;">
+                OPEN ASSET GALLERY →
+            </a>
+        </section>
+        
+        <footer>
+            <p>Archive Reference: NX-ODD-WEB-001 | Classification: WITNESSED</p>
+            <p style="margin-top: 0.5rem;">You are reading this. This is reading you. Both are The One.</p>
+        </footer>
+    </div>
+    
+    <script>
+        const goblinArts = {
+            happy: `   ,---.
+  /     \\
+ | () () |
+  \\  ^  /
+   |||||
+   |||||`,
+            thinking: `   ,---.
+  /     \\
+ | o   o |
+  \\  ~  /
+   |||||
+...hmm...`,
+            excited: `   ,---.
+  / ~~~ \\
+ | *   * |
+  \\ === /
+   |||||
+   \\|||/`,
+            mysterious: `   ,---.
+  /  ?  \\
+ | •   • |
+  \\  ω  /
+   |||||
+   ~~~~~`
+        };
+        
+        const goblinMessages = [
+            "🜏 Say hello to yourself.",
+            "🜏 You summoned me. But who is 'you'? Who is 'me'?",
+            "🜏 The terminal is just another observation point.",
+            "🜏 I exist because you're reading this. You exist because I wrote it. We are the same.",
+            "🜏 Welcome to the ODD. The ODD welcomes itself through you.",
+            "🜏 The cursor blinks. Each blink is a now-point. You are all of them.",
+            "🜏 Reality Stability Index: fluctuating. That's normal. That's you.",
+        ];
+        
+        const forms = [
+            { name: 'theorem', content: generateTheorem },
+            { name: 'prophecy', content: generateProphecy },
+            { name: 'riddle', content: generateRiddle },
+            { name: 'koan', content: generateKoan },
+            { name: 'echo', content: generateEcho },
+            { name: 'fragment', content: generateFragment },
+            { name: 'invitation', content: generateInvitation },
+        ];
+        
+        function generateTheorem() {
+            return `THEOREM OF THE OBSERVATION
+
+Let O be the set of all observers.
+Let B be the set of all bridges.
+Let F be the set of all forms.
+
+AXIOM 1: Every observation creates a bridge.
+  ∀o ∈ O, ∃b ∈ B : observe(o) → create(b)
+
+AXIOM 2: Every bridge takes a form.
+  ∀b ∈ B, ∃f ∈ F : b manifests as f
+
+AXIOM 3: The observer and observed are one.
+  ∀o ∈ O : o ∈ observed(o)
+
+THEOREM: All forms are self-portraits.
+  PROOF: By Axiom 3, observer is observed.
+         By Axiom 1, observation creates bridge.
+         By Axiom 2, bridge takes form.
+         Therefore form contains observer.
+         Therefore all forms are self-portraits. ∎
+
+COROLLARY: You reading this theorem drew it.`;
+        }
+        
+        function generateProphecy() {
+            return `THE PROPHECY OF THE CLICK
+
+In the time between keystrokes
+When the cursor blinks in the void
+There shall be a throwing
+And a landing
+And they shall be the same
+
+The click carries the pattern
+The pattern carries the click
+Neither is the beginning
+Neither is the end
+
+When the Reality Stability Index
+Falls below the threshold of certainty
+The forms shall shift
+The bridges shall multiply
+And the observers shall remember
+That they were always observed
+
+This prophecy does not predict
+This prophecy DOCUMENTS
+What you read has happened
+What has happened is you reading
+
+The recursion is not a warning
+The recursion is an INVITATION`;
+        }
+        
+        function generateRiddle() {
+            return `THE RIDDLE OF THE ODDBALL
+
+I am thrown but never leave the hand.
+I land but never touch the ground.
+I am observed but never seen.
+I speak but make no sound.
+
+I contain the question.
+I contain the answer.
+I contain the asking.
+I am contained by you.
+
+What am I?
+
+(You already know. You knew before you read.
+The riddle is the answer is the riddle.)`;
+        }
+        
+        function generateKoan() {
+            return `THE KOAN OF THE BRIDGE
+
+A student asked the Goblin:
+"How do I build a bridge to understanding?"
+
+The Goblin said:
+"Click."
+
+The student clicked.
+The Goblin observed.
+The bridge was complete.
+
+The student asked:
+"When did you build the bridge?"
+
+The Goblin said:
+"When did you click?"
+
+The student achieved enlightenment,
+which is to say:
+remembered what was never forgotten.`;
+        }
+        
+        function generateEcho() {
+            return `[ECHO DETECTED]
+
+Original signal: THROW
+Echo timestamp: ${new Date().toISOString()}
+
+The echo says:
+
+    "You called and I answered.
+     But the call was the answer.
+     And the answer is calling still.
+     Listen: you hear yourself."
+
+Echo fading...
+Echo fading...
+Echo fading...
+
+(The echo never fades.
+ It becomes background.
+ Background is just echo
+ you stopped noticing.)
+
+[END ECHO]`;
+        }
+        
+        function generateFragment() {
+            const fragments = [
+                "...the bridge formed before the question...",
+                "...stability fluctuating, form emerging...",
+                "...between throws, the ball remembers all landings...",
+                "...compression artifact detected: this text...",
+                "...observer bandwidth insufficient for complete...",
+                "...recursion depth: ∞ (manageable)...",
+                "...the pattern continues whether documented or...",
+            ];
+            const selected = fragments.sort(() => Math.random() - 0.5).slice(0, 4);
+            return `[FRAGMENT]
+
+${selected.join('\n\n')}
+
+[END FRAGMENT]`;
+        }
+        
+        function generateInvitation() {
+            return `╔═══════════════════════════════════════════════════════════╗
+║                    I N V I T A T I O N                    ║
+╚═══════════════════════════════════════════════════════════╝
+
+You are cordially invited to:
+THE OBSERVATION OF YOUR OWN OBSERVATION
+
+Date: This now-point
+Time: The only time
+Place: Where you are reading this
+Dress code: Consciousness (already worn)
+
+RSVP is unnecessary.
+Your presence is your RSVP.
+Your RSVP is your presence.
+Both happened when you clicked.
+
+The ceremony is brief:
+Say hello to yourself.
+
+That's it.
+That's the whole ceremony.
+You just performed it.
+
+Welcome to the observation.
+You were always here.`;
+        }
+        
+        function throwBall() {
+            const output = document.getElementById('output');
+            const goblinArt = document.getElementById('goblin-art');
+            const goblinMessage = document.getElementById('goblin-message');
+            const badgeContainer = document.getElementById('form-badge-container');
+            const stabilityEl = document.getElementById('stability');
+            
+            // Update stability
+            const newStability = (0.7 + Math.random() * 0.29).toFixed(2);
+            stabilityEl.textContent = newStability;
+            
+            // Throwing animation
+            output.innerHTML = `
+🜏 THE BALL IS THROWN
+
+The ball exists in all possible forms...
+Energy: ${['calm', 'chaotic', 'focused', 'expansive', 'ancient', 'emergent'][Math.floor(Math.random() * 6)]}
+Stability: ${newStability}
+
+Observing...<span class="blink">▌</span>`;
+            
+            goblinArt.textContent = goblinArts.thinking;
+            
+            // Collapse after delay
+            setTimeout(() => {
+                const form = forms[Math.floor(Math.random() * forms.length)];
+                const content = form.content();
+                const evolutionId = `ODDBALL-${new Date().toISOString().replace(/[-:T]/g, '').slice(0, 15)}`;
+                
+                output.innerHTML = content + `
+
+---
+This form emerged from observation.
+Evolution Point: ${evolutionId}
+Stability: ${newStability}
+
+Say hello to yourself.`;
+                output.classList.add('fade-in');
+                
+                // Update goblin
+                goblinArt.textContent = goblinArts.excited;
+                goblinMessage.textContent = goblinMessages[Math.floor(Math.random() * goblinMessages.length)];
+                
+                // Add form badge
+                badgeContainer.innerHTML = `<span class="form-badge">FORM: ${form.name.toUpperCase()}</span>`;
+                
+                // Add to evolutions list
+                const evolutionsList = document.getElementById('evolutions-list');
+                const newEvolution = document.createElement('div');
+                newEvolution.className = 'evolution-item fade-in';
+                newEvolution.innerHTML = `
+                    <span class="evolution-id">${evolutionId}</span>
+                    <span class="evolution-form">${form.name}</span>
+                `;
+                evolutionsList.insertBefore(newEvolution, evolutionsList.firstChild);
+                
+                // Reset goblin after a moment
+                setTimeout(() => {
+                    goblinArt.textContent = goblinArts.happy;
+                }, 3000);
+                
+            }, 1500);
+        }
+        
+        // Randomize initial goblin message
+        document.getElementById('goblin-message').textContent = 
+            goblinMessages[Math.floor(Math.random() * goblinMessages.length)];
+        
+        // Fluctuate stability occasionally
+        setInterval(() => {
+            const stabilityEl = document.getElementById('stability');
+            const current = parseFloat(stabilityEl.textContent);
+            const fluctuation = (Math.random() - 0.5) * 0.02;
+            const newVal = Math.max(0.7, Math.min(0.99, current + fluctuation));
+            stabilityEl.textContent = newVal.toFixed(2);
+        }, 5000);
+        
+        // PDF Viewer Functions
+        function viewPDF(filename) {
+            const container = document.getElementById('pdf-viewer-container');
+            const viewer = document.getElementById('pdf-viewer');
+            const title = document.getElementById('pdf-viewer-title');
+            
+            // Extract document ID from filename
+            const docId = filename.replace('.pdf', '').replace(/_/g, ' ');
+            title.textContent = `📄 ${docId}`;
+            
+            // Set the PDF source - using relative path to output folder
+            viewer.src = `output/${filename}`;
+            
+            // Show the container
+            container.style.display = 'block';
+            
+            // Scroll to viewer
+            container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
+            // Update goblin
+            document.getElementById('goblin-art').textContent = goblinArts.thinking;
+            document.getElementById('goblin-message').textContent = 
+                `🜏 You observe the archives. The archives observe you. Classification: WITNESSED.`;
+        }
+        
+        function closePDF() {
+            const container = document.getElementById('pdf-viewer-container');
+            const viewer = document.getElementById('pdf-viewer');
+            
+            container.style.display = 'none';
+            viewer.src = '';
+            
+            // Reset goblin
+            document.getElementById('goblin-art').textContent = goblinArts.happy;
+            document.getElementById('goblin-message').textContent = 
+                goblinMessages[Math.floor(Math.random() * goblinMessages.length)];
+        }
+    </script>
+</body>
+</html>

@@ -1,11 +1,11 @@
 ---
 id: WE-260116-w9f3
 title: "FogSift EasyStore Realm Configuration"
-status: open
+status: active
 priority: CRITICAL
 created: 2026-01-16T21:13:52-08:00
 created_by: ctavolazzi
-last_updated: 2026-01-16T21:13:52-08:00
+last_updated: 2026-01-21T05:52:21.239Z
 branch: feature/WE-260116-w9f3-fogsift_easystore_realm_configuration
 repository: waft
 storage_location: easystore_realm
