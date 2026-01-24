@@ -87,9 +87,13 @@ class ElevntyCYOAScenario:
         if not self.scenario_dir.exists():
             raise FileNotFoundError(f"Scenario directory not found: {self.scenario_dir}")
 
-        md_files = list(self.scenario_dir.glob("*.md"))
+        # Get all .md files except README.md and other common docs
+        md_files = [
+            f for f in self.scenario_dir.glob("*.md")
+            if f.stem.lower() not in {"readme", "index", "about"}
+        ]
         if not md_files:
-            raise ValueError(f"No .md files found in {self.scenario_dir}")
+            raise ValueError(f"No .md scenario files found in {self.scenario_dir}")
 
         for md_file in md_files:
             node = self._parse_markdown_file(md_file)
