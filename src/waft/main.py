@@ -21,6 +21,7 @@ from rich.text import Text
 
 from .cli.cards_cli import app as cards_app
 from .cli.case_render import case_render_cmd
+from .cli.chief_cli import app as chief_app
 from .cli.epistemic_display import (
     create_epistemic_dashboard,
     format_epistemic_summary,
@@ -797,6 +798,7 @@ app.add_typer(github_app, name="github")
 app.add_typer(journal_app, name="journal")
 app.add_typer(project_app, name="project")
 app.add_typer(empirica_monitor_app, name="empirica")
+<<<<<<< HEAD
 app.add_typer(cards_app, name="cards")
 app.command(name="case-render")(case_render_cmd)
 
@@ -838,6 +840,9 @@ def main_callback(ctx: typer.Context):
     # Check for The Dealer on every command (except 'cards' subcommands to avoid recursion)
     if ctx.invoked_subcommand and not ctx.invoked_subcommand.startswith("cards"):
         _check_dealer_appearance()
+=======
+app.add_typer(chief_app, name="chief")
+>>>>>>> origin/main
 
 
 @empirica_monitor_app.command("monitor")
