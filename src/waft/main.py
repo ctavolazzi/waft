@@ -801,7 +801,7 @@ def evolve(
         console.print(f"\n[bold]Starting evolution from: {current_parent}[/bold]\n")
 
         for gen in range(1, generations + 1):
-            console.print(f"[bold cyan]═══ Generation {gen}/{generations} ═══[/bold]")
+            console.print(f"[bold cyan]═══ Generation {gen}/{generations} ═══[/bold cyan]")
 
             result = engine.run_evolution_cycle(
                 parent_id=current_parent,
