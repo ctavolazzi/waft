@@ -26,8 +26,11 @@ class RedactionStyle(Enum):
 
 @dataclass
 class DocumentConfig:
-    """
-    Configuration for document styling and behavior.
+    """Configuration for document styling and behavior.
+
+    problem -> answer -> evaluation
+
+    This is the core cycle, executed once.
     """
     fonts: dict = field(default_factory=lambda: {
         "Header": ("Helvetica", "B"),
@@ -171,9 +174,17 @@ class Session:
     
     @property
     def converged(self) -> bool:
-        if self.final_evaluation is None:
-            return False
-        return self.final_evaluation.is_good(self.quality_threshold)
+        """Did we reach good quality?"""
+        return (
+            self.final_evaluation.is_good(self.quality_threshold)
+            if self.final_evaluation
+            else False
+        )
+
+
+# ============================================================================
+# SECTION C: THE FOUNDATION (WAFT Integration Layer)
+# ============================================================================
 
 
 class TheFoundation:

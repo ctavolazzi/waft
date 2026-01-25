@@ -36,9 +36,10 @@ dependencies = [
     "jinja2>=3.0.0",
     "pypdf>=4.0.0",
     "playingcards.py>=1.1.0",
-    "weasyprint>=60.0",
-    "markdown>=3.0.0",
+    "weasyprint>=68.0",
+    "markdown>=3.10.1",
     "httpx>=0.25.0",
+    "streamlit>=1.53.1",
 ]
 
 [project.optional-dependencies]

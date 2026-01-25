@@ -1,0 +1,15 @@
+{
+  "event_type": "EVOLUTION_CYCLE",
+  "generation": 2,
+  "parent_id": "being_20260124_115344_a4824174",
+  "selected_variant_id": "being_20260124_115344_28871062",
+  "fitness_improvement": 0.0,
+  "scints_detected": 0,
+  "timestamp": "2026-01-24T11:53:44.614201",
+  "details": {
+    "parent_fitness": 100.0,
+    "selected_fitness": 100.0,
+    "start_time": "2026-01-24T11:53:44.581862",
+    "end_time": "2026-01-24T11:53:44.614184"
+  }
+}
