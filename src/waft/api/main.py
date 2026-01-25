@@ -6,7 +6,7 @@ import logging
 from datetime import datetime
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException, Request, status
+from fastapi import FastAPI, HTTPException, Request, WebSocket, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -15,12 +15,14 @@ from fastapi.staticfiles import StaticFiles
 from .responses import ErrorCodes, ErrorResponse
 from .routes import (
     auth,
+    battle,
     being,
     campfire,
     cartographer,
     cyoa,
     decision,
     empirica,
+    evolution,
     evolve_ui_monitor,
     git,
     gym,
@@ -35,6 +37,7 @@ from .routes import (
     storyteller,
     work_efforts,
 )
+from .websocket import manager, websocket_endpoint
 
 logger = logging.getLogger(__name__)
 
@@ -104,6 +107,14 @@ def create_app(project_path: Path, static_dir: Path | None = None) -> FastAPI:
             {
                 "name": "quests",
                 "description": "Quest Guide Implementation system. Gamified quest-based development orchestrator.",
+            },
+            {
+                "name": "evolution",
+                "description": "Genetic evolution system. Genome management, crossover operations, and population control.",
+            },
+            {
+                "name": "battle",
+                "description": "Battle Royale arena. Agent combat, tournaments, and competitive fitness evaluation.",
             },
         ],
     )
@@ -226,6 +237,21 @@ def create_app(project_path: Path, static_dir: Path | None = None) -> FastAPI:
     app.include_router(evolve_ui_monitor.router, prefix="/api", tags=["evolve-ui"])
     app.include_router(cyoa.router, prefix="/api", tags=["cyoa"])
     app.include_router(storyteller.router, prefix="/api", tags=["storyteller"])
+
+    # New evolution and battle routes
+    app.include_router(evolution.router, prefix="/api", tags=["evolution"])
+    app.include_router(battle.router, prefix="/api", tags=["battle"])
+
+    # WebSocket endpoint for real-time updates
+    @app.websocket("/ws/evolution")
+    async def websocket_evolution(websocket: WebSocket, client_id: str | None = None):
+        """WebSocket endpoint for real-time evolution monitoring."""
+        await websocket_endpoint(websocket, client_id)
+
+    @app.get("/api/ws/stats")
+    async def get_websocket_stats():
+        """Get WebSocket connection statistics."""
+        return manager.get_stats()
 
     # Serve static files if provided (must be last route)
     if static_dir and static_dir.exists():
