@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { projectStore } from '$lib/stores/projectStore';
+	import ThemeToggle from '../ThemeToggle.svelte';
 
 	function refresh() {
 		projectStore.fetch();
@@ -20,13 +21,14 @@
 			<a href="/work-efforts" class="nav-box">Work Efforts</a>
 			<a href="/empirica" class="nav-box">Empirica</a>
 			<a href="/campfire" class="nav-box">🔥 Campfire</a>
-			<a href="/odd-notes" class="nav-box">🧪 ODD Notes</a>
+			<a href="/arena" class="nav-box nav-arena">⚔️ Arena</a>
 			<button
 				on:click={refresh}
 				class="nav-box nav-button"
 			>
 				🔄 Refresh
 			</button>
+			<ThemeToggle size="sm" />
 		</div>
 	</div>
 </nav>
@@ -100,5 +102,27 @@
 	.nav-flow:hover {
 		transform: translateY(-2px);
 		box-shadow: 0 4px 12px rgba(0, 255, 51, 0.6);
+	}
+
+	.nav-arena {
+		background: linear-gradient(135deg, #f97316 0%, #ef4444 100%);
+		color: white;
+		border-color: #f97316;
+		font-weight: 600;
+		animation: arena-pulse 2s infinite;
+	}
+
+	@keyframes arena-pulse {
+		0%, 100% {
+			box-shadow: 0 0 10px rgba(249, 115, 22, 0.4);
+		}
+		50% {
+			box-shadow: 0 0 20px rgba(249, 115, 22, 0.6);
+		}
+	}
+
+	.nav-arena:hover {
+		transform: translateY(-2px) scale(1.05);
+		box-shadow: 0 4px 12px rgba(249, 115, 22, 0.6);
 	}
 </style>

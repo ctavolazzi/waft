@@ -300,8 +300,16 @@ class ScintDetector:
             winner = scint.genome_b
 
         elif strategy == "merge":
-            # TODO: Implement genetic crossover
-            raise NotImplementedError("Merge strategy not yet implemented")
+            # Use genetic crossover to merge both genomes
+            from .genetic_crossover import GeneticCrossover, CrossoverStrategy
+
+            crossover_engine = GeneticCrossover()
+            result = crossover_engine.crossover(
+                scint.genome_a,
+                scint.genome_b,
+                strategy=CrossoverStrategy.FITNESS_WEIGHTED,
+            )
+            winner = result.offspring
 
         else:
             raise ValueError(f"Unknown strategy: {strategy}")
