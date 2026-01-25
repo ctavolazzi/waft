@@ -1,0 +1,25 @@
+{
+  "name": "Grant Proposal Generator",
+  "version": "1.0.0",
+  "xp": 125,
+  "level": 2,
+  "proposals_generated": 2,
+  "critiques_addressed": 5,
+  "toner_saved_ml": 5.0,
+  "genome_hash": "1a1c64bc6ea5808d",
+  "evolution_history": [
+    {
+      "timestamp": "2026-01-24T12:52:58.448050",
+      "event": "EVOLUTION",
+      "from_rarity": "Common",
+      "to_rarity": "Uncommon",
+      "xp": 125
+    }
+  ],
+  "unlocked_abilities": [
+    "Basic Proposal Generation",
+    "Toner Saver Mode"
+  ],
+  "created_at": "2026-01-24T12:52:48.282326",
+  "last_used": "2026-01-24T12:52:58.448127"
+}
