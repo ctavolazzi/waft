@@ -39,6 +39,23 @@ from .two_page_generator import TwoPageGenerator
 from .two_page_generator_legacy import TwoPageGeneratorLegacy
 from .user_feedback import FeedbackEntry, UserFeedbackCollector
 
+# New genetic evolution features
+from .genetic_crossover import (
+    CrossoverResult,
+    CrossoverStrategy,
+    GeneticCrossover,
+    breed,
+)
+from .battle_royale import (
+    BattleAction,
+    BattleResult,
+    BattleRoyale,
+    BattleStats,
+    BattleStatus,
+    Combatant,
+    quick_battle,
+)
+
 __all__ = [
     "StylingGenome",
     "StylingGene",
@@ -76,6 +93,19 @@ __all__ = [
     "StatusComponentBuilder",  # Builder for status-specific PDF components
     "StatusComponentType",  # Status component type constants
     "create_status_components_from_status_dict",  # Create all status components from status dict
+    # Genetic crossover
+    "GeneticCrossover",  # Crossover engine for breeding genomes
+    "CrossoverStrategy",  # Available crossover strategies
+    "CrossoverResult",  # Result of crossover operation
+    "breed",  # Quick function to breed two genomes
+    # Battle royale
+    "BattleRoyale",  # Arena for agent battles
+    "BattleResult",  # Result of a battle
+    "BattleStats",  # Combat stats derived from genome
+    "BattleAction",  # Available battle actions
+    "BattleStatus",  # Battle status enum
+    "Combatant",  # Battle participant
+    "quick_battle",  # Quick function to run a battle
 ]
 
 # TwoPageGenerator is the main implementation (adaptive constraint enforcement)
