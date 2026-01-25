@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
+	import { browser } from '$app/environment';
 
 	let canvas: HTMLCanvasElement;
 	let ctx: CanvasRenderingContext2D | null = null;
@@ -82,8 +83,10 @@
 
 	onDestroy(() => {
 		if (animationFrame) cancelAnimationFrame(animationFrame);
-		window.removeEventListener('resize', handleResize);
-		window.removeEventListener('mousemove', handleMouseMove);
+		if (browser) {
+			window.removeEventListener('resize', handleResize);
+			window.removeEventListener('mousemove', handleMouseMove);
+		}
 	});
 
 	function handleResize() {
