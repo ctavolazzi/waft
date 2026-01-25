@@ -22,6 +22,7 @@
 			<a href="/empirica" class="nav-box">Empirica</a>
 			<a href="/campfire" class="nav-box">🔥 Campfire</a>
 			<a href="/arena" class="nav-box nav-arena">⚔️ Arena</a>
+			<a href="/stats" class="nav-box nav-stats">📊 Stats</a>
 			<button
 				on:click={refresh}
 				class="nav-box nav-button"
@@ -124,5 +125,17 @@
 	.nav-arena:hover {
 		transform: translateY(-2px) scale(1.05);
 		box-shadow: 0 4px 12px rgba(249, 115, 22, 0.6);
+	}
+
+	.nav-stats {
+		background: linear-gradient(135deg, #7c9eff 0%, #a855f7 100%);
+		color: white;
+		border-color: #7c9eff;
+		font-weight: 600;
+	}
+
+	.nav-stats:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 4px 12px rgba(124, 158, 255, 0.5);
 	}
 </style>

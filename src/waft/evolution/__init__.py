@@ -55,6 +55,16 @@ from .battle_royale import (
     Combatant,
     quick_battle,
 )
+from .achievements import (
+    Achievement,
+    AchievementCategory,
+    AchievementRarity,
+    AchievementTracker,
+    UnlockedAchievement,
+    ACHIEVEMENTS,
+    get_tracker,
+    track_event,
+)
 
 __all__ = [
     "StylingGenome",
@@ -106,6 +116,15 @@ __all__ = [
     "BattleStatus",  # Battle status enum
     "Combatant",  # Battle participant
     "quick_battle",  # Quick function to run a battle
+    # Achievement system
+    "Achievement",  # Achievement definition
+    "AchievementCategory",  # Achievement categories
+    "AchievementRarity",  # Rarity levels
+    "AchievementTracker",  # Track and manage achievements
+    "UnlockedAchievement",  # Record of unlocked achievement
+    "ACHIEVEMENTS",  # All achievement definitions
+    "get_tracker",  # Get global achievement tracker
+    "track_event",  # Track event for achievements
 ]
 
 # TwoPageGenerator is the main implementation (adaptive constraint enforcement)
