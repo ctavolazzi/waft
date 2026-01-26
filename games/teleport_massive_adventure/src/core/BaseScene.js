@@ -16,6 +16,7 @@ class BaseScene extends Phaser.Scene {
         this.player = null;
         this.roomLoader = null;
         this.interactionSystem = null;
+        this.minimap = null;
     }
     
     // ========================================
@@ -40,6 +41,10 @@ class BaseScene extends Phaser.Scene {
         
         // Make interaction system available
         window.interactionSystem = this.interactionSystem;
+        
+        // Create minimap
+        this.minimap = new Minimap(this);
+        this.minimap.create();
         
         // Load room data
         if (this.roomId && window.roomsData?.rooms?.[this.roomId]) {
@@ -272,14 +277,31 @@ class BaseScene extends Phaser.Scene {
         items.forEach(item => {
             const slot = document.createElement('div');
             slot.className = 'inventory-slot';
-            slot.innerHTML = `
-                <span class="item-icon">${item.icon || '?'}</span>
-                <span class="item-name">${item.name}</span>
-            `;
-            slot.title = item.description || item.name;
             
-            // Click to select item
-            slot.addEventListener('click', () => {
+            // Get item data for sprite
+            const itemData = window.itemsData?.items?.[item.id] || item;
+            const spritePath = itemData.sprite ? `assets/objects/${itemData.sprite}.png` : null;
+            
+            slot.innerHTML = `
+                ${spritePath ? `<img src="${spritePath}" style="width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />` : ''}
+                <span class="item-icon" style="${spritePath ? 'display: none;' : ''}">${item.icon || itemData.icon || '?'}</span>
+            `;
+            slot.title = `${item.name || itemData.name}\n${item.description || itemData.description || 'Click for details'}`;
+            
+            // Click to show detailed card
+            slot.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (window.inventoryCardSystem) {
+                    window.inventoryCardSystem.showCard(item);
+                } else {
+                    // Fallback to selection
+                    this.selectInventoryItem(item);
+                }
+            });
+            
+            // Right-click to select (for using items)
+            slot.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
                 this.selectInventoryItem(item);
             });
             
@@ -317,6 +339,11 @@ class BaseScene extends Phaser.Scene {
             if (this.player.combatDrone && this.player.combatDrone.isActive) {
                 this.player.combatDrone.update(time, delta);
             }
+        }
+        
+        // Update minimap periodically
+        if (this.minimap && time % 500 < delta) {
+            this.minimap.update();
         }
         
         // Update game manager (coordinates all systems)

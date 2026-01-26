@@ -742,6 +742,9 @@
     <script src="src/core/CombatDrone.js"></script>
     <script src="src/core/CraftingSystem.js"></script>
     <script src="src/core/TheDealer.js"></script>
+    <script src="src/core/ObjectiveSystem.js"></script>
+    <script src="src/core/Minimap.js"></script>
+    <script src="src/core/InventoryCardSystem.js"></script>
     <script src="src/core/BaseScene.js"></script>
     <script src="src/core/AutoPlayer.js"></script>
     
@@ -1050,17 +1053,13 @@
                 // Setup stats HUD updates
                 this._setupStatsHUD();
                 
-                // Subscribe to god comments
+                // Initialize Objective System (for thought bubble hints)
+                objectiveSystem.init();
+                
+                // Subscribe to god comments (The Dealer's commentary - separate from thought bubble)
                 eventBus.on(EventBus.GOD_COMMENT, (data) => {
-                    const commentary = document.getElementById('god-commentary');
-                    if (commentary) {
-                        commentary.textContent = data.comment;
-                        commentary.style.opacity = '0.8';
-                        commentary.style.transition = 'opacity 0.3s';
-                        setTimeout(() => {
-                            commentary.style.opacity = '0.4';
-                        }, 4000);
-                    }
+                    // The Dealer's comments can still appear, but thought bubble is for objectives
+                    console.log(`[THE DEALER] ${data.comment}`);
                 });
                 
                 // Final loading message

@@ -31,6 +31,26 @@ class GameState {
         
         // Observers for reactive updates
         this.observers = new Map();
+        
+        // Event emitter for flag changes
+        this.eventListeners = new Map();
+    }
+    
+    // ========================================
+    // Event Emitter (for flag changes)
+    // ========================================
+    
+    on(event, callback) {
+        if (!this.eventListeners.has(event)) {
+            this.eventListeners.set(event, new Set());
+        }
+        this.eventListeners.get(event).add(callback);
+        return this;
+    }
+    
+    emit(event, data) {
+        this.eventListeners.get(event)?.forEach(cb => cb(data));
+        return this;
     }
     
     // ========================================
@@ -51,6 +71,12 @@ class GameState {
         // Notify observers
         this.notify(path, value, oldValue);
         
+        // Emit event for flag changes
+        if (path.startsWith('flags.')) {
+            const flagName = path.replace('flags.', '');
+            this.emit('flagChanged', { flag: flagName, value, oldValue });
+        }
+        
         return this;
     }
     
@@ -63,8 +89,10 @@ class GameState {
     }
     
     setFlag(name, value = true) {
+        const oldValue = this.state.flags[name];
         this.state.flags[name] = value;
         this.notify(`flags.${name}`, value);
+        this.emit('flagChanged', { flag: name, value, oldValue });
         return this;
     }
     
