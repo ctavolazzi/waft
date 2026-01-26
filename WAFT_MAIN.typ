@@ -1,6 +1,7 @@
 // WAFT Framework: Evidence-Backed Technical Analysis
 // MAIN COMPILATION FILE
-// Professional Publication System
+// Professional Academic Publication System
+// Style: Clean, Feature-Rich, No Color
 
 #import "@preview/fletcher:0.5.8" as fletcher: diagram, node, edge
 #import "@preview/tablex:0.0.9": tablex, cellx, rowspanx, colspanx
@@ -28,111 +29,275 @@
 
 #set text(
   font: "New Computer Modern",
-  size: 11pt,
-  fill: rgb("#333333"),
+  size: 12pt,
+  fill: black,
   hyphenate: true,
 )
 
 #set par(
   justify: true,
   leading: 0.65em,
-  spacing: 1em,
+  spacing: 1.2em,
+  first-line-indent: 1.5em,
 )
 
 #set heading(
   numbering: "1.1",
 )
 
-// Code block styling
+// ============================================================================
+// TYPOGRAPHY ENHANCEMENTS
+// ============================================================================
+
+// Strong emphasis with small caps
+#show strong: set text(weight: "semibold")
+
+// Emphasis styling
+#show emph: set text(style: "italic")
+
+// Superscript/subscript
+#set super(typographic: true)
+#set sub(typographic: true)
+
+// Smart quotes
+#set smartquote(enabled: true)
+
+// ============================================================================
+// CODE BLOCK STYLING - Clean with line numbers
+// ============================================================================
+
 #show raw.where(block: true): it => {
-  set text(font: "JetBrains Mono", size: 9pt)
+  set text(font: "JetBrains Mono", size: 9pt, fill: black)
+  set par(justify: false, leading: 0.5em)
+
   block(
-    fill: rgb("#f5f5f5"),
-    stroke: 1pt + rgb("#cccccc"),
-    radius: 4pt,
-    inset: 12pt,
+    fill: luma(248),
+    stroke: (left: 3pt + luma(180)),
+    inset: (left: 16pt, top: 12pt, bottom: 12pt, right: 12pt),
+    radius: 0pt,
     width: 100%,
-    it
+    breakable: true,
+    {
+      // Add line numbers
+      let lines = it.text.split("\n")
+      let digits = str(lines.len()).len()
+      for (i, line) in lines.enumerate() {
+        let num = str(i + 1)
+        text(fill: luma(160), size: 8pt)[#(" " * (digits - num.len()))#num ]
+        text(fill: black)[#line]
+        if i < lines.len() - 1 { linebreak() }
+      }
+    }
   )
 }
 
 #show raw.where(block: false): it => {
   box(
-    fill: rgb("#f0f0f0"),
-    outset: (x: 3pt, y: 2pt),
+    fill: luma(245),
+    outset: (x: 2pt, y: 2pt),
     radius: 2pt,
-    text(font: "JetBrains Mono", size: 10pt, it)
+    text(font: "JetBrains Mono", size: 10pt, fill: black, it)
   )
 }
 
-// Heading styling
+// ============================================================================
+// HEADING STYLING - Clean Academic
+// ============================================================================
+
+// Level 1: Chapter headings
 #show heading.where(level: 1): it => {
   pagebreak(weak: true)
+  v(0.5in)
   block(
     width: 100%,
-    fill: rgb("#1976d2"),
-    inset: 16pt,
-    radius: 4pt,
-    text(fill: white, size: 20pt, weight: "bold", it.body)
+    below: 0.4in,
+    {
+      text(size: 11pt, weight: "regular", tracking: 0.1em, upper(
+        [Chapter #counter(heading).display("1")]
+      ))
+      v(0.15in)
+      line(length: 100%, stroke: 1.5pt + black)
+      v(0.15in)
+      text(size: 22pt, weight: "bold", it.body)
+      v(0.05in)
+      line(length: 2in, stroke: 0.75pt + black)
+    }
   )
-  v(0.3in)
 }
 
+// Level 2: Section headings
 #show heading.where(level: 2): it => {
-  v(0.2in)
+  v(0.35in)
   block(
     width: 100%,
     above: 0.3in,
     below: 0.2in,
-    text(fill: rgb("#1976d2"), size: 16pt, weight: "bold")[
-      #counter(heading).display() #it.body
-    ]
+    {
+      text(size: 14pt, weight: "bold")[
+        #counter(heading).display("1.1") #h(0.5em) #it.body
+      ]
+      v(0.08in)
+      line(length: 100%, stroke: 0.5pt + luma(120))
+    }
   )
-  line(length: 100%, stroke: 2pt + rgb("#1976d2"))
-  v(0.1in)
 }
 
-// Figure styling
+// Level 3: Subsection headings
+#show heading.where(level: 3): it => {
+  v(0.25in)
+  block(
+    width: 100%,
+    above: 0.2in,
+    below: 0.15in,
+    text(size: 12pt, weight: "bold")[
+      #counter(heading).display("1.1.1") #h(0.4em) #it.body
+    ]
+  )
+}
+
+// Level 4: Paragraph headings
+#show heading.where(level: 4): it => {
+  v(0.15in)
+  text(size: 11pt, weight: "bold", style: "italic")[#it.body.]
+  h(0.5em)
+}
+
+// ============================================================================
+// FIGURE STYLING - Clean Academic
+// ============================================================================
+
 #show figure: it => {
   set align(center)
-  v(0.2in)
+  v(0.25in)
   block(
-    stroke: 1pt + rgb("#cccccc"),
-    radius: 4pt,
-    inset: 12pt,
     width: 100%,
-    [
-      #it.body
-      #v(0.1in)
-      #text(size: 10pt, style: "italic", fill: rgb("#666666"))[
-        #it.caption
+    breakable: false,
+    {
+      it.body
+      v(0.12in)
+      text(size: 10pt)[
+        #text(weight: "bold")[#it.supplement #it.counter.display().]
+        #h(0.3em)
+        #it.caption.body
       ]
-    ]
+    }
   )
-  v(0.2in)
+  v(0.25in)
 }
 
-// Table styling
+// ============================================================================
+// TABLE STYLING - Professional
+// ============================================================================
+
+#set table(
+  stroke: none,
+  inset: 8pt,
+  align: left,
+)
+
 #show table: it => {
   set align(center)
   v(0.2in)
-  block(
-    width: 100%,
+  block(width: 100%, {
+    // Add horizontal rules for academic style
+    set table(
+      stroke: (x, y) => (
+        top: if y == 0 { 1.5pt + black } else if y == 1 { 0.75pt + black } else { none },
+        bottom: 1.5pt + black,
+      )
+    )
     it
-  )
+  })
   v(0.2in)
 }
 
-// Link styling
-#show link: it => {
-  text(fill: rgb("#1976d2"), underline: true, it)
+// ============================================================================
+// QUOTE STYLING - Academic Block Quotes
+// ============================================================================
+
+#show quote: it => {
+  set par(first-line-indent: 0pt)
+  v(0.15in)
+  block(
+    inset: (left: 2em, right: 1em, top: 0.5em, bottom: 0.5em),
+    stroke: (left: 2pt + luma(160)),
+    {
+      text(style: "italic", it.body)
+      if it.attribution != none {
+        v(0.3em)
+        align(right, text(size: 10pt)[— #it.attribution])
+      }
+    }
+  )
+  v(0.15in)
 }
+
+// ============================================================================
+// LINK STYLING - Subtle
+// ============================================================================
+
+#show link: it => {
+  text(fill: black, it)
+  // Add subtle underline for external links
+  if type(it.dest) == str {
+    text(size: 8pt, baseline: -0.5pt)[↗]
+  }
+}
+
+// ============================================================================
+// FOOTNOTE STYLING
+// ============================================================================
+
+#set footnote.entry(
+  separator: line(length: 30%, stroke: 0.5pt + luma(150)),
+  indent: 0.5em,
+  gap: 0.5em,
+)
+
+#show footnote.entry: it => {
+  set text(size: 9pt)
+  it
+}
+
+// ============================================================================
+// OUTLINE STYLING - Table of Contents
+// ============================================================================
+
+#show outline.entry.where(level: 1): it => {
+  v(0.4em, weak: true)
+  strong(it)
+}
+
+// ============================================================================
+// MATH STYLING
+// ============================================================================
+
+#set math.equation(
+  numbering: "(1)",
+  supplement: [Equation],
+)
+
+// ============================================================================
+// LIST STYLING
+// ============================================================================
+
+#set enum(
+  indent: 1.5em,
+  body-indent: 0.5em,
+  numbering: "1.a.i.",
+)
+
+#set list(
+  indent: 1.5em,
+  body-indent: 0.5em,
+  marker: ([•], [◦], [▪]),
+)
 
 // ============================================================================
 // IMPORT CUSTOM FUNCTIONS
 // ============================================================================
 
-#import "waft_functions.typ": callout, evidence, metric
+#import "waft_functions.typ": callout, evidence, metric, definition, theorem, note, sidebar
 
 // ============================================================================
 // COVER PAGE
@@ -148,10 +313,10 @@
   numbering: "i",
   header: none,
   footer: context [
-    #line(length: 100%, stroke: 0.5pt + rgb("#cccccc"))
+    #line(length: 100%, stroke: 0.5pt + luma(180))
     #v(0.05in)
     #align(center)[
-      #text(size: 10pt, fill: rgb("#666666"))[
+      #text(size: 10pt, fill: luma(100))[
         Page #counter(page).display("i")
       ]
     ]
@@ -179,7 +344,7 @@
 #pagebreak()
 #outline(
   title: [Table of Contents],
-  depth: 2,
+  depth: 3,
   indent: auto,
 )
 
@@ -210,21 +375,23 @@
 
 #set page(
   numbering: "1",
-  header: context [
-    #text(size: 10pt, fill: rgb("#666666"))[
-      WAFT Framework: Evidence-Backed Technical Analysis
-      #h(1fr)
-      #counter(page).display("1")
-    ]
-    #v(0.05in)
-    #line(length: 100%, stroke: 0.5pt + rgb("#cccccc"))
-  ],
+  header: context {
+    if counter(page).get().first() > 0 {
+      text(size: 9pt, fill: luma(80))[
+        #smallcaps[WAFT Framework: Evidence-Backed Technical Analysis]
+        #h(1fr)
+        #counter(page).display("1")
+      ]
+      v(0.05in)
+      line(length: 100%, stroke: 0.5pt + luma(180))
+    }
+  },
   footer: context [
-    #line(length: 100%, stroke: 0.5pt + rgb("#cccccc"))
+    #line(length: 100%, stroke: 0.5pt + luma(180))
     #v(0.05in)
     #align(center)[
-      #text(size: 9pt, fill: rgb("#999999"), style: "italic")[
-        Dr. Aria Vex | January 24, 2026
+      #text(size: 9pt, fill: luma(120), style: "italic")[
+        Dr. Aria Vex #h(1em) | #h(1em) January 24, 2026
       ]
     ]
   ],
@@ -241,7 +408,7 @@
 // Chapter 3: Core Claims Analysis (pages 9-13)
 #include "sections/30_core_claims.typ"
 
-// Chapter 4: Scint Gym - Deep Dive (pages 14-28) ⭐ NEXT TO WRITE
+// Chapter 4: Scint Gym - Deep Dive (pages 14-28)
 #include "sections/40_scint_gym.typ"
 
 // Chapter 5: Genome Evolution System (pages 29-37)

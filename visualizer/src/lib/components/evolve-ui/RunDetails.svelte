@@ -9,7 +9,7 @@
 		const hour = timestamp.substring(9, 11);
 		const minute = timestamp.substring(11, 13);
 		const second = timestamp.substring(13, 15);
-		
+
 		const date = new Date(
 			parseInt(year),
 			parseInt(month) - 1,
@@ -18,7 +18,7 @@
 			parseInt(minute),
 			parseInt(second)
 		);
-		
+
 		return date.toLocaleString();
 	}
 
@@ -35,7 +35,7 @@
 		</div>
 	{:else}
 		{@const run = $selectedRun}
-		
+
 		<WireframeBox label="Metadata" variant="secondary" minHeight="auto">
 			<div class="metadata-content">
 				<div class="metadata-item">
@@ -95,7 +95,7 @@
 						</div>
 					</div>
 				{/if}
-				
+
 				{#if run.artifacts.screenshots.length > 0}
 					<div class="artifact-section">
 						<h4>Screenshots ({run.artifacts.screenshots.length})</h4>
@@ -108,7 +108,7 @@
 						</div>
 					</div>
 				{/if}
-				
+
 				{#if run.artifacts.case_files.length > 0}
 					<div class="artifact-section">
 						<h4>Case Files ({run.artifacts.case_files.length})</h4>
@@ -121,7 +121,7 @@
 						</div>
 					</div>
 				{/if}
-				
+
 				{#if run.artifacts.html.length === 0 && run.artifacts.screenshots.length === 0 && run.artifacts.case_files.length === 0}
 					<p class="no-artifacts">No artifacts found for this run.</p>
 				{/if}

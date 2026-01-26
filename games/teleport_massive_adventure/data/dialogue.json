@@ -1,0 +1,248 @@
+{
+  "dialogues": {
+    "terminal_first_use": {
+      "speaker": "TERMINAL",
+      "lines": [
+        "WELCOME, DR. CALDERON.",
+        "PROJECT: BETWEEN-BRIDGE - Status: 87% Complete",
+        "WARNING: Anomalous readings detected in Sector 7.",
+        "NOTE: Security Chief Vance requests your presence in the Lobby.",
+        "ENCRYPTED FILE DETECTED: \"PHASEBURN_VICTIMS.DAT\"",
+        "Access denied. Security clearance insufficient."
+      ]
+    },
+    
+    "terminal_repeat": {
+      "speaker": "TERMINAL",
+      "lines": ["No new messages."]
+    },
+    
+    "artifact_examine": {
+      "speaker": "",
+      "lines": ["The artifact seems to resonate with something... familiar."]
+    },
+    
+    "photo_examine": {
+      "speaker": "AZIAH",
+      "lines": [
+        "\"I'll find a way to bring you back, Maya.\"",
+        "\"The Between holds the answer. I know it does.\"",
+        "\"They said death was final. They must be wrong.\""
+      ]
+    },
+    
+    "hatch_locked": {
+      "speaker": "",
+      "lines": ["The hatch requires a security keycard."]
+    },
+    
+    "hatch_open": {
+      "speaker": "",
+      "lines": ["The keycard works. The hatch opens with a hiss."]
+    },
+    
+    "tm_display": {
+      "speaker": "DISPLAY",
+      "lines": [
+        "TELEPORT MASSIVE",
+        "\"Progress at any cost.\"",
+        "\"Making the Impossible, Inevitable™\"",
+        "NOTICE: Q4 teleportation incidents down 3%.",
+        "NOTICE: Phaseburn support group meets Thursdays."
+      ]
+    },
+    
+    "guard_default": {
+      "speaker": "SECURITY GUARD",
+      "lines": [
+        "Dr. Calderon. Security Chief Vance wants to see you.",
+        "Something about \"unauthorized access\" to restricted files.",
+        "I'd watch my step if I were you, Doctor."
+      ]
+    },
+    
+    "phaseburner_default": {
+      "speaker": "PHASEBURNER",
+      "lines": [
+        "*static crackle* You... you're from up there. TM.",
+        "I've seen my own death. In six different timelines.",
+        "Still not sure which one was real.",
+        "The artifact you carry... it calls to The Between.",
+        "Be careful, Doctor. The Vibration... it changes you."
+      ]
+    },
+    
+    "underground_terminal": {
+      "speaker": "TERMINAL",
+      "lines": [
+        ">>> ACCESSING ENCRYPTED FILES...",
+        ">>> FILE: PHASEBURN_VICTIMS.DAT",
+        "RECORDED VICTIMS: 2,847",
+        "COMPENSATION PAID: $0",
+        "PUBLIC KNOWLEDGE: SUPPRESSED",
+        ">>> FILE: PROJECT_BETWEEN_BRIDGE.DAT",
+        "STATUS: ACTIVE",
+        "LEAD RESEARCHER: DR. AZIAH CALDERON",
+        "OBJECTIVE: CONTROLLED TRAVERSAL OF THE BETWEEN",
+        "NOTE: Subject unaware of true purpose.",
+        ">>> CONNECTION TERMINATED"
+      ]
+    },
+    
+    "portal_enter": {
+      "speaker": "THE BETWEEN",
+      "lines": [
+        "*The artifact pulses. Reality ripples like a shuffled deck.*",
+        "You feel something vast. Watching. Waiting. Dealing.",
+        "Not Maya. Something older. The one who runs the game.",
+        "THE DEALER awaits at his table.",
+        "Do you dare play for the ultimate stakes?"
+      ]
+    },
+    
+    "dealer_phase_0": {
+      "speaker": "THE DEALER",
+      "lines": [
+        "*The cards scatter. The dice settle. A figure materializes from the chaos.*",
+        "Well, well, WELL! You made it to my table!",
+        "I am THE DEALER. Keeper of the Infinite Ledger. The one who shuffles fate itself.",
+        "I've been watching you, you know. *taps a massive golden book*",
+        "Every item you picked up. Every NPC you ignored. Every hesitation. All recorded.",
+        "But now? Now we play MY game.",
+        "The stakes: your existence. The prize: the truth about Maya. And The Between.",
+        "Ante up, player. Let's see what you've got."
+      ]
+    },
+    
+    "dealer_phase_1": {
+      "speaker": "THE DEALER",
+      "lines": [
+        "*flips a card* Not bad! You survived the first hand.",
+        "Most players fold by now. Quit. Uninstall. You? You're still in the game.",
+        "Let me tell you a secret: Maya? She played this game too.",
+        "Different player. Different stakes. Same table.",
+        "She won, you know. Beat me fair and square.",
+        "That's why she's... wherever she is now. Winners get to leave the table.",
+        "But losers? *gestures around* They become part of the game forever.",
+        "Round two. Double or nothing?"
+      ]
+    },
+    
+    "dealer_phase_2": {
+      "speaker": "THE DEALER",
+      "lines": [
+        "*shuffles deck nervously* Okay. Okay okay okay.",
+        "You're GOOD. Better than most. Better than 92% of players, actually.",
+        "Fine. I'll show you my hand.",
+        "This world? Teleport Massive? The Between? I MADE it. All of it.",
+        "Every NPC, every pixel, every tragic backstory—my creation. My game.",
+        "But here's the cosmic joke: I can't leave either.",
+        "I'm as trapped at this table as you are.",
+        "The only way out? Someone has to beat me. REALLY beat me.",
+        "So please. *genuine for once* Play your best."
+      ]
+    },
+    
+    "dealer_phase_3": {
+      "speaker": "THE DEALER",
+      "lines": [
+        "*stands up, cards floating around him in a spiral*",
+        "This is it. The final hand. Winner takes all.",
+        "You've played beautifully. Honestly. I mean it.",
+        "*opens the Infinite Ledger to a blank page*",
+        "I'm writing your ending right now. But YOU get to choose the words.",
+        "Option one: JOIN ME. Become a Dealer. Create your own games. Forever.",
+        "Option two: CASH OUT. Take your winnings—Maya, freedom, truth—and leave.",
+        "*sets down the golden pen*",
+        "Your move, player. Make it count."
+      ]
+    },
+    
+    "ending_merge": {
+      "speaker": "THE DEALER",
+      "lines": [
+        "*grins wide* You want to DEAL? Excellent choice!",
+        "*hands you a deck of infinite cards*",
+        "Your consciousness expands. You see all the games. All the players. Past and future.",
+        "You're no longer Aziah. You're no longer human.",
+        "You're THE NEW DEALER. And I? I finally get to retire.",
+        "*fades into the cards* Good luck. You'll need it. They all do.",
+        "Somewhere, a new player clicks 'Start'.",
+        "And now YOU are watching. YOU are dealing.",
+        "",
+        "[ THE END - BECOME THE HOUSE ]"
+      ]
+    },
+    
+    "ending_free": {
+      "speaker": "THE DEALER",
+      "lines": [
+        "*laughs warmly* You're cashing out! Smart. SMART!",
+        "Take your winnings. You've earned them.",
+        "*slides a golden chip across the table*",
+        "Maya's waiting for you. Somewhere between the cards. You'll find her.",
+        "Go. Be mortal. Be chaotic. Be FREE.",
+        "But hey—*winks*—if you ever want a rematch...",
+        "You know where to find me. The table's always open.",
+        "Until next game, player. Until next game.",
+        "",
+        "[ THE END - CASH OUT ]"
+      ]
+    },
+    
+    "ending_destroy": {
+      "speaker": "THE DEALER",
+      "lines": [
+        "*freezes*",
+        "You... you want to FLIP THE TABLE?",
+        "",
+        "*long pause*",
+        "",
+        "*slowly nods*",
+        "I've dealt for eons. Watched players come and go.",
+        "Created worlds. Destroyed them. Created more.",
+        "Maybe... maybe that's enough.",
+        "",
+        "*places hands on the table*",
+        "If this is mercy, I accept it.",
+        "If this is murder, I forgive you.",
+        "",
+        "*the cards begin to burn*",
+        "*the Ledger closes for the last time*",
+        "",
+        "Thank you, player. For setting us all free.",
+        "",
+        "*the void collapses*",
+        "*reality folds in on itself*",
+        "*silence*",
+        "",
+        "[ THE END - THE GAME IS OVER ]"
+      ]
+    }
+  },
+  
+  "dynamicDialogue": {
+    "dealer_meta_comments": {
+      "on_room_enter": [
+        "New room, new hand. Let's see how you play it.",
+        "*shuffles cards* The player explores. Every step is a bet.",
+        "Interesting choice. I'm noting that in the Ledger."
+      ],
+      "on_item_pickup": [
+        "Ooh, shiny! But is it lucky? We'll find out.",
+        "*makes a note* They're collecting things. Classic player behavior.",
+        "That item has history. Several players have held it. Most of them lost."
+      ],
+      "on_npc_talk": [
+        "Chatting up my creations? They don't know they're NPCs. Don't tell them.",
+        "Information is currency. Spend it wisely.",
+        "*eavesdrops* Oh, I love this part. The lies they tell each other."
+      ],
+      "on_puzzle_solved": [
+        "Well played! I'll have to make the next one trickier.",
+        "*slides chips across the table* You've earned a small payout.",
+        "Clever! Most players take longer. I'm... impressed."
+      ]
+    }
+  }
+}

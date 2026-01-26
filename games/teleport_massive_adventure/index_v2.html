@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Teleport Massive: The Adventure</title>
+    
+    <!-- Meta tags for SEO and sharing -->
+    <meta name="description" content="A cyberpunk point-and-click adventure. Find Maya. Uncover the truth about The Between. Face The Dealer.">
+    <meta name="author" content="WAFT Games">
+    <meta name="theme-color" content="#00aaff">
+    
+    <!-- Open Graph / Social sharing -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Teleport Massive: The Adventure">
+    <meta property="og:description" content="A cyberpunk point-and-click adventure. Find Maya. Uncover the truth about The Between. Face The Dealer.">
+    <meta property="og:image" content="assets/og-image.png">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Teleport Massive: The Adventure">
+    <meta name="twitter:description" content="A cyberpunk point-and-click adventure featuring THE DEALER.">
+    
+    <!-- Favicon - Card suit SVG -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🃏</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🃏</text></svg>">
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        body {
+            background: #0a0a12;
+            color: #00aaff;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            min-height: 100dvh; /* Dynamic viewport height for mobile */
+        }
+        
+        /* ══════════════════════════════════════════════════════════════
+           RESPONSIVE GAME CONTAINER
+           Uses aspect ratio and viewport units for full responsiveness
+           ══════════════════════════════════════════════════════════════ */
+        #game-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            max-width: 100vw;
+            max-height: 100vh;
+            max-height: 100dvh;
+            aspect-ratio: 800 / 600;
+            background: #0f0f1a;
+            border: 2px solid #00aaff;
+            box-shadow: 0 0 30px rgba(0, 170, 255, 0.3);
+            overflow: hidden;
+        }
+        
+        /* Constrain by height on wide screens */
+        @media (min-aspect-ratio: 800/600) {
+            #game-container {
+                width: auto;
+                height: 100vh;
+                height: 100dvh;
+            }
+        }
+        
+        /* Constrain by width on tall screens */
+        @media (max-aspect-ratio: 800/600) {
+            #game-container {
+                width: 100vw;
+                height: auto;
+            }
+        }
+        
+        /* Phaser canvas - fill container */
+        #game-container canvas {
+            display: block;
+            width: 100% !important;
+            height: auto !important;
+            max-height: calc(100% - 70px); /* Leave room for inventory */
+        }
+        
+        /* ══════════════════════════════════════════════════════════════
+           ROOM TITLE - Responsive font
+           ══════════════════════════════════════════════════════════════ */
+        #room-title {
+            position: absolute;
+            top: 1.5%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: clamp(10px, 2vw, 14px);
+            color: #00aaff;
+            text-shadow: 0 0 10px #00aaff;
+            z-index: 100;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        
+        /* ══════════════════════════════════════════════════════════════
+           DIALOGUE BOX - Responsive sizing
+           ══════════════════════════════════════════════════════════════ */
+        #dialogue-box {
+            position: absolute;
+            bottom: 15%;
+            left: 5%;
+            right: 5%;
+            background: rgba(10, 10, 20, 0.95);
+            border: 2px solid #00aaff;
+            padding: clamp(8px, 2vw, 15px);
+            display: none;
+            z-index: 200;
+            max-height: 35%;
+            overflow-y: auto;
+        }
+        
+        #dialogue-box.active {
+            display: block;
+        }
+        
+        #speaker-name {
+            color: #00ff88;
+            font-weight: bold;
+            margin-bottom: clamp(4px, 1vw, 8px);
+            font-size: clamp(11px, 2vw, 14px);
+        }
+        
+        #dialogue-text {
+            color: #ffffff;
+            line-height: 1.5;
+            font-size: clamp(10px, 1.8vw, 13px);
+        }
+        
+        #dialogue-continue {
+            position: absolute;
+            bottom: clamp(5px, 1vw, 10px);
+            right: clamp(8px, 2vw, 15px);
+            color: #00aaff;
+            font-size: clamp(8px, 1.5vw, 10px);
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            50% { opacity: 0.3; }
+        }
+        
+        /* ══════════════════════════════════════════════════════════════
+           INVENTORY PANEL - Responsive
+           ══════════════════════════════════════════════════════════════ */
+        #inventory-panel {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: clamp(50px, 12%, 70px);
+            background: rgba(10, 10, 30, 0.9);
+            border-top: 2px solid #00aaff;
+            display: flex;
+            align-items: center;
+            padding: 0 clamp(10px, 2vw, 20px);
+            gap: clamp(5px, 1vw, 10px);
+            z-index: 150;
+        }
+        
+        #inventory-label {
+            color: #00aaff;
+            font-size: clamp(9px, 1.8vw, 12px);
+            margin-right: clamp(5px, 1vw, 10px);
+            white-space: nowrap;
+        }
+        
+        #inventory-items {
+            display: flex;
+            gap: clamp(5px, 1vw, 10px);
+            flex: 1;
+            overflow-x: auto;
+        }
+        
+        .inventory-slot {
+            width: clamp(35px, 8vw, 50px);
+            height: clamp(35px, 8vw, 50px);
+            min-width: clamp(35px, 8vw, 50px);
+            background: rgba(0, 100, 150, 0.2);
+            border: 1px solid #00aaff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .inventory-slot:hover {
+            background: rgba(0, 170, 255, 0.3);
+            transform: scale(1.05);
+        }
+        
+        .inventory-slot.selected {
+            border-color: #00ff88;
+            box-shadow: 0 0 10px #00ff88;
+        }
+        
+        .item-icon {
+            font-size: clamp(14px, 3vw, 20px);
+        }
+        
+        .item-name {
+            font-size: clamp(6px, 1.2vw, 8px);
+            color: #aaa;
+            margin-top: 2px;
+        }
+        
+        /* ══════════════════════════════════════════════════════════════
+           STATS HUD - HP, XP, Level Display
+           ══════════════════════════════════════════════════════════════ */
+        #stats-hud {
+            position: absolute;
+            top: 2%;
+            left: 2%;
+            width: clamp(140px, 20%, 180px);
+            z-index: 60;
+            font-size: clamp(8px, 1.5vw, 10px);
+        }
+        
+        .stat-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        
+        .stat-label {
+            width: 25px;
+            color: #888;
+            font-weight: bold;
+        }
+        
+        .stat-bar-container {
+            flex: 1;
+            height: clamp(8px, 1.5vw, 12px);
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid #333;
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .stat-bar {
+            height: 100%;
+            transition: width 0.3s ease-out;
+            position: relative;
+        }
+        
+        .stat-bar.hp-bar {
+            background: linear-gradient(90deg, #ff4444, #ff6666);
+            box-shadow: 0 0 8px rgba(255, 68, 68, 0.5);
+        }
+        
+        .stat-bar.hp-bar.low {
+            background: linear-gradient(90deg, #ff2222, #ff4444);
+            animation: pulse-danger 0.5s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-danger {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+        
+        .stat-bar.xp-bar {
+            background: linear-gradient(90deg, #4488ff, #66aaff);
+            box-shadow: 0 0 8px rgba(68, 136, 255, 0.5);
+        }
+        
+        .stat-value {
+            position: absolute;
+            right: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: clamp(6px, 1vw, 8px);
+            color: #fff;
+            text-shadow: 1px 1px 2px #000;
+            font-weight: bold;
+        }
+        
+        .level-display {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 2px 4px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid #446688;
+            border-radius: 3px;
+            margin-top: 4px;
+        }
+        
+        .level-label {
+            color: #00aaff;
+            font-weight: bold;
+        }
+        
+        .level-value {
+            color: #ffaa00;
+            font-weight: bold;
+            font-size: clamp(10px, 2vw, 14px);
+        }
+        
+        /* Level up animation */
+        .level-display.level-up {
+            animation: level-up-glow 1s ease-out;
+        }
+        
+        @keyframes level-up-glow {
+            0% { box-shadow: 0 0 0 0 rgba(255, 170, 0, 0.8); }
+            50% { box-shadow: 0 0 20px 5px rgba(255, 170, 0, 0.8); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 170, 0, 0); }
+        }
+        
+        /* ══════════════════════════════════════════════════════════════
+           GOD COMMENTARY - Responsive
+           ══════════════════════════════════════════════════════════════ */
+        #god-commentary {
+            position: absolute;
+            top: 6%;
+            right: 2%;
+            width: clamp(120px, 25%, 200px);
+            font-size: clamp(8px, 1.5vw, 10px);
+            color: #ffaa00;
+            font-style: italic;
+            opacity: 0.7;
+            text-align: right;
+            z-index: 50;
+            pointer-events: none;
+        }
+        
+        /* ══════════════════════════════════════════════════════════════
+           CONTROLS HINT - Responsive, hidden on mobile
+           ══════════════════════════════════════════════════════════════ */
+        #controls-hint {
+            position: absolute;
+            bottom: 13%;
+            right: 2%;
+            font-size: clamp(7px, 1.3vw, 9px);
+            color: #446688;
+            text-align: right;
+            z-index: 50;
+            pointer-events: none;
+            line-height: 1.4;
+        }
+        
+        #controls-hint kbd {
+            background: rgba(0, 100, 150, 0.3);
+            padding: 1px clamp(2px, 0.5vw, 4px);
+            border-radius: 2px;
+            border: 1px solid #446688;
+            font-size: inherit;
+        }
+        
+        /* Hide controls on small screens (touch devices) */
+        @media (max-width: 600px), (hover: none) {
+            #controls-hint {
+                display: none;
+            }
+        }
+        
+        /* ══════════════════════════════════════════════════════════════
+           LOADING SCREEN - Polished with animations
+           ══════════════════════════════════════════════════════════════ */
+        #loading-screen {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, #0a0a12 0%, #0f1020 50%, #0a0a12 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease-out;
+        }
+        
+        #loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .loading-logo {
+            font-size: clamp(40px, 10vw, 60px);
+            margin-bottom: 10px;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .loading-title {
+            font-size: clamp(20px, 5vw, 32px);
+            color: #00aaff;
+            text-shadow: 0 0 20px #00aaff, 0 0 40px rgba(0, 170, 255, 0.5);
+            margin-bottom: 5px;
+            letter-spacing: 4px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 0 0 20px #00aaff, 0 0 40px rgba(0, 170, 255, 0.5); }
+            to { text-shadow: 0 0 30px #00aaff, 0 0 60px rgba(0, 170, 255, 0.8); }
+        }
+        
+        .loading-subtitle {
+            font-size: clamp(10px, 2vw, 12px);
+            color: #446688;
+            margin-bottom: clamp(20px, 5vw, 40px);
+            letter-spacing: 2px;
+        }
+        
+        .loading-bar {
+            width: clamp(200px, 60%, 300px);
+            height: clamp(12px, 2.5vw, 16px);
+            background: #1a1a2e;
+            border: 1px solid #00aaff;
+            border-radius: 3px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 170, 255, 0.3);
+        }
+        
+        .loading-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #00aaff, #00ff88, #00aaff);
+            background-size: 200% 100%;
+            width: 0%;
+            transition: width 0.3s;
+            animation: shimmer 2s linear infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        .loading-text {
+            margin-top: clamp(12px, 3vw, 20px);
+            font-size: clamp(9px, 1.8vw, 11px);
+            color: #555;
+            min-height: 1.2em;
+        }
+        
+        .loading-tips {
+            margin-top: clamp(20px, 5vw, 40px);
+            font-size: clamp(9px, 1.6vw, 10px);
+            color: #ffaa00;
+            font-style: italic;
+            max-width: 80%;
+            text-align: center;
+            transition: opacity 0.3s;
+            min-height: 1.5em;
+        }
+        
+        .loading-version {
+            position: absolute;
+            bottom: 10px;
+            right: 15px;
+            font-size: 9px;
+            color: #333;
+        }
+        
+        /* ══════════════════════════════════════════════════════════════
+           AUTO-PLAYER UI - Responsive positioning
+           ══════════════════════════════════════════════════════════════ */
+        #auto-player-ui {
+            font-size: clamp(9px, 1.5vw, 12px) !important;
+        }
+        
+        #auto-player-ui button {
+            padding: clamp(4px, 1vw, 8px) clamp(8px, 2vw, 16px) !important;
+            font-size: clamp(9px, 1.5vw, 12px) !important;
+        }
+        
+        #auto-player-log {
+            width: clamp(180px, 35vw, 280px) !important;
+            font-size: clamp(8px, 1.3vw, 10px) !important;
+            max-height: clamp(100px, 20vh, 150px) !important;
+        }
+        
+        /* ══════════════════════════════════════════════════════════════
+           TOUCH-FRIENDLY ADJUSTMENTS
+           ══════════════════════════════════════════════════════════════ */
+        @media (hover: none) and (pointer: coarse) {
+            .inventory-slot {
+                min-width: 44px;
+                min-height: 44px;
+            }
+            
+            #dialogue-box {
+                padding: 12px;
+            }
+            
+            #dialogue-continue {
+                font-size: 12px;
+                padding: 8px;
+            }
+        }
+        
+        /* ══════════════════════════════════════════════════════════════
+           SMALL SCREEN ADJUSTMENTS
+           ══════════════════════════════════════════════════════════════ */
+        @media (max-width: 480px) {
+            #inventory-label {
+                display: none;
+            }
+            
+            #room-title {
+                top: 2%;
+            }
+            
+            #dialogue-box {
+                bottom: 12%;
+                left: 2%;
+                right: 2%;
+            }
+        }
+        
+        /* ══════════════════════════════════════════════════════════════
+           LANDSCAPE MOBILE
+           ══════════════════════════════════════════════════════════════ */
+        @media (max-height: 500px) and (orientation: landscape) {
+            #inventory-panel {
+                height: 50px;
+            }
+            
+            #dialogue-box {
+                bottom: 55px;
+                max-height: 40%;
+            }
+            
+            .inventory-slot {
+                width: 40px;
+                height: 40px;
+                min-width: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <!-- Loading Screen -->
+        <div id="loading-screen">
+            <div class="loading-logo">🃏</div>
+            <div class="loading-title">TELEPORT MASSIVE</div>
+            <div class="loading-subtitle">THE ADVENTURE</div>
+            <div class="loading-bar">
+                <div class="loading-progress" id="loading-progress"></div>
+            </div>
+            <div class="loading-text" id="loading-text">Shuffling the deck...</div>
+            <div class="loading-tips" id="loading-tips">THE DEALER is watching...</div>
+            <div class="loading-version">v1.0.0</div>
+        </div>
+        
+        <!-- Room Title -->
+        <div id="room-title">LOADING...</div>
+        
+        <!-- Stats HUD -->
+        <div id="stats-hud">
+            <div class="stat-row">
+                <span class="stat-label">HP</span>
+                <div class="stat-bar-container">
+                    <div class="stat-bar hp-bar" id="hp-bar" style="width: 100%"></div>
+                    <span class="stat-value" id="hp-value">100/100</span>
+                </div>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">XP</span>
+                <div class="stat-bar-container">
+                    <div class="stat-bar xp-bar" id="xp-bar" style="width: 0%"></div>
+                    <span class="stat-value" id="xp-value">0/100</span>
+                </div>
+            </div>
+            <div class="level-display" id="level-display">
+                <span class="level-label">LEVEL</span>
+                <span class="level-value" id="level-value">1</span>
+            </div>
+        </div>
+        
+        <!-- God Commentary -->
+        <div id="god-commentary"></div>
+        
+        <!-- Controls Hint -->
+        <div id="controls-hint">
+            <kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> or <kbd>WASD</kbd> Move<br>
+            <kbd>E</kbd> Interact &nbsp; <kbd>I</kbd> Inventory<br>
+            <kbd>SPACE</kbd> Continue dialogue<br>
+            or <em>Click to walk</em>
+        </div>
+        
+        <!-- Dialogue Box -->
+        <div id="dialogue-box">
+            <div id="speaker-name">SYSTEM</div>
+            <div id="dialogue-text">Loading...</div>
+            <div id="dialogue-continue">▼ CLICK TO CONTINUE</div>
+        </div>
+        
+        <!-- Inventory Panel -->
+        <div id="inventory-panel">
+            <span id="inventory-label">INVENTORY</span>
+            <div id="inventory-items"></div>
+        </div>
+    </div>
+    
+    <!-- Phaser 3 -->
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
+    
+    <!-- Core Systems -->
+    <script src="src/core/EventBus.js"></script>
+    <script src="src/core/GameState.js"></script>
+    <script src="src/core/GameManager.js"></script>
+    <script src="src/core/StatsSystem.js"></script>
+    <script src="src/core/CollisionSystem.js"></script>
+    <script src="src/core/CombatSystem.js"></script>
+    <script src="src/core/NPCSystem.js"></script>
+    <script src="src/core/DialogueSystem.js"></script>
+    <script src="src/core/RoomLoader.js"></script>
+    <script src="src/core/InteractionSystem.js"></script>
+    <script src="src/core/PlayerController.js"></script>
+    <script src="src/core/TheDealer.js"></script>
+    <script src="src/core/BaseScene.js"></script>
+    <script src="src/core/AutoPlayer.js"></script>
+    
+    <!-- Scenes -->
+    <script src="src/scenes/LabScene.js"></script>
+    <script src="src/scenes/LobbyScene.js"></script>
+    <script src="src/scenes/UndergroundScene.js"></script>
+    <script src="src/scenes/VoidScene.js"></script>
+    
+    <script>
+        // ════════════════════════════════════════════════════════════════
+        // RESPONSIVE GAME DIMENSIONS
+        // ════════════════════════════════════════════════════════════════
+        
+        const BASE_WIDTH = 800;
+        const BASE_HEIGHT = 500;
+        const INVENTORY_HEIGHT = 70;
+        
+        function getGameDimensions() {
+            const container = document.getElementById('game-container');
+            const rect = container.getBoundingClientRect();
+            
+            // Calculate available space (container minus inventory)
+            const availableHeight = rect.height - INVENTORY_HEIGHT;
+            const aspectRatio = BASE_WIDTH / BASE_HEIGHT;
+            
+            let width, height;
+            
+            if (rect.width / availableHeight > aspectRatio) {
+                // Height-constrained
+                height = availableHeight;
+                width = height * aspectRatio;
+            } else {
+                // Width-constrained
+                width = rect.width;
+                height = width / aspectRatio;
+            }
+            
+            return {
+                width: Math.floor(width),
+                height: Math.floor(height)
+            };
+        }
+        
+        // ════════════════════════════════════════════════════════════════
+        // Loading Tips
+        // ════════════════════════════════════════════════════════════════
+        const LOADING_TIPS = [
+            "THE DEALER is watching...",
+            "The house always wins. Usually.",
+            "Every choice is recorded in The Ledger.",
+            "Maya beat The Dealer once. Can you?",
+            "The Between is not a place. It's a process.",
+            "Talk to everyone. Secrets hide in conversation.",
+            "Some items have history. Ask about them.",
+            "Three endings await. Choose wisely.",
+            "The Dealer respects clever players.",
+            "Nothing is random. Everything is dealt."
+        ];
+        
+        let tipIndex = 0;
+        const tipsElement = document.getElementById('loading-tips');
+        
+        function cycleTips() {
+            if (tipsElement) {
+                tipsElement.style.opacity = '0';
+                setTimeout(() => {
+                    tipIndex = (tipIndex + 1) % LOADING_TIPS.length;
+                    tipsElement.textContent = LOADING_TIPS[tipIndex];
+                    tipsElement.style.opacity = '1';
+                }, 300);
+            }
+        }
+        
+        const tipInterval = setInterval(cycleTips, 3000);
+        
+        // ════════════════════════════════════════════════════════════════
+        // Boot Scene - Asset Loading
+        // ════════════════════════════════════════════════════════════════
+        class BootScene extends Phaser.Scene {
+            constructor() {
+                super('BootScene');
+            }
+            
+            preload() {
+                // Progress bar and loading text
+                const progressBar = document.getElementById('loading-progress');
+                const loadingText = document.getElementById('loading-text');
+                
+                const loadingMessages = [
+                    'Shuffling the deck...',
+                    'Dealing cards...',
+                    'Consulting The Ledger...',
+                    'Preparing the table...',
+                    'Stacking chips...',
+                    'Rolling dice...'
+                ];
+                
+                this.load.on('progress', (value) => {
+                    progressBar.style.width = `${value * 100}%`;
+                    
+                    // Update loading message based on progress
+                    const msgIndex = Math.min(
+                        Math.floor(value * loadingMessages.length),
+                        loadingMessages.length - 1
+                    );
+                    loadingText.textContent = loadingMessages[msgIndex];
+                });
+                
+                this.load.on('fileprogress', (file) => {
+                    // Optional: show file name for debugging
+                    // loadingText.textContent = `Loading: ${file.key}`;
+                });
+                
+                // Load data files
+                this.load.json('roomsData', 'data/rooms.json');
+                this.load.json('dialogueData', 'data/dialogue.json');
+                this.load.json('itemsData', 'data/items.json');
+                
+                // Load character sprites
+                const characters = ['aziah', 'guard', 'phaseburner', 'architect'];
+                const directions = ['north', 'south', 'east', 'west'];
+                
+                characters.forEach(char => {
+                    directions.forEach(dir => {
+                        const key = `${char}_${dir}`;
+                        const path = `assets/characters/${char}_extracted/frames/${char}_${dir}.png`;
+                        this.load.image(key, path);
+                    });
+                });
+                
+                // Load objects
+                this.load.image('terminal_obj', 'assets/objects/terminal_obj.png');
+                this.load.image('artifact_obj', 'assets/objects/artifact_obj.png');
+                this.load.image('keycard_obj', 'assets/objects/keycard_obj.png');
+            }
+            
+            create() {
+                // Stop tip cycling
+                clearInterval(tipInterval);
+                
+                // Store loaded data globally
+                window.roomsData = this.cache.json.get('roomsData');
+                window.dialogueData = this.cache.json.get('dialogueData');
+                window.itemsData = this.cache.json.get('itemsData');
+                
+                // Initialize dialogue system with data
+                dialogueSystem.loadData(window.dialogueData?.dialogues || {});
+                
+                // Initialize game state
+                gameState.reset();
+                gameState.set('stats.timeStarted', Date.now());
+                gameState.set('stats.version', '1.0.0');
+                
+                // ════════════════════════════════════════════════════════════
+                // Initialize Game Manager and Register All Systems
+                // ════════════════════════════════════════════════════════════
+                
+                // Register all systems with GameManager
+                gameManager.registerSystem('eventBus', eventBus, { 
+                    initOrder: 0,
+                    updateEnabled: false 
+                });
+                gameManager.registerSystem('gameState', gameState, { 
+                    initOrder: 1,
+                    updateEnabled: false,
+                    dependencies: ['eventBus']
+                });
+                gameManager.registerSystem('statsSystem', statsSystem, { 
+                    initOrder: 2,
+                    updateEnabled: false,
+                    dependencies: ['eventBus', 'gameState']
+                });
+                gameManager.registerSystem('collisionSystem', collisionSystem, { 
+                    initOrder: 3,
+                    updateEnabled: true,
+                    updateOrder: 0,
+                    dependencies: ['eventBus']
+                });
+                gameManager.registerSystem('combatSystem', combatSystem, { 
+                    initOrder: 4,
+                    updateEnabled: true,
+                    updateOrder: 1,
+                    dependencies: ['statsSystem', 'collisionSystem', 'eventBus']
+                });
+                gameManager.registerSystem('npcSystem', npcSystem, { 
+                    initOrder: 5,
+                    updateEnabled: true,
+                    updateOrder: 2,
+                    dependencies: ['statsSystem', 'combatSystem', 'collisionSystem']
+                });
+                gameManager.registerSystem('dialogueSystem', dialogueSystem, { 
+                    initOrder: 6,
+                    updateEnabled: false,
+                    dependencies: ['eventBus']
+                });
+                gameManager.registerSystem('theDealer', theDealer, { 
+                    initOrder: 7,
+                    updateEnabled: false,
+                    dependencies: ['eventBus', 'gameState']
+                });
+                
+                // Initialize all systems through GameManager
+                gameManager.initialize({
+                    phaserGame: this.game,
+                    scene: this
+                }).then(() => {
+                    // Register player character with stats
+                    statsSystem.registerCharacter('aziah', {
+                        name: 'Aziah',
+                        type: 'player',
+                        level: 1,
+                        hp: 100,
+                        maxHp: 100,
+                        attack: 12,
+                        defense: 8,
+                        speed: 10,
+                        luck: 7,
+                        critical: 10
+                    });
+                    
+                    // Register player as combatant
+                    combatSystem.registerCombatant('aziah', {
+                        faction: 'player',
+                        hostileTo: ['enemy']
+                    });
+                    
+                    // Listen for NPC damage events
+                    statsSystem.on('damageTaken', (data) => {
+                        if (npcSystem.getNPC(data.target)) {
+                            npcSystem.notifyDamage(data.target, data.finalDamage, {
+                                x: gameState.get('playerPosition.x') || 400,
+                                y: gameState.get('playerPosition.y') || 400
+                            });
+                        }
+                    });
+                    
+                    // Make GameManager globally accessible
+                    window.gameManager = gameManager;
+                }).catch(error => {
+                    console.error('[BootScene] Failed to initialize systems:', error);
+                });
+                
+                // Setup stats HUD updates
+                this._setupStatsHUD();
+                
+                // Subscribe to god comments
+                eventBus.on(EventBus.GOD_COMMENT, (data) => {
+                    const commentary = document.getElementById('god-commentary');
+                    if (commentary) {
+                        commentary.textContent = data.comment;
+                        commentary.style.opacity = '0.8';
+                        commentary.style.transition = 'opacity 0.3s';
+                        setTimeout(() => {
+                            commentary.style.opacity = '0.4';
+                        }, 4000);
+                    }
+                });
+                
+                // Final loading message
+                document.getElementById('loading-text').textContent = 'The game begins...';
+                
+                // Smooth transition to game
+                setTimeout(() => {
+                    document.getElementById('loading-screen').classList.add('hidden');
+                    
+                    // Emit game start
+                    eventBus.emit(EventBus.GAME_START, { timestamp: Date.now() });
+                    
+                    // Start first scene
+                    this.scene.start('LabScene');
+                }, 500);
+            }
+            
+            /**
+             * Setup stats HUD event listeners
+             */
+            _setupStatsHUD() {
+                const hpBar = document.getElementById('hp-bar');
+                const hpValue = document.getElementById('hp-value');
+                const xpBar = document.getElementById('xp-bar');
+                const xpValue = document.getElementById('xp-value');
+                const levelValue = document.getElementById('level-value');
+                const levelDisplay = document.getElementById('level-display');
+                
+                // Update HUD function
+                const updateHUD = () => {
+                    const stats = statsSystem.getStats('aziah');
+                    if (!stats) return;
+                    
+                    // HP
+                    const hpPercent = (stats.hp / stats.maxHp) * 100;
+                    hpBar.style.width = `${hpPercent}%`;
+                    hpValue.textContent = `${stats.hp}/${stats.maxHp}`;
+                    
+                    // Low HP warning
+                    if (hpPercent <= 25) {
+                        hpBar.classList.add('low');
+                    } else {
+                        hpBar.classList.remove('low');
+                    }
+                    
+                    // XP
+                    const xpProgress = statsSystem.getXpProgress('aziah');
+                    xpBar.style.width = `${xpProgress}%`;
+                    
+                    if (stats.level < statsSystem.CONFIG.MAX_LEVEL) {
+                        const currentLevelXp = statsSystem.CONFIG.XP_TABLE[stats.level];
+                        const nextLevelXp = statsSystem.CONFIG.XP_TABLE[stats.level + 1];
+                        xpValue.textContent = `${stats.xp - currentLevelXp}/${nextLevelXp - currentLevelXp}`;
+                    } else {
+                        xpValue.textContent = 'MAX';
+                    }
+                    
+                    // Level
+                    levelValue.textContent = stats.level;
+                };
+                
+                // Subscribe to stat changes
+                statsSystem.on('damageTaken', updateHUD);
+                statsSystem.on('healReceived', updateHUD);
+                statsSystem.on('xpGained', updateHUD);
+                statsSystem.on('levelUp', (data) => {
+                    updateHUD();
+                    // Play level up animation
+                    levelDisplay.classList.add('level-up');
+                    setTimeout(() => {
+                        levelDisplay.classList.remove('level-up');
+                    }, 1000);
+                    
+                    // The Dealer comments on level up
+                    theDealer.comment('level_up', `Level ${data.level}. The stakes just got higher.`);
+                });
+                
+                // Initial update
+                updateHUD();
+            }
+        }
+        
+        // ════════════════════════════════════════════════════════════════
+        // Phaser Config with Scale Manager
+        // ════════════════════════════════════════════════════════════════
+        const config = {
+            type: Phaser.AUTO,
+            width: BASE_WIDTH,
+            height: BASE_HEIGHT,
+            parent: 'game-container',
+            backgroundColor: '#0f0f1a',
+            pixelArt: true,
+            
+            // Responsive scaling
+            scale: {
+                mode: Phaser.Scale.FIT,
+                autoCenter: Phaser.Scale.CENTER_BOTH,
+                width: BASE_WIDTH,
+                height: BASE_HEIGHT,
+                min: {
+                    width: 320,
+                    height: 200
+                },
+                max: {
+                    width: 1600,
+                    height: 1000
+                }
+            },
+            
+            scene: [BootScene, LabScene, LobbyScene, UndergroundScene, VoidScene]
+        };
+        
+        // Create game
+        const game = new Phaser.Game(config);
+        
+        // ════════════════════════════════════════════════════════════════
+        // Resize Handler
+        // ════════════════════════════════════════════════════════════════
+        function handleResize() {
+            // Phaser's scale manager handles canvas resizing automatically
+            // This is just for any additional responsive adjustments
+            const container = document.getElementById('game-container');
+            const rect = container.getBoundingClientRect();
+            
+            // Adjust inventory based on container size
+            const inventoryPanel = document.getElementById('inventory-panel');
+            if (inventoryPanel) {
+                const inventoryHeight = Math.max(50, Math.min(70, rect.height * 0.12));
+                inventoryPanel.style.height = `${inventoryHeight}px`;
+            }
+        }
+        
+        // Listen for resize events
+        window.addEventListener('resize', handleResize);
+        window.addEventListener('orientationchange', () => {
+            setTimeout(handleResize, 100);
+        });
+        
+        // Initial call
+        setTimeout(handleResize, 100);
+        
+        // ════════════════════════════════════════════════════════════════
+        // Debug: Expose systems globally
+        // ════════════════════════════════════════════════════════════════
+        window.game = game;
+        window.gameState = gameState;
+        window.dialogueSystem = dialogueSystem;
+        window.eventBus = eventBus;
+        window.theDealer = theDealer;
+        window.theArchitect = theDealer; // Backwards compat
+        window.autoPlayer = autoPlayer;
+    </script>
+</body>
+</html>

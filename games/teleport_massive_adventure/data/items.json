@@ -1,0 +1,30 @@
+{
+  "items": {
+    "artifact": {
+      "id": "artifact",
+      "name": "SWAB Artifact",
+      "description": "A crystalline object from The Between. It pulses with cosmic energy.",
+      "icon": "◈",
+      "sprite": "artifact_obj",
+      "usableOn": ["portal", "phaseburner"],
+      "effects": {
+        "onPhaseburner": {
+          "action": "dialogue",
+          "dialogueId": "phaseburner_artifact_reaction"
+        }
+      }
+    },
+    
+    "keycard": {
+      "id": "keycard",
+      "name": "Security Keycard",
+      "description": "A TM security keycard. Someone must have dropped it.",
+      "icon": "▭",
+      "sprite": "keycard_obj",
+      "usableOn": ["maintenance_hatch"],
+      "consumeOnUse": false
+    }
+  },
+  
+  "combinations": []
+}

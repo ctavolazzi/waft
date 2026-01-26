@@ -1,0 +1,19 @@
+# Typst ignore file for WAFT White Paper Template
+
+# Documentation
+README.md
+*.md
+
+# Build artifacts
+*.pdf
+*.html
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

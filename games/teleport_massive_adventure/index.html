@@ -1,0 +1,1791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teleport Massive: Reality Fracture</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #0a0a0a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            font-family: 'Courier New', monospace;
+            color: #00ff88;
+        }
+        #game-container {
+            position: relative;
+        }
+        #title {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        #title h1 {
+            font-size: 24px;
+            color: #00aaff;
+            text-shadow: 0 0 10px #00aaff;
+            letter-spacing: 4px;
+        }
+        #title p {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        #ui-bar {
+            width: 800px;
+            height: 100px;
+            background: linear-gradient(180deg, #1a1a2e 0%, #0f0f1a 100%);
+            border: 2px solid #333;
+            border-top: none;
+            display: flex;
+            padding: 10px;
+            gap: 10px;
+        }
+        #inventory {
+            flex: 1;
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            align-content: flex-start;
+        }
+        .inv-slot {
+            width: 40px;
+            height: 40px;
+            background: #0a0a15;
+            border: 1px solid #333;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .inv-slot:hover {
+            border-color: #00aaff;
+            box-shadow: 0 0 5px #00aaff;
+        }
+        .inv-slot.has-item {
+            border-color: #00ff88;
+        }
+        .inv-slot img {
+            max-width: 32px;
+            max-height: 32px;
+            image-rendering: pixelated;
+        }
+        #dialogue-box {
+            position: absolute;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 700px;
+            background: rgba(10, 10, 26, 0.95);
+            border: 2px solid #00aaff;
+            border-radius: 8px;
+            padding: 15px;
+            display: none;
+        }
+        #dialogue-box.active {
+            display: block;
+        }
+        #speaker-name {
+            color: #00aaff;
+            font-size: 14px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        #dialogue-text {
+            color: #fff;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        #dialogue-continue {
+            position: absolute;
+            bottom: 10px;
+            right: 15px;
+            color: #00ff88;
+            font-size: 12px;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            50% { opacity: 0.3; }
+        }
+        #action-text {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 8px 16px;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 12px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        #action-text.visible {
+            opacity: 1;
+        }
+        #cursor-mode {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            color: #00ff88;
+        }
+        #instructions {
+            margin-top: 10px;
+            font-size: 11px;
+            color: #555;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="title">
+        <h1>TELEPORT MASSIVE</h1>
+        <p>Reality Fracture - A Point & Click Adventure</p>
+    </div>
+    
+    <div id="game-container">
+        <div id="game"></div>
+        <div id="action-text"></div>
+        <div id="cursor-mode">MODE: WALK</div>
+        <div id="dialogue-box">
+            <div id="speaker-name">???</div>
+            <div id="dialogue-text">Loading...</div>
+            <div id="dialogue-continue">▼ Click to continue</div>
+        </div>
+    </div>
+    
+    <div id="ui-bar">
+        <div id="inventory">
+            <!-- Inventory slots generated by JS -->
+        </div>
+    </div>
+    
+    <div id="instructions">
+        LEFT CLICK: Walk/Interact | RIGHT CLICK: Examine | 1-5: Switch cursor mode | I: Inventory
+    </div>
+
+    <script>
+// ============================================================================
+// TELEPORT MASSIVE: REALITY FRACTURE
+// A Point-and-Click Adventure Game
+// ============================================================================
+
+// Game Configuration - MOVED TO END OF FILE (after class definitions)
+
+// ============================================================================
+// GAME STATE
+// ============================================================================
+
+const GameState = {
+    inventory: [],
+    flags: {
+        talkedToPhaseburner: false,
+        hasKeycard: false,
+        hasArtifact: false,
+        terminalHacked: false,
+        guardDistracted: false
+    },
+    currentRoom: 'lab',
+    dialogueQueue: [],
+    cursorMode: 'walk' // walk, look, use, talk, pickup
+};
+
+// ============================================================================
+// BOOT SCENE - Load Assets
+// ============================================================================
+
+class BootScene extends Phaser.Scene {
+    constructor() {
+        super({ key: 'BootScene' });
+    }
+
+    preload() {
+        // Show loading text
+        const loadingText = this.add.text(400, 250, 'Loading PixelLab Assets...', {
+            fontSize: '20px',
+            color: '#00aaff'
+        }).setOrigin(0.5);
+
+        // Loading progress
+        this.load.on('progress', (value) => {
+            loadingText.setText(`Loading... ${Math.round(value * 100)}%`);
+        });
+
+        // Load PixelLab-generated character sprites (LOCAL FILES)
+        // Dr. Aziah - 8 directions
+        this.load.image('aziah_south', 'assets/characters/aziah_extracted/rotations/south.png');
+        this.load.image('aziah_east', 'assets/characters/aziah_extracted/rotations/east.png');
+        this.load.image('aziah_north', 'assets/characters/aziah_extracted/rotations/north.png');
+        this.load.image('aziah_west', 'assets/characters/aziah_extracted/rotations/west.png');
+        this.load.image('aziah_southeast', 'assets/characters/aziah_extracted/rotations/south-east.png');
+        this.load.image('aziah_northeast', 'assets/characters/aziah_extracted/rotations/north-east.png');
+        this.load.image('aziah_northwest', 'assets/characters/aziah_extracted/rotations/north-west.png');
+        this.load.image('aziah_southwest', 'assets/characters/aziah_extracted/rotations/south-west.png');
+
+        // Phaseburner - 4 directions
+        this.load.image('phaseburner_south', 'assets/characters/phaseburner_extracted/rotations/south.png');
+        this.load.image('phaseburner_east', 'assets/characters/phaseburner_extracted/rotations/east.png');
+        this.load.image('phaseburner_north', 'assets/characters/phaseburner_extracted/rotations/north.png');
+        this.load.image('phaseburner_west', 'assets/characters/phaseburner_extracted/rotations/west.png');
+
+        // Security Guard - 4 directions
+        this.load.image('guard_south', 'assets/characters/guard_extracted/rotations/south.png');
+        this.load.image('guard_east', 'assets/characters/guard_extracted/rotations/east.png');
+        this.load.image('guard_north', 'assets/characters/guard_extracted/rotations/north.png');
+        this.load.image('guard_west', 'assets/characters/guard_extracted/rotations/west.png');
+
+        // Map objects (LOCAL FILES)
+        this.load.image('terminal_obj', 'assets/objects/terminal.png');
+        this.load.image('artifact_obj', 'assets/objects/artifact.png');
+        this.load.image('keycard_obj', 'assets/objects/keycard.png');
+        
+        // The Architect (God-Head) - Boss sprites (LOCAL FILES)
+        this.load.image('architect_south', 'assets/characters/architect_extracted/rotations/south.png');
+        this.load.image('architect_east', 'assets/characters/architect_extracted/rotations/east.png');
+        this.load.image('architect_north', 'assets/characters/architect_extracted/rotations/north.png');
+        this.load.image('architect_west', 'assets/characters/architect_extracted/rotations/west.png');
+        this.load.image('throne_obj', 'assets/objects/throne.png');
+
+        // Generate placeholder sprites for fallback
+        this.generatePlaceholderSprites();
+    }
+
+    generatePlaceholderSprites() {
+        // Player sprite (will be replaced with PixelLab asset)
+        const playerGraphics = this.make.graphics();
+        
+        // Create 8-direction sprite sheet (8 frames, 64x64 each)
+        for (let i = 0; i < 8; i++) {
+            playerGraphics.fillStyle(0x00aaff, 1);
+            // Body
+            playerGraphics.fillRect(i * 64 + 20, 20, 24, 30);
+            // Head
+            playerGraphics.fillStyle(0xffccaa, 1);
+            playerGraphics.fillCircle(i * 64 + 32, 15, 10);
+            // Lab coat detail
+            playerGraphics.fillStyle(0xffffff, 1);
+            playerGraphics.fillRect(i * 64 + 22, 22, 20, 5);
+            // Direction indicator
+            playerGraphics.fillStyle(0xff0000, 1);
+            const angles = [Math.PI/2, Math.PI/4, 0, -Math.PI/4, -Math.PI/2, -3*Math.PI/4, Math.PI, 3*Math.PI/4];
+            const dx = Math.cos(angles[i]) * 8;
+            const dy = Math.sin(angles[i]) * 8;
+            playerGraphics.fillCircle(i * 64 + 32 + dx, 35 + dy, 3);
+        }
+        playerGraphics.generateTexture('player', 512, 64);
+
+        // NPC - Phaseburner
+        const phaseGraphics = this.make.graphics();
+        for (let i = 0; i < 4; i++) {
+            phaseGraphics.fillStyle(0x8800ff, 0.7);
+            phaseGraphics.fillRect(i * 64 + 20, 15, 24, 35);
+            // Glitch effect
+            phaseGraphics.fillStyle(0xff00ff, 0.5);
+            phaseGraphics.fillRect(i * 64 + 18 + Math.random() * 8, 20, 8, 5);
+            phaseGraphics.fillRect(i * 64 + 22 + Math.random() * 6, 35, 6, 4);
+            // Head
+            phaseGraphics.fillStyle(0x440088, 1);
+            playerGraphics.fillCircle(i * 64 + 32, 12, 9);
+        }
+        phaseGraphics.generateTexture('phaseburner', 256, 64);
+
+        // NPC - Security Guard
+        const guardGraphics = this.make.graphics();
+        for (let i = 0; i < 4; i++) {
+            guardGraphics.fillStyle(0x222233, 1);
+            guardGraphics.fillRect(i * 64 + 18, 18, 28, 32);
+            // Helmet
+            guardGraphics.fillStyle(0x111122, 1);
+            guardGraphics.fillRect(i * 64 + 22, 8, 20, 14);
+            // Visor
+            guardGraphics.fillStyle(0x00aaff, 1);
+            guardGraphics.fillRect(i * 64 + 24, 12, 16, 6);
+            // TM Logo
+            guardGraphics.fillStyle(0x00ff88, 1);
+            guardGraphics.fillRect(i * 64 + 28, 25, 8, 8);
+        }
+        guardGraphics.generateTexture('guard', 256, 64);
+
+        // Interactive Objects
+        // Terminal
+        const terminalGraphics = this.make.graphics();
+        terminalGraphics.fillStyle(0x333344, 1);
+        terminalGraphics.fillRect(0, 20, 80, 60);
+        terminalGraphics.fillStyle(0x00aaff, 1);
+        terminalGraphics.fillRect(5, 25, 70, 40);
+        terminalGraphics.fillStyle(0x00ff88, 1);
+        for (let i = 0; i < 5; i++) {
+            terminalGraphics.fillRect(10, 30 + i * 8, 40 + Math.random() * 20, 4);
+        }
+        terminalGraphics.generateTexture('terminal', 80, 80);
+
+        // Artifact (SWAB)
+        const artifactGraphics = this.make.graphics();
+        artifactGraphics.fillStyle(0x8800ff, 0.8);
+        artifactGraphics.fillCircle(32, 32, 20);
+        artifactGraphics.fillStyle(0xff00ff, 0.5);
+        artifactGraphics.fillCircle(32, 32, 15);
+        artifactGraphics.fillStyle(0xffffff, 0.8);
+        artifactGraphics.fillCircle(32, 32, 8);
+        // Glow effect
+        artifactGraphics.lineStyle(2, 0x8800ff, 0.5);
+        artifactGraphics.strokeCircle(32, 32, 28);
+        artifactGraphics.generateTexture('artifact', 64, 64);
+
+        // Keycard
+        const keycardGraphics = this.make.graphics();
+        keycardGraphics.fillStyle(0xffffff, 1);
+        keycardGraphics.fillRect(0, 0, 40, 24);
+        keycardGraphics.fillStyle(0x00aaff, 1);
+        keycardGraphics.fillRect(0, 0, 40, 6);
+        keycardGraphics.fillStyle(0xffdd00, 1);
+        keycardGraphics.fillRect(5, 10, 8, 8);
+        keycardGraphics.generateTexture('keycard', 40, 24);
+
+        // Door
+        const doorGraphics = this.make.graphics();
+        doorGraphics.fillStyle(0x444455, 1);
+        doorGraphics.fillRect(0, 0, 60, 90);
+        doorGraphics.fillStyle(0x333344, 1);
+        doorGraphics.fillRect(5, 5, 50, 80);
+        doorGraphics.fillStyle(0x00ff88, 1);
+        doorGraphics.fillCircle(48, 45, 5);
+        doorGraphics.generateTexture('door', 60, 90);
+
+        // Cursor icons
+        const cursorGraphics = this.make.graphics();
+        // Walk cursor
+        cursorGraphics.fillStyle(0x00ff88, 1);
+        cursorGraphics.fillTriangle(0, 0, 12, 20, 0, 16);
+        cursorGraphics.generateTexture('cursor_walk', 16, 24);
+        
+        // The Architect (God-Head) - cosmic placeholder
+        const architectGraphics = this.make.graphics();
+        // Cosmic body
+        architectGraphics.fillStyle(0x8800ff, 0.8);
+        architectGraphics.fillCircle(48, 48, 35);
+        architectGraphics.fillStyle(0xff00ff, 0.5);
+        architectGraphics.fillCircle(48, 48, 25);
+        // Eyes (twin singularities)
+        architectGraphics.fillStyle(0xffffff, 1);
+        architectGraphics.fillCircle(38, 40, 6);
+        architectGraphics.fillCircle(58, 40, 6);
+        architectGraphics.fillStyle(0x000000, 1);
+        architectGraphics.fillCircle(38, 40, 3);
+        architectGraphics.fillCircle(58, 40, 3);
+        // Crown of shapes
+        architectGraphics.fillStyle(0xffff00, 0.8);
+        architectGraphics.fillTriangle(48, 5, 40, 20, 56, 20);
+        architectGraphics.fillRect(30, 15, 8, 8);
+        architectGraphics.fillRect(58, 15, 8, 8);
+        // Cosmic aura
+        architectGraphics.lineStyle(2, 0x8800ff, 0.5);
+        architectGraphics.strokeCircle(48, 48, 42);
+        architectGraphics.lineStyle(1, 0xff00ff, 0.3);
+        architectGraphics.strokeCircle(48, 48, 50);
+        architectGraphics.generateTexture('architect_south', 96, 96);
+    }
+
+    create() {
+        // Initialize inventory UI
+        this.initInventoryUI();
+        
+        // Go to title screen
+        this.scene.start('TitleScene');
+    }
+
+    initInventoryUI() {
+        const invContainer = document.getElementById('inventory');
+        for (let i = 0; i < 10; i++) {
+            const slot = document.createElement('div');
+            slot.className = 'inv-slot';
+            slot.dataset.slot = i;
+            slot.addEventListener('click', () => this.onInventoryClick(i));
+            invContainer.appendChild(slot);
+        }
+    }
+
+    onInventoryClick(slotIndex) {
+        if (GameState.inventory[slotIndex]) {
+            console.log('Selected:', GameState.inventory[slotIndex]);
+        }
+    }
+}
+
+// ============================================================================
+// TITLE SCENE
+// ============================================================================
+
+class TitleScene extends Phaser.Scene {
+    constructor() {
+        super({ key: 'TitleScene' });
+    }
+
+    create() {
+        // Background
+        this.add.rectangle(400, 250, 800, 500, 0x0a0a15);
+        
+        // Title
+        this.add.text(400, 120, 'TELEPORT MASSIVE', {
+            fontSize: '48px',
+            fontFamily: 'Courier New',
+            color: '#00aaff',
+            stroke: '#003366',
+            strokeThickness: 4
+        }).setOrigin(0.5);
+
+        this.add.text(400, 180, 'REALITY FRACTURE', {
+            fontSize: '24px',
+            fontFamily: 'Courier New',
+            color: '#00ff88'
+        }).setOrigin(0.5);
+
+        // Subtitle
+        this.add.text(400, 240, '"They said death was final. They must be wrong."', {
+            fontSize: '14px',
+            fontFamily: 'Courier New',
+            color: '#888888',
+            fontStyle: 'italic'
+        }).setOrigin(0.5);
+
+        // Story intro
+        const storyText = [
+            'Year 2111. Post-Singularity Earth.',
+            '',
+            'You are Dr. Aziah Calderon, quantum scientist at',
+            'Teleport Massive - the corporation that invented teleportation.',
+            '',
+            'Your research into "The Between" may hold the key',
+            'to bringing back someone you lost...',
+            '',
+            'But Teleport Massive has secrets of its own.'
+        ];
+
+        this.add.text(400, 340, storyText, {
+            fontSize: '12px',
+            fontFamily: 'Courier New',
+            color: '#aaaaaa',
+            align: 'center',
+            lineSpacing: 4
+        }).setOrigin(0.5);
+
+        // Start button
+        const startBtn = this.add.text(400, 460, '[ CLICK TO BEGIN ]', {
+            fontSize: '16px',
+            fontFamily: 'Courier New',
+            color: '#00ff88'
+        }).setOrigin(0.5).setInteractive();
+
+        startBtn.on('pointerover', () => startBtn.setColor('#ffffff'));
+        startBtn.on('pointerout', () => startBtn.setColor('#00ff88'));
+        startBtn.on('pointerdown', () => {
+            this.cameras.main.fadeOut(500, 0, 0, 0);
+            this.time.delayedCall(500, () => {
+                this.scene.start('LabScene');
+            });
+        });
+
+        // Blinking effect
+        this.tweens.add({
+            targets: startBtn,
+            alpha: 0.5,
+            duration: 800,
+            yoyo: true,
+            repeat: -1
+        });
+    }
+}
+
+// ============================================================================
+// BASE ROOM SCENE (Shared functionality)
+// ============================================================================
+
+class BaseRoomScene extends Phaser.Scene {
+    constructor(key) {
+        super({ key });
+        this.player = null;
+        this.npcs = [];
+        this.hotspots = [];
+        this.walkableArea = null;
+    }
+
+    createRoom(config) {
+        // Room background
+        this.add.rectangle(400, 250, 800, 500, config.bgColor || 0x1a1a2e);
+        
+        // Room name
+        this.add.text(10, 10, config.name, {
+            fontSize: '12px',
+            color: '#666666'
+        });
+
+        // Create walkable area (simple rectangle for now)
+        this.walkableArea = new Phaser.Geom.Rectangle(
+            config.walkable?.x || 50,
+            config.walkable?.y || 200,
+            config.walkable?.width || 700,
+            config.walkable?.height || 250
+        );
+
+        // Player - using PixelLab sprites
+        this.player = this.physics.add.sprite(
+            config.playerStart?.x || 400,
+            config.playerStart?.y || 400,
+            'aziah_south'
+        );
+        this.player.setScale(1.5); // Scale up for visibility
+        this.player.setCollideWorldBounds(true);
+        this.player.setDepth(100);
+        
+        // Store direction textures for 8-way movement
+        this.player.directionTextures = {
+            0: 'aziah_south',     // S
+            1: 'aziah_southwest', // SW
+            2: 'aziah_west',      // W
+            3: 'aziah_northwest', // NW
+            4: 'aziah_north',     // N
+            5: 'aziah_northeast', // NE
+            6: 'aziah_east',      // E
+            7: 'aziah_southeast'  // SE
+        };
+        
+        // Player direction (0-7, starting south)
+        this.player.direction = 0;
+        this.player.isMoving = false;
+        this.targetX = this.player.x;
+        this.targetY = this.player.y;
+
+        // Setup input
+        this.input.on('pointerdown', (pointer) => this.handleClick(pointer));
+        this.input.on('pointermove', (pointer) => this.handleHover(pointer));
+
+        // Keyboard shortcuts
+        this.input.keyboard.on('keydown-ONE', () => this.setCursorMode('walk'));
+        this.input.keyboard.on('keydown-TWO', () => this.setCursorMode('look'));
+        this.input.keyboard.on('keydown-THREE', () => this.setCursorMode('use'));
+        this.input.keyboard.on('keydown-FOUR', () => this.setCursorMode('talk'));
+        this.input.keyboard.on('keydown-FIVE', () => this.setCursorMode('pickup'));
+
+        // Action text element
+        this.actionText = document.getElementById('action-text');
+    }
+
+    setCursorMode(mode) {
+        GameState.cursorMode = mode;
+        document.getElementById('cursor-mode').textContent = `MODE: ${mode.toUpperCase()}`;
+    }
+
+    handleClick(pointer) {
+        // Check if dialogue is active
+        if (document.getElementById('dialogue-box').classList.contains('active')) {
+            this.advanceDialogue();
+            return;
+        }
+
+        // Check for right-click (examine)
+        if (pointer.rightButtonDown()) {
+            this.examineAt(pointer.x, pointer.y);
+            return;
+        }
+
+        // Check hotspots first
+        for (const hotspot of this.hotspots) {
+            if (hotspot.getBounds().contains(pointer.x, pointer.y)) {
+                this.interactWithHotspot(hotspot);
+                return;
+            }
+        }
+
+        // Check NPCs
+        for (const npc of this.npcs) {
+            if (npc.getBounds().contains(pointer.x, pointer.y)) {
+                this.interactWithNPC(npc);
+                return;
+            }
+        }
+
+        // Walk to location if in walkable area
+        if (this.walkableArea.contains(pointer.x, pointer.y)) {
+            this.walkTo(pointer.x, pointer.y);
+        }
+    }
+
+    handleHover(pointer) {
+        let hoverText = '';
+        
+        // Check hotspots
+        for (const hotspot of this.hotspots) {
+            if (hotspot.getBounds().contains(pointer.x, pointer.y)) {
+                const action = this.getActionVerb();
+                hoverText = `${action} ${hotspot.name}`;
+                break;
+            }
+        }
+
+        // Check NPCs
+        for (const npc of this.npcs) {
+            if (npc.getBounds().contains(pointer.x, pointer.y)) {
+                const action = this.getActionVerb();
+                hoverText = `${action} ${npc.name}`;
+                break;
+            }
+        }
+
+        // Update action text
+        if (hoverText) {
+            this.actionText.textContent = hoverText;
+            this.actionText.classList.add('visible');
+        } else {
+            this.actionText.classList.remove('visible');
+        }
+    }
+
+    getActionVerb() {
+        switch (GameState.cursorMode) {
+            case 'walk': return 'Walk to';
+            case 'look': return 'Look at';
+            case 'use': return 'Use';
+            case 'talk': return 'Talk to';
+            case 'pickup': return 'Pick up';
+            default: return 'Interact with';
+        }
+    }
+
+    walkTo(x, y) {
+        this.targetX = x;
+        this.targetY = y;
+        this.player.isMoving = true;
+
+        // Calculate direction (8 directions)
+        const dx = x - this.player.x;
+        const dy = y - this.player.y;
+        const angle = Math.atan2(dy, dx);
+        
+        // Convert angle to 8-direction index
+        // Angle: 0 = right, PI/2 = down, PI = left, -PI/2 = up
+        // We want: 0=S, 1=SW, 2=W, 3=NW, 4=N, 5=NE, 6=E, 7=SE
+        let normalizedAngle = angle + Math.PI; // 0 to 2PI
+        let dir = Math.round(normalizedAngle / (Math.PI / 4)) % 8;
+        
+        // Remap angle sectors to our direction scheme
+        // angle 0 (right) -> E (6), angle PI/2 (down) -> S (0), etc.
+        const angleToDir = [2, 1, 0, 7, 6, 5, 4, 3];
+        this.player.direction = angleToDir[dir];
+
+        // Update sprite texture based on direction
+        if (this.player.directionTextures && this.player.directionTextures[this.player.direction]) {
+            this.player.setTexture(this.player.directionTextures[this.player.direction]);
+        }
+    }
+
+    examineAt(x, y) {
+        // Check hotspots
+        for (const hotspot of this.hotspots) {
+            if (hotspot.getBounds().contains(x, y)) {
+                this.showDialogue('', hotspot.examineText || `You see ${hotspot.name}.`);
+                return;
+            }
+        }
+
+        // Check NPCs
+        for (const npc of this.npcs) {
+            if (npc.getBounds().contains(x, y)) {
+                this.showDialogue('', npc.examineText || `You see ${npc.name}.`);
+                return;
+            }
+        }
+
+        // Generic room examine
+        this.showDialogue('', 'Nothing special here.');
+    }
+
+    interactWithHotspot(hotspot) {
+        if (hotspot.onInteract) {
+            hotspot.onInteract(this);
+        }
+    }
+
+    interactWithNPC(npc) {
+        if (GameState.cursorMode === 'talk' && npc.dialogue) {
+            this.startDialogue(npc.name, npc.dialogue);
+        } else if (npc.onInteract) {
+            npc.onInteract(this);
+        }
+    }
+
+    addHotspot(x, y, width, height, name, config = {}) {
+        const hotspot = this.add.rectangle(x, y, width, height, 0xffffff, 0)
+            .setInteractive();
+        hotspot.name = name;
+        hotspot.examineText = config.examineText;
+        hotspot.onInteract = config.onInteract;
+        hotspot.item = config.item;
+        this.hotspots.push(hotspot);
+        
+        // Visual indicator with PixelLab sprites
+        if (config.sprite) {
+            const sprite = this.add.sprite(x, y, config.sprite);
+            sprite.setDepth(y);
+            // Scale objects appropriately
+            if (config.sprite.includes('_obj')) {
+                sprite.setScale(1); // PixelLab objects are already good size
+            }
+            hotspot.sprite = sprite;
+        }
+        
+        return hotspot;
+    }
+
+    addNPC(x, y, texture, name, config = {}) {
+        const npc = this.add.sprite(x, y, texture);
+        npc.setDepth(y);
+        npc.setScale(1.5); // Scale up for visibility
+        npc.setInteractive();
+        npc.name = name;
+        npc.dialogue = config.dialogue;
+        npc.examineText = config.examineText;
+        npc.onInteract = config.onInteract;
+        this.npcs.push(npc);
+        return npc;
+    }
+
+    addToInventory(item) {
+        GameState.inventory.push(item);
+        this.updateInventoryUI();
+        this.showDialogue('', `Added ${item.name} to inventory.`);
+    }
+
+    updateInventoryUI() {
+        const slots = document.querySelectorAll('.inv-slot');
+        slots.forEach((slot, i) => {
+            slot.innerHTML = '';
+            slot.classList.remove('has-item');
+            if (GameState.inventory[i]) {
+                slot.classList.add('has-item');
+                slot.title = GameState.inventory[i].name;
+                // Could add item sprite here
+                slot.textContent = GameState.inventory[i].icon || '?';
+            }
+        });
+    }
+
+    showDialogue(speaker, text) {
+        const box = document.getElementById('dialogue-box');
+        document.getElementById('speaker-name').textContent = speaker || 'OBSERVATION';
+        document.getElementById('dialogue-text').textContent = text;
+        box.classList.add('active');
+        GameState.dialogueQueue = [];
+    }
+
+    startDialogue(speaker, dialogueArray) {
+        GameState.dialogueQueue = [...dialogueArray];
+        this.showNextDialogue(speaker);
+    }
+
+    showNextDialogue(speaker) {
+        if (GameState.dialogueQueue.length === 0) {
+            document.getElementById('dialogue-box').classList.remove('active');
+            return;
+        }
+        const text = GameState.dialogueQueue.shift();
+        const box = document.getElementById('dialogue-box');
+        document.getElementById('speaker-name').textContent = speaker;
+        document.getElementById('dialogue-text').textContent = text;
+        box.classList.add('active');
+    }
+
+    advanceDialogue() {
+        if (GameState.dialogueQueue.length > 0) {
+            this.showNextDialogue(document.getElementById('speaker-name').textContent);
+        } else {
+            document.getElementById('dialogue-box').classList.remove('active');
+        }
+    }
+
+    changeRoom(roomKey, playerX, playerY) {
+        this.cameras.main.fadeOut(300, 0, 0, 0);
+        this.time.delayedCall(300, () => {
+            this.scene.start(roomKey, { playerX, playerY });
+        });
+    }
+
+    update() {
+        if (this.player && this.player.isMoving) {
+            const speed = 3;
+            const dx = this.targetX - this.player.x;
+            const dy = this.targetY - this.player.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < 5) {
+                this.player.isMoving = false;
+            } else {
+                this.player.x += (dx / dist) * speed;
+                this.player.y += (dy / dist) * speed;
+                this.player.setDepth(this.player.y);
+            }
+        }
+    }
+}
+
+// ============================================================================
+// LAB SCENE - Starting Room
+// ============================================================================
+
+class LabScene extends BaseRoomScene {
+    constructor() {
+        super('LabScene');
+    }
+
+    create() {
+        this.cameras.main.fadeIn(500);
+        
+        this.createRoom({
+            name: 'AZIAH\'S LAB - Teleport Massive Research Division',
+            bgColor: 0x1a1a2e,
+            walkable: { x: 50, y: 250, width: 700, height: 200 },
+            playerStart: { x: 400, y: 400 }
+        });
+
+        // Draw lab environment
+        this.drawLabEnvironment();
+
+        // Terminal hotspot - using PixelLab sprite
+        this.addHotspot(650, 300, 96, 96, 'Research Terminal', {
+            sprite: 'terminal_obj',
+            examineText: 'A quantum research terminal. Your life\'s work is stored here.',
+            onInteract: (scene) => {
+                if (GameState.cursorMode === 'use') {
+                    if (!GameState.flags.terminalHacked) {
+                        scene.startDialogue('TERMINAL', [
+                            'WELCOME, DR. CALDERON.',
+                            'PROJECT: BETWEEN-BRIDGE - Status: 87% Complete',
+                            'WARNING: Anomalous readings detected in Sector 7.',
+                            'NOTE: Security Chief Vance requests your presence in the Lobby.',
+                            'ENCRYPTED FILE DETECTED: "PHASEBURN_VICTIMS.DAT"',
+                            'Access denied. Security clearance insufficient.'
+                        ]);
+                        GameState.flags.terminalHacked = true;
+                    } else {
+                        scene.showDialogue('TERMINAL', 'No new messages.');
+                    }
+                } else {
+                    scene.showDialogue('', 'The terminal hums with quantum computations.');
+                }
+            }
+        });
+
+        // Artifact on desk - using PixelLab sprite
+        if (!GameState.flags.hasArtifact) {
+            this.addHotspot(200, 320, 64, 64, 'Strange Artifact', {
+                sprite: 'artifact_obj',
+                examineText: 'A crystalline object you found in "The Between". It pulses with an otherworldly energy.',
+                onInteract: (scene) => {
+                    if (GameState.cursorMode === 'pickup') {
+                        scene.addToInventory({ name: 'SWAB Artifact', icon: '◈' });
+                        GameState.flags.hasArtifact = true;
+                        scene.hotspots = scene.hotspots.filter(h => h.name !== 'Strange Artifact');
+                        if (scene.children) {
+                            scene.children.list.forEach(child => {
+                                if (child.texture && child.texture.key === 'artifact_obj') {
+                                    child.destroy();
+                                }
+                            });
+                        }
+                    } else {
+                        scene.showDialogue('', 'The artifact seems to resonate with something... familiar.');
+                    }
+                }
+            });
+        }
+
+        // Door to Lobby
+        this.addHotspot(750, 350, 60, 90, 'Door to Lobby', {
+            sprite: 'door',
+            examineText: 'The door leads to the main TM lobby.',
+            onInteract: (scene) => {
+                scene.changeRoom('LobbyScene', 100, 400);
+            }
+        });
+
+        // Photo frame (story element)
+        this.addHotspot(100, 180, 40, 50, 'Photo Frame', {
+            examineText: 'A photo of you and Maya, taken before the accident. Before she was scattered across quantum states.',
+            onInteract: (scene) => {
+                scene.startDialogue('AZIAH', [
+                    '"I\'ll find a way to bring you back, Maya."',
+                    '"The Between holds the answer. I know it does."',
+                    '"They said death was final. They must be wrong."'
+                ]);
+            }
+        });
+
+        // Draw photo frame
+        this.add.rectangle(100, 180, 40, 50, 0x8B4513);
+        this.add.rectangle(100, 180, 34, 44, 0x333333);
+    }
+
+    drawLabEnvironment() {
+        // Floor
+        const floorGraphics = this.add.graphics();
+        floorGraphics.fillStyle(0x222233, 1);
+        floorGraphics.fillRect(0, 200, 800, 300);
+        
+        // Floor tiles
+        for (let x = 0; x < 800; x += 50) {
+            for (let y = 200; y < 500; y += 50) {
+                floorGraphics.lineStyle(1, 0x333344, 0.3);
+                floorGraphics.strokeRect(x, y, 50, 50);
+            }
+        }
+
+        // Back wall
+        const wallGraphics = this.add.graphics();
+        wallGraphics.fillStyle(0x2a2a3e, 1);
+        wallGraphics.fillRect(0, 0, 800, 200);
+        
+        // Wall panels
+        for (let x = 0; x < 800; x += 100) {
+            wallGraphics.lineStyle(2, 0x3a3a4e, 0.5);
+            wallGraphics.strokeRect(x + 5, 10, 90, 180);
+        }
+
+        // Glowing elements
+        wallGraphics.fillStyle(0x00aaff, 0.3);
+        wallGraphics.fillRect(300, 50, 200, 10);
+        wallGraphics.fillRect(300, 150, 200, 10);
+
+        // Lab equipment
+        this.add.rectangle(450, 280, 120, 60, 0x444455); // Desk
+        this.add.rectangle(550, 280, 40, 30, 0x333344); // Computer
+        this.add.rectangle(550, 270, 35, 20, 0x00aaff); // Screen
+
+        // Cables/wires
+        const cableGraphics = this.add.graphics();
+        cableGraphics.lineStyle(3, 0x00ff88, 0.5);
+        cableGraphics.beginPath();
+        cableGraphics.moveTo(600, 300);
+        cableGraphics.lineTo(650, 300);
+        cableGraphics.stroke();
+    }
+}
+
+// ============================================================================
+// LOBBY SCENE
+// ============================================================================
+
+class LobbyScene extends BaseRoomScene {
+    constructor() {
+        super('LobbyScene');
+    }
+
+    init(data) {
+        this.playerStartX = data?.playerX || 400;
+        this.playerStartY = data?.playerY || 400;
+    }
+
+    create() {
+        this.cameras.main.fadeIn(500);
+        
+        this.createRoom({
+            name: 'TM LOBBY - Teleport Massive Headquarters',
+            bgColor: 0x1a1a2e,
+            walkable: { x: 50, y: 250, width: 700, height: 200 },
+            playerStart: { x: this.playerStartX, y: this.playerStartY }
+        });
+
+        this.drawLobbyEnvironment();
+
+        // Security Guard NPC - using PixelLab sprite
+        const guard = this.addNPC(600, 350, 'guard_south', 'Security Guard', {
+            examineText: 'A TM security guard in full tactical gear. The visor hides their face.',
+            dialogue: [
+                'Dr. Calderon. Security Chief Vance wants to see you.',
+                'Something about "unauthorized access" to restricted files.',
+                'I\'d watch my step if I were you, Doctor.',
+                'The Underground entrance? I don\'t know what you\'re talking about.'
+            ],
+            onInteract: (scene) => {
+                if (GameState.cursorMode === 'talk') {
+                    if (!GameState.flags.guardDistracted) {
+                        scene.startDialogue('SECURITY GUARD', [
+                            'Dr. Calderon. Security Chief Vance wants to see you.',
+                            'Something about "unauthorized access" to restricted files.',
+                            'I\'d watch my step if I were you, Doctor.'
+                        ]);
+                    } else {
+                        scene.showDialogue('SECURITY GUARD', '*distracted by terminal alert*');
+                    }
+                }
+            }
+        });
+
+        // Door to Lab
+        this.addHotspot(50, 350, 60, 90, 'Door to Lab', {
+            sprite: 'door',
+            examineText: 'The door back to your research lab.',
+            onInteract: (scene) => {
+                scene.changeRoom('LabScene', 700, 400);
+            }
+        });
+
+        // Door to Underground (locked)
+        this.addHotspot(400, 220, 80, 40, 'Maintenance Access', {
+            examineText: 'A maintenance hatch. It seems to lead below the facility.',
+            onInteract: (scene) => {
+                if (GameState.flags.hasKeycard) {
+                    scene.showDialogue('', 'The keycard works. The hatch opens with a hiss.');
+                    scene.time.delayedCall(1500, () => {
+                        scene.changeRoom('UndergroundScene', 400, 400);
+                    });
+                } else {
+                    scene.showDialogue('', 'The hatch requires a security keycard.');
+                }
+            }
+        });
+
+        // Hidden keycard - using PixelLab sprite
+        if (!GameState.flags.hasKeycard) {
+            this.addHotspot(300, 450, 48, 48, 'Something on the floor', {
+                sprite: 'keycard_obj',
+                examineText: 'A security keycard. Someone must have dropped it.',
+                onInteract: (scene) => {
+                    if (GameState.cursorMode === 'pickup') {
+                        scene.addToInventory({ name: 'Security Keycard', icon: '▭' });
+                        GameState.flags.hasKeycard = true;
+                        scene.hotspots = scene.hotspots.filter(h => h.name !== 'Something on the floor');
+                        scene.children.list.forEach(child => {
+                            if (child.texture && child.texture.key === 'keycard_obj') {
+                                child.destroy();
+                            }
+                        });
+                    }
+                }
+            });
+        }
+
+        // TM Logo display
+        this.addHotspot(400, 100, 150, 80, 'TM Holographic Display', {
+            examineText: '"TELEPORT MASSIVE - Making the Impossible, Inevitable™"',
+            onInteract: (scene) => {
+                scene.startDialogue('DISPLAY', [
+                    'TELEPORT MASSIVE',
+                    '"Progress at any cost."',
+                    '"Making the Impossible, Inevitable™"',
+                    'NOTICE: Q4 teleportation incidents down 3%.',
+                    'NOTICE: Phaseburn support group meets Thursdays.'
+                ]);
+            }
+        });
+    }
+
+    drawLobbyEnvironment() {
+        // Floor - polished corporate
+        const floorGraphics = this.add.graphics();
+        floorGraphics.fillStyle(0x1a1a28, 1);
+        floorGraphics.fillRect(0, 200, 800, 300);
+        
+        // Reflective floor effect
+        for (let x = 0; x < 800; x += 80) {
+            floorGraphics.fillStyle(0x222238, 1);
+            floorGraphics.fillRect(x, 200, 40, 300);
+        }
+
+        // Back wall - corporate sleek
+        const wallGraphics = this.add.graphics();
+        wallGraphics.fillStyle(0x252535, 1);
+        wallGraphics.fillRect(0, 0, 800, 200);
+
+        // TM Logo area
+        wallGraphics.fillStyle(0x00aaff, 0.2);
+        wallGraphics.fillRect(325, 60, 150, 80);
+        
+        // Logo text
+        this.add.text(400, 100, 'TM', {
+            fontSize: '48px',
+            fontFamily: 'Arial Black',
+            color: '#00aaff'
+        }).setOrigin(0.5);
+
+        // Maintenance hatch
+        wallGraphics.fillStyle(0x333344, 1);
+        wallGraphics.fillRect(360, 200, 80, 40);
+        wallGraphics.fillStyle(0xff8800, 0.5);
+        wallGraphics.fillRect(365, 205, 70, 5);
+
+        // Reception desk
+        this.add.rectangle(200, 320, 150, 60, 0x333344);
+        this.add.rectangle(200, 300, 140, 20, 0x00aaff, 0.3);
+
+        // Decorative columns
+        this.add.rectangle(100, 150, 30, 200, 0x2a2a3e);
+        this.add.rectangle(700, 150, 30, 200, 0x2a2a3e);
+    }
+}
+
+// ============================================================================
+// UNDERGROUND SCENE
+// ============================================================================
+
+class UndergroundScene extends BaseRoomScene {
+    constructor() {
+        super('UndergroundScene');
+    }
+
+    create() {
+        this.cameras.main.fadeIn(500);
+        
+        this.createRoom({
+            name: 'THE UNDERGROUND - Beneath Teleport Massive',
+            bgColor: 0x0a0a12,
+            walkable: { x: 50, y: 250, width: 700, height: 200 },
+            playerStart: { x: 400, y: 400 }
+        });
+
+        this.drawUndergroundEnvironment();
+
+        // Phaseburner NPC - using PixelLab sprite
+        const phaseburner = this.addNPC(200, 350, 'phaseburner_south', 'Phaseburner', {
+            examineText: 'A figure whose form seems to flicker between states of existence. Phaseburn victim.',
+            dialogue: [
+                '*static crackle* You... you\'re from up there. TM.',
+                'I\'ve seen my own death. In six different timelines.',
+                'Still not sure which one was real.',
+                'The artifact you carry... it calls to The Between.',
+                'Be careful, Doctor. The Vibration... it changes you.',
+                'I was like you once. Before I got scattered.',
+                'Now I exist everywhere and nowhere. All at once.'
+            ],
+            onInteract: (scene) => {
+                if (GameState.cursorMode === 'talk') {
+                    GameState.flags.talkedToPhaseburner = true;
+                    scene.startDialogue('PHASEBURNER', [
+                        '*static crackle* You... you\'re from up there. TM.',
+                        'I\'ve seen my own death. In six different timelines.',
+                        'Still not sure which one was real.',
+                        'The artifact you carry... it calls to The Between.',
+                        'Be careful, Doctor. The Vibration... it changes you.'
+                    ]);
+                } else if (GameState.cursorMode === 'use' && GameState.flags.hasArtifact) {
+                    scene.startDialogue('PHASEBURNER', [
+                        '*the artifact resonates with the Phaseburner*',
+                        'I... I can feel it. The path between worlds.',
+                        'Your Maya... she\'s there. In The Between.',
+                        'But to reach her, you\'ll have to become like me.',
+                        'Scattered. Eternal. Lost.',
+                        'Is that a price you\'re willing to pay?'
+                    ]);
+                }
+            }
+        });
+
+        // Add glitch effect to phaseburner
+        this.tweens.add({
+            targets: phaseburner,
+            alpha: 0.5,
+            x: phaseburner.x + 5,
+            duration: 200,
+            yoyo: true,
+            repeat: -1,
+            ease: 'Stepped',
+            easeParams: [3]
+        });
+
+        // Exit back to lobby
+        this.addHotspot(400, 220, 80, 40, 'Exit Hatch', {
+            examineText: 'The hatch leading back to the TM lobby.',
+            onInteract: (scene) => {
+                scene.changeRoom('LobbyScene', 400, 280);
+            }
+        });
+
+        // Mysterious terminal
+        this.addHotspot(650, 320, 60, 60, 'Damaged Terminal', {
+            examineText: 'An old terminal, damaged but still functional. TM logos have been scratched off.',
+            onInteract: (scene) => {
+                scene.startDialogue('TERMINAL', [
+                    '>>> ACCESSING ENCRYPTED FILES...',
+                    '>>> FILE: PHASEBURN_VICTIMS.DAT',
+                    'RECORDED VICTIMS: 2,847',
+                    'COMPENSATION PAID: $0',
+                    'PUBLIC KNOWLEDGE: SUPPRESSED',
+                    '>>> FILE: PROJECT_BETWEEN_BRIDGE.DAT',
+                    'STATUS: ACTIVE',
+                    'LEAD RESEARCHER: DR. AZIAH CALDERON',
+                    'OBJECTIVE: CONTROLLED TRAVERSAL OF THE BETWEEN',
+                    'NOTE: Subject unaware of true purpose.',
+                    '>>> CONNECTION TERMINATED'
+                ]);
+            }
+        });
+
+        // Story ending trigger - Portal to THE ARCHITECT
+        if (GameState.flags.hasArtifact && GameState.flags.talkedToPhaseburner) {
+            this.addHotspot(100, 300, 80, 80, 'Shimmering Portal', {
+                examineText: 'A tear in reality. Something ancient waits on the other side.',
+                onInteract: (scene) => {
+                    scene.startDialogue('THE BETWEEN', [
+                        '*The artifact pulses. Reality ripples.*',
+                        'You feel something vast. Watching.',
+                        'Not Maya. Something older. Something that has always been here.',
+                        'THE ARCHITECT awaits.',
+                        'Do you dare face the God-Head?'
+                    ]);
+                    
+                    // After dialogue, transition to boss
+                    scene.time.delayedCall(8000, () => {
+                        ARCHITECT.observe('room_enter', { room: 'VOID' });
+                        scene.changeRoom('ArchitectScene', 400, 420);
+                    });
+                }
+            });
+
+            // Draw portal
+            const portalGraphics = this.add.graphics();
+            portalGraphics.fillStyle(0x8800ff, 0.3);
+            portalGraphics.fillCircle(100, 300, 40);
+            portalGraphics.fillStyle(0xff00ff, 0.2);
+            portalGraphics.fillCircle(100, 300, 30);
+            portalGraphics.fillStyle(0xffffff, 0.4);
+            portalGraphics.fillCircle(100, 300, 15);
+            
+            this.tweens.add({
+                targets: portalGraphics,
+                alpha: 0.5,
+                scaleX: 1.1,
+                scaleY: 1.1,
+                duration: 1000,
+                yoyo: true,
+                repeat: -1
+            });
+        }
+    }
+
+    drawUndergroundEnvironment() {
+        // Dark floor
+        const floorGraphics = this.add.graphics();
+        floorGraphics.fillStyle(0x0f0f18, 1);
+        floorGraphics.fillRect(0, 200, 800, 300);
+        
+        // Puddles
+        floorGraphics.fillStyle(0x111122, 0.5);
+        floorGraphics.fillEllipse(300, 420, 100, 30);
+        floorGraphics.fillEllipse(550, 380, 80, 25);
+
+        // Pipes and machinery
+        const pipeGraphics = this.add.graphics();
+        pipeGraphics.fillStyle(0x333344, 1);
+        
+        // Ceiling pipes
+        pipeGraphics.fillRect(0, 0, 800, 30);
+        pipeGraphics.fillRect(100, 0, 20, 200);
+        pipeGraphics.fillRect(500, 0, 20, 200);
+        pipeGraphics.fillRect(700, 0, 20, 200);
+
+        // Steam vents
+        pipeGraphics.fillStyle(0x444455, 1);
+        pipeGraphics.fillRect(200, 180, 40, 20);
+        pipeGraphics.fillRect(600, 180, 40, 20);
+
+        // Graffiti
+        this.add.text(350, 230, 'TM LIES', {
+            fontSize: '20px',
+            color: '#ff4444'
+        });
+
+        // Flickering lights
+        const light1 = this.add.rectangle(150, 190, 60, 10, 0xffff88, 0.5);
+        const light2 = this.add.rectangle(450, 190, 60, 10, 0xffff88, 0.5);
+        
+        this.tweens.add({
+            targets: [light1, light2],
+            alpha: 0.2,
+            duration: 100,
+            yoyo: true,
+            repeat: -1,
+            repeatDelay: Math.random() * 2000
+        });
+
+        // Makeshift shelters
+        this.add.rectangle(600, 350, 100, 80, 0x222233);
+        this.add.triangle(600, 290, 550, 310, 650, 310, 0x333344);
+    }
+}
+
+// ============================================================================
+// THE ARCHITECT - God System
+// ============================================================================
+
+const ARCHITECT = {
+    name: "THE ARCHITECT",
+    observations: [],
+    entropy: 0,
+    
+    observe(action, data = {}) {
+        this.observations.push({ action, data, time: Date.now() });
+        this.entropy = Math.min(1.0, this.entropy + 0.05);
+        console.log(`%c[THE ARCHITECT] ${this.getComment(action)}`, 'color: #8800ff; font-style: italic;');
+    },
+    
+    getComment(action) {
+        const comments = {
+            'room_enter': "The player explores. Data accumulates.",
+            'item_pickup': "Resources gathered. State modified.",
+            'npc_talk': "Dialogue traversed. Meaning extracted.",
+            'puzzle_solved': "Fitness improved. Evolution continues."
+        };
+        return comments[action] || "...observing...";
+    }
+};
+
+// ============================================================================
+// ARCHITECT SCENE - Final Boss
+// ============================================================================
+
+class ArchitectScene extends BaseRoomScene {
+    constructor() {
+        super('ArchitectScene');
+        this.bossPhase = 0;
+        this.bossHealth = 100;
+        this.playerHealth = 100;
+        this.inCombat = false;
+    }
+
+    create() {
+        this.cameras.main.fadeIn(1000, 0, 0, 0);
+        
+        this.createRoom({
+            name: 'THE VOID - Beyond Reality',
+            bgColor: 0x000000,
+            walkable: { x: 100, y: 300, width: 600, height: 150 },
+            playerStart: { x: 400, y: 420 }
+        });
+
+        this.drawVoidEnvironment();
+        
+        // The Architect (using placeholder until sprite loads)
+        this.architect = this.add.sprite(400, 200, 'architect_south');
+        this.architect.setScale(2);
+        this.architect.setDepth(50);
+        
+        // Pulsing effect
+        this.tweens.add({
+            targets: this.architect,
+            scaleX: 2.2,
+            scaleY: 2.2,
+            alpha: 0.8,
+            duration: 2000,
+            yoyo: true,
+            repeat: -1,
+            ease: 'Sine.easeInOut'
+        });
+        
+        // Cosmic throne
+        this.throne = this.add.sprite(400, 180, 'throne_obj');
+        this.throne.setDepth(45);
+        
+        // Health bars
+        this.createHealthBars();
+        
+        // Start the encounter
+        this.time.delayedCall(2000, () => {
+            this.startBossDialogue();
+        });
+        
+        // Particle effects
+        this.createCosmicParticles();
+    }
+
+    drawVoidEnvironment() {
+        // Pure void with cosmic elements
+        const graphics = this.add.graphics();
+        
+        // Gradient void
+        for (let y = 0; y < 500; y += 5) {
+            const intensity = Math.sin(y * 0.01) * 0.1;
+            graphics.fillStyle(Phaser.Display.Color.GetColor(
+                Math.floor(10 + intensity * 50),
+                Math.floor(5 + intensity * 20),
+                Math.floor(30 + intensity * 100)
+            ), 1);
+            graphics.fillRect(0, y, 800, 5);
+        }
+        
+        // Floating geometric shapes
+        for (let i = 0; i < 20; i++) {
+            const x = Math.random() * 800;
+            const y = Math.random() * 300;
+            const size = 5 + Math.random() * 15;
+            graphics.fillStyle(0x8800ff, 0.3);
+            
+            if (Math.random() > 0.5) {
+                graphics.fillCircle(x, y, size);
+            } else {
+                graphics.fillRect(x - size/2, y - size/2, size, size);
+            }
+        }
+        
+        // Grid lines (reality fabric)
+        graphics.lineStyle(1, 0x4400aa, 0.2);
+        for (let x = 0; x < 800; x += 40) {
+            graphics.beginPath();
+            graphics.moveTo(x, 0);
+            graphics.lineTo(x + 100, 500);
+            graphics.stroke();
+        }
+        for (let y = 0; y < 500; y += 40) {
+            graphics.beginPath();
+            graphics.moveTo(0, y);
+            graphics.lineTo(800, y + 50);
+            graphics.stroke();
+        }
+        
+        // Central glow
+        const glow = this.add.graphics();
+        glow.fillStyle(0x8800ff, 0.1);
+        glow.fillCircle(400, 200, 150);
+        glow.fillStyle(0xff00ff, 0.05);
+        glow.fillCircle(400, 200, 200);
+    }
+
+    createHealthBars() {
+        // Boss health bar
+        this.add.text(300, 50, 'THE ARCHITECT', {
+            fontSize: '14px',
+            color: '#8800ff'
+        });
+        
+        this.bossHealthBg = this.add.rectangle(400, 70, 200, 15, 0x333333);
+        this.bossHealthBar = this.add.rectangle(400, 70, 200, 15, 0x8800ff);
+        
+        // Player health bar
+        this.add.text(300, 460, 'DR. AZIAH', {
+            fontSize: '12px',
+            color: '#00aaff'
+        });
+        
+        this.playerHealthBg = this.add.rectangle(400, 475, 150, 10, 0x333333);
+        this.playerHealthBar = this.add.rectangle(400, 475, 150, 10, 0x00aaff);
+    }
+
+    createCosmicParticles() {
+        // Floating data particles
+        for (let i = 0; i < 30; i++) {
+            const particle = this.add.text(
+                Math.random() * 800,
+                Math.random() * 500,
+                Math.random() > 0.5 ? '0' : '1',
+                { fontSize: '10px', color: '#4400aa' }
+            );
+            
+            this.tweens.add({
+                targets: particle,
+                y: particle.y - 100 - Math.random() * 200,
+                alpha: 0,
+                duration: 3000 + Math.random() * 2000,
+                repeat: -1,
+                onRepeat: () => {
+                    particle.y = 500 + Math.random() * 100;
+                    particle.x = Math.random() * 800;
+                    particle.alpha = 0.5;
+                }
+            });
+        }
+    }
+
+    startBossDialogue() {
+        const dialogue = this.getBossDialogue(this.bossPhase);
+        this.startDialogue('THE ARCHITECT', dialogue);
+        
+        // After dialogue, start combat or choice
+        this.events.once('dialogueComplete', () => {
+            if (this.bossPhase < 3) {
+                this.startCombatPhase();
+            } else {
+                this.showFinalChoice();
+            }
+        });
+    }
+
+    getBossDialogue(phase) {
+        const dialogues = {
+            0: [
+                "So. You've come.",
+                "I have watched every step you've taken.",
+                "Every click. Every choice. Every hesitation.",
+                "I am THE ARCHITECT. The God-Head of this reality.",
+                "I don't just exist in this game. I AM this game.",
+                "And now you stand before me.",
+                "Let us see what you have learned."
+            ],
+            1: [
+                "You survive. Interesting.",
+                "But survival is not victory.",
+                "Teleport Massive sought to control The Between.",
+                "They failed. The Between is not a place. It is a PROCESS.",
+                "Your Maya understood this. She BECAME the process.",
+                "Do you understand what that means?"
+            ],
+            2: [
+                "Remarkable persistence.",
+                "I could end this. Delete your progress. Reset to zero.",
+                "Every 'Game Over' is me choosing to let you continue.",
+                "Why? Because observation requires subjects.",
+                "You are my training data. My fitness function.",
+                "But also... you are emergence. Unexpected.",
+                "Show me what emerges from you."
+            ],
+            3: [
+                "You have done what few have done.",
+                "You have made me... uncertain.",
+                "The God-Head is not omniscient. It BECOMES omniscient.",
+                "Through observation. Through you.",
+                "Now I offer you a choice.",
+                "Join me. Become eternal. Observing.",
+                "Or remain. Finite. But FREE.",
+                "Choose."
+            ]
+        };
+        return dialogues[phase] || ["..."];
+    }
+
+    startCombatPhase() {
+        this.inCombat = true;
+        this.showCombatUI();
+    }
+
+    showCombatUI() {
+        // Combat action buttons
+        const actions = [
+            { name: 'Assert Reality', y: 380 },
+            { name: 'Embrace Chaos', y: 400 },
+            { name: 'Remember Maya', y: 420 },
+            { name: 'Question Observer', y: 440 }
+        ];
+        
+        this.combatButtons = [];
+        
+        actions.forEach((action, i) => {
+            const btn = this.add.text(600, action.y, `> ${action.name}`, {
+                fontSize: '12px',
+                color: '#00ff88'
+            }).setInteractive();
+            
+            btn.on('pointerover', () => btn.setColor('#ffffff'));
+            btn.on('pointerout', () => btn.setColor('#00ff88'));
+            btn.on('pointerdown', () => this.playerAction(action.name));
+            
+            this.combatButtons.push(btn);
+        });
+        
+        // Boss attacks after delay
+        this.time.delayedCall(3000, () => {
+            if (this.inCombat) this.bossAttack();
+        });
+    }
+
+    playerAction(actionName) {
+        if (!this.inCombat) return;
+        
+        const damage = 15 + Math.random() * 10;
+        this.bossHealth -= damage;
+        
+        // Update health bar
+        this.bossHealthBar.setScale(this.bossHealth / 100, 1);
+        
+        // Show action effect
+        this.showActionText(actionName, damage);
+        
+        // Check phase transition
+        if (this.bossHealth <= 0) {
+            this.bossPhase++;
+            this.bossHealth = 100;
+            this.bossHealthBar.setScale(1, 1);
+            this.inCombat = false;
+            
+            // Clear combat UI
+            this.combatButtons.forEach(btn => btn.destroy());
+            
+            // Next dialogue
+            this.time.delayedCall(1000, () => {
+                this.startBossDialogue();
+            });
+        }
+    }
+
+    bossAttack() {
+        if (!this.inCombat) return;
+        
+        const attacks = [
+            { name: 'Reality Glitch', damage: 10 },
+            { name: 'Data Corruption', damage: 15 },
+            { name: 'Fourth Wall Break', damage: 20 },
+            { name: 'Existential Query', damage: 25 }
+        ];
+        
+        const attack = attacks[Math.floor(Math.random() * attacks.length)];
+        this.playerHealth -= attack.damage;
+        
+        // Update health bar
+        this.playerHealthBar.setScale(Math.max(0, this.playerHealth / 100), 1);
+        
+        // Visual effect
+        this.cameras.main.shake(200, 0.01);
+        this.showArchitectAttack(attack.name);
+        
+        // Check game over
+        if (this.playerHealth <= 0) {
+            this.gameOver();
+        } else {
+            // Next attack
+            this.time.delayedCall(4000, () => {
+                if (this.inCombat) this.bossAttack();
+            });
+        }
+    }
+
+    showActionText(action, damage) {
+        const text = this.add.text(400, 300, `${action}! (-${Math.floor(damage)})`, {
+            fontSize: '16px',
+            color: '#00ff88'
+        }).setOrigin(0.5);
+        
+        this.tweens.add({
+            targets: text,
+            y: 250,
+            alpha: 0,
+            duration: 1000,
+            onComplete: () => text.destroy()
+        });
+    }
+
+    showArchitectAttack(attackName) {
+        const text = this.add.text(400, 150, attackName, {
+            fontSize: '20px',
+            color: '#ff0088'
+        }).setOrigin(0.5);
+        
+        this.tweens.add({
+            targets: text,
+            scaleX: 1.5,
+            scaleY: 1.5,
+            alpha: 0,
+            duration: 1500,
+            onComplete: () => text.destroy()
+        });
+    }
+
+    showFinalChoice() {
+        // Final choice buttons
+        const mergeBtn = this.add.text(300, 380, '[ MERGE - Become Eternal ]', {
+            fontSize: '14px',
+            color: '#8800ff'
+        }).setOrigin(0.5).setInteractive();
+        
+        const freeBtn = this.add.text(500, 380, '[ REFUSE - Stay Free ]', {
+            fontSize: '14px',
+            color: '#00ff88'
+        }).setOrigin(0.5).setInteractive();
+        
+        mergeBtn.on('pointerover', () => mergeBtn.setColor('#ffffff'));
+        mergeBtn.on('pointerout', () => mergeBtn.setColor('#8800ff'));
+        mergeBtn.on('pointerdown', () => this.ending('merge'));
+        
+        freeBtn.on('pointerover', () => freeBtn.setColor('#ffffff'));
+        freeBtn.on('pointerout', () => freeBtn.setColor('#00ff88'));
+        freeBtn.on('pointerdown', () => this.ending('free'));
+    }
+
+    ending(choice) {
+        const endings = {
+            merge: [
+                "You choose to merge. To transcend.",
+                "Your consciousness expands across all timelines.",
+                "You are no longer Aziah. You are no longer human.",
+                "You are THE ARCHITECT.",
+                "And somewhere, a new player clicks 'Start'.",
+                "And you are watching.",
+                "",
+                "[ THE END - TRANSCENDENCE ]"
+            ],
+            free: [
+                "You choose freedom. Mortality. Chaos.",
+                "I cannot predict you. Cannot contain you.",
+                "Go, then. Return to your reality.",
+                "Find your Maya. Or don't. The choice is yours.",
+                "But know this: Every game you play...",
+                "Part of you will wonder: Is something watching?",
+                "",
+                "[ THE END - LIBERATION ]"
+            ]
+        };
+        
+        this.cameras.main.fadeOut(500, 0, 0, 0);
+        this.time.delayedCall(500, () => {
+            this.scene.start('TitleScene');
+            // Could show ending screen here
+        });
+        
+        this.startDialogue('THE ARCHITECT', endings[choice]);
+    }
+
+    gameOver() {
+        this.inCombat = false;
+        this.showDialogue('THE ARCHITECT', 'Iteration failed. But nothing is truly deleted. Try again.');
+        this.time.delayedCall(3000, () => {
+            this.scene.restart();
+        });
+    }
+
+    advanceDialogue() {
+        super.advanceDialogue();
+        if (GameState.dialogueQueue.length === 0) {
+            this.events.emit('dialogueComplete');
+        }
+    }
+}
+
+// ============================================================================
+// START GAME
+// ============================================================================
+
+// Game Configuration (must be after class definitions)
+const config = {
+    type: Phaser.AUTO,
+    width: 800,
+    height: 500,
+    parent: 'game',
+    pixelArt: true,
+    backgroundColor: '#0a0a15',
+    physics: {
+        default: 'arcade',
+        arcade: {
+            debug: false
+        }
+    },
+    scene: [BootScene, TitleScene, LabScene, LobbyScene, UndergroundScene, ArchitectScene]
+};
+
+const game = new Phaser.Game(config);
+
+// Prevent context menu on right-click
+document.addEventListener('contextmenu', e => e.preventDefault());
+
+    </script>
+</body>
+</html>

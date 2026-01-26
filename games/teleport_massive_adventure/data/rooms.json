@@ -1,0 +1,309 @@
+{
+  "rooms": {
+    "lab": {
+      "id": "lab",
+      "name": "AZIAH'S LAB - Teleport Massive Research Division",
+      "background": {
+        "type": "procedural",
+        "style": "lab",
+        "colors": {
+          "floor": "#222233",
+          "wall": "#2a2a3e",
+          "accent": "#00aaff"
+        }
+      },
+      "walkable": { "x": 50, "y": 250, "width": 700, "height": 200 },
+      "playerStart": { "x": 400, "y": 400 },
+      "hotspots": [
+        {
+          "id": "terminal",
+          "name": "Research Terminal",
+          "position": { "x": 650, "y": 300 },
+          "size": { "width": 96, "height": 96 },
+          "sprite": "terminal_obj",
+          "examineText": "A quantum research terminal. Your life's work is stored here.",
+          "interactions": {
+            "use": {
+              "condition": { "flag": "terminalHacked", "equals": false },
+              "action": "dialogue",
+              "dialogueId": "terminal_first_use",
+              "setFlag": { "terminalHacked": true }
+            },
+            "use_repeat": {
+              "condition": { "flag": "terminalHacked", "equals": true },
+              "action": "dialogue",
+              "dialogueId": "terminal_repeat"
+            }
+          }
+        },
+        {
+          "id": "artifact",
+          "name": "Strange Artifact",
+          "position": { "x": 200, "y": 320 },
+          "size": { "width": 64, "height": 64 },
+          "sprite": "artifact_obj",
+          "examineText": "A crystalline object you found in 'The Between'. It pulses with otherworldly energy.",
+          "visible": { "flag": "hasArtifact", "equals": false },
+          "interactions": {
+            "pickup": {
+              "action": "addItem",
+              "item": "artifact",
+              "setFlag": { "hasArtifact": true },
+              "hideHotspot": true
+            },
+            "look": {
+              "action": "dialogue",
+              "dialogueId": "artifact_examine"
+            }
+          }
+        },
+        {
+          "id": "door_lobby",
+          "name": "Door to Lobby",
+          "position": { "x": 750, "y": 350 },
+          "size": { "width": 60, "height": 90 },
+          "sprite": "door",
+          "examineText": "The door leads to the main TM lobby.",
+          "interactions": {
+            "use": {
+              "action": "changeRoom",
+              "target": "lobby",
+              "playerPosition": { "x": 100, "y": 400 }
+            }
+          }
+        },
+        {
+          "id": "photo",
+          "name": "Photo Frame",
+          "position": { "x": 100, "y": 180 },
+          "size": { "width": 40, "height": 50 },
+          "examineText": "A photo of you and Maya, taken before the accident.",
+          "interactions": {
+            "look": {
+              "action": "dialogue",
+              "dialogueId": "photo_examine"
+            }
+          }
+        }
+      ],
+      "npcs": [],
+      "ambient": {
+        "particles": "data_streams",
+        "sound": "lab_hum"
+      }
+    },
+    
+    "lobby": {
+      "id": "lobby",
+      "name": "TM LOBBY - Teleport Massive Headquarters",
+      "background": {
+        "type": "procedural",
+        "style": "corporate",
+        "colors": {
+          "floor": "#1a1a28",
+          "wall": "#252535",
+          "accent": "#00aaff"
+        }
+      },
+      "walkable": { "x": 50, "y": 250, "width": 700, "height": 200 },
+      "playerStart": { "x": 400, "y": 400 },
+      "hotspots": [
+        {
+          "id": "door_lab",
+          "name": "Door to Lab",
+          "position": { "x": 50, "y": 350 },
+          "size": { "width": 60, "height": 90 },
+          "sprite": "door",
+          "interactions": {
+            "use": {
+              "action": "changeRoom",
+              "target": "lab",
+              "playerPosition": { "x": 700, "y": 400 }
+            }
+          }
+        },
+        {
+          "id": "maintenance_hatch",
+          "name": "Maintenance Access",
+          "position": { "x": 400, "y": 220 },
+          "size": { "width": 80, "height": 40 },
+          "examineText": "A maintenance hatch leading below the facility.",
+          "interactions": {
+            "use": {
+              "condition": { "flag": "hasKeycard", "equals": true },
+              "action": "changeRoom",
+              "target": "underground",
+              "playerPosition": { "x": 400, "y": 400 },
+              "dialogue": "hatch_open"
+            },
+            "use_locked": {
+              "condition": { "flag": "hasKeycard", "equals": false },
+              "action": "dialogue",
+              "dialogueId": "hatch_locked"
+            }
+          }
+        },
+        {
+          "id": "keycard",
+          "name": "Something on the floor",
+          "position": { "x": 300, "y": 450 },
+          "size": { "width": 48, "height": 48 },
+          "sprite": "keycard_obj",
+          "visible": { "flag": "hasKeycard", "equals": false },
+          "interactions": {
+            "pickup": {
+              "action": "addItem",
+              "item": "keycard",
+              "setFlag": { "hasKeycard": true },
+              "hideHotspot": true
+            }
+          }
+        },
+        {
+          "id": "tm_display",
+          "name": "TM Holographic Display",
+          "position": { "x": 400, "y": 100 },
+          "size": { "width": 150, "height": 80 },
+          "interactions": {
+            "look": {
+              "action": "dialogue",
+              "dialogueId": "tm_display"
+            }
+          }
+        }
+      ],
+      "npcs": [
+        {
+          "id": "guard",
+          "name": "Security Guard",
+          "position": { "x": 600, "y": 350 },
+          "sprite": "guard_south",
+          "examineText": "A TM security guard in full tactical gear.",
+          "dialogue": "guard_default"
+        }
+      ]
+    },
+    
+    "underground": {
+      "id": "underground",
+      "name": "THE UNDERGROUND - Beneath Teleport Massive",
+      "background": {
+        "type": "procedural",
+        "style": "underground",
+        "colors": {
+          "floor": "#0f0f18",
+          "wall": "#0a0a12",
+          "accent": "#4400aa"
+        }
+      },
+      "walkable": { "x": 50, "y": 250, "width": 700, "height": 200 },
+      "playerStart": { "x": 400, "y": 400 },
+      "hotspots": [
+        {
+          "id": "exit_hatch",
+          "name": "Exit Hatch",
+          "position": { "x": 400, "y": 220 },
+          "size": { "width": 80, "height": 40 },
+          "interactions": {
+            "use": {
+              "action": "changeRoom",
+              "target": "lobby",
+              "playerPosition": { "x": 400, "y": 280 }
+            }
+          }
+        },
+        {
+          "id": "damaged_terminal",
+          "name": "Damaged Terminal",
+          "position": { "x": 650, "y": 320 },
+          "size": { "width": 60, "height": 60 },
+          "interactions": {
+            "use": {
+              "action": "dialogue",
+              "dialogueId": "underground_terminal"
+            }
+          }
+        },
+        {
+          "id": "portal",
+          "name": "Shimmering Portal",
+          "position": { "x": 100, "y": 300 },
+          "size": { "width": 80, "height": 80 },
+          "visible": {
+            "all": [
+              { "flag": "hasArtifact", "equals": true },
+              { "flag": "talkedToPhaseburner", "equals": true }
+            ]
+          },
+          "examineText": "A tear in reality. Something ancient waits on the other side.",
+          "interactions": {
+            "use": {
+              "action": "sequence",
+              "steps": [
+                { "action": "dialogue", "dialogueId": "portal_enter" },
+                { "action": "changeRoom", "target": "void", "delay": 8000 }
+              ]
+            }
+          }
+        }
+      ],
+      "npcs": [
+        {
+          "id": "phaseburner",
+          "name": "Phaseburner",
+          "position": { "x": 200, "y": 350 },
+          "sprite": "phaseburner_south",
+          "examineText": "A figure whose form flickers between states of existence.",
+          "dialogue": "phaseburner_default",
+          "effects": {
+            "glitch": true,
+            "alpha_pulse": { "min": 0.5, "max": 1.0, "duration": 200 }
+          },
+          "onTalk": { "setFlag": { "talkedToPhaseburner": true } }
+        }
+      ],
+      "ambient": {
+        "particles": "steam",
+        "flickerLights": true
+      }
+    },
+    
+    "void": {
+      "id": "void",
+      "name": "THE DEALER'S TABLE - Where Fate is Shuffled",
+      "background": {
+        "type": "procedural",
+        "style": "casino_void",
+        "colors": {
+          "primary": "#051005",
+          "secondary": "#0a200a",
+          "accent": "#ffaa00"
+        }
+      },
+      "walkable": { "x": 100, "y": 300, "width": 600, "height": 150 },
+      "playerStart": { "x": 400, "y": 420 },
+      "isBossRoom": true,
+      "boss": {
+        "id": "dealer",
+        "name": "THE DEALER",
+        "sprite": "architect_south",
+        "position": { "x": 400, "y": 160 },
+        "scale": 2.5,
+        "phases": 3,
+        "dialoguePrefix": "dealer_phase_"
+      },
+      "hotspots": [
+        {
+          "id": "card_table",
+          "name": "The Infinite Table",
+          "position": { "x": 400, "y": 200 },
+          "examineText": "A card table that stretches into infinity. The felt is worn from countless games."
+        }
+      ],
+      "ambient": {
+        "particles": "floating_cards",
+        "geometry": "casino_lights"
+      }
+    }
+  }
+}

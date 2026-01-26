@@ -1,0 +1,11 @@
+# WAFT White Paper Template Package
+# A professional white paper template for WAFT publications
+
+package = "waft-whitepaper"
+version = "0.1.0"
+entrypoint = "lib.typ"
+authors = ["WAFT Development Team"]
+license = "MIT"
+description = "A professional white paper template for WAFT publications, following Typst's template tutorial and inspired by academic paper templates."
+keywords = ["whitepaper", "academic", "report", "waft", "professional"]
+categories = ["Report", "Paper"]
