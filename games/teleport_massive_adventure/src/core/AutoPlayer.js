@@ -62,12 +62,14 @@ class AutoPlayer {
             // Go to lobby
             { scene: 'LabScene', action: 'log', message: '🚪 Heading to lobby...' },
             { scene: 'LabScene', action: 'walkTo', x: 750, y: 350 },
-            { scene: 'LabScene', action: 'wait', duration: 1500 },
+            { scene: 'LabScene', action: 'wait', duration: 2000 },
             { scene: 'LabScene', action: 'interact', targetId: 'door_lobby', mode: 'use' },
-            { scene: 'LabScene', action: 'wait', duration: 3000 },
+            { scene: 'LabScene', action: 'wait', duration: 2000 },
             
             // === LOBBY SCENE ===
-            { scene: 'LobbyScene', action: 'wait', duration: 1500 },
+            // Allow scene transition time (scene might still be LabScene during transition)
+            { scene: null, action: 'wait', duration: 2000 },
+            { scene: 'LobbyScene', action: 'wait', duration: 2000 },
             { scene: 'LobbyScene', action: 'log', message: '🏢 Arrived in TM Lobby' },
             
             // Look at display
@@ -92,12 +94,14 @@ class AutoPlayer {
             // Use maintenance hatch
             { scene: 'LobbyScene', action: 'log', message: '🕳️ Using keycard on maintenance hatch...' },
             { scene: 'LobbyScene', action: 'walkTo', x: 400, y: 220 },
-            { scene: 'LobbyScene', action: 'wait', duration: 1500 },
+            { scene: 'LobbyScene', action: 'wait', duration: 2000 },
             { scene: 'LobbyScene', action: 'interact', targetId: 'maintenance_hatch', mode: 'use' },
-            { scene: 'LobbyScene', action: 'wait', duration: 3000 },
+            { scene: 'LobbyScene', action: 'wait', duration: 2000 },
             
             // === UNDERGROUND SCENE ===
-            { scene: 'UndergroundScene', action: 'wait', duration: 1500 },
+            // Allow scene transition time
+            { scene: null, action: 'wait', duration: 2000 },
+            { scene: 'UndergroundScene', action: 'wait', duration: 2000 },
             { scene: 'UndergroundScene', action: 'log', message: '🔦 Descended to underground...' },
             
             // Talk to Phaseburner
@@ -119,10 +123,12 @@ class AutoPlayer {
             { scene: 'UndergroundScene', action: 'walkTo', x: 100, y: 300 },
             { scene: 'UndergroundScene', action: 'wait', duration: 2000 },
             { scene: 'UndergroundScene', action: 'interact', targetId: 'portal', mode: 'use' },
-            { scene: 'UndergroundScene', action: 'wait', duration: 10000 },
+            { scene: 'UndergroundScene', action: 'wait', duration: 3000 },
             
             // === VOID SCENE (Boss) ===
-            { scene: 'VoidScene', action: 'wait', duration: 4000 },
+            // Allow scene transition time (portal has 8 second delay)
+            { scene: null, action: 'wait', duration: 5000 },
+            { scene: 'VoidScene', action: 'wait', duration: 3000 },
             { scene: 'VoidScene', action: 'log', message: '🎭 Confronting THE DEALER...' },
             
             // Wait for boss encounter to start
@@ -373,15 +379,17 @@ class AutoPlayer {
             if (!currentSceneKey || currentSceneKey !== expectedSceneKey) {
                 // Wrong scene, wait and retry (with max retries)
                 const retryCount = this.stateData?.sceneRetries || 0;
-                if (retryCount < 30) { // Max 15 seconds wait (increased)
-                    this.log(`⏳ Waiting for ${expectedSceneKey} (current: ${currentSceneKey || 'none'}, attempt ${retryCount + 1}/30)...`);
+                if (retryCount < 40) { // Max 20 seconds wait (increased further)
+                    this.log(`⏳ Waiting for ${expectedSceneKey} (current: ${currentSceneKey || 'none'}, attempt ${retryCount + 1}/40)...`);
                     this.stateData = { ...this.stateData, sceneRetries: retryCount + 1 };
                     this.currentStep--; // Retry this step
                     this.stepTimer = setTimeout(() => this.executeNextStep(), 500);
                 } else {
-                    this.log(`⚠ Scene transition timeout after 30 attempts, continuing anyway`);
+                    this.log(`⚠ Scene transition timeout after 40 attempts`);
+                    this.log(`   Expected: ${expectedSceneKey}, Current: ${currentSceneKey || 'none'}`);
+                    this.log(`   Continuing to next step anyway...`);
                     this.stateData = { ...this.stateData, sceneRetries: 0 };
-                    // Continue anyway - might be scene name mismatch
+                    // Continue anyway - might be scene name mismatch or transition issue
                 }
                 return;
             }
@@ -530,22 +538,31 @@ class AutoPlayer {
                 scene.player.walkTo(interactPoint.x, interactPoint.y);
                 
                 // Wait for movement to complete, then interact
+                let movementComplete = false;
                 const checkMovement = setInterval(() => {
-                    if (!scene.player.isMoving) {
+                    if (!scene.player.isMoving || movementComplete) {
                         clearInterval(checkMovement);
-                        if (scene.interactionSystem) {
-                            scene.interactionSystem.interact(target, mode);
+                        if (!movementComplete && scene.interactionSystem) {
+                            movementComplete = true;
+                            // Small delay after movement stops
+                            setTimeout(() => {
+                                if (scene.interactionSystem) {
+                                    scene.interactionSystem.interact(target, mode);
+                                }
+                            }, 300);
                         }
                     }
                 }, 100);
                 
-                // Timeout fallback
+                // Timeout fallback (longer for scene transitions)
+                const timeout = mode === 'use' && targetId.includes('door') ? 3000 : 2000;
                 setTimeout(() => {
                     clearInterval(checkMovement);
-                    if (scene.interactionSystem) {
+                    if (!movementComplete && scene.interactionSystem) {
+                        movementComplete = true;
                         scene.interactionSystem.interact(target, mode);
                     }
-                }, 2000);
+                }, timeout);
             } else {
                 scene.interactionSystem.interact(target, mode);
             }
