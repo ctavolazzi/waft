@@ -1212,6 +1212,27 @@
         window.theDealer = theDealer;
         window.theArchitect = theDealer; // Backwards compat
         window.autoPlayer = autoPlayer;
+        
+        // Expose global function for programmatic control
+        window.startAutoPlayer = () => {
+            if (autoPlayer && !autoPlayer.isRunning) {
+                autoPlayer.start();
+                return true;
+            }
+            return false;
+        };
+        
+        // Check for URL parameter to auto-start
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('auto') === 'true' || urlParams.get('autoplayer') === 'true') {
+            // Wait for game to be fully loaded, then start
+            setTimeout(() => {
+                if (autoPlayer && !autoPlayer.isRunning) {
+                    console.log('🎬 Auto-starting AutoPlayer from URL parameter...');
+                    autoPlayer.start();
+                }
+            }, 2000); // Give game 2 seconds to fully initialize
+        }
     </script>
 </body>
 </html>
