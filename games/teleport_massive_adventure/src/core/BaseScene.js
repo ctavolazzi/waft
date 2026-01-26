@@ -331,6 +331,12 @@ class BaseScene extends Phaser.Scene {
     // ========================================
     
     goToRoom(roomId, playerX, playerY) {
+        // Cleanup combat drone before scene transition
+        if (this.player?.combatDrone) {
+            this.player.combatDrone.destroy();
+            this.player.combatDrone = null;
+        }
+        
         this.cameras.main.fadeOut(300, 0, 0, 0);
         
         this.time.delayedCall(300, () => {
