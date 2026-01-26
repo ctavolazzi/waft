@@ -659,24 +659,31 @@ class VoidScene extends BaseScene {
     }
     
     _showDamageNumber(x, y, amount, color) {
-        const dmgText = this.add.text(x, y, `-${amount}`, {
-            fontSize: '24px',
-            color: color,
-            fontFamily: 'monospace',
-            fontStyle: 'bold',
-            stroke: '#000000',
-            strokeThickness: 3
-        }).setOrigin(0.5);
-        
-        this.tweens.add({
-            targets: dmgText,
-            y: y - 50,
-            alpha: 0,
-            scale: 1.5,
-            duration: 800,
-            ease: 'Power2',
-            onComplete: () => dmgText.destroy()
-        });
+        // Use centralized visual effects utility
+        const VisualEffects = window.VisualEffects || (typeof VisualEffects !== 'undefined' ? VisualEffects : null);
+        if (VisualEffects) {
+            VisualEffects.floatingNumber(this, x, y, amount, 'damage', { color });
+        } else {
+            // Fallback for compatibility
+            const dmgText = this.add.text(x, y, `-${amount}`, {
+                fontSize: '24px',
+                color: color,
+                fontFamily: 'monospace',
+                fontStyle: 'bold',
+                stroke: '#000000',
+                strokeThickness: 3
+            }).setOrigin(0.5);
+            
+            this.tweens.add({
+                targets: dmgText,
+                y: y - 50,
+                alpha: 0,
+                scale: 1.5,
+                duration: 800,
+                ease: 'Power2',
+                onComplete: () => dmgText.destroy()
+            });
+        }
     }
     
     _updateBossHP() {
@@ -874,7 +881,17 @@ class VoidScene extends BaseScene {
                 gameState.setFlag('gameCompleted', true);
                 gameState.setFlag('endingChoice', choice);
                 gameState.reset();
-                this.scene.start('LabScene');
+                // Use centralized transition
+                const SceneTransition = window.SceneTransition || (typeof SceneTransition !== 'undefined' ? SceneTransition : null);
+                if (SceneTransition) {
+                    SceneTransition.transition(this, 'lab', {
+                        playerX: 400,
+                        playerY: 400,
+                        onCleanup: () => SceneTransition.cleanupPlayer(this.player)
+                    });
+                } else {
+                    this.scene.start('LabScene');
+                }
             });
         });
     }
@@ -930,7 +947,17 @@ class VoidScene extends BaseScene {
             this.cameras.main.fadeOut(1500, 0, 0, 0);
             this.time.delayedCall(1500, () => {
                 gameState.setFlag('lostToDealer', true);
-                this.scene.start('UndergroundScene');
+                // Use centralized transition
+                const SceneTransition = window.SceneTransition || (typeof SceneTransition !== 'undefined' ? SceneTransition : null);
+                if (SceneTransition) {
+                    SceneTransition.transition(this, 'underground', {
+                        playerX: 400,
+                        playerY: 400,
+                        onCleanup: () => SceneTransition.cleanupPlayer(this.player)
+                    });
+                } else {
+                    this.scene.start('UndergroundScene');
+                }
             });
         });
     }

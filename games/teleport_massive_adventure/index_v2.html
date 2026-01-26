@@ -732,6 +732,14 @@
     <!-- Phaser 3 -->
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
     
+    <!-- Core Systems - Utilities First -->
+    <script src="src/core/GameConstants.js"></script>
+    <script src="src/core/SceneTransition.js"></script>
+    <script src="src/core/VisualEffects.js"></script>
+    <script src="src/core/DependencyContainer.js"></script>
+    <script src="src/core/SystemAccessor.js"></script>
+    <script src="src/core/utils-loader.js"></script>
+    
     <!-- Core Systems -->
     <script src="src/core/EventBus.js"></script>
     <script src="src/core/GameState.js"></script>
@@ -1019,6 +1027,20 @@
                     phaserGame: this.game,
                     scene: this
                 }).then(() => {
+                    // Register all systems in DependencyContainer for clean access
+                    if (window.dependencyContainer) {
+                        window.dependencyContainer.registerInstance('gameManager', gameManager);
+                        window.dependencyContainer.registerInstance('eventBus', eventBus);
+                        window.dependencyContainer.registerInstance('gameState', gameState);
+                        window.dependencyContainer.registerInstance('statsSystem', statsSystem);
+                        window.dependencyContainer.registerInstance('collisionSystem', collisionSystem);
+                        window.dependencyContainer.registerInstance('combatSystem', combatSystem);
+                        window.dependencyContainer.registerInstance('npcSystem', npcSystem);
+                        window.dependencyContainer.registerInstance('dialogueSystem', dialogueSystem);
+                        window.dependencyContainer.registerInstance('theDealer', theDealer);
+                        console.log('[BootScene] Systems registered in DependencyContainer');
+                    }
+                    
                     // Register player character with stats
                     statsSystem.registerCharacter('aziah', {
                         name: 'Aziah',
@@ -1049,7 +1071,7 @@
                         }
                     });
                     
-                    // Make GameManager globally accessible
+                    // Make GameManager globally accessible (backwards compatibility)
                     window.gameManager = gameManager;
                 }).catch(error => {
                     console.error('[BootScene] Failed to initialize systems:', error);

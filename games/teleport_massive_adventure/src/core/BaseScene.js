@@ -8,6 +8,16 @@
  * - Click processing
  * - UI hookup
  */
+
+// Import utilities (using dynamic import for compatibility)
+// If ES6 modules not available, these will be loaded via script tags
+let SceneTransition;
+if (typeof import !== 'undefined') {
+    import('./SceneTransition.js').then(m => SceneTransition = m.SceneTransition);
+} else if (typeof window !== 'undefined' && window.SceneTransition) {
+    SceneTransition = window.SceneTransition;
+}
+
 class BaseScene extends Phaser.Scene {
     constructor(key) {
         super(key);
@@ -90,7 +100,23 @@ class BaseScene extends Phaser.Scene {
         // Initialize combat drone if player has it
         if (this.player.hasDrone || gameState.getFlag('hasCombatDrone')) {
             this.player.hasDrone = true;
-            if (window.gameManager) {
+            // Use SystemAccessor for clean system access
+            const SystemAccessor = window.SystemAccessor || (typeof SystemAccessor !== 'undefined' ? SystemAccessor : null);
+            if (SystemAccessor) {
+                const combatSystem = SystemAccessor.getCombatSystem();
+                const npcSystem = SystemAccessor.getNPCSystem();
+                const statsSystem = SystemAccessor.getStatsSystem();
+                
+                if (combatSystem && npcSystem && statsSystem) {
+                    this.player.initCombatDrone({
+                        combatSystem,
+                        npcSystem,
+                        statsSystem
+                    });
+                    this.player.activateDrone();
+                }
+            } else if (window.gameManager) {
+                // Fallback to legacy access
                 const combatSystem = window.gameManager.getSystem('combatSystem');
                 const npcSystem = window.gameManager.getSystem('npcSystem');
                 const statsSystem = window.gameManager.getSystem('statsSystem');
@@ -347,9 +373,11 @@ class BaseScene extends Phaser.Scene {
         }
         
         // Update game manager (coordinates all systems)
-        if (window.gameManager) {
-            window.gameManager.setCurrentScene(this);
-            window.gameManager.update(time, delta);
+        const SystemAccessor = window.SystemAccessor || (typeof SystemAccessor !== 'undefined' ? SystemAccessor : null);
+        const gameManager = SystemAccessor ? SystemAccessor.getGameManager() : (window.gameManager || null);
+        if (gameManager) {
+            gameManager.setCurrentScene(this);
+            gameManager.update(time, delta);
         }
     }
     
@@ -358,27 +386,11 @@ class BaseScene extends Phaser.Scene {
     // ========================================
     
     goToRoom(roomId, playerX, playerY) {
-        // Cleanup combat drone before scene transition
-        if (this.player?.combatDrone) {
-            this.player.combatDrone.destroy();
-            this.player.combatDrone = null;
-        }
-        
-        this.cameras.main.fadeOut(300, 0, 0, 0);
-        
-        this.time.delayedCall(300, () => {
-            // Map room IDs to scene keys
-            const sceneMap = {
-                'lab': 'LabScene',
-                'lobby': 'LobbyScene',
-                'underground': 'UndergroundScene',
-                'void': 'VoidScene'
-            };
-            
-            this.scene.start(sceneMap[roomId] || roomId, {
-                playerX: playerX,
-                playerY: playerY
-            });
+        // Use centralized transition utility
+        SceneTransition.transition(this, roomId, {
+            playerX,
+            playerY,
+            onCleanup: () => SceneTransition.cleanupPlayer(this.player)
         });
     }
 }

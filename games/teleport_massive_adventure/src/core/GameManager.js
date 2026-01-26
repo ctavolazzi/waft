@@ -392,3 +392,13 @@ class GameManager {
 
 // Singleton export
 const gameManager = new GameManager();
+
+// Register in DependencyContainer if available
+if (typeof window !== 'undefined' && window.dependencyContainer) {
+    window.dependencyContainer.registerInstance('gameManager', gameManager);
+}
+
+// Also expose on window for backwards compatibility
+if (typeof window !== 'undefined') {
+    window.gameManager = gameManager;
+}

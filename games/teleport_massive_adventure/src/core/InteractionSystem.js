@@ -244,22 +244,31 @@ class InteractionSystem {
         
         gameState.enterRoom(targetRoom, position);
         
-        // Trigger scene change in Phaser
+        // Use centralized transition utility
         if (this.scene) {
-            this.scene.cameras.main.fadeOut(300, 0, 0, 0);
-            this.scene.time.delayedCall(300, () => {
-                // Map room ID to scene key
-                const sceneMap = {
-                    'lab': 'LabScene',
-                    'lobby': 'LobbyScene',
-                    'underground': 'UndergroundScene',
-                    'void': 'VoidScene'
-                };
-                this.scene.scene.start(sceneMap[targetRoom] || targetRoom, { 
-                    playerX: position.x, 
-                    playerY: position.y 
+            const SceneTransition = window.SceneTransition || (typeof SceneTransition !== 'undefined' ? SceneTransition : null);
+            if (SceneTransition) {
+                SceneTransition.transition(this.scene, targetRoom, {
+                    playerX: position.x,
+                    playerY: position.y,
+                    onCleanup: () => SceneTransition.cleanupPlayer(this.scene?.player)
                 });
-            });
+            } else {
+                // Fallback for compatibility
+                this.scene.cameras.main.fadeOut(300, 0, 0, 0);
+                this.scene.time.delayedCall(300, () => {
+                    const sceneMap = {
+                        'lab': 'LabScene',
+                        'lobby': 'LobbyScene',
+                        'underground': 'UndergroundScene',
+                        'void': 'VoidScene'
+                    };
+                    this.scene.scene.start(sceneMap[targetRoom] || targetRoom, { 
+                        playerX: position.x, 
+                        playerY: position.y 
+                    });
+                });
+            }
         }
         
         eventBus.emit(EventBus.ROOM_ENTER, { room: targetRoom, position });
@@ -292,7 +301,22 @@ class InteractionSystem {
         if (!drone) {
             // Try to initialize drone if player has it
             if (player && player.hasDrone) {
-                if (window.gameManager) {
+                const SystemAccessor = window.SystemAccessor || (typeof SystemAccessor !== 'undefined' ? SystemAccessor : null);
+                if (SystemAccessor) {
+                    const combatSystem = SystemAccessor.getCombatSystem();
+                    const npcSystem = SystemAccessor.getNPCSystem();
+                    const statsSystem = SystemAccessor.getStatsSystem();
+                    
+                    if (combatSystem && npcSystem && statsSystem) {
+                        player.initCombatDrone({
+                            combatSystem,
+                            npcSystem,
+                            statsSystem
+                        });
+                        player.activateDrone();
+                    }
+                } else if (window.gameManager) {
+                    // Fallback to legacy access
                     const combatSystem = window.gameManager.getSystem('combatSystem');
                     const npcSystem = window.gameManager.getSystem('npcSystem');
                     const statsSystem = window.gameManager.getSystem('statsSystem');

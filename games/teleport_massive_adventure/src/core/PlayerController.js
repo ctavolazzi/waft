@@ -473,7 +473,22 @@ class PlayerController {
         
         if (!this.combatDrone) {
             // Initialize if not already done
-            if (window.gameManager) {
+            const SystemAccessor = window.SystemAccessor || (typeof SystemAccessor !== 'undefined' ? SystemAccessor : null);
+            if (SystemAccessor) {
+                const combatSystem = SystemAccessor.getCombatSystem();
+                const npcSystem = SystemAccessor.getNPCSystem();
+                const statsSystem = SystemAccessor.getStatsSystem();
+                
+                if (combatSystem && npcSystem && statsSystem) {
+                    this.combatDrone = new CombatDrone(this.scene, this);
+                    this.combatDrone.init({
+                        combatSystem,
+                        npcSystem,
+                        statsSystem
+                    });
+                }
+            } else if (window.gameManager) {
+                // Fallback to legacy access
                 const combatSystem = window.gameManager.getSystem('combatSystem');
                 const npcSystem = window.gameManager.getSystem('npcSystem');
                 const statsSystem = window.gameManager.getSystem('statsSystem');
@@ -511,7 +526,27 @@ class PlayerController {
         gameState.setFlag('hasCombatDrone', true);
         
         // Auto-activate if systems are ready
-        if (window.gameManager) {
+        const SystemAccessor = window.SystemAccessor || (typeof SystemAccessor !== 'undefined' ? SystemAccessor : null);
+        if (SystemAccessor) {
+            const combatSystem = SystemAccessor.getCombatSystem();
+            const npcSystem = SystemAccessor.getNPCSystem();
+            const statsSystem = SystemAccessor.getStatsSystem();
+            
+            if (combatSystem && npcSystem && statsSystem) {
+                this.initCombatDrone({
+                    combatSystem,
+                    npcSystem,
+                    statsSystem
+                });
+                this.activateDrone();
+                
+                // Visual feedback
+                if (this.scene) {
+                    this.scene.cameras.main.flash(300, 0, 255, 0);
+                }
+            }
+        } else if (window.gameManager) {
+            // Fallback to legacy access
             const combatSystem = window.gameManager.getSystem('combatSystem');
             const npcSystem = window.gameManager.getSystem('npcSystem');
             const statsSystem = window.gameManager.getSystem('statsSystem');
