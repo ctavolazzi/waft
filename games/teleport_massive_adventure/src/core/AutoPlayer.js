@@ -62,10 +62,10 @@ class AutoPlayer {
             { scene: 'LabScene', action: 'log', message: '🚪 Heading to lobby...' },
             { scene: 'LabScene', action: 'walkTo', x: 720, y: 380 },
             { scene: 'LabScene', action: 'interact', targetId: 'door_lobby', mode: 'use' },
-            { scene: 'LabScene', action: 'wait', duration: 1000 },
+            { scene: 'LabScene', action: 'wait', duration: 2000 },
             
             // === LOBBY SCENE ===
-            { scene: 'LobbyScene', action: 'wait', duration: 500 },
+            { scene: 'LobbyScene', action: 'wait', duration: 1500 },
             { scene: 'LobbyScene', action: 'log', message: '🏢 Arrived in TM Lobby' },
             
             // Look at display
@@ -90,10 +90,10 @@ class AutoPlayer {
             { scene: 'LobbyScene', action: 'log', message: '🕳️ Using keycard on maintenance hatch...' },
             { scene: 'LobbyScene', action: 'walkTo', x: 400, y: 280 },
             { scene: 'LobbyScene', action: 'interact', targetId: 'maintenance_hatch', mode: 'use' },
-            { scene: 'LobbyScene', action: 'wait', duration: 1000 },
+            { scene: 'LobbyScene', action: 'wait', duration: 2000 },
             
             // === UNDERGROUND SCENE ===
-            { scene: 'UndergroundScene', action: 'wait', duration: 500 },
+            { scene: 'UndergroundScene', action: 'wait', duration: 1500 },
             { scene: 'UndergroundScene', action: 'log', message: '🔦 Descended to underground...' },
             
             // Talk to Phaseburner
@@ -110,50 +110,72 @@ class AutoPlayer {
             
             // Enter portal (should appear after talking to phaseburner + having artifact)
             { scene: 'UndergroundScene', action: 'log', message: '🌀 Portal has appeared! Entering...' },
-            { scene: 'UndergroundScene', action: 'walkTo', x: 100, y: 350 },
+            { scene: 'UndergroundScene', action: 'walkTo', x: 100, y: 300 },
             { scene: 'UndergroundScene', action: 'wait', duration: 2000 },
             { scene: 'UndergroundScene', action: 'interact', targetId: 'portal', mode: 'use' },
-            { scene: 'UndergroundScene', action: 'wait', duration: 8000 },
+            { scene: 'UndergroundScene', action: 'wait', duration: 10000 },
             
             // === VOID SCENE (Boss) ===
-            { scene: 'VoidScene', action: 'wait', duration: 2000 },
-            { scene: 'VoidScene', action: 'log', message: '🎭 Confronting THE ARCHITECT...' },
+            { scene: 'VoidScene', action: 'wait', duration: 4000 },
+            { scene: 'VoidScene', action: 'log', message: '🎭 Confronting THE DEALER...' },
             
-            // Boss fight is handled by dialogue/combat system
-            // Auto-select actions
-            { scene: 'VoidScene', action: 'wait', duration: 5000 },
-            { scene: 'VoidScene', action: 'log', message: '⚔️ Phase 1 - Assert Reality' },
-            { scene: 'VoidScene', action: 'bossAction', actionKey: 'assert' },
+            // Wait for boss encounter to start
             { scene: 'VoidScene', action: 'wait', duration: 4000 },
             
-            { scene: 'VoidScene', action: 'log', message: '⚔️ Using Remember Maya' },
-            { scene: 'VoidScene', action: 'bossAction', actionKey: 'maya' },
-            { scene: 'VoidScene', action: 'wait', duration: 4000 },
+            // Phase 1 - Multiple actions to defeat boss (100 HP, need ~5-6 actions)
+            { scene: 'VoidScene', action: 'log', message: '⚔️ Phase 1 - Starting combat' },
+            { scene: 'VoidScene', action: 'wait', duration: 3000 },
+            { scene: 'VoidScene', action: 'bossAction', actionKey: 'question' }, // 30 damage
+            { scene: 'VoidScene', action: 'wait', duration: 6000 },
             
-            { scene: 'VoidScene', action: 'log', message: '⚔️ Using Question Observer' },
-            { scene: 'VoidScene', action: 'bossAction', actionKey: 'question' },
-            { scene: 'VoidScene', action: 'wait', duration: 4000 },
+            { scene: 'VoidScene', action: 'bossAction', actionKey: 'bluff' }, // 20 damage
+            { scene: 'VoidScene', action: 'wait', duration: 6000 },
             
-            { scene: 'VoidScene', action: 'log', message: '⚔️ Phase 2 - Embrace Chaos' },
-            { scene: 'VoidScene', action: 'bossAction', actionKey: 'chaos' },
-            { scene: 'VoidScene', action: 'wait', duration: 4000 },
+            { scene: 'VoidScene', action: 'bossAction', actionKey: 'maya' }, // 15 damage
+            { scene: 'VoidScene', action: 'wait', duration: 6000 },
             
-            { scene: 'VoidScene', action: 'bossAction', actionKey: 'question' },
-            { scene: 'VoidScene', action: 'wait', duration: 4000 },
+            { scene: 'VoidScene', action: 'bossAction', actionKey: 'question' }, // 30 damage
+            { scene: 'VoidScene', action: 'wait', duration: 6000 },
             
-            { scene: 'VoidScene', action: 'bossAction', actionKey: 'assert' },
-            { scene: 'VoidScene', action: 'wait', duration: 4000 },
+            { scene: 'VoidScene', action: 'bossAction', actionKey: 'bluff' }, // 20 damage (total: 115, phase ends)
+            { scene: 'VoidScene', action: 'wait', duration: 6000 },
             
+            // Phase 2
+            { scene: 'VoidScene', action: 'log', message: '⚔️ Phase 2 - Continuing fight' },
+            { scene: 'VoidScene', action: 'wait', duration: 4000 },
+            { scene: 'VoidScene', action: 'bossAction', actionKey: 'question' }, // 30 damage
+            { scene: 'VoidScene', action: 'wait', duration: 6000 },
+            
+            { scene: 'VoidScene', action: 'bossAction', actionKey: 'bluff' }, // 20 damage
+            { scene: 'VoidScene', action: 'wait', duration: 6000 },
+            
+            { scene: 'VoidScene', action: 'bossAction', actionKey: 'maya' }, // 15 damage
+            { scene: 'VoidScene', action: 'wait', duration: 6000 },
+            
+            { scene: 'VoidScene', action: 'bossAction', actionKey: 'question' }, // 30 damage (total: 95, phase ends)
+            { scene: 'VoidScene', action: 'wait', duration: 6000 },
+            
+            // Phase 3
             { scene: 'VoidScene', action: 'log', message: '⚔️ Phase 3 - Final push' },
-            { scene: 'VoidScene', action: 'bossAction', actionKey: 'maya' },
             { scene: 'VoidScene', action: 'wait', duration: 4000 },
+            { scene: 'VoidScene', action: 'bossAction', actionKey: 'question' }, // 30 damage
+            { scene: 'VoidScene', action: 'wait', duration: 6000 },
             
-            { scene: 'VoidScene', action: 'bossAction', actionKey: 'question' },
-            { scene: 'VoidScene', action: 'wait', duration: 4000 },
+            { scene: 'VoidScene', action: 'bossAction', actionKey: 'bluff' }, // 20 damage
+            { scene: 'VoidScene', action: 'wait', duration: 6000 },
+            
+            { scene: 'VoidScene', action: 'bossAction', actionKey: 'maya' }, // 15 damage
+            { scene: 'VoidScene', action: 'wait', duration: 6000 },
+            
+            { scene: 'VoidScene', action: 'bossAction', actionKey: 'question' }, // 30 damage (total: 95, victory!)
+            { scene: 'VoidScene', action: 'wait', duration: 6000 },
+            
+            // Wait for victory and final choice
+            { scene: 'VoidScene', action: 'log', message: '🎭 Waiting for final choice...' },
+            { scene: 'VoidScene', action: 'wait', duration: 8000 },
             
             // Final choice - Liberation ending
-            { scene: 'VoidScene', action: 'log', message: '🎭 Final choice - Choosing LIBERATION' },
-            { scene: 'VoidScene', action: 'wait', duration: 5000 },
+            { scene: 'VoidScene', action: 'log', message: '🎭 Choosing LIBERATION ending' },
             { scene: 'VoidScene', action: 'endingChoice', choice: 'free' },
             
             // Complete
@@ -276,10 +298,15 @@ class AutoPlayer {
         this.isRunning = true;
         this.isPaused = false;
         this.currentStep = 0;
+        this.stateData = {}; // Reset state data
         this.logArea.innerHTML = '';
         this.log('🎬 AutoPlayer started');
         this.updateUI();
-        this.executeNextStep();
+        
+        // Wait a moment for game to be ready
+        setTimeout(() => {
+            this.executeNextStep();
+        }, 500);
     }
     
     pause() {
@@ -336,12 +363,23 @@ class AutoPlayer {
             const currentSceneKey = currentScene?.scene?.key;
             
             if (!currentSceneKey || currentSceneKey !== expectedSceneKey) {
-                // Wrong scene, wait and retry
-                this.log(`⏳ Waiting for ${expectedSceneKey} (current: ${currentSceneKey || 'none'})...`);
-                this.currentStep--; // Retry this step
-                this.stepTimer = setTimeout(() => this.executeNextStep(), 500);
+                // Wrong scene, wait and retry (with max retries)
+                const retryCount = this.stateData?.sceneRetries || 0;
+                if (retryCount < 20) { // Max 10 seconds wait
+                    this.log(`⏳ Waiting for ${expectedSceneKey} (current: ${currentSceneKey || 'none'}, attempt ${retryCount + 1})...`);
+                    this.stateData = { ...this.stateData, sceneRetries: retryCount + 1 };
+                    this.currentStep--; // Retry this step
+                    this.stepTimer = setTimeout(() => this.executeNextStep(), 500);
+                } else {
+                    this.log(`⚠ Scene transition timeout, skipping to next step`);
+                    this.stateData = { ...this.stateData, sceneRetries: 0 };
+                    // Continue anyway
+                }
                 return;
             }
+            
+            // Reset scene retry counter on success
+            this.stateData = { ...this.stateData, sceneRetries: 0 };
         }
         
         // Execute the action
@@ -383,17 +421,20 @@ class AutoPlayer {
                 
             case 'interact':
                 this.performInteraction(scene, step.targetId, step.mode);
-                this.scheduleNext(this.actionDelay);
+                // Wait longer for interactions (they may trigger dialogue)
+                this.scheduleNext(this.actionDelay + 500);
                 break;
                 
             case 'bossAction':
                 this.performBossAction(scene, step.actionKey);
-                this.scheduleNext(500);
+                // Wait longer for boss action to complete (dialogue, damage, etc.)
+                this.scheduleNext(3000);
                 break;
                 
             case 'endingChoice':
                 this.performEndingChoice(scene, step.choice);
-                this.scheduleNext(1000);
+                // Wait for ending sequence to complete
+                this.scheduleNext(5000);
                 break;
                 
             case 'stop':
@@ -471,19 +512,106 @@ class AutoPlayer {
     }
     
     performBossAction(scene, actionKey) {
+        // Wait for player turn to be available (with retry logic)
+        if (!scene?.isPlayerTurn && scene?.combatActive) {
+            this.log(`⏳ Waiting for player turn... (combatActive: ${scene.combatActive}, isPlayerTurn: ${scene.isPlayerTurn})`);
+            // Retry after a delay (up to 5 times)
+            const retryCount = this.stateData?.bossActionRetries || 0;
+            if (retryCount < 5) {
+                this.stateData = { ...this.stateData, bossActionRetries: retryCount + 1 };
+                this.stepTimer = setTimeout(() => {
+                    this.currentStep--; // Retry this step
+                    this.executeNextStep();
+                }, 2000);
+            } else {
+                this.log(`⚠ Max retries reached for boss action, skipping`);
+                this.stateData = { ...this.stateData, bossActionRetries: 0 };
+                this.scheduleNext(1000);
+            }
+            return;
+        }
+        
+        // Reset retry counter on success
+        this.stateData = { ...this.stateData, bossActionRetries: 0 };
+        
         // Click the boss action button
         if (scene?.playerAction) {
             scene.playerAction(actionKey);
             this.log(`→ Boss action: ${actionKey}`);
+        } else if (scene?.actionButtons) {
+            // Try to find and click the button directly
+            const buttonData = scene.actionButtons.find(b => b.action?.key === actionKey);
+            if (buttonData && buttonData.btn) {
+                if (buttonData.btn.visible) {
+                    // Simulate click
+                    buttonData.btn.emit('pointerdown');
+                    this.log(`→ Boss action (button click): ${actionKey}`);
+                } else {
+                    // Button exists but not visible - wait a bit
+                    this.log(`⏳ Boss action button not visible yet: ${actionKey}`);
+                    this.stepTimer = setTimeout(() => {
+                        this.currentStep--; // Retry
+                        this.executeNextStep();
+                    }, 1000);
+                }
+            } else {
+                this.log(`⚠ Boss action button not found: ${actionKey} (available: ${scene.actionButtons.map(b => b.action?.key).join(', ')})`);
+                // Try to use playerAction anyway
+                if (scene.playerAction) {
+                    scene.playerAction(actionKey);
+                }
+            }
         } else {
-            this.log(`⚠ Boss action not available`);
+            this.log(`⚠ Boss action not available (scene: ${scene?.scene?.key}, has playerAction: ${!!scene?.playerAction})`);
         }
     }
     
     performEndingChoice(scene, choice) {
+        // Wait for final choice UI to appear (with retry logic)
+        if (!scene?.finalChoiceShown) {
+            const retryCount = this.stateData?.endingRetries || 0;
+            if (retryCount < 10) {
+                this.log(`⏳ Waiting for final choice UI... (attempt ${retryCount + 1}/10)`);
+                this.stateData = { ...this.stateData, endingRetries: retryCount + 1 };
+                // Retry after a delay
+                this.stepTimer = setTimeout(() => {
+                    this.currentStep--; // Retry this step
+                    this.executeNextStep();
+                }, 2000);
+            } else {
+                this.log(`⚠ Max retries reached for ending choice, trying anyway`);
+                this.stateData = { ...this.stateData, endingRetries: 0 };
+            }
+            return;
+        }
+        
+        // Reset retry counter
+        this.stateData = { ...this.stateData, endingRetries: 0 };
+        
+        // Map choice keys
+        const choiceMap = {
+            'free': 'free',
+            'join': 'merge',
+            'destroy': 'destroy',
+            'merge': 'merge'
+        };
+        
+        const mappedChoice = choiceMap[choice] || 'free';
+        
         if (scene?.ending) {
-            scene.ending(choice);
-            this.log(`→ Chose ending: ${choice}`);
+            scene.ending(mappedChoice);
+            this.log(`→ Chose ending: ${mappedChoice} (from ${choice})`);
+        } else if (scene?.endingButtons) {
+            // Try to find and click the button directly
+            const buttonData = scene.endingButtons.find(b => b.key === mappedChoice);
+            if (buttonData && buttonData.btn) {
+                buttonData.btn.emit('pointerdown');
+                this.log(`→ Chose ending (button click): ${mappedChoice}`);
+            } else {
+                this.log(`⚠ Ending button not found: ${mappedChoice} (available: ${scene.endingButtons.map(b => b.key).join(', ')})`);
+            }
+        } else {
+            this.log(`⚠ Ending choice not available (has ending: ${!!scene?.ending}, has buttons: ${!!scene?.endingButtons})`);
         }
     }
     
@@ -536,6 +664,9 @@ class AutoPlayer {
                 dialogueSystem.advance();
                 // Continue until dialogue is done
                 this.autoAdvanceDialogue();
+            } else if (!dialogueSystem?.isActive && this.isRunning) {
+                // Dialogue finished, continue with next step
+                // Don't schedule here - let the normal flow continue
             }
         }, this.dialogueSpeed);
     }

@@ -518,6 +518,24 @@ class VoidScene extends BaseScene {
         });
     }
     
+    // Public method for AutoPlayer
+    playerAction(actionKey) {
+        if (!this.combatActive || !this.isPlayerTurn) {
+            console.warn(`[VoidScene] Cannot execute action ${actionKey} - not player turn or combat inactive`);
+            return;
+        }
+        
+        // Find action by key
+        const actions = theDealer.getPlayerActions();
+        const action = actions.find(a => a.key === actionKey);
+        
+        if (action) {
+            this._playerAction(action);
+        } else {
+            console.warn(`[VoidScene] Action not found: ${actionKey}`);
+        }
+    }
+    
     _bossAction() {
         if (this.bossHP <= 0 || !this.combatActive) return;
         
@@ -746,6 +764,7 @@ class VoidScene extends BaseScene {
     }
     
     _showFinalChoice() {
+        this.finalChoiceShown = true;
         const { GOLD } = VoidScene.CONFIG.COLORS;
         
         // Darken background
@@ -788,6 +807,7 @@ class VoidScene extends BaseScene {
             }
         ];
         
+        this.endingButtons = [];
         endings.forEach(ending => {
             const btn = this.add.rectangle(ending.x, 300, 140, 60, ending.color, 1)
                 .setInteractive({ useHandCursor: true });
@@ -809,6 +829,9 @@ class VoidScene extends BaseScene {
             btn.on('pointerover', () => btn.setScale(1.1));
             btn.on('pointerout', () => btn.setScale(1));
             btn.on('pointerdown', () => this._ending(ending.key));
+            
+            // Store for AutoPlayer access
+            this.endingButtons.push({ btn, key: ending.key });
         });
     }
     
@@ -840,6 +863,36 @@ class VoidScene extends BaseScene {
                 this.scene.start('LabScene');
             });
         });
+    }
+    
+    // Public method for AutoPlayer
+    ending(choice) {
+        // Map AutoPlayer choice keys to VoidScene keys
+        const choiceMap = {
+            'free': 'free',
+            'join': 'merge',
+            'destroy': 'destroy',
+            'merge': 'merge'
+        };
+        
+        const mappedChoice = choiceMap[choice] || 'free';
+        
+        // Check if final choice UI is showing
+        if (this.finalChoiceShown) {
+            this._ending(mappedChoice);
+        } else {
+            // If not showing yet, wait for it
+            console.warn(`[VoidScene] Final choice UI not ready, waiting...`);
+            this.time.delayedCall(1000, () => {
+                if (this.finalChoiceShown) {
+                    this._ending(mappedChoice);
+                } else {
+                    // Force show if needed
+                    this._showFinalChoice();
+                    this.time.delayedCall(500, () => this._ending(mappedChoice));
+                }
+            });
+        }
     }
     
     _playerDefeated() {

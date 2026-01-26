@@ -225,7 +225,7 @@ class InteractionSystem {
                     'lab': 'LabScene',
                     'lobby': 'LobbyScene',
                     'underground': 'UndergroundScene',
-                    'void': 'ArchitectScene'
+                    'void': 'VoidScene'
                 };
                 this.scene.scene.start(sceneMap[targetRoom] || targetRoom, { 
                     playerX: position.x, 
