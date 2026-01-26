@@ -216,6 +216,17 @@ class StatsSystem {
             finalDamage = Math.floor(finalDamage * 1.5);
         }
         
+        // Check for drone shield (if player is taking damage)
+        if (characterId === 'aziah') {
+            const player = window.game?.scene?.scenes?.find(s => s.player)?.player;
+            const drone = player?.combatDrone;
+            if (drone && drone.abilities.shield.active && drone.abilities.shield.damageReduction) {
+                const shieldReduction = drone.abilities.shield.damageReduction;
+                finalDamage = Math.max(1, Math.floor(finalDamage * (1 - shieldReduction)));
+                this._log(`🛡️ Shield absorbed ${Math.floor(shieldReduction * 100)}% damage`);
+            }
+        }
+        
         // Apply damage
         const previousHp = stats.hp;
         stats.hp = Math.max(0, stats.hp - finalDamage);
