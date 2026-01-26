@@ -29,6 +29,9 @@ class BaseScene extends Phaser.Scene {
     }
     
     create() {
+        // Setup UI references FIRST (before loadRoom which calls updateRoomTitle)
+        this.setupUI();
+        
         // Initialize systems
         this.roomLoader = new RoomLoader(this);
         this.interactionSystem = new InteractionSystem(this);
@@ -42,13 +45,13 @@ class BaseScene extends Phaser.Scene {
         if (this.roomId && window.roomsData?.rooms?.[this.roomId]) {
             this.roomData = window.roomsData.rooms[this.roomId];
             this.loadRoom();
+        } else {
+            // If room data not available, at least set a default title
+            this.updateRoomTitle(this.scene.key || 'UNKNOWN');
         }
         
         // Setup input
         this.setupInput();
-        
-        // Setup UI references
-        this.setupUI();
         
         // Fade in
         this.cameras.main.fadeIn(300, 0, 0, 0);
@@ -230,8 +233,15 @@ class BaseScene extends Phaser.Scene {
     }
     
     updateRoomTitle(title) {
+        // Try UI reference first
         if (this.ui?.title) {
             this.ui.title.textContent = title;
+        } else {
+            // Fallback: direct DOM access
+            const titleElement = document.getElementById('room-title');
+            if (titleElement) {
+                titleElement.textContent = title;
+            }
         }
     }
     

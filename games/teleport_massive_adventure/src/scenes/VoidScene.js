@@ -57,6 +57,17 @@ class VoidScene extends BaseScene {
     
     create() {
         // Don't call super.create() - custom setup for boss room
+        // BUT we need to setup UI and update title
+        this.setupUI();
+        
+        // Load room data for title
+        if (this.roomId && window.roomsData?.rooms?.[this.roomId]) {
+            this.roomData = window.roomsData.rooms[this.roomId];
+            this.updateRoomTitle(this.roomData.name);
+        } else {
+            this.updateRoomTitle('THE DEALER\'S TABLE');
+        }
+        
         this.cameras.main.fadeIn(1000, 0, 0, 0);
         
         // Create environment
@@ -87,6 +98,9 @@ class VoidScene extends BaseScene {
         
         // Emit event
         eventBus.emit(EventBus.COMBAT_START, { boss: 'dealer', room: 'void' });
+        
+        // Update game state
+        gameState.enterRoom(this.roomId);
     }
     
     update(time, delta) {
