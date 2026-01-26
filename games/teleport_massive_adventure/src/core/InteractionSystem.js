@@ -149,6 +149,9 @@ class InteractionSystem {
             case 'conditional':
                 return this.executeConditional(action);
                 
+            case 'craft':
+                return this.executeCraft(action);
+                
             default:
                 console.warn(`Unknown action type: ${action.action}`);
                 return false;
@@ -261,6 +264,232 @@ class InteractionSystem {
             });
         }
         return true;
+    }
+    
+    executeCraft(action) {
+        // Open crafting UI
+        if (action.craftType === 'drone_upgrade') {
+            this._openDroneCraftingUI();
+        }
+        return true;
+    }
+    
+    _openDroneCraftingUI() {
+        // Get player's drone
+        const scene = this.scene;
+        const player = scene?.player;
+        const drone = player?.combatDrone;
+        
+        if (!drone || !drone.isActive) {
+            dialogueSystem.showSingle('', 'You need to have your drone activated to upgrade it.');
+            return;
+        }
+        
+        // Get inventory
+        const inventory = gameState.getInventory();
+        const droneParts = inventory.filter(item => item.craftingMaterial && item.type === 'drone_part');
+        
+        // Get available recipes
+        const availableRecipes = craftingSystem.getAvailableRecipes(inventory, drone);
+        
+        // Show crafting UI
+        this._showCraftingUI(drone, droneParts, availableRecipes);
+    }
+    
+    _showCraftingUI(drone, parts, recipes) {
+        // Create crafting UI overlay
+        const overlay = document.createElement('div');
+        overlay.id = 'crafting-overlay';
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Courier New', monospace;
+        `;
+        
+        const panel = document.createElement('div');
+        panel.style.cssText = `
+            background: rgba(10, 10, 30, 0.95);
+            border: 3px solid #00aaff;
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            color: #00ff88;
+        `;
+        
+        // Title
+        const title = document.createElement('h2');
+        title.textContent = 'DRONE UPGRADE WORKBENCH';
+        title.style.cssText = 'color: #00aaff; margin-bottom: 20px; text-align: center;';
+        panel.appendChild(title);
+        
+        // Drone info
+        const droneInfo = craftingSystem.getDroneInfo(drone);
+        const infoDiv = document.createElement('div');
+        infoDiv.style.cssText = 'margin-bottom: 20px; padding: 10px; background: rgba(0, 100, 150, 0.2); border: 1px solid #00aaff;';
+        infoDiv.innerHTML = `
+            <strong>Current Drone Level: ${droneInfo.level}</strong><br>
+            Damage: ${droneInfo.damage} | Cooldown: ${droneInfo.shotCooldown}ms | Range: ${droneInfo.targetRange}px
+        `;
+        panel.appendChild(infoDiv);
+        
+        // Available parts
+        const partsDiv = document.createElement('div');
+        partsDiv.style.cssText = 'margin-bottom: 20px;';
+        partsDiv.innerHTML = '<strong>Available Parts:</strong><br>';
+        if (parts.length === 0) {
+            partsDiv.innerHTML += '<span style="color: #888;">No parts in inventory</span>';
+        } else {
+            parts.forEach(part => {
+                const partSpan = document.createElement('span');
+                partSpan.textContent = `${part.icon} ${part.name} `;
+                partSpan.style.cssText = 'display: inline-block; margin: 5px; padding: 5px; background: rgba(0, 170, 255, 0.2); border: 1px solid #00aaff;';
+                partsDiv.appendChild(partSpan);
+            });
+        }
+        panel.appendChild(partsDiv);
+        
+        // Available upgrades
+        const upgradesDiv = document.createElement('div');
+        upgradesDiv.innerHTML = '<strong>Available Upgrades:</strong><br>';
+        
+        if (recipes.length === 0) {
+            upgradesDiv.innerHTML += '<span style="color: #888;">No upgrades available. Collect more parts!</span>';
+        } else {
+            recipes.forEach(recipe => {
+                const recipeDiv = document.createElement('div');
+                recipeDiv.style.cssText = 'margin: 10px 0; padding: 10px; background: rgba(0, 100, 150, 0.2); border: 1px solid #00ff88;';
+                
+                const recipeTitle = document.createElement('div');
+                recipeTitle.textContent = recipe.name;
+                recipeTitle.style.cssText = 'font-weight: bold; color: #00ff88; margin-bottom: 5px;';
+                recipeDiv.appendChild(recipeTitle);
+                
+                const recipeDesc = document.createElement('div');
+                recipeDesc.textContent = recipe.description;
+                recipeDesc.style.cssText = 'font-size: 12px; color: #aaa; margin-bottom: 10px;';
+                recipeDiv.appendChild(recipeDesc);
+                
+                const recipeParts = document.createElement('div');
+                recipeParts.textContent = `Required: ${recipe.parts.join(', ')}`;
+                recipeParts.style.cssText = 'font-size: 11px; color: #888; margin-bottom: 10px;';
+                recipeDiv.appendChild(recipeParts);
+                
+                const craftBtn = document.createElement('button');
+                craftBtn.textContent = 'CRAFT';
+                craftBtn.style.cssText = `
+                    background: #00aaff;
+                    color: #000;
+                    border: none;
+                    padding: 8px 16px;
+                    cursor: pointer;
+                    font-family: inherit;
+                    font-weight: bold;
+                `;
+                craftBtn.onclick = () => {
+                    this._craftUpgrade(recipe.id, overlay);
+                };
+                recipeDiv.appendChild(craftBtn);
+                
+                upgradesDiv.appendChild(recipeDiv);
+            });
+        }
+        panel.appendChild(upgradesDiv);
+        
+        // Close button
+        const closeBtn = document.createElement('button');
+        closeBtn.textContent = 'CLOSE';
+        closeBtn.style.cssText = `
+            margin-top: 20px;
+            width: 100%;
+            background: #ff4444;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: bold;
+        `;
+        closeBtn.onclick = () => overlay.remove();
+        panel.appendChild(closeBtn);
+        
+        overlay.appendChild(panel);
+        document.body.appendChild(overlay);
+        
+        // Close on escape
+        const closeHandler = (e) => {
+            if (e.key === 'Escape') {
+                overlay.remove();
+                document.removeEventListener('keydown', closeHandler);
+            }
+        };
+        document.addEventListener('keydown', closeHandler);
+    }
+    
+    _craftUpgrade(recipeId, overlay) {
+        const scene = this.scene;
+        const player = scene?.player;
+        const drone = player?.combatDrone;
+        const inventory = gameState.getInventory();
+        
+        if (!drone) {
+            dialogueSystem.showSingle('', 'Drone not available.');
+            return;
+        }
+        
+        // Attempt craft
+        const result = craftingSystem.craft(recipeId, inventory, drone);
+        
+        if (result.success) {
+            // Remove consumed parts from inventory
+            result.consumedParts.forEach(partId => {
+                gameState.removeItem(partId);
+            });
+            
+            // Show success message with stat changes
+            let message = result.message;
+            if (result.result.statBonus) {
+                const bonuses = [];
+                if (result.result.statBonus.damage) bonuses.push(`+${result.result.statBonus.damage} damage`);
+                if (result.result.statBonus.shotCooldown) bonuses.push(`${result.result.statBonus.shotCooldown}ms faster shots`);
+                if (result.result.statBonus.targetRange) bonuses.push(`+${result.result.statBonus.targetRange}px range`);
+                if (bonuses.length > 0) {
+                    message += ` (${bonuses.join(', ')})`;
+                }
+            }
+            dialogueSystem.showSingle('', message);
+            
+            // Update drone stats
+            if (result.result.level) {
+                drone.level = result.result.level;
+            }
+            
+            // Emit event
+            if (window.eventBus) {
+                window.eventBus.emit('drone:upgraded', { 
+                    level: drone.level,
+                    recipe: recipeId,
+                    player: 'aziah'
+                });
+            }
+            
+            // Close UI and refresh
+            overlay.remove();
+            setTimeout(() => {
+                this._openDroneCraftingUI(); // Reopen to show updated state
+            }, 500);
+        } else {
+            dialogueSystem.showSingle('', result.message);
+        }
     }
     
     executeSequence(action) {

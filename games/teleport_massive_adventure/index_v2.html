@@ -740,6 +740,7 @@
     <script src="src/core/InteractionSystem.js"></script>
     <script src="src/core/PlayerController.js"></script>
     <script src="src/core/CombatDrone.js"></script>
+    <script src="src/core/CraftingSystem.js"></script>
     <script src="src/core/TheDealer.js"></script>
     <script src="src/core/BaseScene.js"></script>
     <script src="src/core/AutoPlayer.js"></script>
@@ -906,6 +907,12 @@
                 // Load ability icons
                 this.load.image('ability_burst', 'assets/ui/ability_burst.png');
                 this.load.image('ability_shield', 'assets/ui/ability_shield.png');
+                
+                // Load workbench and drone parts
+                this.load.image('workbench_obj', 'assets/objects/workbench_obj.png');
+                this.load.image('energy_core_obj', 'assets/objects/energy_core_obj.png');
+                this.load.image('weapon_module_obj', 'assets/objects/weapon_module_obj.png');
+                this.load.image('shield_generator_obj', 'assets/objects/shield_generator_obj.png');
             }
             
             create() {

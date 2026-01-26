@@ -75,6 +75,36 @@
           "value": true
         }
       }
+    },
+    
+    "energy_core": {
+      "id": "energy_core",
+      "name": "Energy Core Module",
+      "description": "A glowing blue energy core. Essential for basic drone upgrades.",
+      "icon": "⚡",
+      "sprite": "energy_core_obj",
+      "craftingMaterial": true,
+      "type": "drone_part"
+    },
+    
+    "weapon_module": {
+      "id": "weapon_module",
+      "name": "Weapon Module",
+      "description": "A red laser emitter module. Increases drone damage and burst shot effectiveness.",
+      "icon": "🔫",
+      "sprite": "weapon_module_obj",
+      "craftingMaterial": true,
+      "type": "drone_part"
+    },
+    
+    "shield_generator": {
+      "id": "shield_generator",
+      "name": "Shield Generator",
+      "description": "A hexagonal shield generator module. Enhances shield mode duration and effectiveness.",
+      "icon": "🛡️",
+      "sprite": "shield_generator_obj",
+      "craftingMaterial": true,
+      "type": "drone_part"
     }
   },
   

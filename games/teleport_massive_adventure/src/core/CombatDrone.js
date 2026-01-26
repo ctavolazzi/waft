@@ -35,13 +35,19 @@ class CombatDrone {
         this.damage = 12;
         this.projectiles = [];
         
+        // Level and upgrades
+        this.level = 1;
+        this.upgrades = [];
+        
         // Abilities
         this.abilities = {
             burst: {
                 name: 'Burst Shot',
                 cooldown: 5000, // 5 seconds
                 lastUsed: 0,
-                active: false
+                active: false,
+                projectileCount: 5, // Base count
+                damageMultiplier: 1.0
             },
             shield: {
                 name: 'Shield Mode',
@@ -49,7 +55,8 @@ class CombatDrone {
                 duration: 3000, // 3 seconds active
                 lastUsed: 0,
                 active: false,
-                shieldSprite: null
+                shieldSprite: null,
+                damageReduction: 0.0 // 0 = no reduction, 1.0 = 100% reduction
             }
         };
         
@@ -566,7 +573,7 @@ class CombatDrone {
     _useBurstShot() {
         if (!this.target && !this.droneSprite) return;
         
-        const burstCount = 5;
+        const burstCount = this.abilities.burst.projectileCount || 5;
         const spreadAngle = Math.PI / 3; // 60 degree spread
         
         // If no target, shoot forward
@@ -586,13 +593,14 @@ class CombatDrone {
             const targetX = this.droneSprite.x + Math.cos(angle) * 200;
             const targetY = this.droneSprite.y + Math.sin(angle) * 200;
             
+            const projectileDamage = (this.damage * 0.8) * (this.abilities.burst.damageMultiplier || 1.0);
             this._createProjectile(
                 this.droneSprite.x,
                 this.droneSprite.y,
                 targetX,
                 targetY,
                 this.target?.id || null,
-                this.damage * 0.8 // Slightly less damage per shot
+                projectileDamage
             );
         }
         

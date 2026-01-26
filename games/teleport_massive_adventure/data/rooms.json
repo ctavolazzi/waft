@@ -84,6 +84,37 @@
               "dialogueId": "photo_examine"
             }
           }
+        },
+        {
+          "id": "workbench_lab",
+          "name": "Drone Workbench",
+          "position": { "x": 500, "y": 320 },
+          "size": { "width": 64, "height": 64 },
+          "sprite": "workbench_obj",
+          "examineText": "A workbench for upgrading and modifying drones. Tools and screens line the surface.",
+          "interactions": {
+            "use": {
+              "action": "craft",
+              "craftType": "drone_upgrade"
+            }
+          }
+        },
+        {
+          "id": "energy_core_pickup",
+          "name": "Energy Core Module",
+          "position": { "x": 350, "y": 280 },
+          "size": { "width": 32, "height": 32 },
+          "sprite": "energy_core_obj",
+          "visible": { "flag": "hasEnergyCore", "equals": false },
+          "examineText": "A glowing blue energy core module. Used for drone upgrades.",
+          "interactions": {
+            "pickup": {
+              "action": "addItem",
+              "item": "energy_core",
+              "setFlag": { "hasEnergyCore": true },
+              "hideHotspot": true
+            }
+          }
         }
       ],
       "npcs": [],
@@ -243,6 +274,54 @@
                 { "action": "dialogue", "dialogueId": "portal_enter" },
                 { "action": "changeRoom", "target": "void", "delay": 8000 }
               ]
+            }
+          }
+        },
+        {
+          "id": "workbench_underground",
+          "name": "Damaged Workbench",
+          "position": { "x": 500, "y": 320 },
+          "size": { "width": 64, "height": 64 },
+          "sprite": "workbench_obj",
+          "examineText": "An old workbench, still functional despite the damage. Perfect for drone modifications.",
+          "interactions": {
+            "use": {
+              "action": "craft",
+              "craftType": "drone_upgrade"
+            }
+          }
+        },
+        {
+          "id": "weapon_module_pickup",
+          "name": "Weapon Module",
+          "position": { "x": 400, "y": 380 },
+          "size": { "width": 32, "height": 32 },
+          "sprite": "weapon_module_obj",
+          "visible": { "flag": "hasWeaponModule", "equals": false },
+          "examineText": "A red laser emitter module. Increases drone firepower.",
+          "interactions": {
+            "pickup": {
+              "action": "addItem",
+              "item": "weapon_module",
+              "setFlag": { "hasWeaponModule": true },
+              "hideHotspot": true
+            }
+          }
+        },
+        {
+          "id": "shield_generator_pickup",
+          "name": "Shield Generator",
+          "position": { "x": 300, "y": 360 },
+          "size": { "width": 32, "height": 32 },
+          "sprite": "shield_generator_obj",
+          "visible": { "flag": "hasShieldGenerator", "equals": false },
+          "examineText": "A hexagonal shield generator module. Enhances defensive capabilities.",
+          "interactions": {
+            "pickup": {
+              "action": "addItem",
+              "item": "shield_generator",
+              "setFlag": { "hasShieldGenerator": true },
+              "hideHotspot": true
             }
           }
         }
