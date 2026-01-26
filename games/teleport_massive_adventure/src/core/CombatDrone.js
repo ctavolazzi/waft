@@ -651,9 +651,13 @@ class CombatDrone {
             this._deactivateShield();
         });
         
-        // Emit event
+        // Emit event for shield activation (so combat system can check it)
         if (window.eventBus) {
-            window.eventBus.emit('drone:ability', { ability: 'shield', player: 'aziah' });
+            window.eventBus.emit('drone:ability', { ability: 'shield', player: 'aziah', active: true });
+            window.eventBus.emit('drone:shield:activated', { 
+                player: 'aziah',
+                damageReduction: this.abilities.shield.damageReduction || 0
+            });
         }
     }
     
