@@ -176,18 +176,19 @@ class AutoPlayer {
             { scene: 'VoidScene', action: 'bossAction', actionKey: 'question' }, // 30 damage (total: 95, victory!)
             { scene: 'VoidScene', action: 'wait', duration: 6000 },
             
-            // Wait for victory and final choice
+            // Wait for victory and final choice (boss should be defeated by now)
             { scene: 'VoidScene', action: 'log', message: '🎭 Waiting for final choice...' },
-            { scene: 'VoidScene', action: 'wait', duration: 8000 },
+            { scene: 'VoidScene', action: 'wait', duration: 10000 },
             
-            // Final choice - Liberation ending
+            // Final choice - Liberation ending (retry if needed)
             { scene: 'VoidScene', action: 'log', message: '🎭 Choosing LIBERATION ending' },
             { scene: 'VoidScene', action: 'endingChoice', choice: 'free' },
+            { scene: 'VoidScene', action: 'wait', duration: 3000 },
             
             // Complete
-            { scene: 'VoidScene', action: 'wait', duration: 5000 },
+            { scene: 'VoidScene', action: 'wait', duration: 8000 },
             { scene: null, action: 'log', message: '✅ PLAYTHROUGH COMPLETE!' },
-            { scene: null, action: 'wait', duration: 2000 },
+            { scene: null, action: 'wait', duration: 3000 },
             { scene: null, action: 'stop' }
         ];
     }
@@ -409,17 +410,31 @@ class AutoPlayer {
                 
             case 'walkTo':
                 if (player && player.sprite) {
-                    // Wait for player to finish moving
+                    // Calculate distance and time
                     const distance = Math.sqrt(
                         Math.pow(step.x - player.sprite.x, 2) + 
                         Math.pow(step.y - player.sprite.y, 2)
                     );
-                    const walkTime = (distance / player.walkSpeed) * 1000;
+                    const walkTime = (distance / (player.walkSpeed || 150)) * 1000;
                     
                     player.walkTo(step.x, step.y);
                     
-                    // Wait for movement to complete + buffer
-                    this.scheduleNext(walkTime + this.walkDelay);
+                    // Wait for movement with polling to ensure completion
+                    let movementChecks = 0;
+                    const checkMovement = setInterval(() => {
+                        movementChecks++;
+                        if (!player.isMoving || movementChecks > 50) {
+                            clearInterval(checkMovement);
+                            // Additional buffer after movement completes
+                            this.scheduleNext(this.walkDelay);
+                        }
+                    }, 100);
+                    
+                    // Fallback timeout
+                    setTimeout(() => {
+                        clearInterval(checkMovement);
+                        this.scheduleNext(this.walkDelay);
+                    }, walkTime + this.walkDelay + 1000);
                 } else {
                     this.log(`⚠ Player not available for walkTo`);
                     this.scheduleNext(100);
@@ -610,8 +625,8 @@ class AutoPlayer {
         // Wait for final choice UI to appear (with retry logic)
         if (!scene?.finalChoiceShown) {
             const retryCount = this.stateData?.endingRetries || 0;
-            if (retryCount < 10) {
-                this.log(`⏳ Waiting for final choice UI... (attempt ${retryCount + 1}/10)`);
+            if (retryCount < 15) {
+                this.log(`⏳ Waiting for final choice UI... (attempt ${retryCount + 1}/15)`);
                 this.stateData = { ...this.stateData, endingRetries: retryCount + 1 };
                 // Retry after a delay
                 this.stepTimer = setTimeout(() => {
@@ -619,8 +634,16 @@ class AutoPlayer {
                     this.executeNextStep();
                 }, 2000);
             } else {
-                this.log(`⚠ Max retries reached for ending choice, trying anyway`);
+                this.log(`⚠ Max retries reached for ending choice, trying to force show`);
                 this.stateData = { ...this.stateData, endingRetries: 0 };
+                // Try to force show the choice UI
+                if (scene && typeof scene._showFinalChoice === 'function') {
+                    scene._showFinalChoice();
+                    this.stepTimer = setTimeout(() => {
+                        this.currentStep--; // Retry after forcing show
+                        this.executeNextStep();
+                    }, 1000);
+                }
             }
             return;
         }
@@ -649,6 +672,14 @@ class AutoPlayer {
                 this.log(`→ Chose ending (button click): ${mappedChoice}`);
             } else {
                 this.log(`⚠ Ending button not found: ${mappedChoice} (available: ${scene.endingButtons.map(b => b.key).join(', ')})`);
+                // Try to find by partial match
+                const altButton = scene.endingButtons.find(b => 
+                    b.key.includes(mappedChoice) || mappedChoice.includes(b.key)
+                );
+                if (altButton && altButton.btn) {
+                    altButton.btn.emit('pointerdown');
+                    this.log(`→ Chose ending (alternative match): ${altButton.key}`);
+                }
             }
         } else {
             this.log(`⚠ Ending choice not available (has ending: ${!!scene?.ending}, has buttons: ${!!scene?.endingButtons})`);
