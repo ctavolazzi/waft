@@ -159,6 +159,99 @@
         }
         
         /* ══════════════════════════════════════════════════════════════
+           ABILITY BAR - Drone Abilities
+           ══════════════════════════════════════════════════════════════ */
+        #ability-bar {
+            position: absolute;
+            bottom: clamp(50px, 12%, 70px);
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: clamp(8px, 1.5vw, 12px);
+            padding: clamp(5px, 1vw, 10px);
+            background: rgba(10, 10, 30, 0.95);
+            border: 2px solid #00aaff;
+            border-radius: 8px;
+            z-index: 140;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        #ability-bar.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .ability-slot {
+            width: clamp(40px, 8vw, 56px);
+            height: clamp(40px, 8vw, 56px);
+            background: rgba(0, 100, 150, 0.2);
+            border: 2px solid #00aaff;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        
+        .ability-slot:hover {
+            background: rgba(0, 170, 255, 0.3);
+            border-color: #00ff88;
+            transform: scale(1.1);
+        }
+        
+        .ability-slot:active {
+            transform: scale(0.95);
+        }
+        
+        .ability-slot.cooldown {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .ability-slot.cooldown:hover {
+            transform: scale(1);
+        }
+        
+        .ability-icon {
+            width: clamp(24px, 5vw, 32px);
+            height: clamp(24px, 5vw, 32px);
+            image-rendering: pixelated;
+            object-fit: contain;
+        }
+        
+        .ability-key {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            font-size: clamp(8px, 1.5vw, 10px);
+            color: #00ff88;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 1px 3px;
+            border-radius: 2px;
+        }
+        
+        .ability-cooldown {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(10px, 2vw, 14px);
+            color: #00ff88;
+            font-weight: bold;
+        }
+        
+        /* ══════════════════════════════════════════════════════════════
            INVENTORY PANEL - Responsive
            ══════════════════════════════════════════════════════════════ */
         #inventory-panel {
@@ -610,6 +703,18 @@
             <div id="speaker-name">SYSTEM</div>
             <div id="dialogue-text">Loading...</div>
             <div id="dialogue-continue">▼ CLICK TO CONTINUE</div>
+        </div>
+        
+        <!-- Ability Bar -->
+        <div id="ability-bar">
+            <div class="ability-slot" id="ability-1" data-ability="burst">
+                <img class="ability-icon" id="ability-icon-1" src="" alt="Burst Shot" />
+                <span class="ability-key">1</span>
+            </div>
+            <div class="ability-slot" id="ability-2" data-ability="shield">
+                <img class="ability-icon" id="ability-icon-2" src="" alt="Shield Mode" />
+                <span class="ability-key">2</span>
+            </div>
         </div>
         
         <!-- Inventory Panel -->

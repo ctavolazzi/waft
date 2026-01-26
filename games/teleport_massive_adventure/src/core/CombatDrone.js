@@ -35,6 +35,24 @@ class CombatDrone {
         this.damage = 12;
         this.projectiles = [];
         
+        // Abilities
+        this.abilities = {
+            burst: {
+                name: 'Burst Shot',
+                cooldown: 5000, // 5 seconds
+                lastUsed: 0,
+                active: false
+            },
+            shield: {
+                name: 'Shield Mode',
+                cooldown: 10000, // 10 seconds
+                duration: 3000, // 3 seconds active
+                lastUsed: 0,
+                active: false,
+                shieldSprite: null
+            }
+        };
+        
         // Visual effects
         this.muzzleFlash = null;
         this.trailGraphics = null;
@@ -43,6 +61,9 @@ class CombatDrone {
         this.combatSystem = null;
         this.npcSystem = null;
         this.statsSystem = null;
+        
+        // UI
+        this.abilityBar = null;
     }
     
     /**
@@ -52,6 +73,31 @@ class CombatDrone {
         this.combatSystem = systems.combatSystem;
         this.npcSystem = systems.npcSystem;
         this.statsSystem = systems.statsSystem;
+        
+        // Setup ability bar UI
+        this._setupAbilityBar();
+    }
+    
+    /**
+     * Setup ability bar UI
+     */
+    _setupAbilityBar() {
+        this.abilityBar = document.getElementById('ability-bar');
+        if (!this.abilityBar) return;
+        
+        // Setup ability slots
+        const ability1 = document.getElementById('ability-1');
+        const ability2 = document.getElementById('ability-2');
+        
+        if (ability1) {
+            ability1.addEventListener('click', () => this.useAbility('burst'));
+        }
+        if (ability2) {
+            ability2.addEventListener('click', () => this.useAbility('shield'));
+        }
+        
+        // Keyboard shortcuts (set up in update loop to avoid timing issues)
+        this._keyboardSetup = false;
     }
     
     /**
@@ -62,6 +108,11 @@ class CombatDrone {
         
         this.isActive = true;
         this.isDeployed = false;
+        
+        // Show ability bar
+        if (this.abilityBar) {
+            this.abilityBar.classList.add('visible');
+        }
         
         // Create drone sprite (small, above player)
         if (!this.droneSprite && this.player?.sprite) {
@@ -126,6 +177,16 @@ class CombatDrone {
         this.isActive = false;
         this.isDeployed = false;
         this.target = null;
+        
+        // Hide ability bar
+        if (this.abilityBar) {
+            this.abilityBar.classList.remove('visible');
+        }
+        
+        // Deactivate shield if active
+        if (this.abilities.shield.active) {
+            this._deactivateShield();
+        }
         
         // Retract animation
         if (this.droneSprite) {
@@ -193,6 +254,17 @@ class CombatDrone {
     update(time, delta) {
         if (!this.isActive || !this.droneSprite || !this.player?.sprite) return;
         
+        // Setup keyboard shortcuts once
+        if (!this._keyboardSetup && this.scene && this.scene.input && this.scene.input.keyboard) {
+            const key1 = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
+            const key2 = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
+            
+            key1.on('down', () => this.useAbility('burst'));
+            key2.on('down', () => this.useAbility('shield'));
+            
+            this._keyboardSetup = true;
+        }
+        
         // Follow player (with slight offset)
         const targetX = this.player.sprite.x + this.offsetX;
         const targetY = this.player.sprite.y + this.offsetY;
@@ -221,6 +293,9 @@ class CombatDrone {
         
         // Update projectiles
         this._updateProjectiles(time, delta);
+        
+        // Update shield if active
+        this._updateShield();
     }
     
     /**
@@ -276,41 +351,15 @@ class CombatDrone {
     _shoot() {
         if (!this.target || !this.droneSprite) return;
         
-        // Create projectile
-        const projectile = {
-            sprite: this.scene.add.circle(
-                this.droneSprite.x,
-                this.droneSprite.y,
-                3,
-                0x00ff88,
-                1
-            ),
-            startX: this.droneSprite.x,
-            startY: this.droneSprite.y,
-            targetX: this.target.x,
-            targetY: this.target.y,
-            speed: 400,
-            damage: this.damage,
-            targetId: this.target.id,
-            lifetime: 2000, // 2 seconds max
-            createdAt: this.scene.time.now
-        };
-        
-        projectile.sprite.setDepth(this.droneSprite.depth + 1);
-        projectile.sprite.setStrokeStyle(1, 0xffffff, 0.8);
-        
-        // Add glow trail
-        const trail = this.scene.add.circle(
-            projectile.sprite.x,
-            projectile.sprite.y,
-            5,
-            0x00ff88,
-            0.5
+        // Use helper method
+        this._createProjectile(
+            this.droneSprite.x,
+            this.droneSprite.y,
+            this.target.x,
+            this.target.y,
+            this.target.id,
+            this.damage
         );
-        trail.setDepth(projectile.sprite.depth - 1);
-        projectile.trail = trail;
-        
-        this.projectiles.push(projectile);
         
         // Muzzle flash effect
         this._createMuzzleFlash();
@@ -457,6 +506,255 @@ class CombatDrone {
     }
     
     /**
+     * Use an ability
+     */
+    useAbility(abilityKey) {
+        if (!this.isActive || !this.isDeployed) return false;
+        
+        const ability = this.abilities[abilityKey];
+        if (!ability) return false;
+        
+        const now = this.scene.time.now;
+        const timeSinceUse = now - ability.lastUsed;
+        
+        // Check cooldown
+        if (timeSinceUse < ability.cooldown) {
+            // Show cooldown feedback
+            this._showCooldownFeedback(abilityKey);
+            return false;
+        }
+        
+        // Use ability
+        ability.lastUsed = now;
+        
+        switch (abilityKey) {
+            case 'burst':
+                this._useBurstShot();
+                break;
+            case 'shield':
+                this._useShieldMode();
+                break;
+        }
+        
+        // Update UI
+        this._updateAbilityUI(abilityKey);
+        
+        return true;
+    }
+    
+    /**
+     * Burst Shot ability - fires multiple projectiles in spread pattern
+     */
+    _useBurstShot() {
+        if (!this.target && !this.droneSprite) return;
+        
+        const burstCount = 5;
+        const spreadAngle = Math.PI / 3; // 60 degree spread
+        
+        // If no target, shoot forward
+        let baseAngle = 0;
+        if (this.target) {
+            baseAngle = Phaser.Math.Angle.Between(
+                this.droneSprite.x,
+                this.droneSprite.y,
+                this.target.x,
+                this.target.y
+            );
+        }
+        
+        // Fire multiple projectiles
+        for (let i = 0; i < burstCount; i++) {
+            const angle = baseAngle + (i - burstCount / 2) * (spreadAngle / burstCount);
+            const targetX = this.droneSprite.x + Math.cos(angle) * 200;
+            const targetY = this.droneSprite.y + Math.sin(angle) * 200;
+            
+            this._createProjectile(
+                this.droneSprite.x,
+                this.droneSprite.y,
+                targetX,
+                targetY,
+                this.target?.id || null,
+                this.damage * 0.8 // Slightly less damage per shot
+            );
+        }
+        
+        // Enhanced muzzle flash
+        this._createMuzzleFlash();
+        this._createMuzzleFlash();
+        
+        // Emit event
+        if (window.eventBus) {
+            window.eventBus.emit('drone:ability', { ability: 'burst', player: 'aziah' });
+        }
+    }
+    
+    /**
+     * Shield Mode ability - creates temporary shield
+     */
+    _useShieldMode() {
+        if (this.abilities.shield.active) return; // Already active
+        
+        this.abilities.shield.active = true;
+        
+        // Create shield visual
+        if (this.player?.sprite) {
+            this.abilities.shield.shieldSprite = this.scene.add.circle(
+                this.player.sprite.x,
+                this.player.sprite.y,
+                30,
+                0x00ff88,
+                0.3
+            );
+            this.abilities.shield.shieldSprite.setStrokeStyle(3, 0x00ff88, 0.8);
+            this.abilities.shield.shieldSprite.setDepth(this.player.sprite.depth + 2);
+            
+            // Pulsing animation
+            this.scene.tweens.add({
+                targets: this.abilities.shield.shieldSprite,
+                scale: 1.2,
+                alpha: 0.5,
+                duration: 500,
+                yoyo: true,
+                repeat: -1,
+                ease: 'Sine.easeInOut'
+            });
+        }
+        
+        // Auto-deactivate after duration
+        this.scene.time.delayedCall(this.abilities.shield.duration, () => {
+            this._deactivateShield();
+        });
+        
+        // Emit event
+        if (window.eventBus) {
+            window.eventBus.emit('drone:ability', { ability: 'shield', player: 'aziah' });
+        }
+    }
+    
+    /**
+     * Deactivate shield
+     */
+    _deactivateShield() {
+        if (!this.abilities.shield.active) return;
+        
+        this.abilities.shield.active = false;
+        
+        if (this.abilities.shield.shieldSprite) {
+            // Fade out
+            this.scene.tweens.add({
+                targets: this.abilities.shield.shieldSprite,
+                alpha: 0,
+                scale: 0.5,
+                duration: 300,
+                onComplete: () => {
+                    if (this.abilities.shield.shieldSprite) {
+                        this.abilities.shield.shieldSprite.destroy();
+                        this.abilities.shield.shieldSprite = null;
+                    }
+                }
+            });
+        }
+    }
+    
+    /**
+     * Create projectile (extracted for reuse)
+     */
+    _createProjectile(startX, startY, targetX, targetY, targetId, damage) {
+        const projectile = {
+            sprite: this.scene.add.circle(startX, startY, 3, 0x00ff88, 1),
+            startX: startX,
+            startY: startY,
+            targetX: targetX,
+            targetY: targetY,
+            speed: 400,
+            damage: damage || this.damage,
+            targetId: targetId,
+            lifetime: 2000,
+            createdAt: this.scene.time.now
+        };
+        
+        projectile.sprite.setDepth(this.droneSprite.depth + 1);
+        projectile.sprite.setStrokeStyle(1, 0xffffff, 0.8);
+        
+        // Add glow trail
+        const trail = this.scene.add.circle(startX, startY, 5, 0x00ff88, 0.5);
+        trail.setDepth(projectile.sprite.depth - 1);
+        projectile.trail = trail;
+        
+        this.projectiles.push(projectile);
+    }
+    
+    /**
+     * Update ability UI cooldowns
+     */
+    _updateAbilityUI(abilityKey) {
+        if (!this.abilityBar) return;
+        
+        const slot = document.getElementById(`ability-${abilityKey === 'burst' ? '1' : '2'}`);
+        if (!slot) return;
+        
+        const ability = this.abilities[abilityKey];
+        const now = this.scene.time.now;
+        const timeSinceUse = now - ability.lastUsed;
+        const remainingCooldown = Math.max(0, ability.cooldown - timeSinceUse);
+        
+        // Add cooldown class
+        slot.classList.add('cooldown');
+        
+        // Show cooldown timer
+        let cooldownDisplay = slot.querySelector('.ability-cooldown');
+        if (!cooldownDisplay) {
+            cooldownDisplay = document.createElement('div');
+            cooldownDisplay.className = 'ability-cooldown';
+            slot.appendChild(cooldownDisplay);
+        }
+        
+        // Update cooldown display
+        const updateCooldown = () => {
+            const currentTime = this.scene.time.now;
+            const currentRemaining = Math.max(0, ability.cooldown - (currentTime - ability.lastUsed));
+            
+            if (currentRemaining > 0) {
+                cooldownDisplay.textContent = Math.ceil(currentRemaining / 1000);
+                requestAnimationFrame(updateCooldown);
+            } else {
+                slot.classList.remove('cooldown');
+                if (cooldownDisplay.parentNode) {
+                    cooldownDisplay.remove();
+                }
+            }
+        };
+        
+        updateCooldown();
+    }
+    
+    /**
+     * Show cooldown feedback
+     */
+    _showCooldownFeedback(abilityKey) {
+        const slot = document.getElementById(`ability-${abilityKey === 'burst' ? '1' : '2'}`);
+        if (slot) {
+            // Flash effect
+            slot.style.borderColor = '#ff4444';
+            setTimeout(() => {
+                slot.style.borderColor = '';
+            }, 200);
+        }
+    }
+    
+    /**
+     * Update shield position if active
+     */
+    _updateShield() {
+        if (!this.abilities.shield.active || !this.abilities.shield.shieldSprite || !this.player?.sprite) return;
+        
+        // Follow player
+        this.abilities.shield.shieldSprite.x = this.player.sprite.x;
+        this.abilities.shield.shieldSprite.y = this.player.sprite.y;
+        this.abilities.shield.shieldSprite.setDepth(this.player.sprite.depth + 2);
+    }
+    
+    /**
      * Cleanup (call on scene shutdown)
      */
     destroy() {
@@ -464,6 +762,10 @@ class CombatDrone {
         if (this.trailGraphics) {
             this.trailGraphics.destroy();
             this.trailGraphics = null;
+        }
+        if (this.abilities.shield.shieldSprite) {
+            this.abilities.shield.shieldSprite.destroy();
+            this.abilities.shield.shieldSprite = null;
         }
     }
 }
