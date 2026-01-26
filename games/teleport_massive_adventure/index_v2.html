@@ -913,6 +913,32 @@
                 this.load.image('energy_core_obj', 'assets/objects/energy_core_obj.png');
                 this.load.image('weapon_module_obj', 'assets/objects/weapon_module_obj.png');
                 this.load.image('shield_generator_obj', 'assets/objects/shield_generator_obj.png');
+                
+                // Generate door sprite (placeholder until we get PixelLab door asset)
+                this.generateDoorSprite();
+            }
+            
+            generateDoorSprite() {
+                // Create door sprite programmatically
+                const doorGraphics = this.make.graphics();
+                // Door frame (dark gray)
+                doorGraphics.fillStyle(0x444455, 1);
+                doorGraphics.fillRect(0, 0, 60, 90);
+                // Door panel (darker gray)
+                doorGraphics.fillStyle(0x333344, 1);
+                doorGraphics.fillRect(5, 5, 50, 80);
+                // Door handle/panel accent (cyan)
+                doorGraphics.fillStyle(0x00ff88, 1);
+                doorGraphics.fillCircle(48, 45, 5);
+                // Door panel lines
+                doorGraphics.lineStyle(1, 0x222233, 0.5);
+                doorGraphics.strokeRect(10, 10, 40, 70);
+                // Vertical panel divider
+                doorGraphics.lineStyle(1, 0x222233, 0.3);
+                doorGraphics.moveTo(30, 10);
+                doorGraphics.lineTo(30, 80);
+                // Generate texture
+                doorGraphics.generateTexture('door', 60, 90);
             }
             
             create() {
