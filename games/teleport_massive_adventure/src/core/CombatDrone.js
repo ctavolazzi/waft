@@ -88,6 +88,24 @@ class CombatDrone {
         // Setup ability slots
         const ability1 = document.getElementById('ability-1');
         const ability2 = document.getElementById('ability-2');
+        const icon1 = document.getElementById('ability-icon-1');
+        const icon2 = document.getElementById('ability-icon-2');
+        
+        // Set ability icons (use direct path since textures may not be accessible)
+        if (icon1) {
+            icon1.src = 'assets/ui/ability_burst.png';
+            icon1.onerror = () => {
+                // Fallback if image not found
+                icon1.style.display = 'none';
+            };
+        }
+        if (icon2) {
+            icon2.src = 'assets/ui/ability_shield.png';
+            icon2.onerror = () => {
+                // Fallback if image not found
+                icon2.style.display = 'none';
+            };
+        }
         
         if (ability1) {
             ability1.addEventListener('click', () => this.useAbility('burst'));
