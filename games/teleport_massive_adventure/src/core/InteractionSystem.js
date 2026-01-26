@@ -180,6 +180,23 @@ class InteractionSystem {
             // Show pickup message
             dialogueSystem.showSingle('', `Added ${itemData.name} to inventory.`);
             
+            // Handle special item effects
+            if (itemData.effects?.onAcquire) {
+                const effect = itemData.effects.onAcquire;
+                if (effect.action === 'setFlag') {
+                    gameState.setFlag(effect.flag, effect.value !== undefined ? effect.value : true);
+                    
+                    // Special handling for combat drone
+                    if (effect.flag === 'hasCombatDrone') {
+                        // Activate drone if player exists
+                        const scene = this.scene;
+                        if (scene?.player) {
+                            scene.player.acquireDrone();
+                        }
+                    }
+                }
+            }
+            
             // Set flags
             if (action.setFlag) {
                 this.executeSetFlag(action);

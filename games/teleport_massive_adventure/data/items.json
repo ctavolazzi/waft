@@ -59,6 +59,22 @@
         "speedBoost": 1.5,
         "duration": 30000
       }
+    },
+    
+    "combat_drone": {
+      "id": "combat_drone",
+      "name": "Combat Drone",
+      "description": "A small autonomous drone that deploys from your back and automatically targets enemies. Fires energy projectiles.",
+      "icon": "🤖",
+      "sprite": "security_drone_south",
+      "equippable": true,
+      "effects": {
+        "onAcquire": {
+          "action": "setFlag",
+          "flag": "hasCombatDrone",
+          "value": true
+        }
+      }
     }
   },
   

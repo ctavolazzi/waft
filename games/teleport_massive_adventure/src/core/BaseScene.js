@@ -82,6 +82,25 @@ class BaseScene extends Phaser.Scene {
         // Setup keyboard movement (arrow keys + WASD)
         this.player.setupKeyboardInput();
         
+        // Initialize combat drone if player has it
+        if (this.player.hasDrone || gameState.getFlag('hasCombatDrone')) {
+            this.player.hasDrone = true;
+            if (window.gameManager) {
+                const combatSystem = window.gameManager.getSystem('combatSystem');
+                const npcSystem = window.gameManager.getSystem('npcSystem');
+                const statsSystem = window.gameManager.getSystem('statsSystem');
+                
+                if (combatSystem && npcSystem && statsSystem) {
+                    this.player.initCombatDrone({
+                        combatSystem,
+                        npcSystem,
+                        statsSystem
+                    });
+                    this.player.activateDrone();
+                }
+            }
+        }
+        
         // Set title
         this.updateRoomTitle(this.roomData.name);
     }
@@ -293,6 +312,11 @@ class BaseScene extends Phaser.Scene {
         // Update player
         if (this.player) {
             this.player.update(delta);
+            
+            // Update combat drone if active
+            if (this.player.combatDrone && this.player.combatDrone.isActive) {
+                this.player.combatDrone.update(time, delta);
+            }
         }
         
         // Update game manager (coordinates all systems)

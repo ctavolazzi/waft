@@ -634,6 +634,7 @@
     <script src="src/core/RoomLoader.js"></script>
     <script src="src/core/InteractionSystem.js"></script>
     <script src="src/core/PlayerController.js"></script>
+    <script src="src/core/CombatDrone.js"></script>
     <script src="src/core/TheDealer.js"></script>
     <script src="src/core/BaseScene.js"></script>
     <script src="src/core/AutoPlayer.js"></script>
@@ -774,6 +775,20 @@
                         const path = `assets/characters/${enemy}_extracted/frames/${enemy}_${dir}.png`;
                         this.load.image(key, path);
                     });
+                });
+                
+                // Load combat drone sprites (for player's drone)
+                directions.forEach(dir => {
+                    const key = `combat_drone_${dir}`;
+                    const path = `assets/characters/security_drone_extracted/frames/security_drone_${dir}.png`;
+                    this.load.image(key, path);
+                });
+                
+                // Also load as security_drone_* for direct reference
+                directions.forEach(dir => {
+                    const key = `security_drone_${dir}`;
+                    const path = `assets/characters/security_drone_extracted/frames/security_drone_${dir}.png`;
+                    this.load.image(key, path);
                 });
                 
                 // Load objects

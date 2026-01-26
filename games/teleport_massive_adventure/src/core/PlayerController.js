@@ -28,6 +28,10 @@ class PlayerController {
         // Animation frames
         this.direction = 'south';
         this.animating = false;
+        
+        // Combat drone
+        this.combatDrone = null;
+        this.hasDrone = false; // Set to true when drone is acquired
     }
     
     // ========================================
@@ -443,6 +447,78 @@ class PlayerController {
     
     getPosition() {
         return this.sprite ? { x: this.sprite.x, y: this.sprite.y } : { x: 0, y: 0 };
+    }
+    
+    // ========================================
+    // Combat Drone
+    // ========================================
+    
+    /**
+     * Initialize combat drone
+     */
+    initCombatDrone(systems) {
+        if (!this.hasDrone) return;
+        
+        if (!this.combatDrone) {
+            this.combatDrone = new CombatDrone(this.scene, this);
+            this.combatDrone.init(systems);
+        }
+    }
+    
+    /**
+     * Activate combat drone
+     */
+    activateDrone() {
+        if (!this.hasDrone) return;
+        
+        if (!this.combatDrone) {
+            // Initialize if not already done
+            if (window.gameManager) {
+                const combatSystem = window.gameManager.getSystem('combatSystem');
+                const npcSystem = window.gameManager.getSystem('npcSystem');
+                const statsSystem = window.gameManager.getSystem('statsSystem');
+                
+                if (combatSystem && npcSystem && statsSystem) {
+                    this.combatDrone = new CombatDrone(this.scene, this);
+                    this.combatDrone.init({
+                        combatSystem,
+                        npcSystem,
+                        statsSystem
+                    });
+                }
+            }
+        }
+        
+        if (this.combatDrone) {
+            this.combatDrone.activate();
+        }
+    }
+    
+    /**
+     * Deactivate combat drone
+     */
+    deactivateDrone() {
+        if (this.combatDrone) {
+            this.combatDrone.deactivate();
+        }
+    }
+    
+    /**
+     * Acquire drone (called when player gets drone item/ability)
+     */
+    acquireDrone() {
+        this.hasDrone = true;
+        
+        // Auto-activate if systems are ready
+        if (window.gameManager) {
+            const combatSystem = window.gameManager.getSystem('combatSystem');
+            const npcSystem = window.gameManager.getSystem('npcSystem');
+            const statsSystem = window.gameManager.getSystem('statsSystem');
+            
+            if (combatSystem && npcSystem && statsSystem) {
+                this.activateDrone();
+            }
+        }
     }
     
     // ========================================
