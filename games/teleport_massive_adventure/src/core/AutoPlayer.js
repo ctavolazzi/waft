@@ -48,9 +48,10 @@ class AutoPlayer {
             
             // Pick up artifact
             { scene: 'LabScene', action: 'log', message: '✨ Picking up the strange artifact...' },
-            { scene: 'LabScene', action: 'walkTo', x: 200, y: 380 },
+            { scene: 'LabScene', action: 'walkTo', x: 200, y: 320 },
+            { scene: 'LabScene', action: 'wait', duration: 1000 },
             { scene: 'LabScene', action: 'interact', targetId: 'artifact', mode: 'pickup' },
-            { scene: 'LabScene', action: 'wait', duration: 1500 },
+            { scene: 'LabScene', action: 'wait', duration: 2000 },
             
             // Use terminal
             { scene: 'LabScene', action: 'log', message: '💻 Using research terminal...' },
@@ -60,9 +61,10 @@ class AutoPlayer {
             
             // Go to lobby
             { scene: 'LabScene', action: 'log', message: '🚪 Heading to lobby...' },
-            { scene: 'LabScene', action: 'walkTo', x: 720, y: 380 },
+            { scene: 'LabScene', action: 'walkTo', x: 750, y: 350 },
+            { scene: 'LabScene', action: 'wait', duration: 1500 },
             { scene: 'LabScene', action: 'interact', targetId: 'door_lobby', mode: 'use' },
-            { scene: 'LabScene', action: 'wait', duration: 2000 },
+            { scene: 'LabScene', action: 'wait', duration: 3000 },
             
             // === LOBBY SCENE ===
             { scene: 'LobbyScene', action: 'wait', duration: 1500 },
@@ -82,15 +84,17 @@ class AutoPlayer {
             
             // Pick up keycard
             { scene: 'LobbyScene', action: 'log', message: '🔑 Found keycard on floor...' },
-            { scene: 'LobbyScene', action: 'walkTo', x: 300, y: 420 },
+            { scene: 'LobbyScene', action: 'walkTo', x: 300, y: 450 },
+            { scene: 'LobbyScene', action: 'wait', duration: 1000 },
             { scene: 'LobbyScene', action: 'interact', targetId: 'keycard', mode: 'pickup' },
-            { scene: 'LobbyScene', action: 'wait', duration: 1500 },
+            { scene: 'LobbyScene', action: 'wait', duration: 2000 },
             
             // Use maintenance hatch
             { scene: 'LobbyScene', action: 'log', message: '🕳️ Using keycard on maintenance hatch...' },
-            { scene: 'LobbyScene', action: 'walkTo', x: 400, y: 280 },
+            { scene: 'LobbyScene', action: 'walkTo', x: 400, y: 220 },
+            { scene: 'LobbyScene', action: 'wait', duration: 1500 },
             { scene: 'LobbyScene', action: 'interact', targetId: 'maintenance_hatch', mode: 'use' },
-            { scene: 'LobbyScene', action: 'wait', duration: 2000 },
+            { scene: 'LobbyScene', action: 'wait', duration: 3000 },
             
             // === UNDERGROUND SCENE ===
             { scene: 'UndergroundScene', action: 'wait', duration: 1500 },
@@ -98,15 +102,17 @@ class AutoPlayer {
             
             // Talk to Phaseburner
             { scene: 'UndergroundScene', action: 'log', message: '👻 Approaching Phaseburner...' },
-            { scene: 'UndergroundScene', action: 'walkTo', x: 200, y: 380 },
+            { scene: 'UndergroundScene', action: 'walkTo', x: 200, y: 350 },
+            { scene: 'UndergroundScene', action: 'wait', duration: 1500 },
             { scene: 'UndergroundScene', action: 'interact', targetId: 'phaseburner', mode: 'talk' },
-            { scene: 'UndergroundScene', action: 'wait', duration: 4000 },
+            { scene: 'UndergroundScene', action: 'wait', duration: 6000 },
             
             // Use damaged terminal
             { scene: 'UndergroundScene', action: 'log', message: '💻 Accessing damaged terminal...' },
-            { scene: 'UndergroundScene', action: 'walkTo', x: 620, y: 360 },
+            { scene: 'UndergroundScene', action: 'walkTo', x: 650, y: 320 },
+            { scene: 'UndergroundScene', action: 'wait', duration: 1500 },
             { scene: 'UndergroundScene', action: 'interact', targetId: 'damaged_terminal', mode: 'use' },
-            { scene: 'UndergroundScene', action: 'wait', duration: 4000 },
+            { scene: 'UndergroundScene', action: 'wait', duration: 6000 },
             
             // Enter portal (should appear after talking to phaseburner + having artifact)
             { scene: 'UndergroundScene', action: 'log', message: '🌀 Portal has appeared! Entering...' },
@@ -179,8 +185,9 @@ class AutoPlayer {
             { scene: 'VoidScene', action: 'endingChoice', choice: 'free' },
             
             // Complete
-            { scene: 'VoidScene', action: 'wait', duration: 3000 },
+            { scene: 'VoidScene', action: 'wait', duration: 5000 },
             { scene: null, action: 'log', message: '✅ PLAYTHROUGH COMPLETE!' },
+            { scene: null, action: 'wait', duration: 2000 },
             { scene: null, action: 'stop' }
         ];
     }
@@ -360,20 +367,20 @@ class AutoPlayer {
         const currentScene = this.getCurrentScene();
         if (step.scene && step.scene !== null) {
             const expectedSceneKey = step.scene;
-            const currentSceneKey = currentScene?.scene?.key;
+            const currentSceneKey = currentScene?.scene?.key || currentScene?.sys?.settings?.key;
             
             if (!currentSceneKey || currentSceneKey !== expectedSceneKey) {
                 // Wrong scene, wait and retry (with max retries)
                 const retryCount = this.stateData?.sceneRetries || 0;
-                if (retryCount < 20) { // Max 10 seconds wait
-                    this.log(`⏳ Waiting for ${expectedSceneKey} (current: ${currentSceneKey || 'none'}, attempt ${retryCount + 1})...`);
+                if (retryCount < 30) { // Max 15 seconds wait (increased)
+                    this.log(`⏳ Waiting for ${expectedSceneKey} (current: ${currentSceneKey || 'none'}, attempt ${retryCount + 1}/30)...`);
                     this.stateData = { ...this.stateData, sceneRetries: retryCount + 1 };
                     this.currentStep--; // Retry this step
                     this.stepTimer = setTimeout(() => this.executeNextStep(), 500);
                 } else {
-                    this.log(`⚠ Scene transition timeout, skipping to next step`);
+                    this.log(`⚠ Scene transition timeout after 30 attempts, continuing anyway`);
                     this.stateData = { ...this.stateData, sceneRetries: 0 };
-                    // Continue anyway
+                    // Continue anyway - might be scene name mismatch
                 }
                 return;
             }
@@ -490,24 +497,57 @@ class AutoPlayer {
         }
         
         if (target && scene.interactionSystem) {
-            // Walk to target first if player exists
-            if (scene.player && scene.player.sprite && target.hotspotConfig) {
-                const targetPos = target.hotspotConfig.position;
+            // Walk to target first if player exists and target has position
+            if (scene.player && scene.player.sprite) {
+                let targetPos;
+                if (target.hotspotConfig?.position) {
+                    targetPos = target.hotspotConfig.position;
+                } else if (target.npcConfig?.position) {
+                    targetPos = target.npcConfig.position;
+                } else {
+                    // No position, try to interact directly
+                    scene.interactionSystem.interact(target, mode);
+                    this.log(`→ ${mode}: ${targetId} (direct)`);
+                    return;
+                }
+                
                 const interactPoint = scene.player.getInteractionPoint(target, { x: targetPos.x, y: targetPos.y });
                 scene.player.walkTo(interactPoint.x, interactPoint.y);
                 
-                // Wait a bit for movement, then interact
+                // Wait for movement to complete, then interact
+                const checkMovement = setInterval(() => {
+                    if (!scene.player.isMoving) {
+                        clearInterval(checkMovement);
+                        if (scene.interactionSystem) {
+                            scene.interactionSystem.interact(target, mode);
+                        }
+                    }
+                }, 100);
+                
+                // Timeout fallback
                 setTimeout(() => {
+                    clearInterval(checkMovement);
                     if (scene.interactionSystem) {
                         scene.interactionSystem.interact(target, mode);
                     }
-                }, 500);
+                }, 2000);
             } else {
                 scene.interactionSystem.interact(target, mode);
             }
             this.log(`→ ${mode}: ${targetId}`);
         } else {
             this.log(`⚠ Target not found: ${targetId} (hotspots: ${scene.roomLoader.hotspots?.length || 0}, npcs: ${scene.roomLoader.npcs?.length || 0})`);
+            // Try to find by name variation
+            if (scene.roomLoader.hotspots) {
+                const altTarget = scene.roomLoader.hotspots.find(h => 
+                    h.hotspotConfig?.id?.toLowerCase().includes(targetId.toLowerCase()) ||
+                    h.hotspotConfig?.name?.toLowerCase().includes(targetId.toLowerCase())
+                );
+                if (altTarget && scene.interactionSystem) {
+                    this.log(`→ Found alternative target, trying ${altTarget.hotspotConfig?.id || altTarget.hotspotConfig?.name}`);
+                    scene.interactionSystem.interact(altTarget, mode);
+                }
+            }
         }
     }
     
@@ -618,22 +658,30 @@ class AutoPlayer {
     getCurrentScene() {
         // Try multiple ways to get the current scene
         if (window.game) {
-            // Method 1: Phaser scene manager
-            const activeScene = window.game.scene.getScenes(true).find(s => s.scene.isActive);
-            if (activeScene) return activeScene;
+            // Method 1: Phaser scene manager (get active scenes)
+            const activeScenes = window.game.scene.getScenes(true);
+            if (activeScenes && activeScenes.length > 0) {
+                // Find the one that's actually active
+                const active = activeScenes.find(s => s.scene && s.scene.isActive);
+                if (active) return active;
+                // Otherwise return the first one
+                return activeScenes[0];
+            }
             
             // Method 2: Direct scene access
             const scenes = window.game.scene.scenes;
             if (scenes && scenes.length > 0) {
-                // Return the most recently started scene
+                // Return the most recently started scene (last in array)
                 return scenes[scenes.length - 1];
             }
-        }
-        
-        // Fallback: Try to get from Phaser registry
-        if (window.Phaser && window.Phaser.Scenes && window.Phaser.Scenes.SceneManager) {
-            // This is a last resort
-            return null;
+            
+            // Method 3: Try scene manager directly
+            if (window.game.scene.sceneManager) {
+                const running = window.game.scene.sceneManager.getScenes(true);
+                if (running && running.length > 0) {
+                    return running[running.length - 1];
+                }
+            }
         }
         
         return null;
@@ -669,6 +717,20 @@ class AutoPlayer {
                 // Don't schedule here - let the normal flow continue
             }
         }, this.dialogueSpeed);
+    }
+    
+    /**
+     * Get current progress for debugging
+     */
+    getProgress() {
+        return {
+            currentStep: this.currentStep,
+            totalSteps: this.script.length,
+            progress: this.script.length > 0 ? (this.currentStep / this.script.length * 100).toFixed(1) + '%' : '0%',
+            isRunning: this.isRunning,
+            isPaused: this.isPaused,
+            currentScene: this.getCurrentScene()?.scene?.key || 'none'
+        };
     }
 }
 
