@@ -100,19 +100,39 @@ async function testAutoPlayer() {
         await page.screenshot({ path: path.join(SCREENSHOT_DIR, '11_ending_choice.png'), fullPage: true });
         console.log('✅ Screenshot 11: Ending Choice');
         
-        // Wait for completion
-        await page.waitForTimeout(5000);
+        // Wait longer for full completion (boss fight + ending can take time)
+        console.log('⏳ Waiting for full game completion...');
+        await page.waitForTimeout(60000); // Wait up to 60 seconds for completion
+        
+        // Take final screenshot
         await page.screenshot({ path: path.join(SCREENSHOT_DIR, '12_completion.png'), fullPage: true });
         console.log('✅ Screenshot 12: Game Complete');
         
         // Check AutoPlayer status
-        const statusText = await page.textContent('#auto-player-status');
+        const statusText = await page.textContent('#auto-player-status').catch(() => 'Unknown');
         console.log(`📊 Final AutoPlayer status: ${statusText}`);
         
         // Check log area for completion message
-        const logContent = await page.textContent('#auto-player-log');
-        if (logContent && logContent.includes('COMPLETE')) {
+        const logContent = await page.textContent('#auto-player-log').catch(() => '');
+        if (logContent && (logContent.includes('COMPLETE') || logContent.includes('complete'))) {
             console.log('✅ AutoPlayer completed successfully!');
+        } else {
+            console.log('⚠️ AutoPlayer may not have completed - check logs');
+            console.log(`Log content: ${logContent.substring(0, 200)}...`);
+        }
+        
+        // Get current step info
+        const progressInfo = await page.evaluate(() => {
+            if (window.autoPlayer) {
+                return window.autoPlayer.getProgress();
+            }
+            return null;
+        }).catch(() => null);
+        
+        if (progressInfo) {
+            console.log(`📊 Progress: ${progressInfo.progress} (${progressInfo.currentStep}/${progressInfo.totalSteps})`);
+            console.log(`📊 Current scene: ${progressInfo.currentScene}`);
+            console.log(`📊 Running: ${progressInfo.isRunning}, Paused: ${progressInfo.isPaused}`);
         }
         
         console.log(`\n📸 Screenshots saved to: ${SCREENSHOT_DIR}`);
