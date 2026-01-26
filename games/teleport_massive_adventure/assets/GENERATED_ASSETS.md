@@ -1,59 +1,162 @@
-# Generated Assets Tracking
-## PixelLab Character IDs
+# Generated Assets Log
 
-Generated: 2026-01-26
-Updated: 2026-01-26 04:22
+## Characters Generated (2026-01-25)
 
----
+### ✅ Glitch Guard
+- **ID:** `ce370ece-d940-464f-adbf-e27781101755`
+- **Status:** Ready
+- **Directions:** 4 (south, east, north, west)
+- **Size:** 64×64px
+- **Location:** `assets/characters/glitch_guard_extracted/`
+- **Usage:** Basic enemy in Corridor scene
 
-## Characters
+### ✅ Heavy Guard
+- **ID:** `1252c1a9-d9fb-4dd7-959d-5f5f58e49a7e`
+- **Status:** Ready (with animations)
+- **Directions:** 4
+- **Size:** 64×64px
+- **Location:** `assets/characters/heavy_guard_extracted/`
+- **Usage:** Tank enemy, higher HP/defense
 
-### Dr. Vance (Security Chief)
-- **ID:** `a29dff82-6dcd-4e93-89ef-66287f9e392d`
-- **Status:** ✅ COMPLETE
-- **Animations:** idle (2/4 directions done)
-- **Description:** Corporate security chief in dark tactical armor, stern expression, gray buzzcut
-- **Download:** https://api.pixellab.ai/mcp/characters/a29dff82-6dcd-4e93-89ef-66287f9e392d/download
+### ✅ Security Drone
+- **ID:** `a04c5445-324a-4a8a-be39-06829bfdc42e`
+- **Status:** Ready (with animations)
+- **Directions:** 4
+- **Size:** 48×48px
+- **Location:** `assets/characters/security_drone_extracted/`
+- **Usage:** Fast flying enemy
 
-### ARIA (AI Hologram)
-- **ID:** `651e6752-ed63-466b-8736-2b3392ff6cd0`
-- **Status:** ✅ COMPLETE (animations processing)
-- **Animations:** idle (queued)
-- **Description:** AI hologram assistant, translucent blue, geometric patterns, friendly
-- **Download:** https://api.pixellab.ai/mcp/characters/651e6752-ed63-466b-8736-2b3392ff6cd0/download
+### ⏳ Chief Vex
+- **ID:** `4cec2fa4-6b16-4c76-81b2-c2356ba30022`
+- **Status:** Processing
+- **Directions:** 4
+- **Size:** 64×64px
+- **Usage:** Mini-boss in Security Room
 
-### Maya Echo (Ghost)
-- **ID:** `633218f0-e3f3-4561-9fc6-5e3c9a4ddae3`
-- **Status:** ✅ COMPLETE (animations processing)
-- **Animations:** idle (queued)
-- **Description:** Ghostly woman, warm amber colors, sad gentle expression
-- **Download:** https://api.pixellab.ai/mcp/characters/633218f0-e3f3-4561-9fc6-5e3c9a4ddae3/download
+### ✅ CORE Boss
+- **ID:** `f49739fe-ca67-43ab-840e-b2550596a218`
+- **Status:** Ready
+- **Directions:** 4
+- **Size:** 96×96px
+- **Location:** `assets/characters/core_boss_extracted/`
+- **Usage:** Boss in Mainframe scene
 
----
+## Map Objects Generated (2026-01-25)
 
-## Pending Generation
+### ✅ Access Card
+- **ID:** `0aa08363-d735-4183-98f4-df6510c9918a`
+- **Status:** Ready
+- **Size:** 32×32px
+- **Location:** `assets/objects/access_card.png`
+- **Usage:** Item that unlocks upper levels
 
-| Character | Description | Status |
-|-----------|-------------|--------|
-| Elder Phaseburner | Robes, glitched, wise, purple energy | Waiting |
-| CEO Hologram | Expensive suit, untrustworthy smile | Waiting |
+### ⏳ Health Kit
+- **ID:** `7d2668c1-8ef1-47bc-85dd-7242a458dcee`
+- **Status:** Rate limited, retry later
+- **Size:** 48×48px
+- **Usage:** Consumable healing item
 
----
+### ⏳ Server Rack
+- **ID:** `36f81b7b-da06-4c9a-b22c-d5ebae849795`
+- **Status:** Processing
+- **Size:** 64×128px
+- **Usage:** Decorative/prop in server rooms
 
-## To Check Status
+### ⏳ Energy Drink
+- **ID:** `b62dc902-f506-4f77-b10e-cac1a1d8db49`
+- **Status:** Processing
+- **Size:** 32×32px
+- **Usage:** Consumable item
 
+### ⏳ Security Checkpoint
+- **ID:** `3a8a51e0-3afb-4aeb-ae5b-7449d586e8bf`
+- **Status:** Processing
+- **Size:** 64×64px
+- **Usage:** Prop in Security Room
+
+### ⏳ Executive Desk
+- **ID:** `7e8780c8-4f39-4358-af25-4b92eecae57b`
+- **Status:** Processing
+- **Size:** 128×64px
+- **Usage:** Prop in Executive Suite
+
+### ⏳ Portal
+- **ID:** `087128d4-213c-45f8-b731-44970ca803c9`
+- **Status:** Processing
+- **Size:** 80×80px
+- **Usage:** Dimensional portal in Underground scene
+
+### ⏳ Cooling Unit
+- **ID:** `16c3ffe3-f0be-46c9-95df-4dd8c586c386`
+- **Status:** Processing
+- **Size:** 48×64px
+- **Usage:** Prop in server rooms
+
+## Integration Notes
+
+### Loading Assets in Game
+
+Add to `index_v2.html` BootScene preload:
+
+```javascript
+// Enemy characters
+const enemies = ['glitch_guard', 'heavy_guard', 'security_drone', 'core_boss'];
+const directions = ['north', 'south', 'east', 'west'];
+
+enemies.forEach(enemy => {
+    directions.forEach(dir => {
+        const key = `${enemy}_${dir}`;
+        const path = `assets/characters/${enemy}_extracted/frames/${enemy}_${dir}.png`;
+        this.load.image(key, path);
+    });
+});
+
+// Map objects
+this.load.image('access_card', 'assets/objects/access_card.png');
+this.load.image('access_card_obj', 'assets/objects/access_card_obj.png');
 ```
-MCP Tool: get_character
-Arguments: { "character_id": "<ID>", "include_preview": true }
+
+### Adding to Rooms JSON
+
+Example for Corridor scene:
+```json
+{
+  "id": "corridor",
+  "npcs": [
+    {
+      "id": "glitch_guard_1",
+      "name": "Glitch Guard",
+      "position": { "x": 300, "y": 400 },
+      "sprite": "glitch_guard_south",
+      "type": "enemy",
+      "hostile": true,
+      "hp": 40,
+      "attack": 8,
+      "defense": 3
+    }
+  ],
+  "hotspots": [
+    {
+      "id": "access_card",
+      "name": "Access Card",
+      "position": { "x": 500, "y": 350 },
+      "sprite": "access_card_obj",
+      "interactions": {
+        "pickup": {
+          "action": "addItem",
+          "item": "access_card"
+        }
+      }
+    }
+  ]
+}
 ```
 
----
+## Next Steps
 
-## Download URLs
-
-Once complete, characters can be downloaded as ZIP files containing:
-- All directional sprites (N/S/E/W)
-- All animation frames
-- Metadata JSON
-
-The download URL format: `https://api.pixellab.ai/mcp/characters/{id}/download`
+1. Wait for remaining assets to finish processing
+2. Download completed assets using curl commands
+3. Add assets to game's preload sequence
+4. Create enemy NPCs in NPCSystem
+5. Add items to items.json
+6. Update rooms.json with new assets

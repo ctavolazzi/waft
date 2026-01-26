@@ -766,10 +766,22 @@
                     });
                 });
                 
+                // Load enemy characters
+                const enemies = ['heavy_guard', 'security_drone', 'core_boss'];
+                enemies.forEach(enemy => {
+                    directions.forEach(dir => {
+                        const key = `${enemy}_${dir}`;
+                        const path = `assets/characters/${enemy}_extracted/frames/${enemy}_${dir}.png`;
+                        this.load.image(key, path);
+                    });
+                });
+                
                 // Load objects
                 this.load.image('terminal_obj', 'assets/objects/terminal_obj.png');
                 this.load.image('artifact_obj', 'assets/objects/artifact_obj.png');
                 this.load.image('keycard_obj', 'assets/objects/keycard_obj.png');
+                this.load.image('access_card', 'assets/objects/access_card.png');
+                this.load.image('access_card_obj', 'assets/objects/access_card_obj.png');
             }
             
             create() {

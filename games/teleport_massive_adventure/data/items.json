@@ -23,6 +23,42 @@
       "sprite": "keycard_obj",
       "usableOn": ["maintenance_hatch"],
       "consumeOnUse": false
+    },
+    
+    "access_card": {
+      "id": "access_card",
+      "name": "Access Card",
+      "description": "A high-level access card with holographic display. Unlocks upper levels of the facility.",
+      "icon": "🔑",
+      "sprite": "access_card_obj",
+      "usableOn": ["upper_level_door", "mainframe_access"],
+      "consumeOnUse": false
+    },
+    
+    "health_kit": {
+      "id": "health_kit",
+      "name": "Health Kit",
+      "description": "A medical supply kit. Restores 50 HP when used.",
+      "icon": "➕",
+      "sprite": "health_kit_obj",
+      "consumable": true,
+      "effects": {
+        "heal": 50
+      }
+    },
+    
+    "energy_drink": {
+      "id": "energy_drink",
+      "name": "Energy Drink",
+      "description": "A futuristic energy drink. Restores 25 HP and increases speed temporarily.",
+      "icon": "⚡",
+      "sprite": "energy_drink_obj",
+      "consumable": true,
+      "effects": {
+        "heal": 25,
+        "speedBoost": 1.5,
+        "duration": 30000
+      }
     }
   },
   
