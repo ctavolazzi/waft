@@ -280,9 +280,35 @@ class InteractionSystem {
         const player = scene?.player;
         const drone = player?.combatDrone;
         
-        if (!drone || !drone.isActive) {
-            dialogueSystem.showSingle('', 'You need to have your drone activated to upgrade it.');
-            return;
+        // Allow upgrading even if drone not active (will activate it)
+        if (!drone) {
+            // Try to initialize drone if player has it
+            if (player && player.hasDrone) {
+                if (window.gameManager) {
+                    const combatSystem = window.gameManager.getSystem('combatSystem');
+                    const npcSystem = window.gameManager.getSystem('npcSystem');
+                    const statsSystem = window.gameManager.getSystem('statsSystem');
+                    
+                    if (combatSystem && npcSystem && statsSystem) {
+                        player.initCombatDrone({
+                            combatSystem,
+                            npcSystem,
+                            statsSystem
+                        });
+                        player.activateDrone();
+                    }
+                }
+            }
+            
+            if (!player?.combatDrone) {
+                dialogueSystem.showSingle('', 'You need to have a combat drone to upgrade it. Find the drone item first.');
+                return;
+            }
+        }
+        
+        // Ensure drone is active for upgrades
+        if (drone && !drone.isActive) {
+            drone.activate();
         }
         
         // Get inventory

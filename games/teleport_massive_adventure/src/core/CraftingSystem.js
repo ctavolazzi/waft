@@ -24,33 +24,33 @@ class CraftingSystem {
             // Level 1 upgrades (basic parts)
             'drone_level_2': {
                 name: 'Drone Level 2',
-                description: 'Upgrade drone to level 2',
+                description: 'Upgrade drone to level 2. Increases damage and fire rate.',
                 parts: ['energy_core'],
                 result: { level: 2, statBonus: { damage: 3, shotCooldown: -100 } }
             },
             'drone_level_3': {
                 name: 'Drone Level 3',
-                description: 'Upgrade drone to level 3',
+                description: 'Upgrade drone to level 3. Significant damage boost and extended range.',
                 parts: ['energy_core', 'weapon_module'],
                 result: { level: 3, statBonus: { damage: 5, shotCooldown: -200, targetRange: 50 } }
             },
             'drone_level_4': {
                 name: 'Drone Level 4',
-                description: 'Upgrade drone to level 4',
+                description: 'Upgrade drone to level 4. Maximum power with enhanced shield capabilities.',
                 parts: ['energy_core', 'weapon_module', 'shield_generator'],
                 result: { level: 4, statBonus: { damage: 8, shotCooldown: -300, targetRange: 100, shieldDuration: 1000 } }
             },
             
-            // Ability upgrades
+            // Ability upgrades (can be done at any level)
             'burst_upgrade': {
                 name: 'Enhanced Burst Shot',
-                description: 'Increases burst shot damage and projectile count',
+                description: 'Increases burst shot damage by 50% and adds 2 more projectiles.',
                 parts: ['weapon_module'],
                 result: { abilityUpgrade: 'burst', bonus: { damageMultiplier: 1.5, projectileCount: 2 } }
             },
             'shield_upgrade': {
                 name: 'Enhanced Shield Mode',
-                description: 'Increases shield duration and damage reduction',
+                description: 'Increases shield duration by 2 seconds and adds 50% damage reduction.',
                 parts: ['shield_generator'],
                 result: { abilityUpgrade: 'shield', bonus: { duration: 2000, damageReduction: 0.5 } }
             }
@@ -168,9 +168,26 @@ class CraftingSystem {
         const available = [];
         
         Object.entries(this.recipes).forEach(([recipeId, recipe]) => {
-            // Check if already at max level
+            // For level upgrades, check if already at that level
             if (recipe.result.level && drone.level >= recipe.result.level) {
-                return; // Skip
+                return; // Skip - already at or past this level
+            }
+            
+            // For ability upgrades, check if already upgraded
+            if (recipe.result.abilityUpgrade) {
+                const ability = drone.abilities[recipe.result.abilityUpgrade];
+                // Check if upgrade already applied (has the bonus properties)
+                if (recipe.result.bonus) {
+                    const hasUpgrade = Object.keys(recipe.result.bonus).every(key => {
+                        if (key.includes('Multiplier')) {
+                            return ability[key] && ability[key] > 1.0;
+                        }
+                        return ability[key] !== undefined;
+                    });
+                    if (hasUpgrade) {
+                        return; // Skip - already upgraded
+                    }
+                }
             }
             
             // Check if can craft
