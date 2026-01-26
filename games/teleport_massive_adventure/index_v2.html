@@ -428,14 +428,19 @@
             position: absolute;
             top: 6%;
             right: 2%;
-            width: clamp(120px, 25%, 200px);
-            font-size: clamp(8px, 1.5vw, 10px);
-            color: #ffaa00;
+            width: clamp(150px, 28%, 250px);
+            font-size: clamp(9px, 1.6vw, 11px);
+            color: #00ff88;
             font-style: italic;
-            opacity: 0.7;
+            opacity: 0.8;
             text-align: right;
             z-index: 50;
             pointer-events: none;
+            line-height: 1.5;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px 12px;
+            border-radius: 4px;
+            border-left: 2px solid #00ff88;
         }
         
         /* ══════════════════════════════════════════════════════════════
@@ -1055,6 +1060,12 @@
                 
                 // Initialize Objective System (for thought bubble hints)
                 objectiveSystem.init();
+                
+                // Initialize Inventory Card System
+                if (window.inventoryCardSystem) {
+                    inventoryCardSystem.init();
+                    window.inventoryCardSystem = inventoryCardSystem;
+                }
                 
                 // Subscribe to god comments (The Dealer's commentary - separate from thought bubble)
                 eventBus.on(EventBus.GOD_COMMENT, (data) => {

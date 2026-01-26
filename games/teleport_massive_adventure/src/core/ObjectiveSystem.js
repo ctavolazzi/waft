@@ -40,7 +40,7 @@ class ObjectiveSystem {
                 id: 'pickup_artifact',
                 name: 'Collect the Artifact',
                 description: 'That strange artifact from The Between...',
-                hint: 'Check the terminal. Your research might have answers.',
+                hint: 'Check the terminal on the right. Your research might have answers, and it might activate your combat drone.',
                 condition: { flag: 'hasArtifact', equals: true },
                 nextObjective: 'use_terminal'
             },
@@ -48,7 +48,7 @@ class ObjectiveSystem {
                 id: 'use_terminal',
                 name: 'Access Research Terminal',
                 description: 'Your research data might hold clues.',
-                hint: 'The door to the lobby is on the right. Maybe someone there knows something.',
+                hint: 'The terminal activated your combat drone! Use it to defend yourself. The door to the lobby is on the right.',
                 condition: { flag: 'terminalHacked', equals: true },
                 nextObjective: 'go_to_lobby'
             },
@@ -112,9 +112,9 @@ class ObjectiveSystem {
                 id: 'use_drone',
                 name: 'Use Your Drone',
                 description: 'Your combat drone is ready.',
-                hint: 'Your drone auto-targets enemies. Press 1 for Burst Shot, 2 for Shield Mode. Find workbenches to upgrade it.',
+                hint: 'Your drone auto-targets enemies. Press 1 for Burst Shot, 2 for Shield Mode. Find workbenches in the lab or underground to upgrade it.',
                 condition: { flag: 'hasCombatDrone', equals: true },
-                nextObjective: 'enter_portal'
+                nextObjective: 'go_to_lobby'
             },
             'face_dealer': {
                 id: 'face_dealer',
@@ -151,8 +151,10 @@ class ObjectiveSystem {
         
         // Listen to game state changes
         if (window.gameState) {
-            gameState.on('flagChanged', () => {
+            gameState.on('flagChanged', (data) => {
                 this.checkObjectives();
+                // Update thought bubble when flags change
+                this.updateThoughtBubble();
             });
         }
         
@@ -195,14 +197,26 @@ class ObjectiveSystem {
         if (this.currentObjective) {
             thought = this.currentObjective.hint;
         } else {
-            // Default thoughts
-            const defaultThoughts = [
-                "What am I trying to remember?",
-                "Something feels incomplete...",
-                "I should keep exploring.",
-                "The answers are here somewhere."
-            ];
-            thought = defaultThoughts[Math.floor(Math.random() * defaultThoughts.length)];
+            // Default thoughts based on game state
+            const hasArtifact = gameState.getFlag('hasArtifact');
+            const hasKeycard = gameState.getFlag('hasKeycard');
+            const hasDrone = gameState.getFlag('hasCombatDrone');
+            
+            if (hasDrone) {
+                thought = "My drone is ready. I should find enemies to test it, or workbenches to upgrade it.";
+            } else if (hasKeycard) {
+                thought = "I have the keycard. I should use it on the maintenance hatch.";
+            } else if (hasArtifact) {
+                thought = "The artifact pulses with energy. I should check the terminal.";
+            } else {
+                const defaultThoughts = [
+                    "What am I trying to remember?",
+                    "Something feels incomplete...",
+                    "I should keep exploring.",
+                    "The answers are here somewhere."
+                ];
+                thought = defaultThoughts[Math.floor(Math.random() * defaultThoughts.length)];
+            }
         }
         
         // Update with fade animation
@@ -210,6 +224,7 @@ class ObjectiveSystem {
         setTimeout(() => {
             this.thoughtBubble.textContent = thought;
             this.thoughtBubble.style.opacity = '0.8';
+            this.thoughtBubble.style.transition = 'opacity 0.3s';
         }, 200);
     }
     

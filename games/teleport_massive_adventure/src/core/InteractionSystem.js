@@ -200,6 +200,14 @@ class InteractionSystem {
                 }
             }
             
+            // Give drone if action specifies
+            if (action.giveDrone) {
+                const scene = this.scene;
+                if (scene?.player) {
+                    scene.player.acquireDrone();
+                }
+            }
+            
             // Set flags
             if (action.setFlag) {
                 this.executeSetFlag(action);

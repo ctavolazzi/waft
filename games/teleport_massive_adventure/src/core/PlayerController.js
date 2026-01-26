@@ -508,6 +508,7 @@ class PlayerController {
      */
     acquireDrone() {
         this.hasDrone = true;
+        gameState.setFlag('hasCombatDrone', true);
         
         // Auto-activate if systems are ready
         if (window.gameManager) {
@@ -516,8 +517,31 @@ class PlayerController {
             const statsSystem = window.gameManager.getSystem('statsSystem');
             
             if (combatSystem && npcSystem && statsSystem) {
+                this.initCombatDrone({
+                    combatSystem,
+                    npcSystem,
+                    statsSystem
+                });
                 this.activateDrone();
+                
+                // Visual feedback
+                if (this.scene) {
+                    this.scene.cameras.main.flash(300, 0, 255, 0);
+                }
             }
+        }
+        
+        // Show notification
+        if (window.dialogueSystem) {
+            window.dialogueSystem.showLines('SYSTEM', [
+                'Combat drone acquired!',
+                'Press 1 for Burst Shot, 2 for Shield Mode.'
+            ]);
+        }
+        
+        // Update objective system
+        if (window.objectiveSystem) {
+            window.objectiveSystem.checkObjectives();
         }
     }
     

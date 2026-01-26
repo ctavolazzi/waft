@@ -177,8 +177,9 @@ class CombatDrone {
                 glow.setDepth(this.droneSprite.depth - 1);
             }
             
-            this.droneSprite.setScale(0.6);
+            this.droneSprite.setScale(2.5); // Larger for visibility
             this.droneSprite.setDepth(this.player.sprite.depth + 1);
+            this.droneSprite.setTint(0x88ff88); // Glow effect
             
             // Deploy animation (pop off back)
             this._deployAnimation();
@@ -253,22 +254,33 @@ class CombatDrone {
         const startX = this.player.sprite.x + this.offsetX;
         const startY = this.player.sprite.y + this.offsetY;
         const deployX = startX + 20; // Pop out to the side
-        const deployY = startY - 15; // Pop up
+        const deployY = startY - 50; // Pop up higher for visibility
         
         // Start hidden, then pop out
         this.droneSprite.setAlpha(0);
         this.droneSprite.setScale(0);
         
+        // Add glow effect
+        this.droneSprite.setTint(0x88ff88);
+        
         this.scene.tweens.add({
             targets: this.droneSprite,
             x: deployX,
             y: deployY,
-            alpha: 1,
-            scale: 0.6,
+            alpha: 0.9,
+            scale: 2.5, // Larger for visibility
             duration: 400,
             ease: 'Back.easeOut',
             onComplete: () => {
                 this.isDeployed = true;
+                // Pulsing glow animation
+                this.scene.tweens.add({
+                    targets: this.droneSprite,
+                    alpha: 0.7,
+                    duration: 1000,
+                    yoyo: true,
+                    repeat: -1
+                });
             }
         });
     }
@@ -290,14 +302,19 @@ class CombatDrone {
             this._keyboardSetup = true;
         }
         
-        // Follow player (with slight offset)
+        // Follow player (with higher offset for visibility)
         const targetX = this.player.sprite.x + this.offsetX;
-        const targetY = this.player.sprite.y + this.offsetY;
+        const targetY = this.player.sprite.y - 50; // Higher offset
         
         // Smooth follow
         const followSpeed = 0.15;
         this.droneSprite.x += (targetX - this.droneSprite.x) * followSpeed;
         this.droneSprite.y += (targetY - this.droneSprite.y) * followSpeed;
+        
+        // Keep drone visible and glowing
+        if (this.droneSprite.alpha < 0.8) {
+            this.droneSprite.setAlpha(0.8);
+        }
         
         // Keep depth sorted
         this.droneSprite.setDepth(this.player.sprite.depth + 1);

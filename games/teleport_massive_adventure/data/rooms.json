@@ -27,7 +27,8 @@
               "condition": { "flag": "terminalHacked", "equals": false },
               "action": "dialogue",
               "dialogueId": "terminal_first_use",
-              "setFlag": { "terminalHacked": true }
+              "setFlag": { "terminalHacked": true },
+              "giveDrone": true
             },
             "use_repeat": {
               "condition": { "flag": "terminalHacked", "equals": true },
