@@ -6,7 +6,7 @@ Creates timestamped script files for audit trail.
 """
 
 import json
-from datetime import datetime
+from datetime import date, datetime
 from pathlib import Path
 from typing import Any
 
