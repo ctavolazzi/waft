@@ -128,3 +128,4 @@
 {"timestamp": "2026-02-27T17:34:14.119836", "gate_number": 12, "system_card": "Ace of Spades", "dealer_card": "10 of Diamonds", "won": false, "key_fragment": null}
 {"timestamp": "2026-02-27T17:34:14.120762", "gate_number": 12, "system_card": "8 of Spades", "dealer_card": "6 of Spades", "won": false, "key_fragment": null}
 {"timestamp": "2026-02-27T17:34:14.127112", "gate_number": 12, "system_card": "10 of Diamonds", "dealer_card": "9 of Diamonds", "won": true, "key_fragment": "SEAL-12-589135C1CBC0C8D4"}
+{"timestamp": "2026-02-27T19:34:30.442407", "gate_number": 12, "system_card": "9 of Spades", "dealer_card": "4 of Spades", "won": false, "key_fragment": null}
