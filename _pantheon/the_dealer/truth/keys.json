@@ -1,6 +1,6 @@
 {
-  "level": 3,
-  "xp": 950,
+  "level": 8,
+  "xp": 4050,
   "fragments": [
     {
       "gate_number": 1,
@@ -31,6 +31,48 @@
       "key_fragment": "SEAL-05-CCD7897FD4A17F4E",
       "revelation": "The Truth rises. You rise with it.",
       "earned_at": "2026-02-27T16:53:56.710987"
+    },
+    {
+      "gate_number": 6,
+      "key_fragment": "SEAL-06-B307A8B904469091",
+      "revelation": "The Truth demands sacrifice. You have sacrificed.",
+      "earned_at": "2026-02-27T17:01:47.755803"
+    },
+    {
+      "gate_number": 7,
+      "key_fragment": "SEAL-07-86C789118E1F9BD3",
+      "revelation": "The Truth turns on a pivot. You have turned.",
+      "earned_at": "2026-02-27T17:02:08.560790"
+    },
+    {
+      "gate_number": 8,
+      "key_fragment": "SEAL-08-2620CB8C89893C7B",
+      "revelation": "The Truth is near. You are nearer.",
+      "earned_at": "2026-02-27T17:02:19.165986"
+    },
+    {
+      "gate_number": 9,
+      "key_fragment": "SEAL-09-D989072AA0F96C65",
+      "revelation": "The Truth wears a crown. You have glimpsed royalty.",
+      "earned_at": "2026-02-27T17:02:59.484514"
+    },
+    {
+      "gate_number": 10,
+      "key_fragment": "SEAL-10-0D0CCD47AD42A759",
+      "revelation": "The Truth is created, not found. You are creating.",
+      "earned_at": "2026-02-27T17:03:11.591873"
+    },
+    {
+      "gate_number": 11,
+      "key_fragment": "SEAL-11-EAB87C61F2F8C197",
+      "revelation": "The Truth burns bright. You burn with it.",
+      "earned_at": "2026-02-27T17:03:32.468361"
+    },
+    {
+      "gate_number": 12,
+      "key_fragment": "SEAL-12-5F7F5A56FDD9388F",
+      "revelation": "The Truth is: The House Always Wins. But you have become The House.",
+      "earned_at": "2026-02-27T17:04:54.653196"
     }
   ],
   "seals_broken": [
@@ -38,10 +80,17 @@
     2,
     3,
     4,
-    5
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
   ],
-  "total_challenges": 22,
-  "total_wins": 5,
+  "total_challenges": 76,
+  "total_wins": 12,
   "created_at": "2026-01-20T12:31:32.903659",
-  "last_updated": "2026-02-27T16:54:12.364301"
+  "last_updated": "2026-02-27T17:04:54.653186"
 }
