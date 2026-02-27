@@ -161,3 +161,6 @@
 {"timestamp": "2026-02-27T19:43:56.825653", "gate_number": 12, "system_card": "4 of Clubs", "dealer_card": "9 of Spades", "won": false, "key_fragment": null}
 {"timestamp": "2026-02-27T19:43:57.851450", "gate_number": 12, "system_card": "9 of Clubs", "dealer_card": "King of Spades", "won": false, "key_fragment": null}
 {"timestamp": "2026-02-27T19:45:52.886024", "gate_number": 12, "system_card": "9 of Spades", "dealer_card": "9 of Hearts", "won": false, "key_fragment": null}
+{"timestamp": "2026-02-27T20:13:14.291726", "gate_number": 12, "system_card": "5 of Diamonds", "dealer_card": "6 of Clubs", "won": false, "key_fragment": null}
+{"timestamp": "2026-02-27T20:13:14.292427", "gate_number": 12, "system_card": "Ace of Diamonds", "dealer_card": "5 of Diamonds", "won": false, "key_fragment": null}
+{"timestamp": "2026-02-27T20:13:14.292951", "gate_number": 12, "system_card": "5 of Diamonds", "dealer_card": "5 of Hearts", "won": false, "key_fragment": null}

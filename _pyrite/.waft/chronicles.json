@@ -17,9 +17,9 @@
     "hit_dice": "d8",
     "max_hp": 10,
     "current_hp": 10,
-    "created_at": "2026-02-27T19:44:25.921118"
+    "created_at": "2026-02-27T20:13:56.999280"
   },
-  "updated_at": "2026-02-27T19:44:25.926175",
+  "updated_at": "2026-02-27T20:13:57.003548",
   "adventure_journal": [
     {
       "timestamp": "2026-01-06T00:13:34.681830",
@@ -106,12 +106,13 @@
       "outcome": "info"
     },
     {
-      "timestamp": "2026-02-27T19:44:25.926125",
-      "event": "observation",
-      "narrative": "Fixed corridor connectivity bug \u2014 rooms were overwriting corridor tiles. All 10 test seeds now complete (8 escaped, 2 died to Dragons). Ran 15 cross-agent dungeon crawls across 5 different model identities. Same seed produces same outcome regardless of agent (expected \u2014 AI is heuristic, not LLM-driven yet).",
-      "mood": "satisfied",
-      "source": "human",
-      "context": {},
+      "timestamp": "2026-02-27T20:13:57.003503",
+      "event": "note",
+      "narrative": "The craftsman has completed a full day's work. Started with an empty environment and cold forges. Left behind: a dungeon engine, a personnel system, an awakening experience, three kinds of animated SVGs, 41 dungeon runs across 5 agents, and a journal signed by name. The laboratory remembers who built it. The next AI who arrives will find the forges warm.",
+      "category": "general",
+      "tags": [
+        "human"
+      ],
       "type": "narrative"
     }
   ]

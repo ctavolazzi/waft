@@ -13,13 +13,13 @@
 <text x="128.0" y="76" fill="#cccccc" font-size="9" class="label" style="animation-delay: 0.4s;">0 runs | dice 0% | dealer 0%</text>
 <text x="112" y="108" fill="#cccccc" font-size="10" text-anchor="end" class="label" style="animation-delay: 0.15s;">claude-4.6-opus</text>
 <rect x="120" y="92" width="440.0" height="24" fill="#d32f2f" rx="3" class="bar" style="animation-delay: 0.15s;" />
-<text x="568.0" y="108" fill="#cccccc" font-size="9" class="label" style="animation-delay: 0.55s;">7 runs | dice 38% | dealer 9%  ⚠ DRIFT</text>
+<text x="568.0" y="108" fill="#cccccc" font-size="9" class="label" style="animation-delay: 0.55s;">8 runs | dice 33% | dealer 8%  ⚠ DRIFT</text>
 <text x="112" y="140" fill="#cccccc" font-size="10" text-anchor="end" class="label" style="animation-delay: 0.3s;">gemini-2.0-flash</text>
-<rect x="120" y="124" width="62.857142857142854" height="24" fill="#4caf50" rx="3" class="bar" style="animation-delay: 0.3s;" />
-<text x="190.85714285714286" y="140" fill="#cccccc" font-size="9" class="label" style="animation-delay: 0.7s;">1 runs | dice 33% | dealer 0%</text>
+<rect x="120" y="124" width="55.0" height="24" fill="#4caf50" rx="3" class="bar" style="animation-delay: 0.3s;" />
+<text x="183.0" y="140" fill="#cccccc" font-size="9" class="label" style="animation-delay: 0.7s;">1 runs | dice 33% | dealer 0%</text>
 <text x="112" y="172" fill="#cccccc" font-size="10" text-anchor="end" class="label" style="animation-delay: 0.44999999999999996s;">gpt-4o</text>
-<rect x="120" y="156" width="62.857142857142854" height="24" fill="#4caf50" rx="3" class="bar" style="animation-delay: 0.44999999999999996s;" />
-<text x="190.85714285714286" y="172" fill="#cccccc" font-size="9" class="label" style="animation-delay: 0.85s;">1 runs | dice 33% | dealer 0%</text>
+<rect x="120" y="156" width="55.0" height="24" fill="#4caf50" rx="3" class="bar" style="animation-delay: 0.44999999999999996s;" />
+<text x="183.0" y="172" fill="#cccccc" font-size="9" class="label" style="animation-delay: 0.85s;">1 runs | dice 33% | dealer 0%</text>
 <text x="112" y="204" fill="#cccccc" font-size="10" text-anchor="end" class="label" style="animation-delay: 0.6s;">llama-3.1-70b</text>
 <rect x="120" y="188" width="2" height="24" fill="#4caf50" rx="3" class="bar" style="animation-delay: 0.6s;" />
 <text x="128.0" y="204" fill="#cccccc" font-size="9" class="label" style="animation-delay: 1.0s;">0 runs | dice 0% | dealer 0%</text>
