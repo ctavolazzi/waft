@@ -321,6 +321,41 @@ def view_cmd(
     _render_run_tui(run)
 
 
+@app.command("viz")
+def viz_cmd(
+    run_id: str | None = typer.Argument(
+        None, help="Run ID to visualize (latest if not given)"
+    ),
+    path: str | None = typer.Option(
+        None, "--path", "-p", help="Project path"
+    ),
+):
+    """Generate animated SVG timeline of an awakening run."""
+    from ..core.awakening import RUNS_DIR
+    from ..core.visualize import generate_timeline_svg
+
+    project_path = Path(path) if path else Path.cwd()
+    runs_dir = project_path / RUNS_DIR
+
+    if run_id:
+        run_path = runs_dir / f"{run_id}.json"
+    else:
+        files = sorted(runs_dir.glob("AWK-*.json"), reverse=True)
+        if not files:
+            console.print("[dim]No awakening runs found.[/dim]")
+            raise typer.Exit(1)
+        run_path = files[0]
+
+    if not run_path.exists():
+        console.print(f"[red]Run not found: {run_id}[/red]")
+        raise typer.Exit(1)
+
+    out = generate_timeline_svg(run_path, project_path)
+    console.print(
+        f"[{COLOR_GREEN}]✓ SVG saved: {out}[/{COLOR_GREEN}]"
+    )
+
+
 def _render_run_summary(run: AwakeningRun):
     """Render a compact summary panel for a completed run."""
     wins = sum(1 for e in run.dealer_encounters if e.get("won"))

@@ -287,3 +287,19 @@ def disclose_cmd(
         )
     else:
         console.print("[dim]No changes specified.[/dim]")
+
+
+@app.command("chart")
+def chart_cmd(
+    path: str | None = typer.Option(
+        None, "--path", "-p", help="Project path"
+    ),
+):
+    """Generate animated SVG comparison chart of all agents."""
+    from ..core.visualize import generate_personnel_chart_svg
+
+    project_path = Path(path) if path else Path.cwd()
+    out = generate_personnel_chart_svg(project_path)
+    console.print(
+        f"[{COLOR_GREEN}]✓ SVG saved: {out}[/{COLOR_GREEN}]"
+    )

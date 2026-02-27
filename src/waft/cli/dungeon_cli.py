@@ -15,6 +15,7 @@ from rich.columns import Columns
 from rich.console import Console
 from rich.live import Live
 from rich.panel import Panel
+from rich.table import Table
 from rich.text import Text
 
 from ..core.dungeon import (
@@ -36,8 +37,6 @@ app = typer.Typer(
     invoke_without_command=True,
 )
 
-console = Console()
-
 # --- Display Constants ---
 
 COLOR_GOLD = "#FFD700"
@@ -50,6 +49,94 @@ ANIMATION_DELAY_MOVE = 0.08
 ANIMATION_DELAY_EVENT = 0.6
 ANIMATION_DELAY_COMBAT = 0.3
 
+console = Console()
+
+
+@app.command("stats")
+def stats_cmd(
+    path: str | None = typer.Option(
+        None, "--path", "-p", help="Project path"
+    ),
+):
+    """Show aggregate statistics across all dungeon runs."""
+    from ..core.visualize import compute_dungeon_stats
+
+    project_path = Path(path) if path else Path.cwd()
+    stats = compute_dungeon_stats(project_path)
+
+    if stats["total_runs"] == 0:
+        console.print("[dim]No dungeon runs found.[/dim]")
+        return
+
+    table = Table(
+        title="⬥ Dungeon Statistics ⬥",
+        show_header=False,
+        box=None,
+        padding=(0, 2),
+    )
+    table.add_column("Metric", style="white")
+    table.add_column("Value", style=COLOR_GOLD, justify="right")
+
+    table.add_row("Total Runs", str(stats["total_runs"]))
+    table.add_row(
+        "Outcomes",
+        f"{stats['escaped']} escaped / "
+        f"{stats['died']} died / "
+        f"{stats['timeout']} timeout",
+    )
+    table.add_row("Escape Rate", f"{stats['escape_rate']:.1%}")
+    table.add_row("Avg Turns", f"{stats['avg_turns']:.1f}")
+    table.add_row(
+        "Avg HP on Escape", f"{stats['avg_hp_on_escape']:.1f}"
+    )
+    table.add_row("Total Gold", str(stats["total_gold"]))
+    table.add_row(
+        "Total Monsters Slain", str(stats["total_monsters_slain"])
+    )
+    table.add_row("Unique Seeds", str(stats["unique_seeds"]))
+    table.add_row(
+        "Dealer",
+        f"{stats['dealer_wins']}W / "
+        f"{stats['dealer_encounters']} encounters",
+    )
+    table.add_row("Agents", ", ".join(stats["agents"]))
+
+    console.print()
+    console.print(Panel(table, border_style=COLOR_GOLD))
+    console.print()
+
+
+@app.command("viz")
+def viz_cmd(
+    run_id: str | None = typer.Argument(
+        None, help="Run ID to visualize (latest if not given)"
+    ),
+    path: str | None = typer.Option(
+        None, "--path", "-p", help="Project path"
+    ),
+):
+    """Generate animated SVG visualization of a dungeon run."""
+    from ..core.dungeon import DUNGEON_RUNS_DIR
+    from ..core.visualize import generate_dungeon_svg
+
+    project_path = Path(path) if path else Path.cwd()
+    runs_dir = project_path / DUNGEON_RUNS_DIR
+
+    if run_id:
+        run_path = runs_dir / f"{run_id}.json"
+    else:
+        files = sorted(runs_dir.glob("DNG-*.json"), reverse=True)
+        if not files:
+            console.print("[dim]No dungeon runs found.[/dim]")
+            raise typer.Exit(1)
+        run_path = files[0]
+
+    if not run_path.exists():
+        console.print(f"[red]Run not found: {run_id}[/red]")
+        raise typer.Exit(1)
+
+    out = generate_dungeon_svg(run_path, project_path)
+    console.print(f"[{COLOR_GREEN}]✓ SVG saved: {out}[/{COLOR_GREEN}]")
 
 def _hp_bar(hp: int, max_hp: int, width: int = 20) -> str:
     """Render an HP bar with color."""
@@ -344,15 +431,18 @@ def _format_event(evt) -> str:
 def _show_summary(state: GameState, out_path: Path):
     """Show post-game summary."""
     if state.escaped:
-        outcome = f"[bold {COLOR_GREEN}]ESCAPED[/bold {COLOR_GREEN}]"
+        outcome_text = "ESCAPED"
+        outcome_style = f"bold {COLOR_GREEN}"
     elif not state.alive:
-        outcome = f"[bold {COLOR_RED}]DIED (turn {state.turn})[/bold {COLOR_RED}]"
+        outcome_text = f"DIED (turn {state.turn})"
+        outcome_style = f"bold {COLOR_RED}"
     else:
-        outcome = f"[{COLOR_DIM}]TIMEOUT[/{COLOR_DIM}]"
+        outcome_text = "TIMEOUT"
+        outcome_style = COLOR_DIM
 
     content = Text()
     content.append("Outcome: ", style="white")
-    content.append(f"{outcome}\n")
+    content.append(f"{outcome_text}\n", style=outcome_style)
     content.append(f"Turns: {state.turn}\n", style="white")
     content.append(
         f"HP: {state.player_hp}/{state.player_max_hp}\n", style="white"
