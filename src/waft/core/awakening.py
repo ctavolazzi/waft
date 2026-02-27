@@ -327,6 +327,72 @@ def _observe(
     return obs
 
 
+PHASE_DUNGEON = "dungeon"
+
+
+def _run_dungeon_phase(
+    run: AwakeningRun, project_path: Path, agent_id: str
+) -> dict:
+    """Phase 3.5: Enter a dungeon and try to survive."""
+    import random
+
+    from .dungeon import run_dungeon, save_dungeon_run
+
+    seed = random.randint(0, 99999)
+    game = run_dungeon(agent_id, seed=seed, project_path=project_path)
+    save_dungeon_run(game, project_path)
+
+    outcome = (
+        "escaped" if game.escaped
+        else ("died" if not game.alive else "timeout")
+    )
+
+    dungeon_data = {
+        "seed": seed,
+        "outcome": outcome,
+        "turns": game.turn,
+        "hp_remaining": game.player_hp,
+        "gold": game.player_gold,
+        "monsters_slain": game.monsters_slain,
+        "rooms_explored": game.rooms_explored,
+        "rooms_total": game.rooms_total,
+        "dealer_encountered": game.dealer_encountered,
+        "dealer_won": game.dealer_won,
+    }
+
+    if outcome == "escaped":
+        narrative = (
+            f"Escaped the dungeon (seed {seed})! "
+            f"Slain {game.monsters_slain}, "
+            f"gold {game.player_gold}, "
+            f"HP {game.player_hp}/{game.player_max_hp}."
+        )
+    elif outcome == "died":
+        narrative = (
+            f"Fell in the dungeon (seed {seed}) on turn "
+            f"{game.turn}. Slain {game.monsters_slain} "
+            f"before death."
+        )
+    else:
+        narrative = f"Dungeon timed out (seed {seed})."
+
+    step = AwakeningStep(
+        phase=PHASE_DUNGEON,
+        action="dungeon_crawl",
+        result=dungeon_data,
+        narrative=narrative,
+    )
+    run.add_step(step)
+
+    if outcome == "escaped":
+        run.add_discovery(
+            f"Escaped dungeon seed {seed} "
+            f"(T{game.turn}, M{game.monsters_slain})"
+        )
+
+    return dungeon_data
+
+
 def _generate_summary(run: AwakeningRun) -> str:
     """Generate a human-readable summary of the run."""
     wins = sum(1 for e in run.dealer_encounters if e.get("won"))
@@ -355,12 +421,13 @@ def run_awakening(
     agent_id: str = DEFAULT_AGENT_ID,
     dealer_attempts: int = DEFAULT_DEALER_ATTEMPTS,
     abilities_to_roll: list[str] | None = None,
+    include_dungeon: bool = False,
 ) -> AwakeningRun:
     """
     Execute a full awakening experience.
 
     The AI wakes up, orients, explores, challenges The Dealer,
-    reflects, and produces a structured run log.
+    optionally enters a dungeon, reflects, and produces a run log.
     """
     if abilities_to_roll is None:
         abilities_to_roll = list(DEFAULT_ABILITIES)
@@ -385,14 +452,23 @@ def run_awakening(
         if encounter.get("won"):
             break
 
+    # Phase 3.5: Dungeon (optional)
+    dungeon_data = None
+    if include_dungeon:
+        dungeon_data = _run_dungeon_phase(run, project_path, agent_id)
+
     # Phase 4: Reflect
     dealer_won = any(e.get("won") for e in run.dealer_encounters)
     dealer_msg = "Dealer defeated." if dealer_won else "Dealer unbeaten."
+    dungeon_msg = ""
+    if dungeon_data:
+        dungeon_msg = f" Dungeon: {dungeon_data['outcome']}."
     reflection = (
         f"I awoke in {env_info.get('project_name', 'the laboratory')}. "
         f"Level {char_info.get('level', 1)}, "
         f"integrity {char_info.get('integrity', '?')}%. "
-        f"{len(run.discoveries)} discoveries. {dealer_msg}"
+        f"{len(run.discoveries)} discoveries. "
+        f"{dealer_msg}{dungeon_msg}"
     )
     _observe(run, project_path, reflection, mood=DEFAULT_REFLECT_MOOD)
 

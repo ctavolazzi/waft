@@ -1,0 +1,165 @@
+{
+  "run_id": "DNG-20260227-203426-b44a",
+  "agent_id": "claude-4.6-opus",
+  "seed": 61106,
+  "timestamp": "2026-02-27T20:34:26.741936",
+  "outcome": "escaped",
+  "turns": 6,
+  "hp_remaining": 15,
+  "gold": 21,
+  "xp": 25,
+  "rooms_explored": 7,
+  "rooms_total": 7,
+  "monsters_slain": 2,
+  "treasures_found": 1,
+  "traps_triggered": 0,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 61106). 7 rooms await.",
+      "data": {
+        "rooms": 7,
+        "seed": 61106
+      },
+      "position": [
+        6,
+        13
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +21 gold, +0 HP.",
+      "data": {
+        "gold": 21,
+        "heal": 0
+      },
+      "position": [
+        16,
+        10
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "encounter",
+      "description": "A Goblin lurches from the shadows!",
+      "data": {
+        "monster": "Goblin"
+      },
+      "position": [
+        19,
+        19
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "combat_win",
+      "description": "Defeated the Goblin! +10 XP.",
+      "data": {
+        "won": true,
+        "rounds": 2,
+        "monster": "Goblin",
+        "log": [
+          "You hit Goblin for 3",
+          "Goblin hits you for 1",
+          "You hit Goblin for 3"
+        ],
+        "xp_gained": 10
+      },
+      "position": [
+        19,
+        19
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "encounter",
+      "description": "A Skeleton lurches from the shadows!",
+      "data": {
+        "monster": "Skeleton"
+      },
+      "position": [
+        35,
+        18
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "combat_win",
+      "description": "Defeated the Skeleton! +15 XP.",
+      "data": {
+        "won": true,
+        "rounds": 2,
+        "monster": "Skeleton",
+        "log": [
+          "You hit Skeleton for 4",
+          "Skeleton hits you for 4",
+          "You hit Skeleton for 6"
+        ],
+        "xp_gained": 15
+      },
+      "position": [
+        35,
+        18
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        43,
+        17
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        43,
+        5
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "9 of Diamonds",
+        "dealer_card": "8 of Spades",
+        "gate": 12
+      },
+      "position": [
+        43,
+        5
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        29,
+        10
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "complete",
+      "description": "Escaped the dungeon! Slain 2 monsters, found 1 treasures, earned 21 gold.",
+      "data": {},
+      "position": [
+        29,
+        10
+      ]
+    }
+  ]
+}

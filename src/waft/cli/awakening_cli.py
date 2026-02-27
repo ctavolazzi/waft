@@ -31,6 +31,7 @@ from ..core.awakening import (
     _observe,
     _orient,
     _roll_ability,
+    _run_dungeon_phase,
     list_runs,
     load_run,
     save_run,
@@ -117,6 +118,9 @@ def main(
         help="Dealer challenge attempts",
     ),
     quiet: bool = typer.Option(False, "--quiet", "-q", help="Minimal output"),
+    dungeon: bool = typer.Option(
+        False, "--dungeon", "-d", help="Include a dungeon crawl phase"
+    ),
 ):
     """Run a new awakening experience (default when no subcommand)."""
     if ctx.invoked_subcommand is not None:
@@ -181,17 +185,35 @@ def main(
         if encounter.get("won"):
             break
 
+    # Phase 3.5: Dungeon (optional)
+    dungeon_data = None
+    if dungeon:
+        if not quiet:
+            console.print(
+                "\n[bold #9C27B0]▸ Phase 3.5: "
+                "ENTER THE DUNGEON[/bold #9C27B0]"
+            )
+        dungeon_data = _run_dungeon_phase(run, project_path, agent_id)
+        if not quiet:
+            console.print(
+                _render_step_live(run.steps[-1], len(run.steps) - 1)
+            )
+
     # Phase 4: Reflect
     if not quiet:
         console.print(f"\n[{COLOR_GREEN}]▸ Phase 4: REFLECT[/{COLOR_GREEN}]")
 
     dealer_won = any(e.get("won") for e in run.dealer_encounters)
     dealer_msg = "Dealer defeated." if dealer_won else "Dealer unbeaten."
+    dungeon_msg = ""
+    if dungeon_data:
+        dungeon_msg = f" Dungeon: {dungeon_data['outcome']}."
     reflection = (
         f"I awoke in {env_info.get('project_name', 'the laboratory')}. "
         f"Level {char_info.get('level', 1)}, "
         f"integrity {char_info.get('integrity', '?')}%. "
-        f"{len(run.discoveries)} discoveries made. {dealer_msg}"
+        f"{len(run.discoveries)} discoveries. "
+        f"{dealer_msg}{dungeon_msg}"
     )
     _observe(run, project_path, reflection, mood=DEFAULT_REFLECT_MOOD)
     if not quiet:

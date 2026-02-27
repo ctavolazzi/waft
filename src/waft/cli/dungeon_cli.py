@@ -138,6 +138,207 @@ def viz_cmd(
     out = generate_dungeon_svg(run_path, project_path)
     console.print(f"[{COLOR_GREEN}]✓ SVG saved: {out}[/{COLOR_GREEN}]")
 
+
+@app.command("replay")
+def replay_cmd(
+    run_id: str | None = typer.Argument(
+        None, help="Run ID to replay (latest if not given)"
+    ),
+    path: str | None = typer.Option(
+        None, "--path", "-p", help="Project path"
+    ),
+    speed: float = typer.Option(
+        1.0, "--speed", "-s", help="Playback speed multiplier"
+    ),
+):
+    """Replay a saved dungeon run with animated display."""
+    from ..core.dungeon import DUNGEON_RUNS_DIR, generate_dungeon
+
+    project_path = Path(path) if path else Path.cwd()
+    runs_dir = project_path / DUNGEON_RUNS_DIR
+
+    if run_id:
+        run_path = runs_dir / f"{run_id}.json"
+    else:
+        files = sorted(runs_dir.glob("DNG-*.json"), reverse=True)
+        if not files:
+            console.print("[dim]No dungeon runs found.[/dim]")
+            raise typer.Exit(1)
+        run_path = files[0]
+
+    if not run_path.exists():
+        console.print("[red]Run not found.[/red]")
+        raise typer.Exit(1)
+
+    import json
+
+    data = json.loads(run_path.read_text())
+    seed = data.get("seed", 0)
+    events = data.get("events", [])
+    agent = data.get("agent_id", "unknown")
+    outcome = data.get("outcome", "?")
+
+    grid, rooms = generate_dungeon(seed)
+    state = GameState(
+        agent_id=agent,
+        dungeon_seed=seed,
+        rooms_total=len(rooms),
+        player_max_hp=data.get("hp_remaining", 20)
+        + abs(min(0, data.get("hp_remaining", 0))),
+    )
+
+    if rooms:
+        sx, sy = rooms[0].center
+        state.player_x = sx
+        state.player_y = sy
+        rooms[0].explored = True
+
+    event_log = [
+        f"[{COLOR_CYAN}]REPLAY: {data.get('run_id', '?')}[/{COLOR_CYAN}]"
+    ]
+
+    delay = ANIMATION_DELAY_EVENT / speed
+
+    with Live(
+        _build_display(grid, rooms, state, event_log),
+        console=console,
+        refresh_per_second=12,
+        transient=True,
+    ) as live:
+        for evt in events:
+            pos = evt.get("position", [0, 0])
+            if pos and len(pos) == 2:
+                state.player_x = int(pos[0])
+                state.player_y = int(pos[1])
+
+            for room in rooms:
+                if room.contains(state.player_x, state.player_y):
+                    room.explored = True
+
+            etype = evt.get("event_type", "")
+            desc = evt.get("description", "")
+            colors = {
+                "start": COLOR_CYAN,
+                "encounter": COLOR_RED,
+                "combat_win": COLOR_GREEN,
+                "combat_loss": COLOR_RED,
+                "treasure": COLOR_GOLD,
+                "trap": "#FF6600",
+                "dealer": COLOR_GOLD,
+                "exit": COLOR_GREEN,
+                "death": COLOR_RED,
+            }
+            color = colors.get(etype, COLOR_DIM)
+            event_log.append(f"[{color}]{desc}[/{color}]")
+
+            live.update(_build_display(grid, rooms, state, event_log))
+            time.sleep(delay)
+
+    # Show final summary
+    console.print()
+    console.print(Panel(
+        Text(
+            f"Replay complete: {outcome.upper()}\n"
+            f"Turns: {data.get('turns', 0)} | "
+            f"HP: {data.get('hp_remaining', 0)} | "
+            f"Gold: {data.get('gold', 0)} | "
+            f"Slain: {data.get('monsters_slain', 0)}",
+        ),
+        title=f"[bold {COLOR_GOLD}]⬥ REPLAY: {data.get('run_id', '?')} ⬥[/bold {COLOR_GOLD}]",
+        border_style=COLOR_GOLD,
+    ))
+
+
+@app.command("batch")
+def batch_cmd(
+    count: int = typer.Option(
+        20, "--count", "-n", help="Number of runs"
+    ),
+    agent_id: str = typer.Option(
+        "unknown", "--agent", "-a", help="Agent identifier"
+    ),
+    path: str | None = typer.Option(
+        None, "--path", "-p", help="Project path"
+    ),
+):
+    """Run a batch of dungeons and analyze seed difficulty."""
+    from ..core.dungeon import run_dungeon, save_dungeon_run
+
+    project_path = Path(path) if path else Path.cwd()
+    import random as _random
+
+    results = []
+    console.print(
+        f"\n[bold {COLOR_GOLD}]⬥ BATCH RUN: "
+        f"{count} dungeons ⬥[/bold {COLOR_GOLD}]\n"
+    )
+
+    for _i in range(count):
+        seed = _random.randint(0, 99999)
+        state = run_dungeon(agent_id, seed=seed, project_path=project_path)
+        save_dungeon_run(state, project_path)
+        icon = (
+            f"[{COLOR_GREEN}]✓[/{COLOR_GREEN}]"
+            if state.escaped
+            else f"[{COLOR_RED}]✗[/{COLOR_RED}]"
+            if not state.alive
+            else f"[{COLOR_DIM}]○[/{COLOR_DIM}]"
+        )
+        console.print(
+            f"  {icon} seed {seed:5d} | "
+            f"T{state.turn:3d} HP{state.player_hp:3d} "
+            f"G{state.player_gold:3d} M{state.monsters_slain}"
+        )
+        results.append({
+            "seed": seed,
+            "outcome": "escaped" if state.escaped else (
+                "died" if not state.alive else "timeout"
+            ),
+            "turns": state.turn,
+            "hp": state.player_hp,
+            "gold": state.player_gold,
+            "monsters": state.monsters_slain,
+        })
+
+    # Analyze
+    escaped = [r for r in results if r["outcome"] == "escaped"]
+    died = [r for r in results if r["outcome"] == "died"]
+
+    console.print(
+        f"\n[bold]Results: "
+        f"[{COLOR_GREEN}]{len(escaped)} escaped[/{COLOR_GREEN}] / "
+        f"[{COLOR_RED}]{len(died)} died[/{COLOR_RED}] / "
+        f"{count - len(escaped) - len(died)} timeout"
+        f"[/bold]"
+    )
+
+    if escaped:
+        best = min(escaped, key=lambda r: r["turns"])
+        richest = max(escaped, key=lambda r: r["gold"])
+        console.print(
+            f"  Fastest escape: seed {best['seed']} "
+            f"(T{best['turns']}, HP{best['hp']})"
+        )
+        console.print(
+            f"  Richest escape: seed {richest['seed']} "
+            f"(G{richest['gold']}, T{richest['turns']})"
+        )
+
+    if died:
+        quickest_death = min(died, key=lambda r: r["turns"])
+        longest_fight = max(died, key=lambda r: r["monsters"])
+        console.print(
+            f"  Quickest death: seed {quickest_death['seed']} "
+            f"(T{quickest_death['turns']})"
+        )
+        console.print(
+            f"  Most kills before death: seed {longest_fight['seed']} "
+            f"(M{longest_fight['monsters']}, T{longest_fight['turns']})"
+        )
+
+    console.print()
+
+
 def _hp_bar(hp: int, max_hp: int, width: int = 20) -> str:
     """Render an HP bar with color."""
     frac = hp / max_hp if max_hp else 0

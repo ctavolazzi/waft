@@ -1,0 +1,139 @@
+{
+  "run_id": "DNG-20260227-203426-84f2",
+  "agent_id": "claude-4.6-opus",
+  "seed": 49838,
+  "timestamp": "2026-02-27T20:34:26.755630",
+  "outcome": "escaped",
+  "turns": 5,
+  "hp_remaining": 2,
+  "gold": 13,
+  "xp": 25,
+  "rooms_explored": 6,
+  "rooms_total": 8,
+  "monsters_slain": 1,
+  "treasures_found": 1,
+  "traps_triggered": 1,
+  "dealer_encountered": true,
+  "dealer_won": true,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 49838). 8 rooms await.",
+      "data": {
+        "rooms": 8,
+        "seed": 49838
+      },
+      "position": [
+        6,
+        8
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +13 gold, +0 HP.",
+      "data": {
+        "gold": 13,
+        "heal": 0
+      },
+      "position": [
+        12,
+        10
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        19,
+        10
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "dealer_result",
+      "description": "Gate 12: SEAL BROKEN.",
+      "data": {
+        "won": true,
+        "system_card": "10 of Diamonds",
+        "dealer_card": "9 of Diamonds",
+        "gate": 12
+      },
+      "position": [
+        19,
+        10
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "encounter",
+      "description": "A Orc lurches from the shadows!",
+      "data": {
+        "monster": "Orc"
+      },
+      "position": [
+        18,
+        19
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "combat_win",
+      "description": "Defeated the Orc! +25 XP.",
+      "data": {
+        "won": true,
+        "rounds": 4,
+        "monster": "Orc",
+        "log": [
+          "You hit Orc for 2",
+          "Orc hits you for 5",
+          "You hit Orc for 1",
+          "Orc hits you for 4",
+          "You hit Orc for 1",
+          "Orc hits you for 3",
+          "You hit Orc for 6"
+        ],
+        "xp_gained": 25
+      },
+      "position": [
+        18,
+        19
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "trap",
+      "description": "Triggered a trap! -6 HP.",
+      "data": {
+        "damage": 6
+      },
+      "position": [
+        10,
+        18
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        30,
+        11
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "complete",
+      "description": "Escaped the dungeon! Slain 1 monsters, found 1 treasures, earned 13 gold.",
+      "data": {},
+      "position": [
+        30,
+        11
+      ]
+    }
+  ]
+}
