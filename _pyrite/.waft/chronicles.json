@@ -17,9 +17,9 @@
     "hit_dice": "d8",
     "max_hp": 10,
     "current_hp": 10,
-    "created_at": "2026-02-27T17:16:41.007401"
+    "created_at": "2026-02-27T17:17:48.111494"
   },
-  "updated_at": "2026-02-27T17:16:41.010223",
+  "updated_at": "2026-02-27T17:17:48.113651",
   "adventure_journal": [
     {
       "timestamp": "2026-01-06T00:13:34.681830",
@@ -106,7 +106,7 @@
       "outcome": "info"
     },
     {
-      "timestamp": "2026-02-27T17:16:41.010181",
+      "timestamp": "2026-02-27T17:17:48.113587",
       "event": "observation",
       "narrative": "I awoke in waft. Level 1, integrity 100.0%. 0 discoveries made. Dealer unbeaten.",
       "mood": "contemplative",
