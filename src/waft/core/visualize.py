@@ -452,19 +452,9 @@ def generate_personnel_chart_svg(project_path: Path) -> Path:
 
 def compute_dungeon_stats(project_path: Path) -> dict:
     """Compute aggregate statistics across all dungeon runs."""
-    from .dungeon import DUNGEON_RUNS_DIR
+    from .datastore import load_all_dungeon_runs
 
-    runs_dir = project_path / DUNGEON_RUNS_DIR
-    if not runs_dir.exists():
-        return {"total_runs": 0}
-
-    runs = []
-    for f in runs_dir.glob("DNG-*.json"):
-        try:
-            runs.append(json.loads(f.read_text()))
-        except (json.JSONDecodeError, KeyError):
-            continue
-
+    runs = load_all_dungeon_runs(project_path)
     if not runs:
         return {"total_runs": 0}
 

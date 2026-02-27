@@ -581,6 +581,18 @@ def run_dungeon(
         seed=seed,
     )
 
+    # Check messages from previous agents
+    if project_path:
+        prior = _read_seed_messages(seed, project_path)
+        if prior:
+            warnings = [m["text"] for m in prior[:3]]
+            state.add_event(
+                "intel",
+                f"Found {len(prior)} message(s) from prior agents: "
+                f"{warnings[0]}",
+                total_messages=len(prior),
+            )
+
     # Game loop
     while state.turn < MAX_TURNS and state.alive and not state.escaped:
         state.turn += 1
@@ -640,7 +652,54 @@ def run_dungeon(
             f"Slain {state.monsters_slain} monsters before falling.",
         )
 
+    # Post a message for future agents
+    if project_path:
+        _post_run_message(state, project_path)
+
     return state
+
+
+def _post_run_message(state: GameState, project_path: Path):
+    """Leave a message for future agents based on what happened."""
+    from .datastore import MessageStore
+
+    store = MessageStore(project_path)
+    seed_tag = f"seed:{state.dungeon_seed}"
+
+    if state.escaped:
+        text = (
+            f"Escaped seed {state.dungeon_seed} in {state.turn} turns. "
+            f"HP {state.player_hp}/{state.player_max_hp}, "
+            f"slain {state.monsters_slain}, gold {state.player_gold}."
+        )
+    elif not state.alive:
+        death_events = [
+            e for e in state.events
+            if e.event_type in ("combat_loss", "trap")
+        ]
+        cause = death_events[-1].description if death_events else "unknown"
+        text = (
+            f"Died at seed {state.dungeon_seed}, turn {state.turn}. "
+            f"Cause: {cause}"
+        )
+    else:
+        text = f"Timed out at seed {state.dungeon_seed}."
+
+    store.post(
+        author=state.agent_id,
+        text=text,
+        tags=[seed_tag, state.agent_id, "dungeon"],
+    )
+
+
+def _read_seed_messages(
+    seed: int, project_path: Path
+) -> list[dict]:
+    """Read messages left by previous agents for this seed."""
+    from .datastore import MessageStore
+
+    store = MessageStore(project_path)
+    return store.query_by_seed(seed)
 
 
 def _resolve_encounter(

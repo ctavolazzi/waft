@@ -192,6 +192,76 @@ class TestPersonnel:
         assert any("DRIFT" in f for f in flags)
 
 
+class TestDatastore:
+    def test_message_store_post_and_query(self, tmp_project):
+        from waft.core.datastore import MessageStore
+
+        store = MessageStore(tmp_project)
+        store.post("agent-a", "Hello world", tags=["test", "seed:42"])
+        store.post("agent-b", "Second message", tags=["test"])
+
+        all_msgs = store.query()
+        assert len(all_msgs) == 2
+
+        by_seed = store.query_by_seed(42)
+        assert len(by_seed) == 1
+        assert by_seed[0]["author"] == "agent-a"
+
+    def test_message_store_query_by_author(self, tmp_project):
+        from waft.core.datastore import MessageStore
+
+        store = MessageStore(tmp_project)
+        store.post("agent-a", "msg1", tags=["dungeon"])
+        store.post("agent-b", "msg2", tags=["dungeon"])
+        store.post("agent-a", "msg3", tags=["dungeon"])
+
+        by_author = store.query(author="agent-a")
+        assert len(by_author) == 2
+
+    def test_load_all_json(self, tmp_project):
+        from waft.core.datastore import load_all_json
+
+        d = tmp_project / "test_data"
+        d.mkdir()
+        (d / "TEST-001.json").write_text('{"id": 1}')
+        (d / "TEST-002.json").write_text('{"id": 2}')
+        (d / "OTHER-001.json").write_text('{"id": 3}')
+
+        all_data = load_all_json(d, prefix="TEST-")
+        assert len(all_data) == 2
+
+
+class TestArchaeology:
+    def test_analyze_produces_insights(self, tmp_project):
+        from waft.core.archaeology import analyze
+        from waft.core.dungeon import run_dungeon, save_dungeon_run
+
+        for seed in [100, 200, 300]:
+            state = run_dungeon("test-agent", seed=seed, project_path=tmp_project)
+            save_dungeon_run(state, tmp_project)
+
+        results = analyze(tmp_project)
+        assert results["total_runs"] == 3
+        assert len(results.get("readable", [])) > 0
+
+
+class TestDealerJournal:
+    def test_generate_journal(self, tmp_project):
+        from waft.core.dealer_journal import generate_journal
+
+        mem = tmp_project / "_pantheon" / "the_dealer" / "memory.jsonl"
+        mem.parent.mkdir(parents=True, exist_ok=True)
+        entries = [
+            '{"timestamp":"2026-01-01","gate_number":1,"system_card":"Ace","dealer_card":"King","won":true}',
+            '{"timestamp":"2026-01-02","gate_number":1,"system_card":"2","dealer_card":"10","won":false}',
+        ]
+        mem.write_text("\n".join(entries))
+
+        journal = generate_journal(tmp_project)
+        assert "The Dealer" in journal
+        assert "2" in journal  # total encounters
+
+
 class TestAwakening:
     def test_generate_run_id(self):
         from waft.core.awakening import _generate_run_id

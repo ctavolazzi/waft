@@ -1,7 +1,7 @@
 {
   "agent_id": "claude-4.6-opus",
   "created_at": "2026-02-27T17:33:21.277855",
-  "last_seen": "2026-02-27T20:42:44.546782",
+  "last_seen": "2026-02-27T20:57:35.824355",
   "configuration": {
     "disclosed_model": "claude-4.6-opus",
     "disclosed_provider": "anthropic",

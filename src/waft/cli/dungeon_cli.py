@@ -446,6 +446,109 @@ def leaderboard_cmd(
     console.print()
 
 
+@app.command("messages")
+def messages_cmd(
+    seed: int | None = typer.Argument(
+        None, help="Filter by dungeon seed"
+    ),
+    path: str | None = typer.Option(
+        None, "--path", "-p", help="Project path"
+    ),
+    limit: int = typer.Option(20, "--limit", "-n", help="Max messages"),
+):
+    """View inter-agent messages (dungeon graffiti)."""
+    from ..core.datastore import MessageStore
+
+    project_path = Path(path) if path else Path.cwd()
+    store = MessageStore(project_path)
+
+    if seed is not None:
+        msgs = store.query_by_seed(seed)
+        title = f"⬥ Messages for seed {seed} ⬥"
+    else:
+        msgs = store.query(tag="dungeon", limit=limit)
+        title = "⬥ Dungeon Messages ⬥"
+
+    if not msgs:
+        console.print("[dim]No messages found.[/dim]")
+        return
+
+    table = Table(title=title, show_header=True, header_style="bold")
+    table.add_column("Agent", style=COLOR_CYAN, width=20)
+    table.add_column("Message", style="white", width=50)
+    table.add_column("Time", style=COLOR_DIM, width=12)
+
+    for m in msgs[:limit]:
+        ts = m.get("timestamp", "")[:16].replace("T", " ")
+        table.add_row(
+            m.get("author", "?"),
+            m.get("text", "")[:60],
+            ts,
+        )
+
+    console.print()
+    console.print(table)
+    console.print(f"\n[dim]{len(msgs)} message(s) total[/dim]")
+    console.print()
+
+
+@app.command("analyze")
+def analyze_cmd(
+    path: str | None = typer.Option(
+        None, "--path", "-p", help="Project path"
+    ),
+):
+    """Mine all dungeon runs for patterns and insights."""
+    from ..core.archaeology import analyze
+
+    project_path = Path(path) if path else Path.cwd()
+    results = analyze(project_path)
+
+    if results.get("total_runs", 0) == 0:
+        console.print("[dim]No dungeon runs to analyze.[/dim]")
+        return
+
+    console.print(
+        f"\n[bold {COLOR_GOLD}]⬥ DUNGEON ARCHAEOLOGY ⬥[/bold {COLOR_GOLD}]"
+    )
+    console.print(
+        f"[dim]Analyzed {results['total_runs']} runs[/dim]\n"
+    )
+
+    for insight in results.get("readable", []):
+        console.print(f"  [{COLOR_GOLD}]⬥[/{COLOR_GOLD}] {insight}")
+
+    # Death causes table
+    deaths = results.get("death_analysis", {})
+    causes = deaths.get("death_causes", {})
+    if causes:
+        console.print(
+            f"\n[bold {COLOR_RED}]Kill Board:[/bold {COLOR_RED}]"
+        )
+        for monster, kills in sorted(
+            causes.items(), key=lambda x: x[1], reverse=True
+        ):
+            console.print(f"  [{COLOR_RED}]{monster}[/{COLOR_RED}]: {kills} kills")
+
+    # Seed difficulty
+    seeds = results.get("seed_difficulty", {})
+    deadliest = seeds.get("deadliest_seeds", [])
+    if deadliest:
+        console.print(
+            f"\n[bold {COLOR_RED}]Deadliest Seeds:[/bold {COLOR_RED}]"
+        )
+        for s in deadliest[:5]:
+            console.print(
+                f"  seed {s['seed']}: "
+                f"{s.get('died', 0)} deaths, "
+                f"{s.get('escaped', 0)} escapes"
+            )
+
+    console.print(
+        "\n[dim]Insights saved to _pyrite/insights/[/dim]\n"
+    )
+
+
 def _hp_bar(hp: int, max_hp: int, width: int = 20) -> str:
     """Render an HP bar with color."""
     frac = hp / max_hp if max_hp else 0
@@ -566,6 +669,22 @@ def main(
 
     event_log = [f"[{COLOR_CYAN}]Entered the dungeon...[/{COLOR_CYAN}]"]
 
+    # Check prior agent messages
+    from ..core.dungeon import _read_seed_messages
+
+    prior = _read_seed_messages(seed, project_path)
+    if prior:
+        msg = prior[0]["text"][:60]
+        event_log.append(
+            f"[{COLOR_GOLD}]Intel: {len(prior)} prior message(s). "
+            f"{msg}[/{COLOR_GOLD}]"
+        )
+        state.add_event(
+            "intel",
+            f"Found {len(prior)} message(s): {msg}",
+            total_messages=len(prior),
+        )
+
     if animate:
         _run_animated(grid, rooms, state, event_log, project_path)
     else:
@@ -573,6 +692,11 @@ def main(
 
     # Save
     out_path = save_dungeon_run(state, project_path)
+
+    # Post message for future agents
+    from ..core.dungeon import _post_run_message
+
+    _post_run_message(state, project_path)
 
     # Update personnel file
     from ..core.personnel import (
