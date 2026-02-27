@@ -14,6 +14,22 @@ from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from pathlib import Path
 
+# --- Constants ---
+
+RUN_ID_PREFIX = "AWK"
+RUNS_DIR = Path("_pyrite") / "awakening" / "runs"
+
+PHASE_ORIENT = "orient"
+PHASE_EXPLORE = "explore"
+PHASE_CHALLENGE = "challenge"
+PHASE_REFLECT = "reflect"
+
+DEFAULT_AGENT_ID = "unknown"
+DEFAULT_ABILITIES = ("wisdom", "intelligence", "charisma")
+DEFAULT_DC = 10
+DEFAULT_DEALER_ATTEMPTS = 3
+DEFAULT_REFLECT_MOOD = "contemplative"
+
 
 @dataclass
 class AwakeningStep:
@@ -22,7 +38,9 @@ class AwakeningStep:
     phase: str
     action: str
     result: dict
-    timestamp: str = field(default_factory=lambda: datetime.utcnow().isoformat())
+    timestamp: str = field(
+        default_factory=lambda: datetime.utcnow().isoformat()
+    )
     narrative: str = ""
     dice_roll: dict | None = None
 
@@ -61,14 +79,17 @@ class AwakeningRun:
         return (end - start).total_seconds()
 
 
+# --- Storage ---
+
+
 def _generate_run_id() -> str:
     ts = datetime.utcnow().strftime("%Y%m%d-%H%M%S")
     suffix = f"{random.randint(0, 0xFFFF):04x}"
-    return f"AWK-{ts}-{suffix}"
+    return f"{RUN_ID_PREFIX}-{ts}-{suffix}"
 
 
 def _runs_dir(project_path: Path) -> Path:
-    d = project_path / "_pyrite" / "awakening" / "runs"
+    d = project_path / RUNS_DIR
     d.mkdir(parents=True, exist_ok=True)
     return d
 
@@ -95,17 +116,20 @@ def load_run(run_id: str, project_path: Path) -> AwakeningRun | None:
 def list_runs(project_path: Path) -> list[dict]:
     """List all saved runs with summary info."""
     runs = []
-    for f in sorted(_runs_dir(project_path).glob("AWK-*.json"), reverse=True):
+    pattern = f"{RUN_ID_PREFIX}-*.json"
+    for f in sorted(_runs_dir(project_path).glob(pattern), reverse=True):
         try:
             data = json.loads(f.read_text())
             runs.append(
                 {
                     "run_id": data["run_id"],
-                    "agent_id": data.get("agent_id", "unknown"),
+                    "agent_id": data.get("agent_id", DEFAULT_AGENT_ID),
                     "started_at": data.get("started_at", ""),
                     "steps": len(data.get("steps", [])),
                     "discoveries": len(data.get("discoveries", [])),
-                    "dealer_encounters": len(data.get("dealer_encounters", [])),
+                    "dealer_encounters": len(
+                        data.get("dealer_encounters", [])
+                    ),
                     "summary": data.get("summary", "")[:80],
                 }
             )
@@ -126,9 +150,13 @@ def _orient(run: AwakeningRun, project_path: Path) -> dict:
         text = pyproject.read_text()
         for line in text.splitlines():
             if line.strip().startswith("name ="):
-                info["project_name"] = line.split('"')[1] if '"' in line else "unknown"
+                info["project_name"] = (
+                    line.split('"')[1] if '"' in line else "unknown"
+                )
             if line.strip().startswith("version ="):
-                info["project_version"] = line.split('"')[1] if '"' in line else "unknown"
+                info["project_version"] = (
+                    line.split('"')[1] if '"' in line else "unknown"
+                )
 
     info["has_pyrite"] = (project_path / "_pyrite").is_dir()
     info["has_pantheon"] = (project_path / "_pantheon").is_dir()
@@ -145,7 +173,7 @@ def _orient(run: AwakeningRun, project_path: Path) -> dict:
             pass
 
     step = AwakeningStep(
-        phase="orient",
+        phase=PHASE_ORIENT,
         action="scan_environment",
         result=info,
         narrative=(
@@ -154,7 +182,8 @@ def _orient(run: AwakeningRun, project_path: Path) -> dict:
             f"{'Pyrite active. ' if info.get('has_pyrite') else ''}"
             f"{'Pantheon stands. ' if info.get('has_pantheon') else ''}"
             f"{'Tests exist. ' if info.get('has_tests') else ''}"
-            f"Dealer encountered {info.get('dealer_encounters', 0)} times."
+            f"Dealer encountered "
+            f"{info.get('dealer_encounters', 0)} times."
         ),
     )
     run.add_step(step)
@@ -169,37 +198,41 @@ def _check_character(run: AwakeningRun, project_path: Path) -> dict:
     char = keeper.get_character()
 
     step = AwakeningStep(
-        phase="orient",
+        phase=PHASE_ORIENT,
         action="check_character",
         result=char,
-        narrative=f"I am Level {char.get('level', 1)}. "
-        f"HP: {char.get('hp', '?')}/{char.get('max_hp', '?')}. "
-        f"Integrity: {char.get('integrity', '?')}%. "
-        f"Insight: {char.get('insight', 0)}.",
+        narrative=(
+            f"I am Level {char.get('level', 1)}. "
+            f"HP: {char.get('hp', '?')}/{char.get('max_hp', '?')}. "
+            f"Integrity: {char.get('integrity', '?')}%. "
+            f"Insight: {char.get('insight', 0)}."
+        ),
     )
     run.add_step(step)
     return char
 
 
-def _roll_ability(run: AwakeningRun, project_path: Path, ability: str) -> dict:
+def _roll_ability(
+    run: AwakeningRun, project_path: Path, ability: str
+) -> dict:
     """Phase 3: Roll dice — test fate."""
     from ..core.tavern_keeper import TavernKeeper
 
     keeper = TavernKeeper(project_path)
-    result = keeper.roll_check(ability, dc=10)
+    result = keeper.roll_check(ability, dc=DEFAULT_DC)
 
     roll_data = {
         "ability": ability,
         "roll": result.get("roll", 0),
         "modifier": result.get("modifier", 0),
         "total": result.get("total", 0),
-        "dc": result.get("dc", 10),
+        "dc": result.get("dc", DEFAULT_DC),
         "success": result.get("success", False),
         "outcome": result.get("outcome", ""),
     }
 
     step = AwakeningStep(
-        phase="explore",
+        phase=PHASE_EXPLORE,
         action=f"roll_{ability}",
         result=roll_data,
         dice_roll=roll_data,
@@ -243,26 +276,38 @@ def _challenge_dealer(run: AwakeningRun, project_path: Path) -> dict:
 
     run.dealer_encounters.append(encounter)
 
-    outcome = "VICTORY — Seal broken!" if encounter["won"] else "DEFEAT — The House wins."
+    won_msg = "VICTORY — Seal broken!"
+    lost_msg = "DEFEAT — The House wins."
+    outcome = won_msg if encounter["won"] else lost_msg
     step = AwakeningStep(
-        phase="challenge",
+        phase=PHASE_CHALLENGE,
         action="face_the_dealer",
         result=encounter,
-        narrative=f"Gate {encounter['gate']}: {gate_name} / {casino_name}. "
-        f"I draw {system_card}. The Dealer draws {dealer_card}. "
-        f"{outcome}",
+        narrative=(
+            f"Gate {encounter['gate']}: "
+            f"{gate_name} / {casino_name}. "
+            f"I draw {system_card}. "
+            f"The Dealer draws {dealer_card}. "
+            f"{outcome}"
+        ),
     )
     run.add_step(step)
 
     if encounter["won"]:
         run.add_discovery(
-            f"Broke Gate {encounter['gate']} ({gate_name}): {system_card} vs {dealer_card}"
+            f"Broke Gate {encounter['gate']} ({gate_name}): "
+            f"{system_card} vs {dealer_card}"
         )
 
     return encounter
 
 
-def _observe(run: AwakeningRun, project_path: Path, text: str, mood: str = "reflective") -> dict:
+def _observe(
+    run: AwakeningRun,
+    project_path: Path,
+    text: str,
+    mood: str = DEFAULT_REFLECT_MOOD,
+) -> dict:
     """Phase 5: Observe — log an observation to the chronicle."""
     from ..core.tavern_keeper import Narrator, TavernKeeper
 
@@ -272,7 +317,7 @@ def _observe(run: AwakeningRun, project_path: Path, text: str, mood: str = "refl
 
     obs = {"text": text, "mood": mood}
     step = AwakeningStep(
-        phase="reflect",
+        phase=PHASE_REFLECT,
         action="observe",
         result=obs,
         narrative=text,
@@ -306,8 +351,8 @@ def _generate_summary(run: AwakeningRun) -> str:
 
 def run_awakening(
     project_path: Path,
-    agent_id: str = "claude-4.6-opus",
-    dealer_attempts: int = 3,
+    agent_id: str = DEFAULT_AGENT_ID,
+    dealer_attempts: int = DEFAULT_DEALER_ATTEMPTS,
     abilities_to_roll: list[str] | None = None,
 ) -> AwakeningRun:
     """
@@ -317,7 +362,7 @@ def run_awakening(
     reflects, and produces a structured run log.
     """
     if abilities_to_roll is None:
-        abilities_to_roll = ["wisdom", "intelligence", "charisma"]
+        abilities_to_roll = list(DEFAULT_ABILITIES)
 
     run = AwakeningRun(
         run_id=_generate_run_id(),
@@ -348,7 +393,7 @@ def run_awakening(
         f"integrity {char_info.get('integrity', '?')}%. "
         f"{len(run.discoveries)} discoveries. {dealer_msg}"
     )
-    _observe(run, project_path, reflection, mood="contemplative")
+    _observe(run, project_path, reflection, mood=DEFAULT_REFLECT_MOOD)
 
     # Finalize
     run.ended_at = datetime.utcnow().isoformat()
@@ -359,7 +404,5 @@ def run_awakening(
     }
     run.summary = _generate_summary(run)
 
-    # Save
     save_run(run, project_path)
-
     return run

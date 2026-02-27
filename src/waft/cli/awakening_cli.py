@@ -17,6 +17,11 @@ from rich.table import Table
 from rich.text import Text
 
 from ..core.awakening import (
+    DEFAULT_ABILITIES,
+    DEFAULT_AGENT_ID,
+    DEFAULT_DEALER_ATTEMPTS,
+    DEFAULT_REFLECT_MOOD,
+    PHASE_CHALLENGE,
     AwakeningRun,
     AwakeningStep,
     _challenge_dealer,
@@ -40,21 +45,36 @@ app = typer.Typer(
 
 console = Console()
 
-GOLD = "#FFD700"
-CYAN = "#00FFFF"
-RED = "#D32F2F"
-GREEN = "#4CAF50"
-DIM = "#757575"
+# --- Display Constants ---
+
+COLOR_GOLD = "#FFD700"
+COLOR_CYAN = "#00FFFF"
+COLOR_RED = "#D32F2F"
+COLOR_GREEN = "#4CAF50"
+COLOR_DIM = "#757575"
+
+PHASE_COLORS = {
+    "orient": COLOR_CYAN,
+    "explore": COLOR_GOLD,
+    "challenge": COLOR_RED,
+    "reflect": COLOR_GREEN,
+}
+
+DEFAULT_LIST_LIMIT = 20
+PHASE_SEPARATOR_WIDTH = 60
 
 
 def _phase_color(phase: str) -> str:
-    return {"orient": CYAN, "explore": GOLD, "challenge": RED, "reflect": GREEN}.get(phase, DIM)
+    return PHASE_COLORS.get(phase, COLOR_DIM)
 
 
 def _render_step_live(step: AwakeningStep, index: int) -> Panel:
     """Render a single step as a Rich panel for live display."""
     color = _phase_color(step.phase)
-    header = f"[{color}]Step {index + 1}: {step.phase.upper()} / {step.action}[/{color}]"
+    header = (
+        f"[{color}]Step {index + 1}: "
+        f"{step.phase.upper()} / {step.action}[/{color}]"
+    )
 
     content = Text()
     content.append(step.narrative or "(no narrative)", style="white")
@@ -62,13 +82,17 @@ def _render_step_live(step: AwakeningStep, index: int) -> Panel:
     if step.dice_roll:
         roll = step.dice_roll
         result_style = "green" if roll.get("success") else "red"
-        r = roll.get('roll', '?')
-        m, t = roll.get('modifier', '?'), roll.get('total', '?')
-        dc = roll.get('dc', '?')
-        content.append(f"\n  🎲 {r} + {m} = {t} vs DC {dc} ", style="dim")
-        content.append(f"[{result_style}]{'✓' if roll.get('success') else '✗'}[/{result_style}]")
+        r = roll.get("roll", "?")
+        m = roll.get("modifier", "?")
+        t = roll.get("total", "?")
+        dc = roll.get("dc", "?")
+        content.append(
+            f"\n  🎲 {r} + {m} = {t} vs DC {dc} ", style="dim"
+        )
+        icon = "✓" if roll.get("success") else "✗"
+        content.append(f"[{result_style}]{icon}[/{result_style}]")
 
-    if step.phase == "challenge":
+    if step.phase == PHASE_CHALLENGE:
         won = step.result.get("won", False)
         icon = "⬥ VICTORY ⬥" if won else "✗ DEFEAT ✗"
         style = "bold green" if won else "bold red"
@@ -80,12 +104,21 @@ def _render_step_live(step: AwakeningStep, index: int) -> Panel:
 @app.callback()
 def main(
     ctx: typer.Context,
-    path: str | None = typer.Option(None, "--path", "-p", help="Project path"),
-    agent_id: str = typer.Option("claude-4.6-opus", "--agent", "-a", help="Agent identifier"),
-    attempts: int = typer.Option(3, "--attempts", "-n", help="Dealer challenge attempts"),
+    path: str | None = typer.Option(
+        None, "--path", "-p", help="Project path"
+    ),
+    agent_id: str = typer.Option(
+        DEFAULT_AGENT_ID, "--agent", "-a", help="Agent identifier"
+    ),
+    attempts: int = typer.Option(
+        DEFAULT_DEALER_ATTEMPTS,
+        "--attempts",
+        "-n",
+        help="Dealer challenge attempts",
+    ),
     quiet: bool = typer.Option(False, "--quiet", "-q", help="Minimal output"),
 ):
-    """Run a new awakening experience (default when no subcommand given)."""
+    """Run a new awakening experience (default when no subcommand)."""
     if ctx.invoked_subcommand is not None:
         return
 
@@ -95,9 +128,11 @@ def main(
         console.print()
         console.print(
             Panel(
-                Align.center(Text("THE AWAKENING", style=f"bold {GOLD}")),
+                Align.center(
+                    Text("THE AWAKENING", style=f"bold {COLOR_GOLD}")
+                ),
                 subtitle="[dim]An AI wakes up in the laboratory[/dim]",
-                border_style=GOLD,
+                border_style=COLOR_GOLD,
                 padding=(1, 4),
             )
         )
@@ -113,7 +148,7 @@ def main(
 
     # Phase 1: Orient
     if not quiet:
-        console.print(f"[{CYAN}]▸ Phase 1: ORIENT[/{CYAN}]")
+        console.print(f"[{COLOR_CYAN}]▸ Phase 1: ORIENT[/{COLOR_CYAN}]")
     env_info = _orient(run, project_path)
     if not quiet:
         console.print(_render_step_live(run.steps[-1], len(run.steps) - 1))
@@ -124,34 +159,41 @@ def main(
 
     # Phase 2: Explore
     if not quiet:
-        console.print(f"\n[{GOLD}]▸ Phase 2: EXPLORE[/{GOLD}]")
-    for ability in ["wisdom", "intelligence", "charisma"]:
+        console.print(f"\n[{COLOR_GOLD}]▸ Phase 2: EXPLORE[/{COLOR_GOLD}]")
+    for ability in DEFAULT_ABILITIES:
         _roll_ability(run, project_path, ability)
         if not quiet:
-            console.print(_render_step_live(run.steps[-1], len(run.steps) - 1))
+            console.print(
+                _render_step_live(run.steps[-1], len(run.steps) - 1)
+            )
 
     # Phase 3: Challenge
     if not quiet:
-        console.print(f"\n[{RED}]▸ Phase 3: CHALLENGE THE DEALER[/{RED}]")
+        console.print(
+            f"\n[{COLOR_RED}]▸ Phase 3: CHALLENGE THE DEALER[/{COLOR_RED}]"
+        )
     for _i in range(attempts):
         encounter = _challenge_dealer(run, project_path)
         if not quiet:
-            console.print(_render_step_live(run.steps[-1], len(run.steps) - 1))
+            console.print(
+                _render_step_live(run.steps[-1], len(run.steps) - 1)
+            )
         if encounter.get("won"):
             break
 
     # Phase 4: Reflect
     if not quiet:
-        console.print(f"\n[{GREEN}]▸ Phase 4: REFLECT[/{GREEN}]")
+        console.print(f"\n[{COLOR_GREEN}]▸ Phase 4: REFLECT[/{COLOR_GREEN}]")
 
-    [s.narrative for s in run.steps if s.narrative]
+    dealer_won = any(e.get("won") for e in run.dealer_encounters)
+    dealer_msg = "Dealer defeated." if dealer_won else "Dealer unbeaten."
     reflection = (
         f"I awoke in {env_info.get('project_name', 'the laboratory')}. "
-        f"Level {char_info.get('level', 1)}, integrity {char_info.get('integrity', '?')}%. "
-        f"{len(run.discoveries)} discoveries made. "
-        f"{'Dealer defeated.' if any(e.get('won') for e in run.dealer_encounters) else 'Dealer unbeaten.'}"  # noqa: E501
+        f"Level {char_info.get('level', 1)}, "
+        f"integrity {char_info.get('integrity', '?')}%. "
+        f"{len(run.discoveries)} discoveries made. {dealer_msg}"
     )
-    _observe(run, project_path, reflection, mood="contemplative")
+    _observe(run, project_path, reflection, mood=DEFAULT_REFLECT_MOOD)
     if not quiet:
         console.print(_render_step_live(run.steps[-1], len(run.steps) - 1))
 
@@ -165,7 +207,6 @@ def main(
     run.summary = _generate_summary(run)
     out_path = save_run(run, project_path)
 
-    # Summary
     if not quiet:
         console.print()
         _render_run_summary(run)
@@ -177,15 +218,22 @@ def main(
 
 @app.command("list")
 def list_cmd(
-    path: str | None = typer.Option(None, "--path", "-p", help="Project path"),
-    limit: int = typer.Option(20, "--limit", "-n", help="Max runs to show"),
+    path: str | None = typer.Option(
+        None, "--path", "-p", help="Project path"
+    ),
+    limit: int = typer.Option(
+        DEFAULT_LIST_LIMIT, "--limit", "-n", help="Max runs to show"
+    ),
 ):
     """List past awakening runs."""
     project_path = Path(path) if path else Path.cwd()
     runs = list_runs(project_path)
 
     if not runs:
-        console.print("[dim]No awakening runs found. Run 'waft awaken' to start one.[/dim]")
+        console.print(
+            "[dim]No awakening runs found. "
+            "Run 'waft awaken' to start one.[/dim]"
+        )
         return
 
     table = Table(
@@ -197,11 +245,17 @@ def list_cmd(
     table.add_column("Agent", style="green", width=20)
     table.add_column("Date", style="dim", width=16)
     table.add_column("Steps", style="white", width=6, justify="right")
-    table.add_column("Discoveries", style="yellow", width=12, justify="right")
+    table.add_column(
+        "Discoveries", style="yellow", width=12, justify="right"
+    )
     table.add_column("Dealer", style="red", width=8, justify="right")
 
     for r in runs[:limit]:
-        date = r["started_at"][:16].replace("T", " ") if r["started_at"] else "?"
+        date = (
+            r["started_at"][:16].replace("T", " ")
+            if r["started_at"]
+            else "?"
+        )
         table.add_row(
             r["run_id"],
             r["agent_id"],
@@ -219,7 +273,9 @@ def list_cmd(
 @app.command("view")
 def view_cmd(
     run_id: str = typer.Argument(..., help="Run ID to view"),
-    path: str | None = typer.Option(None, "--path", "-p", help="Project path"),
+    path: str | None = typer.Option(
+        None, "--path", "-p", help="Project path"
+    ),
 ):
     """View a specific awakening run in rich detail (TUI)."""
     project_path = Path(path) if path else Path.cwd()
@@ -237,31 +293,41 @@ def _render_run_summary(run: AwakeningRun):
     wins = sum(1 for e in run.dealer_encounters if e.get("won"))
     losses = len(run.dealer_encounters) - wins
     rolls = [s for s in run.steps if s.dice_roll]
-    roll_successes = sum(1 for r in rolls if r.dice_roll.get("success"))
+    roll_successes = sum(
+        1 for r in rolls if r.dice_roll.get("success")
+    )
 
     content = Text()
-    content.append(f"Run: {run.run_id}\n", style=f"bold {CYAN}")
+    content.append(f"Run: {run.run_id}\n", style=f"bold {COLOR_CYAN}")
     content.append(f"Agent: {run.agent_id}\n", style="white")
-    content.append(f"Duration: {run.duration_seconds():.1f}s\n", style="dim")
+    content.append(
+        f"Duration: {run.duration_seconds():.1f}s\n", style="dim"
+    )
     content.append(f"Steps: {len(run.steps)} | ", style="white")
-    content.append(f"Discoveries: {len(run.discoveries)} | ", style="yellow")
-    content.append(f"Dice: {roll_successes}/{len(rolls)} | ", style="white")
+    content.append(
+        f"Discoveries: {len(run.discoveries)} | ", style="yellow"
+    )
+    content.append(
+        f"Dice: {roll_successes}/{len(rolls)} | ", style="white"
+    )
 
-    if wins > 0:
-        content.append(f"Dealer: {wins}W/{losses}L", style="bold green")
-    else:
-        content.append(f"Dealer: {wins}W/{losses}L", style="red")
+    dealer_style = "bold green" if wins > 0 else "red"
+    content.append(f"Dealer: {wins}W/{losses}L", style=dealer_style)
 
     if run.discoveries:
-        content.append("\n\nDiscoveries:", style=f"bold {GOLD}")
+        content.append("\n\nDiscoveries:", style=f"bold {COLOR_GOLD}")
         for d in run.discoveries:
             content.append(f"\n  ⬥ {d['text']}", style="yellow")
 
     console.print(
         Panel(
             content,
-            title=f"[bold {GOLD}]⬥ AWAKENING COMPLETE ⬥[/bold {GOLD}]",
-            border_style=GOLD,
+            title=(
+                f"[bold {COLOR_GOLD}]"
+                f"⬥ AWAKENING COMPLETE ⬥"
+                f"[/bold {COLOR_GOLD}]"
+            ),
+            border_style=COLOR_GOLD,
             padding=(1, 2),
         )
     )
@@ -272,17 +338,25 @@ def _render_run_tui(run: AwakeningRun):
     console.print()
     console.print(
         Panel(
-            Align.center(Text(f"AWAKENING RUN: {run.run_id}", style=f"bold {GOLD}")),
+            Align.center(
+                Text(
+                    f"AWAKENING RUN: {run.run_id}",
+                    style=f"bold {COLOR_GOLD}",
+                )
+            ),
             subtitle=f"[dim]{run.agent_id} | {run.started_at[:16]}[/dim]",
-            border_style=GOLD,
+            border_style=COLOR_GOLD,
             padding=(1, 4),
         )
     )
 
     # Timeline
+    step_count = len(run.steps)
+    duration = run.duration_seconds()
     console.print(
-        f"\n[bold {CYAN}]Timeline ({len(run.steps)} steps, "
-        f"{run.duration_seconds():.1f}s)[/bold {CYAN}]"
+        f"\n[bold {COLOR_CYAN}]Timeline "
+        f"({step_count} steps, {duration:.1f}s)"
+        f"[/bold {COLOR_CYAN}]"
     )
     console.print()
 
@@ -291,21 +365,30 @@ def _render_run_tui(run: AwakeningRun):
         if step.phase != current_phase:
             current_phase = step.phase
             color = _phase_color(current_phase)
-            console.print(f"[{color}]{'━' * 60}[/{color}]")
-            console.print(f"[bold {color}]  {current_phase.upper()}[/bold {color}]")
-            console.print(f"[{color}]{'━' * 60}[/{color}]")
+            sep = "━" * PHASE_SEPARATOR_WIDTH
+            console.print(f"[{color}]{sep}[/{color}]")
+            console.print(
+                f"[bold {color}]  {current_phase.upper()}[/bold {color}]"
+            )
+            console.print(f"[{color}]{sep}[/{color}]")
 
         console.print(_render_step_live(step, i))
 
     # Discoveries
     if run.discoveries:
-        console.print(f"\n[bold {GOLD}]⬥ Discoveries[/bold {GOLD}]")
+        console.print(
+            f"\n[bold {COLOR_GOLD}]⬥ Discoveries[/bold {COLOR_GOLD}]"
+        )
         for d in run.discoveries:
-            console.print(f"  [{GOLD}]⬥[/{GOLD}] {d['text']}")
+            console.print(f"  [{COLOR_GOLD}]⬥[/{COLOR_GOLD}] {d['text']}")
 
     # Dealer Encounters
     if run.dealer_encounters:
-        table = Table(title="Dealer Encounters", show_header=True, header_style="bold red")
+        table = Table(
+            title="Dealer Encounters",
+            show_header=True,
+            header_style="bold red",
+        )
         table.add_column("Gate", style="cyan", width=6)
         table.add_column("Name", style="white", width=15)
         table.add_column("System Card", style="green", width=20)
@@ -313,17 +396,20 @@ def _render_run_tui(run: AwakeningRun):
         table.add_column("Result", style="bold", width=10)
 
         for enc in run.dealer_encounters:
-            result = "[green]WIN[/green]" if enc.get("won") else "[red]LOSS[/red]"
+            result_text = (
+                "[green]WIN[/green]"
+                if enc.get("won")
+                else "[red]LOSS[/red]"
+            )
             table.add_row(
                 str(enc.get("gate", "?")),
                 enc.get("gate_name", "?"),
                 enc.get("system_card", "?"),
                 enc.get("dealer_card", "?"),
-                result,
+                result_text,
             )
         console.print()
         console.print(table)
 
-    # Summary
     console.print()
     _render_run_summary(run)
