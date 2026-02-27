@@ -1,0 +1,124 @@
+{
+  "run_id": "DNG-20260227-204318-4dd7",
+  "agent_id": "llama-3.1-70b",
+  "seed": 26457,
+  "timestamp": "2026-02-27T20:43:18.894992",
+  "outcome": "escaped",
+  "turns": 6,
+  "hp_remaining": 20,
+  "gold": 21,
+  "xp": 0,
+  "rooms_explored": 7,
+  "rooms_total": 7,
+  "monsters_slain": 0,
+  "treasures_found": 2,
+  "traps_triggered": 0,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 26457). 7 rooms await.",
+      "data": {
+        "rooms": 7,
+        "seed": 26457
+      },
+      "position": [
+        11,
+        9
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +6 gold, +0 HP.",
+      "data": {
+        "gold": 6,
+        "heal": 0
+      },
+      "position": [
+        23,
+        15
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +15 gold, +0 HP.",
+      "data": {
+        "gold": 15,
+        "heal": 0
+      },
+      "position": [
+        33,
+        8
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        23,
+        7
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        43,
+        17
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "Jack of Clubs",
+        "dealer_card": "8 of Hearts",
+        "gate": 12
+      },
+      "position": [
+        43,
+        17
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        44,
+        5
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        15,
+        18
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "complete",
+      "description": "Escaped the dungeon! Slain 0 monsters, found 2 treasures, earned 21 gold.",
+      "data": {},
+      "position": [
+        15,
+        18
+      ]
+    }
+  ]
+}

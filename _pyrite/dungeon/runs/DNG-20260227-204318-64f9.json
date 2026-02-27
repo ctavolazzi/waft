@@ -1,0 +1,128 @@
+{
+  "run_id": "DNG-20260227-204318-64f9",
+  "agent_id": "llama-3.1-70b",
+  "seed": 24662,
+  "timestamp": "2026-02-27T20:43:18.908166",
+  "outcome": "died",
+  "turns": 3,
+  "hp_remaining": -5,
+  "gold": 13,
+  "xp": 0,
+  "rooms_explored": 4,
+  "rooms_total": 8,
+  "monsters_slain": 0,
+  "treasures_found": 1,
+  "traps_triggered": 0,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 24662). 8 rooms await.",
+      "data": {
+        "rooms": 8,
+        "seed": 24662
+      },
+      "position": [
+        30,
+        15
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +13 gold, +0 HP.",
+      "data": {
+        "gold": 13,
+        "heal": 0
+      },
+      "position": [
+        12,
+        14
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        20,
+        8
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "3 of Hearts",
+        "dealer_card": "Queen of Clubs",
+        "gate": 12
+      },
+      "position": [
+        20,
+        8
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "encounter",
+      "description": "A Dragon lurches from the shadows!",
+      "data": {
+        "monster": "Dragon"
+      },
+      "position": [
+        28,
+        5
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "combat_loss",
+      "description": "The Dragon was too strong.",
+      "data": {
+        "won": false,
+        "rounds": 4,
+        "monster": "Dragon",
+        "log": [
+          "You hit Dragon for 5",
+          "Dragon hits you for 5",
+          "You hit Dragon for 4",
+          "Dragon hits you for 6",
+          "You hit Dragon for 6",
+          "Dragon hits you for 7",
+          "You hit Dragon for 3",
+          "Dragon hits you for 7"
+        ],
+        "xp_gained": 0
+      },
+      "position": [
+        28,
+        5
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "death",
+      "description": "You have fallen in the dungeon.",
+      "data": {},
+      "position": [
+        28,
+        5
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "complete",
+      "description": "Died on turn 3. Slain 0 monsters before falling.",
+      "data": {},
+      "position": [
+        28,
+        5
+      ]
+    }
+  ]
+}

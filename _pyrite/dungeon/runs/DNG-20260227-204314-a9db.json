@@ -1,0 +1,154 @@
+{
+  "run_id": "DNG-20260227-204314-a9db",
+  "agent_id": "claude-4.6-opus",
+  "seed": 41121,
+  "timestamp": "2026-02-27T20:43:14.967987",
+  "outcome": "escaped",
+  "turns": 5,
+  "hp_remaining": 9,
+  "gold": 0,
+  "xp": 45,
+  "rooms_explored": 6,
+  "rooms_total": 6,
+  "monsters_slain": 2,
+  "treasures_found": 0,
+  "traps_triggered": 1,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 41121). 6 rooms await.",
+      "data": {
+        "rooms": 6,
+        "seed": 41121
+      },
+      "position": [
+        39,
+        11
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        14,
+        18
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "4 of Diamonds",
+        "dealer_card": "7 of Hearts",
+        "gate": 12
+      },
+      "position": [
+        14,
+        18
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "encounter",
+      "description": "A Wraith lurches from the shadows!",
+      "data": {
+        "monster": "Wraith"
+      },
+      "position": [
+        7,
+        6
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "combat_win",
+      "description": "Defeated the Wraith! +30 XP.",
+      "data": {
+        "won": true,
+        "rounds": 2,
+        "monster": "Wraith",
+        "log": [
+          "You hit Wraith for 5",
+          "Wraith hits you for 4",
+          "You hit Wraith for 5"
+        ],
+        "xp_gained": 30
+      },
+      "position": [
+        7,
+        6
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "trap",
+      "description": "Triggered a trap! -3 HP.",
+      "data": {
+        "damage": 3
+      },
+      "position": [
+        31,
+        13
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "encounter",
+      "description": "A Skeleton lurches from the shadows!",
+      "data": {
+        "monster": "Skeleton"
+      },
+      "position": [
+        5,
+        16
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "combat_win",
+      "description": "Defeated the Skeleton! +15 XP.",
+      "data": {
+        "won": true,
+        "rounds": 2,
+        "monster": "Skeleton",
+        "log": [
+          "You hit Skeleton for 3",
+          "Skeleton hits you for 4",
+          "You hit Skeleton for 4"
+        ],
+        "xp_gained": 15
+      },
+      "position": [
+        5,
+        16
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        20,
+        11
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "complete",
+      "description": "Escaped the dungeon! Slain 2 monsters, found 0 treasures, earned 0 gold.",
+      "data": {},
+      "position": [
+        20,
+        11
+      ]
+    }
+  ]
+}

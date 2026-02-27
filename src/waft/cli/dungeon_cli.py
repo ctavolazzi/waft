@@ -339,6 +339,113 @@ def batch_cmd(
     console.print()
 
 
+@app.command("leaderboard")
+def leaderboard_cmd(
+    path: str | None = typer.Option(
+        None, "--path", "-p", help="Project path"
+    ),
+    limit: int = typer.Option(
+        10, "--limit", "-n", help="Top N entries"
+    ),
+):
+    """Show the all-time dungeon leaderboard by agent."""
+    import json
+
+    from ..core.dungeon import DUNGEON_RUNS_DIR
+
+    project_path = Path(path) if path else Path.cwd()
+    runs_dir = project_path / DUNGEON_RUNS_DIR
+
+    if not runs_dir.exists():
+        console.print("[dim]No dungeon runs found.[/dim]")
+        return
+
+    runs = []
+    for f in runs_dir.glob("DNG-*.json"):
+        try:
+            runs.append(json.loads(f.read_text()))
+        except (json.JSONDecodeError, KeyError):
+            continue
+
+    if not runs:
+        console.print("[dim]No dungeon runs found.[/dim]")
+        return
+
+    # Agent stats
+    agents = {}
+    for r in runs:
+        aid = r.get("agent_id", "unknown")
+        if aid not in agents:
+            agents[aid] = {
+                "runs": 0,
+                "escaped": 0,
+                "died": 0,
+                "total_gold": 0,
+                "total_monsters": 0,
+                "total_turns": 0,
+                "best_gold": 0,
+                "best_seed": 0,
+            }
+        a = agents[aid]
+        a["runs"] += 1
+        if r.get("outcome") == "escaped":
+            a["escaped"] += 1
+        elif r.get("outcome") == "died":
+            a["died"] += 1
+        a["total_gold"] += r.get("gold", 0)
+        a["total_monsters"] += r.get("monsters_slain", 0)
+        a["total_turns"] += r.get("turns", 0)
+        gold = r.get("gold", 0)
+        if gold > a["best_gold"]:
+            a["best_gold"] = gold
+            a["best_seed"] = r.get("seed", 0)
+
+    # Sort by escape rate then total gold
+    sorted_agents = sorted(
+        agents.items(),
+        key=lambda x: (
+            x[1]["escaped"] / max(x[1]["runs"], 1),
+            x[1]["total_gold"],
+        ),
+        reverse=True,
+    )
+
+    table = Table(
+        title="⬥ Dungeon Leaderboard ⬥",
+        show_header=True,
+        header_style=f"bold {COLOR_GOLD}",
+    )
+    table.add_column("#", style=COLOR_DIM, width=3)
+    table.add_column("Agent", style=COLOR_CYAN, width=22)
+    table.add_column("Runs", style="white", width=5, justify="right")
+    table.add_column(
+        "Escape %", style=COLOR_GREEN, width=9, justify="right"
+    )
+    table.add_column(
+        "Gold", style=COLOR_GOLD, width=6, justify="right"
+    )
+    table.add_column(
+        "Kills", style=COLOR_RED, width=6, justify="right"
+    )
+    table.add_column("Best Run", style=COLOR_DIM, width=16)
+
+    for rank, (aid, a) in enumerate(sorted_agents[:limit], 1):
+        esc_rate = a["escaped"] / max(a["runs"], 1)
+        table.add_row(
+            str(rank),
+            aid,
+            str(a["runs"]),
+            f"{esc_rate:.0%}",
+            str(a["total_gold"]),
+            str(a["total_monsters"]),
+            f"seed {a['best_seed']} (G{a['best_gold']})",
+        )
+
+    console.print()
+    console.print(table)
+    console.print()
+
+
 def _hp_bar(hp: int, max_hp: int, width: int = 20) -> str:
     """Render an HP bar with color."""
     frac = hp / max_hp if max_hp else 0

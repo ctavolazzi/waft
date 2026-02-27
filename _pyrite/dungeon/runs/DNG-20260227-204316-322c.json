@@ -1,0 +1,141 @@
+{
+  "run_id": "DNG-20260227-204316-322c",
+  "agent_id": "gemini-2.0-flash",
+  "seed": 363,
+  "timestamp": "2026-02-27T20:43:16.947597",
+  "outcome": "died",
+  "turns": 4,
+  "hp_remaining": -1,
+  "gold": 25,
+  "xp": 0,
+  "rooms_explored": 5,
+  "rooms_total": 9,
+  "monsters_slain": 0,
+  "treasures_found": 2,
+  "traps_triggered": 0,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 363). 9 rooms await.",
+      "data": {
+        "rooms": 9,
+        "seed": 363
+      },
+      "position": [
+        37,
+        8
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +19 gold, +0 HP.",
+      "data": {
+        "gold": 19,
+        "heal": 0
+      },
+      "position": [
+        9,
+        19
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +6 gold, +0 HP.",
+      "data": {
+        "gold": 6,
+        "heal": 0
+      },
+      "position": [
+        30,
+        7
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        21,
+        17
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "9 of Hearts",
+        "dealer_card": "Ace of Clubs",
+        "gate": 12
+      },
+      "position": [
+        21,
+        17
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "encounter",
+      "description": "A Dragon lurches from the shadows!",
+      "data": {
+        "monster": "Dragon"
+      },
+      "position": [
+        43,
+        4
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "combat_loss",
+      "description": "The Dragon was too strong.",
+      "data": {
+        "won": false,
+        "rounds": 4,
+        "monster": "Dragon",
+        "log": [
+          "You hit Dragon for 4",
+          "Dragon hits you for 6",
+          "You hit Dragon for 4",
+          "Dragon hits you for 4",
+          "You hit Dragon for 4",
+          "Dragon hits you for 6",
+          "You hit Dragon for 1",
+          "Dragon hits you for 5"
+        ],
+        "xp_gained": 0
+      },
+      "position": [
+        43,
+        4
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "death",
+      "description": "You have fallen in the dungeon.",
+      "data": {},
+      "position": [
+        43,
+        4
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "complete",
+      "description": "Died on turn 4. Slain 0 monsters before falling.",
+      "data": {},
+      "position": [
+        43,
+        4
+      ]
+    }
+  ]
+}

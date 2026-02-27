@@ -68,9 +68,31 @@ ENCOUNTER_WEIGHTS = {
     "dealer": 5,
 }
 
-# AI decision weights
-AI_EXPLORE_WEIGHT = 10
+# AI decision defaults
 AI_FLEE_HP_THRESHOLD = 0.3
+
+
+def _agent_personality(agent_id: str) -> dict:
+    """
+    Derive a deterministic personality from agent_id.
+
+    Different agents make different decisions on the same seed.
+    The personality is a dict of floats [0, 1] controlling behavior:
+      - aggression: prefer monster rooms vs avoid them
+      - greed: prefer treasure rooms
+      - caution: flee HP threshold (higher = more cautious)
+      - exploration: prefer distant rooms vs nearest
+    """
+    import hashlib
+
+    h = hashlib.sha256(agent_id.encode()).digest()
+    return {
+        "aggression": h[0] / 255,
+        "greed": h[1] / 255,
+        "caution": 0.15 + (h[2] / 255) * 0.45,
+        "exploration": h[3] / 255,
+        "combat_luck": h[4] / 255,
+    }
 
 
 # --- Data Structures ---
@@ -413,32 +435,26 @@ def _find_path_bfs(
 def _pick_target(
     rooms: list[Room], state: GameState
 ) -> Room | None:
-    """AI picks the next room to explore. Saves exit for last."""
+    """AI picks the next room based on agent personality."""
+    personality = _agent_personality(state.agent_id)
     unexplored = [r for r in rooms if not r.explored]
     non_exit = [r for r in unexplored if r.encounter != "exit"]
 
-    # If critically low HP, head for exit
-    if state.hp_fraction < AI_FLEE_HP_THRESHOLD:
+    # Flee threshold is personality-driven
+    if state.hp_fraction < personality["caution"]:
         exit_rooms = [r for r in rooms if r.encounter == "exit"]
         if exit_rooms:
             return exit_rooms[0]
 
-    # Explore non-exit rooms first
     if non_exit:
-        return min(
-            non_exit,
-            key=lambda r: abs(r.center[0] - state.player_x)
-            + abs(r.center[1] - state.player_y),
-        )
+        return _score_rooms(non_exit, state, personality)
 
-    # All non-exit rooms explored — head for exit
     exit_unexplored = [
         r for r in unexplored if r.encounter == "exit"
     ]
     if exit_unexplored:
         return exit_unexplored[0]
 
-    # Everything explored — try exit even if already visited
     exit_rooms = [r for r in rooms if r.encounter == "exit"]
     if exit_rooms and not state.escaped:
         return exit_rooms[0]
@@ -446,11 +462,45 @@ def _pick_target(
     return None
 
 
+def _score_rooms(
+    rooms: list[Room],
+    state: GameState,
+    personality: dict,
+) -> Room:
+    """Score rooms by personality-weighted preferences."""
+
+    def score(room: Room) -> float:
+        dist = (
+            abs(room.center[0] - state.player_x)
+            + abs(room.center[1] - state.player_y)
+        )
+        # Base: prefer closer rooms, exploration personality inverts this
+        exploration_weight = personality["exploration"]
+        base = -dist if exploration_weight < 0.5 else dist * 0.5
+
+        # Encounter preferences
+        if room.encounter == "monster":
+            base += (personality["aggression"] - 0.5) * 20
+        elif room.encounter == "treasure":
+            base += personality["greed"] * 15
+        elif room.encounter == "trap":
+            base -= 5
+        elif room.encounter == "dealer":
+            base += personality["aggression"] * 10
+
+        return base
+
+    return max(rooms, key=score)
+
+
 # --- Combat ---
 
 
 def _resolve_combat(state: GameState, monster: dict) -> dict:
-    """Simple combat: trade blows until one side dies."""
+    """Combat with personality-influenced luck."""
+    personality = _agent_personality(state.agent_id)
+    luck_bonus = int(personality["combat_luck"] * 3)
+
     m_hp = monster["hp"]
     m_atk = monster["attack"]
     m_name = monster["name"]
@@ -460,7 +510,7 @@ def _resolve_combat(state: GameState, monster: dict) -> dict:
     while m_hp > 0 and state.player_hp > 0:
         rounds += 1
         p_roll = random.randint(1, 20)
-        p_dmg = max(1, p_roll // 4 + state.player_level)
+        p_dmg = max(1, p_roll // 4 + state.player_level + luck_bonus)
         m_hp -= p_dmg
         log.append(f"You hit {m_name} for {p_dmg}")
 

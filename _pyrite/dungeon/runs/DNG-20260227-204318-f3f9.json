@@ -1,0 +1,152 @@
+{
+  "run_id": "DNG-20260227-204318-f3f9",
+  "agent_id": "llama-3.1-70b",
+  "seed": 76473,
+  "timestamp": "2026-02-27T20:43:18.896679",
+  "outcome": "escaped",
+  "turns": 7,
+  "hp_remaining": 12,
+  "gold": 0,
+  "xp": 15,
+  "rooms_explored": 8,
+  "rooms_total": 8,
+  "monsters_slain": 1,
+  "treasures_found": 0,
+  "traps_triggered": 1,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 76473). 8 rooms await.",
+      "data": {
+        "rooms": 8,
+        "seed": 76473
+      },
+      "position": [
+        15,
+        18
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "encounter",
+      "description": "A Skeleton lurches from the shadows!",
+      "data": {
+        "monster": "Skeleton"
+      },
+      "position": [
+        7,
+        12
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "combat_win",
+      "description": "Defeated the Skeleton! +15 XP.",
+      "data": {
+        "won": true,
+        "rounds": 2,
+        "monster": "Skeleton",
+        "log": [
+          "You hit Skeleton for 2",
+          "Skeleton hits you for 3",
+          "You hit Skeleton for 5"
+        ],
+        "xp_gained": 15
+      },
+      "position": [
+        7,
+        12
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        4,
+        4
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "6 of Hearts",
+        "dealer_card": "7 of Diamonds",
+        "gate": 12
+      },
+      "position": [
+        4,
+        4
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        19,
+        10
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        28,
+        8
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        31,
+        19
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "trap",
+      "description": "Triggered a trap! -5 HP.",
+      "data": {
+        "damage": 5
+      },
+      "position": [
+        40,
+        10
+      ]
+    },
+    {
+      "turn": 7,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        13,
+        12
+      ]
+    },
+    {
+      "turn": 7,
+      "event_type": "complete",
+      "description": "Escaped the dungeon! Slain 1 monsters, found 0 treasures, earned 0 gold.",
+      "data": {},
+      "position": [
+        13,
+        12
+      ]
+    }
+  ]
+}

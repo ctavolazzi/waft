@@ -1,0 +1,90 @@
+{
+  "run_id": "DNG-20260227-204314-a720",
+  "agent_id": "claude-4.6-opus",
+  "seed": 75580,
+  "timestamp": "2026-02-27T20:43:14.981254",
+  "outcome": "died",
+  "turns": 1,
+  "hp_remaining": -6,
+  "gold": 0,
+  "xp": 0,
+  "rooms_explored": 2,
+  "rooms_total": 9,
+  "monsters_slain": 0,
+  "treasures_found": 0,
+  "traps_triggered": 0,
+  "dealer_encountered": false,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 75580). 9 rooms await.",
+      "data": {
+        "rooms": 9,
+        "seed": 75580
+      },
+      "position": [
+        43,
+        14
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "encounter",
+      "description": "A Dragon lurches from the shadows!",
+      "data": {
+        "monster": "Dragon"
+      },
+      "position": [
+        4,
+        18
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "combat_loss",
+      "description": "The Dragon was too strong.",
+      "data": {
+        "won": false,
+        "rounds": 4,
+        "monster": "Dragon",
+        "log": [
+          "You hit Dragon for 6",
+          "Dragon hits you for 5",
+          "You hit Dragon for 4",
+          "Dragon hits you for 7",
+          "You hit Dragon for 3",
+          "Dragon hits you for 7",
+          "You hit Dragon for 4",
+          "Dragon hits you for 7"
+        ],
+        "xp_gained": 0
+      },
+      "position": [
+        4,
+        18
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "death",
+      "description": "You have fallen in the dungeon.",
+      "data": {},
+      "position": [
+        4,
+        18
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "complete",
+      "description": "Died on turn 1. Slain 0 monsters before falling.",
+      "data": {},
+      "position": [
+        4,
+        18
+      ]
+    }
+  ]
+}
