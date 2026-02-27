@@ -18,3 +18,5 @@
 {"timestamp": "2026-02-27T16:01:29.150143", "gate_number": 5, "system_card": "King of Diamonds", "dealer_card": "King of Diamonds", "won": false, "key_fragment": null}
 {"timestamp": "2026-02-27T16:30:46.486743", "gate_number": 5, "system_card": "King of Diamonds", "dealer_card": "King of Diamonds", "won": false, "key_fragment": null}
 {"timestamp": "2026-02-27T16:31:12.984936", "gate_number": 5, "system_card": "King of Diamonds", "dealer_card": "King of Diamonds", "won": false, "key_fragment": null}
+{"timestamp": "2026-02-27T16:53:56.710667", "gate_number": 5, "system_card": "Queen of Clubs", "dealer_card": "2 of Diamonds", "won": true, "key_fragment": "SEAL-05-CCD7897FD4A17F4E"}
+{"timestamp": "2026-02-27T16:54:12.364040", "gate_number": 6, "system_card": "10 of Diamonds", "dealer_card": "10 of Spades", "won": false, "key_fragment": null}

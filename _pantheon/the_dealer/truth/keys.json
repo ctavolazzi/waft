@@ -1,6 +1,6 @@
 {
   "level": 3,
-  "xp": 750,
+  "xp": 950,
   "fragments": [
     {
       "gate_number": 1,
@@ -25,16 +25,23 @@
       "key_fragment": "SEAL-04-A7C5E48BE47CC789",
       "revelation": "The Truth is precise. Your precision is noted.",
       "earned_at": "2026-01-20T12:31:55.421858"
+    },
+    {
+      "gate_number": 5,
+      "key_fragment": "SEAL-05-CCD7897FD4A17F4E",
+      "revelation": "The Truth rises. You rise with it.",
+      "earned_at": "2026-02-27T16:53:56.710987"
     }
   ],
   "seals_broken": [
     1,
     2,
     3,
-    4
+    4,
+    5
   ],
-  "total_challenges": 20,
-  "total_wins": 4,
+  "total_challenges": 22,
+  "total_wins": 5,
   "created_at": "2026-01-20T12:31:32.903659",
-  "last_updated": "2026-02-27T16:31:12.985234"
+  "last_updated": "2026-02-27T16:54:12.364301"
 }

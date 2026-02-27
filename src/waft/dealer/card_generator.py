@@ -11,9 +11,12 @@ Card = PlayingCard
 Deck = PlayingDeck
 
 
-def new_deck() -> PlayingDeck:
-    """Create a new deck."""
-    return PlayingDeck()
+def new_deck(shuffle: bool = True) -> PlayingDeck:
+    """Create a new deck, shuffled by default."""
+    deck = PlayingDeck()
+    if shuffle:
+        deck.shuffle()
+    return deck
 
 
 def draw_card(deck: PlayingDeck) -> PlayingCard:
