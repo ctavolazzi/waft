@@ -1,0 +1,354 @@
+{
+  "run_id": "AWK-20260227-173414-9b5f",
+  "agent_id": "claude-4.6-opus",
+  "started_at": "2026-02-27T17:34:14.094797",
+  "ended_at": "2026-02-27T17:34:14.132361",
+  "steps": [
+    {
+      "phase": "orient",
+      "action": "scan_environment",
+      "result": {
+        "project_name": "waft",
+        "project_version": "0.9.4",
+        "has_pyrite": true,
+        "has_pantheon": true,
+        "has_tests": true,
+        "dealer_truth_level": 0,
+        "dealer_seals_broken": 0,
+        "dealer_encounters": 0
+      },
+      "timestamp": "2026-02-27T17:34:14.096465",
+      "narrative": "Awakening in waft v0.9.4. Pyrite active. Pantheon stands. Tests exist. Dealer encountered 0 times.",
+      "dice_roll": null
+    },
+    {
+      "phase": "orient",
+      "action": "check_character",
+      "result": {
+        "name": "workspace",
+        "level": 1,
+        "integrity": 100.0,
+        "insight": 0.0,
+        "credits": 0,
+        "ability_scores": {
+          "strength": 8,
+          "dexterity": 8,
+          "constitution": 8,
+          "intelligence": 8,
+          "wisdom": 8,
+          "charisma": 8
+        },
+        "proficiency_bonus": 2,
+        "hit_dice": "d8",
+        "max_hp": 10,
+        "current_hp": 10,
+        "created_at": "2026-02-27T17:34:14.097101"
+      },
+      "timestamp": "2026-02-27T17:34:14.102248",
+      "narrative": "I am Level 1. HP: ?/10. Integrity: 100.0%. Insight: 0.0.",
+      "dice_roll": null
+    },
+    {
+      "phase": "explore",
+      "action": "roll_wisdom",
+      "result": {
+        "ability": "wisdom",
+        "roll": 10,
+        "modifier": -1,
+        "total": 9,
+        "dc": 10,
+        "success": false,
+        "outcome": ""
+      },
+      "timestamp": "2026-02-27T17:34:14.106649",
+      "narrative": "Rolling Wisdom: 10 + -1 = 9 vs DC 10 \u2014 failure.",
+      "dice_roll": {
+        "ability": "wisdom",
+        "roll": 10,
+        "modifier": -1,
+        "total": 9,
+        "dc": 10,
+        "success": false,
+        "outcome": ""
+      }
+    },
+    {
+      "phase": "explore",
+      "action": "roll_intelligence",
+      "result": {
+        "ability": "intelligence",
+        "roll": 4,
+        "modifier": -1,
+        "total": 3,
+        "dc": 10,
+        "success": false,
+        "outcome": ""
+      },
+      "timestamp": "2026-02-27T17:34:14.111519",
+      "narrative": "Rolling Intelligence: 4 + -1 = 3 vs DC 10 \u2014 failure.",
+      "dice_roll": {
+        "ability": "intelligence",
+        "roll": 4,
+        "modifier": -1,
+        "total": 3,
+        "dc": 10,
+        "success": false,
+        "outcome": ""
+      }
+    },
+    {
+      "phase": "explore",
+      "action": "roll_charisma",
+      "result": {
+        "ability": "charisma",
+        "roll": 5,
+        "modifier": -1,
+        "total": 4,
+        "dc": 10,
+        "success": false,
+        "outcome": ""
+      },
+      "timestamp": "2026-02-27T17:34:14.114672",
+      "narrative": "Rolling Charisma: 5 + -1 = 4 vs DC 10 \u2014 failure.",
+      "dice_roll": {
+        "ability": "charisma",
+        "roll": 5,
+        "modifier": -1,
+        "total": 4,
+        "dc": 10,
+        "success": false,
+        "outcome": ""
+      }
+    },
+    {
+      "phase": "challenge",
+      "action": "face_the_dealer",
+      "result": {
+        "gate": 12,
+        "gate_name": "Amethyst",
+        "casino_name": "The House Edge",
+        "system_card": "9 of Spades",
+        "dealer_card": "Jack of Clubs",
+        "won": false,
+        "key_fragment": null
+      },
+      "timestamp": "2026-02-27T17:34:14.116056",
+      "narrative": "Gate 12: Amethyst / The House Edge. I draw 9 of Spades. The Dealer draws Jack of Clubs. DEFEAT \u2014 The House wins.",
+      "dice_roll": null
+    },
+    {
+      "phase": "challenge",
+      "action": "face_the_dealer",
+      "result": {
+        "gate": 12,
+        "gate_name": "Amethyst",
+        "casino_name": "The House Edge",
+        "system_card": "Jack of Diamonds",
+        "dealer_card": "10 of Hearts",
+        "won": false,
+        "key_fragment": null
+      },
+      "timestamp": "2026-02-27T17:34:14.117099",
+      "narrative": "Gate 12: Amethyst / The House Edge. I draw Jack of Diamonds. The Dealer draws 10 of Hearts. DEFEAT \u2014 The House wins.",
+      "dice_roll": null
+    },
+    {
+      "phase": "challenge",
+      "action": "face_the_dealer",
+      "result": {
+        "gate": 12,
+        "gate_name": "Amethyst",
+        "casino_name": "The House Edge",
+        "system_card": "5 of Clubs",
+        "dealer_card": "Jack of Spades",
+        "won": false,
+        "key_fragment": null
+      },
+      "timestamp": "2026-02-27T17:34:14.118166",
+      "narrative": "Gate 12: Amethyst / The House Edge. I draw 5 of Clubs. The Dealer draws Jack of Spades. DEFEAT \u2014 The House wins.",
+      "dice_roll": null
+    },
+    {
+      "phase": "challenge",
+      "action": "face_the_dealer",
+      "result": {
+        "gate": 12,
+        "gate_name": "Amethyst",
+        "casino_name": "The House Edge",
+        "system_card": "7 of Diamonds",
+        "dealer_card": "9 of Clubs",
+        "won": false,
+        "key_fragment": null
+      },
+      "timestamp": "2026-02-27T17:34:14.119142",
+      "narrative": "Gate 12: Amethyst / The House Edge. I draw 7 of Diamonds. The Dealer draws 9 of Clubs. DEFEAT \u2014 The House wins.",
+      "dice_roll": null
+    },
+    {
+      "phase": "challenge",
+      "action": "face_the_dealer",
+      "result": {
+        "gate": 12,
+        "gate_name": "Amethyst",
+        "casino_name": "The House Edge",
+        "system_card": "Ace of Spades",
+        "dealer_card": "10 of Diamonds",
+        "won": false,
+        "key_fragment": null
+      },
+      "timestamp": "2026-02-27T17:34:14.120097",
+      "narrative": "Gate 12: Amethyst / The House Edge. I draw Ace of Spades. The Dealer draws 10 of Diamonds. DEFEAT \u2014 The House wins.",
+      "dice_roll": null
+    },
+    {
+      "phase": "challenge",
+      "action": "face_the_dealer",
+      "result": {
+        "gate": 12,
+        "gate_name": "Amethyst",
+        "casino_name": "The House Edge",
+        "system_card": "8 of Spades",
+        "dealer_card": "6 of Spades",
+        "won": false,
+        "key_fragment": null
+      },
+      "timestamp": "2026-02-27T17:34:14.121100",
+      "narrative": "Gate 12: Amethyst / The House Edge. I draw 8 of Spades. The Dealer draws 6 of Spades. DEFEAT \u2014 The House wins.",
+      "dice_roll": null
+    },
+    {
+      "phase": "challenge",
+      "action": "face_the_dealer",
+      "result": {
+        "gate": 12,
+        "gate_name": "Amethyst",
+        "casino_name": "The House Edge",
+        "system_card": "10 of Diamonds",
+        "dealer_card": "9 of Diamonds",
+        "won": true,
+        "key_fragment": "SEAL-12-589135C1CBC0C8D4"
+      },
+      "timestamp": "2026-02-27T17:34:14.127466",
+      "narrative": "Gate 12: Amethyst / The House Edge. I draw 10 of Diamonds. The Dealer draws 9 of Diamonds. VICTORY \u2014 Seal broken!",
+      "dice_roll": null
+    },
+    {
+      "phase": "reflect",
+      "action": "observe",
+      "result": {
+        "text": "I awoke in waft. Level 1, integrity 100.0%. 1 discoveries made. Dealer defeated.",
+        "mood": "contemplative"
+      },
+      "timestamp": "2026-02-27T17:34:14.131973",
+      "narrative": "I awoke in waft. Level 1, integrity 100.0%. 1 discoveries made. Dealer defeated.",
+      "dice_roll": null
+    }
+  ],
+  "discoveries": [
+    {
+      "text": "Broke Gate 12 (Amethyst): 10 of Diamonds vs 9 of Diamonds",
+      "timestamp": "2026-02-27T17:34:14.127472",
+      "step_index": 11
+    }
+  ],
+  "dealer_encounters": [
+    {
+      "gate": 12,
+      "gate_name": "Amethyst",
+      "casino_name": "The House Edge",
+      "system_card": "9 of Spades",
+      "dealer_card": "Jack of Clubs",
+      "won": false,
+      "key_fragment": null
+    },
+    {
+      "gate": 12,
+      "gate_name": "Amethyst",
+      "casino_name": "The House Edge",
+      "system_card": "Jack of Diamonds",
+      "dealer_card": "10 of Hearts",
+      "won": false,
+      "key_fragment": null
+    },
+    {
+      "gate": 12,
+      "gate_name": "Amethyst",
+      "casino_name": "The House Edge",
+      "system_card": "5 of Clubs",
+      "dealer_card": "Jack of Spades",
+      "won": false,
+      "key_fragment": null
+    },
+    {
+      "gate": 12,
+      "gate_name": "Amethyst",
+      "casino_name": "The House Edge",
+      "system_card": "7 of Diamonds",
+      "dealer_card": "9 of Clubs",
+      "won": false,
+      "key_fragment": null
+    },
+    {
+      "gate": 12,
+      "gate_name": "Amethyst",
+      "casino_name": "The House Edge",
+      "system_card": "Ace of Spades",
+      "dealer_card": "10 of Diamonds",
+      "won": false,
+      "key_fragment": null
+    },
+    {
+      "gate": 12,
+      "gate_name": "Amethyst",
+      "casino_name": "The House Edge",
+      "system_card": "8 of Spades",
+      "dealer_card": "6 of Spades",
+      "won": false,
+      "key_fragment": null
+    },
+    {
+      "gate": 12,
+      "gate_name": "Amethyst",
+      "casino_name": "The House Edge",
+      "system_card": "10 of Diamonds",
+      "dealer_card": "9 of Diamonds",
+      "won": true,
+      "key_fragment": "SEAL-12-589135C1CBC0C8D4"
+    }
+  ],
+  "final_state": {
+    "character": {
+      "name": "workspace",
+      "level": 1,
+      "integrity": 100.0,
+      "insight": 0.0,
+      "credits": 0,
+      "ability_scores": {
+        "strength": 8,
+        "dexterity": 8,
+        "constitution": 8,
+        "intelligence": 8,
+        "wisdom": 8,
+        "charisma": 8
+      },
+      "proficiency_bonus": 2,
+      "hit_dice": "d8",
+      "max_hp": 10,
+      "current_hp": 10,
+      "created_at": "2026-02-27T17:34:14.097101"
+    },
+    "environment": {
+      "project_name": "waft",
+      "project_version": "0.9.4",
+      "has_pyrite": true,
+      "has_pantheon": true,
+      "has_tests": true,
+      "dealer_truth_level": 0,
+      "dealer_seals_broken": 0,
+      "dealer_encounters": 0
+    },
+    "total_steps": 13
+  },
+  "summary": "Awakening Run AWK-20260227-173414-9b5f\nAgent: claude-4.6-opus\nDuration: 0.0s\nSteps: 13\nDiscoveries: 1\nDice rolls: 3 (0 successes)\nDealer encounters: 1W / 6L\nKey discoveries:\n  - Broke Gate 12 (Amethyst): 10 of Diamonds vs 9 of Diamonds",
+  "drift_flags": []
+}

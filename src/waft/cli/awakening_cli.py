@@ -207,11 +207,44 @@ def main(
     run.summary = _generate_summary(run)
     out_path = save_run(run, project_path)
 
+    # Update personnel file
+    from dataclasses import asdict as _asdict
+
+    from ..core.personnel import (
+        get_or_create_personnel,
+        save_personnel,
+    )
+    from ..core.personnel import (
+        update_from_run as update_personnel,
+    )
+
+    pf = get_or_create_personnel(agent_id, project_path)
+    run_data = {
+        "run_id": run.run_id,
+        "steps": [_asdict(s) for s in run.steps],
+        "discoveries": run.discoveries,
+        "dealer_encounters": run.dealer_encounters,
+        "duration": run.duration_seconds(),
+    }
+    drift_flags = update_personnel(pf, run_data)
+    save_personnel(pf, project_path)
+
     if not quiet:
         console.print()
         _render_run_summary(run)
+        if drift_flags:
+            console.print(
+                f"\n[bold {COLOR_RED}]⚠ DRIFT DETECTED[/bold {COLOR_RED}]"
+            )
+            for flag in drift_flags:
+                console.print(f"  [{COLOR_RED}]⚠[/{COLOR_RED}] {flag}")
         console.print(f"\n[dim]Run saved: {out_path}[/dim]")
-        console.print(f"[dim]View with: waft awaken view {run.run_id}[/dim]")
+        console.print(
+            f"[dim]Personnel: waft personnel view {agent_id}[/dim]"
+        )
+        console.print(
+            f"[dim]Replay: waft awaken view {run.run_id}[/dim]"
+        )
     else:
         console.print(run.run_id)
 

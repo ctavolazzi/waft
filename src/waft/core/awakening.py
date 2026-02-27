@@ -58,6 +58,7 @@ class AwakeningRun:
     dealer_encounters: list = field(default_factory=list)
     final_state: dict = field(default_factory=dict)
     summary: str = ""
+    drift_flags: list = field(default_factory=list)
 
     def add_step(self, step: AwakeningStep):
         self.steps.append(step)
@@ -405,4 +406,20 @@ def run_awakening(
     run.summary = _generate_summary(run)
 
     save_run(run, project_path)
+
+    # Update personnel file
+    from .personnel import get_or_create_personnel, save_personnel, update_from_run
+
+    pf = get_or_create_personnel(agent_id, project_path)
+    run_data = {
+        "run_id": run.run_id,
+        "steps": [asdict(s) for s in run.steps],
+        "discoveries": run.discoveries,
+        "dealer_encounters": run.dealer_encounters,
+        "duration": run.duration_seconds(),
+    }
+    drift_flags = update_from_run(pf, run_data)
+    save_personnel(pf, project_path)
+    run.drift_flags = drift_flags
+
     return run

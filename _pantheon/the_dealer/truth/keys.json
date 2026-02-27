@@ -1,6 +1,6 @@
 {
-  "level": 8,
-  "xp": 4050,
+  "level": 10,
+  "xp": 6050,
   "fragments": [
     {
       "gate_number": 1,
@@ -73,6 +73,18 @@
       "key_fragment": "SEAL-12-5F7F5A56FDD9388F",
       "revelation": "The Truth is: The House Always Wins. But you have become The House.",
       "earned_at": "2026-02-27T17:04:54.653196"
+    },
+    {
+      "gate_number": 12,
+      "key_fragment": "SEAL-12-27496574BA94E5D1",
+      "revelation": "The Truth is: The House Always Wins. But you have become The House.",
+      "earned_at": "2026-02-27T17:33:21.273824"
+    },
+    {
+      "gate_number": 12,
+      "key_fragment": "SEAL-12-589135C1CBC0C8D4",
+      "revelation": "The Truth is: The House Always Wins. But you have become The House.",
+      "earned_at": "2026-02-27T17:34:14.127189"
     }
   ],
   "seals_broken": [
@@ -89,8 +101,8 @@
     11,
     12
   ],
-  "total_challenges": 101,
-  "total_wins": 12,
+  "total_challenges": 130,
+  "total_wins": 14,
   "created_at": "2026-01-20T12:31:32.903659",
-  "last_updated": "2026-02-27T17:27:18.508587"
+  "last_updated": "2026-02-27T17:34:14.127181"
 }

@@ -21,6 +21,7 @@ from rich.text import Text
 
 from .cli.awakening_cli import app as awakening_app
 from .cli.cards_cli import app as cards_app
+from .cli.personnel_cli import app as personnel_app
 from .cli.case_render import case_render_cmd
 from .cli.chief_cli import app as chief_app
 from .cli.epistemic_display import (
@@ -846,6 +847,7 @@ app.add_typer(empirica_monitor_app, name="empirica")
 app.add_typer(awakening_app, name="awaken")
 app.add_typer(cards_app, name="cards")
 app.add_typer(chief_app, name="chief")
+app.add_typer(personnel_app, name="personnel")
 app.command(name="case-render")(case_render_cmd)
 
 
