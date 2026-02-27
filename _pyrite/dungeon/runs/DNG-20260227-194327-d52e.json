@@ -1,0 +1,144 @@
+{
+  "run_id": "DNG-20260227-194327-d52e",
+  "agent_id": "claude-4.6-opus",
+  "seed": 1024,
+  "timestamp": "2026-02-27T19:43:27.372083",
+  "outcome": "escaped",
+  "turns": 6,
+  "hp_remaining": 13,
+  "gold": 9,
+  "xp": 25,
+  "rooms_explored": 7,
+  "rooms_total": 7,
+  "monsters_slain": 1,
+  "treasures_found": 1,
+  "traps_triggered": 0,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 1024). 7 rooms await.",
+      "data": {},
+      "position": [
+        27,
+        14
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "encounter",
+      "description": "A Orc lurches from the shadows!",
+      "data": {
+        "monster": "Orc"
+      },
+      "position": [
+        27,
+        6
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "combat_win",
+      "description": "Defeated the Orc! +25 XP.",
+      "data": {
+        "won": true,
+        "rounds": 4,
+        "monster": "Orc",
+        "log": [
+          "You hit Orc for 2",
+          "Orc hits you for 5",
+          "You hit Orc for 2",
+          "Orc hits you for 2",
+          "You hit Orc for 3",
+          "Orc hits you for 3",
+          "You hit Orc for 3"
+        ],
+        "xp_gained": 25
+      },
+      "position": [
+        27,
+        6
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        37,
+        6
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "5 of Hearts",
+        "dealer_card": "5 of Clubs",
+        "gate": 12
+      },
+      "position": [
+        37,
+        6
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        37,
+        18
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +9 gold, +3 HP.",
+      "data": {
+        "gold": 9,
+        "heal": 3
+      },
+      "position": [
+        11,
+        17
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        10,
+        5
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        20,
+        4
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "complete",
+      "description": "Escaped! Slain 1, gold 9.",
+      "data": {},
+      "position": [
+        20,
+        4
+      ]
+    }
+  ]
+}

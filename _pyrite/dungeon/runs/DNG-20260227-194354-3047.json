@@ -1,0 +1,166 @@
+{
+  "run_id": "DNG-20260227-194354-3047",
+  "agent_id": "claude-3.5-sonnet",
+  "seed": 300,
+  "timestamp": "2026-02-27T19:43:54.684177",
+  "outcome": "escaped",
+  "turns": 6,
+  "hp_remaining": 9,
+  "gold": 17,
+  "xp": 60,
+  "rooms_explored": 7,
+  "rooms_total": 7,
+  "monsters_slain": 2,
+  "treasures_found": 1,
+  "traps_triggered": 0,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 300). 7 rooms await.",
+      "data": {},
+      "position": [
+        27,
+        4
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        39,
+        6
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "9 of Clubs",
+        "dealer_card": "King of Spades",
+        "gate": 12
+      },
+      "position": [
+        39,
+        6
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        37,
+        17
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "encounter",
+      "description": "A Wraith lurches from the shadows!",
+      "data": {
+        "monster": "Wraith"
+      },
+      "position": [
+        19,
+        15
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "combat_win",
+      "description": "Defeated the Wraith! +30 XP.",
+      "data": {
+        "won": true,
+        "rounds": 3,
+        "monster": "Wraith",
+        "log": [
+          "You hit Wraith for 3",
+          "Wraith hits you for 4",
+          "You hit Wraith for 2",
+          "Wraith hits you for 3",
+          "You hit Wraith for 5"
+        ],
+        "xp_gained": 30
+      },
+      "position": [
+        19,
+        15
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "encounter",
+      "description": "A Wraith lurches from the shadows!",
+      "data": {
+        "monster": "Wraith"
+      },
+      "position": [
+        10,
+        16
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "combat_win",
+      "description": "Defeated the Wraith! +30 XP.",
+      "data": {
+        "won": true,
+        "rounds": 3,
+        "monster": "Wraith",
+        "log": [
+          "You hit Wraith for 2",
+          "Wraith hits you for 5",
+          "You hit Wraith for 2",
+          "Wraith hits you for 2",
+          "You hit Wraith for 6"
+        ],
+        "xp_gained": 30
+      },
+      "position": [
+        10,
+        16
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +17 gold, +3 HP.",
+      "data": {
+        "gold": 17,
+        "heal": 3
+      },
+      "position": [
+        6,
+        9
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        26,
+        14
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "complete",
+      "description": "Escaped! Slain 2, gold 17.",
+      "data": {},
+      "position": [
+        26,
+        14
+      ]
+    }
+  ]
+}

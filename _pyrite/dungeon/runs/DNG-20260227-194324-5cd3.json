@@ -1,0 +1,174 @@
+{
+  "run_id": "DNG-20260227-194324-5cd3",
+  "agent_id": "claude-4.6-opus",
+  "seed": 256,
+  "timestamp": "2026-02-27T19:43:24.241999",
+  "outcome": "escaped",
+  "turns": 7,
+  "hp_remaining": 14,
+  "gold": 5,
+  "xp": 35,
+  "rooms_explored": 8,
+  "rooms_total": 8,
+  "monsters_slain": 2,
+  "treasures_found": 1,
+  "traps_triggered": 0,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 256). 8 rooms await.",
+      "data": {},
+      "position": [
+        31,
+        15
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        22,
+        19
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "9 of Spades",
+        "dealer_card": "9 of Hearts",
+        "gate": 12
+      },
+      "position": [
+        22,
+        19
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        12,
+        16
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "encounter",
+      "description": "A Orc lurches from the shadows!",
+      "data": {
+        "monster": "Orc"
+      },
+      "position": [
+        14,
+        9
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "combat_win",
+      "description": "Defeated the Orc! +25 XP.",
+      "data": {
+        "won": true,
+        "rounds": 4,
+        "monster": "Orc",
+        "log": [
+          "You hit Orc for 1",
+          "Orc hits you for 2",
+          "You hit Orc for 4",
+          "Orc hits you for 3",
+          "You hit Orc for 1",
+          "Orc hits you for 4",
+          "You hit Orc for 6"
+        ],
+        "xp_gained": 25
+      },
+      "position": [
+        14,
+        9
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "encounter",
+      "description": "A Goblin lurches from the shadows!",
+      "data": {
+        "monster": "Goblin"
+      },
+      "position": [
+        5,
+        9
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "combat_win",
+      "description": "Defeated the Goblin! +10 XP.",
+      "data": {
+        "won": true,
+        "rounds": 1,
+        "monster": "Goblin",
+        "log": [
+          "You hit Goblin for 4"
+        ],
+        "xp_gained": 10
+      },
+      "position": [
+        5,
+        9
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +5 gold, +3 HP.",
+      "data": {
+        "gold": 5,
+        "heal": 3
+      },
+      "position": [
+        26,
+        6
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        39,
+        7
+      ]
+    },
+    {
+      "turn": 7,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        43,
+        18
+      ]
+    },
+    {
+      "turn": 7,
+      "event_type": "complete",
+      "description": "Escaped! Slain 2, gold 5.",
+      "data": {},
+      "position": [
+        43,
+        18
+      ]
+    }
+  ]
+}

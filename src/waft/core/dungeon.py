@@ -216,13 +216,18 @@ def generate_dungeon(seed: int | None = None) -> tuple[list[list[str]], list[Roo
 
 
 def _carve_room(grid: list[list[str]], room: Room):
-    """Carve a room into the grid."""
+    """Carve a room into the grid. Preserves existing corridors."""
     for dy in range(room.h):
         for dx in range(room.w):
             gy, gx = room.y + dy, room.x + dx
             if 0 <= gy < MAP_HEIGHT and 0 <= gx < MAP_WIDTH:
-                if dy == 0 or dy == room.h - 1 or dx == 0 or dx == room.w - 1:
-                    grid[gy][gx] = TILE_WALL
+                is_edge = (
+                    dy == 0 or dy == room.h - 1
+                    or dx == 0 or dx == room.w - 1
+                )
+                if is_edge:
+                    if grid[gy][gx] != TILE_CORRIDOR:
+                        grid[gy][gx] = TILE_WALL
                 else:
                     grid[gy][gx] = TILE_FLOOR
 

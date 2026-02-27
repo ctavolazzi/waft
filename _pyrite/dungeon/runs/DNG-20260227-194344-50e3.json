@@ -1,0 +1,186 @@
+{
+  "run_id": "DNG-20260227-194344-50e3",
+  "agent_id": "claude-4.6-opus",
+  "seed": 200,
+  "timestamp": "2026-02-27T19:43:44.400730",
+  "outcome": "died",
+  "turns": 6,
+  "hp_remaining": -3,
+  "gold": 0,
+  "xp": 25,
+  "rooms_explored": 7,
+  "rooms_total": 8,
+  "monsters_slain": 2,
+  "treasures_found": 0,
+  "traps_triggered": 1,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 200). 8 rooms await.",
+      "data": {},
+      "position": [
+        4,
+        7
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "encounter",
+      "description": "A Goblin lurches from the shadows!",
+      "data": {
+        "monster": "Goblin"
+      },
+      "position": [
+        13,
+        7
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "combat_win",
+      "description": "Defeated the Goblin! +10 XP.",
+      "data": {
+        "won": true,
+        "rounds": 2,
+        "monster": "Goblin",
+        "log": [
+          "You hit Goblin for 2",
+          "Goblin hits you for 1",
+          "You hit Goblin for 4"
+        ],
+        "xp_gained": 10
+      },
+      "position": [
+        13,
+        7
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        18,
+        19
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "4 of Clubs",
+        "dealer_card": "9 of Spades",
+        "gate": 12
+      },
+      "position": [
+        18,
+        19
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "trap",
+      "description": "Triggered a trap! -5 HP.",
+      "data": {
+        "damage": 5
+      },
+      "position": [
+        27,
+        18
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        33,
+        11
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "encounter",
+      "description": "A Skeleton lurches from the shadows!",
+      "data": {
+        "monster": "Skeleton"
+      },
+      "position": [
+        44,
+        6
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "combat_win",
+      "description": "Defeated the Skeleton! +15 XP.",
+      "data": {
+        "won": true,
+        "rounds": 2,
+        "monster": "Skeleton",
+        "log": [
+          "You hit Skeleton for 2",
+          "Skeleton hits you for 3",
+          "You hit Skeleton for 4"
+        ],
+        "xp_gained": 15
+      },
+      "position": [
+        44,
+        6
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "encounter",
+      "description": "A Troll lurches from the shadows!",
+      "data": {
+        "monster": "Troll"
+      },
+      "position": [
+        5,
+        18
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "combat_loss",
+      "description": "The Troll was too strong.",
+      "data": {
+        "won": false,
+        "rounds": 3,
+        "monster": "Troll",
+        "log": [
+          "You hit Troll for 3",
+          "Troll hits you for 4",
+          "You hit Troll for 2",
+          "Troll hits you for 5",
+          "You hit Troll for 5",
+          "Troll hits you for 5"
+        ],
+        "xp_gained": 0
+      },
+      "position": [
+        5,
+        18
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "death",
+      "description": "You have fallen.",
+      "data": {},
+      "position": [
+        5,
+        18
+      ]
+    }
+  ]
+}
