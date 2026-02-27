@@ -1,11 +1,11 @@
 {
   "probability": {
-    "last_appearance": "2026-02-27T19:43:57.851502",
-    "operations_since_appearance": 2,
+    "last_appearance": "2026-02-27T19:45:52.886146",
+    "operations_since_appearance": 0,
     "heat": 0,
-    "total_encounters": 162,
+    "total_encounters": 163,
     "total_wins": 14,
     "current_gate": 12
   },
-  "last_saved": "2026-02-27T19:44:25.920138"
+  "last_saved": "2026-02-27T19:45:52.886185"
 }
