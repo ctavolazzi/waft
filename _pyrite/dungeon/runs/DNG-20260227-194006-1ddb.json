@@ -1,0 +1,123 @@
+{
+  "run_id": "DNG-20260227-194006-1ddb",
+  "agent_id": "claude-4.6-opus",
+  "seed": 99,
+  "timestamp": "2026-02-27T19:40:06.352485",
+  "outcome": "escaped",
+  "turns": 5,
+  "hp_remaining": 10,
+  "gold": 0,
+  "xp": 15,
+  "rooms_explored": 5,
+  "rooms_total": 6,
+  "monsters_slain": 1,
+  "treasures_found": 0,
+  "traps_triggered": 1,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 99). 6 rooms await.",
+      "data": {},
+      "position": [
+        16,
+        9
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        15,
+        18
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "7 of Hearts",
+        "dealer_card": "6 of Clubs",
+        "gate": 12
+      },
+      "position": [
+        15,
+        18
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "encounter",
+      "description": "A Skeleton lurches from the shadows!",
+      "data": {
+        "monster": "Skeleton"
+      },
+      "position": [
+        28,
+        13
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "combat_win",
+      "description": "Defeated the Skeleton! +15 XP.",
+      "data": {
+        "won": true,
+        "rounds": 4,
+        "monster": "Skeleton",
+        "log": [
+          "You hit Skeleton for 2",
+          "Skeleton hits you for 1",
+          "You hit Skeleton for 2",
+          "Skeleton hits you for 3",
+          "You hit Skeleton for 1",
+          "Skeleton hits you for 4",
+          "You hit Skeleton for 1"
+        ],
+        "xp_gained": 15
+      },
+      "position": [
+        28,
+        13
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "trap",
+      "description": "Triggered a trap! -2 HP.",
+      "data": {
+        "damage": 2
+      },
+      "position": [
+        4,
+        8
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        38,
+        16
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "complete",
+      "description": "Escaped! Slain 1, gold 0.",
+      "data": {},
+      "position": [
+        38,
+        16
+      ]
+    }
+  ]
+}

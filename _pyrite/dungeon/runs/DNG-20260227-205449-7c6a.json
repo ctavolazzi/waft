@@ -1,0 +1,145 @@
+{
+  "run_id": "DNG-20260227-205449-7c6a",
+  "agent_id": "claude-4.6-opus",
+  "seed": 42,
+  "timestamp": "2026-02-27T20:54:49.863124",
+  "outcome": "died",
+  "turns": 4,
+  "hp_remaining": -5,
+  "gold": 18,
+  "xp": 15,
+  "rooms_explored": 5,
+  "rooms_total": 6,
+  "monsters_slain": 1,
+  "treasures_found": 1,
+  "traps_triggered": 0,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 42). 6 rooms await.",
+      "data": {},
+      "position": [
+        6,
+        11
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +18 gold, +0 HP.",
+      "data": {
+        "gold": 18,
+        "heal": 0
+      },
+      "position": [
+        39,
+        16
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "encounter",
+      "description": "A Skeleton lurches from the shadows!",
+      "data": {
+        "monster": "Skeleton"
+      },
+      "position": [
+        23,
+        5
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "combat_win",
+      "description": "Defeated the Skeleton! +15 XP.",
+      "data": {
+        "won": true,
+        "rounds": 2,
+        "monster": "Skeleton",
+        "log": [
+          "You hit Skeleton for 3",
+          "Skeleton hits you for 4",
+          "You hit Skeleton for 6"
+        ],
+        "xp_gained": 15
+      },
+      "position": [
+        23,
+        5
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        26,
+        12
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "6 of Spades",
+        "dealer_card": "4 of Spades",
+        "gate": 12
+      },
+      "position": [
+        26,
+        12
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "encounter",
+      "description": "A Dragon lurches from the shadows!",
+      "data": {
+        "monster": "Dragon"
+      },
+      "position": [
+        39,
+        6
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "combat_loss",
+      "description": "The Dragon was too strong.",
+      "data": {
+        "won": false,
+        "rounds": 3,
+        "monster": "Dragon",
+        "log": [
+          "You hit Dragon for 3",
+          "Dragon hits you for 7",
+          "You hit Dragon for 3",
+          "Dragon hits you for 7",
+          "You hit Dragon for 6",
+          "Dragon hits you for 7"
+        ],
+        "xp_gained": 0
+      },
+      "position": [
+        39,
+        6
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "death",
+      "description": "You have fallen.",
+      "data": {},
+      "position": [
+        39,
+        6
+      ]
+    }
+  ]
+}

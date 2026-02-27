@@ -1,0 +1,152 @@
+{
+  "run_id": "DNG-20260227-203659-455c",
+  "agent_id": "claude-4.6-opus",
+  "seed": 738,
+  "timestamp": "2026-02-27T20:36:59.816990",
+  "outcome": "escaped",
+  "turns": 5,
+  "hp_remaining": 14,
+  "gold": 0,
+  "xp": 20,
+  "rooms_explored": 6,
+  "rooms_total": 6,
+  "monsters_slain": 2,
+  "treasures_found": 0,
+  "traps_triggered": 0,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 738). 6 rooms await.",
+      "data": {
+        "rooms": 6,
+        "seed": 738
+      },
+      "position": [
+        19,
+        8
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "encounter",
+      "description": "A Goblin lurches from the shadows!",
+      "data": {
+        "monster": "Goblin"
+      },
+      "position": [
+        30,
+        7
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "combat_win",
+      "description": "Defeated the Goblin! +10 XP.",
+      "data": {
+        "won": true,
+        "rounds": 2,
+        "monster": "Goblin",
+        "log": [
+          "You hit Goblin for 3",
+          "Goblin hits you for 4",
+          "You hit Goblin for 5"
+        ],
+        "xp_gained": 10
+      },
+      "position": [
+        30,
+        7
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        34,
+        18
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "encounter",
+      "description": "A Goblin lurches from the shadows!",
+      "data": {
+        "monster": "Goblin"
+      },
+      "position": [
+        24,
+        18
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "combat_win",
+      "description": "Defeated the Goblin! +10 XP.",
+      "data": {
+        "won": true,
+        "rounds": 2,
+        "monster": "Goblin",
+        "log": [
+          "You hit Goblin for 3",
+          "Goblin hits you for 2",
+          "You hit Goblin for 2"
+        ],
+        "xp_gained": 10
+      },
+      "position": [
+        24,
+        18
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        15,
+        18
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "King of Hearts",
+        "dealer_card": "3 of Clubs",
+        "gate": 12
+      },
+      "position": [
+        15,
+        18
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        38,
+        8
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "complete",
+      "description": "Escaped the dungeon! Slain 2 monsters, found 0 treasures, earned 0 gold.",
+      "data": {},
+      "position": [
+        38,
+        8
+      ]
+    }
+  ]
+}

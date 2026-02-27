@@ -1,0 +1,184 @@
+{
+  "run_id": "DNG-20260227-203426-b97b",
+  "agent_id": "claude-4.6-opus",
+  "seed": 88822,
+  "timestamp": "2026-02-27T20:34:26.736802",
+  "outcome": "escaped",
+  "turns": 8,
+  "hp_remaining": 7,
+  "gold": 0,
+  "xp": 20,
+  "rooms_explored": 9,
+  "rooms_total": 9,
+  "monsters_slain": 2,
+  "treasures_found": 0,
+  "traps_triggered": 3,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 88822). 9 rooms await.",
+      "data": {
+        "rooms": 9,
+        "seed": 88822
+      },
+      "position": [
+        40,
+        14
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "encounter",
+      "description": "A Goblin lurches from the shadows!",
+      "data": {
+        "monster": "Goblin"
+      },
+      "position": [
+        34,
+        12
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "combat_win",
+      "description": "Defeated the Goblin! +10 XP.",
+      "data": {
+        "won": true,
+        "rounds": 1,
+        "monster": "Goblin",
+        "log": [
+          "You hit Goblin for 5"
+        ],
+        "xp_gained": 10
+      },
+      "position": [
+        34,
+        12
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "trap",
+      "description": "Triggered a trap! -5 HP.",
+      "data": {
+        "damage": 5
+      },
+      "position": [
+        27,
+        10
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        19,
+        13
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "Queen of Diamonds",
+        "dealer_card": "7 of Diamonds",
+        "gate": 12
+      },
+      "position": [
+        19,
+        13
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "encounter",
+      "description": "A Goblin lurches from the shadows!",
+      "data": {
+        "monster": "Goblin"
+      },
+      "position": [
+        12,
+        15
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "combat_win",
+      "description": "Defeated the Goblin! +10 XP.",
+      "data": {
+        "won": true,
+        "rounds": 1,
+        "monster": "Goblin",
+        "log": [
+          "You hit Goblin for 5"
+        ],
+        "xp_gained": 10
+      },
+      "position": [
+        12,
+        15
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        4,
+        13
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "trap",
+      "description": "Triggered a trap! -5 HP.",
+      "data": {
+        "damage": 5
+      },
+      "position": [
+        15,
+        5
+      ]
+    },
+    {
+      "turn": 7,
+      "event_type": "trap",
+      "description": "Triggered a trap! -3 HP.",
+      "data": {
+        "damage": 3
+      },
+      "position": [
+        22,
+        19
+      ]
+    },
+    {
+      "turn": 8,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        39,
+        4
+      ]
+    },
+    {
+      "turn": 8,
+      "event_type": "complete",
+      "description": "Escaped the dungeon! Slain 2 monsters, found 0 treasures, earned 0 gold.",
+      "data": {},
+      "position": [
+        39,
+        4
+      ]
+    }
+  ]
+}

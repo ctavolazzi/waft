@@ -1,0 +1,155 @@
+{
+  "run_id": "DNG-20260227-204316-27bd",
+  "agent_id": "gemini-2.0-flash",
+  "seed": 38021,
+  "timestamp": "2026-02-27T20:43:16.945414",
+  "outcome": "escaped",
+  "turns": 6,
+  "hp_remaining": 18,
+  "gold": 0,
+  "xp": 15,
+  "rooms_explored": 7,
+  "rooms_total": 7,
+  "monsters_slain": 1,
+  "treasures_found": 0,
+  "traps_triggered": 1,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 38021). 7 rooms await.",
+      "data": {
+        "rooms": 7,
+        "seed": 38021
+      },
+      "position": [
+        6,
+        5
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        40,
+        17
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        17,
+        12
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "4 of Spades",
+        "dealer_card": "King of Clubs",
+        "gate": 12
+      },
+      "position": [
+        17,
+        12
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "encounter",
+      "description": "A Skeleton lurches from the shadows!",
+      "data": {
+        "monster": "Skeleton"
+      },
+      "position": [
+        42,
+        3
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "combat_win",
+      "description": "Defeated the Skeleton! +15 XP.",
+      "data": {
+        "won": true,
+        "rounds": 1,
+        "monster": "Skeleton",
+        "log": [
+          "You hit Skeleton for 6"
+        ],
+        "xp_gained": 15
+      },
+      "position": [
+        42,
+        3
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        26,
+        11
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "4 of Spades",
+        "dealer_card": "Jack of Spades",
+        "gate": 12
+      },
+      "position": [
+        26,
+        11
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "trap",
+      "description": "Triggered a trap! -2 HP.",
+      "data": {
+        "damage": 2
+      },
+      "position": [
+        42,
+        9
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        8,
+        18
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "complete",
+      "description": "Escaped the dungeon! Slain 1 monsters, found 0 treasures, earned 0 gold.",
+      "data": {},
+      "position": [
+        8,
+        18
+      ]
+    }
+  ]
+}

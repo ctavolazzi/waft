@@ -1,0 +1,154 @@
+{
+  "run_id": "DNG-20260227-203413-6997",
+  "agent_id": "claude-4.6-opus",
+  "seed": 48625,
+  "timestamp": "2026-02-27T20:34:13.469272",
+  "outcome": "escaped",
+  "turns": 7,
+  "hp_remaining": 2,
+  "gold": 0,
+  "xp": 100,
+  "rooms_explored": 8,
+  "rooms_total": 9,
+  "monsters_slain": 1,
+  "treasures_found": 0,
+  "traps_triggered": 0,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 48625). 9 rooms await.",
+      "data": {
+        "rooms": 9,
+        "seed": 48625
+      },
+      "position": [
+        29,
+        9
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        24,
+        13
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        25,
+        19
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        15,
+        20
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        8,
+        12
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "3 of Hearts",
+        "dealer_card": "9 of Clubs",
+        "gate": 12
+      },
+      "position": [
+        8,
+        12
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        8,
+        5
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "encounter",
+      "description": "A Dragon lurches from the shadows!",
+      "data": {
+        "monster": "Dragon"
+      },
+      "position": [
+        21,
+        3
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "combat_win",
+      "description": "Defeated the Dragon! +100 XP.",
+      "data": {
+        "won": true,
+        "rounds": 4,
+        "monster": "Dragon",
+        "log": [
+          "You hit Dragon for 5",
+          "Dragon hits you for 8",
+          "You hit Dragon for 5",
+          "Dragon hits you for 4",
+          "You hit Dragon for 4",
+          "Dragon hits you for 6",
+          "You hit Dragon for 6"
+        ],
+        "xp_gained": 100
+      },
+      "position": [
+        21,
+        3
+      ]
+    },
+    {
+      "turn": 7,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        33,
+        19
+      ]
+    },
+    {
+      "turn": 7,
+      "event_type": "complete",
+      "description": "Escaped the dungeon! Slain 1 monsters, found 0 treasures, earned 0 gold.",
+      "data": {},
+      "position": [
+        33,
+        19
+      ]
+    }
+  ]
+}

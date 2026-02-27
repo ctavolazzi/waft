@@ -1,0 +1,202 @@
+{
+  "run_id": "DNG-20260227-204314-4016",
+  "agent_id": "claude-4.6-opus",
+  "seed": 50354,
+  "timestamp": "2026-02-27T20:43:14.975954",
+  "outcome": "died",
+  "turns": 6,
+  "hp_remaining": -4,
+  "gold": 23,
+  "xp": 30,
+  "rooms_explored": 7,
+  "rooms_total": 8,
+  "monsters_slain": 2,
+  "treasures_found": 1,
+  "traps_triggered": 0,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 50354). 8 rooms await.",
+      "data": {
+        "rooms": 8,
+        "seed": 50354
+      },
+      "position": [
+        32,
+        7
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        5,
+        3
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "8 of Diamonds",
+        "dealer_card": "10 of Spades",
+        "gate": 12
+      },
+      "position": [
+        5,
+        3
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "encounter",
+      "description": "A Skeleton lurches from the shadows!",
+      "data": {
+        "monster": "Skeleton"
+      },
+      "position": [
+        37,
+        20
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "combat_win",
+      "description": "Defeated the Skeleton! +15 XP.",
+      "data": {
+        "won": true,
+        "rounds": 3,
+        "monster": "Skeleton",
+        "log": [
+          "You hit Skeleton for 2",
+          "Skeleton hits you for 3",
+          "You hit Skeleton for 2",
+          "Skeleton hits you for 3",
+          "You hit Skeleton for 4"
+        ],
+        "xp_gained": 15
+      },
+      "position": [
+        37,
+        20
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        5,
+        10
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "encounter",
+      "description": "A Skeleton lurches from the shadows!",
+      "data": {
+        "monster": "Skeleton"
+      },
+      "position": [
+        26,
+        16
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "combat_win",
+      "description": "Defeated the Skeleton! +15 XP.",
+      "data": {
+        "won": true,
+        "rounds": 2,
+        "monster": "Skeleton",
+        "log": [
+          "You hit Skeleton for 5",
+          "Skeleton hits you for 3",
+          "You hit Skeleton for 5"
+        ],
+        "xp_gained": 15
+      },
+      "position": [
+        26,
+        16
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +23 gold, +3 HP.",
+      "data": {
+        "gold": 23,
+        "heal": 3
+      },
+      "position": [
+        13,
+        19
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "encounter",
+      "description": "A Dragon lurches from the shadows!",
+      "data": {
+        "monster": "Dragon"
+      },
+      "position": [
+        14,
+        6
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "combat_loss",
+      "description": "The Dragon was too strong.",
+      "data": {
+        "won": false,
+        "rounds": 3,
+        "monster": "Dragon",
+        "log": [
+          "You hit Dragon for 3",
+          "Dragon hits you for 5",
+          "You hit Dragon for 4",
+          "Dragon hits you for 8",
+          "You hit Dragon for 4",
+          "Dragon hits you for 5"
+        ],
+        "xp_gained": 0
+      },
+      "position": [
+        14,
+        6
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "death",
+      "description": "You have fallen in the dungeon.",
+      "data": {},
+      "position": [
+        14,
+        6
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "complete",
+      "description": "Died on turn 6. Slain 2 monsters before falling.",
+      "data": {},
+      "position": [
+        14,
+        6
+      ]
+    }
+  ]
+}

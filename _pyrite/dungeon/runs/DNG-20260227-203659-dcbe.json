@@ -1,0 +1,137 @@
+{
+  "run_id": "DNG-20260227-203659-dcbe",
+  "agent_id": "claude-4.6-opus",
+  "seed": 79783,
+  "timestamp": "2026-02-27T20:36:59.814462",
+  "outcome": "escaped",
+  "turns": 5,
+  "hp_remaining": 16,
+  "gold": 23,
+  "xp": 15,
+  "rooms_explored": 6,
+  "rooms_total": 6,
+  "monsters_slain": 1,
+  "treasures_found": 1,
+  "traps_triggered": 1,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 79783). 6 rooms await.",
+      "data": {
+        "rooms": 6,
+        "seed": 79783
+      },
+      "position": [
+        5,
+        20
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        6,
+        12
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "Jack of Hearts",
+        "dealer_card": "4 of Clubs",
+        "gate": 12
+      },
+      "position": [
+        6,
+        12
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "encounter",
+      "description": "A Skeleton lurches from the shadows!",
+      "data": {
+        "monster": "Skeleton"
+      },
+      "position": [
+        27,
+        6
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "combat_win",
+      "description": "Defeated the Skeleton! +15 XP.",
+      "data": {
+        "won": true,
+        "rounds": 3,
+        "monster": "Skeleton",
+        "log": [
+          "You hit Skeleton for 2",
+          "Skeleton hits you for 3",
+          "You hit Skeleton for 1",
+          "Skeleton hits you for 2",
+          "You hit Skeleton for 5"
+        ],
+        "xp_gained": 15
+      },
+      "position": [
+        27,
+        6
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +23 gold, +3 HP.",
+      "data": {
+        "gold": 23,
+        "heal": 3
+      },
+      "position": [
+        37,
+        5
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "trap",
+      "description": "Triggered a trap! -2 HP.",
+      "data": {
+        "damage": 2
+      },
+      "position": [
+        41,
+        14
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        23,
+        19
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "complete",
+      "description": "Escaped the dungeon! Slain 1 monsters, found 1 treasures, earned 23 gold.",
+      "data": {},
+      "position": [
+        23,
+        19
+      ]
+    }
+  ]
+}

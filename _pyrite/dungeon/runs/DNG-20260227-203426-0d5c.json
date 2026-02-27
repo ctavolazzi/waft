@@ -1,0 +1,128 @@
+{
+  "run_id": "DNG-20260227-203426-0d5c",
+  "agent_id": "claude-4.6-opus",
+  "seed": 92073,
+  "timestamp": "2026-02-27T20:34:26.748362",
+  "outcome": "died",
+  "turns": 4,
+  "hp_remaining": -3,
+  "gold": 31,
+  "xp": 0,
+  "rooms_explored": 5,
+  "rooms_total": 8,
+  "monsters_slain": 0,
+  "treasures_found": 2,
+  "traps_triggered": 1,
+  "dealer_encountered": false,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 92073). 8 rooms await.",
+      "data": {
+        "rooms": 8,
+        "seed": 92073
+      },
+      "position": [
+        41,
+        12
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +17 gold, +0 HP.",
+      "data": {
+        "gold": 17,
+        "heal": 0
+      },
+      "position": [
+        33,
+        12
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "trap",
+      "description": "Triggered a trap! -3 HP.",
+      "data": {
+        "damage": 3
+      },
+      "position": [
+        34,
+        20
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +14 gold, +3 HP.",
+      "data": {
+        "gold": 14,
+        "heal": 3
+      },
+      "position": [
+        42,
+        21
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "encounter",
+      "description": "A Dragon lurches from the shadows!",
+      "data": {
+        "monster": "Dragon"
+      },
+      "position": [
+        26,
+        16
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "combat_loss",
+      "description": "The Dragon was too strong.",
+      "data": {
+        "won": false,
+        "rounds": 4,
+        "monster": "Dragon",
+        "log": [
+          "You hit Dragon for 3",
+          "Dragon hits you for 6",
+          "You hit Dragon for 1",
+          "Dragon hits you for 5",
+          "You hit Dragon for 2",
+          "Dragon hits you for 6",
+          "You hit Dragon for 2",
+          "Dragon hits you for 6"
+        ],
+        "xp_gained": 0
+      },
+      "position": [
+        26,
+        16
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "death",
+      "description": "You have fallen in the dungeon.",
+      "data": {},
+      "position": [
+        26,
+        16
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "complete",
+      "description": "Died on turn 4. Slain 0 monsters before falling.",
+      "data": {},
+      "position": [
+        26,
+        16
+      ]
+    }
+  ]
+}

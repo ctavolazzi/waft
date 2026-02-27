@@ -1,0 +1,145 @@
+{
+  "run_id": "DNG-20260227-203426-8c61",
+  "agent_id": "claude-4.6-opus",
+  "seed": 62760,
+  "timestamp": "2026-02-27T20:34:26.757198",
+  "outcome": "died",
+  "turns": 4,
+  "hp_remaining": -2,
+  "gold": 16,
+  "xp": 30,
+  "rooms_explored": 5,
+  "rooms_total": 7,
+  "monsters_slain": 1,
+  "treasures_found": 1,
+  "traps_triggered": 0,
+  "dealer_encountered": false,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 62760). 7 rooms await.",
+      "data": {
+        "rooms": 7,
+        "seed": 62760
+      },
+      "position": [
+        34,
+        13
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +16 gold, +0 HP.",
+      "data": {
+        "gold": 16,
+        "heal": 0
+      },
+      "position": [
+        28,
+        14
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        18,
+        17
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "encounter",
+      "description": "A Wraith lurches from the shadows!",
+      "data": {
+        "monster": "Wraith"
+      },
+      "position": [
+        6,
+        17
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "combat_win",
+      "description": "Defeated the Wraith! +30 XP.",
+      "data": {
+        "won": true,
+        "rounds": 4,
+        "monster": "Wraith",
+        "log": [
+          "You hit Wraith for 1",
+          "Wraith hits you for 5",
+          "You hit Wraith for 2",
+          "Wraith hits you for 5",
+          "You hit Wraith for 3",
+          "Wraith hits you for 4",
+          "You hit Wraith for 3"
+        ],
+        "xp_gained": 30
+      },
+      "position": [
+        6,
+        17
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "encounter",
+      "description": "A Wraith lurches from the shadows!",
+      "data": {
+        "monster": "Wraith"
+      },
+      "position": [
+        6,
+        7
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "combat_loss",
+      "description": "The Wraith was too strong.",
+      "data": {
+        "won": false,
+        "rounds": 2,
+        "monster": "Wraith",
+        "log": [
+          "You hit Wraith for 1",
+          "Wraith hits you for 3",
+          "You hit Wraith for 1",
+          "Wraith hits you for 5"
+        ],
+        "xp_gained": 0
+      },
+      "position": [
+        6,
+        7
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "death",
+      "description": "You have fallen in the dungeon.",
+      "data": {},
+      "position": [
+        6,
+        7
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "complete",
+      "description": "Died on turn 4. Slain 1 monsters before falling.",
+      "data": {},
+      "position": [
+        6,
+        7
+      ]
+    }
+  ]
+}

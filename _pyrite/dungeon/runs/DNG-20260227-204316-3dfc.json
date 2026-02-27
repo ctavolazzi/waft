@@ -1,0 +1,170 @@
+{
+  "run_id": "DNG-20260227-204316-3dfc",
+  "agent_id": "gemini-2.0-flash",
+  "seed": 72605,
+  "timestamp": "2026-02-27T20:43:16.957711",
+  "outcome": "escaped",
+  "turns": 8,
+  "hp_remaining": 13,
+  "gold": 28,
+  "xp": 15,
+  "rooms_explored": 9,
+  "rooms_total": 9,
+  "monsters_slain": 1,
+  "treasures_found": 2,
+  "traps_triggered": 1,
+  "dealer_encountered": true,
+  "dealer_won": true,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 72605). 9 rooms await.",
+      "data": {
+        "rooms": 9,
+        "seed": 72605
+      },
+      "position": [
+        16,
+        7
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +16 gold, +0 HP.",
+      "data": {
+        "gold": 16,
+        "heal": 0
+      },
+      "position": [
+        34,
+        8
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +12 gold, +0 HP.",
+      "data": {
+        "gold": 12,
+        "heal": 0
+      },
+      "position": [
+        25,
+        3
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        39,
+        12
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "trap",
+      "description": "Triggered a trap! -3 HP.",
+      "data": {
+        "damage": 3
+      },
+      "position": [
+        6,
+        6
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        23,
+        19
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "encounter",
+      "description": "A Skeleton lurches from the shadows!",
+      "data": {
+        "monster": "Skeleton"
+      },
+      "position": [
+        42,
+        6
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "combat_win",
+      "description": "Defeated the Skeleton! +15 XP.",
+      "data": {
+        "won": true,
+        "rounds": 3,
+        "monster": "Skeleton",
+        "log": [
+          "You hit Skeleton for 2",
+          "Skeleton hits you for 2",
+          "You hit Skeleton for 3",
+          "Skeleton hits you for 2",
+          "You hit Skeleton for 4"
+        ],
+        "xp_gained": 15
+      },
+      "position": [
+        42,
+        6
+      ]
+    },
+    {
+      "turn": 7,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        26,
+        11
+      ]
+    },
+    {
+      "turn": 7,
+      "event_type": "dealer_result",
+      "description": "Gate 12: SEAL BROKEN.",
+      "data": {
+        "won": true,
+        "system_card": "9 of Clubs",
+        "dealer_card": "8 of Clubs",
+        "gate": 12
+      },
+      "position": [
+        26,
+        11
+      ]
+    },
+    {
+      "turn": 8,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        9,
+        14
+      ]
+    },
+    {
+      "turn": 8,
+      "event_type": "complete",
+      "description": "Escaped the dungeon! Slain 1 monsters, found 2 treasures, earned 28 gold.",
+      "data": {},
+      "position": [
+        9,
+        14
+      ]
+    }
+  ]
+}

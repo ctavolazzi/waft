@@ -1,0 +1,217 @@
+{
+  "run_id": "DNG-20260227-204226-b4f2",
+  "agent_id": "claude-3.5-sonnet",
+  "seed": 500,
+  "timestamp": "2026-02-27T20:42:26.523531",
+  "outcome": "died",
+  "turns": 7,
+  "hp_remaining": -2,
+  "gold": 25,
+  "xp": 60,
+  "rooms_explored": 8,
+  "rooms_total": 9,
+  "monsters_slain": 3,
+  "treasures_found": 1,
+  "traps_triggered": 0,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 500). 9 rooms await.",
+      "data": {},
+      "position": [
+        41,
+        12
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        15,
+        19
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +25 gold, +0 HP.",
+      "data": {
+        "gold": 25,
+        "heal": 0
+      },
+      "position": [
+        34,
+        13
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "encounter",
+      "description": "A Orc lurches from the shadows!",
+      "data": {
+        "monster": "Orc"
+      },
+      "position": [
+        3,
+        7
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "combat_win",
+      "description": "Defeated the Orc! +25 XP.",
+      "data": {
+        "won": true,
+        "rounds": 2,
+        "monster": "Orc",
+        "log": [
+          "You hit Orc for 6",
+          "Orc hits you for 5",
+          "You hit Orc for 4"
+        ],
+        "xp_gained": 25
+      },
+      "position": [
+        3,
+        7
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        25,
+        18
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "6 of Diamonds",
+        "dealer_card": "10 of Diamonds",
+        "gate": 12
+      },
+      "position": [
+        25,
+        18
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "encounter",
+      "description": "A Orc lurches from the shadows!",
+      "data": {
+        "monster": "Orc"
+      },
+      "position": [
+        9,
+        5
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "combat_win",
+      "description": "Defeated the Orc! +25 XP.",
+      "data": {
+        "won": true,
+        "rounds": 2,
+        "monster": "Orc",
+        "log": [
+          "You hit Orc for 5",
+          "Orc hits you for 4",
+          "You hit Orc for 7"
+        ],
+        "xp_gained": 25
+      },
+      "position": [
+        9,
+        5
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "encounter",
+      "description": "A Goblin lurches from the shadows!",
+      "data": {
+        "monster": "Goblin"
+      },
+      "position": [
+        28,
+        8
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "combat_win",
+      "description": "Defeated the Goblin! +10 XP.",
+      "data": {
+        "won": true,
+        "rounds": 1,
+        "monster": "Goblin",
+        "log": [
+          "You hit Goblin for 7"
+        ],
+        "xp_gained": 10
+      },
+      "position": [
+        28,
+        8
+      ]
+    },
+    {
+      "turn": 7,
+      "event_type": "encounter",
+      "description": "A Dragon lurches from the shadows!",
+      "data": {
+        "monster": "Dragon"
+      },
+      "position": [
+        21,
+        5
+      ]
+    },
+    {
+      "turn": 7,
+      "event_type": "combat_loss",
+      "description": "The Dragon was too strong.",
+      "data": {
+        "won": false,
+        "rounds": 3,
+        "monster": "Dragon",
+        "log": [
+          "You hit Dragon for 6",
+          "Dragon hits you for 5",
+          "You hit Dragon for 7",
+          "Dragon hits you for 4",
+          "You hit Dragon for 5",
+          "Dragon hits you for 4"
+        ],
+        "xp_gained": 0
+      },
+      "position": [
+        21,
+        5
+      ]
+    },
+    {
+      "turn": 7,
+      "event_type": "death",
+      "description": "You have fallen.",
+      "data": {},
+      "position": [
+        21,
+        5
+      ]
+    }
+  ]
+}

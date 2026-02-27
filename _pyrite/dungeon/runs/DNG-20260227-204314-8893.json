@@ -1,0 +1,101 @@
+{
+  "run_id": "DNG-20260227-204314-8893",
+  "agent_id": "claude-4.6-opus",
+  "seed": 18229,
+  "timestamp": "2026-02-27T20:43:14.980399",
+  "outcome": "escaped",
+  "turns": 4,
+  "hp_remaining": 20,
+  "gold": 13,
+  "xp": 0,
+  "rooms_explored": 5,
+  "rooms_total": 5,
+  "monsters_slain": 0,
+  "treasures_found": 1,
+  "traps_triggered": 0,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 18229). 5 rooms await.",
+      "data": {
+        "rooms": 5,
+        "seed": 18229
+      },
+      "position": [
+        42,
+        5
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        9,
+        10
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        31,
+        12
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "Queen of Clubs",
+        "dealer_card": "5 of Hearts",
+        "gate": 12
+      },
+      "position": [
+        31,
+        12
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +13 gold, +0 HP.",
+      "data": {
+        "gold": 13,
+        "heal": 0
+      },
+      "position": [
+        22,
+        7
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        18,
+        18
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "complete",
+      "description": "Escaped the dungeon! Slain 0 monsters, found 1 treasures, earned 13 gold.",
+      "data": {},
+      "position": [
+        18,
+        18
+      ]
+    }
+  ]
+}

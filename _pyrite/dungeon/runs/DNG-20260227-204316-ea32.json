@@ -1,0 +1,179 @@
+{
+  "run_id": "DNG-20260227-204316-ea32",
+  "agent_id": "gemini-2.0-flash",
+  "seed": 62869,
+  "timestamp": "2026-02-27T20:43:16.949753",
+  "outcome": "escaped",
+  "turns": 7,
+  "hp_remaining": 3,
+  "gold": 8,
+  "xp": 70,
+  "rooms_explored": 8,
+  "rooms_total": 9,
+  "monsters_slain": 2,
+  "treasures_found": 1,
+  "traps_triggered": 0,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 62869). 9 rooms await.",
+      "data": {
+        "rooms": 9,
+        "seed": 62869
+      },
+      "position": [
+        30,
+        18
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        11,
+        7
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "10 of Spades",
+        "dealer_card": "7 of Diamonds",
+        "gate": 12
+      },
+      "position": [
+        11,
+        7
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +8 gold, +0 HP.",
+      "data": {
+        "gold": 8,
+        "heal": 0
+      },
+      "position": [
+        44,
+        15
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "encounter",
+      "description": "A Troll lurches from the shadows!",
+      "data": {
+        "monster": "Troll"
+      },
+      "position": [
+        13,
+        20
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "combat_win",
+      "description": "Defeated the Troll! +40 XP.",
+      "data": {
+        "won": true,
+        "rounds": 3,
+        "monster": "Troll",
+        "log": [
+          "You hit Troll for 5",
+          "Troll hits you for 3",
+          "You hit Troll for 4",
+          "Troll hits you for 3",
+          "You hit Troll for 5"
+        ],
+        "xp_gained": 40
+      },
+      "position": [
+        13,
+        20
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        36,
+        11
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        24,
+        14
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "encounter",
+      "description": "A Wraith lurches from the shadows!",
+      "data": {
+        "monster": "Wraith"
+      },
+      "position": [
+        28,
+        5
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "combat_win",
+      "description": "Defeated the Wraith! +30 XP.",
+      "data": {
+        "won": true,
+        "rounds": 3,
+        "monster": "Wraith",
+        "log": [
+          "You hit Wraith for 1",
+          "Wraith hits you for 5",
+          "You hit Wraith for 5",
+          "Wraith hits you for 6",
+          "You hit Wraith for 2"
+        ],
+        "xp_gained": 30
+      },
+      "position": [
+        28,
+        5
+      ]
+    },
+    {
+      "turn": 7,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        41,
+        7
+      ]
+    },
+    {
+      "turn": 7,
+      "event_type": "complete",
+      "description": "Escaped the dungeon! Slain 2 monsters, found 1 treasures, earned 8 gold.",
+      "data": {},
+      "position": [
+        41,
+        7
+      ]
+    }
+  ]
+}

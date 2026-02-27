@@ -1,0 +1,163 @@
+{
+  "run_id": "DNG-20260227-194008-0433",
+  "agent_id": "claude-4.6-opus",
+  "seed": 512,
+  "timestamp": "2026-02-27T19:40:08.353433",
+  "outcome": "escaped",
+  "turns": 8,
+  "hp_remaining": 16,
+  "gold": 21,
+  "xp": 30,
+  "rooms_explored": 9,
+  "rooms_total": 9,
+  "monsters_slain": 1,
+  "treasures_found": 2,
+  "traps_triggered": 0,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 512). 9 rooms await.",
+      "data": {},
+      "position": [
+        12,
+        14
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        7,
+        9
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "5 of Spades",
+        "dealer_card": "3 of Hearts",
+        "gate": 12
+      },
+      "position": [
+        7,
+        9
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +8 gold, +0 HP.",
+      "data": {
+        "gold": 8,
+        "heal": 0
+      },
+      "position": [
+        18,
+        3
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        34,
+        4
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        43,
+        9
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        43,
+        16
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +13 gold, +0 HP.",
+      "data": {
+        "gold": 13,
+        "heal": 0
+      },
+      "position": [
+        25,
+        16
+      ]
+    },
+    {
+      "turn": 7,
+      "event_type": "encounter",
+      "description": "A Wraith lurches from the shadows!",
+      "data": {
+        "monster": "Wraith"
+      },
+      "position": [
+        19,
+        19
+      ]
+    },
+    {
+      "turn": 7,
+      "event_type": "combat_win",
+      "description": "Defeated the Wraith! +30 XP.",
+      "data": {
+        "won": true,
+        "rounds": 2,
+        "monster": "Wraith",
+        "log": [
+          "You hit Wraith for 5",
+          "Wraith hits you for 4",
+          "You hit Wraith for 5"
+        ],
+        "xp_gained": 30
+      },
+      "position": [
+        19,
+        19
+      ]
+    },
+    {
+      "turn": 8,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        35,
+        19
+      ]
+    },
+    {
+      "turn": 8,
+      "event_type": "complete",
+      "description": "Escaped! Slain 1, gold 21.",
+      "data": {},
+      "position": [
+        35,
+        19
+      ]
+    }
+  ]
+}

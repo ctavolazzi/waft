@@ -1,0 +1,166 @@
+{
+  "run_id": "DNG-20260227-204316-22fe",
+  "agent_id": "gemini-2.0-flash",
+  "seed": 44969,
+  "timestamp": "2026-02-27T20:43:16.940286",
+  "outcome": "escaped",
+  "turns": 6,
+  "hp_remaining": 6,
+  "gold": 0,
+  "xp": 40,
+  "rooms_explored": 7,
+  "rooms_total": 7,
+  "monsters_slain": 2,
+  "treasures_found": 0,
+  "traps_triggered": 0,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 44969). 7 rooms await.",
+      "data": {
+        "rooms": 7,
+        "seed": 44969
+      },
+      "position": [
+        38,
+        16
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "encounter",
+      "description": "A Skeleton lurches from the shadows!",
+      "data": {
+        "monster": "Skeleton"
+      },
+      "position": [
+        5,
+        7
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "combat_win",
+      "description": "Defeated the Skeleton! +15 XP.",
+      "data": {
+        "won": true,
+        "rounds": 2,
+        "monster": "Skeleton",
+        "log": [
+          "You hit Skeleton for 5",
+          "Skeleton hits you for 3",
+          "You hit Skeleton for 4"
+        ],
+        "xp_gained": 15
+      },
+      "position": [
+        5,
+        7
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        37,
+        8
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "3 of Hearts",
+        "dealer_card": "5 of Clubs",
+        "gate": 12
+      },
+      "position": [
+        37,
+        8
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "encounter",
+      "description": "A Orc lurches from the shadows!",
+      "data": {
+        "monster": "Orc"
+      },
+      "position": [
+        7,
+        18
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "combat_win",
+      "description": "Defeated the Orc! +25 XP.",
+      "data": {
+        "won": true,
+        "rounds": 4,
+        "monster": "Orc",
+        "log": [
+          "You hit Orc for 3",
+          "Orc hits you for 4",
+          "You hit Orc for 1",
+          "Orc hits you for 4",
+          "You hit Orc for 3",
+          "Orc hits you for 3",
+          "You hit Orc for 4"
+        ],
+        "xp_gained": 25
+      },
+      "position": [
+        7,
+        18
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        24,
+        4
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        18,
+        15
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        28,
+        18
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "complete",
+      "description": "Escaped the dungeon! Slain 2 monsters, found 0 treasures, earned 0 gold.",
+      "data": {},
+      "position": [
+        28,
+        18
+      ]
+    }
+  ]
+}

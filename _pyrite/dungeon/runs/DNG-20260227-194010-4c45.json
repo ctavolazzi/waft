@@ -1,0 +1,63 @@
+{
+  "run_id": "DNG-20260227-194010-4c45",
+  "agent_id": "claude-4.6-opus",
+  "seed": 1024,
+  "timestamp": "2026-02-27T19:40:10.405721",
+  "outcome": "timeout",
+  "turns": 200,
+  "hp_remaining": 20,
+  "gold": 9,
+  "xp": 0,
+  "rooms_explored": 3,
+  "rooms_total": 7,
+  "monsters_slain": 0,
+  "treasures_found": 1,
+  "traps_triggered": 0,
+  "dealer_encountered": false,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 1024). 7 rooms await.",
+      "data": {},
+      "position": [
+        27,
+        14
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        37,
+        18
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +9 gold, +0 HP.",
+      "data": {
+        "gold": 9,
+        "heal": 0
+      },
+      "position": [
+        11,
+        17
+      ]
+    },
+    {
+      "turn": 200,
+      "event_type": "timeout",
+      "description": "Ran out of turns (200).",
+      "data": {},
+      "position": [
+        11,
+        17
+      ]
+    }
+  ]
+}

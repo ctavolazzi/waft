@@ -1,0 +1,109 @@
+{
+  "run_id": "DNG-20260227-200954-ff31",
+  "agent_id": "claude-4.6-opus",
+  "seed": 2026,
+  "timestamp": "2026-02-27T20:09:54.296492",
+  "outcome": "died",
+  "turns": 2,
+  "hp_remaining": -1,
+  "gold": 0,
+  "xp": 25,
+  "rooms_explored": 3,
+  "rooms_total": 6,
+  "monsters_slain": 1,
+  "treasures_found": 0,
+  "traps_triggered": 0,
+  "dealer_encountered": false,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 2026). 6 rooms await.",
+      "data": {},
+      "position": [
+        35,
+        20
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "encounter",
+      "description": "A Orc lurches from the shadows!",
+      "data": {
+        "monster": "Orc"
+      },
+      "position": [
+        40,
+        12
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "combat_win",
+      "description": "Defeated the Orc! +25 XP.",
+      "data": {
+        "won": true,
+        "rounds": 3,
+        "monster": "Orc",
+        "log": [
+          "You hit Orc for 4",
+          "Orc hits you for 2",
+          "You hit Orc for 4",
+          "Orc hits you for 5",
+          "You hit Orc for 3"
+        ],
+        "xp_gained": 25
+      },
+      "position": [
+        40,
+        12
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "encounter",
+      "description": "A Troll lurches from the shadows!",
+      "data": {
+        "monster": "Troll"
+      },
+      "position": [
+        20,
+        4
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "combat_loss",
+      "description": "The Troll was too strong.",
+      "data": {
+        "won": false,
+        "rounds": 3,
+        "monster": "Troll",
+        "log": [
+          "You hit Troll for 4",
+          "Troll hits you for 4",
+          "You hit Troll for 4",
+          "Troll hits you for 6",
+          "You hit Troll for 1",
+          "Troll hits you for 4"
+        ],
+        "xp_gained": 0
+      },
+      "position": [
+        20,
+        4
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "death",
+      "description": "You have fallen in the dungeon.",
+      "data": {},
+      "position": [
+        20,
+        4
+      ]
+    }
+  ]
+}
