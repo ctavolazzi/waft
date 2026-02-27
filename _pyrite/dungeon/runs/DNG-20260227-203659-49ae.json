@@ -1,0 +1,111 @@
+{
+  "run_id": "DNG-20260227-203659-49ae",
+  "agent_id": "claude-4.6-opus",
+  "seed": 15108,
+  "timestamp": "2026-02-27T20:36:59.815425",
+  "outcome": "escaped",
+  "turns": 4,
+  "hp_remaining": 3,
+  "gold": 0,
+  "xp": 40,
+  "rooms_explored": 5,
+  "rooms_total": 7,
+  "monsters_slain": 1,
+  "treasures_found": 0,
+  "traps_triggered": 0,
+  "dealer_encountered": false,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 15108). 7 rooms await.",
+      "data": {
+        "rooms": 7,
+        "seed": 15108
+      },
+      "position": [
+        8,
+        10
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        18,
+        7
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        26,
+        10
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "encounter",
+      "description": "A Troll lurches from the shadows!",
+      "data": {
+        "monster": "Troll"
+      },
+      "position": [
+        33,
+        6
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "combat_win",
+      "description": "Defeated the Troll! +40 XP.",
+      "data": {
+        "won": true,
+        "rounds": 5,
+        "monster": "Troll",
+        "log": [
+          "You hit Troll for 5",
+          "Troll hits you for 4",
+          "You hit Troll for 1",
+          "Troll hits you for 6",
+          "You hit Troll for 3",
+          "Troll hits you for 4",
+          "You hit Troll for 3",
+          "Troll hits you for 3",
+          "You hit Troll for 4"
+        ],
+        "xp_gained": 40
+      },
+      "position": [
+        33,
+        6
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        38,
+        14
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "complete",
+      "description": "Escaped the dungeon! Slain 1 monsters, found 0 treasures, earned 0 gold.",
+      "data": {},
+      "position": [
+        38,
+        14
+      ]
+    }
+  ]
+}

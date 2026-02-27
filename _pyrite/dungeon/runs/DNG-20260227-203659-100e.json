@@ -1,0 +1,141 @@
+{
+  "run_id": "DNG-20260227-203659-100e",
+  "agent_id": "claude-4.6-opus",
+  "seed": 80626,
+  "timestamp": "2026-02-27T20:36:59.820390",
+  "outcome": "died",
+  "turns": 4,
+  "hp_remaining": 0,
+  "gold": 21,
+  "xp": 10,
+  "rooms_explored": 5,
+  "rooms_total": 8,
+  "monsters_slain": 1,
+  "treasures_found": 1,
+  "traps_triggered": 0,
+  "dealer_encountered": false,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 80626). 8 rooms await.",
+      "data": {
+        "rooms": 8,
+        "seed": 80626
+      },
+      "position": [
+        9,
+        5
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        3,
+        10
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "encounter",
+      "description": "A Goblin lurches from the shadows!",
+      "data": {
+        "monster": "Goblin"
+      },
+      "position": [
+        8,
+        17
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "combat_win",
+      "description": "Defeated the Goblin! +10 XP.",
+      "data": {
+        "won": true,
+        "rounds": 1,
+        "monster": "Goblin",
+        "log": [
+          "You hit Goblin for 6"
+        ],
+        "xp_gained": 10
+      },
+      "position": [
+        8,
+        17
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +21 gold, +0 HP.",
+      "data": {
+        "gold": 21,
+        "heal": 0
+      },
+      "position": [
+        16,
+        15
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "encounter",
+      "description": "A Dragon lurches from the shadows!",
+      "data": {
+        "monster": "Dragon"
+      },
+      "position": [
+        18,
+        3
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "combat_loss",
+      "description": "The Dragon was too strong.",
+      "data": {
+        "won": false,
+        "rounds": 3,
+        "monster": "Dragon",
+        "log": [
+          "You hit Dragon for 4",
+          "Dragon hits you for 7",
+          "You hit Dragon for 2",
+          "Dragon hits you for 6",
+          "You hit Dragon for 4",
+          "Dragon hits you for 7"
+        ],
+        "xp_gained": 0
+      },
+      "position": [
+        18,
+        3
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "death",
+      "description": "You have fallen in the dungeon.",
+      "data": {},
+      "position": [
+        18,
+        3
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "complete",
+      "description": "Died on turn 4. Slain 1 monsters before falling.",
+      "data": {},
+      "position": [
+        18,
+        3
+      ]
+    }
+  ]
+}

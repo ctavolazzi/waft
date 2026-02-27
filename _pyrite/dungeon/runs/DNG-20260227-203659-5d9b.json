@@ -1,0 +1,176 @@
+{
+  "run_id": "DNG-20260227-203659-5d9b",
+  "agent_id": "claude-4.6-opus",
+  "seed": 94221,
+  "timestamp": "2026-02-27T20:36:59.812536",
+  "outcome": "escaped",
+  "turns": 7,
+  "hp_remaining": 6,
+  "gold": 0,
+  "xp": 40,
+  "rooms_explored": 8,
+  "rooms_total": 8,
+  "monsters_slain": 2,
+  "treasures_found": 0,
+  "traps_triggered": 2,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 94221). 8 rooms await.",
+      "data": {
+        "rooms": 8,
+        "seed": 94221
+      },
+      "position": [
+        13,
+        8
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "trap",
+      "description": "Triggered a trap! -5 HP.",
+      "data": {
+        "damage": 5
+      },
+      "position": [
+        22,
+        9
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        30,
+        10
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "8 of Spades",
+        "dealer_card": "Jack of Spades",
+        "gate": 12
+      },
+      "position": [
+        30,
+        10
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        39,
+        5
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "encounter",
+      "description": "A Goblin lurches from the shadows!",
+      "data": {
+        "monster": "Goblin"
+      },
+      "position": [
+        38,
+        17
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "combat_win",
+      "description": "Defeated the Goblin! +10 XP.",
+      "data": {
+        "won": true,
+        "rounds": 1,
+        "monster": "Goblin",
+        "log": [
+          "You hit Goblin for 4"
+        ],
+        "xp_gained": 10
+      },
+      "position": [
+        38,
+        17
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "encounter",
+      "description": "A Wraith lurches from the shadows!",
+      "data": {
+        "monster": "Wraith"
+      },
+      "position": [
+        11,
+        18
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "combat_win",
+      "description": "Defeated the Wraith! +30 XP.",
+      "data": {
+        "won": true,
+        "rounds": 3,
+        "monster": "Wraith",
+        "log": [
+          "You hit Wraith for 2",
+          "Wraith hits you for 3",
+          "You hit Wraith for 1",
+          "Wraith hits you for 2",
+          "You hit Wraith for 5"
+        ],
+        "xp_gained": 30
+      },
+      "position": [
+        11,
+        18
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "trap",
+      "description": "Triggered a trap! -4 HP.",
+      "data": {
+        "damage": 4
+      },
+      "position": [
+        5,
+        14
+      ]
+    },
+    {
+      "turn": 7,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        38,
+        12
+      ]
+    },
+    {
+      "turn": 7,
+      "event_type": "complete",
+      "description": "Escaped the dungeon! Slain 2 monsters, found 0 treasures, earned 0 gold.",
+      "data": {},
+      "position": [
+        38,
+        12
+      ]
+    }
+  ]
+}
