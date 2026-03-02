@@ -13,6 +13,10 @@ Waft is a scientific instrument for studying the **physics of artificial cogniti
 **The goal**: Observe a "God-Head" agent emerge from the evolutionary process.
 
 > *Read [The Philosophy of WAFT](docs/PHILOSOPHY.md) for the deeper why.*
+>
+> *For a runtime-verified CLI/API map, see [WAFT CLI and API Runtime Reference](docs/CLI_RUNTIME_REFERENCE.md).*
+>
+> *Historical snapshot: [WAFT Runtime Discovery (2026-02-27)](docs/WAFT_RUNTIME_DISCOVERY_20260227.md).*
 
 ---
 
@@ -100,6 +104,10 @@ waft evolve --agent RefactorAgent --generation 5
 ---
 
 ## Commands
+
+Runtime-verified command and route notes are tracked in:
+- `docs/CLI_RUNTIME_REFERENCE.md`
+- `docs/WAFT_RUNTIME_DISCOVERY_20260227.md` (historical snapshot)
 
 ### Core Commands
 
@@ -196,6 +204,36 @@ Start a web dashboard for the project:
 waft serve
 waft serve --port 8080 --dev
 ```
+
+### Docker Runtime (Ollama-Compatible API)
+
+Run WAFT API in Docker with Ollama-compatible v1 endpoints:
+
+- `GET /api/tags`
+- `POST /api/generate`
+
+Build and run:
+
+```bash
+docker compose up --build
+```
+
+Then verify:
+
+```bash
+curl http://localhost:8000/api/health
+curl http://localhost:8000/api/tags
+curl -X POST http://localhost:8000/api/generate \
+  -H "Content-Type: application/json" \
+  -d '{"model":"waft-echo:latest","prompt":"Hello from Docker","stream":false}'
+```
+
+Container runtime uses:
+
+- Host binding: `0.0.0.0`
+- Project path env: `WAFT_PROJECT_PATH=/app`
+
+See `docs/DOCKER_OLLAMA_RUNTIME.md` for full details.
 
 ### Empirica Commands
 
