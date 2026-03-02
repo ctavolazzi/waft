@@ -1,0 +1,203 @@
+{
+  "run_id": "DNG-20260227-204314-b7b0",
+  "agent_id": "claude-4.6-opus",
+  "seed": 52792,
+  "timestamp": "2026-02-27T20:43:14.983373",
+  "outcome": "died",
+  "turns": 6,
+  "hp_remaining": -2,
+  "gold": 24,
+  "xp": 35,
+  "rooms_explored": 7,
+  "rooms_total": 9,
+  "monsters_slain": 2,
+  "treasures_found": 2,
+  "traps_triggered": 0,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 52792). 9 rooms await.",
+      "data": {
+        "rooms": 9,
+        "seed": 52792
+      },
+      "position": [
+        8,
+        15
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "encounter",
+      "description": "A Goblin lurches from the shadows!",
+      "data": {
+        "monster": "Goblin"
+      },
+      "position": [
+        43,
+        4
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "combat_win",
+      "description": "Defeated the Goblin! +10 XP.",
+      "data": {
+        "won": true,
+        "rounds": 1,
+        "monster": "Goblin",
+        "log": [
+          "You hit Goblin for 6"
+        ],
+        "xp_gained": 10
+      },
+      "position": [
+        43,
+        4
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +14 gold, +0 HP.",
+      "data": {
+        "gold": 14,
+        "heal": 0
+      },
+      "position": [
+        17,
+        17
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "encounter",
+      "description": "A Orc lurches from the shadows!",
+      "data": {
+        "monster": "Orc"
+      },
+      "position": [
+        35,
+        3
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "combat_win",
+      "description": "Defeated the Orc! +25 XP.",
+      "data": {
+        "won": true,
+        "rounds": 3,
+        "monster": "Orc",
+        "log": [
+          "You hit Orc for 3",
+          "Orc hits you for 3",
+          "You hit Orc for 6",
+          "Orc hits you for 5",
+          "You hit Orc for 5"
+        ],
+        "xp_gained": 25
+      },
+      "position": [
+        35,
+        3
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        28,
+        15
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "Queen of Diamonds",
+        "dealer_card": "2 of Diamonds",
+        "gate": 12
+      },
+      "position": [
+        28,
+        15
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +10 gold, +3 HP.",
+      "data": {
+        "gold": 10,
+        "heal": 3
+      },
+      "position": [
+        20,
+        5
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "encounter",
+      "description": "A Dragon lurches from the shadows!",
+      "data": {
+        "monster": "Dragon"
+      },
+      "position": [
+        36,
+        18
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "combat_loss",
+      "description": "The Dragon was too strong.",
+      "data": {
+        "won": false,
+        "rounds": 3,
+        "monster": "Dragon",
+        "log": [
+          "You hit Dragon for 5",
+          "Dragon hits you for 6",
+          "You hit Dragon for 6",
+          "Dragon hits you for 5",
+          "You hit Dragon for 5",
+          "Dragon hits you for 6"
+        ],
+        "xp_gained": 0
+      },
+      "position": [
+        36,
+        18
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "death",
+      "description": "You have fallen in the dungeon.",
+      "data": {},
+      "position": [
+        36,
+        18
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "complete",
+      "description": "Died on turn 6. Slain 2 monsters before falling.",
+      "data": {},
+      "position": [
+        36,
+        18
+      ]
+    }
+  ]
+}

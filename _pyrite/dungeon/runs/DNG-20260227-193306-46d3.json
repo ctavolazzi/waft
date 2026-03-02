@@ -1,0 +1,40 @@
+{
+  "run_id": "DNG-20260227-193306-46d3",
+  "agent_id": "claude-4.6-opus",
+  "seed": 42,
+  "timestamp": "2026-02-27T19:33:06.308163",
+  "outcome": "timeout",
+  "turns": 200,
+  "hp_remaining": 20,
+  "gold": 0,
+  "xp": 0,
+  "rooms_explored": 1,
+  "rooms_total": 6,
+  "monsters_slain": 0,
+  "treasures_found": 0,
+  "traps_triggered": 0,
+  "dealer_encountered": false,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 42). 6 rooms await.",
+      "data": {},
+      "position": [
+        6,
+        11
+      ]
+    },
+    {
+      "turn": 200,
+      "event_type": "timeout",
+      "description": "Ran out of turns (200).",
+      "data": {},
+      "position": [
+        6,
+        11
+      ]
+    }
+  ]
+}

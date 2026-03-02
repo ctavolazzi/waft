@@ -1,0 +1,131 @@
+{
+  "run_id": "DNG-20260227-194328-b713",
+  "agent_id": "claude-4.6-opus",
+  "seed": 2025,
+  "timestamp": "2026-02-27T19:43:28.424228",
+  "outcome": "escaped",
+  "turns": 7,
+  "hp_remaining": 20,
+  "gold": 28,
+  "xp": 0,
+  "rooms_explored": 8,
+  "rooms_total": 8,
+  "monsters_slain": 0,
+  "treasures_found": 2,
+  "traps_triggered": 0,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 2025). 8 rooms await.",
+      "data": {},
+      "position": [
+        35,
+        8
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        28,
+        7
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        28,
+        15
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +9 gold, +0 HP.",
+      "data": {
+        "gold": 9,
+        "heal": 0
+      },
+      "position": [
+        41,
+        17
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        9,
+        17
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        4,
+        10
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "4 of Clubs",
+        "dealer_card": "9 of Clubs",
+        "gate": 12
+      },
+      "position": [
+        4,
+        10
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +19 gold, +0 HP.",
+      "data": {
+        "gold": 19,
+        "heal": 0
+      },
+      "position": [
+        18,
+        6
+      ]
+    },
+    {
+      "turn": 7,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        22,
+        20
+      ]
+    },
+    {
+      "turn": 7,
+      "event_type": "complete",
+      "description": "Escaped! Slain 0, gold 28.",
+      "data": {},
+      "position": [
+        22,
+        20
+      ]
+    }
+  ]
+}

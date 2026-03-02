@@ -1,0 +1,164 @@
+{
+  "run_id": "DNG-20260227-204318-ba5a",
+  "agent_id": "llama-3.1-70b",
+  "seed": 44709,
+  "timestamp": "2026-02-27T20:43:18.903780",
+  "outcome": "escaped",
+  "turns": 8,
+  "hp_remaining": 20,
+  "gold": 30,
+  "xp": 10,
+  "rooms_explored": 9,
+  "rooms_total": 9,
+  "monsters_slain": 1,
+  "treasures_found": 2,
+  "traps_triggered": 0,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 44709). 9 rooms await.",
+      "data": {
+        "rooms": 9,
+        "seed": 44709
+      },
+      "position": [
+        27,
+        13
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        25,
+        4
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "Queen of Diamonds",
+        "dealer_card": "Queen of Spades",
+        "gate": 12
+      },
+      "position": [
+        25,
+        4
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "encounter",
+      "description": "A Goblin lurches from the shadows!",
+      "data": {
+        "monster": "Goblin"
+      },
+      "position": [
+        7,
+        4
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "combat_win",
+      "description": "Defeated the Goblin! +10 XP.",
+      "data": {
+        "won": true,
+        "rounds": 1,
+        "monster": "Goblin",
+        "log": [
+          "You hit Goblin for 4"
+        ],
+        "xp_gained": 10
+      },
+      "position": [
+        7,
+        4
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +10 gold, +0 HP.",
+      "data": {
+        "gold": 10,
+        "heal": 0
+      },
+      "position": [
+        5,
+        15
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        13,
+        16
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        16,
+        8
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        38,
+        4
+      ]
+    },
+    {
+      "turn": 7,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +20 gold, +0 HP.",
+      "data": {
+        "gold": 20,
+        "heal": 0
+      },
+      "position": [
+        45,
+        19
+      ]
+    },
+    {
+      "turn": 8,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        40,
+        19
+      ]
+    },
+    {
+      "turn": 8,
+      "event_type": "complete",
+      "description": "Escaped the dungeon! Slain 1 monsters, found 2 treasures, earned 30 gold.",
+      "data": {},
+      "position": [
+        40,
+        19
+      ]
+    }
+  ]
+}

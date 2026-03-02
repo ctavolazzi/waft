@@ -1,0 +1,102 @@
+{
+  "run_id": "DNG-20260227-204315-ed78",
+  "agent_id": "gpt-4o",
+  "seed": 94287,
+  "timestamp": "2026-02-27T20:43:15.950897",
+  "outcome": "escaped",
+  "turns": 3,
+  "hp_remaining": 8,
+  "gold": 13,
+  "xp": 40,
+  "rooms_explored": 4,
+  "rooms_total": 9,
+  "monsters_slain": 1,
+  "treasures_found": 1,
+  "traps_triggered": 0,
+  "dealer_encountered": false,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 94287). 9 rooms await.",
+      "data": {
+        "rooms": 9,
+        "seed": 94287
+      },
+      "position": [
+        26,
+        4
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +13 gold, +0 HP.",
+      "data": {
+        "gold": 13,
+        "heal": 0
+      },
+      "position": [
+        4,
+        16
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "encounter",
+      "description": "A Troll lurches from the shadows!",
+      "data": {
+        "monster": "Troll"
+      },
+      "position": [
+        34,
+        10
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "combat_win",
+      "description": "Defeated the Troll! +40 XP.",
+      "data": {
+        "won": true,
+        "rounds": 4,
+        "monster": "Troll",
+        "log": [
+          "You hit Troll for 5",
+          "Troll hits you for 3",
+          "You hit Troll for 3",
+          "Troll hits you for 3",
+          "You hit Troll for 3",
+          "Troll hits you for 6",
+          "You hit Troll for 4"
+        ],
+        "xp_gained": 40
+      },
+      "position": [
+        34,
+        10
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        45,
+        18
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "complete",
+      "description": "Escaped the dungeon! Slain 1 monsters, found 1 treasures, earned 13 gold.",
+      "data": {},
+      "position": [
+        45,
+        18
+      ]
+    }
+  ]
+}

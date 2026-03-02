@@ -1,0 +1,162 @@
+{
+  "run_id": "DNG-20260227-203659-9f84",
+  "agent_id": "claude-4.6-opus",
+  "seed": 43549,
+  "timestamp": "2026-02-27T20:36:59.818591",
+  "outcome": "died",
+  "turns": 4,
+  "hp_remaining": -5,
+  "gold": 5,
+  "xp": 25,
+  "rooms_explored": 5,
+  "rooms_total": 8,
+  "monsters_slain": 1,
+  "treasures_found": 1,
+  "traps_triggered": 0,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 43549). 8 rooms await.",
+      "data": {
+        "rooms": 8,
+        "seed": 43549
+      },
+      "position": [
+        6,
+        16
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        24,
+        18
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "Ace of Clubs",
+        "dealer_card": "10 of Clubs",
+        "gate": 12
+      },
+      "position": [
+        24,
+        18
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "encounter",
+      "description": "A Orc lurches from the shadows!",
+      "data": {
+        "monster": "Orc"
+      },
+      "position": [
+        31,
+        13
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "combat_win",
+      "description": "Defeated the Orc! +25 XP.",
+      "data": {
+        "won": true,
+        "rounds": 4,
+        "monster": "Orc",
+        "log": [
+          "You hit Orc for 3",
+          "Orc hits you for 3",
+          "You hit Orc for 3",
+          "Orc hits you for 6",
+          "You hit Orc for 1",
+          "Orc hits you for 2",
+          "You hit Orc for 4"
+        ],
+        "xp_gained": 25
+      },
+      "position": [
+        31,
+        13
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +5 gold, +3 HP.",
+      "data": {
+        "gold": 5,
+        "heal": 3
+      },
+      "position": [
+        38,
+        14
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "encounter",
+      "description": "A Dragon lurches from the shadows!",
+      "data": {
+        "monster": "Dragon"
+      },
+      "position": [
+        34,
+        5
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "combat_loss",
+      "description": "The Dragon was too strong.",
+      "data": {
+        "won": false,
+        "rounds": 3,
+        "monster": "Dragon",
+        "log": [
+          "You hit Dragon for 5",
+          "Dragon hits you for 6",
+          "You hit Dragon for 3",
+          "Dragon hits you for 5",
+          "You hit Dragon for 5",
+          "Dragon hits you for 6"
+        ],
+        "xp_gained": 0
+      },
+      "position": [
+        34,
+        5
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "death",
+      "description": "You have fallen in the dungeon.",
+      "data": {},
+      "position": [
+        34,
+        5
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "complete",
+      "description": "Died on turn 4. Slain 1 monsters before falling.",
+      "data": {},
+      "position": [
+        34,
+        5
+      ]
+    }
+  ]
+}

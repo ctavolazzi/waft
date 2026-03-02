@@ -1,0 +1,170 @@
+{
+  "run_id": "DNG-20260227-204317-a662",
+  "agent_id": "claude-3.5-sonnet",
+  "seed": 25570,
+  "timestamp": "2026-02-27T20:43:17.935158",
+  "outcome": "escaped",
+  "turns": 8,
+  "hp_remaining": 20,
+  "gold": 43,
+  "xp": 10,
+  "rooms_explored": 9,
+  "rooms_total": 9,
+  "monsters_slain": 1,
+  "treasures_found": 4,
+  "traps_triggered": 0,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 25570). 9 rooms await.",
+      "data": {
+        "rooms": 9,
+        "seed": 25570
+      },
+      "position": [
+        14,
+        13
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +10 gold, +0 HP.",
+      "data": {
+        "gold": 10,
+        "heal": 0
+      },
+      "position": [
+        41,
+        10
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +12 gold, +0 HP.",
+      "data": {
+        "gold": 12,
+        "heal": 0
+      },
+      "position": [
+        6,
+        14
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +6 gold, +0 HP.",
+      "data": {
+        "gold": 6,
+        "heal": 0
+      },
+      "position": [
+        26,
+        8
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +15 gold, +0 HP.",
+      "data": {
+        "gold": 15,
+        "heal": 0
+      },
+      "position": [
+        12,
+        5
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        37,
+        17
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "2 of Diamonds",
+        "dealer_card": "Jack of Clubs",
+        "gate": 12
+      },
+      "position": [
+        37,
+        17
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        33,
+        4
+      ]
+    },
+    {
+      "turn": 7,
+      "event_type": "encounter",
+      "description": "A Goblin lurches from the shadows!",
+      "data": {
+        "monster": "Goblin"
+      },
+      "position": [
+        29,
+        17
+      ]
+    },
+    {
+      "turn": 7,
+      "event_type": "combat_win",
+      "description": "Defeated the Goblin! +10 XP.",
+      "data": {
+        "won": true,
+        "rounds": 1,
+        "monster": "Goblin",
+        "log": [
+          "You hit Goblin for 7"
+        ],
+        "xp_gained": 10
+      },
+      "position": [
+        29,
+        17
+      ]
+    },
+    {
+      "turn": 8,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        33,
+        10
+      ]
+    },
+    {
+      "turn": 8,
+      "event_type": "complete",
+      "description": "Escaped the dungeon! Slain 1 monsters, found 4 treasures, earned 43 gold.",
+      "data": {},
+      "position": [
+        33,
+        10
+      ]
+    }
+  ]
+}

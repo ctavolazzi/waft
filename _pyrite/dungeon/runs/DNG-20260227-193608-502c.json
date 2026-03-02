@@ -1,0 +1,86 @@
+{
+  "run_id": "DNG-20260227-193608-502c",
+  "agent_id": "claude-4.6-opus",
+  "seed": 777,
+  "timestamp": "2026-02-27T19:36:08.329330",
+  "outcome": "timeout",
+  "turns": 200,
+  "hp_remaining": 8,
+  "gold": 0,
+  "xp": 30,
+  "rooms_explored": 3,
+  "rooms_total": 7,
+  "monsters_slain": 1,
+  "treasures_found": 0,
+  "traps_triggered": 0,
+  "dealer_encountered": false,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 777). 7 rooms await.",
+      "data": {},
+      "position": [
+        31,
+        15
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "encounter",
+      "description": "A Wraith lurches from the shadows!",
+      "data": {
+        "monster": "Wraith"
+      },
+      "position": [
+        40,
+        11
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "combat_win",
+      "description": "Defeated the Wraith! +30 XP.",
+      "data": {
+        "won": true,
+        "rounds": 4,
+        "monster": "Wraith",
+        "log": [
+          "You hit Wraith for 2",
+          "Wraith hits you for 4",
+          "You hit Wraith for 1",
+          "Wraith hits you for 4",
+          "You hit Wraith for 3",
+          "Wraith hits you for 4",
+          "You hit Wraith for 4"
+        ],
+        "xp_gained": 30
+      },
+      "position": [
+        40,
+        11
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        26,
+        5
+      ]
+    },
+    {
+      "turn": 200,
+      "event_type": "timeout",
+      "description": "Ran out of turns (200).",
+      "data": {},
+      "position": [
+        26,
+        5
+      ]
+    }
+  ]
+}

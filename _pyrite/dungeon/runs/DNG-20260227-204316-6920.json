@@ -1,0 +1,153 @@
+{
+  "run_id": "DNG-20260227-204316-6920",
+  "agent_id": "gemini-2.0-flash",
+  "seed": 14315,
+  "timestamp": "2026-02-27T20:43:16.942751",
+  "outcome": "escaped",
+  "turns": 7,
+  "hp_remaining": 16,
+  "gold": 13,
+  "xp": 10,
+  "rooms_explored": 8,
+  "rooms_total": 8,
+  "monsters_slain": 1,
+  "treasures_found": 1,
+  "traps_triggered": 0,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 14315). 8 rooms await.",
+      "data": {
+        "rooms": 8,
+        "seed": 14315
+      },
+      "position": [
+        41,
+        11
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +13 gold, +0 HP.",
+      "data": {
+        "gold": 13,
+        "heal": 0
+      },
+      "position": [
+        8,
+        15
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        37,
+        19
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        16,
+        6
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "3 of Diamonds",
+        "dealer_card": "9 of Hearts",
+        "gate": 12
+      },
+      "position": [
+        16,
+        6
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        18,
+        20
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        28,
+        9
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "encounter",
+      "description": "A Goblin lurches from the shadows!",
+      "data": {
+        "monster": "Goblin"
+      },
+      "position": [
+        9,
+        4
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "combat_win",
+      "description": "Defeated the Goblin! +10 XP.",
+      "data": {
+        "won": true,
+        "rounds": 2,
+        "monster": "Goblin",
+        "log": [
+          "You hit Goblin for 3",
+          "Goblin hits you for 4",
+          "You hit Goblin for 2"
+        ],
+        "xp_gained": 10
+      },
+      "position": [
+        9,
+        4
+      ]
+    },
+    {
+      "turn": 7,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        41,
+        4
+      ]
+    },
+    {
+      "turn": 7,
+      "event_type": "complete",
+      "description": "Escaped the dungeon! Slain 1 monsters, found 1 treasures, earned 13 gold.",
+      "data": {},
+      "position": [
+        41,
+        4
+      ]
+    }
+  ]
+}

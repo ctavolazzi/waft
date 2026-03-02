@@ -1,0 +1,120 @@
+{
+  "run_id": "DNG-20260227-204227-00e8",
+  "agent_id": "llama-3.1-70b",
+  "seed": 500,
+  "timestamp": "2026-02-27T20:42:27.562182",
+  "outcome": "died",
+  "turns": 3,
+  "hp_remaining": -6,
+  "gold": 25,
+  "xp": 10,
+  "rooms_explored": 4,
+  "rooms_total": 9,
+  "monsters_slain": 1,
+  "treasures_found": 1,
+  "traps_triggered": 0,
+  "dealer_encountered": false,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 500). 9 rooms await.",
+      "data": {},
+      "position": [
+        41,
+        12
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +25 gold, +0 HP.",
+      "data": {
+        "gold": 25,
+        "heal": 0
+      },
+      "position": [
+        34,
+        13
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "encounter",
+      "description": "A Goblin lurches from the shadows!",
+      "data": {
+        "monster": "Goblin"
+      },
+      "position": [
+        28,
+        8
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "combat_win",
+      "description": "Defeated the Goblin! +10 XP.",
+      "data": {
+        "won": true,
+        "rounds": 1,
+        "monster": "Goblin",
+        "log": [
+          "You hit Goblin for 5"
+        ],
+        "xp_gained": 10
+      },
+      "position": [
+        28,
+        8
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "encounter",
+      "description": "A Dragon lurches from the shadows!",
+      "data": {
+        "monster": "Dragon"
+      },
+      "position": [
+        21,
+        5
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "combat_loss",
+      "description": "The Dragon was too strong.",
+      "data": {
+        "won": false,
+        "rounds": 4,
+        "monster": "Dragon",
+        "log": [
+          "You hit Dragon for 6",
+          "Dragon hits you for 5",
+          "You hit Dragon for 2",
+          "Dragon hits you for 7",
+          "You hit Dragon for 2",
+          "Dragon hits you for 7",
+          "You hit Dragon for 6",
+          "Dragon hits you for 7"
+        ],
+        "xp_gained": 0
+      },
+      "position": [
+        21,
+        5
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "death",
+      "description": "You have fallen.",
+      "data": {},
+      "position": [
+        21,
+        5
+      ]
+    }
+  ]
+}

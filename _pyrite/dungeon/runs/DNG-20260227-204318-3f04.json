@@ -1,0 +1,166 @@
+{
+  "run_id": "DNG-20260227-204318-3f04",
+  "agent_id": "llama-3.1-70b",
+  "seed": 86342,
+  "timestamp": "2026-02-27T20:43:18.899751",
+  "outcome": "escaped",
+  "turns": 7,
+  "hp_remaining": 17,
+  "gold": 41,
+  "xp": 0,
+  "rooms_explored": 8,
+  "rooms_total": 8,
+  "monsters_slain": 0,
+  "treasures_found": 2,
+  "traps_triggered": 1,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 86342). 8 rooms await.",
+      "data": {
+        "rooms": 8,
+        "seed": 86342
+      },
+      "position": [
+        33,
+        4
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +18 gold, +0 HP.",
+      "data": {
+        "gold": 18,
+        "heal": 0
+      },
+      "position": [
+        29,
+        10
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        29,
+        19
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "4 of Clubs",
+        "dealer_card": "7 of Diamonds",
+        "gate": 12
+      },
+      "position": [
+        29,
+        19
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        22,
+        18
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "4 of Spades",
+        "dealer_card": "9 of Diamonds",
+        "gate": 12
+      },
+      "position": [
+        22,
+        18
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +23 gold, +0 HP.",
+      "data": {
+        "gold": 23,
+        "heal": 0
+      },
+      "position": [
+        13,
+        15
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        14,
+        3
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "Queen of Clubs",
+        "dealer_card": "Queen of Hearts",
+        "gate": 12
+      },
+      "position": [
+        14,
+        3
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "trap",
+      "description": "Triggered a trap! -3 HP.",
+      "data": {
+        "damage": 3
+      },
+      "position": [
+        40,
+        11
+      ]
+    },
+    {
+      "turn": 7,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        5,
+        8
+      ]
+    },
+    {
+      "turn": 7,
+      "event_type": "complete",
+      "description": "Escaped the dungeon! Slain 0 monsters, found 2 treasures, earned 41 gold.",
+      "data": {},
+      "position": [
+        5,
+        8
+      ]
+    }
+  ]
+}

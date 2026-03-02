@@ -1,0 +1,172 @@
+{
+  "run_id": "DNG-20260227-203620-030c",
+  "agent_id": "claude-4.6-opus",
+  "seed": 96415,
+  "timestamp": "2026-02-27T20:36:20.662799",
+  "outcome": "escaped",
+  "turns": 8,
+  "hp_remaining": 2,
+  "gold": 19,
+  "xp": 40,
+  "rooms_explored": 9,
+  "rooms_total": 9,
+  "monsters_slain": 1,
+  "treasures_found": 2,
+  "traps_triggered": 1,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 96415). 9 rooms await.",
+      "data": {
+        "rooms": 9,
+        "seed": 96415
+      },
+      "position": [
+        20,
+        18
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        19,
+        10
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        20,
+        4
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "Jack of Diamonds",
+        "dealer_card": "7 of Spades",
+        "gate": 12
+      },
+      "position": [
+        20,
+        4
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "trap",
+      "description": "Triggered a trap! -5 HP.",
+      "data": {
+        "damage": 5
+      },
+      "position": [
+        7,
+        4
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +6 gold, +3 HP.",
+      "data": {
+        "gold": 6,
+        "heal": 3
+      },
+      "position": [
+        8,
+        14
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +13 gold, +2 HP.",
+      "data": {
+        "gold": 13,
+        "heal": 2
+      },
+      "position": [
+        26,
+        14
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        42,
+        15
+      ]
+    },
+    {
+      "turn": 7,
+      "event_type": "encounter",
+      "description": "A Troll lurches from the shadows!",
+      "data": {
+        "monster": "Troll"
+      },
+      "position": [
+        42,
+        6
+      ]
+    },
+    {
+      "turn": 7,
+      "event_type": "combat_win",
+      "description": "Defeated the Troll! +40 XP.",
+      "data": {
+        "won": true,
+        "rounds": 4,
+        "monster": "Troll",
+        "log": [
+          "You hit Troll for 5",
+          "Troll hits you for 6",
+          "You hit Troll for 4",
+          "Troll hits you for 6",
+          "You hit Troll for 4",
+          "Troll hits you for 6",
+          "You hit Troll for 5"
+        ],
+        "xp_gained": 40
+      },
+      "position": [
+        42,
+        6
+      ]
+    },
+    {
+      "turn": 8,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        29,
+        20
+      ]
+    },
+    {
+      "turn": 8,
+      "event_type": "complete",
+      "description": "Escaped the dungeon! Slain 1 monsters, found 2 treasures, earned 19 gold.",
+      "data": {},
+      "position": [
+        29,
+        20
+      ]
+    }
+  ]
+}

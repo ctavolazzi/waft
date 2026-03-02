@@ -1,0 +1,117 @@
+{
+  "run_id": "DNG-20260227-204317-010b",
+  "agent_id": "claude-3.5-sonnet",
+  "seed": 81331,
+  "timestamp": "2026-02-27T20:43:17.936889",
+  "outcome": "escaped",
+  "turns": 5,
+  "hp_remaining": 20,
+  "gold": 52,
+  "xp": 0,
+  "rooms_explored": 6,
+  "rooms_total": 6,
+  "monsters_slain": 0,
+  "treasures_found": 3,
+  "traps_triggered": 0,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 81331). 6 rooms await.",
+      "data": {
+        "rooms": 6,
+        "seed": 81331
+      },
+      "position": [
+        24,
+        5
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +15 gold, +0 HP.",
+      "data": {
+        "gold": 15,
+        "heal": 0
+      },
+      "position": [
+        5,
+        7
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +16 gold, +0 HP.",
+      "data": {
+        "gold": 16,
+        "heal": 0
+      },
+      "position": [
+        26,
+        14
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +21 gold, +0 HP.",
+      "data": {
+        "gold": 21,
+        "heal": 0
+      },
+      "position": [
+        16,
+        17
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        37,
+        10
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "Queen of Hearts",
+        "dealer_card": "2 of Clubs",
+        "gate": 12
+      },
+      "position": [
+        37,
+        10
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        15,
+        7
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "complete",
+      "description": "Escaped the dungeon! Slain 0 monsters, found 3 treasures, earned 52 gold.",
+      "data": {},
+      "position": [
+        15,
+        7
+      ]
+    }
+  ]
+}

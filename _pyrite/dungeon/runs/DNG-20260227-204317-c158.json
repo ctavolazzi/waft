@@ -1,0 +1,206 @@
+{
+  "run_id": "DNG-20260227-204317-c158",
+  "agent_id": "claude-3.5-sonnet",
+  "seed": 51506,
+  "timestamp": "2026-02-27T20:43:17.927799",
+  "outcome": "escaped",
+  "turns": 6,
+  "hp_remaining": 8,
+  "gold": 0,
+  "xp": 75,
+  "rooms_explored": 7,
+  "rooms_total": 7,
+  "monsters_slain": 4,
+  "treasures_found": 0,
+  "traps_triggered": 0,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 51506). 7 rooms await.",
+      "data": {
+        "rooms": 7,
+        "seed": 51506
+      },
+      "position": [
+        9,
+        7
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "encounter",
+      "description": "A Skeleton lurches from the shadows!",
+      "data": {
+        "monster": "Skeleton"
+      },
+      "position": [
+        41,
+        20
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "combat_win",
+      "description": "Defeated the Skeleton! +15 XP.",
+      "data": {
+        "won": true,
+        "rounds": 2,
+        "monster": "Skeleton",
+        "log": [
+          "You hit Skeleton for 3",
+          "Skeleton hits you for 3",
+          "You hit Skeleton for 7"
+        ],
+        "xp_gained": 15
+      },
+      "position": [
+        41,
+        20
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        27,
+        10
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "King of Hearts",
+        "dealer_card": "9 of Clubs",
+        "gate": 12
+      },
+      "position": [
+        27,
+        10
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "encounter",
+      "description": "A Skeleton lurches from the shadows!",
+      "data": {
+        "monster": "Skeleton"
+      },
+      "position": [
+        13,
+        19
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "combat_win",
+      "description": "Defeated the Skeleton! +15 XP.",
+      "data": {
+        "won": true,
+        "rounds": 2,
+        "monster": "Skeleton",
+        "log": [
+          "You hit Skeleton for 5",
+          "Skeleton hits you for 2",
+          "You hit Skeleton for 4"
+        ],
+        "xp_gained": 15
+      },
+      "position": [
+        13,
+        19
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "encounter",
+      "description": "A Skeleton lurches from the shadows!",
+      "data": {
+        "monster": "Skeleton"
+      },
+      "position": [
+        41,
+        4
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "combat_win",
+      "description": "Defeated the Skeleton! +15 XP.",
+      "data": {
+        "won": true,
+        "rounds": 2,
+        "monster": "Skeleton",
+        "log": [
+          "You hit Skeleton for 5",
+          "Skeleton hits you for 4",
+          "You hit Skeleton for 4"
+        ],
+        "xp_gained": 15
+      },
+      "position": [
+        41,
+        4
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "encounter",
+      "description": "A Wraith lurches from the shadows!",
+      "data": {
+        "monster": "Wraith"
+      },
+      "position": [
+        42,
+        14
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "combat_win",
+      "description": "Defeated the Wraith! +30 XP.",
+      "data": {
+        "won": true,
+        "rounds": 2,
+        "monster": "Wraith",
+        "log": [
+          "You hit Wraith for 7",
+          "Wraith hits you for 3",
+          "You hit Wraith for 5"
+        ],
+        "xp_gained": 30
+      },
+      "position": [
+        42,
+        14
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        16,
+        3
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "complete",
+      "description": "Escaped the dungeon! Slain 4 monsters, found 0 treasures, earned 0 gold.",
+      "data": {},
+      "position": [
+        16,
+        3
+      ]
+    }
+  ]
+}

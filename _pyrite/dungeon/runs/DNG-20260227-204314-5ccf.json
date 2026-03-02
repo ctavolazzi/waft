@@ -1,0 +1,165 @@
+{
+  "run_id": "DNG-20260227-204314-5ccf",
+  "agent_id": "claude-4.6-opus",
+  "seed": 28695,
+  "timestamp": "2026-02-27T20:43:14.978098",
+  "outcome": "died",
+  "turns": 5,
+  "hp_remaining": -2,
+  "gold": 0,
+  "xp": 25,
+  "rooms_explored": 6,
+  "rooms_total": 9,
+  "monsters_slain": 1,
+  "treasures_found": 0,
+  "traps_triggered": 0,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 28695). 9 rooms await.",
+      "data": {
+        "rooms": 9,
+        "seed": 28695
+      },
+      "position": [
+        42,
+        13
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        9,
+        7
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "Jack of Clubs",
+        "dealer_card": "2 of Hearts",
+        "gate": 12
+      },
+      "position": [
+        9,
+        7
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "encounter",
+      "description": "A Orc lurches from the shadows!",
+      "data": {
+        "monster": "Orc"
+      },
+      "position": [
+        34,
+        20
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "combat_win",
+      "description": "Defeated the Orc! +25 XP.",
+      "data": {
+        "won": true,
+        "rounds": 2,
+        "monster": "Orc",
+        "log": [
+          "You hit Orc for 6",
+          "Orc hits you for 4",
+          "You hit Orc for 4"
+        ],
+        "xp_gained": 25
+      },
+      "position": [
+        34,
+        20
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        3,
+        17
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        43,
+        6
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "encounter",
+      "description": "A Dragon lurches from the shadows!",
+      "data": {
+        "monster": "Dragon"
+      },
+      "position": [
+        11,
+        17
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "combat_loss",
+      "description": "The Dragon was too strong.",
+      "data": {
+        "won": false,
+        "rounds": 3,
+        "monster": "Dragon",
+        "log": [
+          "You hit Dragon for 5",
+          "Dragon hits you for 6",
+          "You hit Dragon for 2",
+          "Dragon hits you for 5",
+          "You hit Dragon for 2",
+          "Dragon hits you for 7"
+        ],
+        "xp_gained": 0
+      },
+      "position": [
+        11,
+        17
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "death",
+      "description": "You have fallen in the dungeon.",
+      "data": {},
+      "position": [
+        11,
+        17
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "complete",
+      "description": "Died on turn 5. Slain 1 monsters before falling.",
+      "data": {},
+      "position": [
+        11,
+        17
+      ]
+    }
+  ]
+}

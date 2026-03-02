@@ -1,0 +1,142 @@
+{
+  "run_id": "DNG-20260227-203426-613c",
+  "agent_id": "claude-4.6-opus",
+  "seed": 3325,
+  "timestamp": "2026-02-27T20:34:26.738693",
+  "outcome": "escaped",
+  "turns": 6,
+  "hp_remaining": 14,
+  "gold": 0,
+  "xp": 10,
+  "rooms_explored": 7,
+  "rooms_total": 7,
+  "monsters_slain": 1,
+  "treasures_found": 0,
+  "traps_triggered": 1,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 3325). 7 rooms await.",
+      "data": {
+        "rooms": 7,
+        "seed": 3325
+      },
+      "position": [
+        13,
+        4
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        4,
+        5
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "encounter",
+      "description": "A Goblin lurches from the shadows!",
+      "data": {
+        "monster": "Goblin"
+      },
+      "position": [
+        14,
+        18
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "combat_win",
+      "description": "Defeated the Goblin! +10 XP.",
+      "data": {
+        "won": true,
+        "rounds": 2,
+        "monster": "Goblin",
+        "log": [
+          "You hit Goblin for 3",
+          "Goblin hits you for 4",
+          "You hit Goblin for 3"
+        ],
+        "xp_gained": 10
+      },
+      "position": [
+        14,
+        18
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        25,
+        15
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        34,
+        12
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "Queen of Hearts",
+        "dealer_card": "3 of Spades",
+        "gate": 12
+      },
+      "position": [
+        34,
+        12
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "trap",
+      "description": "Triggered a trap! -2 HP.",
+      "data": {
+        "damage": 2
+      },
+      "position": [
+        29,
+        3
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        4,
+        15
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "complete",
+      "description": "Escaped the dungeon! Slain 1 monsters, found 0 treasures, earned 0 gold.",
+      "data": {},
+      "position": [
+        4,
+        15
+      ]
+    }
+  ]
+}

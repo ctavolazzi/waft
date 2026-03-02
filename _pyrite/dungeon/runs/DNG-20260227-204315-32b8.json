@@ -1,0 +1,124 @@
+{
+  "run_id": "DNG-20260227-204315-32b8",
+  "agent_id": "gpt-4o",
+  "seed": 30620,
+  "timestamp": "2026-02-27T20:43:15.958897",
+  "outcome": "escaped",
+  "turns": 6,
+  "hp_remaining": 4,
+  "gold": 0,
+  "xp": 0,
+  "rooms_explored": 7,
+  "rooms_total": 7,
+  "monsters_slain": 0,
+  "treasures_found": 0,
+  "traps_triggered": 3,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 30620). 7 rooms await.",
+      "data": {
+        "rooms": 7,
+        "seed": 30620
+      },
+      "position": [
+        34,
+        17
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        5,
+        8
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "3 of Diamonds",
+        "dealer_card": "6 of Clubs",
+        "gate": 12
+      },
+      "position": [
+        5,
+        8
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "trap",
+      "description": "Triggered a trap! -6 HP.",
+      "data": {
+        "damage": 6
+      },
+      "position": [
+        32,
+        6
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        18,
+        12
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "trap",
+      "description": "Triggered a trap! -4 HP.",
+      "data": {
+        "damage": 4
+      },
+      "position": [
+        25,
+        16
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "trap",
+      "description": "Triggered a trap! -6 HP.",
+      "data": {
+        "damage": 6
+      },
+      "position": [
+        18,
+        5
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        39,
+        4
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "complete",
+      "description": "Escaped the dungeon! Slain 0 monsters, found 0 treasures, earned 0 gold.",
+      "data": {},
+      "position": [
+        39,
+        4
+      ]
+    }
+  ]
+}

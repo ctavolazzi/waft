@@ -1,0 +1,98 @@
+{
+  "run_id": "DNG-20260227-204316-a6bb",
+  "agent_id": "gemini-2.0-flash",
+  "seed": 8125,
+  "timestamp": "2026-02-27T20:43:16.964059",
+  "outcome": "escaped",
+  "turns": 4,
+  "hp_remaining": 20,
+  "gold": 0,
+  "xp": 0,
+  "rooms_explored": 5,
+  "rooms_total": 5,
+  "monsters_slain": 0,
+  "treasures_found": 0,
+  "traps_triggered": 0,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 8125). 5 rooms await.",
+      "data": {
+        "rooms": 5,
+        "seed": 8125
+      },
+      "position": [
+        31,
+        10
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        8,
+        20
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "2 of Hearts",
+        "dealer_card": "Queen of Clubs",
+        "gate": 12
+      },
+      "position": [
+        8,
+        20
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        16,
+        15
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        7,
+        11
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        8,
+        4
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "complete",
+      "description": "Escaped the dungeon! Slain 0 monsters, found 0 treasures, earned 0 gold.",
+      "data": {},
+      "position": [
+        8,
+        4
+      ]
+    }
+  ]
+}

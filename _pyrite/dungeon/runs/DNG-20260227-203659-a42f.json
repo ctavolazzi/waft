@@ -1,0 +1,132 @@
+{
+  "run_id": "DNG-20260227-203659-a42f",
+  "agent_id": "claude-4.6-opus",
+  "seed": 52933,
+  "timestamp": "2026-02-27T20:36:59.822129",
+  "outcome": "died",
+  "turns": 5,
+  "hp_remaining": 0,
+  "gold": 0,
+  "xp": 0,
+  "rooms_explored": 6,
+  "rooms_total": 8,
+  "monsters_slain": 0,
+  "treasures_found": 0,
+  "traps_triggered": 1,
+  "dealer_encountered": false,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 52933). 8 rooms await.",
+      "data": {
+        "rooms": 8,
+        "seed": 52933
+      },
+      "position": [
+        10,
+        10
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        14,
+        17
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        21,
+        14
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "trap",
+      "description": "Triggered a trap! -3 HP.",
+      "data": {
+        "damage": 3
+      },
+      "position": [
+        34,
+        15
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        43,
+        16
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "encounter",
+      "description": "A Troll lurches from the shadows!",
+      "data": {
+        "monster": "Troll"
+      },
+      "position": [
+        41,
+        4
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "combat_loss",
+      "description": "The Troll was too strong.",
+      "data": {
+        "won": false,
+        "rounds": 4,
+        "monster": "Troll",
+        "log": [
+          "You hit Troll for 4",
+          "Troll hits you for 6",
+          "You hit Troll for 2",
+          "Troll hits you for 4",
+          "You hit Troll for 2",
+          "Troll hits you for 3",
+          "You hit Troll for 3",
+          "Troll hits you for 4"
+        ],
+        "xp_gained": 0
+      },
+      "position": [
+        41,
+        4
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "death",
+      "description": "You have fallen in the dungeon.",
+      "data": {},
+      "position": [
+        41,
+        4
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "complete",
+      "description": "Died on turn 5. Slain 0 monsters before falling.",
+      "data": {},
+      "position": [
+        41,
+        4
+      ]
+    }
+  ]
+}

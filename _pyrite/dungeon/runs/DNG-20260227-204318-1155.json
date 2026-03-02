@@ -1,0 +1,209 @@
+{
+  "run_id": "DNG-20260227-204318-1155",
+  "agent_id": "llama-3.1-70b",
+  "seed": 94276,
+  "timestamp": "2026-02-27T20:43:18.893016",
+  "outcome": "died",
+  "turns": 5,
+  "hp_remaining": 0,
+  "gold": 0,
+  "xp": 60,
+  "rooms_explored": 6,
+  "rooms_total": 8,
+  "monsters_slain": 3,
+  "treasures_found": 0,
+  "traps_triggered": 0,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 94276). 8 rooms await.",
+      "data": {
+        "rooms": 8,
+        "seed": 94276
+      },
+      "position": [
+        40,
+        6
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "encounter",
+      "description": "A Wraith lurches from the shadows!",
+      "data": {
+        "monster": "Wraith"
+      },
+      "position": [
+        39,
+        18
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "combat_win",
+      "description": "Defeated the Wraith! +30 XP.",
+      "data": {
+        "won": true,
+        "rounds": 3,
+        "monster": "Wraith",
+        "log": [
+          "You hit Wraith for 2",
+          "Wraith hits you for 5",
+          "You hit Wraith for 3",
+          "Wraith hits you for 3",
+          "You hit Wraith for 4"
+        ],
+        "xp_gained": 30
+      },
+      "position": [
+        39,
+        18
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "encounter",
+      "description": "A Skeleton lurches from the shadows!",
+      "data": {
+        "monster": "Skeleton"
+      },
+      "position": [
+        25,
+        13
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "combat_win",
+      "description": "Defeated the Skeleton! +15 XP.",
+      "data": {
+        "won": true,
+        "rounds": 2,
+        "monster": "Skeleton",
+        "log": [
+          "You hit Skeleton for 3",
+          "Skeleton hits you for 1",
+          "You hit Skeleton for 6"
+        ],
+        "xp_gained": 15
+      },
+      "position": [
+        25,
+        13
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        24,
+        5
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "Ace of Clubs",
+        "dealer_card": "King of Hearts",
+        "gate": 12
+      },
+      "position": [
+        24,
+        5
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "encounter",
+      "description": "A Skeleton lurches from the shadows!",
+      "data": {
+        "monster": "Skeleton"
+      },
+      "position": [
+        17,
+        5
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "combat_win",
+      "description": "Defeated the Skeleton! +15 XP.",
+      "data": {
+        "won": true,
+        "rounds": 1,
+        "monster": "Skeleton",
+        "log": [
+          "You hit Skeleton for 7"
+        ],
+        "xp_gained": 15
+      },
+      "position": [
+        17,
+        5
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "encounter",
+      "description": "A Troll lurches from the shadows!",
+      "data": {
+        "monster": "Troll"
+      },
+      "position": [
+        15,
+        18
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "combat_loss",
+      "description": "The Troll was too strong.",
+      "data": {
+        "won": false,
+        "rounds": 3,
+        "monster": "Troll",
+        "log": [
+          "You hit Troll for 3",
+          "Troll hits you for 3",
+          "You hit Troll for 4",
+          "Troll hits you for 3",
+          "You hit Troll for 5",
+          "Troll hits you for 5"
+        ],
+        "xp_gained": 0
+      },
+      "position": [
+        15,
+        18
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "death",
+      "description": "You have fallen in the dungeon.",
+      "data": {},
+      "position": [
+        15,
+        18
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "complete",
+      "description": "Died on turn 5. Slain 3 monsters before falling.",
+      "data": {},
+      "position": [
+        15,
+        18
+      ]
+    }
+  ]
+}

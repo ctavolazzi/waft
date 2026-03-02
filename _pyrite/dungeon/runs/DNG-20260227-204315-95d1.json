@@ -1,0 +1,138 @@
+{
+  "run_id": "DNG-20260227-204315-95d1",
+  "agent_id": "gpt-4o",
+  "seed": 6355,
+  "timestamp": "2026-02-27T20:43:15.966768",
+  "outcome": "died",
+  "turns": 4,
+  "hp_remaining": 0,
+  "gold": 24,
+  "xp": 0,
+  "rooms_explored": 5,
+  "rooms_total": 7,
+  "monsters_slain": 0,
+  "treasures_found": 1,
+  "traps_triggered": 1,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 6355). 7 rooms await.",
+      "data": {
+        "rooms": 7,
+        "seed": 6355
+      },
+      "position": [
+        28,
+        5
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        4,
+        9
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "5 of Clubs",
+        "dealer_card": "Ace of Clubs",
+        "gate": 12
+      },
+      "position": [
+        4,
+        9
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +24 gold, +0 HP.",
+      "data": {
+        "gold": 24,
+        "heal": 0
+      },
+      "position": [
+        38,
+        12
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "trap",
+      "description": "Triggered a trap! -6 HP.",
+      "data": {
+        "damage": 6
+      },
+      "position": [
+        11,
+        20
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "encounter",
+      "description": "A Troll lurches from the shadows!",
+      "data": {
+        "monster": "Troll"
+      },
+      "position": [
+        44,
+        17
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "combat_loss",
+      "description": "The Troll was too strong.",
+      "data": {
+        "won": false,
+        "rounds": 3,
+        "monster": "Troll",
+        "log": [
+          "You hit Troll for 5",
+          "Troll hits you for 5",
+          "You hit Troll for 1",
+          "Troll hits you for 5",
+          "You hit Troll for 5",
+          "Troll hits you for 4"
+        ],
+        "xp_gained": 0
+      },
+      "position": [
+        44,
+        17
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "death",
+      "description": "You have fallen in the dungeon.",
+      "data": {},
+      "position": [
+        44,
+        17
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "complete",
+      "description": "Died on turn 4. Slain 0 monsters before falling.",
+      "data": {},
+      "position": [
+        44,
+        17
+      ]
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "run_id": "DNG-20260227-204247-73c4",
+  "agent_id": "claude-3.5-sonnet",
+  "seed": 1000,
+  "timestamp": "2026-02-27T20:42:47.476011",
+  "outcome": "escaped",
+  "turns": 6,
+  "hp_remaining": 20,
+  "gold": 0,
+  "xp": 0,
+  "rooms_explored": 7,
+  "rooms_total": 7,
+  "monsters_slain": 0,
+  "treasures_found": 0,
+  "traps_triggered": 0,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 1000). 7 rooms await.",
+      "data": {},
+      "position": [
+        10,
+        11
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        44,
+        11
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        18,
+        10
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        32,
+        16
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "5 of Spades",
+        "dealer_card": "2 of Spades",
+        "gate": 12
+      },
+      "position": [
+        32,
+        16
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        33,
+        8
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        27,
+        18
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        43,
+        19
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "complete",
+      "description": "Escaped! Slain 0, gold 0.",
+      "data": {},
+      "position": [
+        43,
+        19
+      ]
+    }
+  ]
+}

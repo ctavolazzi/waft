@@ -1,0 +1,91 @@
+{
+  "run_id": "DNG-20260227-203426-6938",
+  "agent_id": "claude-4.6-opus",
+  "seed": 15239,
+  "timestamp": "2026-02-27T20:34:26.756469",
+  "outcome": "escaped",
+  "turns": 2,
+  "hp_remaining": 3,
+  "gold": 0,
+  "xp": 40,
+  "rooms_explored": 3,
+  "rooms_total": 7,
+  "monsters_slain": 1,
+  "treasures_found": 0,
+  "traps_triggered": 0,
+  "dealer_encountered": false,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 15239). 7 rooms await.",
+      "data": {
+        "rooms": 7,
+        "seed": 15239
+      },
+      "position": [
+        36,
+        19
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "encounter",
+      "description": "A Troll lurches from the shadows!",
+      "data": {
+        "monster": "Troll"
+      },
+      "position": [
+        29,
+        21
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "combat_win",
+      "description": "Defeated the Troll! +40 XP.",
+      "data": {
+        "won": true,
+        "rounds": 5,
+        "monster": "Troll",
+        "log": [
+          "You hit Troll for 6",
+          "Troll hits you for 4",
+          "You hit Troll for 1",
+          "Troll hits you for 3",
+          "You hit Troll for 2",
+          "Troll hits you for 4",
+          "You hit Troll for 2",
+          "Troll hits you for 6",
+          "You hit Troll for 5"
+        ],
+        "xp_gained": 40
+      },
+      "position": [
+        29,
+        21
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        4,
+        3
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "complete",
+      "description": "Escaped the dungeon! Slain 1 monsters, found 0 treasures, earned 0 gold.",
+      "data": {},
+      "position": [
+        4,
+        3
+      ]
+    }
+  ]
+}

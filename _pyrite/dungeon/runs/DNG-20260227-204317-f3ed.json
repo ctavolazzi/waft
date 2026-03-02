@@ -1,0 +1,193 @@
+{
+  "run_id": "DNG-20260227-204317-f3ed",
+  "agent_id": "claude-3.5-sonnet",
+  "seed": 34757,
+  "timestamp": "2026-02-27T20:43:17.930086",
+  "outcome": "escaped",
+  "turns": 8,
+  "hp_remaining": 9,
+  "gold": 51,
+  "xp": 65,
+  "rooms_explored": 9,
+  "rooms_total": 9,
+  "monsters_slain": 2,
+  "treasures_found": 3,
+  "traps_triggered": 0,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 34757). 9 rooms await.",
+      "data": {
+        "rooms": 9,
+        "seed": 34757
+      },
+      "position": [
+        26,
+        5
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +23 gold, +0 HP.",
+      "data": {
+        "gold": 23,
+        "heal": 0
+      },
+      "position": [
+        12,
+        20
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        44,
+        4
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "10 of Clubs",
+        "dealer_card": "5 of Spades",
+        "gate": 12
+      },
+      "position": [
+        44,
+        4
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +5 gold, +0 HP.",
+      "data": {
+        "gold": 5,
+        "heal": 0
+      },
+      "position": [
+        20,
+        15
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +23 gold, +0 HP.",
+      "data": {
+        "gold": 23,
+        "heal": 0
+      },
+      "position": [
+        39,
+        19
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        12,
+        8
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "encounter",
+      "description": "A Troll lurches from the shadows!",
+      "data": {
+        "monster": "Troll"
+      },
+      "position": [
+        36,
+        8
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "combat_win",
+      "description": "Defeated the Troll! +40 XP.",
+      "data": {
+        "won": true,
+        "rounds": 3,
+        "monster": "Troll",
+        "log": [
+          "You hit Troll for 7",
+          "Troll hits you for 3",
+          "You hit Troll for 6",
+          "Troll hits you for 5",
+          "You hit Troll for 4"
+        ],
+        "xp_gained": 40
+      },
+      "position": [
+        36,
+        8
+      ]
+    },
+    {
+      "turn": 7,
+      "event_type": "encounter",
+      "description": "A Orc lurches from the shadows!",
+      "data": {
+        "monster": "Orc"
+      },
+      "position": [
+        20,
+        21
+      ]
+    },
+    {
+      "turn": 7,
+      "event_type": "combat_win",
+      "description": "Defeated the Orc! +25 XP.",
+      "data": {
+        "won": true,
+        "rounds": 2,
+        "monster": "Orc",
+        "log": [
+          "You hit Orc for 6",
+          "Orc hits you for 3",
+          "You hit Orc for 7"
+        ],
+        "xp_gained": 25
+      },
+      "position": [
+        20,
+        21
+      ]
+    },
+    {
+      "turn": 8,
+      "event_type": "exit",
+      "description": "Found the exit! Escaping the dungeon.",
+      "data": {},
+      "position": [
+        4,
+        10
+      ]
+    },
+    {
+      "turn": 8,
+      "event_type": "complete",
+      "description": "Escaped the dungeon! Slain 2 monsters, found 3 treasures, earned 51 gold.",
+      "data": {},
+      "position": [
+        4,
+        10
+      ]
+    }
+  ]
+}

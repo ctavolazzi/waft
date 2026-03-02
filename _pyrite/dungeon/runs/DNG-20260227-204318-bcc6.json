@@ -1,0 +1,116 @@
+{
+  "run_id": "DNG-20260227-204318-bcc6",
+  "agent_id": "llama-3.1-70b",
+  "seed": 12176,
+  "timestamp": "2026-02-27T20:43:18.908998",
+  "outcome": "died",
+  "turns": 3,
+  "hp_remaining": -4,
+  "gold": 30,
+  "xp": 0,
+  "rooms_explored": 4,
+  "rooms_total": 8,
+  "monsters_slain": 0,
+  "treasures_found": 2,
+  "traps_triggered": 0,
+  "dealer_encountered": false,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 12176). 8 rooms await.",
+      "data": {
+        "rooms": 8,
+        "seed": 12176
+      },
+      "position": [
+        40,
+        15
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +21 gold, +0 HP.",
+      "data": {
+        "gold": 21,
+        "heal": 0
+      },
+      "position": [
+        41,
+        21
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "treasure",
+      "description": "Found a treasure chest! +9 gold, +0 HP.",
+      "data": {
+        "gold": 9,
+        "heal": 0
+      },
+      "position": [
+        35,
+        6
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "encounter",
+      "description": "A Dragon lurches from the shadows!",
+      "data": {
+        "monster": "Dragon"
+      },
+      "position": [
+        17,
+        5
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "combat_loss",
+      "description": "The Dragon was too strong.",
+      "data": {
+        "won": false,
+        "rounds": 4,
+        "monster": "Dragon",
+        "log": [
+          "You hit Dragon for 2",
+          "Dragon hits you for 7",
+          "You hit Dragon for 3",
+          "Dragon hits you for 6",
+          "You hit Dragon for 6",
+          "Dragon hits you for 4",
+          "You hit Dragon for 7",
+          "Dragon hits you for 7"
+        ],
+        "xp_gained": 0
+      },
+      "position": [
+        17,
+        5
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "death",
+      "description": "You have fallen in the dungeon.",
+      "data": {},
+      "position": [
+        17,
+        5
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "complete",
+      "description": "Died on turn 3. Slain 0 monsters before falling.",
+      "data": {},
+      "position": [
+        17,
+        5
+      ]
+    }
+  ]
+}

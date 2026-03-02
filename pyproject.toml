@@ -136,5 +136,3 @@ indent-style = "space"
 [tool.uv.workspace]
 members = ["_experiments/test_project_001", "_experiments/existing_project", "_experiments/test_project_002", "_experiments/test_project_001/nested_project", "narcissus_lab/internal_monologue"]
 
-[tool.uv.sources]
-empirica = { path = "_unified/empirica", editable = true }

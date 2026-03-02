@@ -1,0 +1,177 @@
+{
+  "run_id": "DNG-20260227-204317-1304",
+  "agent_id": "claude-3.5-sonnet",
+  "seed": 96029,
+  "timestamp": "2026-02-27T20:43:17.923932",
+  "outcome": "died",
+  "turns": 6,
+  "hp_remaining": -1,
+  "gold": 0,
+  "xp": 15,
+  "rooms_explored": 7,
+  "rooms_total": 8,
+  "monsters_slain": 1,
+  "treasures_found": 0,
+  "traps_triggered": 0,
+  "dealer_encountered": true,
+  "dealer_won": false,
+  "events": [
+    {
+      "turn": 0,
+      "event_type": "start",
+      "description": "Entered the dungeon (seed 96029). 8 rooms await.",
+      "data": {
+        "rooms": 8,
+        "seed": 96029
+      },
+      "position": [
+        12,
+        5
+      ]
+    },
+    {
+      "turn": 1,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        40,
+        12
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "dealer",
+      "description": "The air grows cold. Cards flutter from nowhere. The Dealer has appeared.",
+      "data": {},
+      "position": [
+        21,
+        21
+      ]
+    },
+    {
+      "turn": 2,
+      "event_type": "dealer_result",
+      "description": "Gate 12: THE HOUSE WINS.",
+      "data": {
+        "won": false,
+        "system_card": "8 of Spades",
+        "dealer_card": "9 of Clubs",
+        "gate": 12
+      },
+      "position": [
+        21,
+        21
+      ]
+    },
+    {
+      "turn": 3,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        19,
+        7
+      ]
+    },
+    {
+      "turn": 4,
+      "event_type": "explore",
+      "description": "An empty room. Dust and silence.",
+      "data": {},
+      "position": [
+        18,
+        15
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "encounter",
+      "description": "A Skeleton lurches from the shadows!",
+      "data": {
+        "monster": "Skeleton"
+      },
+      "position": [
+        26,
+        8
+      ]
+    },
+    {
+      "turn": 5,
+      "event_type": "combat_win",
+      "description": "Defeated the Skeleton! +15 XP.",
+      "data": {
+        "won": true,
+        "rounds": 2,
+        "monster": "Skeleton",
+        "log": [
+          "You hit Skeleton for 4",
+          "Skeleton hits you for 1",
+          "You hit Skeleton for 3"
+        ],
+        "xp_gained": 15
+      },
+      "position": [
+        26,
+        8
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "encounter",
+      "description": "A Dragon lurches from the shadows!",
+      "data": {
+        "monster": "Dragon"
+      },
+      "position": [
+        8,
+        13
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "combat_loss",
+      "description": "The Dragon was too strong.",
+      "data": {
+        "won": false,
+        "rounds": 4,
+        "monster": "Dragon",
+        "log": [
+          "You hit Dragon for 5",
+          "Dragon hits you for 6",
+          "You hit Dragon for 3",
+          "Dragon hits you for 5",
+          "You hit Dragon for 7",
+          "Dragon hits you for 4",
+          "You hit Dragon for 4",
+          "Dragon hits you for 5"
+        ],
+        "xp_gained": 0
+      },
+      "position": [
+        8,
+        13
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "death",
+      "description": "You have fallen in the dungeon.",
+      "data": {},
+      "position": [
+        8,
+        13
+      ]
+    },
+    {
+      "turn": 6,
+      "event_type": "complete",
+      "description": "Died on turn 6. Slain 1 monsters before falling.",
+      "data": {},
+      "position": [
+        8,
+        13
+      ]
+    }
+  ]
+}
