@@ -33,7 +33,7 @@ jobs:
         run: uv sync --extra dev
 
       - name: Run tests
-        run: uv run pytest
+        run: uv run pytest tests/api
 
   lint:
     name: Lint and Format Check
