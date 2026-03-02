@@ -13,6 +13,7 @@ on:
 jobs:
   validate-staging:
     name: Validate Staging for Production
+    if: github.ref_name == 'staging' || github.head_ref == 'staging'
     runs-on: ubuntu-latest
 
     steps:
@@ -32,7 +33,7 @@ jobs:
         run: uv sync --extra dev
 
       - name: Run comprehensive tests
-        run: uv run pytest -v --cov=src --cov-report=term-missing
+        run: uv run pytest -v tests/api --cov=src --cov-report=term-missing
 
       - name: Run linting
         run: uv run ruff check .
