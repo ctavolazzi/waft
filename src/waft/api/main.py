@@ -3,6 +3,7 @@ FastAPI application for Waft Visualizer API.
 """
 
 import logging
+import os
 from datetime import datetime
 from pathlib import Path
 
@@ -19,6 +20,7 @@ from .routes import (
     campfire,
     cartographer,
     cyoa,
+    dashboard_5050,
     decision,
     empirica,
     evolve_ui_monitor,
@@ -27,6 +29,7 @@ from .routes import (
     health,
     oracle,
     odd_notes,
+    ollama,
     pet,
     projects,
     protocel,
@@ -222,8 +225,10 @@ def create_app(project_path: Path, static_dir: Path | None = None) -> FastAPI:
     app.include_router(auth.router, prefix="/api", tags=["auth"])
     app.include_router(quests.router, tags=["quests"])
     app.include_router(oracle.router, prefix="/api", tags=["oracle"])
+    app.include_router(ollama.router, prefix="/api", tags=["ollama"])
     app.include_router(odd_notes.router, prefix="/api", tags=["odd"])
     app.include_router(evolve_ui_monitor.router, prefix="/api", tags=["evolve-ui"])
+    app.include_router(dashboard_5050.router, prefix="/api", tags=["dashboard-5050"])
     app.include_router(cyoa.router, prefix="/api", tags=["cyoa"])
     app.include_router(storyteller.router, prefix="/api", tags=["storyteller"])
 
@@ -237,4 +242,4 @@ def create_app(project_path: Path, static_dir: Path | None = None) -> FastAPI:
 
 # Create default app instance for direct uvicorn usage
 # Usage: uvicorn src.waft.api.main:app --reload
-app = create_app(project_path=Path.cwd())
+app = create_app(project_path=Path(os.getenv("WAFT_PROJECT_PATH", str(Path.cwd()))))

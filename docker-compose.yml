@@ -1,0 +1,14 @@
+services:
+  waft-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: waft-api
+    environment:
+      PORT: 8000
+      WAFT_PROJECT_PATH: /app
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/app
+    command: uvicorn src.waft.api.main:app --host 0.0.0.0 --port 8000
