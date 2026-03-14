@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WAFT — The Full Narrative Cycle</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#08090d;--bg2:#0f1219;--bg3:#171d2a;--border:#1e2738;--primary:#60a5fa;--green:#34d399;--red:#f87171;--yellow:#fbbf24;--purple:#a78bfa;--orange:#fb923c;--pink:#f472b6;--text:#d1d5db;--bright:#f3f4f6;--muted:#6b7280;--card:#111827}
+body{font-family:Georgia,'Times New Roman',serif;background:var(--bg);color:var(--text);max-width:820px;margin:0 auto;padding:24px 20px 120px}
+h1{font-size:2.2em;text-align:center;color:var(--bright);margin:40px 0 8px;letter-spacing:.02em}
+.subtitle{text-align:center;color:var(--muted);font-style:italic;margin-bottom:32px;font-size:.95em}
+/* Progress */
+#progress-wrap{position:fixed;top:0;left:0;right:0;height:4px;background:var(--bg2);z-index:99}
+#progress-bar{height:100%;width:0;background:linear-gradient(90deg,var(--primary),var(--purple),var(--pink));transition:width .3s}
+/* Controls */
+.controls{display:flex;gap:10px;justify-content:center;margin:24px 0 40px;position:sticky;top:8px;z-index:50;background:var(--bg);padding:12px 0;border-bottom:1px solid var(--border)}
+.btn{padding:10px 24px;border:none;border-radius:6px;font-size:.9em;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
+.btn-run{background:var(--green);color:#000}.btn-run:hover{filter:brightness(1.1)}
+.btn-pause{background:var(--yellow);color:#000}
+.btn-reset{background:var(--border);color:var(--text)}.btn-reset:hover{background:var(--bg3)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+#counter{font-family:'Cascadia Code',monospace;font-size:.8em;color:var(--muted);align-self:center}
+/* Act */
+.act{margin:48px 0 24px;padding:16px 0;border-top:2px solid var(--border)}
+.act-label{font-size:.7em;text-transform:uppercase;letter-spacing:.15em;color:var(--purple);font-family:system-ui,sans-serif;font-weight:700;margin-bottom:4px}
+.act-title{font-size:1.5em;color:var(--bright);margin-bottom:6px}
+.act-desc{color:var(--muted);font-style:italic;font-size:.9em}
+/* Step */
+.step{margin:16px 0;padding:16px 20px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;opacity:.3;transition:opacity .4s,border-color .4s}
+.step.active{opacity:1;border-color:var(--primary)}
+.step.done{opacity:1;border-color:var(--border)}
+.step.error{opacity:1;border-color:var(--red)}
+.step-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.step-num{font-family:system-ui,sans-serif;font-size:.65em;font-weight:700;background:var(--bg3);color:var(--muted);padding:3px 8px;border-radius:4px;min-width:28px;text-align:center}
+.step-num.ok{background:#16a34a33;color:var(--green)}.step-num.err{background:#dc262633;color:var(--red)}.step-num.run{background:#2563eb33;color:var(--primary)}
+.method{font-family:'Cascadia Code',monospace;font-size:.7em;font-weight:700;padding:2px 7px;border-radius:3px;color:#fff}
+.m-get{background:#2563eb}.m-post{background:#16a34a}.m-put{background:#d97706}.m-patch{background:#7c3aed}.m-delete{background:#dc2626}
+.step-path{font-family:'Cascadia Code',monospace;font-size:.78em;color:var(--text)}
+.step-status{margin-left:auto;font-family:'Cascadia Code',monospace;font-size:.72em}
+.narrative{font-size:.88em;color:var(--muted);line-height:1.6;margin-bottom:8px;font-style:italic}
+.resp{background:var(--bg);border:1px solid var(--border);border-radius:5px;padding:10px 12px;max-height:180px;overflow:auto;font-family:'Cascadia Code','Fira Code',monospace;font-size:.7em;line-height:1.5;color:var(--muted);white-space:pre-wrap;word-break:break-word;display:none}
+.step.done .resp,.step.error .resp{display:block}
+/* Epilogue */
+.epilogue{margin-top:48px;padding:24px;background:var(--card);border:1px solid var(--border);border-radius:10px;text-align:center}
+.epilogue h2{color:var(--bright);margin-bottom:8px}
+.epilogue p{color:var(--muted);font-style:italic}
+#summary{margin-top:12px;font-family:system-ui,sans-serif;font-size:.8em;color:var(--text)}
+/* Scrollbar */
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+</style>
+</head>
+<body>
+<div id="progress-wrap"><div id="progress-bar"></div></div>
+
+<h1>The Full Narrative Cycle</h1>
+<p class="subtitle">A guided journey through every endpoint in the WAFT universe — 74 API calls, one story.</p>
+
+<div class="controls">
+  <button class="btn btn-run" id="btn-run" onclick="runNarrative()">&#9654; Run Full Cycle</button>
+  <button class="btn btn-pause" id="btn-pause" onclick="togglePause()" disabled>&#10074;&#10074; Pause</button>
+  <button class="btn btn-reset" onclick="location.reload()">Reset</button>
+  <span id="counter">0 / 74</span>
+</div>
+
+<div id="timeline"></div>
+
+<div class="epilogue" id="epilogue" style="display:none">
+  <h2>The Cycle is Complete</h2>
+  <p>Every corner of the WAFT universe has been touched.</p>
+  <div id="summary"></div>
+</div>
+
+<script>
+let TOKEN = null, paused = false, running = false;
+let completed = 0, passed = 0, failed = 0, totalSteps = 0;
+const DELAY = 400;
+const state = {};
+
+async function api(method, path, body) {
+  const opts = { method, headers: { 'Content-Type': 'application/json' } };
+  if (TOKEN) opts.headers['Authorization'] = 'Bearer ' + TOKEN;
+  if (body && method !== 'GET') opts.body = JSON.stringify(body);
+  const t0 = performance.now();
+  const resp = await fetch(path, opts);
+  const ms = Math.round(performance.now() - t0);
+  let data;
+  try { data = resp.status === 204 ? { _: 'No Content' } : await resp.json(); } catch { data = { _: await resp.text() }; }
+  return { status: resp.status, ms, data, ok: resp.status >= 200 && resp.status < 400 };
+}
+
+function hl(json) {
+  return JSON.stringify(json, null, 2).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?)/g, m => {
+      let c = '#ae81ff';
+      if (/^"/.test(m)) c = /:\s*$/.test(m) ? '#66d9ef' : '#a6e22e';
+      else if (/true|false/.test(m)) c = '#f92672';
+      else if (/null/.test(m)) c = '#fd971f';
+      return '<span style="color:'+c+'">'+m+'</span>';
+    });
+}
+
+function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+async function waitUnpaused() { while (paused) await wait(100); }
+
+const steps = [];
+
+function act(label, title, desc) {
+  steps.push({ type: 'act', label, title, desc });
+}
+
+function step(method, path, narrative, bodyFn) {
+  steps.push({ type: 'step', method, path, narrative, bodyFn });
+  totalSteps++;
+}
+
+// ── ACT 1: ARRIVAL ──
+act('Act I', 'Arrival', 'You boot the system. Lights flicker on. The WAFT laboratory hums to life.');
+step('GET', '/api/health', 'First things first — is the heart still beating?');
+step('GET', '/api/state', 'You survey the full state of the laboratory. Every instrument, every reading.');
+step('GET', '/api/git', 'The version control ledger. What has changed since you were last here?');
+step('GET', '/api/auth/info', 'You check the security console. What does it require?');
+step('POST', '/api/auth/handshake', 'You extend your hand to the system. It recognizes you.', () => ({ client_name: 'The Narrator', client_version: '1.0.0' }));
+step('GET', '/api/auth/verify', 'You flash your credentials. The green light holds.');
+
+// ── ACT 2: THE LABORATORY ──
+act('Act II', 'The Laboratory', 'With full access, you begin organizing the laboratory for the work ahead.');
+step('GET', '/api/projects', 'You review the existing projects. What legacy remains?');
+step('POST', '/api/projects', 'A new experiment needs a home. You file the paperwork.', () => ({
+  title: 'The Grand Narrative Experiment',
+  description: 'A project born from the full narrative cycle — touching every corner of the WAFT universe.',
+  status: 'active', tags: ['narrative', 'demo', 'full-cycle']
+}));
+step('GET', () => '/api/projects/' + state.projectId, 'You retrieve your freshly created project to inspect it.');
+step('GET', '/api/projects/stats', 'You glance at the aggregate statistics board.'); // known bug: shadowed route
+step('PATCH', () => '/api/projects/' + state.projectId, 'You update the project with a note.', () => ({
+  description: 'Updated mid-narrative — the experiment is underway.'
+}));
+step('POST', '/api/work-efforts', 'Every great project needs a work effort. You create one.', () => ({
+  title: 'Narrative Cycle Documentation',
+  description: 'Documenting the journey through all 74 endpoints.',
+  status: 'active', tags: ['narrative', 'documentation']
+}));
+step('GET', () => '/api/work-efforts/' + state.weId, 'You retrieve the work effort to confirm it exists.');
+step('GET', '/api/work-efforts', 'You list all work efforts in the system.'); // known bug: sort crash
+step('POST', () => '/api/projects/' + state.projectId + '/work-efforts/' + state.weId, 'You link the work effort to the project.');
+step('PATCH', () => '/api/work-efforts/' + state.weId, 'A small update to the work effort.', () => ({
+  description: 'Mid-cycle update — the narrative deepens.'
+}));
+step('PUT', () => '/api/work-efforts/' + state.weId, 'A full update overwrites the record.', () => ({
+  title: 'Narrative Cycle Documentation (Revised)',
+  description: 'Full overwrite at the halfway mark.',
+  status: 'active', tags: ['narrative', 'revised']
+}));
+step('PUT', () => '/api/projects/' + state.projectId, 'You update the entire project record.', () => ({
+  title: 'The Grand Narrative Experiment (Revised)', status: 'active',
+  progress_percent: 25, tags: ['narrative', 'revised']
+}));
+step('DELETE', () => '/api/projects/' + state.projectId + '/work-efforts/' + state.weId, 'You unlink the work effort from the project.');
+step('DELETE', () => '/api/work-efforts/' + state.weId, 'The work effort has served its purpose. You archive it.');
+step('DELETE', () => '/api/projects/' + state.projectId, 'And the project dissolves, its data returned to the void.');
+
+// ── ACT 3: EPISTEMIC AWAKENING ──
+act('Act III', 'Epistemic Awakening', 'You turn inward. What does the system know — and what doesn\'t it know it doesn\'t know?');
+step('GET', '/api/empirica', 'You consult the Empirica framework. The epistemic vectors stare back.');
+step('GET', '/api/oracle/health', 'Is The Oracle awake?');
+step('POST', '/api/oracle/consult', 'You whisper a question into the void.', () => ({
+  question: 'What lies at the boundary between knowledge and uncertainty?'
+}));
+step('GET', '/api/decision/health', 'The Decision Engine. Is the iron core still hot?');
+step('POST', '/api/decision/analyze', 'You feed it a real decision matrix. Let the math decide.', () => ({
+  problem: 'Which path through the narrative is most illuminating?',
+  alternatives: ['The Direct Path', 'The Winding Road', 'The Underground'],
+  criteria: { Insight: 0.4, Safety: 0.3, Speed: 0.3 },
+  scores: {
+    'The Direct Path': { Insight: 5, Safety: 9, Speed: 10 },
+    'The Winding Road': { Insight: 10, Safety: 6, Speed: 3 },
+    'The Underground': { Insight: 8, Safety: 3, Speed: 7 }
+  },
+  methodology: 'WSM', show_details: true, show_sensitivity: true
+}));
+
+// ── ACT 4: THE QUEST ──
+act('Act IV', 'The Quest Begins', 'The gamification engine awakens. Quests, checkpoints, XP — the laboratory becomes an arena.');
+step('GET', '/api/quests/status', 'What is the state of the quest board?');
+step('GET', '/api/quests', 'You read every quest inscription on the board.');
+step('GET', '/api/quests/quest_1', 'You study the first quest in detail.');
+step('POST', '/api/quests/quest_1/start', 'You accept the quest. The board glows.');
+step('GET', '/api/quests/quest_1/checkpoints', 'What checkpoints lie ahead?');
+step('GET', '/api/quests/quest_1/tests', 'What tests must be passed?');
+step('POST', '/api/quests/quest_1/complete', 'With a flourish, you mark it done.');
+
+// ── ACT 5: BEINGS ──
+act('Act V', 'Beings Awaken', 'You reach into the substrate and pull forth life. Beings stir in the digital primordium.');
+step('POST', '/api/being/spawn', 'You speak the words of creation. A being coalesces.', () => ({
+  reality_id: 'narrative_realm', being_type: 'explorer'
+}));
+step('GET', () => '/api/being/' + state.beingId, 'You observe your creation. It blinks.');
+step('POST', () => '/api/being/' + state.beingId + '/decision', 'You present it with a choice.', () => ({
+  context: 'A fork in the corridor. Left leads to light, right to shadow.'
+}));
+step('GET', () => '/api/being/' + state.beingId + '/decisions/make-multiple', 'The being is asked to decide many things at once.');
+step('GET', '/api/pet/status', 'Meanwhile, your pet stirs in its corner. You check on it.');
+step('POST', '/api/pet/chat', 'You speak softly to your companion.', () => ({ message: 'Hello, friend. The narrative is half complete.' }));
+step('POST', '/api/pet/feed', 'You offer sustenance.', () => ({ amount: 15.0 }));
+step('POST', '/api/pet/action', 'You play together.', () => ({ action: 'roll over' }));
+step('GET', '/api/pet/cards', 'You flip through the pet\'s trading card collection.');
+step('POST', '/api/pet/reincarnate', 'The cycle of life. Your pet is reborn.');
+step('POST', '/api/protocel/create', 'Deep in the lab, you engineer a proto-cellular being.', () => ({
+  name: 'narrative_cel', reality_id: 'narrative_realm'
+}));
+step('GET', '/api/protocel/list', 'You survey all protocels in existence.');
+step('GET', () => '/api/protocel/' + (state.protocelId || 'none'), 'You examine your creation under the microscope.');
+step('POST', () => '/api/protocel/' + (state.protocelId || 'none') + '/observe', 'You observe its behavior.', () => ({}));
+step('POST', () => '/api/protocel/' + (state.protocelId || 'none') + '/interact', 'You poke it gently.', () => ({ stimulus: 'light' }));
+step('POST', () => '/api/protocel/' + (state.protocelId || 'none') + '/evolve', 'You accelerate its evolution.', () => ({}));
+
+// ── ACT 6: TALES ──
+act('Act VI', 'Tales Around the Fire', 'Night falls on the laboratory. You gather data around the campfire and tell stories.');
+step('GET', '/api/campfire/stories', 'What stories have already been told?');
+step('POST', '/api/campfire/stories', 'You tell a new one.', () => ({
+  title: 'The Narrator\'s Journey', narrative_style: 'medium', style: 'premium', structure: 'linear'
+}));
+step('GET', () => '/api/campfire/stories/' + (state.storyId || 'story_20260113_015318'), 'You pull the story from the shelf and examine it.');
+step('GET', () => '/api/campfire/stories/' + (state.storyId || 'story_20260113_015318') + '/content', 'You read the story\'s full text aloud.');
+step('GET', '/api/cyoa', 'The Choose Your Own Adventure cabinet. What\'s available?');
+step('GET', '/api/cyoa/mysterious_tavern', 'You pick up the Mysterious Tavern. Dust motes swirl.');
+step('GET', '/api/cyoa/mysterious_tavern/validate', 'Is the story internally consistent? You check.');
+step('GET', '/api/cyoa/mysterious_tavern/graph', 'You map out every branch and ending.');
+step('GET', '/api/cyoa/mysterious_tavern/pages/start', 'You open to the first page and begin reading.');
+step('GET', '/api/cyoa/play', 'The full CYOA player interface materializes.');
+step('POST', '/api/story/start', 'The AI Storyteller awakens. You request a new world.', () => ({ setting: 'fantasy_tavern' }));
+step('POST', '/api/story/action', 'You take your first action in the story.', () => ({
+  session_id: state.storySessionId || 'none',
+  action: 'Look around the tavern and approach the bartender'
+}));
+step('GET', () => '/api/story/session/' + (state.storySessionId || 'none'), 'You review the session state.');
+step('GET', () => '/api/story/world/' + (state.storySessionId || 'none'), 'You examine the world that was generated.');
+step('GET', () => '/api/story/npcs/' + (state.storySessionId || 'none'), 'Who are the characters in this story?');
+step('POST', () => '/api/story/generate-location/' + (state.storySessionId || 'none'), 'You ask the storyteller to dream up a new place.', () => ({}));
+step('GET', '/api/story/sprites/bartender', 'You request the bartender\'s portrait.');
+step('GET', '/api/story/play', 'The full storyteller UI unfolds.');
+
+// ── ACT 7: THE ARENA ──
+act('Act VII', 'The Arena & Beyond', 'The final act. You visit every remaining corner of the laboratory before the lights dim.');
+step('GET', '/api/gym/battle-logs', 'The Scint Gym. You review past battles.');
+step('GET', '/api/gym/stats', 'Overall fitness statistics. How strong are the agents?');
+step('GET', '/api/cartographer', 'Bob the Cartographer shares his maps and API knowledge.');
+step('GET', '/api/tags', 'The Ollama-compatible model registry. What models exist?');
+step('POST', '/api/generate', 'You ask the echo model to speak.', () => ({
+  model: 'waft-echo:latest', prompt: 'The narrative cycle is nearly complete.', stream: false
+}));
+step('GET', '/api/odd/notes', 'The ODD research notes. What observations remain?');
+step('POST', '/api/odd/notes', 'You leave a note for the next visitor.', () => ({
+  title: 'The Narrator Was Here',
+  content: 'I touched every endpoint. The system holds.',
+  tags: ['narrative', 'meta']
+}));
+step('GET', '/api/evolve-ui-runs', 'The Evolve UI Monitor. What UI experiments have been run?');
+step('GET', '/api/5050/session', 'Dashboard 5050. You open the session view.');
+step('GET', '/api/5050/timeline', 'The timeline unfolds — every artifact, every moment.');
+step('POST', '/api/5050/report', 'You generate a session report.', () => ({
+  title: 'Narrative Cycle Complete', notes: 'All 74 endpoints visited.', report_type: 'session_recap'
+}));
+step('POST', '/api/5050/report/pdf', 'A PDF version, for the archives.', () => ({
+  title: 'Narrative Cycle Report (PDF)', notes: 'Full cycle.', report_type: 'session_recap'
+}));
+step('POST', '/api/5050/continue-command', 'You issue one last command before leaving.', () => ({
+  objective: 'Continue the endless cycle', template: 'analysis'
+}));
+step('GET', '/api/5050/file?path=README.md', 'You download a file from the 5050 system as a final memento.');
+
+// ── BUILD TIMELINE ──
+const timeline = document.getElementById('timeline');
+let stepIndex = 0;
+steps.forEach((s, i) => {
+  const el = document.createElement('div');
+  if (s.type === 'act') {
+    el.className = 'act';
+    el.innerHTML = '<div class="act-label">' + s.label + '</div><div class="act-title">' + s.title + '</div><div class="act-desc">' + s.desc + '</div>';
+  } else {
+    stepIndex++;
+    const mc = 'm-' + s.method.toLowerCase();
+    el.className = 'step';
+    el.id = 'step-' + i;
+    const pathDisplay = typeof s.path === 'function' ? s.path.toString().match(/return\s*['"](.+?)['"]/)?.[1] || '(dynamic)' : s.path;
+    el.innerHTML =
+      '<div class="step-head"><span class="step-num" id="sn-'+i+'">' + stepIndex + '</span>' +
+      '<span class="method '+mc+'">' + s.method + '</span>' +
+      '<span class="step-path">' + pathDisplay + '</span>' +
+      '<span class="step-status" id="ss-'+i+'"></span></div>' +
+      '<div class="narrative">' + s.narrative + '</div>' +
+      '<div class="resp" id="sr-'+i+'"></div>';
+  }
+  timeline.appendChild(el);
+});
+
+async function runNarrative() {
+  if (running) return;
+  running = true;
+  document.getElementById('btn-run').disabled = true;
+  document.getElementById('btn-pause').disabled = false;
+  completed = 0; passed = 0; failed = 0;
+
+  // auto-auth first
+  try {
+    const r = await api('POST', '/api/auth/handshake', { client_name: 'Narrative Cycle', client_version: '1.0.0' });
+    if (r.data.token) TOKEN = r.data.token;
+  } catch {}
+
+  for (let i = 0; i < steps.length; i++) {
+    const s = steps[i];
+    if (s.type === 'act') {
+      document.getElementById('step-' + i)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      await wait(DELAY);
+      continue;
+    }
+
+    await waitUnpaused();
+    const el = document.getElementById('step-' + i);
+    const sn = document.getElementById('sn-' + i);
+    const ss = document.getElementById('ss-' + i);
+    const sr = document.getElementById('sr-' + i);
+
+    el.className = 'step active';
+    sn.className = 'step-num run';
+    ss.textContent = '...';
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    await wait(200);
+
+    const path = typeof s.path === 'function' ? s.path() : s.path;
+    const body = s.bodyFn ? s.bodyFn() : undefined;
+
+    try {
+      const r = await api(s.method, path, body);
+      completed++;
+
+      // capture state for chaining
+      if (path === '/api/auth/handshake' && r.data.token) TOKEN = r.data.token;
+      if (path === '/api/projects' && s.method === 'POST' && r.data.project_id) state.projectId = r.data.project_id;
+      if (path === '/api/work-efforts' && s.method === 'POST' && r.data.id) state.weId = r.data.id;
+      if (path === '/api/being/spawn' && r.data.being_id) state.beingId = r.data.being_id;
+      if (path === '/api/protocel/create' && r.data.protocel_id) state.protocelId = r.data.protocel_id;
+      if (path === '/api/campfire/stories' && s.method === 'POST' && r.data.id) state.storyId = r.data.id;
+      if (path === '/api/story/start' && r.data.session_id) state.storySessionId = r.data.session_id;
+
+      sr.innerHTML = hl(r.data);
+      if (r.ok) {
+        el.className = 'step done'; sn.className = 'step-num ok';
+        ss.innerHTML = '<span style="color:var(--green)">' + r.status + '</span> <span style="color:var(--muted)">' + r.ms + 'ms</span>';
+        passed++;
+      } else {
+        el.className = 'step error'; sn.className = 'step-num err';
+        ss.innerHTML = '<span style="color:var(--red)">' + r.status + '</span> <span style="color:var(--muted)">' + r.ms + 'ms</span>';
+        failed++;
+      }
+    } catch (e) {
+      completed++; failed++;
+      el.className = 'step error'; sn.className = 'step-num err';
+      ss.innerHTML = '<span style="color:var(--red)">ERR</span>';
+      sr.innerHTML = '<span style="color:var(--red)">' + e.message + '</span>';
+    }
+
+    document.getElementById('counter').textContent = completed + ' / ' + totalSteps;
+    document.getElementById('progress-bar').style.width = (completed / totalSteps * 100) + '%';
+    await wait(DELAY);
+  }
+
+  // Epilogue
+  const ep = document.getElementById('epilogue');
+  ep.style.display = 'block';
+  document.getElementById('summary').innerHTML =
+    '<span style="color:var(--green)">' + passed + ' passed</span> · ' +
+    '<span style="color:var(--red)">' + failed + ' failed</span> · ' +
+    totalSteps + ' total endpoints · ' +
+    '7 acts';
+  ep.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  running = false;
+  document.getElementById('btn-pause').disabled = true;
+}
+
+function togglePause() {
+  paused = !paused;
+  document.getElementById('btn-pause').textContent = paused ? '▶ Resume' : '❚❚ Pause';
+}
+</script>
+</body>
+</html>
