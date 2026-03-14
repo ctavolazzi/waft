@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WAFT Interactive Demo</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0e17;--bg2:#111827;--bg3:#1a2235;--border:#2d3748;--primary:#60a5fa;--green:#34d399;--red:#f87171;--yellow:#fbbf24;--purple:#a78bfa;--orange:#fb923c;--pink:#f472b6;--text:#e2e8f0;--muted:#94a3b8;--card:#151f32}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh}
+a{color:var(--primary);text-decoration:none}
+/* Sidebar */
+#sidebar{width:240px;background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;overflow-y:auto;z-index:10}
+#sidebar h1{padding:20px 16px 8px;font-size:1.3em;color:var(--primary)}
+#sidebar p{padding:0 16px 16px;font-size:.75em;color:var(--muted);border-bottom:1px solid var(--border)}
+.nav-group{padding:8px 0}
+.nav-group-title{padding:4px 16px;font-size:.65em;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:700}
+.nav-link{display:block;padding:6px 16px 6px 24px;font-size:.82em;color:var(--text);cursor:pointer;transition:background .15s}
+.nav-link:hover{background:var(--bg3);color:var(--primary)}
+.nav-link.active{background:var(--bg3);color:var(--primary);border-left:3px solid var(--primary);padding-left:21px}
+/* Main */
+#main{margin-left:240px;flex:1;padding:24px 32px 80px}
+.section{margin-bottom:32px;background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.section-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.section-header h2{font-size:1.1em;font-weight:600}
+.section-header .badge{font-size:.65em;padding:2px 8px;border-radius:99px;font-weight:700;text-transform:uppercase}
+.section-body{padding:16px 20px}
+.section-desc{font-size:.82em;color:var(--muted);margin-bottom:12px}
+/* Endpoint rows */
+.endpoint{background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-bottom:10px;overflow:hidden}
+.ep-header{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;transition:background .15s}
+.ep-header:hover{background:var(--bg3)}
+.method{font-size:.7em;font-weight:700;padding:3px 8px;border-radius:4px;min-width:52px;text-align:center;color:#fff}
+.method-get{background:#2563eb}.method-post{background:#16a34a}.method-put{background:#d97706}.method-patch{background:#7c3aed}.method-delete{background:#dc2626}
+.ep-path{font-family:'Cascadia Code','Fira Code',monospace;font-size:.82em;color:var(--text)}
+.ep-summary{font-size:.75em;color:var(--muted);margin-left:auto}
+.ep-body{display:none;padding:14px;border-top:1px solid var(--border);background:var(--bg)}
+.ep-body.open{display:block}
+/* Forms */
+.form-row{display:flex;gap:8px;margin-bottom:8px;align-items:end;flex-wrap:wrap}
+.form-group{display:flex;flex-direction:column;gap:3px;flex:1;min-width:140px}
+.form-group label{font-size:.7em;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+.form-group input,.form-group select,.form-group textarea{background:var(--bg2);border:1px solid var(--border);border-radius:5px;padding:7px 10px;color:var(--text);font-size:.82em;font-family:inherit}
+.form-group textarea{min-height:60px;resize:vertical;font-family:'Cascadia Code','Fira Code',monospace;font-size:.75em}
+.form-group input:focus,.form-group textarea:focus{outline:none;border-color:var(--primary)}
+.btn{padding:7px 16px;border:none;border-radius:5px;font-size:.8em;font-weight:600;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:5px}
+.btn-primary{background:var(--primary);color:#000}.btn-primary:hover{filter:brightness(1.15)}
+.btn-green{background:var(--green);color:#000}.btn-green:hover{filter:brightness(1.15)}
+.btn-red{background:var(--red);color:#000}.btn-red:hover{filter:brightness(1.15)}
+.btn-yellow{background:var(--yellow);color:#000}.btn-yellow:hover{filter:brightness(1.15)}
+.btn-purple{background:var(--purple);color:#000}.btn-purple:hover{filter:brightness(1.15)}
+.btn-sm{padding:5px 10px;font-size:.72em}
+/* Response */
+.response{margin-top:10px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.resp-bar{display:flex;align-items:center;gap:8px;padding:6px 10px;border-bottom:1px solid var(--border);font-size:.7em}
+.resp-status{font-weight:700;padding:2px 6px;border-radius:3px}
+.resp-ok{background:#16a34a33;color:var(--green)}.resp-err{background:#dc262633;color:var(--red)}
+.resp-time{color:var(--muted)}
+.resp-body{padding:10px;max-height:300px;overflow:auto;font-family:'Cascadia Code','Fira Code',monospace;font-size:.72em;white-space:pre-wrap;word-break:break-word;color:var(--muted);line-height:1.5}
+/* Status bar */
+#status-bar{position:fixed;bottom:0;left:240px;right:0;background:var(--bg2);border-top:1px solid var(--border);padding:8px 20px;display:flex;gap:16px;align-items:center;font-size:.75em;z-index:10}
+.status-item{display:flex;align-items:center;gap:5px}
+.dot{width:8px;height:8px;border-radius:50%}
+.dot-green{background:var(--green)}.dot-red{background:var(--red)}.dot-yellow{background:var(--yellow)}
+/* Scrollbar */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--muted)}
+/* Toast */
+#toast{position:fixed;top:20px;right:20px;z-index:100;display:flex;flex-direction:column;gap:8px}
+.toast-msg{padding:10px 16px;border-radius:6px;font-size:.8em;animation:slidein .3s ease;max-width:350px}
+.toast-ok{background:#16a34a;color:#fff}.toast-err{background:#dc2626;color:#fff}.toast-info{background:#2563eb;color:#fff}
+@keyframes slidein{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <h1>WAFT Demo</h1>
+  <p>Interactive API Explorer &mdash; 74 endpoints</p>
+  <div class="nav-group">
+    <div class="nav-group-title">System</div>
+    <a class="nav-link" href="#sec-health">Health &amp; State</a>
+    <a class="nav-link" href="#sec-auth">Authentication</a>
+    <a class="nav-link" href="#sec-git">Git Status</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">Core CRUD</div>
+    <a class="nav-link" href="#sec-projects">Projects</a>
+    <a class="nav-link" href="#sec-workefforts">Work Efforts</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">Epistemic</div>
+    <a class="nav-link" href="#sec-empirica">Empirica</a>
+    <a class="nav-link" href="#sec-oracle">Oracle</a>
+    <a class="nav-link" href="#sec-decision">Decision Engine</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">Gamification</div>
+    <a class="nav-link" href="#sec-quests">Quests</a>
+    <a class="nav-link" href="#sec-gym">Gym &amp; Arena</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">Beings</div>
+    <a class="nav-link" href="#sec-being">Being System</a>
+    <a class="nav-link" href="#sec-pet">Pet System</a>
+    <a class="nav-link" href="#sec-protocel">ProtoCel</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">Stories</div>
+    <a class="nav-link" href="#sec-campfire">Campfire</a>
+    <a class="nav-link" href="#sec-cyoa">CYOA</a>
+    <a class="nav-link" href="#sec-storyteller">Storyteller</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">Tools</div>
+    <a class="nav-link" href="#sec-cartographer">Cartographer</a>
+    <a class="nav-link" href="#sec-ollama">Ollama API</a>
+    <a class="nav-link" href="#sec-oddnotes">ODD Notes</a>
+    <a class="nav-link" href="#sec-evolveui">Evolve UI</a>
+    <a class="nav-link" href="#sec-5050">Dashboard 5050</a>
+  </div>
+</nav>
+
+<main id="main">
+
+<!-- HEALTH & STATE -->
+<div class="section" id="sec-health">
+  <div class="section-header">
+    <h2>Health &amp; State</h2>
+    <span class="badge" style="background:var(--green);color:#000">CORE</span>
+  </div>
+  <div class="section-body">
+    <p class="section-desc">System health checks and project state overview.</p>
+    <div class="endpoint" id="ep-health">
+      <div class="ep-header" onclick="toggleEp('ep-health')">
+        <span class="method method-get">GET</span>
+        <span class="ep-path">/api/health</span>
+        <span class="ep-summary">Health Check</span>
+      </div>
+      <div class="ep-body">
+        <button class="btn btn-primary" onclick="apiCall('ep-health','GET','/api/health')">Send Request</button>
+        <div class="response" id="ep-health-resp"></div>
+      </div>
+    </div>
+    <div class="endpoint" id="ep-state">
+      <div class="ep-header" onclick="toggleEp('ep-state')">
+        <span class="method method-get">GET</span>
+        <span class="ep-path">/api/state</span>
+        <span class="ep-summary">Full Project State</span>
+      </div>
+      <div class="ep-body">
+        <button class="btn btn-primary" onclick="apiCall('ep-state','GET','/api/state')">Send Request</button>
+        <div class="response" id="ep-state-resp"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AUTHENTICATION -->
+<div class="section" id="sec-auth">
+  <div class="section-header">
+    <h2>Authentication</h2>
+    <span class="badge" style="background:var(--yellow);color:#000">AUTH</span>
+  </div>
+  <div class="section-body">
+    <p class="section-desc">Token-based auth. Call handshake to get a token, then use it for write operations.</p>
+    <div class="endpoint" id="ep-auth-info">
+      <div class="ep-header" onclick="toggleEp('ep-auth-info')">
+        <span class="method method-get">GET</span>
+        <span class="ep-path">/api/auth/info</span>
+        <span class="ep-summary">Auth Info</span>
+      </div>
+      <div class="ep-body">
+        <button class="btn btn-primary" onclick="apiCall('ep-auth-info','GET','/api/auth/info')">Send Request</button>
+        <div class="response" id="ep-auth-info-resp"></div>
+      </div>
+    </div>
+    <div class="endpoint" id="ep-auth-handshake">
+      <div class="ep-header" onclick="toggleEp('ep-auth-handshake')">
+        <span class="method method-post">POST</span>
+        <span class="ep-path">/api/auth/handshake</span>
+        <span class="ep-summary">Get Token</span>
+      </div>
+      <div class="ep-body">
+        <div class="form-row">
+          <div class="form-group"><label>Client Name</label><input id="hs-client" value="WAFT Demo Page"></div>
+        </div>
+        <button class="btn btn-green" onclick="doHandshake()">Authenticate</button>
+        <div class="response" id="ep-auth-handshake-resp"></div>
+      </div>
+    </div>
+    <div class="endpoint" id="ep-auth-verify">
+      <div class="ep-header" onclick="toggleEp('ep-auth-verify')">
+        <span class="method method-get">GET</span>
+        <span class="ep-path">/api/auth/verify</span>
+        <span class="ep-summary">Verify Token</span>
+      </div>
+      <div class="ep-body">
+        <button class="btn btn-primary" onclick="apiCall('ep-auth-verify','GET','/api/auth/verify')">Verify Current Token</button>
+        <div class="response" id="ep-auth-verify-resp"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GIT -->
+<div class="section" id="sec-git">
+  <div class="section-header">
+    <h2>Git Status</h2>
+    <span class="badge" style="background:var(--purple);color:#000">VCS</span>
+  </div>
+  <div class="section-body">
+    <div class="endpoint" id="ep-git">
+      <div class="ep-header" onclick="toggleEp('ep-git')">
+        <span class="method method-get">GET</span>
+        <span class="ep-path">/api/git</span>
+        <span class="ep-summary">Git Status</span>
+      </div>
+      <div class="ep-body">
+        <button class="btn btn-primary" onclick="apiCall('ep-git','GET','/api/git')">Send Request</button>
+        <div class="response" id="ep-git-resp"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROJECTS -->
+<div class="section" id="sec-projects">
+  <div class="section-header">
+    <h2>Projects</h2>
+    <span class="badge" style="background:var(--primary);color:#000">CRUD</span>
+  </div>
+  <div class="section-body">
+    <p class="section-desc">Full CRUD for long-term projects with milestones and progress tracking.</p>
+    <div class="endpoint" id="ep-proj-list">
+      <div class="ep-header" onclick="toggleEp('ep-proj-list')">
+        <span class="method method-get">GET</span>
+        <span class="ep-path">/api/projects</span>
+        <span class="ep-summary">List Projects</span>
+      </div>
+      <div class="ep-body">
+        <button class="btn btn-primary" onclick="apiCall('ep-proj-list','GET','/api/projects')">Fetch All</button>
+        <div class="response" id="ep-proj-list-resp"></div>
+      </div>
+    </div>
+    <div class="endpoint" id="ep-proj-create">
+      <div class="ep-header" onclick="toggleEp('ep-proj-create')">
+        <span class="method method-post">POST</span>
+        <span class="ep-path">/api/projects</span>
+        <span class="ep-summary">Create Project</span>
+      </div>
+      <div class="ep-body">
+        <div class="form-row">
+          <div class="form-group"><label>Title</label><input id="proj-title" value="Demo Project"></div>
+          <div class="form-group"><label>Status</label>
+            <select id="proj-status"><option>planning</option><option>active</option><option>completed</option><option>on_hold</option></select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Description</label><input id="proj-desc" value="Created via interactive demo"></div>
+          <div class="form-group"><label>Tags (comma-sep)</label><input id="proj-tags" value="demo,test"></div>
+        </div>
+        <button class="btn btn-green" onclick="createProject()">Create Project</button>
+        <div class="response" id="ep-proj-create-resp"></div>
+      </div>
+    </div>
+    <div class="endpoint" id="ep-proj-get">
+      <div class="ep-header" onclick="toggleEp('ep-proj-get')">
+        <span class="method method-get">GET</span>
+        <span class="ep-path">/api/projects/{project_id}</span>
+        <span class="ep-summary">Get / Update / Delete Project</span>
+      </div>
+      <div class="ep-body">
+        <div class="form-row">
+          <div class="form-group"><label>Project ID</label><input id="proj-id" placeholder="proj_20260116_201713"></div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn btn-primary btn-sm" onclick="apiCall('ep-proj-get','GET','/api/projects/'+gv('proj-id'))">GET</button>
+          <button class="btn btn-yellow btn-sm" onclick="patchProject()">PATCH</button>
+          <button class="btn btn-red btn-sm" onclick="apiCall('ep-proj-get','DELETE','/api/projects/'+gv('proj-id'))">DELETE</button>
+        </div>
+        <div class="form-row" style="margin-top:8px">
+          <div class="form-group"><label>Patch Title</label><input id="proj-patch-title" placeholder="New title"></div>
+          <div class="form-group"><label>Patch Status</label><input id="proj-patch-status" placeholder="active"></div>
+        </div>
+        <div class="response" id="ep-proj-get-resp"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WORK EFFORTS -->
+<div class="section" id="sec-workefforts">
+  <div class="section-header">
+    <h2>Work Efforts</h2>
+    <span class="badge" style="background:var(--primary);color:#000">CRUD</span>
+  </div>
+  <div class="section-body">
+    <p class="section-desc">File-based work effort system with YAML frontmatter. Note: list endpoint has a known sort bug with mixed date types.</p>
+    <div class="endpoint" id="ep-we-list">
+      <div class="ep-header" onclick="toggleEp('ep-we-list')">
+        <span class="method method-get">GET</span>
+        <span class="ep-path">/api/work-efforts</span>
+        <span class="ep-summary">List Work Efforts</span>
+      </div>
+      <div class="ep-body">
+        <div class="form-row">
+          <div class="form-group"><label>Status filter</label><input id="we-filter-status" placeholder="active"></div>
+          <div class="form-group"><label>Limit</label><input id="we-limit" value="10" type="number"></div>
+        </div>
+        <button class="btn btn-primary" onclick="listWorkEfforts()">Fetch</button>
+        <div class="response" id="ep-we-list-resp"></div>
+      </div>
+    </div>
+    <div class="endpoint" id="ep-we-create">
+      <div class="ep-header" onclick="toggleEp('ep-we-create')">
+        <span class="method method-post">POST</span>
+        <span class="ep-path">/api/work-efforts</span>
+        <span class="ep-summary">Create Work Effort</span>
+      </div>
+      <div class="ep-body">
+        <div class="form-row">
+          <div class="form-group"><label>Title</label><input id="we-title" value="Demo Work Effort"></div>
+          <div class="form-group"><label>Status</label>
+            <select id="we-status"><option>active</option><option>paused</option><option>completed</option></select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Description</label><input id="we-desc" value="Created via demo page"></div>
+          <div class="form-group"><label>Tags</label><input id="we-tags" value="demo"></div>
+        </div>
+        <button class="btn btn-green" onclick="createWorkEffort()">Create</button>
+        <div class="response" id="ep-we-create-resp"></div>
+      </div>
+    </div>
+    <div class="endpoint" id="ep-we-get">
+      <div class="ep-header" onclick="toggleEp('ep-we-get')">
+        <span class="method method-get">GET</span>
+        <span class="ep-path">/api/work-efforts/{id}</span>
+        <span class="ep-summary">Get / Update / Delete</span>
+      </div>
+      <div class="ep-body">
+        <div class="form-row">
+          <div class="form-group"><label>Work Effort ID</label><input id="we-id" placeholder="WE-260314-xxxx"></div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-primary btn-sm" onclick="apiCall('ep-we-get','GET','/api/work-efforts/'+gv('we-id'))">GET</button>
+          <button class="btn btn-red btn-sm" onclick="apiCall('ep-we-get','DELETE','/api/work-efforts/'+gv('we-id'))">DELETE</button>
+        </div>
+        <div class="response" id="ep-we-get-resp"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EMPIRICA -->
+<div class="section" id="sec-empirica">
+  <div class="section-header">
+    <h2>Empirica</h2>
+    <span class="badge" style="background:var(--purple);color:#000">EPISTEMIC</span>
+  </div>
+  <div class="section-body">
+    <p class="section-desc">Epistemic self-awareness framework. View the current knowledge state.</p>
+    <div class="endpoint" id="ep-empirica">
+      <div class="ep-header" onclick="toggleEp('ep-empirica')">
+        <span class="method method-get">GET</span>
+        <span class="ep-path">/api/empirica</span>
+        <span class="ep-summary">Epistemic State</span>
+      </div>
+      <div class="ep-body">
+        <button class="btn btn-primary" onclick="apiCall('ep-empirica','GET','/api/empirica')">Fetch State</button>
+        <div class="response" id="ep-empirica-resp"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ORACLE -->
+<div class="section" id="sec-oracle">
+  <div class="section-header">
+    <h2>Oracle</h2>
+    <span class="badge" style="background:var(--purple);color:#000">EPISTEMIC</span>
+  </div>
+  <div class="section-body">
+    <p class="section-desc">Consult The Oracle for epistemic guidance.</p>
+    <div class="endpoint" id="ep-oracle-health">
+      <div class="ep-header" onclick="toggleEp('ep-oracle-health')">
+        <span class="method method-get">GET</span>
+        <span class="ep-path">/api/oracle/health</span>
+        <span class="ep-summary">Oracle Health</span>
+      </div>
+      <div class="ep-body">
+        <button class="btn btn-primary" onclick="apiCall('ep-oracle-health','GET','/api/oracle/health')">Check</button>
+        <div class="response" id="ep-oracle-health-resp"></div>
+      </div>
+    </div>
+    <div class="endpoint" id="ep-oracle-consult">
+      <div class="ep-header" onclick="toggleEp('ep-oracle-consult')">
+        <span class="method method-post">POST</span>
+        <span class="ep-path">/api/oracle/consult</span>
+        <span class="ep-summary">Consult Oracle</span>
+      </div>
+      <div class="ep-body">
+        <div class="form-row">
+          <div class="form-group"><label>Question</label><input id="oracle-q" value="What is the meaning of epistemic awareness?"></div>
+        </div>
+        <button class="btn btn-purple" onclick="consultOracle()">Consult</button>
+        <div class="response" id="ep-oracle-consult-resp"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DECISION ENGINE -->
+<div class="section" id="sec-decision">
+  <div class="section-header">
+    <h2>Decision Engine</h2>
+    <span class="badge" style="background:var(--orange);color:#000">ANALYSIS</span>
+  </div>
+  <div class="section-body">
+    <p class="section-desc">Weighted decision matrix analysis with sensitivity testing.</p>
+    <div class="endpoint" id="ep-dec-health">
+      <div class="ep-header" onclick="toggleEp('ep-dec-health')">
+        <span class="method method-get">GET</span>
+        <span class="ep-path">/api/decision/health</span>
+        <span class="ep-summary">Engine Health</span>
+      </div>
+      <div class="ep-body">
+        <button class="btn btn-primary" onclick="apiCall('ep-dec-health','GET','/api/decision/health')">Check</button>
+        <div class="response" id="ep-dec-health-resp"></div>
+      </div>
+    </div>
+    <div class="endpoint" id="ep-dec-analyze">
+      <div class="ep-header" onclick="toggleEp('ep-dec-analyze')">
+        <span class="method method-post">POST</span>
+        <span class="ep-path">/api/decision/analyze</span>
+        <span class="ep-summary">Analyze Decision</span>
+      </div>
+      <div class="ep-body">
+        <div class="form-group" style="margin-bottom:8px">
+          <label>Decision JSON (editable)</label>
+          <textarea id="dec-json" rows="10">{
+  "problem": "Which programming language to learn next?",
+  "alternatives": ["Rust", "Go", "Zig"],
+  "criteria": {"Performance": 0.4, "Ecosystem": 0.3, "Learning Curve": 0.3},
+  "scores": {
+    "Rust": {"Performance": 9, "Ecosystem": 8, "Learning Curve": 4},
+    "Go": {"Performance": 7, "Ecosystem": 9, "Learning Curve": 9},
+    "Zig": {"Performance": 9, "Ecosystem": 4, "Learning Curve": 5}
+  },
+  "methodology": "WSM",
+  "show_details": true,
+  "show_sensitivity": true
+}</textarea>
+        </div>
+        <button class="btn btn-orange" onclick="analyzeDecision()">Analyze</button>
+        <div class="response" id="ep-dec-analyze-resp"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- QUESTS -->
+<div class="section" id="sec-quests">
+  <div class="section-header">
+    <h2>Quests</h2>
+    <span class="badge" style="background:var(--green);color:#000">GAMIFICATION</span>
+  </div>
+  <div class="section-body">
+    <p class="section-desc">Gamified quest-based development with checkpoints and XP rewards.</p>
+    <div class="endpoint" id="ep-quest-status">
+      <div class="ep-header" onclick="toggleEp('ep-quest-status')">
+        <span class="method method-get">GET</span>
+        <span class="ep-path">/api/quests/status</span>
+        <span class="ep-summary">Quest Status</span>
+      </div>
+      <div class="ep-body">
+        <button class="btn btn-primary" onclick="apiCall('ep-quest-status','GET','/api/quests/status')">Check Status</button>
+        <div class="response" id="ep-quest-status-resp"></div>
+      </div>
+    </div>
+    <div class="endpoint" id="ep-quest-list">
+      <div class="ep-header" onclick="toggleEp('ep-quest-list')">
+        <span class="method method-get">GET</span>
+        <span class="ep-path">/api/quests</span>
+        <span class="ep-summary">List All Quests</span>
+      </div>
+      <div class="ep-body">
+        <button class="btn btn-primary" onclick="apiCall('ep-quest-list','GET','/api/quests')">Fetch Quests</button>
+        <div class="response" id="ep-quest-list-resp"></div>
+      </div>
+    </div>
+    <div class="endpoint" id="ep-quest-start">
+      <div class="ep-header" onclick="toggleEp('ep-quest-start')">
+        <span class="method method-post">POST</span>
+        <span class="ep-path">/api/quests/{quest_id}/start</span>
+        <span class="ep-summary">Start Quest</span>
+      </div>
+      <div class="ep-body">
+        <div class="form-row">
+          <div class="form-group"><label>Quest ID</label><input id="quest-id" value="quest_1"></div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-green btn-sm" onclick="apiCall('ep-quest-start','POST','/api/quests/'+gv('quest-id')+'/start')">Start</button>
+          <button class="btn btn-purple btn-sm" onclick="apiCall('ep-quest-start','POST','/api/quests/'+gv('quest-id')+'/complete')">Complete</button>
+          <button class="btn btn-primary btn-sm" onclick="apiCall('ep-quest-start','GET','/api/quests/'+gv('quest-id'))">Get Details</button>
+        </div>
+        <div class="response" id="ep-quest-start-resp"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GYM -->
+<div class="section" id="sec-gym">
+  <div class="section-header">
+    <h2>Gym &amp; Arena</h2>
+    <span class="badge" style="background:var(--red);color:#000">COMBAT</span>
+  </div>
+  <div class="section-body">
+    <p class="section-desc">Scint Gym battle logs and fitness statistics for agents.</p>
+    <div class="endpoint" id="ep-gym-logs">
+      <div class="ep-header" onclick="toggleEp('ep-gym-logs')">
+        <span class="method method-get">GET</span>
+        <span class="ep-path">/api/gym/battle-logs</span>
+        <span class="ep-summary">Battle Logs</span>
+      </div>
+      <div class="ep-body">
+        <button class="btn btn-primary" onclick="apiCall('ep-gym-logs','GET','/api/gym/battle-logs?limit=5')">Fetch Logs (limit 5)</button>
+        <div class="response" id="ep-gym-logs-resp"></div>
+      </div>
+    </div>
+    <div class="endpoint" id="ep-gym-stats">
+      <div class="ep-header" onclick="toggleEp('ep-gym-stats')">
+        <span class="method method-get">GET</span>
+        <span class="ep-path">/api/gym/stats</span>
+        <span class="ep-summary">Gym Stats</span>
+      </div>
+      <div class="ep-body">
+        <button class="btn btn-primary" onclick="apiCall('ep-gym-stats','GET','/api/gym/stats')">Fetch Stats</button>
+        <div class="response" id="ep-gym-stats-resp"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BEING -->
+<div class="section" id="sec-being">
+  <div class="section-header">
+    <h2>Being System</h2>
+    <span class="badge" style="background:var(--pink);color:#000">BEINGS</span>
+  </div>
+  <div class="section-body">
+    <p class="section-desc">Spawn autonomous beings and watch them make decisions.</p>
+    <div class="endpoint" id="ep-being-spawn">
+      <div class="ep-header" onclick="toggleEp('ep-being-spawn')">
+        <span class="method method-post">POST</span>
+        <span class="ep-path">/api/being/spawn</span>
+        <span class="ep-summary">Spawn Being</span>
+      </div>
+      <div class="ep-body">
+        <div class="form-group" style="margin-bottom:8px">
+          <label>Spawn JSON</label>
+          <textarea id="being-spawn-json" rows="4">{"reality_id": "demo_realm", "being_type": "explorer"}</textarea>
+        </div>
+        <button class="btn btn-green" onclick="spawnBeing()">Spawn</button>
+        <div class="response" id="ep-being-spawn-resp"></div>
+      </div>
+    </div>
+    <div class="endpoint" id="ep-being-get">
+      <div class="ep-header" onclick="toggleEp('ep-being-get')">
+        <span class="method method-get">GET</span>
+        <span class="ep-path">/api/being/{being_id}</span>
+        <span class="ep-summary">Get Being / Make Decision</span>
+      </div>
+      <div class="ep-body">
+        <div class="form-row">
+          <div class="form-group"><label>Being ID</label><input id="being-id" placeholder="being_20260314_..."></div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-primary btn-sm" onclick="apiCall('ep-being-get','GET','/api/being/'+gv('being-id'))">Get</button>
+          <button class="btn btn-purple btn-sm" onclick="beingDecision()">Make Decision</button>
+        </div>
+        <div class="form-group" style="margin-top:8px">
+          <label>Decision Context</label><input id="being-decision" value="explore the unknown corridor">
+        </div>
+        <div class="response" id="ep-being-get-resp"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PET -->
+<div class="section" id="sec-pet">
+  <div class="section-header">
+    <h2>Pet System</h2>
+    <span class="badge" style="background:var(--pink);color:#000">BEINGS</span>
+  </div>
+  <div class="section-body">
+    <p class="section-desc">Your digital companion. Chat, feed, play, and collect cards.</p>
+    <div class="endpoint" id="ep-pet-status">
+      <div class="ep-header" onclick="toggleEp('ep-pet-status')">
+        <span class="method method-get">GET</span>
+        <span class="ep-path">/api/pet/status</span>
+        <span class="ep-summary">Pet Status</span>
+      </div>
+      <div class="ep-body">
+        <button class="btn btn-primary" onclick="apiCall('ep-pet-status','GET','/api/pet/status')">Check Pet</button>
+        <div class="response" id="ep-pet-status-resp"></div>
+      </div>
+    </div>
+    <div class="endpoint" id="ep-pet-interact">
+      <div class="ep-header" onclick="toggleEp('ep-pet-interact')">
+        <span class="method method-post">POST</span>
+        <span class="ep-path">/api/pet/chat | feed | action</span>
+        <span class="ep-summary">Interact with Pet</span>
+      </div>
+      <div class="ep-body">
+        <div class="form-row">
+          <div class="form-group"><label>Message / Action</label><input id="pet-msg" value="Hello little friend!"></div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn btn-green btn-sm" onclick="petChat()">Chat</button>
+          <button class="btn btn-yellow btn-sm" onclick="apiCall('ep-pet-interact','POST','/api/pet/feed',{amount:10})">Feed</button>
+          <button class="btn btn-purple btn-sm" onclick="apiCall('ep-pet-interact','POST','/api/pet/action',{action:gv('pet-msg')})">Action</button>
+          <button class="btn btn-primary btn-sm" onclick="apiCall('ep-pet-interact','GET','/api/pet/cards')">Cards</button>
+          <button class="btn btn-red btn-sm" onclick="apiCall('ep-pet-interact','POST','/api/pet/reincarnate')">Reincarnate</button>
+        </div>
+        <div class="response" id="ep-pet-interact-resp"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROTOCEL -->
+<div class="section" id="sec-protocel">
+  <div class="section-header">
+    <h2>ProtoCel</h2>
+    <span class="badge" style="background:var(--pink);color:#000">BEINGS</span>
+  </div>
+  <div class="section-body">
+    <p class="section-desc">Create, observe, interact with, and evolve proto-cellular beings.</p>
+    <div class="endpoint" id="ep-proto-list">
+      <div class="ep-header" onclick="toggleEp('ep-proto-list')">
+        <span class="method method-get">GET</span>
+        <span class="ep-path">/api/protocel/list</span>
+        <span class="ep-summary">List ProtoCels</span>
+      </div>
+      <div class="ep-body">
+        <button class="btn btn-primary" onclick="apiCall('ep-proto-list','GET','/api/protocel/list')">Fetch</button>
+        <div class="response" id="ep-proto-list-resp"></div>
+      </div>
+    </div>
+    <div class="endpoint" id="ep-proto-create">
+      <div class="ep-header" onclick="toggleEp('ep-proto-create')">
+        <span class="method method-post">POST</span>
+        <span class="ep-path">/api/protocel/create</span>
+        <span class="ep-summary">Create &amp; Interact</span>
+      </div>
+      <div class="ep-body">
+        <div class="form-group" style="margin-bottom:8px">
+          <label>Create JSON</label>
+          <textarea id="proto-json" rows="3">{"name": "demo_cel", "reality_id": "demo"}</textarea>
+        </div>
+        <button class="btn btn-green" onclick="apiCallJson('ep-proto-create','POST','/api/protocel/create','proto-json')">Create</button>
+        <div class="form-row" style="margin-top:8px">
+          <div class="form-group"><label>ProtoCel ID</label><input id="proto-id" placeholder="protocel_..."></div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-primary btn-sm" onclick="apiCall('ep-proto-create','GET','/api/protocel/'+gv('proto-id'))">Get</button>
+          <button class="btn btn-purple btn-sm" onclick="apiCall('ep-proto-create','POST','/api/protocel/'+gv('proto-id')+'/observe',{})">Observe</button>
+          <button class="btn btn-yellow btn-sm" onclick="apiCall('ep-proto-create','POST','/api/protocel/'+gv('proto-id')+'/evolve',{})">Evolve</button>
+        </div>
+        <div class="response" id="ep-proto-create-resp"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CAMPFIRE -->
+<div class="section" id="sec-campfire">
+  <div class="section-header">
+    <h2>Campfire Stories</h2>
+    <span class="badge" style="background:var(--orange);color:#000">STORIES</span>
+  </div>
+  <div class="section-body">
+    <p class="section-desc">Create and read campfire stories with oracle insights.</p>
+    <div class="endpoint" id="ep-camp-list">
+      <div class="ep-header" onclick="toggleEp('ep-camp-list')">
+        <span class="method method-get">GET</span>
+        <span class="ep-path">/api/campfire/stories</span>
+        <span class="ep-summary">List Stories</span>
+      </div>
+      <div class="ep-body">
+        <button class="btn btn-primary" onclick="apiCall('ep-camp-list','GET','/api/campfire/stories')">Fetch</button>
+        <div class="response" id="ep-camp-list-resp"></div>
+      </div>
+    </div>
+    <div class="endpoint" id="ep-camp-create">
+      <div class="ep-header" onclick="toggleEp('ep-camp-create')">
+        <span class="method method-post">POST</span>
+        <span class="ep-path">/api/campfire/stories</span>
+        <span class="ep-summary">Create Story</span>
+      </div>
+      <div class="ep-body">
+        <div class="form-group" style="margin-bottom:8px">
+          <label>Story JSON</label>
+          <textarea id="camp-json" rows="3">{"title": "The Demo Tale", "narrative_style": "medium", "style": "premium", "structure": "linear"}</textarea>
+        </div>
+        <button class="btn btn-green" onclick="apiCallJson('ep-camp-create','POST','/api/campfire/stories','camp-json')">Create Story</button>
+        <div class="form-row" style="margin-top:8px">
+          <div class="form-group"><label>Story ID</label><input id="camp-id" placeholder="story_..."></div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-primary btn-sm" onclick="apiCall('ep-camp-create','GET','/api/campfire/stories/'+gv('camp-id'))">Get Story</button>
+          <button class="btn btn-purple btn-sm" onclick="apiCall('ep-camp-create','GET','/api/campfire/stories/'+gv('camp-id')+'/content')">Get Content</button>
+        </div>
+        <div class="response" id="ep-camp-create-resp"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CYOA -->
+<div class="section" id="sec-cyoa">
+  <div class="section-header">
+    <h2>Choose Your Own Adventure</h2>
+    <span class="badge" style="background:var(--orange);color:#000">STORIES</span>
+  </div>
+  <div class="section-body">
+    <p class="section-desc">Explore branching interactive stories.</p>
+    <div class="endpoint" id="ep-cyoa-list">
+      <div class="ep-header" onclick="toggleEp('ep-cyoa-list')">
+        <span class="method method-get">GET</span>
+        <span class="ep-path">/api/cyoa</span>
+        <span class="ep-summary">List Stories</span>
+      </div>
+      <div class="ep-body">
+        <button class="btn btn-primary" onclick="apiCall('ep-cyoa-list','GET','/api/cyoa')">Fetch</button>
+        <div class="response" id="ep-cyoa-list-resp"></div>
+      </div>
+    </div>
+    <div class="endpoint" id="ep-cyoa-play">
+      <div class="ep-header" onclick="toggleEp('ep-cyoa-play')">
+        <span class="method method-get">GET</span>
+        <span class="ep-path">/api/cyoa/{story}/...</span>
+        <span class="ep-summary">Explore Story</span>
+      </div>
+      <div class="ep-body">
+        <div class="form-row">
+          <div class="form-group"><label>Story Name</label><input id="cyoa-name" value="mysterious_tavern"></div>
+          <div class="form-group"><label>Page ID</label><input id="cyoa-page" value="start"></div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn btn-primary btn-sm" onclick="apiCall('ep-cyoa-play','GET','/api/cyoa/'+gv('cyoa-name'))">Get Story</button>
+          <button class="btn btn-green btn-sm" onclick="apiCall('ep-cyoa-play','GET','/api/cyoa/'+gv('cyoa-name')+'/pages/'+gv('cyoa-page'))">Get Page</button>
+          <button class="btn btn-purple btn-sm" onclick="apiCall('ep-cyoa-play','GET','/api/cyoa/'+gv('cyoa-name')+'/validate')">Validate</button>
+          <button class="btn btn-yellow btn-sm" onclick="apiCall('ep-cyoa-play','GET','/api/cyoa/'+gv('cyoa-name')+'/graph')">Graph</button>
+        </div>
+        <div class="response" id="ep-cyoa-play-resp"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STORYTELLER -->
+<div class="section" id="sec-storyteller">
+  <div class="section-header">
+    <h2>AI Storyteller</h2>
+    <span class="badge" style="background:var(--orange);color:#000">STORIES</span>
+  </div>
+  <div class="section-body">
+    <p class="section-desc">Dynamic AI-powered visual novel. Start a game, take actions, explore worlds.</p>
+    <div class="endpoint" id="ep-story-start">
+      <div class="ep-header" onclick="toggleEp('ep-story-start')">
+        <span class="method method-post">POST</span>
+        <span class="ep-path">/api/story/start</span>
+        <span class="ep-summary">Start Game</span>
+      </div>
+      <div class="ep-body">
+        <div class="form-row">
+          <div class="form-group"><label>Setting</label>
+            <select id="story-setting"><option>fantasy_tavern</option><option>space_station</option><option>noir_city</option></select>
+          </div>
+        </div>
+        <button class="btn btn-green" onclick="startStory()">Start Game</button>
+        <div class="response" id="ep-story-start-resp"></div>
+      </div>
+    </div>
+    <div class="endpoint" id="ep-story-action">
+      <div class="ep-header" onclick="toggleEp('ep-story-action')">
+        <span class="method method-post">POST</span>
+        <span class="ep-path">/api/story/action</span>
+        <span class="ep-summary">Take Action / Explore</span>
+      </div>
+      <div class="ep-body">
+        <div class="form-row">
+          <div class="form-group"><label>Session ID</label><input id="story-session" placeholder="session_..."></div>
+          <div class="form-group"><label>Action</label><input id="story-action" value="look around the room"></div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn btn-purple btn-sm" onclick="storyAction()">Take Action</button>
+          <button class="btn btn-primary btn-sm" onclick="apiCall('ep-story-action','GET','/api/story/session/'+gv('story-session'))">Get Session</button>
+          <button class="btn btn-yellow btn-sm" onclick="apiCall('ep-story-action','GET','/api/story/world/'+gv('story-session'))">World</button>
+          <button class="btn btn-green btn-sm" onclick="apiCall('ep-story-action','GET','/api/story/npcs/'+gv('story-session'))">NPCs</button>
+        </div>
+        <div class="response" id="ep-story-action-resp"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CARTOGRAPHER -->
+<div class="section" id="sec-cartographer">
+  <div class="section-header">
+    <h2>Cartographer</h2>
+    <span class="badge" style="background:var(--muted);color:#000">TOOLS</span>
+  </div>
+  <div class="section-body">
+    <div class="endpoint" id="ep-carto">
+      <div class="ep-header" onclick="toggleEp('ep-carto')">
+        <span class="method method-get">GET</span>
+        <span class="ep-path">/api/cartographer</span>
+        <span class="ep-summary">Cartographer Data</span>
+      </div>
+      <div class="ep-body">
+        <button class="btn btn-primary" onclick="apiCall('ep-carto','GET','/api/cartographer')">Fetch</button>
+        <div class="response" id="ep-carto-resp"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- OLLAMA -->
+<div class="section" id="sec-ollama">
+  <div class="section-header">
+    <h2>Ollama-Compatible API</h2>
+    <span class="badge" style="background:var(--muted);color:#000">TOOLS</span>
+  </div>
+  <div class="section-body">
+    <p class="section-desc">Ollama v1 compatible endpoints for model listing and generation.</p>
+    <div class="endpoint" id="ep-ollama-tags">
+      <div class="ep-header" onclick="toggleEp('ep-ollama-tags')">
+        <span class="method method-get">GET</span>
+        <span class="ep-path">/api/tags</span>
+        <span class="ep-summary">List Models</span>
+      </div>
+      <div class="ep-body">
+        <button class="btn btn-primary" onclick="apiCall('ep-ollama-tags','GET','/api/tags')">Fetch Tags</button>
+        <div class="response" id="ep-ollama-tags-resp"></div>
+      </div>
+    </div>
+    <div class="endpoint" id="ep-ollama-gen">
+      <div class="ep-header" onclick="toggleEp('ep-ollama-gen')">
+        <span class="method method-post">POST</span>
+        <span class="ep-path">/api/generate</span>
+        <span class="ep-summary">Generate</span>
+      </div>
+      <div class="ep-body">
+        <div class="form-row">
+          <div class="form-group"><label>Model</label><input id="ollama-model" value="waft-echo:latest"></div>
+          <div class="form-group"><label>Prompt</label><input id="ollama-prompt" value="Hello from the demo page!"></div>
+        </div>
+        <button class="btn btn-green" onclick="ollamaGenerate()">Generate</button>
+        <div class="response" id="ep-ollama-gen-resp"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ODD NOTES -->
+<div class="section" id="sec-oddnotes">
+  <div class="section-header">
+    <h2>ODD Notes</h2>
+    <span class="badge" style="background:var(--muted);color:#000">TOOLS</span>
+  </div>
+  <div class="section-body">
+    <div class="endpoint" id="ep-odd-list">
+      <div class="ep-header" onclick="toggleEp('ep-odd-list')">
+        <span class="method method-get">GET</span>
+        <span class="ep-path">/api/odd/notes</span>
+        <span class="ep-summary">List Notes</span>
+      </div>
+      <div class="ep-body">
+        <button class="btn btn-primary" onclick="apiCall('ep-odd-list','GET','/api/odd/notes')">Fetch</button>
+        <div class="response" id="ep-odd-list-resp"></div>
+      </div>
+    </div>
+    <div class="endpoint" id="ep-odd-create">
+      <div class="ep-header" onclick="toggleEp('ep-odd-create')">
+        <span class="method method-post">POST</span>
+        <span class="ep-path">/api/odd/notes</span>
+        <span class="ep-summary">Create Note</span>
+      </div>
+      <div class="ep-body">
+        <div class="form-group" style="margin-bottom:8px">
+          <label>Note JSON</label>
+          <textarea id="odd-json" rows="3">{"title": "Demo Note", "content": "Created via interactive demo", "tags": ["demo"]}</textarea>
+        </div>
+        <button class="btn btn-green" onclick="apiCallJson('ep-odd-create','POST','/api/odd/notes','odd-json')">Create Note</button>
+        <div class="response" id="ep-odd-create-resp"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EVOLVE UI -->
+<div class="section" id="sec-evolveui">
+  <div class="section-header">
+    <h2>Evolve UI Monitor</h2>
+    <span class="badge" style="background:var(--muted);color:#000">TOOLS</span>
+  </div>
+  <div class="section-body">
+    <div class="endpoint" id="ep-evolve">
+      <div class="ep-header" onclick="toggleEp('ep-evolve')">
+        <span class="method method-get">GET</span>
+        <span class="ep-path">/api/evolve-ui-runs</span>
+        <span class="ep-summary">Evolve UI Runs</span>
+      </div>
+      <div class="ep-body">
+        <button class="btn btn-primary" onclick="apiCall('ep-evolve','GET','/api/evolve-ui-runs')">Fetch Runs</button>
+        <div class="response" id="ep-evolve-resp"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD 5050 -->
+<div class="section" id="sec-5050">
+  <div class="section-header">
+    <h2>Dashboard 5050</h2>
+    <span class="badge" style="background:var(--muted);color:#000">TOOLS</span>
+  </div>
+  <div class="section-body">
+    <p class="section-desc">Session orchestration, timeline, and report generation.</p>
+    <div class="endpoint" id="ep-5050-session">
+      <div class="ep-header" onclick="toggleEp('ep-5050-session')">
+        <span class="method method-get">GET</span>
+        <span class="ep-path">/api/5050/session | timeline</span>
+        <span class="ep-summary">Session &amp; Timeline</span>
+      </div>
+      <div class="ep-body">
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-primary btn-sm" onclick="apiCall('ep-5050-session','GET','/api/5050/session')">Session</button>
+          <button class="btn btn-purple btn-sm" onclick="apiCall('ep-5050-session','GET','/api/5050/timeline')">Timeline</button>
+        </div>
+        <div class="response" id="ep-5050-session-resp"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<div id="status-bar">
+  <div class="status-item"><span class="dot dot-green" id="dot-health"></span> <span id="lbl-health">Checking...</span></div>
+  <div class="status-item">Token: <code id="lbl-token" style="color:var(--muted)">none</code></div>
+  <div class="status-item">Requests: <code id="lbl-reqs">0</code></div>
+  <div class="status-item" style="margin-left:auto"><a href="/docs" target="_blank">Swagger Docs</a></div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+let TOKEN = null;
+let reqCount = 0;
+
+function gv(id) { return document.getElementById(id)?.value || ''; }
+
+function toggleEp(id) {
+  const body = document.querySelector('#' + id + ' .ep-body');
+  body.classList.toggle('open');
+}
+
+function toast(msg, type='info') {
+  const el = document.createElement('div');
+  el.className = 'toast-msg toast-' + type;
+  el.textContent = msg;
+  document.getElementById('toast').appendChild(el);
+  setTimeout(() => el.remove(), 3500);
+}
+
+function renderResponse(epId, status, data, time) {
+  const el = document.getElementById(epId + '-resp');
+  const isOk = status >= 200 && status < 400;
+  el.innerHTML = `<div class="resp-bar"><span class="resp-status ${isOk?'resp-ok':'resp-err'}">${status}</span><span class="resp-time">${time}ms</span></div><div class="resp-body">${syntaxHighlight(JSON.stringify(data, null, 2))}</div>`;
+}
+
+function syntaxHighlight(json) {
+  return json.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, m => {
+      let c = '#ae81ff'; // number
+      if (/^"/.test(m)) { c = /:\s*$/.test(m) ? '#66d9ef' : '#a6e22e'; } // key : string
+      else if (/true|false/.test(m)) c = '#f92672';
+      else if (/null/.test(m)) c = '#fd971f';
+      return '<span style="color:' + c + '">' + m + '</span>';
+    });
+}
+
+async function apiCall(epId, method, url, body) {
+  const t0 = performance.now();
+  reqCount++;
+  document.getElementById('lbl-reqs').textContent = reqCount;
+  const opts = { method, headers: { 'Content-Type': 'application/json' } };
+  if (TOKEN) opts.headers['Authorization'] = 'Bearer ' + TOKEN;
+  if (body && (method === 'POST' || method === 'PUT' || method === 'PATCH')) opts.body = JSON.stringify(body);
+  try {
+    const resp = await fetch(url, opts);
+    const time = Math.round(performance.now() - t0);
+    let data;
+    const ct = resp.headers.get('content-type') || '';
+    if (ct.includes('json')) { data = await resp.json(); }
+    else if (resp.status === 204) { data = { message: 'No Content (success)' }; }
+    else { data = { raw: await resp.text() }; }
+    renderResponse(epId, resp.status, data, time);
+    if (resp.status >= 400) toast(`${method} ${url} → ${resp.status}`, 'err');
+  } catch (e) {
+    renderResponse(epId, 0, { error: e.message }, Math.round(performance.now() - t0));
+    toast('Request failed: ' + e.message, 'err');
+  }
+}
+
+async function apiCallJson(epId, method, url, textareaId) {
+  try {
+    const body = JSON.parse(document.getElementById(textareaId).value);
+    await apiCall(epId, method, url, body);
+  } catch (e) { toast('Invalid JSON: ' + e.message, 'err'); }
+}
+
+async function doHandshake() {
+  const t0 = performance.now();
+  reqCount++;
+  document.getElementById('lbl-reqs').textContent = reqCount;
+  try {
+    const resp = await fetch('/api/auth/handshake', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ client_name: gv('hs-client'), client_version: '1.0.0' })
+    });
+    const data = await resp.json();
+    renderResponse('ep-auth-handshake', resp.status, data, Math.round(performance.now() - t0));
+    if (data.token) {
+      TOKEN = data.token;
+      document.getElementById('lbl-token').textContent = TOKEN.substring(0, 12) + '...';
+      document.getElementById('lbl-token').style.color = 'var(--green)';
+      toast('Authenticated! Token stored.', 'ok');
+    }
+  } catch (e) { toast('Handshake failed: ' + e.message, 'err'); }
+}
+
+function createProject() {
+  const tags = gv('proj-tags').split(',').map(t => t.trim()).filter(Boolean);
+  apiCall('ep-proj-create', 'POST', '/api/projects', {
+    title: gv('proj-title'), description: gv('proj-desc'),
+    status: gv('proj-status'), tags
+  });
+}
+
+function patchProject() {
+  const body = {};
+  if (gv('proj-patch-title')) body.title = gv('proj-patch-title');
+  if (gv('proj-patch-status')) body.status = gv('proj-patch-status');
+  apiCall('ep-proj-get', 'PATCH', '/api/projects/' + gv('proj-id'), body);
+}
+
+function createWorkEffort() {
+  const tags = gv('we-tags').split(',').map(t => t.trim()).filter(Boolean);
+  apiCall('ep-we-create', 'POST', '/api/work-efforts', {
+    title: gv('we-title'), description: gv('we-desc'),
+    status: gv('we-status'), tags
+  });
+}
+
+function listWorkEfforts() {
+  let url = '/api/work-efforts?limit=' + gv('we-limit');
+  if (gv('we-filter-status')) url += '&status=' + gv('we-filter-status');
+  apiCall('ep-we-list', 'GET', url);
+}
+
+function consultOracle() {
+  apiCall('ep-oracle-consult', 'POST', '/api/oracle/consult', { question: gv('oracle-q') });
+}
+
+function analyzeDecision() {
+  apiCallJson('ep-dec-analyze', 'POST', '/api/decision/analyze', 'dec-json');
+}
+
+function spawnBeing() {
+  apiCallJson('ep-being-spawn', 'POST', '/api/being/spawn', 'being-spawn-json');
+}
+
+function beingDecision() {
+  apiCall('ep-being-get', 'POST', '/api/being/' + gv('being-id') + '/decision', {
+    context: gv('being-decision')
+  });
+}
+
+function petChat() {
+  apiCall('ep-pet-interact', 'POST', '/api/pet/chat', { message: gv('pet-msg') });
+}
+
+function startStory() {
+  apiCall('ep-story-start', 'POST', '/api/story/start', { setting: gv('story-setting') });
+}
+
+function storyAction() {
+  apiCall('ep-story-action', 'POST', '/api/story/action', {
+    session_id: gv('story-session'), action: gv('story-action')
+  });
+}
+
+function ollamaGenerate() {
+  apiCall('ep-ollama-gen', 'POST', '/api/generate', {
+    model: gv('ollama-model'), prompt: gv('ollama-prompt'), stream: false
+  });
+}
+
+// Sidebar active tracking
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+      const link = document.querySelector('.nav-link[href="#' + e.target.id + '"]');
+      if (link) link.classList.add('active');
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('.section').forEach(s => observer.observe(s));
+
+// Init: health check + auto-auth
+(async function init() {
+  try {
+    const resp = await fetch('/api/health');
+    const data = await resp.json();
+    document.getElementById('dot-health').className = 'dot dot-green';
+    document.getElementById('lbl-health').textContent = 'API: ' + data.status;
+  } catch {
+    document.getElementById('dot-health').className = 'dot dot-red';
+    document.getElementById('lbl-health').textContent = 'API: offline';
+  }
+  // Auto-authenticate
+  try {
+    const resp = await fetch('/api/auth/handshake', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ client_name: 'WAFT Demo (auto)', client_version: '1.0.0' })
+    });
+    const data = await resp.json();
+    if (data.token) {
+      TOKEN = data.token;
+      document.getElementById('lbl-token').textContent = TOKEN.substring(0, 12) + '...';
+      document.getElementById('lbl-token').style.color = 'var(--green)';
+    }
+  } catch {}
+})();
+</script>
+</body>
+</html>
