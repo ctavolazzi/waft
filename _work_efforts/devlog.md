@@ -4,6 +4,31 @@ This log tracks development activities, decisions, and progress for the waft pro
 
 ---
 
+## 2026-03-14 - `waft add --dev` Fun Fix Kickoff
+
+**Time**: 13:23 UTC  
+**Status**: 🚧 **IN PROGRESS**  
+**Work Effort**: 00.01
+
+### Objective
+
+Make `waft add --dev` behave as documented by forwarding the development-dependency flag to `uv add`.
+
+### Development Plan
+
+1. Add a `dev` flag to the substrate layer.
+2. Forward `--dev` from the CLI without the current misleading warning.
+3. Add focused tests for command construction and CLI forwarding.
+4. Run targeted verification and record the result.
+
+### Discovery Notes
+
+- `src/waft/main.py` currently warns that `--dev` is not fully supported, then adds a regular dependency anyway.
+- `src/waft/core/substrate.py` currently only runs `uv add <package>`.
+- `empirica` is not available on PATH in this environment, so session tracking is being recorded in `_work_efforts` directly.
+
+---
+
 ## 2026-03-01 - Early Oracle Kickoff Commands (`/alrighty-then`, `/aa`)
 
 **Time**: 18:36 PST  

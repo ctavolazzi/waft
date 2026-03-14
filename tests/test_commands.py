@@ -3,8 +3,13 @@
 import subprocess
 import sys
 
+from typer.testing import CliRunner
+
+import waft.main
 from waft.core.memory import MemoryManager
 from waft.core.substrate import SubstrateManager
+
+runner = CliRunner()
 
 
 def run_waft_command(args, cwd=None):
@@ -194,3 +199,29 @@ def test_waft_verify_updates_integrity(full_waft_project):
     # Should run successfully and potentially show integrity
     # The exact output depends on gamification state, but command should complete
     assert result.returncode in [0, 1]  # May succeed or fail based on state
+
+
+def test_waft_add_forwards_dev_flag(project_with_pyproject, monkeypatch):
+    """Test waft add forwards the --dev flag to the substrate layer."""
+    captured = {}
+
+    def fake_add_dependency(self, package, project_path, dev=False):
+        captured["package"] = package
+        captured["project_path"] = project_path
+        captured["dev"] = dev
+        return True
+
+    monkeypatch.setattr(SubstrateManager, "add_dependency", fake_add_dependency)
+    monkeypatch.setattr(waft.main, "_process_tavern_hook", lambda *args, **kwargs: None)
+
+    result = runner.invoke(
+        waft.main.app,
+        ["add", "pytest>=8.0.0", "--dev", "--path", str(project_with_pyproject)],
+    )
+
+    assert result.exit_code == 0
+    assert captured["package"] == "pytest>=8.0.0"
+    assert captured["project_path"] == project_with_pyproject
+    assert captured["dev"] is True
+    assert "Adding development dependency" in result.stdout
+    assert "Running uv add --dev pytest>=8.0.0" in result.stdout
