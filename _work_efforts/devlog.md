@@ -7,7 +7,7 @@ This log tracks development activities, decisions, and progress for the waft pro
 ## 2026-03-14 - Unified WAFT Interface Kickoff
 
 **Time**: 13:51 UTC  
-**Status**: 🚧 **IN PROGRESS**  
+**Status**: ✅ **COMPLETED**  
 **Work Effort**: 10.01
 
 ### Objective
@@ -33,6 +33,29 @@ Create a unified WAFT browser interface by making the `waft serve` visualizer th
 
 - `WE-260112-yfdi` now points to `10.01` as the canonical successor.
 - The old localhost:5050 dashboard history is now explicitly continued by `10.01`.
+
+### Outcome
+
+- Created `_work_efforts/10-19_user_interface/10_unified_waft_interface/10.01_waft_control_center_unification.md` as the canonical UI effort.
+- Updated the older Streamlit UI work effort and the 5050 dashboard history to point at the new unified-ui effort.
+- Turned the visualizer home page into a real WAFT Control Center with:
+  - unified workspace navigation
+  - 5050 context stack
+  - recent 5050 timeline
+  - recent devlog panel
+- Replaced dead visualizer navbar links with real routes.
+- Fixed the `Projects` workspace regression by moving `/api/projects/stats` ahead of the catch-all project-id route.
+- Fixed three pre-existing Svelte parser blockers that were preventing clean navigation/build progress in related visualizer surfaces.
+
+### Verification
+
+- `uv run pytest tests/api/test_projects_basic.py tests/api/test_dashboard_5050.py -q` → pass
+- `uv run ruff check src/waft/api/routes/dashboard_5050.py tests/api/test_dashboard_5050.py tests/api/test_projects_basic.py` → pass
+- Manual browser validation succeeded on:
+  - Control Center
+  - Projects
+  - Flow Lab
+- `npm run check` and `npm run build` still report broader pre-existing visualizer issues outside the unified UI slice, but the dev-path walkthrough is working.
 
 ---
 
