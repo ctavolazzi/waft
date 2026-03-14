@@ -22,14 +22,15 @@ from .routes import (
     cyoa,
     dashboard_5050,
     decision,
+    demo,
     empirica,
     evolve_ui_monitor,
     git,
     gym,
     health,
-    oracle,
     odd_notes,
     ollama,
+    oracle,
     pet,
     projects,
     protocel,
@@ -231,6 +232,7 @@ def create_app(project_path: Path, static_dir: Path | None = None) -> FastAPI:
     app.include_router(dashboard_5050.router, prefix="/api", tags=["dashboard-5050"])
     app.include_router(cyoa.router, prefix="/api", tags=["cyoa"])
     app.include_router(storyteller.router, prefix="/api", tags=["storyteller"])
+    app.include_router(demo.router)
 
     # Serve static files if provided (must be last route)
     if static_dir and static_dir.exists():
