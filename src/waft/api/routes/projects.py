@@ -60,6 +60,31 @@ async def get_projects(request: Request):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@router.get("/projects/stats", response_model=StatsResponse)
+async def get_projects_stats(request: Request):
+    """
+    Get projects statistics.
+    """
+    project_path: Path = request.app.state.project_path
+    manager = ProjectManager(project_path)
+
+    try:
+        projects = manager.list_projects()
+        total = len(projects)
+        active = len([p for p in projects if p.status == ProjectStatus.ACTIVE])
+        avg_progress = sum(p.progress_percent for p in projects) / total if total > 0 else 0.0
+        total_milestones = sum(len(p.milestones) for p in projects)
+
+        return StatsResponse(
+            total_projects=total,
+            active_projects=active,
+            avg_progress=round(avg_progress, 1),
+            total_milestones=total_milestones,
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.get("/projects/{project_id}", response_model=ProjectResponse)
 async def get_project(project_id: str, request: Request):
     """
@@ -87,31 +112,6 @@ async def get_project(project_id: str, request: Request):
         )
     except HTTPException:
         raise
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@router.get("/projects/stats", response_model=StatsResponse)
-async def get_projects_stats(request: Request):
-    """
-    Get projects statistics.
-    """
-    project_path: Path = request.app.state.project_path
-    manager = ProjectManager(project_path)
-
-    try:
-        projects = manager.list_projects()
-        total = len(projects)
-        active = len([p for p in projects if p.status == ProjectStatus.ACTIVE])
-        avg_progress = sum(p.progress_percent for p in projects) / total if total > 0 else 0.0
-        total_milestones = sum(len(p.milestones) for p in projects)
-
-        return StatsResponse(
-            total_projects=total,
-            active_projects=active,
-            avg_progress=round(avg_progress, 1),
-            total_milestones=total_milestones,
-        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
