@@ -61,5 +61,7 @@ Spawn a Being from Source and build a comprehensive Streamlit UI for WAFT that i
 - Streamlit UI implementation complete
 
 ## Related
+- Canonical successor: `_work_efforts/10-19_user_interface/10_unified_waft_interface/10.01_waft_control_center_unification.md`
+- Status note: this Streamlit effort remains valuable history, but the active unified UI path now converges on `waft serve` + FastAPI + Svelte visualizer.
 - Docs: (to be linked)
 - PRs: (to be added)

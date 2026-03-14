@@ -4,6 +4,38 @@ This log tracks development activities, decisions, and progress for the waft pro
 
 ---
 
+## 2026-03-14 - Unified WAFT Interface Kickoff
+
+**Time**: 13:51 UTC  
+**Status**: 🚧 **IN PROGRESS**  
+**Work Effort**: 10.01
+
+### Objective
+
+Create a unified WAFT browser interface by making the `waft serve` visualizer the canonical control center and folding the existing 5050 orchestration context into it.
+
+### Development Plan
+
+1. Create a new canonical unified-ui work effort.
+2. Point the older Streamlit and 5050 UI histories at the new effort.
+3. Extend the visualizer with 5050 session/timeline data.
+4. Replace dead navigation with real workspace links.
+5. Validate the unified UI with targeted checks and a browser walkthrough.
+
+### Discovery Notes
+
+- `waft serve` already treats the FastAPI + Svelte visualizer as the main web path.
+- `dashboard_5050.py` already exposes useful orchestration data, but the frontend does not surface it.
+- The visualizer navbar currently links to routes that do not exist (`/git`, `/work-efforts`, `/empirica`).
+- The older Streamlit dashboard is historical context, not the best current unification base.
+
+### Historical Pointers Updated
+
+- `WE-260112-yfdi` now points to `10.01` as the canonical successor.
+- The old localhost:5050 dashboard history is now explicitly continued by `10.01`.
+
+---
+
 ## 2026-03-14 - `waft add --dev` Fun Fix Kickoff
 
 **Time**: 13:23 UTC  
@@ -453,6 +485,10 @@ This effort tracks real-time context visualization, report/PDF generation, and s
 ### Evidence
 
 - `_work_efforts/WE-260301-5050_localhost_5050_dashboard/VALIDATION_2026-03-01.md`
+
+### Canonical Successor
+
+- Continued by `_work_efforts/10-19_user_interface/10_unified_waft_interface/10.01_waft_control_center_unification.md`, which converges the 5050 orchestration context into the main `waft serve` visualizer instead of keeping it separate.
 
 ---
 

@@ -4,6 +4,9 @@
 
 	function refresh() {
 		projectStore.fetch();
+		if (typeof window !== 'undefined') {
+			window.dispatchEvent(new CustomEvent('waft-refresh'));
+		}
 	}
 </script>
 
@@ -11,16 +14,14 @@
 	<div class="container mx-auto flex items-center justify-between">
 		<a href="/" class="text-2xl font-bold text-[var(--primary-light)]">🌊 Waft</a>
 		<div class="flex items-center gap-2">
-			<a href="/" class="nav-box">Dashboard</a>
-			<a href="/mission-control" class="nav-box nav-highlight">🚀 Mission Control</a>
+			<a href="/" class="nav-box nav-highlight">🏛️ Control Center</a>
+			<a href="/projects" class="nav-box">📁 Projects</a>
+			<a href="/evolve-ui-monitor" class="nav-box">🎨 Evolve UI</a>
 			<a href="/lab" class="nav-box nav-flow">🧪 Flow Lab</a>
 			<a href="/cognitive-tools" class="nav-box">🧠 Cognitive Tools</a>
-			<a href="/evolve-ui-monitor" class="nav-box">🎨 Evolve UI</a>
-			<a href="/odd-notes" class="nav-box">🗂️ ODD Notes</a>
-			<a href="/git" class="nav-box">Git</a>
-			<a href="/work-efforts" class="nav-box">Work Efforts</a>
-			<a href="/empirica" class="nav-box">Empirica</a>
 			<a href="/campfire" class="nav-box">🔥 Campfire</a>
+			<a href="/odd-notes" class="nav-box">🗂️ ODD Notes</a>
+			<a href="/mission-control" class="nav-box">🚀 Mission Control</a>
 			<a href="/arena" class="nav-box nav-arena">⚔️ Arena</a>
 			<a href="/stats" class="nav-box nav-stats">📊 Stats</a>
 			<button

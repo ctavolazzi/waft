@@ -205,24 +205,53 @@ class Visualizer:
         if not work_efforts_path.exists():
             return work_efforts
 
-        # Look for work effort directories
+        seen_paths: set[str] = set()
+
+        # Legacy WE-* work effort directories
         for item in work_efforts_path.iterdir():
             if item.is_dir() and item.name.startswith("WE-"):
-                # Try to find index.md or similar
-                index_file = item / "index.md"
-                if index_file.exists():
+                index_files = sorted(item.glob("*_index.md"))
+                index_file = index_files[0] if index_files else None
+                if not index_file:
+                    continue
+                try:
+                    index_file.read_text()
+                    rel = index_file.relative_to(self.project_path).as_posix()
+                    seen_paths.add(rel)
+                    work_efforts.append(
+                        {
+                            "id": item.name,
+                            "path": rel,
+                            "has_index": True,
+                        }
+                    )
+                except (OSError, UnicodeDecodeError) as e:
+                    logger.debug(f"Could not read work effort {item.name}: {e}")
+
+        # Johnny Decimal work efforts: 10-19_category/10_subcategory/10.01_effort.md
+        for category_dir in work_efforts_path.glob("[0-9][0-9]-*"):
+            if not category_dir.is_dir():
+                continue
+            for subcategory_dir in category_dir.glob("[0-9][0-9]_*"):
+                if not subcategory_dir.is_dir():
+                    continue
+                for effort_file in sorted(subcategory_dir.glob("[0-9][0-9].[0-9][0-9]_*.md")):
+                    if effort_file.name.endswith("00_index.md"):
+                        continue
                     try:
-                        index_file.read_text()
-                        # Extract basic info
+                        effort_file.read_text()
+                        rel = effort_file.relative_to(self.project_path).as_posix()
+                        if rel in seen_paths:
+                            continue
                         work_efforts.append(
                             {
-                                "id": item.name,
-                                "path": str(item.relative_to(self.project_path)),
+                                "id": effort_file.stem.split("_", 1)[0],
+                                "path": rel,
                                 "has_index": True,
                             }
                         )
                     except (OSError, UnicodeDecodeError) as e:
-                        logger.debug(f"Could not read work effort {item.name}: {e}")
+                        logger.debug(f"Could not read work effort {effort_file.name}: {e}")
 
         return work_efforts
 
