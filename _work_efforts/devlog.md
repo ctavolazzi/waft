@@ -7,7 +7,7 @@ This log tracks development activities, decisions, and progress for the waft pro
 ## 2026-03-14 - WAFT Builds WAFT: Visualizer Production Hardening
 
 **Time**: 14:36 UTC  
-**Status**: 🚧 **IN PROGRESS**  
+**Status**: ✅ **COMPLETED**  
 **Work Effort**: 10.02
 
 ### Objective
@@ -31,6 +31,27 @@ Continue the unified UI work by using WAFT’s own `analyze` and `phase1` comman
 - The live dev path is healthy (`waft serve --dev` + `npm run dev`), but `npm run build` still fails on adapter-static dynamic-route requirements.
 - `waft phase1` confirms the repo now sees the new work-effort and devlog state correctly.
 - Current git state remains intentionally dirty only because of unrelated `_pantheon/the_dealer/state.json` plus the new WAFT-generated analysis artifacts.
+
+### Outcome
+
+- Updated `visualizer/svelte.config.js` to emit a SPA fallback page for the built app.
+- Replaced the old static-file mount path in `src/waft/api/main.py` with explicit built-visualizer route serving that:
+  - serves real built assets when present
+  - serves SPA fallback for client-side routes like `/projects`
+  - keeps missing asset requests as `404`
+- Added `tests/api/test_visualizer_static.py` covering fallback routing, API-route preservation, and missing-asset behavior.
+- Updated `visualizer/README.md` to reflect the real dev port and the SPA fallback build behavior.
+
+### Verification
+
+- `uv run pytest tests/api/test_visualizer_static.py tests/api/test_projects_basic.py tests/api/test_dashboard_5050.py -q` → pass
+- `uv run ruff check src/waft/api/main.py tests/api/test_visualizer_static.py` → pass
+- `npm run build` → pass
+- Built-app manual validation succeeded on `http://localhost:8001`:
+  - Control Center root loads
+  - direct address-bar deep link to `/projects` loads
+  - direct address-bar navigation back to `/` loads
+- `npm run check` still reports broader pre-existing visualizer type/config debt outside this specific build-hardening slice.
 
 ---
 
