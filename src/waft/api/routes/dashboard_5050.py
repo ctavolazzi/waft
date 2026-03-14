@@ -38,6 +38,8 @@ def _recent_artifacts(project_path: Path, limit: int = 30) -> list[dict]:
         "_work_efforts/MEME_BORG_SESSION_REPORT_*.md",
         "_work_efforts/WE-*/WE-*_index.md",
         "_work_efforts/[0-9][0-9]-*/[0-9][0-9]_*/[0-9][0-9].[0-9][0-9]_*.md",
+        "_work_efforts/reports/report_5050_*.md",
+        "_work_efforts/reports/report_5050_*.pdf",
         "_pyrite/analyze/analyze-*.md",
         "_pyrite/phase1/phase1-*.json",
         "_pyrite/phase1/phase1-*.html",
