@@ -179,10 +179,8 @@ def _build_report_markdown(
     lines.extend(["## Timeline (Most Recent)", ""])
     for event in timeline[:20]:
         lines.append(
-            (
-                f"- `{event.get('timestamp', '')}` "
-                f"[{event.get('type', 'artifact')}] `{event.get('path', '')}`"
-            )
+            f"- `{event.get('timestamp', '')}` "
+            f"[{event.get('type', 'artifact')}] `{event.get('path', '')}`"
         )
     lines.append("")
 
