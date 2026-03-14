@@ -7,7 +7,7 @@ This log tracks development activities, decisions, and progress for the waft pro
 ## 2026-03-14 - `waft add --dev` Fun Fix Kickoff
 
 **Time**: 13:23 UTC  
-**Status**: 🚧 **IN PROGRESS**  
+**Status**: ✅ **COMPLETED**  
 **Work Effort**: 00.01
 
 ### Objective
@@ -26,6 +26,19 @@ Make `waft add --dev` behave as documented by forwarding the development-depende
 - `src/waft/main.py` currently warns that `--dev` is not fully supported, then adds a regular dependency anyway.
 - `src/waft/core/substrate.py` currently only runs `uv add <package>`.
 - `empirica` is not available on PATH in this environment, so session tracking is being recorded in `_work_efforts` directly.
+
+### Outcome
+
+- Added a `dev` flag to `SubstrateManager.add_dependency()` so it now constructs `uv add --dev <package>` when requested.
+- Updated `waft add` to forward the flag and print the actual command string instead of the old misleading warning.
+- Added regression tests for substrate command construction and CLI-level flag forwarding.
+
+### Verification
+
+- `uv run pytest tests/test_substrate.py -k "add_dependency_builds" -q` → pass
+- `uv run pytest tests/test_commands.py -k "waft_add_forwards_dev_flag" -q` → pass
+- `uv run ruff check tests/test_substrate.py tests/test_commands.py` → pass
+- `uv run ruff check src/waft/main.py src/waft/core/substrate.py tests/test_substrate.py tests/test_commands.py` → existing warnings/failures in repo files outside this small fix (`main.py` and historical import/style debt)
 
 ---
 
