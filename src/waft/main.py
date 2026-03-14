@@ -443,15 +443,11 @@ def add(
 
     if dev:
         console.print("[dim]→[/dim] Adding development dependency...")
-        # For dev dependencies, we'd need to use uv add --dev
-        # For now, just add normally
-        console.print(
-            "[yellow]⚠️[/yellow]  Dev flag not yet fully supported, adding as regular dependency"
-        )
 
-    console.print(f"[dim]→[/dim] Running uv add {package}...")
+    command = f"uv add {'--dev ' if dev else ''}{package}"
+    console.print(f"[dim]→[/dim] Running {command}...")
 
-    success = substrate.add_dependency(package, project_path)
+    success = substrate.add_dependency(package, project_path, dev=dev)
 
     if success:
         console.print(f"[green]✅[/green] Dependency '{package}' added successfully")
@@ -746,8 +742,12 @@ def evolve(
     path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     agent: str | None = typer.Option(None, "--agent", "-a", help="Agent identifier to evolve"),
     generations: int = typer.Option(1, "--generations", "-g", help="Number of generations to run"),
-    num_variants: int = typer.Option(5, "--variants", "-v", help="Number of variants per generation"),
-    reality: str | None = typer.Option(None, "--reality", "-r", help="Reality ID (default: waft-evolution)"),
+    num_variants: int = typer.Option(
+        5, "--variants", "-v", help="Number of variants per generation"
+    ),
+    reality: str | None = typer.Option(
+        None, "--reality", "-r", help="Reality ID (default: waft-evolution)"
+    ),
 ):
     """
     Run the evolutionary cycle (Spawn -> Gym -> Select) for a target agent.
@@ -857,21 +857,21 @@ app.command(name="case-render")(case_render_cmd)
 def _check_dealer_appearance():
     """
     Check if The Dealer appears. Called on every command.
-    
+
     The Dealer is a god-entity from the Realm of Probability.
     He appears with lottery-like odds that increase over time.
     When he appears, the SYSTEM must pick a card.
     """
     try:
         from .dealer import TheDealer
-        
+
         # Only check if we're in a project with a pantheon
         dealer_path = Path("_pantheon/the_dealer")
         if not dealer_path.exists():
             # Create it if we're in a waft project
             if Path("_pyrite").exists() or Path("pyproject.toml").exists():
                 dealer_path.mkdir(parents=True, exist_ok=True)
-        
+
         if dealer_path.exists():
             dealer = TheDealer.load(dealer_path)
             dealer.check_appearance()
@@ -884,7 +884,7 @@ def _check_dealer_appearance():
 def main_callback(ctx: typer.Context):
     """
     Waft - Ambient Meta-Framework for Python.
-    
+
     The Dealer may appear at any time...
     """
     # Check for The Dealer on every command (except 'cards' subcommands to avoid recursion)
@@ -1198,35 +1198,44 @@ def hud_cmd(
 
 @app.command(name="packrat")
 def packrat_cmd(
-    dev_mode: bool = typer.Option(True, "--dev-mode/--no-dev-mode", help="Trigger in 3 seconds for testing (default: True)"),
-    trigger_hour: int = typer.Option(21, "--trigger-hour", help="Hour to trigger in production mode (0-23, default: 21)"),
-    log_level: str = typer.Option("INFO", "--log-level", help="Logging level (DEBUG, INFO, WARNING, ERROR)"),
+    dev_mode: bool = typer.Option(
+        True, "--dev-mode/--no-dev-mode", help="Trigger in 3 seconds for testing (default: True)"
+    ),
+    trigger_hour: int = typer.Option(
+        21, "--trigger-hour", help="Hour to trigger in production mode (0-23, default: 21)"
+    ),
+    log_level: str = typer.Option(
+        "INFO", "--log-level", help="Logging level (DEBUG, INFO, WARNING, ERROR)"
+    ),
     path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Start The Packrat Being - collects daily learning data and generates PDF reports with The Librarian and The Scribe."""
     project_path = resolve_project_path(path)
-    
+
     # Set logging level
     import logging
+
     logging.basicConfig(
         level=getattr(logging, log_level),
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     )
-    
+
     try:
         from .core.daily_learning.packrat_server import PackratServer
-        
+
         server = PackratServer(
             project_path=project_path,
             dev_mode=dev_mode,
             trigger_hour=trigger_hour,
         )
-        
+
         console.print(f"[green]🐀 Starting The Packrat Being...[/green]")
-        console.print(f"[dim]Mode: {'DEV (3 second trigger)' if dev_mode else f'PRODUCTION ({trigger_hour}:00 daily)'}[/dim]")
+        console.print(
+            f"[dim]Mode: {'DEV (3 second trigger)' if dev_mode else f'PRODUCTION ({trigger_hour}:00 daily)'}[/dim]"
+        )
         console.print(f"[dim]Project: {project_path}[/dim]")
         console.print(f"[dim]Press Ctrl+C to stop[/dim]\n")
-        
+
         server.start()
     except KeyboardInterrupt:
         console.print("\n[yellow]The Packrat is going to sleep...[/yellow]")
@@ -1238,10 +1247,18 @@ def packrat_cmd(
 
 @app.command(name="daily-learning-server")
 def daily_learning_server_cmd(
-    dev_mode: bool = typer.Option(True, "--dev-mode/--no-dev-mode", help="Trigger in 3 seconds for testing (default: True)"),
-    trigger_hour: int = typer.Option(21, "--trigger-hour", help="Hour to trigger in production mode (0-23, default: 21)"),
-    port: int | None = typer.Option(None, "--port", help="Optional status port (reserved for future)"),
-    log_level: str = typer.Option("INFO", "--log-level", help="Logging level (DEBUG, INFO, WARNING, ERROR)"),
+    dev_mode: bool = typer.Option(
+        True, "--dev-mode/--no-dev-mode", help="Trigger in 3 seconds for testing (default: True)"
+    ),
+    trigger_hour: int = typer.Option(
+        21, "--trigger-hour", help="Hour to trigger in production mode (0-23, default: 21)"
+    ),
+    port: int | None = typer.Option(
+        None, "--port", help="Optional status port (reserved for future)"
+    ),
+    log_level: str = typer.Option(
+        "INFO", "--log-level", help="Logging level (DEBUG, INFO, WARNING, ERROR)"
+    ),
     path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
 ):
     """Start the Daily Learning Report Server - collects data and generates PDF reports (legacy command, use 'packrat' instead)."""
@@ -2834,6 +2851,7 @@ def check_assumptions(
         verbose=verbose,
     )
 
+
 @app.command()
 def final_report(
     title: str = typer.Option("Final Report", "--title", "-t", help="Report title"),
@@ -3977,9 +3995,15 @@ def dialectic_cmd(
     path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
     port: int = typer.Option(2112, "--port", help="Port to serve on (default: 2112)"),
     host: str = typer.Option("localhost", "--host", help="Host to bind to"),
-    assembly: bool = typer.Option(False, "--assembly", "-a", help="Run Assembly (Thesis) phase only"),
-    antithesis: bool = typer.Option(False, "--antithesis", "-t", help="Run Antithesis (Sanity Check) phase only"),
-    synthesis: bool = typer.Option(False, "--synthesis", "-s", help="Run Synthesis (Problem Desc) phase only"),
+    assembly: bool = typer.Option(
+        False, "--assembly", "-a", help="Run Assembly (Thesis) phase only"
+    ),
+    antithesis: bool = typer.Option(
+        False, "--antithesis", "-t", help="Run Antithesis (Sanity Check) phase only"
+    ),
+    synthesis: bool = typer.Option(
+        False, "--synthesis", "-s", help="Run Synthesis (Problem Desc) phase only"
+    ),
     full: bool = typer.Option(False, "--full", "-f", help="Run full workflow (all phases)"),
     sitrep: bool = typer.Option(False, "--sitrep", help="Generate SITREP from existing phases"),
 ):
@@ -4016,54 +4040,60 @@ def dialectic_cmd(
             # Run all phases
             console.print("[blue]Running full dialectical workflow...[/blue]\n")
             server._create_session()
-            
+
             console.print("[blue]Phase 1: THESIS (Assembly)[/blue]")
             result1 = server.run_assembly_phase()
             console.print(f"  Output: {result1.get('output_path', 'N/A')}\n")
-            
+
             console.print("[red]Phase 2: ANTITHESIS (Sanity Check)[/red]")
             result2 = server.run_antithesis_phase()
             console.print(f"  Output: {result2.get('output_path', 'N/A')}\n")
-            
+
             console.print("[purple]Phase 3: SYNTHESIS (Problem Description)[/purple]")
             result3 = server.run_synthesis_phase()
             console.print(f"  Output: {result3.get('output_path', 'N/A')}\n")
-            
+
             console.print("[bold]Generating SITREP...[/bold]")
             sitrep_result = server.generate_sitrep()
             console.print(f"  SITREP: {sitrep_result.get('output', 'N/A')}\n")
-            
+
             console.print("[green]✓ Full dialectical workflow complete![/green]")
-            
+
         elif assembly:
             server._create_session()
             console.print("[blue]Running THESIS (Assembly) phase...[/blue]\n")
             result = server.run_assembly_phase()
-            console.print(f"\n[green]✓ Assembly complete:[/green] {result.get('output_path', 'N/A')}")
-            
+            console.print(
+                f"\n[green]✓ Assembly complete:[/green] {result.get('output_path', 'N/A')}"
+            )
+
         elif antithesis:
             server._create_session()
             console.print("[red]Running ANTITHESIS (Sanity Check) phase...[/red]\n")
             result = server.run_antithesis_phase()
-            console.print(f"\n[green]✓ Antithesis complete:[/green] {result.get('output_path', 'N/A')}")
-            
+            console.print(
+                f"\n[green]✓ Antithesis complete:[/green] {result.get('output_path', 'N/A')}"
+            )
+
         elif synthesis:
             server._create_session()
             console.print("[purple]Running SYNTHESIS (Problem Description) phase...[/purple]\n")
             result = server.run_synthesis_phase()
-            console.print(f"\n[green]✓ Synthesis complete:[/green] {result.get('output_path', 'N/A')}")
-            
+            console.print(
+                f"\n[green]✓ Synthesis complete:[/green] {result.get('output_path', 'N/A')}"
+            )
+
         elif sitrep:
             server._create_session()
             console.print("[bold]Generating SITREP...[/bold]\n")
             result = server.generate_sitrep()
             console.print(f"\n[green]✓ SITREP generated:[/green] {result.get('output', 'N/A')}")
-            
+
         else:
             # Start web server
             console.print(f"Starting web dashboard at http://{host}:{port}\n")
             server.start()
-            
+
     except KeyboardInterrupt:
         console.print("\n[dim]DIALECTIC Engine shutting down.[/dim]")
     except Exception as e:

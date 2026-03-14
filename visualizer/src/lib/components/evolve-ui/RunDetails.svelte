@@ -26,6 +26,12 @@
 		// Open file in new tab (relative to project root)
 		window.open(`/api/files/${encodeURIComponent(path)}`, '_blank');
 	}
+
+	function openOptionalFile(path: string | undefined) {
+		if (path) {
+			openFile(path);
+		}
+	}
 </script>
 
 <div class="run-details">
@@ -132,22 +138,22 @@
 			<div class="file-browser-content">
 				<div class="file-list">
 					{#if run.artifacts.design_doc}
-						<button class="file-link" on:click={() => openFile(run.artifacts.design_doc!)}>
+						<button class="file-link" on:click={() => openOptionalFile(run.artifacts.design_doc)}>
 							📄 Design Doc: {run.artifacts.design_doc.split('/').pop()}
 						</button>
 					{/if}
 					{#if run.artifacts.requirements}
-						<button class="file-link" on:click={() => openFile(run.artifacts.requirements!)}>
+						<button class="file-link" on:click={() => openOptionalFile(run.artifacts.requirements)}>
 							📄 Requirements: {run.artifacts.requirements.split('/').pop()}
 						</button>
 					{/if}
 					{#if run.artifacts.wireframe}
-						<button class="file-link" on:click={() => openFile(run.artifacts.wireframe!)}>
+						<button class="file-link" on:click={() => openOptionalFile(run.artifacts.wireframe)}>
 							🖼️ Wireframe: {run.artifacts.wireframe.split('/').pop()}
 						</button>
 					{/if}
 					{#if run.artifacts.context_analysis}
-						<button class="file-link" on:click={() => openFile(run.artifacts.context_analysis!)}>
+						<button class="file-link" on:click={() => openOptionalFile(run.artifacts.context_analysis)}>
 							📝 Context Analysis: {run.artifacts.context_analysis.split('/').pop()}
 						</button>
 					{/if}

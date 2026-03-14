@@ -32,6 +32,17 @@ def test_get_projects(test_client: TestClient):
     assert isinstance(response.json(), list)
 
 
+def test_get_projects_stats(test_client: TestClient):
+    """Test aggregate project stats endpoint."""
+    response = test_client.get("/api/projects/stats")
+    assert response.status_code == 200
+    data = response.json()
+    assert "total_projects" in data
+    assert "active_projects" in data
+    assert "avg_progress" in data
+    assert "total_milestones" in data
+
+
 def test_create_project_requires_auth(test_client: TestClient):
     """Test that POST requires authentication."""
     response = test_client.post(

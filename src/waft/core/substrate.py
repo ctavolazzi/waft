@@ -93,13 +93,16 @@ class SubstrateManager:
         except FileNotFoundError:
             return False
 
-    def add_dependency(self, package: str, project_path: Path | None = None) -> bool:
+    def add_dependency(
+        self, package: str, project_path: Path | None = None, dev: bool = False
+    ) -> bool:
         """
         Add a dependency using uv add.
 
         Args:
             package: Package name (e.g., "pytest>=7.0.0")
             project_path: Path to project root. If None, uses self.project_path.
+            dev: Whether to add the package as a development dependency.
 
         Returns:
             True if successful, False otherwise
@@ -109,8 +112,12 @@ class SubstrateManager:
             raise ValueError("project_path must be provided either in __init__ or as parameter")
         try:
             validated_package = validate_package_name_arg(package)
+            command = ["uv", "add"]
+            if dev:
+                command.append("--dev")
+            command.append(validated_package)
             subprocess.run(
-                ["uv", "add", validated_package],
+                command,
                 cwd=project_path,
                 check=True,
                 capture_output=True,

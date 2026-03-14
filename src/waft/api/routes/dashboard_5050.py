@@ -37,6 +37,9 @@ def _recent_artifacts(project_path: Path, limit: int = 30) -> list[dict]:
         "_work_efforts/MINDSPACE_REVIEW_*.md",
         "_work_efforts/MEME_BORG_SESSION_REPORT_*.md",
         "_work_efforts/WE-*/WE-*_index.md",
+        "_work_efforts/[0-9][0-9]-*/[0-9][0-9]_*/[0-9][0-9].[0-9][0-9]_*.md",
+        "_work_efforts/reports/report_5050_*.md",
+        "_work_efforts/reports/report_5050_*.pdf",
         "_pyrite/analyze/analyze-*.md",
         "_pyrite/phase1/phase1-*.json",
         "_pyrite/phase1/phase1-*.html",
@@ -58,7 +61,7 @@ def _recent_artifacts(project_path: Path, limit: int = 30) -> list[dict]:
             event_type = "mindspace"
         elif "/phase1/" in rel:
             event_type = "phase1"
-        elif rel.startswith("_work_efforts/WE-"):
+        elif rel.startswith("_work_efforts/WE-") or rel.startswith("_work_efforts/10-"):
             event_type = "work_effort"
         elif "MEME_BORG_SESSION_REPORT" in rel:
             event_type = "session_report"
@@ -81,6 +84,19 @@ def _latest_work_effort_5050(project_path: Path) -> str | None:
         return None
     candidates.sort(key=lambda p: p.stat().st_mtime, reverse=True)
     return candidates[0].relative_to(project_path).as_posix()
+
+
+def _canonical_ui_work_effort(project_path: Path) -> str | None:
+    candidate = (
+        project_path
+        / "_work_efforts"
+        / "10-19_user_interface"
+        / "10_unified_waft_interface"
+        / "10.01_waft_control_center_unification.md"
+    )
+    if candidate.exists():
+        return candidate.relative_to(project_path).as_posix()
+    return None
 
 
 def _read_text_or_empty(file_path: Path) -> str:
@@ -139,7 +155,10 @@ def _build_report_markdown(
             [
                 "## Decision Trace",
                 "",
-                "- Source commands should include: `waft check-assumptions`, `waft analyze`, `waft proceed`, `waft decide`",
+                (
+                    "- Source commands should include: `waft check-assumptions`, "
+                    "`waft analyze`, `waft proceed`, `waft decide`"
+                ),
                 "- Use timeline below as decision evidence chain",
                 "",
             ]
@@ -160,7 +179,8 @@ def _build_report_markdown(
     lines.extend(["## Timeline (Most Recent)", ""])
     for event in timeline[:20]:
         lines.append(
-            f"- `{event.get('timestamp', '')}` [{event.get('type', 'artifact')}] `{event.get('path', '')}`"
+            f"- `{event.get('timestamp', '')}` "
+            f"[{event.get('type', 'artifact')}] `{event.get('path', '')}`"
         )
     lines.append("")
 
@@ -247,11 +267,13 @@ async def get_5050_session(request: Request):
     state = visualizer.gather_state()
     artifacts = _recent_artifacts(project_path, limit=30)
     latest_we = _latest_work_effort_5050(project_path)
+    canonical_ui_work_effort = _canonical_ui_work_effort(project_path)
 
     return {
         "timestamp": datetime.now().isoformat(),
         "state": state,
         "latest_work_effort_5050": latest_we,
+        "canonical_ui_work_effort": canonical_ui_work_effort,
         "artifacts": artifacts,
         "summary": {
             "uncommitted_files": len(state.get("git", {}).get("uncommitted_files", [])),
@@ -279,9 +301,22 @@ async def create_5050_report(
     visualizer = Visualizer(project_path)
     state = visualizer.gather_state()
     timeline = _recent_artifacts(project_path, limit=40) if body.include_timeline else []
-
-    plan_path = project_path / "_work_efforts" / "WE-260301-5050_localhost_5050_dashboard" / "WE-260301-5050_index.md"
-    plan_text = _read_text_or_empty(plan_path) if body.include_plan else ""
+    plan_text = ""
+    if body.include_plan:
+        for candidate in [
+            project_path
+            / "_work_efforts"
+            / "WE-260301-5050_localhost_5050_dashboard"
+            / "WE-260301-5050_index.md",
+            project_path
+            / "_work_efforts"
+            / "10-19_user_interface"
+            / "10_unified_waft_interface"
+            / "10.01_waft_control_center_unification.md",
+        ]:
+            plan_text = _read_text_or_empty(candidate)
+            if plan_text:
+                break
 
     markdown = _build_report_markdown(
         body.title, body.report_type, body.notes, state, timeline, plan_text
@@ -310,8 +345,22 @@ async def create_5050_report_pdf(
     visualizer = Visualizer(project_path)
     state = visualizer.gather_state()
     timeline = _recent_artifacts(project_path, limit=40) if body.include_timeline else []
-    plan_path = project_path / "_work_efforts" / "WE-260301-5050_localhost_5050_dashboard" / "WE-260301-5050_index.md"
-    plan_text = _read_text_or_empty(plan_path) if body.include_plan else ""
+    plan_text = ""
+    if body.include_plan:
+        for candidate in [
+            project_path
+            / "_work_efforts"
+            / "WE-260301-5050_localhost_5050_dashboard"
+            / "WE-260301-5050_index.md",
+            project_path
+            / "_work_efforts"
+            / "10-19_user_interface"
+            / "10_unified_waft_interface"
+            / "10.01_waft_control_center_unification.md",
+        ]:
+            plan_text = _read_text_or_empty(candidate)
+            if plan_text:
+                break
     markdown = _build_report_markdown(
         body.title, body.report_type, body.notes, state, timeline, plan_text
     )
@@ -341,7 +390,9 @@ async def create_continue_command(request: Request, body: ContinueCommandRequest
 
     template = body.template.strip().lower()
     if template == "analysis":
-        command = "waft check-assumptions --verbose && waft analyze --verbose && waft proceed --strict"
+        command = (
+            "waft check-assumptions --verbose && waft analyze --verbose && waft proceed --strict"
+        )
     elif template == "decision":
         command = "waft decide --topic workflow"
     elif template == "report":

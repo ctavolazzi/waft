@@ -2,6 +2,32 @@ import axios from 'axios';
 import type { ProjectState } from '$lib/stores/projectStore';
 import { browser } from '$app/environment';
 
+export interface Dashboard5050Artifact {
+	type: string;
+	path: string;
+	name: string;
+	timestamp: string;
+	size_bytes: number;
+}
+
+export interface Dashboard5050SessionResponse {
+	timestamp: string;
+	state: ProjectState;
+	latest_work_effort_5050: string | null;
+	canonical_ui_work_effort: string | null;
+	artifacts: Dashboard5050Artifact[];
+	summary: {
+		uncommitted_files: number;
+		integrity: number;
+		work_efforts: number;
+	};
+}
+
+export interface Dashboard5050TimelineResponse {
+	total: number;
+	events: Dashboard5050Artifact[];
+}
+
 // Use relative paths to go through Vite proxy (configured in vite.config.js)
 // The proxy forwards /api requests to http://localhost:8000
 const API_BASE_URL = import.meta.env.VITE_API_URL || '';
@@ -71,11 +97,6 @@ export const apiClient = {
 
 	async getGitStatus() {
 		const response = await client.get('/api/git');
-		return response.data;
-	},
-
-	async getWorkEfforts() {
-		const response = await client.get('/api/work-efforts');
 		return response.data;
 	},
 
@@ -182,6 +203,19 @@ export const apiClient = {
 	 */
 	async getEvolveUIRuns() {
 		const response = await client.get('/api/evolve-ui-runs');
+		return response.data;
+	},
+
+	/**
+	 * Unified control center / 5050 API methods
+	 */
+	async get5050Session(): Promise<Dashboard5050SessionResponse> {
+		const response = await client.get<Dashboard5050SessionResponse>('/api/5050/session');
+		return response.data;
+	},
+
+	async get5050Timeline(): Promise<Dashboard5050TimelineResponse> {
+		const response = await client.get<Dashboard5050TimelineResponse>('/api/5050/timeline');
 		return response.data;
 	},
 

@@ -1,5 +1,6 @@
 """Tests for SubstrateManager."""
 
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -88,3 +89,43 @@ def test_substrate_manager_requires_path():
 
     with pytest.raises(ValueError):
         manager.get_project_info()
+
+
+def test_add_dependency_builds_regular_uv_command(project_with_pyproject, monkeypatch):
+    """Test add_dependency uses plain uv add for regular dependencies."""
+    captured = {}
+
+    def fake_run(command, cwd, check, capture_output):
+        captured["command"] = command
+        captured["cwd"] = cwd
+        captured["check"] = check
+        captured["capture_output"] = capture_output
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+
+    manager = SubstrateManager(project_with_pyproject)
+    assert manager.add_dependency("pytest>=8.0.0") is True
+    assert captured["command"] == ["uv", "add", "pytest>=8.0.0"]
+    assert captured["cwd"] == project_with_pyproject
+    assert captured["check"] is True
+    assert captured["capture_output"] is True
+
+
+def test_add_dependency_builds_dev_uv_command(project_with_pyproject, monkeypatch):
+    """Test add_dependency uses uv add --dev for dev dependencies."""
+    captured = {}
+
+    def fake_run(command, cwd, check, capture_output):
+        captured["command"] = command
+        captured["cwd"] = cwd
+        captured["check"] = check
+        captured["capture_output"] = capture_output
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+
+    manager = SubstrateManager(project_with_pyproject)
+    assert manager.add_dependency("pytest>=8.0.0", dev=True) is True
+    assert captured["command"] == ["uv", "add", "--dev", "pytest>=8.0.0"]
+    assert captured["cwd"] == project_with_pyproject
+    assert captured["check"] is True
+    assert captured["capture_output"] is True
