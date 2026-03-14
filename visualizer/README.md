@@ -8,7 +8,7 @@ SvelteKit-based development dashboard for Waft projects.
 # Install dependencies
 npm install
 
-# Start dev server (runs on port 5173)
+# Start dev server (runs on port 8781)
 npm run dev
 
 # The FastAPI backend should be running on port 8000
@@ -23,6 +23,7 @@ npm run build
 
 # The build output will be in the `build/` directory
 # The FastAPI server will serve these files when running `waft serve`
+# Client-side routes use an SPA fallback page in the build output
 ```
 
 ## Project Structure

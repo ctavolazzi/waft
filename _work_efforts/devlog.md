@@ -4,6 +4,36 @@ This log tracks development activities, decisions, and progress for the waft pro
 
 ---
 
+## 2026-03-14 - WAFT Builds WAFT: Visualizer Production Hardening
+
+**Time**: 14:36 UTC  
+**Status**: 🚧 **IN PROGRESS**  
+**Work Effort**: 10.02
+
+### Objective
+
+Continue the unified UI work by using WAFT’s own `analyze` and `phase1` commands to drive the next iteration: production-build and static-serving hardening for the visualizer.
+
+### WAFT-Driven Inputs
+
+- `waft analyze --verbose` produced `_pyrite/analyze/analyze-2026-03-14-143652.md`
+- `waft phase1 --verbose` produced `_pyrite/phase1/phase1-2026-03-14-143653.json`
+
+### Development Plan
+
+1. Configure the Svelte visualizer for SPA fallback output.
+2. Add backend SPA fallback serving for non-API routes when the built visualizer is mounted.
+3. Add a targeted regression test for static route fallback behavior.
+4. Re-run build/check validation and document what remains pre-existing.
+
+### Discovery Notes
+
+- The live dev path is healthy (`waft serve --dev` + `npm run dev`), but `npm run build` still fails on adapter-static dynamic-route requirements.
+- `waft phase1` confirms the repo now sees the new work-effort and devlog state correctly.
+- Current git state remains intentionally dirty only because of unrelated `_pantheon/the_dealer/state.json` plus the new WAFT-generated analysis artifacts.
+
+---
+
 ## 2026-03-14 - Unified WAFT Interface Kickoff
 
 **Time**: 13:51 UTC  
