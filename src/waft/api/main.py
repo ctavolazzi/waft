@@ -6,13 +6,11 @@ import logging
 import os
 from datetime import datetime
 from pathlib import Path
-from pathlib import PurePosixPath
 
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
-from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse, JSONResponse
 
 from .responses import ErrorCodes, ErrorResponse
 from .routes import (
@@ -43,48 +41,31 @@ from .routes import (
 logger = logging.getLogger(__name__)
 
 
-class SPAStaticFiles(StaticFiles):
-    """Static file handler with SPA fallback for client-side routes."""
+def _static_file_response(static_dir: Path, full_path: str):
+    """Serve a built visualizer asset or the SPA fallback page."""
+    static_root = static_dir.resolve()
+    requested = (static_root / full_path).resolve() if full_path else static_root
 
-    def __init__(
-        self, *args, fallback_files: tuple[str, ...] = ("200.html", "index.html"), **kwargs
-    ):
-        super().__init__(*args, **kwargs)
-        self.fallback_files = fallback_files
+    if not str(requested).startswith(str(static_root)):
+        raise HTTPException(status_code=404, detail="Static asset not found")
 
-    async def get_response(self, path: str, scope):
-        try:
-            response = await super().get_response(path, scope)
-        except HTTPException as exc:
-            if exc.status_code == 404 and self._should_use_fallback(path, scope):
-                fallback = await self._get_fallback_response(scope)
-                if fallback is not None:
-                    return fallback
-            raise
+    if requested.is_dir():
+        index_file = requested / "index.html"
+        if index_file.exists():
+            return FileResponse(str(index_file))
 
-        if response.status_code == 404 and self._should_use_fallback(path, scope):
-            fallback = await self._get_fallback_response(scope)
-            if fallback is not None:
-                return fallback
+    if requested.exists() and requested.is_file():
+        return FileResponse(str(requested))
 
-        return response
+    if Path(full_path).suffix:
+        raise HTTPException(status_code=404, detail="Static asset not found")
 
-    def _should_use_fallback(self, path: str, scope) -> bool:
-        if scope.get("method") not in {"GET", "HEAD"}:
-            return False
-        return PurePosixPath(path).suffix == ""
+    for fallback_name in ("200.html", "index.html"):
+        fallback_file = static_root / fallback_name
+        if fallback_file.exists():
+            return FileResponse(str(fallback_file))
 
-    async def _get_fallback_response(self, scope):
-        for fallback_file in self.fallback_files:
-            try:
-                response = await super().get_response(fallback_file, scope)
-            except HTTPException as exc:
-                if exc.status_code == 404:
-                    continue
-                raise
-            if response.status_code != 404:
-                return response
-        return None
+    raise HTTPException(status_code=404, detail="Static fallback not found")
 
 
 def create_app(project_path: Path, static_dir: Path | None = None) -> FastAPI:
@@ -131,11 +112,17 @@ def create_app(project_path: Path, static_dir: Path | None = None) -> FastAPI:
         openapi_tags=[
             {
                 "name": "projects",
-                "description": "Project management operations. Create, read, update, and delete long-term projects.",
+                "description": (
+                    "Project management operations. Create, read, update, and delete "
+                    "long-term projects."
+                ),
             },
             {
                 "name": "work-efforts",
-                "description": "Work effort management. Track work efforts with file-based storage and YAML frontmatter.",
+                "description": (
+                    "Work effort management. Track work efforts with file-based storage "
+                    "and YAML frontmatter."
+                ),
             },
             {
                 "name": "auth",
@@ -151,7 +138,10 @@ def create_app(project_path: Path, static_dir: Path | None = None) -> FastAPI:
             },
             {
                 "name": "quests",
-                "description": "Quest Guide Implementation system. Gamified quest-based development orchestrator.",
+                "description": (
+                    "Quest Guide Implementation system. Gamified quest-based "
+                    "development orchestrator."
+                ),
             },
         ],
     )
@@ -277,10 +267,12 @@ def create_app(project_path: Path, static_dir: Path | None = None) -> FastAPI:
     app.include_router(cyoa.router, prefix="/api", tags=["cyoa"])
     app.include_router(storyteller.router, prefix="/api", tags=["storyteller"])
 
-    # Serve static files if provided (must be last route)
+    # Serve built visualizer assets if provided (must be last route).
     if static_dir and static_dir.exists():
-        # Mount SPA-aware static files without overriding API routes.
-        app.mount("/", SPAStaticFiles(directory=str(static_dir), html=True), name="static")
+
+        @app.api_route("/{full_path:path}", methods=["GET", "HEAD"], include_in_schema=False)
+        async def serve_visualizer(full_path: str):
+            return _static_file_response(static_dir, full_path)
 
     return app
 
