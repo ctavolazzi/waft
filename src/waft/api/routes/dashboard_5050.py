@@ -155,7 +155,10 @@ def _build_report_markdown(
             [
                 "## Decision Trace",
                 "",
-                "- Source commands should include: `waft check-assumptions`, `waft analyze`, `waft proceed`, `waft decide`",
+                (
+                    "- Source commands should include: `waft check-assumptions`, "
+                    "`waft analyze`, `waft proceed`, `waft decide`"
+                ),
                 "- Use timeline below as decision evidence chain",
                 "",
             ]
@@ -176,7 +179,10 @@ def _build_report_markdown(
     lines.extend(["## Timeline (Most Recent)", ""])
     for event in timeline[:20]:
         lines.append(
-            f"- `{event.get('timestamp', '')}` [{event.get('type', 'artifact')}] `{event.get('path', '')}`"
+            (
+                f"- `{event.get('timestamp', '')}` "
+                f"[{event.get('type', 'artifact')}] `{event.get('path', '')}`"
+            )
         )
     lines.append("")
 

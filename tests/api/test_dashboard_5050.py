@@ -1,5 +1,10 @@
 from fastapi.testclient import TestClient
 
+CANONICAL_UI_PATH = (
+    "_work_efforts/10-19_user_interface/10_unified_waft_interface/"
+    "10.01_waft_control_center_unification.md"
+)
+
 
 def _seed_project(temp_project_path):
     (temp_project_path / "_pyrite" / "active").mkdir(parents=True, exist_ok=True)
@@ -36,10 +41,7 @@ def test_5050_session_exposes_canonical_ui_work_effort(test_client: TestClient, 
 
     assert response.status_code == 200
     data = response.json()
-    assert (
-        data["canonical_ui_work_effort"]
-        == "_work_efforts/10-19_user_interface/10_unified_waft_interface/10.01_waft_control_center_unification.md"
-    )
+    assert data["canonical_ui_work_effort"] == CANONICAL_UI_PATH
     assert data["summary"]["work_efforts"] >= 1
     assert any(
         item["path"].endswith("10.01_waft_control_center_unification.md")
