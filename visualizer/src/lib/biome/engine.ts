@@ -13,13 +13,11 @@ import {
 	PlaneGeometry,
 	RepeatWrapping,
 	RGBAFormat,
-	Raycaster,
 	Scene,
 	ShaderMaterial,
 	SRGBColorSpace,
 	type Texture,
 	TextureLoader,
-	Vector2,
 	Vector3,
 	Timer,
 	WebGLRenderer
@@ -36,44 +34,28 @@ import type {
 } from './types';
 import { CausticsPipeline, applyCausticsToMaterial } from './caustics';
 import { BiomeEngineWebGPU } from './engine-webgpu';
+import {
+	SEABED_PRESETS,
+	buildFallbackNormalTexture,
+	computeRippleBoost,
+	BIOME_FOV,
+	BIOME_NEAR,
+	BIOME_FAR,
+	BIOME_CLEAR_COLOR,
+	BIOME_BG_COLOR,
+	BIOME_FOG_COLOR,
+	BIOME_FOG_NEAR,
+	BIOME_FOG_FAR,
+	BIOME_SKY_SCALE,
+	BIOME_ORBIT_DAMPING,
+	BIOME_MAX_POLAR
+} from './engine-shared';
 import { buildTerrainPlaneGeometry, createPopulationMesh, updatePopulationMesh } from './terrain';
 import { BiomeRainSystem } from './rain-system';
 import { biomeStore } from './store';
+import { terrainVert, terrainFrag, dioramaVert, dioramaBaseFrag, dioramaFrameFrag } from './shaders';
 
 export type { BiomeEngineLike } from './types';
-
-const SEABED_PRESETS: Record<
-	SeabedPreset,
-	{ base: string; shallow: string }
-> = {
-	default: { base: '#375249', shallow: '#4f6f63' },
-	muddy: { base: '#3d2f22', shallow: '#5c4a38' },
-	sand: { base: '#7a6548', shallow: '#c9b896' },
-	coral: { base: '#4a3a55', shallow: '#6b5a7d' }
-};
-
-function buildFallbackNormalTexture(): Texture {
-	const width = 128;
-	const height = 128;
-	const data = new Uint8Array(width * height * 4);
-	for (let y = 0; y < height; y++) {
-		for (let x = 0; x < width; x++) {
-			const i = (y * width + x) * 4;
-			const wave =
-				Math.sin((x / width) * Math.PI * 10) * 0.5 + Math.cos((y / height) * Math.PI * 12) * 0.5;
-			data[i] = 127 + Math.floor(wave * 18);
-			data[i + 1] = 127 + Math.floor(wave * 18);
-			data[i + 2] = 255;
-			data[i + 3] = 255;
-		}
-	}
-	const texture = new DataTexture(data, width, height);
-	texture.needsUpdate = true;
-	texture.wrapS = RepeatWrapping;
-	texture.wrapT = RepeatWrapping;
-	texture.colorSpace = SRGBColorSpace;
-	return texture;
-}
 
 function whitePixelTexture(): DataTexture {
 	const t = new DataTexture(new Uint8Array([255, 255, 255, 255]), 1, 1, RGBAFormat);
@@ -95,34 +77,8 @@ function createTerrainMesh(
 			seabedMap: { value: whitePixelTexture() },
 			useSeabedMap: { value: 0.0 }
 		},
-		vertexShader: `
-varying float vHeight;
-varying vec2 vUv;
-void main() {
-	vUv = uv;
-	vHeight = position.y;
-	gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-}
-`,
-		fragmentShader: `
-varying float vHeight;
-varying vec2 vUv;
-uniform vec3 baseColor;
-uniform vec3 shallowColor;
-uniform sampler2D seabedMap;
-uniform float useSeabedMap;
-void main() {
-	float t = smoothstep(-32.0, -15.0, vHeight);
-	vec3 proc = mix(baseColor, shallowColor, t);
-	proc += vec3(0.04 * sin(vUv.x * 40.0), 0.03 * cos(vUv.y * 32.0), 0.05);
-	vec3 color = proc;
-	if (useSeabedMap > 0.5) {
-		vec3 sampled = texture2D(seabedMap, vUv * 6.0).rgb;
-		color = mix(proc, sampled, 0.88);
-	}
-	gl_FragColor = vec4(color, 1.0);
-}
-`,
+		vertexShader: terrainVert,
+		fragmentShader: terrainFrag,
 		side: DoubleSide
 	});
 	return new Mesh(geometry, material);
@@ -148,8 +104,6 @@ export class BiomeEngine implements BiomeEngineLike {
 	private underwaterObjects: Mesh[] = [];
 
 	private controls: OrbitControls;
-	private raycaster = new Raycaster();
-	private pointer = new Vector2();
 	private rippleBoost = 0;
 	private sky: Sky | null = null;
 
@@ -160,8 +114,13 @@ export class BiomeEngine implements BiomeEngineLike {
 	private waterTime = 0;
 	private raf = 0;
 	private onTick: ((delta: number) => void) | null = null;
-	private onPointerRipple = (e: PointerEvent) => this.pumpRipple(e);
+	private onPointerRipple = (e: PointerEvent) => {
+		const boost = computeRippleBoost(e, this.canvas, this.camera, this.water);
+		if (boost > 0) this.rippleBoost = Math.min(this.rippleBoost + boost, 5.5);
+	};
 	private onWheel = (e: WheelEvent) => e.preventDefault();
+	private _scratchVec3 = new Vector3();
+	private _fog: Fog | null = null;
 	private basePixelRatio = Math.min(window.devicePixelRatio, 2);
 	private dynamicPixelRatio = this.basePixelRatio;
 	private frameMsEma = 16.7;
@@ -181,19 +140,19 @@ export class BiomeEngine implements BiomeEngineLike {
 		});
 		this.renderer.setPixelRatio(this.dynamicPixelRatio);
 		this.renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
-		this.renderer.setClearColor('#061626');
+		this.renderer.setClearColor(BIOME_CLEAR_COLOR);
 		this.renderer.toneMappingExposure = 0.78;
 
-		this.camera = new PerspectiveCamera(55, canvas.clientWidth / canvas.clientHeight, 0.1, 2400);
+		this.camera = new PerspectiveCamera(BIOME_FOV, canvas.clientWidth / canvas.clientHeight, BIOME_NEAR, BIOME_FAR);
 		this.camera.position.set(168, 132, 168);
 
 		this.controls = new OrbitControls(this.camera, this.canvas);
 		this.controls.target.set(0, -12, 0);
 		this.controls.enableDamping = true;
-		this.controls.dampingFactor = 0.06;
+		this.controls.dampingFactor = BIOME_ORBIT_DAMPING;
 		this.controls.minDistance = 46;
 		this.controls.maxDistance = 620;
-		this.controls.maxPolarAngle = Math.PI / 2 - 0.08;
+		this.controls.maxPolarAngle = BIOME_MAX_POLAR;
 		this.controls.update();
 
 		this.scene.add(this.sun);
@@ -201,7 +160,10 @@ export class BiomeEngine implements BiomeEngineLike {
 		this.sun.intensity = 2.4;
 		this.ambient.intensity = 0.34;
 		this.sun.position.set(170, 230, 150);
-		this.scene.fog = state.water.fog ? new Fog('#12263f', 40, 420) : null;
+		if (state.water.fog) {
+			this._fog = new Fog(BIOME_FOG_COLOR, BIOME_FOG_NEAR, BIOME_FOG_FAR);
+			this.scene.fog = this._fog;
+		}
 
 		this.terrain = createTerrainMesh(state.terrain.size, state.terrain.segments, state.terrain.seabedPreset);
 		this.terrain.receiveShadow = true;
@@ -218,23 +180,8 @@ export class BiomeEngine implements BiomeEngineLike {
 					seabedMap: { value: whitePixelTexture() },
 					useSeabedMap: { value: 0.0 }
 				},
-				vertexShader: `
-varying float vHeight;
-void main() {
-	vHeight = position.y;
-	gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-}
-`,
-				fragmentShader: `
-varying float vHeight;
-uniform vec3 baseColor;
-uniform vec3 shallowColor;
-void main() {
-	float t = smoothstep(-10.0, 10.0, vHeight);
-	vec3 color = mix(baseColor, shallowColor, t);
-	gl_FragColor = vec4(color, 1.0);
-}
-`,
+				vertexShader: dioramaVert,
+				fragmentShader: dioramaBaseFrag,
 				side: DoubleSide
 			})
 		);
@@ -248,22 +195,8 @@ void main() {
 				seabedMap: { value: whitePixelTexture() },
 				useSeabedMap: { value: 0.0 }
 			},
-			vertexShader: `
-varying float vHeight;
-void main() {
-	vHeight = position.y;
-	gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-}
-`,
-			fragmentShader: `
-varying float vHeight;
-uniform vec3 baseColor;
-uniform vec3 shallowColor;
-void main() {
-	float t = smoothstep(-6.0, 6.0, vHeight);
-	gl_FragColor = vec4(mix(baseColor, shallowColor, t), 1.0);
-}
-`,
+			vertexShader: dioramaVert,
+			fragmentShader: dioramaFrameFrag,
 			side: DoubleSide
 		});
 		const railLength = state.terrain.size + 14;
@@ -293,18 +226,6 @@ void main() {
 		this.rain = new BiomeRainSystem(state.rain);
 		this.scene.add(this.rain.instancedRain);
 		this.scene.add(this.rain.splashMesh);
-	}
-
-	private pumpRipple(e: PointerEvent): void {
-		if ((e.buttons & 1) === 0 && e.type !== 'pointerdown') return;
-		const rect = this.canvas.getBoundingClientRect();
-		this.pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-		this.pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-		this.raycaster.setFromCamera(this.pointer, this.camera);
-		if (this.water) {
-			const hits = this.raycaster.intersectObject(this.water, false);
-			if (hits.length) this.rippleBoost = Math.min(this.rippleBoost + 1.8, 5.5);
-		}
 	}
 
 	private bindPointerRipples(): void {
@@ -353,19 +274,19 @@ void main() {
 				(this.sky.material as ShaderMaterial).dispose();
 				this.sky = null;
 			}
-			this.scene.background = new Color('#0a1626');
+			this.scene.background = new Color(BIOME_BG_COLOR);
 			return;
 		}
 		if (!this.sky) {
 			this.sky = new Sky();
-			this.sky.scale.setScalar(450000);
+			this.sky.scale.setScalar(BIOME_SKY_SCALE);
 			this.scene.add(this.sky);
 		}
 		const mat = this.sky.material as ShaderMaterial;
 		mat.uniforms.turbidity.value = this.state.sky.turbidity;
 		mat.uniforms.rayleigh.value = this.state.sky.rayleigh;
-		const sun = this.sun.position.clone().normalize().multiplyScalar(400000);
-		mat.uniforms.sunPosition.value.copy(sun);
+		this._scratchVec3.copy(this.sun.position).normalize().multiplyScalar(400000);
+		mat.uniforms.sunPosition.value.copy(this._scratchVec3);
 		this.scene.background = null;
 	}
 
@@ -486,12 +407,13 @@ void main() {
 
 		if (this.shouldRunCaustics()) {
 			this.caustics.updateSettings(this.state.caustics);
+			this._scratchVec3.copy(this.sun.position).normalize();
 			this.caustics.update(
 				this.renderer,
 				this.scene,
 				this.underwaterObjects,
 				this.normalMap,
-				this.sun.position.clone().normalize()
+				this._scratchVec3
 			);
 			applyCausticsToMaterial(
 				this.terrain.material,
@@ -541,13 +463,18 @@ void main() {
 			void this.rain.rebuild(this.terrain, state.water.surfaceY, state.terrain.size, state.rain);
 		}
 
-		this.sun.color = new Color(state.water.sunColor);
+		this.sun.color.set(state.water.sunColor);
 		this.sun.position.set(
 			state.water.sunDirection[0] * 160,
 			Math.max(40, state.water.sunDirection[1] * 180),
 			state.water.sunDirection[2] * 160
 		);
-		this.scene.fog = state.water.fog ? new Fog('#12263f', 40, 420) : null;
+		if (state.water.fog) {
+			if (!this._fog) this._fog = new Fog(BIOME_FOG_COLOR, BIOME_FOG_NEAR, BIOME_FOG_FAR);
+			this.scene.fog = this._fog;
+		} else {
+			this.scene.fog = null;
+		}
 
 		if (sizeChanged) {
 			this.terrain.geometry.dispose();
@@ -590,8 +517,8 @@ void main() {
 		if (this.water?.material && 'uniforms' in this.water.material) {
 			this.water.material.uniforms.distortionScale.value = state.water.distortionScale;
 			this.water.material.uniforms.alpha.value = state.water.alpha;
-			this.water.material.uniforms.waterColor.value = new Color(state.water.waterColor);
-			this.water.material.uniforms.sunColor.value = new Color(state.water.sunColor);
+			(this.water.material.uniforms.waterColor.value as Color).set(state.water.waterColor);
+			(this.water.material.uniforms.sunColor.value as Color).set(state.water.sunColor);
 		}
 		if (this.water) {
 			this.water.position.y = state.water.surfaceY;

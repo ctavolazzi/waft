@@ -5,6 +5,7 @@
 	import { biomeStore } from '$lib/biome/store';
 	import { bindLocalClock, createBiomeEngine, spawnLocalBeings } from '$lib/biome/engine';
 	import { applyRainQualityPreset } from '$lib/biome/rain-system';
+	import { isBiomeDebugEnabled } from '$lib/biome/engine-shared';
 	import type { BiomeEngineLike, BiomeServerPayload, RainDebugTelemetry } from '$lib/biome/types';
 	export let params: Record<string, string> | undefined = undefined;
 	void params;
@@ -84,157 +85,33 @@
 		biomeStore.patchVolumetrics({ enabled: false });
 	}
 
-	function onBridgeEnabled(event: Event) {
-		const input = event.currentTarget as HTMLInputElement;
-		biomeStore.patchBridge({ enabled: input.checked });
-	}
+	// ── Generic handler factories ──────────────────────────────────────
+	/* eslint-disable @typescript-eslint/no-explicit-any */
+	const patchFns = {
+		water: biomeStore.patchWater,
+		caustics: biomeStore.patchCaustics,
+		terrain: biomeStore.patchTerrain,
+		bridge: biomeStore.patchBridge,
+		sky: biomeStore.patchSky,
+		rain: biomeStore.patchRain,
+		rendering: biomeStore.patchRendering,
+		volumetrics: biomeStore.patchVolumetrics
+	} as const;
+	type Section = keyof typeof patchFns;
+	const slider = (s: Section, key: string) => (e: Event) =>
+		patchFns[s]({ [key]: Number((e.currentTarget as HTMLInputElement).value) } as any);
+	const checkbox = (s: Section, key: string) => (e: Event) =>
+		patchFns[s]({ [key]: (e.currentTarget as HTMLInputElement).checked } as any);
+	const select = (s: Section, key: string) => (e: Event) =>
+		patchFns[s]({ [key]: (e.currentTarget as HTMLSelectElement).value } as any);
+	const textInput = (s: Section, key: string) => (e: Event) =>
+		patchFns[s]({ [key]: (e.currentTarget as HTMLInputElement).value } as any);
+	/* eslint-enable @typescript-eslint/no-explicit-any */
 
-	function onCausticsEnabled(event: Event) {
-		const input = event.currentTarget as HTMLInputElement;
-		biomeStore.patchCaustics({ enabled: input.checked });
-	}
-
-	function onCausticsRespectDpr(event: Event) {
-		const input = event.currentTarget as HTMLInputElement;
-		biomeStore.patchCaustics({ respectPerformanceGate: input.checked });
-	}
-
-	function onBridgeMode(event: Event) {
-		const input = event.currentTarget as HTMLSelectElement;
-		biomeStore.patchBridge({ mode: input.value as 'poll' | 'sse' });
-	}
-
-	function onBridgeUrl(event: Event) {
-		const input = event.currentTarget as HTMLInputElement;
-		biomeStore.patchBridge({ url: input.value });
-	}
-
-	function onBridgePollMs(event: Event) {
-		const input = event.currentTarget as HTMLInputElement;
-		biomeStore.patchBridge({ pollMs: Number(input.value) });
-	}
-
-	function onWaterDistortion(event: Event) {
-		const input = event.currentTarget as HTMLInputElement;
-		biomeStore.patchWater({ distortionScale: Number(input.value) });
-	}
-
-	function onWaterAlpha(event: Event) {
-		const input = event.currentTarget as HTMLInputElement;
-		biomeStore.patchWater({ alpha: Number(input.value) });
-	}
-
-	function onWaterTimeScale(event: Event) {
-		const input = event.currentTarget as HTMLInputElement;
-		biomeStore.patchWater({ timeScale: Number(input.value) });
-	}
-
-	function onWaterHeight(event: Event) {
-		const input = event.currentTarget as HTMLInputElement;
-		biomeStore.patchWater({ surfaceY: Number(input.value) });
-	}
-
-	function onRainEnabled(event: Event) {
-		const input = event.currentTarget as HTMLInputElement;
-		biomeStore.patchRain({ enabled: input.checked });
-	}
-
-	function onRainMode(event: Event) {
-		const input = event.currentTarget as HTMLSelectElement;
-		biomeStore.patchRain({ mode: input.value as import('$lib/biome/types').RainMode });
-	}
-
-	function onRainDebugProxies(event: Event) {
-		const input = event.currentTarget as HTMLInputElement;
-		biomeStore.patchRain({ showCollisionProxies: input.checked });
-	}
-
-	function onRainDebugHud(event: Event) {
-		const input = event.currentTarget as HTMLInputElement;
-		biomeStore.patchRain({ showRainDebugHud: input.checked });
-	}
-
+	// ── Custom handlers (non-trivial logic) ─────────────────────────
 	function onRainPreset(event: Event) {
-		const input = event.currentTarget as HTMLSelectElement;
-		const q = input.value as import('$lib/biome/types').RainQuality;
+		const q = (event.currentTarget as HTMLSelectElement).value as import('$lib/biome/types').RainQuality;
 		biomeStore.patchRain(applyRainQualityPreset(q));
-	}
-
-	function onRainDrops(event: Event) {
-		const input = event.currentTarget as HTMLInputElement;
-		biomeStore.patchRain({ collisionDropCount: Number(input.value) });
-	}
-
-	function onRainOverlay(event: Event) {
-		const input = event.currentTarget as HTMLInputElement;
-		biomeStore.patchRain({ overlayDensity: Number(input.value) });
-	}
-
-	function onRainSpawn(event: Event) {
-		const input = event.currentTarget as HTMLInputElement;
-		biomeStore.patchRain({ spawnRadius: Number(input.value) });
-	}
-
-	function onRainSplashes(event: Event) {
-		const input = event.currentTarget as HTMLInputElement;
-		biomeStore.patchRain({ maxActiveSplashes: Number(input.value) });
-	}
-
-	function onSkyEnabled(event: Event) {
-		const input = event.currentTarget as HTMLInputElement;
-		biomeStore.patchSky({ enabled: input.checked });
-	}
-
-	function onSkyTurbidity(event: Event) {
-		const input = event.currentTarget as HTMLInputElement;
-		biomeStore.patchSky({ turbidity: Number(input.value) });
-	}
-
-	function onSkyRayleigh(event: Event) {
-		const input = event.currentTarget as HTMLInputElement;
-		biomeStore.patchSky({ rayleigh: Number(input.value) });
-	}
-
-	function onSkyRespectDpr(event: Event) {
-		const input = event.currentTarget as HTMLInputElement;
-		biomeStore.patchSky({ respectPerformanceGate: input.checked });
-	}
-
-	function onWebGPU(event: Event) {
-		const input = event.currentTarget as HTMLInputElement;
-		biomeStore.patchRendering({ useWebGPU: input.checked });
-	}
-
-	function onVolumetricsEnabled(event: Event) {
-		const input = event.currentTarget as HTMLInputElement;
-		biomeStore.patchVolumetrics({ enabled: input.checked });
-	}
-
-	function onVolumetricsDensity(event: Event) {
-		const input = event.currentTarget as HTMLInputElement;
-		biomeStore.patchVolumetrics({ density: Number(input.value) });
-	}
-
-	function onVolumetricsAnisotropy(event: Event) {
-		const input = event.currentTarget as HTMLInputElement;
-		biomeStore.patchVolumetrics({ anisotropy: Number(input.value) });
-	}
-
-	function onVolumetricsHeightFalloff(event: Event) {
-		const input = event.currentTarget as HTMLInputElement;
-		biomeStore.patchVolumetrics({ heightFalloff: Number(input.value) });
-	}
-
-	function onVolumetricsRespectDpr(event: Event) {
-		const input = event.currentTarget as HTMLInputElement;
-		biomeStore.patchVolumetrics({ respectPerformanceGate: input.checked });
-	}
-
-	function onSeabedPreset(event: Event) {
-		const input = event.currentTarget as HTMLSelectElement;
-		biomeStore.patchTerrain({
-			seabedPreset: input.value as import('$lib/biome/types').SeabedPreset
-		});
 	}
 
 	function onSeabedFile(event: Event) {
@@ -252,21 +129,6 @@
 		const u = get(biomeStore).terrain.seabedTextureDataUrl;
 		if (u?.startsWith('blob:')) URL.revokeObjectURL(u);
 		biomeStore.patchTerrain({ seabedTextureDataUrl: null });
-	}
-
-	function onCausticsIntensity(event: Event) {
-		const input = event.currentTarget as HTMLInputElement;
-		biomeStore.patchCaustics({ intensity: Number(input.value) });
-	}
-
-	function onCausticsSteps(event: Event) {
-		const input = event.currentTarget as HTMLInputElement;
-		biomeStore.patchCaustics({ maxSteps: Number(input.value) });
-	}
-
-	function onCausticsResolution(event: Event) {
-		const input = event.currentTarget as HTMLInputElement;
-		biomeStore.patchCaustics({ resolution: Number(input.value) });
 	}
 
 	function connectBridge() {
@@ -294,13 +156,6 @@
 			beings = payload.beings;
 			engine?.updateBeings(beings);
 		}
-	}
-
-	function isBiomeDebugEnabled(): boolean {
-		if (typeof window === 'undefined') return false;
-		const search = window.location.search ?? '';
-		if (search.includes('debugBiome=1')) return true;
-		return new URLSearchParams(search).get('debugBiome') === '1';
 	}
 
 	onMount(() => {
@@ -451,14 +306,14 @@
 			{extrasAllOff ? 'Restore previous scene config' : 'Enter minimal debug mode'}
 		</button>
 		<label>
-			<input type="checkbox" checked={state.rendering.useWebGPU} on:change={onWebGPU} />
+			<input type="checkbox" checked={state.rendering.useWebGPU} on:change={checkbox('rendering', 'useWebGPU')} />
 			WebGPU spike (<code>WaterMesh</code>; experimental)
 		</label>
 		<label>
 			<input
 				type="checkbox"
 				checked={state.volumetrics.enabled}
-				on:change={onVolumetricsEnabled}
+				on:change={checkbox('volumetrics', 'enabled')}
 				disabled={!state.rendering.useWebGPU}
 			/>
 			Volumetric lighting spike (WebGPU only)
@@ -467,7 +322,7 @@
 			<input
 				type="checkbox"
 				checked={state.volumetrics.respectPerformanceGate}
-				on:change={onVolumetricsRespectDpr}
+				on:change={checkbox('volumetrics', 'respectPerformanceGate')}
 			/>
 			Skip volumetrics when device pixel ratio is above 2
 		</label>
@@ -479,7 +334,7 @@
 				max="1.5"
 				step="0.01"
 				value={state.volumetrics.density}
-				on:input={onVolumetricsDensity}
+				on:input={slider('volumetrics', 'density')}
 				disabled={!state.rendering.useWebGPU || !state.volumetrics.enabled}
 			/>
 		</div>
@@ -491,7 +346,7 @@
 				max="0.95"
 				step="0.01"
 				value={state.volumetrics.anisotropy}
-				on:input={onVolumetricsAnisotropy}
+				on:input={slider('volumetrics', 'anisotropy')}
 				disabled={!state.rendering.useWebGPU || !state.volumetrics.enabled}
 			/>
 		</div>
@@ -503,28 +358,28 @@
 				max="2"
 				step="0.01"
 				value={state.volumetrics.heightFalloff}
-				on:input={onVolumetricsHeightFalloff}
+				on:input={slider('volumetrics', 'heightFalloff')}
 				disabled={!state.rendering.useWebGPU || !state.volumetrics.enabled}
 			/>
 		</div>
 
 		<h2>Bridge</h2>
 		<label>
-			<input type="checkbox" checked={state.bridge.enabled} on:change={onBridgeEnabled} />
+			<input type="checkbox" checked={state.bridge.enabled} on:change={checkbox('bridge', 'enabled')} />
 			Enable server bridge
 		</label>
 		<div class="row">
-			<select value={state.bridge.mode} on:change={onBridgeMode}>
+			<select value={state.bridge.mode} on:change={select('bridge', 'mode')}>
 				<option value="poll">poll</option>
 				<option value="sse">sse</option>
 			</select>
 			<input
 				type="text"
 				value={state.bridge.url}
-				on:input={onBridgeUrl}
+				on:input={textInput('bridge', 'url')}
 				placeholder="http://localhost:8000/api/biome"
 			/>
-			<input type="number" min="100" step="50" value={state.bridge.pollMs} on:input={onBridgePollMs} />
+			<input type="number" min="100" step="50" value={state.bridge.pollMs} on:input={slider('bridge', 'pollMs')} />
 		</div>
 		<div class="row">
 			<button class="btn btn-primary" on:click={connectBridge} disabled={!state.bridge.enabled || connected}>Connect</button>
@@ -534,30 +389,30 @@
 		<h2>Water</h2>
 		<div class="slider">
 			<div class="slider-label">Surface height {state.water.surfaceY.toFixed(1)}</div>
-			<input type="range" min="-12" max="18" step="0.2" value={state.water.surfaceY} on:input={onWaterHeight} />
+			<input type="range" min="-12" max="18" step="0.2" value={state.water.surfaceY} on:input={slider('water', 'surfaceY')} />
 		</div>
 		<div class="slider">
 			<div class="slider-label">Distortion {state.water.distortionScale.toFixed(2)}</div>
-			<input type="range" min="0.2" max="12" step="0.1" value={state.water.distortionScale} on:input={onWaterDistortion} />
+			<input type="range" min="0.2" max="12" step="0.1" value={state.water.distortionScale} on:input={slider('water', 'distortionScale')} />
 		</div>
 		<div class="slider">
 			<div class="slider-label">Alpha {state.water.alpha.toFixed(2)}</div>
-			<input type="range" min="0.2" max="1" step="0.01" value={state.water.alpha} on:input={onWaterAlpha} />
+			<input type="range" min="0.2" max="1" step="0.01" value={state.water.alpha} on:input={slider('water', 'alpha')} />
 		</div>
 		<div class="slider">
 			<div class="slider-label">Time scale {state.water.timeScale.toFixed(2)}</div>
-			<input type="range" min="0.05" max="2" step="0.01" value={state.water.timeScale} on:input={onWaterTimeScale} />
+			<input type="range" min="0.05" max="2" step="0.01" value={state.water.timeScale} on:input={slider('water', 'timeScale')} />
 		</div>
 
 		<h2>Rain (Rapier + overlay)</h2>
 		<p class="hint">Hybrid: screen-space streaks + instanced Rapier spheres vs terrain &amp; water. Uses <code>@dimforge/rapier3d-compat</code> (WASM).</p>
 		<label>
-			<input type="checkbox" checked={state.rain.enabled} on:change={onRainEnabled} />
+			<input type="checkbox" checked={state.rain.enabled} on:change={checkbox('rain', 'enabled')} />
 			Enable rain simulation
 		</label>
 		<label class="preset-row">
 			Rain mode
-			<select value={state.rain.mode} on:change={onRainMode}>
+			<select value={state.rain.mode} on:change={select('rain', 'mode')}>
 				<option value="screen">screen-attached (overlay only)</option>
 				<option value="hybrid">hybrid (overlay + Rapier collisions)</option>
 			</select>
@@ -566,12 +421,12 @@
 			<input
 				type="checkbox"
 				checked={state.rain.showCollisionProxies}
-				on:change={onRainDebugProxies}
+				on:change={checkbox('rain', 'showCollisionProxies')}
 			/>
 			Show collision proxies (debug)
 		</label>
 		<label>
-			<input type="checkbox" checked={state.rain.showRainDebugHud} on:change={onRainDebugHud} />
+			<input type="checkbox" checked={state.rain.showRainDebugHud} on:change={checkbox('rain', 'showRainDebugHud')} />
 			Show rain telemetry (impacts/s, active splashes)
 		</label>
 		<label class="preset-row">
@@ -585,28 +440,28 @@
 		{#if state.rain.mode === 'hybrid'}
 			<div class="slider">
 				<div class="slider-label">Collision drops {state.rain.collisionDropCount}</div>
-				<input type="range" min="40" max="1200" step="20" value={state.rain.collisionDropCount} on:input={onRainDrops} />
+				<input type="range" min="40" max="1200" step="20" value={state.rain.collisionDropCount} on:input={slider('rain', 'collisionDropCount')} />
 			</div>
 		{/if}
 		<div class="slider">
 			<div class="slider-label">Overlay density {state.rain.overlayDensity.toFixed(2)}</div>
-			<input type="range" min="0" max="1" step="0.02" value={state.rain.overlayDensity} on:input={onRainOverlay} />
+			<input type="range" min="0" max="1" step="0.02" value={state.rain.overlayDensity} on:input={slider('rain', 'overlayDensity')} />
 		</div>
 		{#if state.rain.mode === 'hybrid'}
 			<div class="slider">
 				<div class="slider-label">Spawn radius {state.rain.spawnRadius.toFixed(0)}</div>
-				<input type="range" min="80" max="420" step="10" value={state.rain.spawnRadius} on:input={onRainSpawn} />
+				<input type="range" min="80" max="420" step="10" value={state.rain.spawnRadius} on:input={slider('rain', 'spawnRadius')} />
 			</div>
 			<div class="slider">
 				<div class="slider-label">Max splashes {state.rain.maxActiveSplashes}</div>
-				<input type="range" min="8" max="128" step="4" value={state.rain.maxActiveSplashes} on:input={onRainSplashes} />
+				<input type="range" min="8" max="128" step="4" value={state.rain.maxActiveSplashes} on:input={slider('rain', 'maxActiveSplashes')} />
 			</div>
 		{/if}
 
 		<h2>Seabed</h2>
 		<label class="preset-row">
 			Preset
-			<select value={state.terrain.seabedPreset} on:change={onSeabedPreset}>
+			<select value={state.terrain.seabedPreset} on:change={select('terrain', 'seabedPreset')}>
 				<option value="default">default</option>
 				<option value="muddy">muddy</option>
 				<option value="sand">sand</option>
@@ -621,42 +476,42 @@
 
 		<h2>Sky (WebGL: Sky; WebGPU: SkyMesh)</h2>
 		<label>
-			<input type="checkbox" checked={state.sky.enabled} on:change={onSkyEnabled} />
+			<input type="checkbox" checked={state.sky.enabled} on:change={checkbox('sky', 'enabled')} />
 			Enable sky dome (better reflections / readout)
 		</label>
 		<label>
-			<input type="checkbox" checked={state.sky.respectPerformanceGate} on:change={onSkyRespectDpr} />
+			<input type="checkbox" checked={state.sky.respectPerformanceGate} on:change={checkbox('sky', 'respectPerformanceGate')} />
 			Skip on very high device pixel ratio (gate: 2+)
 		</label>
 		<div class="slider">
 			<div class="slider-label">Turbidity {state.sky.turbidity.toFixed(1)}</div>
-			<input type="range" min="1" max="20" step="0.5" value={state.sky.turbidity} on:input={onSkyTurbidity} />
+			<input type="range" min="1" max="20" step="0.5" value={state.sky.turbidity} on:input={slider('sky', 'turbidity')} />
 		</div>
 		<div class="slider">
 			<div class="slider-label">Rayleigh {state.sky.rayleigh.toFixed(2)}</div>
-			<input type="range" min="0.2" max="4" step="0.05" value={state.sky.rayleigh} on:input={onSkyRayleigh} />
+			<input type="range" min="0.2" max="4" step="0.05" value={state.sky.rayleigh} on:input={slider('sky', 'rayleigh')} />
 		</div>
 
 		<h2>Caustics (WebGL only)</h2>
 		<label>
-			<input type="checkbox" checked={state.caustics.enabled} on:change={onCausticsEnabled} />
+			<input type="checkbox" checked={state.caustics.enabled} on:change={checkbox('caustics', 'enabled')} />
 			Enable caustics pass (<code>env_march</code>)
 		</label>
 		<label>
-			<input type="checkbox" checked={state.caustics.respectPerformanceGate} on:change={onCausticsRespectDpr} />
+			<input type="checkbox" checked={state.caustics.respectPerformanceGate} on:change={checkbox('caustics', 'respectPerformanceGate')} />
 			Auto-skip caustics when device pixel ratio is above 2
 		</label>
 		<div class="slider">
 			<div class="slider-label">Intensity {state.caustics.intensity.toFixed(2)}</div>
-			<input type="range" min="0" max="2" step="0.01" value={state.caustics.intensity} on:input={onCausticsIntensity} />
+			<input type="range" min="0" max="2" step="0.01" value={state.caustics.intensity} on:input={slider('caustics', 'intensity')} />
 		</div>
 		<div class="slider">
 			<div class="slider-label">Max steps {state.caustics.maxSteps}</div>
-			<input type="range" min="8" max="200" step="1" value={state.caustics.maxSteps} on:input={onCausticsSteps} />
+			<input type="range" min="8" max="200" step="1" value={state.caustics.maxSteps} on:input={slider('caustics', 'maxSteps')} />
 		</div>
 		<div class="slider">
 			<div class="slider-label">Resolution {state.caustics.resolution}</div>
-			<input type="range" min="128" max="1024" step="128" value={state.caustics.resolution} on:input={onCausticsResolution} />
+			<input type="range" min="128" max="1024" step="128" value={state.caustics.resolution} on:input={slider('caustics', 'resolution')} />
 		</div>
 	</div>
 
