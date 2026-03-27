@@ -31,14 +31,16 @@ export function buildTerrainPlaneGeometry(size: number, segments: number): Plane
 }
 
 export function createPopulationMesh(settings: TerrainSettings): InstancedMesh {
-	const geometry = new SphereGeometry(1.4, 10, 10);
+	const geometry = new SphereGeometry(0.6, 8, 8);
 	const material = new MeshStandardMaterial({
-		color: new Color('#e9f7ff'),
-		emissive: new Color('#9ee7ff'),
-		emissiveIntensity: 3.4,
-		metalness: 0,
-		roughness: 0,
-		fog: false
+		color: new Color('#88ccee'),
+		emissive: new Color('#44aadd'),
+		emissiveIntensity: 0.8,
+		metalness: 0.1,
+		roughness: 0.4,
+		transparent: true,
+		opacity: 0.85,
+		fog: true
 	});
 	const mesh = new InstancedMesh(geometry, material, settings.maxPopulation);
 	mesh.instanceMatrix.setUsage(35048); // DynamicDrawUsage
@@ -58,9 +60,9 @@ export function updatePopulationMesh(
 	for (const being of alive) {
 		const worldX = latticeToWorld(being.x, width, settings.size * 0.95);
 		const worldZ = latticeToWorld(being.y, depth, settings.size * 0.95);
-		const bob = Math.sin((being.fitness + i) * Math.PI * 2) * 0.7;
-		tempPosition.set(worldX, 2.2 + bob, worldZ);
-		tempScale.setScalar(1.2 + being.fitness * 1.1);
+		const bob = Math.sin((being.fitness + i) * Math.PI * 2) * 0.5;
+		tempPosition.set(worldX, -8 + bob, worldZ);
+		tempScale.setScalar(0.5 + being.fitness * 0.8);
 		tempMatrix.compose(tempPosition, mesh.quaternion, tempScale);
 		mesh.setMatrixAt(i, tempMatrix);
 		i += 1;
