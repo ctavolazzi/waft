@@ -10,19 +10,29 @@ The "Operating System" for projects, orchestrating:
 
 import json
 import time
+import webbrowser
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Optional
+from urllib import error as urllib_error
+from urllib import request as urllib_request
 
 import typer
 from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
 
-from .cli.awakening_cli import app as awakening_app
-from .cli.cards_cli import app as cards_app
-from .cli.dungeon_cli import app as dungeon_app
-from .cli.personnel_cli import app as personnel_app
+try:
+    from .cli.cards_cli import app as cards_app
+except Exception:
+    cards_app = typer.Typer(
+        help="Cards commands unavailable (optional dependency missing: install `playingcards`)."
+    )
+
+    @cards_app.command("status")
+    def cards_status():
+        typer.echo("cards CLI unavailable: install optional dependency `playingcards` to enable.")
+
 from .cli.case_render import case_render_cmd
 from .cli.chief_cli import app as chief_app
 from .cli.epistemic_display import (
@@ -31,6 +41,8 @@ from .cli.epistemic_display import (
     get_moon_phase,
 )
 from .cli.hud import render_hud
+from .cli.meme_cli import meme_app
+from .cli.promotion_cli import app as promotion_app
 from .cli.project_commands import app as project_app
 from .cli.pyrite_cli import app as pyrite_app
 from .core.analytics_cli import app as analytics_app
@@ -737,6 +749,186 @@ def serve(
         raise typer.Exit(1)
 
 
+@app.command(name="dashboard-5050")
+def dashboard_5050_cmd(
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    port: int = typer.Option(5050, "--port", help="Dashboard port"),
+    host: str = typer.Option("localhost", "--host", help="Host to bind to"),
+    open_browser: bool = typer.Option(True, "--open-browser/--no-open-browser", help="Open browser automatically"),
+):
+    """
+    Start the localhost:5050 dashboard and API in one process.
+
+    Serves the new dashboard UI from dashboard_5050/ and exposes WAFT API endpoints at /api.
+    """
+    project_path = resolve_project_path(path)
+
+    is_valid, error = validate_waft_project(project_path)
+    if not is_valid:
+        console.print("[bold red]❌ Not a Waft project[/bold red]")
+        console.print(f"[dim]{error}[/dim]")
+        raise typer.Exit(1)
+
+    dashboard_dir = project_path / "dashboard_5050"
+    if not dashboard_dir.exists():
+        console.print("[bold red]❌ dashboard_5050 directory not found[/bold red]")
+        console.print("[dim]Expected: dashboard_5050/index.html[/dim]")
+        raise typer.Exit(1)
+
+    try:
+        import uvicorn
+
+        from .api.main import create_app
+
+        app_instance = create_app(project_path, static_dir=dashboard_dir)
+        url = f"http://{host}:{port}"
+
+        console.print("\n[bold cyan]🌊 WAFT Localhost 5050 Dashboard[/bold cyan]")
+        console.print(f"[dim]→[/dim] Dashboard: {url}")
+        console.print(f"[dim]→[/dim] API docs: {url}/docs")
+        console.print(f"[dim]→[/dim] Project: {project_path.resolve()}")
+        console.print("\nPress Ctrl+C to stop\n")
+
+        if open_browser:
+            try:
+                webbrowser.open(url)
+            except Exception as e:
+                logger.debug(f"Could not auto-open browser: {e}")
+
+        uvicorn.run(app_instance, host=host, port=port, log_level="info")
+    except ImportError as e:
+        console.print(f"[bold red]❌ Missing dependencies: {e}[/bold red]")
+        console.print("[dim]→[/dim] Install with: uv sync[/dim]")
+        raise typer.Exit(1)
+    except Exception as e:
+        if "Address already in use" in str(e) or "already in use" in str(e):
+            console.print(f"[bold red]❌ Port {port} is already in use[/bold red]")
+            console.print("[dim]Try a different port with --port[/dim]")
+        else:
+            console.print(f"[bold red]❌ Error starting dashboard: {e}[/bold red]")
+        raise typer.Exit(1)
+
+
+@app.command(name="runtime-demo")
+def runtime_demo_cmd(
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+    host: str = typer.Option("127.0.0.1", "--host", help="Runtime API host"),
+    port: int = typer.Option(8011, "--port", help="Runtime API port"),
+    model: str = typer.Option("waft-echo:latest", "--model", help="Model for demo requests"),
+    history_limit: int = typer.Option(20, "--history-limit", help="History readback limit"),
+    open_browser: bool = typer.Option(
+        True, "--open-browser/--no-open-browser", help="Open runtime UI in browser"
+    ),
+    run_demo: bool = typer.Option(
+        True, "--run-demo/--no-run-demo", help="Trigger CLI demo generate/chat flow"
+    ),
+):
+    """
+    Run a CLI-guided runtime demo against the WAFT Ollama-compatible API.
+
+    This command validates the runtime UI endpoint and can trigger generate/chat
+    requests, then verifies persisted history events are present.
+    """
+    project_path = resolve_project_path(path)
+    is_valid, error = validate_waft_project(project_path)
+    if not is_valid:
+        console.print("[bold red]❌ Not a Waft project[/bold red]")
+        console.print(f"[dim]{error}[/dim]")
+        raise typer.Exit(1)
+
+    base_url = f"http://{host}:{port}"
+    runtime_ui_url = f"{base_url}/api/runtime-ui"
+
+    def _request(method: str, endpoint: str, payload: dict[str, Any] | None = None):
+        url = f"{base_url}{endpoint}"
+        data = None
+        headers = {}
+        if payload is not None:
+            data = json.dumps(payload).encode("utf-8")
+            headers["Content-Type"] = "application/json"
+
+        req = urllib_request.Request(url, data=data, headers=headers, method=method)
+        try:
+            with urllib_request.urlopen(req, timeout=8) as resp:
+                body = resp.read().decode("utf-8")
+                status = resp.getcode()
+                return status, body
+        except urllib_error.HTTPError as e:
+            body = e.read().decode("utf-8") if e.fp else str(e)
+            return e.code, body
+
+    try:
+        status, _ = _request("GET", "/api/runtime-ui")
+    except Exception as e:
+        console.print("[bold red]❌ Runtime API not reachable[/bold red]")
+        console.print(f"[dim]{e}[/dim]")
+        console.print(
+            f"[dim]Start it with: PYENV_VERSION=3.14.3 python -m uvicorn src.waft.api.main:app --host {host} --port {port}[/dim]"
+        )
+        raise typer.Exit(1)
+
+    if status != 200:
+        console.print(f"[bold red]❌ Runtime UI endpoint returned {status}[/bold red]")
+        console.print(f"[dim]Expected 200 at {runtime_ui_url}[/dim]")
+        raise typer.Exit(1)
+
+    console.print("\n[bold cyan]🌊 WAFT Runtime Demo[/bold cyan]")
+    console.print(f"[dim]→[/dim] Runtime UI: {runtime_ui_url}")
+    console.print(f"[dim]→[/dim] Project: {project_path.resolve()}")
+
+    if open_browser:
+        try:
+            webbrowser.open(runtime_ui_url)
+            console.print("[dim]→[/dim] Opened browser to runtime UI")
+        except Exception as e:
+            console.print(f"[yellow]⚠️[/yellow] Could not open browser automatically: {e}")
+
+    if not run_demo:
+        console.print("[green]✅ Runtime UI is reachable.[/green]")
+        return
+
+    stamp = datetime.now().isoformat()
+    generate_prompt = f"cli runtime demo generate {stamp}"
+    chat_prompt = f"cli runtime demo chat {stamp}"
+
+    generate_payload = {"model": model, "prompt": generate_prompt, "stream": False}
+    chat_payload = {
+        "model": model,
+        "messages": [{"role": "user", "content": chat_prompt}],
+        "stream": False,
+    }
+
+    gen_status, _ = _request("POST", "/api/generate", generate_payload)
+    chat_status, _ = _request("POST", "/api/chat", chat_payload)
+    hist_status, hist_body = _request("GET", f"/api/history?limit={history_limit}")
+
+    if gen_status != 200 or chat_status != 200 or hist_status != 200:
+        console.print("[bold red]❌ Runtime demo requests failed[/bold red]")
+        console.print(
+            f"[dim]generate={gen_status}, chat={chat_status}, history={hist_status}[/dim]"
+        )
+        raise typer.Exit(1)
+
+    events = []
+    try:
+        events = json.loads(hist_body).get("events", [])
+    except Exception:
+        events = []
+
+    matching_events = [
+        event
+        for event in events
+        if generate_prompt in json.dumps(event) or chat_prompt in json.dumps(event)
+    ]
+
+    console.print("[green]✅ Runtime demo requests succeeded[/green]")
+    console.print(f"[dim]→[/dim] generate status: {gen_status}")
+    console.print(f"[dim]→[/dim] chat status: {chat_status}")
+    console.print(f"[dim]→[/dim] history status: {hist_status}")
+    console.print(f"[dim]→[/dim] matching persisted events: {len(matching_events)}")
+    console.print("[dim]→[/dim] Open the browser and click 'Run Demo Flow' for visual diff output.")
+
+
 @app.command()
 def evolve(
     path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
@@ -836,6 +1028,7 @@ goal_app = typer.Typer(help="Goal management commands")
 github_app = typer.Typer(help="GitHub integration commands")
 journal_app = typer.Typer(help="Development journal commands")
 empirica_monitor_app = typer.Typer(help="Empirica monitoring and dashboard commands")
+generate_app = typer.Typer(help="Generation commands")
 
 app.add_typer(session_app, name="session")
 app.add_typer(finding_app, name="finding")
@@ -848,8 +1041,9 @@ app.add_typer(empirica_monitor_app, name="empirica")
 app.add_typer(awakening_app, name="awaken")
 app.add_typer(cards_app, name="cards")
 app.add_typer(chief_app, name="chief")
-app.add_typer(dungeon_app, name="dungeon")
-app.add_typer(personnel_app, name="personnel")
+app.add_typer(meme_app, name="meme")
+app.add_typer(generate_app, name="generate")
+generate_app.add_typer(meme_app, name="meme")
 app.command(name="case-render")(case_render_cmd)
 
 
@@ -951,6 +1145,39 @@ def empirica_monitor_cmd(
         raise typer.Exit(1)
 
     console.print("\n[dim]Dashboard closed[/dim]")
+
+
+@empirica_monitor_app.command("brain")
+def empirica_brain_cmd(
+    mission: str = typer.Argument(..., help="Narrative engineering mission"),
+    session_type: str = typer.Option(
+        "dungeon-engineering", "--session-type", help="Empirica session type"
+    ),
+    run_cycle: bool = typer.Option(
+        False, "--run-cycle", help="Run minimal CASCADE cycle before printing prompt"
+    ),
+    path: str | None = typer.Option(None, "--path", "-p", help="Project path (default: current)"),
+):
+    """Generate the Empirica Brain dungeon-engineering prompt."""
+    project_path = resolve_project_path(path)
+    from .core.empirica_brain import EmpiricaBrain
+
+    brain = EmpiricaBrain(project_path)
+    console.print("\n[bold cyan]🌊 Waft[/bold cyan] - Empirica Brain\n")
+
+    if run_cycle:
+        cycle = brain.run_cascade_cycle(mission=mission, session_type=session_type)
+        if cycle.session_id:
+            console.print(f"[green]✅[/green] Session: [bold]{cycle.session_id}[/bold]")
+        if cycle.gate_result:
+            console.print(f"[dim]Gate: {cycle.gate_result}[/dim]")
+        if not cycle.proceed:
+            console.print(f"[bold red]❌ {cycle.message}[/bold red]")
+            raise typer.Exit(1)
+        console.print(f"[green]✅[/green] {cycle.message}")
+
+    prompt = brain.build_narrative_prompt(mission=mission, session_type=session_type)
+    console.print(Panel(prompt, title="Empirica Brain Prompt", border_style="cyan"))
 
 
 @session_app.command("create")
@@ -1532,6 +1759,7 @@ def checkout(
 # Add analytics subcommand
 app.add_typer(analytics_app, name="analytics")
 app.add_typer(pyrite_app, name="pyrite", help="The Steward - The God of Work Efforts")
+app.add_typer(promotion_app, name="promote", help="Review and gate professional escalation")
 
 
 @app.command()
@@ -3082,35 +3310,38 @@ def oracle(
         console.print("\n")
         console.print(table)
 
-        # Get recent insights
-        console.print("\n[yellow]→[/yellow] Retrieving recent insights...")
-        insights = oracle.get_insights(limit=5)
-        unknowns = oracle.get_unknowns(limit=5)
+        # Get recent insights/unknowns.
+        # For explicit question mode, skip prefetch and let provide_guidance fetch once
+        # to avoid repeated expensive Empirica bootstrap calls.
+        if not question:
+            console.print("\n[yellow]→[/yellow] Retrieving recent insights...")
+            insights = oracle.get_insights(limit=5)
+            unknowns = oracle.get_unknowns(limit=5)
 
-        console.print(f"[green]✓[/green] Found {len(insights)} insights, {len(unknowns)} unknowns")
+            console.print(f"[green]✓[/green] Found {len(insights)} insights, {len(unknowns)} unknowns")
 
-        if insights:
-            console.print("\n[bold]Recent Insights:[/bold]")
-            for i, insight in enumerate(insights[-5:], 1):
-                insight_text = str(insight) if isinstance(insight, dict) else insight
-                if len(insight_text) > 80:
-                    console.print(f"  {i}. [dim]{insight_text[:80]}...[/dim]")
-                else:
-                    console.print(f"  {i}. {insight_text}")
-        else:
-            console.print("  [dim]No recent insights recorded[/dim]")
+            if insights:
+                console.print("\n[bold]Recent Insights:[/bold]")
+                for i, insight in enumerate(insights[-5:], 1):
+                    insight_text = str(insight) if isinstance(insight, dict) else insight
+                    if len(insight_text) > 80:
+                        console.print(f"  {i}. [dim]{insight_text[:80]}...[/dim]")
+                    else:
+                        console.print(f"  {i}. {insight_text}")
+            else:
+                console.print("  [dim]No recent insights recorded[/dim]")
 
-        if unknowns:
-            console.print("\n[bold]Open Unknowns:[/bold]")
-            for i, unknown in enumerate(unknowns[-5:], 1):
-                unknown_text = str(unknown) if isinstance(unknown, dict) else unknown
-                if len(unknown_text) > 80:
-                    console.print(f"  {i}. [yellow]{unknown_text[:80]}...[/yellow]")
-                else:
-                    console.print(f"  {i}. {unknown_text}")
-        else:
-            console.print("\n[bold]Open Unknowns:[/bold]")
-            console.print("  [dim]No open unknowns recorded[/dim]")
+            if unknowns:
+                console.print("\n[bold]Open Unknowns:[/bold]")
+                for i, unknown in enumerate(unknowns[-5:], 1):
+                    unknown_text = str(unknown) if isinstance(unknown, dict) else unknown
+                    if len(unknown_text) > 80:
+                        console.print(f"  {i}. [yellow]{unknown_text[:80]}...[/yellow]")
+                    else:
+                        console.print(f"  {i}. {unknown_text}")
+            else:
+                console.print("\n[bold]Open Unknowns:[/bold]")
+                console.print("  [dim]No open unknowns recorded[/dim]")
 
         # Handle question or assessment
         if assess:
@@ -3488,6 +3719,142 @@ def pantheon(
         console.print(f"[red]❌ Error summoning Pantheon: {e}[/red]")
         _process_tavern_hook(project_path, "pantheon", False)
         raise typer.Exit(1)
+
+
+@app.command(name="oracle-cycle")
+def oracle_cycle(
+    objective: str = typer.Argument(..., help="Objective for this oracle-cycle run"),
+    order_prompt: str = typer.Option(
+        "Should we implement state machine plus atomic persistence before stage logic for this project?",
+        "--order-prompt",
+        help="First oracle prompt focused on ordering",
+    ),
+    risk_prompt: str = typer.Option(
+        "Which risk should be controlled first: lock race, deterministic zip drift, or schema mismatch?",
+        "--risk-prompt",
+        help="Second oracle prompt focused on risk priority",
+    ),
+    output_dir: str | None = typer.Option(
+        None,
+        "--output-dir",
+        help="Optional output directory (default: <path>/_pantheon/oracle_cycle/runs)",
+    ),
+    path: str | None = typer.Option(
+        None,
+        "--path",
+        "-p",
+        help="Project path for context and default storage root",
+    ),
+):
+    """
+    Run a deterministic two-step oracle cycle and persist run artifacts.
+
+    This provides CLI parity with the pantheon oracle-cycle API route. By default,
+    artifacts are written to `_pantheon/oracle_cycle/runs` under the selected path.
+    """
+    project_path = resolve_project_path(path)
+    from .core.science import TheOracle
+
+    console.print("\n[bold cyan]🔁 Waft[/bold cyan] - Oracle Cycle\n")
+    console.print(f"[yellow]→[/yellow] Objective: {objective}")
+    console.print(f"[yellow]→[/yellow] Context path: {project_path}")
+
+    try:
+        oracle = TheOracle(project_path=project_path)
+        order = oracle.provide_guidance(question=order_prompt, show_thinking=False)
+        risk = oracle.provide_guidance(question=risk_prompt, show_thinking=False)
+    except Exception as e:
+        fallback = {
+            "recommendation": f"[HALT] Oracle unavailable, investigate runtime prerequisites. Error: {str(e)}",
+            "reflection": {"summary": "Oracle runtime failed; fallback response emitted for trace continuity."},
+            "check": {"decision": "halt", "confidence": 0.0},
+            "timestamp": datetime.now().isoformat(),
+        }
+        order = fallback
+        risk = fallback
+
+    def _decision_from_recommendation(text: str) -> str:
+        if not text:
+            return "UNKNOWN"
+        upper = text.upper()
+        for token in ["PROCEED", "HALT", "BRANCH", "REVISE", "INVESTIGATE", "UNKNOWN"]:
+            if f"[{token}]" in upper:
+                return token
+        return "UNKNOWN"
+
+    def _extract_reasoning(response: dict[str, Any]) -> str:
+        reflection = response.get("reflection", {})
+        check = response.get("check", {})
+        parts = []
+        if isinstance(reflection, dict):
+            summary = reflection.get("summary") or reflection.get("reflection_summary")
+            if summary:
+                parts.append(str(summary))
+        if isinstance(check, dict):
+            if check.get("decision"):
+                parts.append(f"check_decision={check.get('decision')}")
+            if check.get("confidence") is not None:
+                parts.append(f"check_confidence={check.get('confidence')}")
+        rec = response.get("recommendation")
+        if rec:
+            parts.append(str(rec))
+        return " | ".join(parts)[:2500]
+
+    run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
+    payload = {
+        "run_id": run_id,
+        "objective": objective,
+        "generated_at": datetime.now().isoformat(),
+        "order_decision": _decision_from_recommendation(order.get("recommendation", "")),
+        "risk_decision": _decision_from_recommendation(risk.get("recommendation", "")),
+        "timeline": [
+            {
+                "step": "order_prompt",
+                "prompt": order_prompt,
+                "recommendation": order.get("recommendation", ""),
+                "decision": _decision_from_recommendation(order.get("recommendation", "")),
+                "reasoning": _extract_reasoning(order),
+                "timestamp": order.get("timestamp", ""),
+            },
+            {
+                "step": "risk_prompt",
+                "prompt": risk_prompt,
+                "recommendation": risk.get("recommendation", ""),
+                "decision": _decision_from_recommendation(risk.get("recommendation", "")),
+                "reasoning": _extract_reasoning(risk),
+                "timestamp": risk.get("timestamp", ""),
+            },
+        ],
+    }
+
+    store = (
+        Path(output_dir).expanduser().resolve()
+        if output_dir
+        else project_path / "_pantheon" / "oracle_cycle" / "runs"
+    )
+    store.mkdir(parents=True, exist_ok=True)
+
+    run_path = store / f"{run_id}.json"
+    run_path.write_text(json.dumps(payload, indent=2, ensure_ascii=True), encoding="utf-8")
+    with (store / "index.jsonl").open("a", encoding="utf-8") as f:
+        summary = {
+            k: payload[k]
+            for k in ["run_id", "objective", "generated_at", "order_decision", "risk_decision"]
+        }
+        f.write(json.dumps(summary, ensure_ascii=True) + "\n")
+
+    console.print("[green]✓[/green] Oracle cycle run persisted")
+    console.print(f"[bold]run_id:[/bold] {run_id}")
+    console.print(f"[bold]order_decision:[/bold] {payload['order_decision']}")
+    console.print(f"[bold]risk_decision:[/bold] {payload['risk_decision']}")
+    console.print(f"[bold]artifact:[/bold] {run_path}")
+
+    _process_tavern_hook(
+        project_path,
+        "oracle_cycle",
+        True,
+        {"run_id": run_id, "order_decision": payload["order_decision"], "risk_decision": payload["risk_decision"]},
+    )
 
 
 @app.command()

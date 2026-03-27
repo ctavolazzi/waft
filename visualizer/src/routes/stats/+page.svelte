@@ -5,6 +5,8 @@
 	import AgentProfileCard from '$lib/components/AgentProfileCard.svelte';
 	import FitnessDashboard from '$lib/components/FitnessDashboard.svelte';
 	import EvolutionTree from '$lib/components/EvolutionTree.svelte';
+	export let params: Record<string, string> | undefined = undefined;
+	void params;
 
 	// Mock data for demonstration
 	let selectedAgent: any = null;

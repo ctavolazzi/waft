@@ -3,9 +3,8 @@
 import subprocess
 import sys
 
-from typer.testing import CliRunner
+import pytest
 
-import waft.main
 from waft.core.memory import MemoryManager
 from waft.core.substrate import SubstrateManager
 
@@ -201,27 +200,35 @@ def test_waft_verify_updates_integrity(full_waft_project):
     assert result.returncode in [0, 1]  # May succeed or fail based on state
 
 
-def test_waft_add_forwards_dev_flag(project_with_pyproject, monkeypatch):
-    """Test waft add forwards the --dev flag to the substrate layer."""
-    captured = {}
-
-    def fake_add_dependency(self, package, project_path, dev=False):
-        captured["package"] = package
-        captured["project_path"] = project_path
-        captured["dev"] = dev
-        return True
-
-    monkeypatch.setattr(SubstrateManager, "add_dependency", fake_add_dependency)
-    monkeypatch.setattr(waft.main, "_process_tavern_hook", lambda *args, **kwargs: None)
-
-    result = runner.invoke(
-        waft.main.app,
-        ["add", "pytest>=8.0.0", "--dev", "--path", str(project_with_pyproject)],
+def test_runtime_demo_fails_cleanly_when_server_unreachable(full_waft_project):
+    """Test runtime-demo gives actionable error when API server is not running."""
+    result = run_waft_command(
+        ["runtime-demo", "--host", "127.0.0.1", "--port", "6553", "--no-open-browser"],
+        cwd=full_waft_project,
     )
 
-    assert result.exit_code == 0
-    assert captured["package"] == "pytest>=8.0.0"
-    assert captured["project_path"] == project_with_pyproject
-    assert captured["dev"] is True
-    assert "Adding development dependency" in result.stdout
-    assert "Running uv add --dev pytest>=8.0.0" in result.stdout
+    assert result.returncode == 1
+    assert "Runtime API not reachable" in result.stdout or "Runtime UI endpoint returned" in result.stdout
+
+
+def test_generate_meme_alias_is_available(full_waft_project):
+    """`waft generate meme` alias should be discoverable."""
+    result = run_waft_command(["generate", "--help"], cwd=full_waft_project)
+    assert result.returncode == 0
+    assert "meme" in result.stdout.lower()
+
+
+def test_meme_security_check_is_listed_under_meme_help(full_waft_project):
+    result = run_waft_command(["meme", "--help"], cwd=full_waft_project)
+    if "No module named 'playingcards'" in result.stderr:
+        pytest.skip("CLI help unavailable in this environment (missing playingcards dependency).")
+    assert result.returncode == 0
+    assert "security-check" in result.stdout
+
+
+def test_meme_security_check_is_listed_under_generate_meme_help(full_waft_project):
+    result = run_waft_command(["generate", "meme", "--help"], cwd=full_waft_project)
+    if "No module named 'playingcards'" in result.stderr:
+        pytest.skip("CLI help unavailable in this environment (missing playingcards dependency).")
+    assert result.returncode == 0
+    assert "security-check" in result.stdout

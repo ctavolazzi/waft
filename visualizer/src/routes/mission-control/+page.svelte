@@ -2,6 +2,8 @@
 	import { onMount } from 'svelte';
 	import { writable } from 'svelte/store';
 	import type { Writable } from 'svelte/store';
+	export let params: Record<string, string> | undefined = undefined;
+	void params;
 
 	// Dashboard layout configuration
 	interface DashboardWidget {

@@ -858,8 +858,8 @@ wheels = [
 
 [[package]]
 name = "empirica"
-version = "1.2.3"
-source = { registry = "https://pypi.org/simple" }
+version = "1.5.9"
+source = { editable = "_unified/empirica" }
 dependencies = [
     { name = "aiofiles" },
     { name = "anthropic" },
@@ -877,9 +877,43 @@ dependencies = [
     { name = "tiktoken" },
     { name = "typer" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/99/dc/698fc856f6f44517a37c0aa06b7ed7a8072fb5f64944bdf7639807ac29a0/empirica-1.2.3.tar.gz", hash = "sha256:39828bc0bbb94bc9cc6a8c53739897b1bf7965dbf80bdd8fe3ac54e84e8e247d", size = 736570, upload-time = "2026-01-02T18:50:25.842Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/27/7f/b8cebe220c7994bbe450179c72982065833c6d42dcdde431ceb5383d2b2f/empirica-1.2.3-py3-none-any.whl", hash = "sha256:7f4436a6b43bc4c657fba9b79d094d86325d6c14ffacb330ef106ec5b731e5cc", size = 802076, upload-time = "2026-01-02T18:50:23.823Z" },
+
+[package.metadata]
+requires-dist = [
+    { name = "aiofiles", specifier = ">=23.0" },
+    { name = "anthropic", specifier = ">=0.39.0" },
+    { name = "cryptography", specifier = ">=44.0.1" },
+    { name = "dirty-equals", marker = "extra == 'test'", specifier = ">=0.7" },
+    { name = "empirica", extras = ["api", "vector", "vision", "mcp"], marker = "extra == 'all'" },
+    { name = "empirica", extras = ["test", "lint", "typecheck"], marker = "extra == 'dev'" },
+    { name = "fastapi", marker = "extra == 'api'", specifier = ">=0.115.0" },
+    { name = "flask", marker = "extra == 'api'", specifier = ">=3.0" },
+    { name = "flask-cors", marker = "extra == 'api'", specifier = ">=4.0.2" },
+    { name = "gitpython", specifier = ">=3.1.41" },
+    { name = "google-generativeai", specifier = ">=0.5" },
+    { name = "httpx", specifier = ">=0.24" },
+    { name = "jsonschema", specifier = ">=4.0" },
+    { name = "mcp", marker = "extra == 'mcp'", specifier = ">=1.0.0" },
+    { name = "opencv-contrib-python", marker = "extra == 'vision'", specifier = ">=4.12.0" },
+    { name = "pillow", marker = "extra == 'vision'", specifier = ">=11.3.0" },
+    { name = "pydantic", specifier = ">=2.4.0" },
+    { name = "pydantic-settings", specifier = ">=2.0" },
+    { name = "pyright", marker = "extra == 'typecheck'", specifier = ">=1.1.330" },
+    { name = "pytesseract", marker = "extra == 'vision'", specifier = ">=0.3" },
+    { name = "pytest", marker = "extra == 'test'", specifier = ">=7.4" },
+    { name = "pytest-asyncio", marker = "extra == 'test'", specifier = ">=0.21" },
+    { name = "pytest-cov", marker = "extra == 'test'", specifier = ">=4.1" },
+    { name = "pytest-mock", marker = "extra == 'test'", specifier = ">=3.11" },
+    { name = "pyyaml", specifier = ">=6.0" },
+    { name = "qdrant-client", marker = "extra == 'vector'", specifier = ">=1.7" },
+    { name = "requests", specifier = ">=2.31.0" },
+    { name = "rich", specifier = ">=13.0" },
+    { name = "ruff", marker = "extra == 'lint'", specifier = ">=0.1.0" },
+    { name = "sqlalchemy", specifier = ">=2.0" },
+    { name = "tiktoken", specifier = ">=0.5.0" },
+    { name = "typer", specifier = ">=0.9" },
+    { name = "uvicorn", marker = "extra == 'api'", specifier = ">=0.24" },
+    { name = "werkzeug", marker = "extra == 'api'", specifier = ">=3.1.5" },
 ]
 
 [[package]]

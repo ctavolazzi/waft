@@ -18,6 +18,8 @@
 			<a href="/projects" class="nav-box">📁 Projects</a>
 			<a href="/evolve-ui-monitor" class="nav-box">🎨 Evolve UI</a>
 			<a href="/lab" class="nav-box nav-flow">🧪 Flow Lab</a>
+			<a href="/biome" class="nav-box nav-biome">🌊 Biome</a>
+			<a href="/biome/fluid-research" class="nav-box nav-biome">🧪 Fluid R&D</a>
 			<a href="/cognitive-tools" class="nav-box">🧠 Cognitive Tools</a>
 			<a href="/campfire" class="nav-box">🔥 Campfire</a>
 			<a href="/odd-notes" class="nav-box">🗂️ ODD Notes</a>
@@ -138,5 +140,17 @@
 	.nav-stats:hover {
 		transform: translateY(-2px);
 		box-shadow: 0 4px 12px rgba(124, 158, 255, 0.5);
+	}
+
+	.nav-biome {
+		background: linear-gradient(135deg, #0ea5e9 0%, #14b8a6 100%);
+		color: white;
+		border-color: #0ea5e9;
+		font-weight: 600;
+	}
+
+	.nav-biome:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 4px 12px rgba(20, 184, 166, 0.5);
 	}
 </style>

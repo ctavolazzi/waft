@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Waft Orchestration Snapshot - 2026-03-04</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; background: #0f172a; color: #e2e8f0; }
+    h1, h2 { margin: 0 0 12px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+    .card { background: #111827; border: 1px solid #334155; border-radius: 10px; padding: 14px; }
+    .ok { color: #22c55e; font-weight: 700; }
+    .warn { color: #f59e0b; font-weight: 700; }
+    code { color: #93c5fd; }
+    ul { margin: 8px 0 0 18px; }
+  </style>
+</head>
+<body>
+  <h1>Waft Comprehensive Orchestration Snapshot</h1>
+  <p>Generated: 2026-03-04 08:35 PST</p>
+  <div class="grid">
+    <section class="card">
+      <h2>Environment</h2>
+      <ul>
+        <li>Workspace: <code>/Users/ctavolazzi/Code</code></li>
+        <li>Waft: <code>/Users/ctavolazzi/Code/active/waft</code></li>
+        <li>Branch: <code>feat/docker-ollama-runtime-github-update</code></li>
+        <li>Disk free: <span class="warn">~15Gi (local)</span></li>
+      </ul>
+    </section>
+    <section class="card">
+      <h2>Health</h2>
+      <ul>
+        <li><code>waft verify</code>: <span class="ok">PASS</span></li>
+        <li>Integrity: <span class="ok">100%</span></li>
+        <li>Empirica: initialized</li>
+      </ul>
+    </section>
+    <section class="card">
+      <h2>EasyStore Experiment</h2>
+      <ul>
+        <li>Target: <code>/Volumes/Easystore/waft-experiments/20260304_oracle_cycle_bootstrap</code></li>
+        <li>Oracle run artifact: <code>20260304_082101.json</code></li>
+        <li>Decision output: <code>HALT/HALT</code></li>
+      </ul>
+    </section>
+    <section class="card">
+      <h2>Current Gap</h2>
+      <ul>
+        <li>Documented module invocation is unavailable</li>
+        <li>Working entrypoint is API route</li>
+        <li>Recommended next action: CLI parity layer</li>
+      </ul>
+    </section>
+  </div>
+</body>
+</html>

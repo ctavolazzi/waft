@@ -59,7 +59,7 @@ or in Cursor:
 3. **Shows Insights**: Lists recent findings logged to Empirica
 4. **Shows Unknowns**: Lists open knowledge gaps
 5. **Provides Guidance**: Generates recommendations based on epistemic state
-6. **Assesses Decisions**: Uses Empirica CHECK gates for decision support
+6. **Assesses Decisions**: Uses Empirica CHECK gates for decision support (`PROCEED | INVESTIGATE | HALT | BRANCH | REVISE`)
 
 ---
 

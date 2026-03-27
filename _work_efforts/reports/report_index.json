@@ -1,0 +1,446 @@
+{
+  "latest_run_id": "20260303_074342",
+  "reports": [
+    {
+      "run_id": "20260303_074342",
+      "title": "WAFT Recent Work Report 20260303_074342",
+      "generated_at": "2026-03-03 07:43:42",
+      "run_ts": 1772552622,
+      "md_path": "recent_work_report_20260303_074342.md",
+      "html_path": "recent_work_report_20260303_074342.html",
+      "pdf_path": "recent_work_report_20260303_074342.pdf",
+      "has_md": true,
+      "has_html": true,
+      "has_pdf": true,
+      "missing_artifacts": 0,
+      "freshness": "fresh",
+      "freshness_age_hours": 0.0,
+      "quality_score": 100,
+      "quality_tier": "excellent",
+      "quality_reasons": [
+        "complete"
+      ],
+      "run_duration_ms": 17881
+    },
+    {
+      "run_id": "20260303_073534",
+      "title": "WAFT Recent Work Report 20260303_073534",
+      "generated_at": "2026-03-03 07:35:34",
+      "run_ts": 1772552134,
+      "md_path": "recent_work_report_20260303_073534.md",
+      "html_path": "recent_work_report_20260303_073534.html",
+      "pdf_path": "recent_work_report_20260303_073534.pdf",
+      "has_md": true,
+      "has_html": true,
+      "has_pdf": true,
+      "missing_artifacts": 0,
+      "freshness": "fresh",
+      "freshness_age_hours": 0.14,
+      "quality_score": 100,
+      "quality_tier": "excellent",
+      "quality_reasons": [
+        "complete"
+      ],
+      "run_duration_ms": 3581
+    },
+    {
+      "run_id": "20260303_073315",
+      "title": "WAFT Recent Work Report 20260303_073315",
+      "generated_at": "2026-03-03 07:33:15",
+      "run_ts": 1772551995,
+      "md_path": "recent_work_report_20260303_073315.md",
+      "html_path": "recent_work_report_20260303_073315.html",
+      "pdf_path": "recent_work_report_20260303_073315.pdf",
+      "has_md": true,
+      "has_html": true,
+      "has_pdf": true,
+      "missing_artifacts": 0,
+      "freshness": "fresh",
+      "freshness_age_hours": 0.17,
+      "quality_score": 100,
+      "quality_tier": "excellent",
+      "quality_reasons": [
+        "complete"
+      ],
+      "run_duration_ms": 3111
+    },
+    {
+      "run_id": "20260303_073135",
+      "title": "WAFT Recent Work Report 20260303_073135",
+      "generated_at": "2026-03-03 07:31:35",
+      "run_ts": 1772551895,
+      "md_path": "recent_work_report_20260303_073135.md",
+      "html_path": "recent_work_report_20260303_073135.html",
+      "pdf_path": "recent_work_report_20260303_073135.pdf",
+      "has_md": true,
+      "has_html": true,
+      "has_pdf": true,
+      "missing_artifacts": 0,
+      "freshness": "fresh",
+      "freshness_age_hours": 0.2,
+      "quality_score": 100,
+      "quality_tier": "excellent",
+      "quality_reasons": [
+        "complete"
+      ],
+      "run_duration_ms": 2444
+    },
+    {
+      "run_id": "20260303_073002",
+      "title": "WAFT Recent Work Report 20260303_073002",
+      "generated_at": "2026-03-03 07:30:02",
+      "run_ts": 1772551802,
+      "md_path": "recent_work_report_20260303_073002.md",
+      "html_path": "recent_work_report_20260303_073002.html",
+      "pdf_path": "recent_work_report_20260303_073002.pdf",
+      "has_md": true,
+      "has_html": true,
+      "has_pdf": true,
+      "missing_artifacts": 0,
+      "freshness": "fresh",
+      "freshness_age_hours": 0.23,
+      "quality_score": 100,
+      "quality_tier": "excellent",
+      "quality_reasons": [
+        "complete"
+      ],
+      "run_duration_ms": 6167
+    },
+    {
+      "run_id": "20260303_000334",
+      "title": "WAFT Recent Work Report 20260303_000334",
+      "generated_at": "2026-03-03 00:03:34",
+      "run_ts": 1772525014,
+      "md_path": "recent_work_report_20260303_000334.md",
+      "html_path": "recent_work_report_20260303_000334.html",
+      "pdf_path": "recent_work_report_20260303_000334.pdf",
+      "has_md": true,
+      "has_html": true,
+      "has_pdf": true,
+      "missing_artifacts": 0,
+      "freshness": "fresh",
+      "freshness_age_hours": 7.67,
+      "quality_score": 100,
+      "quality_tier": "excellent",
+      "quality_reasons": [
+        "complete"
+      ],
+      "run_duration_ms": 4227
+    },
+    {
+      "run_id": "20260302_235814",
+      "title": "WAFT Recent Work Report 20260302_235814",
+      "generated_at": "2026-03-02 23:58:14",
+      "run_ts": 1772524694,
+      "md_path": "recent_work_report_20260302_235814.md",
+      "html_path": "recent_work_report_20260302_235814.html",
+      "pdf_path": "recent_work_report_20260302_235814.pdf",
+      "has_md": true,
+      "has_html": true,
+      "has_pdf": true,
+      "missing_artifacts": 0,
+      "freshness": "fresh",
+      "freshness_age_hours": 7.76,
+      "quality_score": 100,
+      "quality_tier": "excellent",
+      "quality_reasons": [
+        "complete"
+      ],
+      "run_duration_ms": 4369
+    },
+    {
+      "run_id": "20260302_235740",
+      "title": "WAFT Recent Work Report 20260302_235740",
+      "generated_at": "2026-03-02 23:57:40",
+      "run_ts": 1772524660,
+      "md_path": "recent_work_report_20260302_235740.md",
+      "html_path": "recent_work_report_20260302_235740.html",
+      "pdf_path": "recent_work_report_20260302_235740.pdf",
+      "has_md": true,
+      "has_html": true,
+      "has_pdf": true,
+      "missing_artifacts": 0,
+      "freshness": "fresh",
+      "freshness_age_hours": 7.77,
+      "quality_score": 100,
+      "quality_tier": "excellent",
+      "quality_reasons": [
+        "complete"
+      ],
+      "run_duration_ms": 2644
+    },
+    {
+      "run_id": "20260302_235441",
+      "title": "WAFT Recent Work Report 20260302_235441",
+      "generated_at": "2026-03-02 23:54:41",
+      "run_ts": 1772524481,
+      "md_path": "recent_work_report_20260302_235441.md",
+      "html_path": "recent_work_report_20260302_235441.html",
+      "pdf_path": "recent_work_report_20260302_235441.pdf",
+      "has_md": true,
+      "has_html": true,
+      "has_pdf": true,
+      "missing_artifacts": 0,
+      "freshness": "fresh",
+      "freshness_age_hours": 7.82,
+      "quality_score": 100,
+      "quality_tier": "excellent",
+      "quality_reasons": [
+        "complete"
+      ],
+      "run_duration_ms": 3594
+    },
+    {
+      "run_id": "20260302_235209",
+      "title": "WAFT Recent Work Report 20260302_235209",
+      "generated_at": "2026-03-02 23:52:09",
+      "run_ts": 1772524329,
+      "md_path": "recent_work_report_20260302_235209.md",
+      "html_path": "recent_work_report_20260302_235209.html",
+      "pdf_path": "recent_work_report_20260302_235209.pdf",
+      "has_md": true,
+      "has_html": true,
+      "has_pdf": true,
+      "missing_artifacts": 0,
+      "freshness": "fresh",
+      "freshness_age_hours": 7.86,
+      "quality_score": 100,
+      "quality_tier": "excellent",
+      "quality_reasons": [
+        "complete"
+      ],
+      "run_duration_ms": 3391
+    },
+    {
+      "run_id": "20260302_235047",
+      "title": "WAFT Recent Work Report 20260302_235047",
+      "generated_at": "2026-03-02 23:50:47",
+      "run_ts": 1772524247,
+      "md_path": "recent_work_report_20260302_235047.md",
+      "html_path": "recent_work_report_20260302_235047.html",
+      "pdf_path": "recent_work_report_20260302_235047.pdf",
+      "has_md": true,
+      "has_html": true,
+      "has_pdf": true,
+      "missing_artifacts": 0,
+      "freshness": "fresh",
+      "freshness_age_hours": 7.88,
+      "quality_score": 100,
+      "quality_tier": "excellent",
+      "quality_reasons": [
+        "complete"
+      ],
+      "run_duration_ms": 3042
+    },
+    {
+      "run_id": "20260302_234734",
+      "title": "WAFT Recent Work Report 20260302_234734",
+      "generated_at": "2026-03-02 23:47:34",
+      "run_ts": 1772524054,
+      "md_path": "recent_work_report_20260302_234734.md",
+      "html_path": "recent_work_report_20260302_234734.html",
+      "pdf_path": "recent_work_report_20260302_234734.pdf",
+      "has_md": true,
+      "has_html": true,
+      "has_pdf": true,
+      "missing_artifacts": 0,
+      "freshness": "fresh",
+      "freshness_age_hours": 7.94,
+      "quality_score": 100,
+      "quality_tier": "excellent",
+      "quality_reasons": [
+        "complete"
+      ],
+      "run_duration_ms": 5681
+    },
+    {
+      "run_id": "20260302_234449",
+      "title": "WAFT Recent Work Report 20260302_234449",
+      "generated_at": "2026-03-02 23:44:49",
+      "run_ts": 1772523889,
+      "md_path": "recent_work_report_20260302_234449.md",
+      "html_path": "recent_work_report_20260302_234449.html",
+      "pdf_path": "recent_work_report_20260302_234449.pdf",
+      "has_md": true,
+      "has_html": true,
+      "has_pdf": true,
+      "missing_artifacts": 0,
+      "freshness": "fresh",
+      "freshness_age_hours": 7.98,
+      "quality_score": 100,
+      "quality_tier": "excellent",
+      "quality_reasons": [
+        "complete"
+      ],
+      "run_duration_ms": 3753
+    },
+    {
+      "run_id": "20260302_234437",
+      "title": "WAFT Recent Work Report 20260302_234437",
+      "generated_at": "2026-03-02 23:44:37",
+      "run_ts": 1772523877,
+      "md_path": "recent_work_report_20260302_234437.md",
+      "html_path": "recent_work_report_20260302_234437.html",
+      "pdf_path": "recent_work_report_20260302_234437.pdf",
+      "has_md": true,
+      "has_html": true,
+      "has_pdf": true,
+      "missing_artifacts": 0,
+      "freshness": "fresh",
+      "freshness_age_hours": 7.98,
+      "quality_score": 100,
+      "quality_tier": "excellent",
+      "quality_reasons": [
+        "complete"
+      ],
+      "run_duration_ms": 3897
+    },
+    {
+      "run_id": "20260302_234249",
+      "title": "WAFT Recent Work Report 20260302_234249",
+      "generated_at": "2026-03-02 23:42:49",
+      "run_ts": 1772523769,
+      "md_path": "recent_work_report_20260302_234249.md",
+      "html_path": "recent_work_report_20260302_234249.html",
+      "pdf_path": "recent_work_report_20260302_234249.pdf",
+      "has_md": true,
+      "has_html": true,
+      "has_pdf": true,
+      "missing_artifacts": 0,
+      "freshness": "fresh",
+      "freshness_age_hours": 8.01,
+      "quality_score": 100,
+      "quality_tier": "excellent",
+      "quality_reasons": [
+        "complete"
+      ],
+      "run_duration_ms": 2560
+    },
+    {
+      "run_id": "20260302_234234",
+      "title": "WAFT Recent Work Report 20260302_234234",
+      "generated_at": "2026-03-02 23:42:34",
+      "run_ts": 1772523754,
+      "md_path": "recent_work_report_20260302_234234.md",
+      "html_path": "recent_work_report_20260302_234234.html",
+      "pdf_path": "recent_work_report_20260302_234234.pdf",
+      "has_md": true,
+      "has_html": true,
+      "has_pdf": true,
+      "missing_artifacts": 0,
+      "freshness": "fresh",
+      "freshness_age_hours": 8.02,
+      "quality_score": 100,
+      "quality_tier": "excellent",
+      "quality_reasons": [
+        "complete"
+      ],
+      "run_duration_ms": 4010
+    },
+    {
+      "run_id": "20260302_233032",
+      "title": "WAFT Recent Work Report 20260302_233032",
+      "generated_at": "2026-03-02 23:30:32",
+      "run_ts": 1772523032,
+      "md_path": "recent_work_report_20260302_233032.md",
+      "html_path": "recent_work_report_20260302_233032.html",
+      "pdf_path": "recent_work_report_20260302_233032.pdf",
+      "has_md": true,
+      "has_html": true,
+      "has_pdf": true,
+      "missing_artifacts": 0,
+      "freshness": "fresh",
+      "freshness_age_hours": 8.22,
+      "quality_score": 100,
+      "quality_tier": "excellent",
+      "quality_reasons": [
+        "complete"
+      ],
+      "run_duration_ms": 0
+    },
+    {
+      "run_id": "20260302_232947",
+      "title": "WAFT Recent Work Report 20260302_232947",
+      "generated_at": "2026-03-02 23:29:47",
+      "run_ts": 1772522987,
+      "md_path": "recent_work_report_20260302_232947.md",
+      "html_path": "recent_work_report_20260302_232947.html",
+      "pdf_path": "recent_work_report_20260302_232947.pdf",
+      "has_md": true,
+      "has_html": true,
+      "has_pdf": true,
+      "missing_artifacts": 0,
+      "freshness": "fresh",
+      "freshness_age_hours": 8.23,
+      "quality_score": 100,
+      "quality_tier": "excellent",
+      "quality_reasons": [
+        "complete"
+      ],
+      "run_duration_ms": 0
+    },
+    {
+      "run_id": "20260302_232934",
+      "title": "WAFT Recent Work Report 20260302_232934",
+      "generated_at": "2026-03-02 23:29:34",
+      "run_ts": 1772522974,
+      "md_path": "recent_work_report_20260302_232934.md",
+      "html_path": "recent_work_report_20260302_232934.html",
+      "pdf_path": "recent_work_report_20260302_232934.pdf",
+      "has_md": true,
+      "has_html": true,
+      "has_pdf": true,
+      "missing_artifacts": 0,
+      "freshness": "fresh",
+      "freshness_age_hours": 8.24,
+      "quality_score": 100,
+      "quality_tier": "excellent",
+      "quality_reasons": [
+        "complete"
+      ],
+      "run_duration_ms": 0
+    },
+    {
+      "run_id": "20260302_232058",
+      "title": "WAFT Recent Work Report 20260302_232058",
+      "generated_at": "2026-03-02 23:20:58",
+      "run_ts": 1772522458,
+      "md_path": "recent_work_report_20260302_232058.md",
+      "html_path": "recent_work_report_20260302_232058.html",
+      "pdf_path": "recent_work_report_20260302_232058.pdf",
+      "has_md": true,
+      "has_html": true,
+      "has_pdf": true,
+      "missing_artifacts": 0,
+      "freshness": "fresh",
+      "freshness_age_hours": 8.38,
+      "quality_score": 100,
+      "quality_tier": "excellent",
+      "quality_reasons": [
+        "complete"
+      ],
+      "run_duration_ms": 0
+    },
+    {
+      "run_id": "20260302_232009",
+      "title": "WAFT Recent Work Report 20260302_232009",
+      "generated_at": "2026-03-02 23:20:09",
+      "run_ts": 1772522409,
+      "md_path": "recent_work_report_20260302_232009.md",
+      "html_path": "recent_work_report_20260302_232009.html",
+      "pdf_path": "recent_work_report_20260302_232009.pdf",
+      "has_md": true,
+      "has_html": true,
+      "has_pdf": true,
+      "missing_artifacts": 0,
+      "freshness": "fresh",
+      "freshness_age_hours": 8.39,
+      "quality_score": 100,
+      "quality_tier": "excellent",
+      "quality_reasons": [
+        "complete"
+      ],
+      "run_duration_ms": 0
+    }
+  ]
+}

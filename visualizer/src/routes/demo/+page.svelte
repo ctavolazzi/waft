@@ -3,6 +3,8 @@
 	import Leaderboard from '$lib/components/Leaderboard.svelte';
 	import AgentProfileCard from '$lib/components/AgentProfileCard.svelte';
 	import FitnessDashboard from '$lib/components/FitnessDashboard.svelte';
+	export let params: Record<string, string> | undefined = undefined;
+	void params;
 
 	// Mock data for demonstration
 	const mockAgents = [

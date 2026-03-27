@@ -1,0 +1,35 @@
+{
+  "allow_ships": [
+    "trusted-scout-01",
+    "waft-internal-orchestrator"
+  ],
+  "deny_ships": [
+    "unknown-raider",
+    "unsigned-courier"
+  ],
+  "allow_hosts": [
+    "api.openai.com",
+    "api.anthropic.com",
+    "huggingface.co",
+    "picsum.photos",
+    "images.unsplash.com",
+    "trends.google.com"
+  ],
+  "deny_hosts": [
+    "localhost",
+    "169.254.169.254"
+  ],
+  "allow_ports": [443],
+  "deny_ports": [22, 25, 3389],
+  "allow_cargo": [
+    "json",
+    "text",
+    "embedding"
+  ],
+  "deny_cargo": [
+    "executable",
+    "binary-installer",
+    "shell-script"
+  ],
+  "allow_private_network": false
+}

@@ -33,8 +33,8 @@
 		return '#f03';
 	}
 
-	function asResourceType(type: string): ResourceType {
-		return type as ResourceType;
+	function resourceKey(key: string): ResourceType {
+		return key as ResourceType;
 	}
 </script>
 
@@ -50,7 +50,7 @@
 				<!-- Resource grid -->
 				<div class="resources-grid">
 					{#each Object.entries(village.resources) as [type, resource]}
-						{@const resourceType = asResourceType(type)}
+						{@const resourceType = resourceKey(type)}
 						{@const percentFull = (resource.amount / resource.capacity) * 100}
 						{@const statusColor = getStatusColor(resource.amount, resource.capacity)}
 

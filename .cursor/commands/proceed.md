@@ -1,5 +1,46 @@
 # Proceed
 
+Validate assumptions before taking the next action, then execute the highest-priority goal.
+
+## Usage
+
+```text
+/proceed
+/proceed <optional focus>
+```
+
+## Required flow
+
+1. **Assumptions extraction**
+   - Pull assumptions from current chat and current code context.
+   - Include user-intent assumptions, runtime assumptions, and dependency assumptions.
+
+2. **Evidence validation**
+   - Prove/disprove assumptions using concrete evidence (files, search, tests, logs).
+   - Categorize each as `PROVEN`, `DISPROVEN`, `PARTIAL`, or `INSUFFICIENT`.
+
+3. **Priority decision**
+   - Select the highest-priority goal based on validated assumptions.
+   - If a critical assumption is unresolved, resolve it before broader implementation.
+
+4. **Execution**
+   - Perform the work for that goal.
+
+5. **Verification**
+   - Run focused checks and return evidence-based results.
+
+## Output contract
+
+- `Assumptions Check` (table/list of assumptions + status + confidence + evidence)
+- `Decision` (highest-priority goal and why)
+- `Proceed` (actions taken + verification + remaining risks)
+
+## Notes
+
+- This command is the preflight safety gate for non-trivial tasks.
+- Keep it evidence-first and minimal-scope until critical assumptions are validated.
+# Proceed
+
 **Keep doing what you're doing, but verify context and assumptions first.**
 
 Pauses to check larger context, reflect on assumptions, ask clarifying questions, perform a "flight check", then proceeds with verified understanding. Ensures no unverified assumptions or unclear ambiguity before taking actions.

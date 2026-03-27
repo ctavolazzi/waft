@@ -11,6 +11,7 @@ and provides guidance based on what the system knows and doesn't know.
 from collections.abc import Callable
 from datetime import datetime
 from pathlib import Path
+import time
 from typing import Any
 
 from ..empirica import EmpiricaManager
@@ -94,6 +95,27 @@ class TheOracle:
 
         # Initialize journal and memory
         self.journal = OracleJournal(self.project_path)
+        # Cache project bootstrap context briefly to avoid repeated expensive calls
+        # during a single oracle invocation.
+        self._bootstrap_cache: dict[str, Any] | None = None
+        self._bootstrap_cache_time: float = 0.0
+
+    def _get_bootstrap_context(self, max_age_seconds: float = 2.5) -> dict[str, Any] | None:
+        """
+        Get project bootstrap context with short-lived caching.
+
+        Empirica bootstrap calls are expensive; oracle workflows call them multiple
+        times back-to-back. A small TTL keeps outputs fresh while preventing
+        command stalls that look like hangs.
+        """
+        now = time.monotonic()
+        if self._bootstrap_cache is not None and (now - self._bootstrap_cache_time) <= max_age_seconds:
+            return self._bootstrap_cache
+
+        context = self.empirica.project_bootstrap()
+        self._bootstrap_cache = context
+        self._bootstrap_cache_time = now
+        return context
 
     def _load_personality(
         self,
@@ -155,7 +177,7 @@ class TheOracle:
             Dictionary with epistemic state (vectors, findings, unknowns, goals)
         """
         # Empirica is guaranteed to be ready (enforced in __init__)
-        context = self.empirica.project_bootstrap()
+        context = self._get_bootstrap_context()
 
         # If no context yet (new project), return empty but valid structure
         if not context:
@@ -217,17 +239,34 @@ class TheOracle:
         """
         return self.empirica.log_unknown(unknown)
 
-    def check_gate(self, operation: dict[str, Any]) -> str | None:
+    def check_gate(
+        self,
+        operation: dict[str, Any],
+        session_id: str | None = None,
+        vectors: dict[str, Any] | None = None,
+        reasoning: str = "",
+        decision: str | None = None,
+    ) -> str | None:
         """
         Check if operation is safe to proceed using Empirica CHECK gate.
 
         Args:
             operation: Operation description dict
+            session_id: Optional Empirica session ID for canonical CHECK payload
+            vectors: Optional flat vector payload
+            reasoning: Optional CHECK reasoning text
+            decision: Optional decision hint (`proceed` / `investigate`)
 
         Returns:
             Gate result: PROCEED | HALT | BRANCH | REVISE | None if failed
         """
-        return self.empirica.check_submit(operation)
+        return self.empirica.check_submit(
+            operation=operation,
+            session_id=session_id,
+            vectors=vectors,
+            reasoning=reasoning,
+            decision=decision,
+        )
 
     def get_insights(self, limit: int = 10) -> list[dict[str, Any]]:
         """
@@ -239,7 +278,7 @@ class TheOracle:
         Returns:
             List of insight dictionaries
         """
-        context = self.empirica.project_bootstrap()
+        context = self._get_bootstrap_context()
         if not context:
             return []
 
@@ -258,7 +297,7 @@ class TheOracle:
         Returns:
             List of unknown dictionaries
         """
-        context = self.empirica.project_bootstrap()
+        context = self._get_bootstrap_context()
         if not context:
             return []
 
@@ -275,7 +314,7 @@ class TheOracle:
             Phase name: Data Gathering | Exploration | Synthesis | Evolution | Transition | UNKNOWN
             Or dict with phase and calculation if show_calculation=True
         """
-        context = self.empirica.project_bootstrap()
+        context = self._get_bootstrap_context()
         if not context:
             return "UNKNOWN"
 
@@ -284,29 +323,112 @@ class TheOracle:
         if not vectors:
             return "UNKNOWN"
 
-        foundation = vectors.get("foundation", {})
-        know = foundation.get("know", 0.0) if foundation else 0.0
-        uncertainty = vectors.get("uncertainty", 1.0)
+        know, uncertainty = self._extract_core_vectors(vectors)
+        return self._determine_phase(know, uncertainty)
 
-        # Validate ranges
+    def _extract_core_vectors(self, vectors: dict[str, Any]) -> tuple[float, float]:
+        """Extract know/uncertainty from either flat or nested vector payloads."""
+        foundation = vectors.get("foundation", {})
+        know = vectors.get("know")
+        if know is None:
+            know = foundation.get("know", 0.0) if isinstance(foundation, dict) else 0.0
+
+        uncertainty = vectors.get("uncertainty", 1.0)
+        try:
+            know_f = float(know)
+        except (TypeError, ValueError):
+            know_f = 0.0
+        try:
+            uncertainty_f = float(uncertainty)
+        except (TypeError, ValueError):
+            uncertainty_f = 1.0
+
+        return max(0.0, min(1.0, know_f)), max(0.0, min(1.0, uncertainty_f))
+
+    def _build_flat_vectors(
+        self,
+        vectors: dict[str, Any],
+        know: float,
+        uncertainty: float,
+        findings_count: int = 0,
+        unknowns_count: int = 0,
+    ) -> dict[str, float]:
+        """Build canonical flat 13-vector payload expected by current Empirica contracts."""
+        foundation = vectors.get("foundation", {})
+        comprehension = vectors.get("comprehension", {})
+        execution = vectors.get("execution", {})
+
+        context_v = vectors.get("context")
+        if context_v is None:
+            context_v = foundation.get("context", 0.6) if isinstance(foundation, dict) else 0.6
+        do_v = vectors.get("do")
+        if do_v is None:
+            do_v = foundation.get("do", 0.7) if isinstance(foundation, dict) else 0.7
+
+        clarity_v = vectors.get("clarity")
+        if clarity_v is None:
+            clarity_v = comprehension.get("clarity", 0.7) if isinstance(comprehension, dict) else 0.7
+        coherence_v = vectors.get("coherence")
+        if coherence_v is None:
+            coherence_v = (
+                comprehension.get("coherence", 0.7) if isinstance(comprehension, dict) else 0.7
+            )
+        signal_v = vectors.get("signal")
+        if signal_v is None:
+            signal_v = comprehension.get("signal", 0.65) if isinstance(comprehension, dict) else 0.65
+        density_v = vectors.get("density")
+        if density_v is None:
+            density_v = (
+                comprehension.get("density", 0.6) if isinstance(comprehension, dict) else 0.6
+            )
+
+        state_v = vectors.get("state")
+        if state_v is None:
+            state_v = execution.get("state", 0.6) if isinstance(execution, dict) else 0.6
+        change_v = vectors.get("change")
+        if change_v is None:
+            change_v = execution.get("change", 0.4) if isinstance(execution, dict) else 0.4
+        completion_v = vectors.get("completion")
+        if completion_v is None:
+            completion_v = (
+                execution.get("completion", 0.2) if isinstance(execution, dict) else 0.2
+            )
+        impact_v = vectors.get("impact")
+        if impact_v is None:
+            impact_v = execution.get("impact", 0.6) if isinstance(execution, dict) else 0.6
+
+        engagement = vectors.get("engagement", 0.85 if findings_count else 0.75)
+
+        return {
+            "engagement": float(max(0.0, min(1.0, engagement))),
+            "know": float(max(0.0, min(1.0, know))),
+            "do": float(max(0.0, min(1.0, do_v))),
+            "context": float(max(0.0, min(1.0, context_v))),
+            "clarity": float(max(0.0, min(1.0, clarity_v))),
+            "coherence": float(max(0.0, min(1.0, coherence_v))),
+            "signal": float(max(0.0, min(1.0, signal_v))),
+            "density": float(max(0.0, min(1.0, density_v))),
+            "state": float(max(0.0, min(1.0, state_v))),
+            "change": float(max(0.0, min(1.0, change_v))),
+            "completion": float(max(0.0, min(1.0, completion_v))),
+            "impact": float(max(0.0, min(1.0, impact_v))),
+            "uncertainty": float(max(0.0, min(1.0, uncertainty))),
+        }
+
+    def _determine_phase(self, know: float, uncertainty: float) -> str:
+        """Determine epistemic phase from know/uncertainty values."""
         know = max(0.0, min(1.0, know))
         uncertainty = max(0.0, min(1.0, uncertainty))
 
-        # Determine phase
         if know < 0.3 and uncertainty > 0.5:
-            phase = "Data Gathering"
-            reason = f"know({know:.2f}) < 0.3 AND uncertainty({uncertainty:.2f}) > 0.5"
-        elif know < 0.6 and uncertainty > 0.3:
-            phase = "Exploration"
-            reason = f"know({know:.2f}) < 0.6 AND uncertainty({uncertainty:.2f}) > 0.3"
-        elif know > 0.6 and uncertainty < 0.3:
-            phase = "Synthesis"
-            reason = f"know({know:.2f}) > 0.6 AND uncertainty({uncertainty:.2f}) < 0.3"
-        elif know > 0.8 and uncertainty < 0.2:
-            phase = "Evolution"
-            reason = f"know({know:.2f}) > 0.8 AND uncertainty({uncertainty:.2f}) < 0.2"
-        else:
-            return "Transition"
+            return "Data Gathering"
+        if know < 0.6 and uncertainty > 0.3:
+            return "Exploration"
+        if know > 0.8 and uncertainty < 0.2:
+            return "Evolution"
+        if know > 0.6 and uncertainty < 0.3:
+            return "Synthesis"
+        return "Transition"
 
     def provide_guidance(
         self,
@@ -328,6 +450,17 @@ class TheOracle:
         Returns:
             Dictionary with guidance, insights, and recommendations
         """
+        # Get current epistemic state once and reuse throughout this call.
+        state = self.get_epistemic_state()
+        epistemic_state = state.get("epistemic_state", {})
+        vectors = epistemic_state.get("vectors", {})
+        know, uncertainty = self._extract_core_vectors(vectors)
+        phase = self._determine_phase(know, uncertainty)
+        findings = state.get("findings", []) or []
+        unknowns = state.get("unknowns", []) or []
+        findings = findings[-5:] if len(findings) > 5 else findings
+        unknowns = unknowns[-5:] if len(unknowns) > 5 else unknowns
+
         # STEP 1: PREFLIGHT - Assess current epistemic state
         if show_thinking and thinking_callback:
             thinking_callback(
@@ -337,7 +470,12 @@ class TheOracle:
                     "thinking": "Retrieving current epistemic vectors from Empirica...",
                 },
             )
-        preflight_result = self._empirica_preflight(question)
+        preflight_result = self._empirica_preflight(
+            question,
+            vectors=vectors if isinstance(vectors, dict) else {},
+            know=know,
+            uncertainty=uncertainty,
+        )
 
         # STEP 2: INVESTIGATE - Reduce uncertainty by reviewing past experiences
         # This is where reflection happens - reviewing memory and patterns
@@ -371,20 +509,7 @@ class TheOracle:
             except Exception:
                 pass  # Continue even if checkpoint logging fails
 
-        # Get current epistemic state
-        state = self.get_epistemic_state()
-        phase = self.get_epistemic_phase()
-
-        # Get relevant findings and unknowns
-        findings = self.get_insights(limit=5)
-        unknowns = self.get_unknowns(limit=5)
-
-        # Calculate knowledge coverage
-        epistemic_state = state.get("epistemic_state", {})
-        vectors = epistemic_state.get("vectors", {})
-        foundation = vectors.get("foundation", {})
-        know = foundation.get("know", 0.0) if foundation else 0.0
-        uncertainty = vectors.get("uncertainty", 1.0)
+        # Calculate knowledge coverage from reused state
         coverage = know * (1.0 - uncertainty) if know > 0 else 0.0
 
         # STEP 3: CHECK - Decision gate based on findings and unknowns
@@ -491,26 +616,33 @@ class TheOracle:
 
         return storage_info
 
-    def _empirica_preflight(self, question: str) -> dict[str, Any]:
+    def _empirica_preflight(
+        self,
+        question: str,
+        vectors: dict[str, Any] | None = None,
+        know: float | None = None,
+        uncertainty: float | None = None,
+    ) -> dict[str, Any]:
         """
         STEP 1: PREFLIGHT - Assess current epistemic state.
 
         Returns:
             Preflight result with KNOW, UNCERTAINTY, and INVESTIGATE_REQUIRED flag
         """
-        state = self.get_epistemic_state()
-        epistemic_state = state.get("epistemic_state", {})
-        vectors = epistemic_state.get("vectors", {})
-        foundation = vectors.get("foundation", {})
-        know = foundation.get("know", 0.0) if foundation else 0.0
-        uncertainty = vectors.get("uncertainty", 1.0)
+        if vectors is None or know is None or uncertainty is None:
+            state = self.get_epistemic_state()
+            epistemic_state = state.get("epistemic_state", {})
+            vectors = epistemic_state.get("vectors", {})
+            know, uncertainty = self._extract_core_vectors(vectors)
 
         # Determine if investigation is required
         investigate_required = uncertainty > 0.5 or know < 0.3
+        flat_vectors = self._build_flat_vectors(vectors or {}, know, uncertainty)
 
         result = {
             "know": know,
             "uncertainty": uncertainty,
+            "vectors": flat_vectors,
             "investigate_required": investigate_required,
             "know_level": "Low" if know < 0.3 else "Medium" if know < 0.7 else "High",
             "uncertainty_level": "High"
@@ -523,17 +655,11 @@ class TheOracle:
         # Submit to Empirica if session ID available
         if self._session_id:
             try:
-                vectors_data = {
-                    "engagement": 0.8,
-                    "foundation": foundation,
-                    "uncertainty": uncertainty,
-                }
-
                 # Use Python API if available (provides 13-vector assessment)
                 if self.empirica.api_available:
                     assessment = self.empirica.api_manager.assess_vectors(
                         session_id=self._session_id,
-                        vectors=vectors_data,
+                        vectors=flat_vectors,
                         reasoning=f"Oracle consultation: {question[:100]}",
                     )
                     if assessment:
@@ -543,7 +669,7 @@ class TheOracle:
                     # Fall back to CLI
                     self.empirica.submit_preflight(
                         self._session_id,
-                        vectors_data,
+                        flat_vectors,
                         reasoning=f"Oracle consultation: {question[:100]}",
                     )
             except Exception:
@@ -568,9 +694,9 @@ class TheOracle:
         findings_count = len(findings)
         unknowns_count = len(unknowns)
 
-        # Confidence increases with findings, decreases with unknowns and uncertainty
-        base_confidence = min(1.0, findings_count * 0.1)
-        confidence = base_confidence * (1.0 - uncertainty)
+        # Confidence is primarily grounded in uncertainty, with mild evidence-ratio adjustment.
+        evidence_ratio = (findings_count + 1) / (findings_count + unknowns_count + 1)
+        confidence = max(0.0, min(1.0, ((1.0 - uncertainty) * 0.7) + (evidence_ratio * 0.3)))
 
         # Decision logic
         decision_reasoning = []  # Initialize reasoning list
@@ -605,15 +731,31 @@ class TheOracle:
 
         # Submit CHECK gate to Empirica
         try:
+            state = self.get_epistemic_state()
+            epistemic_state = state.get("epistemic_state", {})
+            state_vectors = epistemic_state.get("vectors", {})
+            know, _ = self._extract_core_vectors(state_vectors if isinstance(state_vectors, dict) else {})
+            check_vectors = self._build_flat_vectors(
+                state_vectors if isinstance(state_vectors, dict) else {},
+                know=know,
+                uncertainty=uncertainty,
+                findings_count=findings_count,
+                unknowns_count=unknowns_count,
+            )
+            check_decision_hint = "proceed" if confidence >= 0.6 else "investigate"
             gate_result = self.check_gate(
                 {
                     "type": "oracle_guidance",
                     "description": f"Oracle guidance request: {question[:100]}",
                     "scope": "medium",
-                }
+                },
+                session_id=self._session_id,
+                vectors=check_vectors,
+                reasoning=f"Oracle CHECK for: {question[:120]}",
+                decision=check_decision_hint,
             )
             if gate_result:
-                result["decision"] = gate_result
+                result["decision"] = str(gate_result).upper()
 
                 # Log CHECK checkpoint with atomic triple-write if API available
                 if self.empirica.api_available and self._session_id:
@@ -644,23 +786,38 @@ class TheOracle:
         Returns:
             Postflight result with DELTA (knowledge change) and UNCERTAINTY change
         """
-        # Calculate deltas (simplified - in real Empirica, this compares preflight vs postflight vectors)
-        # For now, we track that guidance was provided
-        postflight_vectors = {
-            "engagement": 0.9,  # Increased engagement after providing guidance
-            "foundation": {
-                "know": response.get("know", 0.0),
-                "do": 0.8,  # Oracle can provide guidance
-                "context": 0.7,
-            },
-            "uncertainty": response.get("uncertainty", 0.5),
-        }
+        pre_know = float(preflight.get("know", 0.0))
+        pre_uncertainty = float(preflight.get("uncertainty", 1.0))
+        decision = str(check.get("decision", "REVISE")).upper()
+        findings_count = len(response.get("findings", []) or [])
+        unknowns_count = len(response.get("unknowns", []) or [])
 
-        # Calculate deltas (simplified - would compare with preflight vectors in full implementation)
-        know_delta = 0.0  # Would be: postflight_vectors["foundation"]["know"] - preflight["know"]
-        uncertainty_delta = (
-            0.0  # Would be: postflight_vectors["uncertainty"] - preflight["uncertainty"]
+        if decision == "PROCEED":
+            know_gain, uncertainty_drop = 0.12, 0.08
+        elif decision in {"INVESTIGATE", "BRANCH"}:
+            know_gain, uncertainty_drop = 0.06, 0.03
+        elif decision == "REVISE":
+            know_gain, uncertainty_drop = 0.04, 0.02
+        else:  # HALT or unknown
+            know_gain, uncertainty_drop = 0.0, -0.03
+
+        know_gain += min(0.08, findings_count * 0.01)
+        uncertainty_drop += min(0.05, unknowns_count * 0.005)
+
+        post_know = max(0.0, min(1.0, pre_know + know_gain))
+        post_uncertainty = max(0.0, min(1.0, pre_uncertainty - uncertainty_drop))
+
+        current_vectors = response.get("epistemic_state", {}).get("vectors", {})
+        postflight_vectors = self._build_flat_vectors(
+            current_vectors if isinstance(current_vectors, dict) else {},
+            know=post_know,
+            uncertainty=post_uncertainty,
+            findings_count=findings_count,
+            unknowns_count=unknowns_count,
         )
+
+        know_delta = post_know - pre_know
+        uncertainty_delta = post_uncertainty - pre_uncertainty
 
         result = {
             "knowledge_delta": know_delta,
@@ -672,34 +829,11 @@ class TheOracle:
         # Submit to Empirica if session ID available
         if self._session_id:
             try:
-                # Use Python API if available (atomic triple-write)
-                if self.empirica.api_available:
-                    # Update beliefs with postflight evidence
-                    evidence = {
-                        "vectors": postflight_vectors,
-                        "reasoning": f"Oracle guidance provided: {response.get('question', '')[:100]}",
-                        "phase": "POSTFLIGHT",
-                    }
-                    updated = self.empirica.api_manager.update_beliefs(
-                        session_id=self._session_id, evidence=evidence
-                    )
-                    if updated:
-                        # Log checkpoint with atomic triple-write
-                        self.empirica.api_manager.log_checkpoint(
-                            session_id=self._session_id,
-                            phase="POSTFLIGHT",
-                            data={
-                                "vectors": postflight_vectors,
-                                "reasoning": evidence["reasoning"],
-                            },
-                        )
-                else:
-                    # Fall back to CLI (CLI also performs triple-write via Empirica)
-                    self.empirica.submit_postflight(
-                        self._session_id,
-                        postflight_vectors,
-                        reasoning=f"Oracle guidance provided: {response.get('question', '')[:100]}",
-                    )
+                self.empirica.submit_postflight(
+                    self._session_id,
+                    postflight_vectors,
+                    reasoning=f"Oracle guidance provided: {response.get('question', '')[:100]}",
+                )
             except Exception:
                 pass  # Continue even if postflight submission fails
 
@@ -760,6 +894,10 @@ class TheOracle:
             base = f"[HALT] {base} This requires human approval due to high uncertainty or insufficient knowledge."
         elif check_decision == "BRANCH":
             base = f"[BRANCH] {base} Investigation needed first - {len(unknowns)} unknowns should be addressed."
+        elif check_decision == "INVESTIGATE":
+            base = (
+                f"[INVESTIGATE] {base} Continue noetic work before acting; evidence is still incomplete."
+            )
         elif check_decision == "REVISE":
             base = f"[REVISE] {base} Approach needs refinement based on current epistemic state."
         elif check_decision == "PROCEED":

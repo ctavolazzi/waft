@@ -11,6 +11,8 @@
 	import PyriteCard from '$lib/components/cards/PyriteCard.svelte';
 	import GymCard from '$lib/components/cards/GymCard.svelte';
 	import BobCard from '$lib/components/cards/BobCard.svelte';
+	export let params: Record<string, string> | undefined = undefined;
+	void params;
 
 	let loading = true;
 	let error: string | null = null;

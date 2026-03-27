@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "empirica-epistemic": {
+      "command": "/Users/ctavolazzi/.local/bin/empirica-mcp",
+      "args": [
+        "--workspace",
+        "/Users/ctavolazzi/Code/active/waft"
+      ],
+      "env": {
+        "EMPIRICA_EPISTEMIC_MODE": "true",
+        "EMPIRICA_PERSONALITY": "balanced_architect",
+        "EMPIRICA_INSTANCE_ID": "waft-bot"
+      }
+    }
+  }
+}

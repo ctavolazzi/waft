@@ -1,0 +1,1198 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WAFT Sitrep Hub</title>
+  <style>
+    :root {
+      --bg: #f5f0e6;
+      --paper: #faf8f3;
+      --ink: #3a312b;
+      --muted: #7a6b5d;
+      --line: #d4c4a8;
+      --accent: #e07b3c;
+      --dark: #4a2c2a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 28px;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      line-height: 1.55;
+    }
+    .wrap {
+      max-width: 1040px;
+      margin: 0 auto;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 6px 6px 0 var(--dark);
+      overflow: hidden;
+    }
+    h1, h2, h3 { color: var(--dark); margin: 0 0 10px; }
+    .muted { color: var(--muted); margin-bottom: 16px; }
+    .ticker {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 8px 0;
+      margin: 8px 0 14px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .ticker-track {
+      display: inline-block;
+      padding-left: 100%;
+      color: var(--muted);
+      font-size: 0.88rem;
+      animation: ticker-scroll 28s linear infinite;
+      will-change: transform;
+    }
+    .hero {
+      border: 1px solid var(--line);
+      border-left: 6px solid var(--accent);
+      border-radius: 10px;
+      padding: 16px;
+      margin: 16px 0 26px;
+      background: #fff7ec;
+    }
+    .links a {
+      display: inline-block;
+      margin-right: 10px;
+      margin-bottom: 8px;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--dark);
+      text-decoration: none;
+      background: #fff;
+    }
+    .archive {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 12px;
+    }
+    .archive-card {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px;
+      background: #fff;
+      overflow: hidden;
+    }
+    .meta {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+      margin: 12px 0;
+    }
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px;
+      background: #fff;
+      overflow: hidden;
+      min-width: 0;
+    }
+    .kpi {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-top: 4px;
+    }
+    .kpi-big {
+      font-size: 1.8rem;
+      line-height: 1.1;
+      font-weight: 800;
+      color: var(--dark);
+      margin-top: 4px;
+    }
+    .status-dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: #0d9488;
+      margin-right: 8px;
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+    .status-attention .status-dot {
+      background: #c2410c;
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 8px 0;
+    }
+    .chip {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      padding: 2px 8px;
+      font-size: 0.8rem;
+      color: var(--dark);
+    }
+    .warning {
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      padding: 8px 10px;
+      margin: 6px 0;
+      background: #fff;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .resource-alert {
+      border: 2px solid var(--line);
+      border-left: 8px solid #d97706;
+      border-radius: 10px;
+      background: #fff7ec;
+      padding: 10px 12px;
+      margin: 10px 0 16px;
+    }
+    .resource-alert.critical {
+      border-left-color: #c2410c;
+      background: #fff2f0;
+    }
+    .resource-alert.warning {
+      border-left-color: #d97706;
+      background: #fff9eb;
+    }
+    .resource-alert.ok {
+      border-left-color: #0d9488;
+      background: #f1fbf9;
+    }
+    .resource-alert-title {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+    .resource-alert-body {
+      color: var(--dark);
+      font-weight: 700;
+      font-size: 1rem;
+    }
+    .resource-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .resource-stat {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px;
+      background: #fff;
+    }
+    .resource-label {
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+    .resource-value {
+      color: var(--dark);
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 8px;
+      margin: 8px 0 14px;
+    }
+    input, select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 10px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+    }
+    .result-meta {
+      color: var(--muted);
+      margin: 0 0 10px;
+      font-size: 0.9rem;
+    }
+    .empty {
+      display: none;
+      border: 1px dashed var(--line);
+      border-radius: 10px;
+      padding: 16px;
+      color: var(--muted);
+      background: #fff;
+    }
+    .charts {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 10px;
+      margin: 8px 0 20px;
+    }
+    .charts svg {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+    }
+    .anim-line {
+      stroke-dasharray: 500;
+      stroke-dashoffset: 500;
+      animation: draw-line 1.2s ease-out forwards;
+    }
+    .anim-bar {
+      transform-origin: left center;
+      animation: grow-bar 0.5s ease-out both;
+    }
+    .chart-title {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .explorer-group {
+      border-top: 1px dashed var(--line);
+      margin-top: 8px;
+      padding-top: 8px;
+    }
+    .explorer-row {
+      font-size: 0.9rem;
+      color: var(--ink);
+      margin: 4px 0;
+      overflow-wrap: anywhere;
+    }
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace;
+    }
+    .hint {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    .toast-layer {
+      position: sticky;
+      top: 8px;
+      z-index: 30;
+      display: flex;
+      justify-content: flex-end;
+      pointer-events: none;
+      min-height: 0;
+    }
+    .toast {
+      max-width: 340px;
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--accent);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 8px;
+      padding: 8px 10px;
+      box-shadow: 4px 4px 0 var(--dark);
+      font-size: 0.84rem;
+      opacity: 0;
+      transform: translateY(-6px);
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .nugget {
+      border: 1px solid var(--line);
+      border-left: 6px solid var(--accent);
+      border-radius: 10px;
+      background: #fff7ec;
+      padding: 12px;
+      margin: 0 0 14px;
+    }
+    .nugget-title {
+      font-size: 0.78rem;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+    .nugget-body {
+      margin-top: 4px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--dark);
+    }
+    .cone {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      padding: 10px 12px;
+      margin: 8px 0 20px;
+    }
+    .cone-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 6px 0;
+    }
+    .cone-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 5px 10px;
+      color: var(--dark);
+      text-decoration: none;
+      background: #fff;
+      font-size: 0.84rem;
+    }
+    .cone-level {
+      font-size: 0.76rem;
+      color: var(--muted);
+      margin-right: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .prompt-lab {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      padding: 12px;
+      margin-top: 10px;
+    }
+    .prompt-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 8px;
+    }
+    textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 10px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+      min-height: 90px;
+      resize: vertical;
+    }
+    .btn {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 10px;
+      background: #fff;
+      color: var(--dark);
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      font: inherit;
+    }
+    .btn:hover {
+      border-color: var(--accent);
+    }
+    .hidden {
+      display: none !important;
+    }
+    .low-power * {
+      animation: none !important;
+      transition: none !important;
+      scroll-behavior: auto !important;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.55; transform: scale(0.92); }
+    }
+    @keyframes draw-line {
+      from { stroke-dashoffset: 500; }
+      to { stroke-dashoffset: 0; }
+    }
+    @keyframes grow-bar {
+      from { transform: scaleX(0); }
+      to { transform: scaleX(1); }
+    }
+    @keyframes ticker-scroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-100%); }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>WAFT Sitrep Hub</h1>
+    <div class="muted">Generated 2026-03-03 07:43:42 . This hub highlights the current report and archives prior runs.</div>
+    <div class="nugget">
+      <div class="nugget-title">Golden Nugget</div>
+      <div class="nugget-body">Status is READY: freshest run is 1m ago, quality is 100/100 (excellent), and archive drift is 0 indexed-only / 0 disk-only.</div>
+    </div>
+    <div class="cone">
+      <div class="cone-row"><span class="cone-level">Top text</span><a class="cone-chip" href="#current-sitrep">State snapshot</a><a class="cone-chip" href="#trends">Trend pulse</a></div>
+      <div class="cone-row"><span class="cone-level">Evidence</span><a class="cone-chip" href="#archive">Run archive</a><a class="cone-chip" href="#explorer">Explorer</a><a class="cone-chip" href="#health">Health</a></div>
+      <div class="cone-row"><span class="cone-level">Rabbit holes</span><a class="cone-chip" href="#prompt-lab">404 prompt configurator</a></div>
+    </div>
+    <div class="ticker"><div class="ticker-track">Status: ready  •  Freshness: fresh (1m ago)  •  Quality: 100 (excellent)  •  Trend: flat (+0)  •  Runs 24h/7d/30d: 21/21/21  •  Artifact health: 10/10 complete  •  Drift indexed-only/disk-only: 0/0</div></div>
+    <div id="resourceAlert" class="resource-alert ok">
+      <div class="resource-alert-title">System Resource Monitor</div>
+      <div id="resourceAlertBody" class="resource-alert-body">Initializing adaptive monitor...</div>
+      <div id="resourceFlags" class="hint"></div>
+      <div class="resource-grid">
+        <div class="resource-stat"><div class="resource-label">Status</div><div id="resourceStatus" class="resource-value">OK</div></div>
+        <div class="resource-stat"><div class="resource-label">Event Loop Lag</div><div id="resourceLag" class="resource-value">--</div></div>
+        <div class="resource-stat"><div class="resource-label">Long Tasks / min</div><div id="resourceLongTasks" class="resource-value">--</div></div>
+        <div class="resource-stat"><div class="resource-label">Heap Usage</div><div id="resourceHeap" class="resource-value">n/a</div></div>
+        <div class="resource-stat"><div class="resource-label">Queue Depth</div><div id="resourceQueue" class="resource-value">0</div></div>
+      </div>
+    </div>
+    <div class="toast-layer"><div id="toast" class="toast"></div></div>
+    <div class="hero" id="current-sitrep">
+      <h2>Current Sitrep</h2>
+      <div class="meta">Run ID: 20260303_074342 | Generated: 2026-03-03 07:43:42</div>
+      <div class="links"><a href='recent_work_report_20260303_074342.html'>Current HTML</a><a href='recent_work_report_20260303_074342.pdf'>Current PDF</a><a href='recent_work_report_20260303_074342.md'>Source MD</a></div>
+      <div class="grid">
+        <div class="card ">
+          <div class="hint">Overall status</div>
+          <div class="kpi-big"><span class="status-dot"></span>ready</div>
+          <div class="meta">Stable archive and complete artifacts.</div>
+        </div>
+        <div class="card">
+          <div class="hint">Recency and cadence</div>
+          <div class="kpi">1m ago</div>
+          <div class="meta">Freshness: fresh | Runs (24h): 21</div>
+        </div>
+        <div class="card">
+          <div class="hint">Quality trend</div>
+          <div class="kpi">100 (excellent)</div>
+          <div class="meta">Trend: flat (+0) vs 20260303_073534</div>
+        </div>
+        <div class="card">
+          <div class="hint">Artifact health (last 10 runs)</div>
+          <div class="kpi">10/10 complete</div>
+          <div class="meta">Total missing artifacts: 0</div>
+        </div>
+      </div>
+      <div class="grid">
+        <div class="card">
+          <div class="hint">Current quality detail</div>
+          <div class="kpi">100 / 100</div>
+          <div class="meta">Tier: excellent</div>
+          <div class="hint">Reason tags: complete</div>
+        </div>
+        <div class="card">
+          <div class="hint">New runs since prior execution</div>
+          <div class="kpi">1</div>
+          <div class="meta">Compared to run: 20260303_073534</div>
+        </div>
+        <div class="card">
+          <div class="hint">Missing artifact delta</div>
+          <div class="kpi">+0</div>
+        </div>
+        <div class="card">
+          <div class="hint">Quality trend</div>
+          <div class="kpi">flat</div>
+          <div class="meta">Score delta: +0</div>
+        </div>
+      </div>
+      <div class="warning">Latest-run lock: <span class="mono">20260303_074342</span></div>
+      <div class='warning'>No index/filesystem drift detected</div>
+    </div>
+    <h2 id="trends">Trends</h2>
+    <div class="grid">
+      <div class="card"><div class="hint">Runs in 24h</div><div class="kpi">21</div></div>
+      <div class="card"><div class="hint">Runs in 7d</div><div class="kpi">21</div></div>
+      <div class="card"><div class="hint">Runs in 30d</div><div class="kpi">21</div></div>
+    </div>
+    <div class="charts">
+      <div class="card"><div class="chart-title">Freshness timeline</div><svg width='100%' height='90' viewBox='0 0 360 90' preserveAspectRatio='xMidYMid meet' aria-label='Freshness timeline'><rect class='anim-bar' style='animation-delay:0.00s' x='10' y='14' width='26' height='62' fill='#0d9488' opacity='0.85' /><rect class='anim-bar' style='animation-delay:0.05s' x='38' y='14' width='26' height='62' fill='#0d9488' opacity='0.85' /><rect class='anim-bar' style='animation-delay:0.10s' x='66' y='14' width='26' height='62' fill='#0d9488' opacity='0.85' /><rect class='anim-bar' style='animation-delay:0.15s' x='94' y='14' width='26' height='62' fill='#0d9488' opacity='0.85' /><rect class='anim-bar' style='animation-delay:0.20s' x='122' y='14' width='26' height='62' fill='#0d9488' opacity='0.85' /><rect class='anim-bar' style='animation-delay:0.25s' x='150' y='14' width='26' height='62' fill='#0d9488' opacity='0.85' /><rect class='anim-bar' style='animation-delay:0.30s' x='178' y='14' width='26' height='62' fill='#0d9488' opacity='0.85' /><rect class='anim-bar' style='animation-delay:0.35s' x='206' y='14' width='26' height='62' fill='#0d9488' opacity='0.85' /><rect class='anim-bar' style='animation-delay:0.40s' x='234' y='14' width='26' height='62' fill='#0d9488' opacity='0.85' /><rect class='anim-bar' style='animation-delay:0.45s' x='262' y='14' width='26' height='62' fill='#0d9488' opacity='0.85' /><rect class='anim-bar' style='animation-delay:0.50s' x='290' y='14' width='26' height='62' fill='#0d9488' opacity='0.85' /><rect class='anim-bar' style='animation-delay:0.55s' x='318' y='14' width='26' height='62' fill='#0d9488' opacity='0.85' /></svg></div>
+      <div class="card"><div class="chart-title">Quality trend (recent runs)</div><svg width='100%' height='90' viewBox='0 0 360 90' preserveAspectRatio='xMidYMid meet' aria-label='Quality trend'><rect x='0' y='0' width='360' height='90' fill='none' /><polyline class='anim-line' points='10.0,10.0 40.9,10.0 71.8,10.0 102.7,10.0 133.6,10.0 164.5,10.0 195.5,10.0 226.4,10.0 257.3,10.0 288.2,10.0 319.1,10.0 350.0,10.0' fill='none' stroke='#4a2c2a' stroke-width='2' /></svg></div>
+      <div class="card"><div class="chart-title">Artifact completeness</div><svg width='100%' height='90' viewBox='0 0 360 90' preserveAspectRatio='xMidYMid meet' aria-label='Artifact completeness'><text x='4' y='13' font-size='8'>074342</text><rect class='anim-bar' style='animation-delay:0.00s' x='66' y='6' width='290' height='6' fill='#e07b3c' /><text x='4' y='22' font-size='8'>073534</text><rect class='anim-bar' style='animation-delay:0.05s' x='66' y='15' width='290' height='6' fill='#e07b3c' /><text x='4' y='31' font-size='8'>073315</text><rect class='anim-bar' style='animation-delay:0.10s' x='66' y='24' width='290' height='6' fill='#e07b3c' /><text x='4' y='40' font-size='8'>073135</text><rect class='anim-bar' style='animation-delay:0.15s' x='66' y='33' width='290' height='6' fill='#e07b3c' /><text x='4' y='49' font-size='8'>073002</text><rect class='anim-bar' style='animation-delay:0.20s' x='66' y='42' width='290' height='6' fill='#e07b3c' /><text x='4' y='58' font-size='8'>000334</text><rect class='anim-bar' style='animation-delay:0.25s' x='66' y='51' width='290' height='6' fill='#e07b3c' /><text x='4' y='67' font-size='8'>235814</text><rect class='anim-bar' style='animation-delay:0.30s' x='66' y='60' width='290' height='6' fill='#e07b3c' /><text x='4' y='76' font-size='8'>235740</text><rect class='anim-bar' style='animation-delay:0.35s' x='66' y='69' width='290' height='6' fill='#e07b3c' /></svg></div>
+    </div>
+    <h2 id="archive">Archive</h2>
+    <div class="hint">Search/filter/sort are local and file-safe; no external dependencies.</div>
+    <div class="warning">Rendered runs: 21 / 21 total.</div>
+    
+    <div class="controls">
+      <input id="search" type="text" placeholder="Search run id, title, date, path keywords" />
+      <select id="qualityFilter">
+        <option value="all">Quality: all</option>
+        <option value="excellent">excellent</option>
+        <option value="good">good</option>
+        <option value="fair">fair</option>
+        <option value="poor">poor</option>
+      </select>
+      <select id="dateFilter">
+        <option value="all">Date: all</option>
+        <option value="24h">Last 24h</option>
+        <option value="7d">Last 7d</option>
+        <option value="30d">Last 30d</option>
+      </select>
+      <select id="artifactFilter">
+        <option value="all">Artifacts: all</option>
+        <option value="complete">Complete (HTML+PDF+MD)</option>
+        <option value="incomplete">Incomplete</option>
+      </select>
+      <select id="sortMode">
+        <option value="newest">Sort: newest</option>
+        <option value="quality">Sort: quality high→low</option>
+        <option value="stale">Sort: stale first</option>
+      </select>
+    </div>
+    <div class="cone-row" style="margin-top:4px; margin-bottom:10px;">
+      <button id="loadMoreBtn" class="btn" type="button">Load more</button>
+      <button id="showAllBtn" class="btn" type="button">Show all (may be heavy)</button>
+      <span id="loadMeta" class="hint"></span>
+    </div>
+    <div id="resultMeta" class="result-meta"></div>
+    <div class="archive">
+      <div class='archive-card' data-run-id='20260303_074342' data-title='WAFT Recent Work Report 20260303_074342' data-generated='2026-03-03 07:43:42' data-run-ts='1772552622' data-quality-tier='excellent' data-quality-score='100' data-freshness='fresh' data-missing='0' data-completeness='100'><h3>WAFT Recent Work Report 20260303_074342</h3><div class='meta'>Run ID: 20260303_074342 | Generated: 2026-03-03 07:43:42</div><div class='chips'><span class='chip'>Freshness: fresh</span><span class='chip'>Quality: 100 (excellent)</span><span class='chip'>Missing: 0</span></div><div class='meta'>Quality reasons: complete</div><div class='links'><a href='recent_work_report_20260303_074342.html'>Open HTML</a><a href='recent_work_report_20260303_074342.pdf'>Open PDF</a><a href='recent_work_report_20260303_074342.md'>Source MD</a></div></div>
+<div class='archive-card' data-run-id='20260303_073534' data-title='WAFT Recent Work Report 20260303_073534' data-generated='2026-03-03 07:35:34' data-run-ts='1772552134' data-quality-tier='excellent' data-quality-score='100' data-freshness='fresh' data-missing='0' data-completeness='100'><h3>WAFT Recent Work Report 20260303_073534</h3><div class='meta'>Run ID: 20260303_073534 | Generated: 2026-03-03 07:35:34</div><div class='chips'><span class='chip'>Freshness: fresh</span><span class='chip'>Quality: 100 (excellent)</span><span class='chip'>Missing: 0</span></div><div class='meta'>Quality reasons: complete</div><div class='links'><a href='recent_work_report_20260303_073534.html'>Open HTML</a><a href='recent_work_report_20260303_073534.pdf'>Open PDF</a><a href='recent_work_report_20260303_073534.md'>Source MD</a></div></div>
+<div class='archive-card' data-run-id='20260303_073315' data-title='WAFT Recent Work Report 20260303_073315' data-generated='2026-03-03 07:33:15' data-run-ts='1772551995' data-quality-tier='excellent' data-quality-score='100' data-freshness='fresh' data-missing='0' data-completeness='100'><h3>WAFT Recent Work Report 20260303_073315</h3><div class='meta'>Run ID: 20260303_073315 | Generated: 2026-03-03 07:33:15</div><div class='chips'><span class='chip'>Freshness: fresh</span><span class='chip'>Quality: 100 (excellent)</span><span class='chip'>Missing: 0</span></div><div class='meta'>Quality reasons: complete</div><div class='links'><a href='recent_work_report_20260303_073315.html'>Open HTML</a><a href='recent_work_report_20260303_073315.pdf'>Open PDF</a><a href='recent_work_report_20260303_073315.md'>Source MD</a></div></div>
+<div class='archive-card' data-run-id='20260303_073135' data-title='WAFT Recent Work Report 20260303_073135' data-generated='2026-03-03 07:31:35' data-run-ts='1772551895' data-quality-tier='excellent' data-quality-score='100' data-freshness='fresh' data-missing='0' data-completeness='100'><h3>WAFT Recent Work Report 20260303_073135</h3><div class='meta'>Run ID: 20260303_073135 | Generated: 2026-03-03 07:31:35</div><div class='chips'><span class='chip'>Freshness: fresh</span><span class='chip'>Quality: 100 (excellent)</span><span class='chip'>Missing: 0</span></div><div class='meta'>Quality reasons: complete</div><div class='links'><a href='recent_work_report_20260303_073135.html'>Open HTML</a><a href='recent_work_report_20260303_073135.pdf'>Open PDF</a><a href='recent_work_report_20260303_073135.md'>Source MD</a></div></div>
+<div class='archive-card' data-run-id='20260303_073002' data-title='WAFT Recent Work Report 20260303_073002' data-generated='2026-03-03 07:30:02' data-run-ts='1772551802' data-quality-tier='excellent' data-quality-score='100' data-freshness='fresh' data-missing='0' data-completeness='100'><h3>WAFT Recent Work Report 20260303_073002</h3><div class='meta'>Run ID: 20260303_073002 | Generated: 2026-03-03 07:30:02</div><div class='chips'><span class='chip'>Freshness: fresh</span><span class='chip'>Quality: 100 (excellent)</span><span class='chip'>Missing: 0</span></div><div class='meta'>Quality reasons: complete</div><div class='links'><a href='recent_work_report_20260303_073002.html'>Open HTML</a><a href='recent_work_report_20260303_073002.pdf'>Open PDF</a><a href='recent_work_report_20260303_073002.md'>Source MD</a></div></div>
+<div class='archive-card' data-run-id='20260303_000334' data-title='WAFT Recent Work Report 20260303_000334' data-generated='2026-03-03 00:03:34' data-run-ts='1772525014' data-quality-tier='excellent' data-quality-score='100' data-freshness='fresh' data-missing='0' data-completeness='100'><h3>WAFT Recent Work Report 20260303_000334</h3><div class='meta'>Run ID: 20260303_000334 | Generated: 2026-03-03 00:03:34</div><div class='chips'><span class='chip'>Freshness: fresh</span><span class='chip'>Quality: 100 (excellent)</span><span class='chip'>Missing: 0</span></div><div class='meta'>Quality reasons: complete</div><div class='links'><a href='recent_work_report_20260303_000334.html'>Open HTML</a><a href='recent_work_report_20260303_000334.pdf'>Open PDF</a><a href='recent_work_report_20260303_000334.md'>Source MD</a></div></div>
+<div class='archive-card' data-run-id='20260302_235814' data-title='WAFT Recent Work Report 20260302_235814' data-generated='2026-03-02 23:58:14' data-run-ts='1772524694' data-quality-tier='excellent' data-quality-score='100' data-freshness='fresh' data-missing='0' data-completeness='100'><h3>WAFT Recent Work Report 20260302_235814</h3><div class='meta'>Run ID: 20260302_235814 | Generated: 2026-03-02 23:58:14</div><div class='chips'><span class='chip'>Freshness: fresh</span><span class='chip'>Quality: 100 (excellent)</span><span class='chip'>Missing: 0</span></div><div class='meta'>Quality reasons: complete</div><div class='links'><a href='recent_work_report_20260302_235814.html'>Open HTML</a><a href='recent_work_report_20260302_235814.pdf'>Open PDF</a><a href='recent_work_report_20260302_235814.md'>Source MD</a></div></div>
+<div class='archive-card' data-run-id='20260302_235740' data-title='WAFT Recent Work Report 20260302_235740' data-generated='2026-03-02 23:57:40' data-run-ts='1772524660' data-quality-tier='excellent' data-quality-score='100' data-freshness='fresh' data-missing='0' data-completeness='100'><h3>WAFT Recent Work Report 20260302_235740</h3><div class='meta'>Run ID: 20260302_235740 | Generated: 2026-03-02 23:57:40</div><div class='chips'><span class='chip'>Freshness: fresh</span><span class='chip'>Quality: 100 (excellent)</span><span class='chip'>Missing: 0</span></div><div class='meta'>Quality reasons: complete</div><div class='links'><a href='recent_work_report_20260302_235740.html'>Open HTML</a><a href='recent_work_report_20260302_235740.pdf'>Open PDF</a><a href='recent_work_report_20260302_235740.md'>Source MD</a></div></div>
+<div class='archive-card' data-run-id='20260302_235441' data-title='WAFT Recent Work Report 20260302_235441' data-generated='2026-03-02 23:54:41' data-run-ts='1772524481' data-quality-tier='excellent' data-quality-score='100' data-freshness='fresh' data-missing='0' data-completeness='100'><h3>WAFT Recent Work Report 20260302_235441</h3><div class='meta'>Run ID: 20260302_235441 | Generated: 2026-03-02 23:54:41</div><div class='chips'><span class='chip'>Freshness: fresh</span><span class='chip'>Quality: 100 (excellent)</span><span class='chip'>Missing: 0</span></div><div class='meta'>Quality reasons: complete</div><div class='links'><a href='recent_work_report_20260302_235441.html'>Open HTML</a><a href='recent_work_report_20260302_235441.pdf'>Open PDF</a><a href='recent_work_report_20260302_235441.md'>Source MD</a></div></div>
+<div class='archive-card' data-run-id='20260302_235209' data-title='WAFT Recent Work Report 20260302_235209' data-generated='2026-03-02 23:52:09' data-run-ts='1772524329' data-quality-tier='excellent' data-quality-score='100' data-freshness='fresh' data-missing='0' data-completeness='100'><h3>WAFT Recent Work Report 20260302_235209</h3><div class='meta'>Run ID: 20260302_235209 | Generated: 2026-03-02 23:52:09</div><div class='chips'><span class='chip'>Freshness: fresh</span><span class='chip'>Quality: 100 (excellent)</span><span class='chip'>Missing: 0</span></div><div class='meta'>Quality reasons: complete</div><div class='links'><a href='recent_work_report_20260302_235209.html'>Open HTML</a><a href='recent_work_report_20260302_235209.pdf'>Open PDF</a><a href='recent_work_report_20260302_235209.md'>Source MD</a></div></div>
+<div class='archive-card' data-run-id='20260302_235047' data-title='WAFT Recent Work Report 20260302_235047' data-generated='2026-03-02 23:50:47' data-run-ts='1772524247' data-quality-tier='excellent' data-quality-score='100' data-freshness='fresh' data-missing='0' data-completeness='100'><h3>WAFT Recent Work Report 20260302_235047</h3><div class='meta'>Run ID: 20260302_235047 | Generated: 2026-03-02 23:50:47</div><div class='chips'><span class='chip'>Freshness: fresh</span><span class='chip'>Quality: 100 (excellent)</span><span class='chip'>Missing: 0</span></div><div class='meta'>Quality reasons: complete</div><div class='links'><a href='recent_work_report_20260302_235047.html'>Open HTML</a><a href='recent_work_report_20260302_235047.pdf'>Open PDF</a><a href='recent_work_report_20260302_235047.md'>Source MD</a></div></div>
+<div class='archive-card' data-run-id='20260302_234734' data-title='WAFT Recent Work Report 20260302_234734' data-generated='2026-03-02 23:47:34' data-run-ts='1772524054' data-quality-tier='excellent' data-quality-score='100' data-freshness='fresh' data-missing='0' data-completeness='100'><h3>WAFT Recent Work Report 20260302_234734</h3><div class='meta'>Run ID: 20260302_234734 | Generated: 2026-03-02 23:47:34</div><div class='chips'><span class='chip'>Freshness: fresh</span><span class='chip'>Quality: 100 (excellent)</span><span class='chip'>Missing: 0</span></div><div class='meta'>Quality reasons: complete</div><div class='links'><a href='recent_work_report_20260302_234734.html'>Open HTML</a><a href='recent_work_report_20260302_234734.pdf'>Open PDF</a><a href='recent_work_report_20260302_234734.md'>Source MD</a></div></div>
+<div class='archive-card' data-run-id='20260302_234449' data-title='WAFT Recent Work Report 20260302_234449' data-generated='2026-03-02 23:44:49' data-run-ts='1772523889' data-quality-tier='excellent' data-quality-score='100' data-freshness='fresh' data-missing='0' data-completeness='100'><h3>WAFT Recent Work Report 20260302_234449</h3><div class='meta'>Run ID: 20260302_234449 | Generated: 2026-03-02 23:44:49</div><div class='chips'><span class='chip'>Freshness: fresh</span><span class='chip'>Quality: 100 (excellent)</span><span class='chip'>Missing: 0</span></div><div class='meta'>Quality reasons: complete</div><div class='links'><a href='recent_work_report_20260302_234449.html'>Open HTML</a><a href='recent_work_report_20260302_234449.pdf'>Open PDF</a><a href='recent_work_report_20260302_234449.md'>Source MD</a></div></div>
+<div class='archive-card' data-run-id='20260302_234437' data-title='WAFT Recent Work Report 20260302_234437' data-generated='2026-03-02 23:44:37' data-run-ts='1772523877' data-quality-tier='excellent' data-quality-score='100' data-freshness='fresh' data-missing='0' data-completeness='100'><h3>WAFT Recent Work Report 20260302_234437</h3><div class='meta'>Run ID: 20260302_234437 | Generated: 2026-03-02 23:44:37</div><div class='chips'><span class='chip'>Freshness: fresh</span><span class='chip'>Quality: 100 (excellent)</span><span class='chip'>Missing: 0</span></div><div class='meta'>Quality reasons: complete</div><div class='links'><a href='recent_work_report_20260302_234437.html'>Open HTML</a><a href='recent_work_report_20260302_234437.pdf'>Open PDF</a><a href='recent_work_report_20260302_234437.md'>Source MD</a></div></div>
+<div class='archive-card' data-run-id='20260302_234249' data-title='WAFT Recent Work Report 20260302_234249' data-generated='2026-03-02 23:42:49' data-run-ts='1772523769' data-quality-tier='excellent' data-quality-score='100' data-freshness='fresh' data-missing='0' data-completeness='100'><h3>WAFT Recent Work Report 20260302_234249</h3><div class='meta'>Run ID: 20260302_234249 | Generated: 2026-03-02 23:42:49</div><div class='chips'><span class='chip'>Freshness: fresh</span><span class='chip'>Quality: 100 (excellent)</span><span class='chip'>Missing: 0</span></div><div class='meta'>Quality reasons: complete</div><div class='links'><a href='recent_work_report_20260302_234249.html'>Open HTML</a><a href='recent_work_report_20260302_234249.pdf'>Open PDF</a><a href='recent_work_report_20260302_234249.md'>Source MD</a></div></div>
+<div class='archive-card' data-run-id='20260302_234234' data-title='WAFT Recent Work Report 20260302_234234' data-generated='2026-03-02 23:42:34' data-run-ts='1772523754' data-quality-tier='excellent' data-quality-score='100' data-freshness='fresh' data-missing='0' data-completeness='100'><h3>WAFT Recent Work Report 20260302_234234</h3><div class='meta'>Run ID: 20260302_234234 | Generated: 2026-03-02 23:42:34</div><div class='chips'><span class='chip'>Freshness: fresh</span><span class='chip'>Quality: 100 (excellent)</span><span class='chip'>Missing: 0</span></div><div class='meta'>Quality reasons: complete</div><div class='links'><a href='recent_work_report_20260302_234234.html'>Open HTML</a><a href='recent_work_report_20260302_234234.pdf'>Open PDF</a><a href='recent_work_report_20260302_234234.md'>Source MD</a></div></div>
+<div class='archive-card' data-run-id='20260302_233032' data-title='WAFT Recent Work Report 20260302_233032' data-generated='2026-03-02 23:30:32' data-run-ts='1772523032' data-quality-tier='excellent' data-quality-score='100' data-freshness='fresh' data-missing='0' data-completeness='100'><h3>WAFT Recent Work Report 20260302_233032</h3><div class='meta'>Run ID: 20260302_233032 | Generated: 2026-03-02 23:30:32</div><div class='chips'><span class='chip'>Freshness: fresh</span><span class='chip'>Quality: 100 (excellent)</span><span class='chip'>Missing: 0</span></div><div class='meta'>Quality reasons: complete</div><div class='links'><a href='recent_work_report_20260302_233032.html'>Open HTML</a><a href='recent_work_report_20260302_233032.pdf'>Open PDF</a><a href='recent_work_report_20260302_233032.md'>Source MD</a></div></div>
+<div class='archive-card' data-run-id='20260302_232947' data-title='WAFT Recent Work Report 20260302_232947' data-generated='2026-03-02 23:29:47' data-run-ts='1772522987' data-quality-tier='excellent' data-quality-score='100' data-freshness='fresh' data-missing='0' data-completeness='100'><h3>WAFT Recent Work Report 20260302_232947</h3><div class='meta'>Run ID: 20260302_232947 | Generated: 2026-03-02 23:29:47</div><div class='chips'><span class='chip'>Freshness: fresh</span><span class='chip'>Quality: 100 (excellent)</span><span class='chip'>Missing: 0</span></div><div class='meta'>Quality reasons: complete</div><div class='links'><a href='recent_work_report_20260302_232947.html'>Open HTML</a><a href='recent_work_report_20260302_232947.pdf'>Open PDF</a><a href='recent_work_report_20260302_232947.md'>Source MD</a></div></div>
+<div class='archive-card' data-run-id='20260302_232934' data-title='WAFT Recent Work Report 20260302_232934' data-generated='2026-03-02 23:29:34' data-run-ts='1772522974' data-quality-tier='excellent' data-quality-score='100' data-freshness='fresh' data-missing='0' data-completeness='100'><h3>WAFT Recent Work Report 20260302_232934</h3><div class='meta'>Run ID: 20260302_232934 | Generated: 2026-03-02 23:29:34</div><div class='chips'><span class='chip'>Freshness: fresh</span><span class='chip'>Quality: 100 (excellent)</span><span class='chip'>Missing: 0</span></div><div class='meta'>Quality reasons: complete</div><div class='links'><a href='recent_work_report_20260302_232934.html'>Open HTML</a><a href='recent_work_report_20260302_232934.pdf'>Open PDF</a><a href='recent_work_report_20260302_232934.md'>Source MD</a></div></div>
+<div class='archive-card' data-run-id='20260302_232058' data-title='WAFT Recent Work Report 20260302_232058' data-generated='2026-03-02 23:20:58' data-run-ts='1772522458' data-quality-tier='excellent' data-quality-score='100' data-freshness='fresh' data-missing='0' data-completeness='100'><h3>WAFT Recent Work Report 20260302_232058</h3><div class='meta'>Run ID: 20260302_232058 | Generated: 2026-03-02 23:20:58</div><div class='chips'><span class='chip'>Freshness: fresh</span><span class='chip'>Quality: 100 (excellent)</span><span class='chip'>Missing: 0</span></div><div class='meta'>Quality reasons: complete</div><div class='links'><a href='recent_work_report_20260302_232058.html'>Open HTML</a><a href='recent_work_report_20260302_232058.pdf'>Open PDF</a><a href='recent_work_report_20260302_232058.md'>Source MD</a></div></div>
+<div class='archive-card' data-run-id='20260302_232009' data-title='WAFT Recent Work Report 20260302_232009' data-generated='2026-03-02 23:20:09' data-run-ts='1772522409' data-quality-tier='excellent' data-quality-score='100' data-freshness='fresh' data-missing='0' data-completeness='100'><h3>WAFT Recent Work Report 20260302_232009</h3><div class='meta'>Run ID: 20260302_232009 | Generated: 2026-03-02 23:20:09</div><div class='chips'><span class='chip'>Freshness: fresh</span><span class='chip'>Quality: 100 (excellent)</span><span class='chip'>Missing: 0</span></div><div class='meta'>Quality reasons: complete</div><div class='links'><a href='recent_work_report_20260302_232009.html'>Open HTML</a><a href='recent_work_report_20260302_232009.pdf'>Open PDF</a><a href='recent_work_report_20260302_232009.md'>Source MD</a></div></div>
+    </div>
+    <div id="emptyState" class="empty">No runs match your current filters.</div>
+    <h2 id="explorer">Explorer</h2>
+    <div class="hint">Grouped by day with quick links. Use this to triage report storage quickly.</div>
+    <div class="card">
+      <div class='explorer-group'><h4>2026-03-03</h4><div class='explorer-row'><span class='mono'>20260303_074342</span> | <a href='recent_work_report_20260303_074342.html'>HTML</a> | <a href='recent_work_report_20260303_074342.pdf'>PDF</a> | <a href='recent_work_report_20260303_074342.md'>MD</a></div><div class='explorer-row'><span class='mono'>20260303_073534</span> | <a href='recent_work_report_20260303_073534.html'>HTML</a> | <a href='recent_work_report_20260303_073534.pdf'>PDF</a> | <a href='recent_work_report_20260303_073534.md'>MD</a></div><div class='explorer-row'><span class='mono'>20260303_073315</span> | <a href='recent_work_report_20260303_073315.html'>HTML</a> | <a href='recent_work_report_20260303_073315.pdf'>PDF</a> | <a href='recent_work_report_20260303_073315.md'>MD</a></div><div class='explorer-row'><span class='mono'>20260303_073135</span> | <a href='recent_work_report_20260303_073135.html'>HTML</a> | <a href='recent_work_report_20260303_073135.pdf'>PDF</a> | <a href='recent_work_report_20260303_073135.md'>MD</a></div><div class='explorer-row'><span class='mono'>20260303_073002</span> | <a href='recent_work_report_20260303_073002.html'>HTML</a> | <a href='recent_work_report_20260303_073002.pdf'>PDF</a> | <a href='recent_work_report_20260303_073002.md'>MD</a></div><div class='explorer-row'><span class='mono'>20260303_000334</span> | <a href='recent_work_report_20260303_000334.html'>HTML</a> | <a href='recent_work_report_20260303_000334.pdf'>PDF</a> | <a href='recent_work_report_20260303_000334.md'>MD</a></div></div><div class='explorer-group'><h4>2026-03-02</h4><div class='explorer-row'><span class='mono'>20260302_235814</span> | <a href='recent_work_report_20260302_235814.html'>HTML</a> | <a href='recent_work_report_20260302_235814.pdf'>PDF</a> | <a href='recent_work_report_20260302_235814.md'>MD</a></div><div class='explorer-row'><span class='mono'>20260302_235740</span> | <a href='recent_work_report_20260302_235740.html'>HTML</a> | <a href='recent_work_report_20260302_235740.pdf'>PDF</a> | <a href='recent_work_report_20260302_235740.md'>MD</a></div><div class='explorer-row'><span class='mono'>20260302_235441</span> | <a href='recent_work_report_20260302_235441.html'>HTML</a> | <a href='recent_work_report_20260302_235441.pdf'>PDF</a> | <a href='recent_work_report_20260302_235441.md'>MD</a></div><div class='explorer-row'><span class='mono'>20260302_235209</span> | <a href='recent_work_report_20260302_235209.html'>HTML</a> | <a href='recent_work_report_20260302_235209.pdf'>PDF</a> | <a href='recent_work_report_20260302_235209.md'>MD</a></div><div class='explorer-row'><span class='mono'>20260302_235047</span> | <a href='recent_work_report_20260302_235047.html'>HTML</a> | <a href='recent_work_report_20260302_235047.pdf'>PDF</a> | <a href='recent_work_report_20260302_235047.md'>MD</a></div><div class='explorer-row'><span class='mono'>20260302_234734</span> | <a href='recent_work_report_20260302_234734.html'>HTML</a> | <a href='recent_work_report_20260302_234734.pdf'>PDF</a> | <a href='recent_work_report_20260302_234734.md'>MD</a></div><div class='explorer-row'><span class='mono'>20260302_234449</span> | <a href='recent_work_report_20260302_234449.html'>HTML</a> | <a href='recent_work_report_20260302_234449.pdf'>PDF</a> | <a href='recent_work_report_20260302_234449.md'>MD</a></div><div class='explorer-row'><span class='mono'>20260302_234437</span> | <a href='recent_work_report_20260302_234437.html'>HTML</a> | <a href='recent_work_report_20260302_234437.pdf'>PDF</a> | <a href='recent_work_report_20260302_234437.md'>MD</a></div></div>
+    </div>
+    <h3 id="health">Health</h3>
+    <div class="warning">Orphan files (disk-only runs): 0</div>
+    <div class="warning">Stale index entries (indexed-only runs): 0</div>
+    <div class="hint">Remediation: run `/sitrep` to refresh index, then remove stale artifacts if they are no longer needed.</div>
+    <h2 id="prompt-lab">404 Prompt Configurator</h2>
+    <div class="hint">If a route does not exist, generate a context-rich build prompt instead of dead-ending.</div>
+    <div class="prompt-lab">
+      <div class="prompt-grid">
+        <div>
+          <label for="endpointInput" class="hint">Route / endpoint to open</label>
+          <input id="endpointInput" type="text" placeholder="/reports/new-slice" />
+        </div>
+        <div>
+          <label for="desiredInput" class="hint">Desired outcome (mad-lib style)</label>
+          <input id="desiredInput" type="text" placeholder="I want this route to show ..." />
+        </div>
+        <div>
+          <label for="wireframeInput" class="hint">Wireframe notes (optional)</label>
+          <input id="wireframeInput" type="text" placeholder="Hero | filters | cards | CTA" />
+        </div>
+        <div>
+          <label for="screenshotInput" class="hint">Attach screenshot (optional)</label>
+          <input id="screenshotInput" type="file" accept="image/*" />
+        </div>
+      </div>
+      <div class="cone-row" style="margin-top:8px;">
+        <button id="checkRouteBtn" class="btn">Check Route</button>
+        <button id="generatePromptBtn" class="btn">Generate Prompt</button>
+        <button id="copyPromptBtn" class="btn">Copy Prompt</button>
+      </div>
+      <div id="routeStatus" class="warning">No route check yet.</div>
+      <textarea id="promptOutput" placeholder="Generated prompt will appear here..."></textarea>
+      <div class="hint">Tip: Use a quick wireframe image + route goal, then paste the generated prompt into your next chat.</div>
+    </div>
+  </div>
+  <script>
+    (function() {
+      const cards = Array.from(document.querySelectorAll('.archive-card'));
+      const hrefs = Array.from(document.querySelectorAll('a[href]')).map((a) => a.getAttribute('href') || '');
+      const knownRoutes = new Set(hrefs.filter((h) => h && !h.startsWith('#')));
+      const archive = document.querySelector('.archive');
+      const resultMeta = document.getElementById('resultMeta');
+      const emptyState = document.getElementById('emptyState');
+      const search = document.getElementById('search');
+      const qualityFilter = document.getElementById('qualityFilter');
+      const dateFilter = document.getElementById('dateFilter');
+      const artifactFilter = document.getElementById('artifactFilter');
+      const sortMode = document.getElementById('sortMode');
+      const loadMoreBtn = document.getElementById('loadMoreBtn');
+      const showAllBtn = document.getElementById('showAllBtn');
+      const loadMeta = document.getElementById('loadMeta');
+      const toast = document.getElementById('toast');
+      const resourceAlert = document.getElementById('resourceAlert');
+      const resourceAlertBody = document.getElementById('resourceAlertBody');
+      const resourceFlags = document.getElementById('resourceFlags');
+      const resourceStatus = document.getElementById('resourceStatus');
+      const resourceLag = document.getElementById('resourceLag');
+      const resourceLongTasks = document.getElementById('resourceLongTasks');
+      const resourceHeap = document.getElementById('resourceHeap');
+      const resourceQueue = document.getElementById('resourceQueue');
+      const endpointInput = document.getElementById('endpointInput');
+      const desiredInput = document.getElementById('desiredInput');
+      const wireframeInput = document.getElementById('wireframeInput');
+      const screenshotInput = document.getElementById('screenshotInput');
+      const routeStatus = document.getElementById('routeStatus');
+      const promptOutput = document.getElementById('promptOutput');
+      const checkRouteBtn = document.getElementById('checkRouteBtn');
+      const generatePromptBtn = document.getElementById('generatePromptBtn');
+      const copyPromptBtn = document.getElementById('copyPromptBtn');
+      const nowTs = 1772552622;
+      let toastTimer = null;
+      let activeRenderToken = 0;
+      let filterTimer = null;
+      const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const hwThreads = Number(navigator.hardwareConcurrency || 4);
+      const deviceMem = Number(navigator.deviceMemory || 4);
+      const lowPowerMode = prefersReducedMotion || hwThreads <= 4 || deviceMem <= 4;
+      const CHUNK_SIZE = lowPowerMode ? 12 : 28;
+      const DEBOUNCE_MS = lowPowerMode ? 220 : 120;
+      const YIELD_MS = lowPowerMode ? 22 : 8;
+      const PAGE_SIZE = lowPowerMode ? 40 : 90;
+      let visibleLimit = PAGE_SIZE;
+      const softwareLimits = window.WAFT_RESOURCE_LIMITS || {};
+
+      const Logger = {
+        debugEnabled: localStorage.getItem('waft.sitrep.debug') === '1',
+        info(...args) {
+          if (this.debugEnabled) console.info('[sitrep]', ...args);
+        },
+        warn(...args) {
+          console.warn('[sitrep]', ...args);
+        },
+        error(...args) {
+          console.error('[sitrep]', ...args);
+        },
+      };
+
+      const ErrorManager = {
+        handle(error, context) {
+          Logger.error('error', context, error);
+          showToast(`Error: ${context}`);
+        },
+      };
+
+      function safeHandler(fn, context) {
+        return (...args) => {
+          try {
+            return fn(...args);
+          } catch (error) {
+            ErrorManager.handle(error, context);
+          }
+        };
+      }
+
+      const HandlerManager = {
+        bind(element, eventName, handler, context) {
+          if (!element) return;
+          element.addEventListener(eventName, safeHandler(handler, context));
+        },
+      };
+
+      const RouteManager = {
+        normalize(endpoint) {
+          return (endpoint || '').trim();
+        },
+        exists(endpoint) {
+          const normalized = this.normalize(endpoint);
+          return knownRoutes.has(normalized) || knownRoutes.has(normalized.replace(/^\//, ''));
+        },
+      };
+
+      function createTaskQueueManager() {
+        let pending = [];
+        let running = false;
+        function runNext() {
+          if (running || !pending.length) return;
+          running = true;
+          const task = pending.shift();
+          const done = () => {
+            running = false;
+            runNext();
+          };
+          if ('requestIdleCallback' in window) {
+            window.requestIdleCallback(() => {
+              try {
+                task();
+              } finally {
+                done();
+              }
+            }, { timeout: 80 });
+          } else {
+            setTimeout(() => {
+              try {
+                task();
+              } finally {
+                done();
+              }
+            }, YIELD_MS);
+          }
+        }
+        return {
+          enqueue(task) {
+            pending.push(task);
+            runNext();
+          },
+          cancelAll() {
+            pending = [];
+            running = false;
+          },
+          size() {
+            return pending.length;
+          },
+        };
+      }
+
+      const RenderQueueManager = createTaskQueueManager();
+      window.addEventListener('error', (event) => ErrorManager.handle(event.error || event.message, 'window.error'));
+      window.addEventListener('unhandledrejection', (event) => ErrorManager.handle(event.reason, 'window.unhandledrejection'));
+      if (lowPowerMode) {
+        document.body.classList.add('low-power');
+      }
+      cards.forEach((card) => {
+        if (!card.dataset.searchText) {
+          card.dataset.searchText = [
+            card.dataset.runId || '',
+            card.dataset.title || '',
+            card.dataset.generated || '',
+            card.textContent || ''
+          ].join(' ').toLowerCase();
+        }
+      });
+
+      function schedule(cb) {
+        RenderQueueManager.enqueue(cb);
+      }
+
+      function formatSeverity(sev) {
+        if (sev === 'critical') return 'CRITICAL';
+        if (sev === 'warning') return 'WARNING';
+        return 'OK';
+      }
+
+      const ResourceMonitorManager = (() => {
+        const adaptiveLimits = {
+          lagWarnMs: softwareLimits.lagWarnMs || (hwThreads <= 4 ? 60 : 90),
+          lagCritMs: softwareLimits.lagCritMs || (hwThreads <= 4 ? 120 : 180),
+          longTaskWarnPerMin: softwareLimits.longTaskWarnPerMin || (hwThreads <= 4 ? 4 : 8),
+          longTaskCritPerMin: softwareLimits.longTaskCritPerMin || (hwThreads <= 4 ? 8 : 14),
+          queueWarn: softwareLimits.queueWarn || (lowPowerMode ? 80 : 140),
+          queueCrit: softwareLimits.queueCrit || (lowPowerMode ? 160 : 260),
+          heapWarnRatio: softwareLimits.heapWarnRatio || (deviceMem <= 4 ? 0.65 : 0.78),
+          heapCritRatio: softwareLimits.heapCritRatio || (deviceMem <= 4 ? 0.82 : 0.90),
+          pingBaseMs: softwareLimits.pingBaseMs || 4500,
+          pingCalmMaxMs: softwareLimits.pingCalmMaxMs || 45000,
+          pingHotMs: softwareLimits.pingHotMs || 1200,
+          pingWarnMs: softwareLimits.pingWarnMs || 2400,
+          pingStimulusMs: softwareLimits.pingStimulusMs || 500,
+          alertCooldownMs: softwareLimits.alertCooldownMs || 12000,
+        };
+        let timerId = null;
+        let scheduledForMs = 0;
+        let lastScheduledDelayMs = adaptiveLimits.pingBaseMs;
+        let longTasksInWindow = 0;
+        let lastTick = performance.now();
+        let lastAlertMs = 0;
+        let longTaskObserver = null;
+        let active = false;
+        let quietCycles = 0;
+        let lastEvaluation = { overall: 'ok', flags: [] };
+
+        function severityRank(level) {
+          if (level === 'critical') return 2;
+          if (level === 'warning') return 1;
+          return 0;
+        }
+
+        if ('PerformanceObserver' in window) {
+          try {
+            longTaskObserver = new PerformanceObserver((list) => {
+              longTasksInWindow += list.getEntries().length;
+              requestSample('longtask', 'high');
+            });
+            longTaskObserver.observe({ entryTypes: ['longtask'] });
+          } catch (err) {
+            Logger.warn('LongTask observer unavailable', err);
+          }
+        }
+
+        function evaluate(snapshot) {
+          const flags = [];
+          const pushFlag = (level, code, message) => flags.push({ level, code, message });
+
+          if (snapshot.lagMs >= adaptiveLimits.lagCritMs) pushFlag('critical', 'lag', `Event loop lag high (${snapshot.lagMs}ms)`);
+          else if (snapshot.lagMs >= adaptiveLimits.lagWarnMs) pushFlag('warning', 'lag', `Event loop lag elevated (${snapshot.lagMs}ms)`);
+
+          if (snapshot.longTasksPerMin >= adaptiveLimits.longTaskCritPerMin) pushFlag('critical', 'longtask', `Long tasks high (${snapshot.longTasksPerMin}/min)`);
+          else if (snapshot.longTasksPerMin >= adaptiveLimits.longTaskWarnPerMin) pushFlag('warning', 'longtask', `Long tasks elevated (${snapshot.longTasksPerMin}/min)`);
+
+          if (snapshot.queueDepth >= adaptiveLimits.queueCrit) pushFlag('critical', 'queue', `Queue depth high (${snapshot.queueDepth})`);
+          else if (snapshot.queueDepth >= adaptiveLimits.queueWarn) pushFlag('warning', 'queue', `Queue depth elevated (${snapshot.queueDepth})`);
+
+          if (snapshot.heapRatio !== null) {
+            if (snapshot.heapRatio >= adaptiveLimits.heapCritRatio) pushFlag('critical', 'heap', `Heap near limit (${Math.round(snapshot.heapRatio * 100)}%)`);
+            else if (snapshot.heapRatio >= adaptiveLimits.heapWarnRatio) pushFlag('warning', 'heap', `Heap pressure (${Math.round(snapshot.heapRatio * 100)}%)`);
+          }
+
+          let overall = 'ok';
+          for (const f of flags) {
+            if (severityRank(f.level) > severityRank(overall)) {
+              overall = f.level;
+            }
+          }
+          return { overall, flags };
+        }
+
+        function updateUi(snapshot, evaluation, reason) {
+          if (!resourceAlert) return;
+          resourceAlert.classList.remove('ok', 'warning', 'critical');
+          resourceAlert.classList.add(evaluation.overall);
+          if (resourceStatus) resourceStatus.textContent = formatSeverity(evaluation.overall);
+          if (resourceLag) resourceLag.textContent = `${snapshot.lagMs}ms`;
+          if (resourceLongTasks) resourceLongTasks.textContent = String(snapshot.longTasksPerMin);
+          if (resourceQueue) resourceQueue.textContent = String(snapshot.queueDepth);
+          if (resourceHeap) {
+            resourceHeap.textContent = snapshot.heapRatio === null ? 'n/a' : `${Math.round(snapshot.heapRatio * 100)}%`;
+          }
+          if (resourceFlags) {
+            resourceFlags.textContent = evaluation.flags.length
+              ? `Flags: ${evaluation.flags.map((f) => f.message).join(' | ')}`
+              : `No resource pressure flags. Last ping reason: ${reason}`;
+          }
+          if (resourceAlertBody) {
+            resourceAlertBody.textContent = evaluation.flags.length
+              ? evaluation.flags[0].message
+              : `Cell state stable; adaptive ping backing off (quiet cycles: ${quietCycles}).`;
+          }
+        }
+
+        function maybeAlert(evaluation) {
+          if (!evaluation.flags.length) return;
+          const nowMs = Date.now();
+          if (nowMs - lastAlertMs < adaptiveLimits.alertCooldownMs) return;
+          const primary = evaluation.flags[0];
+          showToast(`Resource ${primary.level.toUpperCase()}: ${primary.message}`);
+          lastAlertMs = nowMs;
+        }
+
+        function nextDelayFromState(evaluation) {
+          if (evaluation.overall === 'critical') return adaptiveLimits.pingHotMs;
+          if (evaluation.overall === 'warning') return adaptiveLimits.pingWarnMs;
+          const delay = Math.min(
+            adaptiveLimits.pingCalmMaxMs,
+            Math.round(adaptiveLimits.pingBaseMs * Math.pow(1.55, Math.min(quietCycles, 8)))
+          );
+          return delay;
+        }
+
+        function clearScheduledPing() {
+          if (timerId) {
+            clearTimeout(timerId);
+            timerId = null;
+          }
+          scheduledForMs = 0;
+        }
+
+        function schedulePing(delayMs, reason) {
+          if (!active || document.visibilityState === 'hidden') return;
+          const nowMs = Date.now();
+          const proposedFor = nowMs + delayMs;
+          if (timerId && scheduledForMs && proposedFor >= scheduledForMs) return;
+          clearScheduledPing();
+          lastScheduledDelayMs = delayMs;
+          scheduledForMs = proposedFor;
+          timerId = window.setTimeout(() => {
+            timerId = null;
+            scheduledForMs = 0;
+            sample(reason);
+          }, delayMs);
+        }
+
+        function requestSample(reason = 'stimulus', urgency = 'normal') {
+          if (!active || document.visibilityState === 'hidden') return;
+          if (urgency === 'high') {
+            schedulePing(adaptiveLimits.pingStimulusMs, reason);
+            return;
+          }
+          if (urgency === 'medium') {
+            schedulePing(Math.min(adaptiveLimits.pingWarnMs, adaptiveLimits.pingBaseMs), reason);
+            return;
+          }
+          schedulePing(nextDelayFromState(lastEvaluation), reason);
+        }
+
+        function sample(reason = 'periodic') {
+          if (!active || document.visibilityState === 'hidden') return;
+          const nowPerf = performance.now();
+          const elapsedMs = Math.max(1, nowPerf - lastTick);
+          const lagMs = Math.max(0, Math.round(elapsedMs - lastScheduledDelayMs));
+          lastTick = nowPerf;
+          const queueDepth = RenderQueueManager.size();
+          const longTasksPerMin = Math.round(longTasksInWindow * (60000 / elapsedMs));
+          longTasksInWindow = 0;
+          let heapRatio = null;
+          if (performance.memory && performance.memory.jsHeapSizeLimit > 0) {
+            heapRatio = performance.memory.usedJSHeapSize / performance.memory.jsHeapSizeLimit;
+          }
+          const snapshot = { lagMs, longTasksPerMin, queueDepth, heapRatio };
+          const evaluation = evaluate(snapshot);
+          if (evaluation.overall === 'ok') quietCycles += 1;
+          else quietCycles = 0;
+          lastEvaluation = evaluation;
+          updateUi(snapshot, evaluation, reason);
+          maybeAlert(evaluation);
+          Logger.info('resource.sample', { reason, snapshot, evaluation, quietCycles, adaptiveLimits });
+          schedulePing(nextDelayFromState(evaluation), 'adaptive-ping');
+        }
+
+        function start() {
+          if (active) return;
+          active = true;
+          lastTick = performance.now();
+          quietCycles = 0;
+          requestSample('startup', 'high');
+        }
+
+        function stop() {
+          active = false;
+          clearScheduledPing();
+        }
+
+        function teardown() {
+          stop();
+          if (longTaskObserver) {
+            try {
+              longTaskObserver.disconnect();
+            } catch (_err) {
+              // ignore
+            }
+          }
+        }
+
+        return { start, stop, teardown, stimulus: requestSample };
+      })();
+
+      function showToast(msg) {
+        if (!toast) return;
+        toast.textContent = msg;
+        toast.classList.add('show');
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          toast.classList.remove('show');
+        }, 1700);
+      }
+
+      function withinWindow(runTs, windowKey) {
+        if (windowKey === 'all') return true;
+        const ageSeconds = nowTs - runTs;
+        if (windowKey === '24h') return ageSeconds <= 24 * 3600;
+        if (windowKey === '7d') return ageSeconds <= 7 * 24 * 3600;
+        if (windowKey === '30d') return ageSeconds <= 30 * 24 * 3600;
+        return true;
+      }
+
+      function freshnessRank(value) {
+        if (value === 'stale') return 0;
+        if (value === 'aging') return 1;
+        return 2;
+      }
+
+      function applyFilters(resetLimit = false) {
+        ResourceMonitorManager.stimulus('filters.start', 'medium');
+        const renderToken = ++activeRenderToken;
+        RenderQueueManager.cancelAll();
+        if (resetLimit) visibleLimit = PAGE_SIZE;
+        const q = search.value.trim().toLowerCase();
+        const quality = qualityFilter.value;
+        const dateWindow = dateFilter.value;
+        const artifact = artifactFilter.value;
+        const mode = sortMode.value;
+
+        const filtered = cards.filter((card) => {
+          const runId = card.dataset.runId || '';
+          const title = card.dataset.title || '';
+          const generated = card.dataset.generated || '';
+          const qualityTier = card.dataset.qualityTier || '';
+          const completeness = Number(card.dataset.completeness || 0);
+          const runTs = Number(card.dataset.runTs || 0);
+          const haystack = card.dataset.searchText || [runId, title, generated, card.textContent || ''].join(' ').toLowerCase();
+          if (q && !haystack.includes(q)) return false;
+          if (quality !== 'all' && qualityTier !== quality) return false;
+          if (!withinWindow(runTs, dateWindow)) return false;
+          if (artifact === 'complete' && completeness < 100) return false;
+          if (artifact === 'incomplete' && completeness === 100) return false;
+          return true;
+        });
+
+        filtered.sort((a, b) => {
+          const runTsA = Number(a.dataset.runTs || 0);
+          const runTsB = Number(b.dataset.runTs || 0);
+          const scoreA = Number(a.dataset.qualityScore || 0);
+          const scoreB = Number(b.dataset.qualityScore || 0);
+          const freshnessA = freshnessRank(a.dataset.freshness || '');
+          const freshnessB = freshnessRank(b.dataset.freshness || '');
+          if (mode === 'quality') return scoreB - scoreA || runTsB - runTsA;
+          if (mode === 'stale') return freshnessA - freshnessB || runTsB - runTsA;
+          return runTsB - runTsA;
+        });
+
+        const totalFiltered = filtered.length;
+        const toRender = filtered.slice(0, visibleLimit);
+        archive.innerHTML = '';
+        emptyState.style.display = 'none';
+        if (!toRender.length) {
+          resultMeta.textContent = `Showing 0 of ${cards.length} runs`;
+          emptyState.style.display = 'block';
+          if (loadMoreBtn) loadMoreBtn.style.display = 'none';
+          if (showAllBtn) showAllBtn.style.display = 'none';
+          if (loadMeta) loadMeta.textContent = '';
+          showToast('No runs match filters');
+          return;
+        }
+
+        let index = 0;
+        resultMeta.textContent = `Rendering 0/${toRender.length} of ${totalFiltered} filtered (queue:${CHUNK_SIZE}, mode:${lowPowerMode ? 'low-power' : 'normal'})`;
+        if (loadMeta) {
+          loadMeta.textContent = `Showing ${toRender.length} / ${totalFiltered} filtered`;
+        }
+        const hasMore = totalFiltered > toRender.length;
+        if (loadMoreBtn) loadMoreBtn.style.display = hasMore ? 'inline-block' : 'none';
+        if (showAllBtn) showAllBtn.style.display = hasMore ? 'inline-block' : 'none';
+        if (loadMoreBtn) {
+          loadMoreBtn.textContent = `Load more (+${PAGE_SIZE})`;
+        }
+
+        function renderChunk() {
+          if (renderToken !== activeRenderToken) return;
+          const frag = document.createDocumentFragment();
+          const end = Math.min(toRender.length, index + CHUNK_SIZE);
+          for (; index < end; index++) {
+            frag.appendChild(toRender[index]);
+          }
+          archive.appendChild(frag);
+          resultMeta.textContent = `Showing ${index} of ${toRender.length} rendered (${totalFiltered} filtered, ${cards.length} indexed)`;
+          if (index < toRender.length) {
+            schedule(renderChunk);
+          } else {
+            showToast(`Filters applied: ${totalFiltered} result(s), rendered ${toRender.length}`);
+            ResourceMonitorManager.stimulus('filters.complete', 'medium');
+          }
+        }
+        schedule(renderChunk);
+      }
+
+      function collectUiContext() {
+        const components = Array.from(new Set(Array.from(document.querySelectorAll('[class]'))
+          .flatMap((el) => (el.className || '').split(' '))
+          .map((x) => x.trim())
+          .filter((x) => x && !x.includes('show')))).slice(0, 40);
+        const styleTokens = ['--bg', '--paper', '--ink', '--accent', '--dark', '--line'];
+        return {
+          title: document.title,
+          h1: (document.querySelector('h1') || { textContent: '' }).textContent.trim(),
+          generatedAt: "2026-03-03 07:43:42 ",
+          components,
+          styleTokens,
+          cardCount: cards.length,
+        };
+      }
+
+      function buildPrompt(routeExists) {
+        const ctx = collectUiContext();
+        const endpoint = (endpointInput.value || '').trim() || '/missing/route';
+        const desired = (desiredInput.value || '').trim() || 'Show a useful page with clear top summary and progressively deeper evidence';
+        const wireframe = (wireframeInput.value || '').trim() || 'Top: golden nugget; Middle: evidence cards; Bottom: explorer and actions';
+        const screenshot = screenshotInput && screenshotInput.files && screenshotInput.files[0] ? screenshotInput.files[0].name : '(none)';
+        return [
+          `You are continuing WAFT site development.`,
+          ``,
+          `Route request: ${endpoint}`,
+          `Route exists now: ${routeExists ? 'yes' : 'no (treat as 404-to-feature request)'}`,
+          `Desired outcome: ${desired}`,
+          `Wireframe hint: ${wireframe}`,
+          `Screenshot file: ${screenshot}`,
+          ``,
+          `Site context:`,
+          `- Page title: ${ctx.title}`,
+          `- Header: ${ctx.h1}`,
+          `- Generated: ${ctx.generatedAt}`,
+          `- Archive cards visible: ${ctx.cardCount}`,
+          `- Known style tokens: ${ctx.styleTokens.join(', ')}`,
+          `- Key component classes: ${ctx.components.join(', ')}`,
+          ``,
+          `Build requirements:`,
+          `1) Add a concise abstract at the top explaining current system status.`,
+          `2) Provide a reverse-cone exploration flow: summary -> evidence -> raw detail.`,
+          `3) Add/upgrade endpoint UX so missing routes open a prompt-configurator instead of dead-end 404.`,
+          `4) Keep styling consistent with this site tokens and card system.`,
+          `5) Return implementation steps and updated code snippets.`,
+        ].join('\n');
+      }
+
+      function checkRoute() {
+        const endpoint = (endpointInput.value || '').trim();
+        if (!endpoint) {
+          routeStatus.textContent = 'Enter a route first.';
+          showToast('Enter a route to check');
+          return false;
+        }
+        const exists = RouteManager.exists(endpoint);
+        if (exists) {
+          routeStatus.textContent = `Route exists: ${endpoint}`;
+          showToast('Route exists');
+        } else {
+          routeStatus.textContent = `Route missing (404 candidate): ${endpoint} - prompt configurator ready.`;
+          showToast('404 candidate detected, prompt prefilled');
+          promptOutput.value = buildPrompt(false);
+        }
+        return exists;
+      }
+
+      function requestApplyFilters() {
+        ResourceMonitorManager.stimulus('filters.input', 'low');
+        if (filterTimer) clearTimeout(filterTimer);
+        filterTimer = setTimeout(() => applyFilters(true), DEBOUNCE_MS);
+      }
+
+      [search, qualityFilter, dateFilter, artifactFilter, sortMode].forEach((el) => {
+        HandlerManager.bind(el, 'input', requestApplyFilters, 'filters.input');
+        HandlerManager.bind(el, 'change', requestApplyFilters, 'filters.change');
+      });
+      HandlerManager.bind(checkRouteBtn, 'click', checkRoute, 'route.check');
+      HandlerManager.bind(generatePromptBtn, 'click', () => {
+        const exists = checkRoute();
+        promptOutput.value = buildPrompt(exists);
+        showToast('Prompt generated');
+      }, 'prompt.generate');
+      HandlerManager.bind(copyPromptBtn, 'click', async () => {
+        try {
+          await navigator.clipboard.writeText(promptOutput.value || '');
+          showToast('Prompt copied');
+        } catch (err) {
+          showToast('Copy failed - manual copy needed');
+        }
+      }, 'prompt.copy');
+      HandlerManager.bind(loadMoreBtn, 'click', () => {
+        visibleLimit += PAGE_SIZE;
+        applyFilters(false);
+      }, 'archive.loadMore');
+      HandlerManager.bind(showAllBtn, 'click', () => {
+        visibleLimit = cards.length;
+        applyFilters(false);
+      }, 'archive.showAll');
+      document.addEventListener('visibilitychange', safeHandler(() => {
+        if (document.visibilityState === 'hidden') ResourceMonitorManager.stop();
+        else ResourceMonitorManager.start();
+      }, 'resource.visibility'));
+      window.addEventListener('beforeunload', safeHandler(() => ResourceMonitorManager.teardown(), 'resource.teardown'));
+      showToast(`Sitrep ready: ${cards.length} run(s) indexed (${lowPowerMode ? 'low-power' : 'normal'} mode)`);
+      Logger.info('init', { indexedRuns: cards.length, lowPowerMode, queue: CHUNK_SIZE });
+      ResourceMonitorManager.start();
+      applyFilters(true);
+    })();
+  </script>
+</body>
+</html>

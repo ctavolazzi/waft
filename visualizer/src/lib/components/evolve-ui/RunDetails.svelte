@@ -138,22 +138,38 @@
 			<div class="file-browser-content">
 				<div class="file-list">
 					{#if run.artifacts.design_doc}
-						<button class="file-link" on:click={() => openOptionalFile(run.artifacts.design_doc)}>
+						<button
+							class="file-link"
+							on:click={() =>
+								run.artifacts.design_doc && openFile(run.artifacts.design_doc)}
+						>
 							📄 Design Doc: {run.artifacts.design_doc.split('/').pop()}
 						</button>
 					{/if}
 					{#if run.artifacts.requirements}
-						<button class="file-link" on:click={() => openOptionalFile(run.artifacts.requirements)}>
+						<button
+							class="file-link"
+							on:click={() =>
+								run.artifacts.requirements && openFile(run.artifacts.requirements)}
+						>
 							📄 Requirements: {run.artifacts.requirements.split('/').pop()}
 						</button>
 					{/if}
 					{#if run.artifacts.wireframe}
-						<button class="file-link" on:click={() => openOptionalFile(run.artifacts.wireframe)}>
+						<button
+							class="file-link"
+							on:click={() => run.artifacts.wireframe && openFile(run.artifacts.wireframe)}
+						>
 							🖼️ Wireframe: {run.artifacts.wireframe.split('/').pop()}
 						</button>
 					{/if}
 					{#if run.artifacts.context_analysis}
-						<button class="file-link" on:click={() => openOptionalFile(run.artifacts.context_analysis)}>
+						<button
+							class="file-link"
+							on:click={() =>
+								run.artifacts.context_analysis &&
+								openFile(run.artifacts.context_analysis)}
+						>
 							📝 Context Analysis: {run.artifacts.context_analysis.split('/').pop()}
 						</button>
 					{/if}

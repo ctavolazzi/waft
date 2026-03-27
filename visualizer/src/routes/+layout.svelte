@@ -4,10 +4,12 @@
 	import '../app.css';
 	import AppShell from '$lib/components/layout/AppShell.svelte';
 	import { authStore } from '$lib/stores/authStore';
+	export let params: Record<string, string> | undefined = undefined;
+	void params;
 
 	const oddNotesRoute = '/odd-notes';
 
-	onMount(async () => {
+	onMount(() => {
 		if ($page.url.pathname.startsWith(oddNotesRoute)) {
 			return;
 		}

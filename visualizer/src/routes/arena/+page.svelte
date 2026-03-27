@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import EvolutionTree from '$lib/components/EvolutionTree.svelte';
+	export let params: Record<string, string> | undefined = undefined;
+	void params;
 
 	interface Agent {
 		id: string;

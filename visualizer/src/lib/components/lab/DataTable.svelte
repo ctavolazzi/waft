@@ -38,6 +38,18 @@
 		}
 	}
 
+	function getFitnessColor(fitness: number): string {
+		if (fitness > 0.7) return '#0f3';
+		if (fitness > 0.4) return '#f90';
+		return '#f03';
+	}
+
+	function getEnergyColor(energy: number): string {
+		if (energy > 0.6) return '#0f3';
+		if (energy > 0.3) return '#f90';
+		return '#f03';
+	}
+
 	function exportCSV() {
 		if (!realm) return;
 

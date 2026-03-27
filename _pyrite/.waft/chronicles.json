@@ -1,9 +1,9 @@
 {
   "character": {
-    "name": "workspace",
+    "name": "waft",
     "level": 1,
     "integrity": 100.0,
-    "insight": 0.0,
+    "insight": 5.0,
     "credits": 0,
     "ability_scores": {
       "strength": 8,
@@ -15,11 +15,12 @@
     },
     "proficiency_bonus": 2,
     "hit_dice": "d8",
-    "max_hp": 10,
-    "current_hp": 10,
-    "created_at": "2026-02-27T20:36:20.663867"
+    "max_hp": 7,
+    "current_hp": 7,
+    "created_at": "2026-03-26T20:31:02.731746",
+    "updated_at": "2026-03-26T20:31:05.437073"
   },
-  "updated_at": "2026-02-27T20:36:20.668650",
+  "updated_at": "2026-03-26T20:31:10.301646",
   "adventure_journal": [
     {
       "timestamp": "2026-01-06T00:13:34.681830",
@@ -106,13 +107,36 @@
       "outcome": "info"
     },
     {
-      "timestamp": "2026-02-27T20:36:20.668598",
-      "event": "observation",
-      "narrative": "I awoke in waft. Level 1, integrity 100.0%. 1 discoveries. Dealer unbeaten. Dungeon: escaped.",
-      "mood": "contemplative",
-      "source": "awakening",
-      "context": {},
-      "type": "narrative"
+      "timestamp": "2026-03-04T08:30:22.352799",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-03-04T11:21:02.243208",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "timestamp": "2026-03-26T20:31:00.405988",
+      "event": "integrity_restore",
+      "narrative": "Project verification passed",
+      "outcome": "info"
+    },
+    {
+      "event": "verify",
+      "narrative": "The waft holds firm as uncertainty dissipates.",
+      "dice_roll": "1d20+-1",
+      "result": 2,
+      "outcome": "success",
+      "rewards": {
+        "insight": 5,
+        "credits": 0,
+        "integrity": 2.0
+      },
+      "classification": "failure",
+      "timestamp": "2026-03-26T20:31:10.301470"
     }
   ]
 }
