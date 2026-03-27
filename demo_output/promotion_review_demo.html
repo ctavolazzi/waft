@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>WAFT Promotion Review Demo</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; background: #f7f7f7; color: #1f1f1f; }
+    h1 { margin-bottom: 4px; }
+    .meta { color: #555; margin-bottom: 20px; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    @media (max-width: 1180px) { .grid { grid-template-columns: 1fr; } }
+    .card { background: white; border: 1px solid #ddd; border-radius: 10px; padding: 16px; }
+    .pass { border-left: 6px solid #2e7d32; }
+    .warn { border-left: 6px solid #ef6c00; }
+    .fail { border-left: 6px solid #c62828; }
+    .badges { margin-top: 8px; }
+    .badge { display: inline-block; padding: 4px 8px; margin: 2px 6px 2px 0; border-radius: 999px; font-size: 12px; }
+    .badge.ok { background: #e8f5e9; color: #1b5e20; border: 1px solid #a5d6a7; }
+    .badge.fail { background: #ffebee; color: #b71c1c; border: 1px solid #ef9a9a; }
+    code { background: #efefef; padding: 2px 5px; border-radius: 4px; }
+    .small { color: #666; font-size: 12px; }
+    a { color: #0b57d0; }
+  </style>
+</head>
+<body>
+  <h1>WAFT Promotion Review Demo</h1>
+  <div class="meta">Generated: 2026-03-02T14:19:10.126033</div>
+  <div class="grid">
+    <div class="card pass">
+      <h2>Promotion-Ready Candidate</h2>
+      <p><strong>Exit Code:</strong> 0</p>
+      <p><strong>Ready:</strong> True</p>
+      <p><strong>Score:</strong> 10/10</p>
+      <p><strong>Report:</strong> <a href="file:///Users/ctavolazzi/Code/active/waft/demo_output/promotion_review_pass.md">promotion_review_pass.md</a></p>
+      <p class="small">Changed files: 3</p>
+      <div class="badges"><span class='badge ok'>all gates pass</span></div>
+    </div>
+    <div class="card warn">
+      <h2>Borderline Candidate (Docs Missing)</h2>
+      <p><strong>Exit Code:</strong> 1</p>
+      <p><strong>Ready:</strong> False</p>
+      <p><strong>Score:</strong> 8/10</p>
+      <p><strong>Report:</strong> <a href="file:///Users/ctavolazzi/Code/active/waft/demo_output/promotion_review_borderline.md">promotion_review_borderline.md</a></p>
+      <p class="small">Changed files: 2</p>
+      <div class="badges"><span class='badge fail'>docs</span></div>
+    </div>
+    <div class="card fail">
+      <h2>Blocked Candidate (Internal Artifacts)</h2>
+      <p><strong>Exit Code:</strong> 1</p>
+      <p><strong>Ready:</strong> False</p>
+      <p><strong>Score:</strong> 2/10</p>
+      <p><strong>Report:</strong> <a href="file:///Users/ctavolazzi/Code/active/waft/demo_output/promotion_review_fail.md">promotion_review_fail.md</a></p>
+      <p class="small">Blocked files: 1</p>
+      <div class="badges"><span class='badge fail'>quality</span><span class='badge fail'>docs</span><span class='badge fail'>professional_surface</span><span class='badge fail'>security</span></div>
+    </div>
+  </div>
+  <h3>CLI command used</h3>
+  <p><code>/Users/ctavolazzi/.pyenv/versions/3.14.3/bin/python -m waft.main promote review ...</code></p>
+</body>
+</html>

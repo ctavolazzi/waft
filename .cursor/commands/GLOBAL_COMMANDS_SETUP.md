@@ -53,15 +53,16 @@ After syncing, these commands are available globally:
 
 ### Core Workflow Commands
 1. **`/phase1`** - Comprehensive data gathering & visualization
-2. **`/analyze`** - Analysis, insights & action planning
-3. **`/resume`** - Pick up where you left off
-4. **`/continue`** - Reflect on current work and continue
-5. **`/reflect`** - Write in AI journal (reflection)
-6. **`/journal`** - AI journal system hub (view, search, stats, reflect)
-7. **`/recap`** - Conversation recap and session summary
-7. **`/audit`** - Audit conversation quality, completeness, and issues
-8. **`/checkpoint`** - Situation report and status update
-9. **`/verify`** - Verification with traceable evidence
+2. **`/execute`** - Canonical execution flow (oracle consult -> context gather -> plan check -> execution -> verification)
+3. **`/analyze`** - Analysis, insights & action planning
+4. **`/resume`** - Pick up where you left off
+5. **`/continue`** - Reflect on current work and continue
+6. **`/reflect`** - Write in AI journal (reflection)
+7. **`/journal`** - AI journal system hub (view, search, stats, reflect)
+8. **`/recap`** - Conversation recap and session summary
+9. **`/audit`** - Audit conversation quality, completeness, and issues
+10. **`/checkpoint`** - Situation report and status update
+11. **`/verify`** - Verification with traceable evidence
 
 ### Analysis & Planning Commands
 6. **`/consider`** - Analysis and recommendations

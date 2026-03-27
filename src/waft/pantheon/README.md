@@ -148,6 +148,28 @@ state = github_god.get_repository_state()
 branches = github_god.get_branch_summary()
 ```
 
+## The Pondering One (NEW)
+
+The Pondering One is the Pantheon steward of the Empirica Brain Realm. It governs MCP-first operation, fallback posture, and jungle-gym verification.
+
+### Quick Start
+
+```python
+from waft.pantheon import ThePonderingOne
+from pathlib import Path
+
+pondering_one = ThePonderingOne(project_path=Path.cwd())
+
+# Ensure MCP realm config exists and is healthy
+status = pondering_one.ensure_brain_realm()
+
+# Inspect current transport posture (mcp/cli/degraded)
+health = pondering_one.get_brain_realm_status()
+
+# Run transport stress harness
+report = pondering_one.run_jungle_gym(mode="simulated")
+```
+
 ### Quick Start
 
 ```python

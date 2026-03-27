@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WAFT Localhost 5050 Dashboard</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div>
+        <h1>WAFT Dashboard 5050</h1>
+        <p class="muted">Cursor context, timeline, reports, and safe command handoff.</p>
+      </div>
+      <div class="topbar-actions">
+        <button id="refreshBtn">Refresh</button>
+        <button id="continueBtn">Continue in Cursor</button>
+      </div>
+    </header>
+
+    <section class="cards">
+      <article class="card">
+        <h2>Snapshot</h2>
+        <div id="snapshot"></div>
+      </article>
+
+      <article class="card">
+        <h2>Command Bundle</h2>
+        <label class="inline-field">
+          Template
+          <select id="templateSelect">
+            <option value="analysis">analysis</option>
+            <option value="decision">decision</option>
+            <option value="report">report</option>
+          </select>
+        </label>
+        <textarea id="objectiveInput" rows="3">Continue localhost:5050 implementation flow</textarea>
+        <textarea id="commandOutput" rows="8" readonly placeholder="Generated command bundle appears here"></textarea>
+        <p class="muted">Safe mode: copy and paste into Cursor chat.</p>
+      </article>
+    </section>
+
+    <section class="cards">
+      <article class="card">
+        <h2>Timeline</h2>
+        <div id="timeline" class="timeline"></div>
+      </article>
+
+      <article class="card">
+        <h2>Reports and PDF</h2>
+        <label class="inline-field">
+          Report type
+          <select id="reportType">
+            <option value="session_recap">session_recap</option>
+            <option value="implementation_readiness">implementation_readiness</option>
+            <option value="decision_trace">decision_trace</option>
+          </select>
+        </label>
+        <input id="reportTitle" type="text" value="Localhost 5050 Session Report" />
+        <textarea id="reportNotes" rows="4" placeholder="Optional notes for this report"></textarea>
+        <div class="row">
+          <button id="generateReportBtn">Generate Report</button>
+          <button id="generatePdfBtn">Generate PDF</button>
+        </div>
+        <div class="row">
+          <a id="reportLink" class="hidden" target="_blank" rel="noreferrer">Open report</a>
+          <a id="pdfLink" class="hidden" target="_blank" rel="noreferrer">Open PDF</a>
+        </div>
+        <div class="row">
+          <button id="printBtn">Print Current Page</button>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>

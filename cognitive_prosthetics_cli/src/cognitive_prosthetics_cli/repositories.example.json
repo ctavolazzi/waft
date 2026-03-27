@@ -1,0 +1,13 @@
+{
+  "repositories": [
+    {
+      "id": "waft",
+      "name": "waft",
+      "path": "~/Code/active/waft",
+      "required_paths": [
+        "README.md",
+        "src/waft/main.py"
+      ]
+    }
+  ]
+}

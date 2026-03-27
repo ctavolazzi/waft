@@ -1,5 +1,53 @@
 # Check Assumptions
 
+Identify assumptions in the active conversation and validate each with evidence.
+
+## Usage
+
+```text
+/check-assumptions
+```
+
+## Execution
+
+1. Extract assumptions from chat + current repo context.
+2. Classify by type:
+   - code
+   - dependency
+   - data
+   - system
+   - behavioral/user-intent
+3. Mark risk (`critical`, `medium`, `low`).
+4. Gather evidence using direct sources (`ReadFile`, `rg`, `Glob`, targeted runtime checks).
+5. Assign status per assumption:
+   - `PROVEN`
+   - `DISPROVEN`
+   - `PARTIAL`
+   - `INSUFFICIENT`
+6. Return confidence score (`0.0-1.0`) and evidence summary.
+7. Recommend next action based on unresolved critical assumptions.
+
+## Output format
+
+```markdown
+## Assumptions Summary
+- Total: N
+- Proven: N
+- Disproven: N
+- Partial: N
+- Insufficient: N
+
+## Detailed Validation
+- A1: ... (category, risk)
+  - Status: ...
+  - Confidence: ...
+  - Evidence: ...
+
+## Recommended Next Step
+- ...
+```
+# Check Assumptions
+
 **Identify all assumptions in the current conversation and attempt to prove them right or wrong using evidence.**
 
 Analyzes the conversation history to extract implicit assumptions, then systematically validates each one using code analysis, file system checks, test results, Empirica epistemic state, and other available evidence sources.

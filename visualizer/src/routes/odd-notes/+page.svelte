@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	export let params: Record<string, string> | undefined = undefined;
+	void params;
 
 	type OddNote = {
 		id: string;

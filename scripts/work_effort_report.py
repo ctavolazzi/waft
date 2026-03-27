@@ -1504,30 +1504,40 @@ def _render_hub_html(
           queueCrit: softwareLimits.queueCrit || (lowPowerMode ? 160 : 260),
           heapWarnRatio: softwareLimits.heapWarnRatio || (deviceMem <= 4 ? 0.65 : 0.78),
           heapCritRatio: softwareLimits.heapCritRatio || (deviceMem <= 4 ? 0.82 : 0.90),
-          sampleMs: softwareLimits.sampleMs || 3500,
+          pingBaseMs: softwareLimits.pingBaseMs || 4500,
+          pingCalmMaxMs: softwareLimits.pingCalmMaxMs || 45000,
+          pingHotMs: softwareLimits.pingHotMs || 1200,
+          pingWarnMs: softwareLimits.pingWarnMs || 2400,
+          pingStimulusMs: softwareLimits.pingStimulusMs || 500,
           alertCooldownMs: softwareLimits.alertCooldownMs || 12000,
         }};
         let timerId = null;
+        let scheduledForMs = 0;
+        let lastScheduledDelayMs = adaptiveLimits.pingBaseMs;
         let longTasksInWindow = 0;
         let lastTick = performance.now();
         let lastAlertMs = 0;
         let longTaskObserver = null;
-
-        if ('PerformanceObserver' in window) {{
-          try {{
-            longTaskObserver = new PerformanceObserver((list) => {{
-              longTasksInWindow += list.getEntries().length;
-            }});
-            longTaskObserver.observe({{ entryTypes: ['longtask'] }});
-          }} catch (err) {{
-            Logger.warn('LongTask observer unavailable', err);
-          }}
-        }}
+        let active = false;
+        let quietCycles = 0;
+        let lastEvaluation = {{ overall: 'ok', flags: [] }};
 
         function severityRank(level) {{
           if (level === 'critical') return 2;
           if (level === 'warning') return 1;
           return 0;
+        }}
+
+        if ('PerformanceObserver' in window) {{
+          try {{
+            longTaskObserver = new PerformanceObserver((list) => {{
+              longTasksInWindow += list.getEntries().length;
+              requestSample('longtask', 'high');
+            }});
+            longTaskObserver.observe({{ entryTypes: ['longtask'] }});
+          }} catch (err) {{
+            Logger.warn('LongTask observer unavailable', err);
+          }}
         }}
 
         function evaluate(snapshot) {{
@@ -1550,14 +1560,14 @@ def _render_hub_html(
 
           let overall = 'ok';
           for (const f of flags) {{
-            if (severityRank(f.level) > severityRank(overall === 'ok' ? 'ok' : overall)) {{
+            if (severityRank(f.level) > severityRank(overall)) {{
               overall = f.level;
             }}
           }}
           return {{ overall, flags }};
         }}
 
-        function updateUi(snapshot, evaluation) {{
+        function updateUi(snapshot, evaluation, reason) {{
           if (!resourceAlert) return;
           resourceAlert.classList.remove('ok', 'warning', 'critical');
           resourceAlert.classList.add(evaluation.overall);
@@ -1571,12 +1581,12 @@ def _render_hub_html(
           if (resourceFlags) {{
             resourceFlags.textContent = evaluation.flags.length
               ? `Flags: ${{evaluation.flags.map((f) => f.message).join(' | ')}}`
-              : 'No resource pressure flags.';
+              : `No resource pressure flags. Last ping reason: ${{reason}}`;
           }}
           if (resourceAlertBody) {{
             resourceAlertBody.textContent = evaluation.flags.length
               ? evaluation.flags[0].message
-              : 'Resource profile within adaptive limits.';
+              : `Cell state stable; adaptive ping backing off (quiet cycles: ${{quietCycles}}).`;
           }}
         }}
 
@@ -1589,13 +1599,60 @@ def _render_hub_html(
           lastAlertMs = nowMs;
         }}
 
-        function sample() {{
+        function nextDelayFromState(evaluation) {{
+          if (evaluation.overall === 'critical') return adaptiveLimits.pingHotMs;
+          if (evaluation.overall === 'warning') return adaptiveLimits.pingWarnMs;
+          const delay = Math.min(
+            adaptiveLimits.pingCalmMaxMs,
+            Math.round(adaptiveLimits.pingBaseMs * Math.pow(1.55, Math.min(quietCycles, 8)))
+          );
+          return delay;
+        }}
+
+        function clearScheduledPing() {{
+          if (timerId) {{
+            clearTimeout(timerId);
+            timerId = null;
+          }}
+          scheduledForMs = 0;
+        }}
+
+        function schedulePing(delayMs, reason) {{
+          if (!active || document.visibilityState === 'hidden') return;
+          const nowMs = Date.now();
+          const proposedFor = nowMs + delayMs;
+          if (timerId && scheduledForMs && proposedFor >= scheduledForMs) return;
+          clearScheduledPing();
+          lastScheduledDelayMs = delayMs;
+          scheduledForMs = proposedFor;
+          timerId = window.setTimeout(() => {{
+            timerId = null;
+            scheduledForMs = 0;
+            sample(reason);
+          }}, delayMs);
+        }}
+
+        function requestSample(reason = 'stimulus', urgency = 'normal') {{
+          if (!active || document.visibilityState === 'hidden') return;
+          if (urgency === 'high') {{
+            schedulePing(adaptiveLimits.pingStimulusMs, reason);
+            return;
+          }}
+          if (urgency === 'medium') {{
+            schedulePing(Math.min(adaptiveLimits.pingWarnMs, adaptiveLimits.pingBaseMs), reason);
+            return;
+          }}
+          schedulePing(nextDelayFromState(lastEvaluation), reason);
+        }}
+
+        function sample(reason = 'periodic') {{
+          if (!active || document.visibilityState === 'hidden') return;
           const nowPerf = performance.now();
-          const expectedMs = adaptiveLimits.sampleMs;
-          const lagMs = Math.max(0, Math.round(nowPerf - lastTick - expectedMs));
+          const elapsedMs = Math.max(1, nowPerf - lastTick);
+          const lagMs = Math.max(0, Math.round(elapsedMs - lastScheduledDelayMs));
           lastTick = nowPerf;
           const queueDepth = RenderQueueManager.size();
-          const longTasksPerMin = Math.round(longTasksInWindow * (60000 / expectedMs));
+          const longTasksPerMin = Math.round(longTasksInWindow * (60000 / elapsedMs));
           longTasksInWindow = 0;
           let heapRatio = null;
           if (performance.memory && performance.memory.jsHeapSizeLimit > 0) {{
@@ -1603,22 +1660,26 @@ def _render_hub_html(
           }}
           const snapshot = {{ lagMs, longTasksPerMin, queueDepth, heapRatio }};
           const evaluation = evaluate(snapshot);
-          updateUi(snapshot, evaluation);
+          if (evaluation.overall === 'ok') quietCycles += 1;
+          else quietCycles = 0;
+          lastEvaluation = evaluation;
+          updateUi(snapshot, evaluation, reason);
           maybeAlert(evaluation);
-          Logger.info('resource.sample', {{ snapshot, evaluation, adaptiveLimits }});
+          Logger.info('resource.sample', {{ reason, snapshot, evaluation, quietCycles, adaptiveLimits }});
+          schedulePing(nextDelayFromState(evaluation), 'adaptive-ping');
         }}
 
         function start() {{
-          if (timerId) return;
-          sample();
-          timerId = window.setInterval(sample, adaptiveLimits.sampleMs);
+          if (active) return;
+          active = true;
+          lastTick = performance.now();
+          quietCycles = 0;
+          requestSample('startup', 'high');
         }}
 
         function stop() {{
-          if (timerId) {{
-            clearInterval(timerId);
-            timerId = null;
-          }}
+          active = false;
+          clearScheduledPing();
         }}
 
         function teardown() {{
@@ -1632,7 +1693,7 @@ def _render_hub_html(
           }}
         }}
 
-        return {{ start, stop, teardown }};
+        return {{ start, stop, teardown, stimulus: requestSample }};
       }})();
 
       function showToast(msg) {{
@@ -1661,6 +1722,7 @@ def _render_hub_html(
       }}
 
       function applyFilters(resetLimit = false) {{
+        ResourceMonitorManager.stimulus('filters.start', 'medium');
         const renderToken = ++activeRenderToken;
         RenderQueueManager.cancelAll();
         if (resetLimit) visibleLimit = PAGE_SIZE;
@@ -1737,6 +1799,7 @@ def _render_hub_html(
             schedule(renderChunk);
           }} else {{
             showToast(`Filters applied: ${{totalFiltered}} result(s), rendered ${{toRender.length}}`);
+            ResourceMonitorManager.stimulus('filters.complete', 'medium');
           }}
         }}
         schedule(renderChunk);
@@ -1810,6 +1873,7 @@ def _render_hub_html(
       }}
 
       function requestApplyFilters() {{
+        ResourceMonitorManager.stimulus('filters.input', 'low');
         if (filterTimer) clearTimeout(filterTimer);
         filterTimer = setTimeout(() => applyFilters(true), DEBOUNCE_MS);
       }}

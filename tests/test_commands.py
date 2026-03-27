@@ -3,6 +3,8 @@
 import subprocess
 import sys
 
+import pytest
+
 from waft.core.memory import MemoryManager
 from waft.core.substrate import SubstrateManager
 
@@ -194,3 +196,37 @@ def test_waft_verify_updates_integrity(full_waft_project):
     # Should run successfully and potentially show integrity
     # The exact output depends on gamification state, but command should complete
     assert result.returncode in [0, 1]  # May succeed or fail based on state
+
+
+def test_runtime_demo_fails_cleanly_when_server_unreachable(full_waft_project):
+    """Test runtime-demo gives actionable error when API server is not running."""
+    result = run_waft_command(
+        ["runtime-demo", "--host", "127.0.0.1", "--port", "6553", "--no-open-browser"],
+        cwd=full_waft_project,
+    )
+
+    assert result.returncode == 1
+    assert "Runtime API not reachable" in result.stdout or "Runtime UI endpoint returned" in result.stdout
+
+
+def test_generate_meme_alias_is_available(full_waft_project):
+    """`waft generate meme` alias should be discoverable."""
+    result = run_waft_command(["generate", "--help"], cwd=full_waft_project)
+    assert result.returncode == 0
+    assert "meme" in result.stdout.lower()
+
+
+def test_meme_security_check_is_listed_under_meme_help(full_waft_project):
+    result = run_waft_command(["meme", "--help"], cwd=full_waft_project)
+    if "No module named 'playingcards'" in result.stderr:
+        pytest.skip("CLI help unavailable in this environment (missing playingcards dependency).")
+    assert result.returncode == 0
+    assert "security-check" in result.stdout
+
+
+def test_meme_security_check_is_listed_under_generate_meme_help(full_waft_project):
+    result = run_waft_command(["generate", "meme", "--help"], cwd=full_waft_project)
+    if "No module named 'playingcards'" in result.stderr:
+        pytest.skip("CLI help unavailable in this environment (missing playingcards dependency).")
+    assert result.returncode == 0
+    assert "security-check" in result.stdout

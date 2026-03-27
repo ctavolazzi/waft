@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pantheon Oracle Cycle</title>
+    <style>
+      body { margin: 0; font-family: Inter, Arial, sans-serif; background: #f8fafc; color: #0f172a; }
+      .wrap { max-width: 1180px; margin: 0 auto; padding: 20px; }
+      .layout { display: grid; grid-template-columns: 340px 1fr; gap: 16px; }
+      .card { background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; }
+      .muted { color: #64748b; }
+      input, textarea, button { width: 100%; box-sizing: border-box; border-radius: 8px; }
+      input, textarea { border: 1px solid #cbd5e1; padding: 10px; margin-bottom: 10px; font-size: 14px; }
+      button { border: 0; background: #0f172a; color: #fff; padding: 10px; font-weight: 600; cursor: pointer; }
+      button:disabled { opacity: 0.6; cursor: default; }
+      .run-item { border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin-bottom: 8px; cursor: pointer; }
+      .run-item.active { border-color: #0f172a; background: #f8fafc; }
+      .pill { display: inline-block; margin-right: 6px; margin-top: 6px; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; }
+      .PROCEED { background: #dcfce7; color: #166534; }
+      .HALT { background: #fee2e2; color: #991b1b; }
+      .BRANCH, .REVISE, .INVESTIGATE, .UNKNOWN { background: #fef3c7; color: #92400e; }
+      .timeline { border-left: 2px solid #cbd5e1; padding-left: 14px; margin-left: 8px; }
+      .node { position: relative; margin-bottom: 14px; }
+      .node::before { content: ""; position: absolute; left: -20px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: #0f172a; }
+      pre { white-space: pre-wrap; border: 1px solid #e2e8f0; background: #f8fafc; border-radius: 8px; padding: 8px; }
+      .profile-card { margin-top: 10px; border: 1px solid #e2e8f0; background: #f8fafc; border-radius: 8px; padding: 10px; }
+      @media (max-width: 940px) { .layout { grid-template-columns: 1fr; } }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/api/pantheon/oracle-cycle/ui/app.mjs"></script>
+  </body>
+  </html>

@@ -5,6 +5,8 @@
     import StatusCard from '$lib/components/cards/StatusCard.svelte';
     import ProgressBar from '$lib/components/status/ProgressBar.svelte';
     import Badge from '$lib/components/status/Badge.svelte';
+    export let params: Record<string, string> | undefined = undefined;
+    void params;
 
     interface Project {
         project_id: string;

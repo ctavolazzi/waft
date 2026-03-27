@@ -213,9 +213,75 @@
       "phase": "UNKNOWN",
       "coverage": 0.0,
       "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-03-01T10:17:27.999496",
+      "phase": "UNKNOWN",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-03-01T11:19:22.137001",
+      "phase": "UNKNOWN",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-03-01T16:29:15.734408",
+      "phase": "Data Gathering",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-03-01T17:15:28.977389",
+      "phase": "Data Gathering",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-03-02T14:21:09.469357",
+      "phase": "Data Gathering",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-03-02T23:53:06.051417",
+      "phase": "Data Gathering",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-03-02T23:56:29.364494",
+      "phase": "Data Gathering",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-03-04T04:53:17.270772",
+      "phase": "Data Gathering",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-03-04T04:53:29.158266",
+      "phase": "Data Gathering",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-03-04T08:49:45.031135",
+      "phase": "Data Gathering",
+      "coverage": 0.0,
+      "uncertainty": 1.0
+    },
+    {
+      "timestamp": "2026-03-04T08:49:48.273430",
+      "phase": "Data Gathering",
+      "coverage": 0.0,
+      "uncertainty": 1.0
     }
   ],
-  "consultation_count": 32,
+  "consultation_count": 43,
   "first_consultation": "2026-01-19T03:00:23.640968",
-  "last_consultation": "2026-01-24T03:23:46.738877"
+  "last_consultation": "2026-03-04T08:49:48.273430"
 }

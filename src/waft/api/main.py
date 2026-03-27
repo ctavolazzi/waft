@@ -16,6 +16,7 @@ from fastapi.staticfiles import StaticFiles
 from .responses import ErrorCodes, ErrorResponse
 from .routes import (
     auth,
+    biome,
     being,
     campfire,
     cartographer,
@@ -27,7 +28,9 @@ from .routes import (
     git,
     gym,
     health,
+    meme_lab,
     oracle,
+    pantheon_oracle_cycle,
     odd_notes,
     ollama,
     pet,
@@ -222,15 +225,18 @@ def create_app(project_path: Path, static_dir: Path | None = None) -> FastAPI:
     app.include_router(cartographer.router, prefix="/api", tags=["cartographer"])
     app.include_router(projects.router, prefix="/api", tags=["projects"])
     app.include_router(health.router, prefix="/api", tags=["health"])
+    app.include_router(meme_lab.router, prefix="/api", tags=["meme-lab"])
     app.include_router(auth.router, prefix="/api", tags=["auth"])
     app.include_router(quests.router, tags=["quests"])
     app.include_router(oracle.router, prefix="/api", tags=["oracle"])
+    app.include_router(pantheon_oracle_cycle.router, prefix="/api", tags=["pantheon-oracle-cycle"])
     app.include_router(ollama.router, prefix="/api", tags=["ollama"])
     app.include_router(odd_notes.router, prefix="/api", tags=["odd"])
     app.include_router(evolve_ui_monitor.router, prefix="/api", tags=["evolve-ui"])
     app.include_router(dashboard_5050.router, prefix="/api", tags=["dashboard-5050"])
     app.include_router(cyoa.router, prefix="/api", tags=["cyoa"])
     app.include_router(storyteller.router, prefix="/api", tags=["storyteller"])
+    app.include_router(biome.router, prefix="/api", tags=["biome"])
 
     # Serve static files if provided (must be last route)
     if static_dir and static_dir.exists():

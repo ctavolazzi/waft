@@ -86,11 +86,10 @@ check_result = self._empirica_check(question, findings, unknowns, uncertainty)
 **Empirica Command Used:**
 - `empirica check-submit` - Decision gate assessment
 
-**Decision Logic:**
-- **PROCEED**: Confidence ≥ 0.7 AND uncertainty < 0.3
-- **HALT**: Confidence < 0.3 OR uncertainty > 0.7
-- **BRANCH**: More unknowns than findings (needs investigation)
-- **REVISE**: Otherwise (needs refinement)
+**Decision Source of Truth:**
+- Oracle now submits canonical CHECK payloads to Empirica and uses the returned gate as authoritative.
+- Local confidence heuristics are only a fallback signal if Empirica gate submission fails.
+- Expected decisions include `PROCEED`, `INVESTIGATE`, `HALT`, `BRANCH`, `REVISE`.
 
 ---
 
@@ -198,6 +197,13 @@ Confidence: 85%. Safe to proceed.
 - **Findings/unknowns** logged via Empirica
 - **Check gates** use Empirica's decision system
 - **Session continuity** maintained across consultations
+
+### MCP Server Mode (Enabled for project)
+- Project config now includes `.cursor/mcp.json` with `empirica-mcp` in epistemic mode.
+- Environment:
+  - `EMPIRICA_EPISTEMIC_MODE=true`
+  - `EMPIRICA_PERSONALITY=balanced_architect`
+- This allows Cursor-side MCP workflows to consume the same Empirica epistemic routing model Oracle is aligned with.
 
 ---
 

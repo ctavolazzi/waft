@@ -2,6 +2,8 @@
   import { onMount } from 'svelte';
   import axios from 'axios';
   import type { Story } from '../types';
+  export let params: Record<string, string> | undefined = undefined;
+  void params;
 
   const API_BASE = 'http://localhost:8000/api';
 

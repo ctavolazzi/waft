@@ -115,8 +115,32 @@
       "reason": "Project verification passed",
       "integrity_before": 100.0,
       "integrity_after": 100.0
+    },
+    {
+      "timestamp": "2026-03-04T08:30:22.352799",
+      "type": "integrity_restore",
+      "amount": 2.0,
+      "reason": "Project verification passed",
+      "integrity_before": 100.0,
+      "integrity_after": 100.0
+    },
+    {
+      "timestamp": "2026-03-04T11:21:02.243208",
+      "type": "integrity_restore",
+      "amount": 2.0,
+      "reason": "Project verification passed",
+      "integrity_before": 100.0,
+      "integrity_after": 100.0
+    },
+    {
+      "timestamp": "2026-03-26T20:31:00.405988",
+      "type": "integrity_restore",
+      "amount": 2.0,
+      "reason": "Project verification passed",
+      "integrity_before": 100.0,
+      "integrity_after": 100.0
     }
   ],
   "created_at": "2026-01-06T00:13:34.681769",
-  "updated_at": "2026-01-06T01:47:26.274040"
+  "updated_at": "2026-03-26T20:31:00.406014"
 }

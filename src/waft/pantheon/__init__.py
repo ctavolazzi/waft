@@ -16,6 +16,7 @@ from .magistrate import Magistrate
 from .military_brass import MilitaryBrass, Mission
 from .mission_control import MissionControl, MissionStatus
 from .paperwork_god import PaperworkGod, PaperworkRecord
+from .pondering_one import ThePonderingOne
 from .reasoner import TheReasoner
 from .scrivener import ReportRecord, ReportType, Scrivener
 from .skurl import RedTapeObstacle, Skurl
@@ -52,6 +53,7 @@ __all__ = [
     "PersonnelRecord",
     "PaperworkGod",
     "PaperworkRecord",
+    "ThePonderingOne",
     "Skurl",
     "RedTapeObstacle",
     # The Scrivener (Reports)

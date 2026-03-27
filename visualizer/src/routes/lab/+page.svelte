@@ -17,6 +17,8 @@
 	import { GENESIS_FARM_TUTORIAL, triggerDrought, checkStepCompletion } from '$lib/models/Tutorial';
 	import { initializePopulation } from '$lib/models/Evolution';
 	import { createRealm } from '$lib/models/Realm';
+	export let params: Record<string, string> | undefined = undefined;
+	void params;
 
 	let showSplash = true;
 	let asciiLine = 0;

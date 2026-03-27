@@ -4,6 +4,8 @@
 	import RunsList from '$lib/components/evolve-ui/RunsList.svelte';
 	import RunDetails from '$lib/components/evolve-ui/RunDetails.svelte';
 	import { evolveUiStore } from '$lib/stores/evolveUiStore';
+	export let params: Record<string, string> | undefined = undefined;
+	void params;
 
 	let refreshInterval: ReturnType<typeof setInterval> | null = null;
 

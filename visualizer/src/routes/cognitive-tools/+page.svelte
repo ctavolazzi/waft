@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { apiClient } from '$lib/api/client';
+	export let params: Record<string, string> | undefined = undefined;
+	void params;
 
 	let loading = true;
 	let empiricaData: any = null;

@@ -4,6 +4,8 @@
 
 **Don't just build agents. Breed them.**
 
+> Note: this repository is expected to migrate toward [FogSift/waft](https://github.com/FogSift/waft.git) in a future phase.
+
 ---
 
 ## The Promise
@@ -141,6 +143,30 @@ waft verify --path /path/to/project
 
 **Options:**
 - `--path, -p`: Project path (default: current directory)
+
+#### `waft oracle-cycle "<objective>"`
+
+Run a two-step oracle cycle from CLI and persist a structured run artifact.
+
+```bash
+# Default output location under selected path
+waft oracle-cycle "Assess bootstrap readiness" --path /path/to/project
+
+# Explicit output path (useful for external-drive experiments)
+waft oracle-cycle "Assess bootstrap readiness" \
+  --path "/Volumes/Easystore/waft-experiments/20260304_oracle_cycle_bootstrap" \
+  --output-dir "/Volumes/Easystore/waft-experiments/20260304_oracle_cycle_bootstrap/oracle_runs"
+```
+
+**Options:**
+- `--path, -p`: Context/project path used for Oracle context and default storage root
+- `--output-dir`: Optional explicit artifact directory override
+- `--order-prompt`: Optional first prompt override (ordering decision)
+- `--risk-prompt`: Optional second prompt override (risk-priority decision)
+
+**Artifacts:**
+- Per-run JSON file: `<run_id>.json`
+- Summary stream: `index.jsonl`
 
 #### `waft evolve`
 
@@ -475,6 +501,7 @@ WAFT includes 12 professional document templates:
 - **[Agent Interface Design](docs/designs/002_agent_interface.md)** - BaseAgent specification
 - **[Evolutionary Architecture](docs/research/evolutionary_architecture.md)** - Scientific doctrine
 - **[State of the Art](docs/research/state_of_art_2026.md)** - Research synthesis
+- **[Meme Generator Guide](docs/MEME_GENERATOR_GUIDE.md)** - `waft meme` usage, styles, and troubleshooting
 
 ### Architecture Documents (PDF)
 

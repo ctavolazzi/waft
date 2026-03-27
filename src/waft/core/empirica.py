@@ -44,6 +44,7 @@ class EmpiricaManager:
         self.project_path = project_path
         self._empirica_cmd = self._find_empirica_command()
         self._project_id: str | None = None  # Cached project ID
+        self._instance_id = os.getenv("EMPIRICA_INSTANCE_ID", "waft-bot")
 
         # Try to initialize Python API (preferred over CLI)
         self._api_manager: EmpiricaAPIManager | None = None
@@ -75,49 +76,98 @@ class EmpiricaManager:
         Returns:
             List of command parts for subprocess.run (e.g., ["/path/to/python3.12/bin/empirica"] or ["empirica"])
         """
-        # Try Python 3.12/3.11's empirica binary first (Empirica requires 3.11+)
-        for py_version in ["3.12", "3.11"]:
-            # Try common installation path for Python framework
-            empirica_path = (
-                f"/Library/Frameworks/Python.framework/Versions/{py_version}/bin/empirica"
-            )
-            if os.path.exists(empirica_path) and os.access(empirica_path, os.X_OK):
-                # Verify it works by checking version
-                try:
-                    result = subprocess.run(
-                        [empirica_path, "--version"],
-                        capture_output=True,
-                        text=True,
-                        timeout=5,
-                    )
-                    if result.returncode == 0 and (
-                        "3.12" in result.stdout or "3.11" in result.stdout
-                    ):
-                        return [empirica_path]
-                except (
-                    subprocess.TimeoutExpired,
-                    FileNotFoundError,
-                    subprocess.CalledProcessError,
-                ):
-                    continue
+        candidates: list[str] = []
+        empirica_in_path = shutil.which("empirica")
+        if empirica_in_path:
+            candidates.append(empirica_in_path)
 
-        # Fallback: try direct empirica command (may use wrong Python version)
-        empirica_cmd = shutil.which("empirica")
-        if empirica_cmd:
-            # Check if it's the Python 3.12/3.11 version
+        for py_version in ["3.12", "3.11"]:
+            candidates.append(f"/Library/Frameworks/Python.framework/Versions/{py_version}/bin/empirica")
+
+        candidates.append("empirica")
+
+        for candidate in candidates:
             try:
                 result = subprocess.run(
-                    [empirica_cmd, "--version"],
+                    [candidate, "--version"],
                     capture_output=True,
                     text=True,
-                    timeout=2,
+                    timeout=3,
                 )
-                if result.returncode == 0 and ("3.12" in result.stdout or "3.11" in result.stdout):
-                    return [empirica_cmd]
+                if result.returncode == 0:
+                    return [candidate]
             except (subprocess.TimeoutExpired, FileNotFoundError, subprocess.CalledProcessError):
-                pass
+                continue
 
-        return ["empirica"]  # Will fail with FileNotFoundError, but consistent interface
+        return ["empirica"]  # Consistent fallback
+
+    def _empirica_env(self) -> dict[str, str]:
+        """Build environment for empirica CLI in headless/Cursor contexts."""
+        env = dict(os.environ)
+        env["EMPIRICA_INSTANCE_ID"] = self._instance_id
+        env["HOME"] = str(self._resolve_empirica_home())
+        return env
+
+    def _resolve_empirica_home(self) -> Path:
+        """
+        Resolve a writable HOME for empirica subprocess calls.
+
+        In sandboxed agent contexts, writes to the real user home may be blocked.
+        We prefer WAFT_EMPIRICA_HOME when set, otherwise fall back to project path
+        if ~/.empirica is not writable.
+        """
+        forced = os.getenv("WAFT_EMPIRICA_HOME")
+        if forced:
+            home = Path(forced).expanduser().resolve()
+            home.mkdir(parents=True, exist_ok=True)
+            return home
+
+        real_home = Path.home()
+        probe_dir = real_home / ".empirica" / "instance_projects"
+        try:
+            probe_dir.mkdir(parents=True, exist_ok=True)
+            probe_file = probe_dir / ".waft_write_probe"
+            probe_file.write_text("ok")
+            probe_file.unlink(missing_ok=True)
+            return real_home
+        except OSError:
+            self.project_path.mkdir(parents=True, exist_ok=True)
+            return self.project_path
+
+    def _write_instance_project_file(self) -> None:
+        """Write instance project mapping so project resolution does not rely on tty heuristics."""
+        empirica_home = self._resolve_empirica_home()
+        instance_dir = empirica_home / ".empirica" / "instance_projects"
+        instance_dir.mkdir(parents=True, exist_ok=True)
+        payload: dict[str, Any] = {
+            "project_path": str(self.project_path),
+            "project_name": self.project_path.name,
+        }
+        if self._project_id:
+            payload["project_id"] = self._project_id
+        (instance_dir / f"{self._instance_id}.json").write_text(json.dumps(payload))
+
+    def _parse_json_output(self, output: str) -> dict[str, Any] | None:
+        """Parse JSON from CLI output that may include extra lines."""
+        text = output.strip()
+        if not text:
+            return None
+        try:
+            parsed = json.loads(text)
+            return parsed if isinstance(parsed, dict) else None
+        except json.JSONDecodeError:
+            pass
+
+        for line in reversed(text.splitlines()):
+            line = line.strip()
+            if not line.startswith("{"):
+                continue
+            try:
+                parsed = json.loads(line)
+                return parsed if isinstance(parsed, dict) else None
+            except json.JSONDecodeError:
+                continue
+        return None
 
     def is_initialized(self) -> bool:
         """
@@ -192,6 +242,7 @@ class EmpiricaManager:
                 capture_output=True,
                 text=True,
                 timeout=3,
+                env=self._empirica_env(),
             )
             if result.returncode == 0:
                 validation["cli_available"] = True
@@ -346,6 +397,7 @@ class EmpiricaManager:
                 capture_output=True,
                 text=True,
                 timeout=5,
+                env=self._empirica_env(),
             )
             if test_result.returncode != 0:
                 error_msg = test_result.stderr or test_result.stdout or "Unknown error"
@@ -372,6 +424,7 @@ class EmpiricaManager:
 
         # Step 4: Ensure project exists (project_bootstrap will auto-create if needed)
         try:
+            self._write_instance_project_file()
             project_id = self._ensure_project_exists()
             if project_id:
                 result["project_id"] = project_id
@@ -454,6 +507,7 @@ class EmpiricaManager:
                 capture_output=True,
                 text=True,
                 check=True,
+                env=self._empirica_env(),
             )
             return True
         except subprocess.CalledProcessError as e:
@@ -484,20 +538,22 @@ class EmpiricaManager:
         }
 
         try:
+            self._write_instance_project_file()
             result = subprocess.run(
-                self._empirica_cmd + ["session-create", "-"],
+                self._empirica_cmd + ["session-create", "--output", "json", "-"],
                 cwd=self.project_path,
                 input=json.dumps(session_data),
                 capture_output=True,
                 text=True,
                 check=True,
                 timeout=5,  # 5 second timeout to prevent hanging
+                env=self._empirica_env(),
             )
-            # Parse session ID from output (format: {"session_id": "..."})
-            import json as json_module
-
-            output = json_module.loads(result.stdout)
-            return output.get("session_id")
+            output = self._parse_json_output(result.stdout)
+            session_id = output.get("session_id") if output else None
+            if session_id:
+                self._write_instance_project_file()
+            return session_id
         except (
             subprocess.CalledProcessError,
             FileNotFoundError,
@@ -552,6 +608,7 @@ class EmpiricaManager:
                 text=True,
                 check=True,
                 timeout=5,  # 5 second timeout to prevent hanging
+                env=self._empirica_env(),
             )
             return True
         except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
@@ -601,6 +658,7 @@ class EmpiricaManager:
                 text=True,
                 check=True,
                 timeout=5,  # 5 second timeout to prevent hanging
+                env=self._empirica_env(),
             )
             return True
         except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
@@ -634,6 +692,7 @@ class EmpiricaManager:
                 capture_output=True,
                 text=True,
                 check=True,
+                env=self._empirica_env(),
             )
             projects_data = json.loads(result.stdout)
 
@@ -677,6 +736,7 @@ class EmpiricaManager:
                     capture_output=True,
                     text=True,
                     check=True,
+                    env=self._empirica_env(),
                 )
                 bootstrap_data = json.loads(result.stdout)
                 if bootstrap_data.get("ok") and bootstrap_data.get("project_id"):
@@ -696,10 +756,12 @@ class EmpiricaManager:
                 capture_output=True,
                 text=True,
                 check=True,
+                env=self._empirica_env(),
             )
             project_data = json.loads(result.stdout)
             if project_data.get("ok") and project_data.get("project_id"):
                 self._project_id = project_data.get("project_id")
+                self._write_instance_project_file()
                 return self._project_id
 
             return None
@@ -719,6 +781,7 @@ class EmpiricaManager:
             Dictionary with epistemic state, goals, findings, unknowns, or None if failed
         """
         # Ensure project exists first
+        self._write_instance_project_file()
         project_id = self._ensure_project_exists()
 
         try:
@@ -732,12 +795,14 @@ class EmpiricaManager:
                 capture_output=True,
                 text=True,
                 check=True,
+                env=self._empirica_env(),
             )
             bootstrap_data = json.loads(result.stdout)
 
             # Cache project_id from response if we didn't have it
             if bootstrap_data.get("ok") and bootstrap_data.get("project_id"):
                 self._project_id = bootstrap_data.get("project_id")
+                self._write_instance_project_file()
 
             return bootstrap_data if bootstrap_data.get("ok") else None
         except (subprocess.CalledProcessError, FileNotFoundError, json.JSONDecodeError):
@@ -763,6 +828,7 @@ class EmpiricaManager:
                 capture_output=True,
                 text=True,
                 check=True,
+                env=self._empirica_env(),
             )
             return True
         except (ValueError, subprocess.CalledProcessError, FileNotFoundError):
@@ -787,43 +853,72 @@ class EmpiricaManager:
                 text=True,
                 check=True,
                 timeout=3,  # 3 second timeout for logging
+                env=self._empirica_env(),
             )
             return True
         except (ValueError, subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
             return False
 
-    def check_submit(self, operation: dict[str, Any] | None = None) -> str | None:
+    def check_submit(
+        self,
+        operation: dict[str, Any] | None = None,
+        session_id: str | None = None,
+        vectors: dict[str, Any] | None = None,
+        reasoning: str = "",
+        decision: str | None = None,
+    ) -> str | None:
         """
         Submit a CHECK gate to assess if operation is safe to proceed.
 
         Returns: PROCEED | HALT | BRANCH | REVISE | None if failed
 
         Args:
-            operation: Optional operation description dict
+            operation: Optional legacy operation description dict
+            session_id: Optional session ID for canonical CHECK payload
+            vectors: Optional flat vector dict
+            reasoning: Optional reasoning for canonical CHECK payload
+            decision: Optional explicit decision hint (`proceed`/`investigate`)
 
         Returns:
             Gate result string or None if failed
         """
         try:
-            if operation:
-                result = subprocess.run(
-                    self._empirica_cmd + ["check-submit", "-"],
-                    cwd=self.project_path,
-                    input=json.dumps(operation),
-                    capture_output=True,
-                    text=True,
-                    check=True,
-                )
+            payload: dict[str, Any]
+            if session_id and vectors:
+                payload = {
+                    "session_id": session_id,
+                    "vectors": vectors,
+                    "reasoning": reasoning or "Oracle CHECK gate submission",
+                }
+            elif operation:
+                payload = dict(operation)
+                payload.setdefault("session_id", session_id)
+                payload.setdefault("vectors", vectors or {"know": 0.5, "uncertainty": 0.5})
+                payload.setdefault("reasoning", reasoning or "Legacy CHECK gate submission")
             else:
-                result = subprocess.run(
-                    self._empirica_cmd + ["check-submit", "-"],
-                    cwd=self.project_path,
-                    capture_output=True,
-                    text=True,
-                    check=True,
-                )
-            output = json.loads(result.stdout)
-            return output.get("gate", output.get("result"))
+                payload = {
+                    "session_id": session_id,
+                    "vectors": vectors or {"know": 0.5, "uncertainty": 0.5},
+                    "reasoning": reasoning or "CHECK gate submission",
+                }
+
+            if decision:
+                payload["decision"] = decision
+
+            result = subprocess.run(
+                self._empirica_cmd + ["check-submit", "-"],
+                cwd=self.project_path,
+                input=json.dumps(payload),
+                capture_output=True,
+                text=True,
+                check=True,
+                env=self._empirica_env(),
+            )
+            output = self._parse_json_output(result.stdout) or {}
+            gate = output.get("decision") or output.get("gate") or output.get("result")
+            if isinstance(gate, str):
+                return gate.upper()
+            return None
         except (subprocess.CalledProcessError, FileNotFoundError, json.JSONDecodeError):
             return None
 
@@ -867,6 +962,7 @@ class EmpiricaManager:
                 capture_output=True,
                 text=True,
                 check=True,
+                env=self._empirica_env(),
             )
             return True
         except (subprocess.CalledProcessError, FileNotFoundError):
@@ -898,6 +994,7 @@ class EmpiricaManager:
                 capture_output=True,
                 text=True,
                 check=True,
+                env=self._empirica_env(),
             )
             return json.loads(result.stdout)
         except (subprocess.CalledProcessError, FileNotFoundError, json.JSONDecodeError):

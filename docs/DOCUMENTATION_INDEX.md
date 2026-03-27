@@ -118,6 +118,8 @@ Comprehensive feature documentation:
 | Guide | Description | Type |
 |-------|-------------|------|
 | [CLI Commands Reference](guides/CLI_COMMANDS.md) | Complete command documentation | Reference |
+| [Meme Generator Guide](MEME_GENERATOR_GUIDE.md) | Meme generation commands and FFmpeg styles | Feature |
+| [404 Prompt Configurator Guide](404_PROMPT_CONFIGURATOR_GUIDE.md) | Missing-route to prompt workflow + test page | Feature |
 | [Gamification System](guides/GAMIFICATION_GUIDE.md) | D&D mechanics and karma | Feature |
 | [PDF Generation System](guides/PDF_GENERATION_GUIDE.md) | Templates and customization | Feature |
 | [Desktop Applications](guides/DESKTOP_APPS_GUIDE.md) | Electron app architecture | Feature |
@@ -221,6 +223,7 @@ Quick reference and lookup:
 | Document | Description | Format |
 |----------|-------------|--------|
 | [Command Reference](reference/COMMAND_REFERENCE.md) | All CLI commands | Quick ref |
+| [CLI Runtime Reference](CLI_RUNTIME_REFERENCE.md) | Verified command/API runtime behavior | Quick ref |
 | [Configuration Reference](reference/CONFIG_REFERENCE.md) | All settings | Quick ref |
 | [Glossary](reference/GLOSSARY.md) | Term definitions | Dictionary |
 | [Keyboard Shortcuts](reference/SHORTCUTS.md) | UI shortcuts | Quick ref |

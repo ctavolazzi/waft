@@ -9,6 +9,7 @@ from typing import Any
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel
 
+from ...karma import KarmaMerchant
 from ...core.science.oracle import TheOracle
 from ..dependencies import get_project_path
 
@@ -114,3 +115,56 @@ async def oracle_health(http_request: Request):
         }
     except Exception as e:
         return {"status": "error", "oracle_available": False, "error": str(e)}
+
+
+@router.get("/oracle/profile")
+async def oracle_profile(http_request: Request, soul_id: str | None = None):
+    project_path = get_project_path(http_request)
+
+    try:
+        oracle = TheOracle(project_path=project_path)
+        personality = oracle.get_personality_info()
+        epistemic_state = oracle.get_epistemic_state()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Oracle profile failed: {str(e)}")
+
+    reincarnation = {
+        "soul_id": soul_id,
+        "total_karma": 0.0,
+        "lifetimes_count": 0,
+        "last_incarnation": None,
+        "memory_fragments_count": 0,
+    }
+
+    if soul_id:
+        try:
+            soul = KarmaMerchant(project_path=project_path).access_akasha(soul_id)
+            reincarnation = {
+                "soul_id": soul.get("soul_id", soul_id),
+                "total_karma": soul.get("total_karma", 0.0),
+                "lifetimes_count": len(soul.get("lifetimes", []) or []),
+                "last_incarnation": soul.get("last_incarnation"),
+                "memory_fragments_count": len(soul.get("memory_fragments", []) or []),
+            }
+        except Exception:
+            pass
+
+    return {
+        "oracle": {
+            "name": personality.get("name", "The Oracle"),
+            "type": personality.get("type", "balanced"),
+            "title": personality.get("title", "Epistemic Intelligence System"),
+            "traits": personality.get("traits", {}),
+            "communication_style": personality.get("communication_style", {}),
+        },
+        "epistemic": {
+            "ready": epistemic_state.get("ready", False),
+            "has_context": epistemic_state.get("has_context", False),
+            "message": epistemic_state.get("message", ""),
+            "findings_count": len(epistemic_state.get("findings", []) or []),
+            "unknowns_count": len(epistemic_state.get("unknowns", []) or []),
+            "goals_count": len(epistemic_state.get("goals", []) or []),
+            "timestamp": epistemic_state.get("timestamp", ""),
+        },
+        "reincarnation": reincarnation,
+    }

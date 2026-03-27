@@ -32,6 +32,10 @@
 		if (ratio > 0.3) return '#f90';
 		return '#f03';
 	}
+
+	function resourceKey(key: string): ResourceType {
+		return key as ResourceType;
+	}
 </script>
 
 {#if village}
@@ -46,7 +50,7 @@
 				<!-- Resource grid -->
 				<div class="resources-grid">
 					{#each Object.entries(village.resources) as [type, resource]}
-						{@const resourceType = type as ResourceType}
+						{@const resourceType = resourceKey(type)}
 						{@const percentFull = (resource.amount / resource.capacity) * 100}
 						{@const statusColor = getStatusColor(resource.amount, resource.capacity)}
 

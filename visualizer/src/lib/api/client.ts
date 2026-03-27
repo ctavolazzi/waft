@@ -74,11 +74,6 @@ export const apiClient = {
 		return response.data;
 	},
 
-	async getWorkEfforts() {
-		const response = await client.get('/api/work-efforts');
-		return response.data;
-	},
-
 	async getEmpirica() {
 		const response = await client.get('/api/empirica');
 		return response.data;

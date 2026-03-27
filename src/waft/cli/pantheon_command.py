@@ -24,6 +24,7 @@ from ..pantheon import (
     MissionControl,
     Storyteller,
     TestRunner,
+    ThePonderingOne,
     TheVillage,
 )
 
@@ -46,6 +47,7 @@ class PantheonCouncil:
         self.fae = Fae(project_path=project_path)
         self.mission_control = MissionControl(project_path=project_path)
         self.village = TheVillage(project_path=project_path)
+        self.pondering_one = ThePonderingOne(project_path=project_path)
 
         # Initialize Oracle (epistemic intelligence)
         try:
@@ -74,6 +76,7 @@ class PantheonCouncil:
             "judgment_history": self._get_recent_judgments(),
             "active_missions": self._get_active_missions(),
             "open_quests": self._get_open_quests(),
+            "brain_realm": self.pondering_one.get_brain_realm_status(),
         }
         return evidence
 
@@ -274,6 +277,12 @@ class PantheonCouncil:
             "[yellow]→[/yellow] [bold]TheVillage[/bold] (God of Community) listens to the gathering..."
         )
         weigh_ins["village"] = self._village_weighs_in(evidence)
+
+        # ThePonderingOne weighs in (Brain Realm Governance)
+        self.console.print(
+            "[yellow]→[/yellow] [bold]ThePonderingOne[/bold] (Brain Realm Governor) audits stewardship..."
+        )
+        weigh_ins["pondering_one"] = self._pondering_one_weighs_in(evidence)
 
         # Oracle weighs in (Epistemic Intelligence)
         if self.oracle_available:
@@ -511,6 +520,35 @@ class PantheonCouncil:
             "perspective": perspective,
             "recommendation": recommendation,
             "priority": "high",
+        }
+
+    def _pondering_one_weighs_in(self, evidence: dict[str, Any]) -> dict[str, Any]:
+        brain_realm = evidence.get("brain_realm", {})
+        transport = brain_realm.get("transport", "degraded")
+        fallback_reason = brain_realm.get("fallback_reason")
+
+        perspective = f"Brain realm transport currently routed through {transport.upper()}. "
+        if fallback_reason:
+            perspective += f"Fallback reason: {fallback_reason}. "
+
+        if transport == "mcp":
+            recommendation = "Maintain MCP-first governance and run jungle gym on regular cadence."
+            priority = "medium"
+        elif transport == "cli":
+            recommendation = "Repair MCP command path and keep CLI fallback active until MCP health is restored."
+            priority = "high"
+        else:
+            recommendation = (
+                "Urgent: restore Empirica backend (MCP or CLI) before autonomous epistemic operations."
+            )
+            priority = "high"
+
+        return {
+            "entity": "ThePonderingOne",
+            "domain": "Brain Realm Governance",
+            "perspective": perspective,
+            "recommendation": recommendation,
+            "priority": priority,
         }
 
     def pass_judgment(self, weigh_ins: dict[str, Any], evidence: dict[str, Any]) -> dict[str, Any]:

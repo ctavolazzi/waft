@@ -2,5 +2,6 @@
   "daily_learning_realm": 8090,
   "library_realm": 8091,
   "security_realm": 8080,
-  "core_realm": 8092
+  "core_realm": 8092,
+  "claude_code_realm": 3131
 }

@@ -10,8 +10,43 @@ Core modules for Waft framework.
 
 from .memory import MemoryManager
 from .substrate import SubstrateManager
+from .door_guy import Bouncer, BouncerDecision, PortManifest, ShipManifest
+from .empirica_brain import BrainCycleResult, EmpiricaBrain
+from .empirica_handler import (
+    CheckResult,
+    EmpericaHandler,
+    EmpericaHandlerError,
+    GateDecision,
+    Phase,
+)
+from .bot import Bot, BotConfig, Inventory, Journal, Port
+from .meme_generator import MemeGenerator, MemeRecipe, MemeRequest, MemeStyle, MemeTemplate
 
-__all__ = ["MemoryManager", "SubstrateManager"]
+__all__ = [
+    "MemoryManager",
+    "SubstrateManager",
+    "Bouncer",
+    "BouncerDecision",
+    "PortManifest",
+    "ShipManifest",
+    "EmpiricaBrain",
+    "BrainCycleResult",
+    "EmpericaHandler",
+    "EmpericaHandlerError",
+    "CheckResult",
+    "GateDecision",
+    "Phase",
+    "Bot",
+    "BotConfig",
+    "Inventory",
+    "Journal",
+    "Port",
+    "MemeGenerator",
+    "MemeRequest",
+    "MemeStyle",
+    "MemeTemplate",
+    "MemeRecipe",
+]
 
 
 # Lazy imports for probe system
