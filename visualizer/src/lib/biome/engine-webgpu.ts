@@ -12,13 +12,12 @@ import {
 	MeshStandardMaterial,
 	PerspectiveCamera,
 	PlaneGeometry,
-	RGBAFormat,
 	Raycaster,
+	RGBAFormat,
 	RepeatWrapping,
 	Scene,
 	SRGBColorSpace,
 	LinearFilter,
-	Vector2,
 	Vector3,
 	Timer,
 	UnsignedByteType,
@@ -29,28 +28,27 @@ import {
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { SkyMesh } from 'three/addons/objects/SkyMesh.js';
 import { WaterMesh } from 'three/addons/objects/WaterMesh.js';
-import type { BiomeEngineLike, BiomeViewState, LatticeBeing, SeabedPreset } from './types';
+import type { BiomeEngineLike, BiomeViewState, LatticeBeing } from './types';
 import { buildTerrainPlaneGeometry, createPopulationMesh, updatePopulationMesh } from './terrain';
+import {
+	SEABED_PRESETS,
+	computeRippleBoost,
+	debugBiome,
+	BIOME_FOV,
+	BIOME_NEAR,
+	BIOME_FAR,
+	BIOME_CLEAR_COLOR,
+	BIOME_BG_COLOR,
+	BIOME_FOG_COLOR,
+	BIOME_FOG_NEAR,
+	BIOME_FOG_FAR,
+	BIOME_SKY_SCALE,
+	BIOME_ORBIT_DAMPING,
+	BIOME_MAX_POLAR
+} from './engine-shared';
 
-const SEABED_HEX: Record<SeabedPreset, string> = {
-	default: '#426d5e',
-	muddy: '#4f3f32',
-	sand: '#a89272',
-	coral: '#5a4a66'
-};
-
-function isBiomeDebugEnabled(): boolean {
-	if (typeof window === 'undefined') return false;
-	const search = window.location.search ?? '';
-	if (search.includes('debugBiome=1')) return true;
-	return new URLSearchParams(search).get('debugBiome') === '1';
-}
-
-function debugBiome(...args: unknown[]): void {
-	if (!isBiomeDebugEnabled()) return;
-	console.warn(...args);
-}
-
+// WebGPU uses three/webgpu DataTexture; re-import buildFallbackNormalTexture logic inline
+// since it must use the webgpu-specific DataTexture constructor.
 function buildFallbackNormals(): Texture {
 	const width = 128;
 	const height = 128;
@@ -92,11 +90,15 @@ export class BiomeEngineWebGPU implements BiomeEngineLike {
 	private normalMap: Texture | null = null;
 	private beings: ReturnType<typeof createPopulationMesh>;
 	private controls: OrbitControls;
-	private raycaster = new Raycaster();
-	private pointer = new Vector2();
 	private rippleBoost = 0;
-	private onPointerRipple = (e: PointerEvent) => this.pumpRipple(e);
+	private onPointerRipple = (e: PointerEvent) => {
+		const boost = computeRippleBoost(e, this.canvas, this.camera, this.water);
+		if (boost > 0) this.rippleBoost = Math.min(this.rippleBoost + boost, 5.5);
+	};
 	private onWheel = (e: WheelEvent) => e.preventDefault();
+	private _scratchVec3 = new Vector3();
+	private _fog: Fog | null = null;
+	private _bgColor = new Color(BIOME_BG_COLOR);
 
 	private sky: SkyMesh | null = null;
 	private seabedUrlLoaded: string | null = null;
@@ -116,26 +118,29 @@ export class BiomeEngineWebGPU implements BiomeEngineLike {
 		this.renderer = new WebGPURenderer({ canvas, antialias: true, alpha: false });
 		this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 		this.renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
-		this.renderer.setClearColor('#061626', 1);
+		this.renderer.setClearColor(BIOME_CLEAR_COLOR, 1);
 		debugBiome('[BiomeRuntime] webgpu-engine-constructed');
 
-		this.camera = new PerspectiveCamera(55, canvas.clientWidth / canvas.clientHeight, 0.1, 2400);
+		this.camera = new PerspectiveCamera(BIOME_FOV, canvas.clientWidth / canvas.clientHeight, BIOME_NEAR, BIOME_FAR);
 		this.camera.position.set(95, 80, 130);
 
 		this.controls = new OrbitControls(this.camera, this.canvas);
 		this.controls.target.set(0, 0, 0);
 		this.controls.enableDamping = true;
-		this.controls.dampingFactor = 0.06;
+		this.controls.dampingFactor = BIOME_ORBIT_DAMPING;
 		this.controls.minDistance = 28;
 		this.controls.maxDistance = 520;
-		this.controls.maxPolarAngle = Math.PI / 2 - 0.08;
+		this.controls.maxPolarAngle = BIOME_MAX_POLAR;
 		this.controls.update();
 
 		this.scene.add(this.sun);
 		this.scene.add(this.ambient);
 		this.sun.position.set(130, 210, 110);
-		this.scene.background = new Color('#0a1626');
-		this.scene.fog = state.water.fog && !state.volumetrics.enabled ? new Fog('#12263f', 40, 420) : null;
+		this.scene.background = this._bgColor;
+		if (state.water.fog && !state.volumetrics.enabled) {
+			this._fog = new Fog(BIOME_FOG_COLOR, BIOME_FOG_NEAR, BIOME_FOG_FAR);
+			this.scene.fog = this._fog;
+		}
 
 		this.beings = createPopulationMesh(state.terrain);
 		this.terrain = this.buildTerrainMesh(state);
@@ -209,7 +214,7 @@ export class BiomeEngineWebGPU implements BiomeEngineLike {
 	}
 
 	private estimateSunVisibility(): number {
-		const toSun = this.sun.position.clone().sub(this.camera.position).normalize();
+		const toSun = this._scratchVec3.copy(this.sun.position).sub(this.camera.position).normalize();
 		this.volumetricRay.set(this.camera.position, toSun);
 		const hits = this.volumetricRay.intersectObject(this.terrain, false);
 		if (!hits.length) return 1;
@@ -229,8 +234,9 @@ export class BiomeEngineWebGPU implements BiomeEngineLike {
 		const density = Math.max(0, this.state.volumetrics.density);
 		const anisotropy = Math.max(0, Math.min(0.95, this.state.volumetrics.anisotropy));
 		const heightFalloff = Math.max(0.01, this.state.volumetrics.heightFalloff);
-		const toSun = this.sun.position.clone().sub(this.camera.position).normalize();
 		const sunVis = this.estimateSunVisibility();
+		// _scratchVec3 was set by estimateSunVisibility; recompute for local use
+		const toSun = this._scratchVec3.copy(this.sun.position).sub(this.camera.position).normalize();
 		const sunDx = toSun.x * 0.5 + 0.5;
 		const sunDy = toSun.y * 0.5 + 0.5;
 
@@ -276,24 +282,12 @@ export class BiomeEngineWebGPU implements BiomeEngineLike {
 	private buildTerrainMesh(state: BiomeViewState): Mesh {
 		const geometry = buildTerrainPlaneGeometry(state.terrain.size, state.terrain.segments);
 		const material = new MeshStandardMaterial({
-			color: new Color(SEABED_HEX[state.terrain.seabedPreset]),
+			color: new Color(SEABED_PRESETS[state.terrain.seabedPreset].base),
 			metalness: 0.05,
 			roughness: 0.92,
 			side: DoubleSide
 		});
 		return new Mesh(geometry, material);
-	}
-
-	private pumpRipple(e: PointerEvent): void {
-		if ((e.buttons & 1) === 0 && e.type !== 'pointerdown') return;
-		const rect = this.canvas.getBoundingClientRect();
-		this.pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-		this.pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-		this.raycaster.setFromCamera(this.pointer, this.camera);
-		if (this.water) {
-			const hits = this.raycaster.intersectObject(this.water, false);
-			if (hits.length) this.rippleBoost = Math.min(this.rippleBoost + 1.8, 5.5);
-		}
 	}
 
 	private initializeWater(): void {
@@ -339,14 +333,14 @@ export class BiomeEngineWebGPU implements BiomeEngineLike {
 		}
 		if (!this.sky) {
 			this.sky = new SkyMesh();
-			this.sky.scale.setScalar(450000);
+			this.sky.scale.setScalar(BIOME_SKY_SCALE);
 			this.scene.add(this.sky);
 		}
 		this.sky.turbidity.value = this.state.sky.turbidity;
 		this.sky.rayleigh.value = this.state.sky.rayleigh;
-		const sunVec = this.sun.position.clone().normalize().multiplyScalar(400000);
-		this.sky.sunPosition.value.copy(sunVec);
-		this.scene.background = new Color('#0a1626');
+		this._scratchVec3.copy(this.sun.position).normalize().multiplyScalar(400000);
+		this.sky.sunPosition.value.copy(this._scratchVec3);
+		this.scene.background = this._bgColor;
 	}
 
 	private applySeabedTextureUrl(url: string | null): void {
@@ -444,15 +438,20 @@ export class BiomeEngineWebGPU implements BiomeEngineLike {
 			Math.max(40, state.water.sunDirection[1] * 180),
 			state.water.sunDirection[2] * 160
 		);
-		this.scene.fog = state.water.fog && !state.volumetrics.enabled ? new Fog('#12263f', 40, 420) : null;
-		this.scene.background = new Color('#0a1626');
+		if (state.water.fog && !state.volumetrics.enabled) {
+			if (!this._fog) this._fog = new Fog(BIOME_FOG_COLOR, BIOME_FOG_NEAR, BIOME_FOG_FAR);
+			this.scene.fog = this._fog;
+		} else {
+			this.scene.fog = null;
+		}
+		this.scene.background = this._bgColor;
 
 		if (sizeChanged) {
 			this.terrain.geometry.dispose();
 			this.terrain.geometry = buildTerrainPlaneGeometry(state.terrain.size, state.terrain.segments);
 		}
 		if (presetChanged || sizeChanged) {
-			(this.terrain.material as MeshStandardMaterial).color.set(SEABED_HEX[state.terrain.seabedPreset]);
+			(this.terrain.material as MeshStandardMaterial).color.set(SEABED_PRESETS[state.terrain.seabedPreset].base);
 		}
 
 		this.applySeabedTextureUrl(state.terrain.seabedTextureDataUrl);
