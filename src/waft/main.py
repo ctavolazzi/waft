@@ -33,6 +33,7 @@ except Exception:
     def cards_status():
         typer.echo("cards CLI unavailable: install optional dependency `playingcards` to enable.")
 
+from .cli.awakening_cli import app as awakening_app
 from .cli.case_render import case_render_cmd
 from .cli.chief_cli import app as chief_app
 from .cli.epistemic_display import (
