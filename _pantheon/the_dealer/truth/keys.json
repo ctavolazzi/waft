@@ -1,6 +1,6 @@
 {
-  "level": 3,
-  "xp": 850,
+  "level": 4,
+  "xp": 1000,
   "fragments": [
     {
       "gate_number": 1,
@@ -31,6 +31,12 @@
       "key_fragment": "SEAL-01-1D1B15860F01AD0F",
       "revelation": "The Truth begins with alignment. You have aligned with The House.",
       "earned_at": "2026-03-26T20:30:15.162027"
+    },
+    {
+      "gate_number": 2,
+      "key_fragment": "SEAL-02-BEF3AE39A48C014E",
+      "revelation": "The Truth has two faces. You see both now.",
+      "earned_at": "2026-04-19T09:08:44.448093"
     }
   ],
   "seals_broken": [
@@ -47,8 +53,8 @@
     11,
     12
   ],
-  "total_challenges": 19,
-  "total_wins": 5,
+  "total_challenges": 20,
+  "total_wins": 6,
   "created_at": "2026-01-20T12:31:32.903659",
-  "last_updated": "2026-03-26T20:30:15.161158"
+  "last_updated": "2026-04-19T09:08:44.448078"
 }
