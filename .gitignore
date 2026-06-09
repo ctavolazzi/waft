@@ -42,9 +42,10 @@ visualizer/vite.config.ts.timestamp-*
 # Temporary PDF examples (generated outputs)
 _temp_pdf_examples/*.pdf
 
-# Runtime data files
-.empirica/sessions/*.db
+# Runtime data files (empirica session/cache — generated, not source)
+.empirica/
 _pyrite/.waft/*.json
 
 # Unified project symlinks
 _unified/
+node_modules/
