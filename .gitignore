@@ -54,3 +54,16 @@ node_modules/
 waft_memory.db
 waft_memory.db-shm
 waft_memory.db-wal
+
+# External reference repos (cloned for study — not waft source)
+_external/
+_realms/
+_temp_latexam_study/
+_temp_science_textbook_template/
+lib/
+standalone/
+templates/
+
+# Cloned study repos inside work efforts
+_work_efforts/**/templates_exploration/
+_work_efforts/**/*_repo/
