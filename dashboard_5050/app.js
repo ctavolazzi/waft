@@ -135,6 +135,97 @@ async function refreshAll() {
   }
 }
 
+// ========== Self-Explorer Panel ==========
+
+let explorerPollId = null;
+
+async function startExplorer() {
+  await ensureHandshake();
+  const data = await jsonFetch(`${API_BASE}/self-explorer/start`, {
+    method: "POST",
+    body: JSON.stringify({ max_steps: 20 })
+  });
+  updateExplorerUI(data);
+  if (!explorerPollId) explorerPollId = setInterval(pollExplorer, 2000);
+}
+
+async function stopExplorer() {
+  await jsonFetch(`${API_BASE}/self-explorer/stop`, { method: "POST" });
+}
+
+async function nudgeExplorer() {
+  const msg = document.getElementById("nudgeInput").value.trim();
+  if (!msg) return;
+  await jsonFetch(`${API_BASE}/self-explorer/nudge`, {
+    method: "POST",
+    body: JSON.stringify({ message: msg })
+  });
+  document.getElementById("nudgeInput").value = "";
+}
+
+async function pollExplorer() {
+  try {
+    const [status, journal] = await Promise.all([
+      jsonFetch(`${API_BASE}/self-explorer/status`),
+      jsonFetch(`${API_BASE}/self-explorer/journal?limit=30`)
+    ]);
+    updateExplorerUI(status);
+    renderJournal(journal.entries);
+    if (!status.running && explorerPollId) {
+      clearInterval(explorerPollId);
+      explorerPollId = null;
+    }
+  } catch (e) {
+    // Server not running or explorer not initialized — silent
+  }
+}
+
+function updateExplorerUI(status) {
+  const badge = document.getElementById("explorerBadge");
+  if (status.running) {
+    badge.textContent = "running";
+    badge.style.background = "#0a0";
+  } else if (status.step_count > 0) {
+    badge.textContent = "stopped";
+    badge.style.background = "#a50";
+  } else {
+    badge.textContent = "offline";
+    badge.style.background = "#555";
+  }
+  const stats = document.getElementById("explorerStats");
+  stats.innerHTML = [
+    `<span class="pill">step ${status.step_count || 0}</span>`,
+    `<span class="pill">files ${status.files_explored || 0}</span>`,
+    `<span class="pill">docs ${status.docs_written || 0}</span>`,
+    `<span class="pill">journal ${status.journal_entries || 0}</span>`,
+    status.current_file ? `<span class="pill">${status.current_file}</span>` : "",
+    status.scientific_name ? `<span class="pill">${status.scientific_name}</span>` : "",
+  ].join(" ");
+}
+
+function renderJournal(entries) {
+  const el = document.getElementById("explorerJournal");
+  const wasAtBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 40;
+  el.innerHTML = entries.map(e => {
+    const ts = e.timestamp ? e.timestamp.split("T")[1]?.slice(0, 8) : "";
+    const type = e.type || "?";
+    const content = e.content || e.observation || e.message || JSON.stringify(e).slice(0, 200);
+    const file = e.file ? ` [${e.file}]` : "";
+    const color = type === "Musing" ? "#ff0" : type === "Reflection" ? "#0ff" : "#0f0";
+    return `<span style="color:${color}">[${ts}] ${type}${file}</span>\n${content}\n`;
+  }).join("\n");
+  if (wasAtBottom) el.scrollTop = el.scrollHeight;
+}
+
+document.getElementById("startExplorerBtn").addEventListener("click", startExplorer);
+document.getElementById("stopExplorerBtn").addEventListener("click", stopExplorer);
+document.getElementById("nudgeBtn").addEventListener("click", nudgeExplorer);
+
+// Poll once on load to pick up running state
+pollExplorer();
+
+// ========== Original Dashboard ==========
+
 document.getElementById("refreshBtn").addEventListener("click", refreshAll);
 document.getElementById("continueBtn").addEventListener("click", copyContinueCommand);
 document.getElementById("generateReportBtn").addEventListener("click", generateReport);

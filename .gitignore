@@ -49,3 +49,8 @@ _pyrite/.waft/*.json
 # Unified project symlinks
 _unified/
 node_modules/
+
+# Runtime DB files
+waft_memory.db
+waft_memory.db-shm
+waft_memory.db-wal

@@ -33,6 +33,7 @@ from .routes import (
     pantheon_oracle_cycle,
     odd_notes,
     ollama,
+    self_explorer,
     pet,
     projects,
     protocel,
@@ -237,6 +238,7 @@ def create_app(project_path: Path, static_dir: Path | None = None) -> FastAPI:
     app.include_router(cyoa.router, prefix="/api", tags=["cyoa"])
     app.include_router(storyteller.router, prefix="/api", tags=["storyteller"])
     app.include_router(biome.router, prefix="/api", tags=["biome"])
+    app.include_router(self_explorer.router, prefix="/api", tags=["self-explorer"])
 
     # Serve static files if provided (must be last route)
     if static_dir and static_dir.exists():

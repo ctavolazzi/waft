@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WAFT | NERVE CENTER STREAM</title>
+    <style>
+        body { background: #0c0c0c; color: #f5ebdd; font-family: 'Courier New', monospace; display: flex; flex-direction: column; height: 100vh; margin: 0; overflow: hidden; border: 4px solid #3c2a21; }
+        #toolbar { flex: 0 0 auto; display: flex; align-items: center; gap: 16px; padding: 8px 16px; background: #141414; border-bottom: 2px solid #3c2a21; font-size: 11px; flex-wrap: wrap; }
+        #toolbar label { cursor: pointer; user-select: none; }
+        #toolbar input[type="text"] { background: #000; color: #9a8; border: 1px solid #3c2a21; padding: 4px 8px; min-width: 220px; }
+        #main { display: flex; flex: 1; min-height: 0; }
+        #terminal { width: 40%; border-right: 2px solid #3c2a21; padding: 20px; overflow-y: auto; background: #000; font-size: 12px; }
+        #preview { width: 60%; background: #1a1a1a; padding: 20px; overflow-y: auto; }
+        .token { animation: blink 0.1s; }
+        @keyframes blink { from { background: #f5ebdd; color: #000; } to { background: transparent; } }
+        h2 { color: #f5ebdd; border-bottom: 2px solid #3c2a21; padding-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; }
+        .meta { color: #666; margin-bottom: 10px; }
+        .status-ok { color: #6a8; }
+        .status-err { color: #c66; }
+    </style>
+</head>
+<body>
+
+<div id="toolbar">
+    <label><input type="checkbox" id="opt-daily"> Append stream to Obsidian daily when done</label>
+    <span>Bridge:</span>
+    <input type="text" id="bridge-url" value="http://127.0.0.1:5055" title="obsidian_daily_bridge.py">
+    <button type="button" id="btn-bridge-check" style="background:#3c2a21;color:#f5ebdd;border:1px solid #6a5;cursor:pointer;padding:4px 10px;">Check bridge</button>
+    <span id="bridge-status"></span>
+</div>
+
+<div id="main">
+<div id="terminal">
+    <h2>📡 Transmission_Log</h2>
+    <div class="meta">Relay: <span id="relay-display"></span></div>
+    <div id="log-content"></div>
+</div>
+
+<div id="preview">
+    <h2>🖼️ Live_Canvas</h2>
+    <div id="canvas-content"></div>
+</div>
+</div>
+
+<script>
+    const RELAY_URL = "http://localhost:3000/query";
+    const logEl = document.getElementById('log-content');
+    const canvasEl = document.getElementById('canvas-content');
+    document.getElementById('relay-display').textContent = RELAY_URL;
+
+    function fenceWrap(lang, code) {
+        let fence = "```";
+        while (code.includes(fence)) fence += "`";
+        return fence + lang + "\n" + code + "\n" + fence;
+    }
+
+    async function appendDailyNote(fullHtml, streamText) {
+        const base = document.getElementById('bridge-url').value.replace(/\/$/, "");
+        const ts = new Date().toISOString();
+        const md = [
+            "\n---\n",
+            "### WAFT Cockpit — " + ts + "\n",
+            "**Model output (raw):**\n",
+            fenceWrap("", streamText),
+            "\n**Rendered HTML:**\n",
+            fenceWrap("html", fullHtml.replace(/```html|```/g, "").trim()),
+            "\n"
+        ].join("\n");
+
+        const headers = { "Content-Type": "application/json" };
+        const token = localStorage.getItem("obsidian_bridge_token");
+        if (token) headers["X-Bridge-Token"] = token;
+
+        const res = await fetch(base + "/append-daily", {
+            method: "POST",
+            headers,
+            body: JSON.stringify({ markdown: md }),
+        });
+        if (!res.ok) {
+            const err = await res.text();
+            throw new Error(err || res.statusText);
+        }
+        return res.json();
+    }
+
+    document.getElementById('btn-bridge-check').addEventListener('click', async () => {
+        const el = document.getElementById('bridge-status');
+        const base = document.getElementById('bridge-url').value.replace(/\/$/, "");
+        el.textContent = "…";
+        el.className = "";
+        try {
+            const res = await fetch(base + "/health");
+            const j = await res.json();
+            if (j.ok) {
+                el.textContent = "OK — " + j.daily_dir + (j.exists ? "" : " (dir missing)");
+                el.className = j.exists ? "status-ok" : "status-err";
+            } else {
+                el.textContent = "Unexpected";
+                el.className = "status-err";
+            }
+        } catch (e) {
+            el.textContent = "Unreachable: " + e.message;
+            el.className = "status-err";
+        }
+    });
+
+    async function startStream() {
+        const response = await fetch(RELAY_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                messages: [{ role: "user", content: "Generate a technical brutalist dashboard UI segment with a status report for 'Soil 82%'. Use thick borders and dithered gradients." }],
+                stream: true
+            })
+        });
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let fullHtml = "";
+        let streamText = "";
+
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            const chunk = decoder.decode(value);
+            const lines = chunk.split('\n');
+
+            for (const line of lines) {
+                if (line.startsWith('data: ') && line !== 'data: [DONE]') {
+                    try {
+                        const json = JSON.parse(line.substring(6));
+                        const content = json.choices[0].delta.content || "";
+
+                        if (content) {
+                            streamText += content;
+                            const span = document.createElement('span');
+                            span.className = 'token';
+                            span.innerText = content;
+                            logEl.appendChild(span);
+                            logEl.scrollTop = logEl.scrollHeight;
+
+                            fullHtml += content;
+                            const clean = fullHtml.replace(/```html|```/g, "");
+                            canvasEl.innerHTML = clean;
+                        }
+                    } catch (e) {
+                        console.error("Parse Error", e);
+                    }
+                }
+            }
+        }
+
+        if (document.getElementById('opt-daily').checked && streamText.trim()) {
+            const status = document.getElementById('bridge-status');
+            status.textContent = "Appending to daily…";
+            status.className = "";
+            try {
+                const j = await appendDailyNote(fullHtml, streamText);
+                status.textContent = "Daily note updated: " + j.path;
+                status.className = "status-ok";
+            } catch (e) {
+                status.textContent = "Daily append failed: " + e.message;
+                status.className = "status-err";
+            }
+        }
+    }
+
+    startStream();
+</script>
+</body>
+</html>

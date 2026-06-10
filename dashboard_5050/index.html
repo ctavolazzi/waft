@@ -20,6 +20,20 @@
     </header>
 
     <section class="cards">
+      <article class="card" style="grid-column: 1 / -1;">
+        <h2>Self-Explorer <span id="explorerBadge" style="font-size:.7em;padding:2px 8px;border-radius:4px;background:#555;color:#fff;">offline</span></h2>
+        <div style="display:flex;gap:8px;margin-bottom:8px;">
+          <button id="startExplorerBtn">Start</button>
+          <button id="stopExplorerBtn">Stop</button>
+          <input id="nudgeInput" type="text" placeholder="Nudge the agent..." style="flex:1;" />
+          <button id="nudgeBtn">Nudge</button>
+        </div>
+        <div style="display:flex;gap:8px;font-size:.85em;margin-bottom:8px;" id="explorerStats"></div>
+        <div id="explorerJournal" style="max-height:400px;overflow-y:auto;background:#1a1a1a;color:#0f0;font-family:monospace;font-size:.82em;padding:8px;border-radius:4px;white-space:pre-wrap;"></div>
+      </article>
+    </section>
+
+    <section class="cards">
       <article class="card">
         <h2>Snapshot</h2>
         <div id="snapshot"></div>
