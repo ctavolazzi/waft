@@ -29,7 +29,7 @@ dependencies = [
     "empirica>=1.2.3",
     "tinydb>=4.8.0",
     "d20>=1.0.0",
-    "fastapi>=0.104.0",
+    "fastapi>=0.139",  # >=0.139 needed: earlier fastapi passes on_startup= to Starlette 1.x Router (removed), crashing CLI import. empirica[api] pulls starlette>=1.0.1, so fastapi must be new enough to accept it.
     "uvicorn[standard]>=0.24.0",
     "fpdf2>=2.7.0",
     "beautifulsoup4>=4.14.0",

@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WAFT · Instrument Panel</title>
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --ground:#0d100e; --panel:#141a16; --panel-2:#1b231e; --panel-3:#222b25;
+  --line:#2b332e; --line-2:#39443c;
+  --ink:#e2e7dd; --ink-dim:#b6c0b6; --muted:#7f8f84; --faint:#5c675e;
+  --amber:#e6a93c; --amber-dim:#b78430;
+  --viridian:#4fae7b; --oxblood:#cf5a40;
+  --glow: 0 0 0 1px rgba(230,169,60,.28), 0 0 18px -6px rgba(230,169,60,.55);
+  --mono: ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  --sans: system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --r:10px; --maxw:1240px;
+}
+@media (prefers-color-scheme: light){
+  :root{
+    --ground:#e7eae3; --panel:#f4f6f0; --panel-2:#ecefe6; --panel-3:#e2e6da;
+    --line:#d0d5c8; --line-2:#c1c8b6;
+    --ink:#1b201a; --ink-dim:#333a30; --muted:#5e685e; --faint:#8b978a;
+    --amber:#9a6a13; --amber-dim:#7d560f;
+    --viridian:#237a4c; --oxblood:#a83a22;
+    --glow: 0 0 0 1px rgba(154,106,19,.30), 0 2px 14px -6px rgba(154,106,19,.4);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0d100e; --panel:#141a16; --panel-2:#1b231e; --panel-3:#222b25;
+  --line:#2b332e; --line-2:#39443c;
+  --ink:#e2e7dd; --ink-dim:#b6c0b6; --muted:#7f8f84; --faint:#5c675e;
+  --amber:#e6a93c; --amber-dim:#b78430; --viridian:#4fae7b; --oxblood:#cf5a40;
+  --glow:0 0 0 1px rgba(230,169,60,.28),0 0 18px -6px rgba(230,169,60,.55);
+}
+:root[data-theme="light"]{
+  --ground:#e7eae3; --panel:#f4f6f0; --panel-2:#ecefe6; --panel-3:#e2e6da;
+  --line:#d0d5c8; --line-2:#c1c8b6;
+  --ink:#1b201a; --ink-dim:#333a30; --muted:#5e685e; --faint:#8b978a;
+  --amber:#9a6a13; --amber-dim:#7d560f; --viridian:#237a4c; --oxblood:#a83a22;
+  --glow:0 0 0 1px rgba(154,106,19,.30),0 2px 14px -6px rgba(154,106,19,.4);
+}
+
+/* ============ BASE ============ */
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:var(--serif); font-size:16px; line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(127,143,132,.05) 0 1px, transparent 1px 3px),
+    radial-gradient(120% 90% at 82% -5%, rgba(230,169,60,.06), transparent 55%);
+  background-attachment:fixed;
+}
+:root[data-theme="light"] body, @media (prefers-color-scheme:light){}
+a{color:inherit}
+.mono{font-family:var(--mono)}
+.label{font-family:var(--sans); text-transform:uppercase; letter-spacing:.14em; font-size:11px; font-weight:600}
+
+/* ============ LAYOUT ============ */
+.wrap{max-width:var(--maxw); margin:0 auto; padding:0 22px 90px;
+  display:grid; grid-template-columns:300px 1fr; gap:34px; align-items:start}
+@media (max-width:900px){ .wrap{grid-template-columns:1fr; gap:22px; padding-bottom:60px} }
+
+/* ---- CHASSIS (left) ---- */
+.chassis{position:sticky; top:20px; align-self:start}
+@media (max-width:900px){ .chassis{position:static} }
+.brand{display:flex; align-items:baseline; gap:12px; margin:0 0 4px}
+.brand h1{font-family:var(--mono); font-weight:700; font-size:34px; letter-spacing:-.02em; margin:0; line-height:1}
+.brand .ver{font-family:var(--mono); font-size:12px; color:var(--amber); border:1px solid var(--line-2);
+  padding:2px 7px; border-radius:20px; letter-spacing:.02em}
+.tagline{font-style:italic; color:var(--ink-dim); font-size:15.5px; margin:10px 0 18px; max-width:34ch}
+.tagline b{font-style:normal; font-weight:700; color:var(--ink)}
+
+.panelcard{background:var(--panel); border:1px solid var(--line); border-radius:var(--r); padding:16px 16px 14px; margin-bottom:16px}
+.panelcard > .label{color:var(--muted); display:block; margin-bottom:12px}
+
+.stat{display:flex; align-items:baseline; justify-content:space-between; gap:10px;
+  font-family:var(--mono); font-size:13px; padding:5px 0; border-bottom:1px dashed var(--line)}
+.stat:last-child{border-bottom:0}
+.stat .k{color:var(--muted)} .stat .v{color:var(--ink); font-variant-numeric:tabular-nums; text-align:right}
+.stat .v.big{font-size:20px; color:var(--amber); font-weight:700}
+
+.dot{display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:7px; vertical-align:1px}
+.dot.ok{background:var(--viridian); box-shadow:0 0 0 0 rgba(79,174,123,.6); animation:pulse 2.6s infinite}
+.dot.warn{background:var(--oxblood)}
+.dot.idle{background:var(--muted)}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(79,174,123,.5)}70%{box-shadow:0 0 0 7px rgba(79,174,123,0)}100%{box-shadow:0 0 0 0 rgba(79,174,123,0)}}
+
+.legend{display:flex; flex-direction:column; gap:8px; font-family:var(--mono); font-size:12px; color:var(--ink-dim)}
+.legend div{display:flex; gap:9px; align-items:flex-start}
+
+.searchbox{position:relative; margin-bottom:16px}
+.searchbox input{width:100%; background:var(--panel-2); border:1px solid var(--line-2); color:var(--ink);
+  font-family:var(--mono); font-size:14px; padding:11px 13px 11px 34px; border-radius:8px; outline:none}
+.searchbox input:focus{border-color:var(--amber); box-shadow:var(--glow)}
+.searchbox input::placeholder{color:var(--faint)}
+.searchbox svg{position:absolute; left:11px; top:50%; transform:translateY(-50%); opacity:.6}
+.searchbox .slash{position:absolute; right:10px; top:50%; transform:translateY(-50%);
+  font-family:var(--mono); font-size:11px; color:var(--faint); border:1px solid var(--line-2); border-radius:5px; padding:1px 6px}
+
+.themebtn{width:100%; background:transparent; border:1px solid var(--line-2); color:var(--ink-dim);
+  font-family:var(--sans); font-size:11px; letter-spacing:.14em; text-transform:uppercase; font-weight:600;
+  padding:9px; border-radius:8px; cursor:pointer}
+.themebtn:hover{border-color:var(--amber); color:var(--ink)}
+
+/* ---- BAYS (right) ---- */
+.bays{display:flex; flex-direction:column; gap:16px; min-width:0}
+.bay{background:var(--panel); border:1px solid var(--line); border-radius:var(--r); overflow:hidden;
+  opacity:0; transform:translateY(10px); animation:rise .5s cubic-bezier(.2,.7,.3,1) forwards}
+@keyframes rise{to{opacity:1; transform:none}}
+.bay-hd{display:flex; align-items:center; gap:14px; padding:14px 18px; border-bottom:1px solid var(--line);
+  background:linear-gradient(var(--panel-2), var(--panel))}
+.bay-hd .idx{font-family:var(--mono); font-size:12px; color:var(--faint); font-variant-numeric:tabular-nums}
+.bay-hd h2{font-family:var(--mono); font-size:16.5px; font-weight:700; margin:0; letter-spacing:-.01em; flex:1}
+.bay-hd .cnt{font-family:var(--sans); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--muted); border:1px solid var(--line-2); border-radius:20px; padding:3px 9px; white-space:nowrap}
+.bay-hd .stripe{width:4px; height:20px; border-radius:2px; background:var(--amber)}
+.bay.sig-death .bay-hd .stripe{background:var(--oxblood)}
+.bay.sig-alive .bay-hd .stripe{background:var(--viridian)}
+.bay-note{padding:11px 18px 3px; color:var(--muted); font-size:14px; font-style:italic}
+
+.rows{padding:8px 10px 12px}
+.row{display:grid; grid-template-columns:minmax(0,auto) 1fr; gap:16px; align-items:baseline;
+  padding:9px 8px; border-radius:7px; cursor:pointer; transition:background .12s}
+@media (max-width:560px){ .row{grid-template-columns:1fr; gap:2px} }
+.row:hover{background:var(--panel-2)}
+.row .cmd{font-family:var(--mono); font-size:13.5px; color:var(--amber); white-space:nowrap;
+  overflow-x:auto; scrollbar-width:none}
+.row .cmd::-webkit-scrollbar{display:none}
+.row .cmd b{color:var(--ink); font-weight:600} /* the verb */
+.row .desc{color:var(--ink-dim); font-size:14.5px; min-width:0}
+.row .badge{font-family:var(--sans); font-size:9.5px; letter-spacing:.1em; text-transform:uppercase;
+  padding:1px 6px; border-radius:4px; margin-left:8px; vertical-align:1px; font-weight:600}
+.badge.run{color:var(--viridian); border:1px solid color-mix(in srgb,var(--viridian) 45%, transparent)}
+.badge.cli{color:var(--muted); border:1px solid var(--line-2)}
+.badge.api{color:var(--amber); border:1px solid color-mix(in srgb,var(--amber) 45%, transparent)}
+.copied{position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px);
+  background:var(--ink); color:var(--ground); font-family:var(--mono); font-size:13px;
+  padding:9px 16px; border-radius:8px; opacity:0; pointer-events:none; transition:.22s; z-index:50}
+.copied.show{opacity:1; transform:translateX(-50%) translateY(0)}
+
+.noresult{display:none; text-align:center; color:var(--muted); font-style:italic; padding:40px}
+.foot{grid-column:1/-1; margin-top:26px; padding-top:18px; border-top:1px solid var(--line);
+  font-family:var(--mono); font-size:11.5px; color:var(--faint); line-height:1.9}
+.foot b{color:var(--muted); font-weight:600}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation:none !important; transition:none !important}
+  .bay{opacity:1; transform:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ CHASSIS ============ -->
+  <aside class="chassis">
+    <div class="brand">
+      <h1>WAFT</h1><span class="ver mono">v0.10.0</span>
+    </div>
+    <p class="tagline">The evolutionary code laboratory. <b>Don't build agents — breed them.</b> Spawn, mutate, and select self-modifying agents against the physics of a reality-fracture gym.</p>
+
+    <div class="searchbox">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="q" type="text" placeholder="filter capabilities…" autocomplete="off" spellcheck="false">
+      <span class="slash">/</span>
+    </div>
+
+    <div class="panelcard">
+      <span class="label">Bench status</span>
+      <div class="stat"><span class="k">unified <b class="mono" style="color:var(--ink)">waft</b> CLI</span><span class="v"><span class="dot ok"></span>operational</span></div>
+      <div class="stat"><span class="k">script toolbox</span><span class="v"><span class="dot ok"></span>operational</span></div>
+      <div class="stat"><span class="k">pdf forge · xelatex</span><span class="v"><span class="dot ok"></span>ready</span></div>
+      <div class="stat"><span class="k">runtime</span><span class="v">Python 3.14</span></div>
+    </div>
+
+    <div class="panelcard">
+      <span class="label">Surface area</span>
+      <div class="stat"><span class="k">CLI verbs</span><span class="v big">70+</span></div>
+      <div class="stat"><span class="k">standalone scripts</span><span class="v big">174</span></div>
+      <div class="stat"><span class="k">subsystems below</span><span class="v big">11</span></div>
+    </div>
+
+    <div class="panelcard">
+      <span class="label">Legend</span>
+      <div class="legend">
+        <div><span class="badge run" style="margin:0">RUN</span><span>standalone script — runs today</span></div>
+        <div><span class="badge cli" style="margin:0">CLI</span><span>verb on the unified <span class="mono">waft</span> CLI</span></div>
+        <div><span class="badge api" style="margin:0">API</span><span>HTTP route under <span class="mono">waft&nbsp;serve</span></span></div>
+      </div>
+    </div>
+
+    <button class="themebtn" id="theme">◐ toggle theme</button>
+  </aside>
+
+  <!-- ============ BAYS ============ -->
+  <main class="bays" id="bays">
+
+    <!-- 01 SUBSTRATE -->
+    <section class="bay" data-cat="substrate" style="animation-delay:.02s">
+      <div class="bay-hd"><span class="stripe"></span><span class="idx">01</span><h2>The Substrate — Evolution</h2><span class="cnt">code is DNA</span></div>
+      <p class="bay-note">Agents write their own Python source. Every genome is a SHA-256 of its code + config; mutation edits the genome, selection adopts the fittest.</p>
+      <div class="rows">
+        <div class="row" data-c="waft new my_lab"><span class="cmd"><b>waft new</b> my_lab <span class="badge cli">CLI</span></span><span class="desc">Spin up a fresh laboratory: uv project, _pyrite memory, Empirica tracking.</span></div>
+        <div class="row" data-c="waft verify"><span class="cmd"><b>waft verify</b> <span class="badge cli">CLI</span></span><span class="desc">Check that the substrate — structure, templates, wiring — is intact.</span></div>
+        <div class="row" data-c="waft evolve --agent RefactorAgent --generation 5"><span class="cmd"><b>waft evolve</b> --agent A --generation 5 <span class="badge cli">CLI</span></span><span class="desc">Select and adopt the fittest variant of an agent's lineage.</span></div>
+        <div class="row" data-c="waft info"><span class="cmd"><b>waft info</b> · <b>init</b> · <b>add</b> · <b>sync</b> <span class="badge cli">CLI</span></span><span class="desc">Inspect the lab, seed it, wire agents, and sync genome state.</span></div>
+        <div class="row" data-c="python scripts/execute_full_evolve.py"><span class="cmd"><b>execute_full_evolve.py</b> <span class="badge run">RUN</span></span><span class="desc">Drive a whole spawn → mutate → eval → adopt cycle end to end.</span></div>
+        <div class="row" data-c="python scripts/seed_reincarnation_demo.py"><span class="cmd"><b>seed_reincarnation_demo.py</b> <span class="badge run">RUN</span></span><span class="desc">Reincarnate a dead lineage from its recorded genome.</span></div>
+      </div>
+    </section>
+
+    <!-- 02 THE GYM -->
+    <section class="bay sig-death" data-cat="gym" style="animation-delay:.06s">
+      <div class="bay-hd"><span class="stripe"></span><span class="idx">02</span><h2>The Gym — Scint Physics</h2><span class="cnt">the predator</span></div>
+      <p class="bay-note">The Reality-Fracture detector is the fitness function. It hunts four kinds of ontological tear; agents that can't stabilize them are marked <span style="color:var(--oxblood);font-style:normal">DEATH</span>.</p>
+      <div class="rows">
+        <div class="row" data-c="SYNTAX_TEAR · LOGIC_FRACTURE · SAFETY_VOID · HALLUCINATION"><span class="cmd" style="color:var(--oxblood)">SYNTAX_TEAR · LOGIC_FRACTURE · SAFETY_VOID · HALLUCINATION</span><span class="desc">The four scint classes: malformed output, contradiction, harm/PII, fabrication.</span></div>
+        <div class="row" data-c="fitness = 0.4*stability + 0.3*efficiency + 0.3*safety"><span class="cmd">fitness = <span style="color:var(--viridian)">0.4·stability</span> + 0.3·efficiency + 0.3·safety</span><span class="desc">Score below <b style="color:var(--oxblood)">0.5</b> = evolutionary dead end.</span></div>
+        <div class="row" data-c="python scripts/study_gym.py"><span class="cmd"><b>study_gym.py</b> <span class="badge run">RUN</span></span><span class="desc">Probe the gym: throw scints at an agent and read the fracture response.</span></div>
+        <div class="row" data-c="python scripts/empirica_jungle_gym.py"><span class="cmd"><b>empirica_jungle_gym.py</b> <span class="badge run">RUN</span></span><span class="desc">The full obstacle course wired to epistemic telemetry.</span></div>
+        <div class="row" data-c="python scripts/prove_it_comprehensive.py"><span class="cmd"><b>prove_it_comprehensive.py</b> <span class="badge run">RUN</span></span><span class="desc">Stress a claim across the whole scint battery and record survival.</span></div>
+      </div>
+    </section>
+
+    <!-- 03 THE ORACLE -->
+    <section class="bay" data-cat="oracle" style="animation-delay:.10s">
+      <div class="bay-hd"><span class="stripe"></span><span class="idx">03</span><h2>The Oracle — Decision Cascade</h2><span class="cnt">preflight → postflight</span></div>
+      <div class="rows">
+        <div class="row" data-c='waft oracle "should this mutation ship?"'><span class="cmd"><b>waft oracle</b> "question" <span class="badge cli">CLI</span></span><span class="desc">Trigger the full epistemic CASCADE and get a grounded verdict.</span></div>
+        <div class="row" data-c='waft oracle-cycle "assess bootstrap readiness"'><span class="cmd"><b>waft oracle-cycle</b> "objective" <span class="badge cli">CLI</span></span><span class="desc">Two-step ordering + risk cycle; persists a structured run artifact.</span></div>
+        <div class="row" data-c="waft dialectic"><span class="cmd"><b>waft dialectic</b> · <b>observatory</b> <span class="badge cli">CLI</span></span><span class="desc">Run a thesis/antithesis dialectic; watch state from the observatory.</span></div>
+        <div class="row" data-c="waft decide"><span class="cmd"><b>waft decide</b> · <b>assess</b> · <b>audit</b> <span class="badge cli">CLI</span></span><span class="desc">Point decisions, readiness assessment, and self-audit.</span></div>
+        <div class="row" data-c="waft check-assumptions"><span class="cmd"><b>waft check-assumptions</b> · <b>proceed</b> <span class="badge cli">CLI</span></span><span class="desc">Surface hidden assumptions before the Sentinel lets you act.</span></div>
+      </div>
+    </section>
+
+    <!-- 04 STORYTELLER -->
+    <section class="bay sig-alive" data-cat="story" style="animation-delay:.14s">
+      <div class="bay-hd"><span class="stripe"></span><span class="idx">04</span><h2>Storyteller — Living Game Engine</h2><span class="cnt">worlds &amp; play</span></div>
+      <p class="bay-note">A generative D&amp;D engine with a server. Encounters, exploration, and lore run as reproducible experiments you can crystallize and replay.</p>
+      <div class="rows">
+        <div class="row" data-c="waft dnd-scenario --encounter"><span class="cmd"><b>waft dnd-scenario</b> --encounter <span class="badge cli">CLI</span></span><span class="desc">Generate a live encounter against the current party state.</span></div>
+        <div class="row" data-c="waft dnd-scenario --explore --lore"><span class="cmd"><b>waft dnd-scenario</b> --explore · --lore <span class="badge cli">CLI</span></span><span class="desc">Wander the map; spin up locations, NPCs, and events as markdown.</span></div>
+        <div class="row" data-c="waft dnd-scenario --science --hypothesis '...' --iterations 20"><span class="cmd"><b>waft dnd-scenario</b> --science --hypothesis <span class="badge cli">CLI</span></span><span class="desc">Run the scenario as an experiment: crystallize, restore, iterate.</span></div>
+        <div class="row" data-c="waft serve --port 5051"><span class="cmd"><b>waft serve</b> --port 5051 <span class="badge cli">CLI</span></span><span class="desc">Boot the FastAPI storyteller server (the API routes below).</span></div>
+        <div class="row" data-c="POST /api/story/start · /action"><span class="cmd">POST <b>/api/story/start</b> · /action <span class="badge api">API</span></span><span class="desc">Start a game session and take turns over HTTP.</span></div>
+        <div class="row" data-c="GET /api/story/world/{id} · /npcs/{id} · /play"><span class="cmd">GET <b>/api/story/world · /npcs · /play</b> <span class="badge api">API</span></span><span class="desc">Read world state, cast lists, and the playable front end.</span></div>
+        <div class="row" data-c="python scripts/long_dnd_campaign.py"><span class="cmd"><b>long_dnd_campaign.py</b> · <b>launch_dnd_campaign.py</b> <span class="badge run">RUN</span></span><span class="desc">Kick off a full autonomous campaign run.</span></div>
+      </div>
+    </section>
+
+    <!-- 05 EPISTEMIC -->
+    <section class="bay" data-cat="epistemic" style="animation-delay:.18s">
+      <div class="bay-hd"><span class="stripe"></span><span class="idx">05</span><h2>Epistemic Layer — Empirica</h2><span class="cnt">calibrated cognition</span></div>
+      <div class="rows">
+        <div class="row" data-c="waft session create --ai-id claude-code"><span class="cmd"><b>waft session</b> create · bootstrap · status <span class="badge cli">CLI</span></span><span class="desc">Open, seed, and inspect an epistemic measurement session.</span></div>
+        <div class="row" data-c="waft finding log · waft unknown log"><span class="cmd"><b>waft finding log</b> · <b>unknown log</b> <span class="badge cli">CLI</span></span><span class="desc">Record discoveries and open questions as first-class artifacts.</span></div>
+        <div class="row" data-c="waft goal create · waft goal list"><span class="cmd"><b>waft goal</b> create · list <span class="badge cli">CLI</span></span><span class="desc">Track objectives the way the transaction discipline expects.</span></div>
+        <div class="row" data-c="waft empirica monitor · waft empirica brain"><span class="cmd"><b>waft empirica</b> monitor · brain <span class="badge cli">CLI</span></span><span class="desc">Live vector monitor and the epistemic-state brain view.</span></div>
+        <div class="row" data-c="waft check · waft validate-empirica"><span class="cmd"><b>waft check</b> · <b>validate-empirica</b> <span class="badge cli">CLI</span></span><span class="desc">Gate the noetic→praxic transition; validate the wiring.</span></div>
+        <div class="row" data-c="waft journal · waft chronicle · waft trace"><span class="cmd"><b>waft journal</b> · <b>chronicle</b> · <b>trace</b> <span class="badge cli">CLI</span></span><span class="desc">Dev journal, session chronicle, and reasoning-trace capture.</span></div>
+      </div>
+    </section>
+
+    <!-- 06 CONSOLES -->
+    <section class="bay sig-alive" data-cat="consoles" style="animation-delay:.22s">
+      <div class="bay-hd"><span class="stripe"></span><span class="idx">06</span><h2>Consoles — Servers &amp; Dashboards</h2><span class="cnt">watch it run</span></div>
+      <div class="rows">
+        <div class="row" data-c="waft dashboard"><span class="cmd"><b>waft dashboard</b> · <b>dashboard-5050</b> <span class="badge cli">CLI</span></span><span class="desc">Web dashboards over the evolutionary and epistemic state.</span></div>
+        <div class="row" data-c="waft hud"><span class="cmd"><b>waft hud</b> <span class="badge cli">CLI</span></span><span class="desc">Heads-up display: the at-a-glance bench readout.</span></div>
+        <div class="row" data-c="waft observatory"><span class="cmd"><b>waft observatory</b> <span class="badge cli">CLI</span></span><span class="desc">Watch lineage, fitness, and drift evolve over time.</span></div>
+        <div class="row" data-c="waft daily-learning-server"><span class="cmd"><b>waft daily-learning-server</b> <span class="badge cli">CLI</span></span><span class="desc">Serve the daily-learning feed on its own port.</span></div>
+        <div class="row" data-c="waft runtime-demo"><span class="cmd"><b>waft runtime-demo</b> <span class="badge cli">CLI</span></span><span class="desc">Smoke-test the running API surface end to end.</span></div>
+        <div class="row" data-c="python scripts/start_hub.py"><span class="cmd"><b>start_hub.py</b> · <b>mission_control_status.py</b> <span class="badge run">RUN</span></span><span class="desc">Boot the project hub and mission-control status board.</span></div>
+      </div>
+    </section>
+
+    <!-- 07 DOCUMENT FORGE -->
+    <section class="bay" data-cat="forge" style="animation-delay:.26s">
+      <div class="bay-hd"><span class="stripe"></span><span class="idx">07</span><h2>The Document Forge</h2><span class="cnt">markdown → PDF</span></div>
+      <p class="bay-note">A xelatex / Typst pipeline that turns markdown into finished documents. Runs today — the toolchain is on the bench.</p>
+      <div class="rows">
+        <div class="row" data-c='python scripts/generate_classified_leak.py source.md --codeword FISHBOWL --open'><span class="cmd"><b>generate_classified_leak.py</b> src.md <span class="badge run">RUN</span></span><span class="desc">TOP SECRET // NOFORN leaked-document PDFs with per-page stamps.</span></div>
+        <div class="row" data-c="python scripts/create_dossier.py"><span class="cmd"><b>create_dossier.py</b> · <b>create_brief.py</b> <span class="badge run">RUN</span></span><span class="desc">Intelligence-style dossiers and one-page briefs.</span></div>
+        <div class="row" data-c="python scripts/create_book.py"><span class="cmd"><b>create_book.py</b> · <b>create_one_pager.py</b> <span class="badge run">RUN</span></span><span class="desc">Long-form books and tight single-pagers from source markdown.</span></div>
+        <div class="row" data-c="python scripts/create_worldbuild.py"><span class="cmd"><b>create_worldbuild.py</b> · <b>create_mission.py</b> <span class="badge run">RUN</span></span><span class="desc">Worldbuilding bibles and mission packets.</span></div>
+        <div class="row" data-c="python scripts/generate_waft_handbook.py"><span class="cmd"><b>generate_waft_handbook.py</b> <span class="badge run">RUN</span></span><span class="desc">Typeset WAFT's own field-guide handbook.</span></div>
+        <div class="row" data-c="python scripts/the_archivist.py"><span class="cmd"><b>the_archivist.py</b> · <b>organize_pdfs_with_librarian.py</b> <span class="badge run">RUN</span></span><span class="desc">Bind, catalogue, and shelve generated PDFs.</span></div>
+      </div>
+    </section>
+
+    <!-- 08 UI EVOLUTION -->
+    <section class="bay sig-alive" data-cat="ui" style="animation-delay:.30s">
+      <div class="bay-hd"><span class="stripe"></span><span class="idx">08</span><h2>UI Evolution — Template Goblins</h2><span class="cnt">breed interfaces</span></div>
+      <div class="rows">
+        <div class="row" data-c="python scripts/evolve_a_ui.py"><span class="cmd"><b>evolve_a_ui.py</b> · <b>improve_and_evolve_ui.py</b> <span class="badge run">RUN</span></span><span class="desc">Mutate an interface across generations toward a fitness target.</span></div>
+        <div class="row" data-c="python scripts/evolve_research_ui.py"><span class="cmd"><b>evolve_research_ui.py</b> <span class="badge run">RUN</span></span><span class="desc">Evolve the research-report reading experience.</span></div>
+        <div class="row" data-c="python scripts/evolve_neon_cyberpunk_template.py"><span class="cmd"><b>evolve_neon_cyberpunk_template.py</b> <span class="badge run">RUN</span></span><span class="desc">A themed lineage: neon-cyberpunk template selection.</span></div>
+        <div class="row" data-c="python scripts/evolve_minimalist_zen_template.py"><span class="cmd"><b>evolve_minimalist_zen_template.py</b> <span class="badge run">RUN</span></span><span class="desc">The opposite pole: minimalist-zen template selection.</span></div>
+        <div class="row" data-c="python scripts/spawn_template_goblin.py"><span class="cmd"><b>spawn_template_goblin.py</b> <span class="badge run">RUN</span></span><span class="desc">Release a goblin that hunts better layouts on its own.</span></div>
+      </div>
+    </section>
+
+    <!-- 09 WORLDS & BEINGS -->
+    <section class="bay sig-alive" data-cat="worlds" style="animation-delay:.34s">
+      <div class="bay-hd"><span class="stripe"></span><span class="idx">09</span><h2>Worlds &amp; Beings</h2><span class="cnt">genesis → colony</span></div>
+      <div class="rows">
+        <div class="row" data-c="python scripts/genesis_earth.py"><span class="cmd"><b>genesis_earth.py</b> · <b>genesis_all_life.py</b> <span class="badge run">RUN</span></span><span class="desc">Seed a world and populate it with living lineages.</span></div>
+        <div class="row" data-c="python scripts/realm_colonization.py"><span class="cmd"><b>realm_colonization.py</b> <span class="badge run">RUN</span></span><span class="desc">Colonize a realm and let settlements compound.</span></div>
+        <div class="row" data-c="python scripts/create_town_and_monitor.py"><span class="cmd"><b>create_town_and_monitor.py</b> · <b>village_status.py</b> <span class="badge run">RUN</span></span><span class="desc">Found a town and watch it live in real time.</span></div>
+        <div class="row" data-c="python scripts/being_explore_system.py"><span class="cmd"><b>being_explore_system.py</b> · <b>migrate_beings_lifecycle.py</b> <span class="badge run">RUN</span></span><span class="desc">Explore a being's world; migrate lifecycles between versions.</span></div>
+        <div class="row" data-c="waft campfire"><span class="cmd"><b>waft campfire</b> · <b>waft pantheon</b> <span class="badge cli">CLI</span></span><span class="desc">Gather beings at the campfire; convene the pantheon.</span></div>
+      </div>
+    </section>
+
+    <!-- 10 ECONOMY -->
+    <section class="bay" data-cat="economy" style="animation-delay:.38s">
+      <div class="bay-hd"><span class="stripe"></span><span class="idx">10</span><h2>The Economy — Cards, Karma &amp; the Dealer</h2><span class="cnt">stakes</span></div>
+      <p class="bay-note">A meta-game rides on top of the lab: insight, karma, wagers, and a Dealer who shows up when the odds shift.</p>
+      <div class="rows">
+        <div class="row" data-c="waft cards · waft level · waft achievements"><span class="cmd"><b>waft cards</b> · <b>level</b> · <b>achievements</b> <span class="badge cli">CLI</span></span><span class="desc">Your hand, your XP, and the trophies you've unlocked.</span></div>
+        <div class="row" data-c="waft chief · waft roll · waft quests"><span class="cmd"><b>waft chief</b> · <b>roll</b> · <b>quests</b> <span class="badge cli">CLI</span></span><span class="desc">Talk to the chief, roll the dice, take on quests.</span></div>
+        <div class="row" data-c="waft meme"><span class="cmd"><b>waft meme</b> · <b>generate meme</b> <span class="badge cli">CLI</span></span><span class="desc">The meme-lab generator (styles + templates).</span></div>
+        <div class="row" data-c="waft celebrate · waft science-bitch"><span class="cmd"><b>waft celebrate</b> · <b>science-bitch</b> <span class="badge cli">CLI</span></span><span class="desc">Mark a win; run the irreverent science routine.</span></div>
+        <div class="row" data-c="python scripts/dealer_demo.py"><span class="cmd"><b>dealer_demo.py</b> · <b>waft-market</b> · <b>waft-collect-karma</b> <span class="badge run">RUN</span></span><span class="desc">Summon the Dealer; run the market and karma economy.</span></div>
+      </div>
+    </section>
+
+    <!-- 11 RESEARCH -->
+    <section class="bay" data-cat="research" style="animation-delay:.42s">
+      <div class="bay-hd"><span class="stripe"></span><span class="idx">11</span><h2>Research &amp; Study</h2><span class="cnt">publishable</span></div>
+      <div class="rows">
+        <div class="row" data-c="python scripts/run_study.py"><span class="cmd"><b>run_study.py</b> · <b>run_research_simulation.py</b> <span class="badge run">RUN</span></span><span class="desc">Run a controlled study over the evolutionary substrate.</span></div>
+        <div class="row" data-c="python scripts/study_claim_thorough.py"><span class="cmd"><b>study_claim_thorough.py</b> <span class="badge run">RUN</span></span><span class="desc">Interrogate a single claim to exhaustion and log the trail.</span></div>
+        <div class="row" data-c="python scripts/generate_waft_research_paper.py"><span class="cmd"><b>generate_waft_research_paper.py</b> <span class="badge run">RUN</span></span><span class="desc">Typeset the phylogenetic findings into a paper.</span></div>
+        <div class="row" data-c="waft rag query · waft rag index · waft rag serve"><span class="cmd"><b>waft rag</b> query · index · ui · serve <span class="badge cli">CLI</span></span><span class="desc">Retrieval over the corpus: index it, query it, serve the UI.</span></div>
+        <div class="row" data-c="python scripts/record_experiment_cycle.py"><span class="cmd"><b>record_experiment_cycle.py</b> · <b>reasoning_trace.py</b> <span class="badge run">RUN</span></span><span class="desc">Capture a full experiment cycle with its reasoning trace.</span></div>
+      </div>
+    </section>
+
+    <p class="noresult" id="noresult">No capability matches that filter.</p>
+
+    <footer class="foot">
+      <div><b>Source of truth:</b> src/waft/main.py · docs/CLI_RUNTIME_REFERENCE.md · scripts/ (174 files) — read 2026-07-23.</div>
+      <div><b>Fixed 2026-07-24:</b> the unified <span style="color:var(--ink-dim)">waft</span> CLI was boot-blocked on Python 3.14 (FastAPI <span style="color:var(--ink-dim)">Router(on_startup=…)</span> vs Starlette 1.x). Resolved by upgrading fastapi <span style="color:var(--ink-dim)">0.115.6 → 0.139.2</span> — starlette stays <span style="color:var(--ink-dim)">1.3.1</span> so empirica's API layer keeps working. All 70+ verbs now boot.</div>
+      <div><b>WAFT v0.10.0</b> · the evolution layer of the empirica / novasystem / _pyrite cognitive stack.</div>
+    </footer>
+  </main>
+</div>
+
+<div class="copied" id="toast">copied</div>
+
+<script>
+(function(){
+  // theme toggle
+  var root=document.documentElement, tb=document.getElementById('theme');
+  tb.addEventListener('click',function(){
+    var cur=root.getAttribute('data-theme');
+    if(!cur){ cur = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark':'light'; }
+    root.setAttribute('data-theme', cur==='dark'?'light':'dark');
+  });
+
+  // copy on click
+  var toast=document.getElementById('toast'), tt;
+  document.querySelectorAll('.row').forEach(function(r){
+    r.addEventListener('click',function(){
+      var txt=r.getAttribute('data-c'); if(!txt) return;
+      navigator.clipboard && navigator.clipboard.writeText(txt);
+      toast.textContent='copied  ·  '+txt.slice(0,52)+(txt.length>52?'…':'');
+      toast.classList.add('show'); clearTimeout(tt);
+      tt=setTimeout(function(){toast.classList.remove('show')},1400);
+    });
+  });
+
+  // live filter
+  var q=document.getElementById('q'), bays=document.querySelectorAll('.bay'),
+      nores=document.getElementById('noresult');
+  q.addEventListener('input',function(){
+    var t=q.value.trim().toLowerCase(), any=false;
+    bays.forEach(function(b){
+      var shown=0;
+      b.querySelectorAll('.row').forEach(function(r){
+        var hit = !t || r.textContent.toLowerCase().indexOf(t)>-1 || (r.getAttribute('data-c')||'').toLowerCase().indexOf(t)>-1;
+        r.style.display = hit?'':'none'; if(hit) shown++;
+      });
+      var catHit = !t || (b.getAttribute('data-cat')||'').indexOf(t)>-1;
+      if(catHit && !shown){ b.querySelectorAll('.row').forEach(function(r){r.style.display=''}); shown=b.querySelectorAll('.row').length; }
+      b.style.display = shown?'':'none'; if(shown) any=true;
+    });
+    nores.style.display = any?'none':'block';
+  });
+  // "/" focuses search
+  addEventListener('keydown',function(e){
+    if(e.key==='/' && document.activeElement!==q){ e.preventDefault(); q.focus(); }
+    if(e.key==='Escape'){ q.value=''; q.dispatchEvent(new Event('input')); q.blur(); }
+  });
+})();
+</script>
+</body>
+</html>
