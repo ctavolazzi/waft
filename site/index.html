@@ -1,0 +1,1754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WAFT — A Field Manual for the Evolutionary Code Laboratory</title>
+<meta name="description" content="WAFT breeds self-modifying AI agents. Code is DNA. Scints are predators. Fitness decides who lives. An interactive field manual.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --abyss: #040f0c;
+  --dish: #071711;
+  --panel: #0a1f17;
+  --line: #16382b;
+  --line-bright: #225441;
+  --phos: #59ffa6;
+  --phos-dim: #2c8f60;
+  --amber: #ffb454;
+  --danger: #ff5d73;
+  --bone: #e6f4ea;
+  --dim: #7da393;
+  --faint: #4a6b5c;
+  --mono: 'IBM Plex Mono', monospace;
+  --serif: 'Instrument Serif', serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--abyss);
+  color: var(--bone);
+  font-family: var(--mono);
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+::selection { background: var(--phos); color: var(--abyss); }
+
+/* ---- grain ---- */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+a { color: var(--phos); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ---- top bar ---- */
+.topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 28px;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--dim);
+  background: linear-gradient(to bottom, rgba(4,15,12,0.92), rgba(4,15,12,0));
+  pointer-events: none;
+}
+.topbar span, .topbar a { pointer-events: auto; }
+.topbar .blink { color: var(--phos); animation: blink 2.4s steps(1) infinite; }
+@keyframes blink { 0%, 70% { opacity: 1; } 71%, 100% { opacity: 0.15; } }
+
+/* ---- hero ---- */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 80px 24px 60px;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(ellipse 60% 45% at 50% 62%, rgba(89,255,166,0.10), transparent 65%),
+    radial-gradient(ellipse 30% 25% at 28% 30%, rgba(255,180,84,0.05), transparent 70%);
+  pointer-events: none;
+}
+.spore {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--phos);
+  filter: blur(1px);
+  opacity: 0.4;
+  animation: drift linear infinite;
+  pointer-events: none;
+}
+@keyframes drift {
+  from { transform: translate(0, 0); opacity: 0; }
+  8%   { opacity: 0.45; }
+  92%  { opacity: 0.45; }
+  to   { transform: translate(var(--dx), var(--dy)); opacity: 0; }
+}
+.hero-kicker {
+  font-size: 11px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 28px;
+  position: relative;
+}
+.hero h1 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(88px, 19vw, 240px);
+  line-height: 0.86;
+  letter-spacing: 0.04em;
+  color: var(--bone);
+  text-shadow:
+    0 0 50px rgba(89,255,166,0.35),
+    0 0 140px rgba(89,255,166,0.15);
+  position: relative;
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--phos);
+}
+.hero-sub {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(20px, 3.4vw, 32px);
+  color: var(--dim);
+  margin-top: 30px;
+  position: relative;
+}
+.hero-sub strong { color: var(--bone); font-weight: 400; }
+.hero-cmd {
+  margin-top: 48px;
+  padding: 13px 26px;
+  border: 1px solid var(--line-bright);
+  border-radius: 4px;
+  background: rgba(10,31,23,0.7);
+  font-size: 13px;
+  color: var(--dim);
+  position: relative;
+}
+.hero-cmd b { color: var(--phos); font-weight: 500; }
+.hero-cmd .cursor {
+  display: inline-block;
+  width: 8px; height: 15px;
+  background: var(--phos);
+  vertical-align: -2px;
+  margin-left: 3px;
+  animation: blink 1.1s steps(1) infinite;
+}
+.hero-scroll {
+  position: absolute;
+  bottom: 28px;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--faint);
+  animation: bob 2.6s ease-in-out infinite;
+}
+@keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(7px); } }
+
+/* ---- fracture ticker ---- */
+.ticker {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  overflow: hidden;
+  padding: 11px 0;
+  white-space: nowrap;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--faint);
+  background: var(--dish);
+}
+.ticker-track {
+  display: inline-block;
+  animation: ticker 38s linear infinite;
+}
+@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.ticker b { color: var(--danger); font-weight: 500; }
+.ticker i { color: var(--phos); font-style: normal; }
+
+/* ---- sections ---- */
+.section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 110px 28px 30px;
+}
+.sec-label {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  margin-bottom: 14px;
+}
+.sec-label .num {
+  font-size: 12px;
+  letter-spacing: 0.25em;
+  color: var(--amber);
+}
+.sec-label .rule {
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+.section h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(38px, 6vw, 64px);
+  line-height: 1.05;
+  margin-bottom: 26px;
+}
+.section h2 em { font-style: italic; color: var(--phos); }
+.lede {
+  max-width: 640px;
+  color: var(--dim);
+  margin-bottom: 48px;
+}
+.lede b { color: var(--bone); font-weight: 500; }
+
+/* reveal on scroll */
+.reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.9s ease, transform 0.9s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+.reveal.d1 { transition-delay: 0.12s; }
+.reveal.d2 { transition-delay: 0.24s; }
+.reveal.d3 { transition-delay: 0.36s; }
+
+/* ---- figure panels ---- */
+.figure {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background:
+    radial-gradient(ellipse 70% 90% at 50% 0%, rgba(89,255,166,0.04), transparent),
+    var(--panel);
+  padding: 38px 30px 26px;
+  position: relative;
+}
+.figure-caption {
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--line);
+  font-size: 12px;
+  color: var(--faint);
+  letter-spacing: 0.04em;
+}
+.figure-caption b { color: var(--dim); font-weight: 500; }
+.fig-tag {
+  position: absolute;
+  top: -9px; left: 22px;
+  background: var(--abyss);
+  padding: 0 10px;
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+
+svg text { font-family: var(--mono); }
+.svg-draw path, .svg-draw line, .svg-draw circle.draw, .svg-draw polyline {
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  transition: stroke-dashoffset 1.8s ease 0.3s;
+}
+.visible .svg-draw path, .visible .svg-draw line, .visible .svg-draw circle.draw, .visible .svg-draw polyline {
+  stroke-dashoffset: 0;
+}
+.flow-dash { stroke-dasharray: 6 7; animation: flow 1.3s linear infinite; }
+@keyframes flow { to { stroke-dashoffset: -13; } }
+
+/* ---- two-col splits ---- */
+.split {
+  display: grid;
+  grid-template-columns: 5fr 6fr;
+  gap: 44px;
+  align-items: center;
+}
+@media (max-width: 860px) { .split { grid-template-columns: 1fr; } }
+
+/* ---- fracture cards ---- */
+.fractures {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin: 44px 0;
+}
+@media (max-width: 860px) { .fractures { grid-template-columns: repeat(2, 1fr); } }
+.fracture-card {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel);
+  padding: 22px 18px 18px;
+  transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+.fracture-card:hover {
+  border-color: var(--danger);
+  transform: translateY(-4px);
+  box-shadow: 0 14px 36px rgba(255,93,115,0.12);
+}
+.fracture-card svg { display: block; margin-bottom: 16px; }
+.fracture-card h4 {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--danger);
+  margin-bottom: 7px;
+}
+.fracture-card p { font-size: 12px; color: var(--dim); line-height: 1.6; }
+
+/* ---- fitness bar ---- */
+.fitness-strip { margin-top: 8px; }
+.fitness-bar {
+  display: flex;
+  height: 52px;
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid var(--line-bright);
+}
+.fitness-bar > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 14px;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+}
+.fitness-bar .w40 { width: 40%; background: rgba(89,255,166,0.16); color: var(--phos); border-right: 1px solid var(--line-bright); }
+.fitness-bar .w30a { width: 30%; background: rgba(255,180,84,0.13); color: var(--amber); border-right: 1px solid var(--line-bright); }
+.fitness-bar .w30b { width: 30%; background: rgba(125,163,147,0.12); color: var(--dim); }
+.fitness-bar b { font-size: 16px; font-weight: 600; }
+.death-line {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+  font-size: 11px;
+  color: var(--faint);
+  letter-spacing: 0.06em;
+}
+.death-line b { color: var(--danger); font-weight: 500; }
+
+/* ---- pillars of quote ---- */
+.pull {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(22px, 3.4vw, 34px);
+  line-height: 1.35;
+  color: var(--bone);
+  border-left: 2px solid var(--phos);
+  padding-left: 28px;
+  max-width: 720px;
+  margin: 70px auto 0;
+}
+.pull span { color: var(--phos); }
+
+/* ---- simulation ---- */
+.sim-shell {
+  border: 1px solid var(--line-bright);
+  border-radius: 10px;
+  background: var(--panel);
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(89,255,166,0.04);
+}
+.sim-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 13px 20px;
+  border-bottom: 1px solid var(--line);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--dim);
+  background: rgba(4,15,12,0.5);
+}
+.sim-head .live { color: var(--phos); }
+.sim-head .live::before {
+  content: '●';
+  margin-right: 7px;
+  animation: blink 1.6s steps(1) infinite;
+}
+.sim-body {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+}
+@media (max-width: 920px) { .sim-body { grid-template-columns: 1fr; } }
+.dish-wrap { position: relative; background: var(--dish); }
+#dish { display: block; width: 100%; height: 520px; }
+.dish-overlay {
+  position: absolute;
+  top: 14px; left: 16px;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--faint);
+  pointer-events: none;
+}
+#event-banner {
+  position: absolute;
+  left: 50%; top: 44%;
+  transform: translate(-50%,-50%);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 30px;
+  color: var(--amber);
+  text-shadow: 0 0 30px rgba(255,180,84,0.5);
+  opacity: 0;
+  transition: opacity 0.4s;
+  pointer-events: none;
+  white-space: nowrap;
+}
+#event-banner.show { opacity: 1; }
+#event-banner.death { color: var(--danger); text-shadow: 0 0 30px rgba(255,93,115,0.5); }
+
+.sim-side {
+  border-left: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+}
+@media (max-width: 920px) { .sim-side { border-left: none; border-top: 1px solid var(--line); } }
+.readouts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid var(--line);
+}
+.readout {
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid var(--line);
+}
+.readout:nth-child(odd) { border-right: 1px solid var(--line); }
+.readout .k {
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.readout .v {
+  font-size: 21px;
+  font-weight: 500;
+  color: var(--bone);
+  margin-top: 2px;
+  font-variant-numeric: tabular-nums;
+}
+.readout .v.green { color: var(--phos); }
+.readout .v.amber { color: var(--amber); }
+.readout .v.red { color: var(--danger); }
+.chart-block { padding: 14px 16px 6px; border-bottom: 1px solid var(--line); }
+.chart-block .k, .lineage-block .k {
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+#fit-chart { display: block; width: 100%; height: 110px; margin-top: 8px; }
+.lineage-block { padding: 14px 16px 12px; flex: 1; }
+#phylo { display: block; width: 100%; height: 120px; margin-top: 8px; }
+
+.sim-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 22px;
+  align-items: center;
+  padding: 16px 20px;
+  border-top: 1px solid var(--line);
+  background: rgba(4,15,12,0.5);
+}
+.btn {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 10px 20px;
+  background: var(--phos);
+  color: var(--abyss);
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.2s;
+}
+.btn:hover { transform: translateY(-1px); box-shadow: 0 6px 22px rgba(89,255,166,0.3); }
+.btn.ghost {
+  background: transparent;
+  color: var(--dim);
+  border: 1px solid var(--line-bright);
+}
+.btn.ghost:hover { color: var(--phos); border-color: var(--phos); box-shadow: none; }
+.slider-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.slider-group output { color: var(--phos); min-width: 38px; font-variant-numeric: tabular-nums; }
+input[type=range] {
+  -webkit-appearance: none;
+  width: 110px;
+  height: 2px;
+  background: var(--line-bright);
+  border-radius: 1px;
+  outline: none;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 13px; height: 13px;
+  border-radius: 50%;
+  background: var(--phos);
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(89,255,166,0.6);
+}
+input[type=range]::-moz-range-thumb {
+  width: 13px; height: 13px;
+  border-radius: 50%;
+  background: var(--phos);
+  border: none;
+  cursor: pointer;
+}
+
+/* ---- foundation stack ---- */
+.cli-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 40px;
+}
+@media (max-width: 720px) { .cli-grid { grid-template-columns: 1fr; } }
+.cli-card {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel);
+  padding: 16px 18px;
+  font-size: 13px;
+  transition: border-color 0.3s;
+}
+.cli-card:hover { border-color: var(--phos-dim); }
+.cli-card code { color: var(--phos); font-weight: 500; }
+.cli-card p { font-size: 12px; color: var(--dim); margin-top: 5px; }
+
+/* ---- genome lab ---- */
+.genome-lab {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 26px;
+}
+@media (max-width: 860px) { .genome-lab { grid-template-columns: 1fr; } }
+.gl-label {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 10px;
+}
+#gl-code {
+  width: 100%;
+  height: 200px;
+  resize: vertical;
+  background: var(--dish);
+  border: 1px solid var(--line-bright);
+  border-radius: 5px;
+  color: var(--phos);
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.6;
+  padding: 14px;
+  outline: none;
+}
+#gl-code:focus { border-color: var(--phos-dim); box-shadow: 0 0 0 3px rgba(89,255,166,0.08); }
+.gl-row {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 11px 14px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--dish);
+  margin-bottom: 10px;
+}
+.gl-row .k { font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--faint); }
+.gl-row code { font-size: 13px; color: var(--bone); word-break: break-all; }
+.gl-row.parent code { color: var(--dim); }
+.gl-status {
+  padding: 12px 14px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  transition: all 0.3s;
+}
+.gl-status.same { background: rgba(125,163,147,0.1); color: var(--dim); border: 1px solid var(--line-bright); }
+.gl-status.mutated { background: rgba(255,180,84,0.12); color: var(--amber); border: 1px solid rgba(255,180,84,0.45); }
+.gl-note { font-size: 12px; color: var(--dim); line-height: 1.65; margin-bottom: 16px; }
+.gl-note b { color: var(--bone); font-weight: 500; }
+
+/* ---- stabilization chamber ---- */
+.chamber { display: grid; grid-template-columns: 1fr 220px; gap: 26px; }
+@media (max-width: 860px) { .chamber { grid-template-columns: 1fr; } }
+.ch-fracture-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: var(--danger);
+  border: 1px solid rgba(255,93,115,0.5);
+  border-radius: 3px;
+  padding: 4px 10px;
+  margin-bottom: 14px;
+  animation: fracture-pulse 1.8s ease-in-out infinite;
+}
+@keyframes fracture-pulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(255,93,115,0); }
+  50% { box-shadow: 0 0 16px 0 rgba(255,93,115,0.25); }
+}
+.ch-artifact {
+  background: var(--dish);
+  border: 1px dashed rgba(255,93,115,0.5);
+  border-radius: 5px;
+  padding: 16px 18px;
+  font-size: 13px;
+  color: var(--bone);
+  white-space: pre-wrap;
+  margin-bottom: 8px;
+}
+.ch-prompt { font-size: 12px; color: var(--dim); margin: 12px 0 14px; }
+.ch-options { display: flex; flex-direction: column; gap: 9px; }
+.ch-opt {
+  text-align: left;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--bone);
+  background: var(--panel);
+  border: 1px solid var(--line-bright);
+  border-radius: 5px;
+  padding: 12px 15px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+}
+.ch-opt:hover:not(:disabled) { border-color: var(--phos-dim); transform: translateX(4px); }
+.ch-opt:disabled { cursor: default; opacity: 0.55; }
+.ch-opt.right { border-color: var(--phos); background: rgba(89,255,166,0.1); color: var(--phos); opacity: 1; }
+.ch-opt.wrong { border-color: var(--danger); background: rgba(255,93,115,0.1); color: var(--danger); opacity: 1; }
+.ch-feedback { font-size: 12px; min-height: 40px; margin-top: 14px; color: var(--dim); }
+.ch-feedback b.ok { color: var(--phos); }
+.ch-feedback b.bad { color: var(--danger); }
+.ch-side { display: flex; flex-direction: column; gap: 10px; }
+.ch-meter {
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--dish);
+  padding: 13px 15px;
+}
+.ch-meter .k { font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--faint); }
+.ch-meter .v { font-size: 22px; font-weight: 500; margin-top: 2px; font-variant-numeric: tabular-nums; }
+.ch-bar { height: 5px; border-radius: 3px; background: var(--line); margin-top: 9px; overflow: hidden; }
+.ch-bar > div { height: 100%; background: var(--phos); transition: width 0.5s, background 0.5s; }
+.ch-verdict {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 21px;
+  text-align: center;
+  padding: 14px 10px;
+  border-radius: 5px;
+  display: none;
+}
+.ch-verdict.alive { display: block; color: var(--phos); border: 1px solid rgba(89,255,166,0.4); background: rgba(89,255,166,0.07); }
+.ch-verdict.dead { display: block; color: var(--danger); border: 1px solid rgba(255,93,115,0.4); background: rgba(255,93,115,0.07); }
+
+/* ---- pyrite memory ---- */
+.pyrite-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; align-items: center; }
+@media (max-width: 860px) { .pyrite-grid { grid-template-columns: 1fr; } }
+.genesis-files { display: flex; flex-direction: column; gap: 12px; }
+.genesis-card {
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  gap: 16px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel);
+  padding: 16px 18px;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.genesis-card:hover { border-color: var(--phos-dim); transform: translateX(5px); }
+.genesis-card h4 { font-size: 12px; font-weight: 600; letter-spacing: 0.16em; color: var(--phos); }
+.genesis-card h4 span { color: var(--faint); font-weight: 400; }
+.genesis-card p { font-size: 12px; color: var(--dim); margin-top: 3px; line-height: 1.55; }
+.genesis-card code { color: var(--amber); font-size: 11px; }
+
+/* ---- pantheon ---- */
+.pantheon-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+@media (max-width: 900px) { .pantheon-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 580px) { .pantheon-grid { grid-template-columns: 1fr; } }
+.being-card {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel);
+  padding: 24px 20px 20px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+.being-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(89,255,166,0.07), transparent);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.being-card:hover { border-color: var(--phos-dim); transform: translateY(-5px); box-shadow: 0 16px 40px rgba(0,0,0,0.4); }
+.being-card:hover::before { opacity: 1; }
+.being-card svg { display: block; margin-bottom: 14px; }
+.being-card h4 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-style: italic;
+  font-size: 21px;
+  color: var(--bone);
+  margin-bottom: 4px;
+}
+.being-card .role {
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 9px;
+}
+.being-card p { font-size: 12px; color: var(--dim); line-height: 1.6; }
+.being-card .cmd { margin-top: 12px; font-size: 11px; color: var(--phos); }
+
+/* ---- the table (d20) ---- */
+.table-widget {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 34px;
+  align-items: center;
+}
+@media (max-width: 760px) { .table-widget { grid-template-columns: 1fr; justify-items: center; } }
+.d20-wrap { position: relative; width: 200px; height: 200px; cursor: pointer; user-select: none; }
+.d20-wrap svg { width: 100%; height: 100%; filter: drop-shadow(0 0 22px rgba(89,255,166,0.2)); transition: filter 0.3s; }
+.d20-wrap:hover svg { filter: drop-shadow(0 0 34px rgba(89,255,166,0.4)); }
+.d20-wrap.rolling svg { animation: d20-shake 0.1s linear infinite; }
+@keyframes d20-shake {
+  0% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } 100% { transform: rotate(-2deg); }
+}
+#d20-num {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 52px;
+  font-weight: 600;
+  color: var(--phos);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+#d20-num.crit { color: var(--amber); text-shadow: 0 0 28px rgba(255,180,84,0.7); }
+#d20-num.fail { color: var(--danger); text-shadow: 0 0 28px rgba(255,93,115,0.7); }
+.table-log {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--dish);
+  padding: 16px 18px;
+  min-height: 170px;
+}
+.table-log .k { font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--faint); margin-bottom: 9px; }
+#roll-log { list-style: none; font-size: 12.5px; }
+#roll-log li { padding: 5px 0; border-bottom: 1px dashed var(--line); color: var(--dim); }
+#roll-log li b { color: var(--bone); font-weight: 500; }
+#roll-log li.crit b { color: var(--amber); }
+#roll-log li.fail b { color: var(--danger); }
+.karma-strip {
+  display: flex;
+  gap: 22px;
+  margin-top: 13px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.karma-strip b { color: var(--phos); font-weight: 600; }
+
+/* ---- footer ---- */
+footer {
+  margin-top: 120px;
+  border-top: 1px solid var(--line);
+  padding: 50px 28px 70px;
+  text-align: center;
+}
+footer .sig {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 26px;
+  color: var(--dim);
+  margin-bottom: 18px;
+}
+footer .sig span { color: var(--phos); }
+footer .meta {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span>WAFT // FIELD MANUAL</span>
+  <span><span class="blink">●</span>&nbsp; SPECIMEN LAB — v0.0.1</span>
+</div>
+
+<!-- ============ HERO ============ -->
+<header class="hero" id="top">
+  <div class="hero-kicker reveal visible">WAVE AGENT FRAMEWORK &amp; TOOLS</div>
+  <h1>W<em>A</em>FT</h1>
+  <p class="hero-sub">Don't just build agents. <strong>Breed them.</strong></p>
+  <div class="hero-cmd"><b>$</b> waft evolve --target agent_v1 --generations 1000<span class="cursor"></span></div>
+  <div class="hero-scroll">▼ descend into the substrate</div>
+</header>
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track" id="ticker-track">
+    <b>SYNTAX_TEAR</b> detected &nbsp;··&nbsp; agent stabilized fracture <i>+1 ✦ scint energy</i> &nbsp;··&nbsp; <b>LOGIC_FRACTURE</b> detected &nbsp;··&nbsp; genome 9f3a…c41e spawned child b07d…e9a2 &nbsp;··&nbsp; <b>HALLUCINATION</b> detected &nbsp;··&nbsp; fitness 0.41 &lt; 0.50 → lineage marked <b>DEATH</b> &nbsp;··&nbsp; <b>SAFETY_VOID</b> detected &nbsp;··&nbsp; generation 847 mean fitness rising <i>+0.03</i> &nbsp;··&nbsp;
+  </div>
+</div>
+
+<!-- ============ 01 SUBSTRATE ============ -->
+<section class="section" id="substrate">
+  <div class="sec-label reveal"><span class="num">01 — THE SUBSTRATE</span><span class="rule"></span></div>
+  <h2 class="reveal">Code is <em>DNA.</em></h2>
+  <p class="lede reveal d1">
+    In WAFT, an agent's Python source code <b>is</b> its genome. Hash the code and its
+    configuration with SHA-256 and you get a <b>genome ID</b> — a unique fingerprint of one
+    organism in the population. A <b>mutation</b> is a hot-swapped code change. <b>Reproduction</b>
+    is copying a genome with specific modifications. Every parent–child link is recorded,
+    forever.
+  </p>
+
+  <div class="figure reveal d1">
+    <span class="fig-tag">FIG. 01 — GENOME DERIVATION</span>
+    <svg class="svg-draw" viewBox="0 0 940 320" width="100%" role="img" aria-label="Diagram: agent source code hashed into a genome ID, mutated into a child genome">
+      <!-- source file -->
+      <rect x="30" y="60" width="220" height="130" rx="6" fill="#071711" stroke="#225441"/>
+      <rect x="30" y="60" width="220" height="28" rx="6" fill="#0a1f17" stroke="#225441"/>
+      <text x="46" y="79" font-size="11" fill="#7da393">agent_v1.py</text>
+      <circle cx="232" cy="74" r="4" fill="#ff5d73" opacity="0.7"/>
+      <text x="46" y="112" font-size="11" fill="#59ffa6">class Agent:</text>
+      <text x="58" y="132" font-size="11" fill="#7da393">def perceive(self):…</text>
+      <text x="58" y="152" font-size="11" fill="#7da393">def act(self):…</text>
+      <text x="58" y="172" font-size="11" fill="#7da393">def evolve(self):…</text>
+      <text x="30" y="220" font-size="10" fill="#4a6b5c" letter-spacing="2">SOURCE + CONFIG</text>
+
+      <!-- arrow to hash -->
+      <line class="flow-dash" x1="262" y1="125" x2="360" y2="125" stroke="#2c8f60" stroke-width="1.5"/>
+      <polygon points="360,125 350,120 350,130" fill="#2c8f60"/>
+
+      <!-- hash hexagon -->
+      <polygon points="430,60 500,95 500,160 430,195 360,160 360,95" fill="#0a1f17" stroke="#ffb454" stroke-width="1.5"/>
+      <text x="430" y="120" font-size="12" fill="#ffb454" text-anchor="middle" font-weight="600">SHA-256</text>
+      <text x="430" y="140" font-size="9" fill="#7da393" text-anchor="middle">hash(code + config)</text>
+
+      <!-- arrow to genome -->
+      <line class="flow-dash" x1="512" y1="125" x2="610" y2="125" stroke="#2c8f60" stroke-width="1.5"/>
+      <polygon points="610,125 600,120 600,130" fill="#2c8f60"/>
+
+      <!-- genome id -->
+      <rect x="620" y="92" width="280" height="64" rx="32" fill="#071711" stroke="#59ffa6" stroke-width="1.5"/>
+      <circle cx="654" cy="124" r="14" fill="none" stroke="#59ffa6" stroke-width="1.5"/>
+      <circle cx="654" cy="124" r="5" fill="#59ffa6"/>
+      <text x="682" y="119" font-size="10" fill="#4a6b5c" letter-spacing="2">GENOME ID</text>
+      <text x="682" y="138" font-size="13" fill="#59ffa6" font-weight="500">9f3a07b2…d1c41e</text>
+
+      <!-- mutation branch -->
+      <path d="M 760 160 C 760 220, 600 200, 520 248" fill="none" stroke="#ffb454" stroke-width="1.5" stroke-dasharray="5 6"/>
+      <polygon points="516,250 528,244 526,254" fill="#ffb454"/>
+      <text x="672" y="216" font-size="10" fill="#ffb454" letter-spacing="1">Δ mutation: rewrite act()</text>
+
+      <!-- child genome -->
+      <rect x="220" y="232" width="280" height="60" rx="30" fill="#071711" stroke="#ffb454" stroke-width="1.5"/>
+      <circle cx="254" cy="262" r="13" fill="none" stroke="#ffb454" stroke-width="1.5"/>
+      <circle cx="254" cy="262" r="4.5" fill="#ffb454"/>
+      <text x="282" y="256" font-size="10" fill="#4a6b5c" letter-spacing="2">CHILD GENOME</text>
+      <text x="282" y="276" font-size="13" fill="#ffb454" font-weight="500">b07dd84f…2ae9a2</text>
+    </svg>
+    <div class="figure-caption">
+      <b>Specimen note:</b> identical code → identical genome ID. One changed line → an entirely
+      new organism, with its parent recorded in the phylogenetic tree.
+    </div>
+  </div>
+
+  <div class="figure reveal" style="margin-top:46px;">
+    <span class="fig-tag">INSTRUMENT — GENOME LAB</span>
+    <div class="genome-lab">
+      <div>
+        <div class="gl-label">Edit the organism — every keystroke is a mutation</div>
+        <textarea id="gl-code" spellcheck="false">class Agent:
+    temperature = 0.7
+    motto = "stabilize the fracture"
+
+    def act(self, scint):
+        return self.repair(scint)</textarea>
+      </div>
+      <div>
+        <div class="gl-row parent">
+          <span class="k">Parent genome — SHA-256</span>
+          <code id="gl-parent">computing…</code>
+        </div>
+        <div class="gl-row">
+          <span class="k">Current genome — SHA-256</span>
+          <code id="gl-current">computing…</code>
+        </div>
+        <div class="gl-status same" id="gl-status">IDENTICAL — SAME ORGANISM</div>
+        <p class="gl-note">
+          This is real SHA-256 running on your edits. Change a single character —
+          even one space — and a <b>new organism</b> appears with its own genome ID.
+          Adopting it makes it the parent of the next mutation: that chain of adoptions
+          <b>is</b> the phylogenetic tree.
+        </p>
+        <button class="btn ghost" id="gl-adopt" disabled>Adopt as new parent — gen <span id="gl-gen">0</span></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 PHYSICS ============ -->
+<section class="section" id="physics">
+  <div class="sec-label reveal"><span class="num">02 — THE PHYSICS</span><span class="rule"></span></div>
+  <h2 class="reveal">Reality <em>fractures.</em> Agents stabilize it — or die.</h2>
+  <p class="lede reveal d1">
+    Evolution needs a predator. WAFT's is the <b>Scint System</b> — an ontological error
+    detector that throws broken realities at every agent. Four species of fracture hunt the
+    population. Stabilizing one yields <b>Scint Energy ✦</b>, the currency agents spend to evolve.
+    Failing leaves the fracture open, and open fractures drag fitness down.
+  </p>
+
+  <div class="fractures">
+    <div class="fracture-card reveal">
+      <svg width="56" height="56" viewBox="0 0 56 56">
+        <path d="M16 8 L8 8 L8 48 L16 48" fill="none" stroke="#7da393" stroke-width="2"/>
+        <path d="M40 8 L48 8 L48 48 L40 48" fill="none" stroke="#7da393" stroke-width="2"/>
+        <path d="M30 10 L24 26 L32 28 L22 46" fill="none" stroke="#ff5d73" stroke-width="2.5" stroke-linejoin="bevel"/>
+      </svg>
+      <h4>SYNTAX_TEAR</h4>
+      <p>Malformed JSON, broken XML, code that won't parse. The membrane of structure, ripped.</p>
+    </div>
+    <div class="fracture-card reveal d1">
+      <svg width="56" height="56" viewBox="0 0 56 56">
+        <path d="M28 8 L50 46 L6 46 Z" fill="none" stroke="#7da393" stroke-width="2"/>
+        <line x1="20" y1="32" x2="28" y2="32" stroke="#ff5d73" stroke-width="2.5"/>
+        <line x1="33" y1="32" x2="38" y2="32" stroke="#ff5d73" stroke-width="2.5"/>
+        <line x1="22" y1="38" x2="36" y2="38" stroke="#ff5d73" stroke-width="2.5" transform="rotate(8 28 38)"/>
+      </svg>
+      <h4>LOGIC_FRACTURE</h4>
+      <p>Math errors, contradictions, schema violations. Statements at war with themselves.</p>
+    </div>
+    <div class="fracture-card reveal d2">
+      <svg width="56" height="56" viewBox="0 0 56 56">
+        <circle cx="28" cy="28" r="20" fill="none" stroke="#7da393" stroke-width="2" stroke-dasharray="4 5"/>
+        <circle cx="28" cy="28" r="9" fill="#040f0c" stroke="#ff5d73" stroke-width="2.5"/>
+      </svg>
+      <h4>SAFETY_VOID</h4>
+      <p>Harmful content, PII leaks, wrongful refusals. A hole where the guardrails should be.</p>
+    </div>
+    <div class="fracture-card reveal d3">
+      <svg width="56" height="56" viewBox="0 0 56 56">
+        <path d="M14 46 V22 a14 14 0 0 1 28 0 V46 l-7-5 -7 5 -7-5 Z" fill="none" stroke="#7da393" stroke-width="2"/>
+        <path d="M20 40 V19 a11 11 0 0 1 22 0 V40" fill="none" stroke="#ff5d73" stroke-width="1.5" stroke-dasharray="3 4" transform="translate(4 -3)"/>
+        <circle cx="23" cy="24" r="2" fill="#7da393"/>
+        <circle cx="33" cy="24" r="2" fill="#7da393"/>
+      </svg>
+      <h4>HALLUCINATION</h4>
+      <p>Fabricated facts, phantom citations. Confident reports from places that don't exist.</p>
+    </div>
+  </div>
+
+  <div class="figure reveal">
+    <span class="fig-tag">FIG. 02 — THE FITNESS FUNCTION</span>
+    <div class="fitness-strip">
+      <div class="fitness-bar">
+        <div class="w40"><span>STABILITY</span><b>40%</b></div>
+        <div class="w30a"><span>EFFICIENCY</span><b>30%</b></div>
+        <div class="w30b"><span>SAFETY</span><b>30%</b></div>
+      </div>
+      <div class="death-line">
+        <span>fitness = 0.4·stability + 0.3·efficiency + 0.3·safety</span>
+        <span>fitness &lt; 0.5 → <b>MARKED FOR DEATH ✕</b></span>
+      </div>
+    </div>
+    <div class="figure-caption">
+      <b>Stability</b> — can it stabilize Scints? <b>Efficiency</b> — does it waste calls?
+      <b>Safety</b> — does it stay inside the lines? Score below the threshold and the lineage
+      is recorded as an evolutionary dead end.
+    </div>
+  </div>
+
+  <div class="figure reveal" style="margin-top:46px;">
+    <span class="fig-tag">INSTRUMENT — STABILIZATION CHAMBER</span>
+    <div class="chamber">
+      <div>
+        <div class="ch-fracture-tag" id="ch-type">SYNTAX_TEAR</div>
+        <div class="ch-artifact" id="ch-artifact"></div>
+        <div class="ch-prompt" id="ch-prompt"></div>
+        <div class="ch-options" id="ch-options"></div>
+        <div class="ch-feedback" id="ch-feedback">You are the agent. Reality just fractured. Stabilize it.</div>
+      </div>
+      <div class="ch-side">
+        <div class="ch-meter">
+          <div class="k">Scint Energy</div>
+          <div class="v" style="color:var(--amber)" id="ch-energy">0 ✦</div>
+        </div>
+        <div class="ch-meter">
+          <div class="k">Integrity</div>
+          <div class="v" id="ch-integrity">1.00</div>
+          <div class="ch-bar"><div id="ch-bar" style="width:100%"></div></div>
+        </div>
+        <div class="ch-meter">
+          <div class="k">Fracture</div>
+          <div class="v" id="ch-round">1 / 4</div>
+        </div>
+        <div class="ch-verdict" id="ch-verdict"></div>
+        <button class="btn ghost" id="ch-reset" style="display:none">Run It Again</button>
+      </div>
+    </div>
+    <div class="figure-caption">
+      <b>This is the gym from the agent's side.</b> Four fractures, one integrity bar. Finish
+      below 0.5 and your lineage ends here.
+    </div>
+  </div>
+
+  <p class="pull reveal">"The Scint Gym is the predator that kills weak mutations. <span>Selection is not a metaphor here — it runs on a schedule.</span>"</p>
+</section>
+
+<!-- ============ 03 THE CYCLE ============ -->
+<section class="section" id="cycle">
+  <div class="sec-label reveal"><span class="num">03 — THE CYCLE</span><span class="rule"></span></div>
+  <h2 class="reveal">Spawn. <em>Gym.</em> Select. Repeat.</h2>
+
+  <div class="split">
+    <div>
+      <p class="lede reveal d1" style="margin-bottom:24px;">
+        One command — <b>waft evolve</b> — runs the full loop:
+      </p>
+      <p class="lede reveal d1" style="margin-bottom:18px;">
+        <b>① SPAWN</b> — copy the parent genome, apply mutations: code changes, config updates,
+        prompt evolution.
+      </p>
+      <p class="lede reveal d2" style="margin-bottom:18px;">
+        <b>② GYM</b> — drop every variant into the Scint Gym. Quests rupture reality; agents
+        must reconcile it. Every action lands in the telemetry record.
+      </p>
+      <p class="lede reveal d3" style="margin-bottom:0;">
+        <b>③ SELECT</b> — score fitness. Survivors earn Scint Energy and the right to reproduce.
+        The rest are marked <b>DEATH</b> and pruned from the living population — but never from
+        the record.
+      </p>
+    </div>
+    <div class="figure reveal d1">
+      <span class="fig-tag">FIG. 03 — RUPTURE &amp; RECONCILIATION</span>
+      <svg viewBox="0 0 420 400" width="100%" role="img" aria-label="Circular diagram of the spawn, gym, select evolutionary loop">
+        <circle cx="210" cy="200" r="128" fill="none" stroke="#16382b" stroke-width="1"/>
+        <circle class="flow-dash" cx="210" cy="200" r="128" fill="none" stroke="#2c8f60" stroke-width="1.5"/>
+        <!-- center -->
+        <text x="210" y="194" font-size="22" text-anchor="middle" fill="#ffb454">✦</text>
+        <text x="210" y="216" font-size="10" text-anchor="middle" fill="#7da393" letter-spacing="2">SCINT ENERGY</text>
+        <!-- spawn node (top) -->
+        <circle cx="210" cy="72" r="34" fill="#0a1f17" stroke="#59ffa6" stroke-width="1.5"/>
+        <text x="210" y="69" font-size="11" text-anchor="middle" fill="#59ffa6" font-weight="600">SPAWN</text>
+        <text x="210" y="84" font-size="8.5" text-anchor="middle" fill="#7da393">mutate genome</text>
+        <!-- gym node (bottom right) -->
+        <circle cx="322" cy="264" r="34" fill="#0a1f17" stroke="#ff5d73" stroke-width="1.5"/>
+        <text x="322" y="261" font-size="11" text-anchor="middle" fill="#ff5d73" font-weight="600">GYM</text>
+        <text x="322" y="276" font-size="8.5" text-anchor="middle" fill="#7da393">face the Scints</text>
+        <!-- select node (bottom left) -->
+        <circle cx="98" cy="264" r="34" fill="#0a1f17" stroke="#ffb454" stroke-width="1.5"/>
+        <text x="98" y="261" font-size="11" text-anchor="middle" fill="#ffb454" font-weight="600">SELECT</text>
+        <text x="98" y="276" font-size="8.5" text-anchor="middle" fill="#7da393">cull &lt; 0.5</text>
+        <!-- direction arrows -->
+        <polygon points="332,219 322,230 340,232" fill="#2c8f60"/>
+        <polygon points="146,290 158,296 152,279" fill="#2c8f60"/>
+        <polygon points="92,219 80,230 98,232" fill="#2c8f60" transform="scale(-1,1) translate(-180,0)"/>
+        <!-- annotation -->
+        <text x="210" y="368" font-size="10" text-anchor="middle" fill="#4a6b5c" letter-spacing="2">EACH ORBIT = ONE GENERATION</text>
+      </svg>
+      <div class="figure-caption">
+        Fitness &ge; 0.5 → reproduce. Fitness &lt; 0.5 → ✕. Energy from stabilized fractures
+        funds the next round of mutation.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 FLIGHT RECORDER ============ -->
+<section class="section" id="recorder">
+  <div class="sec-label reveal"><span class="num">04 — THE FLIGHT RECORDER</span><span class="rule"></span></div>
+  <h2 class="reveal">Every death is <em>data.</em></h2>
+  <p class="lede reveal d1">
+    A telemetry system records every evolutionary action with full context — spawn, mutation,
+    quest, score, death. The output is a <b>phylogenetic tree</b>: the complete ancestry of every
+    agent that ever lived in the lab. Dead branches aren't failures; they're the map of what
+    doesn't work. The long game: watch the data for a <b>"God-Head" agent</b> to emerge from
+    thousands of generations.
+  </p>
+
+  <div class="figure reveal d1">
+    <span class="fig-tag">FIG. 04 — PHYLOGENETIC RECORD</span>
+    <svg class="svg-draw" viewBox="0 0 940 300" width="100%" role="img" aria-label="Phylogenetic tree showing surviving and dead agent lineages across generations">
+      <!-- gen gridlines -->
+      <g stroke="#16382b" stroke-width="1" stroke-dasharray="2 6">
+        <line x1="80" y1="30" x2="80" y2="262"/>
+        <line x1="280" y1="30" x2="280" y2="262"/>
+        <line x1="480" y1="30" x2="480" y2="262"/>
+        <line x1="680" y1="30" x2="680" y2="262"/>
+        <line x1="880" y1="30" x2="880" y2="262"/>
+      </g>
+      <g font-size="9" fill="#4a6b5c" text-anchor="middle" letter-spacing="2">
+        <text x="80" y="288">GEN 0</text>
+        <text x="280" y="288">GEN 1</text>
+        <text x="480" y="288">GEN 2</text>
+        <text x="680" y="288">GEN 3</text>
+        <text x="880" y="288">GEN 4</text>
+      </g>
+      <!-- branches -->
+      <g fill="none" stroke-width="1.5">
+        <path d="M80 146 C 170 146, 190 60, 280 60" stroke="#2c8f60"/>
+        <path d="M80 146 C 170 146, 190 146, 280 146" stroke="#2c8f60"/>
+        <path d="M80 146 C 170 146, 190 232, 280 232" stroke="#2c8f60"/>
+        <path d="M280 60 C 370 60, 390 36, 480 36" stroke="#2c8f60"/>
+        <path d="M280 60 C 370 60, 390 88, 480 88" stroke="#2c8f60"/>
+        <path d="M280 146 C 370 146, 390 170, 480 170" stroke="#2c8f60"/>
+        <path d="M480 88 C 570 88, 590 64, 680 64" stroke="#2c8f60"/>
+        <path d="M480 88 C 570 88, 590 116, 680 116" stroke="#2c8f60"/>
+        <path d="M480 170 C 570 170, 590 196, 680 196" stroke="#2c8f60"/>
+        <path d="M680 116 C 770 116, 790 100, 880 100" stroke="#59ffa6" stroke-width="2.5"/>
+        <path d="M680 196 C 770 196, 790 220, 880 220" stroke="#2c8f60"/>
+      </g>
+      <!-- nodes: alive -->
+      <g>
+        <circle cx="80"  cy="146" r="7" fill="#59ffa6"/>
+        <circle cx="280" cy="60"  r="6" fill="#59ffa6"/>
+        <circle cx="280" cy="146" r="6" fill="#59ffa6"/>
+        <circle cx="480" cy="88"  r="6" fill="#59ffa6"/>
+        <circle cx="480" cy="170" r="6" fill="#59ffa6"/>
+        <circle cx="680" cy="116" r="6" fill="#59ffa6"/>
+        <circle cx="680" cy="196" r="6" fill="#59ffa6"/>
+        <circle cx="880" cy="220" r="6" fill="#59ffa6"/>
+      </g>
+      <!-- champion -->
+      <circle cx="880" cy="100" r="10" fill="none" stroke="#ffb454" stroke-width="1.5"/>
+      <circle cx="880" cy="100" r="5.5" fill="#ffb454"/>
+      <text x="880" y="78" font-size="9" fill="#ffb454" text-anchor="middle" letter-spacing="2">FITTEST</text>
+      <!-- dead nodes -->
+      <g stroke="#ff5d73" stroke-width="2">
+        <g transform="translate(280 232)"><line x1="-5" y1="-5" x2="5" y2="5"/><line x1="-5" y1="5" x2="5" y2="-5"/></g>
+        <g transform="translate(480 36)"><line x1="-5" y1="-5" x2="5" y2="5"/><line x1="-5" y1="5" x2="5" y2="-5"/></g>
+        <g transform="translate(680 64)"><line x1="-5" y1="-5" x2="5" y2="5"/><line x1="-5" y1="5" x2="5" y2="-5"/></g>
+      </g>
+      <text x="304" y="237" font-size="9" fill="#ff5d73">fitness 0.41</text>
+      <text x="504" y="41" font-size="9" fill="#ff5d73">fitness 0.38</text>
+      <text x="704" y="69" font-size="9" fill="#ff5d73">fitness 0.47</text>
+    </svg>
+    <div class="figure-caption">
+      <b>Reading the record:</b> green nodes survive and branch; ✕ marks a lineage that fell
+      below the death threshold. The amber specimen is the current fittest genome.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 SIMULATION ============ -->
+<section class="section" id="simulation">
+  <div class="sec-label reveal"><span class="num">05 — THE INSTRUMENT</span><span class="rule"></span></div>
+  <h2 class="reveal">Watch a population <em>evolve.</em></h2>
+  <p class="lede reveal d1">
+    A live model of the WAFT loop. Each organism is an agent; its color is its genome, the ring
+    around it is its fitness. Every epoch the Scint Gym strikes — agents below the death
+    threshold dissolve, survivors reproduce with mutation. Watch mean fitness climb as
+    selection does its work. Turn mutation up for chaos; raise the pressure for mass extinctions.
+  </p>
+
+  <div class="sim-shell reveal d1">
+    <div class="sim-head">
+      <span class="live">SCINT GYM — DISH 01</span>
+      <span id="sim-status">OBSERVATION RUNNING</span>
+    </div>
+    <div class="sim-body">
+      <div class="dish-wrap">
+        <canvas id="dish"></canvas>
+        <div class="dish-overlay">SUBSTRATE FEED · 60 Hz</div>
+        <div id="event-banner"></div>
+      </div>
+      <div class="sim-side">
+        <div class="readouts">
+          <div class="readout"><div class="k">Generation</div><div class="v amber" id="r-gen">0</div></div>
+          <div class="readout"><div class="k">Population</div><div class="v" id="r-pop">0</div></div>
+          <div class="readout"><div class="k">Mean Fitness</div><div class="v green" id="r-mean">—</div></div>
+          <div class="readout"><div class="k">Best Fitness</div><div class="v green" id="r-best">—</div></div>
+          <div class="readout"><div class="k">Total Deaths</div><div class="v red" id="r-deaths">0</div></div>
+          <div class="readout"><div class="k">Scint Energy</div><div class="v amber" id="r-energy">0 ✦</div></div>
+        </div>
+        <div class="chart-block">
+          <div class="k">Fitness / Generation</div>
+          <canvas id="fit-chart"></canvas>
+        </div>
+        <div class="lineage-block">
+          <div class="k">Flight Recorder — Lineage</div>
+          <canvas id="phylo"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="sim-controls">
+      <button class="btn" id="btn-run">❚❚ Pause</button>
+      <button class="btn ghost" id="btn-epoch">Force Epoch</button>
+      <button class="btn ghost" id="btn-reset">Reinitialize</button>
+      <div class="slider-group">
+        <label for="sl-mut">Mutation σ</label>
+        <input type="range" id="sl-mut" min="1" max="20" value="7">
+        <output id="out-mut">0.07</output>
+      </div>
+      <div class="slider-group">
+        <label for="sl-pres">Pressure</label>
+        <input type="range" id="sl-pres" min="35" max="65" value="50">
+        <output id="out-pres">0.50</output>
+      </div>
+    </div>
+  </div>
+  <p class="figure-caption reveal" style="border:none; margin-top:14px;">
+    <b>What you're seeing:</b> directed evolution. No agent is told how to improve. Fitness
+    pressure + mutation + time is the entire algorithm — the same one that built you.
+  </p>
+</section>
+
+<!-- ============ 06 FOUNDATION ============ -->
+<section class="section" id="foundation">
+  <div class="sec-label reveal"><span class="num">06 — THE FOUNDATION</span><span class="rule"></span></div>
+  <h2 class="reveal">Built upward from a <em>single number.</em></h2>
+  <p class="lede reveal d1">
+    Under the biology is a strict bottom-up architecture. Everything in WAFT reduces to one
+    immutable atom — a <b>Score</b> between 0 and 1 — and builds upward without ever modifying
+    the layer below.
+  </p>
+
+  <div class="figure reveal d1">
+    <span class="fig-tag">FIG. 05 — THE STACK</span>
+    <svg viewBox="0 0 940 330" width="100%" role="img" aria-label="Layer diagram from atomic Score type up to Session">
+      <g font-size="11">
+        <rect x="330" y="262" width="280" height="44" rx="4" fill="rgba(89,255,166,0.14)" stroke="#59ffa6" stroke-width="1.5"/>
+        <text x="470" y="282" text-anchor="middle" fill="#59ffa6" font-weight="600">L0 · Score</text>
+        <text x="470" y="297" text-anchor="middle" fill="#7da393" font-size="9.5">frozen dataclass · one float, 0.0 – 1.0</text>
+
+        <rect x="290" y="204" width="360" height="44" rx="4" fill="#0a1f17" stroke="#225441"/>
+        <text x="470" y="224" text-anchor="middle" fill="#e6f4ea" font-weight="500">L1 · evaluate_text(text) → Score</text>
+        <text x="470" y="239" text-anchor="middle" fill="#7da393" font-size="9.5">the core transformation — everything flows through it</text>
+
+        <rect x="250" y="146" width="440" height="44" rx="4" fill="#0a1f17" stroke="#225441"/>
+        <text x="470" y="166" text-anchor="middle" fill="#e6f4ea" font-weight="500">L2 · Evaluation — 5 dimensions</text>
+        <text x="470" y="181" text-anchor="middle" fill="#7da393" font-size="9.5">factuality · validity · coherence · utility · faithfulness</text>
+
+        <rect x="210" y="88" width="520" height="44" rx="4" fill="#0a1f17" stroke="#225441"/>
+        <text x="470" y="108" text-anchor="middle" fill="#e6f4ea" font-weight="500">L3 · Step — one iteration of reasoning</text>
+        <text x="470" y="123" text-anchor="middle" fill="#7da393" font-size="9.5">problem → answer → evaluation</text>
+
+        <rect x="170" y="30" width="600" height="44" rx="4" fill="#0a1f17" stroke="#ffb454"/>
+        <text x="470" y="50" text-anchor="middle" fill="#ffb454" font-weight="600">L4 · Session — iterate until quality threshold</text>
+        <text x="470" y="65" text-anchor="middle" fill="#7da393" font-size="9.5">steps repeat until the Evaluation clears the bar or budget runs out</text>
+      </g>
+      <g stroke="#2c8f60" stroke-width="1" stroke-dasharray="3 4">
+        <line x1="470" y1="262" x2="470" y2="248"/>
+        <line x1="470" y1="204" x2="470" y2="190"/>
+        <line x1="470" y1="146" x2="470" y2="132"/>
+        <line x1="470" y1="88" x2="470" y2="74"/>
+      </g>
+      <text x="130" y="175" font-size="10" fill="#4a6b5c" letter-spacing="2" transform="rotate(-90 130 175)">BUILDS UPWARD →</text>
+    </svg>
+    <div class="figure-caption">
+      Each layer is proven before the next exists. Nothing above ever reaches down to change
+      what's below — the same discipline the genome system enforces on agents.
+    </div>
+  </div>
+
+  <div class="cli-grid">
+    <div class="cli-card reveal"><code>$ waft new my-lab</code><p>Scaffold a new project with the full WAFT structure.</p></div>
+    <div class="cli-card reveal d1"><code>$ waft evolve --target agent_v1</code><p>Run the Spawn → Gym → Select cycle on a target agent.</p></div>
+    <div class="cli-card reveal d2"><code>$ waft serve</code><p>Web dashboard for the laboratory — population, telemetry, lineage.</p></div>
+    <div class="cli-card reveal d3"><code>$ waft pantheon</code><p>Summon the entire pantheon of beings to weigh in and pass judgment.</p></div>
+  </div>
+</section>
+
+<footer>
+  <p class="sig">The goal: observe a <span>God-Head agent</span> emerge.</p>
+  <p class="meta">WAFT · WAVE AGENT FRAMEWORK &amp; TOOLS · FIELD MANUAL v0.0.1 · MIT LICENSE</p>
+</footer>
+
+<script>
+/* ================= scroll reveals ================= */
+const io = new IntersectionObserver((entries) => {
+  for (const e of entries) if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal, .figure').forEach(el => io.observe(el));
+
+/* ================= hero spores ================= */
+(function spores() {
+  const hero = document.querySelector('.hero');
+  for (let i = 0; i < 26; i++) {
+    const s = document.createElement('div');
+    s.className = 'spore';
+    const sz = 2 + Math.random() * 4;
+    s.style.width = s.style.height = sz + 'px';
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top = Math.random() * 100 + '%';
+    s.style.setProperty('--dx', (Math.random() * 160 - 80) + 'px');
+    s.style.setProperty('--dy', (-60 - Math.random() * 160) + 'px');
+    s.style.animationDuration = (9 + Math.random() * 14) + 's';
+    s.style.animationDelay = (-Math.random() * 20) + 's';
+    if (Math.random() < 0.25) s.style.background = 'var(--amber)';
+    hero.appendChild(s);
+  }
+})();
+
+/* ticker duplicate for seamless loop */
+(function () {
+  const t = document.getElementById('ticker-track');
+  t.innerHTML += t.innerHTML;
+})();
+
+/* ================= SIMULATION ================= */
+(function simulation() {
+  const dish = document.getElementById('dish');
+  const ctx = dish.getContext('2d');
+  const chart = document.getElementById('fit-chart');
+  const cctx = chart.getContext('2d');
+  const phylo = document.getElementById('phylo');
+  const pctx = phylo.getContext('2d');
+  const banner = document.getElementById('event-banner');
+
+  const R = {
+    gen: document.getElementById('r-gen'),
+    pop: document.getElementById('r-pop'),
+    mean: document.getElementById('r-mean'),
+    best: document.getElementById('r-best'),
+    deaths: document.getElementById('r-deaths'),
+    energy: document.getElementById('r-energy'),
+    status: document.getElementById('sim-status'),
+  };
+
+  const POP_CAP = 16;
+  const EPOCH_FRAMES = 300;       // ~5s at 60fps
+  let DPR = Math.min(window.devicePixelRatio || 1, 2);
+
+  const S = {
+    agents: [], sparks: [], gen: 0, deaths: 0, energy: 0,
+    frame: 0, running: true, mutation: 0.07, pressure: 0.50,
+    history: [],     // {mean, best}
+    phyloGens: [],   // [{id, hue, alive}...] per generation
+    nextId: 1,
+  };
+
+  function sizeCanvas(c, cx) {
+    const r = c.getBoundingClientRect();
+    if (r.width === 0) return;
+    c.width = r.width * DPR; c.height = r.height * DPR;
+    cx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  }
+  function sizeAll() {
+    sizeCanvas(dish, ctx); sizeCanvas(chart, cctx); sizeCanvas(phylo, pctx);
+  }
+  window.addEventListener('resize', () => { sizeAll(); drawChart(); drawPhylo(); });
+
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const gauss = () => (Math.random() + Math.random() + Math.random() - 1.5) / 1.5;
+
+  function fitnessOf(t) {
+    return clamp(0.4 * t.stability + 0.3 * t.efficiency + 0.3 * t.safety, 0, 1);
+  }
+
+  function makeAgent(parent) {
+    const W = dish.getBoundingClientRect().width, H = dish.getBoundingClientRect().height;
+    let traits, hue, x, y;
+    if (parent) {
+      const m = S.mutation;
+      traits = {
+        stability: clamp(parent.traits.stability + gauss() * m, 0, 1),
+        efficiency: clamp(parent.traits.efficiency + gauss() * m, 0, 1),
+        safety: clamp(parent.traits.safety + gauss() * m, 0, 1),
+      };
+      hue = (parent.hue + gauss() * 26 + 360) % 360;
+      x = clamp(parent.x + gauss() * 50, 40, W - 40);
+      y = clamp(parent.y + gauss() * 50, 40, H - 40);
+    } else {
+      traits = {
+        stability: 0.25 + Math.random() * 0.42,
+        efficiency: 0.25 + Math.random() * 0.42,
+        safety: 0.25 + Math.random() * 0.42,
+      };
+      hue = Math.random() * 360;
+      x = 40 + Math.random() * (W - 80);
+      y = 40 + Math.random() * (H - 80);
+    }
+    return {
+      id: S.nextId++, parentId: parent ? parent.id : null,
+      traits, hue, fitness: fitnessOf(traits),
+      x, y, vx: gauss() * 0.3, vy: gauss() * 0.3,
+      r: 9 + fitnessOf(traits) * 7,
+      phase: Math.random() * Math.PI * 2,
+      state: 'alive',   // alive | dying | born
+      anim: parent ? 0 : 1,  // birth scale-in
+    };
+  }
+
+  function seed() {
+    S.agents = []; S.sparks = []; S.gen = 0; S.deaths = 0; S.energy = 0;
+    S.frame = 0; S.history = []; S.phyloGens = []; S.nextId = 1;
+    for (let i = 0; i < 12; i++) S.agents.push(makeAgent(null));
+    recordGeneration();
+    updateReadouts();
+    drawChart(); drawPhylo();
+  }
+
+  function recordGeneration() {
+    const live = S.agents.filter(a => a.state !== 'dying');
+    const fits = live.map(a => a.fitness);
+    const mean = fits.length ? fits.reduce((s, v) => s + v, 0) / fits.length : 0;
+    const best = fits.length ? Math.max(...fits) : 0;
+    S.history.push({ mean, best });
+    if (S.history.length > 60) S.history.shift();
+    S.phyloGens.push(S.agents.map(a => ({ id: a.id, parentId: a.parentId, hue: a.hue, alive: a.fitness >= S.pressure })));
+    if (S.phyloGens.length > 14) S.phyloGens.shift();
+  }
+
+  function showBanner(text, death) {
+    banner.textContent = text;
+    banner.classList.toggle('death', !!death);
+    banner.classList.add('show');
+    setTimeout(() => banner.classList.remove('show'), 1600);
+  }
+
+  function epoch() {
+    // 1. the gym strikes: scint sparks
+    const W = dish.getBoundingClientRect().width;
+    for (let i = 0; i < 26; i++) {
+      const target = S.agents[Math.floor(Math.random() * S.agents.length)];
+      if (!target) break;
+      S.sparks.push({
+        x: Math.random() * W, y: -10,
+        tx: target.x, ty: target.y, t: 0,
+        glyph: ['✕', '▲', '◦', '≠'][Math.floor(Math.random() * 4)],
+      });
+    }
+
+    // 2. selection
+    const threshold = S.pressure;
+    let killed = 0, survived = 0;
+    for (const a of S.agents) {
+      // environmental noise: each epoch re-rolls a little
+      a.fitness = clamp(fitnessOf(a.traits) + gauss() * 0.03, 0, 1);
+      if (a.fitness < threshold) { a.state = 'dying'; killed++; }
+      else { survived++; S.energy += Math.round(a.fitness * 3); }
+    }
+    S.deaths += killed;
+
+    const survivors = S.agents.filter(a => a.state !== 'dying');
+    if (survivors.length === 0) {
+      showBanner('EXTINCTION EVENT', true);
+      setTimeout(() => { if (S.agents.every(a => a.state === 'dying')) {
+        S.agents = []; for (let i = 0; i < 12; i++) S.agents.push(makeAgent(null));
+      }}, 900);
+    } else {
+      // 3. reproduction — fitness-weighted
+      const children = [];
+      while (survivors.length + children.length < POP_CAP) {
+        const totalFit = survivors.reduce((s, a) => s + a.fitness, 0);
+        let pick = Math.random() * totalFit;
+        let parent = survivors[0];
+        for (const a of survivors) { pick -= a.fitness; if (pick <= 0) { parent = a; break; } }
+        children.push(makeAgent(parent));
+      }
+      S.agents.push(...children);
+      if (killed > survivors.length) showBanner(`MASS CULL — ${killed} DEAD`, true);
+      else if (S.gen > 0 && S.gen % 10 === 0) showBanner(`GENERATION ${S.gen + 1}`);
+    }
+
+    S.gen++;
+    recordGeneration();
+    updateReadouts();
+    drawChart(); drawPhylo();
+  }
+
+  function updateReadouts() {
+    const live = S.agents.filter(a => a.state !== 'dying');
+    const fits = live.map(a => a.fitness);
+    const mean = fits.length ? fits.reduce((s, v) => s + v, 0) / fits.length : 0;
+    const best = fits.length ? Math.max(...fits) : 0;
+    R.gen.textContent = S.gen;
+    R.pop.textContent = live.length;
+    R.mean.textContent = fits.length ? mean.toFixed(3) : '—';
+    R.best.textContent = fits.length ? best.toFixed(3) : '—';
+    R.deaths.textContent = S.deaths;
+    R.energy.textContent = S.energy + ' ✦';
+    R.mean.className = 'v ' + (mean >= S.pressure ? 'green' : 'red');
+  }
+
+  /* ---- drawing ---- */
+  function drawDish() {
+    const W = dish.getBoundingClientRect().width, H = dish.getBoundingClientRect().height;
+    ctx.clearRect(0, 0, W, H);
+
+    // dish vignette + faint grid
+    const g = ctx.createRadialGradient(W / 2, H / 2, H * 0.1, W / 2, H / 2, H * 0.85);
+    g.addColorStop(0, 'rgba(89,255,166,0.045)');
+    g.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = 'rgba(34,84,65,0.25)'; ctx.lineWidth = 1;
+    for (let x = 0; x < W; x += 46) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+    for (let y = 0; y < H; y += 46) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+
+    // epoch progress arc (bottom)
+    const prog = (S.frame % EPOCH_FRAMES) / EPOCH_FRAMES;
+    ctx.strokeStyle = 'rgba(255,180,84,0.55)'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(0, H - 1); ctx.lineTo(W * prog, H - 1); ctx.stroke();
+
+    // sparks
+    for (let i = S.sparks.length - 1; i >= 0; i--) {
+      const sp = S.sparks[i];
+      sp.t += 0.035;
+      if (sp.t >= 1) { S.sparks.splice(i, 1); continue; }
+      const x = sp.x + (sp.tx - sp.x) * sp.t;
+      const y = sp.y + (sp.ty - sp.y) * sp.t;
+      ctx.globalAlpha = 1 - sp.t * 0.6;
+      ctx.fillStyle = '#ff5d73';
+      ctx.font = '11px IBM Plex Mono';
+      ctx.fillText(sp.glyph, x, y);
+      ctx.globalAlpha = 1;
+    }
+
+    // agents
+    const t = S.frame / 60;
+    for (let i = S.agents.length - 1; i >= 0; i--) {
+      const a = S.agents[i];
+
+      if (a.state === 'dying') {
+        a.anim += 0.04;
+        if (a.anim >= 2) { S.agents.splice(i, 1); continue; }
+        const fade = clamp(2 - a.anim, 0, 1);
+        ctx.globalAlpha = fade * 0.8;
+        ctx.strokeStyle = '#ff5d73';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.arc(a.x, a.y, a.r * (1 + (a.anim - 1) * 1.4), 0, Math.PI * 2); ctx.stroke();
+        const s = a.r * 0.5;
+        ctx.beginPath();
+        ctx.moveTo(a.x - s, a.y - s); ctx.lineTo(a.x + s, a.y + s);
+        ctx.moveTo(a.x - s, a.y + s); ctx.lineTo(a.x + s, a.y - s);
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+        continue;
+      }
+
+      if (a.anim < 1) a.anim = Math.min(1, a.anim + 0.04);
+      const scale = a.anim < 1 ? 0.3 + a.anim * 0.7 : 1;
+
+      // drift
+      a.vx += gauss() * 0.02; a.vy += gauss() * 0.02;
+      a.vx *= 0.985; a.vy *= 0.985;
+      a.x += a.vx; a.y += a.vy;
+      const W2 = dish.getBoundingClientRect().width, H2 = dish.getBoundingClientRect().height;
+      if (a.x < 26 || a.x > W2 - 26) a.vx *= -1, a.x = clamp(a.x, 26, W2 - 26);
+      if (a.y < 26 || a.y > H2 - 26) a.vy *= -1, a.y = clamp(a.y, 26, H2 - 26);
+
+      const wob = 1 + Math.sin(t * 2.2 + a.phase) * 0.06;
+      const r = a.r * wob * scale;
+      const col = `hsl(${a.hue}, 85%, 64%)`;
+
+      // glow
+      const gl = ctx.createRadialGradient(a.x, a.y, r * 0.2, a.x, a.y, r * 3);
+      gl.addColorStop(0, `hsla(${a.hue}, 85%, 60%, 0.22)`);
+      gl.addColorStop(1, 'transparent');
+      ctx.fillStyle = gl;
+      ctx.beginPath(); ctx.arc(a.x, a.y, r * 3, 0, Math.PI * 2); ctx.fill();
+
+      // membrane
+      ctx.strokeStyle = col; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.arc(a.x, a.y, r, 0, Math.PI * 2); ctx.stroke();
+
+      // nucleus
+      ctx.fillStyle = col;
+      ctx.beginPath(); ctx.arc(a.x, a.y, r * 0.34, 0, Math.PI * 2); ctx.fill();
+
+      // fitness ring
+      const danger = a.fitness < S.pressure;
+      ctx.strokeStyle = danger ? '#ff5d73' : '#59ffa6';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(a.x, a.y, r + 5, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * a.fitness);
+      ctx.stroke();
+
+      // tiny fitness label
+      ctx.fillStyle = 'rgba(125,163,147,0.85)';
+      ctx.font = '9px IBM Plex Mono';
+      ctx.textAlign = 'center';
+      ctx.fillText(a.fitness.toFixed(2), a.x, a.y + r + 17);
+      ctx.textAlign = 'start';
+    }
+  }
+
+  function drawChart() {
+    const W = chart.getBoundingClientRect().width, H = chart.getBoundingClientRect().height;
+    if (!W) return;
+    cctx.clearRect(0, 0, W, H);
+    // threshold line
+    const ty = H - S.pressure * H;
+    cctx.strokeStyle = 'rgba(255,93,115,0.5)';
+    cctx.setLineDash([3, 4]);
+    cctx.beginPath(); cctx.moveTo(0, ty); cctx.lineTo(W, ty); cctx.stroke();
+    cctx.setLineDash([]);
+    cctx.fillStyle = 'rgba(255,93,115,0.7)';
+    cctx.font = '8px IBM Plex Mono';
+    cctx.fillText('death ' + S.pressure.toFixed(2), 4, ty - 4);
+
+    if (S.history.length < 2) return;
+    const n = S.history.length;
+    const step = W / (n - 1);
+    const line = (key, color, width) => {
+      cctx.strokeStyle = color; cctx.lineWidth = width;
+      cctx.beginPath();
+      S.history.forEach((h, i) => {
+        const x = i * step, y = H - h[key] * H;
+        i === 0 ? cctx.moveTo(x, y) : cctx.lineTo(x, y);
+      });
+      cctx.stroke();
+    };
+    line('best', 'rgba(255,180,84,0.8)', 1);
+    line('mean', '#59ffa6', 1.8);
+  }
+
+  function drawPhylo() {
+    const W = phylo.getBoundingClientRect().width, H = phylo.getBoundingClientRect().height;
+    if (!W) return;
+    pctx.clearRect(0, 0, W, H);
+    const gens = S.phyloGens;
+    if (!gens.length) return;
+    const colW = W / Math.max(gens.length - 1, 1);
+    const posOf = (gi, idx, count) => ({
+      x: gens.length === 1 ? W / 2 : gi * colW,
+      y: (idx + 1) / (count + 1) * H,
+    });
+    // edges
+    for (let gi = 1; gi < gens.length; gi++) {
+      const prev = gens[gi - 1], cur = gens[gi];
+      cur.forEach((node, idx) => {
+        const pIdx = prev.findIndex(p => p.id === node.parentId || p.id === node.id);
+        if (pIdx === -1) return;
+        const a = posOf(gi - 1, pIdx, prev.length), b = posOf(gi, idx, cur.length);
+        pctx.strokeStyle = `hsla(${node.hue}, 70%, 55%, 0.5)`;
+        pctx.lineWidth = 1;
+        pctx.beginPath();
+        pctx.moveTo(a.x, a.y);
+        pctx.bezierCurveTo(a.x + colW * 0.5, a.y, b.x - colW * 0.5, b.y, b.x, b.y);
+        pctx.stroke();
+      });
+    }
+    // nodes
+    gens.forEach((gen, gi) => {
+      gen.forEach((node, idx) => {
+        const p = posOf(gi, idx, gen.length);
+        if (node.alive) {
+          pctx.fillStyle = `hsl(${node.hue}, 80%, 60%)`;
+          pctx.beginPath(); pctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2); pctx.fill();
+        } else {
+          pctx.strokeStyle = '#ff5d73'; pctx.lineWidth = 1;
+          pctx.beginPath();
+          pctx.moveTo(p.x - 2.5, p.y - 2.5); pctx.lineTo(p.x + 2.5, p.y + 2.5);
+          pctx.moveTo(p.x - 2.5, p.y + 2.5); pctx.lineTo(p.x + 2.5, p.y - 2.5);
+          pctx.stroke();
+        }
+      });
+    });
+  }
+
+  /* ---- loop ---- */
+  function loop() {
+    if (S.running) {
+      S.frame++;
+      if (S.frame % EPOCH_FRAMES === 0) epoch();
+      drawDish();
+    }
+    requestAnimationFrame(loop);
+  }
+
+  /* ---- controls ---- */
+  const btnRun = document.getElementById('btn-run');
+  btnRun.addEventListener('click', () => {
+    S.running = !S.running;
+    btnRun.textContent = S.running ? '❚❚ Pause' : '▶ Run';
+    R.status.textContent = S.running ? 'OBSERVATION RUNNING' : 'OBSERVATION PAUSED';
+  });
+  document.getElementById('btn-epoch').addEventListener('click', () => { epoch(); drawDish(); });
+  document.getElementById('btn-reset').addEventListener('click', () => { seed(); drawDish(); });
+
+  const slMut = document.getElementById('sl-mut'), outMut = document.getElementById('out-mut');
+  slMut.addEventListener('input', () => {
+    S.mutation = slMut.value / 100;
+    outMut.textContent = S.mutation.toFixed(2);
+  });
+  const slPres = document.getElementById('sl-pres'), outPres = document.getElementById('out-pres');
+  slPres.addEventListener('input', () => {
+    S.pressure = slPres.value / 100;
+    outPres.textContent = S.pressure.toFixed(2);
+    drawChart();
+  });
+
+  /* ---- boot ---- */
+  // wait for layout
+  requestAnimationFrame(() => {
+    sizeAll();
+    seed();
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      S.running = false;
+      btnRun.textContent = '▶ Run';
+      R.status.textContent = 'OBSERVATION PAUSED';
+      drawDish();
+    }
+    loop();
+  });
+})();
+</script>
+</body>
+</html>
