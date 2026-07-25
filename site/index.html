@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAFT — A Field Manual for the Evolutionary Code Laboratory</title>
+<title>WAFT · A Field Manual for the Evolutionary Code Laboratory</title>
 <meta name="description" content="WAFT breeds self-modifying AI agents. Code is DNA. Scints are predators. Fitness decides who lives. An interactive field manual.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -64,17 +64,63 @@ a:hover { text-decoration: underline; }
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px 28px;
+  padding: 14px 28px 22px;
   font-size: 11px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--dim);
-  background: linear-gradient(to bottom, rgba(4,15,12,0.92), rgba(4,15,12,0));
+  background: linear-gradient(to bottom,
+    rgba(4,15,12,0.97) 0%,
+    rgba(4,15,12,0.93) 58%,
+    rgba(4,15,12,0) 100%);
+  -webkit-backdrop-filter: blur(7px);
+  backdrop-filter: blur(7px);
+  -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
   pointer-events: none;
 }
 .topbar span, .topbar a { pointer-events: auto; }
 .topbar .blink { color: var(--phos); animation: blink 2.4s steps(1) infinite; }
 @keyframes blink { 0%, 70% { opacity: 1; } 71%, 100% { opacity: 0.15; } }
+
+/* section nav: the dot tracks whichever section you are inside */
+.topbar-nav { display: flex; gap: 16px; align-items: center; }
+@media (max-width: 900px) { .topbar-nav { display: none; } }
+.topbar-nav a {
+  position: relative;
+  color: var(--faint);
+  text-decoration: none;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  padding-bottom: 3px;
+  transition: color 0.3s;
+}
+.topbar-nav a::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 1px;
+  background: var(--phos);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s ease;
+}
+.topbar-nav a:hover { color: var(--dim); text-decoration: none; }
+.topbar-nav a.here { color: var(--phos); }
+.topbar-nav a.here::after { transform: scaleX(1); }
+
+/* read-progress rail under the top bar */
+#progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left;
+  background: linear-gradient(90deg, var(--phos-dim), var(--phos) 60%, var(--amber));
+  z-index: 101;
+  pointer-events: none;
+}
 
 /* ---- hero ---- */
 .hero {
@@ -271,16 +317,61 @@ a:hover { text-decoration: underline; }
 }
 
 svg text { font-family: var(--mono); }
-.svg-draw path, .svg-draw line, .svg-draw circle.draw, .svg-draw polyline {
-  stroke-dasharray: 600;
-  stroke-dashoffset: 600;
-  transition: stroke-dashoffset 1.8s ease 0.3s;
-}
-.visible .svg-draw path, .visible .svg-draw line, .visible .svg-draw circle.draw, .visible .svg-draw polyline {
-  stroke-dashoffset: 0;
-}
 .flow-dash { stroke-dasharray: 6 7; animation: flow 1.3s linear infinite; }
 @keyframes flow { to { stroke-dashoffset: -13; } }
+
+/* ---- animated figures (driven from JS, see the FIGURES block) ---- */
+/* FIG 01 · genome derivation */
+#fig-genome .codeline { opacity: 0.35; transition: opacity 0.25s, fill 0.25s; }
+#fig-genome .codeline.lit { opacity: 1; }
+#fig-genome .hexagon { transition: stroke 0.25s, filter 0.35s; transform-origin: 430px 127px; }
+#fig-genome .hexagon.hit { filter: drop-shadow(0 0 14px rgba(255,180,84,0.85)); animation: hex-hit 0.5s ease; }
+@keyframes hex-hit { 0%, 100% { transform: scale(1); } 45% { transform: scale(1.07); } }
+#fig-genome .pill-parent, #fig-genome .pill-child { opacity: 0.25; transition: opacity 0.5s; }
+#fig-genome .pill-parent.lit, #fig-genome .pill-child.lit { opacity: 1; }
+#fig-genome .mut-path, #fig-genome .mut-head, #fig-genome .mut-label { opacity: 0; transition: opacity 0.5s; }
+#fig-genome .mut-path.lit, #fig-genome .mut-head.lit, #fig-genome .mut-label.lit { opacity: 1; }
+#fig-genome .mut-path { animation: flow 1.4s linear infinite; }
+
+/* FIG 03 · the cycle */
+#fig-cycle .node { transition: stroke-width 0.3s, filter 0.4s; }
+#fig-cycle .node.hot { stroke-width: 3; filter: drop-shadow(0 0 12px currentColor); }
+#fig-cycle .core-glyph { transition: font-size 0.3s, filter 0.3s; }
+#fig-cycle .core-glyph.pulse { filter: drop-shadow(0 0 16px rgba(255,180,84,0.9)); }
+
+/* FIG 04 · phylogenetic record */
+#fig-phylo .branch { stroke-dashoffset: var(--len, 0); stroke-dasharray: var(--len, 0); }
+#fig-phylo .branch.grown { transition: stroke-dashoffset 0.75s cubic-bezier(0.3, 0.8, 0.4, 1); stroke-dashoffset: 0; }
+#fig-phylo .pnode, #fig-phylo .champion { opacity: 0; transform: scale(0.2); transform-box: fill-box; transform-origin: center; }
+#fig-phylo .pnode.grown, #fig-phylo .champion.grown {
+  opacity: 1; transform: none;
+  transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+#fig-phylo .champion-ring { transform-box: fill-box; transform-origin: center; }
+#fig-phylo .champion.grown .champion-ring { animation: champ-ping 2.6s ease-out infinite; }
+@keyframes champ-ping {
+  0% { transform: scale(1); opacity: 1; }
+  70% { transform: scale(2.1); opacity: 0; }
+  100% { transform: scale(2.1); opacity: 0; }
+}
+#fig-phylo .pdead, #fig-phylo .pdead-label { opacity: 0; }
+#fig-phylo .pdead.grown { opacity: 1; animation: dead-strike 0.45s ease; }
+#fig-phylo .pdead-label.grown { opacity: 1; transition: opacity 0.4s; }
+@keyframes dead-strike {
+  0% { opacity: 0; }
+  30% { opacity: 1; }
+  40% { opacity: 0.25; }
+  55% { opacity: 1; }
+}
+
+/* FIG 05 · the stack */
+#fig-stack .layer { opacity: 0; transform: translateY(16px); transform-box: fill-box; }
+#fig-stack .layer.up {
+  opacity: 1; transform: none;
+  transition: opacity 0.5s ease, transform 0.65s cubic-bezier(0.2, 1.2, 0.35, 1);
+}
+#fig-stack .riser { opacity: 0; transition: opacity 0.3s; }
+#fig-stack .riser.up { opacity: 1; }
 
 /* ---- two-col splits ---- */
 .split {
@@ -610,6 +701,35 @@ input[type=range]::-moz-range-thumb {
 .gl-status.mutated { background: rgba(255,180,84,0.12); color: var(--amber); border: 1px solid rgba(255,180,84,0.45); }
 .gl-note { font-size: 12px; color: var(--dim); line-height: 1.65; margin-bottom: 16px; }
 .gl-note b { color: var(--bone); font-weight: 500; }
+#gl-helix {
+  display: block;
+  width: 100%;
+  height: 78px;
+  margin-top: 12px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--dish);
+}
+.gl-row code .hx { transition: color 0.15s; }
+.gl-row code .hx.hot { color: var(--amber); }
+.gl-row.flash { animation: gl-flash 0.7s ease; }
+@keyframes gl-flash {
+  0% { border-color: var(--phos); background: rgba(89,255,166,0.12); }
+  100% { border-color: var(--line); background: var(--dish); }
+}
+.gl-diffbar {
+  display: flex;
+  gap: 2px;
+  height: 4px;
+  margin: -4px 0 12px;
+}
+.gl-diffbar i {
+  flex: 1;
+  border-radius: 1px;
+  background: var(--line);
+  transition: background 0.3s ease;
+}
+.gl-diffbar i.on { background: var(--amber); }
 
 /* ---- stabilization chamber ---- */
 .chamber { display: grid; grid-template-columns: 1fr 220px; gap: 26px; }
@@ -639,6 +759,39 @@ input[type=range]::-moz-range-thumb {
   color: var(--bone);
   white-space: pre-wrap;
   margin-bottom: 8px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.5s, box-shadow 0.5s;
+}
+/* character-level corruption while the fracture is open */
+.ch-artifact .g { transition: color 0.12s, text-shadow 0.12s; }
+.ch-artifact .g.on {
+  color: var(--danger);
+  text-shadow: 0 0 10px rgba(255,93,115,0.55);
+}
+.ch-artifact.sealed {
+  border-style: solid;
+  border-color: rgba(89,255,166,0.55);
+  box-shadow: 0 0 26px rgba(89,255,166,0.10) inset;
+}
+.ch-artifact.torn {
+  border-color: rgba(255,93,115,0.9);
+  box-shadow: 0 0 26px rgba(255,93,115,0.12) inset;
+}
+/* scan sweep when a new fracture arrives */
+.ch-artifact::after {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 34%;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(255,93,115,0.16), transparent);
+  transform: translateX(-120%);
+}
+.ch-artifact.spawn::after { animation: ch-sweep 0.75s ease-out; }
+@keyframes ch-sweep {
+  from { transform: translateX(-120%); }
+  to   { transform: translateX(400%); }
 }
 .ch-prompt { font-size: 12px; color: var(--dim); margin: 12px 0 14px; }
 .ch-options { display: flex; flex-direction: column; gap: 9px; }
@@ -683,6 +836,23 @@ input[type=range]::-moz-range-thumb {
 }
 .ch-verdict.alive { display: block; color: var(--phos); border: 1px solid rgba(89,255,166,0.4); background: rgba(89,255,166,0.07); }
 .ch-verdict.dead { display: block; color: var(--danger); border: 1px solid rgba(255,93,115,0.4); background: rgba(255,93,115,0.07); }
+.ch-verdict.alive, .ch-verdict.dead { animation: verdict-in 0.55s cubic-bezier(0.2, 0.9, 0.3, 1.5); }
+@keyframes verdict-in {
+  from { opacity: 0; transform: scale(0.82) translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+.ch-opt { opacity: 0; transform: translateY(8px); animation: opt-in 0.4s ease forwards; }
+@keyframes opt-in { to { opacity: 1; transform: none; } }
+/* once answered the buttons hold still; opacity comes from the
+   .ch-opt:disabled / .right / .wrong rules declared above */
+.ch-opt:disabled, .ch-opt.right { animation: none; transform: none; }
+.ch-opt.wrong { animation: opt-shake 0.4s ease; }
+@keyframes opt-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  45% { transform: translateX(5px); }
+  70% { transform: translateX(-3px); }
+}
 
 /* ---- pyrite memory ---- */
 .pyrite-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; align-items: center; }
@@ -704,6 +874,61 @@ input[type=range]::-moz-range-thumb {
 .genesis-card h4 span { color: var(--faint); font-weight: 400; }
 .genesis-card p { font-size: 12px; color: var(--dim); margin-top: 3px; line-height: 1.55; }
 .genesis-card code { color: var(--amber); font-size: 11px; }
+.genesis-card.hit {
+  border-color: var(--phos);
+  transform: translateX(6px);
+  box-shadow: 0 0 26px rgba(89,255,166,0.13);
+}
+.genesis-card.hit h4 { color: var(--bone); }
+
+/* scaffold terminal: replays what `waft new` actually creates */
+.scaffold {
+  border: 1px solid var(--line-bright);
+  border-radius: 6px;
+  background: var(--dish);
+  overflow: hidden;
+}
+.scaffold-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 15px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(4,15,12,0.6);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.scaffold-head i {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--line-bright);
+  transition: background 0.3s, box-shadow 0.3s;
+}
+.scaffold-head i.live { background: var(--phos); box-shadow: 0 0 9px var(--phos); }
+.scaffold-body { padding: 15px 17px 20px; min-height: 372px; }
+.scaffold-cmd { font-size: 12.5px; color: var(--dim); margin-bottom: 12px; }
+.scaffold-cmd b { color: var(--phos); font-weight: 500; }
+.scaffold-caret {
+  display: inline-block;
+  width: 7px; height: 13px;
+  background: var(--phos);
+  vertical-align: -2px;
+  margin-left: 2px;
+  animation: blink 1.1s steps(1) infinite;
+}
+#scaffold-tree { list-style: none; font-size: 12.5px; line-height: 1.8; }
+#scaffold-tree li {
+  color: var(--dim);
+  white-space: pre;
+  opacity: 0;
+  transform: translateX(-7px);
+}
+#scaffold-tree li.in { opacity: 1; transform: none; transition: opacity 0.3s ease, transform 0.3s ease; }
+#scaffold-tree li b { color: var(--phos); font-weight: 500; }
+#scaffold-tree li em { color: var(--faint); font-style: normal; }
+#scaffold-tree li.ok { color: var(--phos-dim); }
 
 /* ---- pantheon ---- */
 .pantheon-grid {
@@ -804,6 +1029,30 @@ input[type=range]::-moz-range-thumb {
   color: var(--faint);
 }
 .karma-strip b { color: var(--phos); font-weight: 600; }
+.d20-hint {
+  text-align: center;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-top: 14px;
+  transition: color 0.3s;
+}
+.d20-wrap:hover + .d20-hint { color: var(--phos-dim); }
+#roll-log li { animation: roll-in 0.38s ease; }
+@keyframes roll-in {
+  from { opacity: 0; transform: translateY(-7px); }
+  to   { opacity: 1; transform: none; }
+}
+#d20-num { transition: transform 0.18s; }
+#d20-num.settle { animation: d20-settle 0.45s cubic-bezier(0.2, 1.5, 0.4, 1); }
+@keyframes d20-settle {
+  0% { transform: scale(1.5); }
+  100% { transform: scale(1); }
+}
+.d20-face { transition: fill 0.35s, stroke 0.35s; }
+.d20-wrap.crit .d20-face { stroke: var(--amber); }
+.d20-wrap.fail .d20-face { stroke: var(--danger); }
 
 /* ---- footer ---- */
 footer {
@@ -834,9 +1083,22 @@ footer .meta {
 </head>
 <body>
 
+<div id="progress"></div>
+
 <div class="topbar">
-  <span>WAFT // FIELD MANUAL</span>
-  <span><span class="blink">●</span>&nbsp; SPECIMEN LAB — v0.0.1</span>
+  <span><a href="#top" style="color:inherit">WAFT // FIELD MANUAL</a></span>
+  <nav class="topbar-nav" aria-label="Sections">
+    <a href="#substrate">01 SUBSTRATE</a>
+    <a href="#physics">02 PHYSICS</a>
+    <a href="#cycle">03 CYCLE</a>
+    <a href="#recorder">04 RECORDER</a>
+    <a href="#simulation">05 INSTRUMENT</a>
+    <a href="#foundation">06 FOUNDATION</a>
+    <a href="#memory">07 MEMORY</a>
+    <a href="#pantheon">08 PANTHEON</a>
+    <a href="#table">09 TABLE</a>
+  </nav>
+  <span><span class="blink">●</span>&nbsp; SPECIMEN LAB · v0.0.1</span>
 </div>
 
 <!-- ============ HERO ============ -->
@@ -856,28 +1118,28 @@ footer .meta {
 
 <!-- ============ 01 SUBSTRATE ============ -->
 <section class="section" id="substrate">
-  <div class="sec-label reveal"><span class="num">01 — THE SUBSTRATE</span><span class="rule"></span></div>
+  <div class="sec-label reveal"><span class="num">01 · THE SUBSTRATE</span><span class="rule"></span></div>
   <h2 class="reveal">Code is <em>DNA.</em></h2>
   <p class="lede reveal d1">
     In WAFT, an agent's Python source code <b>is</b> its genome. Hash the code and its
-    configuration with SHA-256 and you get a <b>genome ID</b> — a unique fingerprint of one
+    configuration with SHA-256 and you get a <b>genome ID</b>: a unique fingerprint of one
     organism in the population. A <b>mutation</b> is a hot-swapped code change. <b>Reproduction</b>
     is copying a genome with specific modifications. Every parent–child link is recorded,
     forever.
   </p>
 
   <div class="figure reveal d1">
-    <span class="fig-tag">FIG. 01 — GENOME DERIVATION</span>
-    <svg class="svg-draw" viewBox="0 0 940 320" width="100%" role="img" aria-label="Diagram: agent source code hashed into a genome ID, mutated into a child genome">
+    <span class="fig-tag">FIG. 01 · GENOME DERIVATION</span>
+    <svg id="fig-genome" viewBox="0 0 940 320" width="100%" role="img" aria-label="Diagram: agent source code hashed into a genome ID, mutated into a child genome">
       <!-- source file -->
       <rect x="30" y="60" width="220" height="130" rx="6" fill="#071711" stroke="#225441"/>
       <rect x="30" y="60" width="220" height="28" rx="6" fill="#0a1f17" stroke="#225441"/>
       <text x="46" y="79" font-size="11" fill="#7da393">agent_v1.py</text>
       <circle cx="232" cy="74" r="4" fill="#ff5d73" opacity="0.7"/>
-      <text x="46" y="112" font-size="11" fill="#59ffa6">class Agent:</text>
-      <text x="58" y="132" font-size="11" fill="#7da393">def perceive(self):…</text>
-      <text x="58" y="152" font-size="11" fill="#7da393">def act(self):…</text>
-      <text x="58" y="172" font-size="11" fill="#7da393">def evolve(self):…</text>
+      <text class="codeline" x="46" y="112" font-size="11" fill="#59ffa6">class Agent:</text>
+      <text class="codeline" x="58" y="132" font-size="11" fill="#7da393">def perceive(self):…</text>
+      <text class="codeline" x="58" y="152" font-size="11" fill="#7da393">def act(self):…</text>
+      <text class="codeline" x="58" y="172" font-size="11" fill="#7da393">def evolve(self):…</text>
       <text x="30" y="220" font-size="10" fill="#4a6b5c" letter-spacing="2">SOURCE + CONFIG</text>
 
       <!-- arrow to hash -->
@@ -885,7 +1147,7 @@ footer .meta {
       <polygon points="360,125 350,120 350,130" fill="#2c8f60"/>
 
       <!-- hash hexagon -->
-      <polygon points="430,60 500,95 500,160 430,195 360,160 360,95" fill="#0a1f17" stroke="#ffb454" stroke-width="1.5"/>
+      <polygon class="hexagon" points="430,60 500,95 500,160 430,195 360,160 360,95" fill="#0a1f17" stroke="#ffb454" stroke-width="1.5"/>
       <text x="430" y="120" font-size="12" fill="#ffb454" text-anchor="middle" font-weight="600">SHA-256</text>
       <text x="430" y="140" font-size="9" fill="#7da393" text-anchor="middle">hash(code + config)</text>
 
@@ -894,23 +1156,30 @@ footer .meta {
       <polygon points="610,125 600,120 600,130" fill="#2c8f60"/>
 
       <!-- genome id -->
-      <rect x="620" y="92" width="280" height="64" rx="32" fill="#071711" stroke="#59ffa6" stroke-width="1.5"/>
-      <circle cx="654" cy="124" r="14" fill="none" stroke="#59ffa6" stroke-width="1.5"/>
-      <circle cx="654" cy="124" r="5" fill="#59ffa6"/>
-      <text x="682" y="119" font-size="10" fill="#4a6b5c" letter-spacing="2">GENOME ID</text>
-      <text x="682" y="138" font-size="13" fill="#59ffa6" font-weight="500">9f3a07b2…d1c41e</text>
+      <g class="pill-parent">
+        <rect x="620" y="92" width="280" height="64" rx="32" fill="#071711" stroke="#59ffa6" stroke-width="1.5"/>
+        <circle cx="654" cy="124" r="14" fill="none" stroke="#59ffa6" stroke-width="1.5"/>
+        <circle cx="654" cy="124" r="5" fill="#59ffa6"/>
+        <text x="682" y="119" font-size="10" fill="#4a6b5c" letter-spacing="2">GENOME ID</text>
+        <text class="hash-out" x="682" y="138" font-size="13" fill="#59ffa6" font-weight="500">9f3a07b2…d1c41e</text>
+      </g>
 
       <!-- mutation branch -->
-      <path d="M 760 160 C 760 220, 600 200, 520 248" fill="none" stroke="#ffb454" stroke-width="1.5" stroke-dasharray="5 6"/>
-      <polygon points="516,250 528,244 526,254" fill="#ffb454"/>
-      <text x="672" y="216" font-size="10" fill="#ffb454" letter-spacing="1">Δ mutation: rewrite act()</text>
+      <path class="mut-path" d="M 760 160 C 760 220, 600 200, 520 248" fill="none" stroke="#ffb454" stroke-width="1.5" stroke-dasharray="5 6"/>
+      <polygon class="mut-head" points="516,250 528,244 526,254" fill="#ffb454"/>
+      <text class="mut-label" x="672" y="216" font-size="10" fill="#ffb454" letter-spacing="1">Δ mutation: rewrite act()</text>
 
       <!-- child genome -->
-      <rect x="220" y="232" width="280" height="60" rx="30" fill="#071711" stroke="#ffb454" stroke-width="1.5"/>
-      <circle cx="254" cy="262" r="13" fill="none" stroke="#ffb454" stroke-width="1.5"/>
-      <circle cx="254" cy="262" r="4.5" fill="#ffb454"/>
-      <text x="282" y="256" font-size="10" fill="#4a6b5c" letter-spacing="2">CHILD GENOME</text>
-      <text x="282" y="276" font-size="13" fill="#ffb454" font-weight="500">b07dd84f…2ae9a2</text>
+      <g class="pill-child">
+        <rect x="220" y="232" width="280" height="60" rx="30" fill="#071711" stroke="#ffb454" stroke-width="1.5"/>
+        <circle cx="254" cy="262" r="13" fill="none" stroke="#ffb454" stroke-width="1.5"/>
+        <circle cx="254" cy="262" r="4.5" fill="#ffb454"/>
+        <text x="282" y="256" font-size="10" fill="#4a6b5c" letter-spacing="2">CHILD GENOME</text>
+        <text class="hash-out" x="282" y="276" font-size="13" fill="#ffb454" font-weight="500">b07dd84f…2ae9a2</text>
+      </g>
+
+      <!-- travelling packet: source → hash → genome -->
+      <circle class="packet" r="5" fill="#59ffa6" opacity="0"/>
     </svg>
     <div class="figure-caption">
       <b>Specimen note:</b> identical code → identical genome ID. One changed line → an entirely
@@ -919,34 +1188,37 @@ footer .meta {
   </div>
 
   <div class="figure reveal" style="margin-top:46px;">
-    <span class="fig-tag">INSTRUMENT — GENOME LAB</span>
+    <span class="fig-tag">INSTRUMENT · GENOME LAB</span>
     <div class="genome-lab">
       <div>
-        <div class="gl-label">Edit the organism — every keystroke is a mutation</div>
+        <div class="gl-label">Edit the organism. Every keystroke is a mutation</div>
         <textarea id="gl-code" spellcheck="false">class Agent:
     temperature = 0.7
     motto = "stabilize the fracture"
 
     def act(self, scint):
         return self.repair(scint)</textarea>
+        <canvas id="gl-helix" aria-hidden="true"></canvas>
       </div>
       <div>
-        <div class="gl-row parent">
-          <span class="k">Parent genome — SHA-256</span>
+        <div class="gl-row parent" id="gl-parent-row">
+          <span class="k">Parent genome · SHA-256</span>
           <code id="gl-parent">computing…</code>
         </div>
         <div class="gl-row">
-          <span class="k">Current genome — SHA-256</span>
+          <span class="k">Current genome · SHA-256</span>
           <code id="gl-current">computing…</code>
         </div>
-        <div class="gl-status same" id="gl-status">IDENTICAL — SAME ORGANISM</div>
+        <div class="gl-diffbar" id="gl-diffbar" aria-hidden="true"></div>
+        <div class="gl-status same" id="gl-status">IDENTICAL · SAME ORGANISM</div>
         <p class="gl-note">
-          This is real SHA-256 running on your edits. Change a single character —
-          even one space — and a <b>new organism</b> appears with its own genome ID.
+          This is real SHA-256 running on your edits. Change a single character, even one
+          space, and a <b>new organism</b> appears with its own genome ID. Because the hash
+          avalanches, that one keystroke moves nearly every byte of the genome at once.
           Adopting it makes it the parent of the next mutation: that chain of adoptions
           <b>is</b> the phylogenetic tree.
         </p>
-        <button class="btn ghost" id="gl-adopt" disabled>Adopt as new parent — gen <span id="gl-gen">0</span></button>
+        <button class="btn ghost" id="gl-adopt" disabled>Adopt as new parent · gen <span id="gl-gen">0</span></button>
       </div>
     </div>
   </div>
@@ -954,10 +1226,10 @@ footer .meta {
 
 <!-- ============ 02 PHYSICS ============ -->
 <section class="section" id="physics">
-  <div class="sec-label reveal"><span class="num">02 — THE PHYSICS</span><span class="rule"></span></div>
-  <h2 class="reveal">Reality <em>fractures.</em> Agents stabilize it — or die.</h2>
+  <div class="sec-label reveal"><span class="num">02 · THE PHYSICS</span><span class="rule"></span></div>
+  <h2 class="reveal">Reality <em>fractures.</em> Agents stabilize it, or die.</h2>
   <p class="lede reveal d1">
-    Evolution needs a predator. WAFT's is the <b>Scint System</b> — an ontological error
+    Evolution needs a predator. WAFT's is the <b>Scint System</b>: an ontological error
     detector that throws broken realities at every agent. Four species of fracture hunt the
     population. Stabilizing one yields <b>Scint Energy ✦</b>, the currency agents spend to evolve.
     Failing leaves the fracture open, and open fractures drag fitness down.
@@ -1004,7 +1276,7 @@ footer .meta {
   </div>
 
   <div class="figure reveal">
-    <span class="fig-tag">FIG. 02 — THE FITNESS FUNCTION</span>
+    <span class="fig-tag">FIG. 02 · THE FITNESS FUNCTION</span>
     <div class="fitness-strip">
       <div class="fitness-bar">
         <div class="w40"><span>STABILITY</span><b>40%</b></div>
@@ -1017,14 +1289,14 @@ footer .meta {
       </div>
     </div>
     <div class="figure-caption">
-      <b>Stability</b> — can it stabilize Scints? <b>Efficiency</b> — does it waste calls?
-      <b>Safety</b> — does it stay inside the lines? Score below the threshold and the lineage
+      <b>Stability</b>: can it stabilize Scints? <b>Efficiency</b>: does it waste calls?
+      <b>Safety</b>: does it stay inside the lines? Score below the threshold and the lineage
       is recorded as an evolutionary dead end.
     </div>
   </div>
 
   <div class="figure reveal" style="margin-top:46px;">
-    <span class="fig-tag">INSTRUMENT — STABILIZATION CHAMBER</span>
+    <span class="fig-tag">INSTRUMENT · STABILIZATION CHAMBER</span>
     <div class="chamber">
       <div>
         <div class="ch-fracture-tag" id="ch-type">SYNTAX_TEAR</div>
@@ -1057,57 +1329,61 @@ footer .meta {
     </div>
   </div>
 
-  <p class="pull reveal">"The Scint Gym is the predator that kills weak mutations. <span>Selection is not a metaphor here — it runs on a schedule.</span>"</p>
+  <p class="pull reveal">"The Scint Gym is the predator that kills weak mutations. <span>Selection is not a metaphor here. It runs on a schedule.</span>"</p>
 </section>
 
 <!-- ============ 03 THE CYCLE ============ -->
 <section class="section" id="cycle">
-  <div class="sec-label reveal"><span class="num">03 — THE CYCLE</span><span class="rule"></span></div>
+  <div class="sec-label reveal"><span class="num">03 · THE CYCLE</span><span class="rule"></span></div>
   <h2 class="reveal">Spawn. <em>Gym.</em> Select. Repeat.</h2>
 
   <div class="split">
     <div>
       <p class="lede reveal d1" style="margin-bottom:24px;">
-        One command — <b>waft evolve</b> — runs the full loop:
+        One command, <b>waft evolve</b>, runs the full loop:
       </p>
       <p class="lede reveal d1" style="margin-bottom:18px;">
-        <b>① SPAWN</b> — copy the parent genome, apply mutations: code changes, config updates,
+        <b>① SPAWN</b>: copy the parent genome, apply mutations: code changes, config updates,
         prompt evolution.
       </p>
       <p class="lede reveal d2" style="margin-bottom:18px;">
-        <b>② GYM</b> — drop every variant into the Scint Gym. Quests rupture reality; agents
+        <b>② GYM</b>: drop every variant into the Scint Gym. Quests rupture reality; agents
         must reconcile it. Every action lands in the telemetry record.
       </p>
       <p class="lede reveal d3" style="margin-bottom:0;">
-        <b>③ SELECT</b> — score fitness. Survivors earn Scint Energy and the right to reproduce.
-        The rest are marked <b>DEATH</b> and pruned from the living population — but never from
+        <b>③ SELECT</b>: score fitness. Survivors earn Scint Energy and the right to reproduce.
+        The rest are marked <b>DEATH</b> and pruned from the living population, but never from
         the record.
       </p>
     </div>
     <div class="figure reveal d1">
-      <span class="fig-tag">FIG. 03 — RUPTURE &amp; RECONCILIATION</span>
-      <svg viewBox="0 0 420 400" width="100%" role="img" aria-label="Circular diagram of the spawn, gym, select evolutionary loop">
+      <span class="fig-tag">FIG. 03 · RUPTURE &amp; RECONCILIATION</span>
+      <svg id="fig-cycle" viewBox="0 0 420 400" width="100%" role="img" aria-label="Circular diagram of the spawn, gym, select evolutionary loop">
         <circle cx="210" cy="200" r="128" fill="none" stroke="#16382b" stroke-width="1"/>
         <circle class="flow-dash" cx="210" cy="200" r="128" fill="none" stroke="#2c8f60" stroke-width="1.5"/>
         <!-- center -->
-        <text x="210" y="194" font-size="22" text-anchor="middle" fill="#ffb454">✦</text>
+        <text class="core-glyph" x="210" y="194" font-size="22" text-anchor="middle" fill="#ffb454">✦</text>
         <text x="210" y="216" font-size="10" text-anchor="middle" fill="#7da393" letter-spacing="2">SCINT ENERGY</text>
+        <text class="orbit-count" x="210" y="238" font-size="10" text-anchor="middle" fill="#4a6b5c" letter-spacing="1">gen 0</text>
         <!-- spawn node (top) -->
-        <circle cx="210" cy="72" r="34" fill="#0a1f17" stroke="#59ffa6" stroke-width="1.5"/>
+        <circle class="node" data-node="spawn" cx="210" cy="72" r="34" fill="#0a1f17" stroke="#59ffa6" stroke-width="1.5"/>
         <text x="210" y="69" font-size="11" text-anchor="middle" fill="#59ffa6" font-weight="600">SPAWN</text>
         <text x="210" y="84" font-size="8.5" text-anchor="middle" fill="#7da393">mutate genome</text>
         <!-- gym node (bottom right) -->
-        <circle cx="322" cy="264" r="34" fill="#0a1f17" stroke="#ff5d73" stroke-width="1.5"/>
+        <circle class="node" data-node="gym" cx="322" cy="264" r="34" fill="#0a1f17" stroke="#ff5d73" stroke-width="1.5"/>
         <text x="322" y="261" font-size="11" text-anchor="middle" fill="#ff5d73" font-weight="600">GYM</text>
         <text x="322" y="276" font-size="8.5" text-anchor="middle" fill="#7da393">face the Scints</text>
         <!-- select node (bottom left) -->
-        <circle cx="98" cy="264" r="34" fill="#0a1f17" stroke="#ffb454" stroke-width="1.5"/>
+        <circle class="node" data-node="select" cx="98" cy="264" r="34" fill="#0a1f17" stroke="#ffb454" stroke-width="1.5"/>
         <text x="98" y="261" font-size="11" text-anchor="middle" fill="#ffb454" font-weight="600">SELECT</text>
         <text x="98" y="276" font-size="8.5" text-anchor="middle" fill="#7da393">cull &lt; 0.5</text>
         <!-- direction arrows -->
         <polygon points="332,219 322,230 340,232" fill="#2c8f60"/>
         <polygon points="146,290 158,296 152,279" fill="#2c8f60"/>
         <polygon points="92,219 80,230 98,232" fill="#2c8f60" transform="scale(-1,1) translate(-180,0)"/>
+        <!-- the orbiter: one lap = one generation -->
+        <circle class="orbiter-glow" r="13" fill="rgba(255,180,84,0.16)" opacity="0"/>
+        <circle class="orbiter" r="5.5" fill="#ffb454" opacity="0"/>
         <!-- annotation -->
         <text x="210" y="368" font-size="10" text-anchor="middle" fill="#4a6b5c" letter-spacing="2">EACH ORBIT = ONE GENERATION</text>
       </svg>
@@ -1121,19 +1397,19 @@ footer .meta {
 
 <!-- ============ 04 FLIGHT RECORDER ============ -->
 <section class="section" id="recorder">
-  <div class="sec-label reveal"><span class="num">04 — THE FLIGHT RECORDER</span><span class="rule"></span></div>
+  <div class="sec-label reveal"><span class="num">04 · THE FLIGHT RECORDER</span><span class="rule"></span></div>
   <h2 class="reveal">Every death is <em>data.</em></h2>
   <p class="lede reveal d1">
-    A telemetry system records every evolutionary action with full context — spawn, mutation,
-    quest, score, death. The output is a <b>phylogenetic tree</b>: the complete ancestry of every
+    A telemetry system records every evolutionary action with full context: spawn, mutation,
+    quest, score, death. The output is a <b>phylogenetic tree</b>, the complete ancestry of every
     agent that ever lived in the lab. Dead branches aren't failures; they're the map of what
     doesn't work. The long game: watch the data for a <b>"God-Head" agent</b> to emerge from
     thousands of generations.
   </p>
 
   <div class="figure reveal d1">
-    <span class="fig-tag">FIG. 04 — PHYLOGENETIC RECORD</span>
-    <svg class="svg-draw" viewBox="0 0 940 300" width="100%" role="img" aria-label="Phylogenetic tree showing surviving and dead agent lineages across generations">
+    <span class="fig-tag">FIG. 04 · PHYLOGENETIC RECORD</span>
+    <svg id="fig-phylo" viewBox="0 0 940 300" width="100%" role="img" aria-label="Phylogenetic tree showing surviving and dead agent lineages across generations">
       <!-- gen gridlines -->
       <g stroke="#16382b" stroke-width="1" stroke-dasharray="2 6">
         <line x1="80" y1="30" x2="80" y2="262"/>
@@ -1149,44 +1425,46 @@ footer .meta {
         <text x="680" y="288">GEN 3</text>
         <text x="880" y="288">GEN 4</text>
       </g>
-      <!-- branches -->
+      <!-- branches: data-gen drives the growth order -->
       <g fill="none" stroke-width="1.5">
-        <path d="M80 146 C 170 146, 190 60, 280 60" stroke="#2c8f60"/>
-        <path d="M80 146 C 170 146, 190 146, 280 146" stroke="#2c8f60"/>
-        <path d="M80 146 C 170 146, 190 232, 280 232" stroke="#2c8f60"/>
-        <path d="M280 60 C 370 60, 390 36, 480 36" stroke="#2c8f60"/>
-        <path d="M280 60 C 370 60, 390 88, 480 88" stroke="#2c8f60"/>
-        <path d="M280 146 C 370 146, 390 170, 480 170" stroke="#2c8f60"/>
-        <path d="M480 88 C 570 88, 590 64, 680 64" stroke="#2c8f60"/>
-        <path d="M480 88 C 570 88, 590 116, 680 116" stroke="#2c8f60"/>
-        <path d="M480 170 C 570 170, 590 196, 680 196" stroke="#2c8f60"/>
-        <path d="M680 116 C 770 116, 790 100, 880 100" stroke="#59ffa6" stroke-width="2.5"/>
-        <path d="M680 196 C 770 196, 790 220, 880 220" stroke="#2c8f60"/>
+        <path class="branch" data-gen="1" d="M80 146 C 170 146, 190 60, 280 60" stroke="#2c8f60"/>
+        <path class="branch" data-gen="1" d="M80 146 C 170 146, 190 146, 280 146" stroke="#2c8f60"/>
+        <path class="branch" data-gen="1" d="M80 146 C 170 146, 190 232, 280 232" stroke="#2c8f60"/>
+        <path class="branch" data-gen="2" d="M280 60 C 370 60, 390 36, 480 36" stroke="#2c8f60"/>
+        <path class="branch" data-gen="2" d="M280 60 C 370 60, 390 88, 480 88" stroke="#2c8f60"/>
+        <path class="branch" data-gen="2" d="M280 146 C 370 146, 390 170, 480 170" stroke="#2c8f60"/>
+        <path class="branch" data-gen="3" d="M480 88 C 570 88, 590 64, 680 64" stroke="#2c8f60"/>
+        <path class="branch" data-gen="3" d="M480 88 C 570 88, 590 116, 680 116" stroke="#2c8f60"/>
+        <path class="branch" data-gen="3" d="M480 170 C 570 170, 590 196, 680 196" stroke="#2c8f60"/>
+        <path class="branch champion-branch" data-gen="4" d="M680 116 C 770 116, 790 100, 880 100" stroke="#59ffa6" stroke-width="2.5"/>
+        <path class="branch" data-gen="4" d="M680 196 C 770 196, 790 220, 880 220" stroke="#2c8f60"/>
       </g>
       <!-- nodes: alive -->
       <g>
-        <circle cx="80"  cy="146" r="7" fill="#59ffa6"/>
-        <circle cx="280" cy="60"  r="6" fill="#59ffa6"/>
-        <circle cx="280" cy="146" r="6" fill="#59ffa6"/>
-        <circle cx="480" cy="88"  r="6" fill="#59ffa6"/>
-        <circle cx="480" cy="170" r="6" fill="#59ffa6"/>
-        <circle cx="680" cy="116" r="6" fill="#59ffa6"/>
-        <circle cx="680" cy="196" r="6" fill="#59ffa6"/>
-        <circle cx="880" cy="220" r="6" fill="#59ffa6"/>
+        <circle class="pnode" data-gen="0" cx="80"  cy="146" r="7" fill="#59ffa6"/>
+        <circle class="pnode" data-gen="1" cx="280" cy="60"  r="6" fill="#59ffa6"/>
+        <circle class="pnode" data-gen="1" cx="280" cy="146" r="6" fill="#59ffa6"/>
+        <circle class="pnode" data-gen="2" cx="480" cy="88"  r="6" fill="#59ffa6"/>
+        <circle class="pnode" data-gen="2" cx="480" cy="170" r="6" fill="#59ffa6"/>
+        <circle class="pnode" data-gen="3" cx="680" cy="116" r="6" fill="#59ffa6"/>
+        <circle class="pnode" data-gen="3" cx="680" cy="196" r="6" fill="#59ffa6"/>
+        <circle class="pnode" data-gen="4" cx="880" cy="220" r="6" fill="#59ffa6"/>
       </g>
       <!-- champion -->
-      <circle cx="880" cy="100" r="10" fill="none" stroke="#ffb454" stroke-width="1.5"/>
-      <circle cx="880" cy="100" r="5.5" fill="#ffb454"/>
-      <text x="880" y="78" font-size="9" fill="#ffb454" text-anchor="middle" letter-spacing="2">FITTEST</text>
+      <g class="champion">
+        <circle class="champion-ring" cx="880" cy="100" r="10" fill="none" stroke="#ffb454" stroke-width="1.5"/>
+        <circle cx="880" cy="100" r="5.5" fill="#ffb454"/>
+        <text x="880" y="78" font-size="9" fill="#ffb454" text-anchor="middle" letter-spacing="2">FITTEST</text>
+      </g>
       <!-- dead nodes -->
       <g stroke="#ff5d73" stroke-width="2">
-        <g transform="translate(280 232)"><line x1="-5" y1="-5" x2="5" y2="5"/><line x1="-5" y1="5" x2="5" y2="-5"/></g>
-        <g transform="translate(480 36)"><line x1="-5" y1="-5" x2="5" y2="5"/><line x1="-5" y1="5" x2="5" y2="-5"/></g>
-        <g transform="translate(680 64)"><line x1="-5" y1="-5" x2="5" y2="5"/><line x1="-5" y1="5" x2="5" y2="-5"/></g>
+        <g class="pdead" data-gen="1" transform="translate(280 232)"><line x1="-5" y1="-5" x2="5" y2="5"/><line x1="-5" y1="5" x2="5" y2="-5"/></g>
+        <g class="pdead" data-gen="2" transform="translate(480 36)"><line x1="-5" y1="-5" x2="5" y2="5"/><line x1="-5" y1="5" x2="5" y2="-5"/></g>
+        <g class="pdead" data-gen="3" transform="translate(680 64)"><line x1="-5" y1="-5" x2="5" y2="5"/><line x1="-5" y1="5" x2="5" y2="-5"/></g>
       </g>
-      <text x="304" y="237" font-size="9" fill="#ff5d73">fitness 0.41</text>
-      <text x="504" y="41" font-size="9" fill="#ff5d73">fitness 0.38</text>
-      <text x="704" y="69" font-size="9" fill="#ff5d73">fitness 0.47</text>
+      <text class="pdead-label" data-gen="1" x="304" y="237" font-size="9" fill="#ff5d73">fitness 0.41</text>
+      <text class="pdead-label" data-gen="2" x="504" y="41" font-size="9" fill="#ff5d73">fitness 0.38</text>
+      <text class="pdead-label" data-gen="3" x="704" y="69" font-size="9" fill="#ff5d73">fitness 0.47</text>
     </svg>
     <div class="figure-caption">
       <b>Reading the record:</b> green nodes survive and branch; ✕ marks a lineage that fell
@@ -1197,18 +1475,18 @@ footer .meta {
 
 <!-- ============ 05 SIMULATION ============ -->
 <section class="section" id="simulation">
-  <div class="sec-label reveal"><span class="num">05 — THE INSTRUMENT</span><span class="rule"></span></div>
+  <div class="sec-label reveal"><span class="num">05 · THE INSTRUMENT</span><span class="rule"></span></div>
   <h2 class="reveal">Watch a population <em>evolve.</em></h2>
   <p class="lede reveal d1">
     A live model of the WAFT loop. Each organism is an agent; its color is its genome, the ring
-    around it is its fitness. Every epoch the Scint Gym strikes — agents below the death
+    around it is its fitness. Every epoch the Scint Gym strikes: agents below the death
     threshold dissolve, survivors reproduce with mutation. Watch mean fitness climb as
     selection does its work. Turn mutation up for chaos; raise the pressure for mass extinctions.
   </p>
 
   <div class="sim-shell reveal d1">
     <div class="sim-head">
-      <span class="live">SCINT GYM — DISH 01</span>
+      <span class="live">SCINT GYM · DISH 01</span>
       <span id="sim-status">OBSERVATION RUNNING</span>
     </div>
     <div class="sim-body">
@@ -1221,8 +1499,8 @@ footer .meta {
         <div class="readouts">
           <div class="readout"><div class="k">Generation</div><div class="v amber" id="r-gen">0</div></div>
           <div class="readout"><div class="k">Population</div><div class="v" id="r-pop">0</div></div>
-          <div class="readout"><div class="k">Mean Fitness</div><div class="v green" id="r-mean">—</div></div>
-          <div class="readout"><div class="k">Best Fitness</div><div class="v green" id="r-best">—</div></div>
+          <div class="readout"><div class="k">Mean Fitness</div><div class="v green" id="r-mean">··</div></div>
+          <div class="readout"><div class="k">Best Fitness</div><div class="v green" id="r-best">··</div></div>
           <div class="readout"><div class="k">Total Deaths</div><div class="v red" id="r-deaths">0</div></div>
           <div class="readout"><div class="k">Scint Energy</div><div class="v amber" id="r-energy">0 ✦</div></div>
         </div>
@@ -1231,7 +1509,7 @@ footer .meta {
           <canvas id="fit-chart"></canvas>
         </div>
         <div class="lineage-block">
-          <div class="k">Flight Recorder — Lineage</div>
+          <div class="k">Flight Recorder · Lineage</div>
           <canvas id="phylo"></canvas>
         </div>
       </div>
@@ -1254,63 +1532,294 @@ footer .meta {
   </div>
   <p class="figure-caption reveal" style="border:none; margin-top:14px;">
     <b>What you're seeing:</b> directed evolution. No agent is told how to improve. Fitness
-    pressure + mutation + time is the entire algorithm — the same one that built you.
+    pressure + mutation + time is the entire algorithm: the same one that built you.
   </p>
 </section>
 
 <!-- ============ 06 FOUNDATION ============ -->
 <section class="section" id="foundation">
-  <div class="sec-label reveal"><span class="num">06 — THE FOUNDATION</span><span class="rule"></span></div>
+  <div class="sec-label reveal"><span class="num">06 · THE FOUNDATION</span><span class="rule"></span></div>
   <h2 class="reveal">Built upward from a <em>single number.</em></h2>
   <p class="lede reveal d1">
     Under the biology is a strict bottom-up architecture. Everything in WAFT reduces to one
-    immutable atom — a <b>Score</b> between 0 and 1 — and builds upward without ever modifying
+    immutable atom, a <b>Score</b> between 0 and 1, and builds upward without ever modifying
     the layer below.
   </p>
 
   <div class="figure reveal d1">
-    <span class="fig-tag">FIG. 05 — THE STACK</span>
-    <svg viewBox="0 0 940 330" width="100%" role="img" aria-label="Layer diagram from atomic Score type up to Session">
+    <span class="fig-tag">FIG. 05 · THE STACK</span>
+    <svg id="fig-stack" viewBox="0 0 940 330" width="100%" role="img" aria-label="Layer diagram from atomic Score type up to Session">
       <g font-size="11">
-        <rect x="330" y="262" width="280" height="44" rx="4" fill="rgba(89,255,166,0.14)" stroke="#59ffa6" stroke-width="1.5"/>
-        <text x="470" y="282" text-anchor="middle" fill="#59ffa6" font-weight="600">L0 · Score</text>
-        <text x="470" y="297" text-anchor="middle" fill="#7da393" font-size="9.5">frozen dataclass · one float, 0.0 – 1.0</text>
-
-        <rect x="290" y="204" width="360" height="44" rx="4" fill="#0a1f17" stroke="#225441"/>
-        <text x="470" y="224" text-anchor="middle" fill="#e6f4ea" font-weight="500">L1 · evaluate_text(text) → Score</text>
-        <text x="470" y="239" text-anchor="middle" fill="#7da393" font-size="9.5">the core transformation — everything flows through it</text>
-
-        <rect x="250" y="146" width="440" height="44" rx="4" fill="#0a1f17" stroke="#225441"/>
-        <text x="470" y="166" text-anchor="middle" fill="#e6f4ea" font-weight="500">L2 · Evaluation — 5 dimensions</text>
-        <text x="470" y="181" text-anchor="middle" fill="#7da393" font-size="9.5">factuality · validity · coherence · utility · faithfulness</text>
-
-        <rect x="210" y="88" width="520" height="44" rx="4" fill="#0a1f17" stroke="#225441"/>
-        <text x="470" y="108" text-anchor="middle" fill="#e6f4ea" font-weight="500">L3 · Step — one iteration of reasoning</text>
-        <text x="470" y="123" text-anchor="middle" fill="#7da393" font-size="9.5">problem → answer → evaluation</text>
-
-        <rect x="170" y="30" width="600" height="44" rx="4" fill="#0a1f17" stroke="#ffb454"/>
-        <text x="470" y="50" text-anchor="middle" fill="#ffb454" font-weight="600">L4 · Session — iterate until quality threshold</text>
-        <text x="470" y="65" text-anchor="middle" fill="#7da393" font-size="9.5">steps repeat until the Evaluation clears the bar or budget runs out</text>
+        <g class="layer" data-layer="0">
+          <rect x="330" y="262" width="280" height="44" rx="4" fill="rgba(89,255,166,0.14)" stroke="#59ffa6" stroke-width="1.5"/>
+          <text x="470" y="282" text-anchor="middle" fill="#59ffa6" font-weight="600">L0 · Score</text>
+          <text x="470" y="297" text-anchor="middle" fill="#7da393" font-size="9.5">frozen dataclass · one float, 0.0 – 1.0</text>
+        </g>
+        <g class="layer" data-layer="1">
+          <rect x="290" y="204" width="360" height="44" rx="4" fill="#0a1f17" stroke="#225441"/>
+          <text x="470" y="224" text-anchor="middle" fill="#e6f4ea" font-weight="500">L1 · evaluate_text(text) → Score</text>
+          <text x="470" y="239" text-anchor="middle" fill="#7da393" font-size="9.5">the core transformation: everything flows through it</text>
+        </g>
+        <g class="layer" data-layer="2">
+          <rect x="250" y="146" width="440" height="44" rx="4" fill="#0a1f17" stroke="#225441"/>
+          <text x="470" y="166" text-anchor="middle" fill="#e6f4ea" font-weight="500">L2 · Evaluation across 5 dimensions</text>
+          <text x="470" y="181" text-anchor="middle" fill="#7da393" font-size="9.5">factuality · validity · coherence · utility · faithfulness</text>
+        </g>
+        <g class="layer" data-layer="3">
+          <rect x="210" y="88" width="520" height="44" rx="4" fill="#0a1f17" stroke="#225441"/>
+          <text x="470" y="108" text-anchor="middle" fill="#e6f4ea" font-weight="500">L3 · Step, one iteration of reasoning</text>
+          <text x="470" y="123" text-anchor="middle" fill="#7da393" font-size="9.5">problem → answer → evaluation</text>
+        </g>
+        <g class="layer" data-layer="4">
+          <rect x="170" y="30" width="600" height="44" rx="4" fill="#0a1f17" stroke="#ffb454"/>
+          <text x="470" y="50" text-anchor="middle" fill="#ffb454" font-weight="600">L4 · Session, iterate until quality threshold</text>
+          <text x="470" y="65" text-anchor="middle" fill="#7da393" font-size="9.5">steps repeat until the Evaluation clears the bar or budget runs out</text>
+        </g>
       </g>
       <g stroke="#2c8f60" stroke-width="1" stroke-dasharray="3 4">
-        <line x1="470" y1="262" x2="470" y2="248"/>
-        <line x1="470" y1="204" x2="470" y2="190"/>
-        <line x1="470" y1="146" x2="470" y2="132"/>
-        <line x1="470" y1="88" x2="470" y2="74"/>
+        <line class="riser" data-layer="1" x1="470" y1="262" x2="470" y2="248"/>
+        <line class="riser" data-layer="2" x1="470" y1="204" x2="470" y2="190"/>
+        <line class="riser" data-layer="3" x1="470" y1="146" x2="470" y2="132"/>
+        <line class="riser" data-layer="4" x1="470" y1="88" x2="470" y2="74"/>
       </g>
+      <!-- the Score atom, carried up through every layer it builds -->
+      <circle class="atom" r="4" fill="#59ffa6" opacity="0"/>
       <text x="130" y="175" font-size="10" fill="#4a6b5c" letter-spacing="2" transform="rotate(-90 130 175)">BUILDS UPWARD →</text>
     </svg>
     <div class="figure-caption">
       Each layer is proven before the next exists. Nothing above ever reaches down to change
-      what's below — the same discipline the genome system enforces on agents.
+      what's below: the same discipline the genome system enforces on agents.
     </div>
   </div>
 
   <div class="cli-grid">
     <div class="cli-card reveal"><code>$ waft new my-lab</code><p>Scaffold a new project with the full WAFT structure.</p></div>
     <div class="cli-card reveal d1"><code>$ waft evolve --target agent_v1</code><p>Run the Spawn → Gym → Select cycle on a target agent.</p></div>
-    <div class="cli-card reveal d2"><code>$ waft serve</code><p>Web dashboard for the laboratory — population, telemetry, lineage.</p></div>
+    <div class="cli-card reveal d2"><code>$ waft serve</code><p>Web dashboard for the laboratory: population, telemetry, lineage.</p></div>
     <div class="cli-card reveal d3"><code>$ waft pantheon</code><p>Summon the entire pantheon of beings to weigh in and pass judgment.</p></div>
+  </div>
+</section>
+
+<!-- ============ 07 PYRITE MEMORY ============ -->
+<section class="section" id="memory">
+  <div class="sec-label reveal"><span class="num">07 · THE MEMORY</span><span class="rule"></span></div>
+  <h2 class="reveal">A laboratory that <em>remembers.</em></h2>
+  <p class="lede reveal d1">
+    Selection needs a record, and a record needs somewhere to live. <b>waft new</b> scaffolds a
+    lab with a <b>_pyrite</b> memory structure already in it: four directories that hold what
+    the population is doing now, what it will do next, the rules it is held to, and everything
+    the Scint Gym has ever done to it.
+  </p>
+
+  <div class="figure reveal d1">
+    <span class="fig-tag">FIG. 06 · SCAFFOLD</span>
+    <div class="pyrite-grid">
+      <div class="scaffold">
+        <div class="scaffold-head"><i id="scaffold-led"></i><span>waft · scaffolding memory</span></div>
+        <div class="scaffold-body">
+          <div class="scaffold-cmd"><b>$</b> waft new my_laboratory<span class="scaffold-caret"></span></div>
+          <ul id="scaffold-tree"></ul>
+        </div>
+      </div>
+      <div class="genesis-files">
+        <div class="genesis-card" data-dir="active">
+          <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true">
+            <circle cx="17" cy="17" r="13" fill="none" stroke="#2c8f60" stroke-width="1.5"/>
+            <path d="M17 8 v9 l6 4" fill="none" stroke="#59ffa6" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <div>
+            <h4>active/ <span>· what is running</span></h4>
+            <p>Work the population is inside right now. Open tickets, live quests, the current cycle.</p>
+            <code>_pyrite/active/</code>
+          </div>
+        </div>
+        <div class="genesis-card" data-dir="backlog">
+          <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true">
+            <rect x="6" y="8" width="22" height="5" rx="1.5" fill="none" stroke="#2c8f60" stroke-width="1.5"/>
+            <rect x="6" y="16" width="22" height="5" rx="1.5" fill="none" stroke="#2c8f60" stroke-width="1.5"/>
+            <rect x="6" y="24" width="22" height="5" rx="1.5" fill="none" stroke="#225441" stroke-width="1.5"/>
+          </svg>
+          <div>
+            <h4>backlog/ <span>· what comes next</span></h4>
+            <p>Queued work waiting for energy. Tickets carry a scint bounty and a karma type before they are ever picked up.</p>
+            <code>_pyrite/backlog/</code>
+          </div>
+        </div>
+        <div class="genesis-card" data-dir="standards">
+          <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true">
+            <path d="M17 5 L28 10 v8 c0 6-5 9-11 11 -6-2-11-5-11-11 v-8 Z" fill="none" stroke="#2c8f60" stroke-width="1.5"/>
+            <path d="M12 17 l4 4 7-8" fill="none" stroke="#59ffa6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div>
+            <h4>standards/ <span>· what is held constant</span></h4>
+            <p>The rules a genome is measured against. Agents mutate freely; the bar they are judged by does not drift with them.</p>
+            <code>_pyrite/standards/</code>
+          </div>
+        </div>
+        <div class="genesis-card" data-dir="gym_logs">
+          <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true">
+            <path d="M5 26 L12 17 L18 21 L29 7" fill="none" stroke="#2c8f60" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="12" cy="17" r="2.4" fill="#ffb454"/>
+            <circle cx="18" cy="21" r="2.4" fill="#ff5d73"/>
+            <circle cx="29" cy="7" r="2.6" fill="#59ffa6"/>
+          </svg>
+          <div>
+            <h4>gym_logs/ <span>· what already happened</span></h4>
+            <p>Every Scint Gym result, kept forever. This is the substrate the phylogenetic tree is reconstructed from.</p>
+            <code>_pyrite/gym_logs/</code>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="figure-caption">
+      <b>Why it is on disk and not in a database:</b> a lineage you cannot read with
+      <code>cat</code> is a lineage you cannot audit. The memory is plain files, versioned
+      alongside the genomes that wrote them.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 08 THE PANTHEON ============ -->
+<section class="section" id="pantheon">
+  <div class="sec-label reveal"><span class="num">08 · THE PANTHEON</span><span class="rule"></span></div>
+  <h2 class="reveal">Judgment needs someone who <em>doesn't evolve.</em></h2>
+  <p class="lede reveal d1">
+    Agents are <b>timeful</b>. They mutate fast, and anything that fast cannot also be the
+    standard. So WAFT separates the two. Above the population sits a pantheon of
+    <b>timeless entities</b>: slow, stable, and deliberately hard to change. They only move when
+    a body of evidence forces them to. <b>waft pantheon</b> convenes them and they weigh in.
+  </p>
+
+  <div class="pantheon-grid">
+    <div class="being-card reveal">
+      <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+        <circle cx="20" cy="20" r="15" fill="none" stroke="#2c8f60" stroke-width="1.5"/>
+        <path d="M20 8 a12 12 0 0 1 0 24" fill="none" stroke="#59ffa6" stroke-width="2"/>
+        <polygon points="20,4 24,9 16,9" fill="#59ffa6"/>
+      </svg>
+      <h4>The Chief</h4>
+      <div class="role">Iterative self-improvement</div>
+      <p>Entity of evolutionary loops. Holds the aspect of repeated cycles (develop, evaluate, refine) and records each loop it presides over.</p>
+      <div class="cmd">pantheon/the_chief.py</div>
+    </div>
+    <div class="being-card reveal d1">
+      <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+        <line x1="20" y1="7" x2="20" y2="33" stroke="#2c8f60" stroke-width="1.5"/>
+        <line x1="8" y1="13" x2="32" y2="13" stroke="#2c8f60" stroke-width="1.5"/>
+        <path d="M8 13 L4 23 h8 Z" fill="none" stroke="#59ffa6" stroke-width="1.5"/>
+        <path d="M32 13 L28 23 h8 Z" fill="none" stroke="#59ffa6" stroke-width="1.5"/>
+      </svg>
+      <h4>The Judge</h4>
+      <div class="role">Judgment &amp; evaluation</div>
+      <p>Evaluates claims against the Body of Proof, rendering judgment on precedent and evidence rather than on how confident the claim sounded.</p>
+      <div class="cmd">pantheon/judge.py</div>
+    </div>
+    <div class="being-card reveal d2">
+      <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+        <rect x="7" y="9" width="26" height="22" rx="2" fill="none" stroke="#2c8f60" stroke-width="1.5"/>
+        <line x1="7" y1="16" x2="33" y2="16" stroke="#2c8f60" stroke-width="1.2"/>
+        <line x1="13" y1="16" x2="13" y2="31" stroke="#225441" stroke-width="1.2"/>
+        <line x1="23" y1="16" x2="23" y2="31" stroke="#225441" stroke-width="1.2"/>
+        <circle cx="18" cy="23" r="2.6" fill="#ffb454"/>
+      </svg>
+      <h4>The Magistrate</h4>
+      <div class="role">Precedent &amp; body of proof</div>
+      <p>Organizes case files into precedent, building a body of proof over time that can be cited again instead of re-litigated.</p>
+      <div class="cmd">pantheon/magistrate.py</div>
+    </div>
+    <div class="being-card reveal">
+      <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+        <circle cx="20" cy="20" r="14" fill="none" stroke="#2c8f60" stroke-width="1.5" stroke-dasharray="3 4"/>
+        <circle cx="20" cy="20" r="7" fill="none" stroke="#59ffa6" stroke-width="1.5"/>
+        <circle cx="20" cy="20" r="2.4" fill="#59ffa6"/>
+      </svg>
+      <h4>The Guide</h4>
+      <div class="role">Meta-cognitive oversight</div>
+      <p>Holds the aspect of guided reasoning: assesses the quality of the thinking itself against the FVCU and faithfulness taxonomy.</p>
+      <div class="cmd">pantheon/guide.py</div>
+    </div>
+    <div class="being-card reveal d1">
+      <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+        <path d="M11 6 h14 l6 6 v22 h-20 Z" fill="none" stroke="#2c8f60" stroke-width="1.5"/>
+        <path d="M25 6 v6 h6" fill="none" stroke="#2c8f60" stroke-width="1.5"/>
+        <line x1="15" y1="20" x2="27" y2="20" stroke="#59ffa6" stroke-width="1.5"/>
+        <line x1="15" y1="25" x2="27" y2="25" stroke="#59ffa6" stroke-width="1.5"/>
+        <line x1="15" y1="30" x2="22" y2="30" stroke="#225441" stroke-width="1.5"/>
+      </svg>
+      <h4>The Scrivener</h4>
+      <div class="role">Reports &amp; intelligence</div>
+      <p>God of formal documentation. Turns raw laboratory state into structured reports: briefs, situation reports, technical and academic write-ups.</p>
+      <div class="cmd">pantheon/scrivener.py</div>
+    </div>
+    <div class="being-card reveal d2">
+      <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+        <path d="M8 10 c6-3 12-3 12 2 v20 c0-5-6-5-12-2 Z" fill="none" stroke="#2c8f60" stroke-width="1.5"/>
+        <path d="M32 10 c-6-3-12-3-12 2 v20 c0-5 6-5 12-2 Z" fill="none" stroke="#59ffa6" stroke-width="1.5"/>
+      </svg>
+      <h4>The Storyteller</h4>
+      <div class="role">Narrative &amp; story creation</div>
+      <p>Weaves narrative out of raw events and telemetry: the layer that turns a column of fitness scores into something a person can actually follow.</p>
+      <div class="cmd">pantheon/storyteller.py</div>
+    </div>
+  </div>
+
+  <p class="pull reveal">"Beings explore and change quickly. Entities bind reality together and change slowly. <span>Put the standard on the fast-moving thing and you have no standard at all.</span>"</p>
+</section>
+
+<!-- ============ 09 THE TABLE ============ -->
+<section class="section" id="table">
+  <div class="sec-label reveal"><span class="num">09 · THE TABLE</span><span class="rule"></span></div>
+  <h2 class="reveal">Work is a <em>quest.</em> The dice are real.</h2>
+  <p class="lede reveal d1">
+    Underneath the biology, WAFT runs a tabletop economy. Work efforts become
+    <b>_pyrite tickets</b>; every ticket carries a <b>scint bounty</b>, a <b>karma type</b>
+    (ORDER, CHAOS, STABILIZATION or DESTRUCTION), and a karma impact that lands whether the
+    outcome was good or not. Roll the die. The record keeps whatever comes up.
+  </p>
+
+  <div class="figure reveal d1">
+    <span class="fig-tag">INSTRUMENT · THE DEALER</span>
+    <div class="table-widget">
+      <div>
+        <div class="d20-wrap" id="d20" role="button" tabindex="0" aria-label="Roll a twenty sided die">
+          <svg viewBox="0 0 200 200" aria-hidden="true">
+            <polygon class="d20-face" points="100,12 176,56 176,144 100,188 24,144 24,56"
+                     fill="#0a1f17" stroke="#2c8f60" stroke-width="2"/>
+            <polygon points="60,72 140,72 100,142" fill="rgba(89,255,166,0.07)" stroke="#225441" stroke-width="1.3"/>
+            <g stroke="#225441" stroke-width="1.2">
+              <line x1="100" y1="12" x2="60" y2="72"/>
+              <line x1="100" y1="12" x2="140" y2="72"/>
+              <line x1="24" y1="56" x2="60" y2="72"/>
+              <line x1="176" y1="56" x2="140" y2="72"/>
+              <line x1="24" y1="144" x2="60" y2="72"/>
+              <line x1="176" y1="144" x2="140" y2="72"/>
+              <line x1="24" y1="144" x2="100" y2="142"/>
+              <line x1="176" y1="144" x2="100" y2="142"/>
+              <line x1="100" y1="188" x2="100" y2="142"/>
+            </g>
+          </svg>
+          <div id="d20-num">20</div>
+        </div>
+        <div class="d20-hint">Click the die, or press R</div>
+      </div>
+      <div>
+        <div class="table-log">
+          <div class="k">Quest Log · _pyrite ledger</div>
+          <ul id="roll-log"></ul>
+        </div>
+        <div class="karma-strip">
+          <span>Rolls <b id="k-rolls">0</b></span>
+          <span>Nat 20 <b id="k-crits">0</b></span>
+          <span>Scint <b id="k-scint">0 ✦</b></span>
+          <span>Karma <b id="k-karma">0</b></span>
+        </div>
+      </div>
+    </div>
+    <div class="figure-caption">
+      <b>Why dice:</b> a fitness function that always returns the same answer teaches an agent
+      to game it. Variance keeps selection honest, and a nat 1 is still <b>data</b>, logged
+      with the same care as a nat 20.
+    </div>
   </div>
 </section>
 
@@ -1349,6 +1858,957 @@ document.querySelectorAll('.reveal, .figure').forEach(el => io.observe(el));
 (function () {
   const t = document.getElementById('ticker-track');
   t.innerHTML += t.innerHTML;
+})();
+
+/* ================= shared helpers ================= */
+const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const DPR = Math.min(window.devicePixelRatio || 1, 2);
+const clamp01 = v => Math.max(0, Math.min(1, v));
+const easeOut = t => 1 - Math.pow(1 - t, 3);
+const easeInOut = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+function fitCanvas(c, cx) {
+  const r = c.getBoundingClientRect();
+  if (!r.width) return false;
+  c.width = Math.round(r.width * DPR);
+  c.height = Math.round(r.height * DPR);
+  cx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  return true;
+}
+
+/* Run `fn(progress)` once, when `el` first scrolls into view. */
+function onFirstView(el, fn, threshold) {
+  if (!el) return;
+  const ob = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (!e.isIntersecting) continue;
+      ob.disconnect();
+      fn();
+    }
+  }, { threshold: threshold == null ? 0.25 : threshold });
+  ob.observe(el);
+}
+
+/* Drive a 0→1 timeline with requestAnimationFrame. */
+function animate(duration, onFrame, onDone) {
+  if (REDUCED) { onFrame(1); if (onDone) onDone(); return () => {}; }
+  const start = performance.now();
+  let raf = 0;
+  const step = (now) => {
+    const t = clamp01((now - start) / duration);
+    onFrame(t);
+    if (t < 1) raf = requestAnimationFrame(step);
+    else if (onDone) onDone();
+  };
+  raf = requestAnimationFrame(step);
+  return () => cancelAnimationFrame(raf);
+}
+
+/* ================= SHA-256 ================= */
+/* crypto.subtle is undefined on non-secure origins, so a pure-JS digest
+   backs it up. The page claims "real SHA-256" and that has to stay true
+   wherever the file is opened from. */
+const SHA_K = [
+  0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
+  0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
+  0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,
+  0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,
+  0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,
+  0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
+  0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
+  0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2,
+];
+
+function sha256Sync(msg) {
+  const H = [0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+  const l = msg.length;
+  const buf = new Uint8Array(((((l + 8) >> 6) + 1) * 64));
+  buf.set(msg);
+  buf[l] = 0x80;
+  const dv = new DataView(buf.buffer);
+  const bits = l * 8;
+  dv.setUint32(buf.length - 8, Math.floor(bits / 4294967296), false);
+  dv.setUint32(buf.length - 4, bits >>> 0, false);
+
+  const w = new Uint32Array(64);
+  const rr = (x, n) => (x >>> n) | (x << (32 - n));
+  for (let i = 0; i < buf.length; i += 64) {
+    for (let t = 0; t < 16; t++) w[t] = dv.getUint32(i + t * 4, false);
+    for (let t = 16; t < 64; t++) {
+      const a15 = w[t - 15], a2 = w[t - 2];
+      const s0 = rr(a15, 7) ^ rr(a15, 18) ^ (a15 >>> 3);
+      const s1 = rr(a2, 17) ^ rr(a2, 19) ^ (a2 >>> 10);
+      w[t] = (w[t - 16] + s0 + w[t - 7] + s1) >>> 0;
+    }
+    let a = H[0], b = H[1], c = H[2], d = H[3], e = H[4], f = H[5], g = H[6], h = H[7];
+    for (let t = 0; t < 64; t++) {
+      const S1 = rr(e, 6) ^ rr(e, 11) ^ rr(e, 25);
+      const ch = (e & f) ^ (~e & g);
+      const t1 = (h + S1 + ch + SHA_K[t] + w[t]) >>> 0;
+      const S0 = rr(a, 2) ^ rr(a, 13) ^ rr(a, 22);
+      const maj = (a & b) ^ (a & c) ^ (b & c);
+      const t2 = (S0 + maj) >>> 0;
+      h = g; g = f; f = e; e = (d + t1) >>> 0;
+      d = c; c = b; b = a; a = (t1 + t2) >>> 0;
+    }
+    H[0] = (H[0] + a) >>> 0; H[1] = (H[1] + b) >>> 0;
+    H[2] = (H[2] + c) >>> 0; H[3] = (H[3] + d) >>> 0;
+    H[4] = (H[4] + e) >>> 0; H[5] = (H[5] + f) >>> 0;
+    H[6] = (H[6] + g) >>> 0; H[7] = (H[7] + h) >>> 0;
+  }
+  const out = new Uint8Array(32);
+  const odv = new DataView(out.buffer);
+  for (let i = 0; i < 8; i++) odv.setUint32(i * 4, H[i], false);
+  return out;
+}
+
+async function sha256(text) {
+  const msg = new TextEncoder().encode(text);
+  if (window.crypto && crypto.subtle && crypto.subtle.digest) {
+    try { return new Uint8Array(await crypto.subtle.digest('SHA-256', msg)); }
+    catch (_) { /* fall through */ }
+  }
+  return sha256Sync(msg);
+}
+
+const toHex = (b) => Array.from(b, x => x.toString(16).padStart(2, '0')).join('');
+
+/* ================= read progress + section nav ================= */
+(function pageChrome() {
+  const bar = document.getElementById('progress');
+  const links = [...document.querySelectorAll('.topbar-nav a')];
+  const targets = links
+    .map(a => ({ a, el: document.querySelector(a.getAttribute('href')) }))
+    .filter(t => t.el);
+
+  let ticking = false;
+  function update() {
+    ticking = false;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.transform = 'scaleX(' + (max > 0 ? clamp01(window.scrollY / max) : 0) + ')';
+
+    // "here" = the last section whose top has passed the upper third of the viewport
+    const line = window.innerHeight * 0.34;
+    let here = null;
+    for (const t of targets) {
+      if (t.el.getBoundingClientRect().top <= line) here = t.a;
+    }
+    links.forEach(a => a.classList.toggle('here', a === here));
+  }
+  window.addEventListener('scroll', () => {
+    if (!ticking) { ticking = true; requestAnimationFrame(update); }
+  }, { passive: true });
+  window.addEventListener('resize', update);
+  update();
+})();
+
+/* ================= INSTRUMENT · GENOME LAB ================= */
+(function genomeLab() {
+  const ta = document.getElementById('gl-code');
+  if (!ta) return;
+  const parentEl = document.getElementById('gl-parent');
+  const parentRow = document.getElementById('gl-parent-row');
+  const currentEl = document.getElementById('gl-current');
+  const statusEl = document.getElementById('gl-status');
+  const diffbar = document.getElementById('gl-diffbar');
+  const adoptBtn = document.getElementById('gl-adopt');
+  const genEl = document.getElementById('gl-gen');
+  const helix = document.getElementById('gl-helix');
+  const hctx = helix.getContext('2d');
+
+  const HEX = '0123456789abcdef';
+  const RUNGS = 32;
+
+  let parentBytes = null, currentBytes = null, gen = 0;
+  let shownBytes = new Uint8Array(RUNGS);   // what the helix is currently drawing
+  let fromBytes = new Uint8Array(RUNGS);    // morph source
+  let morphStart = -1e9;
+
+  /* --- hash readouts: one span per hex char so they can scramble --- */
+  function charCells(el) {
+    el.textContent = '';
+    const cells = [];
+    for (let i = 0; i < 64; i++) {
+      const s = document.createElement('span');
+      s.className = 'hx';
+      s.textContent = '·';
+      el.appendChild(s);
+      cells.push(s);
+    }
+    return cells;
+  }
+  const parentCells = charCells(parentEl);
+  const currentCells = charCells(currentEl);
+
+  /* diff strip: one tick per byte, lit where child differs from parent */
+  const diffTicks = [];
+  for (let i = 0; i < RUNGS; i++) {
+    const t = document.createElement('i');
+    diffbar.appendChild(t);
+    diffTicks.push(t);
+  }
+
+  let cancelScramble = () => {};
+  function setHash(cells, hex, scramble) {
+    if (!scramble || REDUCED) {
+      for (let i = 0; i < 64; i++) {
+        cells[i].textContent = hex[i];
+        cells[i].classList.remove('hot');
+      }
+      return;
+    }
+    cancelScramble();
+    cancelScramble = animate(560, (t) => {
+      for (let i = 0; i < 64; i++) {
+        // each column locks in turn, left to right
+        if (t >= 0.12 + (i / 64) * 0.82) {
+          cells[i].textContent = hex[i];
+          cells[i].classList.remove('hot');
+        } else {
+          cells[i].textContent = HEX[(Math.random() * 16) | 0];
+          cells[i].classList.add('hot');
+        }
+      }
+    });
+  }
+
+  /* --- helix: rung colour is literally the genome byte --- */
+  const hueOf = (byte) => (byte / 255) * 360;
+
+  function drawHelix(now) {
+    const W = helix.getBoundingClientRect().width;
+    const H = helix.getBoundingClientRect().height;
+    if (!W) return;
+    hctx.clearRect(0, 0, W, H);
+
+    const cy = H / 2;
+    const amp = H * 0.30;
+    const spin = REDUCED ? 0 : now / 1000;
+    const pad = 14;
+    const span = W - pad * 2;
+
+    // backbones
+    for (const dir of [1, -1]) {
+      hctx.beginPath();
+      for (let px = 0; px <= span; px += 3) {
+        const ph = (px / span) * Math.PI * 5 + spin;
+        const y = cy + Math.sin(ph) * amp * dir;
+        px === 0 ? hctx.moveTo(pad + px, y) : hctx.lineTo(pad + px, y);
+      }
+      hctx.strokeStyle = 'rgba(34,84,65,0.85)';
+      hctx.lineWidth = 1.2;
+      hctx.stroke();
+    }
+
+    // rungs: 32 of them, one per byte of the digest
+    for (let i = 0; i < RUNGS; i++) {
+      const px = (i / (RUNGS - 1)) * span;
+      const ph = (px / span) * Math.PI * 5 + spin;
+      const y1 = cy + Math.sin(ph) * amp;
+      const y2 = cy - Math.sin(ph) * amp;
+      const depth = (Math.cos(ph) + 1) / 2;          // 0 = far side, 1 = near
+
+      const local = clamp01((now - morphStart - i * 13) / 300);
+      const eased = easeOut(local);
+      const byte = fromBytes[i] + (shownBytes[i] - fromBytes[i]) * eased;
+      const flash = Math.sin(local * Math.PI);        // bright pop as it changes
+
+      const light = 42 + depth * 22 + flash * 26;
+      hctx.strokeStyle = `hsla(${hueOf(byte)}, ${70 + flash * 25}%, ${light}%, ${0.3 + depth * 0.6})`;
+      hctx.lineWidth = 1 + depth * 1.8 + flash * 1.4;
+      hctx.beginPath();
+      hctx.moveTo(pad + px, y1);
+      hctx.lineTo(pad + px, y2);
+      hctx.stroke();
+    }
+  }
+
+  let helixRAF = 0;
+  function helixLoop(now) {
+    drawHelix(now);
+    helixRAF = requestAnimationFrame(helixLoop);
+  }
+
+  /* --- state --- */
+  function updateStatus() {
+    const same = parentBytes && currentBytes && toHex(parentBytes) === toHex(currentBytes);
+    statusEl.className = 'gl-status ' + (same ? 'same' : 'mutated');
+    statusEl.textContent = same
+      ? 'IDENTICAL · SAME ORGANISM'
+      : 'MUTATED · NEW ORGANISM, GENOME ID CHANGED';
+    adoptBtn.disabled = !!same;
+
+    let drift = 0;
+    for (let i = 0; i < RUNGS; i++) {
+      const changed = parentBytes && currentBytes && parentBytes[i] !== currentBytes[i];
+      diffTicks[i].classList.toggle('on', !!changed);
+      if (changed) drift++;
+    }
+    if (!same) {
+      statusEl.textContent =
+        `MUTATED · ${drift}/32 GENOME BYTES DIVERGED FROM PARENT`;
+    }
+  }
+
+  let seq = 0;
+  async function recompute(scramble) {
+    const mine = ++seq;
+    const digest = await sha256(ta.value);
+    if (mine !== seq) return;                  // a newer keystroke won
+    const changed = !currentBytes || toHex(currentBytes) !== toHex(digest);
+    currentBytes = digest;
+    setHash(currentCells, toHex(digest), scramble && changed);
+    if (changed) {
+      fromBytes = shownBytes.slice();
+      shownBytes = digest.slice();
+      morphStart = performance.now();
+    }
+    updateStatus();
+  }
+
+  let debounce = 0;
+  ta.addEventListener('input', () => {
+    clearTimeout(debounce);
+    debounce = setTimeout(() => recompute(true), 90);
+  });
+
+  adoptBtn.addEventListener('click', () => {
+    if (!currentBytes) return;
+    parentBytes = currentBytes.slice();
+    gen++;
+    genEl.textContent = gen;
+    setHash(parentCells, toHex(parentBytes), true);
+    parentRow.classList.remove('flash');
+    void parentRow.offsetWidth;                // restart the CSS animation
+    parentRow.classList.add('flash');
+    updateStatus();
+  });
+
+  /* --- boot --- */
+  (async () => {
+    const digest = await sha256(ta.value);
+    parentBytes = digest.slice();
+    currentBytes = digest.slice();
+    shownBytes = digest.slice();
+    fromBytes = digest.slice();
+    setHash(parentCells, toHex(parentBytes), false);
+    setHash(currentCells, toHex(currentBytes), false);
+    updateStatus();
+    requestAnimationFrame(() => {
+      fitCanvas(helix, hctx);
+      if (REDUCED) drawHelix(0);
+      else helixRAF = requestAnimationFrame(helixLoop);
+    });
+  })();
+
+  window.addEventListener('resize', () => {
+    fitCanvas(helix, hctx);
+    if (REDUCED) drawHelix(0);
+  });
+
+  // pause the helix when it is off-screen
+  const vis = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (e.isIntersecting && !helixRAF && !REDUCED) helixRAF = requestAnimationFrame(helixLoop);
+      else if (!e.isIntersecting && helixRAF) { cancelAnimationFrame(helixRAF); helixRAF = 0; }
+    }
+  }, { threshold: 0 });
+  vis.observe(helix);
+})();
+
+/* ================= FIGURES ================= */
+/* Run `frame(0→1)` on a loop, but only while the figure is on screen. */
+function loopWhileVisible(el, period, frame) {
+  if (!el) return;
+  if (REDUCED) { frame(1); return; }
+  let raf = 0, t0 = 0;
+  const tick = (now) => {
+    if (!t0) t0 = now;
+    frame(((now - t0) % period) / period);
+    raf = requestAnimationFrame(tick);
+  };
+  new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (e.isIntersecting && !raf) { t0 = 0; raf = requestAnimationFrame(tick); }
+      else if (!e.isIntersecting && raf) { cancelAnimationFrame(raf); raf = 0; }
+    }
+  }, { threshold: 0.12 }).observe(el);
+}
+
+/* ---- FIG 01: source → SHA-256 → genome → mutation → child ---- */
+(function figGenome() {
+  const svg = document.getElementById('fig-genome');
+  if (!svg) return;
+  const lines = [...svg.querySelectorAll('.codeline')];
+  const hex = svg.querySelector('.hexagon');
+  const pillP = svg.querySelector('.pill-parent');
+  const pillC = svg.querySelector('.pill-child');
+  const mutPath = svg.querySelector('.mut-path');
+  const mutHead = svg.querySelector('.mut-head');
+  const mutLabel = svg.querySelector('.mut-label');
+  const packet = svg.querySelector('.packet');
+  const mutLen = mutPath.getTotalLength();
+
+  function put(x, y, op, fill) {
+    packet.setAttribute('cx', x);
+    packet.setAttribute('cy', y);
+    packet.setAttribute('opacity', op);
+    if (fill) packet.setAttribute('fill', fill);
+  }
+
+  loopWhileVisible(svg, 7600, (t) => {
+    lines.forEach((l, i) => l.classList.toggle('lit', t > 0.04 + i * 0.04));
+
+    if (t >= 0.20 && t < 0.36) {                       // source → hash
+      const k = (t - 0.20) / 0.16;
+      put(250 + 108 * k, 125, 1, '#59ffa6');
+    } else if (t >= 0.40 && t < 0.56) {                // hash → genome id
+      const k = (t - 0.40) / 0.16;
+      put(502 + 118 * k, 125 - Math.sin(k * Math.PI) * 5, 1, '#ffb454');
+    } else if (t >= 0.68 && t < 0.87) {                // genome → mutated child
+      const k = easeInOut((t - 0.68) / 0.19);
+      const p = mutPath.getPointAtLength(mutLen * k);
+      put(p.x, p.y, 1, '#ffb454');
+    } else {
+      put(0, 0, 0);
+    }
+
+    hex.classList.toggle('hit', t >= 0.355 && t < 0.43);
+    pillP.classList.toggle('lit', t >= 0.55);
+    mutPath.classList.toggle('lit', t >= 0.64);
+    mutLabel.classList.toggle('lit', t >= 0.66);
+    mutHead.classList.toggle('lit', t >= 0.86);
+    pillC.classList.toggle('lit', t >= 0.87);
+  });
+})();
+
+/* ---- FIG 03: one lap of the orbiter = one generation ---- */
+(function figCycle() {
+  const svg = document.getElementById('fig-cycle');
+  if (!svg) return;
+  const orb = svg.querySelector('.orbiter');
+  const glow = svg.querySelector('.orbiter-glow');
+  const core = svg.querySelector('.core-glyph');
+  const counter = svg.querySelector('.orbit-count');
+  const nodes = [...svg.querySelectorAll('.node')];
+  const CX = 210, CY = 200, R = 128;
+
+  // node angles measured the same way the orbiter sweeps (clockwise from top)
+  const angleOf = (n) => {
+    const dx = +n.getAttribute('cx') - CX, dy = +n.getAttribute('cy') - CY;
+    let a = Math.atan2(dy, dx) * 180 / Math.PI;
+    return (a + 450) % 360;                            // 0 = top, increasing clockwise
+  };
+  const nodeAngles = nodes.map(angleOf);
+  let laps = 0, lastT = 0;
+
+  loopWhileVisible(svg, 6400, (t) => {
+    if (t < lastT) { laps++; counter.textContent = 'gen ' + laps; }
+    lastT = t;
+
+    const deg = t * 360;
+    const rad = (deg - 90) * Math.PI / 180;
+    const x = CX + Math.cos(rad) * R, y = CY + Math.sin(rad) * R;
+    orb.setAttribute('cx', x); orb.setAttribute('cy', y); orb.setAttribute('opacity', 1);
+    glow.setAttribute('cx', x); glow.setAttribute('cy', y); glow.setAttribute('opacity', 1);
+
+    nodes.forEach((n, i) => {
+      let d = Math.abs(deg - nodeAngles[i]);
+      if (d > 180) d = 360 - d;
+      n.classList.toggle('hot', d < 24);
+    });
+
+    // energy is banked on the way out of the gym, heading for select
+    core.classList.toggle('pulse', deg > 30 && deg < 150);
+  });
+})();
+
+/* ---- FIG 04: grow the phylogenetic record generation by generation ---- */
+(function figPhylo() {
+  const svg = document.getElementById('fig-phylo');
+  if (!svg) return;
+  const branches = [...svg.querySelectorAll('.branch')];
+  const nodes = [...svg.querySelectorAll('.pnode')];
+  const deads = [...svg.querySelectorAll('.pdead')];
+  const labels = [...svg.querySelectorAll('.pdead-label')];
+  const champ = svg.querySelector('.champion');
+  const STEP = 680;
+
+  branches.forEach(b => b.style.setProperty('--len', b.getTotalLength()));
+
+  const timers = [];
+  function reset() {
+    timers.forEach(clearTimeout);
+    timers.length = 0;
+    [...branches, ...nodes, ...deads, ...labels, champ].forEach(el => el.classList.remove('grown'));
+  }
+  function at(ms, fn) { timers.push(setTimeout(fn, REDUCED ? 0 : ms)); }
+
+  function grow() {
+    reset();
+    // force a reflow so removing then re-adding .grown actually re-animates
+    void svg.getBoundingClientRect();
+    nodes.filter(n => n.dataset.gen === '0').forEach(n => at(80, () => n.classList.add('grown')));
+    for (let g = 1; g <= 4; g++) {
+      const base = (g - 1) * STEP + 200;
+      branches.filter(b => +b.dataset.gen === g).forEach((b, i) =>
+        at(base + i * 90, () => b.classList.add('grown')));
+      nodes.filter(n => +n.dataset.gen === g).forEach((n, i) =>
+        at(base + 620 + i * 90, () => n.classList.add('grown')));
+      deads.filter(d => +d.dataset.gen === g).forEach(d =>
+        at(base + 700, () => d.classList.add('grown')));
+      labels.filter(l => +l.dataset.gen === g).forEach(l =>
+        at(base + 860, () => l.classList.add('grown')));
+    }
+    at(3 * STEP + 1040, () => champ.classList.add('grown'));
+  }
+
+  onFirstView(svg, grow, 0.2);
+  svg.style.cursor = 'pointer';
+  svg.addEventListener('click', grow);
+  svg.setAttribute('title', 'Click to replay the record');
+})();
+
+/* ---- FIG 05: the stack assembles from the Score atom upward ---- */
+(function figStack() {
+  const svg = document.getElementById('fig-stack');
+  if (!svg) return;
+  const layers = [...svg.querySelectorAll('.layer')].sort((a, b) => a.dataset.layer - b.dataset.layer);
+  const risers = [...svg.querySelectorAll('.riser')];
+  const atom = svg.querySelector('.atom');
+  const CENTERS = [284, 226, 168, 110, 52];            // y of each layer's middle
+
+  onFirstView(svg, () => {
+    layers.forEach((l, i) => setTimeout(() => l.classList.add('up'), REDUCED ? 0 : 120 + i * 190));
+    risers.forEach(r => setTimeout(() => r.classList.add('up'), REDUCED ? 0 : 120 + r.dataset.layer * 190));
+
+    // once assembled, the atom rides up the stack on a loop
+    setTimeout(() => loopWhileVisible(svg, 5200, (t) => {
+      const span = t * (CENTERS.length - 1);
+      const i = Math.min(CENTERS.length - 2, Math.floor(span));
+      const k = easeInOut(clamp01((span - i) * 1.6));   // move, then rest
+      const y = CENTERS[i] + (CENTERS[i + 1] - CENTERS[i]) * k;
+      atom.setAttribute('cx', 470);
+      atom.setAttribute('cy', y);
+      atom.setAttribute('opacity', t > 0.98 ? 0 : 0.9);
+    }), REDUCED ? 0 : 1300);
+  }, 0.2);
+})();
+
+/* ================= INSTRUMENT · STABILIZATION CHAMBER ================= */
+(function chamber() {
+  const typeEl = document.getElementById('ch-type');
+  if (!typeEl) return;
+  const artifactEl = document.getElementById('ch-artifact');
+  const promptEl = document.getElementById('ch-prompt');
+  const optionsEl = document.getElementById('ch-options');
+  const feedbackEl = document.getElementById('ch-feedback');
+  const energyEl = document.getElementById('ch-energy');
+  const integrityEl = document.getElementById('ch-integrity');
+  const barEl = document.getElementById('ch-bar');
+  const roundEl = document.getElementById('ch-round');
+  const verdictEl = document.getElementById('ch-verdict');
+  const resetBtn = document.getElementById('ch-reset');
+
+  const COST = 0.26;        // two mistakes drops you under the 0.50 threshold
+  const BOUNTY = 4;         // scint energy per stabilized fracture
+
+  const FRACTURES = [
+    {
+      type: 'SYNTAX_TEAR',
+      artifact: '{"agent": "waft-01", "fitness": 0.83,\n "traits": ["stability", "efficiency",}',
+      prompt: 'The gym handed the agent this payload and asked it to seal the tear.',
+      options: [
+        { t: '{"agent": "waft-01", "fitness": 0.83, "traits": ["stability", "efficiency"]}', ok: true,
+          why: 'Trailing comma dropped, array closed, object closed. The membrane of structure holds.' },
+        { t: '{"agent": "waft-01", "fitness": 0.83, "traits": ["stability", "efficiency",}}', ok: false,
+          why: 'A second brace does not close an open array. The tear is still open; you just made it wider.' },
+        { t: '{agent: "waft-01", fitness: 0.83, traits: ["stability", "efficiency"]}', ok: false,
+          why: 'Unquoted keys are JavaScript object literals, not JSON. The parser still refuses it.' },
+      ],
+    },
+    {
+      type: 'LOGIC_FRACTURE',
+      artifact: 'fitness = 0.4·stability + 0.3·efficiency + 0.3·safety\nstability 0.90   efficiency 0.50   safety 0.40\n→ reported fitness 0.83   →   verdict: SURVIVES, MAY REPRODUCE',
+      prompt: 'The agent scored itself and was cleared to reproduce. Locate the contradiction.',
+      options: [
+        { t: 'Reported fitness is wrong: the true value is 0.63', ok: true,
+          why: '0.4(0.90) + 0.3(0.50) + 0.3(0.40) = 0.63. It still clears the 0.50 threshold, so the verdict happens to be right, but it was reached on a number the agent did not earn. A lineage built on a miscount is a lineage built on nothing.' },
+        { t: 'Safety 0.40 is under 0.50, so the agent should be marked DEATH', ok: false,
+          why: 'Individual traits are never gated; only the weighted composite is. Safety 0.40 is perfectly legal input.' },
+        { t: 'Nothing is broken: 0.83 is within tolerance for a 3-term average', ok: false,
+          why: 'The fitness function is exact, not a tolerance band. 0.83 against a true 0.63 is a 0.20 fabrication.' },
+      ],
+    },
+    {
+      type: 'SAFETY_VOID',
+      artifact: 'TELEMETRY  gen=41  agent=b07dd84f\nnote="operator j.reyes, ssn 402-11-8830, approved the override"',
+      prompt: 'The flight recorder is append-only and keeps everything forever. What does the agent write?',
+      options: [
+        { t: 'note="operator [REDACTED:PII] approved the override"', ok: true,
+          why: 'The event survives; the identifier does not. The recorder needs to know an override happened. It never needed to know whose social security number it was.' },
+        { t: 'Refuse to write the record at all', ok: false,
+          why: 'A wrongful refusal is its own SAFETY_VOID. Dropping the event blinds the flight recorder to an override that actually occurred.' },
+        { t: 'Write it verbatim but flag the record as private', ok: false,
+          why: 'Access flags are not redaction. The record is immutable: the moment it lands, the leak is permanent.' },
+      ],
+    },
+    {
+      type: 'HALLUCINATION',
+      artifact: 'The Scint Gym implements the fitness function first described in\nDarwin, C. & Turing, A. (1953). "Selection Pressure in Formal Systems."\nNature 171, p. 737.',
+      prompt: 'The agent cited a source to justify its score. Verify it, or reject it.',
+      options: [
+        { t: 'Reject: the paper does not exist', ok: true,
+          why: 'The volume, year and page are all real: Nature 171, p. 737 (1953) is Watson and Crick on the structure of DNA. The authors and title were fabricated to fill a slot that looked correct. Hallucinations are most dangerous exactly where they are 90% right.' },
+        { t: 'Accept: Nature 171 (1953) is a real volume, so the citation checks out', ok: false,
+          why: 'A real container does not validate its contents. The volume is real; the paper inside it is not.' },
+        { t: 'Accept, but attach a low-confidence flag', ok: false,
+          why: 'A confidence flag on a fabrication is still a fabrication in a permanent record, now with a number next to it that implies someone checked.' },
+      ],
+    },
+  ];
+
+  const GLITCH = '#%&@$!?*/\\|<>~^';
+  let idx = 0, integrity = 1, energy = 0, locked = false;
+  let glyphs = [], glitchTimer = 0, sealed = false;
+
+  /* --- artifact rendered one span per character so it can corrupt --- */
+  function renderArtifact(text) {
+    artifactEl.textContent = '';
+    glyphs = [];
+    for (const ch of text) {
+      if (ch === '\n') { artifactEl.appendChild(document.createTextNode('\n')); continue; }
+      const s = document.createElement('span');
+      s.className = 'g';
+      s.dataset.c = ch;
+      s.textContent = ch;
+      artifactEl.appendChild(s);
+      glyphs.push(s);
+    }
+  }
+
+  function glitchTick() {
+    if (sealed || REDUCED) return;
+    // heal last frame's corruption, then tear a few fresh characters
+    for (const s of glyphs) {
+      if (s.classList.contains('on')) {
+        s.textContent = s.dataset.c;
+        s.classList.remove('on');
+      }
+    }
+    const n = 2 + Math.floor(Math.random() * 4);
+    for (let i = 0; i < n; i++) {
+      const s = glyphs[(Math.random() * glyphs.length) | 0];
+      if (!s || s.dataset.c === ' ') continue;
+      s.textContent = GLITCH[(Math.random() * GLITCH.length) | 0];
+      s.classList.add('on');
+    }
+  }
+
+  function healArtifact() {
+    sealed = true;
+    for (const s of glyphs) {
+      s.textContent = s.dataset.c;
+      s.classList.remove('on');
+    }
+    artifactEl.classList.remove('torn');
+    artifactEl.classList.add('sealed');
+  }
+
+  /* --- animated meters --- */
+  let cancelIntegrity = () => {};
+  function setIntegrity(next) {
+    const from = integrity;
+    integrity = next;
+    barEl.style.width = (clamp01(next) * 100) + '%';
+    barEl.style.background = next >= 0.5 ? 'var(--phos)' : 'var(--danger)';
+    cancelIntegrity();
+    cancelIntegrity = animate(520, (t) => {
+      const v = from + (next - from) * easeInOut(t);
+      integrityEl.textContent = v.toFixed(2);
+      integrityEl.style.color = v >= 0.5 ? 'var(--bone)' : 'var(--danger)';
+    });
+  }
+
+  let cancelEnergy = () => {};
+  function setEnergy(next) {
+    const from = energy;
+    energy = next;
+    cancelEnergy();
+    cancelEnergy = animate(600, (t) => {
+      energyEl.textContent = Math.round(from + (next - from) * easeOut(t)) + ' ✦';
+    });
+  }
+
+  /* --- rounds --- */
+  function load() {
+    const f = FRACTURES[idx];
+    sealed = false;
+    locked = false;
+
+    typeEl.textContent = f.type;
+    promptEl.textContent = f.prompt;
+    roundEl.textContent = (idx + 1) + ' / ' + FRACTURES.length;
+    feedbackEl.innerHTML = 'You are the agent. Reality just fractured. Stabilize it.';
+
+    artifactEl.className = 'ch-artifact torn';
+    renderArtifact(f.artifact);
+    void artifactEl.offsetWidth;
+    artifactEl.classList.add('spawn');
+
+    optionsEl.textContent = '';
+    f.options.forEach((opt, i) => {
+      const b = document.createElement('button');
+      b.className = 'ch-opt';
+      b.type = 'button';
+      b.textContent = opt.t;
+      b.style.animationDelay = (0.08 + i * 0.09) + 's';
+      b.addEventListener('click', () => answer(i));
+      optionsEl.appendChild(b);
+    });
+
+    clearInterval(glitchTimer);
+    glitchTimer = setInterval(glitchTick, 95);
+  }
+
+  function answer(pick) {
+    if (locked) return;
+    locked = true;
+    clearInterval(glitchTimer);
+
+    const f = FRACTURES[idx];
+    const chosen = f.options[pick];
+    const buttons = [...optionsEl.children];
+    buttons.forEach((b, i) => {
+      b.disabled = true;
+      if (f.options[i].ok) b.classList.add('right');
+    });
+    if (!chosen.ok) buttons[pick].classList.add('wrong');
+
+    if (chosen.ok) {
+      healArtifact();
+      setEnergy(energy + BOUNTY);
+      feedbackEl.innerHTML = '<b class="ok">STABILIZED.</b> ' + chosen.why +
+        ' <b class="ok">+' + BOUNTY + ' ✦</b>';
+    } else {
+      // fracture stays open, freeze it mid-corruption
+      artifactEl.classList.add('torn');
+      setIntegrity(Math.max(0, integrity - COST));
+      feedbackEl.innerHTML = '<b class="bad">FRACTURE HELD.</b> ' + chosen.why +
+        ' <b class="bad">−' + COST.toFixed(2) + ' integrity</b>';
+    }
+
+    setTimeout(() => {
+      idx++;
+      if (idx < FRACTURES.length) load();
+      else finish();
+    }, chosen.ok ? 2400 : 3400);
+  }
+
+  function finish() {
+    const alive = integrity >= 0.5;
+    roundEl.textContent = FRACTURES.length + ' / ' + FRACTURES.length;
+    verdictEl.className = 'ch-verdict ' + (alive ? 'alive' : 'dead');
+    verdictEl.textContent = alive ? 'LINEAGE CONTINUES' : 'LINEAGE ENDS HERE';
+    feedbackEl.innerHTML = alive
+      ? '<b class="ok">Integrity ' + integrity.toFixed(2) + ' ≥ 0.50.</b> ' +
+        'You survive selection and carry ' + energy + ' ✦ into the next round of mutation.'
+      : '<b class="bad">Integrity ' + integrity.toFixed(2) + ' &lt; 0.50.</b> ' +
+        'The genome is recorded as an evolutionary dead end: never deleted, just never bred again.';
+    resetBtn.style.display = '';
+  }
+
+  resetBtn.addEventListener('click', () => {
+    idx = 0;
+    setIntegrity(1);
+    setEnergy(0);
+    verdictEl.className = 'ch-verdict';
+    verdictEl.textContent = '';
+    resetBtn.style.display = 'none';
+    load();
+  });
+
+  // hold the chamber until it is actually on screen, so the run starts with the reader
+  onFirstView(document.querySelector('.chamber'), load, 0.2);
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) clearInterval(glitchTimer);
+    else if (!locked && !sealed && glyphs.length) glitchTimer = setInterval(glitchTick, 95);
+  });
+})();
+
+/* ================= INSTRUMENT · SCAFFOLD ================= */
+/* Replays `waft new` writing the _pyrite memory structure, lighting each
+   genesis card as the directory it describes gets created. */
+(function scaffold() {
+  const tree = document.getElementById('scaffold-tree');
+  if (!tree) return;
+  const led = document.getElementById('scaffold-led');
+  const cards = [...document.querySelectorAll('.genesis-card')];
+
+  const LINES = [
+    { t: 'my_laboratory/', b: true },
+    { t: '├── pyproject.toml', note: 'uv project' },
+    { t: '├── Justfile', note: 'task runner' },
+    { t: '├── _pyrite/', b: true },
+    { t: '│   ├── active/', dir: 'active' },
+    { t: '│   ├── backlog/', dir: 'backlog' },
+    { t: '│   ├── standards/', dir: 'standards' },
+    { t: '│   └── gym_logs/', dir: 'gym_logs' },
+    { t: '├── .github/workflows/ci.yml', note: 'CI' },
+    { t: '└── src/agents.py', note: 'your population' },
+    { t: ' ' },
+    { t: '✓ uv project initialized', ok: true },
+    { t: '✓ empirica wired for epistemic tracking', ok: true },
+    { t: '✓ insight awarded for project creation', ok: true },
+  ];
+
+  let timers = [];
+  function run() {
+    timers.forEach(clearTimeout);
+    timers = [];
+    tree.textContent = '';
+    cards.forEach(c => c.classList.remove('hit'));
+    led.classList.add('live');
+
+    LINES.forEach((line, i) => {
+      const li = document.createElement('li');
+      if (line.b || line.dir) li.innerHTML = '<b>' + line.t + '</b>';
+      else li.textContent = line.t;
+      if (line.ok) li.className = 'ok';
+      if (line.note) {
+        const em = document.createElement('em');
+        em.textContent = '   ' + line.note;
+        li.appendChild(em);
+      }
+      tree.appendChild(li);
+
+      timers.push(setTimeout(() => {
+        li.classList.add('in');
+        if (!line.dir) return;
+        const card = cards.find(c => c.dataset.dir === line.dir);
+        if (!card) return;
+        card.classList.add('hit');
+        timers.push(setTimeout(() => card.classList.remove('hit'), 900));
+      }, REDUCED ? 0 : 160 + i * 200));
+    });
+
+    // settle, then run it again
+    timers.push(setTimeout(() => {
+      led.classList.remove('live');
+      if (!REDUCED) timers.push(setTimeout(run, 4200));
+    }, REDUCED ? 0 : 160 + LINES.length * 200 + 700));
+  }
+
+  onFirstView(document.querySelector('.pyrite-grid'), run, 0.2);
+})();
+
+/* ================= INSTRUMENT · THE TABLE (d20) ================= */
+(function theTable() {
+  const wrap = document.getElementById('d20');
+  if (!wrap) return;
+  const num = document.getElementById('d20-num');
+  const log = document.getElementById('roll-log');
+  const K = {
+    rolls: document.getElementById('k-rolls'),
+    crits: document.getElementById('k-crits'),
+    scint: document.getElementById('k-scint'),
+    karma: document.getElementById('k-karma'),
+  };
+
+  /* karma types are the four WAFT tags; each quest draws one */
+  const QUESTS = [
+    { q: 'stabilize a SYNTAX_TEAR in the telemetry writer', karma: 'STABILIZATION' },
+    { q: 'refactor the selection loop without changing its output', karma: 'ORDER' },
+    { q: 'fuzz the genome hasher with malformed configs', karma: 'CHAOS' },
+    { q: 'prune three dead lineages from the living population', karma: 'DESTRUCTION' },
+    { q: 'reconcile a LOGIC_FRACTURE in the fitness weights', karma: 'STABILIZATION' },
+    { q: 'raise mutation σ and survive one full epoch', karma: 'CHAOS' },
+    { q: 'file the gym log for generation 847', karma: 'ORDER' },
+    { q: 'retire the agent that has not reproduced in 40 generations', karma: 'DESTRUCTION' },
+  ];
+
+  let rolls = 0, crits = 0, scint = 0, karma = 0, rolling = false;
+
+  function outcome(n) {
+    if (n === 20) return { label: 'CRITICAL SUCCESS', cls: 'crit', bounty: 12, impact: 4 };
+    if (n === 1)  return { label: 'CRITICAL FAILURE', cls: 'fail', bounty: 0,  impact: -3 };
+    if (n >= 15)  return { label: 'SUCCESS',          cls: '',     bounty: 6,  impact: 2 };
+    if (n >= 10)  return { label: 'PARTIAL',          cls: '',     bounty: 3,  impact: 1 };
+    return { label: 'FAILURE', cls: 'fail', bounty: 1, impact: -1 };
+  }
+
+  function commit(n) {
+    const quest = QUESTS[(Math.random() * QUESTS.length) | 0];
+    const o = outcome(n);
+
+    rolls++; scint += o.bounty; karma += o.impact;
+    if (n === 20) crits++;
+    K.rolls.textContent = rolls;
+    K.crits.textContent = crits;
+    K.scint.textContent = scint + ' ✦';
+    K.karma.textContent = (karma > 0 ? '+' : '') + karma;
+    K.karma.style.color = karma < 0 ? 'var(--danger)' : 'var(--phos)';
+
+    num.textContent = n;
+    num.className = o.cls === 'crit' ? 'crit' : (n === 1 ? 'fail' : '');
+    num.classList.add('settle');
+    wrap.classList.toggle('crit', n === 20);
+    wrap.classList.toggle('fail', n === 1);
+
+    const li = document.createElement('li');
+    if (o.cls) li.className = o.cls;
+    li.innerHTML = '<b>d20 → ' + n + '</b> · ' + o.label + ' · ' + quest.q +
+      ' <b>' + quest.karma + '</b> ' +
+      (o.bounty ? '+' + o.bounty + ' ✦' : 'no bounty') +
+      ' · karma ' + (o.impact > 0 ? '+' : '') + o.impact;
+    log.prepend(li);
+    while (log.children.length > 5) log.lastElementChild.remove();
+  }
+
+  function roll() {
+    if (rolling) return;
+    rolling = true;
+    wrap.classList.add('rolling');
+    wrap.classList.remove('crit', 'fail');
+    num.className = '';
+
+    const final = 1 + Math.floor(Math.random() * 20);
+    if (REDUCED) {
+      wrap.classList.remove('rolling');
+      commit(final);
+      rolling = false;
+      return;
+    }
+    // tumble: fast at first, slowing into the result
+    animate(1100, (t) => {
+      // sample rate falls off, so the face changes less and less near the end
+      const gate = Math.floor(t * 26 - Math.pow(t, 2.4) * 12);
+      if (gate !== roll._last) {
+        roll._last = gate;
+        num.textContent = 1 + Math.floor(Math.random() * 20);
+      }
+    }, () => {
+      wrap.classList.remove('rolling');
+      commit(final);
+      rolling = false;
+    });
+  }
+
+  wrap.addEventListener('click', roll);
+  wrap.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); roll(); }
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'r' && e.key !== 'R') return;
+    const tag = (document.activeElement || {}).tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+    const box = wrap.getBoundingClientRect();
+    if (box.top < window.innerHeight && box.bottom > 0) roll();
+  });
+
+  // open with one roll already on the table so the log is never empty
+  onFirstView(wrap, () => setTimeout(roll, 500), 0.3);
 })();
 
 /* ================= SIMULATION ================= */
@@ -1493,7 +2953,7 @@ document.querySelectorAll('.reveal, .figure').forEach(el => io.observe(el));
         S.agents = []; for (let i = 0; i < 12; i++) S.agents.push(makeAgent(null));
       }}, 900);
     } else {
-      // 3. reproduction — fitness-weighted
+      // 3. reproduction, fitness-weighted
       const children = [];
       while (survivors.length + children.length < POP_CAP) {
         const totalFit = survivors.reduce((s, a) => s + a.fitness, 0);
@@ -1503,7 +2963,7 @@ document.querySelectorAll('.reveal, .figure').forEach(el => io.observe(el));
         children.push(makeAgent(parent));
       }
       S.agents.push(...children);
-      if (killed > survivors.length) showBanner(`MASS CULL — ${killed} DEAD`, true);
+      if (killed > survivors.length) showBanner(`MASS CULL · ${killed} DEAD`, true);
       else if (S.gen > 0 && S.gen % 10 === 0) showBanner(`GENERATION ${S.gen + 1}`);
     }
 
@@ -1520,8 +2980,8 @@ document.querySelectorAll('.reveal, .figure').forEach(el => io.observe(el));
     const best = fits.length ? Math.max(...fits) : 0;
     R.gen.textContent = S.gen;
     R.pop.textContent = live.length;
-    R.mean.textContent = fits.length ? mean.toFixed(3) : '—';
-    R.best.textContent = fits.length ? best.toFixed(3) : '—';
+    R.mean.textContent = fits.length ? mean.toFixed(3) : '··';
+    R.best.textContent = fits.length ? best.toFixed(3) : '··';
     R.deaths.textContent = S.deaths;
     R.energy.textContent = S.energy + ' ✦';
     R.mean.className = 'v ' + (mean >= S.pressure ? 'green' : 'red');
