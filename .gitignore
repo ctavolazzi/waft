@@ -48,3 +48,12 @@ _pyrite/.waft/*.json
 
 # Unified project symlinks
 _unified/
+
+# Secrets and generated credentials.
+# All of these are recreated on demand by the code that reads them, so they
+# must never be committed. See src/waft/api/auth.py (get_or_create_token),
+# src/waft/pyrite.py (_generate_secret_key), and
+# src/waft/core/dnd_scenario/realm_state_preserver.py (_generate_hmac_key).
+.waft_api_token
+.pyrite_secret_key
+.hmac_key
