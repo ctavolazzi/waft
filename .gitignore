@@ -52,3 +52,4 @@ _unified/
 # Local keys and tokens: never tracked
 .waft_api_token
 .pyrite_secret_key
+.hmac_key
