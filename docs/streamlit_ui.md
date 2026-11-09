@@ -204,7 +204,7 @@ If a system shows as "not available":
 
 ## Related Documentation
 
-- [WAFT System Integration](./WAFT_SYSTEM_INTEGRATION.md)
+- [WAFT System Integration](../_archive/root-2026-11-09/WAFT_SYSTEM_INTEGRATION.md)
 - [Being System Documentation](../src/waft/being.py)
 - [Empirica Integration](../_work_efforts/EMPIRICA_INTEGRATION.md)
 - [Gamification System](../src/waft/core/gamification.py)
