@@ -78,7 +78,7 @@ This enables reconstruction of the complete **Family Tree** for scientific publi
 
 ```bash
 # Install Waft
-uv tool install waft
+uv tool install git+https://github.com/ctavolazzi/waft
 
 # Create a new evolutionary laboratory
 waft new my_laboratory
@@ -91,17 +91,9 @@ waft verify
 ## The Evolutionary Cycle
 
 ```bash
-# Spawn variants with mutations
-waft spawn --agent RefactorAgent --mutation "improved_prompt.json"
-
-# Evaluate fitness in the Gym
-waft eval --agent RefactorAgent
-
-# Evolve into the fittest variant
-waft evolve --agent RefactorAgent --generation 5
+# Evolve an agent: spawn variants, score them in the Gym, keep the fittest
+waft evolve --agent RefactorAgent --generations 5
 ```
-
-**Coming Soon**: Full evolutionary cycle automation.
 
 ---
 
@@ -407,7 +399,7 @@ Waft is **directed** - evolution is guided by fitness functions, not random muta
 
 ```bash
 # Using uv (recommended)
-uv tool install waft
+uv tool install git+https://github.com/ctavolazzi/waft
 
 # Or from source
 git clone https://github.com/ctavolazzi/waft.git
