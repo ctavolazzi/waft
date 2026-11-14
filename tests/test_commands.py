@@ -4,6 +4,7 @@ import subprocess
 import sys
 
 import pytest
+from typer.testing import CliRunner
 
 from waft.core.memory import MemoryManager
 from waft.core.substrate import SubstrateManager
