@@ -7,8 +7,12 @@ Defines the types of decisions agents can make to evolve stories.
 import uuid
 from datetime import datetime
 from enum import Enum
+from typing import TYPE_CHECKING
 
 from pydantic import BaseModel, Field
+
+if TYPE_CHECKING:
+    from .story_state import Event, StoryState
 
 
 class DecisionType(str, Enum):

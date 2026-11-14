@@ -191,6 +191,7 @@ class NowCycleManager:
 
                     # Calculate alignment score (for alignment effects)
                     from .alignment import AlignmentSystem
+                    from .harm import ArrowOfIntent
 
                     alignment_system = AlignmentSystem()
 

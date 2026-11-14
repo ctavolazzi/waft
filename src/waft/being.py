@@ -1025,7 +1025,7 @@ class Being:
             # Calculate CON modifier from stamina/will_to_live
             # Use stamina as proxy for CON (physical resilience)
             con_score = max(8, min(20, int((self.stamina / 100.0) * 20.0)))
-            con_modifier = dnd_stats.DnD5eStats.ability_modifier(con_score)
+            con_modifier = DnD5eStats.ability_modifier(con_score)
 
             # Proficiency bonus based on lifetimes (experience)
             proficiency_bonus = min(6, max(2, 2 + (self.lifetimes // 4)))

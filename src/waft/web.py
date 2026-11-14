@@ -23,27 +23,10 @@ class WaftHandler(BaseHTTPRequestHandler):
     """HTTP request handler for Waft web dashboard."""
 
     def __init__(self, project_path: Path, dev_mode: bool = False, *args, **kwargs):
-        # #region agent log
-        import json
-        with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
-            f.write(json.dumps({"sessionId": "debug-session", "runId": "initial", "hypothesisId": "A", "location": "web.py:19", "message": "WaftHandler.__init__ entry", "data": {"project_path": str(project_path), "project_path_type": type(project_path).__name__}, "timestamp": __import__("time").time() * 1000}) + "\n")
-        # #endregion
         self.project_path = project_path
         self.dev_mode = dev_mode
-        # #region agent log
-        with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
-            f.write(json.dumps({"sessionId": "debug-session", "runId": "initial", "hypothesisId": "A", "location": "web.py:21", "message": "Before MemoryManager init", "data": {"project_path": str(project_path)}, "timestamp": __import__("time").time() * 1000}) + "\n")
-        # #endregion
         self.memory = MemoryManager(project_path)
-        # #region agent log
-        with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
-            f.write(json.dumps({"sessionId": "debug-session", "runId": "post-fix", "hypothesisId": "A", "location": "web.py:22", "message": "Before SubstrateManager init", "data": {"project_path": str(project_path), "substrate_class": str(SubstrateManager), "substrate_init": str(SubstrateManager.__init__)}, "timestamp": __import__("time").time() * 1000}) + "\n")
-        # #endregion
         self.substrate = SubstrateManager(project_path)
-        # #region agent log
-        with open('/Users/ctavolazzi/Code/active/waft/.cursor/debug.log', 'a') as f:
-            f.write(json.dumps({"sessionId": "debug-session", "runId": "post-fix", "hypothesisId": "A", "location": "web.py:23", "message": "After SubstrateManager init", "data": {"substrate_created": str(self.substrate), "substrate_project_path": str(self.substrate.project_path)}, "timestamp": __import__("time").time() * 1000}) + "\n")
-        # #endregion
         super().__init__(*args, **kwargs)
 
     def do_GET(self):
@@ -460,6 +443,11 @@ def create_handler(project_path: Path, dev_mode: bool = False):
     return handler
 
 
+def _notify_clients() -> None:
+    """Tell the person at the terminal to refresh. The dashboard has no push channel (see its Refresh button)."""
+    print("   Refresh the browser to load the change.")
+
+
 def _watch_files(project_path: Path, dev_mode: bool):
     """Watch for file changes and notify clients via SSE (no server restart needed)."""
     if not dev_mode:
@@ -494,7 +482,6 @@ def _watch_files(project_path: Path, dev_mode: bool):
                         if file_path_str not in self.last_modified or self.last_modified[file_path_str] != current_mtime:
                             self.last_modified[file_path_str] = current_mtime
                             print(f"\n🔄 File changed: {file_path.name}")
-                            print("   Notifying clients to reload...")
                             _notify_clients()
                     except (OSError, FileNotFoundError):
                         # File might have been deleted or moved
@@ -524,7 +511,6 @@ def _watch_files(project_path: Path, dev_mode: bool):
                             if file_path_str not in last_modified or last_modified[file_path_str] != current_mtime:
                                 last_modified[file_path_str] = current_mtime
                                 print(f"\n🔄 File changed: {file_path.name}")
-                                print("   Notifying clients to reload...")
                                 _notify_clients()
                         except (OSError, FileNotFoundError):
                             pass

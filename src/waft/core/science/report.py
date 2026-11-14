@@ -18,6 +18,7 @@ from .taxonomy import LineagePoet
 logger = get_logger(__name__)
 
 if TYPE_CHECKING:
+    from ..agent.base import BaseAgent
     from ..world.biome import Biome
 
 

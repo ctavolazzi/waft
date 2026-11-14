@@ -118,7 +118,7 @@ def secrets(
     pyrite_path: str = typer.Option("_pyrite", "--pyrite-path"),
 ):
     """List secrets (metadata only) (/secrets ability)."""
-    pyrite = get_pyrite_instance(work_efforts_path, pyrite_path)
+    pyrite = get_pyrite(Path(work_efforts_path), Path(pyrite_path))
     result = pyrite.execute_ability("/secrets")
     typer.echo(json.dumps(result, indent=2))
 
@@ -191,7 +191,7 @@ def set_status(
     pyrite_path: str = typer.Option("_pyrite", "--pyrite-path"),
 ):
     """Set work effort status."""
-    pyrite = get_pyrite_instance(work_efforts_path, pyrite_path)
+    pyrite = get_pyrite(Path(work_efforts_path), Path(pyrite_path))
     new_status = WorkEffortStatus(status)
     success = pyrite.update_work_effort_status(we_id, new_status)
 

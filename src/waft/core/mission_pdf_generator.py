@@ -7,9 +7,13 @@ Soft military language (NCIS TV style) - professional but approachable.
 
 from datetime import datetime
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from ..evolution.pdf_generator import PDFGenerator
 from ..utils import get_storage_path
+
+if TYPE_CHECKING:
+    from ..pantheon.military_brass import Mission
 
 
 def generate_mission_pdf(

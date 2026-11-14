@@ -3097,6 +3097,8 @@ def final_report(
 
     from .core.final_report import FinalReportGenerator
 
+    project_path = resolve_project_path(path)
+
     try:
         generator = FinalReportGenerator(project_path)
 

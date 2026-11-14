@@ -6,7 +6,10 @@ skill learning, memory recording, goal pursuit, etc.
 """
 
 import random
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from ..being import Being
 
 
 class BeingDecisionSystem:

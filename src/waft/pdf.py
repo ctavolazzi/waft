@@ -852,6 +852,7 @@ class PDF:
 
     def _open_pdf(self, pdf_path: Path) -> None:
         """Open PDF in default viewer."""
+        import os
         import platform
         import subprocess
 
@@ -882,6 +883,7 @@ class PDF:
         if not self._generated_path:
             raise ValueError("PDF not generated yet. Call save() first.")
 
+        import os
         import platform
         import subprocess
 

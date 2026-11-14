@@ -194,7 +194,7 @@ def render_being_details(being_system: BeingSystem, being_id: str):
         # Chronicle
         st.subheader("Chronicle")
         chronicle_path = (
-            project_path / "_hidden" / ".truth" / "beings" / being_id / "chronicle.jsonl"
+            being_system.project_path / "_hidden" / ".truth" / "beings" / being_id / "chronicle.jsonl"
         )
         if chronicle_path.exists():
             render_chronicle(chronicle_path)
