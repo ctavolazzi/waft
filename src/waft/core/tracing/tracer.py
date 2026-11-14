@@ -6,7 +6,7 @@ import time
 import uuid
 from dataclasses import dataclass, field, asdict
 from typing import Optional, Dict, Any, List
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 
 from .context import TraceContext, get_current_context, set_current_context
@@ -29,7 +29,9 @@ class Span:
     operation: str
     layer: str
     parent_span_id: Optional[str] = None
-    timestamp: str = field(default_factory=lambda: datetime.utcnow().isoformat())
+    timestamp: str = field(
+        default_factory=lambda: datetime.now(timezone.utc).replace(tzinfo=None).isoformat()
+    )
     duration_ms: Optional[float] = None
     status: SpanStatus = SpanStatus.PENDING
     data: Dict[str, Any] = field(default_factory=dict)

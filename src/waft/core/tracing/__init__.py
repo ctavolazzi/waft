@@ -22,6 +22,8 @@ __all__ = [
     "TraceStorage",
     "TraceViewer",
     "span_context",
+    "get_tracer",
+    "reset_tracer",
 ]
 
 # Global tracer instance
@@ -34,3 +36,9 @@ def get_tracer() -> Tracer:
     if _global_tracer is None:
         _global_tracer = Tracer()
     return _global_tracer
+
+
+def reset_tracer() -> None:
+    """Drop the global tracer so the next get_tracer() reads WAFT_TRACE_DIR and WAFT_TRACING again."""
+    global _global_tracer
+    _global_tracer = None

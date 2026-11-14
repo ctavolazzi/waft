@@ -1,6 +1,8 @@
 import math
 from dataclasses import dataclass
 
+from .tracing import SpanStatus, get_tracer
+
 # ==========================================
 # 1. Immutable Data Structures
 # ==========================================
@@ -125,9 +127,12 @@ class DecisionMatrixCalculator:
                     weight = weight_map.get(score_obj.criterion_name, 0.0)
                     results[score_obj.alternative_name] += weight * score_obj.value
 
-            return results
-        finally:
-            span.end()
+        except Exception as e:
+            tracer.end_span(span, SpanStatus.ERROR, error=e)
+            raise
+
+        tracer.end_span(span, SpanStatus.SUCCESS)
+        return results
 
     def rank_alternatives(self, scores: dict[str, float]) -> list[tuple[str, float, int]]:
         """

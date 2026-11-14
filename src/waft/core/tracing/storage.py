@@ -6,7 +6,7 @@ import json
 import os
 from pathlib import Path
 from typing import Optional, List, Dict, Any
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 class TraceStorage:
@@ -18,14 +18,20 @@ class TraceStorage:
 
         Args:
             base_path: Base directory for trace files.
-                      Defaults to _pyrite/analytics/traces/
+                      Defaults to the WAFT_TRACE_DIR environment variable,
+                      then to _pyrite/analytics/traces/ in the working directory.
+
+        Set WAFT_TRACING=off to keep spans in memory only (nothing is written).
         """
+        self.enabled = os.environ.get("WAFT_TRACING", "on").strip().lower() not in ("off", "0", "false", "no")
+
         if base_path is None:
-            # Default to _pyrite/analytics/traces in current working directory
-            base_path = Path.cwd() / "_pyrite" / "analytics" / "traces"
+            env_dir = os.environ.get("WAFT_TRACE_DIR")
+            base_path = Path(env_dir) if env_dir else Path.cwd() / "_pyrite" / "analytics" / "traces"
 
         self.base_path = Path(base_path)
-        self._ensure_directory()
+        if self.enabled:
+            self._ensure_directory()
 
     def _ensure_directory(self) -> None:
         """Ensure the traces directory exists."""
@@ -42,7 +48,7 @@ class TraceStorage:
             Path to the trace file
         """
         if date is None:
-            date = datetime.utcnow()
+            date = datetime.now(timezone.utc).replace(tzinfo=None)
 
         filename = f"{date.strftime('%Y-%m-%d')}.jsonl"
         return self.base_path / filename
@@ -54,6 +60,9 @@ class TraceStorage:
         Args:
             span: The span to write
         """
+        if not self.enabled:
+            return
+
         trace_file = self._get_trace_file()
 
         # Convert span to dict

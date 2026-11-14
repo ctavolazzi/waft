@@ -9,6 +9,7 @@ data and converts it to clean, validated objects.
 from typing import Any
 
 from .decision_matrix import Alternative, Criterion, DecisionMatrix, Score
+from .tracing import SpanStatus, get_tracer
 
 
 class InputTransformer:
@@ -69,6 +70,7 @@ class InputTransformer:
                 alternatives=alternatives, criteria=criteria, scores=scores, methodology=methodology
             )
 
+            tracer.end_span(span, SpanStatus.SUCCESS)
             return matrix
 
         except ValueError as e:

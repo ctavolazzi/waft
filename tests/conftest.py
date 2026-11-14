@@ -7,6 +7,24 @@ from pathlib import Path
 import pytest
 
 
+@pytest.fixture(autouse=True, scope="session")
+def _traces_outside_the_repo(tmp_path_factory):
+    """Send tracing output to a temp folder so a test run never writes into the checkout."""
+    import os
+
+    from waft.core.tracing import reset_tracer
+
+    previous = os.environ.get("WAFT_TRACE_DIR")
+    os.environ["WAFT_TRACE_DIR"] = str(tmp_path_factory.mktemp("traces"))
+    reset_tracer()
+    yield
+    if previous is None:
+        os.environ.pop("WAFT_TRACE_DIR", None)
+    else:
+        os.environ["WAFT_TRACE_DIR"] = previous
+    reset_tracer()
+
+
 @pytest.fixture
 def temp_project_path():
     """Create a temporary project directory."""
