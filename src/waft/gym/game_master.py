@@ -21,7 +21,25 @@ from .models import BattleLog, Hero, Quest
 from .scint import RegexScintDetector
 from .stabilizer import StabilizationLoop
 
+from ..core.decision_matrix import DecisionMatrix, DecisionMatrixCalculator
 from ..core.input_transformer import InputTransformer
+
+
+def validate_answer(response_data: Any) -> DecisionMatrix:
+    """
+    The gym's judge: is this answer a valid decision matrix?
+
+    Two gates. The InputTransformer checks shape (keys present, names and numbers readable).
+    The DecisionMatrixCalculator checks the maths (no negative weights, weights sum to 1.0,
+    finite scores, no missing score). Until 2026-11-14 only the first gate was used, so an
+    answer whose weights summed to 1.5, or were negative, won quests whose win condition
+    says otherwise.
+
+    Raises ValueError when the answer is not valid.
+    """
+    matrix = InputTransformer.transform_input(response_data)
+    DecisionMatrixCalculator(matrix)  # its constructor validates and raises
+    return matrix
 
 
 class GameMaster:
@@ -129,7 +147,7 @@ class GameMaster:
             import json as json_lib
 
             response_data = json_lib.loads(response_str)
-            InputTransformer.transform_input(response_data)  # Raises ValueError if invalid
+            validate_answer(response_data)  # Raises ValueError if invalid
 
         try:
             # Try to parse the response as JSON
@@ -138,7 +156,7 @@ class GameMaster:
             response_data = json_lib.loads(agent_response)
 
             # Validate using InputTransformer (The Waft Iron Core)
-            matrix = InputTransformer.transform_input(response_data)
+            matrix = validate_answer(response_data)
 
             # Success! The validation passed
             success = True
@@ -213,7 +231,7 @@ class GameMaster:
                     # Re-validate and save loot with corrected response
                     try:
                         response_data = json_lib.loads(corrected_output)
-                        matrix = InputTransformer.transform_input(response_data)
+                        matrix = validate_answer(response_data)
 
                         loot_data = {
                             "quest_name": quest.name,
@@ -297,7 +315,7 @@ class GameMaster:
                     # Re-validate and save loot
                     try:
                         response_data = json_lib.loads(corrected_output)
-                        matrix = InputTransformer.transform_input(response_data)
+                        matrix = validate_answer(response_data)
 
                         loot_data = {
                             "quest_name": quest.name,
