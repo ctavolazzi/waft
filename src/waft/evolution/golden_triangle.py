@@ -80,36 +80,6 @@ class GoldenTriangle:
         Returns:
             HTML string
         """
-        # #region agent log
-        with open("/Users/ctavolazzi/Code/active/waft/.cursor/debug.log", "a") as f:
-            import json
-
-            f.write(
-                json.dumps(
-                    {
-                        "sessionId": "debug-session",
-                        "runId": "run1",
-                        "hypothesisId": "A",
-                        "location": "golden_triangle.py:68",
-                        "message": "markdown_to_html entry",
-                        "data": {
-                            "markdown_length": len(markdown_text) if markdown_text else 0,
-                            "markdown_preview": markdown_text[:200] if markdown_text else "",
-                            "has_h1": bool(re.search(r"^#\s+", markdown_text, re.MULTILINE))
-                            if markdown_text
-                            else False,
-                            "has_hr": bool(re.search(r"^---$", markdown_text, re.MULTILINE))
-                            if markdown_text
-                            else False,
-                            "markdown_available": MARKDOWN_AVAILABLE,
-                            "preserve_html": preserve_html,
-                        },
-                        "timestamp": int(__import__("time").time() * 1000),
-                    }
-                )
-                + "\n"
-            )
-        # #endregion
 
         if not markdown_text:
             return ""
@@ -119,92 +89,17 @@ class GoldenTriangle:
             try:
                 html = markdown.markdown(markdown_text, extensions=self.markdown_extensions)
 
-                # #region agent log
-                with open("/Users/ctavolazzi/Code/active/waft/.cursor/debug.log", "a") as f:
-                    import json
-
-                    f.write(
-                        json.dumps(
-                            {
-                                "sessionId": "debug-session",
-                                "runId": "run1",
-                                "hypothesisId": "A",
-                                "location": "golden_triangle.py:98",
-                                "message": "markdown library used",
-                                "data": {
-                                    "html_length": len(html) if html else 0,
-                                    "html_preview": html[:300] if html else "",
-                                    "has_h1_tag": bool(re.search(r"<h1[^>]*>", html))
-                                    if html
-                                    else False,
-                                    "has_hr_tag": bool(re.search(r"<hr[^>]*>", html))
-                                    if html
-                                    else False,
-                                    "has_raw_hash": bool(re.search(r"#\s+WAFT", html))
-                                    if html
-                                    else False,
-                                },
-                                "timestamp": int(__import__("time").time() * 1000),
-                            }
-                        )
-                        + "\n"
-                    )
-                # #endregion
 
                 # Note: Inline styles are preserved - WeasyPrint handles them well
                 # extract_styles option reserved for future CSS class extraction
                 return html
             except Exception as e:
-                # #region agent log
-                with open("/Users/ctavolazzi/Code/active/waft/.cursor/debug.log", "a") as f:
-                    import json
-
-                    f.write(
-                        json.dumps(
-                            {
-                                "sessionId": "debug-session",
-                                "runId": "run1",
-                                "hypothesisId": "A",
-                                "location": "golden_triangle.py:107",
-                                "message": "markdown library exception",
-                                "data": {"error": str(e)},
-                                "timestamp": int(__import__("time").time() * 1000),
-                            }
-                        )
-                        + "\n"
-                    )
-                # #endregion
                 # Fallback to manual conversion
                 pass
 
         # Manual conversion (handles HTML blocks)
         html = self._manual_markdown_to_html(markdown_text, preserve_html)
 
-        # #region agent log
-        with open("/Users/ctavolazzi/Code/active/waft/.cursor/debug.log", "a") as f:
-            import json
-
-            f.write(
-                json.dumps(
-                    {
-                        "sessionId": "debug-session",
-                        "runId": "run1",
-                        "hypothesisId": "B",
-                        "location": "golden_triangle.py:114",
-                        "message": "manual conversion used",
-                        "data": {
-                            "html_length": len(html) if html else 0,
-                            "html_preview": html[:300] if html else "",
-                            "has_h1_tag": bool(re.search(r"<h1[^>]*>", html)) if html else False,
-                            "has_hr_tag": bool(re.search(r"<hr[^>]*>", html)) if html else False,
-                            "has_raw_hash": bool(re.search(r"#\s+WAFT", html)) if html else False,
-                        },
-                        "timestamp": int(__import__("time").time() * 1000),
-                    }
-                )
-                + "\n"
-            )
-        # #endregion
 
         # Note: Inline styles are preserved - WeasyPrint handles them well
         # extract_styles option reserved for future CSS class extraction
@@ -318,40 +213,6 @@ class GoldenTriangle:
 
     def _manual_markdown_to_html(self, text: str, preserve_html: bool = True) -> str:
         """Manual markdown to HTML conversion with HTML block support."""
-        # #region agent log
-        with open("/Users/ctavolazzi/Code/active/waft/.cursor/debug.log", "a") as f:
-            import json
-
-            f.write(
-                json.dumps(
-                    {
-                        "sessionId": "debug-session",
-                        "runId": "run1",
-                        "hypothesisId": "B",
-                        "location": "golden_triangle.py:218",
-                        "message": "_manual_markdown_to_html entry",
-                        "data": {
-                            "text_length": len(text) if text else 0,
-                            "text_preview": text[:200] if text else "",
-                            "has_h1_md": bool(re.search(r"^#\s+", text, re.MULTILINE))
-                            if text
-                            else False,
-                            "has_hr_md": bool(re.search(r"^---$", text, re.MULTILINE))
-                            if text
-                            else False,
-                            "h1_matches": len(re.findall(r"^#\s+(.+)$", text, re.MULTILINE))
-                            if text
-                            else 0,
-                            "hr_matches": len(re.findall(r"^---$", text, re.MULTILINE))
-                            if text
-                            else 0,
-                        },
-                        "timestamp": int(__import__("time").time() * 1000),
-                    }
-                )
-                + "\n"
-            )
-        # #endregion
 
         html = text
 
@@ -383,30 +244,6 @@ class GoldenTriangle:
         html = re.sub(r"`([^`]+)`", r"<code>\1</code>", html)
 
         # Headers (h6 to h1 to avoid conflicts)
-        # #region agent log
-        with open("/Users/ctavolazzi/Code/active/waft/.cursor/debug.log", "a") as f:
-            import json
-
-            f.write(
-                json.dumps(
-                    {
-                        "sessionId": "debug-session",
-                        "runId": "run1",
-                        "hypothesisId": "B",
-                        "location": "golden_triangle.py:254",
-                        "message": "before header conversion",
-                        "data": {
-                            "html_preview": html[:300] if html else "",
-                            "h1_before": len(re.findall(r"^#\s+", html, re.MULTILINE))
-                            if html
-                            else 0,
-                        },
-                        "timestamp": int(__import__("time").time() * 1000),
-                    }
-                )
-                + "\n"
-            )
-        # #endregion
 
         html = re.sub(r"^######\s+(.+)$", r"<h6>\1</h6>", html, flags=re.MULTILINE)
         html = re.sub(r"^#####\s+(.+)$", r"<h5>\1</h5>", html, flags=re.MULTILINE)
@@ -415,31 +252,6 @@ class GoldenTriangle:
         html = re.sub(r"^##\s+(.+)$", r"<h2>\1</h2>", html, flags=re.MULTILINE)
         html = re.sub(r"^#\s+(.+)$", r"<h1>\1</h1>", html, flags=re.MULTILINE)
 
-        # #region agent log
-        with open("/Users/ctavolazzi/Code/active/waft/.cursor/debug.log", "a") as f:
-            import json
-
-            f.write(
-                json.dumps(
-                    {
-                        "sessionId": "debug-session",
-                        "runId": "run1",
-                        "hypothesisId": "B",
-                        "location": "golden_triangle.py:261",
-                        "message": "after header conversion",
-                        "data": {
-                            "html_preview": html[:300] if html else "",
-                            "h1_after": len(re.findall(r"<h1[^>]*>", html)) if html else 0,
-                            "has_raw_hash": bool(re.search(r"^#\s+", html, re.MULTILINE))
-                            if html
-                            else False,
-                        },
-                        "timestamp": int(__import__("time").time() * 1000),
-                    }
-                )
-                + "\n"
-            )
-        # #endregion
 
         # Bold (**text** or __text__)
         html = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", html)
@@ -459,89 +271,15 @@ class GoldenTriangle:
         html = re.sub(r"^>\s+(.+)$", r"<blockquote>\1</blockquote>", html, flags=re.MULTILINE)
 
         # Horizontal rules
-        # #region agent log
-        with open("/Users/ctavolazzi/Code/active/waft/.cursor/debug.log", "a") as f:
-            import json
-
-            f.write(
-                json.dumps(
-                    {
-                        "sessionId": "debug-session",
-                        "runId": "run1",
-                        "hypothesisId": "C",
-                        "location": "golden_triangle.py:279",
-                        "message": "before hr conversion",
-                        "data": {
-                            "hr_before": len(re.findall(r"^---$", html, re.MULTILINE))
-                            if html
-                            else 0,
-                            "hr_matches": re.findall(r"^---$", html, re.MULTILINE)[:5]
-                            if html
-                            else [],
-                        },
-                        "timestamp": int(__import__("time").time() * 1000),
-                    }
-                )
-                + "\n"
-            )
-        # #endregion
 
         html = re.sub(r"^---$", r"<hr>", html, flags=re.MULTILINE)
 
-        # #region agent log
-        with open("/Users/ctavolazzi/Code/active/waft/.cursor/debug.log", "a") as f:
-            import json
-
-            f.write(
-                json.dumps(
-                    {
-                        "sessionId": "debug-session",
-                        "runId": "run1",
-                        "hypothesisId": "C",
-                        "location": "golden_triangle.py:282",
-                        "message": "after hr conversion",
-                        "data": {
-                            "hr_after": len(re.findall(r"<hr[^>]*>", html)) if html else 0,
-                            "has_raw_hr": bool(re.search(r"^---$", html, re.MULTILINE))
-                            if html
-                            else False,
-                        },
-                        "timestamp": int(__import__("time").time() * 1000),
-                    }
-                )
-                + "\n"
-            )
-        # #endregion
 
         # Restore HTML blocks if preserved
         if preserve_html and html_blocks:
             for i, block in enumerate(html_blocks):
                 html = html.replace(f"__HTML_BLOCK_{i}__", block)
 
-        # #region agent log
-        with open("/Users/ctavolazzi/Code/active/waft/.cursor/debug.log", "a") as f:
-            import json
-
-            f.write(
-                json.dumps(
-                    {
-                        "sessionId": "debug-session",
-                        "runId": "run1",
-                        "hypothesisId": "B",
-                        "location": "golden_triangle.py:290",
-                        "message": "_manual_markdown_to_html exit",
-                        "data": {
-                            "html_length": len(html) if html else 0,
-                            "html_preview": html[:400] if html else "",
-                            "final_h1_count": len(re.findall(r"<h1[^>]*>", html)) if html else 0,
-                            "final_hr_count": len(re.findall(r"<hr[^>]*>", html)) if html else 0,
-                        },
-                        "timestamp": int(__import__("time").time() * 1000),
-                    }
-                )
-                + "\n"
-            )
-        # #endregion
 
         return html
 

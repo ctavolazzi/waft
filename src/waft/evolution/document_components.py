@@ -354,30 +354,6 @@ class ComponentBuilder:
             # Join with newlines to preserve markdown structure (lists, paragraphs, etc.)
             body = "\n\n".join(cleaned_ideas)
 
-        # #region agent log
-        with open("/Users/ctavolazzi/Code/active/waft/.cursor/debug.log", "a") as f:
-            import json
-
-            f.write(
-                json.dumps(
-                    {
-                        "sessionId": "debug-session",
-                        "runId": "run1",
-                        "hypothesisId": "A",
-                        "location": "document_components.py:190",
-                        "message": "build_section_component body created",
-                        "data": {
-                            "title": title,
-                            "body_length": len(body) if body else 0,
-                            "body_preview": body[:150] if body else "",
-                            "ideas_count": len(ideas),
-                        },
-                        "timestamp": int(__import__("time").time() * 1000),
-                    }
-                )
-                + "\n"
-            )
-        # #endregion
 
         return DocumentComponent(
             component_type=ComponentType.SECTION,
