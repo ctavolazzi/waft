@@ -955,6 +955,9 @@ def evolve(
     5. Record all events in the Flight Recorder
 
     If no agent is specified, creates a new Adam being to start evolution.
+
+    Fitness here is a heuristic over a being's attributes: no task is executed. `waft lab run`
+    is the loop that scores variants on real gym quests and records the run.
     """
     from .core.evolution_engine import EvolutionEngine
     from .being import BeingSystem
@@ -1016,6 +1019,10 @@ def evolve(
         console.print(f"\n[bold green]🎉 Evolution complete![/bold green]")
         console.print(f"[dim]Final being: {current_parent}[/dim]")
         console.print(f"[dim]Flight recorder: {engine.flight_recorder_path}[/dim]")
+        console.print(
+            "[dim]This command scores a being's attributes; it runs no task. For a loop that runs "
+            "tasks and records the evidence, use: waft lab run[/dim]"
+        )
 
     except Exception as e:
         console.print(f"[red]❌ Evolution failed:[/red] {str(e).replace('[', '').replace(']', '')}")
