@@ -19,7 +19,7 @@ Part of [[WE-261114-bklg_index|WE-261114-bklg]]
 
 Tags: `R` `CT` `P2`  (M measured, R read, Q question; owner agent, CT or research; P1 first)
 
-**Evidence.** several products live here: `waft_desktop` (Electron, about 203 MiB tracked), `typst-webapp`, `games/`, `_realms/`, `PITCH_DECK`, `succulent_jewelry_pdfs`, `Bubbles`, `Campaigns`, `NARRATIVE-WAFT`.
+**Evidence.** several products live here: `waft_desktop` (Electron, about 203 MiB tracked), `typst-webapp`, `games/`, `_realms/`, `PITCH_DECK`, `succulent_jewelry_pdfs`, `Bubbles`, `Campaigns`, `NARRATIVE-WAFT`. The repo holds 28 dependency manifests (`pyproject.toml`, `package.json`, `requirements.txt`) besides the root one, for example under `_experiments/`, `dnd_campaign_desktop_app/`, `recap_review_app/`, `typst-webapp/`, `waft_desktop/` and `waft_pdf_library/`.
 
 **First step.** for each: keep, move to its own repo, or archive on a branch. Do it after D1.
 

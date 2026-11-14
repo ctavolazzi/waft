@@ -19,7 +19,7 @@ Part of [[WE-261114-bklg_index|WE-261114-bklg]]
 
 Tags: `R` `research` `P1`  (M measured, R read, Q question; owner agent, CT or research; P1 first)
 
-**Evidence.** README and `PITCH_DECK` use phrases such as "Don't just build agents. Breed them." and "God-Head". FogSift FINDINGS (2026-10-25) says the term appears only in documentation and nothing in `src/` or `tests/` measures it.
+**Evidence.** README and `PITCH_DECK` use phrases such as "Don't just build agents. Breed them." and "God-Head". README Core Pillar 1, "The Substrate", says "Agents that write their own Python source code (DNA)"; in the code, `core/substrate.py` is `SubstrateManager`, a wrapper around uv commands (init, sync, add), and no path I read makes an agent write its own source. FogSift FINDINGS (2026-10-25) says the "God-Head" term appears only in documentation and nothing in `src/` or `tests/` measures it.
 
 **First step.** one table: claim, where it is made, the command or test that shows it, the measured result, status.
 

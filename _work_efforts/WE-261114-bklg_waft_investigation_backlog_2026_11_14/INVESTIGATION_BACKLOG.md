@@ -7,7 +7,7 @@
 
 ## What this is
 
-A list of 137 things for people (CT) and more capable agents to investigate, decide or expand on, found while setting up the WAFT environment and running the project. Each item has an id (such as `B2`), a tag for how well it is known, who can pick it up, a priority, the evidence, and a first step. The same ids are the ticket titles in this work effort, so a ticket can be claimed and closed without touching this document.
+A list of 162 things for people (CT) and more capable agents to investigate, decide or expand on, found while setting up the WAFT environment and running the project. Each item has an id (such as `B2`), a tag for how well it is known, who can pick it up, a priority, the evidence, and a first step. The same ids are the ticket titles in this work effort, so a ticket can be claimed and closed without touching this document.
 
 Priorities are my judgment, not a measurement: P1 means do first (broken, risky or blocks other work), P2 means soon, P3 means whenever.
 
@@ -25,20 +25,22 @@ Priorities are my judgment, not a measurement: P1 means do first (broken, risky 
 | `CT` | needs a decision or an action from CT |
 | `research` | needs reading, experiments or a more capable model |
 
-Counts: 51 measured, 50 read, 36 questions. Owners: 87 agent, 30 CT, 20 research. Priorities: 26 P1, 53 P2, 58 P3.
+Counts: 80 measured, 51 read, 31 questions. Owners: 110 agent, 33 CT, 19 research. Priorities: 34 P1, 62 P2, 66 P3.
 
-## The first ten (best value for effort)
+## The first twelve (best value for effort)
 
 - **B1, B2, B3.** A wheel built from this repo cannot start the CLI (`ModuleNotFoundError: waft.templates.typst`). The hand-written package list ships 202 of 516 Python files.
 - **A1 to A4, A18, C10.** The 25 red tests trace to a half-wired tracing module and to undefined names. One ruff rule (F821) finds 31 of them; it is not in CI.
-- **C1.** CI runs the tests under `tests/api` only, roughly 7 percent of the suite, so the break reached `main` while CI stayed green.
-- **D1.** 9,015 `node_modules` files are tracked.
-- **D4.** Third-party PDFs, a book, a MediaWiki zip and papers sit in a public MIT repo with no recorded licences.
+- **C1, A15.** CI runs only the tests under `tests/api`, roughly 7 percent of the suite. Measured coverage over all of `src` is 16 percent, and `main.py` (2,400 statements) is at 0.
+- **E16, E2.** `POST /api/auth/handshake` gives the API token to any caller, and none of the 28 other write routes I called returned 401 without a token.
+- **E7.** `pip-audit` finds known vulnerabilities in 21 locked packages, among them pypdf, pillow, starlette, cryptography and urllib3. Most have a fixed version.
+- **F19.** API routes write state relative to the code, not the project: an unauthenticated `POST /api/pet/feed` created a file inside this checkout.
+- **D1, D4, D16.** 9,015 `node_modules` files are tracked, third-party files sit in a public MIT repo with no recorded licences, and three plan files quote passwords for another project.
 - **E1.** The Fernet key and the realm HMAC key are public in git history and are not recorded as rotated.
-- **F2, F3.** `waft evolve` gave three variants the same id, every score was 100, improvement +0.00. What evolution acts on is undocumented.
-- **G2.** At least 18 docs name commands that the CLI does not have.
+- **F2, F3.** `waft evolve` gave three variants the same id, every score was 100, improvement +0.00; the fitness function never runs a task.
+- **G2, G3.** At least 18 docs name commands that the CLI does not have, and the README's "Substrate" is not what the code calls the substrate.
 - **G7, H1.** WAFT is not in `_workbench/STATE.md`, and the repo has no one-sentence purpose.
-- **I1.** 132 work efforts: 69 active, 7 unreadable by pyrite.
+- **I1, I11.** The repo already holds 297 open tickets in 70 active work efforts, 66 of them untouched since January.
 
 ## Record of this session
 
@@ -56,16 +58,27 @@ What I did, in order. Every command ran in the Linux container (Python 3.14.3 th
 10. Read `_workbench` (FogSift FINDINGS, ROLLOUT, STATE.md, sessions/LOG.md) and ran `fogsift.py we list` here to see the existing work efforts (I1).
 11. Wrote this document and created the work effort with `fogsift.py we create --todos-file`, which drives `_pyrite`.
 
+**Second pass (same day, after "explore further"):**
+
+12. Installed analysis tools into a scratch venv outside the repo (bandit, vulture, deptry, pip-audit, radon, detect-secrets) and `deptry` into this repo's local `.venv`. A combined docker and uvx command was declined by the permission check; I did not retry it.
+13. Reran the suite with coverage (16 percent over `src`), ran bandit, vulture, radon, deptry, pip-audit and detect-secrets, compiled every tracked Python file, checked Markdown links, and counted duplicate blobs and personal-data patterns.
+14. Ran the three ignored test files one at a time to read their errors (A7). Found that the clone is shallow (L9).
+15. Started `waft serve` on a scratch project (port 8765), read its OpenAPI schema and called the unauthenticated write routes with empty bodies (E2, E16, F19). One probe created a file inside the checkout; I moved it to the scratchpad. A tracked SQLite `-shm` file changed during the runs; I restored it. The server was stopped afterwards.
+16. Copied `visualizer/` to a scratch directory, ran `npm install`, `npm run build` and `npm test` (F22, D13). The test process hung and I killed it.
+17. Read the code behind `waft evolve` (`core/evolution_engine.py`, `being.py`) and the API auth code, and mined the repo's own 135 work efforts and 499 tickets (I11).
+18. A read-only helper agent reviewed the Electron app and the shell scripts. I rechecked its main claims (the `sandbox: false` setting, the `shell: true` spawn, the six debug `fetch` calls, the Electron version, script modes, the `set -e` counter bug, the publishing script lines) and marked in each item what I did and did not check. I also dropped one of its claims: it dated the first appearance of the key files to 2026-01-25, but that commit is the shallow boundary (L9).
+19. Added 25 items and updated the evidence of 27 existing ones (several question marks became measurements), then regenerated this document and the tickets.
+
 **Changed in the repo:**
 
 - Commit `4ad0eee1` added `_pyrite/analytics/traces/2026-11-14.jsonl`. A test run generated it and the session's stop hook asked for untracked files to be committed. It probably should not be tracked (A10, D8, L2).
 - This work effort: `_work_efforts/WE-261114-bklg_*/` with the index, the tickets and this document.
-- No file in `src/`, `tests/` or the config was changed. `uv.lock` and trace files that tools rewrote during the runs were restored with `git checkout`.
-- Local only, ignored by git: `_unified/empirica/`, `.venv/`, `build/`.
+- No file in `src/`, `tests/` or the config was changed. `uv.lock`, trace files and `.empirica/sessions/sessions.db-shm` that tools rewrote during the runs were restored with `git checkout`; one file an API probe created inside the checkout was moved out.
+- Local only, ignored by git: `_unified/empirica/`, `.venv/` (now also holding `deptry`), `build/`.
 
 **Not done:**
 
-- The three test files AGENTS.md says to ignore were not run (A7). Docker was not built (B10). The Electron app, the SvelteKit visualizer and `waft serve` were not run. macOS and Windows were not tried (B11).
+- Docker was not built (B10). The Electron app was not run. The SvelteKit visualizer was built and tested in a scratch copy only. macOS and Windows were not tried (B11). The full git history and the 701 low-severity bandit findings were not read (L9, E13).
 - Nothing was fixed. A1 to A3 are one-line or few-line changes I tested temporarily; I left them for review.
 - No pull request was opened.
 
@@ -80,7 +93,21 @@ What I did, in order. Every command ran in the Linux container (Python 3.14.3 th
 | Ruff, project config | All checks passed | `uv run ruff check .` |
 | Ruff, default rules on src | 268 findings (F401 99, F541 55, F821 31, E722 21, E402 19, F841 14, E741 12, E701 11, F811 4, E731 2) | `ruff check src --isolated --line-length 100 --statistics` |
 | Wheel | 202 of 516 `.py` files, 0 data files; `waft --help` fails in a clean venv | `uv build --wheel`, then install and run |
-| Tracked files | 19,741; `.git` pack 687 MiB; working tree 2.9 GB with `.venv` | `git ls-files`, `git count-objects -vH`, `du` |
+| Tracked files | 19,741; `.git` pack 687 MiB (shallow clone, see L9); working tree 2.9 GB with `.venv` | `git ls-files`, `git count-objects -vH`, `du` |
+| Coverage | 16 percent of 58,876 statements; 258 modules at 0 percent; `main.py` 2,400 statements at 0 | `uv run pytest tests/ --cov=src/waft` (same 25 failures) |
+| bandit | 717 issues: 7 high, 9 medium, 701 low (135,988 lines) | `bandit -r src` |
+| pip-audit | 21 of 120 locked packages have advisories (281 as counted by the tool) | `pip-audit -r` on the exported lock, `dev` extra |
+| deptry (src) | 83 undeclared imports, 21 transitive, 4 unused declared | `deptry src --known-first-party waft` |
+| vulture (src) | 33 findings at 80 percent confidence; 1,433 at 60 percent | `vulture src` |
+| radon (src) | 79 functions rank D or worse; 18 blocks rank F | `radon cc src -s` |
+| Compile check | 4 of 1,109 tracked `.py` files (outside node_modules) have syntax errors | `compile()` on each file |
+| Doc links | 147 of 273 relative links in README and docs/ are broken | script over 117 Markdown files |
+| Duplicate content | 2,969 contents under more than one path; 5,336 extra copies; about 382 MiB | `git ls-files -s` |
+| detect-secrets | 2,807 raw hits in 417 files (61 keyword hits in 27 files); none verified | `detect-secrets scan` over 7,3xx tracked text files |
+| API surface | 95 paths, 106 operations, 41 write operations, 13 declare auth; 0 of 28 probed write routes returned 401 | `waft serve` on a scratch project, `curl` |
+| Other servers | 20 server apps outside `src/`; 7 with wildcard CORS; 9 binding 0.0.0.0 | `grep` over tracked Python |
+| Work-effort tickets | 499 tickets: 125 completed, 356 pending, 10 in_progress, 8 open; 297 open in 70 active work efforts | script over `_work_efforts/WE-*/tickets` |
+| Visualizer (scratch copy) | install 28 s, build OK, 34 tests pass, test process did not exit | `npm install`, `npm run build`, `npm test` |
 | Tracked node_modules files | 9,015 | `git ls-files | grep -c node_modules` |
 | Tracked PDFs | 3,082 | `git ls-files '*.pdf'` |
 | Tracked Markdown, without node_modules | 3,680 | `git ls-files '*.md'` |
@@ -150,11 +177,11 @@ The 25 red tests in the baseline come from two causes: a half-wired tracing modu
 
 #### A7. Decide the fate of the three test files that fail at collection
 
-`R` `agent` `P2`
+`M` `agent` `P2`
 
-**Evidence.** AGENTS.md says `test_foundation.py`, `test_full_system.py` and `test_the_absolute_begeesus.py` have module-level code that fails and must be passed to `--ignore`. I did not run them.
+**Evidence.** Run one at a time, each fails at collection: `tests/test_foundation.py` with `ImportError: cannot import name 'KeyValueBlock' from 'waft.foundation'`; `tests/test_full_system.py` with `TypeError: TheFoundation.__init__() takes from 1 to 2 positional arguments but 3 were given`; `tests/test_the_absolute_begeesus.py` with `AttributeError: 'Evaluation' object has no attribute 'aesthetic'`. AGENTS.md tells everyone to pass `--ignore` for them, so whole files of tests never run.
 
-**First step.** for each: fix it, turn it into a script under `scripts/`, or move it to `_to_delete/` for CT's approval.
+**First step.** for each: fix the API drift (the tests or the code), turn it into a script under `scripts/`, or move it to `_to_delete/` for CT's approval.
 
 #### A8. Explain the setup error in tests/real_proof_test.py
 
@@ -192,7 +219,7 @@ The 25 red tests in the baseline come from two causes: a half-wired tracing modu
 
 `M` `agent` `P3`
 
-**Evidence.** 151 warnings in the baseline run and 185 after the import patch. Sources: `datetime.utcnow()` at `tracer.py:32` and `storage.py:45`; Pydantic v2 `max_items` and class-based `Config` in `api/schemas/work_efforts.py` (lines 10, 16, 29, 35, 48, 54, 60, 89) and `api/schemas/projects.py`; `api/responses.py:10`.
+**Evidence.** 151 warnings in the baseline run and 185 after the import patch. `datetime.utcnow()` appears 140 times in `src` (for example `tracer.py:32` and `storage.py:45`); Pydantic v2 `max_items` and class-based `Config` in `api/schemas/work_efforts.py` (lines 10, 16, 29, 35, 48, 54, 60, 89) and `api/schemas/projects.py`; `api/responses.py:10`.
 
 **First step.** use timezone-aware datetimes, `max_length` and `ConfigDict`, then run with `-W error::DeprecationWarning` in CI.
 
@@ -214,11 +241,11 @@ The 25 red tests in the baseline come from two causes: a half-wired tracing modu
 
 #### A15. Measure coverage over all of src
 
-`Q` `agent` `P3`
+`M` `agent` `P3`
 
-**Evidence.** the only coverage command in the repo is in the staging workflow and, because only `tests/api` runs there, covers little. `src/waft` has 516 Python files and about 174,000 lines.
+**Evidence.** Measured with `uv run pytest tests/ --cov=src/waft` (same 25 failures, 99 s): total coverage is 16 percent (58,876 statements, 49,697 missed). 258 modules are at 0 percent (32,416 statements). `main.py` alone has 2,400 statements at 0 percent; next are `one_pager.py` 632, `foundation_v2.py` 485, `pyrite.py` 471, `cli/dungeon_cli.py` 404 and `core/pocketbase_scout.py` 380. The test module that would exercise the CLI (`tests/test_commands.py`) does not load (A6).
 
-**First step.** `uv run pytest --cov=src --cov-report=term-missing` on the fixed baseline; list modules at 0 percent; they are dead-code candidates (F7).
+**First step.** fix A6 and add the smoke test in A19; set a coverage floor at today's 16 percent and ratchet it up; list the 0 percent modules next to the dead-code list (F7).
 
 #### A16. Review the 23 skips, 8 xfails and the 1 xpass
 
@@ -243,6 +270,14 @@ The 25 red tests in the baseline come from two causes: a half-wired tracing modu
 **Evidence.** `ruff check src --isolated --select F821` reports 31 undefined names. Besides the five tracing hits (A1, A3): `main.py` lines 3101 to 3128 use `project_path` six times; `pdf.py:861` and `:891` use `os`; `web.py:498` and `:528` call `_notify_clients`; `being.py:1028` uses `dnd_stats`; `cli/pyrite_cli.py:121` and `:194` call `get_pyrite_instance`; `ui/streamlit/being_integration.py:197` uses `project_path`; and `Being`, `Mission`, `ArrowOfIntent`, `BaseAgent`, `StoryState`, `Event` appear in 12 more places (some may be annotation-only).
 
 **First step.** read each site and separate real NameErrors from annotations; fix; then turn the rule on in CI (C10).
+
+#### A19. Add a smoke test for every CLI command
+
+`M` `agent` `P2`
+
+**Evidence.** `src/waft/main.py` has 2,400 statements at 0 percent coverage (A15) and registers 82 commands; the one test module for the CLI, `tests/test_commands.py`, does not load (A6). No test runs `waft <command> --help` for each command.
+
+**First step.** after A6, add one parametrized test that runs `--help` for every command and expects exit code 0; run it against an installed wheel too, which would have caught B2.
 
 
 ### B. Packaging, install and Docker
@@ -317,15 +352,15 @@ This section holds the biggest single finding: a wheel built from this checkout 
 
 `M` `agent` `P3`
 
-**Evidence.** `git tag` lists 0 tags. `pyproject.toml` says 0.10.0; `CHANGELOG.md` has an `[Unreleased]` section (the staging workflow warns about it); `src/waft/version/` exists and was not read.
+**Evidence.** `git tag` lists 0 tags. Three version schemes disagree: `pyproject.toml` says 0.10.0; `CHANGELOG.md` has `[Unreleased]` above 0.9.4 (2026-01-19); `src/waft/version` implements an epoch-based scheme (`v{Years}.{Months}.{Days}.{Hour}.{Quarter}`, epoch 2026-01-04). `waft --version` is not an option ("No such option").
 
-**First step.** write the steps (bump, changelog, tag, build, publish or release asset); check the three version sources agree; tag at the right commit.
+**First step.** choose one scheme; write the release steps (bump, changelog, tag, build, publish or release asset); tag the right commit; add `waft --version` and make it print the same version everywhere.
 
 #### B10. Build and run the Dockerfile
 
 `R` `agent` `P2`
 
-**Evidence.** the Dockerfile installs with `pip install .` (ignoring `uv.lock`) and starts `uvicorn src.waft.api.main:app`, a source-tree path that bypasses the installed package. No Docker here, so it was never built. Given B1, the installed wheel is broken, so the container may work only because it imports from the copied `src/`.
+**Evidence.** the Dockerfile installs with `pip install .` (ignoring `uv.lock`) and starts `uvicorn src.waft.api.main:app --host 0.0.0.0`, a source-tree path that bypasses the installed package. It has no `USER` line (the container runs as root) and no `HEALTHCHECK`. It was never built: a `docker` binary exists on this machine but my attempt to query it was declined by the permission check, so I did not try. Given B1 the installed wheel is broken, so a container may work only because it imports from the copied `src/`. `docker-compose.yml` publishes `8000:8000` on all host interfaces, mounts the whole checkout writable at `/app` (`./:/app`) and runs uvicorn with `--host 0.0.0.0` (E17).
 
 **First step.** build it in CI; choose one run path; pin the base image; add a health check (`/api/decision/health` exists).
 
@@ -336,6 +371,22 @@ This section holds the biggest single finding: a wheel built from this checkout 
 **Evidence.** scripts use bash (`START_EVOLVE_UI.sh`, `scripts/dev-reinstall.sh`), 433 tracked files hold `/Users/ctavolazzi`, and the FogSift reports say nothing has run on macOS. Only Linux was tested here.
 
 **First step.** add a macOS job to CI; list the failures.
+
+#### B12. Remove the experiment folders from the uv workspace
+
+`M` `agent` `P2`
+
+**Evidence.** `pyproject.toml` has a `[tool.uv.workspace]` with five members: `_experiments/test_project_001`, `_experiments/existing_project`, `_experiments/test_project_002`, `_experiments/test_project_001/nested_project` and `narcissus_lab/internal_monologue`. Every uv command prints a deprecation warning about `tool.uv.dev-dependencies` in `narcissus_lab/internal_monologue/pyproject.toml`. The members' dependencies resolve into the root `uv.lock`, a likely cause of A11.
+
+**First step.** drop the experiment members, fix or move the deprecated field, re-lock, and check that `uv.lock` stays stable (A11).
+
+#### B13. Declare or remove the undeclared dependencies
+
+`M` `agent` `P2`
+
+**Evidence.** `deptry src --known-first-party waft` reports 83 modules imported but not declared, 21 transitive packages used directly and 4 declared but unused. Undeclared third-party names include `reportlab` (8 imports), `fitz` (PyMuPDF, 4), `plotly` (4) and `sklearn` (2). Used directly but only transitive: `yaml` (6), `requests` (3), `PIL` (3), `pandas` (2), `google` (2), `cryptography` (2), `numpy` and `dotenv` (1 each). Several first-party-looking names (`src`, `foundation`, `demo_api`, `scripts`, `rag_chatbot`, `tmcg`, `patterns`, `scientific_method_tool`) point at broken imports or path hacks. Declared but unused: the `crewai` extra and the dev tools `pytest`, `pytest-cov` and `ruff` (the last three are expected).
+
+**First step.** decide per package: declare it in an extra, make the import lazy with a clear error, or delete the code; add deptry to CI with this count as the starting budget (C11).
 
 
 ### C. CI and release
@@ -384,9 +435,9 @@ This section holds the biggest single finding: a wheel built from this checkout 
 
 `Q` `agent` `P2`
 
-**Evidence.** no workflow runs gitleaks, pip-audit, npm audit or CodeQL.
+**Evidence.** no workflow runs gitleaks, pip-audit, npm audit, bandit or CodeQL. Run by hand today: pip-audit found 21 vulnerable packages (E7), bandit 717 issues (E13), detect-secrets 2,807 raw hits in 417 files (mostly high-entropy strings in generated HTML and lock files) plus 61 keyword hits in 27 files that were not verified (E6).
 
-**First step.** add gitleaks (pinned), `pip-audit` on the lock, and `npm audit` for the front ends you keep.
+**First step.** add gitleaks (pinned), pip-audit on the lock and bandit with `-ll`, each recording today's number as the starting budget (C11); `npm audit` for the front ends you keep.
 
 #### C7. Build and smoke-test the artifacts in CI
 
@@ -420,6 +471,14 @@ This section holds the biggest single finding: a wheel built from this checkout 
 
 **First step.** add a CI step `ruff check src --select F821`; fix or baseline the hits.
 
+#### C11. Add the new checks to CI with ratchets
+
+`M` `agent` `P2`
+
+**Evidence.** baselines measured today: coverage 16 percent; bandit 717 issues (7 high); pip-audit 21 vulnerable packages; deptry 83, 21 and 4; vulture 33 at 80 percent confidence; radon 79 functions rank D or worse; ruff F821 31; broken doc links 147 of 273; 4 files that do not compile; 28 write routes that never returned 401 (E2).
+
+**First step.** add each as a job that records the number and fails only if it rises; lower the budget as items close; print the table in the weekly health run (L7).
+
 
 ### D. Repository size and hygiene
 
@@ -427,7 +486,7 @@ This section holds the biggest single finding: a wheel built from this checkout 
 
 `M` `agent` `P1`
 
-**Evidence.** `git ls-files | grep -c node_modules` gives 9,015: `waft_desktop/electron` 5,065, `typst-webapp/frontend` 1,916, `waft_desktop/frontend` 1,486, `games/teleport_massive_adventure` 548. The root `.gitignore` ignores only `visualizer/node_modules`. 279 `.map` files are tracked as well.
+**Evidence.** `git ls-files | grep -c node_modules` gives 9,015: `waft_desktop/electron` 5,065, `typst-webapp/frontend` 1,916, `waft_desktop/frontend` 1,486, `games/teleport_massive_adventure` 548. The root `.gitignore` ignores only `visualizer/node_modules`. 279 `.map` files are tracked as well. A helper agent also reports that `waft_desktop/START_DEV.sh` skips `npm install` because these directories already exist (lines not checked by me).
 
 **First step.** `git rm -r --cached` those folders, add `node_modules/` to `.gitignore`, keep lockfiles, confirm each app still installs.
 
@@ -443,7 +502,7 @@ This section holds the biggest single finding: a wheel built from this checkout 
 
 `M` `CT` `P2`
 
-**Evidence.** top files by size: `mediawiki-1.45.1.zip` 93.7 MiB; `examples/908530342-Building-AI-Agents-With-LLMs-RAG-And-Knowledge-Graphs-1.pdf` 90.8 MiB; `templates/1789_USA_Miller_Woods_TrailA_Visitors_Guide.pdf` 67.2 MiB; `PITCH_DECK/Waft__Breeding_AI_s_Future_.mp4` 39.3 MiB; three PDFs of 38 to 39 MiB in `_work_efforts/WE-260119-ejtx...`; a 31.1 MiB `.m4a` in `PITCH_DECK`. The `.git` pack is 687 MiB, and the 12 largest top-level folders of tracked files sum to about 1,400 MiB.
+**Evidence.** top files by size: `mediawiki-1.45.1.zip` 93.7 MiB; `examples/908530342-Building-AI-Agents-With-LLMs-RAG-And-Knowledge-Graphs-1.pdf` 90.8 MiB; `templates/1789_USA_Miller_Woods_TrailA_Visitors_Guide.pdf` 67.2 MiB; `PITCH_DECK/Waft__Breeding_AI_s_Future_.mp4` 39.3 MiB; three PDFs of 38 to 39 MiB in `_work_efforts/WE-260119-ejtx...`; a 31.1 MiB `.m4a` in `PITCH_DECK`. The `.git` pack is 687 MiB in this shallow clone (L9; the full history may be larger), and the 12 largest top-level folders of tracked files sum to about 1,400 MiB.
 
 **First step.** options: Git LFS, release assets, a data repo, or history filtering (D12). Add a size check to CI (D11).
 
@@ -451,7 +510,7 @@ This section holds the biggest single finding: a wheel built from this checkout 
 
 `R` `CT` `P1`
 
-**Evidence.** tracked files include a book PDF ("Building AI Agents With LLMs, RAG, And Knowledge Graphs"), the GPT-4 Technical Report, several arXiv papers, a park visitor guide, a MediaWiki release (GPL) and `Latex Source Code.zip`. The licence of each is unknown. `CREDITS.md` was not read.
+**Evidence.** tracked files include a book PDF ("Building AI Agents With LLMs, RAG, And Knowledge Graphs"), the GPT-4 Technical Report, several arXiv papers, a park visitor guide, a MediaWiki release (GPL) and `Latex Source Code.zip`. The licence of each is unknown. `CREDITS.md` lists AI assistants only; it has no credits or licences for third-party files.
 
 **First step.** list every third-party file with source and licence; remove or replace with links where rights are unclear. This protects CT's credibility rule.
 
@@ -475,7 +534,7 @@ This section holds the biggest single finding: a wheel built from this checkout 
 
 `M` `agent` `P2`
 
-**Evidence.** tracked: `.cursor` 171 files, `.empirica` 12, `.empirica_reflex_logs` 12 (named in `.gitignore` but tracked earlier), `.playwright-mcp` 3, `.obsidian` 5, `.waft` 1. The sibling book repo had the same Empirica problem (FogSift FINDINGS item 2).
+**Evidence.** tracked: `.cursor` 171 files (1.4 MiB: 138 slash commands, 10 plans, 8 procedures, 4 continuation prompts, 1 skill), `.empirica` 12 files (1.6 MiB, including a SQLite database and its WAL and SHM files), `.empirica_reflex_logs` 12 (named in `.gitignore` but tracked earlier), `.playwright-mcp` 3 screenshots from 2026-01-26, `.obsidian` 5, `.waft/ollama_runtime.jsonl` (10 lines of prompts and responses). The sibling book repo had the same Empirica problem (FogSift FINDINGS item 2).
 
 **First step.** read the contents for sensitive reasoning or paths; `git rm --cached`; extend `.gitignore`.
 
@@ -483,7 +542,7 @@ This section holds the biggest single finding: a wheel built from this checkout 
 
 `M` `agent` `P2`
 
-**Evidence.** 4 tracked `.db` or `.sqlite` files (for example `_pyrite/analytics/sessions.db`) and 162 tracked `.jsonl` files (traces, journals).
+**Evidence.** 4 tracked database files: `.empirica/sessions/sessions.db` (51 tables; 133 sessions, 56 reflexes; its `-wal` and `-shm` files are tracked too), `_pyrite/analytics/sessions.db`, `waft_memory.db` and `waft_pdf_library/backend/data/library.db` (2,125 PDF records); plus 162 tracked `.jsonl` files. During my runs, opening the Empirica database changed the tracked `.empirica/sessions/sessions.db-shm`; I restored it with `git checkout`.
 
 **First step.** inspect for personal paths; split fixtures from runtime data; ignore the runtime paths (A10).
 
@@ -499,7 +558,7 @@ This section holds the biggest single finding: a wheel built from this checkout 
 
 `R` `CT` `P2`
 
-**Evidence.** several products live here: `waft_desktop` (Electron, about 203 MiB tracked), `typst-webapp`, `games/`, `_realms/`, `PITCH_DECK`, `succulent_jewelry_pdfs`, `Bubbles`, `Campaigns`, `NARRATIVE-WAFT`.
+**Evidence.** several products live here: `waft_desktop` (Electron, about 203 MiB tracked), `typst-webapp`, `games/`, `_realms/`, `PITCH_DECK`, `succulent_jewelry_pdfs`, `Bubbles`, `Campaigns`, `NARRATIVE-WAFT`. The repo holds 28 dependency manifests (`pyproject.toml`, `package.json`, `requirements.txt`) besides the root one, for example under `_experiments/`, `dnd_campaign_desktop_app/`, `recap_review_app/`, `typst-webapp/`, `waft_desktop/` and `waft_pdf_library/`.
 
 **First step.** for each: keep, move to its own repo, or archive on a branch. Do it after D1.
 
@@ -519,6 +578,38 @@ This section holds the biggest single finding: a wheel built from this checkout 
 
 **First step.** CT decides; if yes, plan `git filter-repo` with a backup and a branch freeze.
 
+#### D13. Commit the visualizer lockfile
+
+`M` `agent` `P2`
+
+**Evidence.** `.gitignore` lists `visualizer/package-lock.json`, so `npm ci` cannot be used and each install resolves fresh. A clean `npm install` in a scratch copy took 28 s for 374 packages and printed deprecation warnings (`inflight`, `rimraf` 2, `glob` 7). The build succeeded.
+
+**First step.** remove the ignore line, commit the lockfile, switch docs and CI to `npm ci`.
+
+#### D14. Remove duplicate files from the working tree
+
+`M` `agent` `P3`
+
+**Evidence.** 2,969 file contents are tracked under more than one path: 5,336 extra copies, about 382 MiB in the working tree (git stores each content once, so the pack grows less). Largest: an esbuild binary in `typst-webapp/frontend/node_modules` (29.4 MiB, 4 copies) and the `_archive/daily/2026-01-13/WAFT_GAME_RULES_*.pdf` files (5.9 MiB, 5 copies each).
+
+**First step.** after D1 most copies disappear; then dedupe what is left or keep one and link.
+
+#### D15. Review personal data in tracked text files
+
+`M` `agent` `P2`
+
+**Evidence.** a scan of 7,215 tracked text files (no `node_modules`, no binaries) found 68 distinct email addresses and 16 files with phone-number-like text. Most look like placeholders (`viewer@email.com`, `waft@example.com`), but `christopher@fogsift.com` and `porchroot@gmail.com` each appear in 12 files, and the phone-like text is in invoices and business cards under `_work_efforts/WE-260119-ejtx...`. Whether any belong to real people was not checked.
+
+**First step.** list the real ones; replace with placeholders or remove; add a personal-data check to pre-commit (L3).
+
+#### D16. Check the plans that quote passwords for another project
+
+`R` `CT` `P1`
+
+**Evidence.** `_work_efforts/Plans/gitguardian_secret_remediation_6d48b28c.plan.md` (and two copies under `_organized_constellation`) is a plan to rotate "REAL production credentials" of a Cloudflare Pages app (admin, editor, contributor and viewer accounts and a site password). It contains `password:` literals and a `SITE_PASSWORD` constant; its own to-do list still shows the docs step in progress and the production reseed pending. detect-secrets flags 5 keyword hits in each copy. I masked the values and did not inspect them. `_work_efforts/Plans` holds 284 plan files in all.
+
+**First step.** CT confirms those credentials were rotated; remove the values from the three files (and from history if they were live); move other projects' plans to their own repositories.
+
 
 ### E. Security
 
@@ -526,39 +617,39 @@ This section holds the biggest single finding: a wheel built from this checkout 
 
 `R` `CT` `P1`
 
-**Evidence.** `_pyrite/.waft/.pyrite_secret_key` (a Fernet key) and the D&D realm `.hmac_key` were tracked in this public repo; untracked by commits 67ce2ed8 and 3f8cb670. Commit 67ce2ed8 says the Pexels key, the Pixabay key and the API token were rotated; it does not say the Fernet key was. Commit dd1992fd says both crypto keys must be kept locally because deleting them orphans encrypted secrets and invalidates realm state. So both values stay public and valid.
+**Evidence.** `_pyrite/.waft/.pyrite_secret_key` (a Fernet key) and the D&D realm `.hmac_key` were tracked in this public repo; untracked by commits 67ce2ed8 and 3f8cb670. Commit 67ce2ed8 says the Pexels key, the Pixabay key and the API token were rotated; it does not say the Fernet key was. Commit dd1992fd says both crypto keys must be kept locally because deleting them orphans encrypted secrets and invalidates realm state. So both values stay public and valid. The date the keys first entered history is unknown: the oldest commit visible here, `dc8e4d2a` (2026-01-25), is the shallow boundary and so shows every file as added (L9).
 
 **First step.** inventory what is encrypted or signed with each; rotate with a re-encrypt or re-sign migration; generate on demand afterwards.
 
 #### E2. Review API authentication
 
-`R` `agent` `P2`
+`M` `agent` `P1`
 
-**Evidence.** the bearer token comes from `get_or_create_token()` in `src/waft/api/auth.py` and is stored in `.waft_api_token`. Comparison method, token scope, which routes require it and rotation were not reviewed.
+**Evidence.** `waft serve` run from a scratch project exposes an OpenAPI schema with 95 paths and 106 operations. 41 are writes (POST, PUT, PATCH, DELETE) and only 13 operations declare the HTTPBearer scheme. Called without a token: `POST /api/work-efforts` returns 401, but none of the other 28 write routes I called (all but `/api/pet/reincarnate`, which I skipped) returned 401: 200 for `/api/5050/continue-command`, `/api/being/spawn`, `/api/pet/feed`, `/api/protocel/create` and `/api/story/start` (plus `/api/auth/handshake`, see E16); 404 for 7 routes called with a made-up id; 422 for 14 routes called with an empty body; 500 for `/api/being/{id}/decision`. `GET /api/work-efforts` is open too.
 
-**First step.** read `auth.py` and every router; list routes by auth requirement; add tests for 401 and 403.
+**First step.** decide the policy (every non-GET route needs the token except the handshake); apply it router-wide; add a test that walks the OpenAPI schema and asserts 401 without a token.
 
 #### E3. Review CORS settings
 
 `M` `agent` `P2`
 
-**Evidence.** `src/waft/api/main.py:120` sets `allow_origins`; `tests/test_cors.py::test_actual_post_request_with_cors` returns 500 (A1 does not fix it).
+**Evidence.** `src/waft/api/main.py:120` sets `allow_origins` to four localhost URLs (ports 5173, 3000 and 8781 on localhost and 127.0.0.1) with `allow_credentials=True` and `*` for methods and headers; there is no wildcard origin. `tests/test_cors.py::test_actual_post_request_with_cors` returns 500 and A1 alone does not fix it.
 
-**First step.** read the origin list; confirm no wildcard with credentials; fix the 500.
+**First step.** decide how a hosted deployment sets its origins (an environment variable); fix the 500 (A4).
 
 #### E4. Audit shell and subprocess calls
 
 `M` `agent` `P1`
 
-**Evidence.** `src` has 241 `subprocess.` references, 14 `shell=True` and 4 `os.system`. No `eval(`, `exec(`, `pickle.load` or `yaml.load(` hits. Where the arguments come from was not read.
+**Evidence.** `src` has 241 `subprocess.` references, 14 `shell=True` and 4 `os.system`. bandit rates five of them high: `dealer/pdf_generator.py:221` and `main.py:4078` (B602, `shell=True`), `fogsift/simulation.py:17`, `pet/fogsift_cli.py:52` and `pet/fogsift_device.py:321` (B605, a shell started from a string). No `eval(`, `exec(`, `pickle.load` or `yaml.load(` hits. Where the arguments come from was not read.
 
-**First step.** list the 18 sites; for each: argument source (CLI, API, document text); replace with list arguments or `shlex.quote`.
+**First step.** read those five first, then the other 13; for each: argument source (CLI, API, document text); replace with list arguments or `shlex.quote`.
 
 #### E5. Remove leftover agent logging blocks
 
 `M` `agent` `P2`
 
-**Evidence.** five Python files contain `# #region agent log` (`web.py`, `document_builder.py`, `one_pager.py`, `evolution/document_components.py`, `evolution/golden_triangle.py`); `web.py:26` onward appends to `/Users/ctavolazzi/Code/active/waft/.cursor/debug.log`.
+**Evidence.** five Python files contain `# #region agent log` (`web.py`, `document_builder.py`, `one_pager.py`, `evolution/document_components.py`, `evolution/golden_triangle.py`); `web.py:26` onward appends to `/Users/ctavolazzi/Code/active/waft/.cursor/debug.log`. `waft_desktop/electron/main.js` has six more of the same kind: `fetch` calls to `http://127.0.0.1:7248/ingest/...` that send the process id, the absolute backend path, the port, error text and context-menu link URLs to whatever listens on that loopback port.
 
 **First step.** delete the blocks; run the staging gate's grep locally.
 
@@ -566,25 +657,25 @@ This section holds the biggest single finding: a wheel built from this checkout 
 
 `Q` `agent` `P2`
 
-**Evidence.** my scan of the current tree used five patterns (`sk-`, `ghp_`, `AKIA`, `AIza`, `xox`) and found nothing; that is a weak test. The history (687 MiB pack) and the vendored `node_modules` were not scanned.
+**Evidence.** the current tree was scanned two ways: five regexes (`sk-`, `ghp_`, `AKIA`, `AIza`, `xox`) found nothing, and detect-secrets over 7,215 tracked text files (no `node_modules`, no binaries) raised 2,807 raw hits in 417 files: 2,209 base64-entropy, 537 hex-entropy and 61 keyword hits in 27 files, mostly docs about secrets, plan files (D16) and scripts. None was verified. The history (this clone is shallow, L9) and the vendored `node_modules` were not scanned.
 
-**First step.** run gitleaks and trufflehog over all refs; classify hits as live, rotated or fixture.
+**First step.** unshallow (L9); run gitleaks and trufflehog over all refs; classify each hit as live, rotated or fixture; triage the 27 keyword files first.
 
 #### E7. Audit dependencies for known vulnerabilities
 
-`Q` `agent` `P2`
+`M` `agent` `P1`
 
-**Evidence.** no audit has run. The Python side is pinned by `uv.lock`; the JavaScript side has lockfiles inside tracked `node_modules` trees.
+**Evidence.** `pip-audit` on the 120 distinct packages locked for the `dev` extra (2026-11-14): 21 packages have advisories (281 as the tool counts them, with duplicates). Most list a fix: cryptography 46.0.6 to 46.0.7, pillow 12.1.1 to 12.2.0, pypdf 6.9.2 to 6.10.0, starlette 1.0.0 to 1.0.1, urllib3 2.6.3 to 2.7.0, fpdf2 2.8.7 to 2.8.8, anthropic 0.86.0 to 0.87.0, and smaller ones (anyio, brotli, brotlicffi, certifi, gitpython, httplib2, idna, pyasn1, pydantic-settings, pygments, pytest, soupsieve, tornado); weasyprint 68.1 lists no fix. pypdf, pillow, weasyprint and fpdf2 parse files that users supply. `npm audit` was not run.
 
-**First step.** `pip-audit` on the lock; `npm audit` in `waft_desktop/electron`, `waft_desktop/frontend`, `typst-webapp/frontend` and `visualizer`; record the Electron version.
+**First step.** upgrade the fixable ones with `uv lock --upgrade-package`, rerun the suite, decide about weasyprint, add pip-audit to CI (C6); run `npm audit` for the front ends you keep.
 
 #### E8. Review the Electron app's security settings
 
-`Q` `research` `P3`
+`M` `agent` `P2`
 
-**Evidence.** `waft_desktop/electron` exists; `nodeIntegration`, `contextIsolation`, preload scripts and IPC exposure were not read.
+**Evidence.** `waft_desktop/electron/main.js` (checked by me): `contextIsolation: true` and `nodeIntegration: false` but `sandbox: false` (lines 279 to 281); the backend is started with `spawn('waft', ['serve', ...], {shell: true})` (line 80); Reload, Force Reload and Toggle Developer Tools are in the right-click menu (lines 325 to 327; whether they are gated on dev mode was not checked); six debug `fetch` calls to `http://127.0.0.1:7248/...` remain (E5); Electron is `^28.0.0` locked at 28.3.3, an old major. A helper agent also read, and I did not check: the preload exposes only three fixed invoke calls plus listeners, but `removeAllListeners(channel)` forwards any channel name; there is no Content-Security-Policy and no `setWindowOpenHandler` or `will-navigate` guard; on macOS the backend respawns after the window closes; electron-builder ships only `main.js`, `preload.js` and `package.json`, so a packaged build cannot load its UI. `dnd_campaign_desktop_app/electron/main.js` and `recap_review_app/frontend/src/main.js` reportedly use the same `sandbox: false` pattern and were not reviewed.
 
-**First step.** read the main-process config against Electron's security checklist.
+**First step.** set `sandbox: true`, drop `shell: true`, add a CSP and navigation guards, gate DevTools on dev mode, upgrade Electron to a supported major, then check the two other Electron apps (or retire them with D10).
 
 #### E9. Test that PDF redaction removes the text
 
@@ -618,6 +709,54 @@ This section holds the biggest single finding: a wheel built from this checkout 
 
 **First step.** state the intended trust model: one machine, shared, or signed by an owner key.
 
+#### E13. Triage the high and medium bandit findings
+
+`M` `agent` `P2`
+
+**Evidence.** `bandit -r src` reports 717 issues over 135,988 lines: 7 high, 9 medium, 701 low. High: `core/status_persistence.py:73` and `:108` (B324, weak hash), `dealer/pdf_generator.py:221` and `main.py:4078` (B602), `fogsift/simulation.py:17`, `pet/fogsift_cli.py:52` and `pet/fogsift_device.py:321` (B605). Medium: `core/pocketbase_scout.py:135` (B103, file permissions), `main.py:853` and `core/realms/pocketbase_downloader.py:87` (B310, urlopen), `document_builder.py:962`, `templates/typst/compiler.py:107` and `:108` (B108, fixed /tmp path), and three B104 bind-all hits covered in E14. The 701 low findings were not read.
+
+**First step.** read each of the 16, fix it or mark it with a reason; add bandit to CI with this list as the baseline (C11).
+
+#### E14. Stop two commands from listening on all interfaces by default
+
+`M` `agent` `P1`
+
+**Evidence.** `main.py:4576` (`waft rag ui`) and `main.py:4623` (`waft rag serve`) default `--host` to `0.0.0.0` on port 7860, so the Gradio app listens on every network interface. `core/door_guy.py:96` also contains `0.0.0.0`, but in a blocklist (a false positive). `waft serve` itself defaults to localhost.
+
+**First step.** default to `127.0.0.1`, require an explicit `--host 0.0.0.0` with a printed warning; add a test of the defaults.
+
+#### E15. Tighten the 20 other servers outside src
+
+`M` `agent` `P2`
+
+**Evidence.** 20 tracked Python files outside `src/` start a FastAPI, Flask or `HTTPServer` app. 7 allow every origin (`allow_origins=["*"]`): `cute_test_runner/server.py`, `dnd_campaign_desktop_app/backend/campaign_server.py`, `examples/dnd_game_server.py`, `recap_review_app/backend/main.py`, `scripts/mission_control_village_api.py`, `scripts/quest_server.py` and `simulation/simulation_server.py`. 9 bind `0.0.0.0`: `_realms/odd_realm/app.py`, `api/guide_api.py`, `cute_test_runner/server.py`, `examples/dnd_game_server.py`, `scripts/launch_dnd_campaign.py`, `scripts/mission_control_village_api.py`, `scripts/research_simulation_server.py`, `simulation/simulation_server.py` and `typst-webapp/backend/main.py`. None uses `debug=True`. Whether any of them is still used was not checked. `games/teleport_massive_adventure/scripts/start_autoplayer.sh:14` also runs `python3 -m http.server 8000` with no `--bind`, which serves the game folder on every interface and collides with the API port.
+
+**First step.** list which servers are live; delete or archive the rest (with CT's approval); for the live ones default to localhost and name the allowed origins.
+
+#### E16. Stop the handshake route from handing the API token to any caller
+
+`M` `agent` `P1`
+
+**Evidence.** `api/routes/auth.py:42` to `:66`: `POST /api/auth/handshake` has no authentication, calls `get_or_create_token(project_path)` and returns the token in the response body (the docstring calls it a "one-time setup for local development"). Measured: it answered 200 to a call with no credentials and an empty JSON body. So the bearer scheme protects nothing from a client that can reach the port. `api/auth.py:82` compares tokens with `==` (not constant time); the token is a 32-byte `secrets.token_urlsafe` value stored in `.waft_api_token` with mode 600 and never expires. The Dockerfile starts uvicorn on `0.0.0.0:8000` (B10), so a container exposes the handshake to the network.
+
+**First step.** limit the handshake to loopback clients (`request.client.host`) or hand the token over some other way (printed once at startup); use `hmac.compare_digest`; add expiry and rotation; add tests for all three.
+
+#### E17. Do not publish the open API with the checkout mounted writable
+
+`R` `agent` `P1`
+
+**Evidence.** `docker-compose.yml` publishes the API on `8000:8000` (every host interface), bind-mounts `./` at `/app` and sets `WAFT_PROJECT_PATH: /app`; the container runs as root (B10). Combined with E16 (the handshake returns the token), E2 (28 write routes need no token) and F19 (routes write relative to the code), a client on the network could create files in the mounted checkout. This follows from the configuration and my local probes; I did not run the container.
+
+**First step.** publish on `127.0.0.1:8000:8000` by default; mount a separate data directory instead of the repo; fix E16 and E2 first; add a `USER` and a `HEALTHCHECK`.
+
+#### E18. Make the publishing scripts ask before they push
+
+`M` `agent` `P2`
+
+**Evidence.** checked by me: `push_to_github.sh` runs `git add .` (line 32), `git branch -M main` (49) and `git push -u origin main` (56) against a hardcoded remote with no prompt; `scripts/promote-staging-to-main.sh` sets `VERSION` only through `--version` (line 27) and tests `-n "$VERSION"` at line 129, so an inherited `VERSION` variable creates and pushes a release tag. Helper agent, not checked by me: `setup_github.sh` also does `git add .` and commits with a stale v0.1.0 message; `scripts/upload_wiki.sh` clones the wiki into `.wiki-temp` inside the repo (not ignored) and pushes with no prompt; both promote scripts run `git checkout` and `git pull` even under `--dry-run`, so "No changes were made" is false.
+
+**First step.** initialise `VERSION` empty; add a confirmation prompt and a `--yes` flag; stop `git add .`; refuse to run from a non-main branch; make `--dry-run` change nothing.
+
 
 ### F. Architecture and code quality
 
@@ -633,17 +772,17 @@ This section holds the biggest single finding: a wheel built from this checkout 
 
 `M` `agent` `P1`
 
-**Evidence.** `waft evolve --generations 2 --variants 3` printed one id three times (`being_20261114_153322_37e1e692`), then `fitness=100.00, scints=0` for each, "Fitness improvement: +0.00" and a total time of 0.01 s. With identical variants and a saturated score, selection chooses between copies. FogSift gap #44 records the same id defect.
+**Evidence.** `waft evolve --generations 2 --variants 3` printed one id three times (`being_20261114_153322_37e1e692`), then `fitness=100.00, scints=0` for each, "Fitness improvement: +0.00" and a total time of 0.01 s. Cause (read): `src/waft/being.py:1836` builds the id from `datetime.now().strftime('%Y%m%d_%H%M%S')` (one-second resolution) plus the first 8 hex digits of `sha256(reality_id + parent_being_id)`, so variants spawned in the same second share an id; skill mutations (`being.py:1846`) are derived from a hash of that id and the skill name, so they are identical too. `core/evolution_engine.py:318` and `:319` add unseeded `random.uniform` changes to `will_to_live` and `luck`. FogSift gap #44 records the same id defect.
 
-**First step.** read the spawn code in `core/evolution_engine.py`; make ids unique; add a test that N variants have N ids; see F3.
+**First step.** add the variant index or a random suffix to the id; derive mutations from (id, generation, index); seed the random generator from a run seed; add a test that N variants have N ids and N distinct genomes.
 
 #### F3. Find out what "evolution" operates on
 
-`R` `research` `P1`
+`M` `research` `P1`
 
-**Evidence.** `core/evolution_engine.py` imports `hashlib`, `random` and `json`; model-provider names appear in few files (anthropic 2, openai 3, ollama 5, gemini 3 files). The fitness measure is "Scint detection". Nothing read shows a model being called by `evolve`.
+**Evidence.** `core/evolution_engine.py` lines 63 to 131: `evaluate_fitness` never runs the trial tasks (a code comment says "For now, simple heuristic based on being's attributes"); for each task string it runs the same three detectors on the same being (logic fractures, knowledge gaps, safety violations), so a scint is counted once per task. Fitness is 100 minus 10 per scint plus 5 per skill above 80, clamped to 0 to 100. A freshly spawned being has none of the impossible states the detectors look for, so every variant scores 100. Mutation changes numbers (skill levels by up to 5 percent, `will_to_live`, `luck`); in this path no code is generated or rewritten. Provider names appear in few files (anthropic 2, openai 3, ollama 5, gemini 3 files) and `evolve` calls no model.
 
-**First step.** write one page: genome fields, mutation operators, fitness function, what a Being does. If no model runs, say so in the README.
+**First step.** write the one-page spec: genome fields, mutation operators, fitness function; say plainly in the README what `evolve` does today; decide what a real trial (an executed task with a measurable result) would be (R2).
 
 #### F4. Resolve the overlapping names pyrite, empirica and fogsift
 
@@ -671,11 +810,11 @@ This section holds the biggest single finding: a wheel built from this checkout 
 
 #### F7. Run dead-code detection
 
-`Q` `agent` `P3`
+`M` `agent` `P3`
 
-**Evidence.** not run.
+**Evidence.** vulture on `src`: 33 findings at 80 percent confidence or higher (for example unused variables at `cli/banner.py:378` and `core/alignment.py:46`) and 1,433 at 60 percent or higher; many of the second group will be CLI and API entry points that vulture cannot see.
 
-**First step.** `vulture src` and repowise (pinned in FogSift); compare with the zero-coverage list (A15).
+**First step.** triage the 33; intersect the 60 percent list with the 0 percent coverage modules (A15); archive what both agree on, with CT's approval.
 
 #### F8. Check layering and import cycles
 
@@ -721,7 +860,7 @@ This section holds the biggest single finding: a wheel built from this checkout 
 
 `M` `CT` `P2`
 
-**Evidence.** seven exist: the FastAPI app (`waft serve`), the `dashboard` and `dashboard-5050` commands, the observatory (`core/observatory/server.py`, 1,390 lines), Streamlit (`ui/streamlit`), the SvelteKit `visualizer/`, the Electron `waft_desktop/`, and `typst-webapp/`.
+**Evidence.** seven exist: the FastAPI app (`waft serve`), the `dashboard` and `dashboard-5050` commands, the observatory (`core/observatory/server.py`, 1,390 lines), Streamlit (`ui/streamlit`), the SvelteKit `visualizer/`, the Electron `waft_desktop/`, and `typst-webapp/`. In a scratch copy the visualizer installs, builds and passes its tests (F22); the SvelteKit build is not present in this checkout, so `waft serve` starts in API-only mode.
 
 **First step.** for each: last used, who uses it, build status; keep one or two.
 
@@ -729,7 +868,7 @@ This section holds the biggest single finding: a wheel built from this checkout 
 
 `M` `agent` `P1`
 
-**Evidence.** my first run of `waft new demo`, `waft verify` and `waft evolve --generations 2 --variants 3` (cwd a scratch directory, started with `uv run --project /home/user/waft`) left four tracked files modified in `/home/user/waft`: `_pantheon/the_dealer/memory.jsonl`, `state.json`, `truth/keys.json` and `seals/gate_02_the_marker.pdf`. Two reruns did not reproduce it. `verify` rolls dice ("CON Check ... failure"), so the outcome may depend on a random roll. Relative paths `Path("_pantheon/the_dealer")` appear at `main.py:1064` and `core/dealer_journal.py:16`. I reverted the files.
+**Evidence.** my first run of `waft new demo`, `waft verify` and `waft evolve --generations 2 --variants 3` (cwd a scratch directory, started with `uv run --project /home/user/waft`) left four tracked files modified in `/home/user/waft`: `_pantheon/the_dealer/memory.jsonl`, `state.json`, `truth/keys.json` and `seals/gate_02_the_marker.pdf`. Two reruns did not reproduce it. `verify` rolls dice ("CON Check ... failure"), so the outcome may depend on a random roll. Relative paths `Path("_pantheon/the_dealer")` appear at `main.py:1064` and `core/dealer_journal.py:16`. I reverted the files. F19 found the same class of bug in the API: state written relative to the code, not the project.
 
 **First step.** run each command 20 times with a fixed seed while watching `git status` in the source checkout; find the write.
 
@@ -757,6 +896,54 @@ This section holds the biggest single finding: a wheel built from this checkout 
 
 **First step.** choose one path for logs and one for traces; remove the rest.
 
+#### F18. Fix or archive the four tracked Python files that do not compile
+
+`M` `agent` `P3`
+
+**Evidence.** compiling the 1,109 tracked `.py` files outside `node_modules` found 4 syntax errors: `_temp/template_function.py:94` (f-string), `demo_output/scripts/script.py:3` and `demo_output/scripts/test.py:3` (leading zeros in a decimal literal) and `scripts/generate_tavern_game_with_skills.py:580` (invalid decimal literal).
+
+**First step.** fix them or move them to `_to_delete/` for CT's approval; add a compile check for tracked Python to CI (C11).
+
+#### F19. Resolve project paths from the project, not from __file__
+
+`M` `agent` `P1`
+
+**Evidence.** 27 files in `src` derive a root with `Path(__file__)` and three or more `.parent` calls, among them `api/routes/pet.py:14` and the `being`, `protocel`, `storyteller` and `gym` routes. Measured: with `waft serve` running from a scratch directory, an unauthenticated `POST /api/pet/feed` created `_realms/waft_pet/pets/being_20261114_155231_796fa38d.json` inside this checkout (I moved the file out). In a wheel install the same code would write into site-packages. 20 `sys.path.insert` or `append` calls in 19 files add `src` to the path the same way. This is the likely cause of F14.
+
+**First step.** use `app.state.project_path` (it exists in `api/main.py`) or the CLI's `--path`; delete the `sys.path` edits; add a test that runs the API in a temp project and asserts the checkout stays clean.
+
+#### F20. Refactor the most complex functions
+
+`M` `agent` `P3`
+
+**Evidence.** `radon cc src`: 79 functions rank D or worse and 18 blocks rank F (complexity over 40). Worst: `generate_typst_from_parsed_data` in `cli/case_render.py` (100), `Visualizer.analyze` in `core/visualizer.py` (78), `CritiqueResponseManager._generate_response_report` in `core/critique_response.py` (58), `render_town_view` in `ui/streamlit/town_view.py` (56), `GameMaster.start_encounter` in `src/gym/rpg/game_master.py` (54), `parse_markdown_case_file` in `cli/case_render.py` (50) and `oracle` in `main.py` (45).
+
+**First step.** pick the ten worst; add characterization tests first; then split.
+
+#### F21. Replace print, silent excepts and other smells
+
+`M` `agent` `P3`
+
+**Evidence.** counts in `src` (grep): 1,575 `print(` calls, 69 `except Exception` blocks that only `pass`, 21 bare `except:`, 229 `open(` calls with no encoding (rough pattern), 140 `datetime.utcnow()` uses (A12), 15 TODO, FIXME, HACK or XXX markers and 1 `raise NotImplementedError`.
+
+**First step.** route output through `logging` or Rich consistently; replace silent excepts with a logged handler; set `encoding="utf-8"` on text opens; ratchet each count.
+
+#### F22. Make the visualizer test run exit
+
+`M` `agent` `P3`
+
+**Evidence.** in a scratch copy of `visualizer/`, `npm test` ran 3 test files (34 tests, all passing: 1, 17 and 16) but the `vitest run` process did not exit within 9 minutes and I killed it. The build printed 20 warnings, among them A11y warnings in `routes/projects/+page.svelte` and `routes/mission-control/+page.svelte` and a missing `.svelte-kit/tsconfig.json` base config (`svelte-kit sync` has not run).
+
+**First step.** find the open handle (an interval, a server or a watcher started by the experiment runner test) and close it; fix the warnings.
+
+#### F23. Fix helper scripts that abort or leave processes behind
+
+`M` `agent` `P3`
+
+**Evidence.** checked by me: `scripts/sync-cursor-commands.sh` runs under `set -e` (line 8) and increments counters with `((SKIPPED++))` and `((SYNCED++))` (lines 50, 54, 59); in bash `set -e; X=0; ((X++))` exits with status 1, so the script stops after the first file, and its `cp` overwrites commands in `~/.cursor/commands` with no backup. `waft_desktop/START_DEV.sh` starts `npm run dev &` (line 63) and `npm start` (73) but registers its cleanup trap only at line 77, after `set -e` (line 4) can already have exited. Helper agent, not checked by me: `START_EVOLVE_UI.sh` runs `cd visualizer` relative to the caller's directory; several start scripts write fixed `/tmp/*.log` names and leave servers running.
+
+**First step.** initialise counters with `X=$((X+1))`; move the trap above the first background process; use `mktemp` and `trap`; run `shellcheck` over the 36 tracked shell scripts and add it to CI.
+
 
 ### G. Documentation against reality
 
@@ -780,7 +967,7 @@ This section holds the biggest single finding: a wheel built from this checkout 
 
 `R` `research` `P1`
 
-**Evidence.** README and `PITCH_DECK` use phrases such as "Don't just build agents. Breed them." and "God-Head". FogSift FINDINGS (2026-10-25) says the term appears only in documentation and nothing in `src/` or `tests/` measures it.
+**Evidence.** README and `PITCH_DECK` use phrases such as "Don't just build agents. Breed them." and "God-Head". README Core Pillar 1, "The Substrate", says "Agents that write their own Python source code (DNA)"; in the code, `core/substrate.py` is `SubstrateManager`, a wrapper around uv commands (init, sync, add), and no path I read makes an agent write its own source. FogSift FINDINGS (2026-10-25) says the "God-Head" term appears only in documentation and nothing in `src/` or `tests/` measures it.
 
 **First step.** one table: claim, where it is made, the command or test that shows it, the measured result, status.
 
@@ -834,11 +1021,11 @@ This section holds the biggest single finding: a wheel built from this checkout 
 
 #### G10. Check links and file references in docs
 
-`Q` `agent` `P3`
+`M` `agent` `P3`
 
-**Evidence.** the PDF error message points at `docs/PDF_PNG_CONVERSION.md`; its existence was not checked.
+**Evidence.** a link check over `README.md` and the 116 Markdown files under `docs/` found 273 relative links, 147 of them pointing at files that do not exist. `docs/DOCUMENTATION_INDEX.md` alone has 83 broken links, `docs/TYPST_TEMPLATES_BROWSER_REPORT.md` 25, `docs/api/API_INDEX.md` 19, `docs/GETTING_STARTED.md` 7 and `docs/FAQ.md` 5.
 
-**First step.** run a link checker over the Markdown; add it to CI.
+**First step.** commit the checker (`scripts/check_doc_links.py`); fix or delete the dead links, starting with the index; add it to CI with today's 147 as the budget.
 
 #### G11. Decide the fate of the field-manual landing page
 
@@ -847,6 +1034,14 @@ This section holds the biggest single finding: a wheel built from this checkout 
 **Evidence.** commit 9c4bcf8d on branch `dev` (2026-07-24): "add WAFT field-manual landing page", a self-contained interactive page. It is on `dev`, not `main`.
 
 **First step.** publish it (where?) or archive it; its claims must match G3.
+
+#### G12. Document or remove the undocumented executable scripts
+
+`R` `agent` `P3`
+
+**Evidence.** 36 tracked `.sh` files outside `node_modules` (34 mode 755, 2 mode 644 despite shebangs; modes checked, names of the two not). A helper agent found six executables named in no doc, code or CI file: `_science_textbook/compile.sh`, `examples/START_PROJECTS_DASHBOARD.sh`, `install_latex.sh`, `open_small_iterm.sh`, `verify_latex.sh` and `recap_review_app/backend/docker-entrypoint.sh`. It also reports that `install_latex.sh` is the only script using `sudo` (macOS, `brew` and `tlmgr`, no confirmation) and that 12 Python files and several scripts carry hardcoded `/Users/...` or `/Volumes/...` paths (D9).
+
+**First step.** list every script with one line on what it does and whether it is current; delete or archive the rest with CT's approval; keep `install_latex.sh` manual.
 
 
 ### H. What WAFT is for
@@ -913,7 +1108,7 @@ These need CT. Nothing here is a code task.
 
 `R` `CT` `P3`
 
-**Evidence.** no budget is recorded anywhere read; the branch has 85 commits and the repo has 132 work efforts.
+**Evidence.** no budget is recorded anywhere read; the repo has 135 work efforts, and this clone is shallow (L9), so its 86 commits (2026-01-25 onward) are not the whole history.
 
 **First step.** set a number of hours per week; revisit monthly.
 
@@ -925,6 +1120,14 @@ These need CT. Nothing here is a code task.
 
 **First step.** search existing projects, trademarks and domains named waft; report.
 
+#### H10. Decide what to do with the Cursor era material
+
+`R` `CT` `P3`
+
+**Evidence.** `.cursor/` holds 171 tracked files: 138 slash commands, 10 plans, 8 procedures, 4 continuation prompts and 1 skill. AGENTS.md is also written for Cursor Cloud.
+
+**First step.** keep the commands CT still uses (port them to Claude skills), archive the rest, and stop tracking tool output (D7).
+
 
 ### I. Fit with _pyrite, Empirica, FogSift and the work-effort ledger
 
@@ -932,7 +1135,7 @@ These need CT. Nothing here is a code task.
 
 `M` `agent` `P1`
 
-**Evidence.** `fogsift.py we list` run in this repo: 132 work efforts: active 69, completed 27, open 16, pending 11, in_progress 1, template 1, and 7 rows it cannot read (front matter does not parse). Dates run from January to March 2026. pyrite's own vocabulary is active, paused, completed.
+**Evidence.** 135 `WE-*` folders on disk (`fogsift.py we list` shows 132): active 69, completed 27, open 16, pending 11, in_progress 1, template 1, and 7 rows it cannot read (front matter does not parse). Dates run from January to March 2026. pyrite's own vocabulary is active, paused, completed. Of the 70 active work efforts, 66 were last updated in January 2026 (I11).
 
 **First step.** close or pause stale ones with a note; fix the 7 unreadable; map `open` and `pending` onto the vocabulary.
 
@@ -1007,6 +1210,22 @@ These need CT. Nothing here is a code task.
 **Evidence.** FogSift FINDINGS: "The weakest link is WAFT"; its gym scores a stand-in agent's JSON repair, and nothing shows that predicts repository work.
 
 **First step.** design the experiment in R2: pick 20 real tasks, score with the gym and with real outcomes, compare.
+
+#### I11. Reconcile this backlog with the 297 open tickets the repo already holds
+
+`M` `CT` `P1`
+
+**Evidence.** 135 work efforts hold 499 tickets: 125 completed, 356 pending, 10 in_progress, 8 open. The 70 active work efforts hold 297 open tickets; 47 of them have open tickets, 21 have none, and 66 were last updated in January 2026. Largest clusters: AI-Scientist Integration Study (13), The Tribunal (12), Heavy Seed Protocol (12), Case File System Evolution (10), Death Encounter System (10), DnD Narrative Storybook (10), Encapsulated Environments (10), Science-Bitch Command (10), pydyf Testing and Secure Sandbox Environment (9). Overlap with this backlog: `WE-260112-yh09` has three pending sandbox tickets (design, a Docker-based sandbox, a testing framework), which is E11; `WE-260109-sec1` has "Add security tests for input validation" pending, which is E10; `WE-260116-279z` has "Implement POST /api/projects endpoint with auth" pending, which is E2.
+
+**First step.** sort each open ticket into keep, close or merge into a backlog id; start with the clusters named here; close the rest with a note.
+
+#### I12. Triage the note and plan piles
+
+`M` `agent` `P3`
+
+**Evidence.** `_pyrite/` inside this repo has 653 tracked files (6.0 MiB): `active/` holds 162 files (many `next_steps` notes dated 2026-01-13 to 2026-01-19) and `journal/` 58. `_work_efforts/Plans` holds 284 plan files and `.cursor/plans` 10; some are copies (`_organized_constellation/_originals_backup`).
+
+**First step.** mark each pile current, historical or duplicate; archive with a README; keep one index (G1).
 
 
 ### J. Documents and the PDF pipeline
@@ -1169,6 +1388,14 @@ These need CT. Nothing here is a code task.
 
 **First step.** CT's rule: branch first, then merge.
 
+#### L9. Unshallow the clone before any history work
+
+`M` `agent` `P2`
+
+**Evidence.** `git rev-parse --is-shallow-repository` is `true` here: 86 commits are reachable, from 2026-01-25 to 2026-11-14, while the first work effort is dated 2026-01-04 and GitHub shows 254 workflow runs. History statements in this document (A5, D3, D12, E6, H8) rest on a partial clone.
+
+**First step.** `git fetch --unshallow`, then recheck pack size, commit count and authors, and rerun the history scans.
+
 
 ### R. Research for a more capable model
 
@@ -1210,7 +1437,7 @@ These need reading primary sources or running experiments. Names in R1 come from
 
 `Q` `research` `P3`
 
-**Evidence.** FogSift #234 says the lab is deterministic for a seed; `waft evolve` itself reuses ids and saturates at 100 (F2).
+**Evidence.** `waft evolve` uses unseeded `random.uniform` and `datetime.now()` in ids, so two runs with the same inputs differ. FogSift #234 says its own lab harness is deterministic for a seed; that is a different code path. Saturated scores (F2) hide the difference anyway.
 
 **First step.** run twice with a fixed seed and diff; then with different seeds and look at the spread.
 
@@ -1245,10 +1472,14 @@ These are the setup steps from the record above, kept as completed tickets so th
 - **S1.** Fetch empirica 1.2.3 into _unified/empirica so uv sync can resolve it.
 - **S2.** Run uv sync --extra dev and confirm the waft CLI starts from the checkout.
 - **S3.** Measure the baseline: tests, ruff, wheel, CI, branches, sizes, work efforts.
+- **S4.** Second pass: coverage, static analysis, dependency audit, API probes, ledger mining.
 
 ## Caveats
 
 - Linux container only. Python 3.14.3 through uv. No macOS, Windows or Docker.
+- This clone is shallow (86 commits, from 2026-01-25). Anything about history is provisional until `git fetch --unshallow` (L9).
+- The static-analysis tools ran from a scratch venv, so their counts depend on tool versions and default rules; the tools are not part of the repo.
+- Two probes of the running API created files; one landed inside the checkout and was moved out (F19). The calls used empty or made-up inputs, on a scratch project, against localhost.
 - Numbers marked `M` come from commands I ran today; they will drift as the repo changes. Rerun the command in the Baseline table before relying on one.
 - Items marked `R` repeat what a file, commit message or the GitHub API said. I did not rerun them.
 - Library and project names in R1 are from memory and must be checked against their sources before they go into any document.

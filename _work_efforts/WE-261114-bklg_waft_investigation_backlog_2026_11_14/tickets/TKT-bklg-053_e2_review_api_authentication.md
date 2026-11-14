@@ -17,10 +17,10 @@ Part of [[WE-261114-bklg_index|WE-261114-bklg]]
 
 ## Notes
 
-Tags: `R` `agent` `P2`  (M measured, R read, Q question; owner agent, CT or research; P1 first)
+Tags: `M` `agent` `P1`  (M measured, R read, Q question; owner agent, CT or research; P1 first)
 
-**Evidence.** the bearer token comes from `get_or_create_token()` in `src/waft/api/auth.py` and is stored in `.waft_api_token`. Comparison method, token scope, which routes require it and rotation were not reviewed.
+**Evidence.** `waft serve` run from a scratch project exposes an OpenAPI schema with 95 paths and 106 operations. 41 are writes (POST, PUT, PATCH, DELETE) and only 13 operations declare the HTTPBearer scheme. Called without a token: `POST /api/work-efforts` returns 401, but none of the other 28 write routes I called (all but `/api/pet/reincarnate`, which I skipped) returned 401: 200 for `/api/5050/continue-command`, `/api/being/spawn`, `/api/pet/feed`, `/api/protocel/create` and `/api/story/start` (plus `/api/auth/handshake`, see E16); 404 for 7 routes called with a made-up id; 422 for 14 routes called with an empty body; 500 for `/api/being/{id}/decision`. `GET /api/work-efforts` is open too.
 
-**First step.** read `auth.py` and every router; list routes by auth requirement; add tests for 401 and 403.
+**First step.** decide the policy (every non-GET route needs the token except the handshake); apply it router-wide; add a test that walks the OpenAPI schema and asserts 401 without a token.
 
 Full context and the baseline: [INVESTIGATION_BACKLOG.md](../INVESTIGATION_BACKLOG.md), heading E2.

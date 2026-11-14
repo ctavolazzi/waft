@@ -17,10 +17,10 @@ Part of [[WE-261114-bklg_index|WE-261114-bklg]]
 
 ## Notes
 
-Tags: `Q` `agent` `P3`  (M measured, R read, Q question; owner agent, CT or research; P1 first)
+Tags: `M` `agent` `P3`  (M measured, R read, Q question; owner agent, CT or research; P1 first)
 
-**Evidence.** the only coverage command in the repo is in the staging workflow and, because only `tests/api` runs there, covers little. `src/waft` has 516 Python files and about 174,000 lines.
+**Evidence.** Measured with `uv run pytest tests/ --cov=src/waft` (same 25 failures, 99 s): total coverage is 16 percent (58,876 statements, 49,697 missed). 258 modules are at 0 percent (32,416 statements). `main.py` alone has 2,400 statements at 0 percent; next are `one_pager.py` 632, `foundation_v2.py` 485, `pyrite.py` 471, `cli/dungeon_cli.py` 404 and `core/pocketbase_scout.py` 380. The test module that would exercise the CLI (`tests/test_commands.py`) does not load (A6).
 
-**First step.** `uv run pytest --cov=src --cov-report=term-missing` on the fixed baseline; list modules at 0 percent; they are dead-code candidates (F7).
+**First step.** fix A6 and add the smoke test in A19; set a coverage floor at today's 16 percent and ratchet it up; list the 0 percent modules next to the dead-code list (F7).
 
 Full context and the baseline: [INVESTIGATION_BACKLOG.md](../INVESTIGATION_BACKLOG.md), heading A15.

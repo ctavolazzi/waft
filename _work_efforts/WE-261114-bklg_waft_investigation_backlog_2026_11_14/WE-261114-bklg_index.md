@@ -3,7 +3,7 @@ id: WE-261114-bklg
 title: "WAFT investigation backlog 2026-11-14"
 status: active
 created: 2026-11-14T15:43:40.231Z
-last_updated: 2026-11-14T15:43:48.986Z
+last_updated: 2026-11-14T16:06:05.841Z
 objective: "A numbered list of things to investigate, decide or expand on, found while setting up and running WAFT"
 labels: ['investigation', 'waft']
 ---
@@ -16,7 +16,7 @@ A numbered list of things to investigate, decide or expand on, found while setti
 
 ## Description
 
-Full write-up in INVESTIGATION_BACKLOG.md in this folder. Ticket titles carry the same ids (A1 to R8) plus S1 to S3 for the setup done in this session.
+Full write-up in INVESTIGATION_BACKLOG.md in this folder. Ticket titles carry the same ids (A1 to R8) plus S1 to S4 for the setup and exploration done in this session.
 
 ## Tickets
 
@@ -162,22 +162,50 @@ Full write-up in INVESTIGATION_BACKLOG.md in this folder. Ticket titles carry th
 | [[TKT-bklg-138_s1_fetch_empirica_1_2_3_into_unified_empirica_so_u|TKT-bklg-138]] | S1 Fetch empirica 1.2.3 into _unified/empirica so uv sync can resolve it | completed |
 | [[TKT-bklg-139_s2_run_uv_sync_extra_dev_and_confirm_the_waft_cli|TKT-bklg-139]] | S2 Run uv sync --extra dev and confirm the waft CLI starts from the checkout | completed |
 | [[TKT-bklg-140_s3_measure_the_baseline_tests_ruff_wheel_ci_branch|TKT-bklg-140]] | S3 Measure the baseline: tests, ruff, wheel, CI, branches, sizes, work efforts | completed |
+| [[TKT-bklg-141_a19_add_a_smoke_test_for_every_cli_command|TKT-bklg-141]] | A19 Add a smoke test for every CLI command | pending |
+| [[TKT-bklg-142_b12_remove_the_experiment_folders_from_the_uv_work|TKT-bklg-142]] | B12 Remove the experiment folders from the uv workspace | pending |
+| [[TKT-bklg-143_b13_declare_or_remove_the_undeclared_dependencies|TKT-bklg-143]] | B13 Declare or remove the undeclared dependencies | pending |
+| [[TKT-bklg-144_c11_add_the_new_checks_to_ci_with_ratchets|TKT-bklg-144]] | C11 Add the new checks to CI with ratchets | pending |
+| [[TKT-bklg-145_d13_commit_the_visualizer_lockfile|TKT-bklg-145]] | D13 Commit the visualizer lockfile | pending |
+| [[TKT-bklg-146_d14_remove_duplicate_files_from_the_working_tree|TKT-bklg-146]] | D14 Remove duplicate files from the working tree | pending |
+| [[TKT-bklg-147_d15_review_personal_data_in_tracked_text_files|TKT-bklg-147]] | D15 Review personal data in tracked text files | pending |
+| [[TKT-bklg-148_d16_check_the_plans_that_quote_passwords_for_anoth|TKT-bklg-148]] | D16 Check the plans that quote passwords for another project | pending |
+| [[TKT-bklg-149_e13_triage_the_high_and_medium_bandit_findings|TKT-bklg-149]] | E13 Triage the high and medium bandit findings | pending |
+| [[TKT-bklg-150_e14_stop_two_commands_from_listening_on_all_interf|TKT-bklg-150]] | E14 Stop two commands from listening on all interfaces by default | pending |
+| [[TKT-bklg-151_e15_tighten_the_20_other_servers_outside_src|TKT-bklg-151]] | E15 Tighten the 20 other servers outside src | pending |
+| [[TKT-bklg-152_e16_stop_the_handshake_route_from_handing_the_api|TKT-bklg-152]] | E16 Stop the handshake route from handing the API token to any caller | pending |
+| [[TKT-bklg-153_e17_do_not_publish_the_open_api_with_the_checkout|TKT-bklg-153]] | E17 Do not publish the open API with the checkout mounted writable | pending |
+| [[TKT-bklg-154_e18_make_the_publishing_scripts_ask_before_they_pu|TKT-bklg-154]] | E18 Make the publishing scripts ask before they push | pending |
+| [[TKT-bklg-155_f18_fix_or_archive_the_four_tracked_python_files_t|TKT-bklg-155]] | F18 Fix or archive the four tracked Python files that do not compile | pending |
+| [[TKT-bklg-156_f19_resolve_project_paths_from_the_project_not_fro|TKT-bklg-156]] | F19 Resolve project paths from the project, not from __file__ | pending |
+| [[TKT-bklg-157_f20_refactor_the_most_complex_functions|TKT-bklg-157]] | F20 Refactor the most complex functions | pending |
+| [[TKT-bklg-158_f21_replace_print_silent_excepts_and_other_smells|TKT-bklg-158]] | F21 Replace print, silent excepts and other smells | pending |
+| [[TKT-bklg-159_f22_make_the_visualizer_test_run_exit|TKT-bklg-159]] | F22 Make the visualizer test run exit | pending |
+| [[TKT-bklg-160_f23_fix_helper_scripts_that_abort_or_leave_process|TKT-bklg-160]] | F23 Fix helper scripts that abort or leave processes behind | pending |
+| [[TKT-bklg-161_g12_document_or_remove_the_undocumented_executable|TKT-bklg-161]] | G12 Document or remove the undocumented executable scripts | pending |
+| [[TKT-bklg-162_h10_decide_what_to_do_with_the_cursor_era_material|TKT-bklg-162]] | H10 Decide what to do with the Cursor era material | pending |
+| [[TKT-bklg-163_i11_reconcile_this_backlog_with_the_297_open_ticke|TKT-bklg-163]] | I11 Reconcile this backlog with the 297 open tickets the repo already holds | pending |
+| [[TKT-bklg-164_i12_triage_the_note_and_plan_piles|TKT-bklg-164]] | I12 Triage the note and plan piles | pending |
+| [[TKT-bklg-165_l9_unshallow_the_clone_before_any_history_work|TKT-bklg-165]] | L9 Unshallow the clone before any history work | pending |
+| [[TKT-bklg-166_s4_second_pass_coverage_static_analysis_dependency|TKT-bklg-166]] | S4 Second pass: coverage, static analysis, dependency audit, API probes, ledger mining | completed |
 
 ## Read first
 
-[INVESTIGATION_BACKLOG.md](INVESTIGATION_BACKLOG.md) in this folder holds the evidence and the first step for every ticket, the baseline numbers, and a record of what this session did and did not change. Ticket ids in the table below (A1 to R8, S1 to S3) match its headings.
+[INVESTIGATION_BACKLOG.md](INVESTIGATION_BACKLOG.md) in this folder holds the evidence and the first step for every ticket, the baseline numbers, and a record of what this session did and did not change. Ticket ids in the table below (A1 to R8, S1 to S4) match its headings; each ticket's Notes repeat its evidence and first step.
 
 ## Progress
 
-- 2026-11-14: environment set up (S1, S2), baseline measured (S3). Those three tickets are completed; the other 137 are open.
-- Ticket counts: 137 backlog items, tagged measured 51, read 50, question 36; owner agent 87, CT 30, research 20; priority P1 26, P2 53, P3 58.
+- 2026-11-14, first pass: environment set up (S1, S2), baseline measured (S3), 137 items written.
+- 2026-11-14, second pass (S4): coverage, static analysis, a dependency audit, probes of the running API, a read of the code behind `evolve` and the API auth, and a mining of the repo's own 499 tickets added 25 items and sharpened 27 more. Several question marks became measurements.
+- Ticket counts: 162 backlog items (tagged measured 80, read 51, question 31; owner agent 110, CT 33, research 19; priority P1 34, P2 62, P3 66) plus the four completed setup tickets S1 to S4.
 - The Tickets table above is the single record of per-ticket status.
 - Nothing in `src/` was changed. A1 to A3 were tested as a temporary edit (25 failed tests became 15) and reverted.
+- Corrections found along the way: this clone is shallow (L9), so history claims are provisional; one helper-agent claim about when the key files were added was dropped for that reason.
 
 ## Next Steps
 
-1. Review the first ten in INVESTIGATION_BACKLOG.md. B1 and B2 come first: a wheel built from this repo cannot start the CLI.
-2. CT decides the tickets owned by `CT`, starting with G7 (where WAFT sits in the priorities) and H1 (what WAFT is for).
+1. Review the first twelve in INVESTIGATION_BACKLOG.md. B1 and B2 come first: a wheel built from this repo cannot start the CLI. E16 and E2 are next: the API hands its token to any caller and most write routes need none.
+2. CT decides the tickets owned by `CT`, starting with G7 (where WAFT sits in the priorities), H1 (what WAFT is for), D16 (passwords in plan files) and I11 (the 297 open tickets already in this repo).
 3. Hand `agent` tickets to a coding agent one group at a time (A, then B and C), and `research` tickets to a more capable model.
 4. Flip each ticket's `status` as it lands (`fogsift.py ticket status --we WE-261114-bklg --id TKT-bklg-NNN --status completed`), then `we sync`.
 5. Set this work effort's `status` to completed when every ticket is done, or close the ones CT drops.

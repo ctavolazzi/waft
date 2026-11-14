@@ -19,7 +19,7 @@ Part of [[WE-261114-bklg_index|WE-261114-bklg]]
 
 Tags: `M` `agent` `P2`  (M measured, R read, Q question; owner agent, CT or research; P1 first)
 
-**Evidence.** 4 tracked `.db` or `.sqlite` files (for example `_pyrite/analytics/sessions.db`) and 162 tracked `.jsonl` files (traces, journals).
+**Evidence.** 4 tracked database files: `.empirica/sessions/sessions.db` (51 tables; 133 sessions, 56 reflexes; its `-wal` and `-shm` files are tracked too), `_pyrite/analytics/sessions.db`, `waft_memory.db` and `waft_pdf_library/backend/data/library.db` (2,125 PDF records); plus 162 tracked `.jsonl` files. During my runs, opening the Empirica database changed the tracked `.empirica/sessions/sessions.db-shm`; I restored it with `git checkout`.
 
 **First step.** inspect for personal paths; split fixtures from runtime data; ignore the runtime paths (A10).
 

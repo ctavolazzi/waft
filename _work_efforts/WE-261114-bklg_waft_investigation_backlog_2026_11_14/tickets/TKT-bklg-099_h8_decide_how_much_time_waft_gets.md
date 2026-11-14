@@ -19,7 +19,7 @@ Part of [[WE-261114-bklg_index|WE-261114-bklg]]
 
 Tags: `R` `CT` `P3`  (M measured, R read, Q question; owner agent, CT or research; P1 first)
 
-**Evidence.** no budget is recorded anywhere read; the branch has 85 commits and the repo has 132 work efforts.
+**Evidence.** no budget is recorded anywhere read; the repo has 135 work efforts, and this clone is shallow (L9), so its 86 commits (2026-01-25 onward) are not the whole history.
 
 **First step.** set a number of hours per week; revisit monthly.
 

@@ -17,10 +17,10 @@ Part of [[WE-261114-bklg_index|WE-261114-bklg]]
 
 ## Notes
 
-Tags: `Q` `agent` `P3`  (M measured, R read, Q question; owner agent, CT or research; P1 first)
+Tags: `M` `agent` `P3`  (M measured, R read, Q question; owner agent, CT or research; P1 first)
 
-**Evidence.** not run.
+**Evidence.** vulture on `src`: 33 findings at 80 percent confidence or higher (for example unused variables at `cli/banner.py:378` and `core/alignment.py:46`) and 1,433 at 60 percent or higher; many of the second group will be CLI and API entry points that vulture cannot see.
 
-**First step.** `vulture src` and repowise (pinned in FogSift); compare with the zero-coverage list (A15).
+**First step.** triage the 33; intersect the 60 percent list with the 0 percent coverage modules (A15); archive what both agree on, with CT's approval.
 
 Full context and the baseline: [INVESTIGATION_BACKLOG.md](../INVESTIGATION_BACKLOG.md), heading F7.

@@ -19,7 +19,7 @@ Part of [[WE-261114-bklg_index|WE-261114-bklg]]
 
 Tags: `Q` `research` `P3`  (M measured, R read, Q question; owner agent, CT or research; P1 first)
 
-**Evidence.** FogSift #234 says the lab is deterministic for a seed; `waft evolve` itself reuses ids and saturates at 100 (F2).
+**Evidence.** `waft evolve` uses unseeded `random.uniform` and `datetime.now()` in ids, so two runs with the same inputs differ. FogSift #234 says its own lab harness is deterministic for a seed; that is a different code path. Saturated scores (F2) hide the difference anyway.
 
 **First step.** run twice with a fixed seed and diff; then with different seeds and look at the spread.
 

@@ -17,10 +17,10 @@ Part of [[WE-261114-bklg_index|WE-261114-bklg]]
 
 ## Notes
 
-Tags: `R` `agent` `P2`  (M measured, R read, Q question; owner agent, CT or research; P1 first)
+Tags: `M` `agent` `P2`  (M measured, R read, Q question; owner agent, CT or research; P1 first)
 
-**Evidence.** AGENTS.md says `test_foundation.py`, `test_full_system.py` and `test_the_absolute_begeesus.py` have module-level code that fails and must be passed to `--ignore`. I did not run them.
+**Evidence.** Run one at a time, each fails at collection: `tests/test_foundation.py` with `ImportError: cannot import name 'KeyValueBlock' from 'waft.foundation'`; `tests/test_full_system.py` with `TypeError: TheFoundation.__init__() takes from 1 to 2 positional arguments but 3 were given`; `tests/test_the_absolute_begeesus.py` with `AttributeError: 'Evaluation' object has no attribute 'aesthetic'`. AGENTS.md tells everyone to pass `--ignore` for them, so whole files of tests never run.
 
-**First step.** for each: fix it, turn it into a script under `scripts/`, or move it to `_to_delete/` for CT's approval.
+**First step.** for each: fix the API drift (the tests or the code), turn it into a script under `scripts/`, or move it to `_to_delete/` for CT's approval.
 
 Full context and the baseline: [INVESTIGATION_BACKLOG.md](../INVESTIGATION_BACKLOG.md), heading A7.

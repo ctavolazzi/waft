@@ -19,7 +19,7 @@ Part of [[WE-261114-bklg_index|WE-261114-bklg]]
 
 Tags: `M` `agent` `P3`  (M measured, R read, Q question; owner agent, CT or research; P1 first)
 
-**Evidence.** 151 warnings in the baseline run and 185 after the import patch. Sources: `datetime.utcnow()` at `tracer.py:32` and `storage.py:45`; Pydantic v2 `max_items` and class-based `Config` in `api/schemas/work_efforts.py` (lines 10, 16, 29, 35, 48, 54, 60, 89) and `api/schemas/projects.py`; `api/responses.py:10`.
+**Evidence.** 151 warnings in the baseline run and 185 after the import patch. `datetime.utcnow()` appears 140 times in `src` (for example `tracer.py:32` and `storage.py:45`); Pydantic v2 `max_items` and class-based `Config` in `api/schemas/work_efforts.py` (lines 10, 16, 29, 35, 48, 54, 60, 89) and `api/schemas/projects.py`; `api/responses.py:10`.
 
 **First step.** use timezone-aware datetimes, `max_length` and `ConfigDict`, then run with `-W error::DeprecationWarning` in CI.
 

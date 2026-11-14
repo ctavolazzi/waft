@@ -19,8 +19,8 @@ Part of [[WE-261114-bklg_index|WE-261114-bklg]]
 
 Tags: `M` `agent` `P2`  (M measured, R read, Q question; owner agent, CT or research; P1 first)
 
-**Evidence.** `src/waft/api/main.py:120` sets `allow_origins`; `tests/test_cors.py::test_actual_post_request_with_cors` returns 500 (A1 does not fix it).
+**Evidence.** `src/waft/api/main.py:120` sets `allow_origins` to four localhost URLs (ports 5173, 3000 and 8781 on localhost and 127.0.0.1) with `allow_credentials=True` and `*` for methods and headers; there is no wildcard origin. `tests/test_cors.py::test_actual_post_request_with_cors` returns 500 and A1 alone does not fix it.
 
-**First step.** read the origin list; confirm no wildcard with credentials; fix the 500.
+**First step.** decide how a hosted deployment sets its origins (an environment variable); fix the 500 (A4).
 
 Full context and the baseline: [INVESTIGATION_BACKLOG.md](../INVESTIGATION_BACKLOG.md), heading E3.

@@ -19,7 +19,7 @@ Part of [[WE-261114-bklg_index|WE-261114-bklg]]
 
 Tags: `M` `CT` `P2`  (M measured, R read, Q question; owner agent, CT or research; P1 first)
 
-**Evidence.** seven exist: the FastAPI app (`waft serve`), the `dashboard` and `dashboard-5050` commands, the observatory (`core/observatory/server.py`, 1,390 lines), Streamlit (`ui/streamlit`), the SvelteKit `visualizer/`, the Electron `waft_desktop/`, and `typst-webapp/`.
+**Evidence.** seven exist: the FastAPI app (`waft serve`), the `dashboard` and `dashboard-5050` commands, the observatory (`core/observatory/server.py`, 1,390 lines), Streamlit (`ui/streamlit`), the SvelteKit `visualizer/`, the Electron `waft_desktop/`, and `typst-webapp/`. In a scratch copy the visualizer installs, builds and passes its tests (F22); the SvelteKit build is not present in this checkout, so `waft serve` starts in API-only mode.
 
 **First step.** for each: last used, who uses it, build status; keep one or two.
 
