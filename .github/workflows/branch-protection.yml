@@ -12,47 +12,86 @@ on:
       - staging
       - dev
 
+# Versions are pinned on purpose: the runner image and uv both changed under sibling repos
+# and broke their builds. Bump them here, deliberately, when a run on the new one is green.
+env:
+  UV_VERSION: "0.11.32"
+
 jobs:
   test:
-    name: Run Tests
-    runs-on: ubuntu-latest
+    name: Every test, and no undefined names
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install poppler (the PDF to PNG tests need it)
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends poppler-utils
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: ${{ env.UV_VERSION }}
+
+      - name: Install dependencies (the lock file must be current)
+        run: uv sync --extra dev --locked
+
+      # The project's ruff settings exclude most of the tree by name ("api", "cli", "docs" and
+      # more), so `ruff check .` looks at almost nothing. This step ignores those settings and
+      # asks one question of the whole package: is any name used that does not exist?
+      - name: Undefined names and syntax errors in src/waft
+        run: uv run ruff check src/waft --isolated --select E9,F63,F7,F82
+
+      # The whole suite. Until 2026-11-14 this ran tests/api only, about 7 percent of it,
+      # which is how 25 failing tests sat on main under a green check.
+      - name: Run every test
+        run: uv run pytest -q
+
+      - name: The lab works here (controls, determinism, record, tamper tests)
+        run: uv run waft lab doctor
+
+      - name: The tests left the checkout as they found it
+        run: |
+          git status --porcelain
+          test -z "$(git status --porcelain)"
+
+  wheel:
+    name: A built wheel installs and starts
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
       - name: Install uv
         uses: astral-sh/setup-uv@v4
         with:
-          version: "latest"
+          version: ${{ env.UV_VERSION }}
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
+      - name: Build the wheel
+        run: uv build --wheel -o dist
 
-      - name: Install dependencies
-        run: uv sync --extra dev
-
-      - name: Run tests
-        run: uv run pytest tests/api
+      # Installed into a fresh environment and run from another folder, so nothing can be
+      # picked up from the source tree. A wheel that could not start the CLI shipped for months.
+      - name: Install it somewhere clean and use it
+        run: |
+          uv venv /tmp/wheel-env
+          uv pip install --python /tmp/wheel-env/bin/python dist/*.whl
+          cd /tmp
+          WAFT_DEALER=off /tmp/wheel-env/bin/waft --help > /dev/null
+          /tmp/wheel-env/bin/python -c "import waft.api.main, waft.gym, waft.record, waft.lab"
+          WAFT_DEALER=off /tmp/wheel-env/bin/waft lab doctor
 
   lint:
     name: Lint and Format Check
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
       - name: Install uv
         uses: astral-sh/setup-uv@v4
         with:
-          version: "latest"
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
+          version: ${{ env.UV_VERSION }}
 
       - name: Install dependencies
-        run: uv sync --extra dev
+        run: uv sync --extra dev --locked
 
       - name: Check formatting
         run: uv run ruff format --check .
@@ -62,26 +101,20 @@ jobs:
 
   verify:
     name: Verify Project Structure
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
       - name: Install uv
         uses: astral-sh/setup-uv@v4
         with:
-          version: "latest"
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
+          version: ${{ env.UV_VERSION }}
 
       - name: Install dependencies
-        run: uv sync --extra dev
+        run: uv sync --extra dev --locked
 
       - name: Install waft
         run: uv tool install --editable .
 
       - name: Verify project structure
         run: waft verify
-
