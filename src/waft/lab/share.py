@@ -371,12 +371,12 @@ def render(s: Story, width: int, height: int, reveal: float | None = None, closi
     # ---- the pictures share what is left
     top, bottom = y, fy
     curve_h = (bottom - top) * (0.27 if not tall else 0.24)
-    gap = 56 if not tall else 84
+    gap = 78 if not tall else 84
     tree_box = (m + 26, top + 22, width - m - 26, bottom - curve_h - gap - 22)
     panel_bottom = bottom - curve_h - gap
     pen.rect(m, top, width - m, panel_bottom, PANEL, radius=28)
     _draw_tree(pen, s, tree_box, float(s.last) + 2 if done else shown)
-    _draw_legend(pen, m + 6, panel_bottom + (26 if not tall else 34))
+    _draw_legend(pen, m + 6, panel_bottom + (32 if not tall else 34))
     curve_box = (m + 40, bottom - curve_h, width - m - 10, bottom - 34)
     _draw_curve(pen, s, curve_box, float(s.last) if done else shown)
     pen.text(curve_box[0], bottom - 2, "generation 0", "mono", 19, FAINT, anchor="ls")
@@ -529,7 +529,7 @@ h2 {{ font-size:20px; margin:40px 0 10px; }}
 svg {{ width:100%; height:auto; display:block; }}
 button {{ background:var(--amber); color:#14110a; border:0; border-radius:999px; padding:10px 20px; font:inherit; font-weight:700; cursor:pointer; margin-top:14px; }}
 table {{ width:100%; border-collapse:collapse; font-size:14px; }}
-th, td {{ text-align:right; padding:5px 8px; border-bottom:1px solid var(--rule); }}
+th, td {{ text-align:right; padding:5px 6px; border-bottom:1px solid var(--rule); white-space:nowrap; }}
 th {{ color:var(--muted); font-weight:500; }}
 .scroll {{ overflow-x:auto; }}
 ul {{ padding-left:20px; margin:6px 0; }}
@@ -557,7 +557,7 @@ footer {{ margin-top:48px; color:var(--muted); }}
 {prompt}
 
 <h2>Generation by generation</h2>
-<div class="scroll"><table><thead><tr><th>generation</th><th>best</th><th>mean</th><th>worst</th><th>first-try wins</th><th>below 0.5</th></tr></thead><tbody>{rows}</tbody></table></div>
+<div class="scroll"><table><thead><tr><th>gen</th><th>best</th><th>mean</th><th>worst</th><th>first try</th><th>under 0.5</th></tr></thead><tbody>{rows}</tbody></table></div>
 
 <h2>Controls: can the scoring fail, can it pass?</h2>
 <ul>{controls}</ul>
