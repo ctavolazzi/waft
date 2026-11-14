@@ -9,7 +9,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Work in progress features
+- `waft lab`: a seeded evolution loop on the Jungle Gym's quests, recorded in a hash-chained
+  Logbook. Commands `run`, `verify`, `show`, `share` and `doctor`. See `docs/LAB.md`.
+- `waft.record`: the Logbook and its two verifiers (Python and Node), vendored from the FogSift system.
+- `waft.lab.llm`: a provider client with failover, cooldowns, token usage and a call budget,
+  ported from the Keeper's client. Providers come from `WAFT_LLM_*` variables only.
+- `waft lab share`: a 1080 x 1350 card, a self-contained replay page and a 1080 x 1920 video
+  drawn from a recorded run.
+- A recorded example run under `docs/lab/example/`, with its head published in `docs/LAB.md`.
+- `WAFT_TRACE_DIR`, `WAFT_TRACING=off`, `WAFT_DEALER=off` and `WAFT_API_TRUSTED_CLIENTS`.
+- Tests for all of the above. The suite went from 516 passing, 25 failing and 1 error to 850
+  passing and none failing (measured 2026-11-14 on Python 3.14.3).
+
+### Changed
+
+- The Jungle Gym moved from `src/gym/rpg` into the package as `waft.gym`; `gym.rpg` remains as an alias.
+- The gym's judge now enforces the maths its quests ask for (weights positive and summing to 1.0).
+- Packages are discovered automatically and data files ship in the wheel.
+- The API trusts this machine and asks every other client for its token. `docker-compose.yml`
+  publishes the port on 127.0.0.1 only.
+- `waft rag ui` and `waft rag serve` bind to 127.0.0.1 by default.
+- CI runs the whole suite, a check for undefined names, the lab doctor, and a wheel install.
+- 20 locked packages with known advisories were upgraded.
+
+### Fixed
+
+- A wheel built from the repository could not start the CLI (202 of 516 modules shipped) and
+  the API could not be imported from one.
+- `decision_matrix` and `input_transformer` called tracing functions they never imported.
+- 31 undefined names across the package, among them a broken `waft final-report` and a legacy
+  dashboard that opened a debug log under `/Users/...` on every request.
+- 25 leftover debug blocks that wrote to a hardcoded `/Users/...` path.
+- Sibling beings spawned in the same second shared one id (and one genome).
+- `POST /api/auth/handshake` returned the API token to any caller.
+- Running the tests rewrote tracked files (`_pantheon/the_dealer`, trace logs).
 
 ## [0.9.4] - 2026-01-19
 

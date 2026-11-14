@@ -8,6 +8,25 @@
 
 ---
 
+## What runs today: the lab
+
+`waft lab` breeds variants of an agent on real tasks, writes the run into a hash-chained log
+that anyone can check, and turns it into a card and a short video.
+
+![A lab run: best fitness 0.68 to 1.00 over 12 generations](docs/lab/example/20261114T192828Z-lab-scripted-seed-7-b218/share/card.png)
+
+```bash
+waft lab run        # breed, record, and write the card, replay page and video
+waft lab verify     # re-derive every hash of a recorded run
+waft lab doctor     # prove the lab works on this machine
+```
+
+The run in the picture used simulated agents (a scripted fake model) and says so on the card.
+`--agent model` points the same loop at a real model. What a run shows, what it does not, and
+how to check the example yourself: [docs/LAB.md](docs/LAB.md).
+
+---
+
 ## The Promise
 
 Waft is a scientific instrument for studying the **physics of artificial cognition** through directed evolution. We don't just create AI agents—we breed them, test them in the crucible of reality, and observe them evolve over thousands of generations.
