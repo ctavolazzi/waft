@@ -21,19 +21,7 @@ from .models import BattleLog, Hero, Quest
 from .scint import RegexScintDetector
 from .stabilizer import StabilizationLoop
 
-# Import InputTransformer from waft.core
-# Note: This assumes 'src' is in sys.path (as done in play_gym.py)
-try:
-    from waft.core.input_transformer import InputTransformer
-except ImportError:
-    # Fallback: try relative import if running from within src
-    import sys
-    from pathlib import Path
-
-    src_path = Path(__file__).parent.parent.parent
-    if str(src_path) not in sys.path:
-        sys.path.insert(0, str(src_path))
-    from waft.core.input_transformer import InputTransformer
+from ..core.input_transformer import InputTransformer
 
 
 class GameMaster:

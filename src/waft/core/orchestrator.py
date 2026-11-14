@@ -192,7 +192,7 @@ class SystemOrchestrator:
             RegexScintDetector instance
         """
         if "scint_detector" not in self._systems:
-            from gym.rpg.scint import RegexScintDetector
+            from ..gym.scint import RegexScintDetector
 
             # ScintDetector is stateless, no initialization needed
             self._systems["scint_detector"] = RegexScintDetector()

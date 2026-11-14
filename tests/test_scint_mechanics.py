@@ -1,7 +1,7 @@
 import json
 
-from src.gym.rpg.scint import RegexScintDetector, ScintType
-from src.gym.rpg.stabilizer import StabilizationLoop
+from waft.gym.scint import RegexScintDetector, ScintType
+from waft.gym.stabilizer import StabilizationLoop
 
 
 class TestScintMechanics:
