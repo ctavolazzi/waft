@@ -9,6 +9,7 @@ The "Operating System" for projects, orchestrating:
 """
 
 import json
+import os
 import time
 import webbrowser
 from datetime import datetime
@@ -1056,7 +1057,13 @@ def _check_dealer_appearance():
     The Dealer is a god-entity from the Realm of Probability.
     He appears with lottery-like odds that increase over time.
     When he appears, the SYSTEM must pick a card.
+
+    Set WAFT_DEALER=off to keep him away (tests and scripted runs do this,
+    because an appearance rewrites the state files under _pantheon/the_dealer).
     """
+    if os.environ.get("WAFT_DEALER", "on").strip().lower() in ("off", "0", "false", "no"):
+        return
+
     try:
         from .dealer import TheDealer
 
@@ -1082,8 +1089,9 @@ def main_callback(ctx: typer.Context):
 
     The Dealer may appear at any time...
     """
-    # Check for The Dealer on every command (except 'cards' subcommands to avoid recursion)
-    if ctx.invoked_subcommand and not ctx.invoked_subcommand.startswith("cards"):
+    # Check for The Dealer on every command (except 'cards' subcommands to avoid recursion,
+    # and 'lab', whose runs must leave nothing behind but their own record)
+    if ctx.invoked_subcommand and not ctx.invoked_subcommand.startswith(("cards", "lab")):
         _check_dealer_appearance()
 
 

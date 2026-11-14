@@ -16,6 +16,8 @@ def _traces_outside_the_repo(tmp_path_factory):
 
     previous = os.environ.get("WAFT_TRACE_DIR")
     os.environ["WAFT_TRACE_DIR"] = str(tmp_path_factory.mktemp("traces"))
+    # The Dealer rewrites _pantheon/the_dealer in the working directory when he appears.
+    os.environ["WAFT_DEALER"] = "off"
     reset_tracer()
     yield
     if previous is None:
