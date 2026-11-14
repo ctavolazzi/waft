@@ -4,43 +4,13 @@ Quest Guide API endpoints.
 Provides REST API for the Meta-Cognitive Guide LLM System quest implementation.
 """
 
-import importlib.util
-import sys
 from pathlib import Path
-
-# Import the quest system
-# We need to import from the scripts directory
-from pathlib import Path as PathLib
 from typing import Any
 
 from fastapi import APIRouter, HTTPException, Request, status
 from pydantic import BaseModel
 
-
-def _load_quest_manager():
-    """Dynamically load QuestManager from scripts directory."""
-    # From src/waft/api/routes/quests.py, go up 4 levels to project root
-    project_root = PathLib(__file__).parent.parent.parent.parent.parent
-    script_path = project_root / "scripts" / "quest_guide_implementation.py"
-
-    # Add scripts to path temporarily
-    scripts_dir = str(project_root / "scripts")
-    if scripts_dir not in sys.path:
-        sys.path.insert(0, scripts_dir)
-
-    try:
-        spec = importlib.util.spec_from_file_location("quest_guide_implementation", script_path)
-        if spec and spec.loader:
-            module = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(module)
-            return module.QuestManager, module.QuestStatus, module.QuestProgress
-        else:
-            raise ImportError(f"Could not load quest_guide_implementation from {script_path}")
-    except Exception as e:
-        raise ImportError(f"Failed to import quest system: {e}")
-
-
-QuestManager, QuestStatus, QuestProgress = _load_quest_manager()
+from ...core.quest_guide import QuestManager, QuestProgress, QuestStatus
 
 router = APIRouter(prefix="/api/quests", tags=["quests"])
 

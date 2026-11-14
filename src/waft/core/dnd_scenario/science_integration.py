@@ -4,6 +4,8 @@ Science Integration - Bridge between DnD Scenario System and /science-bitch.
 Connects experimental iteration with scientific method workflow.
 """
 
+from __future__ import annotations
+
 from collections.abc import Callable
 from datetime import datetime
 from pathlib import Path

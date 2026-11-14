@@ -10,6 +10,7 @@ implement the Meta-Cognitive Guide LLM System step by step.
 
 Usage:
     python scripts/quest_guide_implementation.py [--quest <quest_id>] [--checkpoint <checkpoint_id>] [--test] [--status]
+    (that script is a thin wrapper; the code lives here so the API can import it from an installed package)
 
 Quest System:
     - Each quest represents a phase of implementation

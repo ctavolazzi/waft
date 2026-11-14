@@ -8,9 +8,9 @@ Utility functions to convert HTML/CSS templates to printer-friendly
 and optimizes for black-and-white printing.
 
 Usage:
-    from scripts.printer_friendly_helper import convert_to_printer_friendly
+    from waft.printer_friendly_helper import convert_css_to_printer_friendly
 
-    printer_friendly_css = convert_to_printer_friendly(original_css)
+    printer_friendly_css = convert_css_to_printer_friendly(original_css)
 """
 
 import re
@@ -154,13 +154,16 @@ def create_printer_friendly_field_guide_template() -> str:
     # but extracted as a reusable function
     from pathlib import Path
 
+    # The full template lives in examples/ of a source checkout; an installed package
+    # does not have it and uses the basic template below.
     template_file = (
-        Path(__file__).parent.parent / "examples" / "generate_waft_field_guide_printer_friendly.py"
+        Path(__file__).resolve().parents[2]
+        / "examples"
+        / "generate_waft_field_guide_printer_friendly.py"
     )
 
-    # Read the template from the file
-    with open(template_file) as f:
-        content = f.read()
+    if template_file.exists():
+        content = template_file.read_text()
         # Extract the PRINTER_FRIENDLY_TEMPLATE constant
         match = re.search(r'PRINTER_FRIENDLY_TEMPLATE = """(.*?)"""', content, re.DOTALL)
         if match:

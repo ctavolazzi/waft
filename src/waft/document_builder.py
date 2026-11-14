@@ -64,17 +64,7 @@ from .binder import Binder, DocumentEntry
 from .pdf_improvements import PDFContentProcessor, PDFStylingEnhancer
 from .templates.registry import TemplateMetadata, TemplateRegistry, get_registry
 
-# Import printer_friendly_helper with path manipulation
-# This is needed because scripts/ is not in the package path
-try:
-    # Try relative import first (if scripts is in path)
-    from scripts.printer_friendly_helper import convert_html_template_to_printer_friendly
-except ImportError:
-    # Fallback: add project root to path
-    project_root = Path(__file__).parent.parent.parent
-    if str(project_root) not in sys.path:
-        sys.path.insert(0, str(project_root))
-    from scripts.printer_friendly_helper import convert_html_template_to_printer_friendly
+from .printer_friendly_helper import convert_html_template_to_printer_friendly
 
 
 class TemplateType(Enum):

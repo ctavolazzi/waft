@@ -2,6 +2,8 @@
 Pet card generator using Teleport Massive Card Game rendering utilities.
 """
 
+from __future__ import annotations
+
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -16,14 +18,28 @@ tmcg_root = project_root / "_realms" / "teleport_massive_cardgame" / "src"
 if tmcg_root.exists() and str(tmcg_root) not in sys.path:
     sys.path.insert(0, str(tmcg_root))
 
-from tmcg.generators.art_generator import ArtGenerator, ArtStyle
-from tmcg.generators.card_generator import CardGenerator
-from tmcg.models.card import FrameColor, Rarity
-from tmcg.renderers.html_renderer import HTMLRenderer
+# The card game lives in _realms/ in a source checkout and is not part of the installed
+# package. Without it everything else about pets (and the API that imports this module)
+# must still load; only making a card needs it.
+try:
+    from tmcg.generators.art_generator import ArtGenerator, ArtStyle
+    from tmcg.generators.card_generator import CardGenerator
+    from tmcg.models.card import FrameColor, Rarity
+    from tmcg.renderers.html_renderer import HTMLRenderer
+
+    TMCG_AVAILABLE = True
+except ImportError:
+    ArtGenerator = ArtStyle = CardGenerator = FrameColor = Rarity = HTMLRenderer = None
+    TMCG_AVAILABLE = False
 
 
 class PetCardGenerator:
     def __init__(self, project_path: Path | None = None):
+        if not TMCG_AVAILABLE:
+            raise RuntimeError(
+                "Pet cards need the Teleport Massive card game (tmcg), which ships only in a "
+                "WAFT source checkout under _realms/teleport_massive_cardgame."
+            )
         self.project_path = Path(project_path or project_root)
         self.cards_dir = pet_realm_path(self.project_path) / "cards"
         self.cards_dir.mkdir(parents=True, exist_ok=True)
