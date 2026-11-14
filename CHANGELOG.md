@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   drawn from a recorded run.
 - A recorded example run under `docs/lab/example/`, with its head published in `docs/LAB.md`.
 - `WAFT_TRACE_DIR`, `WAFT_TRACING=off`, `WAFT_DEALER=off` and `WAFT_API_TRUSTED_CLIENTS`.
-- Tests for all of the above. The suite went from 516 passing, 25 failing and 1 error to 850
+- Tests for all of the above. The suite went from 516 passing, 25 failing and 1 error to 852
   passing and none failing (measured 2026-11-14 on Python 3.14.3).
 
 ### Changed
