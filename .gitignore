@@ -53,3 +53,6 @@ _unified/
 .waft_api_token
 .pyrite_secret_key
 .hmac_key
+
+# Recorded lab runs (waft lab run). Commit a run on purpose, with its head published elsewhere.
+lab-runs/

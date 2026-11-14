@@ -36,6 +36,7 @@ except Exception:
 
 from .cli.awakening_cli import app as awakening_app
 from .cli.case_render import case_render_cmd
+from .lab.cli import lab_app
 from .cli.chief_cli import app as chief_app
 from .cli.epistemic_display import (
     create_epistemic_dashboard,
@@ -1045,6 +1046,7 @@ app.add_typer(cards_app, name="cards")
 app.add_typer(chief_app, name="chief")
 app.add_typer(meme_app, name="meme")
 app.add_typer(generate_app, name="generate")
+app.add_typer(lab_app, name="lab")
 generate_app.add_typer(meme_app, name="meme")
 app.command(name="case-render")(case_render_cmd)
 

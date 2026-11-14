@@ -17,12 +17,11 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
+from ..core.decision_matrix import DecisionMatrix, DecisionMatrixCalculator
+from ..core.input_transformer import InputTransformer
 from .models import BattleLog, Hero, Quest
 from .scint import RegexScintDetector
 from .stabilizer import StabilizationLoop
-
-from ..core.decision_matrix import DecisionMatrix, DecisionMatrixCalculator
-from ..core.input_transformer import InputTransformer
 
 
 def validate_answer(response_data: Any) -> DecisionMatrix:
