@@ -28,6 +28,7 @@ of Pantheon Entities (Forces that Bind Reality Together).
 import hashlib
 import json
 import random
+import uuid
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
@@ -1832,8 +1833,11 @@ class BeingSystem:
         if parent_being_id is None:
             parent_being_id = the_one.being_id
 
-        # Generate being ID
-        being_id = f"being_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{hashlib.sha256(f'{reality_id}{parent_being_id}'.encode()).hexdigest()[:8]}"
+        # Generate being ID. The nonce keeps siblings spawned in the same second apart:
+        # without it every variant of one parent got the same id (and, because skill
+        # mutations are derived from the id, the same genome).
+        nonce = uuid.uuid4().hex
+        being_id = f"being_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{hashlib.sha256(f'{reality_id}{parent_being_id}{nonce}'.encode()).hexdigest()[:8]}"
 
         # Inherit skills from parent if provided
         skills = initial_skills or {}
