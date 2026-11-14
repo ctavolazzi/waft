@@ -40,7 +40,7 @@ class TemplateValidator:
 
         # Check module can be imported
         try:
-            module_path = f"src.waft.templates.{template.module_name}"
+            module_path = f"waft.templates.{template.module_name}"
             module = importlib.import_module(module_path)
         except Exception as e:
             errors.append(f"Cannot import module: {e}")

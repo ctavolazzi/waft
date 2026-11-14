@@ -9,9 +9,9 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
-from src.waft.api.main import create_app
-from src.waft.api.services.work_effort_service import WorkEffortService
-from src.waft.core.projects import ProjectManager
+from waft.api.main import create_app
+from waft.api.services.work_effort_service import WorkEffortService
+from waft.core.projects import ProjectManager
 
 
 @pytest.fixture
@@ -51,6 +51,6 @@ def test_client(temp_project_path):
 @pytest.fixture
 def auth_token(temp_project_path):
     """Create a test authentication token."""
-    from src.waft.api.auth import get_or_create_token
+    from waft.api.auth import get_or_create_token
 
     return get_or_create_token(temp_project_path)

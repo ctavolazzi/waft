@@ -11,7 +11,7 @@ from PIL import Image
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.waft.evolution.pdf_image_converter import (
+from waft.evolution.pdf_image_converter import (
     convert_images_to_pdf,
     convert_pdf_to_images,
     pdf_to_pngs,

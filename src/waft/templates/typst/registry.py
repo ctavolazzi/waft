@@ -79,7 +79,7 @@ class TypstTemplateRegistry:
             TypstTemplateMetadata or None if extraction fails
         """
         module_name = wrapper_file.stem
-        module_path = f"src.waft.templates.typst.wrappers.{module_name}"
+        module_path = f"waft.templates.typst.wrappers.{module_name}"
 
         try:
             module = importlib.import_module(module_path)
@@ -266,7 +266,7 @@ class TypstTemplateRegistry:
         if not template or not template.generate_function:
             return None
 
-        module_path = f"src.waft.templates.typst.wrappers.{template.module_name}"
+        module_path = f"waft.templates.typst.wrappers.{template.module_name}"
         try:
             module = importlib.import_module(module_path)
             return getattr(module, template.generate_function)

@@ -18,13 +18,13 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from src.waft.core.agent.base import BaseAgent
-from src.waft.core.agent.state import AgentConfig
-from src.waft.core.hub.display import PygameBiomeEngine
-from src.waft.core.hub.lifecycle import TheReaper, TheSlicer
-from src.waft.core.science.observer import TheObserver
-from src.waft.core.science.report import ObsidianGenerator
-from src.waft.core.world.biome import Biome
+from waft.core.agent.base import BaseAgent
+from waft.core.agent.state import AgentConfig
+from waft.core.hub.display import PygameBiomeEngine
+from waft.core.hub.lifecycle import TheReaper, TheSlicer
+from waft.core.science.observer import TheObserver
+from waft.core.science.report import ObsidianGenerator
+from waft.core.world.biome import Biome
 
 
 class TestOrganism(BaseAgent):
@@ -57,7 +57,7 @@ async def run_experiment():
     print("STEP 1: Creating Biome and PetriDish...")
     print("-" * 80)
 
-    from src.waft.core.world.biome import AbioticFactors
+    from waft.core.world.biome import AbioticFactors
 
     abiotic = AbioticFactors()
     biome = Biome(

@@ -20,11 +20,11 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from src.waft.core.agent import AgentConfig, BaseAgent
-from src.waft.core.agent.anatomy import AnatomicalArchetype
-from src.waft.core.hub import TheReaper, TheSlicer
-from src.waft.core.science import TheObserver
-from src.waft.core.world import Biome
+from waft.core.agent import AgentConfig, BaseAgent
+from waft.core.agent.anatomy import AnatomicalArchetype
+from waft.core.hub import TheReaper, TheSlicer
+from waft.core.science import TheObserver
+from waft.core.world import Biome
 
 
 class ConjugationOrganism(BaseAgent):
@@ -57,7 +57,7 @@ async def run_experiment():
     print("STEP 1: Creating Biome and PetriDish...")
     print("-" * 80)
 
-    from src.waft.core.world.biome import AbioticFactors
+    from waft.core.world.biome import AbioticFactors
 
     abiotic = AbioticFactors()
     biome = Biome(biome_id="biome_011", project_path=project_root, abiotic_factors=abiotic)

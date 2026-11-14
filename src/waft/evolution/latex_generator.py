@@ -5,7 +5,7 @@ Generates LaTeX documents from content, integrating with WAFT's evolution system
 Supports scientific paper format, research reports, and documentation.
 
 Usage:
-    from src.waft.evolution.latex_generator import LaTeXGenerator
+    from waft.evolution.latex_generator import LaTeXGenerator
 
     generator = LaTeXGenerator.from_content(
         content="# My Document\n\nContent here...",

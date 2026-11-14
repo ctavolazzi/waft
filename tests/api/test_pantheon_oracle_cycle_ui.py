@@ -1,7 +1,7 @@
 from fastapi.testclient import TestClient
 
-from src.waft.api.routes import oracle as oracle_routes
-from src.waft.api.routes import pantheon_oracle_cycle
+from waft.api.routes import oracle as oracle_routes
+from waft.api.routes import pantheon_oracle_cycle
 
 
 class _FakeOracle:

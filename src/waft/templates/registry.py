@@ -76,7 +76,7 @@ class TemplateRegistry:
             TemplateMetadata or None if extraction fails
         """
         module_name = template_file.stem
-        module_path = f"src.waft.templates.{module_name}"
+        module_path = f"waft.templates.{module_name}"
 
         try:
             module = importlib.import_module(module_path)
@@ -268,7 +268,7 @@ class TemplateRegistry:
         if not template or not template.generate_function:
             return None
 
-        module_path = f"src.waft.templates.{template.module_name}"
+        module_path = f"waft.templates.{template.module_name}"
         try:
             module = importlib.import_module(module_path)
             return getattr(module, template.generate_function)

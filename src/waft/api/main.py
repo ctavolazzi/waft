@@ -247,5 +247,5 @@ def create_app(project_path: Path, static_dir: Path | None = None) -> FastAPI:
 
 
 # Create default app instance for direct uvicorn usage
-# Usage: uvicorn src.waft.api.main:app --reload
+# Usage: uvicorn waft.api.main:app --reload
 app = create_app(project_path=Path(os.getenv("WAFT_PROJECT_PATH", str(Path.cwd()))))

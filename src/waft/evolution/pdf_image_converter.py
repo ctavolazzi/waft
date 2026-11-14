@@ -6,12 +6,12 @@ Supports multiple standard page sizes with configurable DPI.
 
 Usage:
     # Convert PDF to PNGs
-    from src.waft.evolution.pdf_image_converter import pdf_to_pngs, PageSize
+    from waft.evolution.pdf_image_converter import pdf_to_pngs, PageSize
 
     png_paths = pdf_to_pngs("document.pdf", dpi=300)
 
     # Convert PNGs to PDF with custom page size
-    from src.waft.evolution.pdf_image_converter import pngs_to_pdf, PageSize
+    from waft.evolution.pdf_image_converter import pngs_to_pdf, PageSize
 
     pngs_to_pdf(png_paths, "output.pdf", page_size=PageSize.LETTER, dpi=300)
 
@@ -288,7 +288,7 @@ def pngs_to_pdf(
 
     Examples:
         # Use standard page size
-        from src.waft.evolution.pdf_image_converter import pngs_to_pdf, PageSize
+        from waft.evolution.pdf_image_converter import pngs_to_pdf, PageSize
 
         pngs_to_pdf(png_list, "output.pdf", page_size=PageSize.LETTER)
         pngs_to_pdf(png_list, "output.pdf", page_size=PageSize.A4)
@@ -457,7 +457,7 @@ def convert_images_to_pdf(
         Path to generated PDF
 
     Examples:
-        from src.waft.evolution.pdf_image_converter import convert_images_to_pdf, PageSize
+        from waft.evolution.pdf_image_converter import convert_images_to_pdf, PageSize
 
         # Use standard page size
         convert_images_to_pdf(images, "output.pdf", page_size=PageSize.A4)

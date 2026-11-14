@@ -12,7 +12,7 @@ Available Templates:
 - tm_report: Technical memo template
 
 Usage:
-    from src.waft.templates.registry import get_registry
+    from waft.templates.registry import get_registry
 
     registry = get_registry()
     templates = registry.list_templates()
@@ -31,10 +31,10 @@ Usage:
     )
 
 CLI:
-    python -m src.waft.templates.cli list
-    python -m src.waft.templates.cli show field_guide
-    python -m src.waft.templates.cli search "lab"
-    python -m src.waft.templates.cli validate
+    python -m waft.templates.cli list
+    python -m waft.templates.cli show field_guide
+    python -m waft.templates.cli search "lab"
+    python -m waft.templates.cli validate
 """
 
 from pathlib import Path

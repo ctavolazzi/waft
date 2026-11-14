@@ -20,10 +20,10 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from src.waft.core.agent import AgentConfig, BaseAgent
-from src.waft.core.science import TheObserver
-from src.waft.core.science.taxonomy import LineagePoet
-from src.waft.core.world import Biome
+from waft.core.agent import AgentConfig, BaseAgent
+from waft.core.science import TheObserver
+from waft.core.science.taxonomy import LineagePoet
+from waft.core.world import Biome
 
 
 class TestOrganism(BaseAgent):
@@ -56,7 +56,7 @@ async def run_experiment():
     print("STEP 1: Creating Biome and PetriDish...")
     print("-" * 80)
 
-    from src.waft.core.world.biome import AbioticFactors
+    from waft.core.world.biome import AbioticFactors
 
     abiotic = AbioticFactors()
     biome = Biome(biome_id="biome_007", project_path=project_root, abiotic_factors=abiotic)

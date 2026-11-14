@@ -10,7 +10,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from src.waft.templates.typst.registry import (
+from waft.templates.typst.registry import (
     TypstTemplateMetadata,
     TypstTemplateRegistry,
     get_typst_registry,

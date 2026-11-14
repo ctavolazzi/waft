@@ -18,7 +18,7 @@ from ..security import write_secure_file
 
 if str(Path(__file__).parent.parent.parent.parent.parent) not in sys.path:
     sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent.parent))
-from src.waft.being import BeingSystem
+from waft.being import BeingSystem
 
 FOUNDING_STORY = """
 # Teleport Massive: The Founding Story

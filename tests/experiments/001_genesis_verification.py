@@ -18,7 +18,7 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from src.waft.core.agent import AgentConfig, BaseAgent, Modification
+from waft.core.agent import AgentConfig, BaseAgent, Modification
 
 
 class TestAgent(BaseAgent):
@@ -144,7 +144,7 @@ async def run_experiment():
     print("STEP 4: Verifying TheObserver (Scientific Registry)...")
     print("-" * 80)
 
-    from src.waft.core.science import TheObserver
+    from waft.core.science import TheObserver
 
     observer = TheObserver(project_path=project_root)
     events = observer.get_laboratory_log()

@@ -314,7 +314,7 @@ class ReflectionSystem:
         Returns:
             Path to generated report
         """
-        from src.waft.templates.code_documentation import generate_code_documentation
+        from waft.templates.code_documentation import generate_code_documentation
 
         # Build HTML content
         content = f"""
@@ -497,7 +497,7 @@ WAFT documenting itself. Recursive self-improvement through documentation.
         Returns:
             Path to generated documentation
         """
-        from src.waft.templates.code_documentation import generate_code_documentation
+        from waft.templates.code_documentation import generate_code_documentation
 
         # Scan WAFT directory structure
         list((self.waft_root / "templates").glob("*.py"))
@@ -712,7 +712,7 @@ All WAFT templates follow these principles:
 
 <h3>Basic Document Generation</h3>
 
-<pre><code>from src.waft.templates.simple_scientific import generate_simple_scientific_document
+<pre><code>from waft.templates.simple_scientific import generate_simple_scientific_document
 
 # Generate a scientific paper
 generate_simple_scientific_document(
@@ -726,7 +726,7 @@ generate_simple_scientific_document(
 
 <h3>Creating a Binder</h3>
 
-<pre><code>from src.waft.binder import Binder, DocumentEntry
+<pre><code>from waft.binder import Binder, DocumentEntry
 
 # Create binder
 binder = Binder(
@@ -747,7 +747,7 @@ binder.generate(Path("complete_docs.pdf"))
 
 <h3>Running Reflection</h3>
 
-<pre><code>from src.waft.reflection import ReflectionSystem
+<pre><code>from waft.reflection import ReflectionSystem
 
 # Create reflector
 reflector = ReflectionSystem(waft_root=Path("src/waft"))

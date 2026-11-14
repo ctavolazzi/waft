@@ -6,7 +6,7 @@ A terminal-based tamagotchi you can interact with in real-time.
 Perfect for Phase 0 testing and YouTube content.
 
 Usage:
-    python -m src.waft.pet.fogsift_cli
+    python -m waft.pet.fogsift_cli
 
 Controls:
     f - Feed

@@ -5,7 +5,7 @@ Provides a clean, composable interface for generating PDFs with minimal boilerpl
 Uses ChatDistiller, StylingGenome, and TwoPageGenerator under the hood.
 
 Example:
-    from src.waft.evolution.pdf_generator import PDFGenerator
+    from waft.evolution.pdf_generator import PDFGenerator
 
     # Simple usage
     PDFGenerator.from_content(

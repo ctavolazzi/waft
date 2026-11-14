@@ -5,7 +5,7 @@ Poker Visualization Package
 Easy-to-use package for generating poker game visualizations.
 
 Quick Start:
-    from src.waft.templates.typst.poker import PokerGame
+    from waft.templates.typst.poker import PokerGame
 
     game = PokerGame("My Poker Game")
     game.add_player("Alice", ["AS", "KH"])

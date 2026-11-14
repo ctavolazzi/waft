@@ -865,7 +865,7 @@ def runtime_demo_cmd(
         console.print("[bold red]❌ Runtime API not reachable[/bold red]")
         console.print(f"[dim]{e}[/dim]")
         console.print(
-            f"[dim]Start it with: PYENV_VERSION=3.14.3 python -m uvicorn src.waft.api.main:app --host {host} --port {port}[/dim]"
+            f"[dim]Start it with: PYENV_VERSION=3.14.3 python -m uvicorn waft.api.main:app --host {host} --port {port}[/dim]"
         )
         raise typer.Exit(1)
 

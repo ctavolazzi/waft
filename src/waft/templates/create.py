@@ -201,7 +201,7 @@ def create_template_interactive() -> Path:
     print(f"\n✅ Created template: {template_file}")
     print("\nNext steps:")
     print(f"  1. Edit {template_file} to customize the template")
-    print(f"  2. Test with: python -m src.waft.templates.cli show {name}")
-    print(f"  3. Validate with: python -m src.waft.templates.cli validate --name {name}")
+    print(f"  2. Test with: python -m waft.templates.cli show {name}")
+    print(f"  3. Validate with: python -m waft.templates.cli validate --name {name}")
 
     return template_file

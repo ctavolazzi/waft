@@ -12,9 +12,9 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from src.waft.core.agent.state import EvolutionaryEvent, EvolutionaryEventType
-from src.waft.core.science import TheObserver
-from src.waft.core.science.taxonomy import LineagePoet
+from waft.core.agent.state import EvolutionaryEvent, EvolutionaryEventType
+from waft.core.science import TheObserver
+from waft.core.science.taxonomy import LineagePoet
 
 
 def create_session_end_event(project_path: Path):

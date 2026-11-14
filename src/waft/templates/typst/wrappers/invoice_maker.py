@@ -9,7 +9,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from src.waft.core.corporations.economics.transaction import Transaction, TransactionType
+from waft.core.corporations.economics.transaction import Transaction, TransactionType
 
 
 def generate_invoice_maker(

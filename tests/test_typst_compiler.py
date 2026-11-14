@@ -12,7 +12,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from src.waft.templates.typst.compiler import TypstCompiler
+from waft.templates.typst.compiler import TypstCompiler
 
 # Check if typst is available
 TYPST_AVAILABLE = shutil.which("typst") is not None

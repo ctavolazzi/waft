@@ -11,8 +11,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from src.waft.core.empirica import EmpiricaManager
-from src.waft.core.science.oracle import TheOracle
+from waft.core.empirica import EmpiricaManager
+from waft.core.science.oracle import TheOracle
 
 
 class TestEmpiricaValidation:

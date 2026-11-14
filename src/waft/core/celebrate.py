@@ -76,7 +76,7 @@ class CelebrateManager:
             if str(self.project_path) not in sys.path:
                 sys.path.insert(0, str(self.project_path))
 
-            from src.waft.templates.celebration_card import generate_celebration_card
+            from waft.templates.celebration_card import generate_celebration_card
 
             # Generate one-page celebration card
             self.console.print("[yellow]→[/yellow] Creating beautiful one-page celebration card...")

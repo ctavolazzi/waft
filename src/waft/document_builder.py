@@ -689,7 +689,7 @@ class DocumentBuilder:
         # Import module and get template constant
         import importlib
 
-        module = importlib.import_module(f"src.waft.templates.{template_meta.module_name}")
+        module = importlib.import_module(f"waft.templates.{template_meta.module_name}")
 
         if template_meta.template_constant:
             template_str = getattr(module, template_meta.template_constant)

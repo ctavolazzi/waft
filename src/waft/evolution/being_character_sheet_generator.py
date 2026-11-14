@@ -18,10 +18,10 @@ from typing import Any
 
 # Add project root to path (if needed)
 # project_root is determined from being_dir when called
-from src.waft.being import Being
-from src.waft.core.dnd5e.character import DnD5eCharacter
-from src.waft.core.dnd5e.dice import DnDRoller
-from src.waft.core.dnd5e.stats import ArmorType, DnD5eStats
+from waft.being import Being
+from waft.core.dnd5e.character import DnD5eCharacter
+from waft.core.dnd5e.dice import DnDRoller
+from waft.core.dnd5e.stats import ArmorType, DnD5eStats
 
 # Character Sheet Template with Placeholders
 CHARACTER_SHEET_TEMPLATE = """D&D 5e Character Sheet
@@ -1277,7 +1277,7 @@ def main():
     project_root = Path(__file__).parent.parent.parent
 
     # Create a test Being
-    from src.waft.being import BeingSystem
+    from waft.being import BeingSystem
 
     being_system = BeingSystem(project_path=project_root)
     being = being_system.spawn_being(

@@ -18,7 +18,7 @@ def test_meme_lab_ui_endpoint(test_client: TestClient):
 def test_generate_meme_endpoint_returns_file_url(
     test_client: TestClient, temp_project_path: Path, monkeypatch
 ):
-    from src.waft.api.routes import meme_lab
+    from waft.api.routes import meme_lab
 
     def fake_generate(self, request):
         output_path = Path(request.output)
@@ -64,7 +64,7 @@ def test_templates_endpoint_returns_mainstream_and_more(test_client: TestClient)
 
 
 def test_soundboard_endpoint_returns_8_buttons(test_client: TestClient, monkeypatch):
-    from src.waft.api.routes import meme_lab
+    from waft.api.routes import meme_lab
 
     def fake_generate(self, request):
         output_path = Path(request.output)
@@ -83,7 +83,7 @@ def test_soundboard_endpoint_returns_8_buttons(test_client: TestClient, monkeypa
 
 
 def test_cook_template_generates_random_template_image(test_client: TestClient, monkeypatch):
-    from src.waft.api.routes import meme_lab
+    from waft.api.routes import meme_lab
 
     def fake_generate(self, request):
         output_path = Path(request.output)
@@ -108,7 +108,7 @@ def test_cook_template_generates_random_template_image(test_client: TestClient, 
 def test_generate_dossier_endpoint_returns_pdf_and_artifacts(
     test_client: TestClient, temp_project_path: Path, monkeypatch
 ):
-    from src.waft.api.routes import meme_lab
+    from waft.api.routes import meme_lab
 
     def fake_generate_dossier(project_path, prompt, count, seed, output_pdf, artifacts_dir):
         output_pdf.parent.mkdir(parents=True, exist_ok=True)
@@ -142,7 +142,7 @@ def test_generate_dossier_endpoint_returns_pdf_and_artifacts(
 
 
 def test_history_endpoint_returns_recent_generated_items(test_client: TestClient, monkeypatch):
-    from src.waft.api.routes import meme_lab
+    from waft.api.routes import meme_lab
 
     def fake_generate(self, request):
         output_path = Path(request.output)
@@ -246,7 +246,7 @@ def test_history_reader_skips_malformed_and_invalid_entries(
 
 
 def test_history_append_is_bounded(temp_project_path: Path):
-    from src.waft.api.routes import meme_lab
+    from waft.api.routes import meme_lab
 
     old_max = meme_lab.MAX_HISTORY_ENTRIES
     meme_lab.MAX_HISTORY_ENTRIES = 5

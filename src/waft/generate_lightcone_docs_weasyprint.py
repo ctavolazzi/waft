@@ -7,7 +7,7 @@ This provides better text wrapping, layout control, and maintainability
 compared to the FPDF version.
 
 Usage:
-    from src.waft.generate_lightcone_docs_weasyprint import generate_all_lightcone_docs
+    from waft.generate_lightcone_docs_weasyprint import generate_all_lightcone_docs
     generate_all_lightcone_docs()
 """
 

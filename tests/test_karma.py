@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-from src.waft.karma import (
+from waft.karma import (
     InsufficientKarmaError,
     InvalidLifePathError,
     KarmaMerchant,

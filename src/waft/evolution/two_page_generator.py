@@ -484,7 +484,7 @@ class TwoPageGenerator:
         )
 
         # 5. Metadata component
-        from src.waft import __version__
+        from waft import __version__
 
         generation_info = {
             "generator": "WAFT TwoPageGenerator",
