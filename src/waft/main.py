@@ -4583,7 +4583,11 @@ def rag_index(
 def rag_ui(
     path: str | None = typer.Option(None, "--path", help="Project path (default: current)"),
     port: int = typer.Option(7860, "--port", help="Port to serve on (default: 7860)"),
-    host: str = typer.Option("0.0.0.0", "--host", help="Host to bind to (default: 0.0.0.0)"),
+    host: str = typer.Option(
+        "127.0.0.1",
+        "--host",
+        help="Host to bind to (default: 127.0.0.1; pass 0.0.0.0 to expose it to your network)",
+    ),
 ):
     """
     Launch RAG Chatbot Gradio UI.
@@ -4630,7 +4634,11 @@ def rag_ui(
 def rag_serve(
     path: str | None = typer.Option(None, "--path", help="Project path (default: current)"),
     port: int = typer.Option(7860, "--port", help="Port to serve on (default: 7860)"),
-    host: str = typer.Option("0.0.0.0", "--host", help="Host to bind to (default: 0.0.0.0)"),
+    host: str = typer.Option(
+        "127.0.0.1",
+        "--host",
+        help="Host to bind to (default: 127.0.0.1; pass 0.0.0.0 to expose it to your network)",
+    ),
 ):
     """
     Serve RAG Chatbot API (alias for 'ui' command).
