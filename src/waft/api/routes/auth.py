@@ -6,11 +6,11 @@ Provides secure handshake and token management for local API access.
 
 from pathlib import Path
 
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel
 
-from ..auth import get_or_create_token, verify_token
+from ..auth import get_or_create_token, is_local_client, verify_token
 
 router = APIRouter()
 security = HTTPBearer(auto_error=False)
@@ -45,8 +45,16 @@ async def handshake(request: Request, handshake_req: HandshakeRequest = Handshak
     Perform secure handshake with API.
 
     Returns a token for authenticated requests.
-    This is a one-time setup for local development.
+    This is a one-time setup for local development, so it only answers clients on this
+    machine. A remote client reads the token from .waft_api_token on the serving machine.
     """
+    if not is_local_client(request.client.host if request.client else None):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="The handshake only answers local clients. Read the token from "
+            ".waft_api_token in the project folder on the machine that runs the server.",
+        )
+
     project_path: Path = request.app.state.project_path
 
     # Generate or get existing token
@@ -91,7 +99,8 @@ async def auth_info(request: Request):
     Get authentication information (public endpoint).
     """
     return {
-        "auth_required": False,  # For now, auth is optional
+        # Local clients may read and write without a token; every other client needs one.
+        "auth_required": not is_local_client(request.client.host if request.client else None),
         "auth_type": "bearer_token",
         "handshake_endpoint": "/api/auth/handshake",
         "verify_endpoint": "/api/auth/verify",

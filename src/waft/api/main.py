@@ -4,6 +4,7 @@ FastAPI application for Waft Visualizer API.
 
 import logging
 import os
+from contextlib import asynccontextmanager
 from datetime import datetime
 from pathlib import Path
 
@@ -13,6 +14,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 
+from .auth import TOKEN_FILE, get_or_create_token, is_local_client, token_matches
 from .responses import ErrorCodes, ErrorResponse
 from .routes import (
     auth,
@@ -56,7 +58,16 @@ def create_app(project_path: Path, static_dir: Path | None = None) -> FastAPI:
     Returns:
         Configured FastAPI app
     """
+    @asynccontextmanager
+    async def lifespan(_app: FastAPI):
+        # A real server start (not a bare import or an in-process test client) makes sure the
+        # token exists, so whoever runs the server can hand it to a remote client.
+        get_or_create_token(project_path)
+        logger.info(f"Remote clients need the API token in {project_path / TOKEN_FILE}")
+        yield
+
     app = FastAPI(
+        lifespan=lifespan,
         title="WAFT API",
         description="""
         WAFT (Wave Agent Framework & Tools) REST API.
@@ -114,7 +125,37 @@ def create_app(project_path: Path, static_dir: Path | None = None) -> FastAPI:
         ],
     )
 
-    # CORS middleware
+    # Remote clients must present the token. Local clients keep working as before, so the
+    # dashboards on a laptop need no setup; a server bound to 0.0.0.0 (Docker, a LAN) is closed
+    # to everyone who does not hold the token from .waft_api_token.
+    open_to_remote = ("/api/health", "/api/auth/info", "/api/auth/verify", "/api/decision/health")
+
+    @app.middleware("http")
+    async def remote_clients_need_the_token(request: Request, call_next):
+        host = request.client.host if request.client else None
+        if (
+            request.method != "OPTIONS"
+            and not is_local_client(host)
+            and request.url.path not in open_to_remote
+        ):
+            scheme, _, presented = request.headers.get("authorization", "").partition(" ")
+            if scheme.lower() != "bearer" or not token_matches(
+                presented.strip(), app.state.project_path
+            ):
+                logger.warning(f"Refused remote client {host} on {request.url.path}: no valid token")
+                error_response = ErrorResponse(
+                    error=ErrorCodes.UNAUTHORIZED,
+                    message="This server only answers remote clients that send its API token.",
+                    timestamp=datetime.now().isoformat(),
+                )
+                return JSONResponse(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    content=error_response.model_dump(),
+                    headers={"WWW-Authenticate": "Bearer"},
+                )
+        return await call_next(request)
+
+    # CORS middleware (added last so it is outermost: a refusal above still carries CORS headers)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=[

@@ -7,8 +7,12 @@ services:
     environment:
       PORT: 8000
       WAFT_PROJECT_PATH: /app
+      # The API trusts this machine and asks everyone else for its token. In a container
+      # "this machine" arrives through the Docker bridge, so trust that range, and only
+      # because the port below is published on 127.0.0.1 alone.
+      WAFT_API_TRUSTED_CLIENTS: "172.16.0.0/12"
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
     volumes:
       - ./:/app
     command: uvicorn src.waft.api.main:app --host 0.0.0.0 --port 8000
