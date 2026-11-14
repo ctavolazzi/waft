@@ -1,7 +1,7 @@
 ---
 id: TKT-dirn-005
 title: "P0.5 Stabilize: upgrade the fixable vulnerable dependencies (E7)"
-status: pending
+status: completed
 created: 2026-11-14T16:24:51.041Z
 parent: WE-261114-dirn
 labels: ['direction', 'waft']
@@ -13,7 +13,7 @@ Part of [[WE-261114-dirn_index|WE-261114-dirn]]
 
 ## Status
 
-- [ ] Not started
+- [x] Completed
 
 ## Notes
 
@@ -23,3 +23,4 @@ Part of [[WE-261114-dirn_index|WE-261114-dirn]]
 
 Full context: [DIRECTION_AND_REUSE.md](../DIRECTION_AND_REUSE.md).
 
+**2026-11-14 (build pass).** Done. pip-audit on the dev lock: no known vulnerabilities.

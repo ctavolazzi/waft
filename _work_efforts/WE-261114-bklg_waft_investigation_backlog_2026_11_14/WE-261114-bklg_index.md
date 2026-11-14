@@ -3,7 +3,7 @@ id: WE-261114-bklg
 title: "WAFT investigation backlog 2026-11-14"
 status: active
 created: 2026-11-14T15:43:40.231Z
-last_updated: 2026-11-14T16:06:05.841Z
+last_updated: 2026-11-14T19:38:48.104Z
 objective: "A numbered list of things to investigate, decide or expand on, found while setting up and running WAFT"
 labels: ['investigation', 'waft']
 ---
@@ -22,45 +22,45 @@ Full write-up in INVESTIGATION_BACKLOG.md in this folder. Ticket titles carry th
 
 | Ticket | Title | Status |
 |--------|-------|--------|
-| [[TKT-bklg-001_a1_add_the_missing_get_tracer_imports_in_two_core|TKT-bklg-001]] | A1 Add the missing get_tracer imports in two core modules | pending |
-| [[TKT-bklg-002_a2_fix_span_end_on_a_span_that_has_no_end_method|TKT-bklg-002]] | A2 Fix span.end() on a Span that has no end method | pending |
-| [[TKT-bklg-003_a3_import_spanstatus_where_input_transformer_uses|TKT-bklg-003]] | A3 Import SpanStatus where input_transformer uses it | pending |
-| [[TKT-bklg-004_a4_rerun_the_suite_after_a1_to_a3_and_list_what_is|TKT-bklg-004]] | A4 Rerun the suite after A1 to A3 and list what is still red | pending |
+| [[TKT-bklg-001_a1_add_the_missing_get_tracer_imports_in_two_core|TKT-bklg-001]] | A1 Add the missing get_tracer imports in two core modules | completed |
+| [[TKT-bklg-002_a2_fix_span_end_on_a_span_that_has_no_end_method|TKT-bklg-002]] | A2 Fix span.end() on a Span that has no end method | completed |
+| [[TKT-bklg-003_a3_import_spanstatus_where_input_transformer_uses|TKT-bklg-003]] | A3 Import SpanStatus where input_transformer uses it | completed |
+| [[TKT-bklg-004_a4_rerun_the_suite_after_a1_to_a3_and_list_what_is|TKT-bklg-004]] | A4 Rerun the suite after A1 to A3 and list what is still red | completed |
 | [[TKT-bklg-005_a5_find_how_the_half_wired_tracing_change_reached|TKT-bklg-005]] | A5 Find how the half-wired tracing change reached main | pending |
-| [[TKT-bklg-006_a6_add_the_clirunner_import_to_tests_test_commands|TKT-bklg-006]] | A6 Add the CliRunner import to tests/test_commands.py | pending |
-| [[TKT-bklg-007_a7_decide_the_fate_of_the_three_test_files_that_fa|TKT-bklg-007]] | A7 Decide the fate of the three test files that fail at collection | pending |
-| [[TKT-bklg-008_a8_explain_the_setup_error_in_tests_real_proof_tes|TKT-bklg-008]] | A8 Explain the setup error in tests/real_proof_test.py | pending |
-| [[TKT-bklg-009_a9_make_the_six_pdf_to_png_tests_pass_or_skip|TKT-bklg-009]] | A9 Make the six PDF-to-PNG tests pass or skip | pending |
-| [[TKT-bklg-010_a10_stop_tests_from_writing_trace_files_into_the_t|TKT-bklg-010]] | A10 Stop tests from writing trace files into the tracked tree | pending |
-| [[TKT-bklg-011_a11_find_why_uv_rewrites_uv_lock_on_every_run|TKT-bklg-011]] | A11 Find why uv rewrites uv.lock on every run | pending |
-| [[TKT-bklg-012_a12_clear_the_deprecation_warnings|TKT-bklg-012]] | A12 Clear the deprecation warnings | pending |
+| [[TKT-bklg-006_a6_add_the_clirunner_import_to_tests_test_commands|TKT-bklg-006]] | A6 Add the CliRunner import to tests/test_commands.py | completed |
+| [[TKT-bklg-007_a7_decide_the_fate_of_the_three_test_files_that_fa|TKT-bklg-007]] | A7 Decide the fate of the three test files that fail at collection | in_progress |
+| [[TKT-bklg-008_a8_explain_the_setup_error_in_tests_real_proof_tes|TKT-bklg-008]] | A8 Explain the setup error in tests/real_proof_test.py | completed |
+| [[TKT-bklg-009_a9_make_the_six_pdf_to_png_tests_pass_or_skip|TKT-bklg-009]] | A9 Make the six PDF-to-PNG tests pass or skip | completed |
+| [[TKT-bklg-010_a10_stop_tests_from_writing_trace_files_into_the_t|TKT-bklg-010]] | A10 Stop tests from writing trace files into the tracked tree | completed |
+| [[TKT-bklg-011_a11_find_why_uv_rewrites_uv_lock_on_every_run|TKT-bklg-011]] | A11 Find why uv rewrites uv.lock on every run | completed |
+| [[TKT-bklg-012_a12_clear_the_deprecation_warnings|TKT-bklg-012]] | A12 Clear the deprecation warnings | in_progress |
 | [[TKT-bklg-013_a13_find_out_whether_the_root_level_suites_in_test|TKT-bklg-013]] | A13 Find out whether the root-level suites in tests/ are run anywhere | pending |
-| [[TKT-bklg-014_a14_add_pytest_configuration_to_pyproject_toml|TKT-bklg-014]] | A14 Add pytest configuration to pyproject.toml | pending |
+| [[TKT-bklg-014_a14_add_pytest_configuration_to_pyproject_toml|TKT-bklg-014]] | A14 Add pytest configuration to pyproject.toml | completed |
 | [[TKT-bklg-015_a15_measure_coverage_over_all_of_src|TKT-bklg-015]] | A15 Measure coverage over all of src | pending |
 | [[TKT-bklg-016_a16_review_the_23_skips_8_xfails_and_the_1_xpass|TKT-bklg-016]] | A16 Review the 23 skips, 8 xfails and the 1 xpass | pending |
-| [[TKT-bklg-017_a17_run_the_suite_on_python_3_12_and_3_13|TKT-bklg-017]] | A17 Run the suite on Python 3.12 and 3.13 | pending |
-| [[TKT-bklg-018_a18_fix_the_31_undefined_names_that_ruff_finds|TKT-bklg-018]] | A18 Fix the 31 undefined names that ruff finds | pending |
-| [[TKT-bklg-019_b1_fix_the_package_list_the_wheel_holds_202_of_516|TKT-bklg-019]] | B1 Fix the package list: the wheel holds 202 of 516 Python files | pending |
-| [[TKT-bklg-020_b2_make_a_wheel_install_start_waft_help_fails_toda|TKT-bklg-020]] | B2 Make a wheel install start: waft --help fails today | pending |
-| [[TKT-bklg-021_b3_ship_template_data_files_in_the_wheel|TKT-bklg-021]] | B3 Ship template data files in the wheel | pending |
-| [[TKT-bklg-022_b4_make_the_empirica_dependency_installable_with_o|TKT-bklg-022]] | B4 Make the empirica dependency installable with one command | pending |
-| [[TKT-bklg-023_b5_test_waft_against_current_empirica|TKT-bklg-023]] | B5 Test WAFT against current Empirica | pending |
+| [[TKT-bklg-017_a17_run_the_suite_on_python_3_12_and_3_13|TKT-bklg-017]] | A17 Run the suite on Python 3.12 and 3.13 | in_progress |
+| [[TKT-bklg-018_a18_fix_the_31_undefined_names_that_ruff_finds|TKT-bklg-018]] | A18 Fix the 31 undefined names that ruff finds | completed |
+| [[TKT-bklg-019_b1_fix_the_package_list_the_wheel_holds_202_of_516|TKT-bklg-019]] | B1 Fix the package list: the wheel holds 202 of 516 Python files | completed |
+| [[TKT-bklg-020_b2_make_a_wheel_install_start_waft_help_fails_toda|TKT-bklg-020]] | B2 Make a wheel install start: waft --help fails today | completed |
+| [[TKT-bklg-021_b3_ship_template_data_files_in_the_wheel|TKT-bklg-021]] | B3 Ship template data files in the wheel | completed |
+| [[TKT-bklg-022_b4_make_the_empirica_dependency_installable_with_o|TKT-bklg-022]] | B4 Make the empirica dependency installable with one command | completed |
+| [[TKT-bklg-023_b5_test_waft_against_current_empirica|TKT-bklg-023]] | B5 Test WAFT against current Empirica | in_progress |
 | [[TKT-bklg-024_b6_split_heavy_dependencies_into_extras|TKT-bklg-024]] | B6 Split heavy dependencies into extras | pending |
 | [[TKT-bklg-025_b7_align_the_python_version_settings|TKT-bklg-025]] | B7 Align the Python version settings | pending |
 | [[TKT-bklg-026_b8_decide_the_package_name|TKT-bklg-026]] | B8 Decide the package name | pending |
 | [[TKT-bklg-027_b9_define_a_release_procedure_and_tag_it|TKT-bklg-027]] | B9 Define a release procedure and tag it | pending |
-| [[TKT-bklg-028_b10_build_and_run_the_dockerfile|TKT-bklg-028]] | B10 Build and run the Dockerfile | pending |
+| [[TKT-bklg-028_b10_build_and_run_the_dockerfile|TKT-bklg-028]] | B10 Build and run the Dockerfile | in_progress |
 | [[TKT-bklg-029_b11_test_on_macos_and_windows|TKT-bklg-029]] | B11 Test on macOS and Windows | pending |
-| [[TKT-bklg-030_c1_run_the_whole_test_suite_in_ci|TKT-bklg-030]] | C1 Run the whole test suite in CI | pending |
+| [[TKT-bklg-030_c1_run_the_whole_test_suite_in_ci|TKT-bklg-030]] | C1 Run the whole test suite in CI | completed |
 | [[TKT-bklg-031_c2_find_out_whether_the_staging_gate_can_ever_run|TKT-bklg-031]] | C2 Find out whether the staging gate can ever run | pending |
-| [[TKT-bklg-032_c3_remove_the_debug_blocks_the_staging_gate_greps|TKT-bklg-032]] | C3 Remove the debug blocks the staging gate greps for | pending |
+| [[TKT-bklg-032_c3_remove_the_debug_blocks_the_staging_gate_greps|TKT-bklg-032]] | C3 Remove the debug blocks the staging gate greps for | completed |
 | [[TKT-bklg-033_c4_triage_the_remote_branches_the_open_pr_and_the|TKT-bklg-033]] | C4 Triage the remote branches, the open PR and the open issue | pending |
 | [[TKT-bklg-034_c5_add_dependency_update_automation|TKT-bklg-034]] | C5 Add dependency update automation | pending |
-| [[TKT-bklg-035_c6_add_secret_and_vulnerability_scanning_to_ci|TKT-bklg-035]] | C6 Add secret and vulnerability scanning to CI | pending |
-| [[TKT-bklg-036_c7_build_and_smoke_test_the_artifacts_in_ci|TKT-bklg-036]] | C7 Build and smoke-test the artifacts in CI | pending |
-| [[TKT-bklg-037_c8_pin_tool_and_runner_versions_in_workflows|TKT-bklg-037]] | C8 Pin tool and runner versions in workflows | pending |
+| [[TKT-bklg-035_c6_add_secret_and_vulnerability_scanning_to_ci|TKT-bklg-035]] | C6 Add secret and vulnerability scanning to CI | in_progress |
+| [[TKT-bklg-036_c7_build_and_smoke_test_the_artifacts_in_ci|TKT-bklg-036]] | C7 Build and smoke-test the artifacts in CI | in_progress |
+| [[TKT-bklg-037_c8_pin_tool_and_runner_versions_in_workflows|TKT-bklg-037]] | C8 Pin tool and runner versions in workflows | completed |
 | [[TKT-bklg-038_c9_measure_ci_health_over_the_last_100_runs|TKT-bklg-038]] | C9 Measure CI health over the last 100 runs | pending |
-| [[TKT-bklg-039_c10_turn_on_ruff_f821_for_all_of_src_in_ci|TKT-bklg-039]] | C10 Turn on ruff F821 for all of src in CI | pending |
+| [[TKT-bklg-039_c10_turn_on_ruff_f821_for_all_of_src_in_ci|TKT-bklg-039]] | C10 Turn on ruff F821 for all of src in CI | completed |
 | [[TKT-bklg-040_d1_untrack_the_9_015_node_modules_files|TKT-bklg-040]] | D1 Untrack the 9,015 node_modules files | pending |
 | [[TKT-bklg-041_d2_decide_where_generated_pdfs_live|TKT-bklg-041]] | D2 Decide where generated PDFs live | pending |
 | [[TKT-bklg-042_d3_decide_what_to_do_about_the_largest_tracked_fil|TKT-bklg-042]] | D3 Decide what to do about the largest tracked files | pending |
@@ -68,26 +68,26 @@ Full write-up in INVESTIGATION_BACKLOG.md in this folder. Ticket titles carry th
 | [[TKT-bklg-044_d5_resolve_the_eight_uninitialized_submodules|TKT-bklg-044]] | D5 Resolve the eight uninitialized submodules | pending |
 | [[TKT-bklg-045_d6_design_the_target_layout_for_the_repo_root|TKT-bklg-045]] | D6 Design the target layout for the repo root | pending |
 | [[TKT-bklg-046_d7_untrack_tool_state|TKT-bklg-046]] | D7 Untrack tool state | pending |
-| [[TKT-bklg-047_d8_move_runtime_data_out_of_git|TKT-bklg-047]] | D8 Move runtime data out of git | pending |
+| [[TKT-bklg-047_d8_move_runtime_data_out_of_git|TKT-bklg-047]] | D8 Move runtime data out of git | in_progress |
 | [[TKT-bklg-048_d9_remove_hardcoded_users_ctavolazzi_paths|TKT-bklg-048]] | D9 Remove hardcoded /Users/ctavolazzi paths | pending |
 | [[TKT-bklg-049_d10_spin_parked_projects_out_of_the_lab_repo|TKT-bklg-049]] | D10 Spin parked projects out of the lab repo | pending |
 | [[TKT-bklg-050_d11_set_a_size_budget|TKT-bklg-050]] | D11 Set a size budget | pending |
 | [[TKT-bklg-051_d12_decide_whether_to_rewrite_history|TKT-bklg-051]] | D12 Decide whether to rewrite history | pending |
 | [[TKT-bklg-052_e1_rotate_or_retire_the_two_crypto_keys_that_are_s|TKT-bklg-052]] | E1 Rotate or retire the two crypto keys that are still public in history | pending |
-| [[TKT-bklg-053_e2_review_api_authentication|TKT-bklg-053]] | E2 Review API authentication | pending |
-| [[TKT-bklg-054_e3_review_cors_settings|TKT-bklg-054]] | E3 Review CORS settings | pending |
+| [[TKT-bklg-053_e2_review_api_authentication|TKT-bklg-053]] | E2 Review API authentication | completed |
+| [[TKT-bklg-054_e3_review_cors_settings|TKT-bklg-054]] | E3 Review CORS settings | in_progress |
 | [[TKT-bklg-055_e4_audit_shell_and_subprocess_calls|TKT-bklg-055]] | E4 Audit shell and subprocess calls | pending |
-| [[TKT-bklg-056_e5_remove_leftover_agent_logging_blocks|TKT-bklg-056]] | E5 Remove leftover agent logging blocks | pending |
+| [[TKT-bklg-056_e5_remove_leftover_agent_logging_blocks|TKT-bklg-056]] | E5 Remove leftover agent logging blocks | in_progress |
 | [[TKT-bklg-057_e6_scan_the_full_history_for_secrets|TKT-bklg-057]] | E6 Scan the full history for secrets | pending |
-| [[TKT-bklg-058_e7_audit_dependencies_for_known_vulnerabilities|TKT-bklg-058]] | E7 Audit dependencies for known vulnerabilities | pending |
+| [[TKT-bklg-058_e7_audit_dependencies_for_known_vulnerabilities|TKT-bklg-058]] | E7 Audit dependencies for known vulnerabilities | completed |
 | [[TKT-bklg-059_e8_review_the_electron_app_s_security_settings|TKT-bklg-059]] | E8 Review the Electron app's security settings | pending |
 | [[TKT-bklg-060_e9_test_that_pdf_redaction_removes_the_text|TKT-bklg-060]] | E9 Test that PDF redaction removes the text | pending |
 | [[TKT-bklg-061_e10_test_the_api_and_cli_for_path_traversal|TKT-bklg-061]] | E10 Test the API and CLI for path traversal | pending |
 | [[TKT-bklg-062_e11_define_the_sandbox_for_self_modifying_code|TKT-bklg-062]] | E11 Define the sandbox for self-modifying code | pending |
 | [[TKT-bklg-063_e12_decide_what_the_realm_hmac_protects|TKT-bklg-063]] | E12 Decide what the realm HMAC protects | pending |
 | [[TKT-bklg-064_f1_split_main_py_into_command_modules|TKT-bklg-064]] | F1 Split main.py into command modules | pending |
-| [[TKT-bklg-065_f2_fix_variant_identity_in_waft_evolve|TKT-bklg-065]] | F2 Fix variant identity in waft evolve | pending |
-| [[TKT-bklg-066_f3_find_out_what_evolution_operates_on|TKT-bklg-066]] | F3 Find out what \"evolution\" operates on | pending |
+| [[TKT-bklg-065_f2_fix_variant_identity_in_waft_evolve|TKT-bklg-065]] | F2 Fix variant identity in waft evolve | completed |
+| [[TKT-bklg-066_f3_find_out_what_evolution_operates_on|TKT-bklg-066]] | F3 Find out what \"evolution\" operates on | in_progress |
 | [[TKT-bklg-067_f4_resolve_the_overlapping_names_pyrite_empirica_a|TKT-bklg-067]] | F4 Resolve the overlapping names pyrite, empirica and fogsift | pending |
 | [[TKT-bklg-068_f5_move_demos_and_generators_out_of_the_package_ro|TKT-bklg-068]] | F5 Move demos and generators out of the package root | pending |
 | [[TKT-bklg-069_f6_remove_versioned_duplicates|TKT-bklg-069]] | F6 Remove versioned duplicates | pending |
@@ -98,14 +98,14 @@ Full write-up in INVESTIGATION_BACKLOG.md in this folder. Ticket titles carry th
 | [[TKT-bklg-074_f11_review_global_singletons|TKT-bklg-074]] | F11 Review global singletons | pending |
 | [[TKT-bklg-075_f12_inventory_the_data_stores|TKT-bklg-075]] | F12 Inventory the data stores | pending |
 | [[TKT-bklg-076_f13_choose_which_front_ends_to_keep|TKT-bklg-076]] | F13 Choose which front ends to keep | pending |
-| [[TKT-bklg-077_f14_find_why_a_first_quickstart_run_changed_tracke|TKT-bklg-077]] | F14 Find why a first quickstart run changed tracked files in the checkout | pending |
+| [[TKT-bklg-077_f14_find_why_a_first_quickstart_run_changed_tracke|TKT-bklg-077]] | F14 Find why a first quickstart run changed tracked files in the checkout | completed |
 | [[TKT-bklg-078_f15_centralize_configuration|TKT-bklg-078]] | F15 Centralize configuration | pending |
-| [[TKT-bklg-079_f16_pin_down_the_api_error_contract|TKT-bklg-079]] | F16 Pin down the API error contract | pending |
+| [[TKT-bklg-079_f16_pin_down_the_api_error_contract|TKT-bklg-079]] | F16 Pin down the API error contract | in_progress |
 | [[TKT-bklg-080_f17_pick_one_observability_story|TKT-bklg-080]] | F17 Pick one observability story | pending |
 | [[TKT-bklg-081_g1_make_one_index_for_the_3_680_markdown_files|TKT-bklg-081]] | G1 Make one index for the 3,680 Markdown files | pending |
 | [[TKT-bklg-082_g2_fix_docs_that_name_commands_the_cli_does_not_ha|TKT-bklg-082]] | G2 Fix docs that name commands the CLI does not have | pending |
-| [[TKT-bklg-083_g3_build_a_claims_table|TKT-bklg-083]] | G3 Build a claims table | pending |
-| [[TKT-bklg-084_g4_add_a_claude_md_for_this_repo|TKT-bklg-084]] | G4 Add a CLAUDE.md for this repo | pending |
+| [[TKT-bklg-083_g3_build_a_claims_table|TKT-bklg-083]] | G3 Build a claims table | in_progress |
+| [[TKT-bklg-084_g4_add_a_claude_md_for_this_repo|TKT-bklg-084]] | G4 Add a CLAUDE.md for this repo | in_progress |
 | [[TKT-bklg-085_g5_date_and_triage_the_root_status_documents|TKT-bklg-085]] | G5 Date and triage the root status documents | pending |
 | [[TKT-bklg-086_g6_write_a_one_page_state_md_for_waft|TKT-bklg-086]] | G6 Write a one-page STATE.md for WAFT | pending |
 | [[TKT-bklg-087_g7_place_waft_in_the_business_priorities|TKT-bklg-087]] | G7 Place WAFT in the business priorities | pending |
@@ -130,7 +130,7 @@ Full write-up in INVESTIGATION_BACKLOG.md in this folder. Ticket titles carry th
 | [[TKT-bklg-106_i6_run_repowise_doc_drift_on_this_repo|TKT-bklg-106]] | I6 Run repowise doc-drift on this repo | pending |
 | [[TKT-bklg-107_i7_test_that_waft_work_efforts_and_pyrite_we_write|TKT-bklg-107]] | I7 Test that waft work-efforts and pyrite we write the same format | pending |
 | [[TKT-bklg-108_i8_create_the_daily_hub_for_this_work|TKT-bklg-108]] | I8 Create the daily hub for this work | pending |
-| [[TKT-bklg-109_i9_close_the_three_recorded_fogsift_gaps_about_waf|TKT-bklg-109]] | I9 Close the three recorded FogSift gaps about WAFT and rerun the proof | pending |
+| [[TKT-bklg-109_i9_close_the_three_recorded_fogsift_gaps_about_waf|TKT-bklg-109]] | I9 Close the three recorded FogSift gaps about WAFT and rerun the proof | in_progress |
 | [[TKT-bklg-110_i10_connect_waft_s_gym_score_to_real_repository_wo|TKT-bklg-110]] | I10 Connect WAFT's gym score to real repository work | pending |
 | [[TKT-bklg-111_j1_choose_the_default_pdf_engine|TKT-bklg-111]] | J1 Choose the default PDF engine | pending |
 | [[TKT-bklg-112_j2_list_the_system_programs_each_command_needs|TKT-bklg-112]] | J2 List the system programs each command needs | pending |
@@ -144,7 +144,7 @@ Full write-up in INVESTIGATION_BACKLOG.md in this folder. Ticket titles carry th
 | [[TKT-bklg-120_k4_review_the_wager_and_karma_mechanics_before_any|TKT-bklg-120]] | K4 Review the wager and karma mechanics before any public release | pending |
 | [[TKT-bklg-121_k5_decide_about_the_pet_device|TKT-bklg-121]] | K5 Decide about the pet device | pending |
 | [[TKT-bklg-122_l1_choose_the_branch_policy|TKT-bklg-122]] | L1 Choose the branch policy | pending |
-| [[TKT-bklg-123_l2_fix_the_stop_hook_conflict|TKT-bklg-123]] | L2 Fix the stop-hook conflict | pending |
+| [[TKT-bklg-123_l2_fix_the_stop_hook_conflict|TKT-bklg-123]] | L2 Fix the stop-hook conflict | completed |
 | [[TKT-bklg-124_l3_add_pre_commit_checks|TKT-bklg-124]] | L3 Add pre-commit checks | pending |
 | [[TKT-bklg-125_l4_add_a_justfile_or_makefile|TKT-bklg-125]] | L4 Add a Justfile or Makefile | pending |
 | [[TKT-bklg-126_l5_write_the_start_and_end_of_session_routine|TKT-bklg-126]] | L5 Write the start and end of session routine | pending |
@@ -155,29 +155,29 @@ Full write-up in INVESTIGATION_BACKLOG.md in this folder. Ticket titles carry th
 | [[TKT-bklg-131_r2_define_fitness_for_repository_work|TKT-bklg-131]] | R2 Define fitness for repository work | pending |
 | [[TKT-bklg-132_r3_specify_safety_for_self_modifying_agents|TKT-bklg-132]] | R3 Specify safety for self-modifying agents | pending |
 | [[TKT-bklg-133_r4_measure_whether_empirica_s_gate_changes_outcome|TKT-bklg-133]] | R4 Measure whether Empirica's gate changes outcomes | pending |
-| [[TKT-bklg-134_r5_test_determinism_of_waft_evolve|TKT-bklg-134]] | R5 Test determinism of waft evolve | pending |
+| [[TKT-bklg-134_r5_test_determinism_of_waft_evolve|TKT-bklg-134]] | R5 Test determinism of waft evolve | in_progress |
 | [[TKT-bklg-135_r6_write_a_formal_genome_spec_with_property_tests|TKT-bklg-135]] | R6 Write a formal genome spec with property tests | pending |
 | [[TKT-bklg-136_r7_plan_a_public_benchmark|TKT-bklg-136]] | R7 Plan a public benchmark | pending |
 | [[TKT-bklg-137_r8_study_how_the_front_ends_could_become_one|TKT-bklg-137]] | R8 Study how the front ends could become one | pending |
 | [[TKT-bklg-138_s1_fetch_empirica_1_2_3_into_unified_empirica_so_u|TKT-bklg-138]] | S1 Fetch empirica 1.2.3 into _unified/empirica so uv sync can resolve it | completed |
 | [[TKT-bklg-139_s2_run_uv_sync_extra_dev_and_confirm_the_waft_cli|TKT-bklg-139]] | S2 Run uv sync --extra dev and confirm the waft CLI starts from the checkout | completed |
 | [[TKT-bklg-140_s3_measure_the_baseline_tests_ruff_wheel_ci_branch|TKT-bklg-140]] | S3 Measure the baseline: tests, ruff, wheel, CI, branches, sizes, work efforts | completed |
-| [[TKT-bklg-141_a19_add_a_smoke_test_for_every_cli_command|TKT-bklg-141]] | A19 Add a smoke test for every CLI command | pending |
+| [[TKT-bklg-141_a19_add_a_smoke_test_for_every_cli_command|TKT-bklg-141]] | A19 Add a smoke test for every CLI command | completed |
 | [[TKT-bklg-142_b12_remove_the_experiment_folders_from_the_uv_work|TKT-bklg-142]] | B12 Remove the experiment folders from the uv workspace | pending |
-| [[TKT-bklg-143_b13_declare_or_remove_the_undeclared_dependencies|TKT-bklg-143]] | B13 Declare or remove the undeclared dependencies | pending |
+| [[TKT-bklg-143_b13_declare_or_remove_the_undeclared_dependencies|TKT-bklg-143]] | B13 Declare or remove the undeclared dependencies | in_progress |
 | [[TKT-bklg-144_c11_add_the_new_checks_to_ci_with_ratchets|TKT-bklg-144]] | C11 Add the new checks to CI with ratchets | pending |
 | [[TKT-bklg-145_d13_commit_the_visualizer_lockfile|TKT-bklg-145]] | D13 Commit the visualizer lockfile | pending |
 | [[TKT-bklg-146_d14_remove_duplicate_files_from_the_working_tree|TKT-bklg-146]] | D14 Remove duplicate files from the working tree | pending |
 | [[TKT-bklg-147_d15_review_personal_data_in_tracked_text_files|TKT-bklg-147]] | D15 Review personal data in tracked text files | pending |
 | [[TKT-bklg-148_d16_check_the_plans_that_quote_passwords_for_anoth|TKT-bklg-148]] | D16 Check the plans that quote passwords for another project | pending |
 | [[TKT-bklg-149_e13_triage_the_high_and_medium_bandit_findings|TKT-bklg-149]] | E13 Triage the high and medium bandit findings | pending |
-| [[TKT-bklg-150_e14_stop_two_commands_from_listening_on_all_interf|TKT-bklg-150]] | E14 Stop two commands from listening on all interfaces by default | pending |
+| [[TKT-bklg-150_e14_stop_two_commands_from_listening_on_all_interf|TKT-bklg-150]] | E14 Stop two commands from listening on all interfaces by default | completed |
 | [[TKT-bklg-151_e15_tighten_the_20_other_servers_outside_src|TKT-bklg-151]] | E15 Tighten the 20 other servers outside src | pending |
-| [[TKT-bklg-152_e16_stop_the_handshake_route_from_handing_the_api|TKT-bklg-152]] | E16 Stop the handshake route from handing the API token to any caller | pending |
-| [[TKT-bklg-153_e17_do_not_publish_the_open_api_with_the_checkout|TKT-bklg-153]] | E17 Do not publish the open API with the checkout mounted writable | pending |
+| [[TKT-bklg-152_e16_stop_the_handshake_route_from_handing_the_api|TKT-bklg-152]] | E16 Stop the handshake route from handing the API token to any caller | completed |
+| [[TKT-bklg-153_e17_do_not_publish_the_open_api_with_the_checkout|TKT-bklg-153]] | E17 Do not publish the open API with the checkout mounted writable | in_progress |
 | [[TKT-bklg-154_e18_make_the_publishing_scripts_ask_before_they_pu|TKT-bklg-154]] | E18 Make the publishing scripts ask before they push | pending |
 | [[TKT-bklg-155_f18_fix_or_archive_the_four_tracked_python_files_t|TKT-bklg-155]] | F18 Fix or archive the four tracked Python files that do not compile | pending |
-| [[TKT-bklg-156_f19_resolve_project_paths_from_the_project_not_fro|TKT-bklg-156]] | F19 Resolve project paths from the project, not from __file__ | pending |
+| [[TKT-bklg-156_f19_resolve_project_paths_from_the_project_not_fro|TKT-bklg-156]] | F19 Resolve project paths from the project, not from __file__ | in_progress |
 | [[TKT-bklg-157_f20_refactor_the_most_complex_functions|TKT-bklg-157]] | F20 Refactor the most complex functions | pending |
 | [[TKT-bklg-158_f21_replace_print_silent_excepts_and_other_smells|TKT-bklg-158]] | F21 Replace print, silent excepts and other smells | pending |
 | [[TKT-bklg-159_f22_make_the_visualizer_test_run_exit|TKT-bklg-159]] | F22 Make the visualizer test run exit | pending |
@@ -188,6 +188,10 @@ Full write-up in INVESTIGATION_BACKLOG.md in this folder. Ticket titles carry th
 | [[TKT-bklg-164_i12_triage_the_note_and_plan_piles|TKT-bklg-164]] | I12 Triage the note and plan piles | pending |
 | [[TKT-bklg-165_l9_unshallow_the_clone_before_any_history_work|TKT-bklg-165]] | L9 Unshallow the clone before any history work | pending |
 | [[TKT-bklg-166_s4_second_pass_coverage_static_analysis_dependency|TKT-bklg-166]] | S4 Second pass: coverage, static analysis, dependency audit, API probes, ledger mining | completed |
+| [[TKT-bklg-167_a20_quest_files_say_rewards_but_the_gym_reads_loot|TKT-bklg-167]] | A20 Quest files say rewards but the gym reads loot_table, so no XP is ever awarded | pending |
+| [[TKT-bklg-168_c12_fix_ruff_s_exclusions_the_project_settings_che|TKT-bklg-168]] | C12 Fix ruff's exclusions: the project settings check 4 files | pending |
+| [[TKT-bklg-169_f24_make_the_last_18_modules_import_from_a_wheel_o|TKT-bklg-169]] | F24 Make the last 18 modules import from a wheel, or move them out | pending |
+| [[TKT-bklg-170_e19_decide_whether_the_dealer_may_write_into_whate|TKT-bklg-170]] | E19 Decide whether the Dealer may write into whatever folder a command runs in | pending |
 
 ## Read first
 
@@ -198,6 +202,7 @@ Full write-up in INVESTIGATION_BACKLOG.md in this folder. Ticket titles carry th
 - 2026-11-14, first pass: environment set up (S1, S2), baseline measured (S3), 137 items written.
 - 2026-11-14, second pass (S4): coverage, static analysis, a dependency audit, probes of the running API, a read of the code behind `evolve` and the API auth, and a mining of the repo's own 499 tickets added 25 items and sharpened 27 more. Several question marks became measurements.
 - Ticket counts: 162 backlog items (tagged measured 80, read 51, question 31; owner agent 110, CT 33, research 19; priority P1 34, P2 62, P3 66) plus the four completed setup tickets S1 to S4.
+- 2026-11-14, build pass: 27 items completed, 19 partly done, 4 new tickets (A20, C12, F24, E19). Three items were wrong (B4, S1, B5); see the note at the top of INVESTIGATION_BACKLOG.md.
 - The Tickets table above is the single record of per-ticket status.
 - Nothing in `src/` was changed. A1 to A3 were tested as a temporary edit (25 failed tests became 15) and reverted.
 - Corrections found along the way: this clone is shallow (L9), so history claims are provisional; one helper-agent claim about when the key files were added was dropped for that reason.

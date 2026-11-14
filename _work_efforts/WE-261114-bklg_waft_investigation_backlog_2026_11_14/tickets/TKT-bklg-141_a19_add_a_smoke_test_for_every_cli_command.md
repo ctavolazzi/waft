@@ -1,7 +1,7 @@
 ---
 id: TKT-bklg-141
 title: "A19 Add a smoke test for every CLI command"
-status: pending
+status: completed
 created: 2026-11-14T16:04:24.835Z
 labels: ['pyrite']
 ---
@@ -14,7 +14,7 @@ Evidence and first step are in the Notes below and in INVESTIGATION_BACKLOG.md.
 
 ## Status
 
-- [ ] Not started
+- [x] Completed
 
 ## Notes
 
@@ -25,3 +25,5 @@ Tags: `M` `agent` `P2`  (M measured, R read, Q question; owner agent, CT or rese
 **First step.** after A6, add one parametrized test that runs `--help` for every command and expects exit code 0; run it against an installed wheel too, which would have caught B2.
 
 Full context and the baseline: [INVESTIGATION_BACKLOG.md](../INVESTIGATION_BACKLOG.md), heading A19.
+
+**2026-11-14 (build pass).** tests/test_cli_smoke.py runs --help for all 151 commands and sub-commands.

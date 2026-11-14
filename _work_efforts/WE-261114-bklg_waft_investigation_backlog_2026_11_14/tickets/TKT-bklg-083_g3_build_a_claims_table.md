@@ -1,7 +1,7 @@
 ---
 id: TKT-bklg-083
 title: "G3 Build a claims table"
-status: pending
+status: in_progress
 created: 2026-11-14T15:43:40.227Z
 parent: WE-261114-bklg
 labels: ['investigation', 'waft']
@@ -13,7 +13,7 @@ Part of [[WE-261114-bklg_index|WE-261114-bklg]]
 
 ## Status
 
-- [ ] Not started
+- [ ] In progress
 
 ## Notes
 
@@ -24,3 +24,5 @@ Tags: `R` `research` `P1`  (M measured, R read, Q question; owner agent, CT or r
 **First step.** one table: claim, where it is made, the command or test that shows it, the measured result, status.
 
 Full context and the baseline: [INVESTIGATION_BACKLOG.md](../INVESTIGATION_BACKLOG.md), heading G3.
+
+**2026-11-14 (build pass).** README has a short section on what runs today. The claims table is not built.

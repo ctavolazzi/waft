@@ -1,7 +1,7 @@
 ---
 id: TKT-bklg-018
 title: "A18 Fix the 31 undefined names that ruff finds"
-status: pending
+status: completed
 created: 2026-11-14T15:43:40.223Z
 parent: WE-261114-bklg
 labels: ['investigation', 'waft']
@@ -13,7 +13,7 @@ Part of [[WE-261114-bklg_index|WE-261114-bklg]]
 
 ## Status
 
-- [ ] Not started
+- [x] Completed
 
 ## Notes
 
@@ -24,3 +24,5 @@ Tags: `M` `agent` `P1`  (M measured, R read, Q question; owner agent, CT or rese
 **First step.** read each site and separate real NameErrors from annotations; fix; then turn the rule on in CI (C10).
 
 Full context and the baseline: [INVESTIGATION_BACKLOG.md](../INVESTIGATION_BACKLOG.md), heading A18.
+
+**2026-11-14 (build pass).** All 31 fixed: real NameErrors in main.py (final-report), pyrite_cli, being.py, now_cycle, pdf.py, the Streamlit being page and web.py; annotation-only names imported under TYPE_CHECKING. ruff F821 over src is clean.

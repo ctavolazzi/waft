@@ -1,7 +1,7 @@
 ---
 id: TKT-bklg-003
 title: "A3 Import SpanStatus where input_transformer uses it"
-status: pending
+status: completed
 created: 2026-11-14T15:43:40.222Z
 parent: WE-261114-bklg
 labels: ['investigation', 'waft']
@@ -13,7 +13,7 @@ Part of [[WE-261114-bklg_index|WE-261114-bklg]]
 
 ## Status
 
-- [ ] Not started
+- [x] Completed
 
 ## Notes
 
@@ -24,3 +24,5 @@ Tags: `M` `agent` `P1`  (M measured, R read, Q question; owner agent, CT or rese
 **First step.** import it from `.tracing`; read the other exception branches of that function for the same slip.
 
 Full context and the baseline: [INVESTIGATION_BACKLOG.md](../INVESTIGATION_BACKLOG.md), heading A3.
+
+**2026-11-14 (build pass).** SpanStatus is imported; the success path now ends its span too.

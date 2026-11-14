@@ -1,7 +1,7 @@
 ---
 id: TKT-dirn-003
 title: "P0.3 Stabilize: run the whole suite and ruff F821 in CI (C1, C10)"
-status: pending
+status: in_progress
 created: 2026-11-14T16:24:51.041Z
 parent: WE-261114-dirn
 labels: ['direction', 'waft']
@@ -13,7 +13,7 @@ Part of [[WE-261114-dirn_index|WE-261114-dirn]]
 
 ## Status
 
-- [ ] Not started
+- [ ] In progress
 
 ## Notes
 
@@ -23,3 +23,4 @@ Part of [[WE-261114-dirn_index|WE-261114-dirn]]
 
 Full context: [DIRECTION_AND_REUSE.md](../DIRECTION_AND_REUSE.md).
 
+**2026-11-14 (build pass).** CI runs the whole suite, an undefined-names pass, the lab doctor and a wheel install. No secret scan yet.

@@ -1,7 +1,7 @@
 ---
 id: TKT-bklg-156
 title: "F19 Resolve project paths from the project, not from __file__"
-status: pending
+status: in_progress
 created: 2026-11-14T16:06:02.739Z
 labels: ['pyrite']
 ---
@@ -14,7 +14,7 @@ Evidence and first step are in the Notes below and in INVESTIGATION_BACKLOG.md.
 
 ## Status
 
-- [ ] Not started
+- [ ] In progress
 
 ## Notes
 
@@ -25,3 +25,5 @@ Tags: `M` `agent` `P1`  (M measured, R read, Q question; owner agent, CT or rese
 **First step.** use `app.state.project_path` (it exists in `api/main.py`) or the CLI's `--path`; delete the `sys.path` edits; add a test that runs the API in a temp project and asserts the checkout stays clean.
 
 Full context and the baseline: [INVESTIGATION_BACKLOG.md](../INVESTIGATION_BACKLOG.md), heading F19.
+
+**2026-11-14 (build pass).** The lab writes only where it is told. The API routes that derive paths from __file__ are unchanged.

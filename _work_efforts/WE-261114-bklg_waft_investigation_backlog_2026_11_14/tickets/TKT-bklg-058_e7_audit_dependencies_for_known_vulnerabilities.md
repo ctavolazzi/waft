@@ -1,7 +1,7 @@
 ---
 id: TKT-bklg-058
 title: "E7 Audit dependencies for known vulnerabilities"
-status: pending
+status: completed
 created: 2026-11-14T15:43:40.225Z
 parent: WE-261114-bklg
 labels: ['investigation', 'waft']
@@ -13,7 +13,7 @@ Part of [[WE-261114-bklg_index|WE-261114-bklg]]
 
 ## Status
 
-- [ ] Not started
+- [x] Completed
 
 ## Notes
 
@@ -24,3 +24,5 @@ Tags: `M` `agent` `P1`  (M measured, R read, Q question; owner agent, CT or rese
 **First step.** upgrade the fixable ones with `uv lock --upgrade-package`, rerun the suite, decide about weasyprint, add pip-audit to CI (C6); run `npm audit` for the front ends you keep.
 
 Full context and the baseline: [INVESTIGATION_BACKLOG.md](../INVESTIGATION_BACKLOG.md), heading E7.
+
+**2026-11-14 (build pass).** 20 packages upgraded, then opentelemetry and python-multipart. pip-audit on the dev lock: no known vulnerabilities (124 packages).

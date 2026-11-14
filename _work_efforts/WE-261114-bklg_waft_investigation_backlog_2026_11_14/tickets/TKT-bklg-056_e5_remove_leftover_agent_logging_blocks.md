@@ -1,7 +1,7 @@
 ---
 id: TKT-bklg-056
 title: "E5 Remove leftover agent logging blocks"
-status: pending
+status: in_progress
 created: 2026-11-14T15:43:40.225Z
 parent: WE-261114-bklg
 labels: ['investigation', 'waft']
@@ -13,7 +13,7 @@ Part of [[WE-261114-bklg_index|WE-261114-bklg]]
 
 ## Status
 
-- [ ] Not started
+- [ ] In progress
 
 ## Notes
 
@@ -24,3 +24,5 @@ Tags: `M` `agent` `P2`  (M measured, R read, Q question; owner agent, CT or rese
 **First step.** delete the blocks; run the staging gate's grep locally.
 
 Full context and the baseline: [INVESTIGATION_BACKLOG.md](../INVESTIGATION_BACKLOG.md), heading E5.
+
+**2026-11-14 (build pass).** The Python blocks are removed. The six fetch calls in waft_desktop/electron/main.js remain.

@@ -1,7 +1,7 @@
 ---
 id: TKT-bklg-065
 title: "F2 Fix variant identity in waft evolve"
-status: pending
+status: completed
 created: 2026-11-14T15:43:40.226Z
 parent: WE-261114-bklg
 labels: ['investigation', 'waft']
@@ -13,7 +13,7 @@ Part of [[WE-261114-bklg_index|WE-261114-bklg]]
 
 ## Status
 
-- [ ] Not started
+- [x] Completed
 
 ## Notes
 
@@ -24,3 +24,5 @@ Tags: `M` `agent` `P1`  (M measured, R read, Q question; owner agent, CT or rese
 **First step.** add the variant index or a random suffix to the id; derive mutations from (id, generation, index); seed the random generator from a run seed; add a test that N variants have N ids and N distinct genomes.
 
 Full context and the baseline: [INVESTIGATION_BACKLOG.md](../INVESTIGATION_BACKLOG.md), heading F2.
+
+**2026-11-14 (build pass).** spawn_being adds a nonce to the id; tests/test_being_ids.py failed before and passes after. The lab uses content-hash ids.

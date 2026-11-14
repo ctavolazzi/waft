@@ -1,7 +1,7 @@
 ---
 id: TKT-bklg-039
 title: "C10 Turn on ruff F821 for all of src in CI"
-status: pending
+status: completed
 created: 2026-11-14T15:43:40.224Z
 parent: WE-261114-bklg
 labels: ['investigation', 'waft']
@@ -13,7 +13,7 @@ Part of [[WE-261114-bklg_index|WE-261114-bklg]]
 
 ## Status
 
-- [ ] Not started
+- [x] Completed
 
 ## Notes
 
@@ -24,3 +24,5 @@ Tags: `M` `agent` `P1`  (M measured, R read, Q question; owner agent, CT or rese
 **First step.** add a CI step `ruff check src --select F821`; fix or baseline the hits.
 
 Full context and the baseline: [INVESTIGATION_BACKLOG.md](../INVESTIGATION_BACKLOG.md), heading C10.
+
+**2026-11-14 (build pass).** The test job runs `ruff check src/waft --isolated --select E9,F63,F7,F82`.

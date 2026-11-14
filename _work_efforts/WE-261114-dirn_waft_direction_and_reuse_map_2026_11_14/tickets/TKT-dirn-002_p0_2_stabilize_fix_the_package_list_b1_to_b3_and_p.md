@@ -1,7 +1,7 @@
 ---
 id: TKT-dirn-002
 title: "P0.2 Stabilize: fix the package list (B1 to B3) and prove a wheel install runs waft --help"
-status: pending
+status: completed
 created: 2026-11-14T16:24:51.041Z
 parent: WE-261114-dirn
 labels: ['direction', 'waft']
@@ -13,7 +13,7 @@ Part of [[WE-261114-dirn_index|WE-261114-dirn]]
 
 ## Status
 
-- [ ] Not started
+- [x] Completed
 
 ## Notes
 
@@ -23,3 +23,4 @@ Part of [[WE-261114-dirn_index|WE-261114-dirn]]
 
 Full context: [DIRECTION_AND_REUSE.md](../DIRECTION_AND_REUSE.md).
 
+**2026-11-14 (build pass).** Done. Wheel: 526 of 526 modules and 44 data files; `waft --help`, the API import and `waft lab doctor` work from a clean Python 3.12 venv. The 31 files that imported src.waft now import waft.

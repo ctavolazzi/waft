@@ -1,7 +1,7 @@
 ---
 id: TKT-bklg-020
 title: "B2 Make a wheel install start: waft --help fails today"
-status: pending
+status: completed
 created: 2026-11-14T15:43:40.223Z
 parent: WE-261114-bklg
 labels: ['investigation', 'waft']
@@ -13,7 +13,7 @@ Part of [[WE-261114-bklg_index|WE-261114-bklg]]
 
 ## Status
 
-- [ ] Not started
+- [x] Completed
 
 ## Notes
 
@@ -24,3 +24,5 @@ Tags: `M` `agent` `P1`  (M measured, R read, Q question; owner agent, CT or rese
 **First step.** fix B1, reinstall in a clean venv, run `--help` for each of the 82 commands, and add that as a CI job (C7).
 
 Full context and the baseline: [INVESTIGATION_BACKLOG.md](../INVESTIGATION_BACKLOG.md), heading B2.
+
+**2026-11-14 (build pass).** A wheel installed in a clean Python 3.12 venv runs `waft --help`, imports waft.api.main and passes `waft lab doctor` from another folder. CI has a job that does this.

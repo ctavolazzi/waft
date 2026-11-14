@@ -1,7 +1,7 @@
 ---
 id: TKT-dirn-013
 title: "P2.4 Real agents: add a recorded fake model so tests never touch the network"
-status: pending
+status: completed
 created: 2026-11-14T16:24:51.042Z
 parent: WE-261114-dirn
 labels: ['direction', 'waft']
@@ -13,7 +13,7 @@ Part of [[WE-261114-dirn_index|WE-261114-dirn]]
 
 ## Status
 
-- [ ] Not started
+- [x] Completed
 
 ## Notes
 
@@ -23,3 +23,4 @@ Part of [[WE-261114-dirn_index|WE-261114-dirn]]
 
 Full context: [DIRECTION_AND_REUSE.md](../DIRECTION_AND_REUSE.md).
 
+**2026-11-14 (build pass).** Done. A scripted fake model behind the real client (in process and over a real socket); lab tests fail on any connection that is not to this machine.

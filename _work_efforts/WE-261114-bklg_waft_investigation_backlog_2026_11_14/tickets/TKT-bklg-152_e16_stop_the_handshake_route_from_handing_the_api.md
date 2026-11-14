@@ -1,7 +1,7 @@
 ---
 id: TKT-bklg-152
 title: "E16 Stop the handshake route from handing the API token to any caller"
-status: pending
+status: completed
 created: 2026-11-14T16:06:01.709Z
 labels: ['pyrite']
 ---
@@ -14,7 +14,7 @@ Evidence and first step are in the Notes below and in INVESTIGATION_BACKLOG.md.
 
 ## Status
 
-- [ ] Not started
+- [x] Completed
 
 ## Notes
 
@@ -25,3 +25,5 @@ Tags: `M` `agent` `P1`  (M measured, R read, Q question; owner agent, CT or rese
 **First step.** limit the handshake to loopback clients (`request.client.host`) or hand the token over some other way (printed once at startup); use `hmac.compare_digest`; add expiry and rotation; add tests for all three.
 
 Full context and the baseline: [INVESTIGATION_BACKLOG.md](../INVESTIGATION_BACKLOG.md), heading E16.
+
+**2026-11-14 (build pass).** The handshake answers local clients only (403 otherwise), tokens are compared with hmac.compare_digest, and starting the server creates the token. Expiry and rotation are not built.

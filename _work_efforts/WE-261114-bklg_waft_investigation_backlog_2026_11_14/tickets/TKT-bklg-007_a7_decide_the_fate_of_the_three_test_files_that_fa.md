@@ -1,7 +1,7 @@
 ---
 id: TKT-bklg-007
 title: "A7 Decide the fate of the three test files that fail at collection"
-status: pending
+status: in_progress
 created: 2026-11-14T15:43:40.222Z
 parent: WE-261114-bklg
 labels: ['investigation', 'waft']
@@ -13,7 +13,7 @@ Part of [[WE-261114-bklg_index|WE-261114-bklg]]
 
 ## Status
 
-- [ ] Not started
+- [ ] In progress
 
 ## Notes
 
@@ -24,3 +24,5 @@ Tags: `M` `agent` `P2`  (M measured, R read, Q question; owner agent, CT or rese
 **First step.** for each: fix the API drift (the tests or the code), turn it into a script under `scripts/`, or move it to `_to_delete/` for CT's approval.
 
 Full context and the baseline: [INVESTIGATION_BACKLOG.md](../INVESTIGATION_BACKLOG.md), heading A7.
+
+**2026-11-14 (build pass).** Read all three errors; they are API drift. They are now ignored by name in pyproject.toml instead of on every command line. Not fixed.

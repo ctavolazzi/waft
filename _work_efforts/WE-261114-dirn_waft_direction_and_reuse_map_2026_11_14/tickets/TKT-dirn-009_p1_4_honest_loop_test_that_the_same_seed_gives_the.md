@@ -1,7 +1,7 @@
 ---
 id: TKT-dirn-009
 title: "P1.4 Honest loop: test that the same seed gives the same head hash and ids are unique"
-status: pending
+status: completed
 created: 2026-11-14T16:24:51.041Z
 parent: WE-261114-dirn
 labels: ['direction', 'waft']
@@ -13,7 +13,7 @@ Part of [[WE-261114-dirn_index|WE-261114-dirn]]
 
 ## Status
 
-- [ ] Not started
+- [x] Completed
 
 ## Notes
 
@@ -23,3 +23,4 @@ Part of [[WE-261114-dirn_index|WE-261114-dirn]]
 
 Full context: [DIRECTION_AND_REUSE.md](../DIRECTION_AND_REUSE.md).
 
+**2026-11-14 (build pass).** Done, with a correction to this ticket: the head hash is different on every recording by design (it covers time and host). What repeats is the result digest. Tests: same seed same digest (also in a fresh process and on Python 3.12), another seed another digest, unique ids, a silent agent scores 0, a one-repair agent scores below the oracle, no clock or global randomness in the loop.

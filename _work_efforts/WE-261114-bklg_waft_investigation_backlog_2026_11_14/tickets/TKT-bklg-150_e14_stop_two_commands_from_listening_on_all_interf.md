@@ -1,7 +1,7 @@
 ---
 id: TKT-bklg-150
 title: "E14 Stop two commands from listening on all interfaces by default"
-status: pending
+status: completed
 created: 2026-11-14T16:06:01.150Z
 labels: ['pyrite']
 ---
@@ -14,7 +14,7 @@ Evidence and first step are in the Notes below and in INVESTIGATION_BACKLOG.md.
 
 ## Status
 
-- [ ] Not started
+- [x] Completed
 
 ## Notes
 
@@ -25,3 +25,5 @@ Tags: `M` `agent` `P1`  (M measured, R read, Q question; owner agent, CT or rese
 **First step.** default to `127.0.0.1`, require an explicit `--host 0.0.0.0` with a printed warning; add a test of the defaults.
 
 Full context and the baseline: [INVESTIGATION_BACKLOG.md](../INVESTIGATION_BACKLOG.md), heading E14.
+
+**2026-11-14 (build pass).** Both commands default to 127.0.0.1.

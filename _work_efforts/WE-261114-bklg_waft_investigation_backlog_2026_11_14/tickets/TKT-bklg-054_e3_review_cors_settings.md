@@ -1,7 +1,7 @@
 ---
 id: TKT-bklg-054
 title: "E3 Review CORS settings"
-status: pending
+status: in_progress
 created: 2026-11-14T15:43:40.225Z
 parent: WE-261114-bklg
 labels: ['investigation', 'waft']
@@ -13,7 +13,7 @@ Part of [[WE-261114-bklg_index|WE-261114-bklg]]
 
 ## Status
 
-- [ ] Not started
+- [ ] In progress
 
 ## Notes
 
@@ -24,3 +24,5 @@ Tags: `M` `agent` `P2`  (M measured, R read, Q question; owner agent, CT or rese
 **First step.** decide how a hosted deployment sets its origins (an environment variable); fix the 500 (A4).
 
 Full context and the baseline: [INVESTIGATION_BACKLOG.md](../INVESTIGATION_BACKLOG.md), heading E3.
+
+**2026-11-14 (build pass).** The 500 was the tracing bug and is gone. The allowed origins are still a fixed list.

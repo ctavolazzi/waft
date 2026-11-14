@@ -5,6 +5,8 @@
 **Branch:** `claude/environment-setup-3whfys`  
 **Status:** proposal for CT. Nothing in `src/` was changed. Companion to the investigation backlog `WE-261114-bklg`, whose item ids (A1, B2 and so on) are used below.
 
+> **Update, 2026-11-14 (build pass).** Phases P0, P1, most of P2 and P4.1 are built. [BUILD_LOG_2026-11-14.md](BUILD_LOG_2026-11-14.md) says what was done and corrects two things below: the same seed gives the same *result digest*, not the same head hash, and `waft evolve` was kept rather than aliased.
+
 CT asked to keep exploring, to steer WAFT's development, and to look through the other repos for code WAFT can use. This page gives one recommended direction, the evidence for it, a phased plan with a check for each phase, and a map of reusable code across the 12 repos.
 ## The recommendation
 

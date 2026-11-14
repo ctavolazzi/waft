@@ -1,7 +1,7 @@
 ---
 id: TKT-bklg-030
 title: "C1 Run the whole test suite in CI"
-status: pending
+status: completed
 created: 2026-11-14T15:43:40.224Z
 parent: WE-261114-bklg
 labels: ['investigation', 'waft']
@@ -13,7 +13,7 @@ Part of [[WE-261114-bklg_index|WE-261114-bklg]]
 
 ## Status
 
-- [ ] Not started
+- [x] Completed
 
 ## Notes
 
@@ -24,3 +24,5 @@ Tags: `R` `agent` `P1`  (M measured, R read, Q question; owner agent, CT or rese
 **First step.** run `pytest tests/` with the known-bad files deselected by name; shrink the list as A1 to A9 land.
 
 Full context and the baseline: [INVESTIGATION_BACKLOG.md](../INVESTIGATION_BACKLOG.md), heading C1.
+
+**2026-11-14 (build pass).** The test job runs `uv run pytest` (the whole suite), the lab doctor, and fails if the checkout changed.

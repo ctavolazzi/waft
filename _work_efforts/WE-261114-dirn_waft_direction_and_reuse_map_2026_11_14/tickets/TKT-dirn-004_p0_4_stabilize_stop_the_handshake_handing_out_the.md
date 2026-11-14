@@ -1,7 +1,7 @@
 ---
 id: TKT-dirn-004
 title: "P0.4 Stabilize: stop the handshake handing out the token and require auth on writes (E16, E2)"
-status: pending
+status: completed
 created: 2026-11-14T16:24:51.041Z
 parent: WE-261114-dirn
 labels: ['direction', 'waft']
@@ -13,7 +13,7 @@ Part of [[WE-261114-dirn_index|WE-261114-dirn]]
 
 ## Status
 
-- [ ] Not started
+- [x] Completed
 
 ## Notes
 
@@ -23,3 +23,4 @@ Part of [[WE-261114-dirn_index|WE-261114-dirn]]
 
 Full context: [DIRECTION_AND_REUSE.md](../DIRECTION_AND_REUSE.md).
 
+**2026-11-14 (build pass).** Done, with one choice made: local clients stay trusted so the dashboards keep working; every remote client needs the token. The handshake is local only.

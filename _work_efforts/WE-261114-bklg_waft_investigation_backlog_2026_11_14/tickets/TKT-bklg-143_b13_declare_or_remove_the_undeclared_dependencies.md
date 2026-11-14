@@ -1,7 +1,7 @@
 ---
 id: TKT-bklg-143
 title: "B13 Declare or remove the undeclared dependencies"
-status: pending
+status: in_progress
 created: 2026-11-14T16:05:59.472Z
 labels: ['pyrite']
 ---
@@ -14,7 +14,7 @@ Evidence and first step are in the Notes below and in INVESTIGATION_BACKLOG.md.
 
 ## Status
 
-- [ ] Not started
+- [ ] In progress
 
 ## Notes
 
@@ -25,3 +25,5 @@ Tags: `M` `agent` `P2`  (M measured, R read, Q question; owner agent, CT or rese
 **First step.** decide per package: declare it in an extra, make the import lazy with a clear error, or delete the code; add deptry to CI with this count as the starting budget (C11).
 
 Full context and the baseline: [INVESTIGATION_BACKLOG.md](../INVESTIGATION_BACKLOG.md), heading B13.
+
+**2026-11-14 (build pass).** pillow, pyyaml, requests and cryptography are declared. reportlab, fitz, plotly, sklearn and the rest are not.

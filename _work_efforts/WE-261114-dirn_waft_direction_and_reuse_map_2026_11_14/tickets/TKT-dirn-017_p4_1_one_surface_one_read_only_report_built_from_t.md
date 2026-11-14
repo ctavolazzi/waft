@@ -1,7 +1,7 @@
 ---
 id: TKT-dirn-017
 title: "P4.1 One surface: one read-only report built from the Logbook, linked from the README"
-status: pending
+status: completed
 created: 2026-11-14T16:24:51.042Z
 parent: WE-261114-dirn
 labels: ['direction', 'waft']
@@ -13,7 +13,7 @@ Part of [[WE-261114-dirn_index|WE-261114-dirn]]
 
 ## Status
 
-- [ ] Not started
+- [x] Completed
 
 ## Notes
 
@@ -23,3 +23,4 @@ Part of [[WE-261114-dirn_index|WE-261114-dirn]]
 
 Full context: [DIRECTION_AND_REUSE.md](../DIRECTION_AND_REUSE.md).
 
+**2026-11-14 (build pass).** Done as `waft lab share`: card, replay page and video, all drawn from the recorded run and linked from README and docs/LAB.md.

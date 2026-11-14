@@ -1,7 +1,7 @@
 ---
 id: TKT-dirn-011
 title: "P2.2 Real agents: add a local model provider over HTTP behind Door Guy"
-status: pending
+status: in_progress
 created: 2026-11-14T16:24:51.042Z
 parent: WE-261114-dirn
 labels: ['direction', 'waft']
@@ -13,7 +13,7 @@ Part of [[WE-261114-dirn_index|WE-261114-dirn]]
 
 ## Status
 
-- [ ] Not started
+- [ ] In progress
 
 ## Notes
 
@@ -23,3 +23,4 @@ Part of [[WE-261114-dirn_index|WE-261114-dirn]]
 
 Full context: [DIRECTION_AND_REUSE.md](../DIRECTION_AND_REUSE.md).
 
+**2026-11-14 (build pass).** The model path is tested over real HTTP against the scripted server, and provider addresses pass the Door Guy. It has not been run against a real local model (none is reachable from the container this was built in). Model calls are tallied in the record, not stored one by one.

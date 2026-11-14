@@ -1,7 +1,7 @@
 ---
 id: TKT-bklg-023
 title: "B5 Test WAFT against current Empirica"
-status: pending
+status: in_progress
 created: 2026-11-14T15:43:40.223Z
 parent: WE-261114-bklg
 labels: ['investigation', 'waft']
@@ -13,7 +13,7 @@ Part of [[WE-261114-bklg_index|WE-261114-bklg]]
 
 ## Status
 
-- [ ] Not started
+- [ ] In progress
 
 ## Notes
 
@@ -24,3 +24,5 @@ Tags: `M` `research` `P2`  (M measured, R read, Q question; owner agent, CT or r
 **First step.** in a throwaway venv with 1.16.3, run the `test_empirica_*.py` files and the Empirica commands; list API breaks; pin a tested range.
 
 Full context and the baseline: [INVESTIGATION_BACKLOG.md](../INVESTIGATION_BACKLOG.md), heading B5.
+
+**2026-11-14 (build pass).** Correction: WAFT runs here on empirica 1.7.1 (from uv.lock), not 1.2.3. Newer versions are still untested.

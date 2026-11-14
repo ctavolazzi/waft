@@ -1,7 +1,7 @@
 ---
 id: TKT-bklg-002
 title: "A2 Fix span.end() on a Span that has no end method"
-status: pending
+status: completed
 created: 2026-11-14T15:43:40.222Z
 parent: WE-261114-bklg
 labels: ['investigation', 'waft']
@@ -13,7 +13,7 @@ Part of [[WE-261114-bklg_index|WE-261114-bklg]]
 
 ## Status
 
-- [ ] Not started
+- [x] Completed
 
 ## Notes
 
@@ -24,3 +24,5 @@ Tags: `M` `agent` `P1`  (M measured, R read, Q question; owner agent, CT or rese
 **First step.** use `tracer.end_span` or add `Span.end`; decide which API is the intended one and make the callers agree.
 
 Full context and the baseline: [INVESTIGATION_BACKLOG.md](../INVESTIGATION_BACKLOG.md), heading A2.
+
+**2026-11-14 (build pass).** calculate_wsm ends its span with tracer.end_span on success and on error.

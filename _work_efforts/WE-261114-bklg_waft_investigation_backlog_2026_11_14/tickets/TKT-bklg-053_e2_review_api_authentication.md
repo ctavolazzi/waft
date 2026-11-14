@@ -1,7 +1,7 @@
 ---
 id: TKT-bklg-053
 title: "E2 Review API authentication"
-status: pending
+status: completed
 created: 2026-11-14T15:43:40.225Z
 parent: WE-261114-bklg
 labels: ['investigation', 'waft']
@@ -13,7 +13,7 @@ Part of [[WE-261114-bklg_index|WE-261114-bklg]]
 
 ## Status
 
-- [ ] Not started
+- [x] Completed
 
 ## Notes
 
@@ -24,3 +24,5 @@ Tags: `M` `agent` `P1`  (M measured, R read, Q question; owner agent, CT or rese
 **First step.** decide the policy (every non-GET route needs the token except the handshake); apply it router-wide; add a test that walks the OpenAPI schema and asserts 401 without a token.
 
 Full context and the baseline: [INVESTIGATION_BACKLOG.md](../INVESTIGATION_BACKLOG.md), heading E2.
+
+**2026-11-14 (build pass).** Policy chosen: this machine is trusted, every other client must send the token on every route except four health and info routes. A test walks all routes in the OpenAPI schema as a remote client and expects 401.

@@ -1,7 +1,7 @@
 ---
 id: TKT-bklg-153
 title: "E17 Do not publish the open API with the checkout mounted writable"
-status: pending
+status: in_progress
 created: 2026-11-14T16:06:01.964Z
 labels: ['pyrite']
 ---
@@ -14,7 +14,7 @@ Evidence and first step are in the Notes below and in INVESTIGATION_BACKLOG.md.
 
 ## Status
 
-- [ ] Not started
+- [ ] In progress
 
 ## Notes
 
@@ -25,3 +25,5 @@ Tags: `R` `agent` `P1`  (M measured, R read, Q question; owner agent, CT or rese
 **First step.** publish on `127.0.0.1:8000:8000` by default; mount a separate data directory instead of the repo; fix E16 and E2 first; add a `USER` and a `HEALTHCHECK`.
 
 Full context and the baseline: [INVESTIGATION_BACKLOG.md](../INVESTIGATION_BACKLOG.md), heading E17.
+
+**2026-11-14 (build pass).** docker-compose.yml publishes on 127.0.0.1 only and the API refuses remote clients without the token. Not run in a container.

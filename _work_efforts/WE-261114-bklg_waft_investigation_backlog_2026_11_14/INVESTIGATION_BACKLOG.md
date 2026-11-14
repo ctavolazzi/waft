@@ -5,6 +5,8 @@
 **Branch:** `claude/environment-setup-3whfys`  
 **Status:** draft for review. Nothing in `src/` was changed.
 
+> **Update, 2026-11-14 (build pass).** 27 items here are closed and 19 are partly done; each ticket carries a dated note. Three items below were wrong and are corrected in `WE-261114-dirn/BUILD_LOG_2026-11-14.md`: B4 and S1 (empirica never needed a manual download), B5 (the installed version is 1.7.1) and A11's guess about `uv.lock`.
+
 ## What this is
 
 A list of 162 things for people (CT) and more capable agents to investigate, decide or expand on, found while setting up the WAFT environment and running the project. Each item has an id (such as `B2`), a tag for how well it is known, who can pick it up, a priority, the evidence, and a first step. The same ids are the ticket titles in this work effort, so a ticket can be claimed and closed without touching this document.

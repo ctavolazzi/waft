@@ -1,7 +1,7 @@
 ---
 id: TKT-bklg-077
 title: "F14 Find why a first quickstart run changed tracked files in the checkout"
-status: pending
+status: completed
 created: 2026-11-14T15:43:40.226Z
 parent: WE-261114-bklg
 labels: ['investigation', 'waft']
@@ -13,7 +13,7 @@ Part of [[WE-261114-bklg_index|WE-261114-bklg]]
 
 ## Status
 
-- [ ] Not started
+- [x] Completed
 
 ## Notes
 
@@ -24,3 +24,5 @@ Tags: `M` `agent` `P1`  (M measured, R read, Q question; owner agent, CT or rese
 **First step.** run each command 20 times with a fixed seed while watching `git status` in the source checkout; find the write.
 
 Full context and the baseline: [INVESTIGATION_BACKLOG.md](../INVESTIGATION_BACKLOG.md), heading F14.
+
+**2026-11-14 (build pass).** Cause found: the Dealer (main.py) writes _pantheon/the_dealer relative to the working directory when he appears, and the tests ran commands from the repo root. WAFT_DEALER=off switches him off; the tests set it. Whether he should write into any folder at all is ticket E19.

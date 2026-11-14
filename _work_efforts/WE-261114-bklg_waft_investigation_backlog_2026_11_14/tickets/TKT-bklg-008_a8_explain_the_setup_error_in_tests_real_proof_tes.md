@@ -1,7 +1,7 @@
 ---
 id: TKT-bklg-008
 title: "A8 Explain the setup error in tests/real_proof_test.py"
-status: pending
+status: completed
 created: 2026-11-14T15:43:40.222Z
 parent: WE-261114-bklg
 labels: ['investigation', 'waft']
@@ -13,7 +13,7 @@ Part of [[WE-261114-bklg_index|WE-261114-bklg]]
 
 ## Status
 
-- [ ] Not started
+- [x] Completed
 
 ## Notes
 
@@ -24,3 +24,5 @@ Tags: `M` `agent` `P3`  (M measured, R read, Q question; owner agent, CT or rese
 **First step.** read it; decide whether this "real proof" still means anything once the tracing is fixed.
 
 Full context and the baseline: [INVESTIGATION_BACKLOG.md](../INVESTIGATION_BACKLOG.md), heading A8.
+
+**2026-11-14 (build pass).** It is a script with its own main(), collected by accident because its name ends in _test.py. pytest now collects test_*.py only.

@@ -1,7 +1,7 @@
 ---
 id: TKT-bklg-001
 title: "A1 Add the missing get_tracer imports in two core modules"
-status: pending
+status: completed
 created: 2026-11-14T15:43:40.222Z
 parent: WE-261114-bklg
 labels: ['investigation', 'waft']
@@ -13,7 +13,7 @@ Part of [[WE-261114-bklg_index|WE-261114-bklg]]
 
 ## Status
 
-- [ ] Not started
+- [x] Completed
 
 ## Notes
 
@@ -24,3 +24,5 @@ Tags: `M` `agent` `P1`  (M measured, R read, Q question; owner agent, CT or rese
 **First step.** apply the import for real, with a test that imports both modules and calls each once.
 
 Full context and the baseline: [INVESTIGATION_BACKLOG.md](../INVESTIGATION_BACKLOG.md), heading A1.
+
+**2026-11-14 (build pass).** Both modules import get_tracer and SpanStatus from .tracing (commit 98588e5f).

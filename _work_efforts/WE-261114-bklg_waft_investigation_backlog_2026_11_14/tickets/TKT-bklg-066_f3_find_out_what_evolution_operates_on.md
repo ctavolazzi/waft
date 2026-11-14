@@ -1,7 +1,7 @@
 ---
 id: TKT-bklg-066
 title: "F3 Find out what \"evolution\" operates on"
-status: pending
+status: in_progress
 created: 2026-11-14T15:43:40.226Z
 parent: WE-261114-bklg
 labels: ['investigation', 'waft']
@@ -13,7 +13,7 @@ Part of [[WE-261114-bklg_index|WE-261114-bklg]]
 
 ## Status
 
-- [ ] Not started
+- [ ] In progress
 
 ## Notes
 
@@ -24,3 +24,5 @@ Tags: `M` `research` `P1`  (M measured, R read, Q question; owner agent, CT or r
 **First step.** write the one-page spec: genome fields, mutation operators, fitness function; say plainly in the README what `evolve` does today; decide what a real trial (an executed task with a measurable result) would be (R2).
 
 Full context and the baseline: [INVESTIGATION_BACKLOG.md](../INVESTIGATION_BACKLOG.md), heading F3.
+
+**2026-11-14 (build pass).** `waft evolve` now says, in its help and its output, that it runs no task. The loop that does is `waft lab run` (docs/LAB.md). The one-page genome spec is not written.

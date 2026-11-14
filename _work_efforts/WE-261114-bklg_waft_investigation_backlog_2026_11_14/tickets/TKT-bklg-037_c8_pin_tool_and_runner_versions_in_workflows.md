@@ -1,7 +1,7 @@
 ---
 id: TKT-bklg-037
 title: "C8 Pin tool and runner versions in workflows"
-status: pending
+status: completed
 created: 2026-11-14T15:43:40.224Z
 parent: WE-261114-bklg
 labels: ['investigation', 'waft']
@@ -13,7 +13,7 @@ Part of [[WE-261114-bklg_index|WE-261114-bklg]]
 
 ## Status
 
-- [ ] Not started
+- [x] Completed
 
 ## Notes
 
@@ -24,3 +24,5 @@ Tags: `R` `agent` `P3`  (M measured, R read, Q question; owner agent, CT or rese
 **First step.** pin the runner image and the uv version.
 
 Full context and the baseline: [INVESTIGATION_BACKLOG.md](../INVESTIGATION_BACKLOG.md), heading C8.
+
+**2026-11-14 (build pass).** Runner image pinned to ubuntu-24.04 and uv to 0.11.32 in branch-protection.yml.

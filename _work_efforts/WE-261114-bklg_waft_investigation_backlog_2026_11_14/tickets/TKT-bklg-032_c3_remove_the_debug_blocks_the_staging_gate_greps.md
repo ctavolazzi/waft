@@ -1,7 +1,7 @@
 ---
 id: TKT-bklg-032
 title: "C3 Remove the debug blocks the staging gate greps for"
-status: pending
+status: completed
 created: 2026-11-14T15:43:40.224Z
 parent: WE-261114-bklg
 labels: ['investigation', 'waft']
@@ -13,7 +13,7 @@ Part of [[WE-261114-bklg_index|WE-261114-bklg]]
 
 ## Status
 
-- [ ] Not started
+- [x] Completed
 
 ## Notes
 
@@ -24,3 +24,5 @@ Tags: `M` `agent` `P2`  (M measured, R read, Q question; owner agent, CT or rese
 **First step.** delete the blocks (E5); keep the gate.
 
 Full context and the baseline: [INVESTIGATION_BACKLOG.md](../INVESTIGATION_BACKLOG.md), heading C3.
+
+**2026-11-14 (build pass).** The 25 blocks in the five Python files are gone, so the gate's grep finds nothing in src.

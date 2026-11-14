@@ -1,7 +1,7 @@
 ---
 id: TKT-bklg-047
 title: "D8 Move runtime data out of git"
-status: pending
+status: in_progress
 created: 2026-11-14T15:43:40.225Z
 parent: WE-261114-bklg
 labels: ['investigation', 'waft']
@@ -13,7 +13,7 @@ Part of [[WE-261114-bklg_index|WE-261114-bklg]]
 
 ## Status
 
-- [ ] Not started
+- [ ] In progress
 
 ## Notes
 
@@ -24,3 +24,5 @@ Tags: `M` `agent` `P2`  (M measured, R read, Q question; owner agent, CT or rese
 **First step.** inspect for personal paths; split fixtures from runtime data; ignore the runtime paths (A10).
 
 Full context and the baseline: [INVESTIGATION_BACKLOG.md](../INVESTIGATION_BACKLOG.md), heading D8.
+
+**2026-11-14 (build pass).** Tests no longer write trace files into the tree. The databases and jsonl files that are tracked are still tracked.

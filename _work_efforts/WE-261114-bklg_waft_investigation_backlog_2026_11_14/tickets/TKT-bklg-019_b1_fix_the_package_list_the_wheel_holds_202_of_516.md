@@ -1,7 +1,7 @@
 ---
 id: TKT-bklg-019
 title: "B1 Fix the package list: the wheel holds 202 of 516 Python files"
-status: pending
+status: completed
 created: 2026-11-14T15:43:40.223Z
 parent: WE-261114-bklg
 labels: ['investigation', 'waft']
@@ -13,7 +13,7 @@ Part of [[WE-261114-bklg_index|WE-261114-bklg]]
 
 ## Status
 
-- [ ] Not started
+- [x] Completed
 
 ## Notes
 
@@ -24,3 +24,5 @@ Tags: `M` `agent` `P1`  (M measured, R read, Q question; owner agent, CT or rese
 **First step.** switch to `[tool.setuptools.packages.find] where = ["src"]`, rebuild, compare file counts, rerun B2.
 
 Full context and the baseline: [INVESTIGATION_BACKLOG.md](../INVESTIGATION_BACKLOG.md), heading B1.
+
+**2026-11-14 (build pass).** [tool.setuptools.packages.find] replaces the hand-written list. The wheel holds 526 of 526 modules.
