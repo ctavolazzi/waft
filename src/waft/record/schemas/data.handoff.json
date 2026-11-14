@@ -1,0 +1,77 @@
+{
+  "properties": {
+    "artifact": {
+      "properties": {
+        "bytes": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "determinism": {
+          "enum": [
+            "exact",
+            "semantic",
+            "volatile"
+          ]
+        },
+        "media": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "[0-9a-f]{64}",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "sha256",
+        "bytes",
+        "media",
+        "determinism"
+      ],
+      "type": "object"
+    },
+    "consumer_saw": {
+      "type": "string"
+    },
+    "derived_from": {
+      "items": {
+        "pattern": "[0-9a-f]{64}",
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "from": {
+      "type": "string"
+    },
+    "note": {
+      "type": "string"
+    },
+    "ok": {
+      "type": "boolean"
+    },
+    "schema": {
+      "type": "string"
+    },
+    "to": {
+      "type": "string"
+    },
+    "via": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "from",
+    "to",
+    "schema",
+    "via",
+    "artifact",
+    "consumer_saw",
+    "derived_from",
+    "ok",
+    "note"
+  ],
+  "type": "object"
+}

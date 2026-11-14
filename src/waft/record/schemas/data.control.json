@@ -1,0 +1,35 @@
+{
+  "properties": {
+    "evidence": {
+      "items": {
+        "minimum": 0,
+        "type": "integer"
+      },
+      "type": "array"
+    },
+    "expected": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "observed": {
+      "type": "string"
+    },
+    "ok": {
+      "type": "boolean"
+    },
+    "planted": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "planted",
+    "expected",
+    "observed",
+    "ok",
+    "evidence"
+  ],
+  "type": "object"
+}

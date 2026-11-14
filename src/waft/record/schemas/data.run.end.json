@@ -1,0 +1,36 @@
+{
+  "properties": {
+    "counts": {
+      "additionalProperties": {
+        "minimum": 0,
+        "type": "integer"
+      },
+      "type": "object"
+    },
+    "ok": {
+      "type": "boolean"
+    },
+    "records": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "started": {
+      "type": "string"
+    },
+    "verdicts": {
+      "additionalProperties": {
+        "minimum": 0,
+        "type": "integer"
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "records",
+    "counts",
+    "verdicts",
+    "started",
+    "ok"
+  ],
+  "type": "object"
+}

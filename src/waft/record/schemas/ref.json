@@ -1,0 +1,33 @@
+{
+  "properties": {
+    "bytes": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "determinism": {
+      "enum": [
+        "exact",
+        "semantic",
+        "volatile"
+      ]
+    },
+    "media": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "sha256": {
+      "pattern": "[0-9a-f]{64}",
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "sha256",
+    "bytes",
+    "media",
+    "determinism"
+  ],
+  "type": "object"
+}

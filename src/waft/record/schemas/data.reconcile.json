@@ -1,0 +1,60 @@
+{
+  "properties": {
+    "a": {
+      "type": [
+        "integer",
+        "string"
+      ]
+    },
+    "a_source": {
+      "type": "string"
+    },
+    "b": {
+      "type": [
+        "integer",
+        "string"
+      ]
+    },
+    "b_source": {
+      "type": "string"
+    },
+    "basis": {
+      "enum": [
+        "independent",
+        "consistency",
+        "expectation"
+      ]
+    },
+    "evidence": {
+      "items": {
+        "minimum": 0,
+        "type": "integer"
+      },
+      "type": "array"
+    },
+    "name": {
+      "type": "string"
+    },
+    "ok": {
+      "type": "boolean"
+    },
+    "tolerance": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "why": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "a",
+    "a_source",
+    "b",
+    "b_source",
+    "tolerance",
+    "ok",
+    "why"
+  ],
+  "type": "object"
+}

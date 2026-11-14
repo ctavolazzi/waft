@@ -1,0 +1,39 @@
+{
+  "properties": {
+    "from": {
+      "items": {
+        "minimum": 0,
+        "type": "integer"
+      },
+      "type": "array"
+    },
+    "reasons": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "rule": {
+      "const": "R1"
+    },
+    "status": {
+      "enum": [
+        "pass",
+        "warn",
+        "fail",
+        "skip"
+      ]
+    },
+    "subject": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "subject",
+    "status",
+    "rule",
+    "from",
+    "reasons"
+  ],
+  "type": "object"
+}

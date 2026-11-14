@@ -1,0 +1,135 @@
+{
+  "properties": {
+    "argv": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "component": {
+      "type": "string"
+    },
+    "cwd": {
+      "type": "string"
+    },
+    "env_overlay": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "isolated": {
+      "type": "boolean"
+    },
+    "ms": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "purpose": {
+      "type": "string"
+    },
+    "rc": {
+      "type": "integer"
+    },
+    "redactions": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "started": {
+      "type": "string"
+    },
+    "stderr": {
+      "properties": {
+        "bytes": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "determinism": {
+          "enum": [
+            "exact",
+            "semantic",
+            "volatile"
+          ]
+        },
+        "media": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "[0-9a-f]{64}",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "sha256",
+        "bytes",
+        "media",
+        "determinism"
+      ],
+      "type": "object"
+    },
+    "stdin_sha256": {
+      "type": "string"
+    },
+    "stdout": {
+      "properties": {
+        "bytes": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "determinism": {
+          "enum": [
+            "exact",
+            "semantic",
+            "volatile"
+          ]
+        },
+        "media": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "[0-9a-f]{64}",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "sha256",
+        "bytes",
+        "media",
+        "determinism"
+      ],
+      "type": "object"
+    },
+    "timed_out": {
+      "type": "boolean"
+    },
+    "truncated": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "argv",
+    "cwd",
+    "env_overlay",
+    "isolated",
+    "stdin_sha256",
+    "rc",
+    "ms",
+    "started",
+    "timed_out",
+    "stdout",
+    "stderr",
+    "redactions",
+    "truncated",
+    "purpose",
+    "component"
+  ],
+  "type": "object"
+}

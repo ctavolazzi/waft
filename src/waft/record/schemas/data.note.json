@@ -1,0 +1,15 @@
+{
+  "properties": {
+    "tag": {
+      "type": "string"
+    },
+    "text": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "tag",
+    "text"
+  ],
+  "type": "object"
+}

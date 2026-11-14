@@ -1,0 +1,44 @@
+{
+  "properties": {
+    "class": {
+      "enum": [
+        "must",
+        "should",
+        "gap",
+        "info"
+      ]
+    },
+    "component": {
+      "type": "string"
+    },
+    "detail": {
+      "type": "string"
+    },
+    "evidence": {
+      "items": {
+        "minimum": 0,
+        "type": "integer"
+      },
+      "type": "array"
+    },
+    "expected": {},
+    "name": {
+      "type": "string"
+    },
+    "observed": {},
+    "ok": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "component",
+    "name",
+    "class",
+    "ok",
+    "expected",
+    "observed",
+    "detail",
+    "evidence"
+  ],
+  "type": "object"
+}

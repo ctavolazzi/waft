@@ -1,0 +1,83 @@
+{
+  "properties": {
+    "api_version": {
+      "type": "string"
+    },
+    "argv": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "git": {
+      "properties": {
+        "branch": {
+          "type": "string"
+        },
+        "dirty_paths": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "head": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "head",
+        "branch",
+        "dirty_paths"
+      ],
+      "type": "object"
+    },
+    "host": {
+      "properties": {
+        "cpus": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "machine": {
+          "type": "string"
+        },
+        "platform": {
+          "type": "string"
+        },
+        "python": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "platform",
+        "machine",
+        "python",
+        "cpus"
+      ],
+      "type": "object"
+    },
+    "label": {
+      "type": "string"
+    },
+    "meta": {
+      "type": "object"
+    },
+    "pins": {
+      "type": "object"
+    },
+    "pins_sha256": {
+      "pattern": "[0-9a-f]{64}",
+      "type": "string"
+    },
+    "scenario": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "label",
+    "scenario",
+    "argv",
+    "api_version",
+    "meta",
+    "git",
+    "host"
+  ],
+  "type": "object"
+}
