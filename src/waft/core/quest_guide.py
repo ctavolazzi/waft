@@ -753,7 +753,7 @@ class QuestManager:
 
         if passed:
             # Mark checkpoint as passed in all relevant quests
-            for quest in self.quests.values():
+            for quest_id, quest in self.quests.items():
                 if checkpoint_id in quest.checkpoints:
                     if quest_id not in self.progress:
                         self.progress[quest_id] = QuestProgress(quest_id=quest_id)
