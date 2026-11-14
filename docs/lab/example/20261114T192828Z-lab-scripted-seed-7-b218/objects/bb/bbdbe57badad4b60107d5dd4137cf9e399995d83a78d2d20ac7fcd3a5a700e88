@@ -1,0 +1,145 @@
+[
+ {
+  "best": 0.6778,
+  "best_id": "g_9faf37967c",
+  "dead": 3,
+  "first_try_rate": 0.0833,
+  "generation": 0,
+  "kept": 4,
+  "mean": 0.4896,
+  "population": 8,
+  "worst": 0.1973
+ },
+ {
+  "best": 0.6778,
+  "best_id": "g_9faf37967c",
+  "dead": 2,
+  "first_try_rate": 0.0972,
+  "generation": 1,
+  "kept": 4,
+  "mean": 0.543,
+  "population": 8,
+  "worst": 0.4009
+ },
+ {
+  "best": 0.6778,
+  "best_id": "g_9faf37967c",
+  "dead": 4,
+  "first_try_rate": 0.0417,
+  "generation": 2,
+  "kept": 4,
+  "mean": 0.4808,
+  "population": 8,
+  "worst": 0.2667
+ },
+ {
+  "best": 0.7804,
+  "best_id": "g_b6572b19ac",
+  "dead": 2,
+  "first_try_rate": 0.0833,
+  "generation": 3,
+  "kept": 4,
+  "mean": 0.5506,
+  "population": 8,
+  "worst": 0.2951
+ },
+ {
+  "best": 0.8929,
+  "best_id": "g_273dcda3de",
+  "dead": 1,
+  "first_try_rate": 0.1806,
+  "generation": 4,
+  "kept": 4,
+  "mean": 0.6472,
+  "population": 8,
+  "worst": 0.3578
+ },
+ {
+  "best": 0.9867,
+  "best_id": "g_d6087c454b",
+  "dead": 0,
+  "first_try_rate": 0.2778,
+  "generation": 5,
+  "kept": 4,
+  "mean": 0.7926,
+  "population": 8,
+  "worst": 0.6778
+ },
+ {
+  "best": 0.9867,
+  "best_id": "g_7ed5758eec",
+  "dead": 0,
+  "first_try_rate": 0.5278,
+  "generation": 6,
+  "kept": 4,
+  "mean": 0.8759,
+  "population": 8,
+  "worst": 0.7804
+ },
+ {
+  "best": 1.0,
+  "best_id": "g_be22da626a",
+  "dead": 0,
+  "first_try_rate": 0.7083,
+  "generation": 7,
+  "kept": 4,
+  "mean": 0.9441,
+  "population": 8,
+  "worst": 0.7564
+ },
+ {
+  "best": 1.0,
+  "best_id": "g_57626d20a5",
+  "dead": 0,
+  "first_try_rate": 0.7917,
+  "generation": 8,
+  "kept": 4,
+  "mean": 0.9528,
+  "population": 8,
+  "worst": 0.792
+ },
+ {
+  "best": 1.0,
+  "best_id": "g_57626d20a5",
+  "dead": 0,
+  "first_try_rate": 0.7639,
+  "generation": 9,
+  "kept": 4,
+  "mean": 0.9289,
+  "population": 8,
+  "worst": 0.6129
+ },
+ {
+  "best": 1.0,
+  "best_id": "g_57626d20a5",
+  "dead": 0,
+  "first_try_rate": 0.9167,
+  "generation": 10,
+  "kept": 4,
+  "mean": 0.9872,
+  "population": 8,
+  "worst": 0.9413
+ },
+ {
+  "best": 1.0,
+  "best_id": "g_57626d20a5",
+  "dead": 0,
+  "first_try_rate": 0.7778,
+  "generation": 11,
+  "kept": 4,
+  "mean": 0.9659,
+  "population": 8,
+  "worst": 0.8924
+ },
+ {
+  "best": 1.0,
+  "best_id": "g_57626d20a5",
+  "dead": 0,
+  "first_try_rate": 0.7639,
+  "generation": 12,
+  "kept": 4,
+  "mean": 0.9377,
+  "population": 8,
+  "worst": 0.6387
+ }
+]

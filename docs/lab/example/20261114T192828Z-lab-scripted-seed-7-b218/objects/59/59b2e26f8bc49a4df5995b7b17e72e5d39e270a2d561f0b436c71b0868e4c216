@@ -1,0 +1,26 @@
+{
+ "fitness": 1.0,
+ "genes": {
+  "example": false,
+  "format_rule": 2,
+  "schema_rule": true,
+  "temperature": 0.92,
+  "tidy_rule": true,
+  "weights_rule": true
+ },
+ "id": "g_57626d20a5",
+ "kind": "prompt",
+ "per_quest": {
+  "The Clean Extraction": 1.0,
+  "The Dirty Input": 1.0,
+  "The Logic Trap": 1.0
+ },
+ "system_prompt": "You turn a description of a decision into a decision matrix. Answer with only a JSON object. No prose, no code fences, nothing before or after it. The object has exactly these keys: 'alternatives' (a list of names), 'criteria' (a map from criterion name to weight), 'scores' (a map from each alternative to a map from each criterion to a number) and 'methodology' (the string 'WSM'). Criterion weights are positive numbers and must sum to 1.0. Fix them if the text gets this wrong. Trim whitespace from every name, and write numbers as numbers, not strings.",
+ "traits": [
+  "JSON only, strict",
+  "names the keys",
+  "weights sum to 1",
+  "tidies names",
+  "temperature 0.92"
+ ]
+}

@@ -1,0 +1,56 @@
+{
+ "agents": {
+  "deterministic": true,
+  "kind": "scripted",
+  "model": "waft-scripted-fake",
+  "providers": [
+   "scripted.invalid:waft-scripted-fake"
+  ]
+ },
+ "config": {
+  "agent": "scripted",
+  "dungeon": "waft_temple.json",
+  "generations": 12,
+  "population": 8,
+  "seed": 7,
+  "trials": 3
+ },
+ "controls": [
+  {
+   "expected": "0",
+   "name": "an agent that says nothing scores zero",
+   "observed": "0",
+   "planted": "an agent that returns an empty string to every prompt",
+   "score": 0.0
+  },
+  {
+   "expected": "1",
+   "name": "an agent that always knows the answer scores one",
+   "observed": "1",
+   "planted": "an agent that returns the known-good answer to every prompt",
+   "score": 1.0
+  },
+  {
+   "expected": "above the silent agent and below the oracle",
+   "name": "an agent that needs one repair scores between the two",
+   "observed": "above the silent agent and below the oracle",
+   "planted": "an agent that fences its first answer and answers cleanly when asked to repair",
+   "score": 0.88
+  }
+ ],
+ "digest": "87484831a39a8de722ea26ac8bb01a3fb5c9c8a1daaa3e89e73ef31c3ef81a71",
+ "label": "simulated agents (scripted fake model)",
+ "quests": [
+  "The Clean Extraction",
+  "The Dirty Input",
+  "The Logic Trap"
+ ],
+ "stopped_early": null,
+ "usage": {
+  "agent_calls": 1037,
+  "completion_tokens": 32800,
+  "model_calls": 1037,
+  "prompt_tokens": 158480,
+  "variants_scored": 50
+ }
+}
